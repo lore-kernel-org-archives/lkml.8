@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A438CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF5A206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0521207DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037037;
-	bh=VJCgLwsSNHwLmsfHycjLYWKHAkmJNu9lyn4RGGguDvQ=;
+	s=default; t=1591037040;
+	bh=Ku7SeBRPKctbDs9kFxC9F7jkNt5OLICrrA9kqwMBLac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLuoFDoSDI1U3h5tQnkyfSqR8B/iLY5jB2dUYZXUoZWTPcp27apwrDU6opmf5dttA
-	 5rHqfw3bZBSmXGu2HAg/yW0dI0JHIkFSpcQFo7odttNXYnq8LOhcwRD3uF0H2Glcwx
-	 rcLFCl7L8IFwWImei+IaPc6qXLCS1rCo/qE4rG2w=
+	b=Oka78mYcpEQFGJ/z8DGsGPZxDL5B7lB/gIqqS1iaHeW4AUEtjp0LV8zXvBOLbqrxm
+	 CiNV4mU9/lM4QwsM3sKD8BEnWb//gTOS4d2k6qfP2fNDv63bOy7iqfAHWUgYrNKA4Q
+	 VInUBuB1tUZSUBKCiuh3b+D62qmCUMBLAIh5VESQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbgFASn4 (ORCPT
+        id S1731320AbgFASoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730552AbgFASLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:09 -0400
+        id S1730477AbgFASLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9724206E2;
-        Mon,  1 Jun 2020 18:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F61F206E2;
+        Mon,  1 Jun 2020 18:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035069;
-        bh=VJCgLwsSNHwLmsfHycjLYWKHAkmJNu9lyn4RGGguDvQ=;
+        s=default; t=1591035064;
+        bh=Ku7SeBRPKctbDs9kFxC9F7jkNt5OLICrrA9kqwMBLac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFKWDiV6ffTZSV3xn9rfSBXjM45e1JaYzUL4QSVrN3uj2ryxBbMuEyaoD057hUMHM
-         bSUYKHyrShihTDW/hFWWiHRPbdwNS7/Pe8oVoOfvT9WGB69t+0anZa9XumQL3M8U92
-         7sxGTSWPWNPlLVhqR16m4mVGo1BAmtPLQ+nrhst8=
+        b=M5JRm0jMySJ50SLCZlsO4Z1qe9RS7USPREx9o2a99orurZvMc7EJTpeHjn+qvwdMQ
+         PZiWyp2JkbBU5E7OSAR/uYtITCTL1CKTt+Lklggd1YTz2HJ+xnzayQl04bk45yI4bw
+         LpsbJthSoHrYLm980AkjFPCWdsZunCjB888dnSOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 137/142] bonding: Fix reference count leak in bond_sysfs_slave_add.
-Date:   Mon,  1 Jun 2020 19:54:55 +0200
-Message-Id: <20200601174051.902277007@linuxfoundation.org>
+Subject: [PATCH 5.4 135/142] ipv4: nexthop version of fib_info_nh_uses_dev
+Date:   Mon,  1 Jun 2020 19:54:53 +0200
+Message-Id: <20200601174051.690845158@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,38 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: David Ahern <dsahern@gmail.com>
 
-commit a068aab42258e25094bc2c159948d263ed7d7a77 upstream.
+commit 1fd1c768f3624a5e66766e7b4ddb9b607cd834a5 upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+Similar to the last path, need to fix fib_info_nh_uses_dev for
+external nexthops to avoid referencing multiple nh_grp structs.
+Move the device check in fib_info_nh_uses_dev to a helper and
+create a nexthop version that is called if the fib_info uses an
+external nexthop.
 
-Fixes: 07699f9a7c8d ("bonding: add sysfs /slave dir for bond slave devices.")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/bonding/bond_sysfs_slave.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/net/ip_fib.h    |   10 ++++++++++
+ include/net/nexthop.h   |   25 +++++++++++++++++++++++++
+ net/ipv4/fib_frontend.c |   19 ++++++++++---------
+ 3 files changed, 45 insertions(+), 9 deletions(-)
 
---- a/drivers/net/bonding/bond_sysfs_slave.c
-+++ b/drivers/net/bonding/bond_sysfs_slave.c
-@@ -149,8 +149,10 @@ int bond_sysfs_slave_add(struct slave *s
+--- a/include/net/ip_fib.h
++++ b/include/net/ip_fib.h
+@@ -422,6 +422,16 @@ static inline int fib_num_tclassid_users
+ #endif
+ int fib_unmerge(struct net *net);
  
- 	err = kobject_init_and_add(&slave->kobj, &slave_ktype,
- 				   &(slave->dev->dev.kobj), "bonding_slave");
--	if (err)
-+	if (err) {
-+		kobject_put(&slave->kobj);
- 		return err;
++static inline bool nhc_l3mdev_matches_dev(const struct fib_nh_common *nhc,
++const struct net_device *dev)
++{
++	if (nhc->nhc_dev == dev ||
++	    l3mdev_master_ifindex_rcu(nhc->nhc_dev) == dev->ifindex)
++		return true;
++
++	return false;
++}
++
+ /* Exported by fib_semantics.c */
+ int ip_fib_check_default(__be32 gw, struct net_device *dev);
+ int fib_sync_down_dev(struct net_device *dev, unsigned long event, bool force);
+--- a/include/net/nexthop.h
++++ b/include/net/nexthop.h
+@@ -233,6 +233,31 @@ struct fib_nh_common *nexthop_fib_nhc(st
+ 	return &nhi->fib_nhc;
+ }
+ 
++static inline bool nexthop_uses_dev(const struct nexthop *nh,
++				    const struct net_device *dev)
++{
++	struct nh_info *nhi;
++
++	if (nh->is_group) {
++		struct nh_group *nhg = rcu_dereference(nh->nh_grp);
++		int i;
++
++		for (i = 0; i < nhg->num_nh; i++) {
++			struct nexthop *nhe = nhg->nh_entries[i].nh;
++
++			nhi = rcu_dereference(nhe->nh_info);
++			if (nhc_l3mdev_matches_dev(&nhi->fib_nhc, dev))
++				return true;
++		}
++	} else {
++		nhi = rcu_dereference(nh->nh_info);
++		if (nhc_l3mdev_matches_dev(&nhi->fib_nhc, dev))
++			return true;
 +	}
++
++	return false;
++}
++
+ static inline unsigned int fib_info_num_path(const struct fib_info *fi)
+ {
+ 	if (unlikely(fi->nh))
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -319,17 +319,18 @@ bool fib_info_nh_uses_dev(struct fib_inf
+ {
+ 	bool dev_match = false;
+ #ifdef CONFIG_IP_ROUTE_MULTIPATH
+-	int ret;
++	if (unlikely(fi->nh)) {
++		dev_match = nexthop_uses_dev(fi->nh, dev);
++	} else {
++		int ret;
  
- 	for (a = slave_attrs; *a; ++a) {
- 		err = sysfs_create_file(&slave->kobj, &((*a)->attr));
+-	for (ret = 0; ret < fib_info_num_path(fi); ret++) {
+-		const struct fib_nh_common *nhc = fib_info_nhc(fi, ret);
++		for (ret = 0; ret < fib_info_num_path(fi); ret++) {
++			const struct fib_nh_common *nhc = fib_info_nhc(fi, ret);
+ 
+-		if (nhc->nhc_dev == dev) {
+-			dev_match = true;
+-			break;
+-		} else if (l3mdev_master_ifindex_rcu(nhc->nhc_dev) == dev->ifindex) {
+-			dev_match = true;
+-			break;
++			if (nhc_l3mdev_matches_dev(nhc, dev)) {
++				dev_match = true;
++				break;
++			}
+ 		}
+ 	}
+ #else
 
 
