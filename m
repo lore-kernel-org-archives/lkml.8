@@ -2,92 +2,131 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D3DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66100207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F1B207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:37:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gy5WnoYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgFAXhd (ORCPT
+        id S1728861AbgFAXh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 19:37:33 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35790 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgFAXhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 19:37:33 -0400
-IronPort-SDR: pzFqz6AXy3aAmN+R1DT9XDh1ZAKGolt22Zpj1u3nvgbpDnB02PeGgIFU/qzw1/AsjDbqpzgE3z
- ++pPGjzBtLlA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 16:37:33 -0700
-IronPort-SDR: vvL2Lps+K9jGjKC4llNqRQeeD7mgnGfmsRhdPfouypantp5TMVUI1fsJ3dwLJ4xdr5anl7XQJn
- NPQr4wImOMWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="444465628"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga005.jf.intel.com with ESMTP; 01 Jun 2020 16:37:32 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id E9EDB301C5F; Mon,  1 Jun 2020 16:37:32 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 16:37:32 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-Message-ID: <20200601233732.GA691017@tassilo.jf.intel.com>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
- <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
+        Mon, 1 Jun 2020 19:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgFAXh6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 19:37:58 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFBD2C03E96B
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 16:37:57 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id y123so980210vsb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 16:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h8sFjChvsOnugroGpTaalX2UTFDmVFNgsXBxH4Psjpo=;
+        b=gy5WnoYjwVwT+AdnTnVAcMO6xsUKQ3HV+niGGFpzvpJ71eeOdaiZZSd7kfAobSbMVB
+         XOrGkvuWpDYrUOFUBsilWffiTomQfNPW7uKYsoyR5y2XD36uCo2cUMgt6nHkaWzaO123
+         T/6WbGm0oG6415mxA7zL7ifNyV53xlL8haCkWgNxo3DqkVlGD6vVClPWynqWqBMIFxOG
+         CKMngEVfHsCMjzEGuOCRn2tiWiHx9PpwmVZzhCGVvXXb9ZRuJmjy4V3WDGb/sf8PFy6t
+         YX4uEKTDgj/YpyQo0UeuDPOfsqKmCY+dYqlnG3yA7r72gF+ohPsap55WdgXcuBtl8nrm
+         7LHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h8sFjChvsOnugroGpTaalX2UTFDmVFNgsXBxH4Psjpo=;
+        b=aIDwzsfdAnmGvxxTFFJwvAZH/oeAlmgTw7jtkN3PqaXAmo6CfNEVL0ZLy7cnuPn5NX
+         e2cKrqSxhbUxOTyiVWoexNKsbSi4rvnPB1DQ5oNAavsjKKoFBIm4/bX1vnlm8fZ7E1Gz
+         NUanTlqh/566B34CpqCqCnkddHFjKLzP04nh9IuH5GE7Izs4aT5htg8xnjTJjNyBsYf5
+         cbvYrQaJOZYIw1L+I7TyFtOK+vFTvBMxUkXeRWOT7nIGxomKxCaHwfKjwqvD4U/FSSe1
+         205R6yd8Pm+hloz9j4fsv4eKM/JGAjYSzh9rKe6WHZ47QXnVGEYe5/7MBAUhGfGRSfmb
+         vGLg==
+X-Gm-Message-State: AOAM532+UKQMOUc1ma7zJ19x26sPtD+avHcd7iX6Yu0zbfdWlyT0Ppol
+        rqQyRnGxrB9UbZdN3A5zDmu47Lmki5keVhzyWHdy3A==
+X-Google-Smtp-Source: ABdhPJzg702J1EkAo7ZILGUxg4+n2COylsnsv/n0Xy8wNQfF/OkYz+Zf11gC56/0p8tSEx58JooMPRVb9HRwD7H3vnE=
+X-Received: by 2002:a67:ce86:: with SMTP id c6mr16538165vse.51.1591054676310;
+ Mon, 01 Jun 2020 16:37:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
+References: <CAMj1kXErFuvOoG=DB6sz5HBvDuHDiKwWD8uOyLuxaX-u8-+dbA@mail.gmail.com>
+ <20200601231805.207441-1-ndesaulniers@google.com>
+In-Reply-To: <20200601231805.207441-1-ndesaulniers@google.com>
+From:   Peter Collingbourne <pcc@google.com>
+Date:   Mon, 1 Jun 2020 16:37:45 -0700
+Message-ID: <CAMn1gO7MrbgpEzaAYZ3vNnbWPdSsHhMkDNXq9rZajur+sqtBsw@mail.gmail.com>
+Subject: Re: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>, guohanjun@huawei.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lorenzo.pieralisi@arm.com, Mark Rutland <mark.rutland@arm.com>,
+        rjw@rjwysocki.net, Will Deacon <will@kernel.org>,
+        stable@vger.kernel.org, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > or a pathname, or including also the event default of "disabled".
-> 
-> For my cases conversion of pathnames into open fds belongs to external
-> controlling process e.g. like in the examples provided in the patch set.
-> Not sure about "event default of 'disabled'"
+On Mon, Jun 1, 2020 at 4:18 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> Will reported UBSAN warnings:
+> UBSAN: null-ptr-deref in drivers/acpi/acpica/tbfadt.c:459:37
+> UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
+>
+> Looks like the emulated offsetof macro ACPI_OFFSET is causing these. We
+> can avoid this by using the compiler builtin, __builtin_offsetof.
 
-It would be nicer for manual use cases if perf supported the path names
-directly like in Adrian's example, not needing a complex wrapper script.
+Would it be better to s/ACPI_OFFSET/offsetof/g the existing users of
+this macro and remove it? It looks like offsetof is already being used
+pervasively in the kernel, and its definition comes from
+<linux/stddef.h>.
 
--Andi
-> 
-> > 
-> > e.g. add "--control" and support all of:
-> > 
-> > --control
-> > --control 11
-> > --control 11,15
-> > --control 11,15,disabled
-> > --control 11,,disabled
-> > --control /tmp/my-perf.fifo
-> > --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
-> > --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
-> > --control /tmp/my-perf.fifo,,disabled
-> > 
-> > Regards
-> > Adrian
-> > 
-> 
-> Regards,
-> Alexey
-> 
+Peter
+
+
+Peter
+
+> The non-kernel runtime of UBSAN would print:
+> runtime error: member access within null pointer of type
+> for this macro.
+>
+> Link: https://lore.kernel.org/lkml/20200521100952.GA5360@willie-the-truck/
+> Cc: stable@vger.kernel.org
+> Reported-by: Will Deacon <will@kernel.org>
+> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  include/acpi/actypes.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
+> index 4defed58ea33..04359c70b198 100644
+> --- a/include/acpi/actypes.h
+> +++ b/include/acpi/actypes.h
+> @@ -508,7 +508,7 @@ typedef u64 acpi_integer;
+>
+>  #define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, (acpi_size) (i))
+>  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
+> -#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+> +#define ACPI_OFFSET(d, f)               __builtin_offsetof(d, f)
+>  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
+>  #define ACPI_PTR_TO_PHYSADDR(i)         ACPI_TO_INTEGER(i)
+>
+> --
+> 2.27.0.rc2.251.g90737beb825-goog
+>
