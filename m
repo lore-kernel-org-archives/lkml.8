@@ -2,51 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0256C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFED7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C38206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E8C20825
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035092;
-	bh=qMbni6eAjeuG2+cWkNxEQwzV+JWizX32l1JotJgiewA=;
+	s=default; t=1591035095;
+	bh=DTZXf56xoqkdM1pDwpE3oN8ES3/B1f9WROuREZ/xyew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PGyoNT2nB6As+7F0JI7LcK4U28I4fmCw/xBw9nE3iZxjAJRjbb0qFMCLneFupsAgE
-	 LSpqdZU4Gu6E6Nz6ca8rDbLceaWW7y7vUYnHI35dMtq+g8eD47KIwfpsaY43oYe+1d
-	 kaDV87y1Ice54Jkngn++EwQtlsaSMDfvSkRwHYtM=
+	b=Hf/ThHHVmraPgG2ACEPDLTpbHmiU7Rw83Z2QNNLtph1m6hY0bwCRRFbe2m4LvOvfq
+	 BWLFaet2RCKIuwzFpAPlTaqTfQ0LMaXiHNeMDtEgXDm4t0//qybBpYGxkQxoW1SpMT
+	 9xrPYpJORyOlKyyr1ugoxrJh6cdBypqxrg9ptDkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbgFASLc (ORCPT
+        id S1731124AbgFASLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58492 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729098AbgFASLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:21 -0400
+        id S1730386AbgFASLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3C392077D;
-        Mon,  1 Jun 2020 18:11:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC332077D;
+        Mon,  1 Jun 2020 18:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035080;
-        bh=qMbni6eAjeuG2+cWkNxEQwzV+JWizX32l1JotJgiewA=;
+        s=default; t=1591035084;
+        bh=DTZXf56xoqkdM1pDwpE3oN8ES3/B1f9WROuREZ/xyew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyBGr0C4e7jt3DS7tlZP38/G8xIEoTa3GqpUtRHO+2lGxcHu6QsTHxOmxkeCtkujw
-         uMJ9wWU4NVbKR4zEYBcZmLSunJSoR+I+Bd0emZ65TYqlS2a6ybGaTPnW2RImqmr8ki
-         kAJqUwUVnC7Kt5gte7556IaBqNML2SWEsNO6ioC8=
+        b=pSO1MabWwDg+IYeAK5NuciCAOdRLw/NZxHhrB80M2e7cREX7z/kt2Da4m4qBvbrP0
+         Sv0M30Bj22rfG8Cf/+MJ6xn9vBx/d28wOU9Vmo5zWlOEozUH1o/74i1KkJ/dyxmWCE
+         zep63jYyMgp30M0MioiuMXwRuCQ1We+N5kAUVBYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 106/142] parisc: Fix kernel panic in mem_init()
-Date:   Mon,  1 Jun 2020 19:54:24 +0200
-Message-Id: <20200601174048.945137274@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fd5332e429401bf42d18@syzkaller.appspotmail.com,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.4 107/142] cfg80211: fix debugfs rename crash
+Date:   Mon,  1 Jun 2020 19:54:25 +0200
+Message-Id: <20200601174049.041697123@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -59,52 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit bf71bc16e02162388808949b179d59d0b571b965 ]
+commit 0bbab5f0301587cad4e923ccc49bb910db86162c upstream.
 
-The Debian kernel v5.6 triggers this kernel panic:
+Removing the "if (IS_ERR(dir)) dir = NULL;" check only works
+if we adjust the remaining code to not rely on it being NULL.
+Check IS_ERR_OR_NULL() before attempting to dereference it.
 
- Kernel panic - not syncing: Bad Address (null pointer deref?)
- Bad Address (null pointer deref?): Code=26 (Data memory access rights trap) at addr 0000000000000000
- CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-2-parisc64 #1 Debian 5.6.14-1
-  IAOQ[0]: mem_init+0xb0/0x150
-  IAOQ[1]: mem_init+0xb4/0x150
-  RP(r2): start_kernel+0x6c8/0x1190
- Backtrace:
-  [<0000000040101ab4>] start_kernel+0x6c8/0x1190
-  [<0000000040108574>] start_parisc+0x158/0x1b8
+I'm not actually entirely sure this fixes the syzbot crash as
+the kernel config indicates that they do have DEBUG_FS in the
+kernel, but this is what I found when looking there.
 
-on a HP-PARISC rp3440 machine with this memory layout:
- Memory Ranges:
-  0) Start 0x0000000000000000 End 0x000000003fffffff Size   1024 MB
-  1) Start 0x0000004040000000 End 0x00000040ffdfffff Size   3070 MB
+Cc: stable@vger.kernel.org
+Fixes: d82574a8e5a4 ("cfg80211: no need to check return value of debugfs_create functions")
+Reported-by: syzbot+fd5332e429401bf42d18@syzkaller.appspotmail.com
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200525113816.fc4da3ec3d4b.Ica63a110679819eaa9fb3bc1b7437d96b1fd187d@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix the crash by avoiding virt_to_page() and similar functions in
-mem_init() until the memory zones have been fully set up.
-
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: stable@vger.kernel.org # v5.0+
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/mm/init.c | 2 +-
+ net/wireless/core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/parisc/mm/init.c b/arch/parisc/mm/init.c
-index ddca8287d43b..3e54484797f6 100644
---- a/arch/parisc/mm/init.c
-+++ b/arch/parisc/mm/init.c
-@@ -588,7 +588,7 @@ void __init mem_init(void)
- 			> BITS_PER_LONG);
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -142,7 +142,7 @@ int cfg80211_dev_rename(struct cfg80211_
+ 	if (result)
+ 		return result;
  
- 	high_memory = __va((max_pfn << PAGE_SHIFT));
--	set_max_mapnr(page_to_pfn(virt_to_page(high_memory - 1)) + 1);
-+	set_max_mapnr(max_low_pfn);
- 	memblock_free_all();
- 
- #ifdef CONFIG_PA11
--- 
-2.25.1
-
+-	if (rdev->wiphy.debugfsdir)
++	if (!IS_ERR_OR_NULL(rdev->wiphy.debugfsdir))
+ 		debugfs_rename(rdev->wiphy.debugfsdir->d_parent,
+ 			       rdev->wiphy.debugfsdir,
+ 			       rdev->wiphy.debugfsdir->d_parent, newname);
 
 
