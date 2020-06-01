@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BD3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB421C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 443EB206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9512206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037277;
-	bh=tirxYBNn+X1HyFht4y1bGde11FRf1xyzvDbSwH9iKUQ=;
+	s=default; t=1591037280;
+	bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FdZKZ/uDF3ip6ZPTk7DP1oZ3/+i2suVqJ9ZO4NHe1p/Bgfi1OcY47NYL51jvk2L8B
-	 O8rPIB8bygI3bjcExTPCMvKcc5csgpxORijV8K6dcW0fXCZQ5+3x6Hg5nFpehr3Ryb
-	 +uStW8JnH4+wR+7hFWkf9jWUV1ZzdsJ2hhdRY0XI=
+	b=CwFsksMhrUrMjF5MAd4qFqzOBmXgllFTJ9clE4tvk9iCDetz9Gpk24KTvU/ODrT2G
+	 6e3Xq/wnigMFWOSTY4f5LdkGyW5uGJnmxYAncAdYRXOiTvxUmQ9LImwXZqCGfv6o3K
+	 vlXzWPj23RfmnFln5Z7a5Lsk5jW3qkfI/Q0AUtdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgFASr4 (ORCPT
+        id S1729937AbgFASHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53936 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730652AbgFASH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:57 -0400
+        id S1730558AbgFASHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B85206E2;
-        Mon,  1 Jun 2020 18:07:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55B9E206E2;
+        Mon,  1 Jun 2020 18:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034876;
-        bh=tirxYBNn+X1HyFht4y1bGde11FRf1xyzvDbSwH9iKUQ=;
+        s=default; t=1591034833;
+        bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gepH6kouOa9SJk0I0V38dPm0f/1eZMjeIOiZinHj75rACLeDgnt5WFMByaAz3KCj8
-         HToeVBGzHSuFGiT2E56YIr/eHFLTcU9VcQPUGDGOxrPzwnia3QsBqqk9zyyc1ddQ8o
-         tK0iMgjSxgpZZXFtNy2XaNxQ0q9MMzKK3TlK4M2E=
+        b=vGnR0HSevNf8i9V9Iurk+XMl2HL6gBpsU/G9wUB19im04SakT/m9CggN3jBre6BnC
+         xmyUlVQPEOFixu+T1c3JpV4oASp2ebBhhpulsdxkUakOhp5mDLNhsVGcux4Zz+44Rt
+         D1Ce3uT8c2vaBa4Me8KQUq5+5U5Bs7ZCoRORdpg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/142] net: freescale: select CONFIG_FIXED_PHY where needed
-Date:   Mon,  1 Jun 2020 19:53:29 +0200
-Message-Id: <20200601174043.092040249@linuxfoundation.org>
+Subject: [PATCH 5.4 034/142] arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
+Date:   Mon,  1 Jun 2020 19:53:12 +0200
+Message-Id: <20200601174041.498168784@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -61,64 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 99352c79af3e5f2e4724abf37fa5a2a3299b1c81 ]
+[ Upstream commit c617ed88502d0b05149e7f32f3b3fd8a0663f7e2 ]
 
-I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
-and CONFIG_GIANFAR=y:
+The status was removed of the '&gmac2phy' node with the apply
+of a patch long time ago, so fix status for '&gmac2phy'
+in 'rk3328-evb.dts'.
 
-x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
-
-It seems the same thing can happen with dpaa and ucc_geth, so change
-all three to do an explicit 'select FIXED_PHY'.
-
-The fixed-phy driver actually has an alternative stub function that
-theoretically allows building network drivers when fixed-phy is
-disabled, but I don't see how that would help here, as the drivers
-presumably would not work then.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200425122345.12902-2-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/Kconfig      | 2 ++
- drivers/net/ethernet/freescale/dpaa/Kconfig | 1 +
- 2 files changed, 3 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
-index 6a7e8993119f..941c7e667afc 100644
---- a/drivers/net/ethernet/freescale/Kconfig
-+++ b/drivers/net/ethernet/freescale/Kconfig
-@@ -77,6 +77,7 @@ config UCC_GETH
- 	depends on QUICC_ENGINE
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	---help---
- 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
- 	  which is available on some Freescale SOCs.
-@@ -90,6 +91,7 @@ config GIANFAR
- 	depends on HAS_DMA
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	select CRC32
- 	---help---
- 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,
-diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
-index 3b325733a4f8..0a54c7e0e4ae 100644
---- a/drivers/net/ethernet/freescale/dpaa/Kconfig
-+++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
-@@ -3,6 +3,7 @@ menuconfig FSL_DPAA_ETH
- 	tristate "DPAA Ethernet"
- 	depends on FSL_DPAA && FSL_FMAN
- 	select PHYLIB
-+	select FIXED_PHY
- 	select FSL_FMAN_MAC
- 	---help---
- 	  Data Path Acceleration Architecture Ethernet driver,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+index 6abc6f4a86cf..05265b38cc02 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -86,7 +86,7 @@
+ 	assigned-clock-rate = <50000000>;
+ 	assigned-clocks = <&cru SCLK_MAC2PHY>;
+ 	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
+-
++	status = "okay";
+ };
+ 
+ &i2c1 {
 -- 
 2.25.1
 
