@@ -2,177 +2,177 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83065C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45617C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60CB720659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037129;
-	bh=6XmarllXwyPHY9soT+MmJh7I5LdAbhyu86ak/5Kzbic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K93ghrD6x1SU9mN0FjL4sU4Q4o0bI/1uMXYqu/e24EfCJyiCNC6grBP+63ZWUVai1
-	 jInHCyOvqPtsvfdtCsmRXPWXG+Tsulo7sUHHepdVpcqSdXK5DE174PbHZjg3AVSciz
-	 OnXwhFOX4lq8AGzzvrsTXiqO1sEA80CU2f03QPcQ=
+	by mail.kernel.org (Postfix) with ESMTP id 19B0520842
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eMwUwSMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgFASp2 (ORCPT
+        id S1730771AbgFASpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729956AbgFASJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:09:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC62206E2;
-        Mon,  1 Jun 2020 18:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034968;
-        bh=6XmarllXwyPHY9soT+MmJh7I5LdAbhyu86ak/5Kzbic=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ygWKwS05wMnA8OqQOZH3v5gPH4L2x0Q94o3yhakCy+rF7pF7DDjcpXeZgde799DOD
-         5HHTaf2GcRpQ1u9fbxjZGa5At9k3lk7QduEZYjlO5m2TSAhQOpqGQXSSzoKAp2xUpN
-         KscqBNhzX8LxosUaRafQHlJ9z0BbcVcTjO5Ub2mw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 092/142] ALSA: usb-audio: Quirks for Gigabyte TRX40 Aorus Master onboard audio
-Date:   Mon,  1 Jun 2020 19:54:10 +0200
-Message-Id: <20200601174047.487958844@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
-References: <20200601174037.904070960@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 1 Jun 2020 14:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729956AbgFASpb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:45:31 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEB9C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:45:30 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f7so10191837ejq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G1VMPDaeJfT8+NmaRje7sflS/Zy0f/09GM/fygivpDo=;
+        b=eMwUwSMmFyEn7DmLF4myi59y7ESt2HQDfbtUySBAfQf+MVQoCAq2ISQG8jRaF4we3D
+         EDsTMPkk77N3GGd43Kw601vDoU1sLinW5DaqzZqH9oHiGqEB+0a6nTXaw0b055PVIEEV
+         NQtwRu5bwRqWwQkLq43ahZjfuqUrc7H5hFtF0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G1VMPDaeJfT8+NmaRje7sflS/Zy0f/09GM/fygivpDo=;
+        b=ZSUZJXxD5pSuMCy4KZu5emwnuUPWTaGp/02AhtCm1iRW17oYXXBSuPj9ALGKZtGX/m
+         l0TnMHUMoB86WqZfri44UvPjknM7WQ0Y+XbeakjAhEpOrjpk5ybJsxSkatPBhdejm2uh
+         HKHnX9kVj41XIPLsDmYxwCRfSP/shKNKBg9VhguJXvpBi7RD0vhDoxdWdq6ldCom8h7Q
+         cLP/BJOJq+WfU4T4nRYhJqhJf51V97cHzJx87pcYUcXde5eN6wJgxtFRkrI/Lzun7M4q
+         ElZfZGTB4Hod7+3I2xxKWn43tnlHnQVQX0drSL/sSpQcsx2qvQI1E0Fyw/R99YLHeQcf
+         9ggQ==
+X-Gm-Message-State: AOAM533dVsMxVcxPeKratlR63GpVegYuU6sms7GnaOs/fkv1Re2pJS3K
+        oBS0uzQMAmcOw/O6Eh2LEwW8PJbRk/laLw==
+X-Google-Smtp-Source: ABdhPJx1PWL7KBlrTdeU6BF+X7fko9ipCpCiO9IvwffBouQasH4zw+PfzuqUVhe9yjVeX9MghmlTCg==
+X-Received: by 2002:a17:906:e0cf:: with SMTP id gl15mr6519669ejb.501.1591037128894;
+        Mon, 01 Jun 2020 11:45:28 -0700 (PDT)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
+        by smtp.gmail.com with ESMTPSA id h10sm356751ejb.2.2020.06.01.11.45.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 11:45:28 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id c71so487999wmd.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:45:27 -0700 (PDT)
+X-Received: by 2002:a7b:c622:: with SMTP id p2mr581952wmk.55.1591037127078;
+ Mon, 01 Jun 2020 11:45:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200529130405.929429-1-maxime.chevallier@bootlin.com>
+In-Reply-To: <20200529130405.929429-1-maxime.chevallier@bootlin.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 1 Jun 2020 20:45:14 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5AVD+LhYZziqNUfga1sCp98MMu+ESgBMagS1n6++ae=pg@mail.gmail.com>
+Message-ID: <CAAFQd5AVD+LhYZziqNUfga1sCp98MMu+ESgBMagS1n6++ae=pg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] media: rockchip: Introduce driver for the camera
+ interface on PX30
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+Hi Maxime,
 
-[ Upstream commit 7f5ad9c9003425175f46c94df380e8c9e558cfb5 ]
+On Fri, May 29, 2020 at 3:04 PM Maxime Chevallier
+<maxime.chevallier@bootlin.com> wrote:
+>
+> Hello everyone,
+>
+> Here's a V2 of the series adding very basic support for the camera interface on
+> the Rockchip PX30 SoC.
+>
+> Thanks to everyone that commented on the first series, your reviews were
+> very helpful :)
+>
+> This Camera Interface is also supported on other Rockchip SoC such as
+> the RK1808, RK3128, RK3288 and RK3288, but for now I've only been able to
+> test it on the PX30, using a PAL format.
 
-Gigabyte TRX40 Aorus Master is equipped with two USB-audio devices,
-a Realtek ALC1220-VB codec (USB ID 0414:a001) and an ESS SABRE9218 DAC
-(USB ID 0414:a000).  The latter serves solely for the headphone output
-on the front panel while the former serves for the rest I/Os (mostly
-for the I/Os in the rear panel but also including the front mic).
+How does this hardware relate to the one handled by the rkisp1 driver
+that is available under staging/media/rkisp1? It was written with
+RK3399 in mind, but I have a loose recollection that the hardware in
+RK3288 was roughly the same.
 
-Both chips do work more or less with the unmodified USB-audio driver,
-but there are a few glitches.  The ALC1220-VB returns an error for an
-inquiry to some jacks, as already seen on other TRX40-based mobos.
-However this machine has a slightly incompatible configuration, hence
-the existing mapping cannot be used as is.
++Helen Koike +Dafna Hirschfeld working on the rkisp1 driver.
 
-Meanwhile the ESS chip seems working without any quirk.  But since
-both audio devices don't provide any specific names, both cards appear
-as "USB-Audio", and it's quite confusing for users.
+Best regards,
+Tomasz
 
-This patch is an attempt to overcome those issues:
-
-- The specific mapping table for ALC1220-VB is provided, reducing the
-  non-working nodes and renaming the badly chosen controls.
-  The connector map isn't needed here unlike other TRX40 quirks.
-
-- For both USB IDs (0414:a000 and 0414:a001), provide specific card
-  name strings, so that user-space can identify more easily; and more
-  importantly, UCM profile can be applied to each.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526082810.29506-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/usb/mixer_maps.c   | 19 +++++++++++++++++++
- sound/usb/quirks-table.h | 25 +++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
-
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index 2255f9abd7a5..ac84f0b2b0bc 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -387,6 +387,21 @@ static const struct usbmix_connector_map trx40_mobo_connector_map[] = {
- 	{}
- };
- 
-+/* Rear panel + front mic on Gigabyte TRX40 Aorus Master with ALC1220-VB */
-+static const struct usbmix_name_map aorus_master_alc1220vb_map[] = {
-+	{ 17, NULL },			/* OT, IEC958?, disabled */
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
-+	{ 16, "Line Out" },		/* OT */
-+	{ 22, "Line Out Playback" },	/* FU */
-+	{ 7, "Line" },			/* IT */
-+	{ 19, "Line Capture" },		/* FU */
-+	{ 8, "Mic" },			/* IT */
-+	{ 20, "Mic Capture" },		/* FU */
-+	{ 9, "Front Mic" },		/* IT */
-+	{ 21, "Front Mic Capture" },	/* FU */
-+	{}
-+};
-+
- /*
-  * Control map entries
-  */
-@@ -506,6 +521,10 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 		.id = USB_ID(0x05a7, 0x1020),
- 		.map = bose_companion5_map,
- 	},
-+	{	/* Gigabyte TRX40 Aorus Master (rear panel + front mic) */
-+		.id = USB_ID(0x0414, 0xa001),
-+		.map = aorus_master_alc1220vb_map,
-+	},
- 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
- 		.id = USB_ID(0x0414, 0xa002),
- 		.map = trx40_mobo_map,
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index aa4c16ce0e57..bbae11605a4c 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3650,4 +3650,29 @@ ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
- ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* Asrock TRX40 Creator */
- #undef ALC1220_VB_DESKTOP
- 
-+/* Two entries for Gigabyte TRX40 Aorus Master:
-+ * TRX40 Aorus Master has two USB-audio devices, one for the front headphone
-+ * with ESS SABRE9218 DAC chip, while another for the rest I/O (the rear
-+ * panel and the front mic) with Realtek ALC1220-VB.
-+ * Here we provide two distinct names for making UCM profiles easier.
-+ */
-+{
-+	USB_DEVICE(0x0414, 0xa000),
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
-+		.vendor_name = "Gigabyte",
-+		.product_name = "Aorus Master Front Headphone",
-+		.profile_name = "Gigabyte-Aorus-Master-Front-Headphone",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
-+{
-+	USB_DEVICE(0x0414, 0xa001),
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
-+		.vendor_name = "Gigabyte",
-+		.product_name = "Aorus Master Main Audio",
-+		.profile_name = "Gigabyte-Aorus-Master-Main-Audio",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
-+
- #undef USB_DEVICE_VENDOR_SPEC
--- 
-2.25.1
-
-
-
+>
+> This driver is mostly based on the driver found in Rockchip's BSP, that
+> has been trimmed down to support the set of features that I was able to test,
+> that is pretty much a very basic one-frame capture and video streaming
+> with GStreamer.
+>
+> This first draft only supports the Parallel interface, although the
+> controller has support for BT656 and CSI2.
+>
+> Finally, this controller has an iommu that could be used in this driver,
+> but as of today I've not been able to get it to work.
+>
+> Any review is welcome.
+>
+> Thanks,
+>
+> Maxime
+>
+> --- Changes since V1 ---
+>
+>  - Took reviews from Rob, Hans, Robin and Heiko into account :
+>   - Renamed the clocks in the binding
+>   - Fixed the DT schema compiling
+>   - Fixed a few typos
+>   - Used the clk bulk API
+>   - Used the reset array API
+>   - Changed a few helpers for more suitable ones
+>   - Rebased on 5.7-rc7
+>
+>
+>
+> Maxime Chevallier (3):
+>   media: dt-bindings: media: Document Rockchip CIF bindings
+>   media: rockchip: Introduce driver for Rockhip's camera interface
+>   arm64: dts: rockchip: Add the camera interface description of the PX30
+>
+>  .../bindings/media/rockchip-cif.yaml          |  100 ++
+>  arch/arm64/boot/dts/rockchip/px30.dtsi        |   12 +
+>  drivers/media/platform/Kconfig                |   13 +
+>  drivers/media/platform/Makefile               |    1 +
+>  drivers/media/platform/rockchip/cif/Makefile  |    3 +
+>  drivers/media/platform/rockchip/cif/capture.c | 1170 +++++++++++++++++
+>  drivers/media/platform/rockchip/cif/dev.c     |  358 +++++
+>  drivers/media/platform/rockchip/cif/dev.h     |  213 +++
+>  drivers/media/platform/rockchip/cif/regs.h    |  256 ++++
+>  9 files changed, 2126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
+>  create mode 100644 drivers/media/platform/rockchip/cif/Makefile
+>  create mode 100644 drivers/media/platform/rockchip/cif/capture.c
+>  create mode 100644 drivers/media/platform/rockchip/cif/dev.c
+>  create mode 100644 drivers/media/platform/rockchip/cif/dev.h
+>  create mode 100644 drivers/media/platform/rockchip/cif/regs.h
+>
+> --
+> 2.25.4
+>
