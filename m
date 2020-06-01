@@ -2,53 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B96EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD4DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37FB2206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A0720679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037702;
-	bh=bHFNpJmKmHKprftzIGOaRHADYjg7o8+IY4OvdCrstTs=;
+	s=default; t=1591037706;
+	bh=zSDmvYYRnv1+LlKvRo10Y1i8mPchkOobWDngou8BWwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iN9ZJkdu6lr5BNvmU6ed1C3hcnjwpvNPKxnjz2gsMhuFUxCFvAnTlCJF6c3TXajpt
-	 I/BvaTz6jQpXpMn3psspxx3KsiyqgK5dZvVXEjbpJHEba0insQrrMxIKMI+7e4GRE7
-	 JGtxDJtXBEYvJ/w2vw4Q/yeEbM9QrLa5a7ipIRz4=
+	b=iaeW3UVsOzuJ/GU9nrAJnESfFsiD6C2xHxQBhiIkoswbFBm2gEzY1WpFtbKRXDY2T
+	 y2kDH2Q3oU0vPnosxHr4Ev3lRUGoyJYIqr05igRBjiJa226O+EWn52NxWg+vFCo2ER
+	 jA1LD6MSLMnSL8+AL3ewQ/a0kWFQNBmPGT49DAxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbgFASzB (ORCPT
+        id S1730360AbgFASzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:55:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44782 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgFASBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:45 -0400
+        id S1729814AbgFASBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D642065C;
-        Mon,  1 Jun 2020 18:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E75EB20776;
+        Mon,  1 Jun 2020 18:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034505;
-        bh=bHFNpJmKmHKprftzIGOaRHADYjg7o8+IY4OvdCrstTs=;
+        s=default; t=1591034494;
+        bh=zSDmvYYRnv1+LlKvRo10Y1i8mPchkOobWDngou8BWwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fiK0A6pg0bna6z8UxG3q1wPUDFDS1cooWsQZCEmw5DrUuhrrvnOVXnqfg4dV3FusC
-         i94Tm1MY+/J59hMXmE2Nn3fgrEtEGVvo/NhbEY/HFQUTZN1UwXKxUrf44etmIO5O81
-         ikgys2oBeWW3RXXMJ01M1rqtk6tG7rxnQq1mtws4=
+        b=EoO3rpa93i/bz5AcS4/7ohiD4ALCnaVx8jkNGe/ghBIVKd7gTLh/YdOi4V4IeFBHd
+         YTUDeQ/FEGcTJm2xZD/fbL8yhoNssa74ya/QHqMHbrwZra7HSTl/Foz2CEdj7zYVoI
+         9WkCHe/qUB+boo5E7Q5aQkUOh5db7DO8gm22KHPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coverity <scan-admin@coverity.com>,
-        Steve French <stfrench@microsoft.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/77] cifs: Fix null pointer check in cifs_read
-Date:   Mon,  1 Jun 2020 19:53:27 +0200
-Message-Id: <20200601174020.389413239@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Alexander Potapenko <glider@google.com>,
+        Borislav Petkov <bp@suse.de>, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.14 55/77] copy_xstate_to_kernel(): dont leave parts of destination uninitialized
+Date:   Mon,  1 Jun 2020 19:54:00 +0200
+Message-Id: <20200601174025.927328180@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -61,36 +60,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 9bd21d4b1a767c3abebec203342f3820dcb84662 ]
+commit 9e4636545933131de15e1ecd06733538ae939b2f upstream.
 
-Coverity scan noted a redundant null check
+copy the corresponding pieces of init_fpstate into the gaps instead.
 
-Coverity-id: 728517
-Reported-by: Coverity <scan-admin@coverity.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@kernel.org
+Tested-by: Alexander Potapenko <glider@google.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/cifs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/fpu/xstate.c |   86 ++++++++++++++++++++++++-------------------
+ 1 file changed, 48 insertions(+), 38 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 662977b8d6ae..72e7cbfb325a 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3496,7 +3496,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
- 			 * than it negotiated since it will refuse the read
- 			 * then.
- 			 */
--			if ((tcon->ses) && !(tcon->ses->capabilities &
-+			if (!(tcon->ses->capabilities &
- 				tcon->ses->server->vals->cap_large_files)) {
- 				current_read_size = min_t(uint,
- 					current_read_size, CIFSMaxBufSize);
--- 
-2.25.1
-
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -964,18 +964,31 @@ static inline bool xfeatures_mxcsr_quirk
+ 	return true;
+ }
+ 
+-/*
+- * This is similar to user_regset_copyout(), but will not add offset to
+- * the source data pointer or increment pos, count, kbuf, and ubuf.
+- */
+-static inline void
+-__copy_xstate_to_kernel(void *kbuf, const void *data,
+-			unsigned int offset, unsigned int size, unsigned int size_total)
++static void fill_gap(unsigned to, void **kbuf, unsigned *pos, unsigned *count)
+ {
+-	if (offset < size_total) {
+-		unsigned int copy = min(size, size_total - offset);
++	if (*pos < to) {
++		unsigned size = to - *pos;
++
++		if (size > *count)
++			size = *count;
++		memcpy(*kbuf, (void *)&init_fpstate.xsave + *pos, size);
++		*kbuf += size;
++		*pos += size;
++		*count -= size;
++	}
++}
+ 
+-		memcpy(kbuf + offset, data, copy);
++static void copy_part(unsigned offset, unsigned size, void *from,
++			void **kbuf, unsigned *pos, unsigned *count)
++{
++	fill_gap(offset, kbuf, pos, count);
++	if (size > *count)
++		size = *count;
++	if (size) {
++		memcpy(*kbuf, from, size);
++		*kbuf += size;
++		*pos += size;
++		*count -= size;
+ 	}
+ }
+ 
+@@ -988,8 +1001,9 @@ __copy_xstate_to_kernel(void *kbuf, cons
+  */
+ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int offset_start, unsigned int size_total)
+ {
+-	unsigned int offset, size;
+ 	struct xstate_header header;
++	const unsigned off_mxcsr = offsetof(struct fxregs_state, mxcsr);
++	unsigned count = size_total;
+ 	int i;
+ 
+ 	/*
+@@ -1005,46 +1019,42 @@ int copy_xstate_to_kernel(void *kbuf, st
+ 	header.xfeatures = xsave->header.xfeatures;
+ 	header.xfeatures &= ~XFEATURE_MASK_SUPERVISOR;
+ 
++	if (header.xfeatures & XFEATURE_MASK_FP)
++		copy_part(0, off_mxcsr,
++			  &xsave->i387, &kbuf, &offset_start, &count);
++	if (header.xfeatures & (XFEATURE_MASK_SSE | XFEATURE_MASK_YMM))
++		copy_part(off_mxcsr, MXCSR_AND_FLAGS_SIZE,
++			  &xsave->i387.mxcsr, &kbuf, &offset_start, &count);
++	if (header.xfeatures & XFEATURE_MASK_FP)
++		copy_part(offsetof(struct fxregs_state, st_space), 128,
++			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
++	if (header.xfeatures & XFEATURE_MASK_SSE)
++		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
++			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
++	/*
++	 * Fill xsave->i387.sw_reserved value for ptrace frame:
++	 */
++	copy_part(offsetof(struct fxregs_state, sw_reserved), 48,
++		  xstate_fx_sw_bytes, &kbuf, &offset_start, &count);
+ 	/*
+ 	 * Copy xregs_state->header:
+ 	 */
+-	offset = offsetof(struct xregs_state, header);
+-	size = sizeof(header);
+-
+-	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
++	copy_part(offsetof(struct xregs_state, header), sizeof(header),
++		  &header, &kbuf, &offset_start, &count);
+ 
+-	for (i = 0; i < XFEATURE_MAX; i++) {
++	for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
+ 		/*
+ 		 * Copy only in-use xstates:
+ 		 */
+ 		if ((header.xfeatures >> i) & 1) {
+ 			void *src = __raw_xsave_addr(xsave, 1 << i);
+ 
+-			offset = xstate_offsets[i];
+-			size = xstate_sizes[i];
+-
+-			/* The next component has to fit fully into the output buffer: */
+-			if (offset + size > size_total)
+-				break;
+-
+-			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
++			copy_part(xstate_offsets[i], xstate_sizes[i],
++				  src, &kbuf, &offset_start, &count);
+ 		}
+ 
+ 	}
+-
+-	if (xfeatures_mxcsr_quirk(header.xfeatures)) {
+-		offset = offsetof(struct fxregs_state, mxcsr);
+-		size = MXCSR_AND_FLAGS_SIZE;
+-		__copy_xstate_to_kernel(kbuf, &xsave->i387.mxcsr, offset, size, size_total);
+-	}
+-
+-	/*
+-	 * Fill xsave->i387.sw_reserved value for ptrace frame:
+-	 */
+-	offset = offsetof(struct fxregs_state, sw_reserved);
+-	size = sizeof(xstate_fx_sw_bytes);
+-
+-	__copy_xstate_to_kernel(kbuf, xstate_fx_sw_bytes, offset, size, size_total);
++	fill_gap(size_total, &kbuf, &offset_start, &count);
+ 
+ 	return 0;
+ }
 
 
