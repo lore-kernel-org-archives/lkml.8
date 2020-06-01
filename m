@@ -2,117 +2,73 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B872C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9BC206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:21:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/HAY6GA"
+	by mail.kernel.org (Postfix) with ESMTP id 060532074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590985538;
+	bh=j5jBspOPRRyK89NladxWTeYhp7KqBe+iA6sF8n3bGvY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UPeFLDBlpafsgsqQtEQjjwIj/wJ9Rd0oUJFaBBskEkDcxNXKJu67LouwT4Jpr+7H+
+	 vVSgW1mP4X2cz2QCzf6d7O3bqBgUwy6V/VXT/QZ8/4kiGY1J6r5wS57FB6EOIEJJqy
+	 36tSspFejcCuXJxQ+bc6xOz7o7vfnpkXUppeaMFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgFAEVH (ORCPT
+        id S1725946AbgFAEZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 00:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgFAEVG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 00:21:06 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F03C08C5CA
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:21:04 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id nm22so3728106pjb.4
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:21:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0pWooxPmBrlgQ0LNPI090mpeVBdObo+y6HOQ/sjn93M=;
-        b=o/HAY6GAL/o9D0bF49hI0zAx9I03e67slE/J69vOt7Z/VccdElcCDANHYaQkS9Lfe7
-         Uspqlwni3/80XZIqsoxxkoVb+4P++uwAnUP9N47RVTxp2wscjk51IU8NAzv16HO81fJA
-         pHd1UWFHm1kKUyYU6HAoeZfS4bbMf0WtqgbMyb9xlwLigL9grjMhLStMHLEFJYk2z5gP
-         qU1JNbhmtFKNC8cR3Ml69qflav4STGcLjNU6BAKzBh1uYQjvz4ubq8iL51E2rY2IINmw
-         oUqpJWQJeEkiqZ+6pB3Sp3F/jwJzVVg4wba2SrTI2WvFT6VjJ8iCelmsvX7zEd1FGQz+
-         5QBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0pWooxPmBrlgQ0LNPI090mpeVBdObo+y6HOQ/sjn93M=;
-        b=QMoJjjGcoJaVRmFWyMjXL/TImq2zI2Oo/Lvb/2kz+dIZrfpr9I4C5p7YrzHzvlh5Gc
-         ZHwRlpOTy9ndGGboRAKThX8xyCofNT3jwuu7x4UhiV65lXfmR+J4Tvf0SijDiizLaDBz
-         HxmbiwhlPJB0OCvjH5lu05vEbVNkzxniYz4utc6MBhJQM5ibEYT50SbpT+mXNF0E/fSi
-         7qnwV/z4gDjpViduPQVSwxfKswJ4T3cwlgsorzSZZe2QinkP3Gy/hkTiEjLvu3SK4mZw
-         X6OcpRj3m/EIO8RFCZTiiFwoTBLbGxF5pl2peOm8FNjZwP+e2yp+LL486E1wERcVyZPl
-         lZBA==
-X-Gm-Message-State: AOAM532M68vj0jN6VJjuGkyYYsCILu6WP2Ru6Q7aeb7XSKtUKVSub7Hm
-        p23YjWEYDzCh7MPkf4NPfJ4WZw==
-X-Google-Smtp-Source: ABdhPJwZZt2+S77vjfH5Yt9RxzONnKBH9FVd8j0bBSGTx4iHzb4Pl1xki3aDzKGPlCl/ZfHZJW6x6g==
-X-Received: by 2002:a17:90a:b90:: with SMTP id 16mr21862974pjr.85.1590985264553;
-        Sun, 31 May 2020 21:21:04 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id t4sm9749569pfh.5.2020.05.31.21.21.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 May 2020 21:21:03 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 09:51:02 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/11] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200601042102.cki4yww56puu4zt7@vireshk-i7>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+        Mon, 1 Jun 2020 00:25:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgFAEZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 00:25:36 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7289206C3;
+        Mon,  1 Jun 2020 04:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590985536;
+        bh=j5jBspOPRRyK89NladxWTeYhp7KqBe+iA6sF8n3bGvY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ctMK8DU8Kes5cmCcdUsbGl5ssqIeYxk+5Cq1f6NFLGnPQTEd9MHfLRZxkfLmwV023
+         M63vU7FyJB0FuaA89xohVD9RGEjfAjqn3xQF7+RgolQqN0jvhJOQVWSqiYkDMTaMsw
+         Ujcx/KjXOULn2HAbD7SZIMecHa7x94ZvU+S2cRpo=
+Date:   Mon, 1 Jun 2020 07:25:32 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Lijun Ou <oulijun@huawei.com>, Xi Wang <wangxi11@huawei.com>,
+        "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] RDMA/hns: Uninitialized variable in
+ modify_qp_init_to_rtr()
+Message-ID: <20200601042532.GB34024@unreal>
+References: <20200529083918.GA1298465@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200529083918.GA1298465@mwanda>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-05-20, 17:40, Serge Semin wrote:
-> This array property is used to indicate the maximum burst transaction
-> length supported by each DMA channel.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
-> 
+On Fri, May 29, 2020 at 11:39:18AM +0300, Dan Carpenter wrote:
+> The "dmac" variable is used before it is initialized.
+>
+> Fixes: 494c3b312255 ("RDMA/hns: Refactor the QP context filling process related to WQE buffer configure")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 > ---
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Move $ref to the root level of the properties. So do with the
->   constraints.
-> - Set default max-burst-len to 256 TR-WIDTH words.
-> 
-> Changelog v3:
-> - Add more details into the property description about what limitations
->   snps,max-burst-len defines.
-> ---
->  .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+Thanks,
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
