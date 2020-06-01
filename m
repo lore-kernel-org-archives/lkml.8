@@ -2,57 +2,54 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52816C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81663C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3C1207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D12206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035107;
-	bh=bZkjbWgUmSFP5X92+1FaRvbwsvKGCYrXN+2UYnKxVJk=;
+	s=default; t=1591035111;
+	bh=E822T5QpBT7X0I1eitipKvMkQ76AZqAMHHLjv+LBFk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G8GjyBly+QEnAzO+U337OrKsQG0Ozn8iGnAOdgxMoGqvgiI5zznSpJfug6Ptr9MHo
-	 mNptBkyCq5YuiNV56aldlK5oNxdkDl09jW//9xmJh1iGz+XZY1VGiHK6o8b3JEmg2s
-	 aYYvaCZocs5fhx3Dof8xS0We9QCP6SuQ/nl1bxds=
+	b=fTfjN3H0n959Co18sfsxxqAjEjo/U5vw0ORMQeHdAcq0K+OUKzCualYyg82RRcmAq
+	 apyLUEo85L83jLIc617o/+aBM0FJ/y8v7Yf1ht5duQsNTpz6EopEat5RiVNkqnPPRD
+	 HiHJo5GfczPt4SPehfYrdO+1m2iwiOWX+uRIRHq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbgFASLq (ORCPT
+        id S1731151AbgFASLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58812 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730097AbgFASLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:36 -0400
+        id S1731135AbgFASLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF64E2077D;
-        Mon,  1 Jun 2020 18:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55C6B207BB;
+        Mon,  1 Jun 2020 18:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035096;
-        bh=bZkjbWgUmSFP5X92+1FaRvbwsvKGCYrXN+2UYnKxVJk=;
+        s=default; t=1591035100;
+        bh=E822T5QpBT7X0I1eitipKvMkQ76AZqAMHHLjv+LBFk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufLZaANAfAKRwBxEFCg4xlZVC9USOj7M1GneJ6qvKaaHxZuBPxEpQ2+VMLRpW+9ws
-         fKcoQtkRO2CV2RYGOaouIsLuV5p6yIEWi6yevMBs2XryPozDH7kumI8bD0yhP20TFY
-         vat2MFL1hciHFVuuJd+exouOShK+Yb+n9M8Mvd1U=
+        b=leZF0c/EycSLhCB+G5a8U+AK5AEKXAyXF1SilJdRf0/IJ+Q4G3xRVD7LlHHGuoDcx
+         RurMsF/F3QXA2no2ypye8YklorbT5GO6Q44h8D39c182hiUyEota0LwOErEnuYWBi3
+         IUcxe5He5RpLuZxpeDqQcza3VC4VLXDrPl+6Dki0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/142] include/asm-generic/topology.h: guard cpumask_of_node() macro argument
-Date:   Mon,  1 Jun 2020 19:54:20 +0200
-Message-Id: <20200601174048.547837342@linuxfoundation.org>
+        stable@vger.kernel.org, Vadim Fedorenko <vfedorenko@novek.ru>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 010/177] net: ipip: fix wrong address family in init error path
+Date:   Mon,  1 Jun 2020 19:52:28 +0200
+Message-Id: <20200601174049.470774113@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
-References: <20200601174037.904070960@linuxfoundation.org>
+In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
+References: <20200601174048.468952319@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,47 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Vadim Fedorenko <vfedorenko@novek.ru>
 
-[ Upstream commit 4377748c7b5187c3342a60fa2ceb60c8a57a8488 ]
+[ Upstream commit 57ebc8f08504f176eb0f25b3e0fde517dec61a4f ]
 
-drivers/hwmon/amd_energy.c:195:15: error: invalid operands to binary expression ('void' and 'int')
-                                        (channel - data->nr_cpus));
-                                        ~~~~~~~~~^~~~~~~~~~~~~~~~~
-include/asm-generic/topology.h:51:42: note: expanded from macro 'cpumask_of_node'
-    #define cpumask_of_node(node)       ((void)node, cpu_online_mask)
-                                               ^~~~
-include/linux/cpumask.h:618:72: note: expanded from macro 'cpumask_first_and'
- #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
-                                                                       ^~~~~
+In case of error with MPLS support the code is misusing AF_INET
+instead of AF_MPLS.
 
-Fixes: f0b848ce6fe9 ("cpumask: Introduce cpumask_of_{node,pcibus} to replace {node,pcibus}_to_cpumask")
-Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Link: http://lkml.kernel.org/r/20200527134623.930247-1-arnd@arndb.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1b69e7e6c4da ("ipip: support MPLS over IPv4")
+Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/asm-generic/topology.h | 2 +-
+ net/ipv4/ipip.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-index 238873739550..5aa8705df87e 100644
---- a/include/asm-generic/topology.h
-+++ b/include/asm-generic/topology.h
-@@ -48,7 +48,7 @@
-   #ifdef CONFIG_NEED_MULTIPLE_NODES
-     #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
-   #else
--    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
-+    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
-   #endif
+--- a/net/ipv4/ipip.c
++++ b/net/ipv4/ipip.c
+@@ -698,7 +698,7 @@ out:
+ 
+ rtnl_link_failed:
+ #if IS_ENABLED(CONFIG_MPLS)
+-	xfrm4_tunnel_deregister(&mplsip_handler, AF_INET);
++	xfrm4_tunnel_deregister(&mplsip_handler, AF_MPLS);
+ xfrm_tunnel_mplsip_failed:
+ 
  #endif
- #ifndef pcibus_to_node
--- 
-2.25.1
-
 
 
