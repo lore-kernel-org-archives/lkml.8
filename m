@@ -2,139 +2,104 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78950C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51663C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55940206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m5Qq5qb7"
+	by mail.kernel.org (Postfix) with ESMTP id 1D1DB2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591002003;
+	bh=WgAfPuFYBjN7FHru2gW4qab9TJ5NnQOwxcj2jx65e30=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QshMfIV22PPj+OeNC0QPN3IpdvCEkD5teNR/raleYdB6wsd51upzk5ZIDbD4LrnQW
+	 Yde6Xix/GeRuF0HQzIrDgqt+h7OqkLWAJKRXVTfy/s6SHNC7kfgwiW6feNv9dgfCpX
+	 v7EJYmjEjFYMj6/uEoMGnDaRqBYJnjs4cXNTbxBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgFAI7o (ORCPT
+        id S1726100AbgFAJAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:59:44 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35432 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgFAI7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:59:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0518wsLQ099629;
-        Mon, 1 Jun 2020 03:58:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591001934;
-        bh=lGlyZcBPTfIHV1CPcNrc05ZOhHwMY7+8yiwU4k+Xhg0=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=m5Qq5qb7OFtWluux14ydZvYIB+t2mYHHOthas1jkOapNLeJlaFRvONQYEkz26llr9
-         EFGeFBlqJEAHl4OeX/VV2UTqZi5O9lrZ5mjMMnXcpcxzL+ItRg7yv/dVP7HVzsLlgO
-         BOIF2Pr24g5StH8GbC7rs1773ZevkHhWdx8O9Zzw=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0518wsv0092753
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Jun 2020 03:58:54 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 1 Jun
- 2020 03:58:53 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 1 Jun 2020 03:58:53 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0518wqOG104672;
-        Mon, 1 Jun 2020 03:58:53 -0500
-Date:   Mon, 1 Jun 2020 14:28:52 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     <Tudor.Ambarus@microchip.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <broonie@kernel.org>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <matthias.bgg@gmail.com>, <michal.simek@xilinx.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <nsekhar@ti.com>,
-        <boris.brezillon@collabora.com>, <masonccyang@mxic.com.tw>
-Subject: Re: [PATCH v9 13/19] mtd: spi-nor: sfdp: do not make invalid quad
- enable fatal
-Message-ID: <20200601085850.um32giucfcvh5oke@ti.com>
-References: <20200525091544.17270-1-p.yadav@ti.com>
- <20200525091544.17270-14-p.yadav@ti.com>
- <2267830.vuSd8QnXzO@192.168.0.120>
+        Mon, 1 Jun 2020 05:00:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbgFAJAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:00:01 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FE84207D0
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591002000;
+        bh=WgAfPuFYBjN7FHru2gW4qab9TJ5NnQOwxcj2jx65e30=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DNBAKb8FYEmA547roJCmUEHeJi/9p01W106l8Mj6KF2DIuThf0DPO9tsIZ+xI5OSa
+         Qb5NaPzCxpLz4T6+ILlQSjGx+v7ngJEnBvsyaym53GD4oebU3RYnPyPpSyeXfEyNGa
+         NSN25oWZZbfy3gNSsxJMj90baVe5yL+hMNaEDVog=
+Received: by mail-lj1-f181.google.com with SMTP id z18so7113228lji.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:00:00 -0700 (PDT)
+X-Gm-Message-State: AOAM533fHm0vby9Ahd9GKx6FHfOCs1hZriYLIcg/tWjYjWlEqBYu/r12
+        giuCxT6klHeVXHEpNWPIZzkl4Y0mVXsoVMYdtio=
+X-Google-Smtp-Source: ABdhPJwGtg0X8mVAjFPLBTQ5dBxDhXXDDNXX89zqKO/9BIIxLL1WvuFWwpDj6JtSJBzC41WwT07o3G9sDZFcl0KOqsc=
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr9871173ljp.346.1591001998792;
+ Mon, 01 Jun 2020 01:59:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2267830.vuSd8QnXzO@192.168.0.120>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1590474856.git.greentime.hu@sifive.com> <fe966314eae51a5089033f7186ac86c39719e0a0.1590474856.git.greentime.hu@sifive.com>
+ <CAJF2gTTnLNmNUvDwRSsmD9auaOGuqYXjuucKSyXZQKoEWEq4Ow@mail.gmail.com> <CAHCEeh+d+ya6+Xrh8hdWVSGo2kk_rZ8PV2eMM-2LLaOojAaBtQ@mail.gmail.com>
+In-Reply-To: <CAHCEeh+d+ya6+Xrh8hdWVSGo2kk_rZ8PV2eMM-2LLaOojAaBtQ@mail.gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 1 Jun 2020 16:59:47 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRk3hUmqOb4dhCWhLZq6tznwVLWGe5M4jY4D+DS+P6vNQ@mail.gmail.com>
+Message-ID: <CAJF2gTRk3hUmqOb4dhCWhLZq6tznwVLWGe5M4jY4D+DS+P6vNQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 05/13] riscv: Add new csr defines related to vector extension
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
+On Mon, Jun 1, 2020 at 4:15 PM Greentime Hu <greentime.hu@sifive.com> wrote=
+:
+>
+> Guo Ren <guoren@kernel.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8831=E6=97=A5 =
+=E9=80=B1=E6=97=A5 =E4=B8=8A=E5=8D=889:56=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > Hi Greentime,
+> >
+> > Why remove vxrm and xstat ?
+> >
+> > > Appendix B: Calling Convention
+> > > In the RISC-V psABI, the vector registers v0-v31 are all caller-saved=
+. The vstart, vl, and vtype CSRs are also caller-saved.
+> > > The vxrm and vxsat fields have thread storage duration.
+> >
+> Hi Guo,
+>
+> https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#vector-cont=
+rol-and-status-register-vcsr
+> "The vxrm and vxsat separate CSRs can also be accessed via fields in
+> the vector control and status CSR, vcsr."
+>
+> Since vcsr will save all these information, I think it should be ok to
+> save vcsr only.
 
-On 30/05/20 06:42PM, Tudor.Ambarus@microchip.com wrote:
-> On Monday, May 25, 2020 12:15:38 PM EEST Pratyush Yadav wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the
-> > content is safe
-> > 
-> > The Micron MT35XU512ABA flash does not support the quad enable bit. But
-> > instead of programming the Quad Enable Require field to 000b ("Device
-> > does not have a QE bit"), it is programmed to 111b ("Reserved").
-> > 
-> > While this is technically incorrect, it is not reason enough to abort
-> > BFPT parsing. Instead, continue BFPT parsing assuming there is no quad
-> > enable bit present.
-> > 
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > ---
-> >  drivers/mtd/spi-nor/sfdp.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-> > index 052cabb52df9..9fd3d8d9a127 100644
-> > --- a/drivers/mtd/spi-nor/sfdp.c
-> > +++ b/drivers/mtd/spi-nor/sfdp.c
-> > @@ -576,10 +576,6 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
-> > 
-> >         /* Quad Enable Requirements. */
-> >         switch (bfpt.dwords[BFPT_DWORD(15)] & BFPT_DWORD15_QER_MASK) {
-> > -       case BFPT_DWORD15_QER_NONE:
-> > -               params->quad_enable = NULL;
-> > -               break;
-> > -
-> >         case BFPT_DWORD15_QER_SR2_BIT1_BUGGY:
-> >                 /*
-> >                  * Writing only one byte to the Status Register has the
-> > @@ -616,8 +612,10 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
-> >                 params->quad_enable = spi_nor_sr2_bit1_quad_enable;
-> >                 break;
-> > 
-> > +       case BFPT_DWORD15_QER_NONE:
-> >         default:
-> > -               return -EINVAL;
-> > +               params->quad_enable = NULL;
-> > +               break;
-> 
-> I would just add a dev_dbg message and break the switch.
-> 	dev_dbg(nor->dev, "BFPT QER reserved value used.\n");
-> 	break;
-> 
-> You will then have to set params->quad_enable = NULL; in a post_bfpt hook.
+Got it, it's similar with fcsr & frm & fflags.
 
-Ok. Will re-roll.
+Acked-by: Guo Ren <guoren@kernel.org>
 
-BTW, are you planning to pick up the xSPI/8D support for 5.8? It has 
-been outstanding for quite some time now and it would be great if it can 
-make it through this merge window.
+--=20
+Best Regards
+ Guo Ren
 
--- 
-Regards,
-Pratyush Yadav
-Texas Instruments India
+ML: https://lore.kernel.org/linux-csky/
