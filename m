@@ -2,112 +2,165 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC417C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF83C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD6B206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF602074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSwTMy4S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPucrLK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgFAJeL (ORCPT
+        id S1725974AbgFAJgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
+        Mon, 1 Jun 2020 05:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFAJeK (ORCPT
+        with ESMTP id S1725290AbgFAJgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:34:10 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460DDC061A0E;
-        Mon,  1 Jun 2020 02:34:10 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id f7so8582106ejq.6;
-        Mon, 01 Jun 2020 02:34:10 -0700 (PDT)
+        Mon, 1 Jun 2020 05:36:22 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4C2C061A0E;
+        Mon,  1 Jun 2020 02:36:20 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id k19so6741551edv.9;
+        Mon, 01 Jun 2020 02:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ujsvq7E0O1OJ/Q85N67F4xNheFg+8Sx1kiYhCQ9HsVo=;
-        b=nSwTMy4SrY7wky5FfELiDtYErYOPgUr2xRemJJWJhNbKC7GW3FtLrW/XE3/kvNhzDI
-         XYG69ZxBinSnVQNm4iRInnO1pF8KFyXfNmKm3AW2vHymd6lQ9nUY1lMGVfg0uldh+eUc
-         rlZnLx8YhVAB6pUnNZ03DWMOXsgJgkFz67NgGAoiw6jWnYeGWAob5xg+fkuQ9qI27Lo7
-         rB2+uFAtClTJHYrD/kpmXl6rxHPF4tB+TThz5epixStCqpeV/Yu9gyO6/d1l10x972zG
-         y+Dif+oQhoX8PKCSf1smS9NtQyKuh20gVhXWx7Bvw5Rzd4FQsfSdLnJm0YC8pmDFL/xm
-         FmAA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wSgsSiuHFdbWoFOMi8zHqxH+AXQ3Xi1eIriJ+02+Jwc=;
+        b=nPucrLK4fIr7QcJ/7TpyNpjJSvIjZFjAbmFtgdKkgFTKASISJtTGY0FMMfa191ILq/
+         ZiBLbVZYufSQb7gu4NfE7P/7NtotCKaYw3cTwLyvOsUDey8DmkdoUK4p5qwOvx8M4kSZ
+         XdFSs1kSgkkRnyf1fMhyQXlB0cnWGWRC+u7ckfJ89QaOTskdrq/+alGQoQfOrTXnhLTh
+         SkSWMcwJvcBhSsk2E/wSZJ+uqJvRJl8dG7iMpgDFXyw7mHgdrCXVMGbbztxUBMFh/fCA
+         UYrUCjlWyWyN02Bdd283am6w/IFbuZPmwoik8xb1Npw4WvRHw2D8ocgm+7bsRbKIF3S0
+         PZyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ujsvq7E0O1OJ/Q85N67F4xNheFg+8Sx1kiYhCQ9HsVo=;
-        b=CugKlOYdNwwlO+4Q2IuXfb2aCRzDvTKhSuQNAzoItuUeI+a7fTOMSCKesl8uxfU/EG
-         HCql3cE2xqipRKdg1C1C7Lxu6x9soSTC7oEaAUwcfDDV3Lvm3x7i1C16FoBaEB1ucLJL
-         SOD81SbUqkDispXpUI4aNNbkU+V+jJ/qnRN+A7NHb7a630lZRncjlE/DmxtYFNcO1wuF
-         bwYwr1qw2G/bmhNAT07f10T5Vos6API9kMISZPvvu0j/YLCbkjkF5NGYxHT5w3hsuC09
-         rNf966Te+k/qW0tVpnJ2o9jui7CE12V+005IaRNZKjQD3cYx2CqZvW9YhFb2KPX49+C2
-         0J/g==
-X-Gm-Message-State: AOAM531iNRNrZN8xAury9RHpTDJoV4A4Paxe6n9ZN/S3pn5mSh24ANEt
-        ATbjAwHQ3t8nWcG8G/TeO1szzTYH
-X-Google-Smtp-Source: ABdhPJz93uMzHny/Glz01ho12bEwz9RwwtfyB+vQM8PCiCUQNX52iD8PyYGc9zPB5stnxxxoKiCwpQ==
-X-Received: by 2002:a17:906:c828:: with SMTP id dd8mr19530044ejb.550.1591004048801;
-        Mon, 01 Jun 2020 02:34:08 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:fc8d:d1:9ec:ca37? ([2a01:110f:b59:fd00:fc8d:d1:9ec:ca37])
-        by smtp.gmail.com with ESMTPSA id l60sm16311462ede.32.2020.06.01.02.34.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 02:34:08 -0700 (PDT)
-Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
- family of RGB drivers
-To:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200526164652.2331-1-dmurphy@ti.com>
- <20200526164652.2331-4-dmurphy@ti.com> <20200527135848.GB5011@amd>
- <d22658c2-07e2-74e6-dc2b-4b64fd9789dd@ti.com>
- <20200531190625.GA30537@duo.ucw.cz>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <c03ce8da-0895-2e1f-0a4c-2b3d9fae8d4d@gmail.com>
-Date:   Mon, 1 Jun 2020 11:34:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wSgsSiuHFdbWoFOMi8zHqxH+AXQ3Xi1eIriJ+02+Jwc=;
+        b=uifd7s3ENHkRDN0+B3wEZeRk8SnzHIxqNKuOk4j0m/FzZeekKjRg8Wb7CQrOArZDv6
+         pAhsQLXHf85Z6jPKB0TSGD/3ZuPHFrkISdlwXtioo10WViQfi7eOWM8lkJe0kA1i2dUq
+         uSPeIijfv8CKzSqUkhhgBn0CLtQEbhvEoO/SyjESMZDRP7LwdoBCYTPki7cVrjYDVc9p
+         xsPKgoFLTKadZBXffNT9inGInP/max8mLGRpIJJQ9myy/JUGdKsUHSbXmg0nRcdk60GY
+         QW+8zI4d50Mt4CmVHZ+oFsJ+11o6L/U6EZpU76dw35o8zAxtoMw6rfbUeC8o+8IfrhIr
+         fhZg==
+X-Gm-Message-State: AOAM532+Y0qvn2pY0RU9l2TMrQPjLS6TPX3l0QFL0b38HQ2YWs6KFQqT
+        VDnJGLRNiIGPTdBXS4l4w/rjxLgNLeNzkL7i63EGXw==
+X-Google-Smtp-Source: ABdhPJwwcw4YXSscVmJIvXWcT0758Qc+D5IxyUW0q8Hkda8zyz+7inCQ8CmAzLmr9xjlWIxhzYtEtUlv5Ew4b9CR0+0=
+X-Received: by 2002:a05:6402:362:: with SMTP id s2mr4227939edw.337.1591004179498;
+ Mon, 01 Jun 2020 02:36:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200531190625.GA30537@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200531180758.1426455-1-olteanv@gmail.com> <39107d25-f6e6-6670-0df6-8ae6421e7f9a@cogentembedded.com>
+In-Reply-To: <39107d25-f6e6-6670-0df6-8ae6421e7f9a@cogentembedded.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 1 Jun 2020 12:36:08 +0300
+Message-ID: <CA+h21hq4tah3EAdFaLdxTR1JtEaSiZfOFuinwHq-p0AZ+ENesw@mail.gmail.com>
+Subject: Re: [PATCH v2] devres: keep both device name and resource name in
+ pretty name
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        bgolaszewski@baylibre.com, mika.westerberg@linux.intel.com,
+        efremov@linux.com, ztuowen@gmail.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel and Dan,
+Hi Sergei,
 
-On 5/31/20 9:06 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> +          There can only be one instance of the ti,led-bank
->>>> +          property for each device node.  This is a required node is the LED
->>>> +          modules are to be backed.
->>> I don't understand the second sentence. Pretty sure it is not valid
->>> english.
->>
->>
->> If I make these changes is this still viable for 5.8 or would you then go
->> into 5.9?
-> 
-> It really depends if we get -rc8 or not, and if you'll need to do any
-> changes to C code or not...
+On Mon, 1 Jun 2020 at 10:51, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>
+> Hello!
+>
+> On 31.05.2020 21:07, Vladimir Oltean wrote:
+>
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > Sometimes debugging a device is easiest using devmem on its register
+> > map, and that can be seen with /proc/iomem. But some device drivers have
+> > many memory regions. Take for example a networking switch. Its memory
+> > map used to look like this in /proc/iomem:
+> >
+> > 1fc000000-1fc3fffff : pcie@1f0000000
+> >    1fc000000-1fc3fffff : 0000:00:00.5
+> >      1fc010000-1fc01ffff : sys
+> >      1fc030000-1fc03ffff : rew
+> >      1fc060000-1fc0603ff : s2
+> >      1fc070000-1fc0701ff : devcpu_gcb
+> >      1fc080000-1fc0800ff : qs
+> >      1fc090000-1fc0900cb : ptp
+> >      1fc100000-1fc10ffff : port0
+> >      1fc110000-1fc11ffff : port1
+> >      1fc120000-1fc12ffff : port2
+> >      1fc130000-1fc13ffff : port3
+> >      1fc140000-1fc14ffff : port4
+> >      1fc150000-1fc15ffff : port5
+> >      1fc200000-1fc21ffff : qsys
+> >      1fc280000-1fc28ffff : ana
+> >
+> > But after the patch in Fixes: was applied, the information is now
+> > presented in a much more opaque way:
+> >
+> > 1fc000000-1fc3fffff : pcie@1f0000000
+> >    1fc000000-1fc3fffff : 0000:00:00.5
+> >      1fc010000-1fc01ffff : 0000:00:00.5
+> >      1fc030000-1fc03ffff : 0000:00:00.5
+> >      1fc060000-1fc0603ff : 0000:00:00.5
+> >      1fc070000-1fc0701ff : 0000:00:00.5
+> >      1fc080000-1fc0800ff : 0000:00:00.5
+> >      1fc090000-1fc0900cb : 0000:00:00.5
+> >      1fc100000-1fc10ffff : 0000:00:00.5
+> >      1fc110000-1fc11ffff : 0000:00:00.5
+> >      1fc120000-1fc12ffff : 0000:00:00.5
+> >      1fc130000-1fc13ffff : 0000:00:00.5
+> >      1fc140000-1fc14ffff : 0000:00:00.5
+> >      1fc150000-1fc15ffff : 0000:00:00.5
+> >      1fc200000-1fc21ffff : 0000:00:00.5
+> >      1fc280000-1fc28ffff : 0000:00:00.5
+> >
+> > That patch made a fair comment that /proc/iomem might be confusing when
+> > it shows resources without an associated device, but we can do better
+> > than just hide the resource name altogether. Namely, we can print the
+> > device name _and_ the resource name. Like this:
+> >
+> > 1fc000000-1fc3fffff : pcie@1f0000000
+> >    1fc000000-1fc3fffff : 0000:00:00.5
+> >      1fc010000-1fc01ffff : 0000:00:00.5 sys
+> >      1fc030000-1fc03ffff : 0000:00:00.5 rew
+> >      1fc060000-1fc0603ff : 0000:00:00.5 s2
+> >      1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
+> >      1fc080000-1fc0800ff : 0000:00:00.5 qs
+> >      1fc090000-1fc0900cb : 0000:00:00.5 ptp
+> >      1fc100000-1fc10ffff : 0000:00:00.5 port0
+> >      1fc110000-1fc11ffff : 0000:00:00.5 port1
+> >      1fc120000-1fc12ffff : 0000:00:00.5 port2
+> >      1fc130000-1fc13ffff : 0000:00:00.5 port3
+> >      1fc140000-1fc14ffff : 0000:00:00.5 port4
+> >      1fc150000-1fc15ffff : 0000:00:00.5 port5
+> >      1fc200000-1fc21ffff : 0000:00:00.5 qsys
+> >      1fc280000-1fc28ffff : 0000:00:00.5 ana
+> >
+> > Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
+> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> [...]
+>
+>     You didn't write the version log -- what changed since v1?
+>
+> MBR, Sergei
 
-I think that we need to simmer such a big extension of the LED
-subsystem for a whole cycle in linux-next, especially taking into
-account addition of new sysfs interface, that is bit quirky.
+The changes in v2 are that I'm checking for memory allocation errors.
 
-Effectively 5.8 seems to not have been viable since few weeks.
-
--- 
-Best regards,
-Jacek Anaszewski
+Thanks,
+-Vladimir
