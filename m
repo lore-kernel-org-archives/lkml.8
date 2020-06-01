@@ -2,178 +2,184 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44533C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C28302074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591046724;
-	bh=8Qt9e+XiD+FUR7h1k2mvt1mhtQNAprWB2mByevBZk2U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=RnNWuTHyvUN4n6YGJCkobl1nWehG1B7jVE46JzIKjq7YuG6hiFE4930H2kegEY2x/
-	 8QrBKat6pJJRhX6EG89Rx4R9aEjp9OWmOfsJ0U/MCeOth7zMkI9dr5kLo0FPFrf+Uw
-	 79aBRz80gtvNzVFL/FT9pFr7OFzhgPFDW4MdL/vk=
+	by mail.kernel.org (Postfix) with ESMTP id 202BE206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgFAVZY (ORCPT
+        id S1728765AbgFAVZb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60726 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 17:25:31 -0400
+Received: from mga02.intel.com ([134.134.136.20]:52785 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbgFAVZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:25:22 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80095206E2;
-        Mon,  1 Jun 2020 21:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591046721;
-        bh=8Qt9e+XiD+FUR7h1k2mvt1mhtQNAprWB2mByevBZk2U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Tfnv5ezJEYhLG3oubFQtNlNFDM77YpLtWpiK17A5c0idmWA0mdy6adF/ky3z8yezb
-         8VvAj0fYHRPVM1uO6EGqVvCNwlE4uemfr8zUQf+2srN1kYRkSwQUWbVu/rvP/xJHQy
-         MOgFpUic5ewR3UBpiwKZLLng4DXpV+RPrUWYTQLM=
-Date:   Mon, 1 Jun 2020 16:25:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>
-Subject: Re: [PATCH] PCI: Relax ACS requirement for Intel RCiEP devices.
-Message-ID: <20200601212519.GA758937@bjorn-Precision-5520>
+        id S1728195AbgFAVZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 17:25:29 -0400
+IronPort-SDR: 0bseIB+4g3Kj71i1U2/yFAo76v7H7jXSpXPJzJcImMEX3al9rMoSu/a8tsiCT5/L3xjXVasNMr
+ HRZxa+cUxtmg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 14:25:28 -0700
+IronPort-SDR: s1XBa8o+ziq5W75mwbzvp+/Z/bykPRU7jO6wJL6KeijgwGh2VJlFOxPrTFoiXevQpjqNFVRBxz
+ 2jC8piB35w8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
+   d="scan'208";a="303770420"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2020 14:25:27 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 1 Jun 2020 14:25:27 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ HASMSX602.ger.corp.intel.com (10.184.107.142) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 2 Jun 2020 00:25:25 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Tue, 2 Jun 2020 00:25:25 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Dorian Stoll <dorian.stoll@tmsp.io>, Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] mei: me: Add itouch device IDs for SPT / ICP
+Thread-Topic: [PATCH] mei: me: Add itouch device IDs for SPT / ICP
+Thread-Index: AQHWOC5DxbJKJY4NZEyE7jjAFJ52tKjD8m1A///d24CAAHKEYA==
+Date:   Mon, 1 Jun 2020 21:25:25 +0000
+Message-ID: <26b73aff781d417fbb93777e63501393@intel.com>
+References: <20200601155954.764558-1-dorian.stoll@tmsp.io>
+ <b22a353f4d4f47df9676c9572b6ac773@intel.com> <4082996.zthe6f22So@desktop>
+In-Reply-To: <4082996.zthe6f22So@desktop>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 01:57:42PM -0700, Ashok Raj wrote:
-> All Intel platforms guarantee that all root complex implementations
-> must send transactions up to IOMMU for address translations. Hence for
-> RCiEP devices that are Vendor ID Intel, can claim exception for lack of
-> ACS support.
 > 
+> >
+> > > These device IDs can be found on Microsoft Surface devices.
+> > >
+> > > Signed-off-by: Dorian Stoll <dorian.stoll@tmsp.io>
+> >
+> > This need to be done differently because of the server platforms conflict.
+> > I have patches for that I will post short, though we are not
+> > officially supporting those devices under Linux, It will be hard to maintain,
+> as currently on the MS surface enables it as far as I know.
+> >
 > 
-> 3.16 Root-Complex Peer to Peer Considerations
-> When DMA remapping is enabled, peer-to-peer requests through the
-> Root-Complex must be handled
-> as follows:
-> • The input address in the request is translated (through first-level,
->   second-level or nested translation) to a host physical address (HPA).
->   The address decoding for peer addresses must be done only on the
->   translated HPA. Hardware implementations are free to further limit
->   peer-to-peer accesses to specific host physical address regions
->   (or to completely disallow peer-forwarding of translated requests).
-> • Since address translation changes the contents (address field) of
->   the PCI Express Transaction Layer Packet (TLP), for PCI Express
->   peer-to-peer requests with ECRC, the Root-Complex hardware must use
->   the new ECRC (re-computed with the translated address) if it
->   decides to forward the TLP as a peer request.
-> • Root-ports, and multi-function root-complex integrated endpoints, may
->   support additional peerto-peer control features by supporting PCI Express
->   Access Control Services (ACS) capability. Refer to ACS capability in
->   PCI Express specifications for details.
+> Thank you for your response!
 > 
-> Since Linux didn't give special treatment to allow this exception, certain
-> RCiEP MFD devices are getting grouped in a single iommu group. This
-> doesn't permit a single device to be assigned to a guest for instance.
-> 
-> In one vendor system: Device 14.x were grouped in a single IOMMU group.
-> 
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.3
-> 
-> After the patch:
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
-> 
-> 14.0 and 14.2 are integrated devices, but legacy end points.
-> Whereas 14.3 was a PCIe compliant RCiEP.
-> 
-> 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
-> Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-> 
-> This permits assigning this device to a guest VM.
-> 
-> Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> To: Joerg Roedel <joro@8bytes.org>
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
-> Cc: Mark Scott <mscott@forcepoint.com>,
-> Cc: Romil Sharma <rsharma@forcepoint.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
+> If you don't mind, could you elaborate on these devices not being supported
+> under Linux? Is it just that the functionality they provide (Intel Precise Touch
+> & Stylus / iTouch / IPTS) won't be supported? Because that I already know,
+> and it is not the intent of this patch. Or do you mean that the entire MEI
+> interface won't be supported for these devices?
 
-Tentatively applied to pci/virtualization for v5.8, thanks!
+Just the iTouch.
 
-The spec says this handling must apply "when DMA remapping is
-enabled".  The patch does not check whether DMA remapping is enabled.
-
-Is there any case where DMA remapping is *not* enabled, and we rely on
-this patch to tell us whether the device is isolated?  It sounds like
-it may give the wrong answer in such a case?
-
-Can you confirm that I don't need to worry about this?  
-
-> ---
-> v2: Moved functionality from iommu to pci quirks - Alex Williamson
 > 
->  drivers/pci/quirks.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 28c9a2409c50..63373ca0a3fe 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4682,6 +4682,20 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
->  		PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
->  }
->  
-> +static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
-> +{
-> +	/*
-> +	 * RCiEP's are required to allow p2p only on translated addresses.
-> +	 * Refer to Intel VT-d specification Section 3.16 Root-Complex Peer
-> +	 * to Peer Considerations
-> +	 */
-> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END)
-> +		return -ENOTTY;
-> +
-> +	return pci_acs_ctrl_enabled(acs_flags,
-> +		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-> +}
-> +
->  static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
->  {
->  	/*
-> @@ -4764,6 +4778,7 @@ static const struct pci_dev_acs_enabled {
->  	/* I219 */
->  	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
->  	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
-> +	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
->  	/* QCOM QDF2xxx root ports */
->  	{ PCI_VENDOR_ID_QCOM, 0x0400, pci_quirk_qcom_rp_acs },
->  	{ PCI_VENDOR_ID_QCOM, 0x0401, pci_quirk_qcom_rp_acs },
-> -- 
-> 2.7.4
-> 
+> Some context on this patch: I am part of a small team of volunteers who try
+> to make the MS Surface devices usable under linux, including the
+> touchscreen (which uses IPTS as of the Surface Pro 4).
+
+Nice work.
+
+> The IPTS driver connects to the device over the MEI bus, but the MEI device is
+> provided by the iTouch devices. Currently we build our own kernels with this
+> patch applied to allow the driver to work. All of this is loosely based on a
+> driver that Intel published a few years ago.
+
+Yes, I'm fully aware of that code base.
+ 
+> Since the driver is otherwise pretty much standalone,
+You do depend on i915, that's the hard part.
+> my hope was that
+> adding these IDs would make it easier to develop / install our driver without
+> having to recompile the entire kernel (i.e. using DKMS). At least until the
+> driver has matured enough and is ready for upstream submission itself.
+> Especially since other iTouch devices have their device IDs added already.
+
+Agree. 
+ 
+> That this would cause conflicts is unfortunate. Judging purely by your words
+> - without having any deeper knowledge about the MEI bus - it seems that it
+> might be possible to fix these conflicts? If thats true, I hope it would also be
+> possible to add these IDs, so that just the MEI interface to IPTS becomes
+> supported - 
+
+Yes, I'm working on that just now.
+
+> I don't expect you to support the entire IPTS technology.
+
+Yep, unfortunately it's not going to be funded by my wife.
+
+> > > ---
+> > >  drivers/misc/mei/hw-me-regs.h | 2 ++
+> > >  drivers/misc/mei/pci-me.c     | 2 ++
+> > >  2 files changed, 4 insertions(+)
+> > >
+> > > diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-
+> > > regs.h index 9392934e3a06..90e7d3020fa5 100644
+> > > --- a/drivers/misc/mei/hw-me-regs.h
+> > > +++ b/drivers/misc/mei/hw-me-regs.h
+> > > @@ -59,6 +59,7 @@
+> > >
+> > >  #define MEI_DEV_ID_SPT        0x9D3A  /* Sunrise Point */
+> > >  #define MEI_DEV_ID_SPT_2      0x9D3B  /* Sunrise Point 2 */
+> > > +#define MEI_DEV_ID_SPT_4      0x9D3E  /* Sunrise Point 4 (iTouch) */
+> > >  #define MEI_DEV_ID_SPT_H      0xA13A  /* Sunrise Point H */
+> > >  #define MEI_DEV_ID_SPT_H_2    0xA13B  /* Sunrise Point H 2 */
+> > >
+> > > @@ -90,6 +91,7 @@
+> > >  #define MEI_DEV_ID_CDF        0x18D3  /* Cedar Fork */
+> > >
+> > >  #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
+> > > +#define MEI_DEV_ID_ICP_LP_4   0x34E4  /* Ice Lake Point LP 4 (iTouch)
+> */
+> > >
+> > >  #define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
+> > >
+> > > diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+> > > index
+> > > a1ed375fed37..5e621e90d8d4 100644
+> > > --- a/drivers/misc/mei/pci-me.c
+> > > +++ b/drivers/misc/mei/pci-me.c
+> > > @@ -68,6 +68,7 @@ static const struct pci_device_id mei_me_pci_tbl[]
+> > > = {
+> > >
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT, MEI_ME_PCH8_CFG)},
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
+> > > +	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_4, MEI_ME_PCH8_CFG)},
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_CFG)},
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_CFG)},
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_CFG)},
+> @@ -94,6
+> > > +95,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
+> > >
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
+> > > +	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP_4, MEI_ME_PCH12_CFG)},
+> > >
+> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH15_CFG)},
+> > >
+> > > --
+> > > 2.26.2
+> > >
+> >
+> >
+
