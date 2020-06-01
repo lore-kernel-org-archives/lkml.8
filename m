@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2865C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ADEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8760520679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299DA20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037652;
-	bh=xDqOcDPxgEtN8yP3ZDnF8X43wyViTPb3+SglNOHmTUg=;
+	s=default; t=1591037657;
+	bh=G5znw6b3xcWoE98cHwMwBHm1ZG+kgcYl3ptVUaPg7Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AxxXSlPTgo/1CMVclcZyTJKiHFj3SIElshZ4g29wqcL5//AXRbUOxewKO4wMeXfaC
-	 GrQNLApVKjjM2QZ42l2fNWmZ664f/hTB1Uh0D8EV3wC2h9q/jKTLV/wb7a6otQTBDt
-	 l2hEaSjz54SQPKgiWQLYFhySfvFkH5jLa6eViizk=
+	b=yRWUVPzAGQIlgEJTVAh90cEJ8b0l1VbNkmbS+8cNuCWxlDX9QF2c9QvXrdnsIJWcv
+	 3rZbApszJN2rt2NX5CJ00+mx7O02XlIi/3uJESKYm+sW1g3nVDo3ojKKSvVdcuVVgb
+	 XIlAaUO58YdUoxxWlG+pgbfo1MueksOAco2VpRfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgFASyM (ORCPT
+        id S1729253AbgFASCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:54:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729907AbgFASCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:15 -0400
+        id S1729877AbgFASCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 647D9207D0;
-        Mon,  1 Jun 2020 18:02:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5991F2065C;
+        Mon,  1 Jun 2020 18:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034534;
-        bh=xDqOcDPxgEtN8yP3ZDnF8X43wyViTPb3+SglNOHmTUg=;
+        s=default; t=1591034525;
+        bh=G5znw6b3xcWoE98cHwMwBHm1ZG+kgcYl3ptVUaPg7Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYg0eVU8MPi04EsobwPQyhTQduT5K4TXAYvoq+xroqWsOBiWgLT58Ego5H0u1S+7U
-         trm7jmk7XaYoXKW/3H01cYpeJS7z28vh6uFkYiE6x1aoVBIqMePV9x6Vi7k3anTHnH
-         9mWyNLjk055oAqqSrNVUU3YBfKz7IFnjlcLXLgP4=
+        b=y5B6qpEOOaqxtJ5qzdK6+uJOwhjSRXHI6CeJrCvuljpzJavOTi/ds/NSvivZAYc1V
+         sbOYkb07UPR9QUILCOEXtiR37ejV9De0Ih1b1WAgNAlKJ84rq9pGSn8hpnhle+lIoM
+         1VORon99t0Fls/bR6IFvevkXNjvizSFGOT4GgrJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerhard Wiesinger <redhat@wiesinger.com>,
-        Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 75/77] KVM: VMX: check for existence of secondary exec controls before accessing
-Date:   Mon,  1 Jun 2020 19:54:20 +0200
-Message-Id: <20200601174029.419790717@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.14 71/77] netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
+Date:   Mon,  1 Jun 2020 19:54:16 +0200
+Message-Id: <20200601174028.556205769@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -62,54 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit fd6b6d9b82f97a851fb0078201ddc38fe9728cda upstream.
+commit 4946ea5c1237036155c3b3a24f049fd5f849f8f6 upstream.
 
-Return early from vmx_set_virtual_apic_mode() if the processor doesn't
-support VIRTUALIZE_APIC_ACCESSES or VIRTUALIZE_X2APIC_MODE, both of
-which reside in SECONDARY_VM_EXEC_CONTROL.  This eliminates warnings
-due to VMWRITEs to SECONDARY_VM_EXEC_CONTROL (VMCS field 401e) failing
-on processors without secondary exec controls.
+>> include/linux/netfilter/nf_conntrack_pptp.h:13:20: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+extern const char *const pptp_msg_name(u_int16_t msg);
+^~~~~~
 
-Remove the similar check for TPR shadowing as it is incorporated in the
-flexpriority_enabled check and the APIC-related code in
-vmx_update_msr_bitmap() is further gated by VIRTUALIZE_X2APIC_MODE.
-
-Reported-by: Gerhard Wiesinger <redhat@wiesinger.com>
-Fixes: 8d860bbeedef ("kvm: vmx: Basic APIC virtualization controls have three settings")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 4c559f15efcc ("netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/netfilter/nf_conntrack_pptp.h |    2 +-
+ net/netfilter/nf_conntrack_pptp.c           |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -9280,15 +9280,16 @@ static void vmx_set_virtual_apic_mode(st
- 	if (!lapic_in_kernel(vcpu))
- 		return;
+--- a/include/linux/netfilter/nf_conntrack_pptp.h
++++ b/include/linux/netfilter/nf_conntrack_pptp.h
+@@ -5,7 +5,7 @@
  
-+	if (!flexpriority_enabled &&
-+	    !cpu_has_vmx_virtualize_x2apic_mode())
-+		return;
-+
- 	/* Postpone execution until vmcs01 is the current VMCS. */
- 	if (is_guest_mode(vcpu)) {
- 		to_vmx(vcpu)->nested.change_vmcs01_virtual_apic_mode = true;
- 		return;
- 	}
+ #include <linux/netfilter/nf_conntrack_common.h>
  
--	if (!cpu_need_tpr_shadow(vcpu))
--		return;
--
- 	sec_exec_control = vmcs_read32(SECONDARY_VM_EXEC_CONTROL);
- 	sec_exec_control &= ~(SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES |
- 			      SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE);
+-extern const char *const pptp_msg_name(u_int16_t msg);
++const char *pptp_msg_name(u_int16_t msg);
+ 
+ /* state of the control session */
+ enum pptp_ctrlsess_state {
+--- a/net/netfilter/nf_conntrack_pptp.c
++++ b/net/netfilter/nf_conntrack_pptp.c
+@@ -90,7 +90,7 @@ static const char *const pptp_msg_name_a
+ 	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
+ };
+ 
+-const char *const pptp_msg_name(u_int16_t msg)
++const char *pptp_msg_name(u_int16_t msg)
+ {
+ 	if (msg > PPTP_MSG_MAX)
+ 		return pptp_msg_name_array[0];
 
 
