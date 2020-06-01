@@ -2,52 +2,51 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22452C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C14C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E91F4206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3734D206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037015;
-	bh=9zuuffeI7sKuAZyAqKZVUFU8nDeJiIG7ehz5hVmqyOo=;
+	s=default; t=1591037017;
+	bh=E7aDakkuZGWWh4pMJFm3LJZ8+eRDuhH2vX43lxxfKk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPS+flEOLefB2gWuIUydgo4yyXpNnhEQ7bDxqsUHHTuQv4rAqbJ7ahu0142wOZGsS
-	 8UpZJwSKaq2uJye1sEIfpfpV5ws8t3BfBfdCctKigc4T0+7exjDtHisl9GjN+3XTl8
-	 qPav2pIBoOyrbmrWfdBPny7VyBwMpDGAA6P+AIYc=
+	b=xyz6kscUlj4ATZOy6/9vY8tnvY4rKkbOAl1M6ieJ7PIBkVH4Xv8n21mlg9xNy56zc
+	 1egfT+2oJzpc7uj8y6eNTNZjf2mY3+lqE1hxZVETJ+Xg2rq1gbQdOccsInMnhnNFlY
+	 kEfK21CTCnlDpdfo2sQJDsHxKd2NSbWqeSt3FuaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbgFASLa (ORCPT
+        id S1731099AbgFASL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:11:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729108AbgFASLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:16 -0400
+        id S1731083AbgFASLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6790B206E2;
-        Mon,  1 Jun 2020 18:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A4192065C;
+        Mon,  1 Jun 2020 18:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035075;
-        bh=9zuuffeI7sKuAZyAqKZVUFU8nDeJiIG7ehz5hVmqyOo=;
+        s=default; t=1591035073;
+        bh=E7aDakkuZGWWh4pMJFm3LJZ8+eRDuhH2vX43lxxfKk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LMeEMaNxUU3SjMARFpBYq7p2m/gbCVGQwDCJaZOjqHqA71DpwNmqCu3kjdEFYS5Mp
-         WTRQBmfpysybDCHVwb6+X2YMLw9+4xfYwVTcLWlNbrjhU0FO6/Sw7hMbDHXonW3wVS
-         gxsaMytkJIqx7rY1W5phknmBPlyPKAzNKtvWUnhY=
+        b=ZQX60g8GEgdYpNzt+p4hKY0hYGBBsc5DA3FTOqUHwKbIxQiprRmTDPp8MZfan6TC1
+         kiLqRovoDTJjvs8SFXl+7TZvlAWutzDU9ol2PWTFJ3H4xIWYv18nmCFR+F8E/LFkT4
+         12oQ7NWJl07cvnskb26hi6e2uU9pQG0JRJrb9yf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 140/142] netfilter: conntrack: Pass value of ctinfo to __nf_conntrack_update
-Date:   Mon,  1 Jun 2020 19:54:58 +0200
-Message-Id: <20200601174052.199090805@linuxfoundation.org>
+Subject: [PATCH 5.4 139/142] netfilter: conntrack: comparison of unsigned in cthelper confirmation
+Date:   Mon,  1 Jun 2020 19:54:57 +0200
+Message-Id: <20200601174052.099624774@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,64 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 46c1e0621a72e0469ec4edfdb6ed4d387ec34f8a upstream.
+commit 94945ad2b330207cded0fd8d4abebde43a776dfb upstream.
 
-Clang warns:
+net/netfilter/nf_conntrack_core.c: In function nf_confirm_cthelper:
+net/netfilter/nf_conntrack_core.c:2117:15: warning: comparison of unsigned expression in < 0 is always false [-Wtype-limits]
+ 2117 |   if (protoff < 0 || (frag_off & htons(~0x7)) != 0)
+      |               ^
 
-net/netfilter/nf_conntrack_core.c:2068:21: warning: variable 'ctinfo' is
-uninitialized when used here [-Wuninitialized]
-        nf_ct_set(skb, ct, ctinfo);
-                           ^~~~~~
-net/netfilter/nf_conntrack_core.c:2024:2: note: variable 'ctinfo' is
-declared here
-        enum ip_conntrack_info ctinfo;
-        ^
-1 warning generated.
+ipv6_skip_exthdr() returns a signed integer.
 
-nf_conntrack_update was split up into nf_conntrack_update and
-__nf_conntrack_update, where the assignment of ctinfo is in
-nf_conntrack_update but it is used in __nf_conntrack_update.
-
-Pass the value of ctinfo from nf_conntrack_update to
-__nf_conntrack_update so that uninitialized memory is not used
-and everything works properly.
-
-Fixes: ee04805ff54a ("netfilter: conntrack: make conntrack userspace helpers work again")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1039
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Fixes: 703acd70f249 ("netfilter: nfnetlink_cthelper: unbreak userspace helper support")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_conntrack_core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nf_conntrack_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/net/netfilter/nf_conntrack_core.c
 +++ b/net/netfilter/nf_conntrack_core.c
-@@ -1880,11 +1880,11 @@ static void nf_conntrack_attach(struct s
- }
- 
- static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
--				 struct nf_conn *ct)
-+				 struct nf_conn *ct,
-+				 enum ip_conntrack_info ctinfo)
+@@ -1955,7 +1955,7 @@ static int nf_confirm_cthelper(struct sk
  {
- 	struct nf_conntrack_tuple_hash *h;
- 	struct nf_conntrack_tuple tuple;
--	enum ip_conntrack_info ctinfo;
- 	struct nf_nat_hook *nat_hook;
- 	unsigned int status;
- 	int dataoff;
-@@ -2009,7 +2009,7 @@ static int nf_conntrack_update(struct ne
- 		return 0;
+ 	const struct nf_conntrack_helper *helper;
+ 	const struct nf_conn_help *help;
+-	unsigned int protoff;
++	int protoff;
  
- 	if (!nf_ct_is_confirmed(ct)) {
--		err = __nf_conntrack_update(net, skb, ct);
-+		err = __nf_conntrack_update(net, skb, ct, ctinfo);
- 		if (err < 0)
- 			return err;
- 	}
+ 	help = nfct_help(ct);
+ 	if (!help)
 
 
