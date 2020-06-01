@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8611FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2392020776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6932087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034288;
-	bh=09YqrVPRrABEq7REe5UqOCDei7Su3HzEdO6ElVdZj6c=;
+	s=default; t=1591034293;
+	bh=KlvviamtZlLWaLfvlNXom9/owKaKsXrEsTDyBdhk6Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CpfNOURfHjJgAA7pj5+QZZyDb191MdhIWr8YM7X852sJg5G7MrBKBHcdNEhwNgCV5
-	 D49ILeWH8wt3W7ld8LL4mpUdzDHG2u5bWfBi7MUqk3UFavyYHEfFW7gRiNU1kEZ977
-	 V/11FbEhKLO2IGD5zZNxM47BtXqAEbmQxmuhBpm4=
+	b=H9pnSKopuONWM6bWVPZvWSTv5N4ZZWfxwkwe4zHpqZG8JY74hv6YWTMXXiFAFubeQ
+	 D2KvgSpyUoQfJ2mhpV30EbXpDcXZwMxNwYOyWP79mfzg2Y119m1vUCmUPkWltoxuEV
+	 NCeKc2WtIMxrsPS4busDwn3fWRqmqFbESjml9bq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgFAR6H (ORCPT
+        id S1729138AbgFAR6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:58:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39750 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729115AbgFAR6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:04 -0400
+        id S1729130AbgFAR6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABBE22073B;
-        Mon,  1 Jun 2020 17:58:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 038812085B;
+        Mon,  1 Jun 2020 17:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034284;
-        bh=09YqrVPRrABEq7REe5UqOCDei7Su3HzEdO6ElVdZj6c=;
+        s=default; t=1591034286;
+        bh=KlvviamtZlLWaLfvlNXom9/owKaKsXrEsTDyBdhk6Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rnwqCdNZpNbcQ7+1d+tfM/WZg4BNiIfV3Y6iDokAMS/35CD4f12YjtISTVRU90jl4
-         aIU40biB3EHQhLuIqfys8dLJtyXEyyGD7vq/WLvxww8oJjcqzH+9IZfUunYw3i0BOq
-         H8x6IQfsCe9WiQc+iZb4yEsRJD092B0zTrtTqcYY=
+        b=zj/Lbyq3sh4ybEC0kKMuCZuM65MeQsGbLYs6CWo1t80/UDiYAS1OIDsuNzlUt2ruc
+         zNDoEiCUXxXxuN8Poyye/QQWx1m+l/wuwLIYW87vqwdZ0nJjDjqvruD1wLcxWGEBN6
+         J2HjpRzUMtbQ1BhCDFbAXlSJqFAwmoGmwTCcoE/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 24/61] Input: i8042 - add ThinkPad S230u to i8042 reset list
-Date:   Mon,  1 Jun 2020 19:53:31 +0200
-Message-Id: <20200601174016.327408605@linuxfoundation.org>
+Subject: [PATCH 4.9 25/61] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
+Date:   Mon,  1 Jun 2020 19:53:32 +0200
+Message-Id: <20200601174016.474501315@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,58 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Locke <kevin@kevinlocke.name>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 2712c91a54a1058d55c284152b4d93c979b67be6 ]
+[ Upstream commit 5caab2da63207d6d631007f592f5219459e3454d ]
 
-On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
-"GDETC1WW (1.81 ) 06/27/2019", the keyboard, Synaptics TouchPad, and
-TrackPoint either do not function or stop functioning a few minutes
-after boot.  This problem has been noted before, perhaps only occurring
-with BIOS 1.57 and later.[1][2][3][4][5]
+Fix to return a negative error code from the input_register_device()
+error handling case instead of 0, as done elsewhere in this function.
 
-Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
-and although the [BIOS changelog] notes "Fixed an issue of UEFI
-touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
-insufficient.
-
-Setting i8042.reset=1 or adding 33474HU to the reset list avoids the
-issue on my system from either warm or cold boot.
-
-[1]: https://bugs.launchpad.net/bugs/1210748
-[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
-[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
-[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
-[5]: https://forums.lenovo.com/topic/findpost/27/1337119
-[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
-
-Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Link: https://lore.kernel.org/r/20200428134948.78343-1-weiyongjun1@huawei.com
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/94f384b0f75f90f71425d7dce7ac82c59ddb87a8.1587702636.git.kevin@kevinlocke.name
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/input/rmi4/rmi_driver.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-index 42330024da2f..d15fd73dbd80 100644
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -745,6 +745,13 @@ static const struct dmi_system_id __initconst i8042_dmi_reset_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "P65xRP"),
- 		},
- 	},
-+	{
-+		/* Lenovo ThinkPad Twist S230u */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
-+		},
-+	},
- 	{ }
- };
- 
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index 65038dcc7613..677edbf870a7 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -991,7 +991,8 @@ static int rmi_driver_probe(struct device *dev)
+ 	if (data->input) {
+ 		rmi_driver_set_input_name(rmi_dev, data->input);
+ 		if (!rmi_dev->xport->input) {
+-			if (input_register_device(data->input)) {
++			retval = input_register_device(data->input);
++			if (retval) {
+ 				dev_err(dev, "%s: Failed to register input device.\n",
+ 					__func__);
+ 				goto err_destroy_functions;
 -- 
 2.25.1
 
