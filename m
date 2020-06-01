@@ -2,53 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1532C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19386C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF24D206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E196A206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037293;
-	bh=A0RLGSqTIiDaPfkMJEKBxw7Dn+ig3t1UvxxkBuVlf1I=;
+	s=default; t=1591037297;
+	bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HKCaKIdGoCcDs0CvzBYiSqfdpjmtR+G6LqjzNHrKpUbxXmwqSdZ7lA3rTkfeFEjVo
-	 d1jdxHC6xVsCziSAV2WPrNyivCDev0QGLuBAugGJE30bwEllM8QSjMIznGGTXb+6Lt
-	 7hZioojKsp3ffYQOAR5kHTS81zBOiBGgPzDailNQ=
+	b=drBkw6KjFfLJApoRZ38K23AsJyHDy9ULSFkezx+mlMrnHVkluIDHyoSwshkrAM57k
+	 0C7PFhFH/01IGn98zmXRy81tIuwmvdVTuqVGdRutzdDC1Bl0rqNkf2BLD3PB/3llkz
+	 ktN+z1D+70LC6tB9RouGdDR8dkhrSNsjE3yM5pIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgFASHt (ORCPT
+        id S1730874AbgFASsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730545AbgFASHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:07 -0400
+        id S1730545AbgFASHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 831392068D;
-        Mon,  1 Jun 2020 18:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 618E2206E2;
+        Mon,  1 Jun 2020 18:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034827;
-        bh=A0RLGSqTIiDaPfkMJEKBxw7Dn+ig3t1UvxxkBuVlf1I=;
+        s=default; t=1591034869;
+        bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2REHGxm4BC+SkbaiU1qcrtWKKLCPZtKHVZWKCtEHW775/7U2FdBViks8E6krSWwt8
-         OEqCSn4rpV/Kfph+PA50iu3ZR+y4WiTXGd65wbdhan5ss1ISiA4jVdzW4p/74CbTIK
-         5uRSEfnBg2Srdlk4ros/AzQ+kyy++ARghdf9yGN8=
+        b=YmPHRcuKUVp+UAalKa5UmVBP0/MFfTKL20u2a7nkHUwZcwzCJdpSovRrg3MGTBcL2
+         xa3cVmzVH6eKiV32BLYC0tV4sf0KzkXsLnz7puBwcyKDnvebLECxMP7oTRwX9pejTP
+         SjPEBC15CaJfLCo81dVQNYWKtUcK+ppLv8NsRXps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Danielle Ratson <danieller@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 031/142] mlxsw: spectrum: Fix use-after-free of split/unsplit/type_set in case reload fails
-Date:   Mon,  1 Jun 2020 19:53:09 +0200
-Message-Id: <20200601174041.132753587@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 048/142] usb: dwc3: pci: Enable extcon driver for Intel Merrifield
+Date:   Mon,  1 Jun 2020 19:53:26 +0200
+Message-Id: <20200601174042.817955302@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -61,108 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Pirko <jiri@mellanox.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 4340f42f207eacb81e7a6b6bb1e3b6afad9a2e26 upstream.
+[ Upstream commit 066c09593454e89bc605ffdff1c9810061f9b1e1 ]
 
-In case of reload fail, the mlxsw_sp->ports contains a pointer to a
-freed memory (either by reload_down() or reload_up() error path).
-Fix this by initializing the pointer to NULL and checking it before
-dereferencing in split/unsplit/type_set callpaths.
+Intel Merrifield provides a DR support via PMIC which has its own
+extcon driver.
 
-Fixes: 24cc68ad6c46 ("mlxsw: core: Add support for reload")
-Reported-by: Danielle Ratson <danieller@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Add a property string to link to that driver.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c |   14 ++++++++++++--
- drivers/net/ethernet/mellanox/mlxsw/switchx2.c |    8 ++++++++
- 2 files changed, 20 insertions(+), 2 deletions(-)
+ drivers/usb/dwc3/dwc3-pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -3932,6 +3932,7 @@ static void mlxsw_sp_ports_remove(struct
- 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
- 	kfree(mlxsw_sp->port_to_module);
- 	kfree(mlxsw_sp->ports);
-+	mlxsw_sp->ports = NULL;
- }
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 7051611229c9..b67372737dc9 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -114,6 +114,7 @@ static const struct property_entry dwc3_pci_intel_properties[] = {
  
- static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
-@@ -3986,6 +3987,7 @@ err_cpu_port_create:
- 	kfree(mlxsw_sp->port_to_module);
- err_port_to_module_alloc:
- 	kfree(mlxsw_sp->ports);
-+	mlxsw_sp->ports = NULL;
- 	return err;
- }
- 
-@@ -4040,6 +4042,14 @@ static void mlxsw_sp_port_unsplit_create
- 	}
- }
- 
-+static struct mlxsw_sp_port *
-+mlxsw_sp_port_get_by_local_port(struct mlxsw_sp *mlxsw_sp, u8 local_port)
-+{
-+	if (mlxsw_sp->ports && mlxsw_sp->ports[local_port])
-+		return mlxsw_sp->ports[local_port];
-+	return NULL;
-+}
-+
- static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
- 			       unsigned int count,
- 			       struct netlink_ext_ack *extack)
-@@ -4058,7 +4068,7 @@ static int mlxsw_sp_port_split(struct ml
- 	local_ports_in_1x = MLXSW_CORE_RES_GET(mlxsw_core, LOCAL_PORTS_IN_1X);
- 	local_ports_in_2x = MLXSW_CORE_RES_GET(mlxsw_core, LOCAL_PORTS_IN_2X);
- 
--	mlxsw_sp_port = mlxsw_sp->ports[local_port];
-+	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
- 	if (!mlxsw_sp_port) {
- 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
- 			local_port);
-@@ -4136,7 +4146,7 @@ static int mlxsw_sp_port_unsplit(struct
- 	local_ports_in_1x = MLXSW_CORE_RES_GET(mlxsw_core, LOCAL_PORTS_IN_1X);
- 	local_ports_in_2x = MLXSW_CORE_RES_GET(mlxsw_core, LOCAL_PORTS_IN_2X);
- 
--	mlxsw_sp_port = mlxsw_sp->ports[local_port];
-+	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
- 	if (!mlxsw_sp_port) {
- 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
- 			local_port);
---- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-@@ -1258,6 +1258,7 @@ static void mlxsw_sx_ports_remove(struct
- 		if (mlxsw_sx_port_created(mlxsw_sx, i))
- 			mlxsw_sx_port_remove(mlxsw_sx, i);
- 	kfree(mlxsw_sx->ports);
-+	mlxsw_sx->ports = NULL;
- }
- 
- static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
-@@ -1292,6 +1293,7 @@ err_port_module_info_get:
- 		if (mlxsw_sx_port_created(mlxsw_sx, i))
- 			mlxsw_sx_port_remove(mlxsw_sx, i);
- 	kfree(mlxsw_sx->ports);
-+	mlxsw_sx->ports = NULL;
- 	return err;
- }
- 
-@@ -1375,6 +1377,12 @@ static int mlxsw_sx_port_type_set(struct
- 	u8 module, width;
- 	int err;
- 
-+	if (!mlxsw_sx->ports || !mlxsw_sx->ports[local_port]) {
-+		dev_err(mlxsw_sx->bus_info->dev, "Port number \"%d\" does not exist\n",
-+			local_port);
-+		return -EINVAL;
-+	}
-+
- 	if (new_type == DEVLINK_PORT_TYPE_AUTO)
- 		return -EOPNOTSUPP;
- 
+ static const struct property_entry dwc3_pci_mrfld_properties[] = {
+ 	PROPERTY_ENTRY_STRING("dr_mode", "otg"),
++	PROPERTY_ENTRY_STRING("linux,extcon-name", "mrfld_bcove_pwrsrc"),
+ 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
+ 	{}
+ };
+-- 
+2.25.1
+
 
 
