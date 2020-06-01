@@ -2,58 +2,57 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0077C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE797208FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD783207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034333;
-	bh=hTc5StCoTsWrEq2VXmWQuAp2PNJxWYeixSkxoRBz6FA=;
+	s=default; t=1591034337;
+	bh=/A/eAbFYdnB8ODV/pNDI4+jBMMubhcLNCzLR43xG+to=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMymjydm3jqZuPjT/JH0HPtEqqPhrlni52m+cpDaWaDjeZF/IFg4RW4oqdbqSECUW
-	 I/YEH80C1KwBMMapW6lhEmU9eR8YlsrKscl6+egnfN3bMRMpT2UryVSnoHRXcMG8TR
-	 /wgs3HqiPgBo97Sp3MBphCdCcRbdMA5TtucYt618=
+	b=KrTe8f3xcJM2mT6Z2HV6T1TDKvRO5YPPKuQ3J8iO32DeoFAPlz5P+a3XkIAvjOFiy
+	 EWr8ae7WGPxO1f9cSb9x9nUaK9mM0tuJg6sj1Pfw42IbhYtyeZkGt9jlD6mbhPBSnI
+	 J2LEEUz/SGkUzMtGbq11mJ7jHkkqiNm5oU3LjrME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgFAR6w (ORCPT
+        id S1727875AbgFAR65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40696 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729215AbgFAR6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:38 -0400
+        id S1729213AbgFAR6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FBC72076B;
-        Mon,  1 Jun 2020 17:58:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A797F2073B;
+        Mon,  1 Jun 2020 17:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034317;
-        bh=hTc5StCoTsWrEq2VXmWQuAp2PNJxWYeixSkxoRBz6FA=;
+        s=default; t=1591034320;
+        bh=/A/eAbFYdnB8ODV/pNDI4+jBMMubhcLNCzLR43xG+to=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gV0rMVSZBHhIaL1t5kb5H82bzP1vdpEOsaUCeLsoMquO4AqbuXME25SazjcSuKpsr
-         eSWJLR0EnOCXLRctFpZ+gBSXOO5iCWfSvJRgjJRm6w+zafeQLnvCv/gKYHh2UkTxHx
-         TXCE9mf2HijWemp2lrdLBttzcw0Z2uMXEgzaTUk0=
+        b=gVaGgFRbdtdJiFpIML0iJpJcof/wKgtId5HKkJl899mGPaQlMJZD3QU1xj4/vSp9W
+         1ZVsEkhQ6H50zhFo5Vrnz8hYJhGKK7wKdupsV4nztjDVJycB7jaIDdYJf1fj4ygfDI
+         qzdpvPYPa6BwOcn1GFmPxyCBD7TbajMhe8HbpzLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        stable@vger.kernel.org, sam <sunhaoyl@outlook.com>,
+        Alexander Potapenko <glider@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 38/61] mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
-Date:   Mon,  1 Jun 2020 19:53:45 +0200
-Message-Id: <20200601174018.784749172@linuxfoundation.org>
+Subject: [PATCH 4.9 39/61] fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
+Date:   Mon,  1 Jun 2020 19:53:46 +0200
+Message-Id: <20200601174018.927481596@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -66,97 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Alexander Potapenko <glider@google.com>
 
-[ Upstream commit 6988f31d558aa8c744464a7f6d91d34ada48ad12 ]
+[ Upstream commit 1d605416fb7175e1adf094251466caa52093b413 ]
 
-Replace superfluous VM_BUG_ON() with comment about correct usage.
+KMSAN reported uninitialized data being written to disk when dumping
+core.  As a result, several kilobytes of kmalloc memory may be written
+to the core file and then read by a non-privileged user.
 
-Technically reverts commit 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to
-page_mapcount()"), but context lines have changed.
-
-Function isolate_migratepages_block() runs some checks out of lru_lock
-when choose pages for migration.  After checking PageLRU() it checks
-extra page references by comparing page_count() and page_mapcount().
-Between these two checks page could be removed from lru, freed and taken
-by slab.
-
-As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
-Race window is tiny.  For certain workload this happens around once a
-year.
-
-    page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
-    flags: 0x500000000008100(slab|head)
-    raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
-    raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
-    page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
-    ------------[ cut here ]------------
-    kernel BUG at ./include/linux/mm.h:628!
-    invalid opcode: 0000 [#1] SMP NOPTI
-    CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
-    Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
-    RIP: 0010:isolate_migratepages_block+0x986/0x9b0
-
-The code in isolate_migratepages_block() was added in commit
-119d6d59dcc0 ("mm, compaction: avoid isolating pinned pages") before
-adding VM_BUG_ON into page_mapcount().
-
-This race has been predicted in 2015 by Vlastimil Babka (see link
-below).
-
-[akpm@linux-foundation.org: comment tweaks, per Hugh]
-Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: sam <sunhaoyl@outlook.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Hugh Dickins <hughd@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/159032779896.957378.7852761411265662220.stgit@buzz
-Link: https://lore.kernel.org/lkml/557710E1.6060103@suse.cz/
-Link: https://lore.kernel.org/linux-mm/158937872515.474360.5066096871639561424.stgit@buzz/T/ (v1)
+Link: http://lkml.kernel.org/r/20200419100848.63472-1-glider@google.com
+Link: https://github.com/google/kmsan/issues/76
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ fs/binfmt_elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ca6f213fa4f0..7a4c035b187f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -504,6 +504,11 @@ static inline int is_vmalloc_or_module_addr(const void *x)
- 
- extern void kvfree(const void *addr);
- 
-+/*
-+ * Mapcount of compound page as a whole, does not include mapped sub-pages.
-+ *
-+ * Must be called only for compound pages or any their tail sub-pages.
-+ */
- static inline int compound_mapcount(struct page *page)
- {
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
-@@ -523,10 +528,16 @@ static inline void page_mapcount_reset(struct page *page)
- 
- int __page_mapcount(struct page *page);
- 
-+/*
-+ * Mapcount of 0-order page; when compound sub-page, includes
-+ * compound_mapcount().
-+ *
-+ * Result is undefined for pages which cannot be mapped into userspace.
-+ * For example SLAB or special types of pages. See function page_has_type().
-+ * They use this place in struct page differently.
-+ */
- static inline int page_mapcount(struct page *page)
- {
--	VM_BUG_ON_PAGE(PageSlab(page), page);
--
- 	if (unlikely(PageCompound(page)))
- 		return __page_mapcount(page);
- 	return atomic_read(&page->_mapcount) + 1;
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index e78553d51837..73cd7482c1fa 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1721,7 +1721,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+ 		    (!regset->active || regset->active(t->task, regset) > 0)) {
+ 			int ret;
+ 			size_t size = regset->n * regset->size;
+-			void *data = kmalloc(size, GFP_KERNEL);
++			void *data = kzalloc(size, GFP_KERNEL);
+ 			if (unlikely(!data))
+ 				return 0;
+ 			ret = regset->get(t->task, regset,
 -- 
 2.25.1
 
