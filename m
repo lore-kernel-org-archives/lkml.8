@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B30C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F72E206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1B4206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035421;
-	bh=dUG1Ak5XxgkCPUsPDSxotQhuzW0jzCC4BzCrfzxmx3c=;
+	s=default; t=1591035425;
+	bh=xr+cNPrIdf1C12cNTU1/aKdibL4caOdZ0UILFHZY4a0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rObOQLdpZ5cEvq0zkRY+f1j6IGct5bm+BPWxEUyfX6bPkGKWvO47CTKBAVaCWItdn
-	 Rn/+2N4ah+9yRr1xtpL8nfhhiBPFXIyhZ5J1njnJ7QQmmvAyBaHwv/QXc6Us0ukC7u
-	 0KTilOgN+bHxVkicRt18XpRT/3p31Vm410C/Hbhk=
+	b=pOX6r1DGTIGOmDve/fn7FpM5IsaIF6Vj/EPjX6Kqnb2/V7ywNand8o9wnNYyUBZhX
+	 YaKet4KGh97xr5muQqkc7LjXqKpqPX06JkCuK1Ikgd2JdF3zHox+uoREtWYXEMwNNQ
+	 JUOVjNdg2qGL28vmFe3aTPq8RmNZzp95T5JvUrIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbgFASRB (ORCPT
+        id S1731778AbgFASRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731754AbgFASQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:16:53 -0400
+        id S1731186AbgFASRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B20320776;
-        Mon,  1 Jun 2020 18:16:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DACB2065C;
+        Mon,  1 Jun 2020 18:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035413;
-        bh=dUG1Ak5XxgkCPUsPDSxotQhuzW0jzCC4BzCrfzxmx3c=;
+        s=default; t=1591035419;
+        bh=xr+cNPrIdf1C12cNTU1/aKdibL4caOdZ0UILFHZY4a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1FeVC21IZ7b3JG7/wmC5uP++ktry5KYazoN4QgVSYD2xVLeR54shV/qfq1GgUiWhr
-         l+SjvFDIeMROgaK2FaEWKtkfeNdBn+zam23KkKzx/kBtuW6FZffaWIrZMR3xnriuRT
-         tEbFW/WlfSqBiHXJN+Xz2usCj7mdP9x4G5n6UKPE=
+        b=kk2wXM7xFtkyG2nObhCTe5qhbhKp+1J63uoYMjHLgPOc9XMO7zk/txLE0u4J4w73/
+         iuI8ldppJpoPbNr7f4M/Psw1//v5OtPXd8gvAuVmEapxER7n36DHpCk9LrRx+/PD/2
+         n5UOwZVXQeBN6eaKULvyjpXsewM0xE90eCKXPCWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
         Xin Long <lucien.xin@gmail.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.6 148/177] xfrm: call xfrm_output_gso when inner_protocol is set in xfrm_output
-Date:   Mon,  1 Jun 2020 19:54:46 +0200
-Message-Id: <20200601174100.780862436@linuxfoundation.org>
+Subject: [PATCH 5.6 151/177] xfrm: fix a NULL-ptr deref in xfrm_local_error
+Date:   Mon,  1 Jun 2020 19:54:49 +0200
+Message-Id: <20200601174100.997886917@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,95 +62,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xin Long <lucien.xin@gmail.com>
 
-commit a204aef9fd77dce1efd9066ca4e44eede99cd858 upstream.
+commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
 
-An use-after-free crash can be triggered when sending big packets over
-vxlan over esp with esp offload enabled:
+This patch is to fix a crash:
 
-  [] BUG: KASAN: use-after-free in ipv6_gso_pull_exthdrs.part.8+0x32c/0x4e0
-  [] Call Trace:
-  []  dump_stack+0x75/0xa0
-  []  kasan_report+0x37/0x50
-  []  ipv6_gso_pull_exthdrs.part.8+0x32c/0x4e0
-  []  ipv6_gso_segment+0x2c8/0x13c0
-  []  skb_mac_gso_segment+0x1cb/0x420
-  []  skb_udp_tunnel_segment+0x6b5/0x1c90
-  []  inet_gso_segment+0x440/0x1380
-  []  skb_mac_gso_segment+0x1cb/0x420
-  []  esp4_gso_segment+0xae8/0x1709 [esp4_offload]
-  []  inet_gso_segment+0x440/0x1380
-  []  skb_mac_gso_segment+0x1cb/0x420
-  []  __skb_gso_segment+0x2d7/0x5f0
-  []  validate_xmit_skb+0x527/0xb10
-  []  __dev_queue_xmit+0x10f8/0x2320 <---
-  []  ip_finish_output2+0xa2e/0x1b50
-  []  ip_output+0x1a8/0x2f0
-  []  xfrm_output_resume+0x110e/0x15f0
-  []  __xfrm4_output+0xe1/0x1b0
-  []  xfrm4_output+0xa0/0x200
-  []  iptunnel_xmit+0x5a7/0x920
-  []  vxlan_xmit_one+0x1658/0x37a0 [vxlan]
-  []  vxlan_xmit+0x5e4/0x3ec8 [vxlan]
-  []  dev_hard_start_xmit+0x125/0x540
-  []  __dev_queue_xmit+0x17bd/0x2320  <---
-  []  ip6_finish_output2+0xb20/0x1b80
-  []  ip6_output+0x1b3/0x390
-  []  ip6_xmit+0xb82/0x17e0
-  []  inet6_csk_xmit+0x225/0x3d0
-  []  __tcp_transmit_skb+0x1763/0x3520
-  []  tcp_write_xmit+0xd64/0x5fe0
-  []  __tcp_push_pending_frames+0x8c/0x320
-  []  tcp_sendmsg_locked+0x2245/0x3500
-  []  tcp_sendmsg+0x27/0x40
+  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
+  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
+  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
+  [ ] Call Trace:
+  [ ]  xfrm6_local_error+0x1eb/0x300
+  [ ]  xfrm_local_error+0x95/0x130
+  [ ]  __xfrm6_output+0x65f/0xb50
+  [ ]  xfrm6_output+0x106/0x46f
+  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
+  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
+  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
+  [ ]  dev_hard_start_xmit+0x165/0x820
+  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
+  [ ]  ip_finish_output2+0xd3e/0x1480
+  [ ]  ip_do_fragment+0x182d/0x2210
+  [ ]  ip_output+0x1d0/0x510
+  [ ]  ip_send_skb+0x37/0xa0
+  [ ]  raw_sendmsg+0x1b4c/0x2b80
+  [ ]  sock_sendmsg+0xc0/0x110
 
-As on the tx path of vxlan over esp, skb->inner_network_header would be
-set on vxlan_xmit() and xfrm4_tunnel_encap_add(), and the later one can
-overwrite the former one. It causes skb_udp_tunnel_segment() to use a
-wrong skb->inner_network_header, then the issue occurs.
+This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
+skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
+xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
+to get ipv6 info from a ipv4 sk.
 
-This patch is to fix it by calling xfrm_output_gso() instead when the
-inner_protocol is set, in which gso_segment of inner_protocol will be
-done first.
+This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
+error reporting more robust"), but brought back by Commit 844d48746e4b
+("xfrm: choose protocol family by skb protocol").
 
-While at it, also improve some code around.
+So to fix it, we should call xfrm6_local_error() only when skb->protocol
+is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
 
-Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
+Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
 Reported-by: Xiumei Mu <xmu@redhat.com>
 Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_output.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ net/xfrm/xfrm_output.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/net/xfrm/xfrm_output.c
 +++ b/net/xfrm/xfrm_output.c
-@@ -583,18 +583,20 @@ int xfrm_output(struct sock *sk, struct
- 		xfrm_state_hold(x);
+@@ -642,7 +642,8 @@ void xfrm_local_error(struct sk_buff *sk
  
- 		if (skb_is_gso(skb)) {
--			skb_shinfo(skb)->gso_type |= SKB_GSO_ESP;
-+			if (skb->inner_protocol)
-+				return xfrm_output_gso(net, sk, skb);
- 
--			return xfrm_output2(net, sk, skb);
-+			skb_shinfo(skb)->gso_type |= SKB_GSO_ESP;
-+			goto out;
- 		}
- 
- 		if (x->xso.dev && x->xso.dev->features & NETIF_F_HW_ESP_TX_CSUM)
- 			goto out;
-+	} else {
-+		if (skb_is_gso(skb))
-+			return xfrm_output_gso(net, sk, skb);
- 	}
- 
--	if (skb_is_gso(skb))
--		return xfrm_output_gso(net, sk, skb);
--
- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
- 		err = skb_checksum_help(skb);
- 		if (err) {
+ 	if (skb->protocol == htons(ETH_P_IP))
+ 		proto = AF_INET;
+-	else if (skb->protocol == htons(ETH_P_IPV6))
++	else if (skb->protocol == htons(ETH_P_IPV6) &&
++		 skb->sk->sk_family == AF_INET6)
+ 		proto = AF_INET6;
+ 	else
+ 		return;
 
 
