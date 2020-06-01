@@ -2,116 +2,260 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24815C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21132C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03D3F206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJBkjwja"
+	by mail.kernel.org (Postfix) with ESMTP id EA777206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591002803;
+	bh=w1slmTZZ2876sYev0ELMlVITFxKpVczZEcUyQH8mdqE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yV2KUH60ewDjruic2JPEtbSozjdZ2dtSjC6ciXHh4EG8t84hJWOvOJ/RWSRYwv8XL
+	 xn5VsqrasNObF0pTc/1syrEg30lTEOutx1dlqs498Hj1++lNVz/Ufb2zBZDsSuCRxG
+	 vWpDCljwzFjUpIoFqxqR35fnGYCVG6Jj/OBa2hqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgFAJNK (ORCPT
+        id S1726125AbgFAJNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgFAJNI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:13:08 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D71C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 02:13:07 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l26so9961299wme.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:13:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tDHwL27SjRSAn7P4iHG4Ki5sU7jd9jS6jL4SyV4oF3E=;
-        b=zJBkjwja8Fm8zIIJ8IBmWgDe1V+NAhJHgo3lPoZWmY4ashtHyXRVt0ke2KgerN+BKB
-         mcbIvnoV/C+IlpkcKMwnTbla9vWa+MTMQo8AbTndYAS1id/kKOlFtIswZE3GyH3xqLqe
-         NKP4cFLNrEs0XTwge8f+oMHNyl6xJNxJ37AeDsG1ZhoRMdq9UVZzbu2rzPzZAoXCLNLw
-         mvTilv3CbiEJgo5JguLjHDrVtI1qN5/QUee0Q8RXb+wXs7Ja6c6EX9Q1pAL7icuNs9P/
-         eD/IDjZUzlf8PziZn/LEhdF9C8YYn0xoLToiFYusRqqif1uPUkJeWB4083UZXw6srafa
-         kAJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tDHwL27SjRSAn7P4iHG4Ki5sU7jd9jS6jL4SyV4oF3E=;
-        b=OzZFE12KXw7ZfY00Px3qdc1KnKwVbazrjkqC+AFJ2VBYvNAvrMANIS+ZzQzLsE9S+V
-         bOKMheeAbYeAH9N5mBn/ado9Zp3N+zfEwQ48rxECXM7YUGg+/gIfLzuxYRwVwnANLw/4
-         ZOJAU29bk0PzPV+J+a2xgl0x/tdbdTRjmLG/19UfZrJ3CJB9gIVBJ9qSRO/e8ztO//ex
-         ZtljgGYYb7Dn+YZ0ePcxqhOR9qt7gZYVXnNS7gTohVXHRuNFIEJfkMv981QRBGiZf/J6
-         BVglLnE0rbaE3syKeDDGVh7do9p32n9PoPMrFGYa66AcHL5uTg4nCa8D1E7DecSXop0R
-         73hw==
-X-Gm-Message-State: AOAM5324/9vPALrHgCyYiownCX6emRu8+VvlX+TUx3dV2zCl3KcNC2W3
-        4Uc/BIYg5PgPmy8z/fuNbPvRm/xEPhA=
-X-Google-Smtp-Source: ABdhPJzMiRlL4OQZE/Sy5jOOHAS/PO2AotW6Syts2R0Ia9kzs9upII1d9fLRC8E86GyxWKS9PaMHPQ==
-X-Received: by 2002:a1c:c904:: with SMTP id f4mr2813557wmb.69.1591002786511;
-        Mon, 01 Jun 2020 02:13:06 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id r2sm21587171wrg.68.2020.06.01.02.13.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jun 2020 02:13:05 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] nvmem: add ONIE NVMEM cells support
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Taras Chornyi <taras.chornyi@plvision.eu>
-References: <20200529230451.21337-1-vadym.kochan@plvision.eu>
- <20200529230451.21337-3-vadym.kochan@plvision.eu>
- <8a8653c5-b112-4042-cbdf-8498e38d14ee@linaro.org>
- <20200601090300.GA21928@plvision.eu>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <0d664272-4ef9-fe2c-02f4-60e9ecb41e20@linaro.org>
-Date:   Mon, 1 Jun 2020 10:13:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 1 Jun 2020 05:13:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbgFAJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:13:21 -0400
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DA6520734
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591002800;
+        bh=w1slmTZZ2876sYev0ELMlVITFxKpVczZEcUyQH8mdqE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cDRie4a/jnxwrnbpGFeojoCrPqDBNUKUWE5vvo1CR+zCMWbeMQ02VsP3Q9pf7q++h
+         AfWfVz8haNVuVZJYriWSarmdn2FMjprIHjniWV4OBHO+S0FmCdBVvaBpbl1xBjRYO0
+         POg6pqPB0yeZWCUXg88uKqE5Mju5PU3fzdS1MhcU=
+Received: by mail-lf1-f42.google.com with SMTP id c12so3483202lfc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:13:20 -0700 (PDT)
+X-Gm-Message-State: AOAM5309eB3Usg1CHPzYj5OppG0KBshJTF6Xv8UNssLhSIcaEoWiv/wC
+        Oi/tA9iJ+8HfDICabd2uljX4wzizkFjct9ytL9o=
+X-Google-Smtp-Source: ABdhPJz7eGyh5VsWr8t8LIfLMDwvO7lk89fQWhe5jtwj6TXEgrbTzrgWNF7maXhOQFWLeH+5CjECc64TPimaNfjr7vw=
+X-Received: by 2002:a19:7fd6:: with SMTP id a205mr10631870lfd.70.1591002798508;
+ Mon, 01 Jun 2020 02:13:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200601090300.GA21928@plvision.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1590474856.git.greentime.hu@sifive.com> <8dd3e441842d2b0fb63da82ecc04b08f99930e6a.1590474856.git.greentime.hu@sifive.com>
+In-Reply-To: <8dd3e441842d2b0fb63da82ecc04b08f99930e6a.1590474856.git.greentime.hu@sifive.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 1 Jun 2020 17:13:07 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSaiymJOGGYqseQMzsnFb_zKeEKPF-Gvgyy2Et_KDbYCA@mail.gmail.com>
+Message-ID: <CAJF2gTSaiymJOGGYqseQMzsnFb_zKeEKPF-Gvgyy2Et_KDbYCA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 12/13] riscv: Add sigcontext save/restore for vector
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since it has been redesigned with new version spec, please change the
+first-author :)
+
+And add me as Co-developed.
+
+On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
+>
+> From: Guo Ren <guoren@linux.alibaba.com>
+>
+> This patch adds sigcontext save/restore for vector. The vector registers
+> will be saved in datap pointer. The datap pointer will be allocaed
+> dynamically when the task needs in kernel space. The datap pointer will
+> be set right after the __riscv_v_state data structure to save all the
+> vector registers in the signal handler stack.
+>
+> [greentime.hu@sifive.com: add support for dynamic vlen]
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> ---
+>  arch/riscv/include/uapi/asm/sigcontext.h |  2 +
+>  arch/riscv/kernel/signal.c               | 92 +++++++++++++++++++++++-
+>  2 files changed, 91 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/include/uapi/asm/sigcontext.h b/arch/riscv/include/uapi/asm/sigcontext.h
+> index 84f2dfcfdbce..4217f3f1c8ba 100644
+> --- a/arch/riscv/include/uapi/asm/sigcontext.h
+> +++ b/arch/riscv/include/uapi/asm/sigcontext.h
+> @@ -8,6 +8,7 @@
+>
+>  #include <asm/ptrace.h>
+>
+> +#define RVV_MAGIC      0x53465457
+>  /*
+>   * Signal context structure
+>   *
+> @@ -17,6 +18,7 @@
+>  struct sigcontext {
+>         struct user_regs_struct sc_regs;
+>         union __riscv_fp_state sc_fpregs;
+> +       struct __riscv_v_state sc_vregs;
+>  };
+>
+>  #endif /* _UAPI_ASM_RISCV_SIGCONTEXT_H */
+> diff --git a/arch/riscv/kernel/signal.c b/arch/riscv/kernel/signal.c
+> index 17ba190e84a5..9ada6f74bb95 100644
+> --- a/arch/riscv/kernel/signal.c
+> +++ b/arch/riscv/kernel/signal.c
+> @@ -83,6 +83,80 @@ static long save_fp_state(struct pt_regs *regs,
+>  #define restore_fp_state(task, regs) (0)
+>  #endif
+>
+> +#ifdef CONFIG_VECTOR
+> +static long restore_v_state(struct pt_regs *regs, struct sigcontext *sc)
+> +{
+> +       long err;
+> +       struct __riscv_v_state __user *state = &sc->sc_vregs;
+> +       void *datap;
+> +       __u32 magic;
+> +
+> +       /* Get magic number and check it. */
+> +       err = __get_user(magic, &state->magic);
+> +       if (unlikely(err))
+> +               return err;
+> +
+> +       if (magic != RVV_MAGIC)
+> +               return -EINVAL;
+> +
+> +       /* Copy everything of __riscv_v_state except datap. */
+> +       err = __copy_from_user(&current->thread.vstate, state,
+> +                              RISCV_V_STATE_DATAP);
+> +       if (unlikely(err))
+> +               return err;
+> +
+> +       /* Copy the pointer datap itself. */
+> +       err = __get_user(datap, &state->datap);
+> +       if (unlikely(err))
+> +               return err;
+> +
+> +
+> +       /* Copy the whole vector content from user space datap. */
+> +       err = __copy_from_user(current->thread.vstate.datap, datap,
+> +                              current->thread.vstate.size);
+> +       if (unlikely(err))
+> +               return err;
+> +
+> +       vstate_restore(current, regs);
+> +
+> +       return err;
+> +}
+> +
+> +static long save_v_state(struct pt_regs *regs, struct sigcontext *sc)
+> +{
+> +       long err;
+> +       struct __riscv_v_state __user *state = &sc->sc_vregs;
+> +       /* Set the datap right after the sigcntext structure. */
+> +       void *datap = sc + 1;
+> +
+> +       vstate_save(current, regs);
+> +       /* Copy everything of vstate but datap. */
+> +       err = __copy_to_user(state, &current->thread.vstate,
+> +                            RISCV_V_STATE_DATAP);
+> +       if (unlikely(err))
+> +               return err;
+> +
+> +       /* Copy the magic number. */
+> +       err = __put_user(RVV_MAGIC, &state->magic);
+> +       if (unlikely(err))
+> +               return err;
+> +
+> +       /* Copy the pointer datap itself. */
+> +       err = __put_user(datap, &state->datap);
+> +       if (unlikely(err))
+> +               return err;
+> +
+> +       /* Copy the whole vector content to user space datap. */
+> +       err = __copy_to_user(datap, current->thread.vstate.datap,
+> +                            current->thread.vstate.size);
+> +
+> +       return err;
+> +}
+> +#else
+> +#define save_v_state(task, regs) (0)
+> +#define restore_v_state(task, regs) (0)
+> +#endif
+> +
+>  static long restore_sigcontext(struct pt_regs *regs,
+>         struct sigcontext __user *sc)
+>  {
+> @@ -92,6 +166,9 @@ static long restore_sigcontext(struct pt_regs *regs,
+>         /* Restore the floating-point state. */
+>         if (has_fpu)
+>                 err |= restore_fp_state(regs, &sc->sc_fpregs);
+> +       /* Restore the vector state. */
+> +       if (has_vector)
+> +               err |= restore_v_state(regs, sc);
+>         return err;
+>  }
+>
+> @@ -101,13 +178,16 @@ SYSCALL_DEFINE0(rt_sigreturn)
+>         struct rt_sigframe __user *frame;
+>         struct task_struct *task;
+>         sigset_t set;
+> +       size_t frame_size = sizeof(*frame);
+>
+>         /* Always make any pending restarted system calls return -EINTR */
+>         current->restart_block.fn = do_no_restart_syscall;
+>
+>         frame = (struct rt_sigframe __user *)regs->sp;
+>
+> -       if (!access_ok(frame, sizeof(*frame)))
+> +       if (has_vector)
+> +               frame_size += current->thread.vstate.size;
+> +       if (!access_ok(frame, frame_size))
+>                 goto badframe;
+>
+>         if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
+> @@ -145,6 +225,9 @@ static long setup_sigcontext(struct rt_sigframe __user *frame,
+>         /* Save the floating-point state. */
+>         if (has_fpu)
+>                 err |= save_fp_state(regs, &sc->sc_fpregs);
+> +       /* Save the vector state. */
+> +       if (has_vector)
+> +               err |= save_v_state(regs, sc);
+>         return err;
+>  }
+>
+> @@ -176,9 +259,12 @@ static int setup_rt_frame(struct ksignal *ksig, sigset_t *set,
+>  {
+>         struct rt_sigframe __user *frame;
+>         long err = 0;
+> +       size_t frame_size = sizeof(*frame);
+>
+> -       frame = get_sigframe(ksig, regs, sizeof(*frame));
+> -       if (!access_ok(frame, sizeof(*frame)))
+> +       if (has_vector)
+> +               frame_size += current->thread.vstate.size;
+> +       frame = get_sigframe(ksig, regs, frame_size);
+> +       if (!access_ok(frame, frame_size))
+>                 return -EFAULT;
+>
+>         err |= copy_siginfo_to_user(&frame->info, &ksig->info);
+> --
+> 2.26.2
+>
+>
 
 
-On 01/06/2020 10:03, Vadym Kochan wrote:
->>> +
->>> +	nvmem = of_nvmem_device_get(np, NULL);
->>> +	if (IS_ERR(nvmem))
->>> +		return PTR_ERR(nvmem);
->>> +
->> TBH, this looks completely incorrect way to do this and misuse of nvmem
->> consumer interface.
->>
->> Ideally nvmem provider driver should populate "cells" in struct nvmem_config
->> after decoding them and then register nvmem provider.
->>
->> That should just work!
->>
->>
->> --srini
-> But this is not nvmem provider but just describes the cells for any
-> nvmem device, because ONIE uses special TLV structure on the nvmem
-> device. So from the nvmem device point it is a consumer but provides the cells
-> for the given device.
+-- 
+Best Regards
+ Guo Ren
 
-That still falls under nvmem providers responsibility to parse these 
-cells before registering it.
-
-BTW, where is the provider driver for this in kernel?
-
-
---srini
-
-> 
+ML: https://lore.kernel.org/linux-csky/
