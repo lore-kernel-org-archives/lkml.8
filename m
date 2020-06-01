@@ -2,172 +2,92 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82E6D2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CA22074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591017301;
+	bh=kMjXUVNCNcYikXj8R8lRTRlVJfjbzlaBlZwBz2nduNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RPxE25OLD1UECm9njEPEAexHagiT1os3dvjtw01tRAO2ZttgWJYpt2wKJFJjUHJF8
+	 Osne03RR1q7fK+S4Oa9ApINQnZUTBDHhrz7pUGpWPloDtkcl8/23gsSLAkTEkt8e+5
+	 sERXp37Wenfhp+7XYY+8u7TzFXlRYaRpyXn2rk3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgFANNd (ORCPT
+        id S1726751AbgFANPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgFANLl (ORCPT
+        Mon, 1 Jun 2020 09:15:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34543 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgFANO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:11:41 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFF8C08C5C0;
-        Mon,  1 Jun 2020 06:11:41 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfkE4-0006yq-FJ; Mon, 01 Jun 2020 15:11:36 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0BA3F1C0244;
-        Mon,  1 Jun 2020 15:11:36 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 13:11:35 -0000
-From:   "tip-bot2 for Serge Semin" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource: mips-gic-timer: Mark GIC timer as
- unstable if ref clock changes
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200521204818.25436-9-Sergey.Semin@baikalelectronics.ru>
-References: <20200521204818.25436-9-Sergey.Semin@baikalelectronics.ru>
+        Mon, 1 Jun 2020 09:14:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z64so3467135pfb.1;
+        Mon, 01 Jun 2020 06:14:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gddyfQ3Neo3DcmxiCVDRf3EtQDq1cuUh0cXICGe8cf4=;
+        b=DRtxPfx79yuZ/UoKVQAKA2A3GE6R7B4daQVUA0Oshg5BBHRM3fAyvp2roe6dOAIRh8
+         eu4jcoQb+S7/pR2Y/XvNaZnvah/wpCn/Ywvhv8XS779Q519150mzB7chvFYSVwpnA3mx
+         NOlXD7/rMwXhglsQhwnPJP3jzXY/N9ho5GfmzPweYKk6QmHOAivWCAAjBaaAWogZ52jb
+         LDQFUjLtfsVgo1EIdhfJScrdlaibQBCktr1wyF89C+2goqwPDIH8kU9A/hMgzYdBaX47
+         jGkEWTGvZ7oq2ccPkF0ea9kKDC34FKZSCxKdNyfqiH5slCADBjAirnHl2cCchJL9WCA4
+         1Gmg==
+X-Gm-Message-State: AOAM53006dljZ2GK2F0PSVV3Blewb763dc2CCAKEKEWGXPuKSC2J30Ge
+        37esfFGnHjWqAVptuArcHyw=
+X-Google-Smtp-Source: ABdhPJyhvFhgDaLemeHJdh4LjmALhxP/lWWjg5b16MtVVLSWXkc4Gw0ALvIpNp0MVDxjYQTNYW5nmA==
+X-Received: by 2002:a62:e219:: with SMTP id a25mr20476293pfi.303.1591017297644;
+        Mon, 01 Jun 2020 06:14:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 124sm14359923pfb.15.2020.06.01.06.14.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 06:14:55 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A911640251; Mon,  1 Jun 2020 13:14:54 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 13:14:54 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Subject: Re: [PATCH 2/4] lib: Make test_sysctl initialized as module
+Message-ID: <20200601131454.GG11244@42.do-not-panic.com>
+References: <159067751438.229397.6746886115540895104.stgit@devnote2>
+ <159067753624.229397.13771427935697541820.stgit@devnote2>
 MIME-Version: 1.0
-Message-ID: <159101709590.17951.10382391604771292137.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159067753624.229397.13771427935697541820.stgit@devnote2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+On Thu, May 28, 2020 at 11:52:16PM +0900, Masami Hiramatsu wrote:
+> test_sysctl.c is expected to be used as a module, but since
+> it does not use module_init(), it never be registered as
+> a module and not appeared under /sys/module/.
+> In the result, the selftests/sysctl/sysctl.sh always fails
+> to find the test module and is skipped.
+> 
+> This makes test_sysctl.c initialized as a module by module_init()
+> and allow sysctl.sh to find the test module is loaded.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Commit-ID:     7d7de1a65349811b24971c5e8e040e6aac192dd4
-Gitweb:        https://git.kernel.org/tip/7d7de1a65349811b24971c5e8e040e6aac192dd4
-Author:        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-AuthorDate:    Thu, 21 May 2020 23:48:17 +03:00
-Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Sat, 23 May 2020 00:03:16 +02:00
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-clocksource: mips-gic-timer: Mark GIC timer as unstable if ref clock changes
-
-Currently clocksource framework doesn't support the clocks with variable
-frequency. Since MIPS GIC timer ticks rate might be unstable on some
-platforms, we must make sure that it justifies the clocksource
-requirements. MIPS GIC timer is incremented with the CPU cluster reference
-clocks rate. So in case if CPU frequency changes, the MIPS GIC tick rate
-changes synchronously. Due to this the clocksource subsystem can't rely on
-the timer to measure system clocks anymore. This commit marks the MIPS GIC
-based clocksource as unstable if reference clock (normally it's a CPU
-reference clocks) rate changes. The clocksource will execute a watchdog
-thread, which lowers the MIPS GIC timer rating to zero and fallbacks to a
-new stable one.
-
-Note we don't need to set the CLOCK_SOURCE_MUST_VERIFY flag to the MIPS
-GIC clocksource since normally the timer is stable. The only reason why
-it gets unstable is due to the ref clock rate change, which event we
-detect here in the driver by means of the clocks event notifier.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200521204818.25436-9-Sergey.Semin@baikalelectronics.ru
----
- drivers/clocksource/Kconfig          |  1 +
- drivers/clocksource/mips-gic-timer.c | 19 ++++++++++++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index c824002..9141838 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -570,6 +570,7 @@ config CLKSRC_VERSATILE
- config CLKSRC_MIPS_GIC
- 	bool
- 	depends on MIPS_GIC
-+	select CLOCKSOURCE_WATCHDOG
- 	select TIMER_OF
- 
- config CLKSRC_TANGO_XTAL
-diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
-index ef12c12..be4175f 100644
---- a/drivers/clocksource/mips-gic-timer.c
-+++ b/drivers/clocksource/mips-gic-timer.c
-@@ -24,6 +24,9 @@
- static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
- static int gic_timer_irq;
- static unsigned int gic_frequency;
-+static bool __read_mostly gic_clock_unstable;
-+
-+static void gic_clocksource_unstable(char *reason);
- 
- static u64 notrace gic_read_count_2x32(void)
- {
-@@ -125,8 +128,10 @@ static int gic_clk_notifier(struct notifier_block *nb, unsigned long action,
- {
- 	struct clk_notifier_data *cnd = data;
- 
--	if (action == POST_RATE_CHANGE)
-+	if (action == POST_RATE_CHANGE) {
-+		gic_clocksource_unstable("ref clock rate change");
- 		on_each_cpu(gic_update_frequency, (void *)cnd->new_rate, 1);
-+	}
- 
- 	return NOTIFY_OK;
- }
-@@ -172,6 +177,18 @@ static struct clocksource gic_clocksource = {
- 	.vdso_clock_mode	= VDSO_CLOCKMODE_GIC,
- };
- 
-+static void gic_clocksource_unstable(char *reason)
-+{
-+	if (gic_clock_unstable)
-+		return;
-+
-+	gic_clock_unstable = true;
-+
-+	pr_info("GIC timer is unstable due to %s\n", reason);
-+
-+	clocksource_mark_unstable(&gic_clocksource);
-+}
-+
- static int __init __gic_clocksource_init(void)
- {
- 	unsigned int count_width;
+  Luis
