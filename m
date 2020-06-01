@@ -2,267 +2,990 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F77CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D927A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E64A2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:24:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZkBIckKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgFAUVK (ORCPT
+        id S1728479AbgFAUY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:21:10 -0400
-Received: from mga09.intel.com ([134.134.136.24]:57046 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbgFAUVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:21:09 -0400
-IronPort-SDR: WIjIF+MkoRV6JUVT1f/7TUpbuHDmRb3szK+8b8bPpALAu3Vejd3lqBImrZZV0Ydj8eTrt1MS/Y
- 3CXjGYOQ60xA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:21:06 -0700
-IronPort-SDR: n1ZPPuYDUZofFfMBSkTAmlE13KIA+Kq5aAce963N9kDHJeX339bdgaMxuOcabNJH7NkWc6POTP
- TJ+f87tT+6cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="377514526"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Jun 2020 13:21:05 -0700
-Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
-        by linux.intel.com (Postfix) with ESMTP id 4019F58010E;
-        Mon,  1 Jun 2020 13:21:03 -0700 (PDT)
-Subject: Re: [PATCH v5 00/13] perf: support enable and disable commands in
- stat and record modes
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <165cbe1a-bb97-3295-425e-1dd12bef70f1@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <40a461ab-4eaa-5abf-22e3-1207cf8db87f@linux.intel.com>
-Date:   Mon, 1 Jun 2020 23:21:02 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <165cbe1a-bb97-3295-425e-1dd12bef70f1@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 1 Jun 2020 16:24:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgFAUY1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 16:24:27 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD522C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:24:26 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id o1so1123916qvq.14
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 13:24:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=LoXMpRvegVVFB/qraJeZ3y0NdhRRqfpioiS69Z/ofTA=;
+        b=ZkBIckKoCMfP08j4PYotAG9cLdGp+wzUXONEMrTgLZ9P/W+rj4Iqr7ZFXGyiBRwcVr
+         MVAwcINlukYDX0AYquxY395gz3uFcR2lqNbB2uR8qGn7GeKpeVnh/uL3CIJADox+bnAY
+         rV6X1jNOLEh/FNVSD1S3mI+Xvoj8kr3tiEAE5DiFNNvxbz/tsHuzHINtSLIgrztIuo/u
+         AlGbooeNmu7TPLZuG3c29K6jUTjdoC7CLdwnZk32yG1w3ijozsuKsLxl84XZ8edz/9Es
+         Q76Nf7wzu/tqEL1Hv3+mh5gnPiHwGiSWC8rgd/7gUkr+NoU8q/3+QGBvEldRrMaQvash
+         2XIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=LoXMpRvegVVFB/qraJeZ3y0NdhRRqfpioiS69Z/ofTA=;
+        b=n1JkioVmeyCNVC12UxTDqF29lIeYFr2qLjHDobo01BvC9o1zitIfSygGqtkzWev/tG
+         EADi2NKF6v3cPEeUX9dyFgVk3ZUUp5/KcG5QsC6Q+/J+BSmW2zmagphZk3RzBeJq89tg
+         lwVMFAvVlCM3vgjYecBGCc/CpJo58SptA+RURiop6H4smQGNTqYYzDNOfBkfEE/g5Iyr
+         aZgkkzlm3nu+Jn8DjlBoXoe2zVtxWKKv2B4Vm7UgsTjcrbAjSSK4jpCgzwV+KLokrnhw
+         sImGLia7HnO4MFGj9u1zaCvy6UdEeKqjrgbkq3ob35NRL2WmpbGHRRx6EJq21pBs3PTH
+         O5Hg==
+X-Gm-Message-State: AOAM531wJom6QPbCp4534tHi0pMKmJvcB2+3q7yMz2xMOt/Z3u74YEMZ
+        NbHDId1x/G/d9z5XEgdXLRBlGyYPLfGo
+X-Google-Smtp-Source: ABdhPJwNFeAQ3f1hR2oxf1Pb/a/YZ9sDJkx9+CODZFRn6bg326ZAseFf7uf+brj6nFVDYQhBe/otGttEYIZG
+X-Received: by 2002:a0c:a8cf:: with SMTP id h15mr22921081qvc.104.1591043065835;
+ Mon, 01 Jun 2020 13:24:25 -0700 (PDT)
+Date:   Mon,  1 Jun 2020 21:24:10 +0100
+Message-Id: <20200601202410.124593-1-pterjan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
+Subject: [PATCH] staging: rtl8712: switch to common ieee80211 headers
+From:   Pascal Terjan <pterjan@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Pascal Terjan <pterjan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch switches to <linux/ieee80211.h> and <net/cfg80211.h> and
+deletes a lot of duplicate definitions plus many unused ones.
 
-Please see v6 with all improvements.
+Non obvious changes:
+- struct ieee80211_ht_cap is different enough that I preferred to keep
+  (and rename) it for now.
+- mcs_rate in translate_scan was not read after being set, so I deleted
+  that part rather than using the renamed struct
+- WLAN_CAPABILITY_BSS is replaced with WLAN_CAPABILITY_ESS which is the
+  corresponding one with same value
 
-~Alexey
+Signed-off-by: Pascal Terjan <pterjan@google.com>
+---
+ drivers/staging/rtl8712/ieee80211.h           | 584 +-----------------
+ drivers/staging/rtl8712/rtl8712_recv.c        |   7 +-
+ drivers/staging/rtl8712/rtl871x_ht.h          |   2 +-
+ drivers/staging/rtl8712/rtl871x_ioctl_linux.c |  13 +-
+ drivers/staging/rtl8712/rtl871x_mlme.c        |  14 +-
+ drivers/staging/rtl8712/rtl871x_recv.c        |   7 +-
+ drivers/staging/rtl8712/rtl871x_recv.h        |   2 -
+ drivers/staging/rtl8712/rtl871x_xmit.c        |   2 +-
+ drivers/staging/rtl8712/wifi.h                |  21 +-
+ 9 files changed, 20 insertions(+), 632 deletions(-)
 
-On 01.06.2020 19:53, Alexey Budankov wrote:
-> 
-> Please refrain from testing this patch set. For some reason it lacks exposure
-> of ctl-fd, ctl-fd-ack options. There are also functional issues. I am working
-> to improve all that and resend fixed v5.
-> 
-> ~Alexey
-> 
-> On 01.06.2020 18:46, Alexey Budankov wrote:
->>
->> Changes in v5:
->> - split re-factoring of events handling loops for stat mode
->>   into smaller incremental parts
->>
->> v4: https://lore.kernel.org/lkml/653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com/
->>
->> Changes in v4:
->> - made checking of ctlfd state unconditional in record trace streaming loop
->> - introduced static poll fds to keep evlist__filter_pollfd() unaffected
->> - handled ret code of evlist__initialize_ctlfd() where need
->> - renamed and structured handle_events() function
->> - applied anonymous structs where needed
->>
->> v3: https://lore.kernel.org/lkml/eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com/
->>
->> Changes in v3:
->> - renamed functions and types from perf_evlist_ to evlist_ to avoid
->>   clash with libperf code;
->> - extended commands to be strings of variable length consisting of
->>   command name and also possibly including command specific data;
->> - merged docs update with the code changes;
->> - updated docs for -D,--delay=-1 option for stat and record modes;
->>
->> v2: https://lore.kernel.org/lkml/d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com/
->>
->> Changes in v2:
->> - renamed resume and pause commands to enable and disable ones, renamed
->>   CTL_CMD_RESUME and CTL_CMD_PAUSE to CTL_CMD_ENABLE and CTL_CMD_DISABLE
->>   to fit to the appropriate ioctls and avoid mixing up with PAUSE_OUTPUT
->>   ioctl;
->> - factored out event handling loop into a handle_events() for stat mode;
->> - separated -D,--delay=-1 into separate patches for stat and record modes;
->>
->> v1: https://lore.kernel.org/lkml/825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com/
->>
->> repo: tip of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
->>
->> The patch set implements handling of 'start disabled', 'enable' and 'disable'
->> external control commands which can be provided for stat and record modes
->> of the tool from an external controlling process. 'start disabled' command
->> can be used to postpone enabling of events in the beginning of a monitoring
->> session. 'enable' and 'disable' commands can be used to enable and disable
->> events correspondingly any time after the start of the session.
->>
->> The 'start disabled', 'enable' and 'disable' external control commands can be
->> used to focus measurement on specially selected time intervals of workload
->> execution. Focused measurement reduces tool intrusion and influence on
->> workload behavior, reduces distortion and amount of collected and stored
->> data, mitigates data accuracy loss because measurement and data capturing
->> happen only during intervals of interest.
->>
->> A controlling process can be a bash shell script [1], native executable or
->> any other language program that can directly work with file descriptors,
->> e.g. pipes [2], and spawn a process, specially the tool one.
->>
->> -D,--delay <val> option is extended with -1 value to skip events enabling
->> in the beginning of a monitoring session ('start disabled' command).
->> --ctl-fd and --ctl-fd-ack command line options are introduced to provide the
->> tool with a pair of file descriptors to listen to control commands and reply
->> to the controlling process on the completion of received commands.
->>
->> The tool reads control command message from ctl-fd descriptor, handles the
->> command and optionally replies acknowledgement message to fd-ack descriptor,
->> if it is specified on the command line. 'enable' command is recognized as
->> 'enable' string message and 'disable' command is recognized as 'disable'
->> string message both received from ctl-fd descriptor. Completion message is
->> 'ack\n' and sent to fd-ack descriptor.
->>
->> Example bash script demonstrating simple use case follows:
->>
->> #!/bin/bash
->>
->> ctl_dir=/tmp/
->>
->> ctl_fifo=${ctl_dir}perf_ctl.fifo
->> test -p ${ctl_fifo} && unlink ${ctl_fifo}
->> mkfifo ${ctl_fifo} && exec {ctl_fd}<>${ctl_fifo}
->>
->> ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
->> test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
->> mkfifo ${ctl_ack_fifo} && exec {ctl_fd_ack}<>${ctl_ack_fifo}
->>
->> perf stat -D -1 -e cpu-cycles -a -I 1000                \
->>           --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
->>           -- sleep 40 &
->> perf_pid=$!
->>
->> sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
->> sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
->> sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e2 && echo "enabled(${e2})"
->> sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d2 && echo "disabled(${d2})"
->>
->> exec {ctl_fd_ack}>&- && unlink ${ctl_ack_fifo}
->> exec {ctl_fd}>&- && unlink ${ctl_fifo}
->>
->> wait -n ${perf_pid}
->> exit $?
->>
->>
->> Script output:
->>
->> [root@host dir] example
->> Events disabled
->> #           time             counts unit events
->>      1.001101062      <not counted>      cpu-cycles                                                  
->>      2.002994944      <not counted>      cpu-cycles                                                  
->>      3.004864340      <not counted>      cpu-cycles                                                  
->>      4.006727177      <not counted>      cpu-cycles                                                  
->> Events enabled
->> enabled(ack)
->>      4.993808464          3,124,246      cpu-cycles                                                  
->>      5.008597004          3,325,624      cpu-cycles                                                  
->>      6.010387483         83,472,992      cpu-cycles                                                  
->>      7.012266598         55,877,621      cpu-cycles                                                  
->>      8.014175695         97,892,729      cpu-cycles                                                  
->>      9.016056093         68,461,242      cpu-cycles                                                  
->>     10.017937507         55,449,643      cpu-cycles                                                  
->>     11.019830154         68,938,167      cpu-cycles                                                  
->>     12.021719952         55,164,101      cpu-cycles                                                  
->>     13.023627550         70,535,720      cpu-cycles                                                  
->>     14.025580995         53,240,125      cpu-cycles                                                  
->> disabled(ack)
->>     14.997518260         53,558,068      cpu-cycles                                                  
->> Events disabled
->>     15.027216416      <not counted>      cpu-cycles                                                  
->>     16.029052729      <not counted>      cpu-cycles                                                  
->>     17.030904762      <not counted>      cpu-cycles                                                  
->>     18.032073424      <not counted>      cpu-cycles                                                  
->>     19.033805074      <not counted>      cpu-cycles                                                  
->> Events enabled
->> enabled(ack)
->>     20.001279097          3,021,022      cpu-cycles                                                  
->>     20.035044381          6,434,367      cpu-cycles                                                  
->>     21.036923813         89,358,251      cpu-cycles                                                  
->>     22.038825169         72,516,351      cpu-cycles                                                  
->> #           time             counts unit events
->>     23.040715596         55,046,157      cpu-cycles                                                  
->>     24.042643757         78,128,649      cpu-cycles                                                  
->>     25.044558535         61,052,428      cpu-cycles                                                  
->>     26.046452785         62,142,806      cpu-cycles                                                  
->>     27.048353021         74,477,971      cpu-cycles                                                  
->>     28.050241286         61,001,623      cpu-cycles                                                  
->>     29.052149961         61,653,502      cpu-cycles                                                  
->> disabled(ack)
->>     30.004980264         82,729,640      cpu-cycles                                                  
->> Events disabled
->>     30.053516176      <not counted>      cpu-cycles                                                  
->>     31.055348366      <not counted>      cpu-cycles                                                  
->>     32.057202097      <not counted>      cpu-cycles                                                  
->>     33.059040702      <not counted>      cpu-cycles                                                  
->>     34.060843288      <not counted>      cpu-cycles                                                  
->>     35.000888624      <not counted>      cpu-cycles                                                  
->> [root@host dir]# 
->>
->> [1] http://man7.org/linux/man-pages/man1/bash.1.html
->> [2] http://man7.org/linux/man-pages/man2/pipe.2.html
->>
->> ---
->> Alexey Budankov (13):
->>   tools/libperf: introduce static poll file descriptors
->>   perf evlist: introduce control file descriptors
->>   perf evlist: implement control command handling functions
->>   perf stat: factor out body of event handling loop for system wide
->>   perf stat: move target check to loop control statement
->>   perf stat: factor out body of event handling loop for launch case
->>   perf stat: factor out event handling loop into dispatch_events()
->>   perf stat: extend -D,--delay option with -1 value
->>   perf stat: implement control commands handling
->>   perf stat: introduce --ctl-fd[-ack] options
->>   perf record: extend -D,--delay option with -1 value
->>   perf record: implement control commands handling
->>   perf record: introduce --ctl-fd[-ack] options
->>
->>  tools/lib/api/fd/array.c                 |  42 ++++++-
->>  tools/lib/api/fd/array.h                 |   7 ++
->>  tools/lib/perf/evlist.c                  |  11 ++
->>  tools/lib/perf/include/internal/evlist.h |   2 +
->>  tools/perf/Documentation/perf-record.txt |   5 +-
->>  tools/perf/Documentation/perf-stat.txt   |  45 ++++++-
->>  tools/perf/builtin-record.c              |  34 +++++-
->>  tools/perf/builtin-stat.c                | 145 +++++++++++++++++------
->>  tools/perf/builtin-trace.c               |   2 +-
->>  tools/perf/util/evlist.c                 | 131 ++++++++++++++++++++
->>  tools/perf/util/evlist.h                 |  25 ++++
->>  tools/perf/util/record.h                 |   4 +-
->>  tools/perf/util/stat.h                   |   4 +-
->>  13 files changed, 407 insertions(+), 50 deletions(-)
->>
+diff --git a/drivers/staging/rtl8712/ieee80211.h b/drivers/staging/rtl8712/ieee80211.h
+index dabaa8fd34fb..61eff7c5746b 100644
+--- a/drivers/staging/rtl8712/ieee80211.h
++++ b/drivers/staging/rtl8712/ieee80211.h
+@@ -14,14 +14,8 @@
+ #ifndef __IEEE80211_H
+ #define __IEEE80211_H
+ 
+-#include "osdep_service.h"
+-#include "drv_types.h"
+-#include "wifi.h"
+-#include <linux/compiler.h>
+-#include <linux/wireless.h>
++#include <linux/ieee80211.h>
+ 
+-#define MGMT_QUEUE_NUM 5
+-#define ETH_ALEN	6
+ #define IEEE_CMD_SET_WPA_PARAM			1
+ #define IEEE_CMD_SET_WPA_IE			2
+ #define IEEE_CMD_SET_ENCRYPTION			3
+@@ -102,162 +96,11 @@ struct ieee_param {
+ 	} u;
+ };
+ 
+-#define IEEE80211_DATA_LEN		2304
+-/* Maximum size for the MA-UNITDATA primitive, 802.11 standard section
+- * 6.2.1.1.2.
+- *
+- * The figure in section 7.1.2 suggests a body size of up to 2312
+- * bytes is allowed, which is a bit confusing, I suspect this
+- * represents the 2304 bytes of real data, plus a possible 8 bytes of
+- * WEP IV and ICV. (this interpretation suggested by Ramiro Barreiro)
+- */
+-
+-#define IEEE80211_HLEN			30
+-#define IEEE80211_FRAME_LEN		(IEEE80211_DATA_LEN + IEEE80211_HLEN)
+-
+-/* this is stolen from ipw2200 driver */
+-#define IEEE_IBSS_MAC_HASH_SIZE 31
+-
+-struct ieee_ibss_seq {
+-	u8 mac[ETH_ALEN];
+-	u16 seq_num;
+-	u16 frag_num;
+-	unsigned long packet_time;
+-	struct list_head list;
+-};
+-
+-struct ieee80211_hdr {
+-	__le16 frame_ctl;
+-	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN];
+-	u8 addr3[ETH_ALEN];
+-	__le16 seq_ctl;
+-	u8 addr4[ETH_ALEN];
+-}  __packed __aligned(2);
+-
+-struct ieee80211_hdr_3addr {
+-	__le16 frame_ctl;
+-	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN];
+-	u8 addr3[ETH_ALEN];
+-	__le16 seq_ctl;
+-}  __packed __aligned(2);
+-
+-struct	ieee80211_hdr_qos {
+-	__le16 frame_ctl;
+-	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN];
+-	u8 addr3[ETH_ALEN];
+-	__le16 seq_ctl;
+-	u8 addr4[ETH_ALEN];
+-	__le16	qc;
+-}   __packed __aligned(2);
+-
+-struct  ieee80211_hdr_3addr_qos {
+-	__le16 frame_ctl;
+-	__le16 duration_id;
+-	u8  addr1[ETH_ALEN];
+-	u8  addr2[ETH_ALEN];
+-	u8  addr3[ETH_ALEN];
+-	__le16 seq_ctl;
+-	__le16 qc;
+-}  __packed;
+-
+-struct eapol {
+-	u8 snap[6];
+-	__be16 ethertype;
+-	u8 version;
+-	u8 type;
+-	__le16 length;
+-} __packed;
+-
+-enum eap_type {
+-	EAP_PACKET = 0,
+-	EAPOL_START,
+-	EAPOL_LOGOFF,
+-	EAPOL_KEY,
+-	EAPOL_ENCAP_ASF_ALERT
+-};
+-
+-#define IEEE80211_3ADDR_LEN 24
+-#define IEEE80211_4ADDR_LEN 30
+-#define IEEE80211_FCS_LEN    4
+-
+ #define MIN_FRAG_THRESHOLD     256U
+ #define	MAX_FRAG_THRESHOLD     2346U
+ 
+-/* Frame control field constants */
+-#define IEEE80211_FCTL_VERS		0x0002
+-#define IEEE80211_FCTL_FTYPE		0x000c
+-#define IEEE80211_FCTL_STYPE		0x00f0
+-#define IEEE80211_FCTL_TODS		0x0100
+-#define IEEE80211_FCTL_FROMDS		0x0200
+-#define IEEE80211_FCTL_MOREFRAGS	0x0400
+-#define IEEE80211_FCTL_RETRY		0x0800
+-#define IEEE80211_FCTL_PM		0x1000
+-#define IEEE80211_FCTL_MOREDATA	0x2000
+-#define IEEE80211_FCTL_WEP		0x4000
+-#define IEEE80211_FCTL_ORDER		0x8000
+-
+-#define IEEE80211_FTYPE_MGMT		0x0000
+-#define IEEE80211_FTYPE_CTL		0x0004
+-#define IEEE80211_FTYPE_DATA		0x0008
+-
+-/* management */
+-#define IEEE80211_STYPE_ASSOC_REQ	0x0000
+-#define IEEE80211_STYPE_ASSOC_RESP	0x0010
+-#define IEEE80211_STYPE_REASSOC_REQ	0x0020
+-#define IEEE80211_STYPE_REASSOC_RESP	0x0030
+-#define IEEE80211_STYPE_PROBE_REQ	0x0040
+-#define IEEE80211_STYPE_PROBE_RESP	0x0050
+-#define IEEE80211_STYPE_BEACON		0x0080
+-#define IEEE80211_STYPE_ATIM		0x0090
+-#define IEEE80211_STYPE_DISASSOC	0x00A0
+-#define IEEE80211_STYPE_AUTH		0x00B0
+-#define IEEE80211_STYPE_DEAUTH		0x00C0
+-
+-/* control */
+-#define IEEE80211_STYPE_PSPOLL		0x00A0
+-#define IEEE80211_STYPE_RTS		0x00B0
+-#define IEEE80211_STYPE_CTS		0x00C0
+-#define IEEE80211_STYPE_ACK		0x00D0
+-#define IEEE80211_STYPE_CFEND		0x00E0
+-#define IEEE80211_STYPE_CFENDACK	0x00F0
+-
+-/* data */
+-#define IEEE80211_STYPE_DATA		0x0000
+-#define IEEE80211_STYPE_DATA_CFACK	0x0010
+-#define IEEE80211_STYPE_DATA_CFPOLL	0x0020
+-#define IEEE80211_STYPE_DATA_CFACKPOLL	0x0030
+-#define IEEE80211_STYPE_NULLFUNC	0x0040
+-#define IEEE80211_STYPE_CFACK		0x0050
+-#define IEEE80211_STYPE_CFPOLL		0x0060
+-#define IEEE80211_STYPE_CFACKPOLL	0x0070
+-#define IEEE80211_QOS_DATAGRP		0x0080
+-
+-#define IEEE80211_SCTL_FRAG		0x000F
+-#define IEEE80211_SCTL_SEQ		0xFFF0
+-
+ /* QoS,QOS */
+ #define NORMAL_ACK			0
+-#define NO_ACK				1
+-#define NON_EXPLICIT_ACK	2
+-#define BLOCK_ACK			3
+-
+-#ifndef ETH_P_PAE
+-#define ETH_P_PAE 0x888E /* Port Access Entity (IEEE 802.1X) */
+-#endif /* ETH_P_PAE */
+-
+-#define ETH_P_PREAUTH 0x88C7 /* IEEE 802.11i pre-authentication */
+-
+-#define ETH_P_ECONET	0x0018
+-
+-#ifndef ETH_P_80211_RAW
+-#define ETH_P_80211_RAW (ETH_P_ECONET + 1)
+-#endif
+ 
+ /* IEEE 802.11 defines */
+ 
+@@ -272,58 +115,6 @@ struct ieee80211_snap_hdr {
+ 
+ #define SNAP_SIZE sizeof(struct ieee80211_snap_hdr)
+ 
+-#define WLAN_FC_GET_TYPE(fc) ((fc) & IEEE80211_FCTL_FTYPE)
+-#define WLAN_FC_GET_STYPE(fc) ((fc) & IEEE80211_FCTL_STYPE)
+-
+-#define WLAN_QC_GET_TID(qc) ((qc) & 0x0f)
+-
+-#define WLAN_GET_SEQ_FRAG(seq) ((seq) & IEEE80211_SCTL_FRAG)
+-#define WLAN_GET_SEQ_SEQ(seq)  ((seq) & IEEE80211_SCTL_SEQ)
+-
+-/* Authentication algorithms */
+-#define WLAN_AUTH_OPEN 0
+-#define WLAN_AUTH_SHARED_KEY 1
+-
+-#define WLAN_AUTH_CHALLENGE_LEN 128
+-
+-#define WLAN_CAPABILITY_BSS BIT(0)
+-#define WLAN_CAPABILITY_IBSS BIT(1)
+-#define WLAN_CAPABILITY_CF_POLLABLE BIT(2)
+-#define WLAN_CAPABILITY_CF_POLL_REQUEST BIT(3)
+-#define WLAN_CAPABILITY_PRIVACY BIT(4)
+-#define WLAN_CAPABILITY_SHORT_PREAMBLE BIT(5)
+-#define WLAN_CAPABILITY_PBCC BIT(6)
+-#define WLAN_CAPABILITY_CHANNEL_AGILITY BIT(7)
+-#define WLAN_CAPABILITY_SHORT_SLOT BIT(10)
+-
+-/* Information Element IDs */
+-#define WLAN_EID_SSID 0
+-#define WLAN_EID_SUPP_RATES 1
+-#define WLAN_EID_FH_PARAMS 2
+-#define WLAN_EID_DS_PARAMS 3
+-#define WLAN_EID_CF_PARAMS 4
+-#define WLAN_EID_TIM 5
+-#define WLAN_EID_IBSS_PARAMS 6
+-#define WLAN_EID_CHALLENGE 16
+-#define WLAN_EID_RSN 48
+-#define WLAN_EID_GENERIC 221
+-
+-#define IEEE80211_MGMT_HDR_LEN 24
+-#define IEEE80211_DATA_HDR3_LEN 24
+-#define IEEE80211_DATA_HDR4_LEN 30
+-
+-#define IEEE80211_STATMASK_SIGNAL BIT(0)
+-#define IEEE80211_STATMASK_RSSI BIT(1)
+-#define IEEE80211_STATMASK_NOISE BIT(2)
+-#define IEEE80211_STATMASK_RATE BIT(3)
+-#define IEEE80211_STATMASK_WEMASK 0x7
+-
+-#define IEEE80211_CCK_MODULATION    BIT(0)
+-#define IEEE80211_OFDM_MODULATION   BIT(1)
+-
+-#define IEEE80211_24GHZ_BAND     BIT(0)
+-#define IEEE80211_52GHZ_BAND     BIT(1)
+-
+ #define IEEE80211_CCK_RATE_LEN			4
+ #define IEEE80211_NUM_OFDM_RATESLEN	8
+ 
+@@ -331,7 +122,6 @@ struct ieee80211_snap_hdr {
+ #define IEEE80211_CCK_RATE_2MB		        0x04
+ #define IEEE80211_CCK_RATE_5MB		        0x0B
+ #define IEEE80211_CCK_RATE_11MB		        0x16
+-#define IEEE80211_OFDM_RATE_LEN			8
+ #define IEEE80211_OFDM_RATE_6MB		        0x0C
+ #define IEEE80211_OFDM_RATE_9MB		        0x12
+ #define IEEE80211_OFDM_RATE_12MB		0x18
+@@ -342,388 +132,16 @@ struct ieee80211_snap_hdr {
+ #define IEEE80211_OFDM_RATE_54MB		0x6C
+ #define IEEE80211_BASIC_RATE_MASK		0x80
+ 
+-#define IEEE80211_CCK_RATE_1MB_MASK		BIT(0)
+-#define IEEE80211_CCK_RATE_2MB_MASK		BIT(1)
+-#define IEEE80211_CCK_RATE_5MB_MASK		BIT(2)
+-#define IEEE80211_CCK_RATE_11MB_MASK		BIT(3)
+-#define IEEE80211_OFDM_RATE_6MB_MASK		BIT(4)
+-#define IEEE80211_OFDM_RATE_9MB_MASK		BIT(5)
+-#define IEEE80211_OFDM_RATE_12MB_MASK		BIT(6)
+-#define IEEE80211_OFDM_RATE_18MB_MASK		BIT(7)
+-#define IEEE80211_OFDM_RATE_24MB_MASK		BIT(8)
+-#define IEEE80211_OFDM_RATE_36MB_MASK		BIT(9)
+-#define IEEE80211_OFDM_RATE_48MB_MASK		BIT(10)
+-#define IEEE80211_OFDM_RATE_54MB_MASK		BIT(11)
+-
+-#define IEEE80211_CCK_RATES_MASK	        0x0000000F
+-#define IEEE80211_CCK_BASIC_RATES_MASK		(IEEE80211_CCK_RATE_1MB_MASK | \
+-	IEEE80211_CCK_RATE_2MB_MASK)
+-#define IEEE80211_CCK_DEFAULT_RATES_MASK   (IEEE80211_CCK_BASIC_RATES_MASK | \
+-					   IEEE80211_CCK_RATE_5MB_MASK | \
+-					   IEEE80211_CCK_RATE_11MB_MASK)
+-
+-#define IEEE80211_OFDM_RATES_MASK		0x00000FF0
+-#define IEEE80211_OFDM_BASIC_RATES_MASK	(IEEE80211_OFDM_RATE_6MB_MASK | \
+-	IEEE80211_OFDM_RATE_12MB_MASK | \
+-	IEEE80211_OFDM_RATE_24MB_MASK)
+-#define IEEE80211_OFDM_DEFAULT_RATES_MASK  (IEEE80211_OFDM_BASIC_RATES_MASK | \
+-					   IEEE80211_OFDM_RATE_9MB_MASK  | \
+-					   IEEE80211_OFDM_RATE_18MB_MASK | \
+-					   IEEE80211_OFDM_RATE_36MB_MASK | \
+-					   IEEE80211_OFDM_RATE_48MB_MASK | \
+-					   IEEE80211_OFDM_RATE_54MB_MASK)
+-#define IEEE80211_DEFAULT_RATES_MASK (IEEE80211_OFDM_DEFAULT_RATES_MASK | \
+-				     IEEE80211_CCK_DEFAULT_RATES_MASK)
+-
+-#define IEEE80211_NUM_OFDM_RATES	    8
+-#define IEEE80211_NUM_CCK_RATES	            4
+-#define IEEE80211_OFDM_SHIFT_MASK_A         4
+-
+-/* NOTE: This data is for statistical purposes; not all hardware provides this
+- *       information for frames received.  Not setting these will not cause
+- *       any adverse affects.
+- */
+-struct ieee80211_rx_stats {
+-	s8 rssi;
+-	u8 signal;
+-	u8 noise;
+-	u8 received_channel;
+-	u16 rate; /* in 100 kbps */
+-	u8 mask;
+-	u8 freq;
+-	u16 len;
+-};
+-
+-/* IEEE 802.11 requires that STA supports concurrent reception of at least
+- * three fragmented frames. This define can be increased to support more
+- * concurrent frames, but it should be noted that each entry can consume about
+- * 2 kB of RAM and increasing cache size will slow down frame reassembly.
+- */
+-#define IEEE80211_FRAG_CACHE_LEN 4
+-
+-struct ieee80211_frag_entry {
+-	u32 first_frag_time;
+-	uint seq;
+-	uint last_frag;
+-	uint qos;   /*jackson*/
+-	uint tid;	/*jackson*/
+-	struct sk_buff *skb;
+-	u8 src_addr[ETH_ALEN];
+-	u8 dst_addr[ETH_ALEN];
+-};
+-
+-struct ieee80211_stats {
+-	uint tx_unicast_frames;
+-	uint tx_multicast_frames;
+-	uint tx_fragments;
+-	uint tx_unicast_octets;
+-	uint tx_multicast_octets;
+-	uint tx_deferred_transmissions;
+-	uint tx_single_retry_frames;
+-	uint tx_multiple_retry_frames;
+-	uint tx_retry_limit_exceeded;
+-	uint tx_discards;
+-	uint rx_unicast_frames;
+-	uint rx_multicast_frames;
+-	uint rx_fragments;
+-	uint rx_unicast_octets;
+-	uint rx_multicast_octets;
+-	uint rx_fcs_errors;
+-	uint rx_discards_no_buffer;
+-	uint tx_discards_wrong_sa;
+-	uint rx_discards_undecryptable;
+-	uint rx_message_in_msg_fragments;
+-	uint rx_message_in_bad_msg_fragments;
+-};
+-
+-struct ieee80211_softmac_stats {
+-	uint rx_ass_ok;
+-	uint rx_ass_err;
+-	uint rx_probe_rq;
+-	uint tx_probe_rs;
+-	uint tx_beacons;
+-	uint rx_auth_rq;
+-	uint rx_auth_rs_ok;
+-	uint rx_auth_rs_err;
+-	uint tx_auth_rq;
+-	uint no_auth_rs;
+-	uint no_ass_rs;
+-	uint tx_ass_rq;
+-	uint rx_ass_rq;
+-	uint tx_probe_rq;
+-	uint reassoc;
+-	uint swtxstop;
+-	uint swtxawake;
+-};
+-
+-#define SEC_KEY_1         BIT(0)
+-#define SEC_KEY_2         BIT(1)
+-#define SEC_KEY_3         BIT(2)
+-#define SEC_KEY_4         BIT(3)
+-#define SEC_ACTIVE_KEY    BIT(4)
+-#define SEC_AUTH_MODE     BIT(5)
+-#define SEC_UNICAST_GROUP BIT(6)
+-#define SEC_LEVEL         BIT(7)
+-#define SEC_ENABLED       BIT(8)
+-
+-#define SEC_LEVEL_0      0 /* None */
+-#define SEC_LEVEL_1      1 /* WEP 40 and 104 bit */
+-#define SEC_LEVEL_2      2 /* Level 1 + TKIP */
+-#define SEC_LEVEL_2_CKIP 3 /* Level 1 + CKIP */
+-#define SEC_LEVEL_3      4 /* Level 2 + CCMP */
+-
+ #define WEP_KEYS 4
+-#define WEP_KEY_LEN 13
+-
+-struct ieee80211_security {
+-	u16 active_key:2,
+-	    enabled:1,
+-	    auth_mode:2,
+-	    auth_algo:4,
+-	    unicast_uses_group:1;
+-	u8 key_sizes[WEP_KEYS];
+-	u8 keys[WEP_KEYS][WEP_KEY_LEN];
+-	u8 level;
+-	u16 flags;
+-} __packed;
+-
+-/*
+- *
+- * 802.11 data frame from AP
+- *
+- *       ,-------------------------------------------------------------------.
+- * Bytes |  2   |  2   |    6    |    6    |    6    |  2   | 0..2312 |   4  |
+- *       |------|------|---------|---------|---------|------|---------|------|
+- * Desc. | ctrl | dura |  DA/RA  |   TA    |    SA   | Sequ |  frame  |  fcs |
+- *       |      | tion | (BSSID) |         |         | ence |  data   |      |
+- *       `-------------------------------------------------------------------'
+- *
+- * Total: 28-2340 bytes
+- *
+- */
+-
+-struct ieee80211_header_data {
+-	__le16 frame_ctl;
+-	__le16 duration_id;
+-	u8 addr1[6];
+-	u8 addr2[6];
+-	u8 addr3[6];
+-	__le16 seq_ctrl;
+-} __packed __aligned(2);
+ 
+-#define BEACON_PROBE_SSID_ID_POSITION 12
+-
+-/* Management Frame Information Element Types */
+-#define MFIE_TYPE_SSID       0
+-#define MFIE_TYPE_RATES      1
+-#define MFIE_TYPE_FH_SET     2
+-#define MFIE_TYPE_DS_SET     3
+-#define MFIE_TYPE_CF_SET     4
+-#define MFIE_TYPE_TIM        5
+-#define MFIE_TYPE_IBSS_SET   6
+-#define MFIE_TYPE_CHALLENGE  16
+-#define MFIE_TYPE_ERP        42
+-#define MFIE_TYPE_RSN	     48
+-#define MFIE_TYPE_RATES_EX   50
+-#define MFIE_TYPE_GENERIC    221
+-
+-struct ieee80211_info_element_hdr {
+-	u8 id;
+-	u8 len;
+-} __packed;
+-
+-struct ieee80211_info_element {
+-	u8 id;
+-	u8 len;
+-	u8 data[];
+-} __packed;
+-
+-/*
+- * These are the data types that can make up management packets
+- *
+-	__le16 auth_algorithm;
+-	__le16 auth_sequence;
+-	__le16 beacon_interval;
+-	__le16 capability;
+-	u8 current_ap[ETH_ALEN];
+-	__le16 listen_interval;
+-	struct {
+-		u16 association_id:14, reserved:2;
+-	} __packed;
+-	__le32 time_stamp[2];
+-	__le16 reason;
+-	__le16 status;
+-*/
+-
+-#define IEEE80211_DEFAULT_TX_ESSID "Penguin"
+-#define IEEE80211_DEFAULT_BASIC_RATE 10
+-
+-struct ieee80211_authentication {
+-	struct ieee80211_header_data header;
+-	__le16 algorithm;
+-	__le16 transaction;
+-	__le16 status;
+-} __packed;
+-
+-struct ieee80211_probe_response {
+-	struct ieee80211_header_data header;
+-	__le32 time_stamp[2];
+-	__le16 beacon_interval;
+-	__le16 capability;
+-	struct ieee80211_info_element info_element;
+-} __packed;
+-
+-struct ieee80211_probe_request {
+-	struct ieee80211_header_data header;
+-} __packed;
+-
+-struct ieee80211_assoc_request_frame {
+-	struct ieee80211_hdr_3addr header;
+-	__le16 capability;
+-	__le16 listen_interval;
+-	struct ieee80211_info_element_hdr info_element;
+-} __packed;
+-
+-struct ieee80211_assoc_response_frame {
+-	struct ieee80211_hdr_3addr header;
+-	__le16 capability;
+-	__le16 status;
+-	__le16 aid;
+-} __packed;
+-
+-struct ieee80211_txb {
+-	u8 nr_frags;
+-	u8 encrypted;
+-	u16 reserved;
+-	u16 frag_size;
+-	u16 payload_size;
+-	struct sk_buff *fragments[];
+-};
+-
+-/* SWEEP TABLE ENTRIES NUMBER*/
+-#define MAX_SWEEP_TAB_ENTRIES		  42
+-#define MAX_SWEEP_TAB_ENTRIES_PER_PACKET  7
+ /* MAX_RATES_LENGTH needs to be 12.  The spec says 8, and many APs
+  * only use 8, and then use extended rates for the remaining supported
+  * rates.  Other APs, however, stick all of their supported rates on the
+  * main rates information element...
+  */
+ #define MAX_RATES_LENGTH                  ((u8)12)
+-#define MAX_RATES_EX_LENGTH               ((u8)16)
+-#define MAX_NETWORK_COUNT                  128
+-#define MAX_CHANNEL_NUMBER                 161
+-#define IEEE80211_SOFTMAC_SCAN_TIME	  400
+-/*(HZ / 2)*/
+-#define IEEE80211_SOFTMAC_ASSOC_RETRY_TIME (HZ * 2)
+-
+-#define CRC_LENGTH                 4U
+-
+ #define MAX_WPA_IE_LEN 128
+ 
+-#define NETWORK_EMPTY_ESSID BIT(0)
+-#define NETWORK_HAS_OFDM    BIT(1)
+-#define NETWORK_HAS_CCK     BIT(2)
+-
+-#define IEEE80211_DTIM_MBCAST 4
+-#define IEEE80211_DTIM_UCAST 2
+-#define IEEE80211_DTIM_VALID 1
+-#define IEEE80211_DTIM_INVALID 0
+-
+-#define IEEE80211_PS_DISABLED 0
+-#define IEEE80211_PS_UNICAST IEEE80211_DTIM_UCAST
+-#define IEEE80211_PS_MBCAST IEEE80211_DTIM_MBCAST
+-#define IW_ESSID_MAX_SIZE 32
+-/*
+- * join_res:
+- * -1: authentication fail
+- * -2: association fail
+- * > 0: TID
+- */
+-
+-enum ieee80211_state {
+-	/* the card is not linked at all */
+-	IEEE80211_NOLINK = 0,
+-	/* IEEE80211_ASSOCIATING* are for BSS client mode
+-	 * the driver shall not perform RX filtering unless
+-	 * the state is LINKED.
+-	 * The driver shall just check for the state LINKED and
+-	 * defaults to NOLINK for ALL the other states (including
+-	 * LINKED_SCANNING)
+-	 */
+-	/* the association procedure will start (wq scheduling)*/
+-	IEEE80211_ASSOCIATING,
+-	IEEE80211_ASSOCIATING_RETRY,
+-	/* the association procedure is sending AUTH request*/
+-	IEEE80211_ASSOCIATING_AUTHENTICATING,
+-	/* the association procedure has successfully authenticated
+-	 * and is sending association request
+-	 */
+-	IEEE80211_ASSOCIATING_AUTHENTICATED,
+-	/* the link is ok. the card associated to a BSS or linked
+-	 * to a ibss cell or acting as an AP and creating the bss
+-	 */
+-	IEEE80211_LINKED,
+-	/* same as LINKED, but the driver shall apply RX filter
+-	 * rules as we are in NO_LINK mode. As the card is still
+-	 * logically linked, but it is doing a syncro site survey
+-	 * then it will be back to LINKED state.
+-	 */
+-	IEEE80211_LINKED_SCANNING,
+-};
+-
+-#define DEFAULT_MAX_SCAN_AGE (15 * HZ)
+-#define DEFAULT_FTS 2346
+-
+-#define CFG_IEEE80211_RESERVE_FCS BIT(0)
+-#define CFG_IEEE80211_COMPUTE_FCS BIT(1)
+-
+-#define MAXTID	16
+-
+-#define IEEE_A            BIT(0)
+-#define IEEE_B            BIT(1)
+-#define IEEE_G            BIT(2)
+-#define IEEE_MODE_MASK    (IEEE_A | IEEE_B | IEEE_G)
+-
+-static inline int ieee80211_is_empty_essid(const char *essid, int essid_len)
+-{
+-	/* Single white space is for Linksys APs */
+-	if (essid_len == 1 && essid[0] == ' ')
+-		return 1;
+-	/* Otherwise, if the entire essid is 0, we assume it is hidden */
+-	while (essid_len) {
+-		essid_len--;
+-		if (essid[essid_len] != '\0')
+-			return 0;
+-	}
+-	return 1;
+-}
+-
+-static inline int ieee80211_get_hdrlen(u16 fc)
+-{
+-	int hdrlen = 24;
+-
+-	switch (WLAN_FC_GET_TYPE(fc)) {
+-	case IEEE80211_FTYPE_DATA:
+-		if (fc & IEEE80211_QOS_DATAGRP)
+-			hdrlen += 2;
+-		if ((fc & IEEE80211_FCTL_FROMDS) && (fc & IEEE80211_FCTL_TODS))
+-			hdrlen += 6; /* Addr4 */
+-		break;
+-	case IEEE80211_FTYPE_CTL:
+-		switch (WLAN_FC_GET_STYPE(fc)) {
+-		case IEEE80211_STYPE_CTS:
+-		case IEEE80211_STYPE_ACK:
+-			hdrlen = 10;
+-			break;
+-		default:
+-			hdrlen = 16;
+-			break;
+-		}
+-		break;
+-	}
+-	return hdrlen;
+-}
+-
+ struct registry_priv;
+ 
+ u8 *r8712_set_ie(u8 *pbuf, sint index, uint len, u8 *source, uint *frlen);
+diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
+index 116773943a2e..fe6694f4d5e4 100644
+--- a/drivers/staging/rtl8712/rtl8712_recv.c
++++ b/drivers/staging/rtl8712/rtl8712_recv.c
+@@ -18,6 +18,7 @@
+ 
+ #include <linux/if_ether.h>
+ #include <linux/ip.h>
++#include <net/cfg80211.h>
+ 
+ #include "osdep_service.h"
+ #include "drv_types.h"
+@@ -27,12 +28,6 @@
+ #include "usb_ops.h"
+ #include "wifi.h"
+ 
+-/* Bridge-Tunnel header (for EtherTypes ETH_P_AARP and ETH_P_IPX) */
+-static u8 bridge_tunnel_header[] = {0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8};
+-
+-/* Ethernet-II snap header (RFC1042 for most EtherTypes) */
+-static u8 rfc1042_header[] = {0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00};
+-
+ static void recv_tasklet(unsigned long priv);
+ 
+ void r8712_init_recv_priv(struct recv_priv *precvpriv,
+diff --git a/drivers/staging/rtl8712/rtl871x_ht.h b/drivers/staging/rtl8712/rtl871x_ht.h
+index ebd78665775d..4bcf5591c44d 100644
+--- a/drivers/staging/rtl8712/rtl871x_ht.h
++++ b/drivers/staging/rtl8712/rtl871x_ht.h
+@@ -26,7 +26,7 @@ struct ht_priv {
+ 	unsigned int	rx_ampdu_maxlen; /* for rx reordering ctrl win_sz,
+ 					  * updated when join_callback.
+ 					  */
+-	struct ieee80211_ht_cap ht_cap;
++	struct rtl_ieee80211_ht_cap ht_cap;
+ };
+ 
+ #endif	/*_RTL871X_HT_H_ */
+diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+index 363b82e3e7c6..36c89cde525d 100644
+--- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
++++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+@@ -211,11 +211,10 @@ static char *translate_scan(struct _adapter *padapter,
+ 			    char *start, char *stop)
+ {
+ 	struct iw_event iwe;
+-	struct ieee80211_ht_cap *pht_capie;
+ 	char *current_val;
+ 	s8 *p;
+ 	u32 i = 0, ht_ielen = 0;
+-	u16	cap, ht_cap = false, mcs_rate;
++	u16	cap, ht_cap = false;
+ 	u8 rssi;
+ 
+ 	if ((pnetwork->network.Configuration.DSConfig < 1) ||
+@@ -241,8 +240,6 @@ static char *translate_scan(struct _adapter *padapter,
+ 			 &ht_ielen, pnetwork->network.IELength - 12);
+ 	if (p && ht_ielen > 0) {
+ 		ht_cap = true;
+-		pht_capie = (struct ieee80211_ht_cap *)(p + 2);
+-		memcpy(&mcs_rate, pht_capie->supp_mcs_set, 2);
+ 	}
+ 	/* Add the protocol name */
+ 	iwe.cmd = SIOCGIWNAME;
+@@ -268,8 +265,8 @@ static char *translate_scan(struct _adapter *padapter,
+ 	memcpy((u8 *)&cap, r8712_get_capability_from_ie(pnetwork->network.IEs),
+ 		2);
+ 	le16_to_cpus(&cap);
+-	if (cap & (WLAN_CAPABILITY_IBSS | WLAN_CAPABILITY_BSS)) {
+-		if (cap & WLAN_CAPABILITY_BSS)
++	if (cap & (WLAN_CAPABILITY_IBSS | WLAN_CAPABILITY_ESS)) {
++		if (cap & WLAN_CAPABILITY_ESS)
+ 			iwe.u.mode = (u32)IW_MODE_MASTER;
+ 		else
+ 			iwe.u.mode = (u32)IW_MODE_ADHOC;
+@@ -1395,7 +1392,7 @@ static int r8711_wx_get_rate(struct net_device *dev,
+ 	struct _adapter *padapter = netdev_priv(dev);
+ 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	struct wlan_bssid_ex *pcur_bss = &pmlmepriv->cur_network.network;
+-	struct ieee80211_ht_cap *pht_capie;
++	struct rtl_ieee80211_ht_cap *pht_capie;
+ 	unsigned char rf_type = padapter->registrypriv.rf_config;
+ 	int i;
+ 	u8 *p;
+@@ -1411,7 +1408,7 @@ static int r8711_wx_get_rate(struct net_device *dev,
+ 			 pcur_bss->IELength - 12);
+ 	if (p && ht_ielen > 0) {
+ 		ht_cap = true;
+-		pht_capie = (struct ieee80211_ht_cap *)(p + 2);
++		pht_capie = (struct rtl_ieee80211_ht_cap *)(p + 2);
+ 		memcpy(&mcs_rate, pht_capie->supp_mcs_set, 2);
+ 		bw_40MHz = (le16_to_cpu(pht_capie->cap_info) &
+ 			    IEEE80211_HT_CAP_SUP_WIDTH) ? 1 : 0;
+diff --git a/drivers/staging/rtl8712/rtl871x_mlme.c b/drivers/staging/rtl8712/rtl871x_mlme.c
+index cabdb3549a5a..efd75add8e35 100644
+--- a/drivers/staging/rtl8712/rtl871x_mlme.c
++++ b/drivers/staging/rtl8712/rtl871x_mlme.c
+@@ -249,8 +249,8 @@ static int is_same_network(struct wlan_bssid_ex *src,
+ 			  src->Ssid.SsidLength))) &&
+ 			((s_cap & WLAN_CAPABILITY_IBSS) ==
+ 			(d_cap & WLAN_CAPABILITY_IBSS)) &&
+-			((s_cap & WLAN_CAPABILITY_BSS) ==
+-			(d_cap & WLAN_CAPABILITY_BSS));
++			((s_cap & WLAN_CAPABILITY_ESS) ==
++			(d_cap & WLAN_CAPABILITY_ESS));
+ 
+ }
+ 
+@@ -1643,7 +1643,7 @@ unsigned int r8712_restructure_ht_ie(struct _adapter *padapter, u8 *in_ie,
+ {
+ 	u32 ielen, out_len;
+ 	unsigned char *p;
+-	struct ieee80211_ht_cap ht_capie;
++	struct rtl_ieee80211_ht_cap ht_capie;
+ 	unsigned char WMM_IE[] = {0x00, 0x50, 0xf2, 0x02, 0x00, 0x01, 0x00};
+ 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	struct qos_priv *pqospriv = &pmlmepriv->qospriv;
+@@ -1659,7 +1659,7 @@ unsigned int r8712_restructure_ht_ie(struct _adapter *padapter, u8 *in_ie,
+ 			pqospriv->qos_option = 1;
+ 		}
+ 		out_len = *pout_len;
+-		memset(&ht_capie, 0, sizeof(struct ieee80211_ht_cap));
++		memset(&ht_capie, 0, sizeof(struct rtl_ieee80211_ht_cap));
+ 		ht_capie.cap_info = cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH |
+ 				    IEEE80211_HT_CAP_SGI_20 |
+ 				    IEEE80211_HT_CAP_SGI_40 |
+@@ -1669,7 +1669,7 @@ unsigned int r8712_restructure_ht_ie(struct _adapter *padapter, u8 *in_ie,
+ 		ht_capie.ampdu_params_info = (IEEE80211_HT_CAP_AMPDU_FACTOR &
+ 				0x03) | (IEEE80211_HT_CAP_AMPDU_DENSITY & 0x00);
+ 		r8712_set_ie(out_ie + out_len, _HT_CAPABILITY_IE_,
+-			     sizeof(struct ieee80211_ht_cap),
++			     sizeof(struct rtl_ieee80211_ht_cap),
+ 			     (unsigned char *)&ht_capie, pout_len);
+ 		phtpriv->ht_option = 1;
+ 	}
+@@ -1683,7 +1683,7 @@ static void update_ht_cap(struct _adapter *padapter, u8 *pie, uint ie_len)
+ 	int i;
+ 	uint len;
+ 	struct sta_info *bmc_sta, *psta;
+-	struct ieee80211_ht_cap *pht_capie;
++	struct rtl_ieee80211_ht_cap *pht_capie;
+ 	struct recv_reorder_ctrl *preorder_ctrl;
+ 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
+@@ -1703,7 +1703,7 @@ static void update_ht_cap(struct _adapter *padapter, u8 *pie, uint ie_len)
+ 				&len, ie_len -
+ 				sizeof(struct NDIS_802_11_FIXED_IEs));
+ 	if (p && len > 0) {
+-		pht_capie = (struct ieee80211_ht_cap *)(p + 2);
++		pht_capie = (struct rtl_ieee80211_ht_cap *)(p + 2);
+ 		max_ampdu_sz = (pht_capie->ampdu_params_info &
+ 				IEEE80211_HT_CAP_AMPDU_FACTOR);
+ 		/* max_ampdu_sz (kbytes); */
+diff --git a/drivers/staging/rtl8712/rtl871x_recv.c b/drivers/staging/rtl8712/rtl871x_recv.c
+index e5092b6da4bd..c1bfd61824ef 100644
+--- a/drivers/staging/rtl8712/rtl871x_recv.c
++++ b/drivers/staging/rtl8712/rtl871x_recv.c
+@@ -21,6 +21,7 @@
+ #include <linux/if_ether.h>
+ #include <linux/kmemleak.h>
+ #include <linux/etherdevice.h>
++#include <net/cfg80211.h>
+ 
+ #include "osdep_service.h"
+ #include "drv_types.h"
+@@ -35,12 +36,6 @@ static const u8 SNAP_ETH_TYPE_IPX[2] = {0x81, 0x37};
+ /* Datagram Delivery Protocol */
+ static const u8 SNAP_ETH_TYPE_APPLETALK_AARP[2] = {0x80, 0xf3};
+ 
+-/* Bridge-Tunnel header (for EtherTypes ETH_P_AARP and ETH_P_IPX) */
+-static const u8 bridge_tunnel_header[] = {0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8};
+-
+-/* Ethernet-II snap header (RFC1042 for most EtherTypes) */
+-static const u8 rfc1042_header[] = {0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00};
+-
+ void _r8712_init_sta_recv_priv(struct sta_recv_priv *psta_recvpriv)
+ {
+ 	memset((u8 *)psta_recvpriv, 0, sizeof(struct sta_recv_priv));
+diff --git a/drivers/staging/rtl8712/rtl871x_recv.h b/drivers/staging/rtl8712/rtl871x_recv.h
+index e93f356ed2b0..e83c256e1474 100644
+--- a/drivers/staging/rtl8712/rtl871x_recv.h
++++ b/drivers/staging/rtl8712/rtl871x_recv.h
+@@ -12,8 +12,6 @@
+ 
+ #define MAX_SUBFRAME_COUNT	64
+ 
+-#define SNAP_SIZE sizeof(struct ieee80211_snap_hdr)
+-
+ /* for Rx reordering buffer control */
+ struct recv_reorder_ctrl {
+ 	struct _adapter	*padapter;
+diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
+index 2f0d0ffa6fae..8b88fd5dc9a1 100644
+--- a/drivers/staging/rtl8712/rtl871x_xmit.c
++++ b/drivers/staging/rtl8712/rtl871x_xmit.c
+@@ -476,7 +476,7 @@ static int make_wlanhdr(struct _adapter *padapter, u8 *hdr,
+ 	struct ieee80211_hdr *pwlanhdr = (struct ieee80211_hdr *)hdr;
+ 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	struct qos_priv *pqospriv = &pmlmepriv->qospriv;
+-	__le16 *fctrl = &pwlanhdr->frame_ctl;
++	__le16 *fctrl = &pwlanhdr->frame_control;
+ 	u8 *bssid;
+ 
+ 	memset(hdr, 0, WLANHDR_OFFSET);
+diff --git a/drivers/staging/rtl8712/wifi.h b/drivers/staging/rtl8712/wifi.h
+index 91b65731fcaa..befb2f9b40ad 100644
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -451,33 +451,18 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
+ #define GetOrderBit(pbuf)	(((*(__le16 *)(pbuf)) & \
+ 				le16_to_cpu(_ORDER_)) != 0)
+ 
+-/**
+- * struct ieee80211_bar - HT Block Ack Request
+- *
+- * This structure refers to "HT BlockAckReq" as
+- * described in 802.11n draft section 7.2.1.7.1
+- */
+-struct ieee80211_bar {
+-	__le16 frame_control;
+-	__le16 duration;
+-	unsigned char ra[6];
+-	unsigned char ta[6];
+-	__le16 control;
+-	__le16 start_seq_num;
+-} __packed;
+-
+ /* 802.11 BAR control masks */
+ #define IEEE80211_BAR_CTRL_ACK_POLICY_NORMAL     0x0000
+ #define IEEE80211_BAR_CTRL_CBMTID_COMPRESSED_BA  0x0004
+ 
+ /*
+- * struct ieee80211_ht_cap - HT capabilities
++ * struct rtl_ieee80211_ht_cap - HT capabilities
+  *
+  * This structure refers to "HT capabilities element" as
+  * described in 802.11n draft section 7.3.2.52
+  */
+ 
+-struct ieee80211_ht_cap {
++struct rtl_ieee80211_ht_cap {
+ 	__le16	cap_info;
+ 	unsigned char	ampdu_params_info;
+ 	unsigned char	supp_mcs_set[16];
+@@ -487,7 +472,7 @@ struct ieee80211_ht_cap {
+ } __packed;
+ 
+ /**
+- * struct ieee80211_ht_cap - HT additional information
++ * struct ieee80211_ht_addt_info - HT additional information
+  *
+  * This structure refers to "HT information element" as
+  * described in 802.11n draft section 7.3.2.53
+-- 
+2.27.0.rc2.251.g90737beb825-goog
+
