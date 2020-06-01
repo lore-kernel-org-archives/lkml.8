@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E050C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98907C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6434206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3E02065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035440;
-	bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
+	s=default; t=1591035444;
+	bh=H7naidMd5Qa0u04rOXvuNj7VG6ToA776KEDM8xBVLYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VLxDZQx/9uUZ9Vx1NtJLEuiep2yyjmo/kdDsnwCrtL48kXnRXrUSdXQPkoO1xIEdL
-	 PyHANGtnjQALG4A5Cwovz4IKBlI8ofhXK0ko4u7qPMIVObLh/GFjG2mb/HNN1LwMIq
-	 vSa4h0+WbIH3hvl9FHfJx1nHaFo1h3l476WfR/lM=
+	b=v6/TtNgEGIZdHgqiRzDjDsFSy4nl55fZ6M6167nCeQcwUP2XUXm4MWlF8SJqFd7YW
+	 inIWY7PbpBwgIculOP2VwgPMVXwyzPcsUwViiiJNqSOaOIE0deJKhZG/gTjX3CMJOM
+	 wVk8AtG9SiskSCEDTG9K1BwManUBKuHx3CHsM4M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbgFASRU (ORCPT
+        id S1731825AbgFASRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731256AbgFASRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:15 -0400
+        id S1731566AbgFASRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F1CA206E2;
-        Mon,  1 Jun 2020 18:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 819B82068D;
+        Mon,  1 Jun 2020 18:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035435;
-        bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
+        s=default; t=1591035440;
+        bh=H7naidMd5Qa0u04rOXvuNj7VG6ToA776KEDM8xBVLYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/zkmG1ffpUSP5pdwyoWKCmP+xsJebeftDmUmaOLI5Tu9onqcz3df1XY1TxPDq1n+
-         aYHy/DkKQz8xMFdbFY3RGl4nR8Vy55WkEX9yl+Y4UsSULcG6Apg0bTvDW5E4N/Fp8n
-         ABqgv9yx72ip40EtpBKpCO1AlpbSfAUfJF/S5XsM=
+        b=WkMPaAUxZhd3pj9/PslDSpFHHXskTRyyNyryXqEcRpd1WYEYBGJpI9SZEJ8ZQQssT
+         aQb3Dnq6j89Bb+tN6YzEmVn0SmQGxoNarzaOJ7wGhQBGfVOa+5V4XWP/poX1wji8C+
+         ZDAAaAmi01NSlK5hNYaDM9zfWGW6QGdbY2sYY4MA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 157/177] netfilter: nfnetlink_cthelper: unbreak userspace helper support
-Date:   Mon,  1 Jun 2020 19:54:55 +0200
-Message-Id: <20200601174101.415428279@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.6 159/177] esp6: get the right proto for transport mode in esp6_gso_encap
+Date:   Mon,  1 Jun 2020 19:54:57 +0200
+Message-Id: <20200601174101.549788863@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,40 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 703acd70f2496537457186211c2f03e792409e68 upstream.
+commit 3c96ec56828922e3fe5477f75eb3fc02f98f98b5 upstream.
 
-Restore helper data size initialization and fix memcopy of the helper
-data size.
+For transport mode, when ipv6 nexthdr is set, the packet format might
+be like:
 
-Fixes: 157ffffeb5dc ("netfilter: nfnetlink_cthelper: reject too large userspace allocation requests")
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+    ----------------------------------------------------
+    |        | dest |     |     |      |  ESP    | ESP |
+    | IP6 hdr| opts.| ESP | TCP | Data | Trailer | ICV |
+    ----------------------------------------------------
+
+What it wants to get for x-proto in esp6_gso_encap() is the proto that
+will be set in ESP nexthdr. So it should skip all ipv6 nexthdrs and
+get the real transport protocol. Othersize, the wrong proto number
+will be set into ESP nexthdr.
+
+This patch is to skip all ipv6 nexthdrs by calling ipv6_skip_exthdr()
+in esp6_gso_encap().
+
+Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nfnetlink_cthelper.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv6/esp6_offload.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/nfnetlink_cthelper.c
-+++ b/net/netfilter/nfnetlink_cthelper.c
-@@ -103,7 +103,7 @@ nfnl_cthelper_from_nlattr(struct nlattr
- 	if (help->helper->data_len == 0)
- 		return -EINVAL;
+--- a/net/ipv6/esp6_offload.c
++++ b/net/ipv6/esp6_offload.c
+@@ -121,9 +121,16 @@ static void esp6_gso_encap(struct xfrm_s
+ 	struct ip_esp_hdr *esph;
+ 	struct ipv6hdr *iph = ipv6_hdr(skb);
+ 	struct xfrm_offload *xo = xfrm_offload(skb);
+-	int proto = iph->nexthdr;
++	u8 proto = iph->nexthdr;
  
--	nla_memcpy(help->data, nla_data(attr), sizeof(help->data));
-+	nla_memcpy(help->data, attr, sizeof(help->data));
- 	return 0;
- }
+ 	skb_push(skb, -skb_network_offset(skb));
++
++	if (x->outer_mode.encap == XFRM_MODE_TRANSPORT) {
++		__be16 frag;
++
++		ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &proto, &frag);
++	}
++
+ 	esph = ip_esp_hdr(skb);
+ 	*skb_mac_header(skb) = IPPROTO_ESP;
  
-@@ -240,6 +240,7 @@ nfnl_cthelper_create(const struct nlattr
- 		ret = -ENOMEM;
- 		goto err2;
- 	}
-+	helper->data_len = size;
- 
- 	helper->flags |= NF_CT_HELPER_F_USERSPACE;
- 	memcpy(&helper->tuple, tuple, sizeof(struct nf_conntrack_tuple));
 
 
