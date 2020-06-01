@@ -2,145 +2,117 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A61EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19043C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 618E62073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53F5207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HwGaDfJP";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="bKbuRnM9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnYkuHEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbgFAWBw (ORCPT
+        id S1729081AbgFAWB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 18:01:52 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41596 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728336AbgFAWBw (ORCPT
+        Mon, 1 Jun 2020 18:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbgFAWB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 18:01:52 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 051LsxDN019581;
-        Mon, 1 Jun 2020 15:01:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Xa9bZgoQygkKeQ1D3TNNIs5ZVXC0ciEKFn1UiWKR4Ho=;
- b=HwGaDfJPa8nvkGEFvjT80kklgSIMBkSqLKWk7Nhql/Cq8J4Xhh/7lW8hwrGe2UGK0wSp
- GDKhz19sEXb3n0eHaqb7LGHec7QjQzbvA7lzYyvCC4GjSmY8YLygVfR8XUsd/xetReGo
- trfuus6gZHD1X3J6eA0+dZK7a60pjJo1B+o= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0089730.ppops.net with ESMTP id 31bk000wkb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 01 Jun 2020 15:01:37 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 1 Jun 2020 15:01:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F7k3y3LngVZjDlLq0TjjGQmNcwPLmL56BPGbSAU7FQpw9Mr16a2e/laFHmqjTi8UgkrY2Ko/YLrmATEQzvbP2JjYg3ZbDwi0o8+vtU74qcYZjfaVhgp4Y64mlH5J2ptnCsP3SHPJ0s0Imjs7r79OPb5wRUdCFaNnemCXckx4YOuTLNTLaEla/+UVmI3C3pLRiS+ocjSyov6sIzp2+CrBRBrDzrYvUKf1y4iykowMUC7hmzYoC9jkcChDnjipFWk7vFnG4YKzgd2/G+lV2xGO7V/5l7PDbUJcflLnYLgNdJybbI2DdVqnlqeaA+eGX/7uQgIvLfdcVXMIBgWBKwPpcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xa9bZgoQygkKeQ1D3TNNIs5ZVXC0ciEKFn1UiWKR4Ho=;
- b=eEuYTDdVxRLLZ+4A6fBlYtAqLWE/6vc9+CLpVeH2FjqLRC+Tohs6ZsLvvUoUpvwUrJfex2aIIRWhNsu4jsAyTSqQQcO/g/AKe+DBNzvnOUhfO3yTs+0KwayqvRQVmRJldFODOG7SOd7IUCfXjlL9WS5Ki2FnvHOupnyRB4ZkYZVwBm7J0TkdaVCN+kex4BLPoWwoCZkayF4q8cJ6ZAT5qJLSVZsaSM0VFvBz4F1ie50q2w//b92nq7Hpqzv3IMe3cujXNKTRmRof4fFO+YDtjiJMK9ka5q0xOZQ7Mu+J89aVMTBRKg21WUEWqcPX9HNVVHIktMRhIjKwO//42KTHeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xa9bZgoQygkKeQ1D3TNNIs5ZVXC0ciEKFn1UiWKR4Ho=;
- b=bKbuRnM96SUUFaEGAoet/JRy20ZNmz2MxVaPEll4EgdbcYCMARxole1Mc31Oc5xU2dDismj9FwVeR99taoZqSddMBPYuaMxdzcf7usSE9rTE39e5agxFm22d9OzOkPmbRa9UlBCuT3xzy9xg+vGlrXnZLtGPLDfM1ozr3o7glas=
-Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
- by BY5PR15MB3537.namprd15.prod.outlook.com (2603:10b6:a03:1f5::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Mon, 1 Jun
- 2020 22:01:33 +0000
-Received: from BY5PR15MB3667.namprd15.prod.outlook.com
- ([fe80::6994:b051:86ba:84f5]) by BY5PR15MB3667.namprd15.prod.outlook.com
- ([fe80::6994:b051:86ba:84f5%5]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
- 22:01:33 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Norbert Lange <nolange79@gmail.com>
-CC:     Nick Terrell <nickrterrell@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Kernel Team <Kernel-team@fb.com>, Chris Mason <clm@fb.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Kees Cook" <keescook@chromium.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>, Petr Malat <oss@malat.biz>,
-        "Patrick Williams" <patrick@stwcx.xyz>,
-        Patrick Williams <patrickw3@fb.com>,
-        "Michael van der Westhuizen" <rmikey@fb.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [GIT PULL][PATCH v5 0/8] Add support for ZSTD-compressed kernel
- and initramfs
-Thread-Topic: [GIT PULL][PATCH v5 0/8] Add support for ZSTD-compressed kernel
- and initramfs
-Thread-Index: AQHWOF/oid8sBRPmvEq8M4eDflitSqjET6sA
-Date:   Mon, 1 Jun 2020 22:01:33 +0000
-Message-ID: <D0196413-4195-4F80-89B3-59859C1515AD@fb.com>
-References: <CADYdroP0zdz=QtuDFCXpkDohEAgGOc7hDHT8_NnqKuvi979J5Q@mail.gmail.com>
-In-Reply-To: <CADYdroP0zdz=QtuDFCXpkDohEAgGOc7hDHT8_NnqKuvi979J5Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:27b5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e3181110-2cd8-490c-c9db-08d8067758fe
-x-ms-traffictypediagnostic: BY5PR15MB3537:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR15MB3537E351EF2762EFF4201F5CAB8A0@BY5PR15MB3537.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0421BF7135
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: djw31F513Wnk+GnA40YKTRuVlhw4U1MikZ1DwmBTdZ/SHvD5TuIrBEmChMsu2cH5Q8xvlZ4hOfBhtvm3v4tEC/7LNdRE4/AnS0Ht4UOJOwCN4sZ0wFlMRp/MC55PNNxadUDLMfJucN6qb3RMvv6dfS1KsIrFO2My0OWaG1jly4cjSvKRSzsIq4mkqHl16bbsYBO0EBc30QHNIbt3+i5JnEB2/DYZ1i6Ftdb7Ff6MY/mYQlv5UYIaQPsHDebsREu1OUzA4JXZUomlvCTWI7VeNGyCJD8W6OQijD/RAxLfV8uGIPo7GBdVO6pHGOROHRsxpEsGnrv3EBdt8kyMIVChRw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(396003)(346002)(376002)(366004)(71200400001)(2906002)(4326008)(76116006)(66946007)(2616005)(66476007)(66556008)(64756008)(8936002)(8676002)(6916009)(66446008)(33656002)(5660300002)(7416002)(86362001)(53546011)(316002)(54906003)(186003)(36756003)(6486002)(6506007)(478600001)(6512007)(558084003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: CkZTuDAXImnlLbQW9shyZT5nZVsI8efEXwHU5gL+jfruriUxCy/yhInspH2w8XRTK4Y2DruhSI5dRSB2tMEtY0KtO+jcOlKFP6nSFjiAYfz+hhv7vE0pD6iNsNcwFeZWD7N1NO8UAaF18k7mteFb7YsjKua7bU1XYjcJV5k0XbfCv6544BcdzfbSp150DXYH2B5tSpX9yIO+sZFw6rdEbR6EFoYJ/EcQJHMlZxwxFmuSf8RrU4HnhDSr5m8Np+FB5KMwG6eE3hjnXESwTNYD0G+ZTDATP4bd3yNpBos1HuQDCXGOeHU4gWjCCY7QKQRikwIk4CtNSeYClgI/7JsThZT8POAYZKUIoLLS0K9ZMvBe6JxIG5SYAZpkSNZ4j3oH0dLFsd+wvc3VO4XxVIarHSxe2x2gsWv4FcXB1O3HPMPK9HNkh+y+3QDQvYalIt358CfXvNBEYmtrNVo5bDXzqiANjK0S30ErzQsMVsFm17aex3hgCnpsH+EsapAQoKA/3wTojBN22RgtenFzmHC24w==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8D732577A7258B41B87D12AE2856297E@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Jun 2020 18:01:58 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4243C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 15:01:57 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x14so1368300wrp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 15:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=IehB16ofl2ZisYz7uWBSmj+l64Pb8TcSH/YFdQJ1EqU=;
+        b=qnYkuHENPemrBrlTtRR9gi8u2PI01ntZSyA1KQRr/H+OsjAScQxABBcGMga3dPHBXF
+         B5rzYp0EZkBZZ7oM0VaSkhWPHp5zlfBv9WEgX/QZWiGyPG2x/DfuNR9Ui7Z0rdxr7GPV
+         53s8NVYi/UhvexR/LhNeT34HD9E4r9zrHH9EyDHey1agJ9zwL75vdR2QwA7EC5W7lAFa
+         BZIvtUlPyV0pzKxqPueB2bWTeMgXAOV+IQFF6UNnXO+SZiQgy948PFkWRwZPyJHwS205
+         xJ2woveqiw4yPN3xKPZ9Au92uyX6LwX9ghrWSyymfEsyuyI5qfANUSbFX/FwsOizdGz8
+         4N8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=IehB16ofl2ZisYz7uWBSmj+l64Pb8TcSH/YFdQJ1EqU=;
+        b=G1KT2093DC55Y+1kvd0oj9SxJo+p3qGEbRkA1zduBhCpRVD8bmw9hMLxOwsT+JKALK
+         /9mR23aPXEejRSSHo4pgQ5Ff3wStPWNotj/Va+pBNimR9wyfKQ1E6v/ipUXr/Zo3M9K0
+         CxvOz70actZNkzMFTZOWhM2ZBICJrXtQcLvhJQByapz8UFj1x7Q8O4FBAtbDp5Xr5Ur5
+         +n7pNvFuDBVN9RgUzqP408dJ4+xonVGR/9xRCWOQofaDKjsx6c/2sz9Q277/N4sHrbWq
+         OVkNOD3O0RKngx/Y2tCvl+fTQYRMbYYJJgnk4nOf4e5GB8YnuLqF1qCI/oQ4kCgRY6Dy
+         i31w==
+X-Gm-Message-State: AOAM53364gvzr/d6BciX7QDDksbUuZwqeq5RgcH/VHWC2ls2FdBiv2qN
+        xJyM1ez8vfG3Sl32uYii2g==
+X-Google-Smtp-Source: ABdhPJy7qi0JzbO9zOj1Ie44EtEG1GtzsS6DHrQZsX6A68U4Y2B3BTj55Mgwton+CsrB4H/cktGPxw==
+X-Received: by 2002:a5d:6751:: with SMTP id l17mr25377462wrw.179.1591048916188;
+        Mon, 01 Jun 2020 15:01:56 -0700 (PDT)
+Received: from earth2.lan (host-92-15-172-76.as43234.net. [92.15.172.76])
+        by smtp.gmail.com with ESMTPSA id v2sm1018113wrn.21.2020.06.01.15.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 15:01:55 -0700 (PDT)
+From:   "=?ISO-8859-15?B?/YCAgISB?=" <jbi.octave@gmail.com>
+X-Google-Original-From: =?ISO-8859-15?B?/YCAgISB?= <djed@earth2.lan>
+Date:   Mon, 1 Jun 2020 23:01:15 +0100 (BST)
+To:     Steven Rostedt <rostedt@goodmis.org>
+cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, paulmck@kernel.org, mingo@redhat.com,
+        boqun.feng@gmail.com, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 4/5] x86/ftrace: Add annotations for ftrace_arch_code_modify_prepare()
+ and ftrace_arch_code_modify_post_process()
+In-Reply-To: <20200601154647.581fa345@oasis.local.home>
+Message-ID: <alpine.LFD.2.22.394.2006012259520.4793@earth2.lan>
+References: <20200601184552.23128-1-jbi.octave@gmail.com> <20200601184552.23128-5-jbi.octave@gmail.com> <20200601154647.581fa345@oasis.local.home>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3181110-2cd8-490c-c9db-08d8067758fe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2020 22:01:33.4584
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: apAQAqlNqFLFikN2TNjKn1nAsgck9dvDrZU/mTB7Mi7ycZwuwUHqPl1EYaGBy6Pq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3537
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-01_12:2020-06-01,2020-06-01 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 adultscore=0
- clxscore=1011 lowpriorityscore=0 priorityscore=1501 cotscore=-2147483648
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006010158
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 1, 2020, at 2:58 PM, Norbert Lange <nolange79@gmail.com> wrote:
->=20
-> The series seems to be stuck in limbo, and I got the hint to bring
-> this to Andrew's attention [1].
-> Hope this will finally end in upstream, been using these patches for ~2 y=
-ears.
 
-Thanks for the CC!=
+
+On Mon, 1 Jun 2020, Steven Rostedt wrote:
+
+> On Mon,  1 Jun 2020 19:45:51 +0100
+> Jules Irenge <jbi.octave@gmail.com> wrote:
+>
+>> Sparse reports warnings
+>>
+>> warning: context imbalance in ftrace_arch_code_modify_prepare()
+>> 	- wrong count at exit
+>> warning: context imbalance in ftrace_arch_code_modify_post_process()
+>> 	- wrong count at exit
+>>
+>> The root cause is that even if
+>>  the annotations on the function are correct,
+>> mutex do not support annotation
+>> This makes Sparse to complain.
+>> To fix this,
+>> __acquire(&text_mutex) and
+>>  __release(&text_mutex) annotations are added
+>> inside ftrace_arch_code_modify_prepare()
+>> and ftrace_arch_code_modify_post_process()
+>> respectively.
+>
+> Wait what? This looks like either a bug in sparse, or we just remove the
+> annotations. This just makes the code ugly, and looks silly.
+>
+> Nack!
+>
+> -- Steve
+>
+>
+>
+Thanks for the feedback, I take good note.
+Jules
