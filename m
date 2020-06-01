@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B664C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B4F2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83C02085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034560;
-	bh=jue4mtuSaQqHGQNs9YXMYo+XF9mB1tK66L6vtKEwzxA=;
+	s=default; t=1591034562;
+	bh=09pFT/p3AtZo/Gyy75xhoEPeOLdDUxHlPwMtz3ZgjI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DodRWVzkJAI0NtaTLsW6x3u4ne931df8cx1Yb/HHsyFOjLLxGhGR/bLnmYggziHQ0
-	 rCqO1f/XHZRNY8N3geDrGe/r8a9cnsW94DniJFa6GMA3/XnwiISSsvKaFWScsZEh03
-	 wUSFdRMfv/aMYkp76Qjv3qHVMFuO/tZc98z/P9+U=
+	b=lFRm13wqVnXgLaK8HgL0YSqZoR33xeOOgOso8AwMobri9ZoJ9Dy32EaY3t8ALqw9s
+	 m/ptWgcTiO1XvmaKijvGBA11W3sudrvytjHfgAy9YPw5t6MjOOpeKZdRQIE+tZhXEG
+	 oLfEBxieeOJocuBzEoaPoBVvtIBUY7sgFgDWM5h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgFASCi (ORCPT
+        id S1729964AbgFASCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729949AbgFASCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:34 -0400
+        id S1728956AbgFASCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502982074B;
-        Mon,  1 Jun 2020 18:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF8A7206E2;
+        Mon,  1 Jun 2020 18:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034552;
-        bh=jue4mtuSaQqHGQNs9YXMYo+XF9mB1tK66L6vtKEwzxA=;
+        s=default; t=1591034557;
+        bh=09pFT/p3AtZo/Gyy75xhoEPeOLdDUxHlPwMtz3ZgjI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Juky0axQjC9gzftFWYGTLacsi/tLtld/IuFF0ge9diKpA1F6HHPa4X1RqBwSbzxUd
-         Gf7cE223X+8FQliFjlEL4YAqUV/EYhJa29Uow6Wyd2ug2Ar356gSjdzYbPzF0nw+Xp
-         kd+Zbozly6P7/OqkzgOYi8juwm/qOkcPmgpYBkFs=
+        b=tZLFfQiwPL901hB7fF4IDOp4ydnMfc3vwecKAggM7gGM97T17bRcidCT/KAmiiIMi
+         rYsw0+mm4pQ4dWJr2FZtOJN9HsHw54LQCFdfkjmy2z5gjQrA3FKRQoxC4e2PyEI3TJ
+         ON0tlSzjYPWAHIo7woJerT5y+uRtev44QOHmnoo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.14 66/77] netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
-Date:   Mon,  1 Jun 2020 19:54:11 +0200
-Message-Id: <20200601174027.739760521@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 68/77] qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
+Date:   Mon,  1 Jun 2020 19:54:13 +0200
+Message-Id: <20200601174028.045243605@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,201 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit 4c559f15efcc43b996f4da528cd7f9483aaca36d upstream.
+commit 15c973858903009e995b2037683de29dfe968621 upstream.
 
-Dan Carpenter says: "Smatch complains that the value for "cmd" comes
-from the network and can't be trusted."
+In function qlcnic_83xx_interrupt_test(), function
+qlcnic_83xx_diag_alloc_res() is not handled by function
+qlcnic_83xx_diag_free_res() after a call of the function
+qlcnic_alloc_mbx_args() failed. Fix this issue by adding
+a jump target "fail_mbx_args", and jump to this new target
+when qlcnic_alloc_mbx_args() failed.
 
-Add pptp_msg_name() helper function that checks for the array boundary.
-
-Fixes: f09943fefe6b ("[NETFILTER]: nf_conntrack/nf_nat: add PPTP helper port")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: b6b4316c8b2f ("qlcnic: Handle qlcnic_alloc_mbx_args() failure")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/netfilter/nf_conntrack_pptp.h |    2 
- net/ipv4/netfilter/nf_nat_pptp.c            |    7 ---
- net/netfilter/nf_conntrack_pptp.c           |   62 +++++++++++++++-------------
- 3 files changed, 38 insertions(+), 33 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/include/linux/netfilter/nf_conntrack_pptp.h
-+++ b/include/linux/netfilter/nf_conntrack_pptp.h
-@@ -5,7 +5,7 @@
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
+@@ -3650,7 +3650,7 @@ int qlcnic_83xx_interrupt_test(struct ne
+ 	ahw->diag_cnt = 0;
+ 	ret = qlcnic_alloc_mbx_args(&cmd, adapter, QLCNIC_CMD_INTRPT_TEST);
+ 	if (ret)
+-		goto fail_diag_irq;
++		goto fail_mbx_args;
  
- #include <linux/netfilter/nf_conntrack_common.h>
+ 	if (adapter->flags & QLCNIC_MSIX_ENABLED)
+ 		intrpt_id = ahw->intr_tbl[0].id;
+@@ -3680,6 +3680,8 @@ int qlcnic_83xx_interrupt_test(struct ne
  
--extern const char *const pptp_msg_name[];
-+extern const char *const pptp_msg_name(u_int16_t msg);
- 
- /* state of the control session */
- enum pptp_ctrlsess_state {
---- a/net/ipv4/netfilter/nf_nat_pptp.c
-+++ b/net/ipv4/netfilter/nf_nat_pptp.c
-@@ -165,8 +165,7 @@ pptp_outbound_pkt(struct sk_buff *skb,
- 		break;
- 	default:
- 		pr_debug("unknown outbound packet 0x%04x:%s\n", msg,
--			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
--					       pptp_msg_name[0]);
-+			 pptp_msg_name(msg));
- 		/* fall through */
- 	case PPTP_SET_LINK_INFO:
- 		/* only need to NAT in case PAC is behind NAT box */
-@@ -267,9 +266,7 @@ pptp_inbound_pkt(struct sk_buff *skb,
- 		pcid_off = offsetof(union pptp_ctrl_union, setlink.peersCallID);
- 		break;
- 	default:
--		pr_debug("unknown inbound packet %s\n",
--			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
--					       pptp_msg_name[0]);
-+		pr_debug("unknown inbound packet %s\n", pptp_msg_name(msg));
- 		/* fall through */
- 	case PPTP_START_SESSION_REQUEST:
- 	case PPTP_START_SESSION_REPLY:
---- a/net/netfilter/nf_conntrack_pptp.c
-+++ b/net/netfilter/nf_conntrack_pptp.c
-@@ -71,24 +71,32 @@ EXPORT_SYMBOL_GPL(nf_nat_pptp_hook_expec
- 
- #if defined(DEBUG) || defined(CONFIG_DYNAMIC_DEBUG)
- /* PptpControlMessageType names */
--const char *const pptp_msg_name[] = {
--	"UNKNOWN_MESSAGE",
--	"START_SESSION_REQUEST",
--	"START_SESSION_REPLY",
--	"STOP_SESSION_REQUEST",
--	"STOP_SESSION_REPLY",
--	"ECHO_REQUEST",
--	"ECHO_REPLY",
--	"OUT_CALL_REQUEST",
--	"OUT_CALL_REPLY",
--	"IN_CALL_REQUEST",
--	"IN_CALL_REPLY",
--	"IN_CALL_CONNECT",
--	"CALL_CLEAR_REQUEST",
--	"CALL_DISCONNECT_NOTIFY",
--	"WAN_ERROR_NOTIFY",
--	"SET_LINK_INFO"
-+static const char *const pptp_msg_name_array[PPTP_MSG_MAX + 1] = {
-+	[0]				= "UNKNOWN_MESSAGE",
-+	[PPTP_START_SESSION_REQUEST]	= "START_SESSION_REQUEST",
-+	[PPTP_START_SESSION_REPLY]	= "START_SESSION_REPLY",
-+	[PPTP_STOP_SESSION_REQUEST]	= "STOP_SESSION_REQUEST",
-+	[PPTP_STOP_SESSION_REPLY]	= "STOP_SESSION_REPLY",
-+	[PPTP_ECHO_REQUEST]		= "ECHO_REQUEST",
-+	[PPTP_ECHO_REPLY]		= "ECHO_REPLY",
-+	[PPTP_OUT_CALL_REQUEST]		= "OUT_CALL_REQUEST",
-+	[PPTP_OUT_CALL_REPLY]		= "OUT_CALL_REPLY",
-+	[PPTP_IN_CALL_REQUEST]		= "IN_CALL_REQUEST",
-+	[PPTP_IN_CALL_REPLY]		= "IN_CALL_REPLY",
-+	[PPTP_IN_CALL_CONNECT]		= "IN_CALL_CONNECT",
-+	[PPTP_CALL_CLEAR_REQUEST]	= "CALL_CLEAR_REQUEST",
-+	[PPTP_CALL_DISCONNECT_NOTIFY]	= "CALL_DISCONNECT_NOTIFY",
-+	[PPTP_WAN_ERROR_NOTIFY]		= "WAN_ERROR_NOTIFY",
-+	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
- };
+ done:
+ 	qlcnic_free_mbx_args(&cmd);
 +
-+const char *const pptp_msg_name(u_int16_t msg)
-+{
-+	if (msg > PPTP_MSG_MAX)
-+		return pptp_msg_name_array[0];
-+
-+	return pptp_msg_name_array[msg];
-+}
- EXPORT_SYMBOL(pptp_msg_name);
- #endif
++fail_mbx_args:
+ 	qlcnic_83xx_diag_free_res(netdev, drv_sds_rings);
  
-@@ -275,7 +283,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 	typeof(nf_nat_pptp_hook_inbound) nf_nat_pptp_inbound;
- 
- 	msg = ntohs(ctlh->messageType);
--	pr_debug("inbound control message %s\n", pptp_msg_name[msg]);
-+	pr_debug("inbound control message %s\n", pptp_msg_name(msg));
- 
- 	switch (msg) {
- 	case PPTP_START_SESSION_REPLY:
-@@ -310,7 +318,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 		pcid = pptpReq->ocack.peersCallID;
- 		if (info->pns_call_id != pcid)
- 			goto invalid;
--		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name[msg],
-+		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name(msg),
- 			 ntohs(cid), ntohs(pcid));
- 
- 		if (pptpReq->ocack.resultCode == PPTP_OUTCALL_CONNECT) {
-@@ -327,7 +335,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 			goto invalid;
- 
- 		cid = pptpReq->icreq.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->cstate = PPTP_CALL_IN_REQ;
- 		info->pac_call_id = cid;
- 		break;
-@@ -346,7 +354,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 		if (info->pns_call_id != pcid)
- 			goto invalid;
- 
--		pr_debug("%s, PCID=%X\n", pptp_msg_name[msg], ntohs(pcid));
-+		pr_debug("%s, PCID=%X\n", pptp_msg_name(msg), ntohs(pcid));
- 		info->cstate = PPTP_CALL_IN_CONF;
- 
- 		/* we expect a GRE connection from PAC to PNS */
-@@ -356,7 +364,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 	case PPTP_CALL_DISCONNECT_NOTIFY:
- 		/* server confirms disconnect */
- 		cid = pptpReq->disc.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->cstate = PPTP_CALL_NONE;
- 
- 		/* untrack this call id, unexpect GRE packets */
-@@ -383,7 +391,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- invalid:
- 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
- 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
--		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
-+		 pptp_msg_name(msg),
- 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
- 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
- 	return NF_ACCEPT;
-@@ -403,7 +411,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 	typeof(nf_nat_pptp_hook_outbound) nf_nat_pptp_outbound;
- 
- 	msg = ntohs(ctlh->messageType);
--	pr_debug("outbound control message %s\n", pptp_msg_name[msg]);
-+	pr_debug("outbound control message %s\n", pptp_msg_name(msg));
- 
- 	switch (msg) {
- 	case PPTP_START_SESSION_REQUEST:
-@@ -425,7 +433,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 		info->cstate = PPTP_CALL_OUT_REQ;
- 		/* track PNS call id */
- 		cid = pptpReq->ocreq.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->pns_call_id = cid;
- 		break;
- 
-@@ -439,7 +447,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 		pcid = pptpReq->icack.peersCallID;
- 		if (info->pac_call_id != pcid)
- 			goto invalid;
--		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name[msg],
-+		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name(msg),
- 			 ntohs(cid), ntohs(pcid));
- 
- 		if (pptpReq->icack.resultCode == PPTP_INCALL_ACCEPT) {
-@@ -479,7 +487,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- invalid:
- 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
- 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
--		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
-+		 pptp_msg_name(msg),
- 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
- 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
- 	return NF_ACCEPT;
+ fail_diag_irq:
 
 
