@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF604C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55A021702
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635AD2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034892;
-	bh=iGPnBlo8kyfDPRdtZjoXDIN1J6IGdWFa/3J4cMiOiuY=;
+	s=default; t=1591034894;
+	bh=pmeOm4DiY82BXXrfgxWB1khpemV4WYpFdghwFx6yf30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gyRjyy76DNVf8NhJvBCR4ZUcXzjnHhBXQkfoB0gYckXc+NQKe5Ylxw/s06Xqt2GpO
-	 KEbwAgugM2qyOaMSg8lMzyaTxsF4sN1tc7RJ8hY7f6xvB6jV+pDI/Inz5EQVilAK2x
-	 UPCVHdz0i2IfI1xKkwhqKqiqeQxKvRHjLnlWWzmg=
+	b=Rdcs9ge5HnPdROKrgVPDsnDObehIA/NjwS/rG8AL2SR5T+fWcNlpvAPFd4XuJVOpk
+	 Jp6QNxzTOzQLYDJJgSAk6/23APPuBk/p5jMcdH44t3zE+CG/45WY3pzBBWLheAMAgV
+	 vfnU9nhiEa9MSoMq8euPHNEftLY2JVSEYEXlWxKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgFASIL (ORCPT
+        id S1730699AbgFASIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53734 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730623AbgFASHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:46 -0400
+        id S1730628AbgFASHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10EC6206E2;
-        Mon,  1 Jun 2020 18:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4793820E65;
+        Mon,  1 Jun 2020 18:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034865;
-        bh=iGPnBlo8kyfDPRdtZjoXDIN1J6IGdWFa/3J4cMiOiuY=;
+        s=default; t=1591034867;
+        bh=pmeOm4DiY82BXXrfgxWB1khpemV4WYpFdghwFx6yf30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p8Smh4R2ykpg/yIFanTic299tQ5dtUG7WFJnxXkM1yUxQBtq4jzMUpu3iajYUv639
-         jvJk1DCjhMgQ+1VOVUnMIqU6RG1Hw/qaobTdNRSvvmtC2WiEluMhkJ6ST6Vv9Ra4rs
-         LUMYLiJL7/yTrKQgZaLpKy6wyKL2BY7GGuAdjOUs=
+        b=iGs7XLr3Yxw/+a8WfM6ByquRT2JRBL9lCCRheSIPG95G7liwypTKfif2gK/2YWkNH
+         3apQqJRJhSrVlEzygl2OR6rasdp8Zyks1rDRKksq5YsySQqJNfM0j4jeMR5dnvj68E
+         BLeyasnOo/OcRenEd1XUOqEDtUEqkGnfIEWigZUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Sierra <alex.sierra@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Lei Xue <carmark.dlut@gmail.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 046/142] drm/amdgpu: Use GEM obj reference for KFD BOs
-Date:   Mon,  1 Jun 2020 19:53:24 +0200
-Message-Id: <20200601174042.639429498@linuxfoundation.org>
+Subject: [PATCH 5.4 047/142] cachefiles: Fix race between read_waiter and read_copier involving op->to_do
+Date:   Mon,  1 Jun 2020 19:53:25 +0200
+Message-Id: <20200601174042.726403754@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -62,50 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Lei Xue <carmark.dlut@gmail.com>
 
-[ Upstream commit 39b3128d7ffd44e400e581e6f49e88cb42bef9a1 ]
+[ Upstream commit 7bb0c5338436dae953622470d52689265867f032 ]
 
-Releasing the AMDGPU BO ref directly leads to problems when BOs were
-exported as DMA bufs. Releasing the GEM reference makes sure that the
-AMDGPU/TTM BO is not freed too early.
+There is a potential race in fscache operation enqueuing for reading and
+copying multiple pages from cachefiles to netfs.  The problem can be seen
+easily on a heavy loaded system (for example many processes reading files
+continually on an NFS share covered by fscache triggered this problem within
+a few minutes).
 
-Also take a GEM reference when importing BOs from DMABufs to keep
-references to imported BOs balances properly.
+The race is due to cachefiles_read_waiter() adding the op to the monitor
+to_do list and then then drop the object->work_lock spinlock before
+completing fscache_enqueue_operation().  Once the lock is dropped,
+cachefiles_read_copier() grabs the op, completes processing it, and
+makes it through fscache_retrieval_complete() which sets the op->state to
+the final state of FSCACHE_OP_ST_COMPLETE(4).  When cachefiles_read_waiter()
+finally gets through the remainder of fscache_enqueue_operation()
+it sees the invalid state, and hits the ASSERTCMP and the following
+oops is seen:
+[ 2259.612361] FS-Cache:
+[ 2259.614785] FS-Cache: Assertion failed
+[ 2259.618639] FS-Cache: 4 == 5 is false
+[ 2259.622456] ------------[ cut here ]------------
+[ 2259.627190] kernel BUG at fs/fscache/operation.c:70!
+...
+[ 2259.791675] RIP: 0010:[<ffffffffc061b4cf>]  [<ffffffffc061b4cf>] fscache_enqueue_operation+0xff/0x170 [fscache]
+[ 2259.802059] RSP: 0000:ffffa0263d543be0  EFLAGS: 00010046
+[ 2259.807521] RAX: 0000000000000019 RBX: ffffa01a4d390480 RCX: 0000000000000006
+[ 2259.814847] RDX: 0000000000000000 RSI: 0000000000000046 RDI: ffffa0263d553890
+[ 2259.822176] RBP: ffffa0263d543be8 R08: 0000000000000000 R09: ffffa0263c2d8708
+[ 2259.829502] R10: 0000000000001e7f R11: 0000000000000000 R12: ffffa01a4d390480
+[ 2259.844483] R13: ffff9fa9546c5920 R14: ffffa0263d543c80 R15: ffffa0293ff9bf10
+[ 2259.859554] FS:  00007f4b6efbd700(0000) GS:ffffa0263d540000(0000) knlGS:0000000000000000
+[ 2259.875571] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2259.889117] CR2: 00007f49e1624ff0 CR3: 0000012b38b38000 CR4: 00000000007607e0
+[ 2259.904015] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 2259.918764] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 2259.933449] PKRU: 55555554
+[ 2259.943654] Call Trace:
+[ 2259.953592]  <IRQ>
+[ 2259.955577]  [<ffffffffc03a7c12>] cachefiles_read_waiter+0x92/0xf0 [cachefiles]
+[ 2259.978039]  [<ffffffffa34d3942>] __wake_up_common+0x82/0x120
+[ 2259.991392]  [<ffffffffa34d3a63>] __wake_up_common_lock+0x83/0xc0
+[ 2260.004930]  [<ffffffffa34d3510>] ? task_rq_unlock+0x20/0x20
+[ 2260.017863]  [<ffffffffa34d3ab3>] __wake_up+0x13/0x20
+[ 2260.030230]  [<ffffffffa34c72a0>] __wake_up_bit+0x50/0x70
+[ 2260.042535]  [<ffffffffa35bdcdb>] unlock_page+0x2b/0x30
+[ 2260.054495]  [<ffffffffa35bdd09>] page_endio+0x29/0x90
+[ 2260.066184]  [<ffffffffa368fc81>] mpage_end_io+0x51/0x80
 
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Tested-by: Alex Sierra <alex.sierra@amd.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Sierra <alex.sierra@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+CPU1
+cachefiles_read_waiter()
+ 20 static int cachefiles_read_waiter(wait_queue_entry_t *wait, unsigned mode,
+ 21                                   int sync, void *_key)
+ 22 {
+...
+ 61         spin_lock(&object->work_lock);
+ 62         list_add_tail(&monitor->op_link, &op->to_do);
+ 63         spin_unlock(&object->work_lock);
+<begin race window>
+ 64
+ 65         fscache_enqueue_retrieval(op);
+182 static inline void fscache_enqueue_retrieval(struct fscache_retrieval *op)
+183 {
+184         fscache_enqueue_operation(&op->op);
+185 }
+ 58 void fscache_enqueue_operation(struct fscache_operation *op)
+ 59 {
+ 60         struct fscache_cookie *cookie = op->object->cookie;
+ 61
+ 62         _enter("{OBJ%x OP%x,%u}",
+ 63                op->object->debug_id, op->debug_id, atomic_read(&op->usage));
+ 64
+ 65         ASSERT(list_empty(&op->pend_link));
+ 66         ASSERT(op->processor != NULL);
+ 67         ASSERT(fscache_object_is_available(op->object));
+ 68         ASSERTCMP(atomic_read(&op->usage), >, 0);
+<end race window>
+
+CPU2
+cachefiles_read_copier()
+168         while (!list_empty(&op->to_do)) {
+...
+202                 fscache_end_io(op, monitor->netfs_page, error);
+203                 put_page(monitor->netfs_page);
+204                 fscache_retrieval_complete(op, 1);
+
+CPU1
+ 58 void fscache_enqueue_operation(struct fscache_operation *op)
+ 59 {
+...
+ 69         ASSERTIFCMP(op->state != FSCACHE_OP_ST_IN_PROGRESS,
+ 70                     op->state, ==,  FSCACHE_OP_ST_CANCELLED);
+
+Signed-off-by: Lei Xue <carmark.dlut@gmail.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/cachefiles/rdwr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 6d021ecc8d59..edb561baf8b9 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -1288,7 +1288,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
- 	}
+diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
+index 44a3ce1e4ce4..ad057ed2b30b 100644
+--- a/fs/cachefiles/rdwr.c
++++ b/fs/cachefiles/rdwr.c
+@@ -60,9 +60,9 @@ static int cachefiles_read_waiter(wait_queue_entry_t *wait, unsigned mode,
+ 	object = container_of(op->op.object, struct cachefiles_object, fscache);
+ 	spin_lock(&object->work_lock);
+ 	list_add_tail(&monitor->op_link, &op->to_do);
++	fscache_enqueue_retrieval(op);
+ 	spin_unlock(&object->work_lock);
  
- 	/* Free the BO*/
--	amdgpu_bo_unref(&mem->bo);
-+	drm_gem_object_put_unlocked(&mem->bo->tbo.base);
- 	mutex_destroy(&mem->lock);
- 	kfree(mem);
- 
-@@ -1630,7 +1630,8 @@ int amdgpu_amdkfd_gpuvm_import_dmabuf(struct kgd_dev *kgd,
- 		AMDGPU_VM_PAGE_READABLE | AMDGPU_VM_PAGE_WRITEABLE |
- 		AMDGPU_VM_PAGE_EXECUTABLE | AMDGPU_VM_MTYPE_NC;
- 
--	(*mem)->bo = amdgpu_bo_ref(bo);
-+	drm_gem_object_get(&bo->tbo.base);
-+	(*mem)->bo = bo;
- 	(*mem)->va = va;
- 	(*mem)->domain = (bo->preferred_domains & AMDGPU_GEM_DOMAIN_VRAM) ?
- 		AMDGPU_GEM_DOMAIN_VRAM : AMDGPU_GEM_DOMAIN_GTT;
+-	fscache_enqueue_retrieval(op);
+ 	fscache_put_retrieval(op);
+ 	return 0;
+ }
 -- 
 2.25.1
 
