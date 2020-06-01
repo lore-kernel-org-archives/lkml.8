@@ -4,48 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE468C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC89FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA442074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02402074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034245;
-	bh=xe0N+7sYbFtwojUydJ8S15eOlZCR8+wuTi/LeGmYtAE=;
+	s=default; t=1591034247;
+	bh=YYkXeT0qG5PVYrGeJGIoToGBNE1ZhrA2NGX8vI6bL6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AI6B9cT+1SKbKx1eTDEnylyXIIGrrX+8CwwLoFjavr28FFXRTRR1gBDJlggJ8Q4uJ
-	 1zhhclg8YZlsMf0wB9DHW9TeAsPXIf2nBR4LEt7KUrhyC4FwWovzYikos+b2XomDGh
-	 atdKzdVAMq7GD6LlagBLIrzEAZ0KYMGV4oZH/yxE=
+	b=bUVRqx4qIEs6A4qbm88yAxiV2g/RRYOgwZ5xYsN0QUWwBdtBaHEfhUwGRpNc36Dha
+	 /00oXoXgM9+Pb8I53SWBaZUjSfDabMAdE6h1gmHs+WSBFy5tyCyfVyNPGtRaJ+8oZe
+	 XBHgyx1YkQ0qA8X/r4Otpqol8xPicoHHgnZqLfK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgFAR5Y (ORCPT
+        id S1728921AbgFAR51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38456 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728884AbgFAR5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:19 -0400
+        id S1728903AbgFAR5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB552076B;
-        Mon,  1 Jun 2020 17:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5B662073B;
+        Mon,  1 Jun 2020 17:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034238;
-        bh=xe0N+7sYbFtwojUydJ8S15eOlZCR8+wuTi/LeGmYtAE=;
+        s=default; t=1591034243;
+        bh=YYkXeT0qG5PVYrGeJGIoToGBNE1ZhrA2NGX8vI6bL6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=unJLlDDNnGzFa2VeegPjbLDhx0hn+tPatmHwOTTtPmua8aW4I94UjCbu/cIhB3UDg
-         PY06q6BCCvL7QTbsISi+8bhkKApt3ZedPvoFN8ecYQfT+DcVCgvdcs6TGtMerekjqT
-         cHw/kMdB5Jc00HfwOJRVHX8z4VSl245MG7XOq5EU=
+        b=pWmGAjDB9UV7ybE3yoLIsFAcyAjhP8Z7jUUpxfu+EaRg4zwqvUrJuQZCO9HSKx2Hj
+         1PYdRWiMJKmGgdGR/2W0R30BYccd2i8TypnJXZ4JxlpJewuVZgzdHRvOsOXOwhvb98
+         dDRPtlMy+p3R8fg0fqiUFWOBNKW9VOcxK6M9BKmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 37/48] Revert "Input: i8042 - add ThinkPad S230u to i8042 nomux list"
-Date:   Mon,  1 Jun 2020 19:53:47 +0200
-Message-Id: <20200601174002.998935723@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 39/48] mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
+Date:   Mon,  1 Jun 2020 19:53:49 +0200
+Message-Id: <20200601174003.327414437@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -58,41 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit f4dec2d6160976b14e54be9c3950ce0f52385741 upstream.
+commit 6988f31d558aa8c744464a7f6d91d34ada48ad12 upstream.
 
-This reverts commit 18931506465a762ffd3f4803d36a18d336a67da9. From Kevin
-Locke:
+Replace superfluous VM_BUG_ON() with comment about correct usage.
 
-"... nomux only appeared to fix the issue because the controller
-continued working after warm reboots. After more thorough testing from
-both warm and cold start, I now believe the entry should be added to
-i8042_dmi_reset_table rather than i8042_dmi_nomux_table as i8042.reset=1
-alone is sufficient to avoid the issue from both states while
-i8042.nomux is not."
+Technically reverts commit 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to
+page_mapcount()"), but context lines have changed.
 
+Function isolate_migratepages_block() runs some checks out of lru_lock
+when choose pages for migration.  After checking PageLRU() it checks
+extra page references by comparing page_count() and page_mapcount().
+Between these two checks page could be removed from lru, freed and taken
+by slab.
+
+As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
+Race window is tiny.  For certain workload this happens around once a
+year.
+
+    page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
+    flags: 0x500000000008100(slab|head)
+    raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
+    raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
+    page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
+    ------------[ cut here ]------------
+    kernel BUG at ./include/linux/mm.h:628!
+    invalid opcode: 0000 [#1] SMP NOPTI
+    CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
+    Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
+    RIP: 0010:isolate_migratepages_block+0x986/0x9b0
+
+The code in isolate_migratepages_block() was added in commit
+119d6d59dcc0 ("mm, compaction: avoid isolating pinned pages") before
+adding VM_BUG_ON into page_mapcount().
+
+This race has been predicted in 2015 by Vlastimil Babka (see link
+below).
+
+[akpm@linux-foundation.org: comment tweaks, per Hugh]
+Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Hugh Dickins <hughd@google.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: David Rientjes <rientjes@google.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/159032779896.957378.7852761411265662220.stgit@buzz
+Link: https://lore.kernel.org/lkml/557710E1.6060103@suse.cz/
+Link: https://lore.kernel.org/linux-mm/158937872515.474360.5066096871639561424.stgit@buzz/T/ (v1)
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/serio/i8042-x86ia64io.h |    7 -------
- 1 file changed, 7 deletions(-)
+ include/linux/mm.h |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -545,13 +545,6 @@ static const struct dmi_system_id __init
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
- 		},
- 	},
--	{
--		/* Lenovo ThinkPad Twist S230u */
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
--		},
--	},
- 	{ }
- };
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -446,7 +446,6 @@ static inline void page_mapcount_reset(s
+ 
+ static inline int page_mapcount(struct page *page)
+ {
+-	VM_BUG_ON_PAGE(PageSlab(page), page);
+ 	return atomic_read(&page->_mapcount) + 1;
+ }
  
 
 
