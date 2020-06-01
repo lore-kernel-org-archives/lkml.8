@@ -2,148 +2,156 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B60792073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:24:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uPm7+Nhh"
+	by mail.kernel.org (Postfix) with ESMTP id 85EA0207DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFAQYK (ORCPT
+        id S1726825AbgFAQ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49866 "EHLO
+        Mon, 1 Jun 2020 12:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFAQYJ (ORCPT
+        with ESMTP id S1726067AbgFAQ1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:24:09 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C979C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:24:08 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id y13so3350301ybj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PQ2GMhzo7cmDr2bvHk1Eg4SDQqgv+z7peej1Sf2vsYE=;
-        b=uPm7+NhhxHzDUqaSkN14igTBR9BwE4dUvjGjDaGJl+MO6HCxa+3Mm3VFkyyCJ/K7qy
-         IPfnwiJ3Ityam2G+W0VuM6GWso8s8Pyfj24xgpSFmWC0bCb8+EHT0aG2inCv3fJ2VJCJ
-         IuF0sKlLInulOSd1HXvy0rUaZxXLkDqWtwXoyHbK146pSD/Jud3GTBOot0SvZgeaGnyC
-         7meWhECX1loiiMzZMg6wBxEkzjMr40tLD0XwGdS9a01QG2msavsR+B3mLyx6QPWHfMGp
-         jmeQvyiOE9Ka/IH9bHw4brTFOvuD2nMncL/Cktk6ogC6aB+0TjyKzrzjogpFA/3+XnDt
-         7rGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PQ2GMhzo7cmDr2bvHk1Eg4SDQqgv+z7peej1Sf2vsYE=;
-        b=Q6Lm/7BXujMu6Pu37kJqPNwDlFFTV6lPWoKLzy4fxIBPzz4DboeiuVnia1IbrHDq1o
-         rqB6rR9yHQtscOfa98qF+pb0I22XjenMrlGl5SthMVHyD/FTQsM1bDjwTmmVhlmeQsf/
-         cb28qF/1PjjGpZIYNbOwXyHraiFqaIucdhj8oH30rWhKJDvg92LXV4hClN80p+5S4D8T
-         xnIbx7i5DxBFwaePuJlMgwbQeZ/r0cIYoKEu5soUgGhnMdZBaUZVIQ0FpQo7kpDxWyzj
-         foyK0rdn07unXyppyxodJwH2oVXDOUUxjVn3Dk2I4/yBAk/IV50BklFTLk1VucamGaqs
-         hK7g==
-X-Gm-Message-State: AOAM532ubXhcIELXAPIE2Ax0HEB5WrIAWnxQyOkrI/p7aK3w36NGhvss
-        XZpuAS9zxdABEvIxQLdAJYht+ZGjLKTN4rcIQhvSxHwF
-X-Google-Smtp-Source: ABdhPJyBN4Lc79P2ibomNOdQBcMt1WD1LcxCDheiYEG7aXgYbSVyZEN2UiyE2prTWlGUy9qPGescjrS7bWTF67Qzw+g=
-X-Received: by 2002:a25:5387:: with SMTP id h129mr32591599ybb.47.1591028647233;
- Mon, 01 Jun 2020 09:24:07 -0700 (PDT)
+        Mon, 1 Jun 2020 12:27:45 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8EB7C05BD43;
+        Mon,  1 Jun 2020 09:27:44 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id A7A722A01B3
+Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kieran.bingham@ideasonboard.com,
+        dafna Hirschfeld <dafna3@gmail.com>,
+        =?UTF-8?Q?Lucas_Magalh=c3=a3es?= <lucmaga@gmail.com>
+References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
+ <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
+ <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
+ <20200601123705.GE5886@pendragon.ideasonboard.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <3cdd1740-d085-c04b-1861-a1a541d1ee56@collabora.com>
+Date:   Mon, 1 Jun 2020 13:27:36 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200524224219.234847-1-jolsa@kernel.org> <20200524224219.234847-7-jolsa@kernel.org>
- <CAP-5=fV5tKwyMCpwt2VFkSFwCCk6qJ3S2_ajNy2P6ZWVxvbC-w@mail.gmail.com> <20200601132147.GB1031432@krava>
-In-Reply-To: <20200601132147.GB1031432@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 1 Jun 2020 09:23:56 -0700
-Message-ID: <CAP-5=fXyqCZUHxn_0OpjDCb+JqoCyEFfJnPNXwYd+jvGshwOrw@mail.gmail.com>
-Subject: Re: [PATCH 06/14] perf tests: Add another pmu-events tests
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200601123705.GE5886@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 6:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Jun 01, 2020 at 12:44:15AM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> > > +       memset(&error, 0, sizeof(error));
-> > > +       ret = parse_events_fake(evlist, id, &error);
-> > > +       if (ret) {
-> > > +               pr_debug("str        : %s\n", error.str);
-> > > +               pr_debug("help       : %s\n", error.help);
-> > > +               pr_debug("first_str  : %s\n", error.first_str);
-> > > +               pr_debug("first_help : %s\n", error.first_help);
-> > > +       }
-> > > +
-> > > +       evlist__delete(evlist);
-> > > +       free(error.str);
-> > > +       free(error.help);
-> > > +       free(error.first_str);
-> > > +       free(error.first_help);
-> > > +       return ret;
-> > > +}
-> >
-> > This is quite similar to check_parse_id, fold them together?
->
-> there is the 'same_cpu' logic in check_parse_id,
-> so I did not want to mess with that
 
-Agreed. We could handle ret and same_cpu in the caller.
 
-> >
-> > > +
-> > > +static int metric_parse_fake(const char *str)
-> > > +{
-> > > +       struct expr_parse_ctx ctx;
-> > > +       struct hashmap_entry *cur;
-> > > +       double result;
-> > > +       int ret = -1;
-> > > +       size_t bkt;
-> > > +       int i;
-> > > +
-> > > +       pr_debug("parsing '%s'\n", str);
-> > > +
-> > > +       expr__ctx_init(&ctx);
-> > > +       if (expr__find_other(str, NULL, &ctx, 0) < 0) {
-> > > +               pr_err("expr__find_other failed\n");
-> > > +               return -1;
-> > > +       }
-> > > +
-> > > +       i = 1;
-> > > +       hashmap__for_each_entry((&ctx.ids), cur, bkt)
-> > > +               expr__add_id(&ctx, strdup(cur->key), i++);
-> >
-> > It might make sense to share the code here with that in test_parsing.
-> > This initialization of ids is commented there and it is a bit special.
->
-> hum, not sure it's worth to add this complexity to test, I'd like
-> to keep it simple, it's already not straightforward ;-) I added the
-> comment you mentioned
+On 6/1/20 9:37 AM, Laurent Pinchart wrote:
+> On Mon, Jun 01, 2020 at 05:46:26PM +0530, Kaaira Gupta wrote:
+>> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
+>>> Hi,
+>>> Thanks for the patch
+>>>
+>>> I don't know how real devices handle ARGB formats,
+>>> I wonder if it should be the part of the debayer.
+>>
+>> Hi! qcam tries to support BA24 as it is one of the formats that vimc
+>> lists as its supported formats wih --list-formats. Shouldn't BA24 be
+>> possible to capture with vimc?
+>>
+>> If yes, which entity should support it, if not debayer? Should there be
+>> a separate conversion entity, or should we keep the support in debayer
+>> itself for efficiency issues?
+> 
+> At the hardware level, the de-bayering block usually produces RGB with 8
+> or more bits per colour components (so 3xn, 24 bits for 8-bit depths).
+> The conversion to 32-bit ARGB usually happens at the DMA engine level,
+> in the formatter right in front of the DMA engine. Ideally the vimc
+> pipeline should expose the same.
+> 
+> From a performance point of view, it makes little sense to process the
+> image in vimc through multiple steps. I think it would be best to
+> generate the final image directly at the output of the pipeline.
 
-Ok, sounds good to me. More testing is the priority :-)
+[+ Lucas Magalhães]
 
-Thanks,
-Ian
+Lucas was working on a patch for that, he sent an RFC[1] some time ago.
 
-> jirka
->
+[1] https://patchwork.linuxtv.org/patch/60445/
+
+It would be nice to have this indeed.
+
+Regards,
+Helen
+
+> 
+>>> On 28.05.20 20:57, Kaaira Gupta wrote:
+>>>> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
+>>>> not support it. Hence, add the support for Alpha (255).
+>>>
+>>> I would change the commit log to:
+>>>
+>>> Add support for V4L2_PIX_FMT_RGB24 format in the debayer
+>>> and set the alpha channel to constant 255.
+>>>
+>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+>>>> ---
+>>>>   .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
+>>>>   1 file changed, 18 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+>>>> index c3f6fef34f68..f34148717a40 100644
+>>>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
+>>>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+>>>> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
+>>>>   	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+>>>>   	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+>>>>   	MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+>>>> +	MEDIA_BUS_FMT_ARGB8888_1X32
+>>>>   };
+>>>>   static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+>>>> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
+>>>>   	unsigned int i, index;
+>>>>   	vpix = vimc_pix_map_by_code(vdeb->src_code);
+>>>> -	index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+>>>> -	for (i = 0; i < 3; i++) {
+>>>> -		switch (vpix->pixelformat) {
+>>>> -		case V4L2_PIX_FMT_RGB24:
+>>>> -			vdeb->src_frame[index + i] = rgb[i];
+>>>> -			break;
+>>>> -		case V4L2_PIX_FMT_BGR24:
+>>>> -			vdeb->src_frame[index + i] = rgb[2 - i];
+>>>> -			break;
+>>>> +
+>>>> +	if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
+>>>> +		index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
+>>>> +		vdeb->src_frame[index] = 255;
+>>>> +		for (i = 0; i < 3; i++)
+>>>> +			vdeb->src_frame[index + i + 1] = rgb[i];
+>>>> +	} else {
+>>>> +		index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+>>>> +		for (i = 0; i < 3; i++) {
+>>>> +			switch (vpix->pixelformat) {
+>>>> +			case V4L2_PIX_FMT_RGB24:
+>>>> +				vdeb->src_frame[index + i] = rgb[i];
+>>>> +				break;
+>>>> +			case V4L2_PIX_FMT_BGR24:
+>>>> +				vdeb->src_frame[index + i] = rgb[2 - i];
+>>>> +				break;
+>>>> +			}
+>>>>   		}
+>>>>   	}
+>>>>   }
+> 
