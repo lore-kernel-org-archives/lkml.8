@@ -2,123 +2,118 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E992C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB17C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4EC20657
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A551206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:11:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="JJ/TQUxp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yhrpZBt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgFALJl (ORCPT
+        id S1726265AbgFALLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 07:09:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48246 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgFALJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 07:09:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CA4F2AAC7;
-        Mon,  1 Jun 2020 11:09:40 +0000 (UTC)
-Message-ID: <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
-Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Marek Vasut <marex@denx.de>, mbrugger@suse.com,
-        u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        mark.kettenis@xs4all.nl
-Date:   Mon, 01 Jun 2020 13:09:37 +0200
-In-Reply-To: <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
-References: <20200505162607.334-1-nsaenzjulienne@suse.de>
-         <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
-         <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Nn5vb/UM3fX7gE/kCMj2"
-User-Agent: Evolution 3.36.2 
+        Mon, 1 Jun 2020 07:11:11 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:35513 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725946AbgFALLK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 07:11:10 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 07C1D5C0035;
+        Mon,  1 Jun 2020 07:11:08 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 01 Jun 2020 07:11:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=3XvqIZoNbkcvmPOyxJdZmpK2ijZ
+        lRphPyOlcJMHTT+Q=; b=JJ/TQUxpepzueCA1KYXlq6WDfiutndE/JCfQXK3I72O
+        5/VL95WRTtP49v7SVoadRP8EA2QkgJKxSubKRa2AAGrBZJudSLK9Tz5Dgy3Xe3yi
+        JkP01TXJAfsvEkjMa67DyvZS4n/uv90E1itX404wsSTGISZhJJQa/7GCcIPDwtxO
+        yefM1FNBrs0+dkXzQHPoAg1DyBXb7HBMEXJYW94P/4CaQpE0XIMQxhkE83ljKCaK
+        E8Ah8TwwvBDFgD9kF/ajuyl0oe8Dn8Ly2SuqfkGF1CcQtbMuXHNvpv2mVYKWRSBs
+        IRtJXOGDTQORxQFKRcZ/VWor/HvnOEm2U2gTzPm8/ig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3XvqIZ
+        oNbkcvmPOyxJdZmpK2ijZlRphPyOlcJMHTT+Q=; b=yhrpZBt6qEtxPMSUBwZAuU
+        05+EAmZxIVtvDR/dIdynQb5GNs6PEBFb3PPKAnofj4iZSU69xXCsqBhQkz9rFPXc
+        Pc33zztT34lbQpQVHz1Y7PZ0RWddOfdBYX50KDzAFXPMAuxcpnSPmaJibGeDTHSs
+        AW+DjUa1/LPYIGAxzE1GbDMmImB3H5luelfIG6ba0+s+7VwhvgqjtlIDUMdZ56xZ
+        ZGxbl76b/8WeyWNKd4nrOHMYjEZAYpCxd+jByWgDpXToDpCewoh9kH2sTzi3fjdQ
+        m31yOWvfU4hpKjcLHOsjd1Z4rI/Y6m3q+aKjGz9OjzKp0yRuFFpWf0Se7FkmjjRA
+        ==
+X-ME-Sender: <xms:S-LUXgTq3hMiiDPpyldzfyqdHzkFBSrL3UOftoV114FgSJMxama64A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefhedgfedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeuleeltd
+    ehkeeltefhleduuddvhfffuedvffduveegheekgeeiffevheegfeetgfenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgr
+    hhdrtghomh
+X-ME-Proxy: <xmx:S-LUXtxXzzebuxxWcVLqwmkqKjqR3ausMtPdxaLdzklf3NSISk5nbQ>
+    <xmx:S-LUXt1oaMrWUFlOVCHW8v9gQ2JG9xIEavF9RembbNvwMgcAceTZ1w>
+    <xmx:S-LUXkCgSpPOaD3v9WjBoi6cOUc0cOzLLASUeNp4R86aa1UtnDfsww>
+    <xmx:TOLUXnYdFNvio5rOs8Dy0_sZ9XczUptnQ28w6Z30zKv7epBkA-lBLQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2BA463060F09;
+        Mon,  1 Jun 2020 07:11:07 -0400 (EDT)
+Date:   Mon, 1 Jun 2020 13:11:05 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Sarthak Garg <sartgarg@codeaurora.org>
+Cc:     stable@vger.kernel.org, adrian.hunter@intel.com,
+        ulf.hansson@linaro.org, vbadigan@codeaurora.org,
+        stummala@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [4.19.124 V1] mmc: core: Fix recursive locking issue in CQE
+ recovery path
+Message-ID: <20200601111105.GC124421@kroah.com>
+References: <1590581942-24283-1-git-send-email-sartgarg@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590581942-24283-1-git-send-email-sartgarg@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 05:49:02PM +0530, Sarthak Garg wrote:
+> [ Upstream commit 39a22f73744d5baee30b5f134ae2e30b668b66ed ]
+> 
+> Consider the following stack trace
+> 
+> -001|raw_spin_lock_irqsave
+> -002|mmc_blk_cqe_complete_rq
+> -003|__blk_mq_complete_request(inline)
+> -003|blk_mq_complete_request(rq)
+> -004|mmc_cqe_timed_out(inline)
+> -004|mmc_mq_timed_out
+> 
+> mmc_mq_timed_out acquires the queue_lock for the first
+> time. The mmc_blk_cqe_complete_rq function also tries to acquire
+> the same queue lock resulting in recursive locking where the task
+> is spinning for the same lock which it has already acquired leading
+> to watchdog bark.
+> 
+> Fix this issue with the lock only for the required critical section.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
+> Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
+> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Link: https://lore.kernel.org/r/1588868135-31783-1-git-send-email-vbadigan@codeaurora.org
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
 
---=-Nn5vb/UM3fX7gE/kCMj2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks for the backport, now queued up.
 
-On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
-> On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
-> > On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
-> > > Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to =
-be
-> > > loaded explicitly. Earlier versions didn't need that as they where us=
-ing
-> > > an EEPROM for that purpose. This series takes care of setting up the
-> > > relevant infrastructure and run the firmware loading routine at the
-> > > right moment.
-> > >=20
-> > > Note that this builds on top of Sylwester Nawrocki's "USB host suppor=
-t
-> > > for Raspberry Pi 4 board" series.
-> > >=20
-> > > ---
-> >=20
-> > Please don't forget about this series. The new 8GB RPi4 contains this H=
-W
-> > design
-> > change and USB will not work without it. See this discussion on the
-> > downstream
-> > kernel github, where other OS/bootloaders are hitting the issue:
-> >=20
-> > https://github.com/raspberrypi/firmware/issues/1402
-> >=20
-> > Otherwise, the Linux version of this is already in linux-next:
-> >=20
-> >=20
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-drivers/usb/host/pci-quirks.c?h=3Dnext-20200529&id=3Dc65822fef4adc0ba40c37a=
-47337376ce75f7a7bc
->=20
-> We're already at 2020.07-rc3 , so unless this is a bugfix (does not look
-> that way), this will have to wait for next release cycle.
-
-Of course. As long as it eventually gets in I'm happy (not implying this
-specific series is flawless, but the overall mechanism). I'm just worried t=
-his
-gets lost.
-
-> Also, it seems
-> there was a lengthy ongoing discussion, is that already sorted out ?
-
-Well, there was some discussion on how to incorporate the platform specific
-callback into XCHI's code. Which this revision of the series addresses. But=
-,
-IIRC, that's pretty much it as far as discussion is concerned.
-
-Regards,
-Nicolas
-
-
---=-Nn5vb/UM3fX7gE/kCMj2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7U4fEACgkQlfZmHno8
-x/5GMgf+I/o1/RHDqKU7lDAoEnd3xBVgyQAL8OOTe/VP7gd2qFz6+X2+n4AZEaJc
-F5AAIPX8EQI8xqhrNvVeuHo+BG81++PENDKtd4QUtUmqjSIByY2D4MlCQSAQ//9k
-5RES2GIIjUFED2qEK2RviVXfJE27Zhx0FUzxw+eb0OScHcoihZYcENVKkgLnsc3e
-X9zMyBv7ptEqoL3WOHbHSVtOQbDqYrxLfHDWR+wIBwOMKabzrhy7TFJhuO1Ity9F
-3EO/+b3fXW49obCBXdDVOxRgsMfW685s1s5kOBCC2scd3osoNNSH/damYDkxOhhb
-PZ+SqvTGfeKO9vG813uu4Pt8iajKcg==
-=MLl3
------END PGP SIGNATURE-----
-
---=-Nn5vb/UM3fX7gE/kCMj2--
-
+greg k-h
