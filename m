@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CCDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41501C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2CFC20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1307720679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037714;
-	bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
+	s=default; t=1591037727;
+	bh=htOHnD6PwjNM80sjCuQJsbau8w9KAO4lvJGG0CepkSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwBHCEGEWSQieUUG/qvbTZTZUqlD5E+6UCT25Uv1G/sdq20DENZsZCqJBhp62nCJi
-	 zGlLWlPe3DA4m66RwpbPd3upgKJPnZgc1aa93sfJsqJWOtwLpEt3r1nS4NFsOhhR9c
-	 e3kjuTIzxZIPt3KfD6jGv7RnT8eyMFQ3xYXNy72I=
+	b=hv5wOXjKf5XcFaVrfiFQYs4CTPzEDeuHmCubUcq0BUmLpsmi0luCeOeO6p7Tz0+9Y
+	 wSO6qLmvR8uTHrGeS3hL3p2+iYVFAnUREm8XvW7FJio7vOa9JEw8gFB3PrwBT97bVT
+	 cChi86MV60kJatwlD/4rggltLUg9nQXVGURHZ68I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbgFASzN (ORCPT
+        id S1730148AbgFASz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbgFASBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:33 -0400
+        id S1729792AbgFASB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A96112073B;
-        Mon,  1 Jun 2020 18:01:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 650202077D;
+        Mon,  1 Jun 2020 18:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034492;
-        bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
+        s=default; t=1591034487;
+        bh=htOHnD6PwjNM80sjCuQJsbau8w9KAO4lvJGG0CepkSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wwnwf/Jo+VibTriLs5Utn45Ttqj9o4n6flB9xvlXTtYhsnSaMJ8+TVaHrm+FFhGTT
-         Y+7I8Wtt4+XmJp+m6SkuL2AD/GnZoD82suGN2M1Bhn//W2CPHC6ib17xZuQcSVuj5R
-         V5h6bU/wSgaa/nVGCk7JTXMssQqZpmYEhMLzIFR8=
+        b=tXlHoD15h+fSkw/NrJYXvZzW0AcgbXNMnqANaRV6etHoBgMCwLBF5b9WPifS6hGZw
+         uL9sq69CnHEa76AMEK9z+WjUKYIgGo9m6GqLBv9u8bhVXzu2XcuoHsyDsa+HGDUsCu
+         jm3hT4CPHmMvcTYJhAJeEJm+i0hYfb6nWgOdhlAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexander Dahl <post@lespocky.de>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.14 54/77] x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
-Date:   Mon,  1 Jun 2020 19:53:59 +0200
-Message-Id: <20200601174025.781995133@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.14 52/77] parisc: Fix kernel panic in mem_init()
+Date:   Mon,  1 Jun 2020 19:53:57 +0200
+Message-Id: <20200601174025.516529052@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -61,105 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Dahl <post@lespocky.de>
+From: Helge Deller <deller@gmx.de>
 
-commit 88743470668ef5eb6b7ba9e0f99888e5999bf172 upstream.
+commit bf71bc16e02162388808949b179d59d0b571b965 upstream.
 
-The intermediate result of the old term (4UL * 1024 * 1024 * 1024) is
-4 294 967 296 or 0x100000000 which is no problem on 64 bit systems.
-The patch does not change the later overall result of 0x100000 for
-MAX_DMA32_PFN (after it has been shifted by PAGE_SHIFT). The new
-calculation yields the same result, but does not require 64 bit
-arithmetic.
+The Debian kernel v5.6 triggers this kernel panic:
 
-On 32 bit systems the old calculation suffers from an arithmetic
-overflow in that intermediate term in braces: 4UL aka unsigned long int
-is 4 byte wide and an arithmetic overflow happens (the 0x100000000 does
-not fit in 4 bytes), the in braces result is truncated to zero, the
-following right shift does not alter that, so MAX_DMA32_PFN evaluates to
-0 on 32 bit systems.
+ Kernel panic - not syncing: Bad Address (null pointer deref?)
+ Bad Address (null pointer deref?): Code=26 (Data memory access rights trap) at addr 0000000000000000
+ CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-2-parisc64 #1 Debian 5.6.14-1
+  IAOQ[0]: mem_init+0xb0/0x150
+  IAOQ[1]: mem_init+0xb4/0x150
+  RP(r2): start_kernel+0x6c8/0x1190
+ Backtrace:
+  [<0000000040101ab4>] start_kernel+0x6c8/0x1190
+  [<0000000040108574>] start_parisc+0x158/0x1b8
 
-That wrong value is a problem in a comparision against MAX_DMA32_PFN in
-the init code for swiotlb in pci_swiotlb_detect_4gb() to decide if
-swiotlb should be active.  That comparison yields the opposite result,
-when compiling on 32 bit systems.
+on a HP-PARISC rp3440 machine with this memory layout:
+ Memory Ranges:
+  0) Start 0x0000000000000000 End 0x000000003fffffff Size   1024 MB
+  1) Start 0x0000004040000000 End 0x00000040ffdfffff Size   3070 MB
 
-This was not possible before
+Fix the crash by avoiding virt_to_page() and similar functions in
+mem_init() until the memory zones have been fully set up.
 
-  1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
-
-when that MAX_DMA32_PFN was first made visible to x86_32 (and which
-landed in v3.0).
-
-In practice this wasn't a problem, unless CONFIG_SWIOTLB is active on
-x86-32.
-
-However if one has set CONFIG_IOMMU_INTEL, since
-
-  c5a5dc4cbbf4 ("iommu/vt-d: Don't switch off swiotlb if bounce page is used")
-
-there's a dependency on CONFIG_SWIOTLB, which was not necessarily
-active before. That landed in v5.4, where we noticed it in the fli4l
-Linux distribution. We have CONFIG_IOMMU_INTEL active on both 32 and 64
-bit kernel configs there (I could not find out why, so let's just say
-historical reasons).
-
-The effect is at boot time 64 MiB (default size) were allocated for
-bounce buffers now, which is a noticeable amount of memory on small
-systems like pcengines ALIX 2D3 with 256 MiB memory, which are still
-frequently used as home routers.
-
-We noticed this effect when migrating from kernel v4.19 (LTS) to v5.4
-(LTS) in fli4l and got that kernel messages for example:
-
-  Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
-  …
-  Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
-  …
-  PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-  software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
-
-The initial analysis and the suggested fix was done by user 'sourcejedi'
-at stackoverflow and explicitly marked as GPLv2 for inclusion in the
-Linux kernel:
-
-  https://unix.stackexchange.com/a/520525/50007
-
-The new calculation, which does not suffer from that overflow, is the
-same as for arch/mips now as suggested by Robin Murphy.
-
-The fix was tested by fli4l users on round about two dozen different
-systems, including both 32 and 64 bit archs, bare metal and virtualized
-machines.
-
- [ bp: Massage commit message. ]
-
-Fixes: 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
-Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Alexander Dahl <post@lespocky.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
-Link: https://unix.stackexchange.com/q/520065/50007
-Link: https://web.nettworks.org/bugs/browse/FFL-2560
-Link: https://lkml.kernel.org/r/20200526175749.20742-1-post@lespocky.de
+Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: stable@vger.kernel.org # v5.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+
 ---
- arch/x86/include/asm/dma.h |    2 +-
+ arch/parisc/mm/init.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/dma.h
-+++ b/arch/x86/include/asm/dma.h
-@@ -74,7 +74,7 @@
- #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
+--- a/arch/parisc/mm/init.c
++++ b/arch/parisc/mm/init.c
+@@ -608,7 +608,7 @@ void __init mem_init(void)
+ 			> BITS_PER_LONG);
  
- /* 4GB broken PCI/AGP hardware bus master zone */
--#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
-+#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
+ 	high_memory = __va((max_pfn << PAGE_SHIFT));
+-	set_max_mapnr(page_to_pfn(virt_to_page(high_memory - 1)) + 1);
++	set_max_mapnr(max_low_pfn);
+ 	free_all_bootmem();
  
- #ifdef CONFIG_X86_32
- /* The maximum address that we can perform a DMA transfer to on this platform */
+ #ifdef CONFIG_PA11
 
 
