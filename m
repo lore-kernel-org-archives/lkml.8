@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E09BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B96C3207DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A29206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034546;
-	bh=34OV/T33rjUYauDRA5grfF8VnK8diJYzM6GiXKWCvOQ=;
+	s=default; t=1591034549;
+	bh=nDPx907IiAgKo62mVevumnODl8p64fK6WNMF6tym8/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=amChjDmjKgqVoifeWDgYQMJY5sRQPtCCDKJy/oq71hz6StPs4gURx19igtbZuJmjG
-	 27yZE9iGqfykRYSNuikFDZnUaOj+fhmTJsLtF/NQXkLp/O9WzvhGj1V/p/eoWJl+np
-	 FoqanQajWkbA9y6mvToE8omrB7fx5TP62CNwKNTM=
+	b=zkMIVotX8glfst1/DdpF3lQB/267WS+pkQD4nkV3lydNhcU1dsyMTuwO+3RSDFADX
+	 mTVKXVOhkGVFU4GGRbskLNUzAIU0naPUyoB/2pm77Xgj6LZ8zbRQ/Gtf+aH42BvjHF
+	 92Z5uPKG8qzfRSkLOTRrLS+zc4H+7SsVqQutGGw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbgFASCZ (ORCPT
+        id S1728915AbgFASC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45450 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729915AbgFASCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:19 -0400
+        id S1728598AbgFASCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E031E207DA;
-        Mon,  1 Jun 2020 18:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D53D207DA;
+        Mon,  1 Jun 2020 18:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034539;
-        bh=34OV/T33rjUYauDRA5grfF8VnK8diJYzM6GiXKWCvOQ=;
+        s=default; t=1591034543;
+        bh=nDPx907IiAgKo62mVevumnODl8p64fK6WNMF6tym8/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ttRv9EyUtWSoahMU1gdnRqQ7vs9Jw/Qaj9djfQgQmsNYlUTPTWk7FDbiExf1Rf1Dn
-         DWEDjV6dKsjHPsEdKKQghppMWitquLB4MPYZkUwNQWzra+sBHtsSnKCQy7y8rIfpIG
-         S9k1xBX8/BhTRvBSSE+xYqSjwUQfwdMaL/XiuSIQ=
+        b=YyhTygTPt0q2JqpkrE/3yurSDteOSBgD9xWwqaqRXj6yS3YnzKBakbzleTLkoyYhs
+         rPmwpKhXa9bMoTd2R4jadZxKbVkxAORVX9PMF/tc2IIPHngiaKc0v9BPCHwvGq/KRb
+         leDDFeUo3J+4h6u8ydQnW4d8VgV/S4XQWzffvZNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 77/77] net: hns: Fixes the missing put_device in positive leg for roce reset
-Date:   Mon,  1 Jun 2020 19:54:22 +0200
-Message-Id: <20200601174029.792461483@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.14 62/77] ip_vti: receive ipip packet by calling ip_tunnel_rcv
+Date:   Mon,  1 Jun 2020 19:54:07 +0200
+Message-Id: <20200601174027.104407992@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,34 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Salil Mehta <salil.mehta@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 4d96e13ee9cd1f7f801e8c7f4b12f09d1da4a5d8 upstream.
+commit 976eba8ab596bab94b9714cd46d38d5c6a2c660d upstream.
 
-This patch fixes the missing device reference release-after-use in
-the positive leg of the roce reset API of the HNS DSAF.
+In Commit dd9ee3444014 ("vti4: Fix a ipip packet processing bug in
+'IPCOMP' virtual tunnel"), it tries to receive IPIP packets in vti
+by calling xfrm_input(). This case happens when a small packet or
+frag sent by peer is too small to get compressed.
 
-Fixes: c969c6e7ab8c ("net: hns: Fix object reference leaks in hns_dsaf_roce_reset()")
-Reported-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+However, xfrm_input() will still get to the IPCOMP path where skb
+sec_path is set, but never dropped while it should have been done
+in vti_ipcomp4_protocol.cb_handler(vti_rcv_cb), as it's not an
+ipcomp4 packet. This will cause that the packet can never pass
+xfrm4_policy_check() in the upper protocol rcv functions.
+
+So this patch is to call ip_tunnel_rcv() to process IPIP packets
+instead.
+
+Fixes: dd9ee3444014 ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv4/ip_vti.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -3142,6 +3142,9 @@ int hns_dsaf_roce_reset(struct fwnode_ha
- 		dsaf_set_bit(credit, DSAF_SBM_ROCEE_CFG_CRD_EN_B, 1);
- 		dsaf_write_dev(dsaf_dev, DSAF_SBM_ROCEE_CFG_REG_REG, credit);
- 	}
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -98,7 +98,28 @@ static int vti_rcv_proto(struct sk_buff
+ 
+ static int vti_rcv_tunnel(struct sk_buff *skb)
+ {
+-	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
++	struct ip_tunnel_net *itn = net_generic(dev_net(skb->dev), vti_net_id);
++	const struct iphdr *iph = ip_hdr(skb);
++	struct ip_tunnel *tunnel;
 +
-+	put_device(&pdev->dev);
++	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
++				  iph->saddr, iph->daddr, 0);
++	if (tunnel) {
++		struct tnl_ptk_info tpi = {
++			.proto = htons(ETH_P_IP),
++		};
 +
- 	return 0;
++		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
++			goto drop;
++		if (iptunnel_pull_header(skb, 0, tpi.proto, false))
++			goto drop;
++		return ip_tunnel_rcv(tunnel, skb, &tpi, NULL, false);
++	}
++
++	return -EINVAL;
++drop:
++	kfree_skb(skb);
++	return 0;
  }
- EXPORT_SYMBOL(hns_dsaf_roce_reset);
+ 
+ static int vti_rcv_cb(struct sk_buff *skb, int err)
 
 
