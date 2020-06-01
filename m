@@ -2,52 +2,51 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2019FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A55C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0EF1207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F74420776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035290;
-	bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
+	s=default; t=1591035294;
+	bh=d6n1lfALiOuqf6hD6qY0ykkceo3UeXoajd4//MCBJ98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zi/g9E8LcIrrR3dRxcUVzOWavupBKohLM0fyRXYMr+lwTuCRJSJb5deioohwjb/ZG
-	 jdViLfQLVsuBkHiTYAa4tiGOaGq6A3z8D1ziFwoOnBP4A2DZjwLF0iUJOyYeCwPWJ0
-	 COT2AC0m9BiZsmqSqSHdM+6+3KZwA/S7Ym+RjHGI=
+	b=kBknFp6a0Y4mu/+MOrFh5BZon3GR5I0RobxzbOVtVFkMbcazPumQm0vP8rASEn3SM
+	 YfzjFyzzL7aGxdtA9x6T7BJJceoPoSKngltNHyvzGEbWalhcjmkVikjFqCBa01MUN8
+	 GisTvQkA8/g4Lb6QfSiK0xjJ7K9KqMrC+neJ5T1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgFASOt (ORCPT
+        id S1731519AbgFASOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:14:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34512 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731490AbgFASOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:14:39 -0400
+        id S1731502AbgFASOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:14:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF53C2065C;
-        Mon,  1 Jun 2020 18:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F7F72065C;
+        Mon,  1 Jun 2020 18:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035278;
-        bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
+        s=default; t=1591035282;
+        bh=d6n1lfALiOuqf6hD6qY0ykkceo3UeXoajd4//MCBJ98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEfGvCMPm4F1hoe/ZBxZ8gJ04389gXUMtXJJLrPCEt0PiL/TTtkclPxctBA4F1925
-         Bb37fMj6Ms2tkZ0O1V6oO3jtghWKrNmwvYnxGYJBNQGVAxEW+GBfkMEqLsNaQ5Q90r
-         ypeRpt/ZEFZ5Ech3oO6VkofFzVfHCJAVMhGc+q54=
+        b=M3MiFfrp1EJnR56gjz+cjQhHwNkbfKbCxUluP6fmZEzHDbLzTrbtonNADWX9RGffX
+         RpguuB7fi6fLuR1w+ruXL0rgAw2O7yYdbB5hwJ97nB2zaLRQig67DJBJUCv2Ti6dir
+         /6hsvPh/OAUTXjCOLa3xZUxP+RDn+QO2s9AQHLyk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 047/177] arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
-Date:   Mon,  1 Jun 2020 19:53:05 +0200
-Message-Id: <20200601174052.963037618@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 039/177] net: sun: fix missing release regions in cas_init_one().
+Date:   Mon,  1 Jun 2020 19:52:57 +0200
+Message-Id: <20200601174052.241276206@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,37 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit c617ed88502d0b05149e7f32f3b3fd8a0663f7e2 ]
+commit 5a730153984dd13f82ffae93d7170d76eba204e9 upstream.
 
-The status was removed of the '&gmac2phy' node with the apply
-of a patch long time ago, so fix status for '&gmac2phy'
-in 'rk3328-evb.dts'.
+In cas_init_one(), "pdev" is requested by "pci_request_regions", but it
+was not released after a call of the function “pci_write_config_byte”
+failed. Thus replace the jump target “err_write_cacheline” by
+"err_out_free_res".
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200425122345.12902-2-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1f26dac32057 ("[NET]: Add Sun Cassini driver.")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/sun/cassini.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-index 6abc6f4a86cf..05265b38cc02 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-@@ -86,7 +86,7 @@
- 	assigned-clock-rate = <50000000>;
- 	assigned-clocks = <&cru SCLK_MAC2PHY>;
- 	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
--
-+	status = "okay";
- };
+--- a/drivers/net/ethernet/sun/cassini.c
++++ b/drivers/net/ethernet/sun/cassini.c
+@@ -4971,7 +4971,7 @@ static int cas_init_one(struct pci_dev *
+ 					  cas_cacheline_size)) {
+ 			dev_err(&pdev->dev, "Could not set PCI cache "
+ 			       "line size\n");
+-			goto err_write_cacheline;
++			goto err_out_free_res;
+ 		}
+ 	}
+ #endif
+@@ -5144,7 +5144,6 @@ err_out_iounmap:
+ err_out_free_res:
+ 	pci_release_regions(pdev);
  
- &i2c1 {
--- 
-2.25.1
-
+-err_write_cacheline:
+ 	/* Try to restore it in case the error occurred after we
+ 	 * set it.
+ 	 */
 
 
