@@ -2,184 +2,239 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44533C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A03C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202BE206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AB920825
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uCTJZLoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgFAVZb convert rfc822-to-8bit (ORCPT
+        id S1728628AbgFAV3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:25:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:52785 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbgFAVZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:25:29 -0400
-IronPort-SDR: 0bseIB+4g3Kj71i1U2/yFAo76v7H7jXSpXPJzJcImMEX3al9rMoSu/a8tsiCT5/L3xjXVasNMr
- HRZxa+cUxtmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 14:25:28 -0700
-IronPort-SDR: s1XBa8o+ziq5W75mwbzvp+/Z/bykPRU7jO6wJL6KeijgwGh2VJlFOxPrTFoiXevQpjqNFVRBxz
- 2jC8piB35w8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="303770420"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2020 14:25:27 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 1 Jun 2020 14:25:27 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- HASMSX602.ger.corp.intel.com (10.184.107.142) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 2 Jun 2020 00:25:25 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Tue, 2 Jun 2020 00:25:25 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Dorian Stoll <dorian.stoll@tmsp.io>, Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] mei: me: Add itouch device IDs for SPT / ICP
-Thread-Topic: [PATCH] mei: me: Add itouch device IDs for SPT / ICP
-Thread-Index: AQHWOC5DxbJKJY4NZEyE7jjAFJ52tKjD8m1A///d24CAAHKEYA==
-Date:   Mon, 1 Jun 2020 21:25:25 +0000
-Message-ID: <26b73aff781d417fbb93777e63501393@intel.com>
-References: <20200601155954.764558-1-dorian.stoll@tmsp.io>
- <b22a353f4d4f47df9676c9572b6ac773@intel.com> <4082996.zthe6f22So@desktop>
-In-Reply-To: <4082996.zthe6f22So@desktop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 1 Jun 2020 17:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728195AbgFAV3C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 17:29:02 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7BE0C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 14:29:02 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r10so4064184pgv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 14:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fUElKYdtd0S2QzT3Ha4tcMjoudyfwMGfy5qOgP152fM=;
+        b=uCTJZLoSnSFLN5YaAStdYypi4L0N4WxVVQIshM7W5ntpJdCOjOhW0c/CHMtm7K6Upv
+         hvdaxUxoZkeM6/P1WZTxZPODHacAjgdMX4Yg//pAc04y9KKhbEQ3BuR3dMIHM+4BmyCp
+         ytlBCwNIBNzZ3Pxsv+9ech3jN+SAGfArx3/QSStuNuzi673aX64Xl6eLxe9vN7zYp0S0
+         EqVfj4sApebndrMZ/YSUe9AsK29UeFNrH39b/Qn0xZzBTAH0qhJuLwBWSVw1hdujS33T
+         3vgPkY+LInWKsbDawbq+YCU++wgqdmX1RaS+tK7twl8cpbOvgV9R2czXQ+zzeyn7TpsP
+         /1dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fUElKYdtd0S2QzT3Ha4tcMjoudyfwMGfy5qOgP152fM=;
+        b=Ew160awqSeyL9w89x14Jh5Axvr/MFcD08PwLL93nxHHF57LzgJjklXdxRkXqiXkhMx
+         pEPHvG+52IK2YHXpSUw5i/CNIEyoRGTngKYJlv3/HrtKpRjlfEP2MTa2O7M0L7txV0Gz
+         vb5iRR41XAZwIo2jwjTGjsMPTYtq2dOgpK6sLsTP4piyUDlR+WQTmanwuiCa+XNPQz7O
+         dmM51OQPVnPk/fkJtaA1l2NqsUjUKM75FMjVkBDh+2PntuJkrV8klT9RYhBsqzCVyh+B
+         +nGxWGC5Ws+geiMcHpd97QUpRFPtkw5gJzdd1KqL/nL934dwwkv7+E4YlLKY32WutAxy
+         B/hA==
+X-Gm-Message-State: AOAM531Rzy+LOKB74v0nRIR5abkuKp4XjaQ1Ktud9bXqlLwuwGNgcIyo
+        RItROxzw+0+HTxZNeekS/++zIg==
+X-Google-Smtp-Source: ABdhPJwwGnA1dLyvE8AboSf3bXlwdAbmFrm8CLGzvi2WI3ozBrNN5gX0DVB4rXyNpdblkYo35H7Ojw==
+X-Received: by 2002:a63:9304:: with SMTP id b4mr20494118pge.229.1591046941983;
+        Mon, 01 Jun 2020 14:29:01 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 3sm311486pfi.68.2020.06.01.14.29.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 14:29:00 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 15:28:58 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
+        Stephen Boyd <swboyd@chromium.org>, robin.murphy@arm.com
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+Message-ID: <20200601212858.GB24287@xps15>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sai,
+
+On top of the comments already privided by Mike, I have the following:
+
+On Mon, Jun 01, 2020 at 01:32:26PM +0530, Sai Prakash Ranjan wrote:
+> Implement a shutdown callback to ensure ETR/ETF hardware is
+> properly shutdown in reboot/shutdown path. This is required
+> for ETR/ETF which has SMMU address translation enabled like
+> on SC7180 SoC and few others. If the hardware is still accessing
+> memory after SMMU translation is disabled as part of SMMU
+> shutdown callback in system reboot or shutdown path, then
+> IOVAs(I/O virtual address) which it was using will go on the bus
+> as the physical addresses which might result in unknown crashes
+> (NoC/interconnect errors). So we make sure from this shutdown
+> callback that the ETR/ETF is shutdown before SMMU translation is
+> disabled and device_link in SMMU driver will take care of ordering
+> of shutdown callbacks such that SMMU shutdown callback is not
+> called before any of its consumer shutdown callbacks.
 > 
-> >
-> > > These device IDs can be found on Microsoft Surface devices.
-> > >
-> > > Signed-off-by: Dorian Stoll <dorian.stoll@tmsp.io>
-> >
-> > This need to be done differently because of the server platforms conflict.
-> > I have patches for that I will post short, though we are not
-> > officially supporting those devices under Linux, It will be hard to maintain,
-> as currently on the MS surface enables it as far as I know.
-> >
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  .../hwtracing/coresight/coresight-tmc-etf.c   |  4 +--
+>  .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
+>  drivers/hwtracing/coresight/coresight-tmc.c   | 29 +++++++++++++++++++
+>  drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
+>  4 files changed, 35 insertions(+), 3 deletions(-)
 > 
-> Thank you for your response!
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> index 36cce2bfb744..cba3e7592820 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> @@ -85,7 +85,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>  	CS_LOCK(drvdata->base);
+>  }
+>  
+> -static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+>  	__tmc_etb_disable_hw(drvdata);
+>  	coresight_disclaim_device(drvdata->base);
+> @@ -118,7 +118,7 @@ static int tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
+>  	return 0;
+>  }
+>  
+> -static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
+> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+>  	CS_UNLOCK(drvdata->base);
 > 
-> If you don't mind, could you elaborate on these devices not being supported
-> under Linux? Is it just that the functionality they provide (Intel Precise Touch
-> & Stylus / iTouch / IPTS) won't be supported? Because that I already know,
-> and it is not the intent of this patch. Or do you mean that the entire MEI
-> interface won't be supported for these devices?
 
-Just the iTouch.
-
-> 
-> Some context on this patch: I am part of a small team of volunteers who try
-> to make the MS Surface devices usable under linux, including the
-> touchscreen (which uses IPTS as of the Surface Pro 4).
-
-Nice work.
-
-> The IPTS driver connects to the device over the MEI bus, but the MEI device is
-> provided by the iTouch devices. Currently we build our own kernels with this
-> patch applied to allow the driver to work. All of this is loosely based on a
-> driver that Intel published a few years ago.
-
-Yes, I'm fully aware of that code base.
+Why do we care about ETB and ETF when they both use RAM internal to the device?
+Moreover, the system RAM they use is not dedicated and as such falls back to the
+kernel's memory pool. 
  
-> Since the driver is otherwise pretty much standalone,
-You do depend on i915, that's the hard part.
-> my hope was that
-> adding these IDs would make it easier to develop / install our driver without
-> having to recompile the entire kernel (i.e. using DKMS). At least until the
-> driver has matured enough and is ready for upstream submission itself.
-> Especially since other iTouch devices have their device IDs added already.
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index 625882bc8b08..b29c2db94d96 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>  
+>  }
+>  
+> -static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+>  	__tmc_etr_disable_hw(drvdata);
+>  	/* Disable CATU device if this ETR is connected to one */
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+> index 5a271ebc4585..7e687a356fe0 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
+> @@ -540,6 +540,34 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>  	return ret;
+>  }
+>  
+> +static void tmc_shutdown(struct amba_device *adev)
+> +{
+> +	struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
+> +
+> +	if (!drvdata->enable)
+> +		goto out;
+> +
+> +	/*
+> +	 * We do not care about the active trace sessions here
+> +	 * since the system is going down unlike remove callback,
+> +	 * just make sure that the hardware is shutdown.
+> +	 */
+> +	switch (drvdata->config_type) {
+> +	case TMC_CONFIG_TYPE_ETB:
+> +		tmc_etb_disable_hw(drvdata);
+> +		break;
+> +	case TMC_CONFIG_TYPE_ETF:
+> +		tmc_etf_disable_hw(drvdata);
+> +		break;
+> +	case TMC_CONFIG_TYPE_ETR:
+> +		tmc_etr_disable_hw(drvdata);
+> +	}
+> +
+> +out:
+> +	misc_deregister(&drvdata->miscdev);
+> +	coresight_unregister(drvdata->csdev);
 
-Agree. 
- 
-> That this would cause conflicts is unfortunate. Judging purely by your words
-> - without having any deeper knowledge about the MEI bus - it seems that it
-> might be possible to fix these conflicts? If thats true, I hope it would also be
-> possible to add these IDs, so that just the MEI interface to IPTS becomes
-> supported - 
+If a session is active when tmc_shutdown() is called, unregistering the ETF/ETR
+will result in a kernel crash if the session is stopped before the kernel has
+had the opportunity to shutdown.  It is the problem as trying to make coresight
+drivers modular. 
 
-Yes, I'm working on that just now.
+For this to really work the ongoing session would need to be stopped.  That
+would teardown the path and stop the sink.
 
-> I don't expect you to support the entire IPTS technology.
+That being said I'm sure that dependencies on an IOMMU isn't a problem confined
+to coresight. I am adding Robin Murphy, who added this commit [1], to the thread
+in the hope that he can provide guidance on the right way to do this.
 
-Yep, unfortunately it's not going to be funded by my wife.
+Thanks,
+Mathieu
 
-> > > ---
-> > >  drivers/misc/mei/hw-me-regs.h | 2 ++
-> > >  drivers/misc/mei/pci-me.c     | 2 ++
-> > >  2 files changed, 4 insertions(+)
-> > >
-> > > diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-
-> > > regs.h index 9392934e3a06..90e7d3020fa5 100644
-> > > --- a/drivers/misc/mei/hw-me-regs.h
-> > > +++ b/drivers/misc/mei/hw-me-regs.h
-> > > @@ -59,6 +59,7 @@
-> > >
-> > >  #define MEI_DEV_ID_SPT        0x9D3A  /* Sunrise Point */
-> > >  #define MEI_DEV_ID_SPT_2      0x9D3B  /* Sunrise Point 2 */
-> > > +#define MEI_DEV_ID_SPT_4      0x9D3E  /* Sunrise Point 4 (iTouch) */
-> > >  #define MEI_DEV_ID_SPT_H      0xA13A  /* Sunrise Point H */
-> > >  #define MEI_DEV_ID_SPT_H_2    0xA13B  /* Sunrise Point H 2 */
-> > >
-> > > @@ -90,6 +91,7 @@
-> > >  #define MEI_DEV_ID_CDF        0x18D3  /* Cedar Fork */
-> > >
-> > >  #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
-> > > +#define MEI_DEV_ID_ICP_LP_4   0x34E4  /* Ice Lake Point LP 4 (iTouch)
-> */
-> > >
-> > >  #define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
-> > >
-> > > diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-> > > index
-> > > a1ed375fed37..5e621e90d8d4 100644
-> > > --- a/drivers/misc/mei/pci-me.c
-> > > +++ b/drivers/misc/mei/pci-me.c
-> > > @@ -68,6 +68,7 @@ static const struct pci_device_id mei_me_pci_tbl[]
-> > > = {
-> > >
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT, MEI_ME_PCH8_CFG)},
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
-> > > +	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_4, MEI_ME_PCH8_CFG)},
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_CFG)},
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_CFG)},
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_CFG)},
-> @@ -94,6
-> > > +95,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
-> > >
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
-> > > +	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP_4, MEI_ME_PCH12_CFG)},
-> > >
-> > >  	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH15_CFG)},
-> > >
-> > > --
-> > > 2.26.2
-> > >
-> >
-> >
+[1]. 2ac15068f346 arm64: dts: juno: Add SMMUs device nodes  
 
+> +}
+> +
+>  static const struct amba_id tmc_ids[] = {
+>  	CS_AMBA_ID(0x000bb961),
+>  	/* Coresight SoC 600 TMC-ETR/ETS */
+> @@ -558,6 +586,7 @@ static struct amba_driver tmc_driver = {
+>  		.suppress_bind_attrs = true,
+>  	},
+>  	.probe		= tmc_probe,
+> +	.shutdown	= tmc_shutdown,
+>  	.id_table	= tmc_ids,
+>  };
+>  builtin_amba_driver(tmc_driver);
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+> index d156860495c7..f4f56c474e58 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+> @@ -262,6 +262,8 @@ u32 tmc_get_memwidth_mask(struct tmc_drvdata *drvdata);
+>  /* ETB/ETF functions */
+>  int tmc_read_prepare_etb(struct tmc_drvdata *drvdata);
+>  int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata);
+> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata);
+> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata);
+>  extern const struct coresight_ops tmc_etb_cs_ops;
+>  extern const struct coresight_ops tmc_etf_cs_ops;
+>  
+> @@ -270,6 +272,7 @@ ssize_t tmc_etb_get_sysfs_trace(struct tmc_drvdata *drvdata,
+>  /* ETR functions */
+>  int tmc_read_prepare_etr(struct tmc_drvdata *drvdata);
+>  int tmc_read_unprepare_etr(struct tmc_drvdata *drvdata);
+> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata);
+>  extern const struct coresight_ops tmc_etr_cs_ops;
+>  ssize_t tmc_etr_get_sysfs_trace(struct tmc_drvdata *drvdata,
+>  				loff_t pos, size_t len, char **bufpp);
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
