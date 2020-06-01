@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3021DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C9B207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CB920878
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034744;
-	bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
+	s=default; t=1591034748;
+	bh=cYxn46v7Fp+VUDknXWc2HELPE8i0Sn7JqZLgXwySOm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSRsAU3zbU5Fpg4NLGcJmAFP+3BfuSAND86uOftYHz6qLthQ+slznk4hu8r3d7Lja
-	 mVIVqJ9jKoKJF0aiwMhKaP8J9IuPDDEFKUjqzz3uxueqbeQv0cmBHB0WDwAl2L4tD3
-	 bxaFHEUzV5BrLSsioen9Bu5IkvBQG5dcY0jYc7Sg=
+	b=yxzst0dwpIKaZwTrq09wSaAYjbe+rWi9BJh9cEK91TOjQ9rrYLAuMnZBxiDxxEcua
+	 B7mg+Gc+dWyrKcLvHEB0cwU2kKD1WoCg4eG1gk0Pg8YQ9BDYsI9xBCQ//c816KMVPV
+	 ihjmz0uzWgaQ5KZh/HfVbd49pHWtStPcZkAZKTk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbgFASFm (ORCPT
+        id S1729747AbgFASFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:05:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729780AbgFASFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:05:23 -0400
+        id S1730298AbgFASF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7382068D;
-        Mon,  1 Jun 2020 18:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19DF62074B;
+        Mon,  1 Jun 2020 18:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034723;
-        bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
+        s=default; t=1591034727;
+        bh=cYxn46v7Fp+VUDknXWc2HELPE8i0Sn7JqZLgXwySOm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aedj5ZetZqakCWz+p7LkQf/LIlvip28Z42Thp5+6wf1HDH1b4tul3494BN4G2qJ04
-         UUbaw3ea+UnknY+TM97es7Stt+ZGfvHbTpcd/i848BkOHl6HFM2bjQUz4dto+nU3zm
-         Rlwr8ozDtKLpKuyB05M2GuDTyaweLmGegwTAjbiI=
+        b=H0oYUNqP7s7rzZXHVjq92t/8Fp4YLpbtlQBomCfAQerTDASFTfBJ387lfT9R9Qfr1
+         zN2Z40hkDb9NylUayH5gA8c6++6WE4lY0N8ARbV0lWzthWMNB/OSBZPZyXDFE0QLBt
+         /42cJ2E6MFDGZTOibl+jFKyYbE0WiDS89ItnZIXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexander Dahl <post@lespocky.de>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.19 73/95] x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
-Date:   Mon,  1 Jun 2020 19:54:13 +0200
-Message-Id: <20200601174032.198812304@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Braun <michael-dev@fami-braun.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 83/95] netfilter: nft_reject_bridge: enable reject with bridge vlan
+Date:   Mon,  1 Jun 2020 19:54:23 +0200
+Message-Id: <20200601174033.163558907@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -61,105 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Dahl <post@lespocky.de>
+From: Michael Braun <michael-dev@fami-braun.de>
 
-commit 88743470668ef5eb6b7ba9e0f99888e5999bf172 upstream.
+commit e9c284ec4b41c827f4369973d2792992849e4fa5 upstream.
 
-The intermediate result of the old term (4UL * 1024 * 1024 * 1024) is
-4 294 967 296 or 0x100000000 which is no problem on 64 bit systems.
-The patch does not change the later overall result of 0x100000 for
-MAX_DMA32_PFN (after it has been shifted by PAGE_SHIFT). The new
-calculation yields the same result, but does not require 64 bit
-arithmetic.
+Currently, using the bridge reject target with tagged packets
+results in untagged packets being sent back.
 
-On 32 bit systems the old calculation suffers from an arithmetic
-overflow in that intermediate term in braces: 4UL aka unsigned long int
-is 4 byte wide and an arithmetic overflow happens (the 0x100000000 does
-not fit in 4 bytes), the in braces result is truncated to zero, the
-following right shift does not alter that, so MAX_DMA32_PFN evaluates to
-0 on 32 bit systems.
+Fix this by mirroring the vlan id as well.
 
-That wrong value is a problem in a comparision against MAX_DMA32_PFN in
-the init code for swiotlb in pci_swiotlb_detect_4gb() to decide if
-swiotlb should be active.  That comparison yields the opposite result,
-when compiling on 32 bit systems.
-
-This was not possible before
-
-  1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
-
-when that MAX_DMA32_PFN was first made visible to x86_32 (and which
-landed in v3.0).
-
-In practice this wasn't a problem, unless CONFIG_SWIOTLB is active on
-x86-32.
-
-However if one has set CONFIG_IOMMU_INTEL, since
-
-  c5a5dc4cbbf4 ("iommu/vt-d: Don't switch off swiotlb if bounce page is used")
-
-there's a dependency on CONFIG_SWIOTLB, which was not necessarily
-active before. That landed in v5.4, where we noticed it in the fli4l
-Linux distribution. We have CONFIG_IOMMU_INTEL active on both 32 and 64
-bit kernel configs there (I could not find out why, so let's just say
-historical reasons).
-
-The effect is at boot time 64 MiB (default size) were allocated for
-bounce buffers now, which is a noticeable amount of memory on small
-systems like pcengines ALIX 2D3 with 256 MiB memory, which are still
-frequently used as home routers.
-
-We noticed this effect when migrating from kernel v4.19 (LTS) to v5.4
-(LTS) in fli4l and got that kernel messages for example:
-
-  Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
-  …
-  Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
-  …
-  PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-  software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
-
-The initial analysis and the suggested fix was done by user 'sourcejedi'
-at stackoverflow and explicitly marked as GPLv2 for inclusion in the
-Linux kernel:
-
-  https://unix.stackexchange.com/a/520525/50007
-
-The new calculation, which does not suffer from that overflow, is the
-same as for arch/mips now as suggested by Robin Murphy.
-
-The fix was tested by fli4l users on round about two dozen different
-systems, including both 32 and 64 bit archs, bare metal and virtualized
-machines.
-
- [ bp: Massage commit message. ]
-
-Fixes: 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
-Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Alexander Dahl <post@lespocky.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
-Link: https://unix.stackexchange.com/q/520065/50007
-Link: https://web.nettworks.org/bugs/browse/FFL-2560
-Link: https://lkml.kernel.org/r/20200526175749.20742-1-post@lespocky.de
+Fixes: 85f5b3086a04 ("netfilter: bridge: add reject support")
+Signed-off-by: Michael Braun <michael-dev@fami-braun.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/dma.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bridge/netfilter/nft_reject_bridge.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/x86/include/asm/dma.h
-+++ b/arch/x86/include/asm/dma.h
-@@ -74,7 +74,7 @@
- #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
+--- a/net/bridge/netfilter/nft_reject_bridge.c
++++ b/net/bridge/netfilter/nft_reject_bridge.c
+@@ -34,6 +34,12 @@ static void nft_reject_br_push_etherhdr(
+ 	ether_addr_copy(eth->h_dest, eth_hdr(oldskb)->h_source);
+ 	eth->h_proto = eth_hdr(oldskb)->h_proto;
+ 	skb_pull(nskb, ETH_HLEN);
++
++	if (skb_vlan_tag_present(oldskb)) {
++		u16 vid = skb_vlan_tag_get(oldskb);
++
++		__vlan_hwaccel_put_tag(nskb, oldskb->vlan_proto, vid);
++	}
+ }
  
- /* 4GB broken PCI/AGP hardware bus master zone */
--#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
-+#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
- 
- #ifdef CONFIG_X86_32
- /* The maximum address that we can perform a DMA transfer to on this platform */
+ static int nft_bridge_iphdr_validate(struct sk_buff *skb)
 
 
