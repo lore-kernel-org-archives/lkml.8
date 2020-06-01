@@ -2,184 +2,85 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE72EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C5B20734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961012074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591042689;
+	bh=gTxHNUn+c76zemOeMmtcdzx9uVaCHcJ5E/m8Bh3yCOI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fgUObgQTGA5RBgmadOEFVbMTQaKA9Z0FkkzHMN00gT69kfyxRYGiiQqDqW61i4Xb1
+	 n14O8UWrEvzuNkzb2iWNTRU8Xf2GH8F+CzI3P0CY0uYrs0eWyPsxBSPwjQK/Fk7opC
+	 NeVEmUuC8nrzuCc/0iNtIswzUC+E3ebEg0qZOFwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgFAUSG (ORCPT
+        id S1728489AbgFAUSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:18:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:29683 "EHLO mga03.intel.com"
+        Mon, 1 Jun 2020 16:18:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbgFAUSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:18:05 -0400
-IronPort-SDR: za8B4K5qo962Sl5ac4BOz3Bvub98FGjX6XNyVlOuunpsfumFJiJd95q56uSPhhhkrh5GqC7UHN
- K4epFpCoGtKw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:18:04 -0700
-IronPort-SDR: R2AYj3SccqpOo7YigFgjni9lNXpfOVn5BTssjIdk1GKqYL3M3MRml7uEAwa8uEfH2rozK6j3Ou
- oJdx217LgHBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="303752754"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2020 13:18:04 -0700
-Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
-        by linux.intel.com (Postfix) with ESMTP id B87DA58002E;
-        Mon,  1 Jun 2020 13:18:01 -0700 (PDT)
-Subject: [PATCH v6 10/13] perf stat: introduce --ctl-fd[-ack] options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <2fba84d0-3448-a318-43d7-e2fbb8ccde11@linux.intel.com>
-Date:   Mon, 1 Jun 2020 23:17:59 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1727996AbgFAUSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 16:18:07 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 693312076B;
+        Mon,  1 Jun 2020 20:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591042686;
+        bh=gTxHNUn+c76zemOeMmtcdzx9uVaCHcJ5E/m8Bh3yCOI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tr0RQWR6oS6AssPXqfmeq9xuvj7d9qQdiRkCMfNRT8f863omNQQQ2qQyRZ8vm7t1D
+         rch1yJSLWyZrBmgTyZjcbBNVWJ7hipC9qOlpLIdgK/DkatV8GES6dxiLZJ/hTmhRI1
+         rqj3JlCgX/JZtZLpuG+rsFrE9Ii/CzYzflWPHbuk=
+Received: by mail-lj1-f182.google.com with SMTP id m18so9788390ljo.5;
+        Mon, 01 Jun 2020 13:18:06 -0700 (PDT)
+X-Gm-Message-State: AOAM530bHzQY8XD2MiWIKcVsPjzAJMSHNk5FXCECBMQdyyu/vynKu7r5
+        iEBZvMRaa8Xy9QR6C6/XmdZCyUoAEpGAQ6XQxJs=
+X-Google-Smtp-Source: ABdhPJwvioT6Tk2rGCLM59ZIXtwMkm6KmKCoUrFB2IhhLJ5TIjz3MFr0H1zBt+czuJOum20rxlt+BKbayd1hZA5ABgI=
+X-Received: by 2002:a2e:9115:: with SMTP id m21mr763659ljg.350.1591042684664;
+ Mon, 01 Jun 2020 13:18:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200601162814.17426-1-efremov@linux.com>
+In-Reply-To: <20200601162814.17426-1-efremov@linux.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 1 Jun 2020 13:17:53 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4nHJ6ewZ6U6EyJYUx7AFpde5D38yRykK3Q_cGf7sgBaQ@mail.gmail.com>
+Message-ID: <CAPhsuW4nHJ6ewZ6U6EyJYUx7AFpde5D38yRykK3Q_cGf7sgBaQ@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Change kvfree to kfree in generic_map_lookup_batch()
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 1, 2020 at 9:29 AM Denis Efremov <efremov@linux.com> wrote:
+>
+> buf_prevkey in generic_map_lookup_batch() is allocated with
+> kmalloc(). It's safe to free it with kfree().
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
-from command line. Extend perf-stat.txt file with --ctl-fd[-ack] options
-description. Document possible usage model introduced by --ctl-fd[-ack]
-options by providing example bash shell script.
+Please add prefix "PATCH bpf" or "PATCH bpf-next" to indicate which
+tree this should
+apply to. This one looks more like for bpf-next, as current code still
+works. For patches
+to bpf-next, we should wait after the merge window.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt | 40 ++++++++++++++++++++++++++
- tools/perf/builtin-stat.c              | 11 +++++++
- tools/perf/util/stat.h                 |  2 ++
- 3 files changed, 53 insertions(+)
+Also, maybe add:
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 9f32f6cd558d..c4a5d31062ef 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -176,6 +176,46 @@ with it.  --append may be used here.  Examples:
-      3>results  perf stat --log-fd 3          -- $cmd
-      3>>results perf stat --log-fd 3 --append -- $cmd
- 
-+--ctl-fd::
-+--ctl-fd-ack::
-+
-+Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
-+'disable': disable events). Optionally send control command completion ('ack') to fd-ack
-+descriptor to synchronize with the controlling process. Example of bash shell script
-+to enable and disable events during measurements:
-+
-+#!/bin/bash
-+
-+ctl_dir=/tmp/
-+
-+ctl_fifo=${ctl_dir}perf_ctl.fifo
-+test -p ${ctl_fifo} && unlink ${ctl_fifo}
-+mkfifo ${ctl_fifo}
-+exec {ctl_fd}<>${ctl_fifo}
-+
-+ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-+test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-+mkfifo ${ctl_ack_fifo}
-+exec {ctl_fd_ack}<>${ctl_ack_fifo}
-+
-+perf stat -D -1 -e cpu-cycles -a -I 1000                \
-+          --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
-+          -- sleep 30 &
-+perf_pid=$!
-+
-+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-+
-+exec {ctl_fd_ack}>&-
-+unlink ${ctl_ack_fifo}
-+
-+exec {ctl_fd}>&-
-+unlink ${ctl_fifo}
-+
-+wait -n ${perf_pid}
-+exit $?
-+
-+
- --pre::
- --post::
- 	Pre and post measurement hooks, e.g.:
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 4a197b5eee23..a878e106ead0 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -188,6 +188,8 @@ static struct perf_stat_config stat_config = {
- 	.metric_only_len	= METRIC_ONLY_LEN,
- 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
- 	.big_num		= true,
-+	.ctl_fd			= -1,
-+	.ctl_fd_ack		= -1
- };
- 
- static inline void diff_timespec(struct timespec *r, struct timespec *a,
-@@ -1080,6 +1082,10 @@ static struct option stat_options[] = {
- 		"libpfm4 event selector. use 'perf list' to list available events",
- 		parse_libpfm_events_option),
- #endif
-+	OPT_INTEGER(0, "ctl-fd", &stat_config.ctl_fd,
-+		    "Listen on fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events)"),
-+	OPT_INTEGER(0, "ctl-fd-ack", &stat_config.ctl_fd_ack,
-+		    "Send control command completion ('ack') to fd ack descriptor"),
- 	OPT_END()
- };
- 
-@@ -2249,6 +2255,9 @@ int cmd_stat(int argc, const char **argv)
- 	signal(SIGALRM, skip_signal);
- 	signal(SIGABRT, skip_signal);
- 
-+	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
-+		goto out;
-+
- 	status = 0;
- 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
- 		if (stat_config.run_count != 1 && verbose > 0)
-@@ -2268,6 +2277,8 @@ int cmd_stat(int argc, const char **argv)
- 	if (!forever && status != -1 && (!interval || stat_config.summary))
- 		print_counters(NULL, argc, argv);
- 
-+	evlist__finalize_ctlfd(evsel_list);
-+
- 	if (STAT_RECORD) {
- 		/*
- 		 * We synthesize the kernel mmap record just so that older tools
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 626421ef35c2..06f0baabe775 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -133,6 +133,8 @@ struct perf_stat_config {
- 	struct perf_cpu_map		*cpus_aggr_map;
- 	u64			*walltime_run;
- 	struct rblist		 metric_events;
-+	int			 ctl_fd;
-+	int			 ctl_fd_ack;
- };
- 
- void perf_stat__set_big_num(int set);
--- 
-2.24.1
+Fixes: cb4d03ab499d ("bpf: Add generic support for lookup batch op")
 
+Acked-by: Song Liu <songliubraving@fb.com>
+
+Thanks,
+Song
