@@ -2,121 +2,105 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC04C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7C982073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE08C2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9GxqpU+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AralpmOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgFAVKr (ORCPT
+        id S1728729AbgFAVLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:10:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgFAVKq (ORCPT
+        Mon, 1 Jun 2020 17:11:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51217 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727983AbgFAVLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:10:46 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F626C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 14:10:46 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id k19so8369664edv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 14:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PhljfA8dcj+WSORT9UU24bdiAcPkgiL6U3k8O8LuYxk=;
-        b=t9GxqpU+A5lPYm4L6N2MEtj3WyrQ5SOVv+0styTmRtIbro1w8EnRBxArHtNvOjK7Hz
-         Nxvs2k4uY2N0X7/86l8mIy2QWYMZfHZg5TzEZVXFxoLbX0ryqN9jMsRNzZcosS8MjxWC
-         hDNGgOukSN9VwvbEGW25/Y9bMMzj/krvfJF8KvSl2263UnhP4Sp9y74bcKakaUmb+dd9
-         bMPFEVSXzirn7K81xz6fX1btpty1IAcS9+jFDUNjwk0thsxrB5aI2BheDeVenOJgIYQk
-         qQcszCkRBXABgLg9DdEYijEV7lgClWi+AGP/1Z9e+K9oGV8bwiNmnPn6TwyUoDwg5y0N
-         G/JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PhljfA8dcj+WSORT9UU24bdiAcPkgiL6U3k8O8LuYxk=;
-        b=k+1tHomGLUTjnq04s76Eq2USiCYOsH4MGFzM6CIyYdeATGCPcudgnT1POKTu6Xbge1
-         Dc1KGT4chvZKy7h9ADUWD64dzicH/MgemlazgFUG3M6A9gNzmeEhseKkmgjP88YETvsp
-         GxthQ0j+GdAWwBJTBE2UlSAjONirhvgSsmDSd5B4ko+lN/WhZIRrAYqasLUEowDI3pk5
-         o4M1zYi4lspubxm+IrQMuhEnsN5dh8L2yof8U9gHshSbHTvsO0wC4UnnRNacc9lC4XLd
-         xY9OmNVkUUDwqs/h4AAnI/0XaSZLWl+KDMifLAS/3uik3Uth6Bqc1fL9i/By0QFwHn/p
-         gHPg==
-X-Gm-Message-State: AOAM532KqhcYb+wjbYum/0vDXZB3eHcK4VjbaccO5NnHS2abtYiQoWUp
-        rAqzo3Bs4ytRHGITDMcDn10=
-X-Google-Smtp-Source: ABdhPJwzuc/YU3vAqkri4+4HSwDvptfGsJ0G1JS0/NJ2YvTZL8QPpuVTvj6pYVeRW0rXRThHc+83qg==
-X-Received: by 2002:a50:a782:: with SMTP id i2mr23741387edc.33.1591045845072;
-        Mon, 01 Jun 2020 14:10:45 -0700 (PDT)
-Received: from ubuntu-laptop (ip5f5bfcfd.dynamic.kabel-deutschland.de. [95.91.252.253])
-        by smtp.googlemail.com with ESMTPSA id l8sm602396ejz.52.2020.06.01.14.10.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Jun 2020 14:10:44 -0700 (PDT)
-Message-ID: <0a4fc94213ca5c2040796a66942f626587483721.camel@gmail.com>
-Subject: Re: [PATCH v6 0/5] Micron SLC NAND filling block
-From:   Bean Huo <huobean@gmail.com>
-To:     miquel.raynal@bootlin.com, vigneshr@ti.com, s.hauer@pengutronix.de,
-        boris.brezillon@collabora.com, derosier@gmail.com,
-        Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bean Huo <beanhuo@micron.com>
-Date:   Mon, 01 Jun 2020 23:10:43 +0200
-In-Reply-To: <829d76189beff5a50ddc56123d22bff3aa6a3378.camel@gmail.com>
-References: <20200525121814.31934-1-huobean@gmail.com>
-         <829d76189beff5a50ddc56123d22bff3aa6a3378.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 1 Jun 2020 17:11:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591045898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DbRzhG2LzWApjj8c+cePRghjnkrYYRcNMFSCvsXUZ8I=;
+        b=AralpmOjEWIyTB9navhbDg72jp4sNdjC6SWkDhw0Hr+ftL0cNIpz35lIEwWTrv2gZTzykQ
+        ehojKqW8rNQS7v8Hvb/8ycTv5cnM1pcuUL+5FQA9BL73xzj+s4DvjEpA2olwlWbOSJQcCy
+        CB5yxm4k7Ksdribn6y4Gtgxx6icPkKQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-w1E6bmOQPuerdajZZdA_Yw-1; Mon, 01 Jun 2020 17:11:31 -0400
+X-MC-Unique: w1E6bmOQPuerdajZZdA_Yw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE1D11883603;
+        Mon,  1 Jun 2020 21:11:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C9D6D01EB;
+        Mon,  1 Jun 2020 21:11:28 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <3cc663a5-088d-4d26-34cd-c96e362c1eb2@web.de>
+References: <3cc663a5-088d-4d26-34cd-c96e362c1eb2@web.de>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: afs: Improve exception handling in afs_net_init()
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1376358.1591045888.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 01 Jun 2020 22:11:28 +0100
+Message-ID: <1376359.1591045888@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-Hi Richard 
-would you please help us confirm below question??
+> I have accidentally taken another look at the implementation of
+> the function "afs_net_init".
+> I noticed that the statement "net->live =3D false;" was specified three =
+times
+> for exception handling at the end.
+> https://elixir.bootlin.com/linux/v5.7/source/fs/afs/main.c#L127
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+fs/afs/main.c?id=3D9bf9511e3d9f328c03f6f79bfb741c3d18f2f2c0#n127
+> =
 
-Thanks,
-Bean
+> Can it be that two of these assignments are redundant then?
 
-On Thu, 2020-05-28 at 16:14 +0200, Bean Huo wrote:
-> hi, Richard
-> 
-> 
-> On Mon, 2020-05-25 at 14:18 +0200, Bean Huo wrote:
-> > After submission of patch V1 [1] and V2 [2], we stopped its update
-> > since we get
-> > stuck in the solution on how to avoid the power-loss issue in case
-> > power-cut
-> > hits the block filling. In the v1 and v2, to avoid this issue, we
-> > always damaged
-> > page0, page1, this's based on the hypothesis that NAND FS is UBIFS.
-> > This
-> > FS-specifical code is unacceptable in the MTD layer. Also, it
-> > cannot
-> > cover all
-> > NAND based file system. Based on the current discussion, seems that
-> > re-write all
-> > first 15 page from page0 is a satisfactory solution.
-> 
+Kind of yes, but no.
 
-> This patch has overwrite page0~page14, damage EC and VID header
-> boths.
-> I know this is safe for UBIFS, even fastmap is enabled (you fixed
-> this in (ubi: fastmap: Correctly handle interrupted erasures in
-> EBA)).
-> Now, how about jffs2? 
-> 
-> 
-> Thanks,
-> Bean
-> 
+I want to set "net->live =3D false" as soon as an error occurs because the=
+re are
+various async mechanisms that check for it and abort their operation if th=
+ey
+see it, but there are multiple error labels.
+
+So it needs to be cleared before afs_cell_purge() or afs_purge_servers() i=
+s
+called and it used to be required for something else as well, but that's n=
+ow
+gone.
+
+In the afs_net_init() function, it now probably only needs to be cleared a=
+fter
+"error_open_socket:".  I'm a bit leary of removing the clearances in case =
+I
+add a new dependency on it later.
+
+David
 
