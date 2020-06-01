@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E31C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A6C2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA09F206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034206;
-	bh=jJlvg5Icn2RSmfrA3Oj+7GiZzqZOSE+7heMsTdczNG4=;
+	s=default; t=1591034208;
+	bh=TN8/J+KS8OaAxt0HQk59vONqZA/Y2/WNw/CL3FuuG00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o6UxlQ81/xD05J+1a4B9X8Zsv6NudwPHluTSnLxYQQrtfhFm00WjxOUCNmPp/YxaP
-	 mg5nMYBwJTILNI1V66v2IjAGsq+a4C88vWdN8Ab9UulWWUgtFBWDCQh24pvZQvJJAM
-	 f38PPqIz+IE/7QJ7S+N3bVKCNG+DLl6lr8htdoLk=
+	b=veXkTUYdyTN64/0cdTUwvTvG9dosh1uF44ZMdmr0mY6fbYFLsIFukufx4CCM5MXDu
+	 oPuJfetf7DcrfQVAed6xqBe6nMV9gaxpaOn+YEGFXD9K1dlf5zaBZ2Lj3x6gymbkOP
+	 Dd6uKnco8n/j+uRVwlFEdV4dihQ0uie5dazYOlDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgFAR4p (ORCPT
+        id S1728670AbgFAR4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37208 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:56:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728670AbgFAR4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:39 -0400
+        id S1728710AbgFAR4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDADB2074B;
-        Mon,  1 Jun 2020 17:56:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD523206E2;
+        Mon,  1 Jun 2020 17:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034198;
-        bh=jJlvg5Icn2RSmfrA3Oj+7GiZzqZOSE+7heMsTdczNG4=;
+        s=default; t=1591034205;
+        bh=TN8/J+KS8OaAxt0HQk59vONqZA/Y2/WNw/CL3FuuG00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yLMjDxX5TzqeFSc8TQ2a0SVItUGfzKUKRUXz6nGDCGPu1KxM+yVaViO79tasAjp58
-         Q3+6/D1FhdPqd/b4XN3iF9rWdC5xxVq9q3WyVmHG6UKqIefud1/ekPmgBABy4LqICM
-         YiXlYLzwIXvZDsvqydQV8I3Ip6dLyYp3x8xizRq8=
+        b=Qx0ZRXsOIFNHXYqsLOsUeoTiScMWhHBlXHtgJREcFiTcR/OEgPw0rsTtQh3dMYx0H
+         CbHwh4uDPoSxtxtbrVIaeHbSUMlXexQFMZi6qwyfwAJrKjD+1nBnHmw8w8rPvU2nMn
+         EuN3mDpIjXTZN6/kSYaILRyUCXf4ucRDLX4lkdLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michal Kalderon <Michal.Kalderon@cavium.com>,
-        Ariel Elior <Ariel.Elior@cavium.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 08/48] IB/cma: Fix reference count leak when no ipv4 addresses are set
-Date:   Mon,  1 Jun 2020 19:53:18 +0200
-Message-Id: <20200601173954.755172639@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 31/48] ip_vti: receive ipip packet by calling ip_tunnel_rcv
+Date:   Mon,  1 Jun 2020 19:53:41 +0200
+Message-Id: <20200601174001.696274292@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -62,47 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kalderon, Michal <Michal.Kalderon@cavium.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 963916fdb3e5ad4af57ac959b5a03bf23f7568ca upstream.
+commit 976eba8ab596bab94b9714cd46d38d5c6a2c660d upstream.
 
-Once in_dev_get is called to receive in_device pointer, the
-in_device reference counter is increased, but if there are
-no ipv4 addresses configured on the net-device the ifa_list
-will be null, resulting in a flow that doesn't call in_dev_put
-to decrease the ref_cnt.
-This was exposed when running RoCE over ipv6 without any ipv4
-addresses configured
+In Commit dd9ee3444014 ("vti4: Fix a ipip packet processing bug in
+'IPCOMP' virtual tunnel"), it tries to receive IPIP packets in vti
+by calling xfrm_input(). This case happens when a small packet or
+frag sent by peer is too small to get compressed.
 
-Fixes: commit 8e3867310c90 ("IB/cma: Fix a race condition in iboe_addr_get_sgid()")
+However, xfrm_input() will still get to the IPCOMP path where skb
+sec_path is set, but never dropped while it should have been done
+in vti_ipcomp4_protocol.cb_handler(vti_rcv_cb), as it's not an
+ipcomp4 packet. This will cause that the packet can never pass
+xfrm4_policy_check() in the upper protocol rcv functions.
 
-Signed-off-by: Michal Kalderon <Michal.Kalderon@cavium.com>
-Signed-off-by: Ariel Elior <Ariel.Elior@cavium.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+So this patch is to call ip_tunnel_rcv() to process IPIP packets
+instead.
+
+Fixes: dd9ee3444014 ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/rdma/ib_addr.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/ipv4/ip_vti.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/include/rdma/ib_addr.h
-+++ b/include/rdma/ib_addr.h
-@@ -200,11 +200,13 @@ static inline void iboe_addr_get_sgid(st
- 	dev = dev_get_by_index(&init_net, dev_addr->bound_dev_if);
- 	if (dev) {
- 		ip4 = in_dev_get(dev);
--		if (ip4 && ip4->ifa_list && ip4->ifa_list->ifa_address) {
-+		if (ip4 && ip4->ifa_list && ip4->ifa_list->ifa_address)
- 			ipv6_addr_set_v4mapped(ip4->ifa_list->ifa_address,
- 					       (struct in6_addr *)gid);
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -99,7 +99,28 @@ static int vti_rcv_proto(struct sk_buff
+ 
+ static int vti_rcv_tunnel(struct sk_buff *skb)
+ {
+-	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
++	struct ip_tunnel_net *itn = net_generic(dev_net(skb->dev), vti_net_id);
++	const struct iphdr *iph = ip_hdr(skb);
++	struct ip_tunnel *tunnel;
 +
-+		if (ip4)
- 			in_dev_put(ip4);
--		}
++	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
++				  iph->saddr, iph->daddr, 0);
++	if (tunnel) {
++		struct tnl_ptk_info tpi = {
++			.proto = htons(ETH_P_IP),
++		};
 +
- 		dev_put(dev);
- 	}
++		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
++			goto drop;
++		if (iptunnel_pull_header(skb, 0, tpi.proto))
++			goto drop;
++		return ip_tunnel_rcv(tunnel, skb, &tpi, NULL, false);
++	}
++
++	return -EINVAL;
++drop:
++	kfree_skb(skb);
++	return 0;
  }
+ 
+ static int vti_rcv_cb(struct sk_buff *skb, int err)
 
 
