@@ -2,58 +2,56 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2584CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8F7F2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA322074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034425;
-	bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+	s=default; t=1591034432;
+	bh=yYeTSMmM5FxusSZEIdctCarTpv7x8v6BuKfesZquWXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uTMg2yn0lCjxE60cQ7NL1kme+AqRykdKrCeJBht078YejZr3ui96lYwECimSqpu8R
-	 XhntGP294oWWpRcfO68xbLTboxTXTrHSmBisQIS2K3kX5zyWDMKXQoBABS3J75MzcL
-	 iYQBY+MGvHZhvuEsLvwF5UcgYzkD1sHvbcbDcTuU=
+	b=n4ZRgQSLCD+ksVn9LJ9MMFsBV7vAHacQsmRrbOnrwR/cHJ1AmDJ0pTQZAqQ3EdA3Q
+	 T2UTz/olH6IGXbgy/+BO7KbSO1JDbmVMHpG7xOVId0fV6RZnHplEpiF1NUeWrUlKnF
+	 fBu/ZZ5Fkf75QLG24a3RJTlAJoY96Qd0RcCO0ciY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbgFASAY (ORCPT
+        id S1729643AbgFASA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42308 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:00:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729547AbgFAR7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:59:48 -0400
+        id S1729584AbgFAR77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:59:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E52E72073B;
-        Mon,  1 Jun 2020 17:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BEE4206E2;
+        Mon,  1 Jun 2020 17:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034387;
-        bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+        s=default; t=1591034398;
+        bh=yYeTSMmM5FxusSZEIdctCarTpv7x8v6BuKfesZquWXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pJzx80WawtZo5qzXAsWpMP4vnthnuG/febMjLUcUQDsPpfBTwKSVQkIA5jBPDviqe
-         Q11GZCuAltDL6xim+pIozOLUiDMLhLvQF65IM+s1OQJ+OQ0W8rKF7IryDwYEMbaKNg
-         UO8vEDS5t5QHc0dTcuaTZMRZS9MAPy0yu9dDTphY=
+        b=jW0l8ftMFS+nu4E/z5msiF9IPnJpHCVpB7lIWcyZ+viDcl2XYVMLP2mRwxmCKRASs
+         b6HyWQkKXS4CChQfepqL/FZODf+2jW5RG/+4ytERbXoVtHBLsHTIcxrEKJm4h3j0fh
+         piPJDCWqhLrlU7yMey6ArNqCoS5u6m21iJP2Wvdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 01/77] ax25: fix setsockopt(SO_BINDTODEVICE)
-Date:   Mon,  1 Jun 2020 19:53:06 +0200
-Message-Id: <20200601174016.738509239@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 14/77] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
+Date:   Mon,  1 Jun 2020 19:53:19 +0200
+Message-Id: <20200601174019.076908390@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,72 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
+[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
 
-syzbot was able to trigger this trace [1], probably by using
-a zero optlen.
+A test with the command below gives these errors:
 
-While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
+'#address-cells' is a required property
 
-[1]
-BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
-CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- strnlen+0xf9/0x170 lib/string.c:569
- dev_name_hash net/core/dev.c:207 [inline]
- netdev_name_node_lookup net/core/dev.c:277 [inline]
- __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
- ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
- __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
- __do_compat_sys_setsockopt net/compat.c:413 [inline]
- __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
- __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f57dd9
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
-RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+The $nodename pattern for spi nodes is
+"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
+'spi-0' and 'spi-1' pinctrl sub nodenames to
+'spi0' and 'spi1' in 'rk322x.dtsi'.
 
-Local variable ----devname@ax25_setsockopt created at:
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ax25/af_ax25.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/rk322x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -639,8 +639,10 @@ static int ax25_setsockopt(struct socket
- 		break;
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index f59f7cc62be6..0c60dbc4b46a 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -950,7 +950,7 @@
+ 			};
+ 		};
  
- 	case SO_BINDTODEVICE:
--		if (optlen > IFNAMSIZ)
--			optlen = IFNAMSIZ;
-+		if (optlen > IFNAMSIZ - 1)
-+			optlen = IFNAMSIZ - 1;
-+
-+		memset(devname, 0, sizeof(devname));
+-		spi-0 {
++		spi0 {
+ 			spi0_clk: spi0-clk {
+ 				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
+ 			};
+@@ -968,7 +968,7 @@
+ 			};
+ 		};
  
- 		if (copy_from_user(devname, optval, optlen)) {
- 			res = -EFAULT;
+-		spi-1 {
++		spi1 {
+ 			spi1_clk: spi1-clk {
+ 				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
+ 			};
+-- 
+2.25.1
+
 
 
