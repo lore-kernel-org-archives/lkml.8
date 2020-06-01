@@ -2,134 +2,109 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D68C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6092720842
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6FA2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591018829;
+	bh=yPxNwFyDGz+DrWoUR1gP8um5qzpz0nh7xWt2uilC08Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cSZnNcR2BUADdhjaxzUkB6+yJQTyoHXoJHJdlUB9roS18YL1bU1ExtVL9VflKO6YV
+	 /tDAtSpqR0bza8IHIi76PeCp0x457e79Ol11NHXMtjzr7Y0/tgxFX4VD6IVA29B+CW
+	 WBPzAXyeQw1jD+0RmPO8yltHUq1qRaWMbCMjwErg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFANgx (ORCPT
+        id S1727013AbgFANk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:36:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40796 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725847AbgFANgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:36:52 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6E5E2EC3AB97623A95A5;
-        Mon,  1 Jun 2020 21:36:50 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 1 Jun 2020
- 21:36:44 +0800
-Subject: Re: [PATCH v2 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
-To:     Catalin Marinas <catalin.marinas@arm.com>
-CC:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
-        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
-        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200423135656.2712-1-yezhenyu2@huawei.com>
- <20200423135656.2712-6-yezhenyu2@huawei.com> <20200522154254.GD26492@gaia>
- <ddba6d98-29b5-0748-ba74-ec022f509270@huawei.com>
- <20200526145244.GG17051@gaia>
- <0c6f79e4-f29a-d373-2e43-c4f87cf78b49@huawei.com>
- <20200601115644.GA23419@gaia>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <b9521ed4-2845-8986-38ee-23c6aee8acd4@huawei.com>
-Date:   Mon, 1 Jun 2020 21:36:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 1 Jun 2020 09:40:28 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39124 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbgFANk1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 09:40:27 -0400
+Received: by mail-lj1-f195.google.com with SMTP id o9so8166240ljj.6;
+        Mon, 01 Jun 2020 06:40:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j7iLZdGPc8lpNeVJhCGOILuMY+ELrVaT/FAbKIg6pFs=;
+        b=e/QcQMWnDuU/ZXVpJuGjUHRNc+1upX/57IfIp50AIPSPJQB+Y6qiAhZa7Z3zM8vgYE
+         mfXctR2w3zC+te/JgfndNiiCRGWjX+kdsFOi8v64h7z9lQ6oOEtQvT+8vCz55q6m4aIj
+         OtW/kpm0n/vWK6roOAmhBMIj9FJrUagb6/vAw3O0Ob695sRpo5Gf4NLZZelNW2yVe07o
+         Esf6vmtCszXj2Pb/F6zY5iCq0DsxKX3I1s3KsQjRnePDJERMobmt6+NUJq+yOrYb0Lji
+         V2dSHZDfSW8hRLrTqExb3lBWqY22NxwxCFgyFEBQy0DA7eQMrIAjhVKGrsu7VXZpKC1Q
+         vDbg==
+X-Gm-Message-State: AOAM5325XygqjywKzDJZuhEfNt7mO5biDahw+Xk+UjKoLxYpL82fOf0p
+        9lLESQ/8kPtL31zRRXuHJmzketo1
+X-Google-Smtp-Source: ABdhPJxVwV3lCQy//DvgdhN0DfFWUmSec6HlqG8g2EH0bQrBNZlzVGIRZ+pVApBbtxC2xWD1l8V1Kw==
+X-Received: by 2002:a2e:8884:: with SMTP id k4mr11281302lji.170.1591018824472;
+        Mon, 01 Jun 2020 06:40:24 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id d9sm4064191ljc.20.2020.06.01.06.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 06:40:23 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1jfkfo-0003Fb-TA; Mon, 01 Jun 2020 15:40:16 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/6] leds: fix broken devres usage
+Date:   Mon,  1 Jun 2020 15:39:44 +0200
+Message-Id: <20200601133950.12420-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200601115644.GA23419@gaia>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/1 19:56, Catalin Marinas wrote:
-> Hi Zhenyu,
-> 
-> On Sat, May 30, 2020 at 06:24:21PM +0800, Zhenyu Ye wrote:
->> On 2020/5/26 22:52, Catalin Marinas wrote:
->>> On Mon, May 25, 2020 at 03:19:42PM +0800, Zhenyu Ye wrote:
->>>> tlb_flush_##_pxx##_range() is used to set tlb->cleared_*,
->>>> flush_##_pxx##_tlb_range() will actually flush the TLB entry.
->>>>
->>>> In arch64, tlb_flush_p?d_range() is defined as:
->>>>
->>>> 	#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
->>>> 	#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
->>>
->>> Currently, flush_p??_tlb_range() are generic and defined as above. I
->>> think in the generic code they can remain an alias for
->>> flush_tlb_range().
->>>
->>> On arm64, we can redefine them as:
->>>
->>> #define flush_pte_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 3)
->>> #define flush_pmd_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 2)
->>> #define flush_pud_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 1)
->>> #define flush_p4d_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 0)
->>>
->>> (unless the compiler optimises away all the mmu_gather stuff in your
->>> macro above but they don't look trivial to me)
->>
->> I changed generic code before considering that other structures may also
->> use this feature, such as Power9. And Peter may want to replace all
->> flush_tlb_range() by tlb_flush() in the future, see [1] for details.
->>
->> If only enable this feature on aarch64, your codes are better.
->>
->> [1] https://lore.kernel.org/linux-arm-kernel/20200402163849.GM20713@hirez.programming.kicks-ass.net/
-> 
-> But we change the semantics slightly if we implement these as
-> mmu_gather. For example, tlb_end_vma() -> tlb_flush_mmu_tlbonly() ends
-> up calling mmu_notifier_invalidate_range() which it didn't before. I
-> think we end up invoking the notifier unnecessarily in some cases (see
-> the comment in __split_huge_pmd()) or we end up calling the notifier
-> twice (e.g. pmdp_huge_clear_flush_notify()).
-> 
+Several MFD child drivers register their class devices directly under
+the parent device (about half of the MFD LED drivers do so).
 
-Yes, so only enable this feature on aarch64 may be better.
-I will change this in V4 of this series. [the v3 only has some minor
-changes and can be ignored :)]
+This means you cannot blindly do devres conversions so that
+deregistration ends up being tied to the parent device, something which
+leads to use-after-free on driver unbind when the class device is
+released while still being registered (and, for example, oopses on later
+parent MFD driver unbind or LED class callbacks, or resource leaks and
+name clashes on child driver reload).
 
->>> Also, I don't see the new flush_pte_* and flush_p4d_* macros used
->>> anywhere and I don't think they are needed. The pte equivalent is
->>> flush_tlb_page() (we need to make sure it's not used on a pmd in the
->>> hugetlb context).
->>
->> flush_tlb_page() is used to flush only one page.  If we add the
->> flush_pte_tlb_range(), then we can use it to flush a range of pages in
->> the future.
-> 
-> If we know flush_tlb_page() is only called on a small page, could we add
-> TTL information here as well?
-> 
+Included is also a clean up removing some pointless casts when
+registering class devices.
 
-Yes, we could. I will add this in flush_tlb_page().
+All but the lm3533 one have only been compile tested.
 
->> But flush_pte_* and flush_p4d_* macros are really not used anywhere. I
->> will remove them in next version of series, and add them if someone
->> needs.
-> 
-> I think it makes sense.
-> 
+Johan
 
-Thanks,
-Zhenyu
+
+Johan Hovold (6):
+  leds: 88pm860x: fix use-after-free on unbind
+  leds: da903x: fix use-after-free on unbind
+  leds: lm3533: fix use-after-free on unbind
+  leds: lm36274: fix use-after-free on unbind
+  leds: wm831x-status: fix use-after-free on unbind
+  leds: drop redundant struct-device pointer casts
+
+ drivers/leds/leds-88pm860x.c      | 14 +++++++++++++-
+ drivers/leds/leds-da903x.c        | 14 +++++++++++++-
+ drivers/leds/leds-lm3533.c        | 12 +++++++++---
+ drivers/leds/leds-lm355x.c        |  9 +++------
+ drivers/leds/leds-lm36274.c       | 15 ++++++++++++---
+ drivers/leds/leds-lm3642.c        |  9 +++------
+ drivers/leds/leds-wm831x-status.c | 14 +++++++++++++-
+ 7 files changed, 66 insertions(+), 21 deletions(-)
+
+-- 
+2.26.2
 
