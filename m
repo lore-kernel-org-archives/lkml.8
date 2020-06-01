@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC059C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0649FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A92E207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14D92065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034467;
-	bh=dgSSEQAkK9qAD0L2RT7SkaWn64DsyKwI6WQr/ioLUYY=;
+	s=default; t=1591034470;
+	bh=0fwH1kl3TnLGLnKNcAtcv7dUqXFLkD4bHPfFezszlEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7HBcs1QPlaemwSMwTjRanm1VyWoGh3oW3InSvIhnTiLyv5S85VxSNDDT6XLoBe54
-	 XwGnZ1T8p6f4eBqzhlTLehTDy3JFClYUF4NcQ2ywNvXPRj5HG0cT2EIYQ10ydYMMnc
-	 QmCtco5T+gYO3wxTJgcAndqVBKobIKXppbBfB1bw=
+	b=g3e4/H7k9kQSB+CrGRD/yGfavOWc6OpewxBrNQLCinWLyX++pLrXmowirQJtgVZF/
+	 ucckO9/3nBvuqQatNtJs6Y8AVzkeJFtNRPlO9/ihrK3xJoPqoKNX9z/IULfXnaiOg8
+	 atblgtu+8ydo0p93L4foZFUtqe5vNEXYgpBY2zZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbgFASBG (ORCPT
+        id S1729746AbgFASBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:01:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43616 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729706AbgFASAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:50 -0400
+        id S1729015AbgFASAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E12C207DF;
-        Mon,  1 Jun 2020 18:00:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76772065C;
+        Mon,  1 Jun 2020 18:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034450;
-        bh=dgSSEQAkK9qAD0L2RT7SkaWn64DsyKwI6WQr/ioLUYY=;
+        s=default; t=1591034452;
+        bh=0fwH1kl3TnLGLnKNcAtcv7dUqXFLkD4bHPfFezszlEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCuSHI8uwF/LOwXp1CTkcniosa0G3HyzBr9Og1SWTA9/OE7Ea5FhNYejCSfkNk4RT
-         AmMfE3HiGmpssiRf9ZJAmcY0ht4AAOyadI8uNNgzdipN4VaPEFRu2D4HMA9IIKGcsy
-         3OXMHSxOmjodwUUc3HLgkVCOtiZ8jdfg1lJGOxo4=
+        b=sJG3Mnk6TqgZzUI4oTjH7XzaNcbCOwq8C96zk66RWPy+wJNmeDzM1/j5j3RX7ITZ5
+         +XWsJD/vLv74qFVNym4shfWueM39g8VhMCZPp3kRdQig0qL5ypVuNv2qt7jFH9wu3C
+         50w6wD95b0sg2WultJR3rdUYiKxnhktiGHdue4+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lei Xue <carmark.dlut@gmail.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/77] cachefiles: Fix race between read_waiter and read_copier involving op->to_do
-Date:   Mon,  1 Jun 2020 19:53:24 +0200
-Message-Id: <20200601174019.894338974@linuxfoundation.org>
+Subject: [PATCH 4.14 37/77] IB/qib: Call kobject_put() when kobject_init_and_add() fails
+Date:   Mon,  1 Jun 2020 19:53:42 +0200
+Message-Id: <20200601174023.151917029@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -61,123 +64,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lei Xue <carmark.dlut@gmail.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit 7bb0c5338436dae953622470d52689265867f032 ]
+[ Upstream commit a35cd6447effd5c239b564c80fa109d05ff3d114 ]
 
-There is a potential race in fscache operation enqueuing for reading and
-copying multiple pages from cachefiles to netfs.  The problem can be seen
-easily on a heavy loaded system (for example many processes reading files
-continually on an NFS share covered by fscache triggered this problem within
-a few minutes).
+When kobject_init_and_add() returns an error in the function
+qib_create_port_files(), the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-The race is due to cachefiles_read_waiter() adding the op to the monitor
-to_do list and then then drop the object->work_lock spinlock before
-completing fscache_enqueue_operation().  Once the lock is dropped,
-cachefiles_read_copier() grabs the op, completes processing it, and
-makes it through fscache_retrieval_complete() which sets the op->state to
-the final state of FSCACHE_OP_ST_COMPLETE(4).  When cachefiles_read_waiter()
-finally gets through the remainder of fscache_enqueue_operation()
-it sees the invalid state, and hits the ASSERTCMP and the following
-oops is seen:
-[ 2259.612361] FS-Cache:
-[ 2259.614785] FS-Cache: Assertion failed
-[ 2259.618639] FS-Cache: 4 == 5 is false
-[ 2259.622456] ------------[ cut here ]------------
-[ 2259.627190] kernel BUG at fs/fscache/operation.c:70!
-...
-[ 2259.791675] RIP: 0010:[<ffffffffc061b4cf>]  [<ffffffffc061b4cf>] fscache_enqueue_operation+0xff/0x170 [fscache]
-[ 2259.802059] RSP: 0000:ffffa0263d543be0  EFLAGS: 00010046
-[ 2259.807521] RAX: 0000000000000019 RBX: ffffa01a4d390480 RCX: 0000000000000006
-[ 2259.814847] RDX: 0000000000000000 RSI: 0000000000000046 RDI: ffffa0263d553890
-[ 2259.822176] RBP: ffffa0263d543be8 R08: 0000000000000000 R09: ffffa0263c2d8708
-[ 2259.829502] R10: 0000000000001e7f R11: 0000000000000000 R12: ffffa01a4d390480
-[ 2259.844483] R13: ffff9fa9546c5920 R14: ffffa0263d543c80 R15: ffffa0293ff9bf10
-[ 2259.859554] FS:  00007f4b6efbd700(0000) GS:ffffa0263d540000(0000) knlGS:0000000000000000
-[ 2259.875571] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 2259.889117] CR2: 00007f49e1624ff0 CR3: 0000012b38b38000 CR4: 00000000007607e0
-[ 2259.904015] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 2259.918764] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 2259.933449] PKRU: 55555554
-[ 2259.943654] Call Trace:
-[ 2259.953592]  <IRQ>
-[ 2259.955577]  [<ffffffffc03a7c12>] cachefiles_read_waiter+0x92/0xf0 [cachefiles]
-[ 2259.978039]  [<ffffffffa34d3942>] __wake_up_common+0x82/0x120
-[ 2259.991392]  [<ffffffffa34d3a63>] __wake_up_common_lock+0x83/0xc0
-[ 2260.004930]  [<ffffffffa34d3510>] ? task_rq_unlock+0x20/0x20
-[ 2260.017863]  [<ffffffffa34d3ab3>] __wake_up+0x13/0x20
-[ 2260.030230]  [<ffffffffa34c72a0>] __wake_up_bit+0x50/0x70
-[ 2260.042535]  [<ffffffffa35bdcdb>] unlock_page+0x2b/0x30
-[ 2260.054495]  [<ffffffffa35bdd09>] page_endio+0x29/0x90
-[ 2260.066184]  [<ffffffffa368fc81>] mpage_end_io+0x51/0x80
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails. In addition, the ppd->diagc_kobj is released
+along with other kobjects when the sysfs is unregistered.
 
-CPU1
-cachefiles_read_waiter()
- 20 static int cachefiles_read_waiter(wait_queue_entry_t *wait, unsigned mode,
- 21                                   int sync, void *_key)
- 22 {
-...
- 61         spin_lock(&object->work_lock);
- 62         list_add_tail(&monitor->op_link, &op->to_do);
- 63         spin_unlock(&object->work_lock);
-<begin race window>
- 64
- 65         fscache_enqueue_retrieval(op);
-182 static inline void fscache_enqueue_retrieval(struct fscache_retrieval *op)
-183 {
-184         fscache_enqueue_operation(&op->op);
-185 }
- 58 void fscache_enqueue_operation(struct fscache_operation *op)
- 59 {
- 60         struct fscache_cookie *cookie = op->object->cookie;
- 61
- 62         _enter("{OBJ%x OP%x,%u}",
- 63                op->object->debug_id, op->debug_id, atomic_read(&op->usage));
- 64
- 65         ASSERT(list_empty(&op->pend_link));
- 66         ASSERT(op->processor != NULL);
- 67         ASSERT(fscache_object_is_available(op->object));
- 68         ASSERTCMP(atomic_read(&op->usage), >, 0);
-<end race window>
-
-CPU2
-cachefiles_read_copier()
-168         while (!list_empty(&op->to_do)) {
-...
-202                 fscache_end_io(op, monitor->netfs_page, error);
-203                 put_page(monitor->netfs_page);
-204                 fscache_retrieval_complete(op, 1);
-
-CPU1
- 58 void fscache_enqueue_operation(struct fscache_operation *op)
- 59 {
-...
- 69         ASSERTIFCMP(op->state != FSCACHE_OP_ST_IN_PROGRESS,
- 70                     op->state, ==,  FSCACHE_OP_ST_CANCELLED);
-
-Signed-off-by: Lei Xue <carmark.dlut@gmail.com>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
+Link: https://lore.kernel.org/r/20200512031328.189865.48627.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Suggested-by: Lin Yi <teroincn@gmail.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cachefiles/rdwr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
-index 5e9176ec0d3a..c073a0f680fd 100644
---- a/fs/cachefiles/rdwr.c
-+++ b/fs/cachefiles/rdwr.c
-@@ -64,9 +64,9 @@ static int cachefiles_read_waiter(wait_queue_entry_t *wait, unsigned mode,
- 	object = container_of(op->op.object, struct cachefiles_object, fscache);
- 	spin_lock(&object->work_lock);
- 	list_add_tail(&monitor->op_link, &op->to_do);
-+	fscache_enqueue_retrieval(op);
- 	spin_unlock(&object->work_lock);
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index d831f3e61ae8..2626205780ee 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -756,7 +756,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping linkcontrol sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail;
++		goto bail_link;
+ 	}
+ 	kobject_uevent(&ppd->pport_kobj, KOBJ_ADD);
  
--	fscache_enqueue_retrieval(op);
- 	fscache_put_retrieval(op);
- 	return 0;
- }
+@@ -766,7 +766,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping sl2vl sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_link;
++		goto bail_sl;
+ 	}
+ 	kobject_uevent(&ppd->sl2vl_kobj, KOBJ_ADD);
+ 
+@@ -776,7 +776,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping diag_counters sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_sl;
++		goto bail_diagc;
+ 	}
+ 	kobject_uevent(&ppd->diagc_kobj, KOBJ_ADD);
+ 
+@@ -789,7 +789,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 		 "Skipping Congestion Control sysfs info, (err %d) port %u\n",
+ 		 ret, port_num);
+-		goto bail_diagc;
++		goto bail_cc;
+ 	}
+ 
+ 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
+@@ -871,6 +871,7 @@ void qib_verbs_unregister_sysfs(struct qib_devdata *dd)
+ 				&cc_table_bin_attr);
+ 			kobject_put(&ppd->pport_cc_kobj);
+ 		}
++		kobject_put(&ppd->diagc_kobj);
+ 		kobject_put(&ppd->sl2vl_kobj);
+ 		kobject_put(&ppd->pport_kobj);
+ 	}
 -- 
 2.25.1
 
