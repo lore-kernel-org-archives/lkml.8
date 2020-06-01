@@ -2,150 +2,264 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A864C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 774122076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14D62076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qy+GRsFw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LdtK86j5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgFAHWO (ORCPT
+        id S1728087AbgFAHWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
+        Mon, 1 Jun 2020 03:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgFAHWN (ORCPT
+        with ESMTP id S1725935AbgFAHWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:22:13 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38A0C061A0E;
-        Mon,  1 Jun 2020 00:22:13 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id o2so2163836vsr.0;
-        Mon, 01 Jun 2020 00:22:13 -0700 (PDT)
+        Mon, 1 Jun 2020 03:22:44 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9CFC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 00:22:43 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id p123so4716364yba.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LIgRN0QDBu4gnSn3TisqfMx5xMC/fpgZPP0eL7TYZo4=;
-        b=Qy+GRsFwP59gROSPpwcSk+d4BmBdCEdjxVcnG89ETwVbaChC3CZGqNCjYA5q3zZEXV
-         ftJjSX22++JyxqShjPrcs60ExBRV9rkg0po2DVvCYUGUQ+/Lln9ssEhgcKVqibq5h1QD
-         3GcB+VR5pmjymE7fc4kCi6UuBXGedcxGeKYY0JahfpNnaRtzua+jlXVyuPKz5eq95nyx
-         FH5rsmTOlXiADyitE7Yo9XplyqzAHQ1AspJB0cypzPPGDXANPkzbpULgcPelQMQlpYkn
-         q2rtZDeeH2pm1YHT1QiK+n+u+A7jM83OUkEtSD+uInIdVHUsPiVFys6kxdjnMNKzkX37
-         ++ig==
+        bh=o/XvLHb8CHrJeV+FPAoynu3y1sILbtELE3G5INRsehY=;
+        b=LdtK86j5E4y6Dexk17tQq2m+DrfykpMRw/LhyEJbEjjU9xidNFdtk4Y6mwLhflm5Rq
+         fV+lDnDzH36qYIjkdqsJNOGsNxLQWUvNEATjxQ1RYOcDcmNTbyQef992jRsj/SPAMby1
+         Yg3EWpy5LMY2sGSWt2qLlaTvOT2FrK26mLn11Up5c3YX/6jWWGf65EcY2FONO+DrEviP
+         lTX2mqaFIWX62hphlGgjp8Ah1zVrlpCL29fjGKhyzfjSD7w3cMcDvSW8aeL2uy9CCcKd
+         ht0/aWKW3YtLvoOEEV+w91sb3zqHb3wVoNUbJY//QUrC1X7qrHR1weWJ4tugTnB5ktfv
+         RdYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LIgRN0QDBu4gnSn3TisqfMx5xMC/fpgZPP0eL7TYZo4=;
-        b=ek40dg9u6PY9p5yDFRjTOxpa6vDqCZFAN+FfzvCrm0BqPTd8VLD5yuw0tshuQgRzXL
-         Z9Zws+lkEhm7OSHbOH1YyDg5gyzfmRRPOQ2d7Ijqb1fVekg6cdgo49j2aic5hGA+62zV
-         YQOyIBm/HEPfJnbvnjCptoCEkZovXN7hWirJ9cwG5kJGOXeafaIhXuJy7dttDnThPQIJ
-         OroiIQta9PqAexB/3Tsu1215a63tRdEdyInhO8GikbPLxN7hONQkHtTqXWOgkk9Ww1KW
-         BCvvayr0MDm8B0lQpy20gRC7IDoUYEh6nFEqhvPxkH1aUcBOqaimPE2XStSxibQ3r2Y1
-         Dekw==
-X-Gm-Message-State: AOAM532eokaXmWqinM7c1K+1NwdseA2DRieP8YIj9LuyocXpOsMz8XyP
-        Bmsx0ia+CepbDFkTqEKhKPn0mz5O04BjZnP1gxc=
-X-Google-Smtp-Source: ABdhPJzIA1FGKrVz+9UgvnCvE4qHbM8WwKnt0yzT0Ej9MwEf3XXL3bZ9GG5bYf4/kar44nR6s2ZBVVKbKsVOWbpBIWw=
-X-Received: by 2002:a05:6102:a17:: with SMTP id t23mr9115865vsa.62.1590996132886;
- Mon, 01 Jun 2020 00:22:12 -0700 (PDT)
+        bh=o/XvLHb8CHrJeV+FPAoynu3y1sILbtELE3G5INRsehY=;
+        b=pQqm9Cir8XYZ3Q7b0eeQtS1SVDTuv8puKbZdndkMLFtzY2Ui7WxBI5Km27hxfRTsUw
+         QfamEU9ipZM+9Q4RNEeXJXgEYD890P8xXKwZdhUIoOPCc7HuvP7KHLM3dJ+iDR3jqUSs
+         mQmIrrTot2BDnYNVGDVSrJo/Hr8/COG++0gnqrvLiSfVYFc+ZNxRsMjs0yW8cBDebdbN
+         H349F39qS1cvVZV09OQOotftCDdJ1ZTn7w0V9RLOBPlCDoMlE6FhS9oWIR6sKnNsZBL9
+         2xzdFLP88VZC1TOlcplaSkGj5Exy7N0BgpF7AETbWisF8xTs1nbUhsjldH7z8j3WpQjW
+         qFMA==
+X-Gm-Message-State: AOAM531nrNu6bITx8Ldag0vCl69P5Es2qK5m1p0SB73lMgE9Nkzpf7zL
+        0as9lZbxjSq4UIwYgRopLMCRX2d3usVB9lYEnVOkWA==
+X-Google-Smtp-Source: ABdhPJz+PNJIPlFcdLcs66b83B5qm6YeAT/PhXW8gEasbY1NmeqpHXvtYB4kEZCl5F3E6cJRk3GwZ0Q8q3RUvdtNc/M=
+X-Received: by 2002:a25:c08b:: with SMTP id c133mr32167741ybf.286.1590996162326;
+ Mon, 01 Jun 2020 00:22:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200529141100.37519-1-pilgrimtao@gmail.com> <c8412d98-0328-0976-e5f9-5beddc148a35@kernel.dk>
-In-Reply-To: <c8412d98-0328-0976-e5f9-5beddc148a35@kernel.dk>
-From:   Tao pilgrim <pilgrimtao@gmail.com>
-Date:   Mon, 1 Jun 2020 15:22:01 +0800
-Message-ID: <CAAWJmAZOQQQeNiTr48OSRRdO2pG+q4c=6gjT55CkWC5FN=HXmA@mail.gmail.com>
-Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     hch@lst.de, sth@linux.ibm.com, viro@zeniv.linux.org.uk, clm@fb.com,
-        jaegeuk@kernel.org, hch@infradead.org,
-        Mark Fasheh <mark@fasheh.com>, dhowells@redhat.com,
-        balbi@kernel.org, damien.lemoal@wdc.com, bvanassche@acm.org,
-        ming.lei@redhat.com, martin.petersen@oracle.com, satyat@google.com,
-        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
-        asml.silence@gmail.com, ajay.joshi@wdc.com,
-        linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>, hoeppner@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        sagi@grimberg.me, linux-nvme@lists.infradead.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, chao@kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
-        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
+References: <20200524224219.234847-1-jolsa@kernel.org> <20200524224219.234847-5-jolsa@kernel.org>
+In-Reply-To: <20200524224219.234847-5-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 1 Jun 2020 00:22:30 -0700
+Message-ID: <CAP-5=fV0Q3Y0wmZd6jeO3VFw-OJMp81zPoEts0S_Ai82VzWEOw@mail.gmail.com>
+Subject: Re: [PATCH 04/14] perf tools: Add fake pmu support
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:13 PM Jens Axboe <axboe@kernel.dk> wrote:
+On Sun, May 24, 2020 at 3:42 PM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> On 5/29/20 8:11 AM, Kaitao Cheng wrote:
-> > There is a function named ilog2() exist which can replace blksize.
-> > The generated code will be shorter and more efficient on some
-> > architecture, such as arm64. And ilog2() can be optimized according
-> > to different architecture.
+> Adding the way to create pmu event without the actual
+> PMU being in place. This way we can test metrics defined
+> for any processors.
 >
-> When you posted this last time, I said:
+> The interface is to define fake_pmu in struct parse_events_state
+> data. It will be used only in tests via special interface
+> function added in following changes.
 >
-> "I like the simplification, but do you have any results to back up
->  that claim? Is the generated code shorter? Runs faster?"
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/parse-events.c | 14 ++++++++++---
+>  tools/perf/util/parse-events.h |  3 ++-
+>  tools/perf/util/parse-events.l |  8 ++++++--
+>  tools/perf/util/parse-events.y | 37 ++++++++++++++++++++++++++++++++--
+>  4 files changed, 54 insertions(+), 8 deletions(-)
 >
-
-Hi  Jens Axboe:
-
-I did a test on ARM64.
-unsigned int ckt_blksize(int size)
-{
-   return blksize_bits(size);
-}
-unsigned int ckt_ilog2(int size)
-{
-    return ilog2(size);
-}
-
-When I compiled it into assembly code, I got the following result,
-
-0000000000000088 <ckt_blksize>:
-      88: 2a0003e8 mov w8, w0
-      8c: 321d03e0 orr w0, wzr, #0x8
-      90: 11000400 add w0, w0, #0x1
-      94: 7108051f cmp w8, #0x201
-      98: 53017d08 lsr w8, w8, #1
-      9c: 54ffffa8 b.hi 90 <ckt_blksize+0x8>
-      a0: d65f03c0 ret
-      a4: d503201f nop
-
-00000000000000a8 <ckt_ilog2>:
-      a8: 320013e8 orr w8, wzr, #0x1f
-      ac: 5ac01009 clz w9, w0
-      b0: 4b090108 sub w8, w8, w9
-      b4: 7100001f cmp w0, #0x0
-      b8: 5a9f1100 csinv w0, w8, wzr, ne
-      bc: d65f03c0 ret
-
-The generated code of ilog2  is shorter , and  runs faster
-
-
-> which you handily ignored, yet sending out a new version. I'm not
-> going to apply this without justification, your commit message is
-> handwavy at best.
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 27b8e49d690e..8304f9b6e6be 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1415,6 +1415,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>                          bool auto_merge_stats,
+>                          bool use_alias)
+>  {
+> +       bool is_fake = parse_state->fake_pmu;
+>         struct perf_event_attr attr;
+>         struct perf_pmu_info info;
+>         struct perf_pmu *pmu;
+> @@ -1436,7 +1437,14 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>                 fprintf(stderr, "' that may result in non-fatal errors\n");
+>         }
 >
+> -       pmu = perf_pmu__find(name);
+> +       if (is_fake) {
+> +               static struct perf_pmu fake_pmu = { };
+> +
+> +               pmu = &fake_pmu;
+> +       } else {
+> +               pmu = perf_pmu__find(name);
+> +       }
+> +
+>         if (!pmu) {
+>                 char *err_str;
+>
+> @@ -1469,7 +1477,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>                 }
+>         }
+>
+> -       if (perf_pmu__check_alias(pmu, head_config, &info))
+> +       if (!is_fake && perf_pmu__check_alias(pmu, head_config, &info))
+>                 return -EINVAL;
+>
+>         if (verbose > 1) {
+> @@ -1502,7 +1510,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>         if (pmu->default_config && get_config_chgs(pmu, head_config, &config_terms))
+>                 return -ENOMEM;
+>
+> -       if (perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
+> +       if (!is_fake && perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
+>                 struct evsel_config_term *pos, *tmp;
+>
+>                 list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index d60510e0609f..963b0ea6c448 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -126,9 +126,10 @@ struct parse_events_state {
+>         int                        idx;
+>         int                        nr_groups;
+>         struct parse_events_error *error;
+> -       struct evlist     *evlist;
+> +       struct evlist             *evlist;
+>         struct list_head          *terms;
+>         int                        stoken;
+> +       bool                       fake_pmu;
+>  };
+>
+>  void parse_events__handle_error(struct parse_events_error *err, int idx,
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> index 002802e17059..56912c9641f5 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -129,12 +129,16 @@ do {                                                              \
+>         yyless(0);                                              \
+>  } while (0)
+>
+> -static int pmu_str_check(yyscan_t scanner)
+> +static int pmu_str_check(yyscan_t scanner, struct parse_events_state *parse_state)
+>  {
+>         YYSTYPE *yylval = parse_events_get_lval(scanner);
+>         char *text = parse_events_get_text(scanner);
+>
+>         yylval->str = strdup(text);
+> +
+> +       if (parse_state->fake_pmu)
+> +               return PE_PMU_EVENT_FAKE;
+> +
+>         switch (perf_pmu__parse_check(text)) {
+>                 case PMU_EVENT_SYMBOL_PREFIX:
+>                         return PE_PMU_EVENT_PRE;
+> @@ -376,7 +380,7 @@ r{num_raw_hex}              { return raw(yyscanner); }
+>  {modifier_event}       { return str(yyscanner, PE_MODIFIER_EVENT); }
+>  {bpf_object}           { if (!isbpf(yyscanner)) { USER_REJECT }; return str(yyscanner, PE_BPF_OBJECT); }
+>  {bpf_source}           { if (!isbpf(yyscanner)) { USER_REJECT }; return str(yyscanner, PE_BPF_SOURCE); }
+> -{name}                 { return pmu_str_check(yyscanner); }
+> +{name}                 { return pmu_str_check(yyscanner, _parse_state); }
+>  {name_tag}             { return str(yyscanner, PE_NAME); }
+>  "/"                    { BEGIN(config); return '/'; }
+>  -                      { return '-'; }
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> index c4ca932d092d..d1b04b8d81ea 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -69,7 +69,7 @@ static void inc_group_count(struct list_head *list,
+>  %token PE_NAME_CACHE_TYPE PE_NAME_CACHE_OP_RESULT
+>  %token PE_PREFIX_MEM PE_PREFIX_RAW PE_PREFIX_GROUP
+>  %token PE_ERROR
+> -%token PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_KERNEL_PMU_EVENT
+> +%token PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
+>  %token PE_ARRAY_ALL PE_ARRAY_RANGE
+>  %token PE_DRV_CFG_TERM
+>  %type <num> PE_VALUE
+> @@ -87,7 +87,7 @@ static void inc_group_count(struct list_head *list,
+>  %type <str> PE_MODIFIER_EVENT
+>  %type <str> PE_MODIFIER_BP
+>  %type <str> PE_EVENT_NAME
+> -%type <str> PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_KERNEL_PMU_EVENT
+> +%type <str> PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
+>  %type <str> PE_DRV_CFG_TERM
+>  %destructor { free ($$); } <str>
+>  %type <term> event_term
+> @@ -356,6 +356,39 @@ PE_PMU_EVENT_PRE '-' PE_PMU_EVENT_SUF sep_dc
+>                 YYABORT;
+>         $$ = list;
+>  }
+> +|
+> +PE_PMU_EVENT_FAKE sep_dc
+> +{
+> +       struct list_head *list;
+> +       int err;
+> +
+> +       list = alloc_list();
+> +       if (!list)
+> +               YYABORT;
+> +
+> +       err = parse_events_add_pmu(_parse_state, list, $1, NULL, false, false);
+> +       free($1);
+> +       if (err < 0)
 
-Do I need to write the test content into commit message?
+nit: on error this needs:
+free(list);
+otherwise something like fuzz testing could go down the error path and
+complain about memory leaks.
 
+Thanks,
+Ian
 
-
--- 
-Yours,
-Kaitao Cheng
+> +               YYABORT;
+> +       $$ = list;
+> +}
+> +|
+> +PE_PMU_EVENT_FAKE opt_pmu_config
+> +{
+> +       struct list_head *list;
+> +       int err;
+> +
+> +       list = alloc_list();
+> +       if (!list)
+> +               YYABORT;
+> +
+> +       err = parse_events_add_pmu(_parse_state, list, $1, $2, false, false);
+> +       free($1);
+> +       parse_events_terms__delete($2);
+> +       if (err < 0)
+> +               YYABORT;
+> +       $$ = list;
+> +}
+>
+>  value_sym:
+>  PE_VALUE_SYM_HW
+> --
+> 2.25.4
+>
