@@ -3,99 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80913C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 480942076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC7C20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgFAUuQ (ORCPT
+        id S1728616AbgFAUuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:50:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50292 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727875AbgFAUuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:50:16 -0400
-IronPort-SDR: Y1BfYK2eGHKEuwF9EWLh1bxyveMaa7LG1tXn84uESszps7e23NsnnZCa46FDQonlOCtSah6oat
- BBV7zcum+joA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:50:15 -0700
-IronPort-SDR: bTUm3amk7QMCFwB2VTG76Lhz3xQiMTgOilKl0Norwi6VrvskLOxHpyrYURhD4p2u+PkUzLd+uh
- I0r78hlFKpHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="257376265"
-Received: from fwong2-mobl.amr.corp.intel.com (HELO [10.251.12.107]) ([10.251.12.107])
-  by orsmga007.jf.intel.com with ESMTP; 01 Jun 2020 13:50:14 -0700
-Subject: Re: [PATCH] soundwire: clarify SPDX use of GPL-2.0
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, vinod.koul@linaro.org, tiwai@suse.de,
-        mengdong.lin@intel.com, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-References: <20200531172807.27042-1-yung-chuan.liao@linux.intel.com>
- <20200601053809.GA1420218@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <686345af-4fda-4bc1-c3bf-da31406e806b@linux.intel.com>
-Date:   Mon, 1 Jun 2020 15:50:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 16:50:32 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:37904 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728590AbgFAUub (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 16:50:31 -0400
+Date:   Mon, 1 Jun 2020 16:50:29 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Michael Karcher <michael.karcher@fu-berlin.de>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sh: Implement __get_user_u64() required for 64-bit
+ get_user()
+Message-ID: <20200601205029.GW1079@brightrain.aerifal.cx>
+References: <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
+ <CAMuHMdWG1wudoBP0EK8FiEj1BMEoL3r5oqJMUEbt2rqRU2gQpw@mail.gmail.com>
+ <ba354e30-82ab-68c2-0771-2489463c9279@physik.fu-berlin.de>
+ <2ad089c1-75cf-0986-c40f-c7f3f8fd6ead@physik.fu-berlin.de>
+ <CAMuHMdXzje-qFH=pGoouSuXTZYf4NvnzbaYxTm_boMek-DbWMg@mail.gmail.com>
+ <20200601030300.GT1079@brightrain.aerifal.cx>
+ <CAMuHMdUmpLRyYTPO8LPtOyYtraQ77XZqYy9=8cUiWphmpvczmg@mail.gmail.com>
+ <fbfca28d-217d-4857-a010-8c6e277db67c@physik.fu-berlin.de>
+ <20200601165700.GU1079@brightrain.aerifal.cx>
+ <50235.92.201.26.143.1591043169.webmail@webmail.zedat.fu-berlin.de>
 MIME-Version: 1.0
-In-Reply-To: <20200601053809.GA1420218@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50235.92.201.26.143.1591043169.webmail@webmail.zedat.fu-berlin.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/1/20 12:38 AM, Greg KH wrote:
-> On Mon, Jun 01, 2020 at 01:28:07AM +0800, Bard Liao wrote:
->> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>
->> Change SPDX from GPL-2.0 to GPL-2.0-only for Intel-contributed
->> code. This was explicit before the transition to SPDX and lost in
->> translation.
+On Mon, Jun 01, 2020 at 10:26:09PM +0200, Michael Karcher wrote:
+> Rich Felker schrieb:
+> >> >> Can I propose a different solution? For archs where there isn't
+> >> >> actually any 64-bit load or store instruction, does it make sense to
+> >> >> be writing asm just to do two 32-bit loads/stores, especially when
+> >> >> this code is not in a hot path?
+> >> > Yes, that's an option, too.
+> >> That's the solution that Michael Karcher suggested to me as an
+> >> alternative when I talked to him off-list.
 > 
-> It is also explicit in the "GPL-2.0" lines as well, did you read the
-> LICENSES/preferred/GPL-2.0 file for the allowed tags to be used for this
-> license?
+> There is a functional argument agains using get_user_32 twice, which I
+> overlooked in my private reply to Adrian. If any of the loads fail, we do
+> not only want err to be set to -EFAULT (which will happen), but we also
+> want a 64-bit zero as result. If one 32-bit read faults, but the other one
+> works, we would get -EFAULT together with 32 valid data bits, and 32 zero
+> bits.
+
+Indeed, if you do it that way you want to check the return value and
+set the value to 0 if either faults.
+
+BTW I'm not sure what's supposed to happen on write if half faults
+after the other half already succeeded... Either a C approach or an
+asm approach has to consider that.
+
+> > I don't have an objection to doing it the way you've proposed, but I
+> > don't think there's any performance distinction or issue with the two
+> > invocations.
 > 
-> So this doesn't change anything, and we are trying to cut down on this
-> type of churn until, maybe, after the whole kernel has proper SPDX
-> lines.
+> Assuming we don't need two exception table entries (put_user_64 currently
+> uses only one, maybe it's wrong), using put_user_32 twice creates an extra
+> unneeded exception table entry, which will "bloat" the exception table.
+> That table is most likely accessed by a binary search algorithm, so the
+> performance loss is marginal, though. Also a bigger table size is
+> cache-unfriendly. (Again, this is likely marginal again, as binary search
+> is already extremely cache-unfriendly).
+> 
+> A similar argument can be made for the exception handler. Even if we need
+> two entries in the exception table, so the first paragraph does not apply,
+> the two entries in the exception table can share the same exception
+> handler (clear the whole 64-bit destination to zero, set -EFAULT, jump
+> past both load instructions), so that part of (admittedly cold) kernel
+> code can get some instructios shorter.
 
-My commit message was misleading, sorry. For SoundWire, we recently 
-added new files with GPL-2.0-only (master + sysfs), as recommended since 
-the short GPL-2.0 identifier is deprecated 
-(https://spdx.org/licenses/GPL-2.0.html https://spdx.org/licenses/).
+Indeed. I don't think it's a significant difference but if kernel
+folks do that's fine. In cases like this my personal preference is to
+err on the side of less arch-specific asm.
 
-Intel does not mind if we delay this change, you are right that this 
-doesn't change anything license-wise. I just felt it was a good time to 
-align old and new contributions to avoid having half of the files with 
-GPL-2.0 and half with GPL-2.0-only.
-
-We still have quite a few patches for SoundWire (~80 coming w/ 7k lines 
-changed), so those changes are really minimal in comparison with the 
-actual 'churn' to fix programming sequences, power management, 
-multi-link management and bit allocation.
-
-Oh and this was not intended to be added to 5.8 btw or pulled as a fix, 
-really nothing to do with the merge window.
-
-If you prefer us to keep this change on the back burner, that's fine, 
-the only intent was to keep all SoundWire-related files consistent.
-
-
+Rich
