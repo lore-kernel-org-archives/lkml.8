@@ -2,93 +2,166 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BB2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3BB420678
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91366207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:11:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=necglobal.onmicrosoft.com header.i=@necglobal.onmicrosoft.com header.b="WXlyULUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgFADEm (ORCPT
+        id S1727120AbgFADLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 23:04:42 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:53982 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgFADEl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 23:04:41 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 05134KVO003273
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sun, 31 May 2020 22:04:24 -0500
-Message-ID: <a37b0156c076d3875f906e970071cb230e526df1.camel@kernel.crashing.org>
-Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Alexander Graf <graf@amazon.de>
-Cc:     Andra Paraschiv <andraprs@amazon.com>,
-        linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Date:   Mon, 01 Jun 2020 13:04:19 +1000
-In-Reply-To: <20200528131259.GA3345766@kroah.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
-         <20200525221334.62966-8-andraprs@amazon.com>
-         <20200526065133.GD2580530@kroah.com>
-         <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
-         <20200526123300.GA2798@kroah.com>
-         <59007eb9-fad3-9655-a856-f5989fa9fdb3@amazon.de>
-         <20200526131708.GA9296@kroah.com>
-         <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
-         <20200526222402.GC179549@kroah.com>
-         <b4f17cbd-7471-fe61-6e7e-1399bd96e24e@amazon.de>
-         <20200528131259.GA3345766@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 31 May 2020 23:11:30 -0400
+Received: from mail-eopbgr1320072.outbound.protection.outlook.com ([40.107.132.72]:62880
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726555AbgFADL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 23:11:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ntcriyG11iqMSVWRq1Ajnb5GlTordOJPHIbFYCXWCcldvp17Zoc4Eh1SLRCzlKuLghzpP7KOQv+MfIOte09jRVKWrHqvaHWv6GoZp59gG/CxcZjAiW2C+qo0SkUieWggK4aXDUXSNPe5dcSYZ70YmUkW4qi8YMi+ybchx+2fFp62t4ewmabfjDZJYs/OiYBORDsV9dCQaz9Tp6GVDJBHpXfVjMMrr4k7qTOK8XOrQn97XDEh1cvUF5gV+F2Vbubkic/si5SMOqP79mud/omdbkSd5k+2ff6odhRVso5UPQiWVjmkSfXNkUyAms3SQxg3Ep2GeYMJNZ6vgUcYsBYoYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yGZucJK5RqUImKCOtmtgEQxJi9L2O+Dod7IzRMqU5nI=;
+ b=RsX/pv1CmKGsaL68UAD7Fa3y6PFnTvaEFQJzl8aJmhTN/HUMaYBOFzX4KC5FNSXDZQbFOH8ymR7PcBHmM7RIjSxQW6vrB45o1NXPffpfjhOSPDrCLK5rmGkLPLqwuUK7ydV5lqoS0Kvdr4FsAOLIKJnvqwjGappW7dhLL75KIkjC71vgHl18c9+Nl4tFALNmyX9qOJlnJm2OqXUWnwJtdghzqGGdl49KYaPAASkuT8xjRgwB/ilEqRoPqDNO2aRmYptc2HFm//vOaS24DH8Pg+TGPn3cjxJ1wJeJgKrs04jaQczdbhibzLv/Hhl6zvPWaLQrp7uyXnf20hy67m9JCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=necglobal.onmicrosoft.com; s=selector1-necglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yGZucJK5RqUImKCOtmtgEQxJi9L2O+Dod7IzRMqU5nI=;
+ b=WXlyULUgDmMasOpD1yrOVLmQnUMgN6h9NNE98KM+JEteonuql4jezTE3vQGHioE3UrHJawEiWS5RochHsNzP8Rhp54Aj4GFbY2h3WSp1pK+4PKKdloIIP1NmXwZEtm7MXzLpNy0db0iFvauFV2uuEZoehPV6L4dugGG7pP2+BoY=
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com (2603:1096:404:74::14)
+ by TY2PR01MB4041.jpnprd01.prod.outlook.com (2603:1096:404:df::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Mon, 1 Jun
+ 2020 03:11:25 +0000
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58]) by TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58%5]) with mapi id 15.20.3045.022; Mon, 1 Jun 2020
+ 03:11:25 +0000
+From:   =?iso-2022-jp?B?SE9SSUdVQ0hJIE5BT1lBKBskQktZOH0hIUQ+TGkbKEIp?= 
+        <naoya.horiguchi@nec.com>
+To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+CC:     Wetp Zhang <wetp.zy@linux.alibaba.com>,
+        "n-horiguchi@ah.jp.nec.com" <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] mm, memory_failure: don't send BUS_MCEERR_AO for
+ action required error
+Thread-Topic: [PATCH V2] mm, memory_failure: don't send BUS_MCEERR_AO for
+ action required error
+Thread-Index: AQHWNkTpD4yFFGEaokaMUIMyuwXASKjANcSAgALiWwA=
+Date:   Mon, 1 Jun 2020 03:11:25 +0000
+Message-ID: <20200601031124.GA5418@hori.linux.bs1.fc.nec.co.jp>
+References: <1590817116-21281-1-git-send-email-wetp.zy@linux.alibaba.com>
+ <CAM9Jb+jWnAPUYpJ-QrUR1oBCj+RwdAZMLyO4GCmAq=8V76VQTw@mail.gmail.com>
+In-Reply-To: <CAM9Jb+jWnAPUYpJ-QrUR1oBCj+RwdAZMLyO4GCmAq=8V76VQTw@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nec.com;
+x-originating-ip: [165.225.110.205]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9aeb5c6-553d-4016-a0c8-08d805d97811
+x-ms-traffictypediagnostic: TY2PR01MB4041:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB40416CFCABB56592D720DEABE78A0@TY2PR01MB4041.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-forefront-prvs: 0421BF7135
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yZcYTZi1hA4RC6jsuv9TwEWjCU7nrqitgEbFEmpP1P3/bpFhuJr46TksStIDpzPyEsbSpgji8TUkies2MR4gHDDaoFej6XMEbjxzWEArgRYGUeYrjnBnDaAX7hd678kK6K4b0dOuJjuBYinAGjh8uEifNuOnQ9576AnvsxD188JBTN2yN/PSU1b4SN1doaEvGSVN/le/ln/ksgzoX/GuldPJTkCiBIuT4jgv/n9KwUgfcigjKBcReNl7eMw83eAt7+9AxgolvRaBAUt1z2IihIMmvoSwtDWfE4JkaAz0QJwumGdhw+s27G5MmTq28WA/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3210.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(366004)(346002)(136003)(376002)(1076003)(33656002)(86362001)(6916009)(54906003)(8936002)(5660300002)(9686003)(6512007)(66556008)(66946007)(85182001)(478600001)(186003)(64756008)(66446008)(66476007)(2906002)(6486002)(76116006)(6506007)(55236004)(26005)(71200400001)(83380400001)(316002)(4326008)(8676002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: PU2ukoISlZQimHKD/E/f5cLIoXCFh8qpP/fwj+A9kFYT/EfPbDkawQEx3EcgMPoe3IFpT1h9407rpOWLrRwXt0zfRtNwMyhzMK4zbo0ZPVWVA8u9vU+SX3KooEnymxjlHrmBigQsFNP4eN3KRxg1DSO/hw/5FEx0+du/nEk9O9sXC0rHogsy9nlVDsJSy1CdqcseQcimGqTf7xXss7otugz8v6WayFkPdt5Ye2KnJRUuMlYvL9HE/kH12Ae8FCmKaVV3SGXr5Vwj8/CciPhqe6uW8rvz8DdMyP9YiHVwUzRdtGaiOoqH7IPRAxJytDR0SD2lOyxX4AiyUjiB3pMWR5lAikV13nsRtS0dwaQOug5DyGuo+wKc101jwwWEDbaKGZo73vgBb9gWPBTJ/+ovKgjGQsrpCJcWBPP0oSlgs3xolbQX5ZZNwS3H2cRJiS9Cl53nCtIT0iUqIlr2QQy5HEviCNHUSGhXOfrEz5xIKaQrahsafzXiRYRcZ28yLtBC
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <D904765FF01F1D44AB15687C82A06DD2@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9aeb5c6-553d-4016-a0c8-08d805d97811
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2020 03:11:25.3108
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QR7dD4J2rRRdayv3E0xQ/j29KtKPhkiLoBjou91xrYjahfDaeEXdXasShbDdiFj012C6JXTnEwSdTAPwP6HP0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4041
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-28 at 15:12 +0200, Greg KH wrote:
-> So at runtime, after all is booted and up and going, you just ripped
-> cores out from under someone's feet?  :)
-> 
-> And the code really handles writing to that value while the module is
-> already loaded and up and running?  At a quick glance, it didn't seem
-> like it would handle that very well as it only is checked at ne_init()
-> time.
-> 
-> Or am I missing something?
-> 
-> Anyway, yes, if you can dynamically do this at runtime, that's great,
-> but it feels ackward to me to rely on one configuration thing as a
-> module parameter, and everything else through the ioctl interface.
-> Unification would seem to be a good thing, right?
+On Sat, May 30, 2020 at 09:08:43AM +0200, Pankaj Gupta wrote:
+> > Some processes dont't want to be killed early, but in "Action Required"
+> > case, those also may be killed by BUS_MCEERR_AO when sharing memory
+> > with other which is accessing the fail memory.
+> > And sending SIGBUS with BUS_MCEERR_AO for action required error is
+> > strange, so ignore the non-current processes here.
+> >
+> > Suggested-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
+> > Signed-off-by: Wetp Zhang <wetp.zy@linux.alibaba.com>
+> > ---
+> >  mm/memory-failure.c | 15 +++++++++------
+> >  1 file changed, 9 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> > index a96364be8ab4..dd3862fcf2e9 100644
+> > --- a/mm/memory-failure.c
+> > +++ b/mm/memory-failure.c
+> > @@ -210,14 +210,17 @@ static int kill_proc(struct to_kill *tk, unsigned=
+ long pfn, int flags)
+> >  {
+> >         struct task_struct *t =3D tk->tsk;
+> >         short addr_lsb =3D tk->size_shift;
+> > -       int ret;
+> > +       int ret =3D 0;
+> >
+> > -       pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d due to ha=
+rdware memory corruption\n",
+> > -               pfn, t->comm, t->pid);
+> > +       if ((t->mm =3D=3D current->mm) || !(flags & MF_ACTION_REQUIRED)=
+)
+> > +               pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d d=
+ue to hardware memory corruption\n",
+> > +                       pfn, t->comm, t->pid);
+>=20
+> Maybe we can generalize the message condition for better readability.
+> Thought a bit but did not get any other idea.
 
-I personally still prefer a sysfs file :) I really don't like module
-parameters as a way to do such things.
+This odd condition might imply that we could have better fix in
+task_early_kill(), but that should come after fixing priority issue of
+early-kill flag, so let's go with this fix for now.
 
-Cheers,
-Ben.
+> >
+> > -       if ((flags & MF_ACTION_REQUIRED) && t->mm =3D=3D current->mm) {
+> > -               ret =3D force_sig_mceerr(BUS_MCEERR_AR, (void __user *)=
+tk->addr,
+> > -                                      addr_lsb);
+> > +       if (flags & MF_ACTION_REQUIRED) {
+> > +               if (t->mm =3D=3D current->mm)
+> > +                       ret =3D force_sig_mceerr(BUS_MCEERR_AR,
+> > +                                        (void __user *)tk->addr, addr_=
+lsb);
+> > +               /* send no signal to non-current processes */
+> >         } else {
+> >                 /*
+> >                  * Don't use force here, it's convenient if the signal
+> > --
+>=20
+> Looks good to me.
+> Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
+Thanks!
 
+Acked-by: Naoya Horiguchi <naoya.horiguchi@nec.com>=
