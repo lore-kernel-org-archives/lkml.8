@@ -2,125 +2,154 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83868C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C528DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 687182076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6BB20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JLEN+joP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgFAXUR (ORCPT
+        id S1728926AbgFAXUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 19:20:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20602 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbgFAXUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 19:20:16 -0400
-IronPort-SDR: il7mEYymC2psy/qNQk8u/dtN1WPUyQspWQ94PnXbc0teJQNPydOqThwKSnRHvLdCeL0Z3KWsdu
- 4TdWrYZO11Pg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 16:20:15 -0700
-IronPort-SDR: hQbV32JOyjOGeuv1Q2ujjMc5qE5l9DREIL4uxk9IfntVO/uJuHc/R3pmYZg2c3JGkkmIfxg4ig
- Vk416qdU8nMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="293360328"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jun 2020 16:20:10 -0700
-Cc:     baolu.lu@linux.intel.com
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
-References: <20200414131542.25608-1-joro@8bytes.org>
- <20200529221623.qc6twmpzryh7nkvb@cantor>
- <20200601104240.7f5xhz7gooqhaq4n@cantor>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <47711845-98ee-95b8-aa95-423a36ed9741@linux.intel.com>
-Date:   Tue, 2 Jun 2020 07:16:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 19:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbgFAXUq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 19:20:46 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C48C05BD43;
+        Mon,  1 Jun 2020 16:20:46 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bWPP5qRFzB3sy;
+        Tue,  2 Jun 2020 09:20:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591053643;
+        bh=lshRSFsN3HPLbDT6RUh9tV90UDfa8ShqrsJXN34ckpA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JLEN+joPC2hx4lO4TW6IEqyMGllrWCbdUNdYrTO7XleF6AoyHEkyRcsGOC5ncRdLz
+         FEdiJZ7+iE6K2zAKuUJxQF8nDZ7Eo1iNaRGBR1/T+LndROhzvzi9NVWSnzfkBYG6Ce
+         EQZyxLwHJIiJD0Yr0fDM/7sNUVNxt10O4jvSYmolukFgL/vH2y5d7/a4KbOVqjVnJq
+         nywGHykmwxBTXWlrQP8f2i61KqScRDhofcpOh0oXgxy4gkUepmTQAD4uFkQCsPMKdz
+         P/HLduw3zLENmIs/3jQbgzv2ZKeGWrR/aq0KEyTCvhQtOKTr/LMngq/6jINy06Ih3O
+         qJYUcuDIgJn2A==
+Date:   Tue, 2 Jun 2020 09:20:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Ahern <dsahern@gmail.com>,
+        Florian Westphal <fw@strlen.de>
+Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus'
+ tree
+Message-ID: <20200602092040.5ef52300@canb.auug.org.au>
+In-Reply-To: <20200511130015.37103884@canb.auug.org.au>
+References: <20200511130015.37103884@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200601104240.7f5xhz7gooqhaq4n@cantor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/TkH89WJytnR288K=Gm+4mTy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerry,
+--Sig_/TkH89WJytnR288K=Gm+4mTy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 6/1/20 6:42 PM, Jerry Snitselaar wrote:
->>
->> Hi Joerg,
->>
->> With this patchset, I have an epyc system where if I boot with
->> iommu=nopt and force a dump I will see some io page faults for a nic
->> on the system. The vmcore is harvested and the system reboots. I
->> haven't reproduced it on other systems yet, but without the patchset I
->> don't see the io page faults during the kdump.
->>
->> Regards,
->> Jerry
-> 
-> I just hit an issue on a separate intel based system (kdump iommu=nopt),
-> where it panics in during intel_iommu_attach_device, in is_aux_domain,
-> due to device_domain_info being DEFER_DEVICE_DOMAIN_INFO. That doesn't
-> get set to a valid address until the domain_add_dev_info call.
-> 
-> Is it as simple as the following?
+Hi Dave,
 
-I guess you won't hit this issue if you use iommu/next branch of Joerg's
-tree. We've changed to use a generic helper to retrieve the valid per
-device iommu data or NULL (if there's no).
+On Mon, 11 May 2020 13:00:15 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the ipsec-next tree got conflicts in:
+>=20
+>   net/ipv4/xfrm4_output.c
+>   net/ipv6/xfrm6_output.c
+>=20
+> between commit:
+>=20
+>   0c922a4850eb ("xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_fi=
+nish")
+>=20
+> from Linus' tree and commit:
+>=20
+>   2ab6096db2f1 ("xfrm: remove output_finish indirection from xfrm_state_a=
+finfo")
+>=20
+> from the ipsec-next tree.
+>=20
+> I fixed it up (I used the latter versions of these files and then added
+> the following patch) and can carry the fix as necessary. This is now fixed
+> as far as linux-next is concerned, but any non trivial conflicts should
+> be mentioned to your upstream maintainer when your tree is submitted for
+> merging.  You may also want to consider cooperating with the maintainer
+> of the conflicting tree to minimise any particularly complex conflicts.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 11 May 2020 12:57:24 +1000
+> Subject: [PATCH] xfrm: merge fixup for "remove output_finish indirection =
+from xfrm_state_afinfo"
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  net/xfrm/xfrm_output.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>=20
+> diff --git a/net/xfrm/xfrm_output.c b/net/xfrm/xfrm_output.c
+> index 886a9b284b3a..0f4b3a5e02ba 100644
+> --- a/net/xfrm/xfrm_output.c
+> +++ b/net/xfrm/xfrm_output.c
+> @@ -574,16 +574,12 @@ int xfrm_output(struct sock *sk, struct sk_buff *sk=
+b)
+>  	switch (x->outer_mode.family) {
+>  	case AF_INET:
+>  		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+> -#ifdef CONFIG_NETFILTER
+>  		IPCB(skb)->flags |=3D IPSKB_XFRM_TRANSFORMED;
+> -#endif
+>  		break;
+>  	case AF_INET6:
+>  		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+> =20
+> -#ifdef CONFIG_NETFILTER
+>  		IP6CB(skb)->flags |=3D IP6SKB_XFRM_TRANSFORMED;
+> -#endif
+>  		break;
+>  	}
+> =20
 
-Best regards,
-baolu
+It looks like this merge resolution fix up was missed when the
+ipsec-next tree was merged into the net-next tree.
 
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 29d3940847d3..f1bbeed46a4c 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5053,8 +5053,8 @@ is_aux_domain(struct device *dev, struct 
-> iommu_domain *domain)
->   {
->          struct device_domain_info *info = dev->archdata.iommu;
-> 
-> -       return info && info->auxd_enabled &&
-> -                       domain->type == IOMMU_DOMAIN_UNMANAGED;
-> +       return info && info != DEFER_DEVICE_DOMAIN_INFO &&
-> +               info->auxd_enabled && domain->type == 
-> IOMMU_DOMAIN_UNMANAGED;
->   }
-> 
->   static void auxiliary_link_device(struct dmar_domain *domain,
-> 
-> 
-> Regards,
-> Jerry
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/TkH89WJytnR288K=Gm+4mTy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7VjUgACgkQAVBC80lX
+0GxFUgf7BVP8TUGqwFITcohFkSvSY2BCjRPAirE2bJHgWC23rDFlNDUBQprmEbF+
+7jJEe+X9lggKAp94xG/w2oBqKbHGOhe5e4ZakSNaCL6WccU+SjO8F2WppOgCeBgM
+rOYYVVzS7QYmM7YP4hJzSU+yCT9ouc446zp2AxltRkWrhg4uXmFwZZIpl6MgeNOD
+alAmkjLl12qisgY5n9aGP05srEwiHMKJsVpxB3+NLlghjGkjLSPRAv3jLr9dfGlN
+2raQn/Qj1C2Y1oD/AsaBIcRxpNgyhe6UdAwahQ/7B/yDzObJiHlRsI60r+l1pqpZ
+DUVSPe/dDEyTGmOlpiimnBbO2WlaCA==
+=xNkS
+-----END PGP SIGNATURE-----
+
+--Sig_/TkH89WJytnR288K=Gm+4mTy--
