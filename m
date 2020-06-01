@@ -2,51 +2,55 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1AC12068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C042073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035551;
-	bh=BAip3cu+vBm8jN5Fq21e/g/Ky+tOWukszXJJNnq+UQY=;
+	s=default; t=1591035555;
+	bh=G7pXJ7gjYCbsGDybjXy2ttQC5CykFVlMMwk7hZpNo30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ONpAHPbh4OWKVeBcTz9MZ9w4X2WbEl0I1QKJEIbgiczKXj5HSq9cqXS+N/yiaj/8
-	 PYapdwfeJalwNG+ziIuHRf/ds4JXSGRYkS1PGm/w+UWaLURJdNkYXHh3phFXWAvAue
-	 wT5p3nRTMvdZgs9rjmGNtsZiThd45Ch6hMFYLKy8=
+	b=Avq7feLbgi9qMc8XIRcP8pbH/K+jCT/BZ2CQnolVH60JCD90eeumJth6jZ+r1wqPT
+	 kVVNpKZMIBx3AHqKki98u8mG3sFlHnmzTHhRspJyW8BZQAb/8ZgtSPGx/7utktrNiu
+	 aCbyOokhLxe+K+Gt/3o1BrugePX+8Y/II7VIdGbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbgFASTK (ORCPT
+        id S1731812AbgFASRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:19:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38638 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731831AbgFASR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:29 -0400
+        id S1730753AbgFASRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D882065C;
-        Mon,  1 Jun 2020 18:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DFF8206E2;
+        Mon,  1 Jun 2020 18:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035448;
-        bh=BAip3cu+vBm8jN5Fq21e/g/Ky+tOWukszXJJNnq+UQY=;
+        s=default; t=1591035431;
+        bh=G7pXJ7gjYCbsGDybjXy2ttQC5CykFVlMMwk7hZpNo30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4CdAcI4aEz+bthHlokDW91rOkg/k3DlhrBJhZjJF9GavOBEnCWm9infyTreU87sl
-         o8ZJ8tzbBGynD+JBg2hX1kJagyfRMGIH/JcTQn08B3CZNFM7f79yWMGySzuiWVq7C1
-         SJXXUmHo2Xsp+zOT7YgooRi1p5hEJn7eproZmew0=
+        b=gTSzNvY7+2qxDN2toWJqvsWGEkl+a6rT/64lnw/bZeZOvoVit8aLhepj9jgn8S+jQ
+         mAN5fEt/CcvMd6JiKflEzd+OnuuufhavBaHTIqhzVACSUWSl8Zyy0E8+l5Gexy2Tdq
+         LpQLyngSbfxkcJkqzFT+bc6eTgs0NGvToJwHaC+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Lang <jaytlang@mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, stable#@vger.kernel.org
-Subject: [PATCH 5.6 163/177] x86/ioperm: Prevent a memory leak when fork fails
-Date:   Mon,  1 Jun 2020 19:55:01 +0200
-Message-Id: <20200601174101.811808609@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 129/177] drm/amd/display: Defer cursor lock until after VUPDATE
+Date:   Mon,  1 Jun 2020 19:54:27 +0200
+Message-Id: <20200601174059.291380865@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,153 +63,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jay Lang <jaytlang@mit.edu>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-commit 4bfe6cce133cad82cea04490c308795275857782 upstream.
+[ Upstream commit 31ecebee9c36d5e5e113a357a655d993fa916174 ]
 
-In the copy_process() routine called by _do_fork(), failure to allocate
-a PID (or further along in the function) will trigger an invocation to
-exit_thread(). This is done to clean up from an earlier call to
-copy_thread_tls(). Naturally, the child task is passed into exit_thread(),
-however during the process, io_bitmap_exit() nullifies the parent's
-io_bitmap rather than the child's.
+[Why]
+We dropped the delay after changed the cursor functions locking the
+entire pipe to locking just the CURSOR registers to fix page flip
+stuttering - this introduced cursor stuttering instead, and an underflow
+issue.
 
-As copy_thread_tls() has been called ahead of the failure, the reference
-count on the calling thread's io_bitmap is incremented as we would expect.
-However, io_bitmap_exit() doesn't accept any arguments, and thus assumes
-it should trash the current thread's io_bitmap reference rather than the
-child's. This is pretty sneaky in practice, because in all instances but
-this one, exit_thread() is called with respect to the current task and
-everything works out.
+The cursor update can be delayed indefinitely if the cursor update
+repeatedly happens right around VUPDATE.
 
-A determined attacker can issue an appropriate ioctl (i.e. KDENABIO) to
-get a bitmap allocated, and force a clone3() syscall to fail by passing
-in a zeroed clone_args structure. The kernel handles the erroneous struct
-and the buggy code path is followed, and even though the parent's reference
-to the io_bitmap is trashed, the child still holds a reference and thus
-the structure will never be freed.
+The underflow issue can happen if we do a viewport update on a pipe
+on the same frame where a cursor update happens around VUPDATE - the
+old cursor registers are retained which can be in an invalid position.
 
-Fix this by tweaking io_bitmap_exit() and its subroutines to accept a
-task_struct argument which to operate on.
+This can cause a pipe hang and indefinite underflow.
 
-Fixes: ea5f1cd7ab49 ("x86/ioperm: Remove bitmap if all permissions dropped")
-Signed-off-by: Jay Lang <jaytlang@mit.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable#@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200524162742.253727-1-jaytlang@mit.edu
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[How]
+The complex, ideal solution to the problem would be a software
+triple buffering mechanism from the DM layer to program only one cursor
+update per frame just before VUPDATE.
 
+The simple workaround until we have that infrastructure in place is
+this change - bring back the delay until VUPDATE before locking, but
+with some corrections to the calculations.
+
+This didn't work for all timings before because the calculation for
+VUPDATE was wrong - it was using the offset from VSTARTUP instead and
+didn't correctly handle the case where VUPDATE could be in the back
+porch.
+
+Add a new hardware sequencer function to use the existing helper to
+calculate the real VUPDATE start and VUPDATE end - VUPDATE can last
+multiple lines after all.
+
+Change the udelay to incorporate the width of VUPDATE as well.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/io_bitmap.h |    4 ++--
- arch/x86/kernel/ioport.c         |   22 +++++++++++-----------
- arch/x86/kernel/process.c        |    4 ++--
- 3 files changed, 15 insertions(+), 15 deletions(-)
+ .../amd/display/dc/dcn10/dcn10_hw_sequencer.c | 69 ++++++++++++++++++-
+ .../amd/display/dc/dcn10/dcn10_hw_sequencer.h |  5 ++
+ .../gpu/drm/amd/display/dc/dcn10/dcn10_init.c |  1 +
+ .../gpu/drm/amd/display/dc/dcn20/dcn20_init.c |  1 +
+ .../gpu/drm/amd/display/dc/dcn21/dcn21_init.c |  1 +
+ .../gpu/drm/amd/display/dc/inc/hw_sequencer.h |  5 ++
+ 6 files changed, 81 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/io_bitmap.h
-+++ b/arch/x86/include/asm/io_bitmap.h
-@@ -17,7 +17,7 @@ struct task_struct;
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
- void io_bitmap_share(struct task_struct *tsk);
--void io_bitmap_exit(void);
-+void io_bitmap_exit(struct task_struct *tsk);
- 
- void native_tss_update_io_bitmap(void);
- 
-@@ -29,7 +29,7 @@ void native_tss_update_io_bitmap(void);
- 
- #else
- static inline void io_bitmap_share(struct task_struct *tsk) { }
--static inline void io_bitmap_exit(void) { }
-+static inline void io_bitmap_exit(struct task_struct *tsk) { }
- static inline void tss_update_io_bitmap(void) { }
- #endif
- 
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -32,15 +32,15 @@ void io_bitmap_share(struct task_struct
- 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 97a820b90541..60cea910759b 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -1592,12 +1592,79 @@ void dcn10_pipe_control_lock(
+ 		hws->funcs.verify_allow_pstate_change_high(dc);
  }
  
--static void task_update_io_bitmap(void)
-+static void task_update_io_bitmap(struct task_struct *tsk)
++/**
++ * delay_cursor_until_vupdate() - Delay cursor update if too close to VUPDATE.
++ *
++ * Software keepout workaround to prevent cursor update locking from stalling
++ * out cursor updates indefinitely or from old values from being retained in
++ * the case where the viewport changes in the same frame as the cursor.
++ *
++ * The idea is to calculate the remaining time from VPOS to VUPDATE. If it's
++ * too close to VUPDATE, then stall out until VUPDATE finishes.
++ *
++ * TODO: Optimize cursor programming to be once per frame before VUPDATE
++ *       to avoid the need for this workaround.
++ */
++static void delay_cursor_until_vupdate(struct dc *dc, struct pipe_ctx *pipe_ctx)
++{
++	struct dc_stream_state *stream = pipe_ctx->stream;
++	struct crtc_position position;
++	uint32_t vupdate_start, vupdate_end;
++	unsigned int lines_to_vupdate, us_to_vupdate, vpos;
++	unsigned int us_per_line, us_vupdate;
++
++	if (!dc->hwss.calc_vupdate_position || !dc->hwss.get_position)
++		return;
++
++	if (!pipe_ctx->stream_res.stream_enc || !pipe_ctx->stream_res.tg)
++		return;
++
++	dc->hwss.calc_vupdate_position(dc, pipe_ctx, &vupdate_start,
++				       &vupdate_end);
++
++	dc->hwss.get_position(&pipe_ctx, 1, &position);
++	vpos = position.vertical_count;
++
++	/* Avoid wraparound calculation issues */
++	vupdate_start += stream->timing.v_total;
++	vupdate_end += stream->timing.v_total;
++	vpos += stream->timing.v_total;
++
++	if (vpos <= vupdate_start) {
++		/* VPOS is in VACTIVE or back porch. */
++		lines_to_vupdate = vupdate_start - vpos;
++	} else if (vpos > vupdate_end) {
++		/* VPOS is in the front porch. */
++		return;
++	} else {
++		/* VPOS is in VUPDATE. */
++		lines_to_vupdate = 0;
++	}
++
++	/* Calculate time until VUPDATE in microseconds. */
++	us_per_line =
++		stream->timing.h_total * 10000u / stream->timing.pix_clk_100hz;
++	us_to_vupdate = lines_to_vupdate * us_per_line;
++
++	/* 70 us is a conservative estimate of cursor update time*/
++	if (us_to_vupdate > 70)
++		return;
++
++	/* Stall out until the cursor update completes. */
++	us_vupdate = (vupdate_end - vupdate_start + 1) * us_per_line;
++	udelay(us_to_vupdate + us_vupdate);
++}
++
+ void dcn10_cursor_lock(struct dc *dc, struct pipe_ctx *pipe, bool lock)
  {
--	struct thread_struct *t = &current->thread;
-+	struct thread_struct *t = &tsk->thread;
+ 	/* cursor lock is per MPCC tree, so only need to lock one pipe per stream */
+ 	if (!pipe || pipe->top_pipe)
+ 		return;
  
- 	if (t->iopl_emul == 3 || t->io_bitmap) {
- 		/* TSS update is handled on exit to user space */
--		set_thread_flag(TIF_IO_BITMAP);
-+		set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- 	} else {
--		clear_thread_flag(TIF_IO_BITMAP);
-+		clear_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- 		/* Invalidate TSS */
- 		preempt_disable();
- 		tss_update_io_bitmap();
-@@ -48,12 +48,12 @@ static void task_update_io_bitmap(void)
- 	}
++	/* Prevent cursor lock from stalling out cursor updates. */
++	if (lock)
++		delay_cursor_until_vupdate(dc, pipe);
++
+ 	dc->res_pool->mpc->funcs->cursor_lock(dc->res_pool->mpc,
+ 			pipe->stream_res.opp->inst, lock);
+ }
+@@ -3142,7 +3209,7 @@ int dcn10_get_vupdate_offset_from_vsync(struct pipe_ctx *pipe_ctx)
+ 	return vertical_line_start;
  }
  
--void io_bitmap_exit(void)
-+void io_bitmap_exit(struct task_struct *tsk)
- {
--	struct io_bitmap *iobm = current->thread.io_bitmap;
-+	struct io_bitmap *iobm = tsk->thread.io_bitmap;
+-static void dcn10_calc_vupdate_position(
++void dcn10_calc_vupdate_position(
+ 		struct dc *dc,
+ 		struct pipe_ctx *pipe_ctx,
+ 		uint32_t *start_line,
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h
+index af51424315d5..42b6e016d71e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h
+@@ -34,6 +34,11 @@ struct dc;
+ void dcn10_hw_sequencer_construct(struct dc *dc);
  
--	current->thread.io_bitmap = NULL;
--	task_update_io_bitmap();
-+	tsk->thread.io_bitmap = NULL;
-+	task_update_io_bitmap(tsk);
- 	if (iobm && refcount_dec_and_test(&iobm->refcnt))
- 		kfree(iobm);
- }
-@@ -101,7 +101,7 @@ long ksys_ioperm(unsigned long from, uns
- 		if (!iobm)
- 			return -ENOMEM;
- 		refcount_set(&iobm->refcnt, 1);
--		io_bitmap_exit();
-+		io_bitmap_exit(current);
- 	}
+ int dcn10_get_vupdate_offset_from_vsync(struct pipe_ctx *pipe_ctx);
++void dcn10_calc_vupdate_position(
++		struct dc *dc,
++		struct pipe_ctx *pipe_ctx,
++		uint32_t *start_line,
++		uint32_t *end_line);
+ void dcn10_setup_vupdate_interrupt(struct dc *dc, struct pipe_ctx *pipe_ctx);
+ enum dc_status dcn10_enable_stream_timing(
+ 		struct pipe_ctx *pipe_ctx,
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c
+index 4a8e4b797bea..0900c861204f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c
+@@ -72,6 +72,7 @@ static const struct hw_sequencer_funcs dcn10_funcs = {
+ 	.set_clock = dcn10_set_clock,
+ 	.get_clock = dcn10_get_clock,
+ 	.get_vupdate_offset_from_vsync = dcn10_get_vupdate_offset_from_vsync,
++	.calc_vupdate_position = dcn10_calc_vupdate_position,
+ };
  
- 	/*
-@@ -133,7 +133,7 @@ long ksys_ioperm(unsigned long from, uns
- 	}
- 	/* All permissions dropped? */
- 	if (max_long == UINT_MAX) {
--		io_bitmap_exit();
-+		io_bitmap_exit(current);
- 		return 0;
- 	}
+ static const struct hwseq_private_funcs dcn10_private_funcs = {
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c
+index 0cae0c2f84c4..71bfde2cf646 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c
+@@ -83,6 +83,7 @@ static const struct hw_sequencer_funcs dcn20_funcs = {
+ 	.init_vm_ctx = dcn20_init_vm_ctx,
+ 	.set_flip_control_gsl = dcn20_set_flip_control_gsl,
+ 	.get_vupdate_offset_from_vsync = dcn10_get_vupdate_offset_from_vsync,
++	.calc_vupdate_position = dcn10_calc_vupdate_position,
+ };
  
-@@ -191,7 +191,7 @@ SYSCALL_DEFINE1(iopl, unsigned int, leve
- 	}
- 
- 	t->iopl_emul = level;
--	task_update_io_bitmap();
-+	task_update_io_bitmap(current);
- 
- 	return 0;
- }
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -97,7 +97,7 @@ int arch_dup_task_struct(struct task_str
- }
- 
- /*
-- * Free current thread data structures etc..
-+ * Free thread data structures etc..
-  */
- void exit_thread(struct task_struct *tsk)
- {
-@@ -105,7 +105,7 @@ void exit_thread(struct task_struct *tsk
- 	struct fpu *fpu = &t->fpu;
- 
- 	if (test_thread_flag(TIF_IO_BITMAP))
--		io_bitmap_exit();
-+		io_bitmap_exit(tsk);
- 
- 	free_vm86(t);
- 
+ static const struct hwseq_private_funcs dcn20_private_funcs = {
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
+index 8fe8ec7c0882..7f53bf724fce 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
+@@ -86,6 +86,7 @@ static const struct hw_sequencer_funcs dcn21_funcs = {
+ 	.optimize_pwr_state = dcn21_optimize_pwr_state,
+ 	.exit_optimized_pwr_state = dcn21_exit_optimized_pwr_state,
+ 	.get_vupdate_offset_from_vsync = dcn10_get_vupdate_offset_from_vsync,
++	.calc_vupdate_position = dcn10_calc_vupdate_position,
+ 	.set_cursor_position = dcn10_set_cursor_position,
+ 	.set_cursor_attribute = dcn10_set_cursor_attribute,
+ 	.set_cursor_sdr_white_level = dcn10_set_cursor_sdr_white_level,
+diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
+index e57467d99d66..08307f3796e3 100644
+--- a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
++++ b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
+@@ -92,6 +92,11 @@ struct hw_sequencer_funcs {
+ 	void (*get_position)(struct pipe_ctx **pipe_ctx, int num_pipes,
+ 			struct crtc_position *position);
+ 	int (*get_vupdate_offset_from_vsync)(struct pipe_ctx *pipe_ctx);
++	void (*calc_vupdate_position)(
++			struct dc *dc,
++			struct pipe_ctx *pipe_ctx,
++			uint32_t *start_line,
++			uint32_t *end_line);
+ 	void (*enable_per_frame_crtc_position_reset)(struct dc *dc,
+ 			int group_size, struct pipe_ctx *grouped_pipes[]);
+ 	void (*enable_timing_synchronization)(struct dc *dc,
+-- 
+2.25.1
+
 
 
