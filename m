@@ -2,74 +2,68 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A87FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEC362076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AA02076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgFAAqr (ORCPT
+        id S1728504AbgFAAqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 20:46:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53316 "EHLO mx2.suse.de"
+        Sun, 31 May 2020 20:46:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:52794 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgFAAqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 20:46:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 26A09AC52;
-        Mon,  1 Jun 2020 00:46:46 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Date:   Mon, 01 Jun 2020 10:46:35 +1000
-Cc:     Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Writeback fixes for NFS
-In-Reply-To: <20200515111043.GK9569@quack2.suse.cz>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name> <87wo6gs26e.fsf@notabene.neil.brown.name> <87tv1ks24t.fsf@notabene.neil.brown.name> <20200416151906.GQ23739@quack2.suse.cz> <87zhb5r30c.fsf@notabene.neil.brown.name> <20200422124600.GH8775@quack2.suse.cz> <871rnob8z3.fsf@notabene.neil.brown.name> <87y2pw9udb.fsf@notabene.neil.brown.name> <20200515111043.GK9569@quack2.suse.cz>
-Message-ID: <87imgb7gus.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        id S1726081AbgFAAqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 20:46:51 -0400
+IronPort-SDR: G3m0QKjonjgTIYkhr72rNz7xw9ShYHtexhU8ix5Dcam6wgDjrnwPU/ksxIoy9+vqkdyfz6oYwz
+ cQIHRMNe3ZIA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 17:46:51 -0700
+IronPort-SDR: 0Xs46V2hEIESIwGQjp2CNHkkG0YcMN5J2ulkkFrL9nKOZzgPRRvze8Kt2LuiKHz+CgJJzQZ2WW
+ Bqk11Oj8xY7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,458,1583222400"; 
+   d="scan'208";a="293005923"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 31 May 2020 17:46:49 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 0/2] iommu/vt-d: Two fixes for v5.8
+Date:   Mon,  1 Jun 2020 08:42:55 +0800
+Message-Id: <20200601004257.15591-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hi Joerg,
 
+This encloses two fixes for v5.8.
+- Make Intel SVM code 64-bit only
+- Set U/S bit to make IOVA over first level compatible with 2nd level
+  translations.
 
-Hi Andrew,
- could you please queue these two patches (following).
- I think they have sufficient review and no remaining complaints.
+Best regards,
+baolu
 
-Thanks,
-NeilBrown
+Lu Baolu (2):
+  iommu/vt-d: Make Intel SVM code 64-bit only
+  iommu/vt-d: Set U/S bit in first level page table by default
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/iommu/Kconfig       | 2 +-
+ drivers/iommu/intel-iommu.c | 5 ++---
+ include/linux/intel-iommu.h | 1 +
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.17.1
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl7UT+sACgkQOeye3VZi
-gblYQBAAgv37f/xIZLXB2Z94M9cjmhD4YWjzfdu1CWVodFvvVReMxog9C2xdrplX
-zsswwQo3GHJ29fJ5jYXIWP46M8t6bdMvqPGtGOdTWz5/50trZf2kDL6cjoM8oAXk
-c7bfjuYpb07ccZYwfaro0EXTCWPI+BXOeMofKlmeAw0wbbq8n+YvUs+fQEdnpfvZ
-3dx76LkxCKEu1YqHGbEl9dV2xO9CRnk25F0GIZBWELgXaOHyJIzTjA9cRCUaBZDY
-rjz3I0sp2YVEEGBoA4fG0UBhU+7bTicC+YEsYCuXAKbsOU0zmPqLc4zZnc2NRr7b
-Zhe8cMDKAE3YSlldJGFCastZAhROvCUu10iXDqG6esKJ1ebw7uh+Duu6B94Cx0NG
-faOJcV61IGIhpzlyxqIzx8vkSKqlGu5N9KZWK/F3nWeMEy+PKCoWxirjkIc+HJb2
-goOFQgrIwllUdzICUvTJD4aXhv36EclE6bh68wSTZC7lxRynw5p2ZqDvL6sG+Ehe
-5ok+vFrC0gtLhYNmDdaqZDXkNRo4qmGUVOffQpSkt18uQsGaoapJ3a8fczaGjnqB
-sUfPDr8LFvtsh6QxuiqXK+0HtJXM6W9N0SI+lgSTAimSlNEaA734PHBAdyRarQWy
-7GMiZ4+egaUTLzx9JADZ5Vhgbuoowt26arv2Nl5kd1lYfKORUUE=
-=PG+P
------END PGP SIGNATURE-----
---=-=-=--
