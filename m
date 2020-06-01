@@ -2,52 +2,54 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A083C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8300B206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157232073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037258;
-	bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
+	s=default; t=1591037264;
+	bh=kVn8x1kydNngyAysBZ+UdkS1JAW1XNUyRrmBJQGKbEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=spCuhW3JFLn/T2qFpbb0iJgvIFAWuwZy9n0BGsqxYDgpR18/WtgdUJYoLEr7f/0Ie
-	 DoQ6yWD4ChxMV7seYZQH839sA4Gq6Dvom+Q3cO/jG6SNp5qUi2nDpxCdRNxwQe5JAE
-	 P5AsbW1K20oxWxthVsjW6OyeHdALNNxVsBYGRrns=
+	b=v75rOr8JKvkvqFFW1t2hNjDfKk7SgczF2o5a/85w43KBvfC1GxxPjmfkKiKAXLuUX
+	 dtRZFlPyXntXQ+hgNcPTUg6LycHfr/6MlW2hhEwlYt4VadIsontJFgZnNQvxkRCj+i
+	 LYP/EwFKZALnnF5hH7WloRcKy3nYrPZqvG39jTss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbgFASrh (ORCPT
+        id S1730883AbgFASrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730687AbgFASIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:08:10 -0400
+        id S1730678AbgFASII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:08:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0487206E2;
-        Mon,  1 Jun 2020 18:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A501207D0;
+        Mon,  1 Jun 2020 18:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034890;
-        bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
+        s=default; t=1591034887;
+        bh=kVn8x1kydNngyAysBZ+UdkS1JAW1XNUyRrmBJQGKbEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=En2dE9HU0IssPSrHtHi3fx4GSCebmzh8A+gX6zrD+Xo1HY9GTOJmvDPUyZQk4qH0R
-         4oVLHRDPmFHghbzh2ABQu2XTlf100EBHMl7lYHDSSr/GRaqwHxC5l/fp3TX74lT4dA
-         kcm1BL++lSDcGGgz3aP/hYm9kNpxDfjRuPzgtf2g=
+        b=pqdU91VxbxLlbAgQsFaGsy2HYncNfw6NtGWuxbIB8ftDmEGyuD8E5kygJQBca26WM
+         Goxvv8Ie1YY5lMF8sGnf+0uI+PYPpQkhsp/qgWC9lxONWKsKhWIfqo4DvU6szE6Ddk
+         WW+PGlzh2ZHvWj/SjZv7HtLkoxD8lhphWiwFhnzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Han <han_mao@linux.alibaba.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 056/142] csky: Fixup perf callchain unwind
-Date:   Mon,  1 Jun 2020 19:53:34 +0200
-Message-Id: <20200601174043.785813180@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 020/142] tipc: block BH before using dst_cache
+Date:   Mon,  1 Jun 2020 19:52:58 +0200
+Message-Id: <20200601174039.942780034@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,93 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Han <han_mao@linux.alibaba.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 229a0ddee1108a3f82a873e6cbbe35c92c540444 ]
+[ Upstream commit 1378817486d6860f6a927f573491afe65287abf1 ]
 
- [ 5221.974084] Unable to handle kernel paging request at virtual address 0xfffff000, pc: 0x8002c18e
- [ 5221.985929] Oops: 00000000
- [ 5221.989488]
- [ 5221.989488] CURRENT PROCESS:
- [ 5221.989488]
- [ 5221.992877] COMM=callchain_test PID=11962
- [ 5221.995213] TEXT=00008000-000087e0 DATA=00009f1c-0000a018 BSS=0000a018-0000b000
- [ 5221.999037] USER-STACK=7fc18e20  KERNEL-STACK=be204680
- [ 5221.999037]
- [ 5222.003292] PC: 0x8002c18e (perf_callchain_kernel+0x3e/0xd4)
- [ 5222.007957] LR: 0x8002c198 (perf_callchain_kernel+0x48/0xd4)
- [ 5222.074873] Call Trace:
- [ 5222.074873] [<800a248e>] get_perf_callchain+0x20a/0x29c
- [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
- [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
- [ 5222.074873] [<8009de6e>] perf_event_output_forward+0x36/0x98
- [ 5222.074873] [<800497e0>] search_exception_tables+0x20/0x44
- [ 5222.074873] [<8002cbb6>] do_page_fault+0x92/0x378
- [ 5222.074873] [<80098608>] __perf_event_overflow+0x54/0xdc
- [ 5222.074873] [<80098778>] perf_swevent_hrtimer+0xe8/0x164
- [ 5222.074873] [<8002ddd0>] update_mmu_cache+0x0/0xd8
- [ 5222.074873] [<8002c014>] user_backtrace+0x58/0xc4
- [ 5222.074873] [<8002c0b4>] perf_callchain_user+0x34/0xd0
- [ 5222.074873] [<800a2442>] get_perf_callchain+0x1be/0x29c
- [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
- [ 5222.074873] [<8009d834>] perf_output_sample+0x78c/0x858
- [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
- [ 5222.074873] [<8009de94>] perf_event_output_forward+0x5c/0x98
- [ 5222.097846]
- [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
- [ 5222.097846] [<8006c874>] hrtimer_interrupt+0x104/0x2ec
- [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
- [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
- [ 5222.097846] [<8006c770>] hrtimer_interrupt+0x0/0x2ec
- [ 5222.097846] [<8005f2e4>] __handle_irq_event_percpu+0xac/0x19c
- [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
- [ 5222.097846] [<8005f408>] handle_irq_event_percpu+0x34/0x88
- [ 5222.097846] [<8005f480>] handle_irq_event+0x24/0x64
- [ 5222.097846] [<8006218c>] handle_level_irq+0x68/0xdc
- [ 5222.097846] [<8005ec76>] __handle_domain_irq+0x56/0xa8
- [ 5222.097846] [<80450e90>] ck_irq_handler+0xac/0xe4
- [ 5222.097846] [<80029012>] csky_do_IRQ+0x12/0x24
- [ 5222.097846] [<8002a3a0>] csky_irq+0x70/0x80
- [ 5222.097846] [<800ca612>] alloc_set_pte+0xd2/0x238
- [ 5222.097846] [<8002ddd0>] update_mmu_cache+0x0/0xd8
- [ 5222.097846] [<800a0340>] perf_event_exit_task+0x98/0x43c
+dst_cache_get() documents it must be used with BH disabled.
 
-The original fp check doesn't base on the real kernal stack region.
-Invalid fp address may cause kernel panic.
+sysbot reported :
 
-Signed-off-by: Mao Han <han_mao@linux.alibaba.com>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BUG: using smp_processor_id() in preemptible [00000000] code: /21697
+caller is dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
+CPU: 0 PID: 21697 Comm:  Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
+ tipc_udp_xmit.isra.0+0xb9/0xad0 net/tipc/udp_media.c:164
+ tipc_udp_send_msg+0x3e6/0x490 net/tipc/udp_media.c:244
+ tipc_bearer_xmit_skb+0x1de/0x3f0 net/tipc/bearer.c:526
+ tipc_enable_bearer+0xb2f/0xd60 net/tipc/bearer.c:331
+ __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
+ tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
+ genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca29
+
+Fixes: e9c1a793210f ("tipc: add dst_cache support for udp media")
+Cc: Xin Long <lucien.xin@gmail.com>
+Cc: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/csky/kernel/perf_callchain.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/tipc/udp_media.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/csky/kernel/perf_callchain.c b/arch/csky/kernel/perf_callchain.c
-index e68ff375c8f8..ab55e98ee8f6 100644
---- a/arch/csky/kernel/perf_callchain.c
-+++ b/arch/csky/kernel/perf_callchain.c
-@@ -12,12 +12,17 @@ struct stackframe {
- 
- static int unwind_frame_kernel(struct stackframe *frame)
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -161,9 +161,11 @@ static int tipc_udp_xmit(struct net *net
+ 			 struct udp_bearer *ub, struct udp_media_addr *src,
+ 			 struct udp_media_addr *dst, struct dst_cache *cache)
  {
--	if (kstack_end((void *)frame->fp))
-+	unsigned long low = (unsigned long)task_stack_page(current);
-+	unsigned long high = low + THREAD_SIZE;
-+
-+	if (unlikely(frame->fp < low || frame->fp > high))
- 		return -EPERM;
--	if (frame->fp & 0x3 || frame->fp < TASK_SIZE)
-+
-+	if (kstack_end((void *)frame->fp) || frame->fp & 0x3)
- 		return -EPERM;
+-	struct dst_entry *ndst = dst_cache_get(cache);
++	struct dst_entry *ndst;
+ 	int ttl, err = 0;
  
- 	*frame = *(struct stackframe *)frame->fp;
-+
- 	if (__kernel_text_address(frame->lr)) {
- 		int graph = 0;
++	local_bh_disable();
++	ndst = dst_cache_get(cache);
+ 	if (dst->proto == htons(ETH_P_IP)) {
+ 		struct rtable *rt = (struct rtable *)ndst;
  
--- 
-2.25.1
-
+@@ -210,9 +212,11 @@ static int tipc_udp_xmit(struct net *net
+ 					   src->port, dst->port, false);
+ #endif
+ 	}
++	local_bh_enable();
+ 	return err;
+ 
+ tx_error:
++	local_bh_enable();
+ 	kfree_skb(skb);
+ 	return err;
+ }
 
 
