@@ -2,192 +2,131 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74336C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E673AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAF6206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="XQFqfptk"
+	by mail.kernel.org (Postfix) with ESMTP id C9056206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgFAF46 (ORCPT
+        id S1726056AbgFAGD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:56:58 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51314 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726070AbgFAF45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:56:57 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0515lTN1000727;
-        Mon, 1 Jun 2020 07:56:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=jm4u4MsVV598+LB742qzZN+QkL1OoKxYIMw9eBswBXo=;
- b=XQFqfptkVoAsWGN64ok/XB/t6VmuQpg9AsBWjOxwzPObPxHYGXjpYm7gYMDIwVE+GHPk
- ZCsV3va/ZzOWG3gtgV+wkGR11XM4n+c4MRuX0OxH7Vs4EqmyCyhoG/MswcbmEV4EZBpJ
- sh1Jk5qKu7SimGKJKugWU1v+j0TdS9JrPKYBUQrcA4RDGdh0V199eiVgvnzd3cMpf2Rb
- 1vEfaQw9rJNZcwmTAmpPpsTQsGGMX8eXeCEbKnY5/cY+QHepaLn5Kd2N9vVwiYIRr6SF
- K1oULjbDMd+rBxgn5QKJuaSWHqlyH5PnwreTDSRHkjvEGkAIy8tzRwqkMQyWAiKmSoMR xA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31becfqhgf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jun 2020 07:56:40 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30CF310002A;
-        Mon,  1 Jun 2020 07:56:36 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1A87E2074B0;
-        Mon,  1 Jun 2020 07:56:36 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 1 Jun
- 2020 07:56:35 +0200
-Date:   Mon, 1 Jun 2020 07:56:34 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-CC:     "kjlu@umn.edu" <kjlu@umn.edu>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] [v2] i2c: stm32f7: Fix runtime PM imbalance on error
-Message-ID: <20200601055634.GB17269@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200527013853.30252-1-dinghao.liu@zju.edu.cn>
+        Mon, 1 Jun 2020 02:03:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:38467 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgFAGD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 02:03:58 -0400
+IronPort-SDR: Bl1+ppwplIu8WuY1NjRq56DJbbXBCSlQTojMwzgCCoa/NnWmoFgEuHQbbd671b86XG1/a1rZoP
+ h+95TOeVdznQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 23:03:57 -0700
+IronPort-SDR: wsSICHzBQ5LDy5N+oVj9qRNOjjytQlziDaATEim2C6cEF5HkIncf/ExLEnTTBRkEIXAVBMfY85
+ 2iFls75YMO5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
+   d="scan'208";a="415694870"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
+  by orsmga004.jf.intel.com with ESMTP; 31 May 2020 23:03:53 -0700
+Date:   Mon, 1 Jun 2020 14:02:59 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     "Amit, Daniel, Kachhap," <amit.kachhap@arm.com>,
+        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [kbuild-all] sh: 1: scripts/ld-version.sh: Permission denied
+Message-ID: <20200601060259.GA10102@intel.com>
+References: <202006011327.VZKhJeiu%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527013853.30252-1-dinghao.liu@zju.edu.cn>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-01_01:2020-05-28,2020-06-01 signatures=0
+In-Reply-To: <202006011327.VZKhJeiu%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Reviewed-by: Alain Volmat <alain.volmat@st.com>
-
-Thanks,
-Alain
-
-On Wed, May 27, 2020 at 01:38:53AM +0000, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> the call returns an error code. Thus a pairing decrement is needed
-> on the error handling path to keep the counter balanced.
+On Mon, Jun 01, 2020 at 01:54:29PM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+> commit: 9553d16fa671b9621c5e2847d08bd90d3be3349c init/kconfig: Add LD_VERSION Kconfig
+> date:   9 weeks ago
+> config: x86_64-allyesconfig
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 2388a096e7865c043e83ece4e26654bd3d1a20d5)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install x86_64 cross compiling tool for clang build
+>         # apt-get install binutils-x86-64-linux-gnu
+>         git checkout 9553d16fa671b9621c5e2847d08bd90d3be3349c
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64  allyesconfig
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>, old ones prefixed by <<):
+kindly ignore this report, which looks like an environment problem,
+we will look into to solve the issue.
+
+> 
+> sh: 1: scripts/gcc-version.sh: Permission denied
+> sh: 1: scripts/gcc-version.sh: Permission denied
+> init/Kconfig:18: syntax error
+> init/Kconfig:17: invalid statement
+> init/Kconfig:18: invalid statement
+> >> sh: 1: scripts/ld-version.sh: Permission denied
+> init/Kconfig:23: syntax error
+> init/Kconfig:22: invalid statement
+> sh: 1: scripts/clang-version.sh: Permission denied
+> init/Kconfig:30: syntax error
+> init/Kconfig:29: invalid statement
+> sh: 1: scripts/gcc-plugin.sh: Permission denied
+> make[2]: *** [scripts/kconfig/Makefile:75: allyesconfig] Error 1
+> make[1]: *** [Makefile:567: allyesconfig] Error 2
+> make: *** [Makefile:179: sub-make] Error 2
+> --
+> sh: 1: scripts/gcc-version.sh: Permission denied
+> sh: 1: scripts/gcc-version.sh: Permission denied
+> init/Kconfig:18: syntax error
+> init/Kconfig:17: invalid statement
+> init/Kconfig:18: invalid statement
+> >> sh: 1: scripts/ld-version.sh: Permission denied
+> init/Kconfig:23: syntax error
+> init/Kconfig:22: invalid statement
+> sh: 1: scripts/clang-version.sh: Permission denied
+> init/Kconfig:30: syntax error
+> init/Kconfig:29: invalid statement
+> sh: 1: scripts/gcc-plugin.sh: Permission denied
+> make[2]: *** [scripts/kconfig/Makefile:75: oldconfig] Error 1
+> make[1]: *** [Makefile:567: oldconfig] Error 2
+> make: *** [Makefile:179: sub-make] Error 2
+> --
+> sh: 1: scripts/gcc-version.sh: Permission denied
+> sh: 1: scripts/gcc-version.sh: Permission denied
+> init/Kconfig:18: syntax error
+> init/Kconfig:17: invalid statement
+> init/Kconfig:18: invalid statement
+> >> sh: 1: scripts/ld-version.sh: Permission denied
+> init/Kconfig:23: syntax error
+> init/Kconfig:22: invalid statement
+> sh: 1: scripts/clang-version.sh: Permission denied
+> init/Kconfig:30: syntax error
+> init/Kconfig:29: invalid statement
+> sh: 1: scripts/gcc-plugin.sh: Permission denied
+> make[2]: *** [scripts/kconfig/Makefile:75: olddefconfig] Error 1
+> make[1]: *** [Makefile:567: olddefconfig] Error 2
+> make: *** [Makefile:179: sub-make] Error 2
+> 
 > ---
-> 
-> Changelog:
-> 
-> v2: - Use pm_runtime_put_noidle() instead of
->       pm_runtime_put_autosuspend(). Fix 5 more
->       similar cases within this dirver.
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 330ffed011e0..822fd1f5b5ae 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -1620,8 +1620,10 @@ static int stm32f7_i2c_xfer(struct i2c_adapter *i2c_adap,
->  	f7_msg->smbus = false;
->  
->  	ret = pm_runtime_get_sync(i2c_dev->dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(i2c_dev->dev);
->  		return ret;
-> +	}
->  
->  	ret = stm32f7_i2c_wait_free_bus(i2c_dev);
->  	if (ret)
-> @@ -1666,8 +1668,10 @@ static int stm32f7_i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
->  	f7_msg->smbus = true;
->  
->  	ret = pm_runtime_get_sync(dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(dev);
->  		return ret;
-> +	}
->  
->  	ret = stm32f7_i2c_wait_free_bus(i2c_dev);
->  	if (ret)
-> @@ -1767,8 +1771,10 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
->  		return ret;
->  
->  	ret = pm_runtime_get_sync(dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(dev);
->  		return ret;
-> +	}
->  
->  	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
->  		stm32f7_i2c_enable_wakeup(i2c_dev, true);
-> @@ -1837,8 +1843,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
->  	WARN_ON(!i2c_dev->slave[id]);
->  
->  	ret = pm_runtime_get_sync(i2c_dev->dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(i2c_dev->dev);
->  		return ret;
-> +	}
->  
->  	if (id == 0) {
->  		mask = STM32F7_I2C_OAR1_OA1EN;
-> @@ -2182,8 +2190,10 @@ static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
->  	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
->  
->  	ret = pm_runtime_get_sync(i2c_dev->dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(i2c_dev->dev);
->  		return ret;
-> +	}
->  
->  	backup_regs->cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
->  	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
-> @@ -2204,8 +2214,10 @@ static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
->  	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
->  
->  	ret = pm_runtime_get_sync(i2c_dev->dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(i2c_dev->dev);
->  		return ret;
-> +	}
->  
->  	cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
->  	if (cr1 & STM32F7_I2C_CR1_PE)
-> -- 
-> 2.17.1
-> 
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
