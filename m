@@ -2,115 +2,180 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60562C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46831206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BCA20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="coNPcBvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgFARNY (ORCPT
+        id S1727826AbgFARPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:13:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:51644 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFARNT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:13:19 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BAE0B8030808;
-        Mon,  1 Jun 2020 17:13:13 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LAyjhD2Voz9V; Mon,  1 Jun 2020 20:13:13 +0300 (MSK)
-Date:   Mon, 1 Jun 2020 20:13:11 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND v2 0/6] mips: Add DT bindings for MIPS CDMM and
- MIPS GIC
-Message-ID: <20200601171311.bra7canlvnvswyxq@mobilestation>
-References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
- <d59ef33155e2ae965e79522ab220c177@kernel.org>
- <20200601152449.2okwqaqw4262nedu@mobilestation>
- <20200601165646.GA12402@alpha.franken.de>
+        Mon, 1 Jun 2020 13:15:15 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:14017 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgFARPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:15:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591031714; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=IRcNB0OpS0geFxfNcF8I6B/taWV6RDssBF+tdvwyM3o=;
+ b=coNPcBvrvmb8LUX1zoiNoxZOUzdGHsL6GiORioo6HmRFbS32xAQdvZfdHZyzyxT2Tfi2PML/
+ kPfji3qeJZ0ZuOgs12XOS2uDvWIxCiybknvjSSaWSKqdGtXFSXKDlQnEoP5RJlITyhz7mCsh
+ MIwKDUlk9h2/Qt/xqjj0iPwKSNI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5ed5379ee276c808de2169b2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 17:15:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 40946C43395; Mon,  1 Jun 2020 17:15:10 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 55B32C433C9;
+        Mon,  1 Jun 2020 17:15:09 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200601165646.GA12402@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 01 Jun 2020 22:45:09 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+In-Reply-To: <CAJ9a7VgxDru8P_RXE2ewGkSA2mfCNvOp+hMuNLB4AszXBOUp1g@mail.gmail.com>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <CAJ9a7VgxDru8P_RXE2ewGkSA2mfCNvOp+hMuNLB4AszXBOUp1g@mail.gmail.com>
+Message-ID: <f3c3a52effa9828d47712a9d4f852dfc@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 06:56:46PM +0200, Thomas Bogendoerfer wrote:
-> On Mon, Jun 01, 2020 at 06:24:49PM +0300, Serge Semin wrote:
-> > Hello Marc,
-> > 
-> > On Mon, Jun 01, 2020 at 01:31:27PM +0100, Marc Zyngier wrote:
-> > > On 2020-06-01 13:21, Serge Semin wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
-> > > > been seen maintaining MIPS for a long time, Thomas is only responsible
-> > > > for the next part of it:
-> > > > 	F:      Documentation/devicetree/bindings/mips/
-> > > > 	F:      Documentation/mips/
-> > > > 	F:      arch/mips/
-> > > > 	F:      drivers/platform/mips/
-> > > > the MIPS-specific drivers like:
-> > > > 	F:	drivers/bus/mips_cdmm.c
-> > > > 	F:	drivers/irqchip/irq-mips-cpu.c
-> > > > 	F:	drivers/irqchip/irq-mips-gic.c
-> > > > 	F:	drivers/clocksource/mips-gic-timer.c
-> > > > 	F:	drivers/cpuidle/cpuidle-cps.c
-> > > > seem to be left for the subsystems maintainers to support. So if you
-> > > > don't
-> > > > mind or unless there is a better alternative, I can help with looking
-> > > > after them to ease the maintainers review burden and since I'll be
-> > > > working
-> > > > on our MIPS-based SoC drivers integrating into the mainline kernel repo
-> > > > anyway. If you don't like this idea, please just decline the last
-> > > > patch in the series.
-> > > 
-> > 
-> > > Given how deeply integrated the MIPS GIC is in the architecture, I'd
-> > > really like Thomas to co-maintain it, or at the very least give his
-> > > blessing on you being the dedicated point of contact for MIPS GIC
-> > > stuff.
-> > 
-> > I don't mind either way. First option might be even better. Thomas,
-> > what do you think?
+Hi Mike,
+
+Thanks for the review.
+
+On 2020-06-01 19:05, Mike Leach wrote:
+> Hi,
 > 
-> sure, I'm happy to be your co-maintainer.
+> On Mon, 1 Jun 2020 at 09:02, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Implement a shutdown callback to ensure ETR/ETF hardware is
+>> properly shutdown in reboot/shutdown path. This is required
+>> for ETR/ETF which has SMMU address translation enabled like
+>> on SC7180 SoC and few others. If the hardware is still accessing
+>> memory after SMMU translation is disabled as part of SMMU
+>> shutdown callback in system reboot or shutdown path, then
+>> IOVAs(I/O virtual address) which it was using will go on the bus
+>> as the physical addresses which might result in unknown crashes
+>> (NoC/interconnect errors). So we make sure from this shutdown
+>> callback that the ETR/ETF is shutdown before SMMU translation is
+>> disabled and device_link in SMMU driver will take care of ordering
+>> of shutdown callbacks such that SMMU shutdown callback is not
+>> called before any of its consumer shutdown callbacks.
+>> 
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>  .../hwtracing/coresight/coresight-tmc-etf.c   |  4 +--
+>>  .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
+>>  drivers/hwtracing/coresight/coresight-tmc.c   | 29 
+>> +++++++++++++++++++
+>>  drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
+>>  4 files changed, 35 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c 
+>> b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> index 36cce2bfb744..cba3e7592820 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> @@ -85,7 +85,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata 
+>> *drvdata)
+>>         CS_LOCK(drvdata->base);
+>>  }
+>> 
+>> -static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>>  {
+>>         __tmc_etb_disable_hw(drvdata);
+>>         coresight_disclaim_device(drvdata->base);
+>> @@ -118,7 +118,7 @@ static int tmc_etf_enable_hw(struct tmc_drvdata 
+>> *drvdata)
+>>         return 0;
+>>  }
+>> 
+>> -static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
+>> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
+>>  {
+>>         CS_UNLOCK(drvdata->base);
+>> 
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c 
+>> b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> index 625882bc8b08..b29c2db94d96 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> @@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct 
+>> tmc_drvdata *drvdata)
+>> 
+>>  }
+>> 
+>> -static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>>  {
+>>         __tmc_etr_disable_hw(drvdata);
+>>         /* Disable CATU device if this ETR is connected to one */
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c 
+>> b/drivers/hwtracing/coresight/coresight-tmc.c
+>> index 5a271ebc4585..7e687a356fe0 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
+>> @@ -540,6 +540,34 @@ static int tmc_probe(struct amba_device *adev, 
+>> const struct amba_id *id)
+>>         return ret;
+>>  }
+>> 
+>> +static void tmc_shutdown(struct amba_device *adev)
+>> +{
+>> +       struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
+>> +
+> 
+> Take drvdata->spinlock here? The tmc_xxx_disable_hw functions are
+> normally called with the spinlock claimed.
 > 
 
-Great! As soon as we finish a discussion regarding the files-list ordering
-raised around the last patch in the series, I'll resend the patchset with you
-added to the list of the MIPS core drivers maintainers.
+Sure will take spinlock here.
 
--Sergey
-
-> Thomas.
+>> +       if (!drvdata->enable)
 > 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+> As per previous patch drvdata->mode can be used here.
+> 
+
+Yes, will use mode here and drop enable flag in the next version.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
