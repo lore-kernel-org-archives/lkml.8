@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88017C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6557C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6818B20872
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ECDA2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034991;
-	bh=PWB2t7f58OTgQdOQWXKpGzdge1XV4v+1OvpmDWYEvUA=;
+	s=default; t=1591034994;
+	bh=c2cjYBWGsu5UJhKoBZ+DStvS3FpJlGb52/gEQaie32Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1oUqWbY2qPpFcql0/VkkBL7Qt1TzkOkeq/gYGluTTOlSre7oXtPHG4XVJws/muw3R
-	 Vdh9WLcORCsDo7jPDSbuODgL0BoeRj7d0D1SVOqBQYLTfVTPHP5i8Ov4Q7h8R12cHJ
-	 zrsAaliOdu6gFQoX48nQgf7n/0hbK7euog/mGNBk=
+	b=wtpicdOenIUKYCWtHdeWjuVGOcIQNhfc0ZGURu4GWMD0DCGpbl2JH1IdAUsl2PFti
+	 ZpJix2eF6RbHMqd741O+2ol7+kmpwongGvXV4feAlFdmyo7mhKfkaPbVx9A0E5kZ4D
+	 BAz9ZZl2QZx8mLreLrJ4gZ5nk/etjzuvGhna466w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgFASJu (ORCPT
+        id S1730938AbgFASJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56222 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729780AbgFASJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:09:44 -0400
+        id S1730916AbgFASJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:09:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9330021531;
-        Mon,  1 Jun 2020 18:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC5B82068D;
+        Mon,  1 Jun 2020 18:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034984;
-        bh=PWB2t7f58OTgQdOQWXKpGzdge1XV4v+1OvpmDWYEvUA=;
+        s=default; t=1591034986;
+        bh=c2cjYBWGsu5UJhKoBZ+DStvS3FpJlGb52/gEQaie32Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PDDx2wMgRN8GqE9yrJDrgtMosj+o/UNvUpPhmnLZxOHTpvxhgx89MRvD+j1mkOCwu
-         wxwFqlC4zE+op0IA7duWJInT1kgWRRED6rMQ06PGLtOvGggvPV2YHdqtDuu/ozuu0i
-         +jy79dsVIejOyRFZkrTLxZmU6vxOdMvGoD9x/NN4=
+        b=TwWOcJVrvmqc4AK4HZZNhTNJnfv5cTosxZFdIjr/mjIW8CLO3m8NlxQ4PSMPfqMNQ
+         J/G02CMEMoTCBK8iBBCCgnLHJGrw77BY9SC01kMpRgxCcTruk5bU+LFRFfqeBklrAw
+         XUmGyvo+iPH2/Ue51UZXRkueuD/XyqYC5Z96O6rM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/142] Input: usbtouchscreen - add support for BonXeon TP
-Date:   Mon,  1 Jun 2020 19:53:41 +0200
-Message-Id: <20200601174044.436273485@linuxfoundation.org>
+Subject: [PATCH 5.4 099/142] mm,thp: stop leaking unreleased file pages
+Date:   Mon,  1 Jun 2020 19:54:17 +0200
+Message-Id: <20200601174048.229621580@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,35 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit e3b4f94ef52ae1592cbe199bd38dbdc0d58b2217 ]
+[ Upstream commit 2f33a706027c94cd4f70fcd3e3f4a17c1ce4ea4b ]
 
-Based on available information this uses the singletouch irtouch
-protocol. This is tested and confirmed to be fully functional on
-the BonXeon TP hardware I have.
+When collapse_file() calls try_to_release_page(), it has already isolated
+the page: so if releasing buffers happens to fail (as it sometimes does),
+remember to putback_lru_page(): otherwise that page is left unreclaimable
+and unfreeable, and the file extent uncollapsible.
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200413184217.55700-1-james.hilliard1@gmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: <stable@vger.kernel.org>	[5.4+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2005231837500.1766@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/usbtouchscreen.c | 1 +
+ mm/khugepaged.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
-index 16d70201de4a..397cb1d3f481 100644
---- a/drivers/input/touchscreen/usbtouchscreen.c
-+++ b/drivers/input/touchscreen/usbtouchscreen.c
-@@ -182,6 +182,7 @@ static const struct usb_device_id usbtouch_devices[] = {
- #endif
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index a8a57bebb5fa..f765475be359 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1655,6 +1655,7 @@ static void collapse_file(struct mm_struct *mm,
+ 		if (page_has_private(page) &&
+ 		    !try_to_release_page(page, GFP_KERNEL)) {
+ 			result = SCAN_PAGE_HAS_PRIVATE;
++			putback_lru_page(page);
+ 			goto out_unlock;
+ 		}
  
- #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
-+	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
 -- 
 2.25.1
 
