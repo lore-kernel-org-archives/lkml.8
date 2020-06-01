@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8692EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E050C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C592068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6434206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035434;
-	bh=50HIzBlE5cgtkzhTklOb2NH4NEGz76WiwXFCARxAil4=;
+	s=default; t=1591035440;
+	bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MkQ4bze/D/+NO8uiieSDfkmQRk6Tc8rl15p0iV9OzObxw2cEBSl/kXRfI+vbrbWMK
-	 VnBcQuYlL+IiXxq3W6Nq1M0Vm15FNSrEu42pZ4SmAhwU1hkKsgsRkqD3v4J1e2kuvL
-	 Nk4E74+uyf9G6L369jglAMjLIEXRX0iROmfPv9bU=
+	b=VLxDZQx/9uUZ9Vx1NtJLEuiep2yyjmo/kdDsnwCrtL48kXnRXrUSdXQPkoO1xIEdL
+	 PyHANGtnjQALG4A5Cwovz4IKBlI8ofhXK0ko4u7qPMIVObLh/GFjG2mb/HNN1LwMIq
+	 vSa4h0+WbIH3hvl9FHfJx1nHaFo1h3l476WfR/lM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgFASRN (ORCPT
+        id S1731819AbgFASRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38152 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731787AbgFASRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:09 -0400
+        id S1731256AbgFASRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523B52065C;
-        Mon,  1 Jun 2020 18:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F1CA206E2;
+        Mon,  1 Jun 2020 18:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035428;
-        bh=50HIzBlE5cgtkzhTklOb2NH4NEGz76WiwXFCARxAil4=;
+        s=default; t=1591035435;
+        bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y02DxiCFrrWjdBKsQe0rMNZ/VXn4NHRC/U2DIN24wPUdBZ8epcYZAGwAsc+QQRHHA
-         z0JJy07opCW3p8zkhrToOPV4wIKhif+0GfchV5M4kMQVjVSpJahoLKXXOEtieUdbGG
-         kuZoMkQ+0gg5iJkeYz6+0sgvDW6hSas/SDUK09gE=
+        b=k/zkmG1ffpUSP5pdwyoWKCmP+xsJebeftDmUmaOLI5Tu9onqcz3df1XY1TxPDq1n+
+         aYHy/DkKQz8xMFdbFY3RGl4nR8Vy55WkEX9yl+Y4UsSULcG6Apg0bTvDW5E4N/Fp8n
+         ABqgv9yx72ip40EtpBKpCO1AlpbSfAUfJF/S5XsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 155/177] netfilter: ipset: Fix subcounter update skip
-Date:   Mon,  1 Jun 2020 19:54:53 +0200
-Message-Id: <20200601174101.281925022@linuxfoundation.org>
+Subject: [PATCH 5.6 157/177] netfilter: nfnetlink_cthelper: unbreak userspace helper support
+Date:   Mon,  1 Jun 2020 19:54:55 +0200
+Message-Id: <20200601174101.415428279@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,33 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Sutter <phil@nwl.cc>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit a164b95ad6055c50612795882f35e0efda1f1390 upstream.
+commit 703acd70f2496537457186211c2f03e792409e68 upstream.
 
-If IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE is set, user requested to not
-update counters in sub sets. Therefore IPSET_FLAG_SKIP_COUNTER_UPDATE
-must be set, not unset.
+Restore helper data size initialization and fix memcopy of the helper
+data size.
 
-Fixes: 6e01781d1c80e ("netfilter: ipset: set match: add support to match the counters")
-Signed-off-by: Phil Sutter <phil@nwl.cc>
+Fixes: 157ffffeb5dc ("netfilter: nfnetlink_cthelper: reject too large userspace allocation requests")
+Reviewed-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/ipset/ip_set_list_set.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nfnetlink_cthelper.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/ipset/ip_set_list_set.c
-+++ b/net/netfilter/ipset/ip_set_list_set.c
-@@ -59,7 +59,7 @@ list_set_ktest(struct ip_set *set, const
- 	/* Don't lookup sub-counters at all */
- 	opt->cmdflags &= ~IPSET_FLAG_MATCH_COUNTERS;
- 	if (opt->cmdflags & IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE)
--		opt->cmdflags &= ~IPSET_FLAG_SKIP_COUNTER_UPDATE;
-+		opt->cmdflags |= IPSET_FLAG_SKIP_COUNTER_UPDATE;
- 	list_for_each_entry_rcu(e, &map->members, list) {
- 		ret = ip_set_test(e->id, skb, par, opt);
- 		if (ret <= 0)
+--- a/net/netfilter/nfnetlink_cthelper.c
++++ b/net/netfilter/nfnetlink_cthelper.c
+@@ -103,7 +103,7 @@ nfnl_cthelper_from_nlattr(struct nlattr
+ 	if (help->helper->data_len == 0)
+ 		return -EINVAL;
+ 
+-	nla_memcpy(help->data, nla_data(attr), sizeof(help->data));
++	nla_memcpy(help->data, attr, sizeof(help->data));
+ 	return 0;
+ }
+ 
+@@ -240,6 +240,7 @@ nfnl_cthelper_create(const struct nlattr
+ 		ret = -ENOMEM;
+ 		goto err2;
+ 	}
++	helper->data_len = size;
+ 
+ 	helper->flags |= NF_CT_HELPER_F_USERSPACE;
+ 	memcpy(&helper->tuple, tuple, sizeof(struct nf_conntrack_tuple));
 
 
