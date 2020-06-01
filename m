@@ -2,191 +2,248 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02964C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D715B2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB712063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgFAIdc (ORCPT
+        id S1728234AbgFAIfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:33:32 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27417 "EHLO mga09.intel.com"
+        Mon, 1 Jun 2020 04:35:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62255 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgFAIdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:33:31 -0400
-IronPort-SDR: KX6H6pMMrbqkzUAKzlatfL5pga/BsPGolhlFgrDT++uvRu3JZjWX9hdz5qKjHDi25xWBpEZ7g0
- B8p/9zzN3vhQ==
+        id S1726142AbgFAIft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 04:35:49 -0400
+IronPort-SDR: azSBGJ1mwIMqfeN81os6DK7gZswojsl2l4/aL5syiRrf74QK+yhBPnYzieaxEMK9UmWLWaoz2f
+ ckOdJAOoMqhA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 01:33:30 -0700
-IronPort-SDR: DAo7x+02qxClWZIG/1Bacfwbe7CZJlqZJWF+aXEMf3lHZHv4NFS42A/jDMQkH20KBXfYWXT22w
- rocpkbdKThNQ==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 01:35:47 -0700
+IronPort-SDR: FGfQ24Q7z2odwpkFCgNChXUIRxCxnX0dfcN1QjZ3+RN+ot7NVSX/sayz4twCYoPOzOgLbC0Sfg
+ ElzBfkJeAqZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,460,1583222400"; 
-   d="scan'208";a="303805935"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 01 Jun 2020 01:33:27 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jffsw-00ABLX-AN; Mon, 01 Jun 2020 11:33:30 +0300
-Date:   Mon, 1 Jun 2020 11:33:30 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Emil Velikov <emil.l.velikov@gmail.com>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
-Message-ID: <20200601083330.GB1634618@smile.fi.intel.com>
-References: <20200529183824.GW1634618@smile.fi.intel.com>
- <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
- <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
- <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
- <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com>
- <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
- <CAHp75VfBe-LMiAi=E4Cy8OasmE8NdSqevp+dsZtTEOLwF-TgmA@mail.gmail.com>
- <CACG_h5p1UpLRoA+ubE4NTFQEvg-oT6TFmsLXXTAtBvzN9z3iPg@mail.gmail.com>
- <CAHp75Vdxa1_ANBLEOB6g25x3O0V5h3yjZve8qpz-xkisD3KTLg@mail.gmail.com>
- <20200531223716.GA20752@rikard>
+   d="scan'208";a="303565655"
+Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2020 01:35:44 -0700
+From:   alexander.antonov@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        lkp@intel.com
+Cc:     alexander.antonov@linux.intel.com
+Subject: [PATCH v10 0/3] perf x86: Exposing IO stack to IO PMON mapping through sysfs
+Date:   Mon,  1 Jun 2020 11:35:40 +0300
+Message-Id: <20200601083543.30011-1-alexander.antonov@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200531223716.GA20752@rikard>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 12:37:16AM +0200, Rikard Falkeborn wrote:
-> + Emil who was working on a patch for this
-> 
-> On Sun, May 31, 2020 at 02:00:45PM +0300, Andy Shevchenko wrote:
-> > On Sun, May 31, 2020 at 4:11 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > > On Sat, May 30, 2020 at 2:50 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Sat, May 30, 2020 at 11:45 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > > > > On Sat, May 30, 2020 at 3:49 AM Andy Shevchenko
-> > > > > <andy.shevchenko@gmail.com> wrote:
-> > 
-> > ...
-> > 
-> Sorry about that, it seems it's only triggered by gcc-9, that's why I
-> missed it.
+From: Alexander Antonov <alexander.antonov@linux.intel.com>
 
-I guess every compiler (more or less recent) will warn here.
-(Sorry, there is a cut in the thread, the problem is with comparison unsigned
- type(s) to 0).
+The previous version can be found at:
+v9: https://lkml.kernel.org/r/20200525080554.21313-1-alexander.antonov@linux.intel.com/
+Changes in this revision are:
+v9 -> v10:
+- Addressed comment from CI Test Service:
+  1. Fixed coding style issues (old style declaration)
 
-> > > #if (l) == 0
-> > > #define GENMASK_INPUT_CHECK(h, l)  0
-> > > #elif
-> > > #define GENMASK_INPUT_CHECK(h, l) \
-> > >         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> > >                 __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> > > #endif
-> > >
-> > > I have verified that this works. Basically this just avoids the sanity
-> > > check when the 'lower' bound 'l' is zero. Let me know if it looks
-> > > fine.
-> 
-> I don't understand how you mean this? You can't use l before you have
-> defined GENMASK_INPUT_CHECK to take l as input? Am I missing something?
-> 
-> How about the following (with an added comment about why the casts are
-> necessary):
-> 
-> diff --git a/include/linux/bits.h b/include/linux/bits.h
-> index 4671fbf28842..5fdb9909fbff 100644
-> --- a/include/linux/bits.h
-> +++ b/include/linux/bits.h
-> @@ -23,7 +23,7 @@
->  #include <linux/build_bug.h>
->  #define GENMASK_INPUT_CHECK(h, l) \
->         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> -               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> +               __builtin_constant_p((int)(l) > (int)(h)), (int)(l) > (int)(h), 0)))
->  #else
->  /*
->   * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-> 
-> I can send a proper patch if this is ok.
-> > 
-> > Unfortunately, it's not enough. We need to take care about the following cases
-> 
-> The __GENMASK macro is only valid for values of h and l between 0 and 63
-> (or 31, if unsigned long is 32 bits). Negative values or values >=
-> sizeof(unsigned long) (or unsigned long long for GENMASK_ULL) result in
-> compiler warnings (-Wshift-count-negative or -Wshift-count-overflow). So
-> when I wrote the GENMASK_INPUT_CHECK macro, the intention was to catch
-> cases where l and h were swapped and let the existing compiler warnings
-> catch negative or too large values.
+The previous version can be found at:
+v8: https://lkml.kernel.org/r/20200320073110.4761-1-roman.sudarikov@linux.intel.com/
+Changes in this revision are:
+v8 -> v9:
+- Addressed comments from Alexander Shishkin:
+  1. Improved comments and commit messages
+  2. Replacing "0444" with the S_IRUGO results in the following checkpatch
+     warning: "Symbolic permissions 'S_IRUGO' are not preferred. Consider using
+     octal permissions '0444'". Thus keeping 0444 for now.
+     Also see: https://lkml.org/lkml/2016/8/2/1945
 
-GENAMSK sometimes is used with non-constant arguments that's why your check
-made a regression.
+The previous version can be found at:
+v7: https://lkml.kernel.org/r/20200303135418.9621-1-roman.sudarikov@linux.intel.com/
+Changes in this revision are:
+v7 -> v8:
+- Addressed comments from Kan Liang:
+  1. Fixed coding style issues (gotos in error path, comments style)
 
-What I described below are the cases to consider w/o what should we do. What
-you answered is the same what I implied. So, we are on the same page here.
+The previous version can be found at:
+v6: https://lkml.kernel.org/r/20200213150148.5627-1-roman.sudarikov@linux.intel.com/
 
-> > 1) h or l negative;
-> 
-> Any of these cases will trigger a compiler warning (h negative triggers 
-> Wshift-count-overflow, l negative triggers Wshift-count-negative).
-> 
-> > 2) h == 0, if l == 0, I dunno what is this. it's basically either 0 or warning;
-> 
-> h == l == 0 is a complicated way of saying 1 (or BIT(0)). l negative
-> triggers compiler warning.
+Changes in this revision are:
+v6 -> v7:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Added proper handling of load/unload path
+  2. Simplified the mapping attribute show procedure by using the segment value
+     of the first available root bus for all mapping attributes which is safe
+     due to current implementation supports single segment configuration only
+  3. Fixed coding style issues (extra lines, gotos in error path, macros etc)
 
-Oh, yes GENMASK(h, l), when h==l==0 should be equivalent to BIT(0) with no
-warning given.
+The previous version can be found at:
+v5: https://lkml.kernel.org/r/20200211161549.19828-1-roman.sudarikov@linux.intel.com/
 
-> > 3) l == 0;
-> 
-> if h is negative, compiler warning (see 1). If h == 0, see 2. If h is
-> positive, there is no error in GENMASK_INPUT_CHECK.
-> 
-> > 4) h and l > 0.
-> 
-> The comparisson works as intended.
+Changes in this revision are:
+v5 -> v6:
+  1. Changed the mapping attribute name to "dieX"
+  2. Called sysfs_attr_init() prior to dynamically creating the mapping attrs
+  3. Removed redundant "empty" attribute
+  4. Got an agreement on the mapping attribute format
 
-> > Now, on top of that (since it's a macro) we have to keep in mind that
-> > h and l can be signed and / or unsigned types.
-> > And macro shall work for all 4 cases (by type signedess).
-> 
-> If we cast to int, we don't need to worry about the signedness. If
-> someone enters a value that can't be cast to int, there will still
-> be a compiler warning about shift out of range.
+The previous version can be found at:
+v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
 
-If the argument unsigned long long will it be the warning (it should not)?
+Changes in this revision are:
+v4 -> v5:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Using the attr_update flow for newly introduced optional attributes
+  2. No subfolder, optional attributes are created the same level as 'cpumask'
+  3. No symlinks, optional attributes are created as files
+  4. Single file for each IIO PMON block to node mapping
+  5. Added Documentation/ABI/sysfs-devices-mapping
 
-> > > Regarding min, max macro that you suggested I am also looking further into it.
-> > 
-> > Since this has been introduced in v5.7 and not only your code is
-> > affected by this I think we need to ping original author either to fix
-> > or revert.
-> > 
-> > So, I Cc'ed to the author and reviewers, because they probably know
-> > better why that had been done in the first place and breaking existing
-> > code.
+The previous version can be found at:
+v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
 
-Please, when you do something there, add a test case to test_bitops.c.
+Changes in this revision are:
+v3 -> v4:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Reworked handling of newly introduced attribute.
+  2. Required Documentation update is expected in the follow up patchset
 
+
+The previous version can be found at:
+v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v2 -> v3:
+  1. Addressed comments from Peter and Kan
+
+The previous version can be found at:
+v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v1 -> v2:
+  1. Fixed process related issues;
+  2. This patch set includes kernel support for IIO stack to PMON mapping;
+  3. Stephane raised concerns regarding output format which may require
+code changes in the user space part of the feature only. We will continue
+output format discussion in the context of user space update.
+
+Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
+significant changes in the integrated I/O (IIO) architecture. The new
+solution introduces IIO stacks which are responsible for managing traffic
+between the PCIe domain and the Mesh domain. Each IIO stack has its own
+PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
+or various built-in accelerators. IIO PMON blocks allow concurrent
+monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+
+Software is supposed to program required perf counters within each IIO
+stack and gather performance data. The tricky thing here is that IIO PMON
+reports data per IIO stack but users have no idea what IIO stacks are -
+they only know devices which are connected to the platform.
+
+Understanding IIO stack concept to find which IIO stack that particular
+IO device is connected to, or to identify an IIO PMON block to program
+for monitoring specific IIO stack assumes a lot of implicit knowledge
+about given Intel server platform architecture.
+
+This patch set introduces:
+1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
+   through sysfs-backend;
+2. A new --iiostat mode in perf stat to provide I/O performance metrics
+   per I/O device.
+
+Usage examples:
+
+1. List all devices below IIO stacks
+  ./perf stat --iiostat=show
+
+Sample output w/o libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0>
+    S1-RootPort0-uncore_iio_0<81:00.0>
+    S0-RootPort1-uncore_iio_1<18:00.0>
+    S1-RootPort1-uncore_iio_1<86:00.0>
+    S1-RootPort1-uncore_iio_1<88:00.0>
+    S0-RootPort2-uncore_iio_2<3d:00.0>
+    S1-RootPort2-uncore_iio_2<af:00.0>
+    S1-RootPort3-uncore_iio_3<da:00.0>
+
+Sample output with libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
+    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
+    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
+    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
+
+2. Collect metrics for all I/O devices below IIO stack
+
+  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    357708+0 records in
+    357707+0 records out
+    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    00:00.0                    0                    0                    0                    0
+    81:00.0                    0                    0                    0                    0
+    18:00.0                    0                    0                    0                    0
+    86:00.0                    0                    0                    0                    0
+    88:00.0                    0                    0                    0                    0
+    3b:00.0                    3                    0                    0                    0
+    3c:03.0                    3                    0                    0                    0
+    3d:00.0                    3                    0                    0                    0
+    af:00.0                    0                    0                    0                    0
+    da:00.0               358559                   44                    0                   22
+
+    215.383783574 seconds time elapsed
+
+
+3. Collect metrics for comma separted list of I/O devices
+
+  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    381555+0 records in
+    381554+0 records out
+    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    da:00.0               382462                   47                    0                   23
+
+    374.045775505 seconds time elapsed
+
+Roman Sudarikov (3):
+  perf/x86/intel/uncore: Expose an Uncore unit to PMON mapping
+  perf/x86/intel/uncore: Wrap the max dies calculation into an accessor
+  perf/x86/intel/uncore: Expose an Uncore unit to IIO PMON mapping
+
+ .../ABI/testing/sysfs-devices-mapping         |  33 +++
+ arch/x86/events/intel/uncore.c                |  21 +-
+ arch/x86/events/intel/uncore.h                |  24 +++
+ arch/x86/events/intel/uncore_snbep.c          | 191 ++++++++++++++++++
+ 4 files changed, 263 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+
+
+base-commit: 9cb1fd0efd195590b828b9b865421ad345a4a145
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.19.1
 
