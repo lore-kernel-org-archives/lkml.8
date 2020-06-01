@@ -2,118 +2,244 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB17C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B948C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A551206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547ED2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="JJ/TQUxp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yhrpZBt6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDNeF1Pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgFALLL (ORCPT
+        id S1726327AbgFALMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 07:11:11 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:35513 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbgFALLK (ORCPT
+        Mon, 1 Jun 2020 07:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgFALMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 07:11:10 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 07C1D5C0035;
-        Mon,  1 Jun 2020 07:11:08 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 01 Jun 2020 07:11:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=3XvqIZoNbkcvmPOyxJdZmpK2ijZ
-        lRphPyOlcJMHTT+Q=; b=JJ/TQUxpepzueCA1KYXlq6WDfiutndE/JCfQXK3I72O
-        5/VL95WRTtP49v7SVoadRP8EA2QkgJKxSubKRa2AAGrBZJudSLK9Tz5Dgy3Xe3yi
-        JkP01TXJAfsvEkjMa67DyvZS4n/uv90E1itX404wsSTGISZhJJQa/7GCcIPDwtxO
-        yefM1FNBrs0+dkXzQHPoAg1DyBXb7HBMEXJYW94P/4CaQpE0XIMQxhkE83ljKCaK
-        E8Ah8TwwvBDFgD9kF/ajuyl0oe8Dn8Ly2SuqfkGF1CcQtbMuXHNvpv2mVYKWRSBs
-        IRtJXOGDTQORxQFKRcZ/VWor/HvnOEm2U2gTzPm8/ig==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3XvqIZ
-        oNbkcvmPOyxJdZmpK2ijZlRphPyOlcJMHTT+Q=; b=yhrpZBt6qEtxPMSUBwZAuU
-        05+EAmZxIVtvDR/dIdynQb5GNs6PEBFb3PPKAnofj4iZSU69xXCsqBhQkz9rFPXc
-        Pc33zztT34lbQpQVHz1Y7PZ0RWddOfdBYX50KDzAFXPMAuxcpnSPmaJibGeDTHSs
-        AW+DjUa1/LPYIGAxzE1GbDMmImB3H5luelfIG6ba0+s+7VwhvgqjtlIDUMdZ56xZ
-        ZGxbl76b/8WeyWNKd4nrOHMYjEZAYpCxd+jByWgDpXToDpCewoh9kH2sTzi3fjdQ
-        m31yOWvfU4hpKjcLHOsjd1Z4rI/Y6m3q+aKjGz9OjzKp0yRuFFpWf0Se7FkmjjRA
-        ==
-X-ME-Sender: <xms:S-LUXgTq3hMiiDPpyldzfyqdHzkFBSrL3UOftoV114FgSJMxama64A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefhedgfedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeuleeltd
-    ehkeeltefhleduuddvhfffuedvffduveegheekgeeiffevheegfeetgfenucffohhmrghi
-    nhepkhgvrhhnvghlrdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgr
-    hhdrtghomh
-X-ME-Proxy: <xmx:S-LUXtxXzzebuxxWcVLqwmkqKjqR3ausMtPdxaLdzklf3NSISk5nbQ>
-    <xmx:S-LUXt1oaMrWUFlOVCHW8v9gQ2JG9xIEavF9RembbNvwMgcAceTZ1w>
-    <xmx:S-LUXkCgSpPOaD3v9WjBoi6cOUc0cOzLLASUeNp4R86aa1UtnDfsww>
-    <xmx:TOLUXnYdFNvio5rOs8Dy0_sZ9XczUptnQ28w6Z30zKv7epBkA-lBLQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2BA463060F09;
-        Mon,  1 Jun 2020 07:11:07 -0400 (EDT)
-Date:   Mon, 1 Jun 2020 13:11:05 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Sarthak Garg <sartgarg@codeaurora.org>
-Cc:     stable@vger.kernel.org, adrian.hunter@intel.com,
-        ulf.hansson@linaro.org, vbadigan@codeaurora.org,
-        stummala@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [4.19.124 V1] mmc: core: Fix recursive locking issue in CQE
- recovery path
-Message-ID: <20200601111105.GC124421@kroah.com>
-References: <1590581942-24283-1-git-send-email-sartgarg@codeaurora.org>
+        Mon, 1 Jun 2020 07:12:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84021C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 04:12:05 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e4so7622929ljn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 04:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K2/0YsNA83Geikdg8xSFtPuXls8VUpH1woVTNt2k/XQ=;
+        b=rDNeF1PmlxvWMhdfbZKW1PZGqHjTG7y5cui4e7iPNLi/OXCOtkGeoy2MjsEofQd1DN
+         6Qpzk3rrq8wO6B6cLiLlTyQdphyPVcYF+rAAyqiVO9rxtwGB5SP5SAktv6Imy/zbIyrz
+         eishvUB9UYR2zobnj65m/YAsIvBco0GiXsR4e9c1XhE0l7dV5vljP+mpGWrjooS8w/8Z
+         SQ2faxkxBc7YeY+qqs1n/dOo9f7ftMeORBus7WvbdCU3TkCwaUE5XOPY6sFV/DwsZcKU
+         1Irsohtk49cWrvi9wDTB3x7Uj3bwiAegCN9vhaqLBScviAsyrLx7DtnYellshrWE1bQh
+         vVdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K2/0YsNA83Geikdg8xSFtPuXls8VUpH1woVTNt2k/XQ=;
+        b=EZdar2ONXTUDnAWkrxGxZGE8O0ib121DKV4sdZFKTrIMNkuAsOunGT+MuoMGjxPa0d
+         9yVEZ+KdLdoKoBPGoJFSAjd7JK5cwo7CMhGUpTUHEQCuLM97ECbRtHP8XOumqy6V1ORJ
+         KlGuVRgWAzmnOxYOy9yMtQ8D+M2hawY98DenDxqrFuqxjuZUxDeHSj8K8kZImz2/wFQ1
+         RoK/1FbkIuXFpMHMm+eD0jUXvwHvm3C1X83yVvmXvKJZ1blCPuxBInE336X/UjLPelzA
+         0KN/yCeWpMYvmmJ4iSAW9CUPzT+UO57QqrlLbwa5at05s36b1etmaLGbOEASfKUCzhaA
+         gutw==
+X-Gm-Message-State: AOAM531r4oSX1uD/IxwYme9niCfec+Zy2eskII6J+23wBmnlLxHClBJu
+        g6x9ZC08w7ro9OWRzF+q3jGylIEHxNDG3QEJoxYwDg==
+X-Google-Smtp-Source: ABdhPJxLsB373tBnVYRgJ1vn7dn1tWlACfXtQ9stWrdwoQ4Gydq3ce5Qc0OlbTI8U2eXMzT08WfqhvRWLDvFRIaosSw=
+X-Received: by 2002:a2e:7504:: with SMTP id q4mr9613507ljc.339.1591009923893;
+ Mon, 01 Jun 2020 04:12:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590581942-24283-1-git-send-email-sartgarg@codeaurora.org>
+References: <20200529082701.13457-1-maxim.uvarov@linaro.org> <20200529082701.13457-4-maxim.uvarov@linaro.org>
+In-Reply-To: <20200529082701.13457-4-maxim.uvarov@linaro.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Mon, 1 Jun 2020 16:41:51 +0530
+Message-ID: <CAFA6WYM56ec-V0vv=4pVcu02FhR==1B+jMMDkU5WSjLdbP4kTw@mail.gmail.com>
+Subject: Re: [PATCHv5 3/3] tpm_ftpm_tee: register driver on TEE bus
+To:     Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 05:49:02PM +0530, Sarthak Garg wrote:
-> [ Upstream commit 39a22f73744d5baee30b5f134ae2e30b668b66ed ]
-> 
-> Consider the following stack trace
-> 
-> -001|raw_spin_lock_irqsave
-> -002|mmc_blk_cqe_complete_rq
-> -003|__blk_mq_complete_request(inline)
-> -003|blk_mq_complete_request(rq)
-> -004|mmc_cqe_timed_out(inline)
-> -004|mmc_mq_timed_out
-> 
-> mmc_mq_timed_out acquires the queue_lock for the first
-> time. The mmc_blk_cqe_complete_rq function also tries to acquire
-> the same queue lock resulting in recursive locking where the task
-> is spinning for the same lock which it has already acquired leading
-> to watchdog bark.
-> 
-> Fix this issue with the lock only for the required critical section.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
-> Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
-> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> Link: https://lore.kernel.org/r/1588868135-31783-1-git-send-email-vbadigan@codeaurora.org
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+On Fri, 29 May 2020 at 13:57, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>
+> Register driver on the TEE bus. The module tee registers bus,
+> and module optee calls optee_enumerate_devices() to scan
+> all devices on the bus. Trusted Application for this driver
+> can be Early TA's (can be compiled into optee-os). In that
+> case it will be on OPTEE bus before linux booting. Also
+> optee-suplicant application is needed to be loaded between
+> OPTEE module and ftpm module to maintain functionality
+> for fTPM driver.
+
+I think this description merely describes the functioning of TEE bus
+and misses what value add does TEE bus provide compared to platform
+bus.
+
+Consider:
+
+====
+OP-TEE based fTPM Trusted Application depends on tee-supplicant to
+provide NV RAM implementation based on RPMB secure storage. So this
+dependency can be resolved via TEE bus where we only invoke fTPM
+driver probe once fTPM device is registered on the bus which is only
+true after the tee-supplicant is up and running. Additionally, TEE bus
+provides auto device enumeration.
+====
+
+With that, implementation looks good to me. So feel free to add:
+
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+
+-Sumit
+
+>
+> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
+> Suggested-by: Arnd Bergmann <arnd@linaro.org>
 > ---
-
-Thanks for the backport, now queued up.
-
-greg k-h
+>  drivers/char/tpm/tpm_ftpm_tee.c | 70 ++++++++++++++++++++++++++++-----
+>  1 file changed, 60 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+> index 22bf553ccf9d..28da638360d8 100644
+> --- a/drivers/char/tpm/tpm_ftpm_tee.c
+> +++ b/drivers/char/tpm/tpm_ftpm_tee.c
+> @@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+>   * Return:
+>   *     On success, 0. On failure, -errno.
+>   */
+> -static int ftpm_tee_probe(struct platform_device *pdev)
+> +static int ftpm_tee_probe(struct device *dev)
+>  {
+>         int rc;
+>         struct tpm_chip *chip;
+> -       struct device *dev = &pdev->dev;
+>         struct ftpm_tee_private *pvt_data = NULL;
+>         struct tee_ioctl_open_session_arg sess_arg;
+>
+> @@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+>         return rc;
+>  }
+>
+> +static int ftpm_plat_tee_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +
+> +       return ftpm_tee_probe(dev);
+> +}
+> +
+>  /**
+>   * ftpm_tee_remove() - remove the TPM device
+>   * @pdev: the platform_device description.
+> @@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+>   * Return:
+>   *     0 always.
+>   */
+> -static int ftpm_tee_remove(struct platform_device *pdev)
+> +static int ftpm_tee_remove(struct device *dev)
+>  {
+> -       struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
+> +       struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
+>
+>         /* Release the chip */
+>         tpm_chip_unregister(pvt_data->chip);
+> @@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +static int ftpm_plat_tee_remove(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +
+> +       return ftpm_tee_remove(dev);
+> +}
+> +
+>  /**
+>   * ftpm_tee_shutdown() - shutdown the TPM device
+>   * @pdev: the platform_device description.
+>   */
+> -static void ftpm_tee_shutdown(struct platform_device *pdev)
+> +static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
+>  {
+>         struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
+>
+> @@ -347,17 +360,54 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
+>
+> -static struct platform_driver ftpm_tee_driver = {
+> +static struct platform_driver ftpm_tee_plat_driver = {
+>         .driver = {
+>                 .name = "ftpm-tee",
+>                 .of_match_table = of_match_ptr(of_ftpm_tee_ids),
+>         },
+> -       .probe = ftpm_tee_probe,
+> -       .remove = ftpm_tee_remove,
+> -       .shutdown = ftpm_tee_shutdown,
+> +       .shutdown = ftpm_plat_tee_shutdown,
+> +       .probe = ftpm_plat_tee_probe,
+> +       .remove = ftpm_plat_tee_remove,
+> +};
+> +
+> +/* UUID of the fTPM TA */
+> +static const struct tee_client_device_id optee_ftpm_id_table[] = {
+> +       {UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
+> +                  0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
+> +       {}
+>  };
+>
+> -module_platform_driver(ftpm_tee_driver);
+> +MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
+> +
+> +static struct tee_client_driver ftpm_tee_driver = {
+> +       .id_table       = optee_ftpm_id_table,
+> +       .driver         = {
+> +               .name           = "optee-ftpm",
+> +               .bus            = &tee_bus_type,
+> +               .probe          = ftpm_tee_probe,
+> +               .remove         = ftpm_tee_remove,
+> +       },
+> +};
+> +
+> +static int __init ftpm_mod_init(void)
+> +{
+> +       int rc;
+> +
+> +       rc = platform_driver_register(&ftpm_tee_plat_driver);
+> +       if (rc)
+> +               return rc;
+> +
+> +       return driver_register(&ftpm_tee_driver.driver);
+> +}
+> +
+> +static void __exit ftpm_mod_exit(void)
+> +{
+> +       platform_driver_unregister(&ftpm_tee_plat_driver);
+> +       driver_unregister(&ftpm_tee_driver.driver);
+> +}
+> +
+> +module_init(ftpm_mod_init);
+> +module_exit(ftpm_mod_exit);
+>
+>  MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
+>  MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
+> --
+> 2.17.1
+>
