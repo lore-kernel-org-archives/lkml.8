@@ -2,120 +2,192 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74336C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB34A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAF6206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cEmrZkDG"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="XQFqfptk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgFAF4Y (ORCPT
+        id S1727000AbgFAF46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:56:24 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:44255 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgFAF4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:56:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590990982; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=qxNlodpscBoxykFUAQVlHFmPOZvwy8cggIcifiL/Li0=; b=cEmrZkDGMht59MeHm/IvO3+KZuVClKAY3e3zVTAHOtxnPyeov2nGHmdLv29lVdln09ECIcdP
- lzYjVqvvtIAAp9p5ZPLANkesDQUYfayt26LDNVQLAQQMmEr4EO8/naNUP7NzGF35oEwZttHp
- 2vhsAPs9Z1ilhaVUWxyF8cwxHSU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ed498832dd9e15ae345e86b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 05:56:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 454CEC433CB; Mon,  1 Jun 2020 05:56:18 +0000 (UTC)
-Received: from [10.50.34.11] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51DA3C433C9;
-        Mon,  1 Jun 2020 05:56:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51DA3C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2] dt-bindings: media: venus: Add an optional power
- domain for perf voting
-To:     Rob Herring <robh@kernel.org>
-Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-References: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
- <20200527193638.GA2604206@bogus>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
-Date:   Mon, 1 Jun 2020 11:26:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 01:56:58 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51314 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726070AbgFAF45 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 01:56:57 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0515lTN1000727;
+        Mon, 1 Jun 2020 07:56:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=jm4u4MsVV598+LB742qzZN+QkL1OoKxYIMw9eBswBXo=;
+ b=XQFqfptkVoAsWGN64ok/XB/t6VmuQpg9AsBWjOxwzPObPxHYGXjpYm7gYMDIwVE+GHPk
+ ZCsV3va/ZzOWG3gtgV+wkGR11XM4n+c4MRuX0OxH7Vs4EqmyCyhoG/MswcbmEV4EZBpJ
+ sh1Jk5qKu7SimGKJKugWU1v+j0TdS9JrPKYBUQrcA4RDGdh0V199eiVgvnzd3cMpf2Rb
+ 1vEfaQw9rJNZcwmTAmpPpsTQsGGMX8eXeCEbKnY5/cY+QHepaLn5Kd2N9vVwiYIRr6SF
+ K1oULjbDMd+rBxgn5QKJuaSWHqlyH5PnwreTDSRHkjvEGkAIy8tzRwqkMQyWAiKmSoMR xA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31becfqhgf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jun 2020 07:56:40 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30CF310002A;
+        Mon,  1 Jun 2020 07:56:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1A87E2074B0;
+        Mon,  1 Jun 2020 07:56:36 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 1 Jun
+ 2020 07:56:35 +0200
+Date:   Mon, 1 Jun 2020 07:56:34 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+CC:     "kjlu@umn.edu" <kjlu@umn.edu>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] [v2] i2c: stm32f7: Fix runtime PM imbalance on error
+Message-ID: <20200601055634.GB17269@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200527013853.30252-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-In-Reply-To: <20200527193638.GA2604206@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200527013853.30252-1-dinghao.liu@zju.edu.cn>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-01_01:2020-05-28,2020-06-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 5/28/2020 1:06 AM, Rob Herring wrote:
-> On Wed, May 13, 2020 at 11:33:27AM +0530, Rajendra Nayak wrote:
->> Add an optional power domain which when specified can be used for
->> setting the performance state of Venus.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
->>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
->>   2 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->> index 764affa..ac1ed64 100644
->> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->> @@ -25,12 +25,16 @@ properties:
->>       maxItems: 1
->>   
->>     power-domains:
->> -    maxItems: 2
->> +    minItems: 2
->> +    maxItems: 3
->>   
->>     power-domain-names:
->> +    minItems: 2
->> +    maxItems: 3
->>       items:
->>         - const: venus
->>         - const: vcodec0
->> +      - const: opp-pd
+Reviewed-by: Alain Volmat <alain.volmat@st.com>
+
+Thanks,
+Alain
+
+On Wed, May 27, 2020 at 01:38:53AM +0000, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> the call returns an error code. Thus a pairing decrement is needed
+> on the error handling path to keep the counter balanced.
 > 
-> Humm, looks suspicious. This is a phyical power island in this block?
-
-yes, this is used to represent the physical 'cx' power island in the SoC
-(Its a shared power island, not a power island specific to this block)
-that can be scaled to different 'performance levels' based on the frequency
-the codec is expected to run at.
-
-> Because that's what 'power-domains' are supposed to represent. Not $os
-> pm-domain construct.
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
 > 
-> Rob
+> Changelog:
 > 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> v2: - Use pm_runtime_put_noidle() instead of
+>       pm_runtime_put_autosuspend(). Fix 5 more
+>       similar cases within this dirver.
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 330ffed011e0..822fd1f5b5ae 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -1620,8 +1620,10 @@ static int stm32f7_i2c_xfer(struct i2c_adapter *i2c_adap,
+>  	f7_msg->smbus = false;
+>  
+>  	ret = pm_runtime_get_sync(i2c_dev->dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(i2c_dev->dev);
+>  		return ret;
+> +	}
+>  
+>  	ret = stm32f7_i2c_wait_free_bus(i2c_dev);
+>  	if (ret)
+> @@ -1666,8 +1668,10 @@ static int stm32f7_i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
+>  	f7_msg->smbus = true;
+>  
+>  	ret = pm_runtime_get_sync(dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(dev);
+>  		return ret;
+> +	}
+>  
+>  	ret = stm32f7_i2c_wait_free_bus(i2c_dev);
+>  	if (ret)
+> @@ -1767,8 +1771,10 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+>  		return ret;
+>  
+>  	ret = pm_runtime_get_sync(dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(dev);
+>  		return ret;
+> +	}
+>  
+>  	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
+>  		stm32f7_i2c_enable_wakeup(i2c_dev, true);
+> @@ -1837,8 +1843,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
+>  	WARN_ON(!i2c_dev->slave[id]);
+>  
+>  	ret = pm_runtime_get_sync(i2c_dev->dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(i2c_dev->dev);
+>  		return ret;
+> +	}
+>  
+>  	if (id == 0) {
+>  		mask = STM32F7_I2C_OAR1_OA1EN;
+> @@ -2182,8 +2190,10 @@ static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
+>  	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
+>  
+>  	ret = pm_runtime_get_sync(i2c_dev->dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(i2c_dev->dev);
+>  		return ret;
+> +	}
+>  
+>  	backup_regs->cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
+>  	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
+> @@ -2204,8 +2214,10 @@ static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
+>  	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
+>  
+>  	ret = pm_runtime_get_sync(i2c_dev->dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(i2c_dev->dev);
+>  		return ret;
+> +	}
+>  
+>  	cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
+>  	if (cr1 & STM32F7_I2C_CR1_PE)
+> -- 
+> 2.17.1
+> 
