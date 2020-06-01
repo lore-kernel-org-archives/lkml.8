@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F78C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2019FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE9F52068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0EF1207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035287;
-	bh=GAE2D+tNYqHpOGEnIoN5nD5WiR4WK1GbglOK11YPR98=;
+	s=default; t=1591035290;
+	bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WJZOcv4cr2YKkUrophwJhBDF9Lv00mWT8V7QaA1HR2ahZmBcmy3SK7IeEBMpQAHIx
-	 t3BAkQZh81g9BxKo3QXoVTVR93BEr8SXranPmV/RgqWJ9tiwW4KNVvXiKo3Mw9Mavy
-	 2kWMRqG9kREtmiHLyu8vzIuMO8/E09mF3dVbW7GA=
+	b=zi/g9E8LcIrrR3dRxcUVzOWavupBKohLM0fyRXYMr+lwTuCRJSJb5deioohwjb/ZG
+	 jdViLfQLVsuBkHiTYAa4tiGOaGq6A3z8D1ziFwoOnBP4A2DZjwLF0iUJOyYeCwPWJ0
+	 COT2AC0m9BiZsmqSqSHdM+6+3KZwA/S7Ym+RjHGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbgFASOq (ORCPT
+        id S1730736AbgFASOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34464 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731481AbgFASOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:14:36 -0400
+        id S1731490AbgFASOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:14:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8FF72068D;
-        Mon,  1 Jun 2020 18:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF53C2065C;
+        Mon,  1 Jun 2020 18:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035276;
-        bh=GAE2D+tNYqHpOGEnIoN5nD5WiR4WK1GbglOK11YPR98=;
+        s=default; t=1591035278;
+        bh=rqrGl13jobhYXcTJKyrzebOW90O43LvkFl6zGUpmsIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTbSW4Ui7ZopeNsB2bgMXn63YKJRkgu26chAvuOTwR0B3AOySOBOMh1HtwVIHMUzk
-         A+ZoU7OqvDAqTXo/LR88jWIE86wGPx5urLjzt86EuhCUYUCuokkx/YPsV4wQmN6AWw
-         FGn9IInquh1z8ux5Kg88uay34bAwBPBTXvY9MAwA=
+        b=FEfGvCMPm4F1hoe/ZBxZ8gJ04389gXUMtXJJLrPCEt0PiL/TTtkclPxctBA4F1925
+         Bb37fMj6Ms2tkZ0O1V6oO3jtghWKrNmwvYnxGYJBNQGVAxEW+GBfkMEqLsNaQ5Q90r
+         ypeRpt/ZEFZ5Ech3oO6VkofFzVfHCJAVMhGc+q54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
         Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 046/177] ARM: dts: rockchip: fix phy nodename for rk3229-xms6
-Date:   Mon,  1 Jun 2020 19:53:04 +0200
-Message-Id: <20200601174052.884195491@linuxfoundation.org>
+Subject: [PATCH 5.6 047/177] arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
+Date:   Mon,  1 Jun 2020 19:53:05 +0200
+Message-Id: <20200601174052.963037618@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,45 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 621c8d0c233e260232278a4cfd3380caa3c1da29 ]
+[ Upstream commit c617ed88502d0b05149e7f32f3b3fd8a0663f7e2 ]
 
-A test with the command below gives for example this error:
-
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: phy@0:
-'#phy-cells' is a required property
-
-The phy nodename is normally used by a phy-handle.
-This node is however compatible with
-"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
-which is just been added to 'ethernet-phy.yaml'.
-So change nodename to 'ethernet-phy' for which '#phy-cells'
-is not a required property
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
+The status was removed of the '&gmac2phy' node with the apply
+of a patch long time ago, so fix status for '&gmac2phy'
+in 'rk3328-evb.dts'.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200425122345.12902-2-jbx6244@gmail.com
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200416170321.4216-2-jbx6244@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3229-xms6.dts | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-index 679fc2b00e5a..933ef69da32a 100644
---- a/arch/arm/boot/dts/rk3229-xms6.dts
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -150,7 +150,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+index 6abc6f4a86cf..05265b38cc02 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -86,7 +86,7 @@
+ 	assigned-clock-rate = <50000000>;
+ 	assigned-clocks = <&cru SCLK_MAC2PHY>;
+ 	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
+-
++	status = "okay";
+ };
  
--		phy: phy@0 {
-+		phy: ethernet-phy@0 {
- 			compatible = "ethernet-phy-id1234.d400",
- 			             "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
+ &i2c1 {
 -- 
 2.25.1
 
