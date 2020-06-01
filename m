@@ -2,171 +2,117 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 02:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3324C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 02:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E332076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 02:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GI7UU2H2"
+	by mail.kernel.org (Postfix) with ESMTP id CBEFB2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 02:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgFAC0l (ORCPT
+        id S1727089AbgFACbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 22:26:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48500 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbgFAC0l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 22:26:41 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0512KAIW157651;
-        Mon, 1 Jun 2020 02:26:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=3op1Z5m27SJuiJ7sCOR05G2Br09w4TM7ZfeVl/DbPQc=;
- b=GI7UU2H2n6IDKas9tpBfEdmL4RvRdHCdIuUM2frPUQW1VjQ7SEdillEJTll1MlLYX1MG
- Bn3cm9KrcrskhYiSfMSUC7eu8wNdh4CQ8RiMGfL3lCZGdoN2gC9TKkaQ650KnAGKI8pW
- kz8PhNoI1JCZU5cQN5a4soUDcSf5T6IkJsU1oJ7D8gMko4prpLXrdQirxVdVlmSJxb6P
- YQ/9MYf3zcLnuClPZrI3DisDeSJS2Xn5e+Gf+ht+otdR90pgONgacYSgVbnquW+81cFp
- fE2Pdj0iqdLF0If21G4oGe2hbStANuw+PGkLs803ucVyrSBHxeh3YkBvC3cBC0rLQflP gA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31bewqmf4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 01 Jun 2020 02:26:38 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0512Hs8L001453;
-        Mon, 1 Jun 2020 02:26:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 31c18qr6sa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Jun 2020 02:26:37 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0512QaBB029436;
-        Mon, 1 Jun 2020 02:26:36 GMT
-Received: from localhost.localdomain (/10.159.229.17)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 31 May 2020 19:26:35 -0700
-Subject: Re: [PATCH 25/30] KVM: nSVM: leave guest mode when clearing EFER.SVME
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200529153934.11694-1-pbonzini@redhat.com>
- <20200529153934.11694-26-pbonzini@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <da854e9e-b305-b938-68f6-995bcc80ffd1@oracle.com>
-Date:   Sun, 31 May 2020 19:26:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 31 May 2020 22:31:00 -0400
+Received: from mga04.intel.com ([192.55.52.120]:46984 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbgFACa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 22:30:59 -0400
+IronPort-SDR: mNzRv7egugdV/olPghanJEyibIn6JE6Zr+Fsn8JS9Jd5/yrOCUcQoDfNEKXzIA/89K4SoyIglA
+ y/mHU6XyG3hw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 19:30:59 -0700
+IronPort-SDR: T05QpFWba5K1bVwF/kW3+ljbhKH1XhcO80D78Yw8mpE5PkpQVzvY+7ARcdODO70NQuQMX2h/ZW
+ Zhh8iymTeLzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
+   d="scan'208";a="257110159"
+Received: from dytagah-mobl.amr.corp.intel.com (HELO localhost) ([10.252.58.236])
+  by orsmga007.jf.intel.com with ESMTP; 31 May 2020 19:30:48 -0700
+Date:   Mon, 1 Jun 2020 05:30:47 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Benoit Houyere <benoit.houyere@st.com>
+Subject: Re: [PATCH v9 2/8] tpm: tpm_tis: Fix expected bit handling and send
+ all bytes in one shot without last byte in exception
+Message-ID: <20200601023047.GB796332@linux.intel.com>
+References: <20200526141658.157801-1-amirmizi6@gmail.com>
+ <20200526141658.157801-3-amirmizi6@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529153934.11694-26-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9638 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
- adultscore=0 mlxlogscore=999 suspectscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006010017
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9638 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 suspectscore=0 impostorscore=0 cotscore=-2147483648
- lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006010017
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526141658.157801-3-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 26, 2020 at 05:16:52PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Incorrect implementation of send message was detected. We polled only
+> TPM_STS.stsValid bit and then we single-checked the TPM_STS.expect bit
+> value.
+> TPM_STS.expected bit should be checked at the same time as
+> TPM_STS.stsValid bit, and this should be repeated until timeout_A.
 
-On 5/29/20 8:39 AM, Paolo Bonzini wrote:
-> According to the AMD manual, the effect of turning off EFER.SVME while a
-> guest is running is undefined.  We make it leave guest mode immediately,
-> similar to the effect of clearing the VMX bit in MSR_IA32_FEAT_CTL.
+I don't understand what the first paragraph is trying to say. It does
+not conclude to anything. Please write instead soemthing that explains
+what is going on.
 
+> To detect a TPM_STS.expected bit reset, the "wait_for_tpm_stat" function is
+> modified to "wait_for_tpm_stat_result". This function regularly reads the
+> status register and check the bits defined by "mask" to reach the value
+> defined in "mask_result".
 
-I see that svm_set_efer() is called in enter_svm_guest_mode() and 
-nested_svm_vmexit(). In the VMRUN path, we have already checked 
-EFER.SVME in nested_vmcb_checks(). So if it was not set, we wouldn't 
-come to enter_svm_guest_mode(). Your fix is only for the #VMEXIT path then ?
+Please remove this and explain instead how are you are changing the
+existing function.
 
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> This correct implementation is required for using the new CRC calculation
+> on I2C TPM command bytes or I2C TPM answer bytes. TPM_STS.expected bit is
+> reset after all bytes are acquired and the CRC result is inserted in the
+> dedicated register. It introduces a normal latency for TPM_STS.expected
+> bit reset.
+> 
+> Respectively, to send a message, as defined in
+> TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be
+> sent in one shot instead of sending the last byte separately.
+> 
+> Suggested-by: Benoit Houyere <benoit.houyere@st.com>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 > ---
->   arch/x86/kvm/svm/nested.c | 16 ++++++++++++++++
->   arch/x86/kvm/svm/svm.c    | 10 ++++++++--
->   arch/x86/kvm/svm/svm.h    |  1 +
->   3 files changed, 25 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index bd3a89cd4070..369eca73fe3e 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -618,6 +618,22 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
->   	return 0;
->   }
->   
-> +/*
-> + * Forcibly leave nested mode in order to be able to reset the VCPU later on.
-> + */
-> +void svm_leave_nested(struct vcpu_svm *svm)
-> +{
-> +	if (is_guest_mode(&svm->vcpu)) {
-> +		struct vmcb *hsave = svm->nested.hsave;
-> +		struct vmcb *vmcb = svm->vmcb;
-> +
-> +		svm->nested.nested_run_pending = 0;
-> +		leave_guest_mode(&svm->vcpu);
-> +		copy_vmcb_control_area(&vmcb->control, &hsave->control);
-> +		nested_svm_uninit_mmu_context(&svm->vcpu);
-> +	}
-> +}
-> +
->   static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
->   {
->   	u32 offset, msr, value;
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index bc08221f6743..b4db9a980469 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -265,6 +265,7 @@ static int get_npt_level(struct kvm_vcpu *vcpu)
->   
->   void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
->   {
-> +	struct vcpu_svm *svm = to_svm(vcpu);
->   	vcpu->arch.efer = efer;
->   
->   	if (!npt_enabled) {
-> @@ -275,8 +276,13 @@ void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
->   			efer &= ~EFER_LME;
->   	}
->   
-> -	to_svm(vcpu)->vmcb->save.efer = efer | EFER_SVME;
-> -	mark_dirty(to_svm(vcpu)->vmcb, VMCB_CR);
-> +	if (!(efer & EFER_SVME)) {
-> +		svm_leave_nested(svm);
-> +		svm_set_gif(svm, true);
-> +	}
-> +
-> +	svm->vmcb->save.efer = efer | EFER_SVME;
-> +	mark_dirty(svm->vmcb, VMCB_CR);
->   }
->   
->   static int is_external_interrupt(u32 info)
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index be8e830f83fa..6ac4c00a5d82 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -389,6 +389,7 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
->   
->   void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
->   			  struct vmcb *nested_vmcb);
-> +void svm_leave_nested(struct vcpu_svm *svm);
->   int nested_svm_vmrun(struct vcpu_svm *svm);
->   void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
->   int nested_svm_vmexit(struct vcpu_svm *svm);
+>  drivers/char/tpm/tpm_tis_core.c | 74 +++++++++++++++++------------------------
+>  1 file changed, 30 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> index 27c6ca0..c725b68 100644
+> --- a/drivers/char/tpm/tpm_tis_core.c
+> +++ b/drivers/char/tpm/tpm_tis_core.c
+> @@ -44,9 +44,10 @@ static bool wait_for_tpm_stat_cond(struct tpm_chip *chip, u8 mask,
+>  	return false;
+>  }
+>  
+> -static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
+> -		unsigned long timeout, wait_queue_head_t *queue,
+> -		bool check_cancel)
+> +static int wait_for_tpm_stat_result(struct tpm_chip *chip, u8 mask,
+> +				    u8 mask_result, unsigned long timeout,
+> +				    wait_queue_head_t *queue,
+> +				    bool check_cancel)
+
+Please do not change the function name.
+
+/Jarkko
