@@ -2,85 +2,140 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0627C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC57D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B838D206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgFAVjK (ORCPT
+        id S1728843AbgFAVk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:39:10 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:32938 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgFAVjJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:39:09 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 00E061C0BD2; Mon,  1 Jun 2020 23:39:07 +0200 (CEST)
-Date:   Mon, 1 Jun 2020 23:38:52 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kevin Locke <kevin@kevinlocke.name>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 38/95] Input: i8042 - add ThinkPad S230u to i8042
- nomux list
-Message-ID: <20200601213852.GD17898@amd>
-References: <20200601174020.759151073@linuxfoundation.org>
- <20200601174026.880387783@linuxfoundation.org>
+        Mon, 1 Jun 2020 17:40:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12253 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728182AbgFAVkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 17:40:25 -0400
+IronPort-SDR: z8IuNLHPZvVL2m2yFgJmg+7Tb20prJHrfDUjA4gki/VpZD37kzpwu0i3Y4PT3V8e/kQNPpWD72
+ bhmGDnUmtr3A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 14:40:24 -0700
+IronPort-SDR: VgXfb6U2XTqaiIxQec+3VLJOmXxCfX10MydJvZqZJ9Uc2tFJYHQfaOqxLazuZEf+hWo2qcN/jG
+ TvV6jUr8NK/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
+   d="scan'208";a="257389245"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga007.jf.intel.com with ESMTP; 01 Jun 2020 14:40:23 -0700
+Date:   Mon, 1 Jun 2020 14:40:23 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] PCI: Relax ACS requirement for Intel RCiEP devices.
+Message-ID: <20200601214023.GA15310@otc-nc-03>
+References: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
+ <20200601212519.GA758937@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="d9ADC0YsG2v16Js0"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200601174026.880387783@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200601212519.GA758937@bjorn-Precision-5520>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 01, 2020 at 04:25:19PM -0500, Bjorn Helgaas wrote:
+> On Thu, May 28, 2020 at 01:57:42PM -0700, Ashok Raj wrote:
+> > All Intel platforms guarantee that all root complex implementations
+> > must send transactions up to IOMMU for address translations. Hence for
+> > RCiEP devices that are Vendor ID Intel, can claim exception for lack of
+> > ACS support.
+> > 
+> > 
+> > 3.16 Root-Complex Peer to Peer Considerations
+> > When DMA remapping is enabled, peer-to-peer requests through the
+> > Root-Complex must be handled
+> > as follows:
+> > • The input address in the request is translated (through first-level,
+> >   second-level or nested translation) to a host physical address (HPA).
+> >   The address decoding for peer addresses must be done only on the
+> >   translated HPA. Hardware implementations are free to further limit
+> >   peer-to-peer accesses to specific host physical address regions
+> >   (or to completely disallow peer-forwarding of translated requests).
+> > • Since address translation changes the contents (address field) of
+> >   the PCI Express Transaction Layer Packet (TLP), for PCI Express
+> >   peer-to-peer requests with ECRC, the Root-Complex hardware must use
+> >   the new ECRC (re-computed with the translated address) if it
+> >   decides to forward the TLP as a peer request.
+> > • Root-ports, and multi-function root-complex integrated endpoints, may
+> >   support additional peerto-peer control features by supporting PCI Express
+> >   Access Control Services (ACS) capability. Refer to ACS capability in
+> >   PCI Express specifications for details.
+> > 
+> > Since Linux didn't give special treatment to allow this exception, certain
+> > RCiEP MFD devices are getting grouped in a single iommu group. This
+> > doesn't permit a single device to be assigned to a guest for instance.
+> > 
+> > In one vendor system: Device 14.x were grouped in a single IOMMU group.
+> > 
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.3
+> > 
+> > After the patch:
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> > /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+> > 
+> > 14.0 and 14.2 are integrated devices, but legacy end points.
+> > Whereas 14.3 was a PCIe compliant RCiEP.
+> > 
+> > 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+> > Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+> > 
+> > This permits assigning this device to a guest VM.
+> > 
+> > Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
+> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > To: Joerg Roedel <joro@8bytes.org>
+> > To: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: iommu@lists.linux-foundation.org
+> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
+> > Cc: Mark Scott <mscott@forcepoint.com>,
+> > Cc: Romil Sharma <rsharma@forcepoint.com>
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> 
+> Tentatively applied to pci/virtualization for v5.8, thanks!
+> 
+> The spec says this handling must apply "when DMA remapping is
+> enabled".  The patch does not check whether DMA remapping is enabled.
+> 
+> Is there any case where DMA remapping is *not* enabled, and we rely on
+> this patch to tell us whether the device is isolated?  It sounds like
+> it may give the wrong answer in such a case?
+> 
+> Can you confirm that I don't need to worry about this?  
 
---d9ADC0YsG2v16Js0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think all of this makes sense only when DMA remapping is enabled.
+Otherwise there is no enforcement for isolation. 
 
-Hi!
-
-> Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
-> and although the [BIOS changelog] notes "Fixed an issue of UEFI
-> touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
-> insufficient.
->=20
-> Adding 33474HU to the nomux list avoids the issue on my system.
-
-This patch is known bad, and is reverted as a step 93/ in this
-series. I believe it would be better to remove this and the revert
-before -stable kernel is released.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---d9ADC0YsG2v16Js0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7VdWwACgkQMOfwapXb+vKQNwCbBvIjqjRKChD3/z62TTpRafQd
-LdoAoKyMlNLZpRnsu2sOkfNgBIM6d7Pl
-=w0I+
------END PGP SIGNATURE-----
-
---d9ADC0YsG2v16Js0--
+Cheers,
+Ashok
