@@ -2,106 +2,171 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A97C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D018B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7B920772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=omnibond-com.20150623.gappssmtp.com header.i=@omnibond-com.20150623.gappssmtp.com header.b="ldYjGDwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgFALM6 (ORCPT
+        id S1726555AbgFALOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 07:12:58 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:44718 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFALMx (ORCPT
+        Mon, 1 Jun 2020 07:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgFALOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 07:12:53 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 49bCFc2B4vz1qrfx;
-        Mon,  1 Jun 2020 13:12:52 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 49bCFc0d6Nz1shfQ;
-        Mon,  1 Jun 2020 13:12:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id fDuklQMg020N; Mon,  1 Jun 2020 13:12:50 +0200 (CEST)
-X-Auth-Info: r77Fr9Ohw+7TGYKK7/UTdauUTk2CLmsK1zv+WP0dhuA=
-Received: from [127.0.0.1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon,  1 Jun 2020 13:12:50 +0200 (CEST)
-Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, mbrugger@suse.com,
-        u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        mark.kettenis@xs4all.nl
-References: <20200505162607.334-1-nsaenzjulienne@suse.de>
- <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
- <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
- <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <c32541a5-2dce-1fb2-7f3d-dfe03bcfb52c@denx.de>
-Date:   Mon, 1 Jun 2020 13:12:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 07:14:06 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3978CC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 04:14:05 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id z12so3189765uap.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 04:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=omnibond-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WXOAaMoBz4R8U5dwNZ1YfVLsYcbZLZ+dVXxKsEXRwXY=;
+        b=ldYjGDwxIV0HzE2xVPpuBE0NOAVS/wx8H146GJymaAusL8tM4TbALmC5vckRW1Mz2h
+         iYHXRI042v6RPOvV2TxuBXm7yKSuQ7eAGi19pRqoDsXPm3eaQdEDp4agW/pkDWzJvswX
+         lHKPP/PrvdEZKioAgAXdN3Cj9R582GOgxZERyU0rXTDPVUz+dF01KRgtgKNI01FFXGls
+         E+Qd4105igPjLgGxPH/nSEIxB87EZD8JPlhCjxUjxqOxlAp/6OMwg9lcHLUtH6ThPs3f
+         BQyv/5nbSVdTe2MuD3wqDiKM6D164XduVY61OUE0kRFs1W0aTXn5NNNVEWXzqkBI1Y7y
+         8nHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WXOAaMoBz4R8U5dwNZ1YfVLsYcbZLZ+dVXxKsEXRwXY=;
+        b=PsFAYUrqYiIggTiNWlNRx9Ylb33g1L+lBAplzz45OAaEVMA2iBaMdboHELQm02UJzV
+         1MxDf1PsE4oVmLSZYSEc3+XdP4vnU7s3xhphOvpF+6eB7Eitxzf+yKnXyUsnno0a19Q0
+         GXRPO0mCA6olSlinjJWvG4iyg7gYdEK973JkVtUCU0wW391WO66MqnMp7ndvff22MOqF
+         /HMeI4PhMMT4Tehpdl6nswtGbw7D1Y36IE7VhdKBiO66BxLprskjoe/LzAnP6VgszYYP
+         LiD1xO4xp1qiH1FQm/jw7h0CHKPAnSO0BxSe2VJouU0VvAl369Tq0EYlKTPVfkALp0pZ
+         lTqQ==
+X-Gm-Message-State: AOAM5333smWekGIEsgYD8QLG/pVCs7Can5XqEo13W/mdauOx1elB+fMN
+        FPU3WAFPFHn4RvQU+HIvgnq+UJHr08BYyZ+jmFGYDg==
+X-Google-Smtp-Source: ABdhPJz8Ar6V60hnAAObpp+yduGb260FWlbMjEdQ4KdG8I/hXKgn7dO8wizKMxc1REqOfKGvnrW5O/i0ftzKsyinRv0=
+X-Received: by 2002:a9f:22e1:: with SMTP id 88mr9356732uan.19.1591010044429;
+ Mon, 01 Jun 2020 04:14:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200523035909.418683-1-jhubbard@nvidia.com> <89244e74-f619-e515-083a-3bf2586fa5c3@nvidia.com>
+In-Reply-To: <89244e74-f619-e515-083a-3bf2586fa5c3@nvidia.com>
+From:   Mike Marshall <hubcap@omnibond.com>
+Date:   Mon, 1 Jun 2020 07:13:53 -0400
+Message-ID: <CAOg9mSQYvPcjCOoTj5_zq-62pxe_XCnqxiaiNLefx10M-MSYuw@mail.gmail.com>
+Subject: Re: [PATCH v2] orangefs: convert get_user_pages() --> pin_user_pages()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/20 1:09 PM, Nicolas Saenz Julienne wrote:
-> On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
->> On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
->>> On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
->>>> Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to be
->>>> loaded explicitly. Earlier versions didn't need that as they where using
->>>> an EEPROM for that purpose. This series takes care of setting up the
->>>> relevant infrastructure and run the firmware loading routine at the
->>>> right moment.
->>>>
->>>> Note that this builds on top of Sylwester Nawrocki's "USB host support
->>>> for Raspberry Pi 4 board" series.
->>>>
->>>> ---
->>>
->>> Please don't forget about this series. The new 8GB RPi4 contains this HW
->>> design
->>> change and USB will not work without it. See this discussion on the
->>> downstream
->>> kernel github, where other OS/bootloaders are hitting the issue:
->>>
->>> https://github.com/raspberrypi/firmware/issues/1402
->>>
->>> Otherwise, the Linux version of this is already in linux-next:
->>>
->>>
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/usb/host/pci-quirks.c?h=next-20200529&id=c65822fef4adc0ba40c37a47337376ce75f7a7bc
->>
->> We're already at 2020.07-rc3 , so unless this is a bugfix (does not look
->> that way), this will have to wait for next release cycle.
-> 
-> Of course. As long as it eventually gets in I'm happy (not implying this
-> specific series is flawless, but the overall mechanism). I'm just worried this
-> gets lost.
-> 
->> Also, it seems
->> there was a lengthy ongoing discussion, is that already sorted out ?
-> 
-> Well, there was some discussion on how to incorporate the platform specific
-> callback into XCHI's code. Which this revision of the series addresses. But,
-> IIRC, that's pretty much it as far as discussion is concerned.
+Hi John.
 
-Oh, right, since the firmware loading hook looks like a reset hook, why
-isn't that implemented via reset controller API instead ?
+Thanks for the patch, and the testing, and the reference to the
+lwn article.
+
+I have also applied your patch to 5.7-rc7 and have run xfstests.
+
+I applied your patch to the orangefs for-next tree.
+
+-Mike
+
+On Sat, May 30, 2020 at 3:39 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On 2020-05-22 20:59, John Hubbard wrote:
+> > This code was using get_user_pages*(), in a "Case 1" scenario
+> > (Direct IO), using the categorization from [1]. That means that it's
+> > time to convert the get_user_pages*() + put_page() calls to
+> > pin_user_pages*() + unpin_user_pages() calls.
+> >
+> > There is some helpful background in [2]: basically, this is a small
+> > part of fixing a long-standing disconnect between pinning pages, and
+> > file systems' use of those pages.
+> >
+> > [1] Documentation/core-api/pin_user_pages.rst
+> >
+> > [2] "Explicit pinning of user-space pages":
+> >      https://lwn.net/Articles/807108/
+> >
+> > Cc: Mike Marshall <hubcap@omnibond.com>
+> > Cc: Martin Brandenburg <martin@omnibond.com>
+> > Cc: devel@lists.orangefs.org
+> > Cc: linux-fsdevel@vger.kernel.org
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> > ---
+> >
+> > Hi,
+> >
+> > Note that I have only compile-tested this patch, although that does
+> > also include cross-compiling for a few other arches.
+>
+> An update on the run-time testing: Just now, I got basic orangefs tests
+> running in xfstests, with this patch applied, and it all looks normal.
+>
+> thanks,
+> --
+> John Hubbard
+> NVIDIA
+>
+> >
+> > Changes since v1 [3]: correct the commit description, so that
+> > it refers to "Case 1" instead of "Case 2".
+> >
+> >
+> > [3] https://lore.kernel.org/r/20200518060139.2828423-1-jhubbard@nvidia.com
+> >
+> > thanks,
+> > John Hubbard
+> > NVIDIA
+> >
+> >   fs/orangefs/orangefs-bufmap.c | 9 +++------
+> >   1 file changed, 3 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/fs/orangefs/orangefs-bufmap.c b/fs/orangefs/orangefs-bufmap.c
+> > index 2bb916d68576..538e839590ef 100644
+> > --- a/fs/orangefs/orangefs-bufmap.c
+> > +++ b/fs/orangefs/orangefs-bufmap.c
+> > @@ -168,10 +168,7 @@ static DEFINE_SPINLOCK(orangefs_bufmap_lock);
+> >   static void
+> >   orangefs_bufmap_unmap(struct orangefs_bufmap *bufmap)
+> >   {
+> > -     int i;
+> > -
+> > -     for (i = 0; i < bufmap->page_count; i++)
+> > -             put_page(bufmap->page_array[i]);
+> > +     unpin_user_pages(bufmap->page_array, bufmap->page_count);
+> >   }
+> >
+> >   static void
+> > @@ -268,7 +265,7 @@ orangefs_bufmap_map(struct orangefs_bufmap *bufmap,
+> >       int offset = 0, ret, i;
+> >
+> >       /* map the pages */
+> > -     ret = get_user_pages_fast((unsigned long)user_desc->ptr,
+> > +     ret = pin_user_pages_fast((unsigned long)user_desc->ptr,
+> >                            bufmap->page_count, FOLL_WRITE, bufmap->page_array);
+> >
+> >       if (ret < 0)
+> > @@ -280,7 +277,7 @@ orangefs_bufmap_map(struct orangefs_bufmap *bufmap,
+> >
+> >               for (i = 0; i < ret; i++) {
+> >                       SetPageError(bufmap->page_array[i]);
+> > -                     put_page(bufmap->page_array[i]);
+> > +                     unpin_user_page(bufmap->page_array[i]);
+> >               }
+> >               return -ENOMEM;
+> >       }
+> >
+>
