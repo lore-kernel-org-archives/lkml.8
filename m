@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB57C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA295206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431D6207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035181;
-	bh=+6uWsY7u/0ao6fwktwEQt/Lkr+S2jHqRI6sY4YA+hgg=;
+	s=default; t=1591035184;
+	bh=eABdBEgjDtkyp2gYB/PXFotmAYH5rmYdmOwO96JAc0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epTmbJ9pqHYWQw+5EBhuLDWuxMFosk6NmnHBW3Fhte5UOJaZAGyNryDN0/afJ/fee
-	 goK3lrgYZ/Cf+T9HRFVzytcmhP7zBUnUOwhzayFGRH9cnlNW41QeOmBK/N6714EKBb
-	 aJTIw/AiO60Eu1+XbX7LD7fbUL3vdddrVfzl13f0=
+	b=EMIEC3GVCoEnEHyMuz3/SnxEipiUB3TZmrTUMO2TmYjfEHDQZ870VGHCIlT2Uz8Mj
+	 xejwgZ3+KYMEi7lEBLbY6Ms4n2R4T2oD/lWXTytw/hOwLEJyO2/4IysUHdo+RPS/Sl
+	 MpKz1JRKomWSD0egG289HrFJdKu3M9OqK7kYGqkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgFASNA (ORCPT
+        id S1728456AbgFASND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60210 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731274AbgFASMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:12:48 -0400
+        id S1731287AbgFASMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:12:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C72EF2068D;
-        Mon,  1 Jun 2020 18:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 976C920776;
+        Mon,  1 Jun 2020 18:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035168;
-        bh=+6uWsY7u/0ao6fwktwEQt/Lkr+S2jHqRI6sY4YA+hgg=;
+        s=default; t=1591035175;
+        bh=eABdBEgjDtkyp2gYB/PXFotmAYH5rmYdmOwO96JAc0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pGAAOVetQGrgDJnFjR59dKL+gXxnHqymD+lcTUVd5u0zXR54edbp4MvdDt6J+wi5K
-         utHqvforjarYeak4aPrW/tLDz0tAndw1lu0TTSpeneAlz26WkrL7sh4sGrRttDJcWM
-         T9cihtjz5HXIVDyK4XdWZ9dYUjbH82zScm0X8Q1k=
+        b=BY2Bqdaxxs6fN81AlcGPITZY9vsmMflaSYBEneiCIv4IA8x6f3YNYTHLuE3IqPgki
+         9ziLsPXZcFbknLHuVDQlfZ8Msfa2HNcmnUVGGmPnoUiNDEcGYzlPrHZ9ueIf1iFfS5
+         VHpyKy9+bicU7sFVdw9c7HGkTKjmZOf5UBvsEwgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Fedorenko <vfedorenko@novek.ru>,
+        stable@vger.kernel.org, DENG Qingfang <dqfext@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 038/177] net/tls: free record only on encryption error
-Date:   Mon,  1 Jun 2020 19:52:56 +0200
-Message-Id: <20200601174052.161084901@linuxfoundation.org>
+Subject: [PATCH 5.6 006/177] net: dsa: mt7530: fix roaming from DSA user ports
+Date:   Mon,  1 Jun 2020 19:52:24 +0200
+Message-Id: <20200601174049.101892993@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,48 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Fedorenko <vfedorenko@novek.ru>
+From: DENG Qingfang <dqfext@gmail.com>
 
-commit 635d9398178659d8ddba79dd061f9451cec0b4d1 upstream.
+[ Upstream commit 5e5502e012b8129e11be616acb0f9c34bc8f8adb ]
 
-We cannot free record on any transient error because it leads to
-losing previos data. Check socket error to know whether record must
-be freed or not.
+When a client moves from a DSA user port to a software port in a bridge,
+it cannot reach any other clients that connected to the DSA user ports.
+That is because SA learning on the CPU port is disabled, so the switch
+ignores the client's frames from the CPU port and still thinks it is at
+the user port.
 
-Fixes: d10523d0b3d7 ("net/tls: free the record on encryption error")
-Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
+Fix it by enabling SA learning on the CPU port.
+
+To prevent the switch from learning from flooding frames from the CPU
+port, set skb->offload_fwd_mark to 1 for unicast and broadcast frames,
+and let the switch flood them instead of trapping to the CPU port.
+Multicast frames still need to be trapped to the CPU port for snooping,
+so set the SA_DIS bit of the MTK tag to 1 when transmitting those frames
+to disable SA learning.
+
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Signed-off-by: DENG Qingfang <dqfext@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/tls/tls_sw.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/dsa/mt7530.c |    9 ++-------
+ drivers/net/dsa/mt7530.h |    1 +
+ net/dsa/tag_mtk.c        |   15 +++++++++++++++
+ 3 files changed, 18 insertions(+), 7 deletions(-)
 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -800,9 +800,10 @@ static int bpf_exec_tx_verdict(struct sk
- 	psock = sk_psock_get(sk);
- 	if (!psock || !policy) {
- 		err = tls_push_record(sk, flags, record_type);
--		if (err && err != -EINPROGRESS) {
-+		if (err && sk->sk_err == EBADMSG) {
- 			*copied -= sk_msg_free(sk, msg);
- 			tls_free_open_rec(sk);
-+			err = -sk->sk_err;
- 		}
- 		if (psock)
- 			sk_psock_put(sk, psock);
-@@ -828,9 +829,10 @@ more_data:
- 	switch (psock->eval) {
- 	case __SK_PASS:
- 		err = tls_push_record(sk, flags, record_type);
--		if (err && err != -EINPROGRESS) {
-+		if (err && sk->sk_err == EBADMSG) {
- 			*copied -= sk_msg_free(sk, msg);
- 			tls_free_open_rec(sk);
-+			err = -sk->sk_err;
- 			goto out_err;
- 		}
- 		break;
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -639,11 +639,8 @@ mt7530_cpu_port_enable(struct mt7530_pri
+ 	mt7530_write(priv, MT7530_PVC_P(port),
+ 		     PORT_SPEC_TAG);
+ 
+-	/* Disable auto learning on the cpu port */
+-	mt7530_set(priv, MT7530_PSC_P(port), SA_DIS);
+-
+-	/* Unknown unicast frame fordwarding to the cpu port */
+-	mt7530_set(priv, MT7530_MFC, UNU_FFP(BIT(port)));
++	/* Unknown multicast frame forwarding to the cpu port */
++	mt7530_rmw(priv, MT7530_MFC, UNM_FFP_MASK, UNM_FFP(BIT(port)));
+ 
+ 	/* Set CPU port number */
+ 	if (priv->id == ID_MT7621)
+@@ -1247,8 +1244,6 @@ mt7530_setup(struct dsa_switch *ds)
+ 	/* Enable and reset MIB counters */
+ 	mt7530_mib_reset(ds);
+ 
+-	mt7530_clear(priv, MT7530_MFC, UNU_FFP_MASK);
+-
+ 	for (i = 0; i < MT7530_NUM_PORTS; i++) {
+ 		/* Disable forwarding by default on all ports */
+ 		mt7530_rmw(priv, MT7530_PCR_P(i), PCR_MATRIX_MASK,
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -31,6 +31,7 @@ enum {
+ #define MT7530_MFC			0x10
+ #define  BC_FFP(x)			(((x) & 0xff) << 24)
+ #define  UNM_FFP(x)			(((x) & 0xff) << 16)
++#define  UNM_FFP_MASK			UNM_FFP(~0)
+ #define  UNU_FFP(x)			(((x) & 0xff) << 8)
+ #define  UNU_FFP_MASK			UNU_FFP(~0)
+ #define  CPU_EN				BIT(7)
+--- a/net/dsa/tag_mtk.c
++++ b/net/dsa/tag_mtk.c
+@@ -15,6 +15,7 @@
+ #define MTK_HDR_XMIT_TAGGED_TPID_8100	1
+ #define MTK_HDR_RECV_SOURCE_PORT_MASK	GENMASK(2, 0)
+ #define MTK_HDR_XMIT_DP_BIT_MASK	GENMASK(5, 0)
++#define MTK_HDR_XMIT_SA_DIS		BIT(6)
+ 
+ static struct sk_buff *mtk_tag_xmit(struct sk_buff *skb,
+ 				    struct net_device *dev)
+@@ -22,6 +23,9 @@ static struct sk_buff *mtk_tag_xmit(stru
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	u8 *mtk_tag;
+ 	bool is_vlan_skb = true;
++	unsigned char *dest = eth_hdr(skb)->h_dest;
++	bool is_multicast_skb = is_multicast_ether_addr(dest) &&
++				!is_broadcast_ether_addr(dest);
+ 
+ 	/* Build the special tag after the MAC Source Address. If VLAN header
+ 	 * is present, it's required that VLAN header and special tag is
+@@ -47,6 +51,10 @@ static struct sk_buff *mtk_tag_xmit(stru
+ 		     MTK_HDR_XMIT_UNTAGGED;
+ 	mtk_tag[1] = (1 << dp->index) & MTK_HDR_XMIT_DP_BIT_MASK;
+ 
++	/* Disable SA learning for multicast frames */
++	if (unlikely(is_multicast_skb))
++		mtk_tag[1] |= MTK_HDR_XMIT_SA_DIS;
++
+ 	/* Tag control information is kept for 802.1Q */
+ 	if (!is_vlan_skb) {
+ 		mtk_tag[2] = 0;
+@@ -61,6 +69,9 @@ static struct sk_buff *mtk_tag_rcv(struc
+ {
+ 	int port;
+ 	__be16 *phdr, hdr;
++	unsigned char *dest = eth_hdr(skb)->h_dest;
++	bool is_multicast_skb = is_multicast_ether_addr(dest) &&
++				!is_broadcast_ether_addr(dest);
+ 
+ 	if (unlikely(!pskb_may_pull(skb, MTK_HDR_LEN)))
+ 		return NULL;
+@@ -86,6 +97,10 @@ static struct sk_buff *mtk_tag_rcv(struc
+ 	if (!skb->dev)
+ 		return NULL;
+ 
++	/* Only unicast or broadcast frames are offloaded */
++	if (likely(!is_multicast_skb))
++		skb->offload_fwd_mark = 1;
++
+ 	return skb;
+ }
+ 
 
 
