@@ -2,195 +2,133 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A6D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2B1206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZYzhAt2"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="l67SRuA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgFAUDm (ORCPT
+        id S1728378AbgFAUEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
+        Mon, 1 Jun 2020 16:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgFAUDl (ORCPT
+        with ESMTP id S1727828AbgFAUEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:03:41 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B0FC061A0E;
-        Mon,  1 Jun 2020 13:03:41 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id s19so8223967edt.12;
-        Mon, 01 Jun 2020 13:03:41 -0700 (PDT)
+        Mon, 1 Jun 2020 16:04:42 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8753C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:04:41 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l26so703720wme.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 13:04:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SKDaq52eODW+ntnFol3ecy2v0dHMmTzzXT8sIsSPLnI=;
-        b=iZYzhAt2RbVdrmChKXkH2OD9g1wwdL+cJN/1p3PCAWVW+523Nd2fsIInjxDwnh1BCr
-         +naDMYchvYAxYuyNxSIxOUa+uPIcjThQwsypEu2RmlEJvwG1KKtsNvaGw4u2tMbf7L1V
-         QcGFHhywW5FhEZioMWoiSXOf8uwUbScCAJ75gqsOGhSz8+gxIvrcCkqpqTBLvGwKUHxp
-         L/w4VkIWq+xwU55mnhhRHlMbNvr3QTqhvu+ZVnB+x15SZ2CqRrwHR/Lhqp72hk+Z/kHA
-         2ZYshWbrVZx1CHT04Esp1G3QLxoknYcTpNHu5ncKnrkSddMwlsNnTKtspI5Xe1hMSi0z
-         7fsg==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s5Dn7h8F8p+9hiFtim1wM4aaeJzWbt5/JlaxHO0hK24=;
+        b=l67SRuA8PBupQ7fNCIDym72270aida6TA0K/imDtClEIRKSkhBKgy9+1yFC0juX9+m
+         LIFR2HpW+Y/YRv5Q7HSqFeyH/yM7vKvpHkLdPBsqJtv2MRQ0pp8sfcJ7cHrrb1u6Aqw9
+         g81acLRL3UVGHjnyWWymDPldpIppTYdhzbGLx9Uub8loMmNs0w4KRoabp0d1WpB/miF+
+         4d+tUd53hJU1mwIwinyoe0ewffZH7cdP96KkldvyOF8z8o6UVkZkye7Ll0DsoJ/7s+k9
+         ru2VmbQytV3hJuV+29DPmZb6DJiNzkbUkgzc5V7AArClc6dbKD0jD67wN8Mle+vg3VAE
+         4Z0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SKDaq52eODW+ntnFol3ecy2v0dHMmTzzXT8sIsSPLnI=;
-        b=U99yDqysnEIxyFnfdeAaNfXl4bzf7yo/rIG47Wo8ipJ8yAPw4LJxbktz1rXt1QBRUE
-         7XeFZRA8p/5XY5k7j7aNrrxwR/1JAEKMbQYugblnbUJ+Lhu+DFaqPxpGH9RHk1mGFonL
-         VRG5lKLTNgMWENl92DZLiXCK4KNaJe8OS0sriE7WmBM3KAGucz3ygU24BWejJ7W2+kLu
-         NmtiSwp2thiUiLTFczgmZeJ3pTHcZsm+/QvDRlvw5RHt+oJhi1wk1x2VoGn4FeSIuPkQ
-         ZJgnfl0SlmDbUCKW7M3/PA0qi0pDB0eKe+qdFoeIN9kTgtpqdOHpCpYZ3DJ2wv+wg8g3
-         jVmg==
-X-Gm-Message-State: AOAM530M/RIbhvV4hi9DsW/uwRXdaiQTlzVwWPqFt3ySRkkBe5HnH/5h
-        q2H/epWINiV+7yuT28dACkUuO4q7zYRGclYG0TY=
-X-Google-Smtp-Source: ABdhPJyiAMFmqOPa5W3SEJLU8SiHs1GkPzEW1LyWXAVfMY/86aeh8wxWS6EDO/EpLEkmXrN9iAHiPbzphB8Kn+0ogDo=
-X-Received: by 2002:a05:6402:719:: with SMTP id w25mr23551045edx.179.1591041819901;
- Mon, 01 Jun 2020 13:03:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s5Dn7h8F8p+9hiFtim1wM4aaeJzWbt5/JlaxHO0hK24=;
+        b=hygnxkmFPnXpmotjltG1OjGRcSLUaDsWnrmS05GlyPxhHU9JRkurrynrsMfnELDwfm
+         eawg4WHVCRGjxAuak9/IcK8lTyDlKUGR1GOzsUFxh5AYJeL5mvEKgzKr9TSTvU3Mu2Tw
+         2fH37yNdi5tWdTBcSwZNpSuYyIuQzJztrQZWFymSyzy8lOCH5mPRfiiG9WTfdRYCQTI2
+         foHPoNQFmO3q91bBYxHtOQDXu8R+KfdorWexMVc1oJxUCKgwcUTlob3T2i92DzwrzJuT
+         h+KKNaAeSSSb90xSr7Mt3WkPUaaR9tqBXz8l3YHVZfc6uSmanowWi29XKQVDqhAqIjgB
+         S+SA==
+X-Gm-Message-State: AOAM532CqBsYM7oqdD2I1w45wxc/ytKsyNlu4Eze0hrjVSaVSlbsIK5b
+        EFWROzjFruY7vZyaE/DBHys=
+X-Google-Smtp-Source: ABdhPJzRb8zSAFQ6wsfxxoYSHAaMpja+sGsf3SPHYEbdIY/I0SegpgESf3NRVDz71fWygY8zMyq3OQ==
+X-Received: by 2002:a1c:49:: with SMTP id 70mr790457wma.184.1591041880550;
+        Mon, 01 Jun 2020 13:04:40 -0700 (PDT)
+Received: from localhost.localdomain (p200300f137189200428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3718:9200:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id g3sm773130wrb.46.2020.06.01.13.04.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 13:04:39 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Thomas Graichen <thomas.graichen@gmail.com>
+Subject: [PATCH] ARM: dts: meson8: remove two invalid interrupt lines from the GPU node
+Date:   Mon,  1 Jun 2020 22:04:11 +0200
+Message-Id: <20200601200411.2006603-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200601095826.1757621-1-olteanv@gmail.com> <7d88d376-dde7-828e-ad0a-12c0cb596ac1@cogentembedded.com>
-In-Reply-To: <7d88d376-dde7-828e-ad0a-12c0cb596ac1@cogentembedded.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 1 Jun 2020 23:03:27 +0300
-Message-ID: <CA+h21hotyQhJeMLJz5SaNc+McRF=w2m4m_qAAQV2D6phE6apkA@mail.gmail.com>
-Subject: Re: [PATCH v3] devres: keep both device name and resource name in
- pretty name
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        bgolaszewski@baylibre.com, mika.westerberg@linux.intel.com,
-        efremov@linux.com, ztuowen@gmail.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergei,
+The 3.10 vendor kernel defines the following GPU 20 interrupt lines:
+  #define INT_MALI_GP                 AM_IRQ(160)
+  #define INT_MALI_GP_MMU             AM_IRQ(161)
+  #define INT_MALI_PP                 AM_IRQ(162)
+  #define INT_MALI_PMU                AM_IRQ(163)
+  #define INT_MALI_PP0                AM_IRQ(164)
+  #define INT_MALI_PP0_MMU            AM_IRQ(165)
+  #define INT_MALI_PP1                AM_IRQ(166)
+  #define INT_MALI_PP1_MMU            AM_IRQ(167)
+  #define INT_MALI_PP2                AM_IRQ(168)
+  #define INT_MALI_PP2_MMU            AM_IRQ(169)
+  #define INT_MALI_PP3                AM_IRQ(170)
+  #define INT_MALI_PP3_MMU            AM_IRQ(171)
+  #define INT_MALI_PP4                AM_IRQ(172)
+  #define INT_MALI_PP4_MMU            AM_IRQ(173)
+  #define INT_MALI_PP5                AM_IRQ(174)
+  #define INT_MALI_PP5_MMU            AM_IRQ(175)
+  #define INT_MALI_PP6                AM_IRQ(176)
+  #define INT_MALI_PP6_MMU            AM_IRQ(177)
+  #define INT_MALI_PP7                AM_IRQ(178)
+  #define INT_MALI_PP7_MMU            AM_IRQ(179)
 
-On Mon, 1 Jun 2020 at 21:48, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->
-> On 06/01/2020 12:58 PM, Vladimir Oltean wrote:
->
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > Sometimes debugging a device is easiest using devmem on its register
-> > map, and that can be seen with /proc/iomem. But some device drivers have
-> > many memory regions. Take for example a networking switch. Its memory
-> > map used to look like this in /proc/iomem:
-> >
-> > 1fc000000-1fc3fffff : pcie@1f0000000
-> >   1fc000000-1fc3fffff : 0000:00:00.5
-> >     1fc010000-1fc01ffff : sys
-> >     1fc030000-1fc03ffff : rew
-> >     1fc060000-1fc0603ff : s2
-> >     1fc070000-1fc0701ff : devcpu_gcb
-> >     1fc080000-1fc0800ff : qs
-> >     1fc090000-1fc0900cb : ptp
-> >     1fc100000-1fc10ffff : port0
-> >     1fc110000-1fc11ffff : port1
-> >     1fc120000-1fc12ffff : port2
-> >     1fc130000-1fc13ffff : port3
-> >     1fc140000-1fc14ffff : port4
-> >     1fc150000-1fc15ffff : port5
-> >     1fc200000-1fc21ffff : qsys
-> >     1fc280000-1fc28ffff : ana
-> >
-> > But after the patch in Fixes: was applied, the information is now
-> > presented in a much more opaque way:
-> >
-> > 1fc000000-1fc3fffff : pcie@1f0000000
-> >   1fc000000-1fc3fffff : 0000:00:00.5
-> >     1fc010000-1fc01ffff : 0000:00:00.5
-> >     1fc030000-1fc03ffff : 0000:00:00.5
-> >     1fc060000-1fc0603ff : 0000:00:00.5
-> >     1fc070000-1fc0701ff : 0000:00:00.5
-> >     1fc080000-1fc0800ff : 0000:00:00.5
-> >     1fc090000-1fc0900cb : 0000:00:00.5
-> >     1fc100000-1fc10ffff : 0000:00:00.5
-> >     1fc110000-1fc11ffff : 0000:00:00.5
-> >     1fc120000-1fc12ffff : 0000:00:00.5
-> >     1fc130000-1fc13ffff : 0000:00:00.5
-> >     1fc140000-1fc14ffff : 0000:00:00.5
-> >     1fc150000-1fc15ffff : 0000:00:00.5
-> >     1fc200000-1fc21ffff : 0000:00:00.5
-> >     1fc280000-1fc28ffff : 0000:00:00.5
-> >
-> > That patch made a fair comment that /proc/iomem might be confusing when
-> > it shows resources without an associated device, but we can do better
-> > than just hide the resource name altogether. Namely, we can print the
-> > device name _and_ the resource name. Like this:
-> >
-> > 1fc000000-1fc3fffff : pcie@1f0000000
-> >   1fc000000-1fc3fffff : 0000:00:00.5
-> >     1fc010000-1fc01ffff : 0000:00:00.5 sys
-> >     1fc030000-1fc03ffff : 0000:00:00.5 rew
-> >     1fc060000-1fc0603ff : 0000:00:00.5 s2
-> >     1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
-> >     1fc080000-1fc0800ff : 0000:00:00.5 qs
-> >     1fc090000-1fc0900cb : 0000:00:00.5 ptp
-> >     1fc100000-1fc10ffff : 0000:00:00.5 port0
-> >     1fc110000-1fc11ffff : 0000:00:00.5 port1
-> >     1fc120000-1fc12ffff : 0000:00:00.5 port2
-> >     1fc130000-1fc13ffff : 0000:00:00.5 port3
-> >     1fc140000-1fc14ffff : 0000:00:00.5 port4
-> >     1fc150000-1fc15ffff : 0000:00:00.5 port5
-> >     1fc200000-1fc21ffff : 0000:00:00.5 qsys
-> >     1fc280000-1fc28ffff : 0000:00:00.5 ana
-> >
-> > Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > ---
-> > Changes in v2:
-> > Checking for memory allocation errors and returning -ENOMEM.
-> >
-> > Changes in v3:
-> > Using devm_kasprintf instead of open-coding it.
-> >
-> >  lib/devres.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/lib/devres.c b/lib/devres.c
-> > index 6ef51f159c54..ca0d28727cce 100644
-> > --- a/lib/devres.c
-> > +++ b/lib/devres.c
-> > @@ -119,6 +119,7 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
-> >  {
-> >       resource_size_t size;
-> >       void __iomem *dest_ptr;
-> > +     char *pretty_name;
-> >
-> >       BUG_ON(!dev);
-> >
-> > @@ -129,7 +130,15 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
-> >
-> >       size = resource_size(res);
-> >
-> > -     if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
-> > +     if (res->name)
-> > +             pretty_name = devm_kasprintf(dev, GFP_KERNEL, "%s %s",
->
->    What about "%s:%s"? I suspect it'd be better on the ABI side of things?
->
-> [...]
->
-> MBR, Sergei
+However, the driver from the 3.10 vendor kernel does not use the
+following four interrupt lines:
+- INT_MALI_PP3
+- INT_MALI_PP3_MMU
+- INT_MALI_PP7
+- INT_MALI_PP7_MMU
 
-I don't have a particular preference, but out of curiosity, why would
-it be better?
+Drop the "pp3" and "ppmmu3" interrupt lines. This is also important
+because there is no matching entry in interrupt-names for it (meaning
+the "pp2" interrupt is actually assigned to the "pp3" interrupt line).
 
-Thanks,
--Vladimir
+Fixes: 7d3f6b536e72c9 ("ARM: dts: meson8: add the Mali-450 MP6 GPU")
+Reported-by: Thomas Graichen <thomas.graichen@gmail.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ arch/arm/boot/dts/meson8.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index eedb92526968..a4ab8b96d0eb 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -239,8 +239,6 @@ mali: gpu@c0000 {
+ 				     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>,
+-- 
+2.26.2
+
