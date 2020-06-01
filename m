@@ -2,58 +2,41 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AA7C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E603C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9CC820734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725EF206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgFAIyP (ORCPT
+        id S1726070AbgFAIz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:54:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:14178 "EHLO mga14.intel.com"
+        Mon, 1 Jun 2020 04:55:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57220 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFAIyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:54:14 -0400
-IronPort-SDR: 8BvEAkx21C/Fh8GwcBuPPsGYR3DefnTF3m7WVIZ5aX1EHJ+ip9wIzvNDHfPv47lO7ezxpoz4A7
- 56mQBWgpTr2Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 01:54:13 -0700
-IronPort-SDR: FnkNeyope3kQlKfZ/BaL8l/t/q/AXKTBtfqu4VafIc9FuJjYlF+pd7wVNKpm9C+z3BNz40yrr7
- 1HhbIspzfqcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,460,1583222400"; 
-   d="scan'208";a="256720241"
-Received: from mylly.fi.intel.com (HELO [10.237.72.51]) ([10.237.72.51])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Jun 2020 01:54:11 -0700
-Subject: Re: [PATCH v6 07/11] i2c: designware: Discard Cherry Trail model flag
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
- <20200528093322.23553-8-Sergey.Semin@baikalelectronics.ru>
- <20200528100635.GH1634618@smile.fi.intel.com>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <85f326ac-7a11-f405-7830-abda4e8b0879@linux.intel.com>
-Date:   Mon, 1 Jun 2020 11:54:10 +0300
+        id S1725290AbgFAIz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 04:55:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DB755AC51;
+        Mon,  1 Jun 2020 08:55:27 +0000 (UTC)
+Subject: Re: 5.7-rc0: kswapd eats cpu during a disk test?!
+To:     Pavel Machek <pavel@ucw.cz>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>
+Cc:     mhocko@suse.cz, "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20200531103431.GA28429@amd>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <e3afe444-4541-b420-0888-575cae8aa46d@suse.cz>
+Date:   Mon, 1 Jun 2020 10:55:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200528100635.GH1634618@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200531103431.GA28429@amd>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,35 +44,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 1:06 PM, Andy Shevchenko wrote:
-> On Thu, May 28, 2020 at 12:33:17PM +0300, Serge Semin wrote:
->> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
->> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
->> bus pm_disabled workaround"), but the flag most likely by mistake has been
->> left in the Dw I2C drivers. Let's remove it. Since MODEL_MSCC_OCELOT is
->> the only model-flag left, redefine it to be 0x100 so setting a very first
->> bit in the MODEL_MASK bits range.
++CC linux-mm
+
+On 5/31/20 12:34 PM, Pavel Machek wrote:
+> Hi!
 > 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> This is simple cat /dev/sda > /dev/zero... on thinkpad x60 (x86-32),
+> with spinning rust.
 > 
-> Conditionally, in case Wolfram and Jarkko are fine with shuffling model
-> defines, which I consider an unneeded churn.
+>   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+  COMMAND
+>    1000 root      20   0       0      0      0 R  53.3  0.0  57:34.93  kswapd0
+>   27897 root      20   0    6976    580    536 R  44.5  0.0   1:44.53  cat
 > 
->> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->> Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> It keeps both CPUs busy... and I don't think that's right.
 
-I completely agree with Andy and more over, I didn't ack this version. 
-This was the version I acked:
-
-https://www.spinics.net/lists/linux-i2c/msg45492.html
-
-So in general please drop the received tags in case you decide to modify 
-patch since reviewers may not agree anymore with it.
-
-That said, I'm fine with that minor code and commit log change. And 
-don't want to have yet another patchset version because it. Four 
-patchset versions during 2 days is a bit too much... Usual 
-recommendation is to wait for 1 week before posting a new version 
-especially if patchset is under active discussion.
-
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Does an older kernel behave differently here?
