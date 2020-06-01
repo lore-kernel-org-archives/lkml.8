@@ -2,120 +2,78 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884A02074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AEF20842
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgFAOrA (ORCPT
+        id S1727849AbgFAOrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:47:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34486 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726017AbgFAOrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:47:00 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 051Ek2bB135572;
-        Mon, 1 Jun 2020 10:46:20 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31bm15jwv7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jun 2020 10:46:20 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 051EkETP136822;
-        Mon, 1 Jun 2020 10:46:19 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31bm15jwu1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jun 2020 10:46:19 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 051Edxwd013432;
-        Mon, 1 Jun 2020 14:46:17 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf47v92e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jun 2020 14:46:17 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 051EkEBu56819942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jun 2020 14:46:15 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C58164C046;
-        Mon,  1 Jun 2020 14:46:14 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52DFD4C04A;
-        Mon,  1 Jun 2020 14:46:10 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.199.63.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon,  1 Jun 2020 14:46:10 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 01 Jun 2020 20:16:08 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Santosh Sivaraj <santosh@fossix.org>, linux-nvdimm@lists.01.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/5] seq_buf: Export seq_buf_printf
-In-Reply-To: <20200601094842.3cd0cab6@gandalf.local.home>
-References: <20200527041244.37821-1-vaibhav@linux.ibm.com> <20200527041244.37821-3-vaibhav@linux.ibm.com> <87367f9eqs.fsf@linux.ibm.com> <20200601094842.3cd0cab6@gandalf.local.home>
-Date:   Mon, 01 Jun 2020 20:16:08 +0530
-Message-ID: <87zh9m974f.fsf@linux.ibm.com>
+        Mon, 1 Jun 2020 10:47:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5833 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726017AbgFAOrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 10:47:31 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8F3BFB91085C29827103;
+        Mon,  1 Jun 2020 22:47:28 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 1 Jun 2020 22:47:21 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
+        <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [RFC PATCH v3 0/2] arm64: tlb: add support for TLBI RANGE instructions
+Date:   Mon, 1 Jun 2020 22:47:11 +0800
+Message-ID: <20200601144713.2222-1-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-01_10:2020-06-01,2020-06-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- suspectscore=0 cotscore=-2147483648 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 spamscore=0 adultscore=0
- malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006010103
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+range of input addresses. This series add support for this feature.
 
-> On Mon, 01 Jun 2020 17:31:31 +0530
-> Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
->
->> Hi Christoph and Steven,
->> 
->> Have addressed your review comment to update the patch description and
->> title for this patch. Can you please provide your ack to this patch.
->> 
->> 
->
-> I thought I already did, but it appears it was a reply to a private email
-> you sent to me. I didn't realize it was off list.
->
-> Anyway:
->
->  Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+--
+ChangeList:
+v4:
+combine the __flush_tlb_range() and the __directly into the same function
+with a single loop for both.
 
-Thanks Steven,
+v3:
+rebase this series on Linux 5.7-rc1.
 
-Had added your ack to Resend-v7 of this patch at [1] on which Christoph
-Hellwig requested an update of patch title. Hence needed your re-ack for
-this version of the patch
+v2:
+Link: https://lkml.org/lkml/2019/11/11/348
 
-[1] : https://lore.kernel.org/linux-nvdimm/20200519190058.257981-3-vaibhav@linux.ibm.com/
+Zhenyu Ye (2):
+  arm64: tlb: Detect the ARMv8.4 TLBI RANGE feature
+  arm64: tlb: Use the TLBI RANGE feature in arm64
 
->
-> -- Steve
+ arch/arm64/include/asm/cpucaps.h  |   3 +-
+ arch/arm64/include/asm/sysreg.h   |   4 ++
+ arch/arm64/include/asm/tlbflush.h | 108 +++++++++++++++++++++++++++++-
+ arch/arm64/kernel/cpufeature.c    |  11 +++
+ 4 files changed, 124 insertions(+), 2 deletions(-)
 
-Cheers
-~ Vaibhav
+-- 
+2.19.1
+
+
