@@ -6,66 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1385C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F53CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCA8C206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD1920878
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591040144;
-	bh=J+cEF6NlV6FTuCyw4GSWHJsgj40PG61Pe/1hieAYRtk=;
+	s=default; t=1591040151;
+	bh=DsLVCV1NuoHtjhufBUDWz8RY+x6etGTIlJU0gQLyjOs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Z3DfexDgkl5486cPXlol6BkhCHWBN70UT21+yOBPZrz/Za7GiBLqb/vs6E0tK+n/z
-	 C2VtRyIdaOvh/8UQQUs9MmD3m9VvFewxha4TsmKU2Bc2s7EHf4BZJ4SdJxO3VKMAaH
-	 NMP0yAEOt8z61o9Qi6hXc2rU+bTS2mxy1IWCYUDY=
+	b=J4USNKBDrTQn5bLuAD1qcPd/croMRap7pJ09EqOxJnw7gzWqFugPcUv680+71RdcF
+	 N+e6lxTRlFvxjUexDMosh1izzsXrrHseqkWqMQzU76AaN9xHNwWkDIM8C9qxpW6n9v
+	 bZGGoy+ONSIzICxDy0aYgEYoAz0OlqlwDlYXxJGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgFATfo (ORCPT
+        id S1729812AbgFATft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 15:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 15:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729558AbgFATfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 15:35:07 -0400
-Subject: Re: [GIT PULL] Crypto Update for 5.8
+        id S1729555AbgFATfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 15:35:06 -0400
+Subject: Re: [GIT PULL] hwmon updates for v5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1591040106;
-        bh=J+cEF6NlV6FTuCyw4GSWHJsgj40PG61Pe/1hieAYRtk=;
+        bh=DsLVCV1NuoHtjhufBUDWz8RY+x6etGTIlJU0gQLyjOs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=YKlgJNTSYsSxtqkyL+YTAfnOx9cPHu4nJApU4V8hGb2k73aVgVHgInrwuFRWE2svc
-         er1c8QtpaS5UyiiGskbtdih3b0ml0+VtkrkwH/Kuntea0QG9XK4F4NxNeLJynb5rkB
-         JJ9oSYvHaBxNWFfzIXTcam5cZUfVVW1l8sG93umM=
+        b=AXpWJGX+ThGgNJpppfdrA0fvXxkyL0+oGQdv9sXkP0GbHp6T25XuL3IOqs8zqrxPV
+         AEMaBLSTIyrmRBgsCe/nzkaGEd8vnPr3Imi7YKPl3DmOLCqWV6gUsqg5YJtGPMngAg
+         yydlek79+Iql5BjhCrqi/QqF0ZfFsh6VWK+KGxbM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200601024533.GA18937@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20191125034536.wlgw25gpgn7y7vni@gondor.apana.org.au>
- <20200128050326.x3cfjz3rj7ep6xr2@gondor.apana.org.au>
- <20200401042720.GA12178@gondor.apana.org.au>
- <20200601024533.GA18937@gondor.apana.org.au>
+In-Reply-To: <20200601020327.246402-1-linux@roeck-us.net>
+References: <20200601020327.246402-1-linux@roeck-us.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200601024533.GA18937@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 58ca0060ec4e51208d2eee12198fc55fd9e4feb3
+X-PR-Tracked-Message-Id: <20200601020327.246402-1-linux@roeck-us.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
+ hwmon-for-v5.8
+X-PR-Tracked-Commit-Id: 87976ce2825d9f1ca2e70ee7d38dec490ad5a6e2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 81e8c10dac62c427b25f6bbb07936806e4dd9e8a
-Message-Id: <159104010689.18844.9017176619965025932.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 129b9a5c40582cb0dc00aa5b58d1d1bcc93d98a7
+Message-Id: <159104010615.18844.4119278139693094724.pr-tracker-bot@kernel.org>
 Date:   Mon, 01 Jun 2020 19:35:06 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
+To:     Guenter Roeck <linux@roeck-us.net>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 1 Jun 2020 12:45:33 +1000:
+The pull request you sent on Sun, 31 May 2020 19:03:27 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/81e8c10dac62c427b25f6bbb07936806e4dd9e8a
+https://git.kernel.org/torvalds/c/129b9a5c40582cb0dc00aa5b58d1d1bcc93d98a7
 
 Thank you!
 
