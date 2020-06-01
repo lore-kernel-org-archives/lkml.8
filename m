@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34795C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6ED0206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13376206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035519;
-	bh=VJCgLwsSNHwLmsfHycjLYWKHAkmJNu9lyn4RGGguDvQ=;
+	s=default; t=1591035524;
+	bh=/ueERacqKCvBCeDX7uFQVBAHO7WaNeHHjAAedKNnKy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQtWshJddx/96lu5uvECRYLRBTiz+vTBQcOItuAlsIexNljtWt5w8M1GO6NuvoRNd
-	 musypCDcRPKJ5OwDDLzzMZQepVvEoQOmOfVX1v9fI/edDPENboLTB9G0FRQiZegGKz
-	 O5PNOGhXNGX9XBqdBYtxk3xAhUfVkMH6gn14Tok4=
+	b=XtHTupJ1/rAELwj7Z/6ZrEQCjGiwdPw9Knft3ZdyA45hoJd7qy/lkcLy/Pa1egolK
+	 wiRhA/WNbDihc52fSSfZFDfU+hecpwciVG9opthdefIx3hfR9bUEU+2p1Sk8qsF9b0
+	 hoYZpVbnkn4pyauh8d5sxCEgdBejJv6v/+qgRRgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbgFASSi (ORCPT
+        id S1731465AbgFASSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:18:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731630AbgFASSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:18:03 -0400
+        id S1731880AbgFASR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3021F2068D;
-        Mon,  1 Jun 2020 18:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 747AD206E2;
+        Mon,  1 Jun 2020 18:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035482;
-        bh=VJCgLwsSNHwLmsfHycjLYWKHAkmJNu9lyn4RGGguDvQ=;
+        s=default; t=1591035475;
+        bh=/ueERacqKCvBCeDX7uFQVBAHO7WaNeHHjAAedKNnKy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0YNWeSvgh/Kyuco2eEFbSaey6hR1EKYBecmhRjrmRCWgfnwFcPVt10NX3wOH+j+t
-         M5v5ki/iIRvMaaeksT2DW9A2Dts3EpT7pkt88MU6GCXAinaXvWkcLqakqvXWjffG3n
-         dCtwY7+CQZT7ieAE8xGr1/e+Vv+5rLCaw/s5FI+0=
+        b=AjmMhBOZ5od5WasrRxbP07F7I5LoA73ysajsHj9YVwYRTBd+67wkDTHb//dI13i4X
+         ldn1AQNQvM6t8w0qOtGcHZv9VFugWVN1q543l3gZ41hLPVyz7EsmqyyqSGehoW8X2T
+         Z9WtppkqdEl7eb8ZPB/MWpCNpcurrbshgFgSt4UU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 172/177] bonding: Fix reference count leak in bond_sysfs_slave_add.
-Date:   Mon,  1 Jun 2020 19:55:10 +0200
-Message-Id: <20200601174102.402758611@linuxfoundation.org>
+Subject: [PATCH 5.6 169/177] nexthop: Expand nexthop_is_multipath in a few places
+Date:   Mon,  1 Jun 2020 19:55:07 +0200
+Message-Id: <20200601174102.208014594@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,38 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: David Ahern <dsahern@gmail.com>
 
-commit a068aab42258e25094bc2c159948d263ed7d7a77 upstream.
+commit 0b5e2e39739e861fa5fc84ab27a35dbe62a15330 upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+I got too fancy consolidating checks on multipath type. The result
+is that path lookups can access 2 different nh_grp structs as exposed
+by Nik's torture tests. Expand nexthop_is_multipath within nexthop.h to
+avoid multiple, nh_grp dereferences and make decisions based on the
+consistent struct.
 
-Fixes: 07699f9a7c8d ("bonding: add sysfs /slave dir for bond slave devices.")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Only 2 places left using nexthop_is_multipath are within IPv6, both
+only check that the nexthop is a multipath for a branching decision
+which are acceptable.
+
+Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/bonding/bond_sysfs_slave.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/net/nexthop.h |   41 +++++++++++++++++++++++++----------------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
 
---- a/drivers/net/bonding/bond_sysfs_slave.c
-+++ b/drivers/net/bonding/bond_sysfs_slave.c
-@@ -149,8 +149,10 @@ int bond_sysfs_slave_add(struct slave *s
+--- a/include/net/nexthop.h
++++ b/include/net/nexthop.h
+@@ -137,21 +137,20 @@ static inline unsigned int nexthop_num_p
+ {
+ 	unsigned int rc = 1;
  
- 	err = kobject_init_and_add(&slave->kobj, &slave_ktype,
- 				   &(slave->dev->dev.kobj), "bonding_slave");
--	if (err)
-+	if (err) {
-+		kobject_put(&slave->kobj);
- 		return err;
-+	}
+-	if (nexthop_is_multipath(nh)) {
++	if (nh->is_group) {
+ 		struct nh_group *nh_grp;
  
- 	for (a = slave_attrs; *a; ++a) {
- 		err = sysfs_create_file(&slave->kobj, &((*a)->attr));
+ 		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
+-		rc = nh_grp->num_nh;
++		if (nh_grp->mpath)
++			rc = nh_grp->num_nh;
+ 	}
+ 
+ 	return rc;
+ }
+ 
+ static inline
+-struct nexthop *nexthop_mpath_select(const struct nexthop *nh, int nhsel)
++struct nexthop *nexthop_mpath_select(const struct nh_group *nhg, int nhsel)
+ {
+-	const struct nh_group *nhg = rcu_dereference_rtnl(nh->nh_grp);
+-
+ 	/* for_nexthops macros in fib_semantics.c grabs a pointer to
+ 	 * the nexthop before checking nhsel
+ 	 */
+@@ -186,12 +185,14 @@ static inline bool nexthop_is_blackhole(
+ {
+ 	const struct nh_info *nhi;
+ 
+-	if (nexthop_is_multipath(nh)) {
+-		if (nexthop_num_path(nh) > 1)
+-			return false;
+-		nh = nexthop_mpath_select(nh, 0);
+-		if (!nh)
++	if (nh->is_group) {
++		struct nh_group *nh_grp;
++
++		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
++		if (nh_grp->num_nh > 1)
+ 			return false;
++
++		nh = nh_grp->nh_entries[0].nh;
+ 	}
+ 
+ 	nhi = rcu_dereference_rtnl(nh->nh_info);
+@@ -217,10 +218,15 @@ struct fib_nh_common *nexthop_fib_nhc(st
+ 	BUILD_BUG_ON(offsetof(struct fib_nh, nh_common) != 0);
+ 	BUILD_BUG_ON(offsetof(struct fib6_nh, nh_common) != 0);
+ 
+-	if (nexthop_is_multipath(nh)) {
+-		nh = nexthop_mpath_select(nh, nhsel);
+-		if (!nh)
+-			return NULL;
++	if (nh->is_group) {
++		struct nh_group *nh_grp;
++
++		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
++		if (nh_grp->mpath) {
++			nh = nexthop_mpath_select(nh_grp, nhsel);
++			if (!nh)
++				return NULL;
++		}
+ 	}
+ 
+ 	nhi = rcu_dereference_rtnl(nh->nh_info);
+@@ -264,8 +270,11 @@ static inline struct fib6_nh *nexthop_fi
+ {
+ 	struct nh_info *nhi;
+ 
+-	if (nexthop_is_multipath(nh)) {
+-		nh = nexthop_mpath_select(nh, 0);
++	if (nh->is_group) {
++		struct nh_group *nh_grp;
++
++		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
++		nh = nexthop_mpath_select(nh_grp, 0);
+ 		if (!nh)
+ 			return NULL;
+ 	}
 
 
