@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F16EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB83C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4D762068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257272065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035200;
-	bh=Q2VEt+aFXCG9PoMYDnzPfWKxWW43uF0r8vtt6Oqh2hY=;
+	s=default; t=1591035203;
+	bh=ANJLV3hUN0eVoqgiZj7BF9PIdjzd9Cn33TUSH8PQwo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qH5X0sI6E//hR9WNwRl/aEXEwoHMPZSSXXzZc460zpmjpi45CO/r/AzSCE4Ogzipe
-	 hTDwGbid7Yi4i2dGBhH32xJaRNj9G9YCP3MlsX/p0O9tpcL8tKfRBx9YwPciP8SwGA
-	 W/t7PcqtMsZPPvkJ8WBg2vGMSWzPT9w+1KWyNLZU=
+	b=BArhxGsuV+ozMleW+yBc/Nnpd2p9UkQuoI8Bar18L2k0WPXQuyl/JhVdWGL5Vm8l4
+	 bw+gw19k/Uze1RK3uqKeF7tETL+E2uo31TJzt5FpotvLDwGu5/FvP1ZDufYEfQ8VGs
+	 HYzFU8p/fyzD2arQMxSOFQUgWlyHaq3wUvAefYxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgFASNT (ORCPT
+        id S1730967AbgFASNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:13:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731312AbgFASNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:13 -0400
+        id S1731305AbgFASNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:13:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52F420870;
-        Mon,  1 Jun 2020 18:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB332068D;
+        Mon,  1 Jun 2020 18:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035193;
-        bh=Q2VEt+aFXCG9PoMYDnzPfWKxWW43uF0r8vtt6Oqh2hY=;
+        s=default; t=1591035188;
+        bh=ANJLV3hUN0eVoqgiZj7BF9PIdjzd9Cn33TUSH8PQwo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SsmcCxvyXqudTDVRNgIlxvTEJ6SKpND5A4lBARZFYIhiisIH9FX28bQB3/KdH9xM2
-         1nZkthReA9ozHYiU/s9YGqHjT4FRZiUBfePQcljf8SorwTN2SB9LmYU+dO+aoYYFwm
-         uvFf63XOGdAAM1al8GMw7Q5/cszjGLc2Q95Fkg8Y=
+        b=WI8C1Qx/oJnS572uKg8/K/VBlvUqDHaU2wGEFn0naIGyURdFnkfsk57IS0AY2i4BK
+         CrehjE6FibNKmt9iGqw/qsDHIkBtaPK0HE8hWb+ZzWbyrRzZmy3Dj6JxWd8BWZJhWW
+         juWrcb1+CRIiZgxjx/TIS9Ctwezrc2/uLE8kd0OI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 051/177] gpio: tegra: mask GPIO IRQs during IRQ shutdown
-Date:   Mon,  1 Jun 2020 19:53:09 +0200
-Message-Id: <20200601174053.298977078@linuxfoundation.org>
+Subject: [PATCH 5.6 049/177] ARM: dts: rockchip: swap clock-names of gpu nodes
+Date:   Mon,  1 Jun 2020 19:53:07 +0200
+Message-Id: <20200601174053.130677414@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,37 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 0cf253eed5d2bdf7bb3152457b38f39b012955f7 ]
+[ Upstream commit b14f3898d2c25a9b47a61fb879d0b1f3af92c59b ]
 
-The driver currently leaves GPIO IRQs unmasked even when the GPIO IRQ
-client has released the GPIO IRQ. This allows the HW to raise IRQs, and
-SW to process them, after shutdown. Fix this by masking the IRQ when it's
-shut down. This is usually taken care of by the irqchip core, but since
-this driver has a custom irq_shutdown implementation, it must do this
-explicitly itself.
+Dts files with Rockchip 'gpu' nodes were manually verified.
+In order to automate this process arm,mali-utgard.txt
+has been converted to yaml. In the new setup dtbs_check with
+arm,mali-utgard.yaml expects clock-names values
+in the same order, so fix that.
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Link: https://lore.kernel.org/r/20200427232605.11608-1-swarren@wwwdotorg.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200425192500.1808-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-tegra.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/rk3036.dtsi | 2 +-
+ arch/arm/boot/dts/rk322x.dtsi | 2 +-
+ arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index acb99eff9939..86568154cdb3 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -368,6 +368,7 @@ static void tegra_gpio_irq_shutdown(struct irq_data *d)
- 	struct tegra_gpio_info *tgi = bank->tgi;
- 	unsigned int gpio = d->hwirq;
- 
-+	tegra_gpio_irq_mask(d);
- 	gpiochip_unlock_as_irq(&tgi->gc, gpio);
- }
- 
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index cf36e25195b4..8c4b8f56c9e0 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -128,7 +128,7 @@
+ 		assigned-clocks = <&cru SCLK_GPU>;
+ 		assigned-clock-rates = <100000000>;
+ 		clocks = <&cru SCLK_GPU>, <&cru SCLK_GPU>;
+-		clock-names = "core", "bus";
++		clock-names = "bus", "core";
+ 		resets = <&cru SRST_GPU>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 4e90efdc9630..729119952c68 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -561,7 +561,7 @@
+ 				  "pp1",
+ 				  "ppmmu1";
+ 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
+-		clock-names = "core", "bus";
++		clock-names = "bus", "core";
+ 		resets = <&cru SRST_GPU_A>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 241f43e29c77..bb5ff10b9110 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -84,7 +84,7 @@
+ 		compatible = "arm,mali-400";
+ 		reg = <0x10090000 0x10000>;
+ 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
+-		clock-names = "core", "bus";
++		clock-names = "bus", "core";
+ 		assigned-clocks = <&cru ACLK_GPU>;
+ 		assigned-clock-rates = <100000000>;
+ 		resets = <&cru SRST_GPU>;
 -- 
 2.25.1
 
