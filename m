@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B579C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6CCA20897
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B70D2085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035056;
-	bh=4UhJldZD0Eevpz5WBeIfMgikOVwXHoQKBYBYJ8uQUZM=;
+	s=default; t=1591035058;
+	bh=H7naidMd5Qa0u04rOXvuNj7VG6ToA776KEDM8xBVLYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGY4BK0UktcKU3K4fC8J1y28Du1F3iVcjU5x0psFXAC4j+6sscr3uMdm3rIOwqTxv
-	 mjZMEheDFm9Jb42tzb3LJ41lr389gbiqIL22l4gL55j/Fq0IIeXfvwoh5w+8eVmGpf
-	 fEINsI4rlGcn5lQyLLhM0hQy4ZwbVP9B8BRtyHxA=
+	b=vSf8DVnrM83n7fH/39azZuzA1TtUBCb9Yv+AqNBMRFDt0Zw4bLGCnZW/goy6r0JVC
+	 26+UaI/yfGhFi5w1OwmeN+eMAYEusrxiBVPOdI3geKkiL/wSdKQHIskHzQS12WVOAS
+	 udd4v3xxlpUhwL8kERq6n1FHMDfmuMXCvj7mOlhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbgFASKz (ORCPT
+        id S1731048AbgFASK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729773AbgFASKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:36 -0400
+        id S1731012AbgFASKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00E6220825;
-        Mon,  1 Jun 2020 18:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2053206E2;
+        Mon,  1 Jun 2020 18:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035035;
-        bh=4UhJldZD0Eevpz5WBeIfMgikOVwXHoQKBYBYJ8uQUZM=;
+        s=default; t=1591035042;
+        bh=H7naidMd5Qa0u04rOXvuNj7VG6ToA776KEDM8xBVLYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kw3qSAV56Q74Oa69+OQTHH0S/2+EuKIMRct52ymwYc36OyrbkcfVKahSH8dA5tRI4
-         +CJMQIrfvPibApRSzpLZNXfqK40ImbI15imthcHDtU498S16i70Kjh944WiK/WWs61
-         cHwPeyGs++uFisNv+ck98z3ATJ79r3Ncsx47ufyk=
+        b=P+MDhmO/PbA39SKoyuYBQGOCKCYhIKN5WvJpAIbZvtl+5xEpo/Zk4bUZ7ttFTUe9b
+         hKCfY/jA3HKMNO1ipS5G9qb00VBjXzHQagZk49UgXkxhv1AR4yzXt32Lrjf0JxCJqS
+         n2NeGUSte516/Om3YPfStCMWxQy13FS4SJMWLDT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 123/142] netfilter: conntrack: make conntrack userspace helpers work again
-Date:   Mon,  1 Jun 2020 19:54:41 +0200
-Message-Id: <20200601174050.546749690@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.4 126/142] esp6: get the right proto for transport mode in esp6_gso_encap
+Date:   Mon,  1 Jun 2020 19:54:44 +0200
+Message-Id: <20200601174050.848248627@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -59,145 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit ee04805ff54a63ffd90bc6749ebfe73473734ddb upstream.
+commit 3c96ec56828922e3fe5477f75eb3fc02f98f98b5 upstream.
 
-Florian Westphal says:
+For transport mode, when ipv6 nexthdr is set, the packet format might
+be like:
 
-"Problem is that after the helper hook was merged back into the confirm
-one, the queueing itself occurs from the confirm hook, i.e. we queue
-from the last netfilter callback in the hook-list.
+    ----------------------------------------------------
+    |        | dest |     |     |      |  ESP    | ESP |
+    | IP6 hdr| opts.| ESP | TCP | Data | Trailer | ICV |
+    ----------------------------------------------------
 
-Therefore, on return, the packet bypasses the confirm action and the
-connection is never committed to the main conntrack table.
+What it wants to get for x-proto in esp6_gso_encap() is the proto that
+will be set in ESP nexthdr. So it should skip all ipv6 nexthdrs and
+get the real transport protocol. Othersize, the wrong proto number
+will be set into ESP nexthdr.
 
-To fix this there are several ways:
-1. revert the 'Fixes' commit and have a extra helper hook again.
-   Works, but has the drawback of adding another indirect call for
-   everyone.
+This patch is to skip all ipv6 nexthdrs by calling ipv6_skip_exthdr()
+in esp6_gso_encap().
 
-2. Special case this: split the hooks only when userspace helper
-   gets added, so queueing occurs at a lower priority again,
-   and normal enqueue reinject would eventually call the last hook.
-
-3. Extend the existing nf_queue ct update hook to allow a forced
-   confirmation (plus run the seqadj code).
-
-This goes for 3)."
-
-Fixes: 827318feb69cb ("netfilter: conntrack: remove helper hook again")
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_conntrack_core.c |   78 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 72 insertions(+), 6 deletions(-)
+ net/ipv6/esp6_offload.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -1879,22 +1879,18 @@ static void nf_conntrack_attach(struct s
- 	nf_conntrack_get(skb_nfct(nskb));
- }
+--- a/net/ipv6/esp6_offload.c
++++ b/net/ipv6/esp6_offload.c
+@@ -121,9 +121,16 @@ static void esp6_gso_encap(struct xfrm_s
+ 	struct ip_esp_hdr *esph;
+ 	struct ipv6hdr *iph = ipv6_hdr(skb);
+ 	struct xfrm_offload *xo = xfrm_offload(skb);
+-	int proto = iph->nexthdr;
++	u8 proto = iph->nexthdr;
  
--static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
-+static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
-+				 struct nf_conn *ct)
- {
- 	struct nf_conntrack_tuple_hash *h;
- 	struct nf_conntrack_tuple tuple;
- 	enum ip_conntrack_info ctinfo;
- 	struct nf_nat_hook *nat_hook;
- 	unsigned int status;
--	struct nf_conn *ct;
- 	int dataoff;
- 	u16 l3num;
- 	u8 l4num;
- 
--	ct = nf_ct_get(skb, &ctinfo);
--	if (!ct || nf_ct_is_confirmed(ct))
--		return 0;
--
- 	l3num = nf_ct_l3num(ct);
- 
- 	dataoff = get_l4proto(skb, skb_network_offset(skb), l3num, &l4num);
-@@ -1951,6 +1947,76 @@ static int nf_conntrack_update(struct ne
- 	return 0;
- }
- 
-+/* This packet is coming from userspace via nf_queue, complete the packet
-+ * processing after the helper invocation in nf_confirm().
-+ */
-+static int nf_confirm_cthelper(struct sk_buff *skb, struct nf_conn *ct,
-+			       enum ip_conntrack_info ctinfo)
-+{
-+	const struct nf_conntrack_helper *helper;
-+	const struct nf_conn_help *help;
-+	unsigned int protoff;
+ 	skb_push(skb, -skb_network_offset(skb));
 +
-+	help = nfct_help(ct);
-+	if (!help)
-+		return 0;
++	if (x->outer_mode.encap == XFRM_MODE_TRANSPORT) {
++		__be16 frag;
 +
-+	helper = rcu_dereference(help->helper);
-+	if (!(helper->flags & NF_CT_HELPER_F_USERSPACE))
-+		return 0;
-+
-+	switch (nf_ct_l3num(ct)) {
-+	case NFPROTO_IPV4:
-+		protoff = skb_network_offset(skb) + ip_hdrlen(skb);
-+		break;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case NFPROTO_IPV6: {
-+		__be16 frag_off;
-+		u8 pnum;
-+
-+		pnum = ipv6_hdr(skb)->nexthdr;
-+		protoff = ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &pnum,
-+					   &frag_off);
-+		if (protoff < 0 || (frag_off & htons(~0x7)) != 0)
-+			return 0;
-+		break;
-+	}
-+#endif
-+	default:
-+		return 0;
++		ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &proto, &frag);
 +	}
 +
-+	if (test_bit(IPS_SEQ_ADJUST_BIT, &ct->status) &&
-+	    !nf_is_loopback_packet(skb)) {
-+		if (!nf_ct_seq_adjust(skb, ct, ctinfo, protoff)) {
-+			NF_CT_STAT_INC_ATOMIC(nf_ct_net(ct), drop);
-+			return -1;
-+		}
-+	}
-+
-+	/* We've seen it coming out the other side: confirm it */
-+	return nf_conntrack_confirm(skb) == NF_DROP ? - 1 : 0;
-+}
-+
-+static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
-+{
-+	enum ip_conntrack_info ctinfo;
-+	struct nf_conn *ct;
-+	int err;
-+
-+	ct = nf_ct_get(skb, &ctinfo);
-+	if (!ct)
-+		return 0;
-+
-+	if (!nf_ct_is_confirmed(ct)) {
-+		err = __nf_conntrack_update(net, skb, ct);
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	return nf_confirm_cthelper(skb, ct, ctinfo);
-+}
-+
- static bool nf_conntrack_get_tuple_skb(struct nf_conntrack_tuple *dst_tuple,
- 				       const struct sk_buff *skb)
- {
+ 	esph = ip_esp_hdr(skb);
+ 	*skb_mac_header(skb) = IPPROTO_ESP;
+ 
 
 
