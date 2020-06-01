@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A28AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABD9207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E4D206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034676;
-	bh=0fwH1kl3TnLGLnKNcAtcv7dUqXFLkD4bHPfFezszlEA=;
+	s=default; t=1591034679;
+	bh=3jPdlcInTFh+EvDJW8n9OfnWGq4Fb6IVg+4HS2nVxB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCPnsolLphDCPmWg1kOqU4goDYWiHBZ52TiVhp2q2usE2b6+JbKLFBCJywu8b6AHY
-	 tp0TigWu7NVv+pr7eFVYOebVVbc1agSkdY4mihP+nXY2g41+3hAYkWuXq2bLTtr2nA
-	 EHsfu/Q2NfQGQiqFtoDMmA56LxM60cqom52iFMrs=
+	b=sBd5rxIWgbJVE+UVBvZnT8B8pmAAnB+onuLL1a4W0hf72NxX3jRs7PdBaW3dt+c47
+	 hQEaOGM96pHjwtQhwp4qtUrkVT7TDwFDBqpS1l1sfA0Neh35zAhVF3otK3zOi1oWv/
+	 FGjo5Y6uJbtQc1Mx994rXbon5Eh2VKtOmhw7CbcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgFASEf (ORCPT
+        id S1730222AbgFASEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48854 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:04:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730186AbgFASET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:04:19 -0400
+        id S1728869AbgFASEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:04:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ABDC2077D;
-        Mon,  1 Jun 2020 18:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D35C1206E2;
+        Mon,  1 Jun 2020 18:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034658;
-        bh=0fwH1kl3TnLGLnKNcAtcv7dUqXFLkD4bHPfFezszlEA=;
+        s=default; t=1591034660;
+        bh=3jPdlcInTFh+EvDJW8n9OfnWGq4Fb6IVg+4HS2nVxB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=esTUxYAWtUfRwo2RMXdHJJF7rmpDurLH6WmFGDoAWK1j0OB3Ef6JPkmEx2upFMd4H
-         PGoe/gCqyblhKvti7kvFbh/W0D9zj8Wbznv9XrEjO76V5xwwQTkN5o0FPIB9zBoecj
-         tXxsbX6SEWWvthEghpbevZWr9Bttfxu/EGh+lcRc=
+        b=lbjUa0HuFDazbCAYsYeslyvPKr/eCr4aCUoW+znSgcjZAimZV99aBRMnXddQwZI99
+         DdG88Vd0dzyWwVtkhrLRNOz5aROacmRkMBhCSxd4U2U/9cEE0FT5m1+XOwe1sDTVnc
+         Hp5ZilCbfOeB4BFvlf5hLQBMCZEsFW22+3sXLu5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Robert Beckett <bob.beckett@collabora.com>,
+        Ian Ray <ian.ray@ge.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 51/95] IB/qib: Call kobject_put() when kobject_init_and_add() fails
-Date:   Mon,  1 Jun 2020 19:53:51 +0200
-Message-Id: <20200601174029.363185212@linuxfoundation.org>
+Subject: [PATCH 4.19 52/95] ARM: dts/imx6q-bx50v3: Set display interface clock parents
+Date:   Mon,  1 Jun 2020 19:53:52 +0200
+Message-Id: <20200601174029.499300512@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -64,80 +62,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Robert Beckett <bob.beckett@collabora.com>
 
-[ Upstream commit a35cd6447effd5c239b564c80fa109d05ff3d114 ]
+[ Upstream commit 665e7c73a7724a393b4ec92d1ae1e029925ef2b7 ]
 
-When kobject_init_and_add() returns an error in the function
-qib_create_port_files(), the function kobject_put() is not called for the
-corresponding kobject, which potentially leads to memory leak.
+Avoid LDB and IPU DI clocks both using the same parent. LDB requires
+pasthrough clock to avoid breaking timing while IPU DI does not.
 
-This patch fixes the issue by calling kobject_put() even if
-kobject_init_and_add() fails. In addition, the ppd->diagc_kobj is released
-along with other kobjects when the sysfs is unregistered.
+Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
+and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
 
-Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
-Link: https://lore.kernel.org/r/20200512031328.189865.48627.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Suggested-by: Lin Yi <teroincn@gmail.com>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This fixes an issue where attempting atomic modeset while using
+HDMI and display port at the same time causes LDB clock programming
+to destroy the programming of HDMI that was done during the same
+modeset.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+[Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
+ originally chosen by Robert Beckett to avoid affecting eMMC clock
+ by DRM atomic updates]
+Signed-off-by: Ian Ray <ian.ray@ge.com>
+[Squash Robert's and Ian's commits for bisectability, update patch
+ description and add stable tag]
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sysfs.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/imx6q-b450v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b650v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b850v3.dts  | 11 -----------
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 15 +++++++++++++++
+ 4 files changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
-index d831f3e61ae8..2626205780ee 100644
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -756,7 +756,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 			"Skipping linkcontrol sysfs info, (err %d) port %u\n",
- 			ret, port_num);
--		goto bail;
-+		goto bail_link;
- 	}
- 	kobject_uevent(&ppd->pport_kobj, KOBJ_ADD);
+diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
+index 3ec58500e9c2..25bf45659737 100644
+--- a/arch/arm/boot/dts/imx6q-b450v3.dts
++++ b/arch/arm/boot/dts/imx6q-b450v3.dts
+@@ -65,13 +65,6 @@
+ 	};
+ };
  
-@@ -766,7 +766,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 			"Skipping sl2vl sysfs info, (err %d) port %u\n",
- 			ret, port_num);
--		goto bail_link;
-+		goto bail_sl;
- 	}
- 	kobject_uevent(&ppd->sl2vl_kobj, KOBJ_ADD);
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
  
-@@ -776,7 +776,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 			"Skipping diag_counters sysfs info, (err %d) port %u\n",
- 			ret, port_num);
--		goto bail_sl;
-+		goto bail_diagc;
- 	}
- 	kobject_uevent(&ppd->diagc_kobj, KOBJ_ADD);
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+index 5650a9b11091..0326711a8700 100644
+--- a/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -65,13 +65,6 @@
+ 	};
+ };
  
-@@ -789,7 +789,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 		 "Skipping Congestion Control sysfs info, (err %d) port %u\n",
- 		 ret, port_num);
--		goto bail_diagc;
-+		goto bail_cc;
- 	}
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
  
- 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
-@@ -871,6 +871,7 @@ void qib_verbs_unregister_sysfs(struct qib_devdata *dd)
- 				&cc_table_bin_attr);
- 			kobject_put(&ppd->pport_cc_kobj);
- 		}
-+		kobject_put(&ppd->diagc_kobj);
- 		kobject_put(&ppd->sl2vl_kobj);
- 		kobject_put(&ppd->pport_kobj);
- 	}
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index 044a5bebe1c5..612f782ddaaa 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -53,17 +53,6 @@
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
+-};
+-
+ &ldb {
+ 	fsl,dual-channel;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index d3cba09be0cb..c1f554348187 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -391,3 +391,18 @@
+ 		#interrupt-cells = <1>;
+ 	};
+ };
++
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI1_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI1_PRE_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>;
++};
 -- 
 2.25.1
 
