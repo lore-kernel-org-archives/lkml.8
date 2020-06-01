@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93361C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7564FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6757320678
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A52420678
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036725;
-	bh=qqYvGaidwfg4zvFMt8jOwZD5KqkfullPtDDFDko273A=;
+	s=default; t=1591036732;
+	bh=8YG6uJRXinW5ioAzi4kbKMYdOmSpe9DCn4FxOPufuvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DfHIh0dNlpvbxYV0Nxju/msjhqNMW0268jJ0MyWPtQQ0Dbv+QcujKQwoTh/UBGViu
-	 +sF2Zq43yaaVHL7tVn/0WlPk5Wai9c7y1BviybF5PJCHU9hF+LqowSJvMnTgq7o4As
-	 3ezaVWMT3lgKTi+ZfTIviQ5UURbfY8IvlCL7oRJU=
+	b=R5tan1gZcrqsHBjZpx1wVihGpaw/qdRSQfxiMqPAsX5/0ZZNw7a7lSvGmWo22nyX9
+	 WPYZiyJ9Zzyng8Dx1g281mJTETh2cNtu+CiVq1rtsfzpFEbeoNOGersnhfUGorRrv6
+	 R6o+OPllc0dZD2Zzsncmwc7BNxOkLmMDH1Il8uww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731813AbgFASio (ORCPT
+        id S1731534AbgFASO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49450 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:14:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731586AbgFASih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:38:37 -0400
+        id S1731513AbgFASOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:14:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4F582074B;
-        Mon,  1 Jun 2020 18:33:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DF6A2068D;
+        Mon,  1 Jun 2020 18:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591036419;
-        bh=qqYvGaidwfg4zvFMt8jOwZD5KqkfullPtDDFDko273A=;
+        s=default; t=1591035289;
+        bh=8YG6uJRXinW5ioAzi4kbKMYdOmSpe9DCn4FxOPufuvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVJKIijzyzGRpGzCLLAUITptTuR+bjLvtTz+VO6ijadSfOqU/fdTLC1LchMO19OyV
-         B/4U29h3XSdjBwIflvuLxS6wU6RbadyFVJWAapKz9879yF2Ez9biVqZwfIm1JRJAcM
-         6y8aCwInHu++XA4IO/y1SznegAB7M2Rct41DyIPw=
+        b=vFmnX13For9v6+ylEFfd3CoDEaJJ8/GIb8JuwcKEupTUjBSWpzc6VGlkfvBNhUaGp
+         CQZ4SQFZP9ooJKhtTxiClxseIL635bF/KXe0EoYhbzmSDZah1V3GRna8FJc2p8yFx7
+         XVaCGsw1taS4HMdHap7ePQ8f9eD7REqcCGLaATBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        =?UTF-8?q?Andrej=20Filip=C4=8Di=C4=8D?= <andrej.filipcic@ijs.si>
-Subject: [PATCH 5.4 095/142] ceph: flush release queue when handling caps for unknown inode
-Date:   Mon,  1 Jun 2020 19:54:13 +0200
-Message-Id: <20200601174047.815799572@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 094/177] ARM: uaccess: consolidate uaccess asm to asm/uaccess-asm.h
+Date:   Mon,  1 Jun 2020 19:53:52 +0200
+Message-Id: <20200601174056.619675194@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
-References: <20200601174037.904070960@linuxfoundation.org>
+In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
+References: <20200601174048.468952319@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,43 +59,300 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit fb33c114d3ed5bdac230716f5b0a93b56b92a90d ]
+[ Upstream commit 747ffc2fcf969eff9309d7f2d1d61cb8b9e1bb40 ]
 
-It's possible for the VFS to completely forget about an inode, but for
-it to still be sitting on the cap release queue. If the MDS sends the
-client a cap message for such an inode, it just ignores it today, which
-can lead to a stall of up to 5s until the cap release queue is flushed.
+Consolidate the user access assembly code to asm/uaccess-asm.h.  This
+moves the csdb, check_uaccess, uaccess_mask_range_ptr, uaccess_enable,
+uaccess_disable, uaccess_save, uaccess_restore macros, and creates two
+new ones for exception entry and exit - uaccess_entry and uaccess_exit.
 
-If we get a cap message for an inode that can't be located, then go
-ahead and flush the cap release queue.
+This makes the uaccess_save and uaccess_restore macros private to
+asm/uaccess-asm.h.
 
-Cc: stable@vger.kernel.org
-URL: https://tracker.ceph.com/issues/45532
-Fixes: 1e9c2eb6811e ("ceph: delete stale dentry when last reference is dropped")
-Reported-and-Tested-by: Andrej Filipčič <andrej.filipcic@ijs.si>
-Suggested-by: Yan, Zheng <zyan@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/include/asm/assembler.h   |  75 +-------------------
+ arch/arm/include/asm/uaccess-asm.h | 106 +++++++++++++++++++++++++++++
+ arch/arm/kernel/entry-armv.S       |  11 +--
+ arch/arm/kernel/entry-header.S     |   9 +--
+ 4 files changed, 112 insertions(+), 89 deletions(-)
+ create mode 100644 arch/arm/include/asm/uaccess-asm.h
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index 2d602c2b0ff6..b2695919435e 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -3938,7 +3938,7 @@ void ceph_handle_caps(struct ceph_mds_session *session,
- 			__ceph_queue_cap_release(session, cap);
- 			spin_unlock(&session->s_cap_lock);
- 		}
--		goto done;
-+		goto flush_cap_releases;
- 	}
+diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+index 99929122dad7..3546d294d55f 100644
+--- a/arch/arm/include/asm/assembler.h
++++ b/arch/arm/include/asm/assembler.h
+@@ -18,11 +18,11 @@
+ #endif
  
- 	/* these will work even if we don't have a cap yet */
+ #include <asm/ptrace.h>
+-#include <asm/domain.h>
+ #include <asm/opcodes-virt.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/page.h>
+ #include <asm/thread_info.h>
++#include <asm/uaccess-asm.h>
+ 
+ #define IOMEM(x)	(x)
+ 
+@@ -446,79 +446,6 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	.size \name , . - \name
+ 	.endm
+ 
+-	.macro	csdb
+-#ifdef CONFIG_THUMB2_KERNEL
+-	.inst.w	0xf3af8014
+-#else
+-	.inst	0xe320f014
+-#endif
+-	.endm
+-
+-	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
+-#ifndef CONFIG_CPU_USE_DOMAINS
+-	adds	\tmp, \addr, #\size - 1
+-	sbcscc	\tmp, \tmp, \limit
+-	bcs	\bad
+-#ifdef CONFIG_CPU_SPECTRE
+-	movcs	\addr, #0
+-	csdb
+-#endif
+-#endif
+-	.endm
+-
+-	.macro uaccess_mask_range_ptr, addr:req, size:req, limit:req, tmp:req
+-#ifdef CONFIG_CPU_SPECTRE
+-	sub	\tmp, \limit, #1
+-	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
+-	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
+-	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
+-	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
+-	csdb
+-#endif
+-	.endm
+-
+-	.macro	uaccess_disable, tmp, isb=1
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	/*
+-	 * Whenever we re-enter userspace, the domains should always be
+-	 * set appropriately.
+-	 */
+-	mov	\tmp, #DACR_UACCESS_DISABLE
+-	mcr	p15, 0, \tmp, c3, c0, 0		@ Set domain register
+-	.if	\isb
+-	instr_sync
+-	.endif
+-#endif
+-	.endm
+-
+-	.macro	uaccess_enable, tmp, isb=1
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	/*
+-	 * Whenever we re-enter userspace, the domains should always be
+-	 * set appropriately.
+-	 */
+-	mov	\tmp, #DACR_UACCESS_ENABLE
+-	mcr	p15, 0, \tmp, c3, c0, 0
+-	.if	\isb
+-	instr_sync
+-	.endif
+-#endif
+-	.endm
+-
+-	.macro	uaccess_save, tmp
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	mrc	p15, 0, \tmp, c3, c0, 0
+-	str	\tmp, [sp, #SVC_DACR]
+-#endif
+-	.endm
+-
+-	.macro	uaccess_restore
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	ldr	r0, [sp, #SVC_DACR]
+-	mcr	p15, 0, r0, c3, c0, 0
+-#endif
+-	.endm
+-
+ 	.irp	c,,eq,ne,cs,cc,mi,pl,vs,vc,hi,ls,ge,lt,gt,le,hs,lo
+ 	.macro	ret\c, reg
+ #if __LINUX_ARM_ARCH__ < 6
+diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
+new file mode 100644
+index 000000000000..d475e3e8145d
+--- /dev/null
++++ b/arch/arm/include/asm/uaccess-asm.h
+@@ -0,0 +1,106 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __ASM_UACCESS_ASM_H__
++#define __ASM_UACCESS_ASM_H__
++
++#include <asm/asm-offsets.h>
++#include <asm/domain.h>
++#include <asm/memory.h>
++#include <asm/thread_info.h>
++
++	.macro	csdb
++#ifdef CONFIG_THUMB2_KERNEL
++	.inst.w	0xf3af8014
++#else
++	.inst	0xe320f014
++#endif
++	.endm
++
++	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
++#ifndef CONFIG_CPU_USE_DOMAINS
++	adds	\tmp, \addr, #\size - 1
++	sbcscc	\tmp, \tmp, \limit
++	bcs	\bad
++#ifdef CONFIG_CPU_SPECTRE
++	movcs	\addr, #0
++	csdb
++#endif
++#endif
++	.endm
++
++	.macro uaccess_mask_range_ptr, addr:req, size:req, limit:req, tmp:req
++#ifdef CONFIG_CPU_SPECTRE
++	sub	\tmp, \limit, #1
++	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
++	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
++	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
++	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
++	csdb
++#endif
++	.endm
++
++	.macro	uaccess_disable, tmp, isb=1
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	/*
++	 * Whenever we re-enter userspace, the domains should always be
++	 * set appropriately.
++	 */
++	mov	\tmp, #DACR_UACCESS_DISABLE
++	mcr	p15, 0, \tmp, c3, c0, 0		@ Set domain register
++	.if	\isb
++	instr_sync
++	.endif
++#endif
++	.endm
++
++	.macro	uaccess_enable, tmp, isb=1
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	/*
++	 * Whenever we re-enter userspace, the domains should always be
++	 * set appropriately.
++	 */
++	mov	\tmp, #DACR_UACCESS_ENABLE
++	mcr	p15, 0, \tmp, c3, c0, 0
++	.if	\isb
++	instr_sync
++	.endif
++#endif
++	.endm
++
++	.macro	uaccess_save, tmp
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	mrc	p15, 0, \tmp, c3, c0, 0
++	str	\tmp, [sp, #SVC_DACR]
++#endif
++	.endm
++
++	.macro	uaccess_restore
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	ldr	r0, [sp, #SVC_DACR]
++	mcr	p15, 0, r0, c3, c0, 0
++#endif
++	.endm
++
++	/*
++	 * Save the address limit on entry to a privileged exception and
++	 * if using PAN, save and disable usermode access.
++	 */
++	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
++	ldr	\tmp0, [\tsk, #TI_ADDR_LIMIT]
++	mov	\tmp1, #TASK_SIZE
++	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++	str	\tmp0, [sp, #SVC_ADDR_LIMIT]
++	uaccess_save \tmp0
++	.if \disable
++	uaccess_disable \tmp0
++	.endif
++	.endm
++
++	/* Restore the user access state previously saved by uaccess_entry */
++	.macro	uaccess_exit, tsk, tmp0, tmp1
++	ldr	\tmp1, [sp, #SVC_ADDR_LIMIT]
++	uaccess_restore
++	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++	.endm
++
++#endif /* __ASM_UACCESS_ASM_H__ */
+diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
+index 77f54830554c..55a47df04773 100644
+--- a/arch/arm/kernel/entry-armv.S
++++ b/arch/arm/kernel/entry-armv.S
+@@ -27,6 +27,7 @@
+ #include <asm/unistd.h>
+ #include <asm/tls.h>
+ #include <asm/system_info.h>
++#include <asm/uaccess-asm.h>
+ 
+ #include "entry-header.S"
+ #include <asm/entry-macro-multi.S>
+@@ -179,15 +180,7 @@ ENDPROC(__und_invalid)
+ 	stmia	r7, {r2 - r6}
+ 
+ 	get_thread_info tsk
+-	ldr	r0, [tsk, #TI_ADDR_LIMIT]
+-	mov	r1, #TASK_SIZE
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
+-	str	r0, [sp, #SVC_ADDR_LIMIT]
+-
+-	uaccess_save r0
+-	.if \uaccess
+-	uaccess_disable r0
+-	.endif
++	uaccess_entry tsk, r0, r1, r2, \uaccess
+ 
+ 	.if \trace
+ #ifdef CONFIG_TRACE_IRQFLAGS
+diff --git a/arch/arm/kernel/entry-header.S b/arch/arm/kernel/entry-header.S
+index 32051ec5b33f..40db0f9188b6 100644
+--- a/arch/arm/kernel/entry-header.S
++++ b/arch/arm/kernel/entry-header.S
+@@ -6,6 +6,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/errno.h>
+ #include <asm/thread_info.h>
++#include <asm/uaccess-asm.h>
+ #include <asm/v7m.h>
+ 
+ @ Bad Abort numbers
+@@ -217,9 +218,7 @@
+ 	blne	trace_hardirqs_off
+ #endif
+ 	.endif
+-	ldr	r1, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_restore
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
++	uaccess_exit tsk, r0, r1
+ 
+ #ifndef CONFIG_THUMB2_KERNEL
+ 	@ ARM mode SVC restore
+@@ -263,9 +262,7 @@
+ 	@ on the stack remains correct).
+ 	@
+ 	.macro  svc_exit_via_fiq
+-	ldr	r1, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_restore
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
++	uaccess_exit tsk, r0, r1
+ #ifndef CONFIG_THUMB2_KERNEL
+ 	@ ARM mode restore
+ 	mov	r0, sp
 -- 
 2.25.1
 
