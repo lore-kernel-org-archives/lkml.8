@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75883C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F7721582
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D72B206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034621;
-	bh=p5Ivg2Y9Ngh2RYD9AbZRVypIHScyMu3J9hzghra5llY=;
+	s=default; t=1591034625;
+	bh=IXAB/ugYIs1Tg1t4omVyrfXiW4pxa2jvUd3vyyQBZXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pdzdPpcF690QtVVOKknms06TC+O7bvL/5OF+onbKFciv6qDshqWbHnWQWVWftRLKv
-	 0C696jfhvuXqYhgL0X9PuEjWkH4I47Yi958M1SPDgRM5tcDf+BfCuO6koK3aqXXfXb
-	 dcL9oFYZagTB9oe/E9lXAFCzjUCC/rOUlPAVq9uk=
+	b=IDVt5Woau3i30FPoMpeNxchfRYYsQpRYj1sh37YPAH/vtmEz1mRpEY0sdFXRnrqSh
+	 04wT/yopoyyBIaq4k1HxObCpay59HJp1iXFz+5+VFuYB30fKjwCFcoHqaV0EAL+aNW
+	 cJtGR6zu1ulXIG3vuhh4VRFNe+D0XRFph/HMkQ3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgFASDk (ORCPT
+        id S1728720AbgFASDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730098AbgFASDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:03:35 -0400
+        id S1730112AbgFASDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:03:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD5722077D;
-        Mon,  1 Jun 2020 18:03:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 625172077D;
+        Mon,  1 Jun 2020 18:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034615;
-        bh=p5Ivg2Y9Ngh2RYD9AbZRVypIHScyMu3J9hzghra5llY=;
+        s=default; t=1591034619;
+        bh=IXAB/ugYIs1Tg1t4omVyrfXiW4pxa2jvUd3vyyQBZXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+7wr0duMZfUrjCEb8wbOmUpG+teflp25QdBEI5OYziBKAQHhFpwTDXnKdKMGXCzI
-         MyrdjV30/0iW9LO06i5f3PirM4GxigefOIRix1cf61TKwdfW5FJS4M3gotXZqX14Y6
-         gwL1i4hqMdEo349HrnD9+ACFIi8zqzOCKYQMhE2I=
+        b=CtolpuvMlEMTM/U7a7XDbFv53aiNg7NQvyKKRT7yweueS/q/yFF1DRC8Pis9S7xry
+         yfa2vv+QQsAXd5r9L098FPXHSNd7d8w+nEjEmF8kBVU7VnbZG62AeRi8XA/ag82j4k
+         /ulZIxxsOmjqKKLkswinPOcm4zj8+NB++hKjDJGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Fedorenko <vfedorenko@novek.ru>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 06/95] net: ipip: fix wrong address family in init error path
-Date:   Mon,  1 Jun 2020 19:53:06 +0200
-Message-Id: <20200601174021.904485238@linuxfoundation.org>
+Subject: [PATCH 4.19 08/95] net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
+Date:   Mon,  1 Jun 2020 19:53:08 +0200
+Message-Id: <20200601174022.201744015@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -59,31 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Fedorenko <vfedorenko@novek.ru>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[ Upstream commit 57ebc8f08504f176eb0f25b3e0fde517dec61a4f ]
+[ Upstream commit d28ea1fbbf437054ef339afec241019f2c4e2bb6 ]
 
-In case of error with MPLS support the code is misusing AF_INET
-instead of AF_MPLS.
+Once the traversal of the list is completed with list_for_each_entry(),
+the iterator (node) will point to an invalid object. So passing this to
+qrtr_local_enqueue() which is outside of the iterator block is erroneous
+eventhough the object is not used.
 
-Fixes: 1b69e7e6c4da ("ipip: support MPLS over IPv4")
-Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
+So fix this by passing NULL to qrtr_local_enqueue().
+
+Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ipip.c |    2 +-
+ net/qrtr/qrtr.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/ipip.c
-+++ b/net/ipv4/ipip.c
-@@ -704,7 +704,7 @@ out:
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -718,7 +718,7 @@ static int qrtr_bcast_enqueue(struct qrt
+ 	}
+ 	mutex_unlock(&qrtr_node_lock);
  
- rtnl_link_failed:
- #if IS_ENABLED(CONFIG_MPLS)
--	xfrm4_tunnel_deregister(&mplsip_handler, AF_INET);
-+	xfrm4_tunnel_deregister(&mplsip_handler, AF_MPLS);
- xfrm_tunnel_mplsip_failed:
+-	qrtr_local_enqueue(node, skb, type, from, to);
++	qrtr_local_enqueue(NULL, skb, type, from, to);
  
- #endif
+ 	return 0;
+ }
 
 
