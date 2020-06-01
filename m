@@ -3,63 +3,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA98BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD86C206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE542073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgFARxq (ORCPT
+        id S1728090AbgFARy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:53:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35460 "EHLO
+        Mon, 1 Jun 2020 13:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgFARxp (ORCPT
+        with ESMTP id S1726113AbgFARy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:53:45 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C74EC05BD43;
-        Mon,  1 Jun 2020 10:53:45 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CD2D811D69C3B;
-        Mon,  1 Jun 2020 10:53:42 -0700 (PDT)
-Date:   Mon, 01 Jun 2020 10:53:39 -0700 (PDT)
-Message-Id: <20200601.105339.1821963108388271707.davem@davemloft.net>
-To:     luobin9@huawei.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        luoxianjun@huawei.com, yin.yinshi@huawei.com,
-        cloud.wangxiaoyun@huawei.com
-Subject: Re: [PATCH net-next v5] hinic: add set_channels ethtool_ops support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200601105748.27511-1-luobin9@huawei.com>
-References: <20200601105748.27511-1-luobin9@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 10:53:43 -0700 (PDT)
+        Mon, 1 Jun 2020 13:54:26 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66AEC05BD43;
+        Mon,  1 Jun 2020 10:54:25 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 7267D2A2519
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Paul Gofman <gofmanp@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        linux-security-module@vger.kernel.org,
+        Zebediah Figura <zfigura@codeweavers.com>
+Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory areas
+Organization: Collabora
+References: <20200530055953.817666-1-krisman@collabora.com>
+        <202005300923.B245392C@keescook> <851rn0ejg9.fsf@collabora.com>
+        <9a512096-7707-3fc6-34ba-22f969c0f964@gmail.com>
+        <20200531164938.GF19604@bombadil.infradead.org>
+        <c007e3e9-e915-16f3-de31-c811ad37c44c@gmail.com>
+        <20200531173157.GG19604@bombadil.infradead.org>
+        <9c1f9db8-5680-cd1a-37aa-5f494b034825@gmail.com>
+Date:   Mon, 01 Jun 2020 13:54:19 -0400
+In-Reply-To: <9c1f9db8-5680-cd1a-37aa-5f494b034825@gmail.com> (Paul Gofman's
+        message of "Sun, 31 May 2020 21:01:46 +0300")
+Message-ID: <85367e7juc.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
-Date: Mon, 1 Jun 2020 18:57:48 +0800
+Paul Gofman <gofmanp@gmail.com> writes:
 
-> @@ -470,6 +470,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
->  	struct hinic_txq *txq;
->  	struct hinic_qp *qp;
->  
-> +	if (unlikely(!netif_carrier_ok(netdev))) {
-> +		dev_kfree_skb_any(skb);
-> +		return NETDEV_TX_OK;
-> +	}
+> On 5/31/20 20:31, Matthew Wilcox wrote:
+>> If it's the cost of the syscall that's the problem, there are ways
+>> around that.  We'd still want a personality() call to indicate that
+>> the syscall handler should look (somewhere) to determine the current
+>> personality, but that could be issued at the start of execution rather
+>> than when we switch between Windows & Linux code.
+>
+> Sure, we can call personality() at start and specify the location to
+> look at, the only thing is that the location should be thread specific,
+> that is, based on fs: or gs: or whatever else which would allow us to
+> have different threads in different "personality" state. If anything
+> needs to be set up at thread start we can do that also of course.
+>
+> If there will be any proof of concept solution I will be happy to make a
+> proof of concept Wine patch using that and do some testing.
 
-As stated by another reviewer, this change is unrelated to adding
-set_channels support.  Please remove it from this patch.
+Let me give that a try and share the patches with you, so we can look at
+how this implementation would look like.
+
+-- 
+Gabriel Krisman Bertazi
