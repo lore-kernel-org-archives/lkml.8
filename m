@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F13C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09496C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD809206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA28F2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034960;
-	bh=xtOu0BkIPNelKFK0gXCMhqXoqae2xudnbZ6hnlXt4CI=;
+	s=default; t=1591034962;
+	bh=R7kL94VI8Tkpahhk2BgW3LuYBB5R/iSbsjwnD+sxvLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BueVlmg5Dj7kj1qqqI+A1HMMXKJ69XWZ8q0b1yjPsSAmiBgCdhK3ZZghJASDjKxZ8
-	 CnPyIluwVeMDqZXUQZAhzb0J4e0FDjpYIYY89vriiYvO1HkyBSz1kYJAZ5wQ5wPREF
-	 c2rNBOFblqNduR/fZOjQU82iVfWC+JkU2SufDm80=
+	b=GXyMDnvaaSQO8nUcHC7rb4V55i4eMeppshde98/F7Q1gF+SEFhj2xYW7+VsrWomc/
+	 iR4kwnzXMKzvUQmUwSnFjR+Oq9Q+0ONkr6FRw7Ol/TmuuL6BhK/vvhDaanJS88HEHt
+	 oa09NX7oAPtbZoJmdJTnwT2T189jXWno7BZRntHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbgFASJT (ORCPT
+        id S1729455AbgFASJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55628 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbgFASJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:09:15 -0400
+        id S1730344AbgFASJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:09:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1BD82068D;
-        Mon,  1 Jun 2020 18:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 324832068D;
+        Mon,  1 Jun 2020 18:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034955;
-        bh=xtOu0BkIPNelKFK0gXCMhqXoqae2xudnbZ6hnlXt4CI=;
+        s=default; t=1591034957;
+        bh=R7kL94VI8Tkpahhk2BgW3LuYBB5R/iSbsjwnD+sxvLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPT3/G+pH+ubYEFsb2L8qyMvdrfGWN7w7gkKYXcwFqm94qEDVTvFgtJkrZ5Gz2tA1
-         gY4F/SHnJkBpzLX+UYN525MQ9dWcgt3Hg5WZtDJ89M0fKhAls1LO/xIpTgIH3y5y0u
-         GIgiJ0zyK/qk7gGmteX+QFAxxcwJfwKvTLlD6sh8=
+        b=DEykqKR/gkgiHEh3vVfW/JqrXO3JHoxz8b7kYJPOaRS/K6OPJJxTBHM+NUIOwoXtM
+         ap09AoL/jUnEz1Gj/ZtMrm5XQvVDH2nKfPsND6OMfM7xnWu8WVvFxCX+JgZEhVNkN4
+         bwkydKtydGd0WN29aah+Mey/tCFToG7rKqmIENW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Changming Liu <liu.changm@northeastern.edu>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/142] ALSA: hwdep: fix a left shifting 1 by 31 UB bug
-Date:   Mon,  1 Jun 2020 19:54:05 +0200
-Message-Id: <20200601174046.921061890@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 088/142] ALSA: hda/realtek - Add a model for Thinkpad T570 without DAC workaround
+Date:   Mon,  1 Jun 2020 19:54:06 +0200
+Message-Id: <20200601174047.019942891@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,43 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changming Liu <liu.changm@northeastern.edu>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit fb8cd6481ffd126f35e9e146a0dcf0c4e8899f2e ]
+[ Upstream commit 399c01aa49e548c82d40f8161915a5941dd3c60e ]
 
-The "info.index" variable can be 31 in "1 << info.index".
-This might trigger an undefined behavior since 1 is signed.
+We fixed the regression of the speaker volume for some Thinkpad models
+(e.g. T570) by the commit 54947cd64c1b ("ALSA: hda/realtek - Fix
+speaker output regression on Thinkpad T570").  Essentially it fixes
+the DAC / pin pairing by a static table.  It was confirmed and merged
+to stable kernel later.
 
-Fix this by casting 1 to 1u just to be sure "1u << 31" is defined.
+Now, interestingly, we got another regression report for the very same
+model (T570) about the similar problem, and the commit above was the
+culprit.  That is, by some reason, there are devices that prefer the
+DAC1, and another device DAC2!
 
-Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
+Unfortunately those have the same ID and we have no idea what can
+differentiate, in this patch, a new fixup model "tpt470-dock-fix" is
+provided, so that users with such a machine can apply it manually.
+When model=tpt470-dock-fix option is passed to snd-hda-intel module,
+it avoids the fixed DAC pairing and the DAC1 is assigned to the
+speaker like the earlier versions.
+
+Fixes: 54947cd64c1b ("ALSA: hda/realtek - Fix speaker output regression on Thinkpad T570")
+BugLink: https://apibugzilla.suse.com/show_bug.cgi?id=1172017
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/BL0PR06MB4548170B842CB055C9AF695DE5B00@BL0PR06MB4548.namprd06.prod.outlook.com
+Link: https://lore.kernel.org/r/20200526062406.9799-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/hwdep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c | 36 +++++++++++++++++++++++++----------
+ 1 file changed, 26 insertions(+), 10 deletions(-)
 
-diff --git a/sound/core/hwdep.c b/sound/core/hwdep.c
-index 00cb5aed10a9..28bec15b0959 100644
---- a/sound/core/hwdep.c
-+++ b/sound/core/hwdep.c
-@@ -216,12 +216,12 @@ static int snd_hwdep_dsp_load(struct snd_hwdep *hw,
- 	if (info.index >= 32)
- 		return -EINVAL;
- 	/* check whether the dsp was already loaded */
--	if (hw->dsp_loaded & (1 << info.index))
-+	if (hw->dsp_loaded & (1u << info.index))
- 		return -EBUSY;
- 	err = hw->ops.dsp_load(hw, &info);
- 	if (err < 0)
- 		return err;
--	hw->dsp_loaded |= (1 << info.index);
-+	hw->dsp_loaded |= (1u << info.index);
- 	return 0;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c5bec191e003..743e2dcccb8b 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5484,18 +5484,9 @@ static void alc_fixup_tpt470_dock(struct hda_codec *codec,
+ 		{ 0x19, 0x21a11010 }, /* dock mic */
+ 		{ }
+ 	};
+-	/* Assure the speaker pin to be coupled with DAC NID 0x03; otherwise
+-	 * the speaker output becomes too low by some reason on Thinkpads with
+-	 * ALC298 codec
+-	 */
+-	static const hda_nid_t preferred_pairs[] = {
+-		0x14, 0x03, 0x17, 0x02, 0x21, 0x02,
+-		0
+-	};
+ 	struct alc_spec *spec = codec->spec;
+ 
+ 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+-		spec->gen.preferred_dacs = preferred_pairs;
+ 		spec->parse_flags = HDA_PINCFG_NO_HP_FIXUP;
+ 		snd_hda_apply_pincfgs(codec, pincfgs);
+ 	} else if (action == HDA_FIXUP_ACT_INIT) {
+@@ -5508,6 +5499,23 @@ static void alc_fixup_tpt470_dock(struct hda_codec *codec,
+ 	}
  }
  
++static void alc_fixup_tpt470_dacs(struct hda_codec *codec,
++				  const struct hda_fixup *fix, int action)
++{
++	/* Assure the speaker pin to be coupled with DAC NID 0x03; otherwise
++	 * the speaker output becomes too low by some reason on Thinkpads with
++	 * ALC298 codec
++	 */
++	static const hda_nid_t preferred_pairs[] = {
++		0x14, 0x03, 0x17, 0x02, 0x21, 0x02,
++		0
++	};
++	struct alc_spec *spec = codec->spec;
++
++	if (action == HDA_FIXUP_ACT_PRE_PROBE)
++		spec->gen.preferred_dacs = preferred_pairs;
++}
++
+ static void alc_shutup_dell_xps13(struct hda_codec *codec)
+ {
+ 	struct alc_spec *spec = codec->spec;
+@@ -6063,6 +6071,7 @@ enum {
+ 	ALC700_FIXUP_INTEL_REFERENCE,
+ 	ALC274_FIXUP_DELL_BIND_DACS,
+ 	ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
++	ALC298_FIXUP_TPT470_DOCK_FIX,
+ 	ALC298_FIXUP_TPT470_DOCK,
+ 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
+ 	ALC255_FIXUP_DELL_HEADSET_MIC,
+@@ -6994,12 +7003,18 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC274_FIXUP_DELL_BIND_DACS
+ 	},
+-	[ALC298_FIXUP_TPT470_DOCK] = {
++	[ALC298_FIXUP_TPT470_DOCK_FIX] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_tpt470_dock,
+ 		.chained = true,
+ 		.chain_id = ALC293_FIXUP_LENOVO_SPK_NOISE
+ 	},
++	[ALC298_FIXUP_TPT470_DOCK] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc_fixup_tpt470_dacs,
++		.chained = true,
++		.chain_id = ALC298_FIXUP_TPT470_DOCK_FIX
++	},
+ 	[ALC255_FIXUP_DUMMY_LINEOUT_VERB] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -7638,6 +7653,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC292_FIXUP_TPT440_DOCK, .name = "tpt440-dock"},
+ 	{.id = ALC292_FIXUP_TPT440, .name = "tpt440"},
+ 	{.id = ALC292_FIXUP_TPT460, .name = "tpt460"},
++	{.id = ALC298_FIXUP_TPT470_DOCK_FIX, .name = "tpt470-dock-fix"},
+ 	{.id = ALC298_FIXUP_TPT470_DOCK, .name = "tpt470-dock"},
+ 	{.id = ALC233_FIXUP_LENOVO_MULTI_CODECS, .name = "dual-codecs"},
+ 	{.id = ALC700_FIXUP_INTEL_REFERENCE, .name = "alc700-ref"},
 -- 
 2.25.1
 
