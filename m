@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223202085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4752074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LWvw8Akz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V3Um2iZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgFAHF6 (ORCPT
+        id S1728184AbgFAHGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:05:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39798 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgFAHF5 (ORCPT
+        Mon, 1 Jun 2020 03:06:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49728 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbgFAHGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:05:57 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05175muG014787;
-        Mon, 1 Jun 2020 02:05:48 -0500
+        Mon, 1 Jun 2020 03:06:01 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05175QTg069541;
+        Mon, 1 Jun 2020 02:05:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590995148;
-        bh=jY9DCJOAaosq5gwJu8ALTUFkZtJ1Ywe+yMWjig0XeuI=;
+        s=ti-com-17Q1; t=1590995126;
+        bh=M6H6i0Eh/2aEE2Hihio/iMjOVmuBrf3WccAscdjEyLs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LWvw8AkzMeZD4hVP/yCc3jU58d4oYDZt9f/6tOwwVBqgQ+DEe+ycrne1upBinyhDe
-         eJkN18D4GYRenJ7wmeW9o59ick5/yCedqQ5UBUqiWdmrC9XnU2psRZp4/wonQqybBY
-         i+N+mlJObo8GiYS7eSYq+OXGTc9yX2J5L6N4QY5I=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05175mfj052757;
-        Mon, 1 Jun 2020 02:05:48 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=V3Um2iZKeCIDPp82s7Hw7RTs/04nPa7j7mmYhd/IZRLx/OCD07nkxzIB9Dyjb93kk
+         BFs3Wd+B0ky40j3DfxThgD7+ItxTmvZV7ppFJYfnXRsAopO2axDpymStgHIC1aPdvc
+         1zFDV+qYB9ZimkTMLhL8c9lI/QJDvhqOvAaID0lE=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05175Qa0061997
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 1 Jun 2020 02:05:26 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 1 Jun
- 2020 02:05:48 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 02:05:26 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 1 Jun 2020 02:05:48 -0500
+ Frontend Transport; Mon, 1 Jun 2020 02:05:26 -0500
 Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 051758s8016257;
-        Mon, 1 Jun 2020 02:05:41 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 051758s5016257;
+        Mon, 1 Jun 2020 02:05:20 -0500
 From:   Vignesh Raghavendra <vigneshr@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Mark Brown <broonie@kernel.org>
@@ -57,9 +58,9 @@ CC:     Vignesh Raghavendra <vigneshr@ti.com>,
         <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
         <dinguyen@kernel.org>, <marex@denx.de>
-Subject: [RESEND PATCH v3 6/8] mtd: spi-nor: cadence-quadspi: Drop redundant WREN in erase path
-Date:   Mon, 1 Jun 2020 12:34:42 +0530
-Message-ID: <20200601070444.16923-7-vigneshr@ti.com>
+Subject: [RESEND PATCH v3 3/8] mtd: spi-nor: cadence-quadspi: Don't initialize rx_dma_complete on failure
+Date:   Mon, 1 Jun 2020 12:34:39 +0530
+Message-ID: <20200601070444.16923-4-vigneshr@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601070444.16923-1-vigneshr@ti.com>
 References: <20200601070444.16923-1-vigneshr@ti.com>
@@ -72,31 +73,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop redundant WREN command in cqspi_erase() as SPI NOR core takes care
-of sending WREN command before sending erase command.
+If driver fails to acquire DMA channel then don't initialize
+rx_dma_complete struct as it won't be used.
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/mtd/spi-nor/controllers/cadence-quadspi.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/mtd/spi-nor/controllers/cadence-quadspi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-index 0570ebca135a9..6b1cbad25e3f6 100644
+index 8a9e17f79d8d9..379e22c11c87f 100644
 --- a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
 +++ b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-@@ -1016,11 +1016,6 @@ static int cqspi_erase(struct spi_nor *nor, loff_t offs)
- 	if (ret)
- 		return ret;
- 
--	/* Send write enable, then erase commands. */
--	ret = nor->controller_ops->write_reg(nor, SPINOR_OP_WREN, NULL, 0);
--	if (ret)
--		return ret;
--
- 	/* Set up command buffer. */
- 	ret = cqspi_command_write_addr(nor, nor->erase_opcode, offs);
- 	if (ret)
+@@ -1180,6 +1180,7 @@ static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
+ 	if (IS_ERR(cqspi->rx_chan)) {
+ 		dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
+ 		cqspi->rx_chan = NULL;
++		return;
+ 	}
+ 	init_completion(&cqspi->rx_dma_complete);
+ }
 -- 
 2.26.2
 
