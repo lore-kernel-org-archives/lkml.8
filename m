@@ -2,202 +2,123 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7529EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16455C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5589E206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E4820842
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591031105;
-	bh=PxIYJ56iKvvrQ4kKSH18qpmNyl0CfsPBmvcZFV5XyeQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o72SvZ5yKSKsQqDxs9R4Atao9OnK0Fkzd+cAF5kEUTnNs4UpbihMy0npfNNRRQDaI
-	 7gFa6UNVIAJJJbQUUCV0AwiR8VAcbFR3NFl6KYSd69ReFumcZzmok/9rmXDZmDa3wY
-	 lBIpi7Pe6M+5tGLRylM7iflXtc7H9DPogKf+qczg=
+	s=default; t=1591031108;
+	bh=1/EAMztdxanqMs3Eh0BAwnoiMLmJaGkeR/TWcYCEiqY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=bXyMR5G2fW1kL3PUXCcVKZxhbpcboxCOnlhht87UWGEM0zbHWkEdI9+T5tS3VTtHT
+	 WXWJKbt6eDxqqRPovgSq/VeOXb7bGXS9afdRflaWKaEVxWsBrCg0mykSWsEwumXyPw
+	 riifzq6mSPc5Yo1QBtc016Y71KAHBkD44JWpsuWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgFARFE (ORCPT
+        id S1727879AbgFARFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:05:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39609 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFARFD (ORCPT
+        Mon, 1 Jun 2020 13:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgFARFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:05:03 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d66so3770635pfd.6;
-        Mon, 01 Jun 2020 10:05:03 -0700 (PDT)
+        Mon, 1 Jun 2020 13:05:04 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90C4C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:05:03 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l11so604101wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=ELtOegSxIG1w6Oelk1/XRv03+HLjNR/T5/bIqJu8LXE=;
+        b=R+OjFU4Lw71CcYolij94VBGfCxmo+R1aB16gdW8MonKhVVcGFGG6dHXRg7ZCrv/kjd
+         WEGRL588Gd5hxkR+rc0vJBF/S2FKfPFG7j4H7EvqvTzJonybjGqOx+3Tviz3n6ZA30VP
+         mf+RO+RXE2F7CrcKZJs4m7oTHhAEGItd37NJaJL369NbE6GD1lJ2jrOS4ViXoHibzj8w
+         1Cj1R9fWr9jZvwRL36BI664C/Wo2QrLIl+CPeiaDlBplEa4EzCsfD43XuSa9udnRl13j
+         k6YoDsN5OnN4kZwI5ny5zETMs7P0xRV0Sq2Y4QKju2Gya9yGkvHL1hUlvaIgrw9lowEz
+         TgUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SqGvEuB0dFlcyyOSkJr50JgBdhkSQyFc3GUwrr5SVgo=;
-        b=a4EHHrJBATDdyjGwKrNre1MUeVtBXz6ysCqST6eBGYsS9djGuOe577cwMuU8COwAvN
-         62QqlMN1xcE7rIKixVyHXEYR7sahHah39Fx243GdGMM92UugozriD2pJYIHqzanIP62i
-         TczoTa/puq5bz4XOL+hNBV6pZlm5R9D3gEMSYbV3WhgkXlC8gOnWoeUTm1PJb5ojviJ4
-         CZiqyOB8j1kfLmX29Gw3jugwBN17gdvBGZUJzlTnFvpswCOSiHmGGgffFUZNIVgJ6g/F
-         ovt7S8DgHOp21fJHo3+WrDxqhFFk6JCtNXzNI+qs9pTdImwYnM8yBrPh9KthaAxwq2qU
-         UUjQ==
-X-Gm-Message-State: AOAM530eahe8l4zDvgUdY01jd/AMN3xwv6ZQA3Jothd6RmJgQrTydMpt
-        VYcGCMIJDVhUnB7ZkyQKAsU=
-X-Google-Smtp-Source: ABdhPJz0ib7h9telSiaQOJsAqtZNR0bvb+tdnQXKTIJD1pbCWADiC0oB625tI++TmThx78YyDXczZQ==
-X-Received: by 2002:a63:205d:: with SMTP id r29mr11424078pgm.367.1591031102551;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=ELtOegSxIG1w6Oelk1/XRv03+HLjNR/T5/bIqJu8LXE=;
+        b=OPF/nMnGyzbFunijIkXFgyE+eCYGJqPjzPwOAAB9xUGXbWj8T7hJG3vaveoWSD0kYN
+         x/MNIPaCURfUfAUfVTJgKHlCRT1uTiFNdlV4mrhVCKBqE55TmntHdK8+NOO1lGRKkZ2P
+         ouB2fbcyclHhfVTp44eQ6ztrQ/LcOMdKyZkuYR9p+Q5YjvXHPQDbvFImpE+j6Lh/D9zG
+         H0d0uyrGOo8cGfImPpM4dtgN9HuppnrEn53T6MnwCfc96Htf7dTtAtg7x3laWyB55Lce
+         RZte5m2bAQn7vwscIkbfpv2oLXcgfgtJ0yiSsw83SNW/G7eIFqc43kfbMg6zNwvTGWBN
+         W9EQ==
+X-Gm-Message-State: AOAM531i7n0h6zsB6GCh0C+q0YFYNUcKzchC6ophMbNrg486SXANY/s0
+        pCP02Ab2LaSeEhNS78OIzLk=
+X-Google-Smtp-Source: ABdhPJzMOB27YalD30ZwA3WdDv7p1NAHWJUCw887SuMhUqSXUzgVP2S9PoH70DPOpNLvC0QnPq82/g==
+X-Received: by 2002:adf:f446:: with SMTP id f6mr22569508wrp.59.1591031102656;
         Mon, 01 Jun 2020 10:05:02 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c123sm8680pfb.102.2020.06.01.10.05.00
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id a1sm288816wmd.28.2020.06.01.10.05.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 10:05:01 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 39CD640251; Mon,  1 Jun 2020 17:05:00 +0000 (UTC)
-Date:   Mon, 1 Jun 2020 17:05:00 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v5 5/7] blktrace: fix debugfs use after free
-Message-ID: <20200601170500.GF13911@42.do-not-panic.com>
-References: <20200516031956.2605-1-mcgrof@kernel.org>
- <20200516031956.2605-6-mcgrof@kernel.org>
- <20200519163713.GA29944@infradead.org>
- <20200527031202.GT11244@42.do-not-panic.com>
+        Mon, 01 Jun 2020 10:05:02 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 19:05:00 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/platform updates for v5.8
+Message-ID: <20200601170500.GA1392237@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527031202.GT11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:12:02AM +0000, Luis Chamberlain wrote:
-> You forgot to deal with partitions. Putting similar lipstick on the pig,
-> this is what I end up with, let me know if this seems agreeable:
+Linus,
 
-So even with the partition stuff in place, this approach still don't
-allow multiple uses of blktrace against a scsi-generic device and its
-backend real block device, say TYPE_DISK. A simple example is a scsi
-drive hooked up used to allow users to do blktrace /dev/sda *and*
-blktrace /dev/sg0, but with the proposed change /dev/sg0 no longer
-works beacuse the dentry pertains to the '/dev/sda' name, not
-'/dev/sg0'.
+Please pull the latest x86/platform git tree from:
 
-We can shoehorn in a solution following the style proposed as follows.
-We can keep this only slightly cleaner if we don't care about the
-extra dentry even if a user disables CONFIG_CHR_DEV_SG. The cost
-would just be an extra dentry on the request_queue.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-platform-2020-06-01
 
-I'll run this through 0-day and then post a new hopefully final series,
-but if you don't think this or would prefer something lease please let
-me know.
+   # HEAD: 33649bf4494c1feaf1956a84895fcc0621aafd90 x86/apic/uv: Remove code for unused distributed GRU mode
 
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 86c107de2836..f46bdc7f6509 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -920,6 +920,9 @@ static void blk_release_queue(struct kobject *kobj)
- 	blk_trace_shutdown(q);
- 
- 	debugfs_remove_recursive(q->debugfs_dir);
-+#if defined(CONFIG_CHR_DEV_SG) || defined(CONFIG_CHR_DEV_SG_MODULE)
-+	debugfs_remove_recursive(q->sg_debugfs_dir);
-+#endif
- 	if (queue_is_mq(q))
- 		blk_mq_debugfs_unregister(q);
- 
-@@ -939,6 +942,21 @@ struct kobj_type blk_queue_ktype = {
- 	.release	= blk_release_queue,
- };
- 
-+#if defined(CONFIG_CHR_DEV_SG) || defined(CONFIG_CHR_DEV_SG_MODULE)
-+/**
-+ * blk_sg_debugfs_init - initialize debugs for scsi-generic
-+ * @q: the associated queue
-+ * @name: name of the scsi-generic device
-+ *
-+ * To be used by scsi-generic for allowing it to use blktrace.
-+ */
-+void blk_sg_debugfs_init(struct request_queue *q, const char *name)
-+{
-+	q->sg_debugfs_dir = debugfs_create_dir(name, blk_debugfs_root);
-+}
-+EXPORT_SYMBOL_GPL(blk_sg_debugfs_init);
-+#endif
-+
- /**
-  * blk_register_queue - register a block layer queue with sysfs
-  * @disk: Disk of which the request queue should be registered with sysfs.
-diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index 20472aaaf630..c87fe1923f3d 100644
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -1519,6 +1519,7 @@ static int
- sg_add_device(struct device *cl_dev, struct class_interface *cl_intf)
- {
- 	struct scsi_device *scsidp = to_scsi_device(cl_dev->parent);
-+	struct request_queue *q = scsidp->request_queue;
- 	struct gendisk *disk;
- 	Sg_device *sdp = NULL;
- 	struct cdev * cdev = NULL;
-@@ -1573,6 +1574,7 @@ sg_add_device(struct device *cl_dev, struct class_interface *cl_intf)
- 	} else
- 		pr_warn("%s: sg_sys Invalid\n", __func__);
- 
-+	blk_sg_debugfs_init(q, disk->disk_name);
- 	sdev_printk(KERN_NOTICE, scsidp, "Attached scsi generic sg%d "
- 		    "type %d\n", sdp->index, scsidp->type);
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 5877b03b8117..be5a40d59f60 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -575,6 +575,9 @@ struct request_queue {
- 	struct bio_set		bio_split;
- 
- 	struct dentry		*debugfs_dir;
-+#if defined(CONFIG_CHR_DEV_SG) || defined(CONFIG_CHR_DEV_SG_MODULE)
-+	struct dentry		*sg_debugfs_dir;
-+#endif
- #ifdef CONFIG_BLK_DEBUG_FS
- 	struct dentry		*sched_debugfs_dir;
- 	struct dentry		*rqos_debugfs_dir;
-@@ -858,6 +861,14 @@ static inline void rq_flush_dcache_pages(struct request *rq)
- 
- extern int blk_register_queue(struct gendisk *disk);
- extern void blk_unregister_queue(struct gendisk *disk);
-+#if defined(CONFIG_CHR_DEV_SG) || defined(CONFIG_CHR_DEV_SG_MODULE)
-+extern void blk_sg_debugfs_init(struct request_queue *q, const char *name);
-+#else
-+static inline void blk_sg_debugfs_init(struct request_queue *q,
-+				       const char *name)
-+{
-+}
-+#endif
- extern blk_qc_t generic_make_request(struct bio *bio);
- extern blk_qc_t direct_make_request(struct bio *bio);
- extern void blk_rq_init(struct request_queue *q, struct request *rq);
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index a55cbfd060f5..5b0310f38e11 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -511,6 +511,11 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	 */
- 	if (bdev && bdev != bdev->bd_contains) {
- 		dir = bdev->bd_part->debugfs_dir;
-+	} else if (q->sg_debugfs_dir &&
-+		   strlen(buts->name) == strlen(q->sg_debugfs_dir->d_name.name)
-+		   && strcmp(buts->name, q->sg_debugfs_dir->d_name.name) == 0) {
-+		/* scsi-generic requires use of its own directory */
-+		dir = q->sg_debugfs_dir;
- 	} else {
- 		/*
- 		 * For queues that do not have a gendisk attached to them, that
+This tree cleans up various aspects of the UV platform support code,
+it removes unnecessary functions and cleans up the rest.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Christoph Hellwig (11):
+      x86/platform/uv: Mark uv_bios_call() and uv_bios_call_irqsave() static
+      x86/platform/uv: Remove the uv_partition_coherence_id() macro
+      x86/platform/uv: Unexport sn_coherency_id
+      x86/platform/uv: Unexport symbols only used by x2apic_uv_x.c
+      x86/platform/uv: Remove the UV*_HUB_IS_SUPPORTED macros
+      x86/platform/uv: Mark is_uv_hubless() static
+      x86/platform/uv: Mark uv_min_hub_revision_id static
+      x86/platform/uv: Simplify uv_send_IPI_one()
+      x86/platform/uv: Remove _uv_hub_info_check()
+      x86/platform/uv: Unexport uv_apicid_hibits
+      x86/platform/uv: Remove the unused _uv_cpu_blade_processor_id() macro
+
+Steve Wahl (1):
+      x86/apic/uv: Remove code for unused distributed GRU mode
+
+
+ arch/x86/include/asm/uv/bios.h     |  7 ---
+ arch/x86/include/asm/uv/uv.h       |  2 -
+ arch/x86/include/asm/uv/uv_hub.h   | 54 ----------------------
+ arch/x86/include/asm/uv/uv_mmrs.h  |  7 ---
+ arch/x86/kernel/apic/x2apic_uv_x.c | 91 +++++++-------------------------------
+ arch/x86/platform/uv/bios_uv.c     | 16 ++-----
+ arch/x86/platform/uv/uv_sysfs.c    |  2 +-
+ 7 files changed, 22 insertions(+), 157 deletions(-)
+
