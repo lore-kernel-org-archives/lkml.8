@@ -2,160 +2,96 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD020C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5690C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E922074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:00:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ct9Ob0fV"
+	by mail.kernel.org (Postfix) with ESMTP id B55802074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591020091;
+	bh=jxxEm3BOjtC1ocHNvSAd6tLMJ3EVe1fdkfj0vtjtB/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0afK05nJ++RM8OnTxo99NucHJgn01M58SK+cY2ZkIdxXPCASqg90i/20kKUfBTL8n
+	 S+XSGphEurGTLInNtW9gIj8wXeHF4uHFUiTcUxCnBCVu368hhzLxx2KRQYRrfhpl9p
+	 8pmEZ9YhRkmmCF5a/ZvL5Dm8CUJoDbuhuO5QfNmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgFAOAw (ORCPT
+        id S1726944AbgFAOBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:00:52 -0400
-Received: from mout.web.de ([212.227.15.3]:50265 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgFAOAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:00:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591020034;
-        bh=e4M583n+ndEFe7uz2Jqv6SloIP8i0ix03FxgdPGGvhQ=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ct9Ob0fVIXFHh1FpSun13ZCyN6SGRqjW958I+rXjkNRBFcH4a+vUB9JQLnLli7hhV
-         Mc7DXeXJks9HkufQx42nTt1HEnDeZqPitrreAekK9aX3nKQiawVZiyzzFdPPUWPHGd
-         UQ003s8kf9SMzmGZ7IgI1DMmnKjivUqYj+Jfhayg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.133.32]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N4vNQ-1iwuDG2K6m-010sT9; Mon, 01
- Jun 2020 16:00:34 +0200
-Subject: Re: [1/2] ubifs: Fix potential memory leaks while iterating entries
-To:     Zhihao Cheng <chengzhihao1@huawei.com>,
-        linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>,
-        Yi Zhang <yi.zhang@huawei.com>
-References: <2bec05b7-78d3-fa36-134a-efbe977933e3@web.de>
- <45e2cd69-93ec-a0b9-b2a6-d170eee44055@huawei.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <4fe27809-552e-ea98-ba1f-cbf68e625d22@web.de>
-Date:   Mon, 1 Jun 2020 16:00:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 10:01:30 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38914 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgFAOB3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 10:01:29 -0400
+Received: by mail-lj1-f194.google.com with SMTP id o9so8257407ljj.6;
+        Mon, 01 Jun 2020 07:01:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RwcvLwY61DL3lLgEQdj5ppo6t6GvndjT1jLRoIUYzkM=;
+        b=W43Ta97okiuU8KkuYVls87D54JDzWpLsJLBgjAQm6BlZrLhzHQjGh7ig+uyXahp9qX
+         TU3gzfJ7GDMmkX506FJvSrVydMy3IirVXlkJA/VLwcoo3i59IHFYgfO1Ud36Eqig/F44
+         jfLpz+oGuXIqp4HyqFhggwkDjWOA2Tj93ZyxhZ7vpnnkAgPnVHfnzAGP12zEIuc28Itt
+         bPQfjnZTCpr+VcuMbF53u7hJOVsxcFsbRJtHhsflBplza8WtRLQeHkKarO3WreVaCBYs
+         cZ52xYOmzqG1S0ddNuQr9sRA8m9xjw04GbsWglEdJS0YafMzboeq89XV7wRjdMrQRDrK
+         yMhg==
+X-Gm-Message-State: AOAM532jsXXdw8K8mryeWa1WRES22oZ+uVKNZFHFgaWYM2/HU8BifMP2
+        ot/XkQIf1Rx4npOSDAaK4s8=
+X-Google-Smtp-Source: ABdhPJxoVj9Ya4G/g3LtoNX72KZKPbSh0F7e6yTrut28wpNPR3kbWdZuWoWGBRXgu2cy9CevfOQxlw==
+X-Received: by 2002:a2e:9d52:: with SMTP id y18mr10334393ljj.327.1591020084957;
+        Mon, 01 Jun 2020 07:01:24 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id 2sm4072371lji.100.2020.06.01.07.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 07:01:24 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jfl09-0003RX-Dd; Mon, 01 Jun 2020 16:01:17 +0200
+Date:   Mon, 1 Jun 2020 16:01:17 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/6] leds: fix broken devres usage
+Message-ID: <20200601140117.GF19480@localhost>
+References: <20200601133950.12420-1-johan@kernel.org>
+ <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <45e2cd69-93ec-a0b9-b2a6-d170eee44055@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Obc3LXDUWzNYAR7rOJ2xt8xMNqUN5H+O9DoGw784fRwgkHrQVxb
- oPmoTc6ELoffvar2f6rRfG01a9xxHevQlOSC4JPSHtoHGwgBhAySkqqvHyvUnF7mNewo3f9
- ccgHkfs68V3O/gOtGExNbcaL/IGXFSuUfLEjJ7tiCuBu1ogHJPDJizn3RfoB+6NNm3Ho+Pu
- ITaeuSIa912MCrFB1Xxlg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VXWDgan85Jg=:B9USaHgU53/jTmeGtDUtib
- me6ZCwodrgs8hm3QQ/V+mJguGfFFkYvs1AYNUi+ekCMD1a/ylJfx7eAYKkNAwnGBy5U6p14lC
- 8BMyu3+W+aJ3zw/3JVfqm+jcedtUPzya/7fWuc+jfetDinHEtp36rvo05KTbYwGo2HHlBFEEc
- EQJfGl3drXju9u2Cer6DOIU4RZ450Rs0v8C2YSayaG4GxSVwBpF+jwK8UoyHuG4By6KiKYrvx
- 1KE/4nfc9F3wigtmCjQ6L/r7wpuIz+KgQJyDWJqSj7YW/VBmLNA01DgK0mjdmcZCu7SjGTvLP
- vtMAs+zdlEtHlRq1sNfQhBJOTTiDhFWbxKKWNeJXNjjN9fXFKfmKC89gF5O8NxmTLP0MZYWlp
- 7RHa+3qeZY6ex6TwkwW08irGIV63EpzUSrVlYI9iyX8QLsiFbuPiiZ8RcaU77Enrnmj7EfNma
- gIqtVahHyxcliTBLdy8h8jfbfJM4sZP6fvpVTM/61IHx51wpuyw1nwtBkf9J+Qw7+Il/S/NHr
- rD7z7JugvB9jIs65yROpUUA2t2oYoxc+VlZkJtf4KCfxpdA4slvJMbxEkZXqxTy4k56lXBveg
- cmqzZLlroNOA7d1yMMHdrUQmXUa+gDedhBqwSICXcMdsnSxDZq1wObbDlWDY0kAwO5pwwy1RQ
- NhyHAlJP5YxmHGE+nOFWm+uZr/urxwy7bH3Oh+BDZnW5gZT4PxCE6lBEiw26c4M+Bnn9IXwzY
- ER3pzly8diSAd6EP+f/wByP377lVAFIzsHjP26aoTX1hZorG4pi4occqIF+FfT539ZZsb6wST
- GWfb0Sm5bFzl7ONb0AYWnyMtrrjcmL1eW4oqNQBFafsJBnLurg8SZLXXujsb6YJIGjfE8RoGQ
- iDMpFimtNUEpZCGJbiQKDx8oYESxnNo4fbHa/A4TQY+818VnGapYBfKgrZLwTlRSUIAhJ6C4M
- w+FVHQeMc+GW765Sbolp5f8S6vkPVtzONe/lgWgPCHRm07rOPwOuxDNEN2zqmMw2eOgT8b50/
- /aQKH1ZLBBu7DMhZ3go/azhu5Yiws+8q/G/ufUZEd8YU/qQ8aVWLS2Reda5iXFsUkHmNBsw8Q
- KsG8WIWuvDzaG1LbHhW7nRihjcQbFrDQEF/6RcWC1z7CXtHDOiFCYEZbTg7ChA46DOvZ3uM8/
- gQPh9hmDxru6oWfFcvgKXRR14+d/Bbtk5V/Kdvm/72AJoiOdkuNnhKCkxAaNiZVTo029uh7xv
- j7DOmAzaUpcVdd/8E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> I suggest to avoid the specification of duplicate function calls
->> (also for the desired exception handling).
->> Will it be helpful to add a few jump targets?
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/coding-style.rst?id=3D3d77e6a8804abcc0504c904bd6e5c=
-df3a5cf8162#n455
-> I've thought about using "goto err_tag_2" in kill_xattrs code block to r=
-elease prev xent,
+On Mon, Jun 01, 2020 at 04:51:01PM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 1, 2020 at 4:42 PM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > Several MFD child drivers register their class devices directly under
+> > the parent device (about half of the MFD LED drivers do so).
+> >
+> > This means you cannot blindly do devres conversions so that
+> > deregistration ends up being tied to the parent device, something which
+> > leads to use-after-free on driver unbind when the class device is
+> > released while still being registered (and, for example, oopses on later
+> > parent MFD driver unbind or LED class callbacks, or resource leaks and
+> > name clashes on child driver reload).
+> 
+> Shouldn't MFD take reference count for their children?
 
-I propose to choose better labels.
+That's not the issue here. The child driver is allocating memory for the
+class device (for example using devres), and that will end up being
+freed on unbind while said device is still registered. The child driver
+may then even be unloaded. No extra reference can fix this.
 
-
-> but later it needs to jump to 'out_release tag=E2=80=98 for releasing pr=
-eviously requested memory,
-> which can clutter the code.
-
-Would you like to reconsider this view?
-
-
-> It seems that two consecutive 'goto tags' will make the code less readab=
-le.
-
-How do you think about to try another software adjustment out in such a de=
-sign direction?
-
-
-Can it make sense to combine changes together with the update step
-=E2=80=9Cubifs: dent: Fix some potential memory leaks while iterating entr=
-ies=E2=80=9D
-into a single patch?
-https://lore.kernel.org/linux-mtd/20200601091037.3794172-2-chengzhihao1@hu=
-awei.com/
-https://lore.kernel.org/patchwork/patch/1250456/
-
-Regards,
-Markus
+Johan
