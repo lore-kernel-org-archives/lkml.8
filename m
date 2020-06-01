@@ -2,113 +2,93 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8FDA20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:03:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+nVziuP"
+	by mail.kernel.org (Postfix) with ESMTP id C3BB420678
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgFADDz (ORCPT
+        id S1727971AbgFADEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 23:03:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgFADDy (ORCPT
+        Sun, 31 May 2020 23:04:42 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:53982 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgFADEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 23:03:54 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94978C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:03:54 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id h95so3403005pje.4
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HadkBgfXSvOfA9Fsm3GngQ/GKJaEcnZZDK/WEOwrtLQ=;
-        b=E+nVziuPYFDx9OPuREfXXWQ3zM3OZkXI7nyBKlK2dCE83jGCQ6GM9qdl9YCy6hkQme
-         VKD9VQFLWtaG0H98z3XMEnsunY32HRSyHk1vTuWd07zz/8XIZgbkGTbJZOYIELO1PQlq
-         v7Iy+E4/LPQN5AM2F81SFoDbieOULD0hbLQHKHQ26Cj0Qx7nysTZJAm8esDTIfhbWFqC
-         YuVYE1yGiPEjE/kME1raCRwcxcPoDdmft/9Lia9J4DheGLuJxpDpGRem/0KHR2Kss8GA
-         mFu5iufKaxRW8EmtdofajikX+qtPyQsHykLO0NghYpsmrX5D1ee+dddcjBQCV0ODp0Hc
-         MHow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HadkBgfXSvOfA9Fsm3GngQ/GKJaEcnZZDK/WEOwrtLQ=;
-        b=sZVGjOMVClzz9IXRrBsaEk63qtSpmtGoD4XFTuQfzKIR5dsYyz1teJVgagIpoyBueB
-         XfJMM4gWdbZpKNjEQZ7CAL9lSKrbWNNLcaIqMj4JyFWukiVUV7iQGSlg5cCjN7g0Hjfj
-         8tpKaTkSxX0IC9DDVpJ/3IXEFrrfPbLwHl49xMAch0CDP7H8iQf1px/t0sN+vDW39KK0
-         wD8Wg1RKGByn4wZPmEiRxXLlMlFsx/J+y/3TSMUvowtgZuHNWstZbVy5u5rdKcxtX3PG
-         iXtFtsUAdZz94MA7T4eTuxsKRizUMsjXNhrmu+NlrjdLlGdBaeyV0AIopV8i0/JnWewC
-         HIhA==
-X-Gm-Message-State: AOAM532iBGeeVyhIXPvPiNBXTNL3k7tHrCDyIjQdlGn2OpjWcBEsDepn
-        Mrw9B8dRBbStMyZPRTETgt/mn6tz8kephQ==
-X-Google-Smtp-Source: ABdhPJwxtN/vAjXXA+l8/UtASUXUx/s/K35KFUO3vjZQcIlpVB5qCr6eFRZboIt3GPFfWb5G9bysYg==
-X-Received: by 2002:a17:90a:64ce:: with SMTP id i14mr20986083pjm.48.1590980633691;
-        Sun, 31 May 2020 20:03:53 -0700 (PDT)
-Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:b8f4:bbde:37ba:20bd])
-        by smtp.gmail.com with ESMTPSA id l23sm12589084pff.80.2020.05.31.20.03.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 20:03:53 -0700 (PDT)
-From:   Daeho Jeong <daeho43@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Daeho Jeong <daehojeong@google.com>, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: protect new segment allocation in expand_inode_data
-Date:   Mon,  1 Jun 2020 12:03:47 +0900
-Message-Id: <20200601030347.112984-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 31 May 2020 23:04:41 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 05134KVO003273
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Sun, 31 May 2020 22:04:24 -0500
+Message-ID: <a37b0156c076d3875f906e970071cb230e526df1.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
+ ioctl interface
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Alexander Graf <graf@amazon.de>
+Cc:     Andra Paraschiv <andraprs@amazon.com>,
+        linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Date:   Mon, 01 Jun 2020 13:04:19 +1000
+In-Reply-To: <20200528131259.GA3345766@kroah.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+         <20200525221334.62966-8-andraprs@amazon.com>
+         <20200526065133.GD2580530@kroah.com>
+         <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
+         <20200526123300.GA2798@kroah.com>
+         <59007eb9-fad3-9655-a856-f5989fa9fdb3@amazon.de>
+         <20200526131708.GA9296@kroah.com>
+         <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
+         <20200526222402.GC179549@kroah.com>
+         <b4f17cbd-7471-fe61-6e7e-1399bd96e24e@amazon.de>
+         <20200528131259.GA3345766@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daeho Jeong <daehojeong@google.com>
+On Thu, 2020-05-28 at 15:12 +0200, Greg KH wrote:
+> So at runtime, after all is booted and up and going, you just ripped
+> cores out from under someone's feet?  :)
+> 
+> And the code really handles writing to that value while the module is
+> already loaded and up and running?  At a quick glance, it didn't seem
+> like it would handle that very well as it only is checked at ne_init()
+> time.
+> 
+> Or am I missing something?
+> 
+> Anyway, yes, if you can dynamically do this at runtime, that's great,
+> but it feels ackward to me to rely on one configuration thing as a
+> module parameter, and everything else through the ioctl interface.
+> Unification would seem to be a good thing, right?
 
-Found a new segemnt allocation without f2fs_lock_op() in
-expand_inode_data(). So, when we do fallocate() for a pinned file
-and trigger checkpoint very frequently and simultaneously. F2FS gets
-stuck in the below code of do_checkpoint() forever.
+I personally still prefer a sysfs file :) I really don't like module
+parameters as a way to do such things.
 
-  f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
-  /* Wait for all dirty meta pages to be submitted for IO */
-                                                <= if fallocate() here,
-  f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META); <= it'll wait forever.
+Cheers,
+Ben.
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/file.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index f7de2a1da528..14ace885baa9 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1660,7 +1660,11 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
- 
- 		down_write(&sbi->pin_sem);
- 		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
-+
-+		f2fs_lock_op(sbi);
- 		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
-+		f2fs_unlock_op(sbi);
-+
- 		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
- 		up_write(&sbi->pin_sem);
- 
--- 
-2.27.0.rc0.183.gde8f92d652-goog
 
