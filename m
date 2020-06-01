@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F98C20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D271820679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037622;
-	bh=ohgHCoXnqjkR1LxSbvAxL5/wdzT6FIc09ykVLQTK/wM=;
+	s=default; t=1591037625;
+	bh=X/+DY4Lx5dQmu+HjNKoBEhFQXVgclPibyLNP+u5Ksn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JE1Z3EEDgWbfB/aSyDg20zSbPh5DAtnFyiNiAi+SaK+k0XlrNQyiYN62FU9vfyafL
-	 Hfk1SNJ8aUYEltRzM4HHG58kiZRJnz5E9/4QWzfSnsQREN4+ndkiwmyPxaa/eFZkAi
-	 8Vu3YgbPohHnuDBLXfWrbNnLD6Fgh2/iqA8O8KW0=
+	b=ONX1cYd88x1Ow1erzWVFqF4S6PW6JrJqgb7xwTqe1oV+rCfYeiIGvB9MI42YKdv/r
+	 QnPjMn+hwQpcOm6gQn3UPw89sY40azAGhoXti3ENQUDnMsLfyBjKrQcJtKTtwzHCu6
+	 RmnNBqPT6QhhCfoFW9CjkeRWrjzgvHW5oY32Vu40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbgFASCu (ORCPT
+        id S1729971AbgFASCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45976 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729965AbgFASCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:44 -0400
+        id S1729053AbgFASCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7084B2065C;
-        Mon,  1 Jun 2020 18:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A542065C;
+        Mon,  1 Jun 2020 18:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034563;
-        bh=ohgHCoXnqjkR1LxSbvAxL5/wdzT6FIc09ykVLQTK/wM=;
+        s=default; t=1591034559;
+        bh=X/+DY4Lx5dQmu+HjNKoBEhFQXVgclPibyLNP+u5Ksn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8Lfc3oVXTTY46MPU2Dk7xIhtS7AKxXy8rT+vTXlRgT9UZDCEdMKRQ9+cOfJHOHI9
-         RYQUsSKeaeOLPm0edZBZsqvSYqQiaVmumZS3dJGT0Ka3kkAaVS//AS3YzXBfiAsgnx
-         xv6FJiT7/mN+/X95awO853t9c/pevL9YrTBTaozk=
+        b=BMYZBhRIzcp0KEdyXb24m/ePHUiERAPMvtJcNR4gF/DRyvw8fr2G0cST+2tIlCQlD
+         JtOG60AJTrGR7G1coHAohCa2qZlh9rJOAYpmDuS5baUVBn/q5o1TLsNTotaMIsSAQ5
+         8KR2R4Vt4XDqK/PapoRp7crcS+VuXtKfpQ/+T1Cw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Roman Mashak <mrv@mojatatu.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 10/95] net sched: fix reporting the first-time use timestamp
-Date:   Mon,  1 Jun 2020 19:53:10 +0200
-Message-Id: <20200601174022.499707903@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.14 59/77] xfrm: fix a NULL-ptr deref in xfrm_local_error
+Date:   Mon,  1 Jun 2020 19:54:04 +0200
+Message-Id: <20200601174026.670418735@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
-References: <20200601174020.759151073@linuxfoundation.org>
+In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
+References: <20200601174016.396817032@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Mashak <mrv@mojatatu.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit b15e62631c5f19fea9895f7632dae9c1b27fe0cd ]
+commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
 
-When a new action is installed, firstuse field of 'tcf_t' is explicitly set
-to 0. Value of zero means "new action, not yet used"; as a packet hits the
-action, 'firstuse' is stamped with the current jiffies value.
+This patch is to fix a crash:
 
-tcf_tm_dump() should return 0 for firstuse if action has not yet been hit.
+  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
+  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
+  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
+  [ ] Call Trace:
+  [ ]  xfrm6_local_error+0x1eb/0x300
+  [ ]  xfrm_local_error+0x95/0x130
+  [ ]  __xfrm6_output+0x65f/0xb50
+  [ ]  xfrm6_output+0x106/0x46f
+  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
+  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
+  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
+  [ ]  dev_hard_start_xmit+0x165/0x820
+  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
+  [ ]  ip_finish_output2+0xd3e/0x1480
+  [ ]  ip_do_fragment+0x182d/0x2210
+  [ ]  ip_output+0x1d0/0x510
+  [ ]  ip_send_skb+0x37/0xa0
+  [ ]  raw_sendmsg+0x1b4c/0x2b80
+  [ ]  sock_sendmsg+0xc0/0x110
 
-Fixes: 48d8ee1694dd ("net sched actions: aggregate dumping of actions timeinfo")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Roman Mashak <mrv@mojatatu.com>
-Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
+skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
+xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
+to get ipv6 info from a ipv4 sk.
+
+This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
+error reporting more robust"), but brought back by Commit 844d48746e4b
+("xfrm: choose protocol family by skb protocol").
+
+So to fix it, we should call xfrm6_local_error() only when skb->protocol
+is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
+
+Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/net/act_api.h |    3 ++-
+ net/xfrm/xfrm_output.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/net/act_api.h
-+++ b/include/net/act_api.h
-@@ -67,7 +67,8 @@ static inline void tcf_tm_dump(struct tc
- {
- 	dtm->install = jiffies_to_clock_t(jiffies - stm->install);
- 	dtm->lastuse = jiffies_to_clock_t(jiffies - stm->lastuse);
--	dtm->firstuse = jiffies_to_clock_t(jiffies - stm->firstuse);
-+	dtm->firstuse = stm->firstuse ?
-+		jiffies_to_clock_t(jiffies - stm->firstuse) : 0;
- 	dtm->expires = jiffies_to_clock_t(stm->expires);
- }
+--- a/net/xfrm/xfrm_output.c
++++ b/net/xfrm/xfrm_output.c
+@@ -286,7 +286,8 @@ void xfrm_local_error(struct sk_buff *sk
  
+ 	if (skb->protocol == htons(ETH_P_IP))
+ 		proto = AF_INET;
+-	else if (skb->protocol == htons(ETH_P_IPV6))
++	else if (skb->protocol == htons(ETH_P_IPV6) &&
++		 skb->sk->sk_family == AF_INET6)
+ 		proto = AF_INET6;
+ 	else
+ 		return;
 
 
