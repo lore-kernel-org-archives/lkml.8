@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EADCE2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3D0206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgFAFwy (ORCPT
+        id S1726034AbgFAFws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:52:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9045 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgFAFws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jun 2020 01:52:48 -0400
-IronPort-SDR: rHsnzSYysFeUrIJ4ZP+lGQdUgy4mkUEs3GuJ3DbjJyBouWa1aMJgs6mVlLPE0lTO4w+J0Ra2+/
- gtn/+Xu1Knlg==
+Received: from mga11.intel.com ([192.55.52.93]:10695 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbgFAFwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 01:52:46 -0400
+IronPort-SDR: ptGMkAIji1fgI96bd0QKAxl47LpBBIhfWsjcBassEstsq/jQlNo/KcQq6Ci9O/P+0BdW/sMGwy
+ 5kb7dQTkU6mw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 22:52:46 -0700
-IronPort-SDR: Wlfoyww8cHrGqi3R8/ZFaMX1JTrlVQpN0CFTgCo9RRQ1Xp6xCjwJSf0PmUbeBu2F4kZtwCAxkz
- jksZM8DqlbcQ==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 22:52:46 -0700
+IronPort-SDR: jxoOYNwgc5eaKB2ZTiVAC5/eILNoeCZneTZ0Sb0J5/kGuKiuiu9UvFzb16XUdXPJV2RKokx3yH
+ /OgCPmB6p6pA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
-   d="scan'208";a="470202797"
+   d="scan'208";a="303769485"
 Received: from lkp-server01.sh.intel.com (HELO 49d03d9b0ee7) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 31 May 2020 22:52:44 -0700
+  by orsmga008.jf.intel.com with ESMTP; 31 May 2020 22:52:44 -0700
 Received: from kbuild by 49d03d9b0ee7 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jfdNM-0000WF-AN; Mon, 01 Jun 2020 05:52:44 +0000
-Date:   Mon, 01 Jun 2020 13:52:03 +0800
+        id 1jfdNM-0000WC-7c; Mon, 01 Jun 2020 05:52:44 +0000
+Date:   Mon, 01 Jun 2020 13:52:06 +0800
 From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
+To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.05.26a] BUILD REGRESSION
- 63fdce1252f16032c9e1eb7244bb674ba4f84855
-Message-ID: <5ed49783.KqVgQ3SKHMWR8db2%lkp@intel.com>
+Subject: [tip:perf/core] BUILD SUCCESS
+ 5cde265384cad739b162cf08afba6da8857778bd
+Message-ID: <5ed49786.Z4Nei4pmXraUJKEA%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,103 +51,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.05.26a
-branch HEAD: 63fdce1252f16032c9e1eb7244bb674ba4f84855  fixup! refperf: Provide module parameter to specify number of experiments
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/core
+branch HEAD: 5cde265384cad739b162cf08afba6da8857778bd  perf/x86/rapl: Add AMD Fam17h RAPL support
 
-Error/Warning in current branch:
+elapsed time: 5488m
 
-m68k-linux-ld: refperf.c:(.text+0x8f2): undefined reference to `__udivdi3'
-refperf.c:(.text+0x762): undefined reference to `__umoddi3'
+configs tested: 86
+configs skipped: 4
 
-Error/Warning ids grouped by kconfigs:
-
-recent_errors
-`-- m68k-allyesconfig
-    |-- m68k-linux-ld:refperf.c:(.text):undefined-reference-to-__udivdi3
-    `-- refperf.c:(.text):undefined-reference-to-__umoddi3
-
-
-i386-tinyconfig vmlinux size:
-
-====================================================================================================
- TOTAL  TEXT  built-in.*                                                                            
-====================================================================================================
-  -233  -233              8747b07d1944 Merge branch 'kcsan-dev.2020.04.13c' into HEAD               
-     0     0              03e8e094dad9 Merge branch 'lkmm-dev.2020.05.16a' into HEAD                
-     0     0              17e0ee2a3ec9 torture:  Remove qemu dependency on EFI firmware             
-     0     0              c58148777978 torture: Add script to smoke-test commits in a branch        
-   +38   +38              396a79cc6818 fork: Annotate a data race in vm_area_dup()                  
-     0     0              8035e0fc710a x86/mm/pat: Mark an intentional data race                    
-     0     0              d7a51c24ee4b rculist: Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init 
-     0     0              e5efa2f1b7b6 locktorture: Use true and false to assign to bool variables  
-     0     0              7514d7f181ab srcu: Fix a typo in comment "amoritized"->"amortized"        
-     0     0              9dbd776542e3 rcu: Simplify the calculation of rcu_state.ncpus             
-     0     0              df12d657bcc0 docs: RCU: Convert checklist.txt to ReST                     
-     0     0              fdfeb779e1bd docs: RCU: Convert lockdep-splat.txt to ReST                 
-     0     0              68b5951f7eb2 docs: RCU: Convert lockdep.txt to ReST                       
-     0     0              ce9edc0c8a82 docs: RCU: Convert rculist_nulls.txt to ReST                 
-     0     0              1bee818b03c7 docs: RCU: Convert torture.txt to ReST                       
-     0     0              9100131711bc docs: RCU: Convert rcuref.txt to ReST                        
-     0     0              080f194cfa87 docs: RCU: Convert stallwarn.txt to ReST                     
-     0     0              6999f47d8456 docs: RCU: Don't duplicate chapter names in rculist_nulls.rs 
-     0     0              55ce2e8178f2 rcutorture: Add races with task-exit processing              
-     0     0              1c60a5e52538 torture: Set configfile variable to current scenario         
-     0     0              9969401f1706 rcutorture: Handle non-statistic bang-string error messages  
-     0     0              6f099e1b362b rcutorture: NULL rcu_torture_current earlier in cleanup code 
-     0     0              6816417616c4 kcsan: Add test suite                                        
-     0     0              848d16e04f52 doc: Timer problems can cause RCU CPU stall warnings         
-     0     0              2364a9f967ec rcu: Add callbacks-invoked counters                          
-     0     0              2775724beeef rcu: Add comment documenting rcu_callback_map's purpose      
-     0     0     +138684  bfd78bca7bdf Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom o 
-    +1     0     -138684  8903088434e7 rcu/tree: Add better tracing for dyntick-idle                
-    -1     0              c0601bb42994 rcu/tree: Clean up dynticks counter usage                    
-     0     0              3f3baaf3ac07 rcu/tree: Remove dynticks_nmi_nesting counter                
-    +1     0              725e4ad9e020 trace: events: rcu: Change description of rcu_dyntick trace  
-     0     0              a9b73fda34ec torture: Remove whitespace from identify_qemu_vcpus output   
-    -1     0     +138684  6267bacdff81 torture: Add --allcpus argument to the kvm.sh script         
-    +1     0     -138684  5c6aa32472cb rcu: Grace-period-kthread related sleeps to idle priority    
-    -1     0     +138684  f334f4fee6e2 rcu: Priority-boost-related sleeps to idle priority          
-     0     0           0  d49cb59f19b6 rcu: No-CBs-related sleeps to idle priority                  
-    +1     0     -138684  4cc4ce9b67ec rcu: Expedited grace-period sleeps to idle priority          
-    -1     0     +138684  cef0575caddb rcu-tasks: Convert sleeps to idle priority                   
-     0     0           0  988aef3524e2 fs/btrfs: Add cond_resched() for try_release_extent_mapping( 
-     0     0     -138684  70ca490c7ab3 locking/osq_lock: Annotate a data race in osq_lock           
-    +1     0              80fa4f7b355d doc: Tasks RCU must protect instructions before trampoline   
-    -1     0     +138684  1b397c884f7a doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq      
-     0     0     -138684  dedad0a2118a tick/nohz: Narrow down noise while setting current task's ti 
-     0     0     +138684  3055759634b2 rcu: fix some kernel-doc warnings                            
-    +1     0     -138684  cf10e7d90417 rcu: Remove initialized but unused rnp from check_slow_task( 
-    -1     0     +138684  af17eef88571 rcu: Mark rcu_nmi_enter() call to rcu_cleanup_after_idle() n 
-     0     0     -138684  55f712e9bd7b rcuperf: Remove useless while loops around wait_event        
-     0     0     +138684  786a25497743 refperf: Add a test to measure performance of read-side sync 
-     0     0           0  dc58d3c31f1f rcuperf: Add comments explaining the high reader overhead    
-     0     0     -138684  b2ff7128cdf1 torture: Add refperf to the rcutorture scripting             
-     0     0              7dde0e35f67b refperf: Add holdoff parameter to allow CPUs to come online  
-     0     0     +138684  2ba85f14b266 refperf: Hoist function-pointer calls out of the loop        
-     0     0     -138684  bd5b16d6c88d refperf: Allow decimal nanoseconds                           
-     0     0     +138684  4cce30d135de refperf: Convert nreaders to a module parameter              
-     0     0     -138684  8bd29f7b847e refperf: Provide module parameter to specify number of exper 
-     0     0              d18ecae2bc2b refperf: Dynamically allocate experiment-summary output buff 
-     0     0              10fa2bf34a50 refperf: Dynamically allocate thread-summary output buffer   
-     0     0              0684e3f4bf1b srcu: Avoid local_irq_save() before acquiring spinlock_t     
-     0     0              63b2b8b35a71 refperf: Make functions static                               
-     0     0              e8a82e9631ec refperf: Tune reader measurement interval                    
-     0     0              f703103e9e7f refperf: Convert reader_task structure's "start" field to in 
-     0     0              ffc241495521 refperf: More closely synchronize reader start times         
-     0     0              568bba215891 rcuperf: Fix kfree_mult to match printk() format             
-     0     0              aec1425c01bc refperf: Add warmup and cooldown processing phases           
-     0     0              bd2d77c5eefd refperf: Label experiment-number column "Runs"               
-     0     0              eede76664b37 refperf: Output per-experiment data points                   
-     0     0              bfd607210803 fixup! refperf: Add holdoff parameter to allow CPUs to come  
-     0     0              7f5a958790d1 fixup! refperf: Convert nreaders to a module parameter       
-     0     0              63fdce1252f1 fixup! refperf: Provide module parameter to specify number o 
-  -189  -189              b1fcf9b83c41..63fdce1252f1 (ALL COMMITS)                                  
-====================================================================================================
-
-elapsed time: 7588m
-
-configs tested: 84
-configs skipped: 1
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
 arm                                 defconfig
 arm                              allyesconfig
@@ -157,26 +70,34 @@ arm64                            allyesconfig
 arm64                               defconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
-mips                malta_kvm_guest_defconfig
-arm                         socfpga_defconfig
-nds32                             allnoconfig
-mips                          malta_defconfig
-arc                              alldefconfig
-arm                         orion5x_defconfig
+arm                       mainstone_defconfig
+arm                            hisi_defconfig
+powerpc                     mpc83xx_defconfig
+m68k                          multi_defconfig
+m68k                             allyesconfig
+powerpc                     pseries_defconfig
+arm                            dove_defconfig
+h8300                            alldefconfig
 i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
 i386                              debian-10.3
 ia64                             allmodconfig
-ia64                              allnoconfig
 ia64                                defconfig
+ia64                              allnoconfig
 ia64                             allyesconfig
 m68k                             allmodconfig
+m68k                              allnoconfig
 m68k                           sun3_defconfig
 m68k                                defconfig
-m68k                              allnoconfig
-m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
 nds32                               defconfig
+nds32                             allnoconfig
 csky                             allyesconfig
 csky                                defconfig
 alpha                               defconfig
@@ -186,35 +107,29 @@ h8300                            allyesconfig
 h8300                            allmodconfig
 xtensa                              defconfig
 arc                                 defconfig
+arc                              allyesconfig
 sh                               allmodconfig
 sh                                allnoconfig
 microblaze                        allnoconfig
-arc                              allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
 mips                             allyesconfig
 mips                              allnoconfig
 mips                             allmodconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
 parisc                            allnoconfig
 parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
 powerpc                             defconfig
 powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
+riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
-riscv                            allyesconfig
 riscv                            allmodconfig
+s390                             allyesconfig
 s390                              allnoconfig
 s390                             allmodconfig
-s390                             allyesconfig
 s390                                defconfig
 sparc                            allyesconfig
 sparc                               defconfig
@@ -223,16 +138,16 @@ sparc64                           allnoconfig
 sparc64                          allyesconfig
 sparc64                          allmodconfig
 um                                allnoconfig
+um                                  defconfig
 um                               allmodconfig
 um                               allyesconfig
-um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
 x86_64                    rhel-7.6-kselftests
 x86_64                         rhel-7.2-clear
 x86_64                                    lkp
 x86_64                              fedora-25
 x86_64                                  kexec
-x86_64                                   rhel
-x86_64                               rhel-7.6
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
