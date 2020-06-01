@@ -2,52 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57358C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05584C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33AC6206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5043206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037330;
-	bh=ambusvve4PtBxJnzxj5h6RempnRnRW92w6VEnBVIJnE=;
+	s=default; t=1591037332;
+	bh=w2pSz6sSKuZ1uwjqUAGFQHWs2ZIfFkdSdsug/JB3dAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8BHApx1agm8XOiLH/Vf5qCsoCsHYmNoBS4nSmDWh653hBm+zlja66iurVd3DcwZy
-	 WN7Yf2/laYJmHzGdVColWK6LiBJEHoI3GCgRH21qdrUq9XQ8ccUfAgGAGuKu0wOVbS
-	 9bRZ+Wpjnj+DQAstWFMS1SRMsP9Uw8wEdcWb4D64=
+	b=ZmccOQFESHLPdxMO5FiEghpAZkYmjPgGgzLVzV0d0l8vMwIrgvGPzkLhZtkeAKrgv
+	 dRoDD+PGvozeZjWW+qb+D+6zK93AWnATMEo1npnffHH6PRx57RaJkyRvNzWJTOkHDj
+	 FKVLkCt+Z913NkOeJ8uAtp8ZvcW1lGnFQkXb1WnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbgFASHY (ORCPT
+        id S1731005AbgFASsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:48:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbgFASGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:06:49 -0400
+        id S1728810AbgFASHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7633D2068D;
-        Mon,  1 Jun 2020 18:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DA4720872;
+        Mon,  1 Jun 2020 18:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034808;
-        bh=ambusvve4PtBxJnzxj5h6RempnRnRW92w6VEnBVIJnE=;
+        s=default; t=1591034842;
+        bh=w2pSz6sSKuZ1uwjqUAGFQHWs2ZIfFkdSdsug/JB3dAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0whhk+VDYoOIEAWBZDAOMdR5oJ0AATKyBeLDUNZH2s21WeDsCZ5ArM3vc9nB/4pQ
-         c0Z2FgVnyhhSH2JtZI7sZxLgdz4xyM1+kLlu0e3ic6NqySnCO8Pl70pX1CvRg1Sdpa
-         L/FGdCLHp4ooD7Hawus/xOM6vJaZTIPKH528w2VA=
+        b=kBhD7gthnnlnItlLgIf6cynf3/ylRW9Qnnb9aE8vgUpRlusMIALwbXzaTDbjBWrL+
+         ffMwk1sX75rf6096dJaaGPbdPg9Znmvr367oBCi2RjtjmmTMzxMvNtneje4uE5ytEN
+         DD3LtRbTb8T5a2illc6wd96u5D6sis2B1BqLh5FQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 009/142] net/mlx5: Add command entry handling completion
-Date:   Mon,  1 Jun 2020 19:52:47 +0200
-Message-Id: <20200601174038.975067779@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 037/142] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
+Date:   Mon,  1 Jun 2020 19:53:15 +0200
+Message-Id: <20200601174041.814110566@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,96 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 17d00e839d3b592da9659c1977d45f85b77f986a ]
+[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
 
-When FW response to commands is very slow and all command entries in
-use are waiting for completion we can have a race where commands can get
-timeout before they get out of the queue and handled. Timeout
-completion on uninitialized command will cause releasing command's
-buffers before accessing it for initialization and then we will get NULL
-pointer exception while trying access it. It may also cause releasing
-buffers of another command since we may have timeout completion before
-even allocating entry index for this command.
-Add entry handling completion to avoid this race.
+A test with the command below gives these errors:
 
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
+'#address-cells' is a required property
+
+The $nodename pattern for spi nodes is
+"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
+'spi-0' and 'spi-1' pinctrl sub nodenames to
+'spi0' and 'spi1' in 'rk322x.dtsi'.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |   14 ++++++++++++++
- include/linux/mlx5/driver.h                   |    1 +
- 2 files changed, 15 insertions(+)
+ arch/arm/boot/dts/rk322x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -861,6 +861,7 @@ static void cmd_work_handler(struct work
- 	int alloc_ret;
- 	int cmd_mode;
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index c60784f3aa75..6bb78b19c555 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -1033,7 +1033,7 @@
+ 			};
+ 		};
  
-+	complete(&ent->handling);
- 	sem = ent->page_queue ? &cmd->pages_sem : &cmd->sem;
- 	down(sem);
- 	if (!ent->page_queue) {
-@@ -978,6 +979,11 @@ static int wait_func(struct mlx5_core_de
- 	struct mlx5_cmd *cmd = &dev->cmd;
- 	int err;
+-		spi-0 {
++		spi0 {
+ 			spi0_clk: spi0-clk {
+ 				rockchip,pins = <0 RK_PB1 2 &pcfg_pull_up>;
+ 			};
+@@ -1051,7 +1051,7 @@
+ 			};
+ 		};
  
-+	if (!wait_for_completion_timeout(&ent->handling, timeout) &&
-+	    cancel_work_sync(&ent->work)) {
-+		ent->ret = -ECANCELED;
-+		goto out_err;
-+	}
- 	if (cmd->mode == CMD_MODE_POLLING || ent->polling) {
- 		wait_for_completion(&ent->done);
- 	} else if (!wait_for_completion_timeout(&ent->done, timeout)) {
-@@ -985,12 +991,17 @@ static int wait_func(struct mlx5_core_de
- 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
- 	}
- 
-+out_err:
- 	err = ent->ret;
- 
- 	if (err == -ETIMEDOUT) {
- 		mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
- 			       mlx5_command_str(msg_to_opcode(ent->in)),
- 			       msg_to_opcode(ent->in));
-+	} else if (err == -ECANCELED) {
-+		mlx5_core_warn(dev, "%s(0x%x) canceled on out of queue timeout.\n",
-+			       mlx5_command_str(msg_to_opcode(ent->in)),
-+			       msg_to_opcode(ent->in));
- 	}
- 	mlx5_core_dbg(dev, "err %d, delivery status %s(%d)\n",
- 		      err, deliv_status_to_str(ent->status), ent->status);
-@@ -1026,6 +1037,7 @@ static int mlx5_cmd_invoke(struct mlx5_c
- 	ent->token = token;
- 	ent->polling = force_polling;
- 
-+	init_completion(&ent->handling);
- 	if (!callback)
- 		init_completion(&ent->done);
- 
-@@ -1045,6 +1057,8 @@ static int mlx5_cmd_invoke(struct mlx5_c
- 	err = wait_func(dev, ent);
- 	if (err == -ETIMEDOUT)
- 		goto out;
-+	if (err == -ECANCELED)
-+		goto out_free;
- 
- 	ds = ent->ts2 - ent->ts1;
- 	op = MLX5_GET(mbox_in, in->first.data, opcode);
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -756,6 +756,7 @@ struct mlx5_cmd_work_ent {
- 	struct delayed_work	cb_timeout_work;
- 	void		       *context;
- 	int			idx;
-+	struct completion	handling;
- 	struct completion	done;
- 	struct mlx5_cmd        *cmd;
- 	struct work_struct	work;
+-		spi-1 {
++		spi1 {
+ 			spi1_clk: spi1-clk {
+ 				rockchip,pins = <0 RK_PC7 2 &pcfg_pull_up>;
+ 			};
+-- 
+2.25.1
+
 
 
