@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C779C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF727C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6F4C206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE5B2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037055;
-	bh=NO1fE9qbQO897QXTH+eDr2xuCe1LhEei9ZR1cr4pqYw=;
+	s=default; t=1591037067;
+	bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AplF1b5nJ+bCB1veZyl0qnlLIGhcr1w5Du8QWVybUXGEcZ7L7Fj2fqGDtKrDOd4Mi
-	 m8z0kzsf7tdY2eHLKEdiHKDL2Px1sW/J+l2JfTN9NAS9ujkVucCJCrtrp+wr8WuxoG
-	 4r6e8V2tTLzj5O8Mp602v/VOay0U/glybco+cC/k=
+	b=digCBpQ2r1O/TRUznelsh9Z2x723T8/R/ezQweuu1gi8VNLh5c/mQ5KAaLdAAfbDj
+	 ICdbdvwTeU8+uDt//Q4M5FJjIRH+ewKVKIJa26iS8xgSnebCAu5blKHgsve86zbvfp
+	 QmCxpHfRgC/vJGeeaZO+93Zus9deOPxR66JtrRh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgFASKp (ORCPT
+        id S1729640AbgFASo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57276 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:44:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730972AbgFASK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:27 -0400
+        id S1729710AbgFASKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 086CC2068D;
-        Mon,  1 Jun 2020 18:10:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3272B2065C;
+        Mon,  1 Jun 2020 18:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035026;
-        bh=NO1fE9qbQO897QXTH+eDr2xuCe1LhEei9ZR1cr4pqYw=;
+        s=default; t=1591035037;
+        bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d3zaM4ZE0ckoNsn52H++ce1URs858uVtFCZbI+uMEd/cA7N/0wyIBa3jZ2wNpK4fF
-         tnk4o6VEE+kCbHMqqAzaHwj+R459Nz2sRlQ8rrbBuvFcFh+GGFfCy8gnh06dV5/9e9
-         Makw+9AU6yl+3pJnGJIug33Z9LsoBaQBgFSh3raM=
+        b=tWAM7jvpsb3W9f0eukyXgyIX3ZArZE81HW720tzRXvsXOBF7iLqd7EeUyf7+sD4nm
+         tBTqgCnZyaVRGGrRlyeKtPDg3saMv3tbjbsn/EYRR47l7KEn80d8o6rBK7HD1fLgtr
+         Jr83DK/2wn1NJfgkR8SsPxhCtXvz03pkCpyUI4xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 120/142] ip_vti: receive ipip packet by calling ip_tunnel_rcv
-Date:   Mon,  1 Jun 2020 19:54:38 +0200
-Message-Id: <20200601174050.248686867@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 124/142] netfilter: nfnetlink_cthelper: unbreak userspace helper support
+Date:   Mon,  1 Jun 2020 19:54:42 +0200
+Message-Id: <20200601174050.656545762@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,65 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 976eba8ab596bab94b9714cd46d38d5c6a2c660d upstream.
+commit 703acd70f2496537457186211c2f03e792409e68 upstream.
 
-In Commit dd9ee3444014 ("vti4: Fix a ipip packet processing bug in
-'IPCOMP' virtual tunnel"), it tries to receive IPIP packets in vti
-by calling xfrm_input(). This case happens when a small packet or
-frag sent by peer is too small to get compressed.
+Restore helper data size initialization and fix memcopy of the helper
+data size.
 
-However, xfrm_input() will still get to the IPCOMP path where skb
-sec_path is set, but never dropped while it should have been done
-in vti_ipcomp4_protocol.cb_handler(vti_rcv_cb), as it's not an
-ipcomp4 packet. This will cause that the packet can never pass
-xfrm4_policy_check() in the upper protocol rcv functions.
-
-So this patch is to call ip_tunnel_rcv() to process IPIP packets
-instead.
-
-Fixes: dd9ee3444014 ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 157ffffeb5dc ("netfilter: nfnetlink_cthelper: reject too large userspace allocation requests")
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/ip_vti.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ net/netfilter/nfnetlink_cthelper.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -93,7 +93,28 @@ static int vti_rcv_proto(struct sk_buff
+--- a/net/netfilter/nfnetlink_cthelper.c
++++ b/net/netfilter/nfnetlink_cthelper.c
+@@ -103,7 +103,7 @@ nfnl_cthelper_from_nlattr(struct nlattr
+ 	if (help->helper->data_len == 0)
+ 		return -EINVAL;
  
- static int vti_rcv_tunnel(struct sk_buff *skb)
- {
--	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
-+	struct ip_tunnel_net *itn = net_generic(dev_net(skb->dev), vti_net_id);
-+	const struct iphdr *iph = ip_hdr(skb);
-+	struct ip_tunnel *tunnel;
-+
-+	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
-+				  iph->saddr, iph->daddr, 0);
-+	if (tunnel) {
-+		struct tnl_ptk_info tpi = {
-+			.proto = htons(ETH_P_IP),
-+		};
-+
-+		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
-+			goto drop;
-+		if (iptunnel_pull_header(skb, 0, tpi.proto, false))
-+			goto drop;
-+		return ip_tunnel_rcv(tunnel, skb, &tpi, NULL, false);
-+	}
-+
-+	return -EINVAL;
-+drop:
-+	kfree_skb(skb);
-+	return 0;
+-	nla_memcpy(help->data, nla_data(attr), sizeof(help->data));
++	nla_memcpy(help->data, attr, sizeof(help->data));
+ 	return 0;
  }
  
- static int vti_rcv_cb(struct sk_buff *skb, int err)
+@@ -240,6 +240,7 @@ nfnl_cthelper_create(const struct nlattr
+ 		ret = -ENOMEM;
+ 		goto err2;
+ 	}
++	helper->data_len = size;
+ 
+ 	helper->flags |= NF_CT_HELPER_F_USERSPACE;
+ 	memcpy(&helper->tuple, tuple, sizeof(struct nf_conntrack_tuple));
 
 
