@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6898C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC12C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCCC2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9532073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034238;
-	bh=0Tf9gZU8elkBmQcO3vpeBGJUqA/s3nLg87n8qhYqdpg=;
+	s=default; t=1591034241;
+	bh=xC9hJYuRSl5pnTM9TMOSwz7SgPWF7neADVLAEPjyJ74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vdbVqFMfhQfQKYQTykO2b2Dirkon1wdYsYKvAbvHMXN+GrizQLEGfXbLpVriGo1IM
-	 KPSfLr+YQW+gL23qfGi/zfQmkwXf4Sff8xnrpqiIYIEylH8BGb65+a7d+fVRw5Uuop
-	 A7Vpv/3m4LWimFqmjNdiR4dIm41iUiaUtt69rd3Q=
+	b=QC3WRihz+v9aB9QRlt0BJoiXasfqrPstWuyyd7Utf7NPtt/5raX/DKDBjszhMzHc8
+	 1b8FVo/OC/gjOw5qdhgPePaSvg/3xFWUxdn+eWj+b9K1SYZBkXuM2K9RU/tn2bEIwL
+	 lw16sgRltn4kkIRue6SqaSOpbZzSAyIkdCMeoOYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgFAR5R (ORCPT
+        id S1728896AbgFAR5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728870AbgFAR5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:14 -0400
+        id S1728878AbgFAR5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC0572076B;
-        Mon,  1 Jun 2020 17:57:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 312312074B;
+        Mon,  1 Jun 2020 17:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034234;
-        bh=0Tf9gZU8elkBmQcO3vpeBGJUqA/s3nLg87n8qhYqdpg=;
+        s=default; t=1591034236;
+        bh=xC9hJYuRSl5pnTM9TMOSwz7SgPWF7neADVLAEPjyJ74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FoRgRH/Bmx9zltllnOR+kVilpUklFxE/bn7o+D6WObpLVwgMnQqu6fWu5X3FAoBRC
-         SG9Kut0PIn7V+FLknNTJo0DgSasXjvtbUTrN6MixIR/OTZlT1OTl+70r96LFIFJ8zd
-         8Li7KIqFov0b0yEEepJURfjesGHc6HwCT8Lf6gjw=
+        b=2bG2XFOg6h8VrS8wkhsvI3KYiMvxWE8REdev2r3cv50fGHX3MwjhNaGqFGa9zen9i
+         nUIOUaEBL4qTyItX5FLDJEHK66bc7DNStTP7ADYFr+246VN9Oa/pDp84PdicQd1Ez5
+         5m5d7I7JuscZjJPbuiOCbdz1Tdh75olT2wiJdADk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 35/48] qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
-Date:   Mon,  1 Jun 2020 19:53:45 +0200
-Message-Id: <20200601174002.639552088@linuxfoundation.org>
+Subject: [PATCH 4.4 36/48] bonding: Fix reference count leak in bond_sysfs_slave_add.
+Date:   Mon,  1 Jun 2020 19:53:46 +0200
+Message-Id: <20200601174002.860442296@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -61,43 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Qiushi Wu <wu000273@umn.edu>
 
-commit 15c973858903009e995b2037683de29dfe968621 upstream.
+commit a068aab42258e25094bc2c159948d263ed7d7a77 upstream.
 
-In function qlcnic_83xx_interrupt_test(), function
-qlcnic_83xx_diag_alloc_res() is not handled by function
-qlcnic_83xx_diag_free_res() after a call of the function
-qlcnic_alloc_mbx_args() failed. Fix this issue by adding
-a jump target "fail_mbx_args", and jump to this new target
-when qlcnic_alloc_mbx_args() failed.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-Fixes: b6b4316c8b2f ("qlcnic: Handle qlcnic_alloc_mbx_args() failure")
+Fixes: 07699f9a7c8d ("bonding: add sysfs /slave dir for bond slave devices.")
 Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c |    4 +++-
+ drivers/net/bonding/bond_sysfs_slave.c |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
-@@ -3609,7 +3609,7 @@ int qlcnic_83xx_interrupt_test(struct ne
- 	ahw->diag_cnt = 0;
- 	ret = qlcnic_alloc_mbx_args(&cmd, adapter, QLCNIC_CMD_INTRPT_TEST);
- 	if (ret)
--		goto fail_diag_irq;
-+		goto fail_mbx_args;
+--- a/drivers/net/bonding/bond_sysfs_slave.c
++++ b/drivers/net/bonding/bond_sysfs_slave.c
+@@ -153,8 +153,10 @@ int bond_sysfs_slave_add(struct slave *s
  
- 	if (adapter->flags & QLCNIC_MSIX_ENABLED)
- 		intrpt_id = ahw->intr_tbl[0].id;
-@@ -3639,6 +3639,8 @@ int qlcnic_83xx_interrupt_test(struct ne
+ 	err = kobject_init_and_add(&slave->kobj, &slave_ktype,
+ 				   &(slave->dev->dev.kobj), "bonding_slave");
+-	if (err)
++	if (err) {
++		kobject_put(&slave->kobj);
+ 		return err;
++	}
  
- done:
- 	qlcnic_free_mbx_args(&cmd);
-+
-+fail_mbx_args:
- 	qlcnic_83xx_diag_free_res(netdev, drv_sds_rings);
- 
- fail_diag_irq:
+ 	for (a = slave_attrs; *a; ++a) {
+ 		err = sysfs_create_file(&slave->kobj, &((*a)->attr));
 
 
