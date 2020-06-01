@@ -2,126 +2,156 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39074C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACB7A206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WlgRQi64"
+	by mail.kernel.org (Postfix) with ESMTP id 1B9D1206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgFAJVs (ORCPT
+        id S1726322AbgFAJWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:21:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25263 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725838AbgFAJVr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:21:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591003305;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IuLK2sSn5CddFiGq7dQ41qvUoboLyFr4AuyNbWpmRVE=;
-        b=WlgRQi64rupsUZsIt6GXIWniHTN0ge0W3L8al0gH4s3zbWjpUGH+AKn5spVU8fDUy+OIVn
-        POmPE7zyvImjhFh2JSN8HS/BBfc+v7SRv7Iuj8qL5QkasZ9zuSF/p19YZ6/iFl5PbvVgJq
-        FxcroLykBuTDHTvKTe72U7s64XHx0xw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-OKM_6Na_Pm6SCQu5GwgpWg-1; Mon, 01 Jun 2020 05:21:44 -0400
-X-MC-Unique: OKM_6Na_Pm6SCQu5GwgpWg-1
-Received: by mail-wr1-f72.google.com with SMTP id l1so4646309wrc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:21:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IuLK2sSn5CddFiGq7dQ41qvUoboLyFr4AuyNbWpmRVE=;
-        b=Wa54Zs8aEZNn0bV7+/wpAU2GUVLpTWcUeR7PPQdobSbEOpAXUNMwnUcHd8uVB+nrz+
-         Y0joIKRrYoyMHY+WJoewYDCSdpMNSXj+RtoUnaDw5axBpgswybGE4SMUBTAv1Ft9OY2g
-         XEMt9yTqZtIJmpijX/vTsUwaTacvGsMtPnwmpdTObw1wCSfhqNF7a1MTJNKA3EMGDHZi
-         0cXqmM1fk3cGKs7Q3DUQokm/Ke1jGbN/RtYccGZPSjnevMKQEDhGFoi/OHrgt8MfDgsB
-         YOYt02gqlWEKrV/o/Jfhw3nEVb5msmuhQ3HcfGeq7wCnCx08+NaLzPczj2SJku9qvE6M
-         ekWg==
-X-Gm-Message-State: AOAM530dPmvDZEMpPT/hUi+QrYLMNY1eT5ulYkdrPkDTjtyTo+E790K6
-        HfuJ+zl2KHqN0LOWH7tEia4UgUSbimSkLzqtpSCyiiVIYzGzJdcDJCnORnUm4qV4f7KnO06bGe0
-        ND8BuCe2TJWZmhL4vS+XOgzgM
-X-Received: by 2002:a1c:9cca:: with SMTP id f193mr20301256wme.71.1591003302913;
-        Mon, 01 Jun 2020 02:21:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwZjBowPYwC+DKgI4BRKZhXw+nZFZK73A3GMy1xVVIrdJTX5qghOe0isbEbZkUkMPrdG2E5KQ==
-X-Received: by 2002:a1c:9cca:: with SMTP id f193mr20301235wme.71.1591003302659;
-        Mon, 01 Jun 2020 02:21:42 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e044:3d2:1991:920c? ([2001:b07:6468:f312:e044:3d2:1991:920c])
-        by smtp.gmail.com with ESMTPSA id d4sm19487104wre.22.2020.06.01.02.21.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 02:21:42 -0700 (PDT)
-Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Gavin Shan <gshan@redhat.com>, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, shan.gavin@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-10-gshan@redhat.com>
- <81adf013-3de7-23e6-7648-8aec821b033c@redhat.com>
- <a6addc25-29af-3690-8392-efa5e8381e98@redhat.com>
- <8ab64c6a-582b-691d-79ab-21cdc0455cd3@redhat.com>
- <6a4a82a4-af01-98c2-c854-9199f55f7bd3@redhat.com>
- <6965aaf641a23fab64fbe2ceeb790272@kernel.org>
- <d0bfb944-b50a-608a-7dcc-5a409cdc4524@redhat.com>
- <4337cca152df47c93d96e092189a0e36@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5c72c597-732e-7dbf-d056-665674ec1792@redhat.com>
-Date:   Mon, 1 Jun 2020 11:21:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 1 Jun 2020 05:22:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35100 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbgFAJWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:22:22 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1631E9C89EA068D77DAA;
+        Mon,  1 Jun 2020 17:22:20 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 1 Jun 2020
+ 17:22:11 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <linux-afs@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <dhowells@redhat.com>, <yi.zhang@huawei.com>
+Subject: [PATCH] afs: Fix memory leak in afs_put_sysnames()
+Date:   Mon, 1 Jun 2020 17:21:50 +0800
+Message-ID: <20200601092150.3798343-1-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <4337cca152df47c93d96e092189a0e36@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/05/20 14:44, Marc Zyngier wrote:
->>
->> Is there an ARM-approved way to reuse the S2 fault syndromes to detect
->> async page faults?
-> 
-> It would mean being able to set an ESR_EL2 register value into ESR_EL1,
-> and there is nothing in the architecture that would allow that,
+sysnames should be freed after refcnt being decreased to zero in
+afs_put_sysnames(). Besides, it would be better set net->sysnames
+to 'NULL' after net->sysnames being released if afs_put_sysnames()
+aims on an afs_sysnames object.
 
-I understand that this is not what you want to do and I'm not proposing
-it, but I want to understand this better: _in practice_ do CPUs check
-closely what is written in ESR_EL1?
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Cc: <Stable@vger.kernel.org> # v4.17+
+Fixes: 6f8880d8e681557 ("afs: Implement @sys substitution handling")
+---
+ fs/afs/dir.c      |  2 +-
+ fs/afs/internal.h |  2 ++
+ fs/afs/main.c     |  4 ++--
+ fs/afs/proc.c     | 25 ++++++++++++++++++++-----
+ 4 files changed, 25 insertions(+), 8 deletions(-)
 
-In any case, the only way to implement this, it seems to me, would be a
-completely paravirtualized exception vector that doesn't use ESR at all.
-
-On the other hand, for the page ready (interrupt) side assigning a PPI
-seems complicated but doable.
-
-Paolo
-
-> with
-> the exception of nested virt: a VHE guest hypervisor running at EL1
-> must be able to observe S2 faults for its own S2, as synthesized by
-> the host hypervisor.
-
-> The trouble is that:
-> - there is so far no commercially available CPU supporting NV
-> - even if you could get hold of such a machine, there is no
->   guarantee that such "EL2 syndrome at EL1" is valid outside of
->   the nested context
-> - this doesn't solve the issue for non-NV CPUs anyway
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index d1e1caa23c8b..cb9d8aa91048 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -894,7 +894,7 @@ static struct dentry *afs_lookup_atsys(struct inode *dir, struct dentry *dentry,
+ 	 */
+ 	ret = NULL;
+ out_s:
+-	afs_put_sysnames(subs);
++	afs_put_sysnames_and_null(net);
+ 	kfree(buf);
+ out_p:
+ 	key_put(key);
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 80255513e230..615dd5f9ad6f 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1093,12 +1093,14 @@ extern void __net_exit afs_proc_cleanup(struct afs_net *);
+ extern int afs_proc_cell_setup(struct afs_cell *);
+ extern void afs_proc_cell_remove(struct afs_cell *);
+ extern void afs_put_sysnames(struct afs_sysnames *);
++extern void afs_put_sysnames_and_null(struct afs_net *);
+ #else
+ static inline int afs_proc_init(struct afs_net *net) { return 0; }
+ static inline void afs_proc_cleanup(struct afs_net *net) {}
+ static inline int afs_proc_cell_setup(struct afs_cell *cell) { return 0; }
+ static inline void afs_proc_cell_remove(struct afs_cell *cell) {}
+ static inline void afs_put_sysnames(struct afs_sysnames *sysnames) {}
++static inline void afs_put_sysnames_and_null(struct afs_net *net) {}
+ #endif
+ 
+ /*
+diff --git a/fs/afs/main.c b/fs/afs/main.c
+index c9c45d7078bd..6bf73fc65fb5 100644
+--- a/fs/afs/main.c
++++ b/fs/afs/main.c
+@@ -132,7 +132,7 @@ static int __net_init afs_net_init(struct net *net_ns)
+ 	net->live = false;
+ 	afs_proc_cleanup(net);
+ error_proc:
+-	afs_put_sysnames(net->sysnames);
++	afs_put_sysnames_and_null(net);
+ error_sysnames:
+ 	net->live = false;
+ 	return ret;
+@@ -150,7 +150,7 @@ static void __net_exit afs_net_exit(struct net *net_ns)
+ 	afs_purge_servers(net);
+ 	afs_close_socket(net);
+ 	afs_proc_cleanup(net);
+-	afs_put_sysnames(net->sysnames);
++	afs_put_sysnames_and_null(net);
+ }
+ 
+ static struct pernet_operations afs_net_ops = {
+diff --git a/fs/afs/proc.c b/fs/afs/proc.c
+index 468e1713bce1..26e1e73281a6 100644
+--- a/fs/afs/proc.c
++++ b/fs/afs/proc.c
+@@ -554,15 +554,30 @@ static int afs_proc_sysname_write(struct file *file, char *buf, size_t size)
+ 	goto out;
+ }
+ 
+-void afs_put_sysnames(struct afs_sysnames *sysnames)
++static void afs_free_sysnames(struct afs_sysnames *sysnames)
+ {
+ 	int i;
+ 
++	for (i = 0; i < sysnames->nr; i++)
++		if (sysnames->subs[i] != afs_init_sysname &&
++		    sysnames->subs[i] != sysnames->blank)
++			kfree(sysnames->subs[i]);
++	kfree(sysnames);
++}
++
++void afs_put_sysnames(struct afs_sysnames *sysnames)
++{
++	if (sysnames && refcount_dec_and_test(&sysnames->usage))
++		afs_free_sysnames(sysnames);
++}
++
++void afs_put_sysnames_and_null(struct afs_net *net)
++{
++	struct afs_sysnames *sysnames = net->sysnames;
++
+ 	if (sysnames && refcount_dec_and_test(&sysnames->usage)) {
+-		for (i = 0; i < sysnames->nr; i++)
+-			if (sysnames->subs[i] != afs_init_sysname &&
+-			    sysnames->subs[i] != sysnames->blank)
+-				kfree(sysnames->subs[i]);
++		afs_free_sysnames(sysnames);
++		net->sysnames = NULL;
+ 	}
+ }
+ 
+-- 
+2.25.4
 
