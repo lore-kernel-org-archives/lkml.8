@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6898C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64BF7206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCCC2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034235;
-	bh=McdU4URPtqNUDD7dh7fAq4tAASitunh0mOZKNYXXj5Q=;
+	s=default; t=1591034238;
+	bh=0Tf9gZU8elkBmQcO3vpeBGJUqA/s3nLg87n8qhYqdpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B0PCoKFg8tgMLbGuAzw2N8ImO2ISa71owQgAOO8XSh4GHKP2RYnVPgbEJj+PQli63
-	 ier/Gg+B0BY/q/fuuumfaMHxqjM0HRYuzrRVDegdfiDrnP4H0jJdJ6D3Nq3lUbl74R
-	 Da349w3D04iwTCKRrckT2gR3fw86VqscWIaSXQGU=
+	b=vdbVqFMfhQfQKYQTykO2b2Dirkon1wdYsYKvAbvHMXN+GrizQLEGfXbLpVriGo1IM
+	 KPSfLr+YQW+gL23qfGi/zfQmkwXf4Sff8xnrpqiIYIEylH8BGb65+a7d+fVRw5Uuop
+	 A7Vpv/3m4LWimFqmjNdiR4dIm41iUiaUtt69rd3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgFAR5O (ORCPT
+        id S1728881AbgFAR5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38142 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbgFAR5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:10 -0400
+        id S1728870AbgFAR5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71A91208B6;
-        Mon,  1 Jun 2020 17:57:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC0572076B;
+        Mon,  1 Jun 2020 17:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034229;
-        bh=McdU4URPtqNUDD7dh7fAq4tAASitunh0mOZKNYXXj5Q=;
+        s=default; t=1591034234;
+        bh=0Tf9gZU8elkBmQcO3vpeBGJUqA/s3nLg87n8qhYqdpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aYOjp289nUBWua1bJ7R4s3+qbLlDlKnEq9pLEOcVeIxPn6LPrUnRdHiLSCFBNElnx
-         PrHprwPfKKkbUwoxTauNUQKRhydmWbDqG2tuPcG6QOEVUZDjIxVN3PNe9XhzGyNZZ1
-         5hTGOH40mqfSAUKhJ4hUZkX6cNBtBZinbFHHFtbs=
+        b=FoRgRH/Bmx9zltllnOR+kVilpUklFxE/bn7o+D6WObpLVwgMnQqu6fWu5X3FAoBRC
+         SG9Kut0PIn7V+FLknNTJo0DgSasXjvtbUTrN6MixIR/OTZlT1OTl+70r96LFIFJ8zd
+         8Li7KIqFov0b0yEEepJURfjesGHc6HwCT8Lf6gjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.4 33/48] netfilter: ipset: Fix subcounter update skip
-Date:   Mon,  1 Jun 2020 19:53:43 +0200
-Message-Id: <20200601174002.235055243@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 35/48] qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
+Date:   Mon,  1 Jun 2020 19:53:45 +0200
+Message-Id: <20200601174002.639552088@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -59,33 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Sutter <phil@nwl.cc>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit a164b95ad6055c50612795882f35e0efda1f1390 upstream.
+commit 15c973858903009e995b2037683de29dfe968621 upstream.
 
-If IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE is set, user requested to not
-update counters in sub sets. Therefore IPSET_FLAG_SKIP_COUNTER_UPDATE
-must be set, not unset.
+In function qlcnic_83xx_interrupt_test(), function
+qlcnic_83xx_diag_alloc_res() is not handled by function
+qlcnic_83xx_diag_free_res() after a call of the function
+qlcnic_alloc_mbx_args() failed. Fix this issue by adding
+a jump target "fail_mbx_args", and jump to this new target
+when qlcnic_alloc_mbx_args() failed.
 
-Fixes: 6e01781d1c80e ("netfilter: ipset: set match: add support to match the counters")
-Signed-off-by: Phil Sutter <phil@nwl.cc>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: b6b4316c8b2f ("qlcnic: Handle qlcnic_alloc_mbx_args() failure")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/ipset/ip_set_list_set.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/ipset/ip_set_list_set.c
-+++ b/net/netfilter/ipset/ip_set_list_set.c
-@@ -60,7 +60,7 @@ list_set_ktest(struct ip_set *set, const
- 	/* Don't lookup sub-counters at all */
- 	opt->cmdflags &= ~IPSET_FLAG_MATCH_COUNTERS;
- 	if (opt->cmdflags & IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE)
--		opt->cmdflags &= ~IPSET_FLAG_SKIP_COUNTER_UPDATE;
-+		opt->cmdflags |= IPSET_FLAG_SKIP_COUNTER_UPDATE;
- 	list_for_each_entry_rcu(e, &map->members, list) {
- 		if (SET_WITH_TIMEOUT(set) &&
- 		    ip_set_timeout_expired(ext_timeout(e, set)))
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
+@@ -3609,7 +3609,7 @@ int qlcnic_83xx_interrupt_test(struct ne
+ 	ahw->diag_cnt = 0;
+ 	ret = qlcnic_alloc_mbx_args(&cmd, adapter, QLCNIC_CMD_INTRPT_TEST);
+ 	if (ret)
+-		goto fail_diag_irq;
++		goto fail_mbx_args;
+ 
+ 	if (adapter->flags & QLCNIC_MSIX_ENABLED)
+ 		intrpt_id = ahw->intr_tbl[0].id;
+@@ -3639,6 +3639,8 @@ int qlcnic_83xx_interrupt_test(struct ne
+ 
+ done:
+ 	qlcnic_free_mbx_args(&cmd);
++
++fail_mbx_args:
+ 	qlcnic_83xx_diag_free_res(netdev, drv_sds_rings);
+ 
+ fail_diag_irq:
 
 
