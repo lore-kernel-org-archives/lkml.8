@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D482C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F153C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D5F206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5462E20878
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036797;
-	bh=uB/nrNTc33V1p9MjKZ2UT3WMBnL+IeRKZpIjZGkr7aQ=;
+	s=default; t=1591036798;
+	bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YDHjp2XJeYfT0pXQZf/fkW56n5tuS3rpnMB/4jrq24oxHUdTgevrcOkT1wiHsc7mV
-	 psgpwTkPV+1z2xcCL3qEcnuX6BCU8zeVu5DNTOOY/C/AUoymjkVeIDHA/eZwCb6VB6
-	 /JsDGHJN2aMpx4MrUn++vwVYGQ4mXhe/404oIrBY=
+	b=YL+hLLCpXkjY76z4Y2gwjQg/NDBnlFNfHlt/liBnRYn2n1sL1/tiN3+he78pbFGDX
+	 RYs6LWcUN5mEXrLSp8NkVYsgz518h9qQzMp9q82btdE5juiw3FLiOtKO4A7HzcHmUD
+	 bXwJrqNy53BVWzrKl6bhgO0jm1LAxzPJOnZ31xUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbgFASNx (ORCPT
+        id S1731395AbgFASNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730208AbgFASNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:48 -0400
+        id S1728289AbgFASNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:13:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42F152068D;
-        Mon,  1 Jun 2020 18:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B5E02065C;
+        Mon,  1 Jun 2020 18:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035226;
-        bh=uB/nrNTc33V1p9MjKZ2UT3WMBnL+IeRKZpIjZGkr7aQ=;
+        s=default; t=1591035224;
+        bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3zwKCPZUIIjncyMzM/5x9ObFfOdvKWGJSNXmCOb0GabbGhcr4gbi7KNmcMeDUv0p
-         6/P4QKoNGGZs+sKRV3ER6qj3j81cCfDqW9O8FSwjGY15NkugYsnStMnhAmRECKZMbD
-         oFGs+9YngvAb+bl18V8wp5fP6X2KalWw9PCpG7ZI=
+        b=KjBWC7ufC6bnooCpcwsgCxPCS6Qj0Li4Et+yDFdbVPp38WG5jOI/5qbMJI6DP+dRm
+         rTEk9bkh+6fnEKw5C6ftNJPCut/0A2sIFIjbHw8m3m7u+QtJ1QUAzhRsurmQkOixGi
+         4Ca04UBKA9bs/5Na+FW8ZkoiKm0wpVb+390of+CI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 065/177] usb: phy: twl6030-usb: Fix a resource leak in an error handling path in twl6030_usb_probe()
-Date:   Mon,  1 Jun 2020 19:53:23 +0200
-Message-Id: <20200601174054.352250089@linuxfoundation.org>
+Subject: [PATCH 5.6 064/177] usb: dwc3: pci: Enable extcon driver for Intel Merrifield
+Date:   Mon,  1 Jun 2020 19:53:22 +0200
+Message-Id: <20200601174054.276064636@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,62 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit f058764d19000d98aef72010468db1f69faf9fa0 ]
+[ Upstream commit 066c09593454e89bc605ffdff1c9810061f9b1e1 ]
 
-A call to 'regulator_get()' is hidden in 'twl6030_usb_ldo_init()'. A
-corresponding put must be performed in the error handling path, as
-already done in the remove function.
+Intel Merrifield provides a DR support via PMIC which has its own
+extcon driver.
 
-While at it, also move a 'free_irq()' call in the error handling path in
-order to be consistent.
+Add a property string to link to that driver.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/phy/phy-twl6030-usb.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/usb/dwc3/dwc3-pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
-index bfebf1f2e991..9a7e655d5280 100644
---- a/drivers/usb/phy/phy-twl6030-usb.c
-+++ b/drivers/usb/phy/phy-twl6030-usb.c
-@@ -377,7 +377,7 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 			twl->irq1, status);
--		return status;
-+		goto err_put_regulator;
- 	}
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 7051611229c9..b67372737dc9 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -114,6 +114,7 @@ static const struct property_entry dwc3_pci_intel_properties[] = {
  
- 	status = request_threaded_irq(twl->irq2, NULL, twl6030_usb_irq,
-@@ -386,8 +386,7 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 			twl->irq2, status);
--		free_irq(twl->irq1, twl);
--		return status;
-+		goto err_free_irq1;
- 	}
- 
- 	twl->asleep = 0;
-@@ -396,6 +395,13 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	dev_info(&pdev->dev, "Initialized TWL6030 USB module\n");
- 
- 	return 0;
-+
-+err_free_irq1:
-+	free_irq(twl->irq1, twl);
-+err_put_regulator:
-+	regulator_put(twl->usb3v3);
-+
-+	return status;
- }
- 
- static int twl6030_usb_remove(struct platform_device *pdev)
+ static const struct property_entry dwc3_pci_mrfld_properties[] = {
+ 	PROPERTY_ENTRY_STRING("dr_mode", "otg"),
++	PROPERTY_ENTRY_STRING("linux,extcon-name", "mrfld_bcove_pwrsrc"),
+ 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
+ 	{}
+ };
 -- 
 2.25.1
 
