@@ -2,106 +2,97 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B424AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37EEC2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8475720825
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="pp/8RPm1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A+2N0452"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UYb0Cmt+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgFAXLr (ORCPT
+        id S1728779AbgFAXMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 19:11:47 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53589 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727113AbgFAXLr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 19:11:47 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BF2AB5800DD;
-        Mon,  1 Jun 2020 19:11:45 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 01 Jun 2020 19:11:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=EJxQtXEmzgFV7qYlHbiD6rvXvA
-        D6+GpjivfAKXYShn8=; b=pp/8RPm1nMDp8zDWGn+jMh9zTt5XUJaZJT5CvG0dcX
-        JRhtGOWyadjxXEh4fVuAcsq7QZZ+zbesJ2IUYWrXUcVzXmFHd1i3e+L2DhzM/yx5
-        IQ2i1htYsKcVQtZi6UFEJqUmkGpN21btMEvllx5NFZaCwLJVDDvSZoX5shfxHGzy
-        q9ZSZ6izbtxumf20J6CWzmEWtB/tk53hIAI+g91CvsyVaasvZ7hqTnMr//FEUT1c
-        LrpDWDXjwIwtI/FfH9dtaqpXvLvGGZwkoDzJM5y4fq9KGJK6I4BUrr/hQmYTq9FN
-        6V9Tya8NxGIILvr9/dwWfuDtlrEQTQtAHfWXb6VmZOmg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EJxQtXEmzgFV7qYlH
-        biD6rvXvAD6+GpjivfAKXYShn8=; b=A+2N0452c36DE0qjKhBkM9RicotCU+OXG
-        ZRRHrE+KyZdHSShWo/lWsb0ey7SWaUKHObn2xZiTSll0E38D+FBamXZ+hV6MLXFn
-        1qSTbnPBQJabyiC4iqyPb2BlwizRAIorwWZRQx8oLPD+5IhsVuugofC2/Vw3mhpv
-        /7zfOGE2VnvdDAg1QV5TQZv2q4tDFmhkHcrHtrmvZ5v/ZqV/8HEUmOGt+KLL0+KX
-        gp0WA+ZRhGh0m4opyE5Cc0lmBJNpwKBHCQrC6wIAXyzgSjN6Esp+CH53yWrtxn9U
-        dDSOtDwnI56QVbuUYiSGPP+Yom5QkttwYg08dBWl5odn/JpcWwOGw==
-X-ME-Sender: <xms:MIvVXkONr8XwPkgygnAIFRmnxuCcLIEGYTO0MNyCOoJFyBpfbIdNng>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefiedgudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhrihhsuceu
-    uhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnhepudeitd
-    elueeijeefleffveelieefgfejjeeigeekudduteefkefffeethfdvjeevnecukfhppedu
-    ieefrdduudegrddufedvrdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepsghorhhishessghurhdrihho
-X-ME-Proxy: <xmx:MIvVXq9zY4BRoFGj3bm2LWIGoPL3_wwYPJmbiCXCTons26eZoFl0YQ>
-    <xmx:MIvVXrTT-2KPnBB0IXj5dVx3rZSOaukhzkJIznA2kfMRoFvs__5NcA>
-    <xmx:MIvVXstHQOxT9yyQjJKxK9dmJqTMSADbP6YATk8D-dzxP3Lt92saBg>
-    <xmx:MYvVXk7gs-3IrbDI23hi0p6OsIDuE_K4pqbNR6lhpFZP-6ACCFHRklCdi80>
-Received: from localhost (unknown [163.114.132.3])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 216D63061CCB;
-        Mon,  1 Jun 2020 19:11:44 -0400 (EDT)
-From:   Boris Burkov <boris@bur.io>
-To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Boris Burkov <boris@bur.io>
-Subject: [PATCH] blk-cgroup: don't account iostat for root cgroup
-Date:   Mon,  1 Jun 2020 16:11:41 -0700
-Message-Id: <20200601231141.2218370-1-boris@bur.io>
-X-Mailer: git-send-email 2.24.1
+        Mon, 1 Jun 2020 19:12:54 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60325 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726007AbgFAXMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 19:12:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bWDL5vz6z9sVl;
+        Tue,  2 Jun 2020 09:12:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591053171;
+        bh=LzS7nuY8BJQmxYHS+02GTVSxFCtHF4MXmeusRwGayMk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UYb0Cmt+OCZxL46OZ0a5NL4zEBC2t4kv/bmaP5c/H2AyGtxaE1dXbjjDrlJbJQIzP
+         KlHtpKnPFEsUUSJeFsMF5IRLJMmEf/P96uKNh8FmzxgtH6YssuVbs+8oufS5XG8eiI
+         bT2cDaWzCpmjo0gtNvdEtxdjlRRbbfjMQYtCv322plNtPqz6+dIM8MiQsci5hk77YB
+         T7iwWoSXlIUxOqcPsRbPssv4g+wUnWTG+D2Ev0dL9n/z5PbD5zoCrqOM5rBjKWUZEt
+         9uIgSY4n92bPFrvJHH5ZBDWeUTgyoMNOPBAiq8BguzQdmLaiecGX6ECzycPhFY6BEj
+         8Jn7edXDS4VvA==
+Date:   Tue, 2 Jun 2020 09:12:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ayush Sawal <ayush.sawal@chelsio.com>
+Subject: linux-next: Fixes tag needs some work in the net-next tree
+Message-ID: <20200602091249.66601c4c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/2Ibb4YXMdSz33=52mhBDgso";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This data is never flushed by rstat, so it is never used. We shouldn't
-bother collecting it. We can access global disk stats to compute io
-statistics for the root cgroup.
+--Sig_/2Ibb4YXMdSz33=52mhBDgso
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Boris Burkov <boris@bur.io>
----
- include/linux/blk-cgroup.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index a57ebe2f00ab..e9de4ec07182 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -591,7 +591,7 @@ static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 
- 	throtl = blk_throtl_bio(q, blkg, bio);
- 
--	if (!throtl) {
-+	if (blkg->parent && !throtl) {
- 		struct blkg_iostat_set *bis;
- 		int rwd, cpu;
- 
--- 
-2.24.1
+In commit
 
+  055be6865dea ("Crypto/chcr: Fixes a coccinile check error")
+
+Fixes tag
+
+  Fixes: 567be3a5d227 ("crypto:
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2Ibb4YXMdSz33=52mhBDgso
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Vi3EACgkQAVBC80lX
+0GzU+ggAhEH96xVlcyX5yFI48YhPi26kZU6W85Q0lkFlcF/nQHDNaILsmW3DKure
+PqG7vsGgdURPP5kBFPWqZBsFONbLVPcpIKUAUNTXUuwZPZpxxq+Pa8kEpymod+Z+
+6qPGgS311eguAw2gg+FAe4B1bH4bNoHebsZks4/3eadqHc/MubvnTs7f4CvhH4v1
+JuyQiaU4n+j8/3pOWEasRiHWMoYpgrRhYaKlDNKlPhssKEzrPHnCSkC8wYHXq0RV
+iYfkDNiqt0MoQYk1Y4GPVyTVrzasC1Qg4Hmw66bPqjMoMTZoPpSGZtfNgd5M5ZwI
+o5o2N9CZB24SbM3gWAnZgJF9qQiagA==
+=pFce
+-----END PGP SIGNATURE-----
+
+--Sig_/2Ibb4YXMdSz33=52mhBDgso--
