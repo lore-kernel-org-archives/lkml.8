@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A323AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B2CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832542074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EBBD206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591038102;
-	bh=cefI0ZFCKQibzgsWiyF43o4I/K11S3pa1wEiuKrRIpY=;
+	s=default; t=1591038105;
+	bh=1EqDWBCublThGphdinrbRT6uFLBsfp4qR1XYa7yaIfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1mjUFqda/XKTrfTlpgoMcpqvY9LdaaHxsi07i1B5D/+YPHEWfUvHVF06bAAl03cEj
-	 Z2Pal5IsE2rg1Rn1dDxEUefmKhmcPsX63TezF8pwekLp5qgmaRU7adfm+7dU03Nrck
-	 r+YiOjdtAUXxFuwQq9tuMNPUXrH6dub80CZ2llpI=
+	b=RFRa48NuhPExKTxc2RpOQnVTDJ7hnJyBpY48fBXR/Ry5bN0Rh9oZ8qFf7JNJvj48r
+	 p0l0LRiR+cY8spyw2XF5mSCWF1ZI1GLSMW1i6lUwiiCe+z659Z1GnvmYtd+o8+wPtP
+	 gN+VaRgjS6nO2S/ryZnex/L2BTRYLQdj4lvR0pJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgFARz6 (ORCPT
+        id S1728993AbgFATBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:55:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35966 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 15:01:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbgFARzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:55:54 -0400
+        id S1728407AbgFARz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:55:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 350182076B;
-        Mon,  1 Jun 2020 17:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 894942073B;
+        Mon,  1 Jun 2020 17:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034153;
-        bh=cefI0ZFCKQibzgsWiyF43o4I/K11S3pa1wEiuKrRIpY=;
+        s=default; t=1591034158;
+        bh=1EqDWBCublThGphdinrbRT6uFLBsfp4qR1XYa7yaIfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hxtIOUJTxyLTeCbQYlSyZuf5hnEhroqZhyyB+PsGCAnsi3BW5jnpT5xyaWPw7M1Qm
-         GXtoNqOn/28xQTFK+JcUI8/s04CuywiqZWvyxzvPO0vta64Zn5LxJGfK05bzOIgEAK
-         S6vkPgCJuHBTkjQnUSf7kMqOkXRZDREZl7uDmgmo=
+        b=BkgbTt1LH6lFiUgpjxWVhglazwlIs7e84iMLbq5kExsF/dV3lIrHv1jeIegU2UyPx
+         bcF99Vkxoj+ZodlEMkZnJpwybXP34P/USKVMl9wcvHgED01m4+27g58hX/vFmOyA1P
+         LBP+vaK382jNtkENfhWmLgnR+rV48Todxb4uHuU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
-        Cameron Gutman <aicommander@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 16/48] Input: xpad - add custom init packet for Xbox One S controllers
-Date:   Mon,  1 Jun 2020 19:53:26 +0200
-Message-Id: <20200601173957.119892052@linuxfoundation.org>
+Subject: [PATCH 4.4 18/48] IB/qib: Call kobject_put() when kobject_init_and_add() fails
+Date:   Mon,  1 Jun 2020 19:53:28 +0200
+Message-Id: <20200601173957.705875521@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -62,54 +64,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Łukasz Patron <priv.luk@gmail.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit 764f7f911bf72450c51eb74cbb262ad9933741d8 ]
+[ Upstream commit a35cd6447effd5c239b564c80fa109d05ff3d114 ]
 
-Sending [ 0x05, 0x20, 0x00, 0x0f, 0x06 ] packet for Xbox One S controllers
-fixes an issue where controller is stuck in Bluetooth mode and not sending
-any inputs.
+When kobject_init_and_add() returns an error in the function
+qib_create_port_files(), the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
-Reviewed-by: Cameron Gutman <aicommander@gmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200422075206.18229-1-priv.luk@gmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails. In addition, the ppd->diagc_kobj is released
+along with other kobjects when the sysfs is unregistered.
+
+Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
+Link: https://lore.kernel.org/r/20200512031328.189865.48627.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Suggested-by: Lin Yi <teroincn@gmail.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/joystick/xpad.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/infiniband/hw/qib/qib_sysfs.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-index 26476a64e663..54a6691d7d87 100644
---- a/drivers/input/joystick/xpad.c
-+++ b/drivers/input/joystick/xpad.c
-@@ -475,6 +475,16 @@ static const u8 xboxone_fw2015_init[] = {
- 	0x05, 0x20, 0x00, 0x01, 0x00
- };
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index 3ae82202cdb5..b33565f4409f 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -703,7 +703,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping linkcontrol sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail;
++		goto bail_link;
+ 	}
+ 	kobject_uevent(&ppd->pport_kobj, KOBJ_ADD);
  
-+/*
-+ * This packet is required for Xbox One S (0x045e:0x02ea)
-+ * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
-+ * initialize the controller that was previously used in
-+ * Bluetooth mode.
-+ */
-+static const u8 xboxone_s_init[] = {
-+	0x05, 0x20, 0x00, 0x0f, 0x06
-+};
-+
- /*
-  * This packet is required for the Titanfall 2 Xbox One pads
-  * (0x0e6f:0x0165) to finish initialization and for Hori pads
-@@ -533,6 +543,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
- 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
+@@ -713,7 +713,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping sl2vl sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_link;
++		goto bail_sl;
+ 	}
+ 	kobject_uevent(&ppd->sl2vl_kobj, KOBJ_ADD);
+ 
+@@ -723,7 +723,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping diag_counters sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_sl;
++		goto bail_diagc;
+ 	}
+ 	kobject_uevent(&ppd->diagc_kobj, KOBJ_ADD);
+ 
+@@ -736,7 +736,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 		 "Skipping Congestion Control sysfs info, (err %d) port %u\n",
+ 		 ret, port_num);
+-		goto bail_diagc;
++		goto bail_cc;
+ 	}
+ 
+ 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
+@@ -818,6 +818,7 @@ void qib_verbs_unregister_sysfs(struct qib_devdata *dd)
+ 				&cc_table_bin_attr);
+ 			kobject_put(&ppd->pport_cc_kobj);
+ 		}
++		kobject_put(&ppd->diagc_kobj);
+ 		kobject_put(&ppd->sl2vl_kobj);
+ 		kobject_put(&ppd->pport_kobj);
+ 	}
 -- 
 2.25.1
 
