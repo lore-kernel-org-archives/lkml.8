@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E27C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD23C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9374207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1FD208A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036641;
-	bh=eh0C+0x9mVrpmssuTcn3nRjVa4S+T2umUEJ6R35Nwt4=;
+	s=default; t=1591036646;
+	bh=xfgbRMaYu1U4oFDf4gWpQzShktC0BgPWQW1Ys9OQYtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcoMXsj6Aj9cMHc2lbvtrQ8G75Em+xBMdODE1sdlZ9VFasKxvC4YiwRxopdbaK7CT
-	 2mqTx89owoALuJDtJvu+zdViEO1g7SK3Yguu+anSAr9kj0qJvuED2fye0PYRwMTXhM
-	 hg0HV7pDRbxSOptXhnYWeslTFuBkrJfUAsvaVQgM=
+	b=rVIPBihczSl1AGx/0KNe7Yugg0Lt5B2sfT063Gk6YQInQTuFNNNsItLqyOxiEgOxd
+	 nl4OahXxYPOOQoIJ9RvAWWoUKvkVbnREFF0nyFI/ID1vZfEwGSuRYjctqtNdY0LVHf
+	 a1ZUNbdT/kYpwXLBVzNM9eu6z0ZCVi13OIlGB4a8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgFAShT (ORCPT
+        id S1730238AbgFAShZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbgFASPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:35 -0400
+        id S1731596AbgFASPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3345C2073B;
-        Mon,  1 Jun 2020 18:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF59D2065C;
+        Mon,  1 Jun 2020 18:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035334;
-        bh=eh0C+0x9mVrpmssuTcn3nRjVa4S+T2umUEJ6R35Nwt4=;
+        s=default; t=1591035332;
+        bh=xfgbRMaYu1U4oFDf4gWpQzShktC0BgPWQW1Ys9OQYtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=px7o/DI4SGL/U8h1xGbJQ9UIIMtBTANjXOCMcRKAvk+Zg6UovrcBkqjaxspQo0mBP
-         qCTZLiIUOomj4i5LK+uhBSLSw/2bnzmFObOr/8r0MOsr068kF1JngM3xmaLtF9sDhD
-         A8gKNa9WyjivBMKvSyZiQbNSVebdFN8eR8a3PdVs=
+        b=JAG61EyGf5AHRTyD0FGKeSXvkdAF8OiSH6ozrDj6oV245KJQTHyDD04V33+H5i3rh
+         sZec7P8K9/ekiFqFqJKHbKvEEtVuTRi336bk3yexjJC8mBw1Is94sTEohpgEM95ii9
+         ULbXq1teMkyz3/0NccNgyCiRWM1HX1rW3Epf/714=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathieu Maret <mathieu.maret@gmail.com>,
-        Brendan Shanks <bshanks@codeweavers.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 086/177] Input: evdev - call input_flush_device() on release(), not flush()
-Date:   Mon,  1 Jun 2020 19:53:44 +0200
-Message-Id: <20200601174056.060328291@linuxfoundation.org>
+Subject: [PATCH 5.6 112/177] gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe()
+Date:   Mon,  1 Jun 2020 19:54:10 +0200
+Message-Id: <20200601174057.951065819@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,72 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Shanks <bshanks@codeweavers.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 09264098ff153f60866039d60b31d39b66f55a31 ]
+[ Upstream commit 98f7d1b15e87c84488b30ecc4ec753b0690b9dbf ]
 
-input_flush_device() should only be called once the struct file is being
-released and no open descriptors remain, but evdev_flush() was calling
-it whenever a file descriptor was closed.
+Propagate the error code returned by devm_platform_ioremap_resource()
+out of probe() instead of overwriting it.
 
-This caused uploaded force-feedback effects to be erased when a process
-did a dup()/close() on the event FD, called system(), etc.
-
-Call input_flush_device() from evdev_release() instead.
-
-Reported-by: Mathieu Maret <mathieu.maret@gmail.com>
-Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
-Link: https://lore.kernel.org/r/20200421231003.7935-1-bshanks@codeweavers.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 72d8cb715477 ("drivers: gpio: bcm-kona: use devm_platform_ioremap_resource()")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+[Bartosz: tweaked the commit message]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/evdev.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ drivers/gpio/gpio-bcm-kona.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-index cb6e3a5f509c..0d57e51b8ba1 100644
---- a/drivers/input/evdev.c
-+++ b/drivers/input/evdev.c
-@@ -326,20 +326,6 @@ static int evdev_fasync(int fd, struct file *file, int on)
- 	return fasync_helper(fd, file, on, &client->fasync);
- }
+diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+index baee8c3f06ad..cf3687a7925f 100644
+--- a/drivers/gpio/gpio-bcm-kona.c
++++ b/drivers/gpio/gpio-bcm-kona.c
+@@ -625,7 +625,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
  
--static int evdev_flush(struct file *file, fl_owner_t id)
--{
--	struct evdev_client *client = file->private_data;
--	struct evdev *evdev = client->evdev;
--
--	mutex_lock(&evdev->mutex);
--
--	if (evdev->exist && !client->revoked)
--		input_flush_device(&evdev->handle, file);
--
--	mutex_unlock(&evdev->mutex);
--	return 0;
--}
--
- static void evdev_free(struct device *dev)
- {
- 	struct evdev *evdev = container_of(dev, struct evdev, dev);
-@@ -453,6 +439,10 @@ static int evdev_release(struct inode *inode, struct file *file)
- 	unsigned int i;
- 
- 	mutex_lock(&evdev->mutex);
-+
-+	if (evdev->exist && !client->revoked)
-+		input_flush_device(&evdev->handle, file);
-+
- 	evdev_ungrab(evdev, client);
- 	mutex_unlock(&evdev->mutex);
- 
-@@ -1310,7 +1300,6 @@ static const struct file_operations evdev_fops = {
- 	.compat_ioctl	= evdev_ioctl_compat,
- #endif
- 	.fasync		= evdev_fasync,
--	.flush		= evdev_flush,
- 	.llseek		= no_llseek,
- };
+ 	kona_gpio->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(kona_gpio->reg_base)) {
+-		ret = -ENXIO;
++		ret = PTR_ERR(kona_gpio->reg_base);
+ 		goto err_irq_domain;
+ 	}
  
 -- 
 2.25.1
