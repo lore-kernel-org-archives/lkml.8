@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4896B2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97C22076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034255;
-	bh=phD9nR7Z3XgGAWj/NsEdRQXSY43SKrYgTBx9FL2Qpcw=;
+	s=default; t=1591034258;
+	bh=1Pm6gaFiAxl5+Jo1O7iSY7cXigm9jLrMs2GVPLwkq48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oZju3AAXz1sETAD7pWRKoYxIzE6+iQ8FFn3N1Jp1GKnreRqLelYNT4jyOPmoRqvkZ
-	 z4nOCA/590szGLNbY/LNDc5nlJNRZv5KHQBUrBVNQuQlHONIsXTKBEpBn/GgP0P+AC
-	 Z0jooKekPnxlzjeKjAXzMCnDgPaeN32sA8D92mfw=
+	b=lCigxhDzro86RW2Ebc8/Zkmg7/AqsEIpnnCQun9FdNIdxHLkP7lJbvzIWsuVprSYu
+	 mFmUQinKnWay+Io3OvjWGShxjbYRfqQJ6USYlfqwl7vO58jUEoWYqZwJEehjcgUJeD
+	 zgy83cUksvW6ig4O309RQK4PfQI/AO91ZPDkOAd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbgFAR5b (ORCPT
+        id S1728952AbgFAR5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbgFAR50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:26 -0400
+        id S1728939AbgFAR5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB2C206E2;
-        Mon,  1 Jun 2020 17:57:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5B142073B;
+        Mon,  1 Jun 2020 17:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034245;
-        bh=phD9nR7Z3XgGAWj/NsEdRQXSY43SKrYgTBx9FL2Qpcw=;
+        s=default; t=1591034252;
+        bh=1Pm6gaFiAxl5+Jo1O7iSY7cXigm9jLrMs2GVPLwkq48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PdmjLKy3ifmMfAxpUdKNBbcF5Lf6E/6NIS5dZhPRwB0hh0dMB1C7EjWW4llIwo5oi
-         5yaijOijU0CAgQjCy/wmdd6VuRcAl+/8v+2IdmyeQXYM7LkVUPPfVzfG8NWrdiJ5YU
-         zbCrfsjfs5AHLnAWtiNFQuzoA7uoCSPul1FmoQ0Y=
+        b=c/C5wPN1x47796Xp5Ga0pDj6Xgo7A36/2Wcc/tRdaULaFu+nE5II8V0+5VZIUvTqg
+         POlIJbsLdQ5uM+y3NWXcuVFSPBhMQkvGTLKK3JsroBH2yVYYRYTpl59o6mV1nbKlK1
+         QskohaHWwQ+kAVOc6LDTKLmUKRzQfSPAJpN/abJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.4 30/48] vti4: eliminated some duplicate code.
-Date:   Mon,  1 Jun 2020 19:53:40 +0200
-Message-Id: <20200601174001.619310966@linuxfoundation.org>
+        stable@vger.kernel.org, "Dmitry V. Levin" <ldv@altlinux.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
+Subject: [PATCH 4.9 11/61] uapi: fix linux/if_pppol2tp.h userspace compilation errors
+Date:   Mon,  1 Jun 2020 19:53:18 +0200
+Message-Id: <20200601174013.784122303@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
-References: <20200601173952.175939894@linuxfoundation.org>
+In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
+References: <20200601174010.316778377@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,141 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Dmitry V. Levin <ldv@altlinux.org>
 
-commit f981c57ffd2d7cf2dd4b6d6f8fcb3965df42f54c upstream.
+commit a725eb15db80643a160310ed6bcfd6c5a6c907f2 upstream.
 
-The ipip tunnel introduced in commit dd9ee3444014 ("vti4: Fix a ipip
-packet processing bug in 'IPCOMP' virtual tunnel") largely duplicated
-the existing vti_input and vti_recv functions.  Refactored to
-deduplicate the common code.
+Because of <linux/libc-compat.h> interface limitations, <netinet/in.h>
+provided by libc cannot be included after <linux/in.h>, therefore any
+header that includes <netinet/in.h> cannot be included after <linux/in.h>.
 
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Change uapi/linux/l2tp.h, the last uapi header that includes
+<netinet/in.h>, to include <linux/in.h> and <linux/in6.h> instead of
+<netinet/in.h> and use __SOCK_SIZE__ instead of sizeof(struct sockaddr)
+the same way as uapi/linux/in.h does, to fix linux/if_pppol2tp.h userspace
+compilation errors like this:
+
+In file included from /usr/include/linux/l2tp.h:12:0,
+                 from /usr/include/linux/if_pppol2tp.h:21,
+/usr/include/netinet/in.h:31:8: error: redefinition of 'struct in_addr'
+
+Fixes: 47c3e7783be4 ("net: l2tp: deprecate PPPOL2TP_MSG_* in favour of L2TP_MSG_*")
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/ipv4/ip_vti.c |   60 +++++++++++++++++++-----------------------------------
- 1 file changed, 22 insertions(+), 38 deletions(-)
+ include/uapi/linux/l2tp.h |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -51,7 +51,7 @@ static int vti_net_id __read_mostly;
- static int vti_tunnel_init(struct net_device *dev);
+--- a/include/uapi/linux/l2tp.h
++++ b/include/uapi/linux/l2tp.h
+@@ -9,9 +9,8 @@
  
- static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
--		     int encap_type)
-+		     int encap_type, bool update_skb_dev)
- {
- 	struct ip_tunnel *tunnel;
- 	const struct iphdr *iph = ip_hdr(skb);
-@@ -66,6 +66,9 @@ static int vti_input(struct sk_buff *skb
+ #include <linux/types.h>
+ #include <linux/socket.h>
+-#ifndef __KERNEL__
+-#include <netinet/in.h>
+-#endif
++#include <linux/in.h>
++#include <linux/in6.h>
  
- 		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
+ #define IPPROTO_L2TP		115
  
-+		if (update_skb_dev)
-+			skb->dev = tunnel->dev;
-+
- 		return xfrm_input(skb, nexthdr, spi, encap_type);
- 	}
+@@ -31,7 +30,7 @@ struct sockaddr_l2tpip {
+ 	__u32		l2tp_conn_id;	/* Connection ID of tunnel */
  
-@@ -75,47 +78,28 @@ drop:
- 	return 0;
- }
- 
--static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
--		     int encap_type)
-+static int vti_input_proto(struct sk_buff *skb, int nexthdr, __be32 spi,
-+			   int encap_type)
- {
--	struct ip_tunnel *tunnel;
--	const struct iphdr *iph = ip_hdr(skb);
--	struct net *net = dev_net(skb->dev);
--	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
--
--	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
--				  iph->saddr, iph->daddr, 0);
--	if (tunnel) {
--		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
--			goto drop;
--
--		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
--
--		skb->dev = tunnel->dev;
--
--		return xfrm_input(skb, nexthdr, spi, encap_type);
--	}
--
--	return -EINVAL;
--drop:
--	kfree_skb(skb);
--	return 0;
-+	return vti_input(skb, nexthdr, spi, encap_type, false);
- }
- 
--static int vti_rcv(struct sk_buff *skb)
-+static int vti_rcv(struct sk_buff *skb, __be32 spi, bool update_skb_dev)
- {
- 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
- 	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
- 
--	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
-+	return vti_input(skb, ip_hdr(skb)->protocol, spi, 0, update_skb_dev);
- }
- 
--static int vti_rcv_ipip(struct sk_buff *skb)
-+static int vti_rcv_proto(struct sk_buff *skb)
- {
--	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
--	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
-+	return vti_rcv(skb, 0, false);
-+}
- 
--	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
-+static int vti_rcv_tunnel(struct sk_buff *skb)
-+{
-+	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
- }
- 
- static int vti_rcv_cb(struct sk_buff *skb, int err)
-@@ -452,31 +436,31 @@ static void __net_init vti_fb_tunnel_ini
- }
- 
- static struct xfrm4_protocol vti_esp4_protocol __read_mostly = {
--	.handler	=	vti_rcv,
--	.input_handler	=	vti_input,
-+	.handler	=	vti_rcv_proto,
-+	.input_handler	=	vti_input_proto,
- 	.cb_handler	=	vti_rcv_cb,
- 	.err_handler	=	vti4_err,
- 	.priority	=	100,
- };
- 
- static struct xfrm4_protocol vti_ah4_protocol __read_mostly = {
--	.handler	=	vti_rcv,
--	.input_handler	=	vti_input,
-+	.handler	=	vti_rcv_proto,
-+	.input_handler	=	vti_input_proto,
- 	.cb_handler	=	vti_rcv_cb,
- 	.err_handler	=	vti4_err,
- 	.priority	=	100,
- };
- 
- static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
--	.handler	=	vti_rcv,
--	.input_handler	=	vti_input,
-+	.handler	=	vti_rcv_proto,
-+	.input_handler	=	vti_input_proto,
- 	.cb_handler	=	vti_rcv_cb,
- 	.err_handler	=	vti4_err,
- 	.priority	=	100,
- };
- 
- static struct xfrm_tunnel ipip_handler __read_mostly = {
--	.handler	=	vti_rcv_ipip,
-+	.handler	=	vti_rcv_tunnel,
- 	.err_handler	=	vti4_err,
- 	.priority	=	0,
- };
+ 	/* Pad to size of `struct sockaddr'. */
+-	unsigned char	__pad[sizeof(struct sockaddr) -
++	unsigned char	__pad[__SOCK_SIZE__ -
+ 			      sizeof(__kernel_sa_family_t) -
+ 			      sizeof(__be16) - sizeof(struct in_addr) -
+ 			      sizeof(__u32)];
 
 
