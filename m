@@ -2,76 +2,64 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F098EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E098BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84202073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21372073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbgFAShq (ORCPT
+        id S1728709AbgFASiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42350 "EHLO
+        Mon, 1 Jun 2020 14:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728887AbgFAShm (ORCPT
+        with ESMTP id S1730842AbgFASho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:37:42 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081B3C00863A;
-        Mon,  1 Jun 2020 11:32:08 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 86D1511D53F8B;
-        Mon,  1 Jun 2020 11:32:07 -0700 (PDT)
-Date:   Mon, 01 Jun 2020 11:32:06 -0700 (PDT)
-Message-Id: <20200601.113206.2297277969426428314.davem@davemloft.net>
-To:     hexie3605@gmail.com
-Cc:     kuba@kernel.org, madhuparnabhowmik04@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/net/wan/lapbether.c: Fixed kernel panic when
- used with AF_PACKET sockets
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200528032134.13752-1-hexie3605@gmail.com>
-References: <20200528032134.13752-1-hexie3605@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 11:32:07 -0700 (PDT)
+        Mon, 1 Jun 2020 14:37:44 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B420DC008639
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:32:00 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jfpE7-001XGJ-76; Mon, 01 Jun 2020 18:31:59 +0000
+Date:   Mon, 1 Jun 2020 19:31:59 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] uaccess __copy_to_user
+Message-ID: <20200601183159.GF23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <hexie3605@gmail.com>
-Date: Wed, 27 May 2020 20:21:33 -0700
+	Getting rid of __copy_to_user() callers - stuff that
+doesn't fit into other series.
 
-> When we use "AF_PACKET" sockets to send data directly over LAPB over
-> Ethernet using this driver, the kernel will panic because of
-> insufficient header space allocated in the "sk_buff" struct.
-> 
-> The header space needs 18 bytes because:
->   the lapbether driver will remove a pseudo header of 1 byte;
->   the lapb module will prepend the LAPB header of 2 or 3 bytes;
->   the lapbether driver will prepend a length field of 2 bytes and the
-> Ethernet header of 14 bytes.
-> 
-> So -1 + 3 + 16 = 18.
-> 
-> Signed-off-by: Xie He <hexie3605@gmail.com>
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-This is not the real problem.
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-The real problem is that this is a stacked, layered, device and the
-lapbether driver does not take the inner device's header length into
-consideration.  It should take this from the child device's netdev
-structure rather than use constants.
+are available in the git repository at:
 
-Your test case will still fail when lapbether is stacked on top of a
-VLAN device or similar, even with your changes.
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git uaccess.__copy_to_user
+
+for you to fetch changes up to 0702e4f39034f15855def3165fe7213c7c2c0163:
+
+  dlmfs: convert dlmfs_file_read() to copy_to_user() (2020-04-23 14:02:49 -0400)
+
+----------------------------------------------------------------
+Al Viro (2):
+      esas2r: don't bother with __copy_to_user()
+      dlmfs: convert dlmfs_file_read() to copy_to_user()
+
+ drivers/scsi/esas2r/esas2r_ioctl.c |  2 +-
+ fs/ocfs2/dlmfs/dlmfs.c             | 33 ++++++++++++++-------------------
+ 2 files changed, 15 insertions(+), 20 deletions(-)
