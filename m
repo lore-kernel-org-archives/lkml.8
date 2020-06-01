@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8410C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7755206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A587B20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037893;
-	bh=nbCUBTl7HqOmBiS2sxRiN0u3YMvEJ2dEag755at0zUo=;
+	s=default; t=1591037898;
+	bh=2nbYkoHGHDeWm117cRo145SBRUcKKDtsBNqmmUFHlfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WzSUguzr2cEWB4VEBmpNI0m376JJ58FFL4/caFkeLJ4Gxs6XBZ64scI/LuZNy7OIs
-	 USPqXvq9vkKaBLmExfM7GcX4rXohAGkf3iN+lMdf+dzVLMD7kL0wczt8oTkPWfMB5R
-	 JWvr2Hnln3CnaIobpklekxEOuXr1EQwRpk4IJIww=
+	b=Bml/ttrIsV5f44GPhZ2q8XpTC+9+FBO3aDwQgjLb7wgCep+P/8ccwHQV56l5M5hhu
+	 /InB2m1dnVnprSJ5ORegrzD50NqbXyXPt8SJgfinG7di/LntKtGJmNFLafKJRqobxP
+	 a1fC+XSQXS5stvIdLfDiglhvlexXUs38J1O9w0sQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgFAS6N (ORCPT
+        id S1730521AbgFAS6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:58:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbgFAR7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:59:25 -0400
+        id S1729325AbgFAR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:59:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FC0F207D0;
-        Mon,  1 Jun 2020 17:59:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD2632076B;
+        Mon,  1 Jun 2020 17:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034364;
-        bh=nbCUBTl7HqOmBiS2sxRiN0u3YMvEJ2dEag755at0zUo=;
+        s=default; t=1591034360;
+        bh=2nbYkoHGHDeWm117cRo145SBRUcKKDtsBNqmmUFHlfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKSXCs0wxhMaEfXLA6fbve2018hZO6nhj3M9qqzldzJDU/HHyhC4TTozqedPUliLh
-         /00LOojGRImiLdJpONvv+vuQ8AE4TDTK7hbzrnCdqlfvzjrBuqNboaiog88rPNpYh2
-         6OiKUTXIH5Zqi+i1V2ctOwS4EQNRCHFzc1kOe/ZE=
+        b=TcsUf/NRXjd+MevWhK9GquwmcTmELeaWSK2tO8ML2li3YHttggWfDHZe3+H20hg4T
+         S897E3iA5nPeyLlTK55yTU5wI2FyPfAHHbILINWIinJnN8ZymAesuL/nk7Gop1in6O
+         TZOFS4Njz0IsZgqAruQ5bHiLdYygcoyXRPYXvdsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 61/61] net: hns: Fixes the missing put_device in positive leg for roce reset
-Date:   Mon,  1 Jun 2020 19:54:08 +0200
-Message-Id: <20200601174022.719789295@linuxfoundation.org>
+        stable@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 59/61] mm/vmalloc.c: dont dereference possible NULL pointer in __vunmap()
+Date:   Mon,  1 Jun 2020 19:54:06 +0200
+Message-Id: <20200601174022.410196971@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,34 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Salil Mehta <salil.mehta@huawei.com>
+From: Liviu Dudau <liviu@dudau.co.uk>
 
-commit 4d96e13ee9cd1f7f801e8c7f4b12f09d1da4a5d8 upstream.
+commit 6ade20327dbb808882888ed8ccded71e93067cf9 upstream.
 
-This patch fixes the missing device reference release-after-use in
-the positive leg of the roce reset API of the HNS DSAF.
+find_vmap_area() can return a NULL pointer and we're going to
+dereference it without checking it first.  Use the existing
+find_vm_area() function which does exactly what we want and checks for
+the NULL pointer.
 
-Fixes: c969c6e7ab8c ("net: hns: Fix object reference leaks in hns_dsaf_roce_reset()")
-Reported-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20181228171009.22269-1-liviu@dudau.co.uk
+Fixes: f3c01d2f3ade ("mm: vmalloc: avoid racy handling of debugobjects in vunmap")
+Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chintan Pandya <cpandya@codeaurora.org>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -2867,6 +2867,9 @@ int hns_dsaf_roce_reset(struct fwnode_ha
- 		dsaf_set_bit(credit, DSAF_SBM_ROCEE_CFG_CRD_EN_B, 1);
- 		dsaf_write_dev(dsaf_dev, DSAF_SBM_ROCEE_CFG_REG_REG, credit);
- 	}
-+
-+	put_device(&pdev->dev);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(hns_dsaf_roce_reset);
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1499,7 +1499,7 @@ static void __vunmap(const void *addr, i
+ 			addr))
+ 		return;
+ 
+-	area = find_vmap_area((unsigned long)addr)->vm;
++	area = find_vm_area(addr);
+ 	if (unlikely(!area)) {
+ 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
+ 				addr);
 
 
