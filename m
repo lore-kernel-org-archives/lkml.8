@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D66C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7E2207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544AE2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034222;
-	bh=Tny3VTVURpEgeM+9w0M0n1RNAkfCIp6+8DfMnH6Z1FY=;
+	s=default; t=1591034229;
+	bh=Sv50GhNdNfAEmQPgwJon282Ryl8sV1jtnma2waxrDZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oBkYqAbSx/p6LLcATPDoW07csUHp/8H/W0rhsy1Kfl3GkLqgAsJ+z0MK3/YVq410S
-	 /y6jpPGPhtIQmTUed9JGL8jwdPZrzl3qdOWclHvh5VNP9xoARmuequLrApb4RIJi0W
-	 U/FhPvXTsXroC97hJtmEstK7RA+vW+L6lXTIGbIc=
+	b=oG3GPjn6QGqsAyiNpEDoq46ZtRNmEuT9oJZsKJI1OWsPpid+Xyd9gjOTtQdvnpRQa
+	 4eny3skBOJI/Tpul5xKLX5/rXNTeZRWCrqGat7IrXQ9VyBsRbYANFwyoEkwN7VoQ/E
+	 cIyEaJLxYk5jFMa9L1yfXY/l2IRlQQKDyCijjErU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgFAR5C (ORCPT
+        id S1726201AbgFAR5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728791AbgFAR46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:58 -0400
+        id S1728825AbgFAR5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D84F207DA;
-        Mon,  1 Jun 2020 17:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAA28207DF;
+        Mon,  1 Jun 2020 17:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034218;
-        bh=Tny3VTVURpEgeM+9w0M0n1RNAkfCIp6+8DfMnH6Z1FY=;
+        s=default; t=1591034225;
+        bh=Sv50GhNdNfAEmQPgwJon282Ryl8sV1jtnma2waxrDZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUljWw7akgkmxwALXjPSpy9WoN0pLTj9l7TCww2O7ufO3VR5wOQphLWDVaFU9jcFc
-         YLfYeSUZ5cFimVCfTZXHrl3LwbbNkgp88a+6jUFtfwf3VZN/gIyRTVLhspgZicREIu
-         Z06X5xN1Zl/5rzjuDVM7QQV6xY72v2T4hoTMIeOo=
+        b=LU+cS3QUqRQpaI0Y5Hk8AewS74OppJJIiEiLkbTqs1NpaiJ2pyNjnr1EALHf1pmqX
+         yue6ZvXKJHCx7F+RoojtaSLIE3yF1jb+rl0xJBZLA+IjXxpecGirJOs1EJAklLMJFo
+         2v0OkfR4k5JRy2H3DevylOSfYrOhuQATXt8BpVj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 45/48] mm/vmalloc.c: dont dereference possible NULL pointer in __vunmap()
-Date:   Mon,  1 Jun 2020 19:53:55 +0200
-Message-Id: <20200601174004.957880557@linuxfoundation.org>
+Subject: [PATCH 4.4 48/48] drm/msm: Fix possible null dereference on failure of get_pages()
+Date:   Mon,  1 Jun 2020 19:53:58 +0200
+Message-Id: <20200601174005.784720752@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -63,40 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liviu Dudau <liviu@dudau.co.uk>
+From: Ben Hutchings <ben.hutchings@codethink.co.uk>
 
-commit 6ade20327dbb808882888ed8ccded71e93067cf9 upstream.
+commit 3976626ea3d2011f8fd3f3a47070a8b792018253 upstream.
 
-find_vmap_area() can return a NULL pointer and we're going to
-dereference it without checking it first.  Use the existing
-find_vm_area() function which does exactly what we want and checks for
-the NULL pointer.
+Commit 62e3a3e342af changed get_pages() to initialise
+msm_gem_object::pages before trying to initialise msm_gem_object::sgt,
+so that put_pages() would properly clean up pages in the failure
+case.
 
-Link: http://lkml.kernel.org/r/20181228171009.22269-1-liviu@dudau.co.uk
-Fixes: f3c01d2f3ade ("mm: vmalloc: avoid racy handling of debugobjects in vunmap")
-Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Chintan Pandya <cpandya@codeaurora.org>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+However, this means that put_pages() now needs to check that
+msm_gem_object::sgt is not null before trying to clean it up, and
+this check was only applied to part of the cleanup code.  Move
+it all into the conditional block.  (Strictly speaking we don't
+need to make the kfree() conditional, but since we can't avoid
+checking for null ourselves we may as well do so.)
+
+Fixes: 62e3a3e342af ("drm/msm: fix leak in failed get_pages")
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@gmail.com>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_gem.c |   20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1464,7 +1464,7 @@ static void __vunmap(const void *addr, i
- 			addr))
- 		return;
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -116,17 +116,19 @@ static void put_pages(struct drm_gem_obj
+ 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
  
--	area = find_vmap_area((unsigned long)addr)->vm;
-+	area = find_vm_area(addr);
- 	if (unlikely(!area)) {
- 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
- 				addr);
+ 	if (msm_obj->pages) {
+-		/* For non-cached buffers, ensure the new pages are clean
+-		 * because display controller, GPU, etc. are not coherent:
+-		 */
+-		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-			dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
+-					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++		if (msm_obj->sgt) {
++			/* For non-cached buffers, ensure the new
++			 * pages are clean because display controller,
++			 * GPU, etc. are not coherent:
++			 */
++			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
++				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
++					     msm_obj->sgt->nents,
++					     DMA_BIDIRECTIONAL);
+ 
+-		if (msm_obj->sgt)
+ 			sg_free_table(msm_obj->sgt);
+-
+-		kfree(msm_obj->sgt);
++			kfree(msm_obj->sgt);
++		}
+ 
+ 		if (use_pages(obj))
+ 			drm_gem_put_pages(obj, msm_obj->pages, true, false);
 
 
