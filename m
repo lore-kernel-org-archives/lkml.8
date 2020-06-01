@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94922068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E23E2065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035015;
-	bh=YJG+QxHdfvDN+V1qYF4g92kefyTXuZGoqW+2ecbTQKo=;
+	s=default; t=1591035023;
+	bh=+HWOD6oJo8RJaqpjSPos9B12MMF2A7CC0NCmDCWJuE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjhCzZKxWM3DGl9YoiwPOrLMqsqe79f7EHdb/pImdGWLGCVhbGuxjB8xk8k2GixzC
-	 oohb2K0JiBW3ThGlFTGeTRTT44Pa7v/AU/GTnaWbm4SgReYI45tVRRFKU9rJlla67F
-	 UV0qMC0wsZbzOkSWLdZu0EaRIHIUXS52pO0qaizI=
+	b=imSFRbqp55dPeBkGMQ2IiscBx7MOWS8tt/xJVxc4BSj+20uSj0nG6Z8M3IOGZqQTF
+	 6X8N+SyOOMHcC4bKb6KNsXCROrwAIDWKRj7vhZJbX0wBIPPYYt87t4pZCWTVad6lzC
+	 oVeQltrOCZK+2VIjzoe2PmJukummPWTZG06IfGXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgFASKO (ORCPT
+        id S1729786AbgFASKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56530 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730949AbgFASJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:09:58 -0400
+        id S1728991AbgFASKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 140D62068D;
-        Mon,  1 Jun 2020 18:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8890C2068D;
+        Mon,  1 Jun 2020 18:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034997;
-        bh=YJG+QxHdfvDN+V1qYF4g92kefyTXuZGoqW+2ecbTQKo=;
+        s=default; t=1591035002;
+        bh=+HWOD6oJo8RJaqpjSPos9B12MMF2A7CC0NCmDCWJuE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdDr5OI7et7uxgFWVm7bMalFpwO0JDvXc7uf7+ktEzXqo1yCnYJRcbDEgUtM8TW1v
-         6IAZEbYfJV7xsLXTU2gHSU8AjJVZZSNovraBHEmnNEXAGbLnv7ffFnBYpI6GghddaV
-         tpCa6ssOb9AYsqMorxffbQHxyGE7u5HAAY6Qs380=
+        b=nx62PiVBqTlvLo2qpA1xYvRfMX3gQA/gNvBBcmostL4QIYIjpIN1Z2urAcw1mDVFp
+         mW+lunSoow+nl7mNv4nGOtI4GYEWXihozmshhzrKUykpHuLSpNcs2tw7WNXSWivedR
+         jTMoTiYkNWGsHLXiH7UU0/zX9ggPcMVIhkpb2JxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
-        Cameron Gutman <aicommander@gmail.com>,
+        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/142] Input: xpad - add custom init packet for Xbox One S controllers
-Date:   Mon,  1 Jun 2020 19:53:44 +0200
-Message-Id: <20200601174044.710260005@linuxfoundation.org>
+Subject: [PATCH 5.4 068/142] Input: i8042 - add ThinkPad S230u to i8042 reset list
+Date:   Mon,  1 Jun 2020 19:53:46 +0200
+Message-Id: <20200601174044.878619529@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -62,54 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Łukasz Patron <priv.luk@gmail.com>
+From: Kevin Locke <kevin@kevinlocke.name>
 
-[ Upstream commit 764f7f911bf72450c51eb74cbb262ad9933741d8 ]
+[ Upstream commit 2712c91a54a1058d55c284152b4d93c979b67be6 ]
 
-Sending [ 0x05, 0x20, 0x00, 0x0f, 0x06 ] packet for Xbox One S controllers
-fixes an issue where controller is stuck in Bluetooth mode and not sending
-any inputs.
+On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
+"GDETC1WW (1.81 ) 06/27/2019", the keyboard, Synaptics TouchPad, and
+TrackPoint either do not function or stop functioning a few minutes
+after boot.  This problem has been noted before, perhaps only occurring
+with BIOS 1.57 and later.[1][2][3][4][5]
 
-Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
-Reviewed-by: Cameron Gutman <aicommander@gmail.com>
+Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
+and although the [BIOS changelog] notes "Fixed an issue of UEFI
+touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
+insufficient.
+
+Setting i8042.reset=1 or adding 33474HU to the reset list avoids the
+issue on my system from either warm or cold boot.
+
+[1]: https://bugs.launchpad.net/bugs/1210748
+[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
+[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
+[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
+[5]: https://forums.lenovo.com/topic/findpost/27/1337119
+[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
+
+Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200422075206.18229-1-priv.luk@gmail.com
+Link: https://lore.kernel.org/r/94f384b0f75f90f71425d7dce7ac82c59ddb87a8.1587702636.git.kevin@kevinlocke.name
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/joystick/xpad.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-index 6b40a1c68f9f..c77cdb3b62b5 100644
---- a/drivers/input/joystick/xpad.c
-+++ b/drivers/input/joystick/xpad.c
-@@ -458,6 +458,16 @@ static const u8 xboxone_fw2015_init[] = {
- 	0x05, 0x20, 0x00, 0x01, 0x00
+diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+index 5bbc9152731d..c47800176534 100644
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -669,6 +669,13 @@ static const struct dmi_system_id __initconst i8042_dmi_reset_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "P65xRP"),
+ 		},
+ 	},
++	{
++		/* Lenovo ThinkPad Twist S230u */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
++		},
++	},
+ 	{ }
  };
  
-+/*
-+ * This packet is required for Xbox One S (0x045e:0x02ea)
-+ * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
-+ * initialize the controller that was previously used in
-+ * Bluetooth mode.
-+ */
-+static const u8 xboxone_s_init[] = {
-+	0x05, 0x20, 0x00, 0x0f, 0x06
-+};
-+
- /*
-  * This packet is required for the Titanfall 2 Xbox One pads
-  * (0x0e6f:0x0165) to finish initialization and for Hori pads
-@@ -516,6 +526,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
- 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
 -- 
 2.25.1
 
