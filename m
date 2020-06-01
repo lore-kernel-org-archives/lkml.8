@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8692EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD9542073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C592068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035431;
-	bh=Syz0oJeLENcBeZiJymoRK63ZsyGJDQbC94aTQ556b6o=;
+	s=default; t=1591035434;
+	bh=50HIzBlE5cgtkzhTklOb2NH4NEGz76WiwXFCARxAil4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zc3wUx9/8FaAOJBX1yw5RTGUu/8SAXYxRbPdEwSjCFUqV/uEMvN4pcIH3vgyE7E82
-	 uFMKcOJxmi3u1dOBnELV4RNZx5S+a5NLOdGPgQQrZ2Aj0ony01lwDr4hYnFccj4RV5
-	 peqmNbsmawhX0h3mhYkqu7l41TMFf37HbhgpLHR0=
+	b=MkQ4bze/D/+NO8uiieSDfkmQRk6Tc8rl15p0iV9OzObxw2cEBSl/kXRfI+vbrbWMK
+	 VnBcQuYlL+IiXxq3W6Nq1M0Vm15FNSrEu42pZ4SmAhwU1hkKsgsRkqD3v4J1e2kuvL
+	 Nk4E74+uyf9G6L369jglAMjLIEXRX0iROmfPv9bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbgFASRL (ORCPT
+        id S1731797AbgFASRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731785AbgFASRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:07 -0400
+        id S1731787AbgFASRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B2EC206E2;
-        Mon,  1 Jun 2020 18:17:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 523B52065C;
+        Mon,  1 Jun 2020 18:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035426;
-        bh=Syz0oJeLENcBeZiJymoRK63ZsyGJDQbC94aTQ556b6o=;
+        s=default; t=1591035428;
+        bh=50HIzBlE5cgtkzhTklOb2NH4NEGz76WiwXFCARxAil4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HnlGPRaT4XZWzANDZYhxMplKeY6Jthz3XTPpewIt5npE82O/FmmgI9aNc2Ai3VsfO
-         8lByhIL5iYdIS1UNHIe+vagim8dxFzK0zq4hGLWblJqvJyOG72oxiooxwZtl/xAm+W
-         pdsgxm9PvBlmqZdjJYdxxJ1jj9KcUM6DbLbt3qd4=
+        b=y02DxiCFrrWjdBKsQe0rMNZ/VXn4NHRC/U2DIN24wPUdBZ8epcYZAGwAsc+QQRHHA
+         z0JJy07opCW3p8zkhrToOPV4wIKhif+0GfchV5M4kMQVjVSpJahoLKXXOEtieUdbGG
+         kuZoMkQ+0gg5iJkeYz6+0sgvDW6hSas/SDUK09gE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Braun <michael-dev@fami-braun.de>,
+        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 154/177] netfilter: nft_reject_bridge: enable reject with bridge vlan
-Date:   Mon,  1 Jun 2020 19:54:52 +0200
-Message-Id: <20200601174101.212699341@linuxfoundation.org>
+Subject: [PATCH 5.6 155/177] netfilter: ipset: Fix subcounter update skip
+Date:   Mon,  1 Jun 2020 19:54:53 +0200
+Message-Id: <20200601174101.281925022@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,38 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Braun <michael-dev@fami-braun.de>
+From: Phil Sutter <phil@nwl.cc>
 
-commit e9c284ec4b41c827f4369973d2792992849e4fa5 upstream.
+commit a164b95ad6055c50612795882f35e0efda1f1390 upstream.
 
-Currently, using the bridge reject target with tagged packets
-results in untagged packets being sent back.
+If IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE is set, user requested to not
+update counters in sub sets. Therefore IPSET_FLAG_SKIP_COUNTER_UPDATE
+must be set, not unset.
 
-Fix this by mirroring the vlan id as well.
-
-Fixes: 85f5b3086a04 ("netfilter: bridge: add reject support")
-Signed-off-by: Michael Braun <michael-dev@fami-braun.de>
+Fixes: 6e01781d1c80e ("netfilter: ipset: set match: add support to match the counters")
+Signed-off-by: Phil Sutter <phil@nwl.cc>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bridge/netfilter/nft_reject_bridge.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/netfilter/ipset/ip_set_list_set.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bridge/netfilter/nft_reject_bridge.c
-+++ b/net/bridge/netfilter/nft_reject_bridge.c
-@@ -31,6 +31,12 @@ static void nft_reject_br_push_etherhdr(
- 	ether_addr_copy(eth->h_dest, eth_hdr(oldskb)->h_source);
- 	eth->h_proto = eth_hdr(oldskb)->h_proto;
- 	skb_pull(nskb, ETH_HLEN);
-+
-+	if (skb_vlan_tag_present(oldskb)) {
-+		u16 vid = skb_vlan_tag_get(oldskb);
-+
-+		__vlan_hwaccel_put_tag(nskb, oldskb->vlan_proto, vid);
-+	}
- }
- 
- static int nft_bridge_iphdr_validate(struct sk_buff *skb)
+--- a/net/netfilter/ipset/ip_set_list_set.c
++++ b/net/netfilter/ipset/ip_set_list_set.c
+@@ -59,7 +59,7 @@ list_set_ktest(struct ip_set *set, const
+ 	/* Don't lookup sub-counters at all */
+ 	opt->cmdflags &= ~IPSET_FLAG_MATCH_COUNTERS;
+ 	if (opt->cmdflags & IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE)
+-		opt->cmdflags &= ~IPSET_FLAG_SKIP_COUNTER_UPDATE;
++		opt->cmdflags |= IPSET_FLAG_SKIP_COUNTER_UPDATE;
+ 	list_for_each_entry_rcu(e, &map->members, list) {
+ 		ret = ip_set_test(e->id, skb, par, opt);
+ 		if (ret <= 0)
 
 
