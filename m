@@ -2,89 +2,118 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A869BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1C1320776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591045380;
-	bh=nUgJyB/gk+5ijwnmP7Z8A8YYdLlmTMNQsU+BbLfn66E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qrUkF5OeuPwH1JI+0FQePtAXBdsAyvwDbcj+MuX8cW93G/TD7RAX23X1xIkD4hiWI
-	 zi+DSsa8/29OZd1Tpdx18HA96vDwvDkhURoD2JAcpLKKwl/juuwBE2xdKVPVd8P8lK
-	 1lI+vt6D2ejuRsBqht/60qdcJ38PVVwDv8455w7I=
+	by mail.kernel.org (Postfix) with ESMTP id 81FA02074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XpxeXoez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgFAVC7 (ORCPT
+        id S1728710AbgFAVD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:02:59 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35817 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbgFAVC6 (ORCPT
+        Mon, 1 Jun 2020 17:03:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37380 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgFAVD2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:02:58 -0400
-Received: by mail-io1-f67.google.com with SMTP id s18so8523914ioe.2;
-        Mon, 01 Jun 2020 14:02:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q2KafSWPk9m9zR6lVEGJ97Ox8H0TePRPBQbpHWvp5CM=;
-        b=PutXRLzPfONEARMsFgiDhG2CRv9UzlOz1L5IsNT1bAJ1pN/rBaALaqXgy7+7WW0sKZ
-         kUaiCB35rInWDQSb/tfpcCfFRnOX8E9rNjajJwyCCgFUdiPH3JjQqGVqp6pUMtT3g8CV
-         sXCaZFjKRfHXd5q/Xc9HaA0iiChTw968pB65M+Ik1M18niZIrrbyAtCiwtFS5ruAas6n
-         0sf/Bc7HwQddZnSboRwq4VowkypWfqL569zEZEbI8PSgoQeNUnpJyd4VA1C/m42j/sp/
-         fix12+1khHEBAzpu3Mqx8pQmzvgpVBmcYzuq9/3ahVNmU14nVXMZLA8NDqNYww6yfCEC
-         60bA==
-X-Gm-Message-State: AOAM532yFdLrAQTtfJT1t2afGMAoJEn/XVSsu8TZqPpSQvcdYiF8DWYO
-        Y7C2wSfJ8faP8bCgq8ExOQ==
-X-Google-Smtp-Source: ABdhPJwz55UCxWtYCo6t6r1ao+TKYwaYb4M8xkoqdmM8u+abMjxVNihr3yUCVvMg+jM/9hTtJN2+Bg==
-X-Received: by 2002:a5d:9d03:: with SMTP id j3mr20290937ioj.176.1591045377082;
-        Mon, 01 Jun 2020 14:02:57 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id q7sm325060ilj.78.2020.06.01.14.02.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 14:02:55 -0700 (PDT)
-Received: (nullmailer pid 1491019 invoked by uid 1000);
-        Mon, 01 Jun 2020 21:02:54 -0000
-Date:   Mon, 1 Jun 2020 15:02:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 06/10] PCI: qcom: Use bulk clk api and assert on error
-Message-ID: <20200601210254.GA1490941@bogus>
-References: <20200514200712.12232-1-ansuelsmth@gmail.com>
- <20200514200712.12232-7-ansuelsmth@gmail.com>
+        Mon, 1 Jun 2020 17:03:28 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 051IGOkB133702;
+        Mon, 1 Jun 2020 18:31:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=klYhvleN5+bHtn61y7WVGwD1VVLVcs1uWE0ZQPZDGoA=;
+ b=XpxeXoezca5asoGN6eYmhtqWCb0uWLJ+p24yfEsWCpdUE+jBOyMKCU+0HfW8ABik6+5D
+ b/9JkCwWFahi4LJ5zZ8D9LpQcUbeZVtfWaDGSCawUrSVAMyPlrnwo4McWwN2WxLTEH3s
+ nvsNw2+qt4H8maj/l24WmychyKJAUJSGR0KDsVSUyDSyYPyXye0j9Kq1UaFu3WAIhpyV
+ dIQuYbWKfpTbwQfkLxixpmlAQp9wQVoayGzRRGW8VPww8YOaVK6j1Y9XkQtvocbMs5mu
+ 20q1gicdQ8F1TqrcBaZzgxslNayWq5KUcYdI/19OB1499ZgF/8GfwGmobQWtzUztoz/l GA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31bfem05wg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 01 Jun 2020 18:31:14 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 051IDrYw029652;
+        Mon, 1 Jun 2020 18:31:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 31c25ke6xs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jun 2020 18:31:13 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 051IVBmD031819;
+        Mon, 1 Jun 2020 18:31:11 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jun 2020 11:31:11 -0700
+Date:   Mon, 1 Jun 2020 21:31:02 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Robert Jarzmik <robert.jarzmik@free.fr>, daniel@zonque.org,
+        haojian.zhuang@gmail.com, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
+ which is unused and broken
+Message-ID: <20200601183102.GS30374@kadam>
+References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
+ <87h7vvb1s3.fsf@belgarion.home>
+ <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200514200712.12232-7-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 bulkscore=1 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006010137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=3 phishscore=0 clxscore=1011
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=3
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006010137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 22:07:07 +0200, Ansuel Smith wrote:
-> Rework 2.1.0 revision to use bulk clk api and fix missing assert on
-> reset_control_deassert error.
+On Mon, Jun 01, 2020 at 01:31:23PM +0200, Christophe JAILLET wrote:
+> Le 01/06/2020 à 10:58, Robert Jarzmik a écrit :
+> > Christophe JAILLET <christophe.jaillet@wanadoo.fr> writes:
+> > 
+> > > Commit 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
+> > > has turned a 'pinctrl_register()' into 'devm_pinctrl_register()' in
+> > > 'pxa2xx_pinctrl_init()'.
+> > > However, the corresponding 'pinctrl_unregister()' call in
+> > > 'pxa2xx_pinctrl_exit()' has not been removed.
+> > > 
+> > > This is not an issue, because 'pxa2xx_pinctrl_exit()' is unused.
+> > > Remove it now to avoid some wondering in the future and save a few LoC.
+> > > 
+> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> > 
+> > Would be even a better patch with a :
+> > Fixes: 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
 > 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 131 +++++++++----------------
->  1 file changed, 46 insertions(+), 85 deletions(-)
-> 
+> I was wondering it was was needed in this case.
+> The patch does not really fix anything, as the function is unused. Or it
+> fixes things on a theoretical point of view.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+There is no concensus...  We should call a vote on this at Kernel
+Summit.  :P
+
+regards,
+dan carpenter
+
+
