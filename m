@@ -2,163 +2,96 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C20BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568CD20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB4020659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RtclL/1m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MoT4G10i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725931AbgFAEFq (ORCPT
+        id S1725932AbgFAEHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 00:05:46 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40382 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFAEFp (ORCPT
+        Mon, 1 Jun 2020 00:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbgFAEHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 00:05:45 -0400
-Received: from [10.0.0.249] (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2990E20B717B;
-        Sun, 31 May 2020 21:05:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2990E20B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1590984344;
-        bh=cRf16aYvsFXacsv2R2HsGnQ+AFezDz46tzhgNYqzsKQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RtclL/1mN0GD5uQjpU2HqQMKwfeCxJF7ii6ZMHj1q8msZDrQl3a61nZvqqop/mGeG
-         +bxU39v107EGEpBikMuO+iu4qzmqb+8SjDrtEiRMmCNrLLpEmRo0efZ8pYE0dEAJfw
-         Iq/vtpTkpHILxsgjyodTpvugBzpBvpLdSBmcmuWk=
-Subject: Re: [RFC][PATCH 0/2] Add support for using reserved memory for ima
- buffer pass
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        balajib@linux.microsoft.com
-References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
- <20200505095620.GA82424@C02TD0UTHF1T.local>
- <e8c7d74e-74bf-caa3-452d-23faa649e825@linux.microsoft.com>
- <20200512230509.GA2654@bogus>
- <7701df90-a68b-b710-4279-9d64e45ee792@linux.microsoft.com>
- <87v9knpa36.fsf@morokweng.localdomain>
-From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
-Message-ID: <9c016a54-1c05-2f5c-6755-3814309e17af@linux.microsoft.com>
-Date:   Sun, 31 May 2020 21:05:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 00:07:46 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3F8C08C5CB
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:07:45 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s10so2883481pgm.0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+6ownZMPIgJJdia/JCvZ/qOK36qij75yfOhvnZqmGDk=;
+        b=MoT4G10i1QXRhHmSLvbhdqLIFOsga5P29Iy8cfjKMfdpgwmgMC65N9xZ/pXrQh2M0L
+         u3tOTwAiW98462Lh4X4ZoucKG+NEqtadraC3IqVW6XaglxEAryoj1UdXBVy4j8JBC1se
+         QI+FOF0aiVjU0eW0aPnDuYAN/r1AWtS7SNafakuv+FvamuiseKiQ9PeZApiBwLWxRwfU
+         fXYVA78P4ovkSxWztSVfDyIDwrr+sMhuPHj3It/gmfI/hHQswR+y+wsfDzeHLxqY25EN
+         LDGDz3Xi2L9L7EMyzWTyui2bBFWiLMi/XSSO1cbbQfcZO73vGk8K9IXa7QCL4yY0hJYz
+         qa4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+6ownZMPIgJJdia/JCvZ/qOK36qij75yfOhvnZqmGDk=;
+        b=IJzDCTEhmvkzNI0uKvBSKCKQguqqWuyeqdUlgbQM1gfzKD0iIWmtzYVhXv6KUdO98+
+         s/XGq3H9unYgYRvur/q2m+65K1kc866nsT1MTH+0ghVtn4M27Z9JZG1UJ6AIDqqIZXhu
+         J0ldOVMZ+vKTVnjw3HlWlOEQy9CyZXxJG9pa0vOW2wgYeuyO90FW2rHrL6wJfRniWaW3
+         jnySQO1UaQ/Vn2EW7CATaMlCx9y9UwP6tV/mw+zxY54uIzORpA0rZoOyxLz6MN1JM6tX
+         uNTObf+ovt0UqKjc4xzjo+49nU2krpJV7BnK5/m4MAnCujjxgNmj9t2nGy7kGj7zAkZ2
+         L1yg==
+X-Gm-Message-State: AOAM531X3Dyxrjd3aVd1+6t4c351RAGOMpbnj5WYdv8Z1fC1CY11dOGM
+        HEMwKPglkQLWkkr1L64b+ENMZw==
+X-Google-Smtp-Source: ABdhPJx2sQD+gYk0YMveVCSJnx6ztfk0oDnR8Id3d7XxHmX6wCFUYDgpyaGtL8cCxpigl5RQ7QO+Fg==
+X-Received: by 2002:a05:6a00:150e:: with SMTP id q14mr18059424pfu.325.1590984465237;
+        Sun, 31 May 2020 21:07:45 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id 140sm9923609pfy.95.2020.05.31.21.07.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 May 2020 21:07:44 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 09:37:42 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, nm@ti.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, saravanak@google.com, mka@chromium.org,
+        smasetty@codeaurora.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH] OPP: Check for bandwidth values before creating icc paths
+Message-ID: <20200601040742.3a4cmhrwgh2ueksy@vireshk-i7>
+References: <20200527192418.20169-1-sibis@codeaurora.org>
+ <20200529052031.n2nvzxdsifwmthfv@vireshk-i7>
+ <0205034b0ece173a7152a43b016985a7@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <87v9knpa36.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0205034b0ece173a7152a43b016985a7@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 29-05-20, 19:47, Sibi Sankar wrote:
+> opp_np needs to be subjected
+> to NULL check as well.
 
-On 5/22/20 9:08 PM, Thiago Jung Bauermann wrote:
-> 
-> Hello Prakhar,
-> 
-> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
-> 
->> On 5/12/20 4:05 PM, Rob Herring wrote:
->>> On Wed, May 06, 2020 at 10:50:04PM -0700, Prakhar Srivastava wrote:
->>>> Hi Mark,
->>>
->>> Please don't top post.
->>>
->>>> This patch set currently only address the Pure DT implementation.
->>>> EFI and ACPI implementations will be posted in subsequent patchsets.
->>>>
->>>> The logs are intended to be carried over the kexec and once read the
->>>> logs are no longer needed and in prior conversation with James(
->>>> https://lore.kernel.org/linux-arm-kernel/0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com/)
->>>> the apporach of using a chosen node doesn't
->>>> support the case.
->>>>
->>>> The DT entries make the reservation permanent and thus doesnt need kernel
->>>> segments to be used for this, however using a chosen-node with
->>>> reserved memory only changes the node information but memory still is
->>>> reserved via reserved-memory section.
->>>
->>> I think Mark's point was whether it needs to be permanent. We don't
->>> hardcode the initrd address for example.
->>>
->> Thankyou for clarifying my misunderstanding, i am modelling this keeping to the
->> TPM log implementation that uses a reserved memory. I will rev up the version
->> with chosen-node support.
->> That will make the memory reservation free after use.
-> 
-> Nice. Do you intend to use the same property that powerpc uses
-> (linux,ima-kexec-buffer)?
-> 
-I was naming it ima-buffer, but naming is not a huge concern.
-I will use linux,ima-kexec-buffer.
->>>> On 5/5/20 2:59 AM, Mark Rutland wrote:
->>>>> Hi Prakhar,
->>>>>
->>>>> On Mon, May 04, 2020 at 01:38:27PM -0700, Prakhar Srivastava wrote:
->>>>>> IMA during kexec(kexec file load) verifies the kernel signature and measures
->>>
->>> What's IMAIMA is a LSM attempting to detect if files have been accidentally or
->> maliciously altered, both remotely and locally, it can also be used
->> to appraise a file's measurement against a "good" value stored as an extended
->> attribute, and enforce local file integrity.
->>
->> IMA also validates and measures the signers of the kernel and initrd
->> during kexec. The measurements are extended to PCR 10(configurable) and the logs
->> stored in memory, however once kexec'd the logs are lost. Kexec is used as
->> secondary boot loader in may use cases and loosing the signer
->> creates a security hole.
->>
->> This patch is an implementation to carry over the logs and making it
->> possible to remotely validate the signers of the kernel and initrd. Such a
->> support exits only in powerpc.
->> This patch makes the carry over of logs architecture independent and puts the
->> complexity in a driver.
-> 
-> If I'm not mistaken, the code at arch/powerpc/kexec/ima.c isn't actually
-> powerpc-specific. It could be moved to an arch-independent directory and
-> used by any other architecture which supports device trees.
-> 
-> I think that's the simplest way forward. And to be honest I'm still
-> trying to understand why you didn't take that approach. Did you try it
-> and hit some obstacle or noticed a disadvantage for your use case?
-> 
-The approach i have in this patch set is to provide an abstraction layer 
-that can be called from any architecture.
-However taking a deeper look only the setup dtb is probably architecture
-specific, only because the architecture specific kexec sets up the 
-device tree. I can also move the code up in security/ima. However i do
-have some concerns with layering. I am hoping you can provide me with 
-some guidance in this aspect, i will send you the patch i am working on
-to get some early feedback.
+No, it isn't. It should already be valid and is set by the OPP core.
+Actually we don't need to do of_node_get(opp_table->np) and just use
+np, I did that to not have a special case while putting the resource.
 
-Thanks,
-Prakhar Srivastava
+> Tested-by: Sibi Sankar <sibis@codeaurora.org>
+> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
+Thanks.
 
-> --
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
-> 
+-- 
+viresh
