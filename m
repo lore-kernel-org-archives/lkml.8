@@ -2,335 +2,197 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6E1206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:20:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CsjFOV69"
+	by mail.kernel.org (Postfix) with ESMTP id 12F39206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591006921;
+	bh=TaB04dQ7qWOoOckA6A6BZQDLASBjooiOp/G6JOq2HkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UeQKsg+dCQyYL12P4t0qDBPwhg3jwgi4+5oAmo/wAzVvpqkvGP5eDjW6UCo4demfG
+	 w41xe/BQ3LZSjM8RYSvmqbE6+clAX4ay50Hs5QDZ1FStcJvAowuTNxB0XZtBpCxrLJ
+	 muQ//YuFZGIDMZXqRJzrmQMYMkUuKgYUDCTDIqnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbgFAKU1 (ORCPT
+        id S1726151AbgFAKV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgFAKUW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:20:22 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA978C03E97C
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 03:20:15 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id f126so2264202vkb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 03:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lMjdaOMl5FMJKVoftarptfTaca79+HcA+5NQl+Y+ztk=;
-        b=CsjFOV69l903wXmbCoC2swYA1hA0jQQHDkl4FagwOP5P2fAYdfTB8HtXnTgTu3Pl9f
-         cyAZohs6eG/eclCSJWQ0gcLbCzaouh05N5+XolimWKj/Zo4mM0z7OHNH0hk66O5PbfPN
-         k3CR0cdmX7DORTxZXVwSbO3U8N5dz9buzddzxyML5rgbKA9xM3Voq/WuRsnqjYYFL8Nb
-         2f7viNjKd114QDnBPpriB/h9rRM2FabInPry9PITQmmZB5XzRQq/mDNR6nsKMquYD9b4
-         4GmdiRAtdL0G6wBdwdhaHiuBrqkGXE83O5eaXUBwxYYSdx1RqwyiTwFwquAviEZusY0k
-         bddw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lMjdaOMl5FMJKVoftarptfTaca79+HcA+5NQl+Y+ztk=;
-        b=gujOHmiA7OleMdLvSd9WPKXNhPtgqrcKqElu8nplA3f5/C6gt1trDpfbnu79LXuo4D
-         TnYTYOqkviwz+tsZcsAos7eMKLCVXRq+q+oOjKF6wl6H6sTvGDn0e/wiaoBkXg7W+wYn
-         sL2RYSa4v9msRZANTlNkWtrYcaeqLBr/1uUfDAuWsjLbI2iGhQLT6Ze+n82nRqEkSGhZ
-         0XUbCAPu7jHu+qNUaHNpEm37JY4NznJ8bOaR3lfxZ96dFmakiJxGqYokcEGMyrjR47Nx
-         SDXjhnkG6iTtgslpdHlrdUiOKWt9zBiMktqdEs5nnBreSZRvRyBt4u/LPVupkwjZgBEa
-         BqRg==
-X-Gm-Message-State: AOAM530u6SjtkKGMwTV9kO3Bhtf4bRWMZ/cB+B7LrSyWqOvx191hXh04
-        zHkEFeuVxW5ai5jEaebVSXm1cwMyp8s4Ho1hkqHl2w==
-X-Google-Smtp-Source: ABdhPJwxct0EL+zyXIst18Ap13874Y1qKvpZtYDdhR3TYN0TPYgWNOu365nkguxU9Mma/sIENZMx04JlwMz401oTbH8=
-X-Received: by 2002:a1f:1188:: with SMTP id 130mr13394447vkr.25.1591006814528;
- Mon, 01 Jun 2020 03:20:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
- <20200427061426.GA11270@infradead.org> <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
- <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
- <2A308283684ECD4B896628E09AF5361E028BCB4B@RS-MBS01.realsil.com.cn>
- <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
- <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
- <CAPDyKFo9X9ghjCeF_kGE2BhB+3QiMAMbD1Qz53saXshxy9odVg@mail.gmail.com> <2A308283684ECD4B896628E09AF5361E59AD1194@RS-MBS01.realsil.com.cn>
-In-Reply-To: <2A308283684ECD4B896628E09AF5361E59AD1194@RS-MBS01.realsil.com.cn>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 1 Jun 2020 12:19:38 +0200
-Message-ID: <CAPDyKFp0Ahcx=iJSGeG19ekDa4rykvAnDHrn4PF5pOoONuH0RA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-To:     =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+        Mon, 1 Jun 2020 06:21:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbgFAKVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 06:21:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A289206C3;
+        Mon,  1 Jun 2020 10:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591006910;
+        bh=TaB04dQ7qWOoOckA6A6BZQDLASBjooiOp/G6JOq2HkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RsnnnY8R9RdD+SK0AeHwotge5Fk+7M+x4sdFlqpMjkGQoiNDzJCMvGZq/RGd+UWO7
+         icI3lnibK2Ta/KtR9cUwZTPui5p7FunWCp/y+If2jZhkzQkEaU/65BbmvvPUhHwhaD
+         AoRqu35nqrR86uBkUQyDau9sBhNqLI1Qdq38/yeM=
+Date:   Mon, 1 Jun 2020 12:21:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Andrew Morton <akpm@linux-foundation.org>,
+        sergei.shtylyov@cogentembedded.com, bgolaszewski@baylibre.com,
+        mika.westerberg@linux.intel.com, efremov@linux.com,
+        ztuowen@gmail.com, lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3] devres: keep both device name and resource name in
+ pretty name
+Message-ID: <20200601102148.GA7229@kroah.com>
+References: <20200601095826.1757621-1-olteanv@gmail.com>
+ <20200601100441.GA1845725@kroah.com>
+ <CA+h21hp2UmMqE_=Ky5J=B=X-ZdU78Fp52zb=vWEPGw9CbcjjVw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hp2UmMqE_=Ky5J=B=X-ZdU78Fp52zb=vWEPGw9CbcjjVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+linux-mmc
-
-On Mon, 1 Jun 2020 at 09:34, =E5=86=AF=E9=94=90 <rui_feng@realsil.com.cn> w=
-rote:
->
+On Mon, Jun 01, 2020 at 01:13:16PM +0300, Vladimir Oltean wrote:
+> Hi Greg,
+> 
+> On Mon, 1 Jun 2020 at 13:04, Greg KH <gregkh@linuxfoundation.org> wrote:
 > >
-> > On Tue, 19 May 2020 at 11:18, =E5=86=AF=E9=94=90 <rui_feng@realsil.com.=
-cn> wrote:
+> > On Mon, Jun 01, 2020 at 12:58:26PM +0300, Vladimir Oltean wrote:
+> > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
 > > >
-> > > > On Tue, 28 Apr 2020 at 05:44, =E5=86=AF=E9=94=90 <rui_feng@realsil.=
-com.cn> wrote:
-> > > > >
-> > > > > >
-> > > > > > On Mon, Apr 27, 2020 at 11:41 AM =E5=86=AF=E9=94=90 <rui_feng@r=
-ealsil.com.cn>
-> > > > wrote:
-> > > > > > >
-> > > > > > >
-> > > > > > > > On Sun, Apr 26, 2020 at 09:25:46AM +0800,
-> > > > > > > > rui_feng@realsil.com.cn
-> > > > > > wrote:
-> > > > > > > > > From: Rui Feng <rui_feng@realsil.com.cn>
-> > > > > > > > >
-> > > > > > > > > RTS5261 support legacy SD mode and SD Express mode.
-> > > > > > > > > In SD7.x, SD association introduce SD Express as a new mo=
-de.
-> > > > > > > > > SD Express mode is distinguished by CMD8.
-> > > > > > > > > Therefore, CMD8 has new bit for SD Express.
-> > > > > > > > > SD Express is based on PCIe/NVMe.
-> > > > > > > > > RTS5261 uses CMD8 to switch to SD Express mode.
-> > > > > > > >
-> > > > > > > > So how does this bit work?  They way I imagined SD Express
-> > > > > > > > to work is that the actual SD Card just shows up as a real
-> > > > > > > > PCIe device, similar to say Thunderbolt.
-> > > > > > >
-> > > > > > > New SD Express card has dual mode. One is SD mode and another
-> > > > > > > is PCIe
-> > > > > > mode.
-> > > > > > > In PCIe mode, it act as a PCIe device and use PCIe protocol
-> > > > > > > not Thunderbolt
-> > > > > > protocol.
-> > > > > >
-> > > > > > I think what Christoph was asking about is why you need to issu=
-e
-> > > > > > any commands at all in SD mode when you want to use PCIe mode
-> > instead.
-> > > > > > What happens if you load the NVMe dthriver before loading the
-> > > > > > rts5261
-> > > > driver?
-> > > > > >
-> > > > > >        Arnd
-> > > > > >
-> > > > > > ------Please consider the environment before printing this e-ma=
-il.
-> > > > >
-> > > > > RTS5261 support SD mode and PCIe/NVMe mode. The workflow is as
-> > follows.
-> > > > > 1.RTS5261 work in SD mode.
-> > > > > 2.If card is plugged in, Host send CMD8 to ask card's PCIe availa=
-bility.
-> > > >
-> > > > This sounds like the card insert/removal needs to be managed by the
-> > > > rtsx_pci_sdmmc driver (mmc).
-> > > >
-> > > > > 3.If the card has PCIe availability, RTS5261 switch to PCIe/NVMe =
-mode.
-> > > >
-> > > > This switch is done by the mmc driver, but how does the PCIe/NVMe
-> > > > driver know when to take over? Isn't there a synchronization point =
-needed?
-> > > >
-> > > > > 4.Mmc driver exit and NVMe driver start working.
-> > > >
-> > > > Having the mmc driver to exit seems wrong to me. Else how would you
-> > > > handle a card being removed and inserted again?
-> > > >
-> > > > In principle you want the mmc core to fail to detect the card and
-> > > > then do a handover, somehow. No?
-> > > >
-> > > > Although, to make this work there are a couple of problems you need
-> > > > to deal with.
-> > > >
-> > > > 1. If the mmc core doesn't successfully detect a card, it will
-> > > > request the mmc host to power off the card. In this situation, you
-> > > > want to keep the power to the card, but leave it to be managed by t=
-he
-> > PCIe/NVMe driver in some way.
-> > > >
-> > > > 2. During system resume, the mmc core may try to restore power for =
-a
-> > > > card, especially if it's a removable slot, as to make sure it gets
-> > > > detected if someone inserted a card while the system was suspended.
-> > > > Not sure if this plays well with the PCIe/NVMe driver's behaviour.
-> > > > Again, I think some kind of synchronization is needed.
-> > > >
-> > > > > 5.If card is unplugged, RTS5261 will switch to SD mode.
-> > > >
-> > > > Alright, clearly the mmc driver is needed to manage card insert/rem=
-oval.
-> > > >
-> > > > > We should send CMD8 in SD mode to ask card's PCIe availability,
-> > > > > and the
-> > > > order of NVMe driver and rts5261 driver doesn't matter.
-> > > >
-> > > > That assumes there's another synchronization mechanism. Maybe there
-> > > > is, but I don't understand how.
-> > > >
-> > > If no card in RTS5261, RTS5261 works in SD mode. If you run command l=
-spci,
-> > you can see the RTS5261 device.
+> > > Sometimes debugging a device is easiest using devmem on its register
+> > > map, and that can be seen with /proc/iomem. But some device drivers have
+> > > many memory regions. Take for example a networking switch. Its memory
+> > > map used to look like this in /proc/iomem:
+> > >
+> > > 1fc000000-1fc3fffff : pcie@1f0000000
+> > >   1fc000000-1fc3fffff : 0000:00:00.5
+> > >     1fc010000-1fc01ffff : sys
+> > >     1fc030000-1fc03ffff : rew
+> > >     1fc060000-1fc0603ff : s2
+> > >     1fc070000-1fc0701ff : devcpu_gcb
+> > >     1fc080000-1fc0800ff : qs
+> > >     1fc090000-1fc0900cb : ptp
+> > >     1fc100000-1fc10ffff : port0
+> > >     1fc110000-1fc11ffff : port1
+> > >     1fc120000-1fc12ffff : port2
+> > >     1fc130000-1fc13ffff : port3
+> > >     1fc140000-1fc14ffff : port4
+> > >     1fc150000-1fc15ffff : port5
+> > >     1fc200000-1fc21ffff : qsys
+> > >     1fc280000-1fc28ffff : ana
+> > >
+> > > But after the patch in Fixes: was applied, the information is now
+> > > presented in a much more opaque way:
+> > >
+> > > 1fc000000-1fc3fffff : pcie@1f0000000
+> > >   1fc000000-1fc3fffff : 0000:00:00.5
+> > >     1fc010000-1fc01ffff : 0000:00:00.5
+> > >     1fc030000-1fc03ffff : 0000:00:00.5
+> > >     1fc060000-1fc0603ff : 0000:00:00.5
+> > >     1fc070000-1fc0701ff : 0000:00:00.5
+> > >     1fc080000-1fc0800ff : 0000:00:00.5
+> > >     1fc090000-1fc0900cb : 0000:00:00.5
+> > >     1fc100000-1fc10ffff : 0000:00:00.5
+> > >     1fc110000-1fc11ffff : 0000:00:00.5
+> > >     1fc120000-1fc12ffff : 0000:00:00.5
+> > >     1fc130000-1fc13ffff : 0000:00:00.5
+> > >     1fc140000-1fc14ffff : 0000:00:00.5
+> > >     1fc150000-1fc15ffff : 0000:00:00.5
+> > >     1fc200000-1fc21ffff : 0000:00:00.5
+> > >     1fc280000-1fc28ffff : 0000:00:00.5
+> > >
+> > > That patch made a fair comment that /proc/iomem might be confusing when
+> > > it shows resources without an associated device, but we can do better
+> > > than just hide the resource name altogether. Namely, we can print the
+> > > device name _and_ the resource name. Like this:
+> > >
+> > > 1fc000000-1fc3fffff : pcie@1f0000000
+> > >   1fc000000-1fc3fffff : 0000:00:00.5
+> > >     1fc010000-1fc01ffff : 0000:00:00.5 sys
+> > >     1fc030000-1fc03ffff : 0000:00:00.5 rew
+> > >     1fc060000-1fc0603ff : 0000:00:00.5 s2
+> > >     1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
+> > >     1fc080000-1fc0800ff : 0000:00:00.5 qs
+> > >     1fc090000-1fc0900cb : 0000:00:00.5 ptp
+> > >     1fc100000-1fc10ffff : 0000:00:00.5 port0
+> > >     1fc110000-1fc11ffff : 0000:00:00.5 port1
+> > >     1fc120000-1fc12ffff : 0000:00:00.5 port2
+> > >     1fc130000-1fc13ffff : 0000:00:00.5 port3
+> > >     1fc140000-1fc14ffff : 0000:00:00.5 port4
+> > >     1fc150000-1fc15ffff : 0000:00:00.5 port5
+> > >     1fc200000-1fc21ffff : 0000:00:00.5 qsys
+> > >     1fc280000-1fc28ffff : 0000:00:00.5 ana
 > >
-> > Right.
+> > As this is changing the format of a user-visable file, what tools just
+> > broke that are used to parsing the old format?
 > >
-> > The rtsx_pci_driver (drivers/misc/cardreader/rtsx_pcr.c) has registered=
- itself
-> > as a pci driver and been probed successfully, I assume. Then during
-> > rtsx_pci_probe() an mfd device is added via mfd_add_devices(), which
-> > corresponds to the rtsx_pci_sdmmc
-> > (drivers/mmc/host/rtsx_pci_sdmmc.c) platform driver.
+> 
+> All the same tools that broke after 8d84b18f5678 was merged. I am not
+> entirely sure why the 'stable ABI' argument was not brought up there
+> as well.
+> 
+> > And are you sure about this?  That's not how my system looks at all, I
+> > have fun things like:
 > >
-> > > When insert a SD Express card, Mmc driver will send CMD8 to ask the
-> > > card's PCIe availability, because it's a SD EXPRESS card,
+> >    ac000000-da0fffff : PCI Bus 0000:03
+> >     ac000000-da0fffff : PCI Bus 0000:04
+> >       ac000000-c3efffff : PCI Bus 0000:06
+> >       c3f00000-c3ffffff : PCI Bus 0000:39
+> >         c3f00000-c3f0ffff : 0000:39:00.0
+> >           c3f00000-c3f0ffff : xhci-hcd
+> >       c4000000-d9ffffff : PCI Bus 0000:3a
+> >         c4000000-d9ffffff : PCI Bus 0000:3b
+> >           c4000000-c40fffff : PCI Bus 0000:3c
+> >           c4000000-c400ffff : 0000:3c:00.0
+> >           c4000000-c400ffff : xhci-hcd
+> >           c4010000-c4010fff : 0000:3c:00.0
+> >           c4011000-c4011fff : 0000:3c:00.0
+> >           c4100000-c41fffff : PCI Bus 0000:3d
+> >           c4100000-c410ffff : 0000:3d:00.0
+> >           c4100000-c410ffff : xhci-hcd
+> >           c4110000-c4110fff : 0000:3d:00.0
+> >           c4111000-c4111fff : 0000:3d:00.0
+> >           c4200000-c42fffff : PCI Bus 0000:3e
+> >           c4200000-c4207fff : 0000:3e:00.0
+> >           c4200000-c4207fff : xhci-hcd
+> >           c4300000-c43fffff : PCI Bus 0000:3f
+> >           c4300000-c437ffff : 0000:3f:00.0
+> >           c4380000-c4383fff : 0000:3f:00.0
+> >           c4400000-d9ffffff : PCI Bus 0000:40
+> >       da000000-da0fffff : PCI Bus 0000:05
+> >         da000000-da03ffff : 0000:05:00.0
+> >         da040000-da040fff : 0000:05:00.0
 > >
-> > Okay, so this will then be a part of the rtsx_pci_sdmmc driver's probe =
-sequence.
-> > Or more exactly, when rtsx_pci_sdmmc_drv_probe() completes successfully=
-, a
-> > mmc rescan work becomes scheduled to try to detect an SD/MMC card. Then
-> > the CMD8 command is sent...
 > >
-> > > RTS5261 will switch to NVMe mode, after switch if you run lspci, you =
-can see
-> > RTS5261 disappeared and a NVMe device replaces RTS5261.
+> > which is a mix of the resources in some places, and just driver names in
+> > others.
 > >
-> > Can you elaborate more exactly how this managed?
+> > But, that does imply that your change will not break anything as the
+> > parsing of this mess is probably just "anything after the ':'
+> > character...
 > >
-> > It kind of sounds like the original PCI device is being deleted? How is=
- this
-> > managed?
+> > thanks,
 > >
-> > In any case, the rtsx_pci_driver's ->remove() callback, rtsx_pci_remove=
-(),
-> > should be invoked, I assume?
-> >
-> > That would then lead to that mfd_remove_devices() gets called, which ma=
-kes
-> > the ->remove() callback of the rtsx_pci_sdmmc driver,
-> > rtsx_pci_sdmmc_drv_remove(), to be invoked. Correct?
-> >
-> Yes, after RTS5261 switch to NVMe mode, rtsx_pci_remove() and rtsx_pci_sd=
-mmc_drv_remove() will be invoked.
+> > greg k-h
+> 
+> With this patch you'll just have more (potentially redundant)
+> information. I'm not really sure how to satisfy everyone here. I was
+> completely fine with pre-8d84b18f5678 behavior.
 
-So, the ->remove() callbacks are invoked because the PCI device that
-corresponds to the rtsx_pci_driver is being deleted. Can you explain
-who deletes the PCI device and why?
+Fair enough, I'll try it out after 5.8-rc1 is out, as I can't do
+anything about this until that happens.
 
-I am not a PCI expert, so apologize for my ignorance - but I really
-want to understand how this is supposed to work.
+thanks,
 
->
-> > > In NVMe mode, RTS5261 only provide a bridge between SD Express card a=
-nd
-> > PCIe. For NVMe driver, just like a new NVMe device is inserted.
-> >
-> > I don't understand what that means, but I am also not an expert on PCI/=
-NVMe.
-> > Care to explain more?
-> >
-> In NVMe mode, SD Express card connect the computer via PCIe.
-> IN SD mode, card connect computer via reader.
-
-That didn't make better sense to me, sorry. I do know about the SD
-spec and the SD-express card protocol parts. Anyway, let's leave this
-for now.
-
->
-> > > Mmc core doesn't successfully detect the card and handover to NVMe
-> > > driver. Because of detect the card failed,
-> >
-> > How do you make sure that the rtsx_pci_sdmmc driver is leaving the card=
- in the
-> > correct state for NVMe?
-> >
-> > For example, the mmc core has a loop re-trying with a lower initializat=
-ion
-> > frequency for the card (400KHz, 300KHz, 200KHz, 100KHz). This will caus=
-e
-> > additional requests to the rtsx_pci_sdmmc driver.
-> >
-> > > Mmc driver will request the RTS5261 to power off the card, but at tha=
-t time
-> > power off the card will not succeed.
-> >
-> > Yes, assuming no card was found, the mmc core calls mmc_power_off().
-> > Ths leads to the rtsx_pci_sdmmc driver's ->set_ios() callback being inv=
-oked,
-> > requesting the card to be powered off. I don't see how you are managing=
- this,
-> > what am I missing?
-> >
-> Before power off card and re-trying initialization, rtsx driver sets RTS5=
-261 0xFF55 bit4=3D0.
-> After set 0xFF55 bit4=3D0, RTS5261 can't receive any CMD from PCIe and pr=
-epare for device disappear.
-> Therefore, MMC driver can't change card status.
-
-Okay, so beyond that point - any calls to the interface that is
-provided from drivers/misc/cardreader/rtsx_pcr will fail, when invoked
-by the rtsx_pci_sdmmc driver?
-
-To me, that sounds a bit fragile and it's also relying on a specific
-behaviour of the RTS5261 card reader interface. I wonder if this could
-be considered as a common behaviour...??
-
-Perhaps it's better to teach the mmc core *more* about SD express
-cards. Maybe add a new host ops for dealing with the specific CMD8
-command and make the mmc core to "bail out", rather than keep retrying
-the initialization. In principle I think the core should accept that
-it may have found an SD express card, then abort further communication
-with it. At least until the mmc host indicates that a
-re-initialization of the card can be done, which could be through a
-remove/re-probe, for example.
-
->
-> > As stated above, I assume you the corresponding platform device for
-> > rtsx_pci_sdmmc being deleted and thus triggering the
-> > rtsx_pci_sdmmc_drv_remove() being called. Correct? If not, how does the
-> > driver manage this?
-> >
-> Yes.
->
-> > > When the card is unplugged, RTS5261 will switch to SD mode by itself
-> > > and don't need mmc driver to do anything,
-> >
-> > Okay.
-> >
-> > So that means the rtsx_pci_sdmmc driver is being probed again?
-> >
-> Yes.
->
-> > > If you run lspci, you can see NVMe device disappeared and RTS5261 app=
-eared
-> > again.
-> >
-> > I see.
-> >
-
-If you need some help on the mmc core parts, I am willing to help out.
-However, first, I would like to get some better understanding of who
-and why the PCI device is deleted.
-
-Kind regards
-Uffe
+greg k-h
