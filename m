@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27816C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D271820679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F027620679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037625;
-	bh=X/+DY4Lx5dQmu+HjNKoBEhFQXVgclPibyLNP+u5Ksn0=;
+	s=default; t=1591037632;
+	bh=gVlM85lAfJZ6wDZrOwqCY+DymGscbAQxro//HxDRrkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONX1cYd88x1Ow1erzWVFqF4S6PW6JrJqgb7xwTqe1oV+rCfYeiIGvB9MI42YKdv/r
-	 QnPjMn+hwQpcOm6gQn3UPw89sY40azAGhoXti3ENQUDnMsLfyBjKrQcJtKTtwzHCu6
-	 RmnNBqPT6QhhCfoFW9CjkeRWrjzgvHW5oY32Vu40=
+	b=LnHDJv7AUzBJsxp5pqQ+Xybp7DxsjQ8e+bYiiVtLPC/zEcA33nJ1s17+TeoopwR9S
+	 HiPbhb3g12piiZc8jJhNM1Yk3TjkAd7m5MCcyfZrqweAM4+QHnsjYx6iPvT+zvFs/n
+	 S0Pb3rhq/AilJaAi2oDDsGbr/XBGLl8Mm9X9c3g8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgFASCp (ORCPT
+        id S1730086AbgFASxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729053AbgFASCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:40 -0400
+        id S1728153AbgFASCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A542065C;
-        Mon,  1 Jun 2020 18:02:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8583B2065C;
+        Mon,  1 Jun 2020 18:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034559;
-        bh=X/+DY4Lx5dQmu+HjNKoBEhFQXVgclPibyLNP+u5Ksn0=;
+        s=default; t=1591034555;
+        bh=gVlM85lAfJZ6wDZrOwqCY+DymGscbAQxro//HxDRrkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMYZBhRIzcp0KEdyXb24m/ePHUiERAPMvtJcNR4gF/DRyvw8fr2G0cST+2tIlCQlD
-         JtOG60AJTrGR7G1coHAohCa2qZlh9rJOAYpmDuS5baUVBn/q5o1TLsNTotaMIsSAQ5
-         8KR2R4Vt4XDqK/PapoRp7crcS+VuXtKfpQ/+T1Cw=
+        b=JkFPnGN0Jkv6mui7old0UXfKNNu6nEJSvCeTt07hx/qMyxSR5zrsd5JXGsGuHKREy
+         qpT2QD2GsLdic9U4T4sXWEN7Tx/FRBkbf4zhbgU23QVCcsvF8J/jLFWSIp3ylu/WVn
+         bCyAhFQ6gdEwpFl5DJe4oBsBVqRkhUZ6GMJBd6c4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.14 59/77] xfrm: fix a NULL-ptr deref in xfrm_local_error
-Date:   Mon,  1 Jun 2020 19:54:04 +0200
-Message-Id: <20200601174026.670418735@linuxfoundation.org>
+Subject: [PATCH 4.14 67/77] esp6: get the right proto for transport mode in esp6_gso_encap
+Date:   Mon,  1 Jun 2020 19:54:12 +0200
+Message-Id: <20200601174027.900174373@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -62,63 +61,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xin Long <lucien.xin@gmail.com>
 
-commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
+commit 3c96ec56828922e3fe5477f75eb3fc02f98f98b5 upstream.
 
-This patch is to fix a crash:
+For transport mode, when ipv6 nexthdr is set, the packet format might
+be like:
 
-  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
-  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
-  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
-  [ ] Call Trace:
-  [ ]  xfrm6_local_error+0x1eb/0x300
-  [ ]  xfrm_local_error+0x95/0x130
-  [ ]  __xfrm6_output+0x65f/0xb50
-  [ ]  xfrm6_output+0x106/0x46f
-  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
-  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
-  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
-  [ ]  dev_hard_start_xmit+0x165/0x820
-  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
-  [ ]  ip_finish_output2+0xd3e/0x1480
-  [ ]  ip_do_fragment+0x182d/0x2210
-  [ ]  ip_output+0x1d0/0x510
-  [ ]  ip_send_skb+0x37/0xa0
-  [ ]  raw_sendmsg+0x1b4c/0x2b80
-  [ ]  sock_sendmsg+0xc0/0x110
+    ----------------------------------------------------
+    |        | dest |     |     |      |  ESP    | ESP |
+    | IP6 hdr| opts.| ESP | TCP | Data | Trailer | ICV |
+    ----------------------------------------------------
 
-This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
-skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
-xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
-to get ipv6 info from a ipv4 sk.
+What it wants to get for x-proto in esp6_gso_encap() is the proto that
+will be set in ESP nexthdr. So it should skip all ipv6 nexthdrs and
+get the real transport protocol. Othersize, the wrong proto number
+will be set into ESP nexthdr.
 
-This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
-error reporting more robust"), but brought back by Commit 844d48746e4b
-("xfrm: choose protocol family by skb protocol").
+This patch is to skip all ipv6 nexthdrs by calling ipv6_skip_exthdr()
+in esp6_gso_encap().
 
-So to fix it, we should call xfrm6_local_error() only when skb->protocol
-is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
-
-Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
-Reported-by: Xiumei Mu <xmu@redhat.com>
+Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
 Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_output.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv6/esp6_offload.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/xfrm/xfrm_output.c
-+++ b/net/xfrm/xfrm_output.c
-@@ -286,7 +286,8 @@ void xfrm_local_error(struct sk_buff *sk
+--- a/net/ipv6/esp6_offload.c
++++ b/net/ipv6/esp6_offload.c
+@@ -121,9 +121,16 @@ static void esp6_gso_encap(struct xfrm_s
+ 	struct ip_esp_hdr *esph;
+ 	struct ipv6hdr *iph = ipv6_hdr(skb);
+ 	struct xfrm_offload *xo = xfrm_offload(skb);
+-	int proto = iph->nexthdr;
++	u8 proto = iph->nexthdr;
  
- 	if (skb->protocol == htons(ETH_P_IP))
- 		proto = AF_INET;
--	else if (skb->protocol == htons(ETH_P_IPV6))
-+	else if (skb->protocol == htons(ETH_P_IPV6) &&
-+		 skb->sk->sk_family == AF_INET6)
- 		proto = AF_INET6;
- 	else
- 		return;
+ 	skb_push(skb, -skb_network_offset(skb));
++
++	if (x->outer_mode->encap == XFRM_MODE_TRANSPORT) {
++		__be16 frag;
++
++		ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &proto, &frag);
++	}
++
+ 	esph = ip_esp_hdr(skb);
+ 	*skb_mac_header(skb) = IPPROTO_ESP;
+ 
 
 
