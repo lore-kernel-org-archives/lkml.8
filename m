@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4082CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D7220870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F007320679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037821;
-	bh=2kWCVXZYXUw1sPg7WO9hPr23Qd/vPlm0bq90WakJSmw=;
+	s=default; t=1591037825;
+	bh=/EpD5WaKRoQTYb0JABgSmq92iThqgn8wT6UDnzvYomE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1UpSMMv1UHbQzin59DVNNPHWm8ONOukeWDRUdy9VU/9RyKthh7O7yTBN609uIzGiM
-	 Zv2GRJHfjDkYCU6fzIkUu8SlDssyp0HRIIELyngZK2V5g+LiNnlzFDLHMK+gjCEImD
-	 Ha26saKzhZbax8jZF6NBvc9ASJG4YTi98mwlA0IA=
+	b=a2ZyslPdfNaaqkj47D0quk11/jzQ5gwHhNVa6Cqc1lzyGS3OyGE6F5sq8Ep8e1ZdK
+	 u0NNkkbEniWJZT6ccizrUOGpaAv39zEeRaIkcMuA0Kakta1HbHEKjXun5HddJVO9Ko
+	 ZUEIPflcHAucfV4j3nHqP/DX8Xs1uDNHWFiADsZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgFAS5A (ORCPT
+        id S1729822AbgFAS5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43024 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:57:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728877AbgFASAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:19 -0400
+        id S1728842AbgFASAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46531206E2;
-        Mon,  1 Jun 2020 18:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098F62065C;
+        Mon,  1 Jun 2020 18:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034418;
-        bh=2kWCVXZYXUw1sPg7WO9hPr23Qd/vPlm0bq90WakJSmw=;
+        s=default; t=1591034416;
+        bh=/EpD5WaKRoQTYb0JABgSmq92iThqgn8wT6UDnzvYomE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GDnZXFVIPFZwDfgiQmlJ6hvoGTgkvOiuYH7Dp9GFnKLMa2AcPHWyxF6cvXNp4BGRG
-         eEDWc74NsFWVpz1kGCoR88DJiqjYTy0PeYjGT+d+ZpHd11RktlVz8o/2Q34H93zyNa
-         INbziuxQJVzIiRUhi6NM2WaWE55Kw953SWOHIbj8=
+        b=vDD3hNJS5pVfYTbwOPd9aMd01HT9bqMNdE8Ws35ZifsEliWEM11fPxuvIHj9lBLEj
+         hNjkDQ6nB23lpDklDPk29iVTWhQwij60r4etUEYok0uqTetiIB8s7WatcTQ72Kf/be
+         z/xuBRBq43pzKxOTi+mCouMW7zu29AMdy793bdJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.14 08/77] net/mlx5e: Update netdev txq on completions during closure
-Date:   Mon,  1 Jun 2020 19:53:13 +0200
-Message-Id: <20200601174017.905106006@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 07/77] sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
+Date:   Mon,  1 Jun 2020 19:53:12 +0200
+Message-Id: <20200601174017.737955047@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,48 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: "Jere Lepp‰nen" <jere.leppanen@nokia.com>
 
-[ Upstream commit 5e911e2c06bd8c17df29147a5e2d4b17fafda024 ]
+[ Upstream commit d3e8e4c11870413789f029a71e72ae6e971fe678 ]
 
-On sq closure when we free its descriptors, we should also update netdev
-txq on completions which would not arrive. Otherwise if we reopen sqs
-and attach them back, for example on fw fatal recovery flow, we may get
-tx timeout.
+Commit bdf6fa52f01b ("sctp: handle association restarts when the
+socket is closed.") starts shutdown when an association is restarted,
+if in SHUTDOWN-PENDING state and the socket is closed. However, the
+rationale stated in that commit applies also when in SHUTDOWN-SENT
+state - we don't want to move an association to ESTABLISHED state when
+the socket has been closed, because that results in an association
+that is unreachable from user space.
 
-Fixes: 29429f3300a3 ("net/mlx5e: Timeout if SQ doesn't flush during close")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+The problem scenario:
+
+1.  Client crashes and/or restarts.
+
+2.  Server (using one-to-one socket) calls close(). SHUTDOWN is lost.
+
+3.  Client reconnects using the same addresses and ports.
+
+4.  Server's association is restarted. The association and the socket
+    move to ESTABLISHED state, even though the server process has
+    closed its descriptor.
+
+Also, after step 4 when the server process exits, some resources are
+leaked in an attempt to release the underlying inet sock structure in
+ESTABLISHED state:
+
+    IPv4: Attempt to release TCP socket in state 1 00000000377288c7
+
+Fix by acting the same way as in SHUTDOWN-PENDING state. That is, if
+an association is restarted in SHUTDOWN-SENT state and the socket is
+closed, then start shutdown and don't move the association or the
+socket to ESTABLISHED state.
+
+Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
+Signed-off-by: Jere Lepp√§nen <jere.leppanen@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tx.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/sctp/sm_statefuns.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-@@ -496,8 +496,9 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *c
- void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
- {
- 	struct mlx5e_tx_wqe_info *wi;
-+	u32 nbytes = 0;
-+	u16 ci, npkts = 0;
- 	struct sk_buff *skb;
--	u16 ci;
- 	int i;
- 
- 	while (sq->cc != sq->pc) {
-@@ -518,8 +519,11 @@ void mlx5e_free_txqsq_descs(struct mlx5e
- 		}
- 
- 		dev_kfree_skb_any(skb);
-+		npkts++;
-+		nbytes += wi->num_bytes;
- 		sq->cc += wi->num_wqebbs;
- 	}
-+	netdev_tx_completed_queue(sq->txq, npkts, nbytes);
- }
- 
- #ifdef CONFIG_MLX5_CORE_IPOIB
+--- a/net/sctp/sm_statefuns.c
++++ b/net/sctp/sm_statefuns.c
+@@ -1829,12 +1829,13 @@ static enum sctp_disposition sctp_sf_do_
+ 	/* Update the content of current association. */
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_UPDATE_ASSOC, SCTP_ASOC(new_asoc));
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_EVENT_ULP, SCTP_ULPEVENT(ev));
+-	if (sctp_state(asoc, SHUTDOWN_PENDING) &&
++	if ((sctp_state(asoc, SHUTDOWN_PENDING) ||
++	     sctp_state(asoc, SHUTDOWN_SENT)) &&
+ 	    (sctp_sstate(asoc->base.sk, CLOSING) ||
+ 	     sock_flag(asoc->base.sk, SOCK_DEAD))) {
+-		/* if were currently in SHUTDOWN_PENDING, but the socket
+-		 * has been closed by user, don't transition to ESTABLISHED.
+-		 * Instead trigger SHUTDOWN bundled with COOKIE_ACK.
++		/* If the socket has been closed by user, don't
++		 * transition to ESTABLISHED. Instead trigger SHUTDOWN
++		 * bundled with COOKIE_ACK.
+ 		 */
+ 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
+ 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
 
 
