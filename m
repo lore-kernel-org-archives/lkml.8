@@ -2,51 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9726C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6427C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8D20206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE16C206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037086;
-	bh=rcGXyxVBSk7HlozhEm2slr0mzTvuHZEvCmq80wwX4hc=;
+	s=default; t=1591037089;
+	bh=l+56c4VIyg+Wlb4RtIt7WDh2QN2wMhTtXg7rIZ4wxf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYV7X3QQiSLfM2XvduWUVMcwCQXaP+F1k3hklD/24Ym7Fx+IzVCjORKumKB7b41ug
-	 Q/GBlqgUcK1l6fLD56QtQB3nwAcl653+3zvs4WyIC26c9gMFXS6QkeLmOwpXUu//w6
-	 yfs/kuxC+bnB/rfJ0/Ns0M5SSIBoqeppva4vRDtc=
+	b=bUCedD6VG5TIqPIpuxbsVrSFOcVV3i+fPIww3Xy/EB3q4ZpQK4DIYk0i7gJOv951H
+	 cY4Nj6TmifcoIQBRdGMuXCqVpynzAVgQvB8luJzTuLjLoaSMtMNSeb/s1KiAemgR88
+	 YoGZ+xQ5MgeYNsCrsxoG9PRVhj8zWdyM214bwZmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbgFASop (ORCPT
+        id S1730977AbgFASKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:44:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57234 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729730AbgFASKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:24 -0400
+        id S1730937AbgFASKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C77AA2065C;
-        Mon,  1 Jun 2020 18:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5E192077D;
+        Mon,  1 Jun 2020 18:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035024;
-        bh=rcGXyxVBSk7HlozhEm2slr0mzTvuHZEvCmq80wwX4hc=;
+        s=default; t=1591035004;
+        bh=l+56c4VIyg+Wlb4RtIt7WDh2QN2wMhTtXg7rIZ4wxf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LX2iilVGQlHRXGv5q7/Usjfzv081/ibTK39zCnk+wbH4UfrpAcUFldigGpcIHUVGm
-         /dEeMeHhVvMH9RREHoj/tmQXJopdl7KzsHiktU64As8Jcx7gQhDh4f+3sdQM/G7jsG
-         Bl0bKkTdaCa8JjNB5b3QHcIvRM3Ckn35CZpYEoW4=
+        b=mnw1Ymh3WexvP90HD848Sey05CMDjZzFUv/ay6YkXYdNzLnDZ8tQ1UhxXuBcViCbN
+         Q/IcRTK1KJbxj9omKvI657N2dlphqR7zGtgFr7I6Kp6zz0RG4p1Fk7FeWg6b2MQsMB
+         0ceAxCK0QIAx+uhWY/fYvVYn3ISWwkQkQULowr60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antony Antony <antony@phenome.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 119/142] xfrm: fix error in comment
-Date:   Mon,  1 Jun 2020 19:54:37 +0200
-Message-Id: <20200601174050.163798394@linuxfoundation.org>
+        stable@vger.kernel.org, Coverity <scan-admin@coverity.com>,
+        Steve French <stfrench@microsoft.com>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 059/142] cifs: Fix null pointer check in cifs_read
+Date:   Mon,  1 Jun 2020 19:53:37 +0200
+Message-Id: <20200601174044.042757329@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -59,31 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antony Antony <antony@phenome.org>
+From: Steve French <stfrench@microsoft.com>
 
-commit 29e4276667e24ee6b91d9f91064d8fda9a210ea1 upstream.
+[ Upstream commit 9bd21d4b1a767c3abebec203342f3820dcb84662 ]
 
-s/xfrm_state_offload/xfrm_user_offload/
+Coverity scan noted a redundant null check
 
-Fixes: d77e38e612a ("xfrm: Add an IPsec hardware offloading API")
-Signed-off-by: Antony Antony <antony@phenome.org>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Coverity-id: 728517
+Reported-by: Coverity <scan-admin@coverity.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/xfrm.h |    2 +-
+ fs/cifs/file.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/uapi/linux/xfrm.h
-+++ b/include/uapi/linux/xfrm.h
-@@ -304,7 +304,7 @@ enum xfrm_attr_type_t {
- 	XFRMA_PROTO,		/* __u8 */
- 	XFRMA_ADDRESS_FILTER,	/* struct xfrm_address_filter */
- 	XFRMA_PAD,
--	XFRMA_OFFLOAD_DEV,	/* struct xfrm_state_offload */
-+	XFRMA_OFFLOAD_DEV,	/* struct xfrm_user_offload */
- 	XFRMA_SET_MARK,		/* __u32 */
- 	XFRMA_SET_MARK_MASK,	/* __u32 */
- 	XFRMA_IF_ID,		/* __u32 */
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index b095094c0842..4959dbe740f7 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3997,7 +3997,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
+ 			 * than it negotiated since it will refuse the read
+ 			 * then.
+ 			 */
+-			if ((tcon->ses) && !(tcon->ses->capabilities &
++			if (!(tcon->ses->capabilities &
+ 				tcon->ses->server->vals->cap_large_files)) {
+ 				current_read_size = min_t(uint,
+ 					current_read_size, CIFSMaxBufSize);
+-- 
+2.25.1
+
 
 
