@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40BA2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE06C20825
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035341;
-	bh=74mmgenOw4MmKp1UIPKTZunpiAwuag71URypgKevze8=;
+	s=default; t=1591035344;
+	bh=O84gu8JATb2e8SHlXObL3eCI/z49fjPGgXDZ+gNoxq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hgzuuaHWKRtz/pBaMy0QOhr0vmr+nP9nxKiCzRxj/lnSUaQ6tM+QiliZdzA0qQ9lY
-	 L2pBDRbFa2Qd9kKP+8CLFEVI9DViklPTn3HqOPUGmGAaKCkKTz3zZerSo9TRAlDpLq
-	 +cURBDIyC1kiNzfVRfTe1X5LxYpk3DZDRB9sp0As=
+	b=g6AQ5FXInP96N5is/eCn6sNeoxreuz5Xp6uqoVkQlZ/zFONlFNBEwj00lne+237sZ
+	 MTqo+xCTzSYYRlYtbLXACpMFgFp29WL7Te2ladm7dux5LieIPNLR8Uvu/o/lVioClp
+	 vo9bnrmunw1Jj5eEQVGUgsraSPZTyJ3mxfHbGxQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbgFASPl (ORCPT
+        id S1731018AbgFASPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35996 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbgFASPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:37 -0400
+        id S1731603AbgFASPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69C3C2065C;
-        Mon,  1 Jun 2020 18:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F0F2073B;
+        Mon,  1 Jun 2020 18:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035336;
-        bh=74mmgenOw4MmKp1UIPKTZunpiAwuag71URypgKevze8=;
+        s=default; t=1591035339;
+        bh=O84gu8JATb2e8SHlXObL3eCI/z49fjPGgXDZ+gNoxq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ADFraXfqtfUYQhOPtvgmSeyEeZyfPuiVbhneU+9ALiyd9yQLE+9VnAc85rov1KXsS
-         xiNRcvJg1cf540Od6d4np3iZ5/gN7NrSJsKJTVlwQ1nsqej2d+Lv3dHbDTIpmGz1On
-         o11AZgYp6LSlhjAiMF0cstOpja9nax26UkhDYWrc=
+        b=Sk+jOlYYNyu8ytvRMkOMjkekoX9mgYEvpruH/7ApRvgqp5wUqntlloLw6wuAG67K+
+         KuO95J+t3eN4di02URukvzzqUq/+5N60sYFxQWrGK/3nwxoTgXkTO8698JhSUm2Jn1
+         o6TXC2J0akYRALEvgr/zSQwlyQUZ5mmJ4YUBZXB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 113/177] RDMA/pvrdma: Fix missing pci disable in pvrdma_pci_probe()
-Date:   Mon,  1 Jun 2020 19:54:11 +0200
-Message-Id: <20200601174058.042187108@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Changming Liu <liu.changm@northeastern.edu>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 114/177] ALSA: hwdep: fix a left shifting 1 by 31 UB bug
+Date:   Mon,  1 Jun 2020 19:54:12 +0200
+Message-Id: <20200601174058.133282954@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,36 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Changming Liu <liu.changm@northeastern.edu>
 
-[ Upstream commit db857e6ae548f0f4f4a0f63fffeeedf3cca21f9d ]
+[ Upstream commit fb8cd6481ffd126f35e9e146a0dcf0c4e8899f2e ]
 
-In function pvrdma_pci_probe(), pdev was not disabled in one error
-path. Thus replace the jump target “err_free_device” by
-"err_disable_pdev".
+The "info.index" variable can be 31 in "1 << info.index".
+This might trigger an undefined behavior since 1 is signed.
 
-Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
-Link: https://lore.kernel.org/r/20200523030457.16160-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fix this by casting 1 to 1u just to be sure "1u << 31" is defined.
+
+Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/BL0PR06MB4548170B842CB055C9AF695DE5B00@BL0PR06MB4548.namprd06.prod.outlook.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/hwdep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-index e580ae9cc55a..780fd2dfc07e 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-@@ -829,7 +829,7 @@ static int pvrdma_pci_probe(struct pci_dev *pdev,
- 	    !(pci_resource_flags(pdev, 1) & IORESOURCE_MEM)) {
- 		dev_err(&pdev->dev, "PCI BAR region not MMIO\n");
- 		ret = -ENOMEM;
--		goto err_free_device;
-+		goto err_disable_pdev;
- 	}
+diff --git a/sound/core/hwdep.c b/sound/core/hwdep.c
+index b412d3b3d5ff..21edb8ac95eb 100644
+--- a/sound/core/hwdep.c
++++ b/sound/core/hwdep.c
+@@ -216,12 +216,12 @@ static int snd_hwdep_dsp_load(struct snd_hwdep *hw,
+ 	if (info.index >= 32)
+ 		return -EINVAL;
+ 	/* check whether the dsp was already loaded */
+-	if (hw->dsp_loaded & (1 << info.index))
++	if (hw->dsp_loaded & (1u << info.index))
+ 		return -EBUSY;
+ 	err = hw->ops.dsp_load(hw, &info);
+ 	if (err < 0)
+ 		return err;
+-	hw->dsp_loaded |= (1 << info.index);
++	hw->dsp_loaded |= (1u << info.index);
+ 	return 0;
+ }
  
- 	ret = pci_request_regions(pdev, DRV_NAME);
 -- 
 2.25.1
 
