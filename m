@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E357DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D18C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65622074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5345A2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035330;
-	bh=SqG4whJ1VEAEkNByq572cqCP5htHqrxHUkMAtyTWFuc=;
+	s=default; t=1591035337;
+	bh=fbp5eN4Hnuv3+bR/hO5F+wm3gfMFLymjiWDBZD1oZEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WV9W1R2jRtwqNgwNSsIxbKORkxQDdkgRFSMi4aAI4iw0zOJxhcZT0thw/fImpMU+t
-	 FJwDepNrHMJzNxAvnzLgN2WvuSUR1465lxcQvW4uBeSjc8D4LcI/62THql9J+j6Y9B
-	 N/hhA6lMSGADjIyKfEPScVXNotHlrXYOTQMF6SfY=
+	b=Qg1vSZ8XGPFfBaKR1FarhatdNpQRFB6KHlXUyBldlmy5COak1R1TkNgUl4d07q2wA
+	 Sf8h+m4L5W5J9GdwQh0XeZErceJUQTLWNEMkxL8XRSPFCa81yKSXEZpHAtKGou0W65
+	 ab3thSsuOiFkDHx8O21+mtFdOdEwCKAuX7FnvSo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbgFASP3 (ORCPT
+        id S1731601AbgFASPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35678 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbgFASPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:23 -0400
+        id S1730497AbgFASPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6AC82073B;
-        Mon,  1 Jun 2020 18:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A872F2068D;
+        Mon,  1 Jun 2020 18:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035323;
-        bh=SqG4whJ1VEAEkNByq572cqCP5htHqrxHUkMAtyTWFuc=;
+        s=default; t=1591035330;
+        bh=fbp5eN4Hnuv3+bR/hO5F+wm3gfMFLymjiWDBZD1oZEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ik69irgXtgwVWR89oDnRi2sBTKPY7POU/+qPmGQHKx+TDPkhaaX7Z6LQUcoNKSvJr
-         bbR0HgpFj2xxnBpohlDf/qx1UOsUIS+vw6WwRNFMrnt/LtK6weq7hNhCu3WvOGomd6
-         KEE8pEDINq3f7HDL7CbRgOTi18qZji6k1RiHDSK8=
+        b=ELI+eDlvB+oBZetjBl1RI9/HvA6ij2ejP2aRsL/CqFeQ0MdYKIYcgW//vf2TEwyXS
+         viit+sOYd08U8odtmjMyWz8HZ1PLmpFXpNAA1n3qu/BOIXjGP80GbrGU752Iwp81Kn
+         NZeZWuWKo+G8lbkUTnH8DXyx8LXFDiAq1xQOC6t0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 108/177] ARM: dts: mmp3: Drop usb-nop-xceiv from HSIC phy
-Date:   Mon,  1 Jun 2020 19:54:06 +0200
-Message-Id: <20200601174057.607240412@linuxfoundation.org>
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 111/177] gpio: pxa: Fix return value of pxa_gpio_probe()
+Date:   Mon,  1 Jun 2020 19:54:09 +0200
+Message-Id: <20200601174057.876910842@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,49 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 24cf6eef79a7e85cfd2ef9dea52f769c9192fc6e ]
+[ Upstream commit 558ab2e8155e5f42ca0a6407957cd4173dc166cc ]
 
-"usb-nop-xceiv" is good enough if we don't lose the configuration done
-by the firmware, but we'd really prefer a real driver.
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-Unfortunately, the PHY core is odd in that when the node is compatible
-with "usb-nop-xceiv", it ignores the other compatible strings. Let's
-just remove it.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 542c25b7a209 ("drivers: gpio: pxa: use devm_platform_ioremap_resource()")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/mmp3.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-pxa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index 3e28f0dc9df4..1e25bf998ab5 100644
---- a/arch/arm/boot/dts/mmp3.dtsi
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -202,8 +202,7 @@
- 			};
+diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+index 9888b62f37af..432c487f77b4 100644
+--- a/drivers/gpio/gpio-pxa.c
++++ b/drivers/gpio/gpio-pxa.c
+@@ -663,8 +663,8 @@ static int pxa_gpio_probe(struct platform_device *pdev)
+ 	pchip->irq1 = irq1;
  
- 			hsic_phy0: hsic-phy@f0001800 {
--				compatible = "marvell,mmp3-hsic-phy",
--					     "usb-nop-xceiv";
-+				compatible = "marvell,mmp3-hsic-phy";
- 				reg = <0xf0001800 0x40>;
- 				#phy-cells = <0>;
- 				status = "disabled";
-@@ -224,8 +223,7 @@
- 			};
+ 	gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (!gpio_reg_base)
+-		return -EINVAL;
++	if (IS_ERR(gpio_reg_base))
++		return PTR_ERR(gpio_reg_base);
  
- 			hsic_phy1: hsic-phy@f0002800 {
--				compatible = "marvell,mmp3-hsic-phy",
--					     "usb-nop-xceiv";
-+				compatible = "marvell,mmp3-hsic-phy";
- 				reg = <0xf0002800 0x40>;
- 				#phy-cells = <0>;
- 				status = "disabled";
+ 	clk = clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
 -- 
 2.25.1
 
