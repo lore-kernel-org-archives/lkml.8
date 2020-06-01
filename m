@@ -2,160 +2,111 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84266C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88D6120734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:51:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="1bqiI0ST"
+	by mail.kernel.org (Postfix) with ESMTP id 6582820734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgFAHvW (ORCPT
+        id S1728138AbgFAHv5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53998 "EHLO
+        Mon, 1 Jun 2020 03:51:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgFAHvV (ORCPT
+        with ESMTP id S1725935AbgFAHv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:51:21 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB06CC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 00:51:20 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id e125so3398918lfd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lLnsFSRkW5PHb+/oaZ7Mx9bMV/UsiXKKVLVFncEiU3E=;
-        b=1bqiI0STU9hw+Veqkv1PIzwq1jo5n3EFM5FwycBBlBHQv9+wYSjymGX/dXiiShRE7K
-         6HDjn+4Gsn5SB5km9/6neacSNl+4k4U+dXsddiqIb1d6pqo3TwpvTTje1MUCd30Rig6n
-         0OkLjQNOGHAWNCRRmHFT27mYd31OqSC2M4VkQoO3KOxOJRmn0DVC4w5AxyvgmGQ2WjDT
-         AX/weecLtERefoRVsjMHBjNn3EYEKEBZNseKuY/gzpV4Tynooat7E6reh212c79jiHBT
-         pKeSqXQV5SzB9Ui2CEcg75WUobA1/gVLQdYRQjoLxV7QyenjdXm5QML26ykWybMZ0Sh3
-         p5Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lLnsFSRkW5PHb+/oaZ7Mx9bMV/UsiXKKVLVFncEiU3E=;
-        b=MjA/Gmde0BJc5Vi8FCskp4JUKmb6drNxWDOFdWpzStOvRfOpWeBZxOebUZZq4WE035
-         fsAqA8UOI6W0E8T2y562gjQgTmfmvUsUFfDxd7Fka2cvZFBPZMQFEDd6U9+WhEQMT6/9
-         Mg8/laUTBGVXv9fIpvnyvkLIg5cul/FBxUibEU1TR4bnYCQ5BPGMyRZnbc+OoipuGAHm
-         n6Y7vBkfxi78Hg3+5GPWu1J9Fy+8o5axkEkrbP61bC51lazBwyG/z+hGkW7aKIKtUKsH
-         0vAiz82AIo+ZPlC++v0KZN8t4IgSEzZVMtynfsEn/HDDwtzNuXwtcv2ai0kwRkXVeua7
-         JO1Q==
-X-Gm-Message-State: AOAM533E3Iwkhf2crExzQ6FmQLQkkLjAkEELao9cLXoiKWwdPLsfLRU9
-        ftvxUe087aGq7vHSJ3pnhgGZsQ==
-X-Google-Smtp-Source: ABdhPJwo2dgUaeBpdChjWZgpIZXWFgUo4EtTjcBCrgKAD+o3xIGhhsKPMdRz2cnhUIFTlWmg+xtuog==
-X-Received: by 2002:ac2:5cac:: with SMTP id e12mr10743762lfq.92.1590997879369;
-        Mon, 01 Jun 2020 00:51:19 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:2dd:a862:f067:6dfa:d209:15e? ([2a00:1fa0:2dd:a862:f067:6dfa:d209:15e])
-        by smtp.gmail.com with ESMTPSA id 10sm2361654ljw.134.2020.06.01.00.51.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 00:51:18 -0700 (PDT)
-Subject: Re: [PATCH v2] devres: keep both device name and resource name in
- pretty name
-To:     Vladimir Oltean <olteanv@gmail.com>, gregkh@linuxfoundation.org,
-        arnd@arndb.de, akpm@linux-foundation.org
-Cc:     bgolaszewski@baylibre.com, mika.westerberg@linux.intel.com,
-        efremov@linux.com, ztuowen@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200531180758.1426455-1-olteanv@gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <39107d25-f6e6-6670-0df6-8ae6421e7f9a@cogentembedded.com>
-Date:   Mon, 1 Jun 2020 10:51:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 03:51:57 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F6DC061A0E;
+        Mon,  1 Jun 2020 00:51:57 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jffEe-0001OT-UH; Mon, 01 Jun 2020 09:51:53 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 289D31C0244;
+        Mon,  1 Jun 2020 09:51:52 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 07:51:51 -0000
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqchip: Fix "Loongson HyperTransport Vector support"
+ driver build on all non-MIPS platforms
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200531180758.1426455-1-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-ID: <159099791195.17951.14470094262975748595.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+The following commit has been merged into the irq/core branch of tip:
 
-On 31.05.2020 21:07, Vladimir Oltean wrote:
+Commit-ID:     d77aeb5d403d379ff458e04fc07b5b86700270f2
+Gitweb:        https://git.kernel.org/tip/d77aeb5d403d379ff458e04fc07b5b86700270f2
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Mon, 01 Jun 2020 09:45:27 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 01 Jun 2020 09:48:52 +02:00
 
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> Sometimes debugging a device is easiest using devmem on its register
-> map, and that can be seen with /proc/iomem. But some device drivers have
-> many memory regions. Take for example a networking switch. Its memory
-> map used to look like this in /proc/iomem:
-> 
-> 1fc000000-1fc3fffff : pcie@1f0000000
->    1fc000000-1fc3fffff : 0000:00:00.5
->      1fc010000-1fc01ffff : sys
->      1fc030000-1fc03ffff : rew
->      1fc060000-1fc0603ff : s2
->      1fc070000-1fc0701ff : devcpu_gcb
->      1fc080000-1fc0800ff : qs
->      1fc090000-1fc0900cb : ptp
->      1fc100000-1fc10ffff : port0
->      1fc110000-1fc11ffff : port1
->      1fc120000-1fc12ffff : port2
->      1fc130000-1fc13ffff : port3
->      1fc140000-1fc14ffff : port4
->      1fc150000-1fc15ffff : port5
->      1fc200000-1fc21ffff : qsys
->      1fc280000-1fc28ffff : ana
-> 
-> But after the patch in Fixes: was applied, the information is now
-> presented in a much more opaque way:
-> 
-> 1fc000000-1fc3fffff : pcie@1f0000000
->    1fc000000-1fc3fffff : 0000:00:00.5
->      1fc010000-1fc01ffff : 0000:00:00.5
->      1fc030000-1fc03ffff : 0000:00:00.5
->      1fc060000-1fc0603ff : 0000:00:00.5
->      1fc070000-1fc0701ff : 0000:00:00.5
->      1fc080000-1fc0800ff : 0000:00:00.5
->      1fc090000-1fc0900cb : 0000:00:00.5
->      1fc100000-1fc10ffff : 0000:00:00.5
->      1fc110000-1fc11ffff : 0000:00:00.5
->      1fc120000-1fc12ffff : 0000:00:00.5
->      1fc130000-1fc13ffff : 0000:00:00.5
->      1fc140000-1fc14ffff : 0000:00:00.5
->      1fc150000-1fc15ffff : 0000:00:00.5
->      1fc200000-1fc21ffff : 0000:00:00.5
->      1fc280000-1fc28ffff : 0000:00:00.5
-> 
-> That patch made a fair comment that /proc/iomem might be confusing when
-> it shows resources without an associated device, but we can do better
-> than just hide the resource name altogether. Namely, we can print the
-> device name _and_ the resource name. Like this:
-> 
-> 1fc000000-1fc3fffff : pcie@1f0000000
->    1fc000000-1fc3fffff : 0000:00:00.5
->      1fc010000-1fc01ffff : 0000:00:00.5 sys
->      1fc030000-1fc03ffff : 0000:00:00.5 rew
->      1fc060000-1fc0603ff : 0000:00:00.5 s2
->      1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
->      1fc080000-1fc0800ff : 0000:00:00.5 qs
->      1fc090000-1fc0900cb : 0000:00:00.5 ptp
->      1fc100000-1fc10ffff : 0000:00:00.5 port0
->      1fc110000-1fc11ffff : 0000:00:00.5 port1
->      1fc120000-1fc12ffff : 0000:00:00.5 port2
->      1fc130000-1fc13ffff : 0000:00:00.5 port3
->      1fc140000-1fc14ffff : 0000:00:00.5 port4
->      1fc150000-1fc15ffff : 0000:00:00.5 port5
->      1fc200000-1fc21ffff : 0000:00:00.5 qsys
->      1fc280000-1fc28ffff : 0000:00:00.5 ana
-> 
-> Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-[...]
+irqchip: Fix "Loongson HyperTransport Vector support" driver build on all non-MIPS platforms
 
-    You didn't write the version log -- what changed since v1?
+This commit:
 
-MBR, Sergei
+  818e915fbac5: ("irqchip: Add Loongson HyperTransport Vector support")
+
+Added a MIPS-only driver, but turned on compilation on all other architectures as well:
+
+ config LOONGSON_HTVEC
+        bool "Loongson3 HyperTransport Interrupt Vector Controller"
+        depends on MACH_LOONGSON64 || COMPILE_TEST
+
+But this driver was never build tested on any other architecture than MIPS:
+
+  drivers/irqchip/irq-loongson-htvec.c: In function ‘htvec_irq_dispatch’:
+  drivers/irqchip/irq-loongson-htvec.c:59:3: error: implicit declaration of function ‘spurious_interrupt’; did you mean ‘smp_reboot_interrupt’? [-Werror=implicit-function-declaration]
+
+Because spurious_interrupt() only exists on MIPS.
+
+So make it MIPS-only.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ drivers/irqchip/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 0b6b826..66b9a68 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -534,7 +534,7 @@ config LOONGSON_HTPIC
+ 
+ config LOONGSON_HTVEC
+ 	bool "Loongson3 HyperTransport Interrupt Vector Controller"
+-	depends on MACH_LOONGSON64 || COMPILE_TEST
++	depends on MACH_LOONGSON64
+ 	default MACH_LOONGSON64
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	help
