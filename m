@@ -6,99 +6,83 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E233B2077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207482073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgFAQ5F (ORCPT
+        id S1727804AbgFAQ5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 1 Jun 2020 12:57:08 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:37840 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgFAQ5F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jun 2020 12:57:05 -0400
-Received: from elvis.franken.de ([193.175.24.41]:47669 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgFAQ5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:57:05 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jfnkB-0004Nc-00; Mon, 01 Jun 2020 18:56:59 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 9578AC0654; Mon,  1 Jun 2020 18:56:46 +0200 (CEST)
-Date:   Mon, 1 Jun 2020 18:56:46 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 0/6] mips: Add DT bindings for MIPS CDMM and
- MIPS GIC
-Message-ID: <20200601165646.GA12402@alpha.franken.de>
-References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
- <d59ef33155e2ae965e79522ab220c177@kernel.org>
- <20200601152449.2okwqaqw4262nedu@mobilestation>
+Date:   Mon, 1 Jun 2020 12:57:00 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sh: Implement __get_user_u64() required for 64-bit
+ get_user()
+Message-ID: <20200601165700.GU1079@brightrain.aerifal.cx>
+References: <20200529174540.4189874-1-glaubitz@physik.fu-berlin.de>
+ <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
+ <CAMuHMdWG1wudoBP0EK8FiEj1BMEoL3r5oqJMUEbt2rqRU2gQpw@mail.gmail.com>
+ <ba354e30-82ab-68c2-0771-2489463c9279@physik.fu-berlin.de>
+ <2ad089c1-75cf-0986-c40f-c7f3f8fd6ead@physik.fu-berlin.de>
+ <CAMuHMdXzje-qFH=pGoouSuXTZYf4NvnzbaYxTm_boMek-DbWMg@mail.gmail.com>
+ <20200601030300.GT1079@brightrain.aerifal.cx>
+ <CAMuHMdUmpLRyYTPO8LPtOyYtraQ77XZqYy9=8cUiWphmpvczmg@mail.gmail.com>
+ <fbfca28d-217d-4857-a010-8c6e277db67c@physik.fu-berlin.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200601152449.2okwqaqw4262nedu@mobilestation>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <fbfca28d-217d-4857-a010-8c6e277db67c@physik.fu-berlin.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 06:24:49PM +0300, Serge Semin wrote:
-> Hello Marc,
+On Mon, Jun 01, 2020 at 11:13:26AM +0200, John Paul Adrian Glaubitz wrote:
+> Hello!
 > 
-> On Mon, Jun 01, 2020 at 01:31:27PM +0100, Marc Zyngier wrote:
-> > On 2020-06-01 13:21, Serge Semin wrote:
+> On 6/1/20 11:02 AM, Geert Uytterhoeven wrote:
+> >> Can I propose a different solution? For archs where there isn't
+> >> actually any 64-bit load or store instruction, does it make sense to
+> >> be writing asm just to do two 32-bit loads/stores, especially when
+> >> this code is not in a hot path?
+> >>
+> >> What about just having the 64-bit versions call the corresponding
+> >> 32-bit version twice? (Ideally this would even be arch-generic and
+> >> could replace the m68k asm.) It would return EFAULT if either of the
+> >> 32-bit calls did.
 > > 
-> > [...]
-> > 
-> > > Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
-> > > been seen maintaining MIPS for a long time, Thomas is only responsible
-> > > for the next part of it:
-> > > 	F:      Documentation/devicetree/bindings/mips/
-> > > 	F:      Documentation/mips/
-> > > 	F:      arch/mips/
-> > > 	F:      drivers/platform/mips/
-> > > the MIPS-specific drivers like:
-> > > 	F:	drivers/bus/mips_cdmm.c
-> > > 	F:	drivers/irqchip/irq-mips-cpu.c
-> > > 	F:	drivers/irqchip/irq-mips-gic.c
-> > > 	F:	drivers/clocksource/mips-gic-timer.c
-> > > 	F:	drivers/cpuidle/cpuidle-cps.c
-> > > seem to be left for the subsystems maintainers to support. So if you
-> > > don't
-> > > mind or unless there is a better alternative, I can help with looking
-> > > after them to ease the maintainers review burden and since I'll be
-> > > working
-> > > on our MIPS-based SoC drivers integrating into the mainline kernel repo
-> > > anyway. If you don't like this idea, please just decline the last
-> > > patch in the series.
-> > 
+> > Yes, that's an option, too.
 > 
-> > Given how deeply integrated the MIPS GIC is in the architecture, I'd
-> > really like Thomas to co-maintain it, or at the very least give his
-> > blessing on you being the dedicated point of contact for MIPS GIC
-> > stuff.
+> That's the solution that Michael Karcher suggested to me as an alternative
+> when I talked to him off-list.
 > 
-> I don't mind either way. First option might be even better. Thomas,
-> what do you think?
+> While I understand that it works, I don't like the inconsistency and I also
+> don't see why we should opt for a potentially slower solution when we can
+> used the fastest one.
+> 
+> I'm also not sure how the exception handling would properly work when you
+> have two invocations of __get_user_asm().
+> 
+> My current approach is consistent with the existing code, so I think it's
+> the natural choice. I just need someone with more experience in SH assembler
+> than me that the solution is correct.
+> 
+> I have already pinged Niibe-san in private, he'll hopefully get back to me
+> within the next days.
 
-sure, I'm happy to be your co-maintainer.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+I don't have an objection to doing it the way you've proposed, but I
+don't think there's any performance distinction or issue with the two
+invocations.
