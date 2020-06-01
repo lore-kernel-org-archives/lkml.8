@@ -2,155 +2,85 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5335D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86786206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgFADYr (ORCPT
+        id S1727056AbgFAD1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 23:24:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52338 "EHLO huawei.com"
+        Sun, 31 May 2020 23:27:09 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:8380 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726218AbgFADYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 23:24:47 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B78B58EEB6B23FA263E9;
-        Mon,  1 Jun 2020 11:24:44 +0800 (CST)
-Received: from [10.173.222.27] (10.173.222.27) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 1 Jun 2020 11:24:37 +0800
-Subject: Re: [PATCH RFC] KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset
- when S2FWB is supported
-To:     Alexandru Elisei <alexandru.elisei@arm.com>,
-        <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Marc Zyngier <maz@kernel.org>
-References: <20200415072835.1164-1-yuzenghui@huawei.com>
- <e99bc07d-0dd4-055c-808f-fd9cde88d2fc@arm.com>
- <a1a1961a-2eae-b26c-e607-ab5c0c929f37@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <4c5c76d6-7dc3-e598-76cd-602a3cdc2f26@huawei.com>
-Date:   Mon, 1 Jun 2020 11:24:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726860AbgFAD1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 23:27:09 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 1 Jun 2020 11:26:51
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.72.4]
+Date:   Mon, 1 Jun 2020 11:26:51 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Ben Skeggs" <skeggsb@gmail.com>
+Cc:     kjlu@umn.edu, "David Airlie" <airlied@linux.ie>,
+        "ML nouveau" <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "ML dri-devel" <dri-devel@lists.freedesktop.org>,
+        "Ben Skeggs" <bskeggs@redhat.com>, Markus.Elfring@web.de
+Subject: Re: Re: [PATCH] drm/nouveau/clk/gm20b: Fix memory leak in
+ gm20b_clk_new
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <CACAvsv73wZK_pKk4TDHaTeBUqxYHvK0KhLQBgPC8Be_VviY2jg@mail.gmail.com>
+References: <20200529080042.6082-1-dinghao.liu@zju.edu.cn>
+ <CACAvsv73wZK_pKk4TDHaTeBUqxYHvK0KhLQBgPC8Be_VviY2jg@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <a1a1961a-2eae-b26c-e607-ab5c0c929f37@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Message-ID: <6a65a5b1.dd4b7.1726deaea0a.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgAXblB7ddRewnRrAA--.6592W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgYSBlZdtOZhVAABs9
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGCS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r48MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
-
-On 2020/5/30 18:46, Alexandru Elisei wrote:
-> Hi,
-> 
-> On 4/20/20 5:10 PM, Alexandru Elisei wrote:
-
-[ For some unknown reasons, I had missed your reply one month ago.
-   Sorry, I'm going to fix my email settings ... ]
-
->> Hi,
->>
->> On 4/15/20 8:28 AM, Zenghui Yu wrote:
->>> stage2_unmap_vm() was introduced to unmap user RAM region in the stage2
->>> page table to make the caches coherent. E.g., a guest reboot with stage1
->>> MMU disabled will access memory using non-cacheable attributes. If the
->>> RAM and caches are not coherent at this stage, some evicted dirty cache
->>> line may go and corrupt guest data in RAM.
->>>
->>> Since ARMv8.4, S2FWB feature is mandatory and KVM will take advantage
->>> of it to configure the stage2 page table and the attributes of memory
->>> access. So we ensure that guests always access memory using cacheable
->>> attributes and thus, the caches always be coherent.
->>>
->>> So on CPUs that support S2FWB, we can safely reset the vcpu without a
->>> heavy stage2 unmapping.
->>>
->>> Cc: Marc Zyngier <maz@kernel.org>
->>> Cc: Christoffer Dall <christoffer.dall@arm.com>
->>> Cc: James Morse <james.morse@arm.com>
->>> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
->>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->>> ---
->>>
->>> If this is correct, there should be a great performance improvement on
->>> a guest reboot (or reset) on systems support S2FWB. But I'm afraid that
->>> I've missed some points here, so please comment!
->>>
->>> The commit 957db105c997 ("arm/arm64: KVM: Introduce stage2_unmap_vm")
->>> was merged about six years ago and I failed to track its histroy and
->>> intention. Instead of a whole stage2 unmapping, something like
->>> stage2_flush_vm() looks enough to me. But again, I'm unsure...
->>>
->>> Thanks for having a look!
->> I had a chat with Christoffer about stage2_unmap_vm, and as I understood it, the
->> purpose was to make sure that any changes made by userspace were seen by the guest
->> while the MMU is off. When a stage 2 fault happens, we do clean+inval on the
->> dcache, or inval on the icache if it was an exec fault. This means that whatever
->> the host userspace writes while the guest is shut down and is still in the cache,
->> the guest will be able to read/execute.
->>
->> This can be relevant if the guest relocates the kernel and overwrites the original
->> image location, and userspace copies the original kernel image back in before
->> restarting the vm.
-
-Yes, I-cache coherency is what I had missed! So without a S2 unmapping
-on reboot, if there's any stale and "valid" cache line in the I-cache,
-guest may fetch the wrong instructions directly from it, and bad things
-will happen... (We will otherwise get a translation fault and a
-permission fault and invalidate the I-cache as needed.)
-
->>
->>>   virt/kvm/arm/arm.c | 5 ++++-
->>>   1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
->>> index 48d0ec44ad77..e6378162cdef 100644
->>> --- a/virt/kvm/arm/arm.c
->>> +++ b/virt/kvm/arm/arm.c
->>> @@ -983,8 +983,11 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
->>>   	/*
->>>   	 * Ensure a rebooted VM will fault in RAM pages and detect if the
->>>   	 * guest MMU is turned off and flush the caches as needed.
->>> +	 *
->>> +	 * S2FWB enforces all memory accesses to RAM being cacheable, we
->>> +	 * ensure that the cache is always coherent.
->>>   	 */
->>> -	if (vcpu->arch.has_run_once)
->>> +	if (vcpu->arch.has_run_once && !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
->> I think userspace does not invalidate the icache when loading a new kernel image,
->> and if the guest patched instructions, they could potentially still be in the
->> icache. Should the icache be invalidated if FWB is present?
-> 
-> I noticed that this was included in the current pull request and I remembered that
-> I wasn't sure about this part. Did some more digging and it turns out that FWB
-> implies no cache maintenance needed for *data to instruction* coherence. From ARM
-> DDI 0487F.b, page D5-2635:
-> 
-> "When ARMv8.4-S2FWB is implemented, the architecture requires that
-> CLIDR_EL1.{LOUU, LOIUS} are zero so that no levels of data cache need to be
-> cleaned in order to manage coherency with instruction fetches".
-> 
-> However, there's no mention that I found for instruction to data coherence,
-> meaning that the icache would still need to be invalidated on each vcpu in order
-> to prevent fetching of patched instructions from the icache. Am I missing something?
-
-Thanks for the head up and Marc's fix!
-
-
-Thanks both,
-Zenghui
+CkhpIEJlbiwKCj4gPiBXaGVuIGdrMjBhX2Nsa19jdG9yKCkgcmV0dXJucyBhbiBlcnJvciBjb2Rl
+LCBwb2ludGVyICJjbGsiCj4gPiBzaG91bGQgYmUgcmVsZWFzZWQuIEl0J3MgdGhlIHNhbWUgd2hl
+biBnbTIwYl9jbGtfbmV3KCkKPiA+IHJldHVybnMgZnJvbSBlbHNld2hlcmUgZm9sbG93aW5nIHRo
+aXMgY2FsbC4KPiBUaGlzIHNob3VsZG4ndCBiZSBuZWNlc3NhcnkuICBJZiBhIHN1YmRldiBjb25z
+dHJ1Y3RvciBmYWlscywgYW5kCj4gcmV0dXJucyBhIHBvaW50ZXIsIHRoZSBjb3JlIHdpbGwgY2Fs
+bCB0aGUgZGVzdHJ1Y3RvciB0byBjbGVhbiB0aGluZ3MKPiB1cC4KPiAKCkknbSBub3QgZmFtaWxp
+YXIgd2l0aCB0aGUgYmVoYXZpb3Igb2YgdGhlIGNhbGxlciBvZiBnbTIwYl9jbGtfbmV3KCkuIApJ
+ZiB0aGUgc3ViZGV2IGNvbnN0cnVjdG9yIGZhaWxzLCB0aGUgY29yZSB3aWxsIGNoZWNrIHRoZSBw
+b2ludGVyCihoZXJlIGlzICJwY2xrIiksIHRoZW4gaXQncyBvayBhbmQgdGhlcmUgaXMgbm8gYnVn
+IChEbyB5b3UgbWVhbiAKdGhpcz8pLiBJZiB0aGUgY29yZSBleGVjdXRlcyBlcnJvciBoYW5kbGlu
+ZyBjb2RlIG9ubHkgYWNjb3JkaW5nIHRvIAp0aGUgZXJyb3IgY29kZSwgdGhlcmUgbWF5IGJlIGEg
+bWVtb3J5IGxlYWsgYnVnICh0aGUgY2FsbGVyIGNhbm5vdCAKa25vdyBpZiAtRU5PTUVNIGNvbWVz
+IGZyb20gdGhlIGZhaWx1cmUgb2Yga3phbGxvYyBvciBnazIwYV9jbGtfY3RvcikuIApJZiB0aGUg
+Y29yZSBhbHdheXMgY2FsbHMgdGhlIGRlc3RydWN0b3IgYXMgbG9uZyBhcyB0aGUgY29uc3RydWN0
+b3IgCmZhaWxzIChldmVuIGlmIHRoZSBremFsbG9jIGZhaWxzKSwgd2UgbWF5IGhhdmUgYSBkb3Vi
+bGUgZnJlZSBidWcuIAoKV291bGQgeW91IGxpa2UgdG8gZ2l2ZSBhIG1vcmUgZGV0YWlsZWQgZXhw
+bGFuYXRpb24gYWJvdXQgdGhlIGJlaGF2aW9yCm9mIHRoZSBjb3JlPyAKClJlZ2FyZHMsCkRpbmdo
+YW8=
