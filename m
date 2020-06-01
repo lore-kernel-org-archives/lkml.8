@@ -2,133 +2,148 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F60C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E988206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591028588;
-	bh=sYsHGCZGXO1Q3BckbVF76yQIJfyp90b+T56aNJ1NsbQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=rO5Eb+0QeKYIve9Yvk12d/7LETZ79RwwI/yUfpAl7//tSww/Db5woktosK+GkTsBD
-	 kjTG+agJ5OhYmocPEIlqKDRDBb07YOeriqHh9dCeMo1YLZnPHABjxZ91YULGbfMYwe
-	 bqijBFYodC7atm06E3Ig+nvl7LUzwBys68j6isZA=
+	by mail.kernel.org (Postfix) with ESMTP id B60792073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uPm7+Nhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgFAQXH (ORCPT
+        id S1727795AbgFAQYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49706 "EHLO
+        Mon, 1 Jun 2020 12:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFAQXH (ORCPT
+        with ESMTP id S1726067AbgFAQYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:23:07 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94492C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:23:06 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id c3so394966wru.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:23:06 -0700 (PDT)
+        Mon, 1 Jun 2020 12:24:09 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C979C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:24:08 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id y13so3350301ybj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=MKmHiaFINZPLg82Dw2TKjTnxk0X6EWpuOFGm/aRIn0o=;
-        b=EbG/9POs7lhCLbPyJmRqU4I/RRHW3gzPM/OUcWyXaGw2hGeDfCqqlvuSKD1Qlkc7+N
-         HbUs6wydQTnqKyeTxjpBP4LMjXQ6zFX/CxuYYMz9njyD4pXoLM4o0urg2UXsY1dvIIP/
-         BvmeQTRy+6EILm5pDZul0+1y0fhLxHO9uJzpXw3LypLvafzohIc8xmtT/BeqKfU0OVR5
-         rWR2HtcKtrMRzSYgaoSbtFg+n8ShNs2qq1i3DBCrPN1kUWxjDIu6KwJXhNEzgufrSxxq
-         P4YWo/+NNci+5ExqgZTuCGKkRMPQ/4g+a1rrTSUfkce0V5kOGswN04kGUgqYbxJLv3so
-         pKKQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PQ2GMhzo7cmDr2bvHk1Eg4SDQqgv+z7peej1Sf2vsYE=;
+        b=uPm7+NhhxHzDUqaSkN14igTBR9BwE4dUvjGjDaGJl+MO6HCxa+3Mm3VFkyyCJ/K7qy
+         IPfnwiJ3Ityam2G+W0VuM6GWso8s8Pyfj24xgpSFmWC0bCb8+EHT0aG2inCv3fJ2VJCJ
+         IuF0sKlLInulOSd1HXvy0rUaZxXLkDqWtwXoyHbK146pSD/Jud3GTBOot0SvZgeaGnyC
+         7meWhECX1loiiMzZMg6wBxEkzjMr40tLD0XwGdS9a01QG2msavsR+B3mLyx6QPWHfMGp
+         jmeQvyiOE9Ka/IH9bHw4brTFOvuD2nMncL/Cktk6ogC6aB+0TjyKzrzjogpFA/3+XnDt
+         7rGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=MKmHiaFINZPLg82Dw2TKjTnxk0X6EWpuOFGm/aRIn0o=;
-        b=QOmGyopcgASDDflzzrMz9GDUuW3xkRk2wM2o9u26fwxDP3lj7CXAHeq7r0AaU1CN8z
-         hRD08s3IQvc+rI89K6M+b+Opcf3M5d0Tq9McJ3wwIxRv967Zb3YeJ8bexcmWRPfqXe6+
-         sGj1Omol/aU6J470HL8NHJw3t7LrJcshGEu7yt1Uhsfv2nN2kbl6WjEeKyJOlGafPeSY
-         UBm6ss9rpjPk9B8B4oqUVqmF8qArxS13uDz5dPNPnMcTNX13ZPqlslic4cWAXEVhAmMM
-         1MAwmZM/bXcEG70pQmvH6qgV5R3Mw67IMPcAMxJ6Un9WXALcXKf89xypJmadFWpcFsG4
-         wWEg==
-X-Gm-Message-State: AOAM530MBb4a8fP3V0QWHIeurktEMsp9Zp1/RdjmJ1dMjvvSGcEl4suH
-        nfXJMpZU48ahNOIJhicOizx0jHLo
-X-Google-Smtp-Source: ABdhPJwPV/acAlvoKP2GOH7XTNxXZs8YRFcEy+TVgLe2ixraNlhBGc2jXlExFKQ7ieeA09ygg3Gvkg==
-X-Received: by 2002:adf:b348:: with SMTP id k8mr24796518wrd.157.1591028585285;
-        Mon, 01 Jun 2020 09:23:05 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id s8sm19032807wrm.96.2020.06.01.09.23.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 09:23:04 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 18:23:02 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/boot updates for v5.8
-Message-ID: <20200601162302.GA1138465@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PQ2GMhzo7cmDr2bvHk1Eg4SDQqgv+z7peej1Sf2vsYE=;
+        b=Q6Lm/7BXujMu6Pu37kJqPNwDlFFTV6lPWoKLzy4fxIBPzz4DboeiuVnia1IbrHDq1o
+         rqB6rR9yHQtscOfa98qF+pb0I22XjenMrlGl5SthMVHyD/FTQsM1bDjwTmmVhlmeQsf/
+         cb28qF/1PjjGpZIYNbOwXyHraiFqaIucdhj8oH30rWhKJDvg92LXV4hClN80p+5S4D8T
+         xnIbx7i5DxBFwaePuJlMgwbQeZ/r0cIYoKEu5soUgGhnMdZBaUZVIQ0FpQo7kpDxWyzj
+         foyK0rdn07unXyppyxodJwH2oVXDOUUxjVn3Dk2I4/yBAk/IV50BklFTLk1VucamGaqs
+         hK7g==
+X-Gm-Message-State: AOAM532ubXhcIELXAPIE2Ax0HEB5WrIAWnxQyOkrI/p7aK3w36NGhvss
+        XZpuAS9zxdABEvIxQLdAJYht+ZGjLKTN4rcIQhvSxHwF
+X-Google-Smtp-Source: ABdhPJyBN4Lc79P2ibomNOdQBcMt1WD1LcxCDheiYEG7aXgYbSVyZEN2UiyE2prTWlGUy9qPGescjrS7bWTF67Qzw+g=
+X-Received: by 2002:a25:5387:: with SMTP id h129mr32591599ybb.47.1591028647233;
+ Mon, 01 Jun 2020 09:24:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200524224219.234847-1-jolsa@kernel.org> <20200524224219.234847-7-jolsa@kernel.org>
+ <CAP-5=fV5tKwyMCpwt2VFkSFwCCk6qJ3S2_ajNy2P6ZWVxvbC-w@mail.gmail.com> <20200601132147.GB1031432@krava>
+In-Reply-To: <20200601132147.GB1031432@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 1 Jun 2020 09:23:56 -0700
+Message-ID: <CAP-5=fXyqCZUHxn_0OpjDCb+JqoCyEFfJnPNXwYd+jvGshwOrw@mail.gmail.com>
+Subject: Re: [PATCH 06/14] perf tests: Add another pmu-events tests
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Mon, Jun 1, 2020 at 6:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Mon, Jun 01, 2020 at 12:44:15AM -0700, Ian Rogers wrote:
+>
+> SNIP
+>
+> > > +       memset(&error, 0, sizeof(error));
+> > > +       ret = parse_events_fake(evlist, id, &error);
+> > > +       if (ret) {
+> > > +               pr_debug("str        : %s\n", error.str);
+> > > +               pr_debug("help       : %s\n", error.help);
+> > > +               pr_debug("first_str  : %s\n", error.first_str);
+> > > +               pr_debug("first_help : %s\n", error.first_help);
+> > > +       }
+> > > +
+> > > +       evlist__delete(evlist);
+> > > +       free(error.str);
+> > > +       free(error.help);
+> > > +       free(error.first_str);
+> > > +       free(error.first_help);
+> > > +       return ret;
+> > > +}
+> >
+> > This is quite similar to check_parse_id, fold them together?
+>
+> there is the 'same_cpu' logic in check_parse_id,
+> so I did not want to mess with that
 
-Please pull the latest x86/boot git tree from:
+Agreed. We could handle ret and same_cpu in the caller.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-2020-06-01
+> >
+> > > +
+> > > +static int metric_parse_fake(const char *str)
+> > > +{
+> > > +       struct expr_parse_ctx ctx;
+> > > +       struct hashmap_entry *cur;
+> > > +       double result;
+> > > +       int ret = -1;
+> > > +       size_t bkt;
+> > > +       int i;
+> > > +
+> > > +       pr_debug("parsing '%s'\n", str);
+> > > +
+> > > +       expr__ctx_init(&ctx);
+> > > +       if (expr__find_other(str, NULL, &ctx, 0) < 0) {
+> > > +               pr_err("expr__find_other failed\n");
+> > > +               return -1;
+> > > +       }
+> > > +
+> > > +       i = 1;
+> > > +       hashmap__for_each_entry((&ctx.ids), cur, bkt)
+> > > +               expr__add_id(&ctx, strdup(cur->key), i++);
+> >
+> > It might make sense to share the code here with that in test_parsing.
+> > This initialization of ids is commented there and it is a bit special.
+>
+> hum, not sure it's worth to add this complexity to test, I'd like
+> to keep it simple, it's already not straightforward ;-) I added the
+> comment you mentioned
 
-   # HEAD: 5214028dd89e49ba27007c3ee475279e584261f0 x86/boot: Correct relocation destination on old linkers
+Ok, sounds good to me. More testing is the priority :-)
 
-Misc updates:
+Thanks,
+Ian
 
- - Add the initrdmem= boot option to specify an initrd embedded in RAM (flash most likely)
- - Sanitize the CS value earlier during boot, which also fixes SEV-ES.
- - Various fixes and smaller cleanups.
-
-  out-of-topic modifications in x86/boot:
-  -----------------------------------------
-  include/linux/tboot.h              # 767dea211cd0: x86/tboot: Mark tboot static
-  init/do_mounts_initrd.c            # 694cfd87b0c8: x86/setup: Add an initrdmem=
-
- Thanks,
-
-	Ingo
-
------------------->
-Arvind Sankar (1):
-      x86/boot: Correct relocation destination on old linkers
-
-Christoph Hellwig (1):
-      x86/tboot: Mark tboot static
-
-Joerg Roedel (1):
-      x86/boot/compressed/64: Switch to __KERNEL_CS after GDT is loaded
-
-Ronald G. Minnich (1):
-      x86/setup: Add an initrdmem= option to specify initrd physical address
-
-Vamshi K Sthambamkadi (2):
-      x86/boot: Add kstrtoul() from lib/
-      x86/boot: Fix -Wint-to-pointer-cast build warning
-
-
- Documentation/admin-guide/kernel-parameters.txt |  7 ++++
- arch/x86/boot/compressed/acpi.c                 |  7 ++--
- arch/x86/boot/compressed/head_32.S              |  5 +--
- arch/x86/boot/compressed/head_64.S              |  9 ++++++
- arch/x86/boot/string.c                          | 43 ++++++++++++++++++++++++-
- arch/x86/boot/string.h                          |  1 +
- arch/x86/kernel/setup.c                         |  6 ++++
- arch/x86/kernel/tboot.c                         |  8 +++--
- include/linux/tboot.h                           |  8 +----
- init/do_mounts_initrd.c                         | 13 +++++++-
- 10 files changed, 90 insertions(+), 17 deletions(-)
-
+> jirka
+>
