@@ -2,51 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F27C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 997F4206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008BE206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037836;
-	bh=Uk2NQ6pJxx7STTg4V23cmfZP3VK2GGpnmgxbNTFcWxo=;
+	s=default; t=1591037840;
+	bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Nc4TFj1w3dJO249vIBEBHT7n1RYjKONcr5LVnZMAeT91nAyoX4EWod2Qk9BJPb0X
-	 huupXEP3qLh6YWN1W1LbA6lKYLWtVLadiYlLqzvxa/7KLLSsQ3AwGaKFzegUK9AnAw
-	 GOPHxb7e9KVllYVgpVg+UiAIUUt3wbscgCwmx890=
+	b=fVjcQsBH59mmep+1Puqc3xXSgxCYGJHqNTrMDEb4ZLhlidZPvlgvaJte3DRlxzZ/J
+	 KK/cfZOXlUKmU75Q4v+dwZa+uvKEsfkjq70jM/f2MS6VRTEmOid3QrYL/xgheMu8JE
+	 EbqEzGwplQWpd2zsnDR1b8tDzXmFL7Z6Qy3K5t8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgFAS5P (ORCPT
+        id S1730709AbgFAS5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:57:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42710 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbgFASAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:05 -0400
+        id S1728120AbgFASAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA0862073B;
-        Mon,  1 Jun 2020 18:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC52A206E2;
+        Mon,  1 Jun 2020 18:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034405;
-        bh=Uk2NQ6pJxx7STTg4V23cmfZP3VK2GGpnmgxbNTFcWxo=;
+        s=default; t=1591034403;
+        bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3J9/gtmWat+vafMOy2h1/GPIkvcLccQLNqYOdrqob/C0LOpml0vLvMjctTbn+Bm8
-         ZLQTxK43PpbqSenYZS4t0/O4RgvjxrOlYQnySKo6WA7C81vXBr79YTewC7TAqV3nMg
-         NH+ucr+8cGtmxgp1HXx7/OahhqbPYAv6oyQi4dGs=
+        b=cbhv1+D72N7wSQA2Kh7BriOlgAAzMrMRCMlQBsDD39ipWwqFGUpsyywoXen0wOI5E
+         Bh/v3CdTDaom+PP3O/aCdQ4MhRHv+hotqNvodd2UuQBj6Eokfswsivjbb6VJMb+Isr
+         lUXGtAdkFHQB97XyvbH3sgnNsNQ+1i5jsbJNOuK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Fedorenko <vfedorenko@novek.ru>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 02/77] net: ipip: fix wrong address family in init error path
-Date:   Mon,  1 Jun 2020 19:53:07 +0200
-Message-Id: <20200601174016.919153810@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 16/77] net: microchip: encx24j600: add missed kthread_stop
+Date:   Mon,  1 Jun 2020 19:53:21 +0200
+Message-Id: <20200601174019.378767998@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,31 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Fedorenko <vfedorenko@novek.ru>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 57ebc8f08504f176eb0f25b3e0fde517dec61a4f ]
+[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
 
-In case of error with MPLS support the code is misusing AF_INET
-instead of AF_MPLS.
+This driver calls kthread_run() in probe, but forgets to call
+kthread_stop() in probe failure and remove.
+Add the missed kthread_stop() to fix it.
 
-Fixes: 1b69e7e6c4da ("ipip: support MPLS over IPv4")
-Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ipip.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/ipip.c
-+++ b/net/ipv4/ipip.c
-@@ -702,7 +702,7 @@ out:
+diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
+index f831238d9793..84b6ad76f5bc 100644
+--- a/drivers/net/ethernet/microchip/encx24j600.c
++++ b/drivers/net/ethernet/microchip/encx24j600.c
+@@ -1075,7 +1075,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 	if (unlikely(ret)) {
+ 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
+ 			  ret);
+-		goto out_free;
++		goto out_stop;
+ 	}
  
- rtnl_link_failed:
- #if IS_ENABLED(CONFIG_MPLS)
--	xfrm4_tunnel_deregister(&mplsip_handler, AF_INET);
-+	xfrm4_tunnel_deregister(&mplsip_handler, AF_MPLS);
- xfrm_tunnel_mplsip_failed:
+ 	eidled = encx24j600_read_reg(priv, EIDLED);
+@@ -1093,6 +1093,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
  
- #endif
+ out_unregister:
+ 	unregister_netdev(priv->ndev);
++out_stop:
++	kthread_stop(priv->kworker_task);
+ out_free:
+ 	free_netdev(ndev);
+ 
+@@ -1105,6 +1107,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
+ 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
+ 
+ 	unregister_netdev(priv->ndev);
++	kthread_stop(priv->kworker_task);
+ 
+ 	free_netdev(priv->ndev);
+ 
+-- 
+2.25.1
+
 
 
