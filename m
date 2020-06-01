@@ -2,145 +2,132 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43F50206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWHuT2rA"
+	by mail.kernel.org (Postfix) with ESMTP id 64A87206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037413;
+	bh=zZkMrV8sfL+xm3WaOiI2ZiFlxFU4FE6jKQUP2VeQ53o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f9kdRsqlHFgaPdhNV799RyQ7nsbee1kRGarnxHuEpnlRzPgnksMfBlL7njuWDSwPp
+	 nwUXgYbRUE9ChKOvIztxQAIc2EA+kg5dDRLWJ4T82uB4WiwEe85ojddXMRjYFvovhK
+	 oLBouSZclUyUJ8JPWScoEoklh9spPNyrPG94E1Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbgFASGS (ORCPT
+        id S1730645AbgFASuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 1 Jun 2020 14:50:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730435AbgFASGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jun 2020 14:06:18 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43391 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730370AbgFASFv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:05:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591034749;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=osjdztueMuaAwG61qi79PUuaa4pVp/qOeP56bfj88L4=;
-        b=XWHuT2rApHW2jLm8wOesofWZh+6w5A1BNR4c6B+T0VB5j4sBMF0n0yilJfj6FdkFX2fQRK
-        NUW85ydYkemkbMc0V1FS4wcKDHGF9MGHvi2VIUCX4NVHFPkmQr21sbEKnT0xpYuX6OwGKl
-        vfMaLTq7sl/HBGtyhBpBr0XIdA9AxTg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-1-ayfnyAN1PO6nfg34SZesjA-1; Mon, 01 Jun 2020 14:05:47 -0400
-X-MC-Unique: ayfnyAN1PO6nfg34SZesjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DF86107B266;
-        Mon,  1 Jun 2020 18:05:45 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D44F11002394;
-        Mon,  1 Jun 2020 18:05:40 +0000 (UTC)
-Date:   Mon, 1 Jun 2020 13:05:38 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Cc:     huawei.libin@huawei.com, xiexiuqi@huawei.com,
-        cj.chengjian@huawei.com, mingo@redhat.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        mbenes@suse.cz, devel@etsukata.com, viro@zeniv.linux.org.uk,
-        esyr@redhat.com
-Subject: Re: Question: livepatch failed for new fork() task stack unreliable
-Message-ID: <20200601180538.o5agg5trbdssqken@treble>
-References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
- <20200529174433.wpkknhypx2bmjika@treble>
- <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BA53B206E2;
+        Mon,  1 Jun 2020 18:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034777;
+        bh=zZkMrV8sfL+xm3WaOiI2ZiFlxFU4FE6jKQUP2VeQ53o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CbMX4CoIe8eczDfe8M//B3dxdgPXAZOLRY+TiqBtbUKjbQ1072caaxR7ZFOWRV1xD
+         sPF53LCp6EI+J3T620S7OgFdG/i6hTHBNukJ8wliyt+XbDHf7kTB3ivyg3xZswS1L6
+         awFgQU0820KINuvL0XOrCCbFMYwm/Z0n1lOgr8vc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 001/142] ax25: fix setsockopt(SO_BINDTODEVICE)
+Date:   Mon,  1 Jun 2020 19:52:39 +0200
+Message-Id: <20200601174038.146844345@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
+References: <20200601174037.904070960@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 10:21:19AM +0800, Wangshaobo (bobo) wrote:
-> 1) when a user mode task just fork start excuting ret_from_fork() till
-> schedule_tail, unwind_next_frame found
-> 
-> orc->sp_reg is ORC_REG_UNDEFINED but orc->end not equals zero, this time
-> arch_stack_walk_reliable()
-> 
-> terminates it's backtracing loop for unwind_done() return true. then 'if
-> (!(task->flags & (PF_KTHREAD | PF_IDLE)))'
-> 
-> in arch_stack_walk_reliable() true and return -EINVAL after.
-> 
-> * The stack trace looks like that:
-> 
-> ret_from_fork
-> 
->       -=> UNWIND_HINT_EMPTY
-> 
->       -=> schedule_tail             /* schedule out */
-> 
->       ...
-> 
->       -=> UNWIND_HINT_REGS      /*  UNDO */
+From: Eric Dumazet <edumazet@google.com>
 
-Yes, makes sense.
+[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
 
-> 2) when using call_usermodehelper_exec_async() to create a user mode task,
-> ret_from_fork() still not exec whereas
-> 
-> the task has been scheduled in __schedule(), at this time, orc->sp_reg is
-> ORC_REG_UNDEFINED but orc->end equals zero,
-> 
-> unwind_error() return true and also terminates arch_stack_walk_reliable()'s
-> backtracing loop, end up return from
-> 
-> 'if (unwind_error())' branch.
-> 
-> * The stack trace looks like that:
-> 
-> -=> call_usermodehelper_exec
-> 
->                  -=> do_exec
-> 
->                            -=> search_binary_handler
-> 
->                                       -=> load_elf_binary
-> 
->                                                 -=> elf_map
-> 
->                                                          -=> vm_mmap_pgoff
-> 
-> -=> down_write_killable
-> 
-> -=> _cond_resched
-> 
->              -=> __schedule           /* scheduled to work */
-> 
-> -=> ret_from_fork       /* UNDO */
+syzbot was able to trigger this trace [1], probably by using
+a zero optlen.
 
-I don't quite follow the stacktrace, but it sounds like the issue is the
-same as the first one you originally reported:
+While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
 
-> 1) The task was not actually scheduled to excute, at this time
-> UNWIND_HINT_EMPTY in ret_from_fork() has not reset unwind_hint, it's
-> sp_reg and end field remain default value and end up throwing an error
-> in unwind_next_frame() when called by arch_stack_walk_reliable();
+[1]
+BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
+CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ strnlen+0xf9/0x170 lib/string.c:569
+ dev_name_hash net/core/dev.c:207 [inline]
+ netdev_name_node_lookup net/core/dev.c:277 [inline]
+ __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
+ ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
+ __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
+ __do_compat_sys_setsockopt net/compat.c:413 [inline]
+ __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
+ __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f57dd9
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
+RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-Or am I misunderstanding?
+Local variable ----devname@ax25_setsockopt created at:
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
 
-And to reiterate, these are not "livepatch failures", right?  Livepatch
-doesn't fail when stack_trace_save_tsk_reliable() returns an error.  It
-recovers gracefully and tries again later.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ax25/af_ax25.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
--- 
-Josh
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -635,8 +635,10 @@ static int ax25_setsockopt(struct socket
+ 		break;
+ 
+ 	case SO_BINDTODEVICE:
+-		if (optlen > IFNAMSIZ)
+-			optlen = IFNAMSIZ;
++		if (optlen > IFNAMSIZ - 1)
++			optlen = IFNAMSIZ - 1;
++
++		memset(devname, 0, sizeof(devname));
+ 
+ 		if (copy_from_user(devname, optval, optlen)) {
+ 			res = -EFAULT;
+
 
