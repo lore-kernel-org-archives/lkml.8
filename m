@@ -2,110 +2,359 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0618C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A61C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B9A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsuZ1J6M"
+	by mail.kernel.org (Postfix) with ESMTP id AADDB2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037219;
+	bh=T5/K99PMf7t1tsRZKTyNLljVxAEqmvl1dP2YqDt3M+w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=L4vv/lLZIec5DqMU7DGRocAyzoqhIhcDrZqqs13pIJOIKMcpA1qye+aJ/mGyO0MO9
+	 v37RKABGizEsUg6nsUPe8uIg01SWXV+arFJBFUqih7GmFSSBhtc8Ksy0UQArYPVfEF
+	 iSCdF3+E6J7b2951L0SemMUHeAz+gmsv5EBe/LaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbgFASqq (ORCPT
+        id S1730052AbgFASq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730022AbgFASqO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:46:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244B0C03E96B;
-        Mon,  1 Jun 2020 11:46:12 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id p5so843098wrw.9;
-        Mon, 01 Jun 2020 11:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kOFsyDdtC4tQx70DlVKZyfHhP0kIiFn/byNoh5w8E6o=;
-        b=IsuZ1J6M6AqznqHS00K5dEA6yy4uQJk6aMikbPyOVD1y56PIW67DCNjyLHHwHIR6wq
-         rnGUL2avrqYY+6YRcd2cEJthIapmNRA7PbLhlauzSPYm16JfmTs+OZyytHYqtYLkHJ9w
-         PXUAktZoV1kds4KA/acdYK5Rvq5vKk2GKiPeikJNPjHBfyWybGIGvnYp8Z20NPUcf1og
-         oGsx0SjZ+Uq0KoBphj+wYYtQ3B+rp0oWzUKbs1Dwrz24YmqL5YV4Fn1VgwJiNe/X+/RC
-         GoIXT9/fNr3jmeTtgaiRJhfSyOO9kMScjs694I5tlZtMZmRrdD5P73M5E6reHnu8H4AG
-         Ysbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kOFsyDdtC4tQx70DlVKZyfHhP0kIiFn/byNoh5w8E6o=;
-        b=CKzeaoTJU4IGIjMyjMiocaJ+NDK/6dcajX8wHM/my8iyDxgzgUYJsyDjlaXHcDIIhl
-         Wqln8uxoj6lXCupGcJKfEk1NZoKrdYr/tGhLdwdn2/G/xjjvAARy2QA9aKPM4D7Dlr2E
-         Sy3sviZns81Pmj0VlTGDGhUilPXIBgvxiAy8tYThEWk7a4A9qA7JPae/2XUN8dMajZJL
-         T7YDw9qelB75ZyJI95vDMD73UgvBK8s3YK8lo/8+Z3h0jhAj70xyrVccHIqeBJCYPJgX
-         WccYkU232MqVgKjNGdMF9UG0GCH/w8DNDVEJ/tMmec1H+jB1si0SHmmgb9m2mTcmv5+g
-         PKEw==
-X-Gm-Message-State: AOAM532yhKS8pu152MxI2Ct1ZvpL/6C5DBu6ibI+YIGFSLGdpsjd6sgk
-        M2VJdh2x3qadPTqdykOUuxCIk/GGyf9Z
-X-Google-Smtp-Source: ABdhPJxbhyx+AYkx+0ePohkm8db6fS8uonyl1TG8MEyzjZw+X31riPYUopSsPgmatcyKM2QBQx16sQ==
-X-Received: by 2002:adf:f5ca:: with SMTP id k10mr22529511wrp.305.1591037170581;
-        Mon, 01 Jun 2020 11:46:10 -0700 (PDT)
-Received: from earth3.lan (host-92-15-172-76.as43234.net. [92.15.172.76])
-        by smtp.googlemail.com with ESMTPSA id 23sm302229wmg.10.2020.06.01.11.46.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 11:46:10 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
+        Mon, 1 Jun 2020 14:46:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728947AbgFASIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:08:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01538207D0;
+        Mon,  1 Jun 2020 18:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034919;
+        bh=T5/K99PMf7t1tsRZKTyNLljVxAEqmvl1dP2YqDt3M+w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YrClQm6R/e0bJ7bxcWER8d3ze2pkk2/mWQ+ZV8xPUOFkaoSI73imqGKbnCjZDz9EC
+         n/kRpJNhPSQmXSrXRdBZHiHlGAFuMZNXW01AUM5dtqTqCPmEhbHBqiu1xBj9KIM4bE
+         YsglYnwGIyyVuulNKu/+8L/homDODVxv2jYkUkr8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, paulmck@kernel.org, mingo@redhat.com,
-        boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        rcu@vger.kernel.org (open list:READ-COPY UPDATE (RCU))
-Subject: [PATCH 1/5] rcu/rcutorture: replace 0 with false
-Date:   Mon,  1 Jun 2020 19:45:48 +0100
-Message-Id: <20200601184552.23128-2-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200601184552.23128-1-jbi.octave@gmail.com>
-References: <20200601184552.23128-1-jbi.octave@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 072/142] ARM: uaccess: consolidate uaccess asm to asm/uaccess-asm.h
+Date:   Mon,  1 Jun 2020 19:53:50 +0200
+Message-Id: <20200601174045.273185447@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
+References: <20200601174037.904070960@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coccinelle reports a warning
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-WARNING: Assignment of 0/1 to bool variable
+[ Upstream commit 747ffc2fcf969eff9309d7f2d1d61cb8b9e1bb40 ]
 
-The root cause is the variable lastphase  is of bool type is initialised with integer 0
-Replacing 0 with false fixes the issue.
+Consolidate the user access assembly code to asm/uaccess-asm.h.  This
+moves the csdb, check_uaccess, uaccess_mask_range_ptr, uaccess_enable,
+uaccess_disable, uaccess_save, uaccess_restore macros, and creates two
+new ones for exception entry and exit - uaccess_entry and uaccess_exit.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+This makes the uaccess_save and uaccess_restore macros private to
+asm/uaccess-asm.h.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/include/asm/assembler.h   |  75 +-------------------
+ arch/arm/include/asm/uaccess-asm.h | 106 +++++++++++++++++++++++++++++
+ arch/arm/kernel/entry-armv.S       |  11 +--
+ arch/arm/kernel/entry-header.S     |   9 +--
+ 4 files changed, 112 insertions(+), 89 deletions(-)
+ create mode 100644 arch/arm/include/asm/uaccess-asm.h
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 5453bd557f43..a082bc402f9b 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -2065,7 +2065,7 @@ static void rcu_torture_barrier1cb(void *rcu_void)
- static int rcu_torture_barrier_cbs(void *arg)
- {
- 	long myid = (long)arg;
--	bool lastphase = 0;
-+	bool lastphase = false;
- 	bool newphase;
- 	struct rcu_head rcu;
+diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+index 99929122dad7..3546d294d55f 100644
+--- a/arch/arm/include/asm/assembler.h
++++ b/arch/arm/include/asm/assembler.h
+@@ -18,11 +18,11 @@
+ #endif
  
+ #include <asm/ptrace.h>
+-#include <asm/domain.h>
+ #include <asm/opcodes-virt.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/page.h>
+ #include <asm/thread_info.h>
++#include <asm/uaccess-asm.h>
+ 
+ #define IOMEM(x)	(x)
+ 
+@@ -446,79 +446,6 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	.size \name , . - \name
+ 	.endm
+ 
+-	.macro	csdb
+-#ifdef CONFIG_THUMB2_KERNEL
+-	.inst.w	0xf3af8014
+-#else
+-	.inst	0xe320f014
+-#endif
+-	.endm
+-
+-	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
+-#ifndef CONFIG_CPU_USE_DOMAINS
+-	adds	\tmp, \addr, #\size - 1
+-	sbcscc	\tmp, \tmp, \limit
+-	bcs	\bad
+-#ifdef CONFIG_CPU_SPECTRE
+-	movcs	\addr, #0
+-	csdb
+-#endif
+-#endif
+-	.endm
+-
+-	.macro uaccess_mask_range_ptr, addr:req, size:req, limit:req, tmp:req
+-#ifdef CONFIG_CPU_SPECTRE
+-	sub	\tmp, \limit, #1
+-	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
+-	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
+-	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
+-	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
+-	csdb
+-#endif
+-	.endm
+-
+-	.macro	uaccess_disable, tmp, isb=1
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	/*
+-	 * Whenever we re-enter userspace, the domains should always be
+-	 * set appropriately.
+-	 */
+-	mov	\tmp, #DACR_UACCESS_DISABLE
+-	mcr	p15, 0, \tmp, c3, c0, 0		@ Set domain register
+-	.if	\isb
+-	instr_sync
+-	.endif
+-#endif
+-	.endm
+-
+-	.macro	uaccess_enable, tmp, isb=1
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	/*
+-	 * Whenever we re-enter userspace, the domains should always be
+-	 * set appropriately.
+-	 */
+-	mov	\tmp, #DACR_UACCESS_ENABLE
+-	mcr	p15, 0, \tmp, c3, c0, 0
+-	.if	\isb
+-	instr_sync
+-	.endif
+-#endif
+-	.endm
+-
+-	.macro	uaccess_save, tmp
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	mrc	p15, 0, \tmp, c3, c0, 0
+-	str	\tmp, [sp, #SVC_DACR]
+-#endif
+-	.endm
+-
+-	.macro	uaccess_restore
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	ldr	r0, [sp, #SVC_DACR]
+-	mcr	p15, 0, r0, c3, c0, 0
+-#endif
+-	.endm
+-
+ 	.irp	c,,eq,ne,cs,cc,mi,pl,vs,vc,hi,ls,ge,lt,gt,le,hs,lo
+ 	.macro	ret\c, reg
+ #if __LINUX_ARM_ARCH__ < 6
+diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
+new file mode 100644
+index 000000000000..d475e3e8145d
+--- /dev/null
++++ b/arch/arm/include/asm/uaccess-asm.h
+@@ -0,0 +1,106 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __ASM_UACCESS_ASM_H__
++#define __ASM_UACCESS_ASM_H__
++
++#include <asm/asm-offsets.h>
++#include <asm/domain.h>
++#include <asm/memory.h>
++#include <asm/thread_info.h>
++
++	.macro	csdb
++#ifdef CONFIG_THUMB2_KERNEL
++	.inst.w	0xf3af8014
++#else
++	.inst	0xe320f014
++#endif
++	.endm
++
++	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
++#ifndef CONFIG_CPU_USE_DOMAINS
++	adds	\tmp, \addr, #\size - 1
++	sbcscc	\tmp, \tmp, \limit
++	bcs	\bad
++#ifdef CONFIG_CPU_SPECTRE
++	movcs	\addr, #0
++	csdb
++#endif
++#endif
++	.endm
++
++	.macro uaccess_mask_range_ptr, addr:req, size:req, limit:req, tmp:req
++#ifdef CONFIG_CPU_SPECTRE
++	sub	\tmp, \limit, #1
++	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
++	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
++	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
++	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
++	csdb
++#endif
++	.endm
++
++	.macro	uaccess_disable, tmp, isb=1
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	/*
++	 * Whenever we re-enter userspace, the domains should always be
++	 * set appropriately.
++	 */
++	mov	\tmp, #DACR_UACCESS_DISABLE
++	mcr	p15, 0, \tmp, c3, c0, 0		@ Set domain register
++	.if	\isb
++	instr_sync
++	.endif
++#endif
++	.endm
++
++	.macro	uaccess_enable, tmp, isb=1
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	/*
++	 * Whenever we re-enter userspace, the domains should always be
++	 * set appropriately.
++	 */
++	mov	\tmp, #DACR_UACCESS_ENABLE
++	mcr	p15, 0, \tmp, c3, c0, 0
++	.if	\isb
++	instr_sync
++	.endif
++#endif
++	.endm
++
++	.macro	uaccess_save, tmp
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	mrc	p15, 0, \tmp, c3, c0, 0
++	str	\tmp, [sp, #SVC_DACR]
++#endif
++	.endm
++
++	.macro	uaccess_restore
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	ldr	r0, [sp, #SVC_DACR]
++	mcr	p15, 0, r0, c3, c0, 0
++#endif
++	.endm
++
++	/*
++	 * Save the address limit on entry to a privileged exception and
++	 * if using PAN, save and disable usermode access.
++	 */
++	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
++	ldr	\tmp0, [\tsk, #TI_ADDR_LIMIT]
++	mov	\tmp1, #TASK_SIZE
++	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++	str	\tmp0, [sp, #SVC_ADDR_LIMIT]
++	uaccess_save \tmp0
++	.if \disable
++	uaccess_disable \tmp0
++	.endif
++	.endm
++
++	/* Restore the user access state previously saved by uaccess_entry */
++	.macro	uaccess_exit, tsk, tmp0, tmp1
++	ldr	\tmp1, [sp, #SVC_ADDR_LIMIT]
++	uaccess_restore
++	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++	.endm
++
++#endif /* __ASM_UACCESS_ASM_H__ */
+diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
+index 858d4e541532..a874b753397e 100644
+--- a/arch/arm/kernel/entry-armv.S
++++ b/arch/arm/kernel/entry-armv.S
+@@ -27,6 +27,7 @@
+ #include <asm/unistd.h>
+ #include <asm/tls.h>
+ #include <asm/system_info.h>
++#include <asm/uaccess-asm.h>
+ 
+ #include "entry-header.S"
+ #include <asm/entry-macro-multi.S>
+@@ -179,15 +180,7 @@ ENDPROC(__und_invalid)
+ 	stmia	r7, {r2 - r6}
+ 
+ 	get_thread_info tsk
+-	ldr	r0, [tsk, #TI_ADDR_LIMIT]
+-	mov	r1, #TASK_SIZE
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
+-	str	r0, [sp, #SVC_ADDR_LIMIT]
+-
+-	uaccess_save r0
+-	.if \uaccess
+-	uaccess_disable r0
+-	.endif
++	uaccess_entry tsk, r0, r1, r2, \uaccess
+ 
+ 	.if \trace
+ #ifdef CONFIG_TRACE_IRQFLAGS
+diff --git a/arch/arm/kernel/entry-header.S b/arch/arm/kernel/entry-header.S
+index 32051ec5b33f..40db0f9188b6 100644
+--- a/arch/arm/kernel/entry-header.S
++++ b/arch/arm/kernel/entry-header.S
+@@ -6,6 +6,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/errno.h>
+ #include <asm/thread_info.h>
++#include <asm/uaccess-asm.h>
+ #include <asm/v7m.h>
+ 
+ @ Bad Abort numbers
+@@ -217,9 +218,7 @@
+ 	blne	trace_hardirqs_off
+ #endif
+ 	.endif
+-	ldr	r1, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_restore
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
++	uaccess_exit tsk, r0, r1
+ 
+ #ifndef CONFIG_THUMB2_KERNEL
+ 	@ ARM mode SVC restore
+@@ -263,9 +262,7 @@
+ 	@ on the stack remains correct).
+ 	@
+ 	.macro  svc_exit_via_fiq
+-	ldr	r1, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_restore
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
++	uaccess_exit tsk, r0, r1
+ #ifndef CONFIG_THUMB2_KERNEL
+ 	@ ARM mode restore
+ 	mov	r0, sp
 -- 
-2.18.2
+2.25.1
+
+
 
