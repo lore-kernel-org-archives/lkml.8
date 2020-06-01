@@ -7,53 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB32C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE493C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B553A2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69052074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgFANLr (ORCPT
+        id S1728318AbgFANNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
+        Mon, 1 Jun 2020 09:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgFANLm (ORCPT
+        with ESMTP id S1726287AbgFANLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:11:42 -0400
+        Mon, 1 Jun 2020 09:11:48 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39A7C08C5CA;
-        Mon,  1 Jun 2020 06:11:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9157DC061A0E;
+        Mon,  1 Jun 2020 06:11:47 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfkE5-00070P-V4; Mon, 01 Jun 2020 15:11:38 +0200
+        id 1jfkEC-00075v-Us; Mon, 01 Jun 2020 15:11:45 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8CC951C0481;
-        Mon,  1 Jun 2020 15:11:37 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 13:11:37 -0000
-From:   "tip-bot2 for Serge Semin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 89FF01C0244;
+        Mon,  1 Jun 2020 15:11:44 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 13:11:44 -0000
+From:   "tip-bot2 for Dejin Zheng" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource: dw_apb_timer: Affiliate of-based
- timer with any CPU
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+Subject: [tip: timers/core] drivers/clocksource/arm_arch_timer: Remove
+ duplicate error message
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200521204818.25436-6-Sergey.Semin@baikalelectronics.ru>
-References: <20200521204818.25436-6-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200429153559.21189-1-zhengdejin5@gmail.com>
+References: <20200429153559.21189-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Message-ID: <159101709744.17951.14459644896202609503.tip-bot2@tip-bot2>
+Message-ID: <159101710442.17951.7304564845428445332.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,56 +60,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     65e0f876405ef4f0ff25eb1c5ff3e9b536d68805
-Gitweb:        https://git.kernel.org/tip/65e0f876405ef4f0ff25eb1c5ff3e9b536d68805
-Author:        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-AuthorDate:    Thu, 21 May 2020 23:48:14 +03:00
+Commit-ID:     d1b5e55208fd8e1c73876ab6ad1ce93485e3f5a2
+Gitweb:        https://git.kernel.org/tip/d1b5e55208fd8e1c73876ab6ad1ce93485e3f5a2
+Author:        Dejin Zheng <zhengdejin5@gmail.com>
+AuthorDate:    Wed, 29 Apr 2020 23:35:59 +08:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Sat, 23 May 2020 00:02:50 +02:00
+CommitterDate: Fri, 22 May 2020 23:58:56 +02:00
 
-clocksource: dw_apb_timer: Affiliate of-based timer with any CPU
+drivers/clocksource/arm_arch_timer: Remove duplicate error message
 
-Currently any DW APB Timer device detected in OF is bound to CPU #0.
-Doing so is redundant since DW APB Timer isn't CPU-local timer, but as
-having APB interface is normally accessible from any CPU in the system. By
-artificially affiliating the DW timer to the very first CPU we may and in
-our case will make the clockevent subsystem to decline the more performant
-real CPU-local timers selection in favor of in fact non-local and
-accessible over a slow bus - DW APB Timers.
+The function acpi_gtdt_init() prints a message in case of
+error. Remove the error message after testing if the function fails,
+otherwise it is a duplicate message.
 
-Let's not affiliate the of-detected DW APB Timers to any CPU. By doing so
-the clockevent framework would prefer to select the real CPU-local timer
-instead of DW APB one. Otherwise if there is no other than DW APB device
-for clockevents tracking then it will be selected.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200521204818.25436-6-Sergey.Semin@baikalelectronics.ru
+Link: https://lore.kernel.org/r/20200429153559.21189-1-zhengdejin5@gmail.com
 ---
- drivers/clocksource/dw_apb_timer_of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/arm_arch_timer.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
-index 8c28b12..2db490f 100644
---- a/drivers/clocksource/dw_apb_timer_of.c
-+++ b/drivers/clocksource/dw_apb_timer_of.c
-@@ -73,7 +73,7 @@ static void __init add_clockevent(struct device_node *event_timer)
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index d53f4c7..befe54a 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -1577,10 +1577,8 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+ 	arch_timers_present |= ARCH_TIMER_TYPE_CP15;
  
- 	timer_get_base_and_rate(event_timer, &iobase, &rate);
+ 	ret = acpi_gtdt_init(table, &platform_timer_count);
+-	if (ret) {
+-		pr_err("Failed to init GTDT table.\n");
++	if (ret)
+ 		return ret;
+-	}
  
--	ced = dw_apb_clockevent_init(0, event_timer->name, 300, iobase, irq,
-+	ced = dw_apb_clockevent_init(-1, event_timer->name, 300, iobase, irq,
- 				     rate);
- 	if (!ced)
- 		panic("Unable to initialise clockevent device");
+ 	arch_timer_ppi[ARCH_TIMER_PHYS_NONSECURE_PPI] =
+ 		acpi_gtdt_map_ppi(ARCH_TIMER_PHYS_NONSECURE_PPI);
