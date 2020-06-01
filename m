@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC063C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B23C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D222065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C6120776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034528;
-	bh=/4637NbNSalGR1WbQ+D0T8p0c9koBNKpPYJadN9wFaI=;
+	s=default; t=1591034533;
+	bh=1bv5vbaODWYmJgMcPDHYJWA/jmmKezyvLnHE3WN46WQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmQ+iLobcBDua1vDa5xxn39TqIlfR8AYJ9fp6jWLc4Fqaa1B9b+Mec/L/+Je6MjAG
-	 MgYY3rXA9Y5li1oj3WBCXGMW7VNTt/YnKh211IkfS/nziBnNJN3oZZFxA2HmJSGd3S
-	 z5OvKlwo33mYb0n3TRxMnj1MgU7FfeS0scNtA9UQ=
+	b=xvgi+n6Nirobg+t93i6be8Idnp2nfAW0gU+eoSx0aENMnMG6eoP9bXNtReG2yoj2E
+	 tjpf24l+7+7uXyLYAOpl9ZR205lVTa8HgSumlgpz1GMo7RDyroN0dSakL++6758w9d
+	 8M3abSNEJhnHWJpUWNynsjbZE4/idEiBe87/SFvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgFASCH (ORCPT
+        id S1729899AbgFASCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45066 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729866AbgFASB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:59 -0400
+        id S1729886AbgFASCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB0E206E2;
-        Mon,  1 Jun 2020 18:01:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DA99206E2;
+        Mon,  1 Jun 2020 18:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034519;
-        bh=/4637NbNSalGR1WbQ+D0T8p0c9koBNKpPYJadN9wFaI=;
+        s=default; t=1591034528;
+        bh=1bv5vbaODWYmJgMcPDHYJWA/jmmKezyvLnHE3WN46WQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qrb0lcH7qd4mjVXR5wDBk1iqQmMMevKGpcPYZ2rH74Z1NoRj0yLChZQnnPPrHS6bw
-         blyVjRwYVa/9K/dndgO8c+/UmpgTpcES0VHOuTv/EPs7ayhdyRQoJLdWxhdAeDxSDZ
-         PbgozBcJE+JywDNVJLUEgVHqrXPCBuAs+Xn5NxI8=
+        b=M5103l8XvbyG2VclwT9vIALDNLLwWyS63V3oE1nE6kfrdt948tJseyN5udP/ZAl2d
+         vVdXcMqxvKUvZRFRVsEGhgykqnWKq9VDAlXgNFArydGAsHVKE0twRGqIv7RyCOuR3/
+         p0jABCaGMmTh3KG6IbRKEBT1pDnQZ805yf2hev7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antony Antony <antony@phenome.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.14 60/77] xfrm: fix error in comment
-Date:   Mon,  1 Jun 2020 19:54:05 +0200
-Message-Id: <20200601174026.810456440@linuxfoundation.org>
+        stable@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 72/77] mm/vmalloc.c: dont dereference possible NULL pointer in __vunmap()
+Date:   Mon,  1 Jun 2020 19:54:17 +0200
+Message-Id: <20200601174028.686979424@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,31 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antony Antony <antony@phenome.org>
+From: Liviu Dudau <liviu@dudau.co.uk>
 
-commit 29e4276667e24ee6b91d9f91064d8fda9a210ea1 upstream.
+commit 6ade20327dbb808882888ed8ccded71e93067cf9 upstream.
 
-s/xfrm_state_offload/xfrm_user_offload/
+find_vmap_area() can return a NULL pointer and we're going to
+dereference it without checking it first.  Use the existing
+find_vm_area() function which does exactly what we want and checks for
+the NULL pointer.
 
-Fixes: d77e38e612a ("xfrm: Add an IPsec hardware offloading API")
-Signed-off-by: Antony Antony <antony@phenome.org>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Link: http://lkml.kernel.org/r/20181228171009.22269-1-liviu@dudau.co.uk
+Fixes: f3c01d2f3ade ("mm: vmalloc: avoid racy handling of debugobjects in vunmap")
+Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chintan Pandya <cpandya@codeaurora.org>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/xfrm.h |    2 +-
+ mm/vmalloc.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/uapi/linux/xfrm.h
-+++ b/include/uapi/linux/xfrm.h
-@@ -304,7 +304,7 @@ enum xfrm_attr_type_t {
- 	XFRMA_PROTO,		/* __u8 */
- 	XFRMA_ADDRESS_FILTER,	/* struct xfrm_address_filter */
- 	XFRMA_PAD,
--	XFRMA_OFFLOAD_DEV,	/* struct xfrm_state_offload */
-+	XFRMA_OFFLOAD_DEV,	/* struct xfrm_user_offload */
- 	XFRMA_OUTPUT_MARK,	/* __u32 */
- 	__XFRMA_MAX
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1524,7 +1524,7 @@ static void __vunmap(const void *addr, i
+ 			addr))
+ 		return;
  
+-	area = find_vmap_area((unsigned long)addr)->vm;
++	area = find_vm_area(addr);
+ 	if (unlikely(!area)) {
+ 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
+ 				addr);
 
 
