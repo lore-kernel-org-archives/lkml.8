@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB18C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9504BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31C67206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797A42085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgFAIoz (ORCPT
+        id S1728369AbgFAIo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:44:55 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:48738 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728103AbgFAIow (ORCPT
+        Mon, 1 Jun 2020 04:44:57 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:52427 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726142AbgFAIoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:44:52 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U-C-4Id_1591001089;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0U-C-4Id_1591001089)
+        Mon, 1 Jun 2020 04:44:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U-ClVgA_1591001088;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0U-ClVgA_1591001088)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 01 Jun 2020 16:44:50 +0800
+          Mon, 01 Jun 2020 16:44:48 +0800
 From:   Lai Jiangshan <laijs@linux.alibaba.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lai Jiangshan <laijs@linux.alibaba.com>, Tejun Heo <tj@kernel.org>,
         Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH 4/4] workqueue: slash half memory usage in 32bit system
-Date:   Mon,  1 Jun 2020 08:44:42 +0000
-Message-Id: <20200601084442.8284-5-laijs@linux.alibaba.com>
+Subject: [PATCH 2/4] workqueue: use BUILD_BUG_ON() for compile time test instead of WARN_ON()
+Date:   Mon,  1 Jun 2020 08:44:40 +0000
+Message-Id: <20200601084442.8284-3-laijs@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200601084442.8284-1-laijs@linux.alibaba.com>
 References: <20200601084442.8284-1-laijs@linux.alibaba.com>
@@ -42,59 +42,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The major memory ussage in workqueue is on the pool_workqueue.
-The pool_workqueue has alignment requirement which often leads
-to padding.
-
-Reducing the memory usage for the pool_workqueue is valuable.
-
-And 32bit system often has less memory, less workqueues,
-less works, less concurrent flush_workqueue()s, so we can
-slash the flush color on 32bit system to reduce memory usage
-
-Before patch:
-The sizeof the struct pool_workqueue is 256 bytes,
-only 136 bytes is in use in 32bit system
-
-After patch:
-The sizeof the struct pool_workqueue is 128 bytes,
-only 104 bytes is in use in 32bit system, there is still
-room for future usage.
-
-Setting WORK_STRUCT_COLOR_BITS to 3 can't reduce the sizeof
-the struct pool_workqueue in 64bit system, unless combined
-with big refactor for unbound pwq.
+Any runtime WARN_ON() has to be fixed, and BUILD_BUG_ON() can
+help you nitice it earlier.
 
 Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 ---
- include/linux/workqueue.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/workqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index 26de0cae2a0a..c0f311926d01 100644
---- a/include/linux/workqueue.h
-+++ b/include/linux/workqueue.h
-@@ -39,7 +39,11 @@ enum {
- 	WORK_STRUCT_COLOR_SHIFT	= 4,	/* color for workqueue flushing */
- #endif
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 7a1fc9fe6314..35120b909234 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -5905,7 +5905,7 @@ void __init workqueue_init_early(void)
+ 	int hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
+ 	int i, cpu;
  
-+#if BITS_PER_LONG == 32
-+	WORK_STRUCT_COLOR_BITS	= 3,
-+#else
- 	WORK_STRUCT_COLOR_BITS	= 4,
-+#endif
+-	WARN_ON(__alignof__(struct pool_workqueue) < __alignof__(long long));
++	BUILD_BUG_ON(__alignof__(struct pool_workqueue) < __alignof__(long long));
  
- 	WORK_STRUCT_PENDING	= 1 << WORK_STRUCT_PENDING_BIT,
- 	WORK_STRUCT_DELAYED	= 1 << WORK_STRUCT_DELAYED_BIT,
-@@ -65,6 +69,8 @@ enum {
- 	 * Reserve 8 bits off of pwq pointer w/ debugobjects turned off.
- 	 * This makes pwqs aligned to 256 bytes and allows 15 workqueue
- 	 * flush colors.
-+	 * For 32 bit system, the numbers are 7 bits, 128 bytes, 7 colors
-+	 * respectively.
- 	 */
- 	WORK_STRUCT_FLAG_BITS	= WORK_STRUCT_COLOR_SHIFT +
- 				  WORK_STRUCT_COLOR_BITS,
+ 	BUG_ON(!alloc_cpumask_var(&wq_unbound_cpumask, GFP_KERNEL));
+ 	cpumask_copy(wq_unbound_cpumask, housekeeping_cpumask(hk_flags));
 -- 
 2.20.1
 
