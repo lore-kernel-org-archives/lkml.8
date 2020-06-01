@@ -2,52 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58ABE21475
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C9B207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034738;
-	bh=UF3nzlyOfmDMR7p9mVsviExlSwnPBfkq9XMpJS5aL04=;
+	s=default; t=1591034744;
+	bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0LWIBEJohOE3PcXRyXmeCVoTdkY6rU0onVc7QyXBOhBJ4xMW43N8ozQI0Y5BUZGe
-	 QBD7d3Yqohvh7e54ucytxUiLCQzSkxuSxqsF57Dc8UmHqChXg/1q7FmNvmfFdIYCnL
-	 pLN41bwM5iEG7flWiFgYfzamJMLsuXBMKDskzVhI=
+	b=QSRsAU3zbU5Fpg4NLGcJmAFP+3BfuSAND86uOftYHz6qLthQ+slznk4hu8r3d7Lja
+	 mVIVqJ9jKoKJF0aiwMhKaP8J9IuPDDEFKUjqzz3uxueqbeQv0cmBHB0WDwAl2L4tD3
+	 bxaFHEUzV5BrLSsioen9Bu5IkvBQG5dcY0jYc7Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgFASFh (ORCPT
+        id S1730356AbgFASFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:05:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:05:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbgFASFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:05:20 -0400
+        id S1729780AbgFASFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DBCC206E2;
-        Mon,  1 Jun 2020 18:05:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C7382068D;
+        Mon,  1 Jun 2020 18:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034718;
-        bh=UF3nzlyOfmDMR7p9mVsviExlSwnPBfkq9XMpJS5aL04=;
+        s=default; t=1591034723;
+        bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ApsWBImnihebyLBwEHmVDWvquf2OMo1iWhOVgWKtNSHeEPxqVVH9nRlLo7KuF/GiN
-         DHapzK3PyUUoT0YNKcbDPmAi6r+kwqsmYZ6nBaK3q3lrjr272PjqZXARtMbBYzTNdF
-         OP4zslvEHOofk4kcX7UVh0EryBhV+9Zc5apJSDWY=
+        b=Aedj5ZetZqakCWz+p7LkQf/LIlvip28Z42Thp5+6wf1HDH1b4tul3494BN4G2qJ04
+         UUbaw3ea+UnknY+TM97es7Stt+ZGfvHbTpcd/i848BkOHl6HFM2bjQUz4dto+nU3zm
+         Rlwr8ozDtKLpKuyB05M2GuDTyaweLmGegwTAjbiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/95] Input: i8042 - add ThinkPad S230u to i8042 nomux list
-Date:   Mon,  1 Jun 2020 19:53:38 +0200
-Message-Id: <20200601174026.880387783@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alexander Dahl <post@lespocky.de>, Borislav Petkov <bp@suse.de>
+Subject: [PATCH 4.19 73/95] x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
+Date:   Mon,  1 Jun 2020 19:54:13 +0200
+Message-Id: <20200601174032.198812304@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -60,63 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Locke <kevin@kevinlocke.name>
+From: Alexander Dahl <post@lespocky.de>
 
-[ Upstream commit 18931506465a762ffd3f4803d36a18d336a67da9 ]
+commit 88743470668ef5eb6b7ba9e0f99888e5999bf172 upstream.
 
-On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
-"GDETC1WW (1.81 ) 06/27/2019", whether booted in UEFI or Legacy/CSM mode
-the keyboard, Synaptics TouchPad, and TrackPoint either do not function
-or stop functioning a few minutes after boot.  This problem has been
-noted before, perhaps only occurring on BIOS 1.57 and
-later.[1][2][3][4][5]
+The intermediate result of the old term (4UL * 1024 * 1024 * 1024) is
+4 294 967 296 or 0x100000000 which is no problem on 64 bit systems.
+The patch does not change the later overall result of 0x100000 for
+MAX_DMA32_PFN (after it has been shifted by PAGE_SHIFT). The new
+calculation yields the same result, but does not require 64 bit
+arithmetic.
 
-This model does not have an external PS/2 port, so mux does not appear
-to be useful.
+On 32 bit systems the old calculation suffers from an arithmetic
+overflow in that intermediate term in braces: 4UL aka unsigned long int
+is 4 byte wide and an arithmetic overflow happens (the 0x100000000 does
+not fit in 4 bytes), the in braces result is truncated to zero, the
+following right shift does not alter that, so MAX_DMA32_PFN evaluates to
+0 on 32 bit systems.
 
-Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
-and although the [BIOS changelog] notes "Fixed an issue of UEFI
-touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
-insufficient.
+That wrong value is a problem in a comparision against MAX_DMA32_PFN in
+the init code for swiotlb in pci_swiotlb_detect_4gb() to decide if
+swiotlb should be active.  That comparison yields the opposite result,
+when compiling on 32 bit systems.
 
-Adding 33474HU to the nomux list avoids the issue on my system.
+This was not possible before
 
-[1]: https://bugs.launchpad.net/bugs/1210748
-[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
-[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
-[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
-[5]: https://forums.lenovo.com/topic/findpost/27/1337119
-[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
+  1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
 
-Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
+when that MAX_DMA32_PFN was first made visible to x86_32 (and which
+landed in v3.0).
+
+In practice this wasn't a problem, unless CONFIG_SWIOTLB is active on
+x86-32.
+
+However if one has set CONFIG_IOMMU_INTEL, since
+
+  c5a5dc4cbbf4 ("iommu/vt-d: Don't switch off swiotlb if bounce page is used")
+
+there's a dependency on CONFIG_SWIOTLB, which was not necessarily
+active before. That landed in v5.4, where we noticed it in the fli4l
+Linux distribution. We have CONFIG_IOMMU_INTEL active on both 32 and 64
+bit kernel configs there (I could not find out why, so let's just say
+historical reasons).
+
+The effect is at boot time 64 MiB (default size) were allocated for
+bounce buffers now, which is a noticeable amount of memory on small
+systems like pcengines ALIX 2D3 with 256 MiB memory, which are still
+frequently used as home routers.
+
+We noticed this effect when migrating from kernel v4.19 (LTS) to v5.4
+(LTS) in fli4l and got that kernel messages for example:
+
+  Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
+  …
+  Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
+  …
+  PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+  software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
+
+The initial analysis and the suggested fix was done by user 'sourcejedi'
+at stackoverflow and explicitly marked as GPLv2 for inclusion in the
+Linux kernel:
+
+  https://unix.stackexchange.com/a/520525/50007
+
+The new calculation, which does not suffer from that overflow, is the
+same as for arch/mips now as suggested by Robin Murphy.
+
+The fix was tested by fli4l users on round about two dozen different
+systems, including both 32 and 64 bit archs, bare metal and virtualized
+machines.
+
+ [ bp: Massage commit message. ]
+
+Fixes: 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
+Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Alexander Dahl <post@lespocky.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/feb8a8339a67025dab3850e6377eb6f3a0e782ba.1587400635.git.kevin@kevinlocke.name
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://unix.stackexchange.com/q/520065/50007
+Link: https://web.nettworks.org/bugs/browse/FFL-2560
+Link: https://lkml.kernel.org/r/20200526175749.20742-1-post@lespocky.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/include/asm/dma.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-index 0d0f977a2f39..8bf38eded1ef 100644
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -545,6 +545,13 @@ static const struct dmi_system_id __initconst i8042_dmi_nomux_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
- 		},
- 	},
-+	{
-+		/* Lenovo ThinkPad Twist S230u */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
-+		},
-+	},
- 	{ }
- };
+--- a/arch/x86/include/asm/dma.h
++++ b/arch/x86/include/asm/dma.h
+@@ -74,7 +74,7 @@
+ #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
  
--- 
-2.25.1
-
+ /* 4GB broken PCI/AGP hardware bus master zone */
+-#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
++#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
+ 
+ #ifdef CONFIG_X86_32
+ /* The maximum address that we can perform a DMA transfer to on this platform */
 
 
