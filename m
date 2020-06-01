@@ -2,177 +2,198 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC239C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A824206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C8B206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OkUxzICY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xo6k765T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgFAIP1 (ORCPT
+        id S1728178AbgFAIPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgFAIP1 (ORCPT
+        Mon, 1 Jun 2020 04:15:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46268 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726142AbgFAIPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:15:27 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A830C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 01:15:27 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c14so7227427qka.11
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 01:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Sk/qZ0PCKuKPpHB9HjPSmK4jmV57qb64kZf7c48kCF0=;
-        b=OkUxzICYBcJ/T23uVyaiKrQRWk4oQTuGUExzoH9tTvqqLd0WJYCUcoC+rEJ5TNqtcr
-         W3L5Vtj+3omzytqwnni8m1uWnj3zsYpe1gbZ6XAObufDkgRtCeV25VbM3ia2SYvculyS
-         0TZPqrYBhiSe0144ZS6jiCqOJtQQgT7B7TJFwYMqlFTPNMi7ze84O3hmXePGKuyQUqtc
-         f+SP+b0/mYsZn6l4tF4VCwwlgUEEc8Yz5srZhVCu8VQJv7aNVVYritdidqgQSGEIjhTS
-         hfWQBK3AVgEGmNLNk6wyEla/z/nZ/0I1Z8VnzEOUHxOZRWWyqvgAFtSO/Cd/E5O4B35C
-         hfEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Sk/qZ0PCKuKPpHB9HjPSmK4jmV57qb64kZf7c48kCF0=;
-        b=fKPTCHLB2lHiEQx0srCFo7tZVvpNpl/76Kj17UHmexNqgzLucEvR7ee/icXtdCwC/A
-         Af1epLUnZ/s2wOPVmAnwW/japAXTqjPb7A9OD2I++nPIqNcP1pOkxy/j50F3BJIjA1+x
-         baBbAjoNmXR7I2KywKVDYB4IsfdzVBawgkWzM/2VMlSJ/iq/Cu//qJLt415CaGMfKevk
-         oNWitHI8z+O8u44sOwyhaN0DfMEU494pUa2t6VsTdKARxqOvDsHoAra9nRz88zqTGGBj
-         4ovKzeCQLpyc1dLMrExwLtKpERl+eHuiVuBbiFyQybtBnz19F7puNYZ/OacmF9kkTsTC
-         Ndgg==
-X-Gm-Message-State: AOAM532quvLTb1Fg3nzntDz2ca0qBDJxep80k6DKyuj8T0snGwM2e0EC
-        oUMB6Z6iUW/VFtqMrOz6HbC06mFniNhipcV3tCua6A==
-X-Google-Smtp-Source: ABdhPJwAZIYguqwZTxoHINg27uUeFDW9ssNvRHKAZfR70FyR5LAn3osu3KVqu7LBFqe+vVsr5skBCE0r7JFHOmVIU50=
-X-Received: by 2002:a37:9bd7:: with SMTP id d206mr19591161qke.113.1590999326270;
- Mon, 01 Jun 2020 01:15:26 -0700 (PDT)
+        Mon, 1 Jun 2020 04:15:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590999341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ivinF440YL1yO0sGUAZhTpAZaKRycn1aa7X7LA045XU=;
+        b=Xo6k765T/NZs2RlOw7Bzfo0jWCwA29nhtgl1eNh20hCFHDzTf/qGTp/xQrdXZY9mUtEkpM
+        x0V82TNzPbO/M3Td3YsKjjIq+TPQnxfIArXynxRz2kjVv40vertI3WeQdeHFkhR6JVbPnq
+        aYUpzRZ7sLLGjuwf7b7RqmNNQu3RkQg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-md2nsfSmNcmZtWBz-FSNgQ-1; Mon, 01 Jun 2020 04:15:37 -0400
+X-MC-Unique: md2nsfSmNcmZtWBz-FSNgQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F86219200C0;
+        Mon,  1 Jun 2020 08:15:35 +0000 (UTC)
+Received: from krava (unknown [10.40.192.36])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8790760BEC;
+        Mon,  1 Jun 2020 08:15:32 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 10:15:31 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] perf stat: Ensure group is defined on top of the same
+ cpu mask
+Message-ID: <20200601081531.GE881900@krava>
+References: <20200531162206.911168-1-jolsa@kernel.org>
+ <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1590474856.git.greentime.hu@sifive.com> <fe966314eae51a5089033f7186ac86c39719e0a0.1590474856.git.greentime.hu@sifive.com>
- <CAJF2gTTnLNmNUvDwRSsmD9auaOGuqYXjuucKSyXZQKoEWEq4Ow@mail.gmail.com>
-In-Reply-To: <CAJF2gTTnLNmNUvDwRSsmD9auaOGuqYXjuucKSyXZQKoEWEq4Ow@mail.gmail.com>
-From:   Greentime Hu <greentime.hu@sifive.com>
-Date:   Mon, 1 Jun 2020 16:15:14 +0800
-Message-ID: <CAHCEeh+d+ya6+Xrh8hdWVSGo2kk_rZ8PV2eMM-2LLaOojAaBtQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 05/13] riscv: Add new csr defines related to vector extension
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guo Ren <guoren@kernel.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8831=E6=97=A5 =
-=E9=80=B1=E6=97=A5 =E4=B8=8A=E5=8D=889:56=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Greentime,
->
-> Why remove vxrm and xstat ?
->
-> > Appendix B: Calling Convention
-> > In the RISC-V psABI, the vector registers v0-v31 are all caller-saved. =
-The vstart, vl, and vtype CSRs are also caller-saved.
-> > The vxrm and vxsat fields have thread storage duration.
->
-Hi Guo,
-
-https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#vector-contro=
-l-and-status-register-vcsr
-"The vxrm and vxsat separate CSRs can also be accessed via fields in
-the vector control and status CSR, vcsr."
-
-Since vcsr will save all these information, I think it should be ok to
-save vcsr only.
-
-> As spec 0.9 mentioned above, vxrm and vxsat are thread storage duration.
->
-> When timer 's interrupt coming, we still need to save them in context_swi=
-tch.
->
-> On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wr=
-ote:
+On Sun, May 31, 2020 at 05:04:47PM -0700, Ian Rogers wrote:
+> On Sun, May 31, 2020 at 9:22 AM Jiri Olsa <jolsa@kernel.org> wrote:
 > >
-> > From: Guo Ren <guoren@linux.alibaba.com>
+> > Jin Yao reported the issue (and posted first versions of this change)
+> > with groups being defined over events with different cpu mask.
 > >
-> > Follow the riscv vector spec to add new csr number.
+> > This causes assert aborts in get_group_fd, like:
 > >
-> > [greentime.hu@sifive.com: update the defined value based on new spec an=
-d
-> > remove unused ones]
-> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> >   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+> >   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
+> >   Aborted
+> >
+> > All the events in the group have to be defined over the same
+> > cpus so the group_fd can be found for every leader/member pair.
+> >
+> > Adding check to ensure this condition is met and removing the
+> > group (with warning) if we detect mixed cpus, like:
+> >
+> >   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+> >   WARNING: event cpu maps do not match, disabling group:
+> >     anon group { power/energy-cores/, cycles }
+> >     anon group { instructions, power/energy-cores/ }
+> 
+> This is really cool! I wonder if there is a better wording for 'event
+> cpu maps' ? It may be useful to list what the cpu maps are for the
+> events as a diagnostic aid.
+
+right, something like this in verbose mode?
+it display cpu maps of events that did not match
+
+[root@krava perf]# ./perf stat -e '{cycles,power/energy-cores/}' -v
+WARNING: group events cpu maps do not match, disabling group:
+  anon group { cycles, power/energy-cores/ }
+     cycles: 0-7
+     power/energy-cores/: 0
+
+jirka
+
+> 
+> Thanks,
+> Ian
+> 
+> > Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
+> > Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
+> > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > > ---
-> >  arch/riscv/include/asm/csr.h | 16 ++++++++++++++--
-> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> >  tools/perf/builtin-stat.c | 51 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
 > >
-> > diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.=
-h
-> > index 8e18d2c64399..cc13626c4bbe 100644
-> > --- a/arch/riscv/include/asm/csr.h
-> > +++ b/arch/riscv/include/asm/csr.h
-> > @@ -24,6 +24,12 @@
-> >  #define SR_FS_CLEAN    _AC(0x00004000, UL)
-> >  #define SR_FS_DIRTY    _AC(0x00006000, UL)
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index b2b79aa161dd..512a41363d07 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -190,6 +190,55 @@ static struct perf_stat_config stat_config = {
+> >         .big_num                = true,
+> >  };
 > >
-> > +#define SR_VS           _AC(0x00000600, UL) /* Vector Status */
-> > +#define SR_VS_OFF       _AC(0x00000000, UL)
-> > +#define SR_VS_INITIAL   _AC(0x00000200, UL)
-> > +#define SR_VS_CLEAN     _AC(0x00000400, UL)
-> > +#define SR_VS_DIRTY     _AC(0x00000600, UL)
+> > +static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+> > +{
+> > +       if (!a->core.cpus && !b->core.cpus)
+> > +               return true;
 > > +
-> >  #define SR_XS          _AC(0x00018000, UL) /* Extension Status */
-> >  #define SR_XS_OFF      _AC(0x00000000, UL)
-> >  #define SR_XS_INITIAL  _AC(0x00008000, UL)
-> > @@ -31,9 +37,9 @@
-> >  #define SR_XS_DIRTY    _AC(0x00018000, UL)
-> >
-> >  #ifndef CONFIG_64BIT
-> > -#define SR_SD          _AC(0x80000000, UL) /* FS/XS dirty */
-> > +#define SR_SD          _AC(0x80000000, UL) /* FS/VS/XS dirty */
-> >  #else
-> > -#define SR_SD          _AC(0x8000000000000000, UL) /* FS/XS dirty */
-> > +#define SR_SD          _AC(0x8000000000000000, UL) /* FS/VS/XS dirty *=
-/
-> >  #endif
-> >
-> >  /* SATP flags */
-> > @@ -114,6 +120,12 @@
-> >  #define CSR_PMPADDR0           0x3b0
-> >  #define CSR_MHARTID            0xf14
-> >
-> > +#define CSR_VSTART             0x8
-> > +#define CSR_VCSR               0xf
-> > +#define CSR_VL                 0xc20
-> > +#define CSR_VTYPE              0xc21
-> > +#define CSR_VLENB              0xc22
+> > +       if (!a->core.cpus || !b->core.cpus)
+> > +               return false;
 > > +
-> >  #ifdef CONFIG_RISCV_M_MODE
-> >  # define CSR_STATUS    CSR_MSTATUS
-> >  # define CSR_IE                CSR_MIE
+> > +       if (a->core.cpus->nr != b->core.cpus->nr)
+> > +               return false;
+> > +
+> > +       for (int i = 0; i < a->core.cpus->nr; i++) {
+> > +               if (a->core.cpus->map[i] != b->core.cpus->map[i])
+> > +                       return false;
+> > +       }
+> > +
+> > +       return true;
+> > +}
+> > +
+> > +static void evlist__check_cpu_maps(struct evlist *evlist)
+> > +{
+> > +       struct evsel *evsel, *pos, *leader;
+> > +       char buf[1024];
+> > +
+> > +       evlist__for_each_entry(evlist, evsel) {
+> > +               leader = evsel->leader;
+> > +
+> > +               /* Check that leader matches cpus with each member. */
+> > +               if (leader == evsel)
+> > +                       continue;
+> > +               if (cpus_map_matched(leader, evsel))
+> > +                       continue;
+> > +
+> > +               /*
+> > +                * If there's mismatch display dismantle the
+> > +                * group and warn user.
+> > +                */
+> > +               WARN_ONCE(1, "WARNING: group events cpu maps do not match, disabling group:\n");
+> > +               evsel__group_desc(leader, buf, sizeof(buf));
+> > +               pr_warning("  %s\n", buf);
+> > +
+> > +               for_each_group_evsel(pos, leader) {
+> > +                       pos->leader = pos;
+> > +                       pos->core.nr_members = 0;
+> > +               }
+> > +               evsel->leader->core.nr_members = 0;
+> > +       }
+> > +}
+> > +
+> >  static inline void diff_timespec(struct timespec *r, struct timespec *a,
+> >                                  struct timespec *b)
+> >  {
+> > @@ -1962,6 +2011,8 @@ int cmd_stat(int argc, const char **argv)
+> >         } else if (argc && !strncmp(argv[0], "rep", 3))
+> >                 return __cmd_report(argc, argv);
+> >
+> > +       evlist__check_cpu_maps(evsel_list);
+> > +
+> >         interval = stat_config.interval;
+> >         timeout = stat_config.timeout;
+> >
 > > --
-> > 2.26.2
+> > 2.25.4
 > >
-> >
->
->
-> --
-> Best Regards
->  Guo Ren
->
-> ML: https://lore.kernel.org/linux-csky/
+> 
+
