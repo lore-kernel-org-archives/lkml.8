@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45642077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5C420772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgFAJwf (ORCPT
+        id S1728012AbgFAJxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:52:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
+        Mon, 1 Jun 2020 05:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgFAJwZ (ORCPT
+        with ESMTP id S1726389AbgFAJwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:52:25 -0400
+        Mon, 1 Jun 2020 05:52:35 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48F0C08C5CA;
-        Mon,  1 Jun 2020 02:52:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15ADEC061A0E;
+        Mon,  1 Jun 2020 02:52:35 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfh7F-0003fb-KJ; Mon, 01 Jun 2020 11:52:21 +0200
+        id 1jfh7P-0003hh-4G; Mon, 01 Jun 2020 11:52:31 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5343C1C0481;
-        Mon,  1 Jun 2020 11:52:21 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 09:52:21 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C637B1C0244;
+        Mon,  1 Jun 2020 11:52:30 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 09:52:30 -0000
+From:   "tip-bot2 for Mike Galbraith" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] smp: Optimize flush_smp_call_function_queue()
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: locking/core] zram: Use local lock to protect per-CPU data
+Cc:     Mike Galbraith <umgwanakikbuti@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200526161907.836818381@infradead.org>
-References: <20200526161907.836818381@infradead.org>
+In-Reply-To: <20200527201119.1692513-8-bigeasy@linutronix.de>
+References: <20200527201119.1692513-8-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159100514119.17951.4934899720059285189.tip-bot2@tip-bot2>
+Message-ID: <159100515059.17951.4923007968333025082.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,87 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     52103be07d8b08311955f8c30e535c2dda290cf4
-Gitweb:        https://git.kernel.org/tip/52103be07d8b08311955f8c30e535c2dda290cf4
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 26 May 2020 18:10:59 +02:00
+Commit-ID:     19f545b6e07f753c4dc639c2f0ab52345733b6a8
+Gitweb:        https://git.kernel.org/tip/19f545b6e07f753c4dc639c2f0ab52345733b6a8
+Author:        Mike Galbraith <umgwanakikbuti@gmail.com>
+AuthorDate:    Wed, 27 May 2020 22:11:19 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 28 May 2020 10:54:15 +02:00
+CommitterDate: Thu, 28 May 2020 10:31:10 +02:00
 
-smp: Optimize flush_smp_call_function_queue()
+zram: Use local lock to protect per-CPU data
 
-The call_single_queue can contain (two) different callbacks,
-synchronous and asynchronous. The current interrupt handler runs them
-in-order, which means that remote CPUs that are waiting for their
-synchronous call can be delayed by running asynchronous callbacks.
+The zcomp driver uses per-CPU compression. The per-CPU data pointer is
+acquired with get_cpu_ptr() which implicitly disables preemption.
+It allocates memory inside the preempt disabled region which conflicts
+with the PREEMPT_RT semantics.
 
-Rework the interrupt handler to first run the synchonous callbacks.
+Replace the implicit preemption control with an explicit local lock.
+This allows RT kernels to substitute it with a real per CPU lock, which
+serializes the access but keeps the code section preemptible. On non RT
+kernels this maps to preempt_disable() as before, i.e. no functional
+change.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+[bigeasy: Use local_lock(), description, drop reordering]
+
+Signed-off-by: Mike Galbraith <umgwanakikbuti@gmail.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200526161907.836818381@infradead.org
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200527201119.1692513-8-bigeasy@linutronix.de
 ---
- kernel/smp.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+ drivers/block/zram/zcomp.c | 7 +++++--
+ drivers/block/zram/zcomp.h | 3 +++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 786092a..db2f738 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -209,9 +209,9 @@ void generic_smp_call_function_single_interrupt(void)
-  */
- static void flush_smp_call_function_queue(bool warn_cpu_offline)
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index 912e3e6..5ee8e3f 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -110,12 +110,13 @@ ssize_t zcomp_available_show(const char *comp, char *buf)
+ 
+ struct zcomp_strm *zcomp_stream_get(struct zcomp *comp)
  {
--	struct llist_head *head;
--	struct llist_node *entry;
- 	call_single_data_t *csd, *csd_next;
-+	struct llist_node *entry, *prev;
-+	struct llist_head *head;
- 	static bool warned;
+-	return get_cpu_ptr(comp->stream);
++	local_lock(&comp->stream->lock);
++	return this_cpu_ptr(comp->stream);
+ }
  
- 	lockdep_assert_irqs_disabled();
-@@ -235,21 +235,40 @@ static void flush_smp_call_function_queue(bool warn_cpu_offline)
- 				csd->func);
- 	}
+ void zcomp_stream_put(struct zcomp *comp)
+ {
+-	put_cpu_ptr(comp->stream);
++	local_unlock(&comp->stream->lock);
+ }
  
-+	/*
-+	 * First; run all SYNC callbacks, people are waiting for us.
-+	 */
-+	prev = NULL;
- 	llist_for_each_entry_safe(csd, csd_next, entry, llist) {
- 		smp_call_func_t func = csd->func;
- 		void *info = csd->info;
+ int zcomp_compress(struct zcomp_strm *zstrm,
+@@ -159,6 +160,8 @@ int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node)
+ 	int ret;
  
- 		/* Do we wait until *after* callback? */
- 		if (csd->flags & CSD_FLAG_SYNCHRONOUS) {
-+			if (prev) {
-+				prev->next = &csd_next->llist;
-+			} else {
-+				entry = &csd_next->llist;
-+			}
- 			func(info);
- 			csd_unlock(csd);
- 		} else {
--			csd_unlock(csd);
--			func(info);
-+			prev = &csd->llist;
- 		}
- 	}
- 
- 	/*
-+	 * Second; run all !SYNC callbacks.
-+	 */
-+	llist_for_each_entry_safe(csd, csd_next, entry, llist) {
-+		smp_call_func_t func = csd->func;
-+		void *info = csd->info;
+ 	zstrm = per_cpu_ptr(comp->stream, cpu);
++	local_lock_init(&zstrm->lock);
 +
-+		csd_unlock(csd);
-+		func(info);
-+	}
-+
-+	/*
- 	 * Handle irq works queued remotely by irq_work_queue_on().
- 	 * Smp functions above are typically synchronous so they
- 	 * better run first since some other CPUs may be busy waiting
+ 	ret = zcomp_strm_init(zstrm, comp);
+ 	if (ret)
+ 		pr_err("Can't allocate a compression stream\n");
+diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
+index 72c2ee4..40f6420 100644
+--- a/drivers/block/zram/zcomp.h
++++ b/drivers/block/zram/zcomp.h
+@@ -5,8 +5,11 @@
+ 
+ #ifndef _ZCOMP_H_
+ #define _ZCOMP_H_
++#include <linux/local_lock.h>
+ 
+ struct zcomp_strm {
++	/* The members ->buffer and ->tfm are protected by ->lock. */
++	local_lock_t lock;
+ 	/* compression/decompression buffer */
+ 	void *buffer;
+ 	struct crypto_comp *tfm;
