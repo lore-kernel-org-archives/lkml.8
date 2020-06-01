@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0983CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE20C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDBC5206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0843206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036923;
-	bh=KlkWwm/tiwxWsauXuo/bW/oTU/cQu4F2ZLTFnbeJcxk=;
+	s=default; t=1591036928;
+	bh=02DePW7699cZ/ay8bB9bEtuVud5XW5WaeGoLYCVGwSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CcqH+zqZAWpZZWzOZpNVyC0hec8na90a5MwmAzExAnelZGeCEMhkS8axiFM1sqLsT
-	 aQ5MZinUNTmfh4NNi7HsO7bY/4yRgQqKu3arkLuoLLSaOs6VEToR5Eslx8IuGoAk7M
-	 jWXxl45yjr9bJQXArWyJDxO545/R2yCkqfqZr2io=
+	b=AXsWX7QT2eMD+2mtukNmEo0rgdHA3tNpTSYlOCM+G3wxR13p0TzrDH+iAfBhVn7FV
+	 HpftwA1ywxri6tj6uMLqwTCPMmkt9kaVb7zhV93jPyXP2dUhye3NHfJoJ37Agv0n73
+	 OhkvR/Ho9NDPBoes8gOZo+/tJoGbjuymrSrwS5Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731182AbgFASMI (ORCPT
+        id S1731042AbgFASmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59088 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:42:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730462AbgFASLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:50 -0400
+        id S1731176AbgFASMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:12:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EDE92065C;
-        Mon,  1 Jun 2020 18:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEAE7206E2;
+        Mon,  1 Jun 2020 18:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035109;
-        bh=KlkWwm/tiwxWsauXuo/bW/oTU/cQu4F2ZLTFnbeJcxk=;
+        s=default; t=1591035125;
+        bh=02DePW7699cZ/ay8bB9bEtuVud5XW5WaeGoLYCVGwSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YSheTNOaO2fh9IkDDQaP8lqMH6tP4c+BHbUarjXlrPIAeqSEpXep0QFF0VsNnJsYl
-         BshnslC3Eq5byS0MpCGFpN5C68oxDccqMJt1SOeAkWZwUtL8yX3cKN/3Ijd+FaCai9
-         h22XYFZektMlJsyy8nlONbFJPOEPeR2ZQ8fQrdfY=
+        b=mXMM1E9EC/Ht+ClV7msMOBi3yii4Y32DhsGJsAt65Ynxlk/pFBDUAkEcIAozr2XZj
+         q4JBSHgstPA/luj1qT3h3AWweGuS2vmiGVYTU/RkUrDmjfaX3uXDG5nvlU6BoR1wW6
+         8mPya/gc2GV5zs1+uUE3xlBvgnIs/h20K7ZSD8e0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 014/177] net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
-Date:   Mon,  1 Jun 2020 19:52:32 +0200
-Message-Id: <20200601174049.840281466@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, jere.leppanen@nokia.com,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org
+Subject: [PATCH 5.6 020/177] sctp: Dont add the shutdown timer if its already been added
+Date:   Mon,  1 Jun 2020 19:52:38 +0200
+Message-Id: <20200601174050.390884187@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,38 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Neil Horman <nhorman@tuxdriver.com>
 
-[ Upstream commit d28ea1fbbf437054ef339afec241019f2c4e2bb6 ]
+[ Upstream commit 20a785aa52c82246055a089e55df9dac47d67da1 ]
 
-Once the traversal of the list is completed with list_for_each_entry(),
-the iterator (node) will point to an invalid object. So passing this to
-qrtr_local_enqueue() which is outside of the iterator block is erroneous
-eventhough the object is not used.
+This BUG halt was reported a while back, but the patch somehow got
+missed:
 
-So fix this by passing NULL to qrtr_local_enqueue().
+PID: 2879   TASK: c16adaa0  CPU: 1   COMMAND: "sctpn"
+ #0 [f418dd28] crash_kexec at c04a7d8c
+ #1 [f418dd7c] oops_end at c0863e02
+ #2 [f418dd90] do_invalid_op at c040aaca
+ #3 [f418de28] error_code (via invalid_op) at c08631a5
+    EAX: f34baac0  EBX: 00000090  ECX: f418deb0  EDX: f5542950  EBP: 00000000
+    DS:  007b      ESI: f34ba800  ES:  007b      EDI: f418dea0  GS:  00e0
+    CS:  0060      EIP: c046fa5e  ERR: ffffffff  EFLAGS: 00010286
+ #4 [f418de5c] add_timer at c046fa5e
+ #5 [f418de68] sctp_do_sm at f8db8c77 [sctp]
+ #6 [f418df30] sctp_primitive_SHUTDOWN at f8dcc1b5 [sctp]
+ #7 [f418df48] inet_shutdown at c080baf9
+ #8 [f418df5c] sys_shutdown at c079eedf
+ #9 [f418df70] sys_socketcall at c079fe88
+    EAX: ffffffda  EBX: 0000000d  ECX: bfceea90  EDX: 0937af98
+    DS:  007b      ESI: 0000000c  ES:  007b      EDI: b7150ae4
+    SS:  007b      ESP: bfceea7c  EBP: bfceeaa8  GS:  0033
+    CS:  0073      EIP: b775c424  ERR: 00000066  EFLAGS: 00000282
 
-Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+It appears that the side effect that starts the shutdown timer was processed
+multiple times, which can happen as multiple paths can trigger it.  This of
+course leads to the BUG halt in add_timer getting called.
+
+Fix seems pretty straightforward, just check before the timer is added if its
+already been started.  If it has mod the timer instead to min(current
+expiration, new expiration)
+
+Its been tested but not confirmed to fix the problem, as the issue has only
+occured in production environments where test kernels are enjoined from being
+installed.  It appears to be a sane fix to me though.  Also, recentely,
+Jere found a reproducer posted on list to confirm that this resolves the
+issues
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+CC: Vlad Yasevich <vyasevich@gmail.com>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: jere.leppanen@nokia.com
+CC: marcelo.leitner@gmail.com
+CC: netdev@vger.kernel.org
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/qrtr/qrtr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sctp/sm_sideeffect.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -855,7 +855,7 @@ static int qrtr_bcast_enqueue(struct qrt
- 	}
- 	mutex_unlock(&qrtr_node_lock);
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -1523,9 +1523,17 @@ static int sctp_cmd_interpreter(enum sct
+ 			timeout = asoc->timeouts[cmd->obj.to];
+ 			BUG_ON(!timeout);
  
--	qrtr_local_enqueue(node, skb, type, from, to);
-+	qrtr_local_enqueue(NULL, skb, type, from, to);
+-			timer->expires = jiffies + timeout;
+-			sctp_association_hold(asoc);
+-			add_timer(timer);
++			/*
++			 * SCTP has a hard time with timer starts.  Because we process
++			 * timer starts as side effects, it can be hard to tell if we
++			 * have already started a timer or not, which leads to BUG
++			 * halts when we call add_timer. So here, instead of just starting
++			 * a timer, if the timer is already started, and just mod
++			 * the timer with the shorter of the two expiration times
++			 */
++			if (!timer_pending(timer))
++				sctp_association_hold(asoc);
++			timer_reduce(timer, jiffies + timeout);
+ 			break;
  
- 	return 0;
- }
+ 		case SCTP_CMD_TIMER_RESTART:
 
 
