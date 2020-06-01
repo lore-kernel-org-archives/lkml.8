@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC18C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D29A216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC43206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037989;
-	bh=gTD9ZJmmQfukiKb2cBKcYkeLRNsmSehEVufbEHZPuM0=;
+	s=default; t=1591037994;
+	bh=/5VkpIO2UD91rUp5qWHQOHYDOK8hTEv34OEZz29srVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSF73EFbw6c+OGcm1/CqQ2vvDSOkZEA04vhyNxA6+okCnPaAjz7HkF9bS0/A7rZ+e
-	 dVckNbmPkoOwtqGKw6DxNOr6d/XMBUKyg3lV1jWZ3zp9X+vM4L7PcZoDBwLlah7c94
-	 AcRvcgR+aO2qm5dn0kOU8ylzbxFi6KCAFwNLuPFQ=
+	b=dqKNTmfW9XFqwmi57V7a794anqB3oMEQc4rJxZnEXW3JDBR09hQ405R3O24kgQRwT
+	 HTRnCMYLZ2cBP9Y9cX/S5KnOjzd0do+U+qZ7/HXunqxZowyF1XaYi987vBkXMR9LMI
+	 7ys5Po/DM4sRvn0J7tbjRym79mpAUGreQ3KW52hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbgFAS7s (ORCPT
+        id S1728769AbgFAR44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:59:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38000 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbgFAR5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:03 -0400
+        id S1728739AbgFAR4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A063E2073B;
-        Mon,  1 Jun 2020 17:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A58C206E2;
+        Mon,  1 Jun 2020 17:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034223;
-        bh=gTD9ZJmmQfukiKb2cBKcYkeLRNsmSehEVufbEHZPuM0=;
+        s=default; t=1591034211;
+        bh=/5VkpIO2UD91rUp5qWHQOHYDOK8hTEv34OEZz29srVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ITBvb+5PfzUjF5ByDmPdZHTx6s0BfP8wNZqJvcicdgdQ6HT+/SGE91HYKzSZ6rAmU
-         2FWX7iX5J//0kotM7AHbzsYC3tfeQauFqL2VJwupP1cFrhmEuo3QiO24WBeKnNG8Lv
-         Xu6oAhjKFM4vHogrve3XqLPT7y23T9zvjyduSPHc=
+        b=PJl8FZ/ErtOFQ4q8lsjLcnst55O8b5MKhh338Dq1j+MCJ/hwE+ROeK8A9mK6KxsMJ
+         7sLfTY6l6nqBF+n9XAulhESqj05v58Y/xopmNLLBcaieVo1eeoRBpGW0w/lU9T5FU0
+         rnmxFYzB5yK+tfp2CA119iNqY9VpxuqT4TfqYFfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 47/48] sc16is7xx: move label err_spi to correct section
-Date:   Mon,  1 Jun 2020 19:53:57 +0200
-Message-Id: <20200601174005.550471883@linuxfoundation.org>
+Subject: [PATCH 4.4 42/48] usb: renesas_usbhs: gadget: fix spin_lock_init() for &uep->lock
+Date:   Mon,  1 Jun 2020 19:53:52 +0200
+Message-Id: <20200601174003.939899118@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -60,42 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <gqjiang@suse.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit e00164a0f000de893944981f41a568c981aca658 upstream.
+commit 14a8d4bfc2102f85ce097563d151370c91c1898a upstream.
 
-err_spi is used when SERIAL_SC16IS7XX_SPI is enabled, so make
-the label only available under SERIAL_SC16IS7XX_SPI option.
-Otherwise, the below warning appears.
+This patch fixes an issue that the spin_lock_init() is not called
+for almost all pipes. Otherwise, the lockdep output the following
+message when we connect a usb cable using g_ncm:
 
-drivers/tty/serial/sc16is7xx.c:1523:1: warning: label ‘err_spi’ defined but not used [-Wunused-label]
- err_spi:
-  ^~~~~~~
+ INFO: trying to register non-static key.
+ the code is fine but needs lockdep annotation.
+ turning off the locking correctness validator.
 
-Signed-off-by: Guoqing Jiang <gqjiang@suse.com>
-Fixes: ac0cdb3d9901 ("sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Fixes: b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps when the driver stops")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Tested-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sc16is7xx.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/renesas_usbhs/mod_gadget.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1489,10 +1489,12 @@ static int __init sc16is7xx_init(void)
- #endif
- 	return ret;
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -1103,7 +1103,6 @@ int usbhs_mod_gadget_probe(struct usbhs_
+ 		ret = -ENOMEM;
+ 		goto usbhs_mod_gadget_probe_err_gpriv;
+ 	}
+-	spin_lock_init(&uep->lock);
  
-+#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
- err_spi:
- #ifdef CONFIG_SERIAL_SC16IS7XX_I2C
- 	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
- #endif
-+#endif
- err_i2c:
- 	uart_unregister_driver(&sc16is7xx_uart);
- 	return ret;
+ 	gpriv->transceiver = usb_get_phy(USB_PHY_TYPE_UNDEFINED);
+ 	dev_info(dev, "%stransceiver found\n",
+@@ -1151,6 +1150,7 @@ int usbhs_mod_gadget_probe(struct usbhs_
+ 		uep->ep.name		= uep->ep_name;
+ 		uep->ep.ops		= &usbhsg_ep_ops;
+ 		INIT_LIST_HEAD(&uep->ep.ep_list);
++		spin_lock_init(&uep->lock);
+ 
+ 		/* init DCP */
+ 		if (usbhsg_is_dcp(uep)) {
 
 
