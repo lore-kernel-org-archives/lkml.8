@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B13C62068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701AA2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035225;
-	bh=/5gUvaIeXL5/SvAcmLxJzXgwL0RfqCvuytXsSmHeWtk=;
+	s=default; t=1591035239;
+	bh=NdnPmtsS3tWnrdzORWnRxa8zNY3r7zHEa+3nzOiybw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QkR8ZZrSWBWtEq0CfdqLj0jvYBtOY4ujY7E49l0qhaLCT6XQpMBmcLggQ8lmey4mB
-	 jPAD6usHuOX+QYmVGnTCmRqaKksgvwe8ZLFLRTHfzcBlJZ7sDGqEtXHE+3MlaHkWbc
-	 Ujh7FYnRAUaEJXS2niZIx3kpqbL76+M9QINmxeLg=
+	b=iJzWQGyP65VeKqj+726XrJPvooMXGcYK/t9+3q8nb7zuGska28YYTLoF3JAmcJ33p
+	 6kyInF/9lolaUsowDNCRc24PsDkVrFz8n5D9rnWNSeDhIczDzJZ/yUn1f0y/kq+ZAF
+	 jKQvGdLokVEGMr3ywQksHhjdVRNmsPFutIE1/Rf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbgFASNp (ORCPT
+        id S1731423AbgFASN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33260 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731374AbgFASNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:40 -0400
+        id S1730992AbgFASNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:13:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A21632065C;
-        Mon,  1 Jun 2020 18:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1A72206E2;
+        Mon,  1 Jun 2020 18:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035220;
-        bh=/5gUvaIeXL5/SvAcmLxJzXgwL0RfqCvuytXsSmHeWtk=;
+        s=default; t=1591035233;
+        bh=NdnPmtsS3tWnrdzORWnRxa8zNY3r7zHEa+3nzOiybw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QINc8cAHRitK2qEJZzHMARYBBcYUre5CNyKVIW82CDfiGpcGc0c8SR3lGpct1naUQ
-         FpYYkFhzGfALlcYdH5e2RefF/JLuh5q5a5krtylkCcLVh7GxPYnS5CQhwXiVSS1lN0
-         +ckxYKuCbU2ab8RXKgivfuy1MTpj/8XsX7pvwMBo=
+        b=kGI8uW/UTMz+oRhYxdDZ79gg6RqVBMxh2hkEPQ0/TSedAqM52NMmPYfDX5KlbWBoS
+         jpe+Sp9aK3Q34IS+9b1Is36+CNvOaQLLKOgoSYg7eHAoj81soqHoN/sJvas6lPvZkI
+         wG6RRANFC1JWS+NS8MDaCRbNsbnwxXQEryswxjhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Sierra <alex.sierra@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        "Leo (Hanghong) Ma" <hanghong.ma@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 062/177] drm/amdgpu: Use GEM obj reference for KFD BOs
-Date:   Mon,  1 Jun 2020 19:53:20 +0200
-Message-Id: <20200601174054.128986546@linuxfoundation.org>
+Subject: [PATCH 5.6 068/177] drm/amd/amdgpu: Update update_config() logic
+Date:   Mon,  1 Jun 2020 19:53:26 +0200
+Message-Id: <20200601174054.581376739@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,50 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Leo (Hanghong) Ma <hanghong.ma@amd.com>
 
-[ Upstream commit 39b3128d7ffd44e400e581e6f49e88cb42bef9a1 ]
+[ Upstream commit 650e723cecf2738dee828564396f3239829aba83 ]
 
-Releasing the AMDGPU BO ref directly leads to problems when BOs were
-exported as DMA bufs. Releasing the GEM reference makes sure that the
-AMDGPU/TTM BO is not freed too early.
+[Why]
+For MST case: when update_config is called to disable a stream,
+this clears the settings for all the streams on that link.
+We should only clear the settings for the stream that was disabled.
 
-Also take a GEM reference when importing BOs from DMABufs to keep
-references to imported BOs balances properly.
+[How]
+Clear the settings after the call to remove display is called.
 
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Tested-by: Alex Sierra <alex.sierra@amd.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Sierra <alex.sierra@amd.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Leo (Hanghong) Ma <hanghong.ma@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index fa8ac9d19a7a..6326c1792270 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -1304,7 +1304,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
+index 3abeff7722e3..e80371542622 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
+@@ -316,15 +316,15 @@ static void update_config(void *handle, struct cp_psp_stream_config *config)
+ 	struct mod_hdcp_display *display = &hdcp_work[link_index].display;
+ 	struct mod_hdcp_link *link = &hdcp_work[link_index].link;
+ 
+-	memset(display, 0, sizeof(*display));
+-	memset(link, 0, sizeof(*link));
+-
+-	display->index = aconnector->base.index;
+-
+ 	if (config->dpms_off) {
+ 		hdcp_remove_display(hdcp_work, link_index, aconnector);
+ 		return;
  	}
++
++	memset(display, 0, sizeof(*display));
++	memset(link, 0, sizeof(*link));
++
++	display->index = aconnector->base.index;
+ 	display->state = MOD_HDCP_DISPLAY_ACTIVE;
  
- 	/* Free the BO*/
--	amdgpu_bo_unref(&mem->bo);
-+	drm_gem_object_put_unlocked(&mem->bo->tbo.base);
- 	mutex_destroy(&mem->lock);
- 	kfree(mem);
- 
-@@ -1647,7 +1647,8 @@ int amdgpu_amdkfd_gpuvm_import_dmabuf(struct kgd_dev *kgd,
- 		 ALLOC_MEM_FLAGS_VRAM : ALLOC_MEM_FLAGS_GTT) |
- 		ALLOC_MEM_FLAGS_WRITABLE | ALLOC_MEM_FLAGS_EXECUTABLE;
- 
--	(*mem)->bo = amdgpu_bo_ref(bo);
-+	drm_gem_object_get(&bo->tbo.base);
-+	(*mem)->bo = bo;
- 	(*mem)->va = va;
- 	(*mem)->domain = (bo->preferred_domains & AMDGPU_GEM_DOMAIN_VRAM) ?
- 		AMDGPU_GEM_DOMAIN_VRAM : AMDGPU_GEM_DOMAIN_GTT;
+ 	if (aconnector->dc_sink != NULL)
 -- 
 2.25.1
 
