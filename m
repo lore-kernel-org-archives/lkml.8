@@ -2,96 +2,161 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78641C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 566B0206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:47:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="dprHmVph";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FvORIxVp"
+	by mail.kernel.org (Postfix) with ESMTP id 842B62085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591030299;
+	bh=ehIgjqfbBBjxDPUjD2WX+8FA7eGuKdelQD+KI1hrAg0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A1LxEFGVT7At6m3MXC+D1dbYxAUR1iij3WNj7kN6AxusKoULcc4QIHe//46O2EVeE
+	 +9T9nRmgiY3RM7hTGkFFkubFwVFe6oDIPLuytA4X8Fix/V1ceeLF9Phk2LLOhvd3qJ
+	 rh3OC/6gQpjqlgAaBRqq5P4+bSNZq/WDtIg9fxX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgFAQrd (ORCPT
+        id S1726073AbgFAQvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:47:33 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:60905 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbgFAQrc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:47:32 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id E18705C0089;
-        Mon,  1 Jun 2020 12:47:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 01 Jun 2020 12:47:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=m0bDCjJMb2mSrUryHZnpstY5uuw
-        3/YciXAeS1fk9yTU=; b=dprHmVphVMlRqrkYXrHwWIlSaFdFhZII7dVcZiY/AU2
-        G4+luvItOpHM744dnCpR0b9H1QobRA1pRUt5d62HuxjXstQ0nos0hpfgncT5Ya1l
-        bs/Pt7RpAyy/k32WvuuDZpPEY7cCOa+3e4gp+Aw0TSp0b5/Y76l1SqsbTOU2mB03
-        iUvEAo1RMf0j/rDG1mlFkr86kuBu66rOMseDgJHLgn5ygIGkdTpUTOVdsktLoS6s
-        BBbPlpIq0BS+cmiyvjmSTGKEATlrSy/fR1p8vpo8p6Q6fsLZsOg88uwDKwc7QOd3
-        b2CERHlcfRE0CLKRSEQ0hTh6kHmPcyCRtHSFHBdpkFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=m0bDCj
-        JMb2mSrUryHZnpstY5uuw3/YciXAeS1fk9yTU=; b=FvORIxVp751hgMaq3aE3Wz
-        i7+jVdQl9sc/s5xYVIbivkCg0msOraYnc51kNpKuF19nheYEFDHSyI9JQGb7y96z
-        1hMHVo2IW426Q4suAA9XWSJML9uNWLyad/7nl/xE6SrwpboHtDBG1p9adi9LuRTK
-        Jw4KG/KEO+fWPkWTyoc+fLAmtgkD9jyI5Of6lvWgekuvZL4RJEswjDKaQrZ0KqYZ
-        Z9w0OdZKl4NSMJcMX/U50CbbHLr6cieiHs2ap8UH2Go+SpEzp4I/bvZV8C3rkhK5
-        kirLwjIauhENqvc0LEZF4r3DfTR5gZlR4ymskAsMIixx1fJ3j8a/kZxAr737Pbmw
-        ==
-X-ME-Sender: <xms:IjHVXuVeHxaTVl0e6ODi7c2-l7JyNbo82ZujmECA3nBT_YUl7G_4_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefhedgleeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:IjHVXqlBr_ODPkID2sqYroHK-6DE9MSc02VpAEZoDD1z8pbi1Nmd6w>
-    <xmx:IjHVXiYjyUPeWI22FhGT-OBRY00Phw9O8IX2o7HT8OH3qEbJOyJjzw>
-    <xmx:IjHVXlWHIzLWlxQvm-NhaW8o5xTV2zjxWNlCFOFzFGOzD4CZL2Uvyg>
-    <xmx:IjHVXpAJYT5EUuUhiNNJLGvFaQLx13TfwzpISLX1_Td6dlmEMXbWDg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1572D3280066;
-        Mon,  1 Jun 2020 12:47:29 -0400 (EDT)
-Date:   Mon, 1 Jun 2020 18:47:27 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Marek Vasut <marex@denx.de>
-Cc:     changbin.du@gmail.com, linux-stable <stable@vger.kernel.org>,
-        acme@kernel.org, jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH] perf: Make perf able to build with latest libbfd
-Message-ID: <20200601164727.GB1037203@kroah.com>
-References: <20200128152938.31413-1-changbin.du@gmail.com>
- <70322330-524c-14ab-aace-e460677e25e3@denx.de>
+        Mon, 1 Jun 2020 12:51:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgFAQvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 12:51:38 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7485A2086A
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 16:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591030297;
+        bh=ehIgjqfbBBjxDPUjD2WX+8FA7eGuKdelQD+KI1hrAg0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uXO8ySExjM2Fo4MQ6Xeg5b01OrE4WYgaXZuCMxO9s/SmQ1An0pmbF2nfDt3SoDuzr
+         3G5cpXO8S3WieWOYfhvTIAsbl0pwhQYG0qRmqfOZ2AyTyYG8jsDz7PdXwcnwfrpHWu
+         8ngXfjRabAdR8GZAGBzjMUEJ5D24y3vHlccwnHHs=
+Received: by mail-wm1-f43.google.com with SMTP id k26so202466wmi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:51:37 -0700 (PDT)
+X-Gm-Message-State: AOAM532sCJC8RbRUC7cPZKw+HG4UqZ7qb6smYPyo7PiNBni5oG38Hxt7
+        3WX7OjXpQSwIfaf/R5B+EYOEEaeBUxowv2lhl7XQGw==
+X-Google-Smtp-Source: ABdhPJxTbhyy5JlsvE6bc8xkZzvDwdVQHFocVib0238l3FWMXeebYTBbDyNENu2bwwiGB3rzKLw990EquTaln20n2ek=
+X-Received: by 2002:a1c:abc3:: with SMTP id u186mr206945wme.21.1591030295821;
+ Mon, 01 Jun 2020 09:51:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70322330-524c-14ab-aace-e460677e25e3@denx.de>
+References: <20200504232132.23570-1-daniel.kiper@oracle.com>
+ <2dad6366d2fceb0a9e36f284a8ed5a8ed86d8756.camel@linux.intel.com>
+ <20200507110634.2yvzirauq5md7d2q@tomti.i.net-space.pl> <d1b55f25-e54c-b259-8836-d834a572de3b@apertussolutions.com>
+In-Reply-To: <d1b55f25-e54c-b259-8836-d834a572de3b@apertussolutions.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 1 Jun 2020 09:51:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrVPK=m3F84NtiU59SLyDrBNxi1ONyhH1GuOhx4aGU=_fQ@mail.gmail.com>
+Message-ID: <CALCETrVPK=m3F84NtiU59SLyDrBNxi1ONyhH1GuOhx4aGU=_fQ@mail.gmail.com>
+Subject: Re: [GRUB PATCH RFC 00/18] i386: Intel TXT secure launcher
+To:     "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Cc:     Daniel Kiper <daniel.kiper@oracle.com>,
+        Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>,
+        grub-devel@gnu.org, LKML <linux-kernel@vger.kernel.org>,
+        trenchboot-devel@googlegroups.com, X86 ML <x86@kernel.org>,
+        alexander.burmashev@oracle.com,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        eric.snowberg@oracle.com, javierm@redhat.com,
+        kanth.ghatraju@oracle.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
+        Matthew Garrett <mjg59@google.com>, phcoder@gmail.com,
+        piotr.krol@3mdeb.com, Peter Jones <pjones@redhat.com>,
+        Ross Philipson <ross.philipson@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 03:50:25AM +0200, Marek Vasut wrote:
-> Hi,
-> 
-> since commit
-> 0ada120c883d ("perf: Make perf able to build with latest libbfd")
-> is in master, can it be backported to stable as well? I keep hitting
-> this with too new binutils on Linux 5.4.y and I have to keep
-> cherry-picking this commit to fix it.
+On Mon, Jun 1, 2020 at 8:33 AM Daniel P. Smith
+<dpsmith@apertussolutions.com> wrote:
+>
+> On 5/7/20 7:06 AM, Daniel Kiper wrote:
+> > Hi =C5=81ukasz,
+> >
+> > On Tue, May 05, 2020 at 04:38:02PM +0200, Lukasz Hawrylko wrote:
+> >> On Tue, 2020-05-05 at 01:21 +0200, Daniel Kiper wrote:
+>
+> ...
+>
+> >> In OS-MLE table there is a buffer for TPM event log, however I see tha=
+t
+> >> you are not using it, but instead allocate space somewhere in the
+> >
+> > I think that this part requires more discussion. In my opinion we shoul=
+d
+> > have this region dynamically allocated because it gives us more flexibi=
+lity.
+> > Of course there is a question about the size of this buffer too. I am
+> > not sure about that because I have not checked yet how many log entries
+> > are created by the SINIT ACM. Though probably it should not be large...
+> >
+> >> memory. I am just wondering if, from security perspective, it will be
+> >> better to use memory from TXT heap for event log, like we do in TBOOT.
+> >
+> > Appendix F, TPM Event Log, has following sentence: There are no
+> > requirements for event log to be in DMA protected memory =E2=80=93 SINI=
+T will
+> > not enforce it.
+> >
+> > I was thinking about it and it seems to me that the TPM event log does
+> > not require any special protections. Any changes in it can be quickly
+> > detected by comparing hashes with the TPM PCRs. Does not it?
+> >
+>
+> I think it would be beneficial to consider the following in deciding
+> where the log is placed. There are two areas of attack/manipulation that
+> need to be considered. The first area is the log contents itself, which
+> as Daniel has pointed out, the log contents do not really need to be
+> protected from tampering as that would/should be detected during
+> verification by the attestor. The second area that we need to consider
+> is the log descriptors themselves. If these are in an area that can be
+> manipulated, it is an opportunity for an attacker to attempt to
+> influence the ACM's execution. For a little perspective, the ACM
+> executes from CRAM to take the most possible precaution to ensure that
+> it cannot be tampered with during execution. This is very important
+> since it runs a CPU mode (ACM Mode) that I would consider to be higher
+> (or lower depending on how you view it) than SMM. As a result, the txt
+> heap is also included in what is mapped into CRAM. If the event log is
+> place in the heap, this ensures that the ACM is not using memory outside
+> of CRAM during execution. Now as Daniel has pointed out, the down side
+> to this is that it greatly restricts the log size and can only be
+> managed by a combination of limiting the number of events and
+> restricting what content is carried in the event data field.
 
-Now applied, thanks.
+Can you clarify what the actual flow of control is?  If I had to guess, it'=
+s:
 
-greg k-h
+GRUB (or other bootloader) writes log.
+
+GRUB transfers control to the ACM.  At this point, GRUB is done
+running and GRUB code will not run again.
+
+ACM validates system configuration and updates TPM state using magic
+privileged TPM access.
+
+ACM transfers control to the shiny new Linux secure launch entry point
+
+Maybe this is right, and maybe this is wrong.  But I have some
+questions about this whole setup.  Is the ACM code going to inspect
+this log at all?  If so, why?  Who supplies the ACM code?  If the ACM
+can be attacked by putting its inputs (e.g. this log) in the wrong
+place in memory, why should this be considered anything other than a
+bug in the ACM?
+
+If GRUB is indeed done by the time anyone consumes the log, why does
+GRUB care where the log ends up?
+
+And finally, the log presumably has nonzero size, and it would be nice
+not to pin some physical memory forever for the log.  Could the kernel
+copy it into tmpfs during boot so it's at least swappable and then
+allow userspace to delete it when userspace is done with it?
