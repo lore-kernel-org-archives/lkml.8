@@ -2,52 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A05C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0905C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B943320842
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6FF20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037224;
-	bh=kMZ8z483ON/zTTVEyFoP7XJhnrafJFQO56c/L6OUIsY=;
+	s=default; t=1591037229;
+	bh=N/W/8g3PtuuoC034RzeB9JObwXv0drfERwy505VPvqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pkmr+2wMYt0aFwFufEhZ8avFW7dkl4rjGBoo6sWNQ/0tHo/E/rQ91PEBefP5e7ni2
-	 6k+F02wU2xhOw9jz2SPOUV7ANz7aavIymaij78Bk5p8eNEoA0eDDRBvg2QnyxDL3o3
-	 Yak3sPe9/j17ayS1NAm5agJ80h3k8voaeCiWtD2c=
+	b=TARhBawk0zp0UXZcAbuXMBWE17gI+BKh9CnqfYIuGXGJ/N2b3uq5nNjsfZH6JcfWY
+	 NBf9620rbNMgBtmwONvNYlKn1MVx7iOgK7J/IznHpzs2jqTHB3FXAuIWkU92lxdFqZ
+	 ytirUyHPfyyx49DXdtfg+YNvUrlhtLbUGGOseRGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgFASrD (ORCPT
+        id S1730724AbgFASIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54750 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730743AbgFASIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:08:35 -0400
+        id S1730721AbgFASIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:08:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EE74207D0;
-        Mon,  1 Jun 2020 18:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2EF62068D;
+        Mon,  1 Jun 2020 18:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034914;
-        bh=kMZ8z483ON/zTTVEyFoP7XJhnrafJFQO56c/L6OUIsY=;
+        s=default; t=1591034901;
+        bh=N/W/8g3PtuuoC034RzeB9JObwXv0drfERwy505VPvqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nGpVh3ZrHDk5HNFjAYqpj+Fc2Osvmn4Jax7XNCScxuwvgQsaPsFIH9TP2D5kNpfkx
-         Rf8UDxDsmJ4Sh+q+LwZnRjhUMlY09gw+N6WaNn3uP4PCgCdkeBoD9o+O+y/k2vLR4D
-         CKO9Nd7rmmBq8CRNqw1VYMqhg09C8gF4lOZBRryk=
+        b=BbY0xG3+Gx7gudYKRr4DHRpNmZClMIEpV6I3TFnNDr3o8Yo29bVTWZSq3+Jmeen3V
+         9kMpTXBjb3954Lfa7PdiVWQDXqWXAMvIgXn+jAsKnNDttcl71pXvv7kOTjQhxKddNN
+         ykK53mc1OeDVxdiZA+kNMPYlr+shXEWTY46JY+AM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 070/142] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
-Date:   Mon,  1 Jun 2020 19:53:48 +0200
-Message-Id: <20200601174045.073010822@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 023/142] net/mlx5: Fix memory leak in mlx5_events_init
+Date:   Mon,  1 Jun 2020 19:53:01 +0200
+Message-Id: <20200601174040.228790262@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,38 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 5caab2da63207d6d631007f592f5219459e3454d ]
+[ Upstream commit df14ad1eccb04a4a28c90389214dbacab085b244 ]
 
-Fix to return a negative error code from the input_register_device()
-error handling case instead of 0, as done elsewhere in this function.
+Fix memory leak in mlx5_events_init(), in case
+create_single_thread_workqueue() fails, events
+struct should be freed.
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Link: https://lore.kernel.org/r/20200428134948.78343-1-weiyongjun1@huawei.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5d3c537f9070 ("net/mlx5: Handle event of power detection in the PCIE slot")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/input/rmi4/rmi_driver.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/events.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index c18e1a25bca6..258d5fe3d395 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -1210,7 +1210,8 @@ static int rmi_driver_probe(struct device *dev)
- 	if (data->input) {
- 		rmi_driver_set_input_name(rmi_dev, data->input);
- 		if (!rmi_dev->xport->input) {
--			if (input_register_device(data->input)) {
-+			retval = input_register_device(data->input);
-+			if (retval) {
- 				dev_err(dev, "%s: Failed to register input device.\n",
- 					__func__);
- 				goto err_destroy_functions;
--- 
-2.25.1
-
+--- a/drivers/net/ethernet/mellanox/mlx5/core/events.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/events.c
+@@ -346,8 +346,10 @@ int mlx5_events_init(struct mlx5_core_de
+ 	events->dev = dev;
+ 	dev->priv.events = events;
+ 	events->wq = create_singlethread_workqueue("mlx5_events");
+-	if (!events->wq)
++	if (!events->wq) {
++		kfree(events);
+ 		return -ENOMEM;
++	}
+ 	INIT_WORK(&events->pcie_core_work, mlx5_pcie_event);
+ 
+ 	return 0;
 
 
