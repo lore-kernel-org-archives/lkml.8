@@ -2,292 +2,98 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4383C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9145C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF0A2087D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9EA02074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036770;
-	bh=qOxoZU27BS4ecyYbGhcESok/bly/SpCHfZfU+pixZLY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRR4BqzVo8i/DlvLPp+HA7q4Ftbekt2WGcWuxK6KRMwbPh3AmXx5VrnZxCZ++cPHA
-	 rVUW8zRdPR+hDwGMgEgdmBSHLs2wpmWzcX0qE1utzE0Hh17EUrfxiNsyu/Kr1Lc90s
-	 Yqg3D2UKuNP8D+hqJVqfYfeFPraYNK+9sfIETIgw=
+	s=default; t=1591036773;
+	bh=RyIsxe6m5o4uNe85AJQRvv7FiQv43lUiUS0HaYJTLWk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LGykuSoz4pNaa4uliZLGhoHnxCWc3AObImi7gFq99V8WxCBXZHpG4J83qlh5RDTa6
+	 qV19+6dzWXrTkqtOaUtW3tGsbaP6sA40keYCVeV6ThWLybhptFyj+gfqmYLo8Cu1wt
+	 M5cwpscH6spw5iNfI2SmgZ1ffcpLJtTAOEdI+0KU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbgFASj3 (ORCPT
+        id S1730055AbgFASjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:39:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730282AbgFASO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:14:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7C072065C;
-        Mon,  1 Jun 2020 18:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035267;
-        bh=qOxoZU27BS4ecyYbGhcESok/bly/SpCHfZfU+pixZLY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0QGY8vpkVY/WcIlBvRrOIltCP3pLDXrlDpAjLGZ4A8HrYl+HbQZxMtXddsqyjZhQE
-         BCNYR15Ds+cILWobw3TFD7qoC3BUvMtANImI9nPtmBkMNLkHbx2q9ek3qxOjJ1CxF8
-         PtgC4XFXpeXBh7JwiyIcSAfzlMSRjSzNUH5dX3gw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 081/177] csky: Fixup raw_copy_from_user()
-Date:   Mon,  1 Jun 2020 19:53:39 +0200
-Message-Id: <20200601174055.653077360@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
-References: <20200601174048.468952319@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 1 Jun 2020 14:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731722AbgFASjZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:39:25 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BDFC008630
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:39:25 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u10so8187826ljj.9
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OQI83XnTUpCYBOZaAbAv+Cb5Uoct40fY5tumECPOkoE=;
+        b=G4XxvEfJ3uyBljRWLUv6ciQWBngwkPYJSSnhCt/HrGYHq8cB1vfKRYnv5BXMA/f8x7
+         V9tX6tl4Nspup5rVZvhh1MWLoYUj0/kFkWHvUZWbPzedpCF6S1GUQRBOYo5GS7ag3l7h
+         tSSv3TGgEIr8C3cowP2U/R/z2d9p+uPonS3LM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OQI83XnTUpCYBOZaAbAv+Cb5Uoct40fY5tumECPOkoE=;
+        b=VlV/xZ4nH7HO1D0J2ahgli+IU58Rc4zzQJ/fFqTmUuexd2eSnkE9hYTRyEzL1dWf+0
+         Y+YasNW8EzP3q7Kt2AaeaN4xtJdSAjV10agBRcvZJ0frr9FZZ0jCVUQcUK494rRjOeJ/
+         3eNBctTxn2cnEZAcLjC0GB5NEETWXmFZJ5YMJ0oi/JNufdAntpn/kbhmJQH7evuvsNle
+         IqIIX2iNnjeNor97XexZPeU5GF80wufmFzzVqgr0evAi9sPuJj4MvSmVO2y7cj+dSMHS
+         bN2CgXBGQywF00P/Bmc/jI0jy3Ew5PXruatpWrUbX/HjUoTZFG/tZDBL8zOSWpGxmmmT
+         C7/g==
+X-Gm-Message-State: AOAM532jV0DIvCFCdTY3/nCIV7L77wQvmoiTTAJS34rOk9CY415YXzIm
+        BlaX40sUT2CzEsZqSJy64dV9ZuXSgjE=
+X-Google-Smtp-Source: ABdhPJzzE25hV+agfcbrASXkEaBP+rD7qdmiOj50K/txLIMEmx8SJYvq+qqWx9eAY8KElP9xQ1K3xA==
+X-Received: by 2002:a2e:80d1:: with SMTP id r17mr11153717ljg.439.1591036763041;
+        Mon, 01 Jun 2020 11:39:23 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id i22sm69062ljb.21.2020.06.01.11.39.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 11:39:22 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id h188so4531100lfd.7
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:39:21 -0700 (PDT)
+X-Received: by 2002:a05:6512:62:: with SMTP id i2mr11740327lfo.152.1591036761565;
+ Mon, 01 Jun 2020 11:39:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200601095423.00ffb5e1@collabora.com>
+In-Reply-To: <20200601095423.00ffb5e1@collabora.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 1 Jun 2020 11:39:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whW82ewxKJjaFq=96eEpCMN0=DtaZxX9ZGBH7BTgTkEfQ@mail.gmail.com>
+Message-ID: <CAHk-=whW82ewxKJjaFq=96eEpCMN0=DtaZxX9ZGBH7BTgTkEfQ@mail.gmail.com>
+Subject: Re: [GIT PULL] i3c: Changes for 5.8
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-i3c <linux-i3c@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Mon, Jun 1, 2020 at 12:54 AM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git i3c/for-5.8
 
-[ Upstream commit 51bb38cb78363fdad1f89e87357b7bc73e39ba88 ]
+Hmm. No such ref..
 
-If raw_copy_from_user(to, from, N) returns K, callers expect
-the first N - K bytes starting at to to have been replaced with
-the contents of corresponding area starting at from and the last
-K bytes of destination *left* *unmodified*.
+I see the "i3c/next" branch that has that top commit, but I don't see
+the signed tag.
 
-What arch/sky/lib/usercopy.c is doing is broken - it can lead to e.g.
-data corruption on write(2).
+Forgot to push? "git request-pull" _should_ have warned about the
+remote side missing..
 
-raw_copy_to_user() is inaccurate about return value, which is a bug,
-but consequences are less drastic than for raw_copy_from_user().
-And just what are those access_ok() doing in there?  I mean, look into
-linux/uaccess.h; that's where we do that check (as well as zero tail
-on failure in the callers that need zeroing).
-
-AFAICS, all of that shouldn't be hard to fix; something like a patch
-below might make a useful starting point.
-
-I would suggest moving these macros into usercopy.c (they are never
-used anywhere else) and possibly expanding them there; if you leave
-them alive, please at least rename __copy_user_zeroing(). Again,
-it must not zero anything on failed read.
-
-Said that, I'm not sure we won't be better off simply turning
-usercopy.c into usercopy.S - all that is left there is a couple of
-functions, each consisting only of inline asm.
-
-Guo Ren reply:
-
-Yes, raw_copy_from_user is wrong, it's no need zeroing code.
-
-unsigned long _copy_from_user(void *to, const void __user *from,
-unsigned long n)
-{
-        unsigned long res = n;
-        might_fault();
-        if (likely(access_ok(from, n))) {
-                kasan_check_write(to, n);
-                res = raw_copy_from_user(to, from, n);
-        }
-        if (unlikely(res))
-                memset(to + (n - res), 0, res);
-        return res;
-}
-EXPORT_SYMBOL(_copy_from_user);
-
-You are right and access_ok() should be removed.
-
-but, how about:
-do {
-...
-        "2:     stw     %3, (%1, 0)     \n"             \
-+       "       subi    %0, 4          \n"               \
-        "9:     stw     %4, (%1, 4)     \n"             \
-+       "       subi    %0, 4          \n"               \
-        "10:    stw     %5, (%1, 8)     \n"             \
-+       "       subi    %0, 4          \n"               \
-        "11:    stw     %6, (%1, 12)    \n"             \
-+       "       subi    %0, 4          \n"               \
-        "       addi    %2, 16          \n"             \
-        "       addi    %1, 16          \n"             \
-
-Don't expand __ex_table
-
-AI Viro reply:
-
-Hey, I've no idea about the instruction scheduling on csky -
-if that doesn't slow the things down, all the better.  It's just
-that copy_to_user() and friends are on fairly hot codepaths,
-and in quite a few situations they will dominate the speed of
-e.g. read(2).  So I tried to keep the fast path unchanged.
-Up to the architecture maintainers, obviously.  Which would be
-you...
-
-As for the fixups size increase (__ex_table size is unchanged)...
-You have each of those macros expanded exactly once.
-So the size is not a serious argument, IMO - useless complexity
-would be, if it is, in fact, useless; the size... not really,
-especially since those extra subi will at least offset it.
-
-Again, up to you - asm optimizations of (essentially)
-memcpy()-style loops are tricky and can depend upon the
-fairly subtle details of architecture.  So even on something
-I know reasonably well I would resort to direct experiments
-if I can't pass the buck to architecture maintainers.
-
-It *is* worth optimizing - this is where read() from a file
-that is already in page cache spends most of the time, etc.
-
-Guo Ren reply:
-
-Thx, after fixup some typo “sub %0, 4”, apply the patch.
-
-TODO:
- - user copy/from codes are still need optimizing.
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/csky/include/asm/uaccess.h | 49 +++++++++++++++++----------------
- arch/csky/lib/usercopy.c        |  8 ++----
- 2 files changed, 28 insertions(+), 29 deletions(-)
-
-diff --git a/arch/csky/include/asm/uaccess.h b/arch/csky/include/asm/uaccess.h
-index eaa1c3403a42..60f8a4112588 100644
---- a/arch/csky/include/asm/uaccess.h
-+++ b/arch/csky/include/asm/uaccess.h
-@@ -254,7 +254,7 @@ do {								\
- 
- extern int __get_user_bad(void);
- 
--#define __copy_user(to, from, n)			\
-+#define ___copy_to_user(to, from, n)			\
- do {							\
- 	int w0, w1, w2, w3;				\
- 	asm volatile(					\
-@@ -289,31 +289,34 @@ do {							\
- 	"       subi    %0, 4           \n"		\
- 	"       br      3b              \n"		\
- 	"5:     cmpnei  %0, 0           \n"  /* 1B */   \
--	"       bf      8f              \n"		\
-+	"       bf      13f             \n"		\
- 	"       ldb     %3, (%2, 0)     \n"		\
- 	"6:     stb     %3, (%1, 0)     \n"		\
- 	"       addi    %2,  1          \n"		\
- 	"       addi    %1,  1          \n"		\
- 	"       subi    %0,  1          \n"		\
- 	"       br      5b              \n"		\
--	"7:     br      8f              \n"		\
-+	"7:     subi	%0,  4          \n"		\
-+	"8:     subi	%0,  4          \n"		\
-+	"12:    subi	%0,  4          \n"		\
-+	"       br      13f             \n"		\
- 	".section __ex_table, \"a\"     \n"		\
- 	".align   2                     \n"		\
--	".long    2b, 7b                \n"		\
--	".long    9b, 7b                \n"		\
--	".long   10b, 7b                \n"		\
-+	".long    2b, 13f               \n"		\
-+	".long    4b, 13f               \n"		\
-+	".long    6b, 13f               \n"		\
-+	".long    9b, 12b               \n"		\
-+	".long   10b, 8b                \n"		\
- 	".long   11b, 7b                \n"		\
--	".long    4b, 7b                \n"		\
--	".long    6b, 7b                \n"		\
- 	".previous                      \n"		\
--	"8:                             \n"		\
-+	"13:                            \n"		\
- 	: "=r"(n), "=r"(to), "=r"(from), "=r"(w0),	\
- 	  "=r"(w1), "=r"(w2), "=r"(w3)			\
- 	: "0"(n), "1"(to), "2"(from)			\
- 	: "memory");					\
- } while (0)
- 
--#define __copy_user_zeroing(to, from, n)		\
-+#define ___copy_from_user(to, from, n)			\
- do {							\
- 	int tmp;					\
- 	int nsave;					\
-@@ -356,22 +359,22 @@ do {							\
- 	"       addi    %1,  1          \n"		\
- 	"       subi    %0,  1          \n"		\
- 	"       br      5b              \n"		\
--	"8:     mov     %3, %0          \n"		\
--	"       movi    %4, 0           \n"		\
--	"9:     stb     %4, (%1, 0)     \n"		\
--	"       addi    %1, 1           \n"		\
--	"       subi    %3, 1           \n"		\
--	"       cmpnei  %3, 0           \n"		\
--	"       bt      9b              \n"		\
--	"       br      7f              \n"		\
-+	"8:     stw     %3, (%1, 0)     \n"		\
-+	"       subi    %0, 4           \n"		\
-+	"       bf      7f              \n"		\
-+	"9:     subi    %0, 8           \n"		\
-+	"       bf      7f              \n"		\
-+	"13:    stw     %3, (%1, 8)     \n"		\
-+	"       subi    %0, 12          \n"		\
-+	"       bf      7f              \n"		\
- 	".section __ex_table, \"a\"     \n"		\
- 	".align   2                     \n"		\
--	".long    2b, 8b                \n"		\
-+	".long    2b, 7f                \n"		\
-+	".long    4b, 7f                \n"		\
-+	".long    6b, 7f                \n"		\
- 	".long   10b, 8b                \n"		\
--	".long   11b, 8b                \n"		\
--	".long   12b, 8b                \n"		\
--	".long    4b, 8b                \n"		\
--	".long    6b, 8b                \n"		\
-+	".long   11b, 9b                \n"		\
-+	".long   12b,13b                \n"		\
- 	".previous                      \n"		\
- 	"7:                             \n"		\
- 	: "=r"(n), "=r"(to), "=r"(from), "=r"(nsave),	\
-diff --git a/arch/csky/lib/usercopy.c b/arch/csky/lib/usercopy.c
-index 647a23986fb5..3c9bd645e643 100644
---- a/arch/csky/lib/usercopy.c
-+++ b/arch/csky/lib/usercopy.c
-@@ -7,10 +7,7 @@
- unsigned long raw_copy_from_user(void *to, const void *from,
- 			unsigned long n)
- {
--	if (access_ok(from, n))
--		__copy_user_zeroing(to, from, n);
--	else
--		memset(to, 0, n);
-+	___copy_from_user(to, from, n);
- 	return n;
- }
- EXPORT_SYMBOL(raw_copy_from_user);
-@@ -18,8 +15,7 @@ EXPORT_SYMBOL(raw_copy_from_user);
- unsigned long raw_copy_to_user(void *to, const void *from,
- 			unsigned long n)
- {
--	if (access_ok(to, n))
--		__copy_user(to, from, n);
-+	___copy_to_user(to, from, n);
- 	return n;
- }
- EXPORT_SYMBOL(raw_copy_to_user);
--- 
-2.25.1
-
-
-
+              Linus
