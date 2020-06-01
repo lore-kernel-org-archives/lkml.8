@@ -5,55 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E459CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 817172068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9D22068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034998;
-	bh=s+yeWGQSX+7m0ap12fJwIoI2VzAPXjgTPoBM4nfbr80=;
+	s=default; t=1591035004;
+	bh=im/pjVj87C1tYMmsvskGWoPrfPRoRrvTwkOr26E3t3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YySEd9ItyhZVaaaJsTBPOXAmd6D6Gi5YM6gXOIlWUWDoN/t38+e2xUzA97Lng/yq7
-	 yy9G/Jd7TxsIeAIoC/StHvsd//JWNhLSfBRlFw5TxusnOpSI9ldGRelr97l2v332gU
-	 eKtn0UJ1F2YmgQVDAQkfCOZWLbZIws3wZ/cqPBeA=
+	b=IRZ0L69KKwYHhSg/SWDQI7Wv5kELT9bhAQwl/JjKYdwahTKP1xQpSaqQI63jX+XSF
+	 2qOaFyc2yIDvzedHT728tXU80hnu2PWEntQUAsEiX+W8SKmLFG4LV4632OABmrnObM
+	 NghC2vdNve2czKSXMvrtdQ3EKdr37w5tAGd7l7gQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbgFASJ5 (ORCPT
+        id S1729983AbgFASKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56316 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730379AbgFASJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:09:49 -0400
+        id S1730937AbgFASJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:09:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1897A2077D;
-        Mon,  1 Jun 2020 18:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B5692077D;
+        Mon,  1 Jun 2020 18:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034988;
-        bh=s+yeWGQSX+7m0ap12fJwIoI2VzAPXjgTPoBM4nfbr80=;
+        s=default; t=1591034993;
+        bh=im/pjVj87C1tYMmsvskGWoPrfPRoRrvTwkOr26E3t3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMSXFyASL52njei35IMcoLQVaEkyVM3Bf3/Oz6mE67T8Nj2cu541G2NyLqERifH7C
-         O84qUuUZwFCrqWAT9RzOFuZikYkJTPxZ87sXT/66ce0L0I82UrWVbWVXv03ghuWKm0
-         JphRCyXueQ9UqW58UBJ5Pt8/A3X8v/78TDvXf8Iw=
+        b=IRWzij8JsnPvbNHwJmbsTJbMLshgw48bw67NaYyANIM1s+Usg5UPpF/MuHX2K8+Ig
+         FoNWZu3XoTl3aTatmQAITkuedJoTPv30NqcJuK6GCHPSQKJqLMDyUMGciYyA9MD8kJ
+         fIOY7eoLQ2L+CHlQ8gwC0FR+o2gIi7tT37go/27Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/142] mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
-Date:   Mon,  1 Jun 2020 19:54:18 +0200
-Message-Id: <20200601174048.343329685@linuxfoundation.org>
+Subject: [PATCH 5.4 064/142] Input: i8042 - add ThinkPad S230u to i8042 nomux list
+Date:   Mon,  1 Jun 2020 19:53:42 +0200
+Message-Id: <20200601174044.531165263@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -66,97 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Kevin Locke <kevin@kevinlocke.name>
 
-[ Upstream commit 6988f31d558aa8c744464a7f6d91d34ada48ad12 ]
+[ Upstream commit 18931506465a762ffd3f4803d36a18d336a67da9 ]
 
-Replace superfluous VM_BUG_ON() with comment about correct usage.
+On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
+"GDETC1WW (1.81 ) 06/27/2019", whether booted in UEFI or Legacy/CSM mode
+the keyboard, Synaptics TouchPad, and TrackPoint either do not function
+or stop functioning a few minutes after boot.  This problem has been
+noted before, perhaps only occurring on BIOS 1.57 and
+later.[1][2][3][4][5]
 
-Technically reverts commit 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to
-page_mapcount()"), but context lines have changed.
+This model does not have an external PS/2 port, so mux does not appear
+to be useful.
 
-Function isolate_migratepages_block() runs some checks out of lru_lock
-when choose pages for migration.  After checking PageLRU() it checks
-extra page references by comparing page_count() and page_mapcount().
-Between these two checks page could be removed from lru, freed and taken
-by slab.
+Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
+and although the [BIOS changelog] notes "Fixed an issue of UEFI
+touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
+insufficient.
 
-As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
-Race window is tiny.  For certain workload this happens around once a
-year.
+Adding 33474HU to the nomux list avoids the issue on my system.
 
-    page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
-    flags: 0x500000000008100(slab|head)
-    raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
-    raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
-    page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
-    ------------[ cut here ]------------
-    kernel BUG at ./include/linux/mm.h:628!
-    invalid opcode: 0000 [#1] SMP NOPTI
-    CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
-    Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
-    RIP: 0010:isolate_migratepages_block+0x986/0x9b0
+[1]: https://bugs.launchpad.net/bugs/1210748
+[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
+[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
+[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
+[5]: https://forums.lenovo.com/topic/findpost/27/1337119
+[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
 
-The code in isolate_migratepages_block() was added in commit
-119d6d59dcc0 ("mm, compaction: avoid isolating pinned pages") before
-adding VM_BUG_ON into page_mapcount().
-
-This race has been predicted in 2015 by Vlastimil Babka (see link
-below).
-
-[akpm@linux-foundation.org: comment tweaks, per Hugh]
-Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Hugh Dickins <hughd@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/159032779896.957378.7852761411265662220.stgit@buzz
-Link: https://lore.kernel.org/lkml/557710E1.6060103@suse.cz/
-Link: https://lore.kernel.org/linux-mm/158937872515.474360.5066096871639561424.stgit@buzz/T/ (v1)
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/feb8a8339a67025dab3850e6377eb6f3a0e782ba.1587400635.git.kevin@kevinlocke.name
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index afa77b683a04..53bad834adf5 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -695,6 +695,11 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
+diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+index 08e919dbeb5d..5bbc9152731d 100644
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -541,6 +541,13 @@ static const struct dmi_system_id __initconst i8042_dmi_nomux_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
+ 		},
+ 	},
++	{
++		/* Lenovo ThinkPad Twist S230u */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
++		},
++	},
+ 	{ }
+ };
  
- extern void kvfree(const void *addr);
- 
-+/*
-+ * Mapcount of compound page as a whole, does not include mapped sub-pages.
-+ *
-+ * Must be called only for compound pages or any their tail sub-pages.
-+ */
- static inline int compound_mapcount(struct page *page)
- {
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
-@@ -714,10 +719,16 @@ static inline void page_mapcount_reset(struct page *page)
- 
- int __page_mapcount(struct page *page);
- 
-+/*
-+ * Mapcount of 0-order page; when compound sub-page, includes
-+ * compound_mapcount().
-+ *
-+ * Result is undefined for pages which cannot be mapped into userspace.
-+ * For example SLAB or special types of pages. See function page_has_type().
-+ * They use this place in struct page differently.
-+ */
- static inline int page_mapcount(struct page *page)
- {
--	VM_BUG_ON_PAGE(PageSlab(page), page);
--
- 	if (unlikely(PageCompound(page)))
- 		return __page_mapcount(page);
- 	return atomic_read(&page->_mapcount) + 1;
 -- 
 2.25.1
 
