@@ -2,120 +2,134 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0799AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B09C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D449C20878
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jDpwCbFH"
+	by mail.kernel.org (Postfix) with ESMTP id B299F206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591034194;
+	bh=dE8j1yJkX/AxjhYQraJkA6rcQeqYJlW5trdGYpf1Lzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hvdB/xjwNV9cJ0DAfegag5OShcWAVVNtdniM7T1NiTmB4SntqBbIz30brvjsDY9wy
+	 hB35fBfTeiFHM0yrJu6EMK1FqWOFqRA9USg+7v0lZx6TrQDd2mqTEtph2IJsbfSZYk
+	 Tz4+LiHfM7ZC4NDWh1P5Tco8zf2GvpGGD70L8XD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgFAR4Z (ORCPT
+        id S1728641AbgFAR4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728505AbgFAR4J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:09 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9AEC08C5C0
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:56:08 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x11so245303plv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u4RFNd9FFVlTeJLx02SSeMMgnm0C5Ocm0tA+r0cHo1Y=;
-        b=jDpwCbFHHHOdFSOjq6a7d0+Jeda1zij/0s2YyarOhbL1q9jo+DgjNl/BLDo6Qai070
-         2WLbe7LDYhcsR6Al9tIXcUq1hjSNSkJ5b37HvFu9BL8DAe3zZ4z6jWGtsBOh2laDL+VM
-         IgVYA3Iv8FKeM1mbOVzl5grl6P2IqcPgjEioI8VvPUiDEJQ+s5y90Ie9Llm9B/aJnsaU
-         1hJvyLWdtmO4dmDCoEE3OeIZsDrXfT+6CtGYWf0Ggvlf2vTy+KrKvrZ8VY1hoTFyQSkm
-         rHd7p4AW41iHcMeRgg5GQN+kpaRrhnsrW+1K29gPT5lgGZ3DvVXMWW5RjsknN+xU8GPN
-         uZNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u4RFNd9FFVlTeJLx02SSeMMgnm0C5Ocm0tA+r0cHo1Y=;
-        b=sKq3tJ5A41m7mSfiRjYBXn/4tr0l16F/K+tEUQ+mkk2y/D6sKkR9bt2gSIukqqwfWK
-         Fq8A2ZcikI1uCuytMbvkT6Hp5qhwRyC8nrTM0QR/35NtD8BfdkhU8mtX/JU6krdT5F+H
-         vFBKdH5S3Dzg5WInm1Fqx6NUw+Vk//ayusa5L6t2p9MbnV6mxhts+fjDt7NzRB6OOAIJ
-         z3kn483Gz4uYXTffMZIssx2CE5yVvnW1SM/ydloeNRgDjlhJj3uioI6+MaaaJoQncPkp
-         P4EN4XggnkIsUshprRf8PmuZein9ll4j2Ki5ssbcGwu5wTeId3FrdUzw/ec27MSun49D
-         rXag==
-X-Gm-Message-State: AOAM532yMTh1tCd4OEY8WBZuo4ghqg+znMBkvwzxrPdlvV3YEUxxhsor
-        UwUM4BRCAqXlZ84o8HG7qV6M3g==
-X-Google-Smtp-Source: ABdhPJyPL4cWZZg61WZPJde8LyrsdhiEW14iaC+dVSSpI6qDWDL94WZSK2PfRnxce1jBtWI4z5ay6w==
-X-Received: by 2002:a17:902:8d83:: with SMTP id v3mr4455323plo.27.1591034168449;
-        Mon, 01 Jun 2020 10:56:08 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id p7sm64771pfq.184.2020.06.01.10.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 10:56:08 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc:     loic.pallardy@st.com, arnaud.pouliquen@st.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 11/11] remoteproc: stm32: Update M4 state in stm32_rproc_stop()
-Date:   Mon,  1 Jun 2020 11:55:52 -0600
-Message-Id: <20200601175552.22286-12-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200601175552.22286-1-mathieu.poirier@linaro.org>
-References: <20200601175552.22286-1-mathieu.poirier@linaro.org>
+        Mon, 1 Jun 2020 13:56:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728590AbgFAR4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 214442077D;
+        Mon,  1 Jun 2020 17:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034182;
+        bh=dE8j1yJkX/AxjhYQraJkA6rcQeqYJlW5trdGYpf1Lzg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NptLYBjOriCinr/5RrS8pmN5esTQfyun9oNq9vPny4Gyqy87PEWx24jwcbosPstHT
+         AhTH2A6F8NPxvwGV3ucDrfmCRCOEkQjdDY4zK11OQHEo2G3PuUL5/TBMYpMN6erUCY
+         aozPNplciLYmAd65D1G2B/X6cqDD2reGJ0Tx+nbo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 28/48] xfrm: fix a warning in xfrm_policy_insert_list
+Date:   Mon,  1 Jun 2020 19:53:38 +0200
+Message-Id: <20200601174000.717333640@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
+References: <20200601173952.175939894@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the co-processor state in function stm32_rproc_stop() so that
-it can be used in scenarios where the remoteproc core is attaching
-to the M4.
+From: Xin Long <lucien.xin@gmail.com>
 
-Mainly based on the work published by Arnaud Pouliquen [1].
+commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd upstream.
 
-[1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=239877
+This waring can be triggered simply by:
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
+    priority 1 mark 0 mask 0x10  #[1]
+  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
+    priority 2 mark 0 mask 0x1   #[2]
+  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
+    priority 2 mark 0 mask 0x10  #[3]
+
+Then dmesg shows:
+
+  [ ] WARNING: CPU: 1 PID: 7265 at net/xfrm/xfrm_policy.c:1548
+  [ ] RIP: 0010:xfrm_policy_insert_list+0x2f2/0x1030
+  [ ] Call Trace:
+  [ ]  xfrm_policy_inexact_insert+0x85/0xe50
+  [ ]  xfrm_policy_insert+0x4ba/0x680
+  [ ]  xfrm_add_policy+0x246/0x4d0
+  [ ]  xfrm_user_rcv_msg+0x331/0x5c0
+  [ ]  netlink_rcv_skb+0x121/0x350
+  [ ]  xfrm_netlink_rcv+0x66/0x80
+  [ ]  netlink_unicast+0x439/0x630
+  [ ]  netlink_sendmsg+0x714/0xbf0
+  [ ]  sock_sendmsg+0xe2/0x110
+
+The issue was introduced by Commit 7cb8a93968e3 ("xfrm: Allow inserting
+policies with matching mark and different priorities"). After that, the
+policies [1] and [2] would be able to be added with different priorities.
+
+However, policy [3] will actually match both [1] and [2]. Policy [1]
+was matched due to the 1st 'return true' in xfrm_policy_mark_match(),
+and policy [2] was matched due to the 2nd 'return true' in there. It
+caused WARN_ON() in xfrm_policy_insert_list().
+
+This patch is to fix it by only (the same value and priority) as the
+same policy in xfrm_policy_mark_match().
+
+Thanks to Yuehaibing, we could make this fix better.
+
+v1->v2:
+  - check policy->mark.v == pol->mark.v only without mask.
+
+Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/remoteproc/stm32_rproc.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/xfrm/xfrm_policy.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 77a20a638e0c..ad0307aaf3d5 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -503,6 +503,18 @@ static int stm32_rproc_stop(struct rproc *rproc)
- 		}
- 	}
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -740,12 +740,7 @@ static void xfrm_policy_requeue(struct x
+ static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+ 				   struct xfrm_policy *pol)
+ {
+-	u32 mark = policy->mark.v & policy->mark.m;
+-
+-	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+-		return true;
+-
+-	if ((mark & pol->mark.m) == pol->mark.v &&
++	if (policy->mark.v == pol->mark.v &&
+ 	    policy->priority == pol->priority)
+ 		return true;
  
-+	/* update coprocessor state to OFF if available */
-+	if (ddata->m4_state.map) {
-+		err = regmap_update_bits(ddata->m4_state.map,
-+					 ddata->m4_state.reg,
-+					 ddata->m4_state.mask,
-+					 M4_STATE_OFF);
-+		if (err) {
-+			dev_err(&rproc->dev, "failed to set copro state\n");
-+			return err;
-+		}
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.20.1
+
 
