@@ -4,128 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C74C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB7F62065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9172065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MkZBcmx5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G6EVZ06p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgFANZd (ORCPT
+        id S1727894AbgFANZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:25:33 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:38215 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgFANZZ (ORCPT
+        Mon, 1 Jun 2020 09:25:38 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44779 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727808AbgFANZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:25:25 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200601132523euoutp0144d3d670f8e8698208e0b004fa90ee30~Ubl8l9Mjs2438824388euoutp01m
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:25:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200601132523euoutp0144d3d670f8e8698208e0b004fa90ee30~Ubl8l9Mjs2438824388euoutp01m
+        Mon, 1 Jun 2020 09:25:31 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200601132530euoutp021a432bb622e67b51530eb3373a1635ab~UbmDTzUm61973619736euoutp02b
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:25:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200601132530euoutp021a432bb622e67b51530eb3373a1635ab~UbmDTzUm61973619736euoutp02b
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591017923;
-        bh=YiwThElw53LJigTjhogLOgCPtHePhvTe1Wd48l2j3Zk=;
+        s=mail20170921; t=1591017930;
+        bh=7MYfA7T1V2zf0ITQLbcPCa/EsxPMtj591hArtPdOjMw=;
         h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=MkZBcmx5dTkcTSvGNhCAM8dtsZZV2rfttLS8PpIFfmngDC4YynrrO31IcFh1hiwOQ
-         ScgjCAgRdz4FPnA/YnrMqYVxuweUsE8COFV/k0QTW7BCrTUwngD4JSqvTmWJGKbMzU
-         VN3lWbxInG/+bbDsfg8E2r5oR3YPiOuFFbnzAFvY=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        b=G6EVZ06pRJJULZiV8S7AVTH/3ncNkfYaIcWhbeuLOLPrZWKG/W5wlpGKUIpMaRhjv
+         DAorg2ctcMO5q+9C4UknJo+QbLjloH9IPsSM6T/KU6ExB5ZFwwyBqzMHDGNhM6JJiu
+         SereMKlyB9KM9zu6Zen44NS+u1OuvrF1QVyCZ2kI=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200601132523eucas1p1487a12788c6e7f519fcdde3d83ce3ead~Ubl8WnRjC2549925499eucas1p1J;
-        Mon,  1 Jun 2020 13:25:23 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id D7.33.60679.2C105DE5; Mon,  1
-        Jun 2020 14:25:22 +0100 (BST)
+        20200601132530eucas1p19a24e5bd23ad1d0190549ddb8bf39910~UbmDLs-Sf1285112851eucas1p1o;
+        Mon,  1 Jun 2020 13:25:30 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id AB.14.61286.AC105DE5; Mon,  1
+        Jun 2020 14:25:30 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200601132522eucas1p2779cda96b3267b044b4eaae18c226d87~Ubl76CI3O2512925129eucas1p2q;
-        Mon,  1 Jun 2020 13:25:22 +0000 (GMT)
+        20200601132530eucas1p273e2fc07bcc82b5acdc6329853398e59~UbmC5ESkn2293122931eucas1p2i;
+        Mon,  1 Jun 2020 13:25:30 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200601132522eusmtrp21f463bd75d32c710cbebf63f471af021~Ubl75RTq31059710597eusmtrp2o;
-        Mon,  1 Jun 2020 13:25:22 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-48-5ed501c277e6
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 4A.95.07950.2C105DE5; Mon,  1
-        Jun 2020 14:25:22 +0100 (BST)
+        20200601132530eusmtrp2e22ef13b605eb5f0be3d4bec7968535b~UbmC4V9au1059710597eusmtrp2s;
+        Mon,  1 Jun 2020 13:25:30 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-d3-5ed501caf24b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DC.95.07950.9C105DE5; Mon,  1
+        Jun 2020 14:25:30 +0100 (BST)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200601132521eusmtip2cfdcb48b1d4e86b512e5445c7d11ad62~Ubl7UgHnr1389413894eusmtip2T;
-        Mon,  1 Jun 2020 13:25:21 +0000 (GMT)
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200601132529eusmtip144ca8a4d65015ef72f79683e359a1e3b~UbmCifbJL1117511175eusmtip1Q;
+        Mon,  1 Jun 2020 13:25:29 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: pxafb: Fix the function used to balance a
- 'dma_alloc_coherent()' call
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     sumit.semwal@linaro.org, rafael.j.wysocki@intel.com,
-        corbet@lwn.net, viresh.kumar@linaro.org, jani.nikula@intel.com,
-        mchehab+samsung@kernel.org, eric.miao@marvell.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Message-ID: <b39fa7b2-fc01-be3e-f899-40b949aa11ee@samsung.com>
-Date:   Mon, 1 Jun 2020 15:25:21 +0200
+Subject: Re: [trivial PATCH] video: fbdev: Use IS_BUILTIN
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Message-ID: <465a04eb-cd2e-d0da-b667-584d297a0102@samsung.com>
+Date:   Mon, 1 Jun 2020 15:25:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200429084505.108897-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcRzH932eu+ce5uzrXPMZle3WalmRau1ZydKMxz8qrc1S6uLparmL
-        u1A2pmwRMdGoGyOSHxUydxf5I9dGuqUltYiJ1NTtjhxKC93jYfnv8+P1/ry/7+1Lk7JesTd9
-        XnOJ02qUCQrKVWTsmn+z3Yzex+7ouRPEGDrLxcz482zE9M9OUkzWRCZiOoasiDEM+jAvC6bE
-        zLv2MoqZnL5BMF/qbBLm1bBDwjyZZQ+4sdUd3wm2peEGxQ596KDYkbxugq0uKBazxffekqyj
-        ZSPrGG4SH6aPuwbFcwnnUzhtQPBp13NXP8oTR10ufy2ZJTJRPp2LXGjAu2HINiDJRa60DNch
-        mB8YW2lmENysmkM8JcMOBI/zw1YVpjk7JUC1CEqMz1Yam1NuyRXxFIX3wq3sBqdaQnviOKgI
-        4adyvAfKCz6RPE7iJgJ69PMEv5DiYFhcyiP5WoQ3gd3St2y8DkfD9OcXYoHxgJ6748vnXXAo
-        jBvKl3kSe8HgeAUh1L5gspUtGwD+KYGKmjxnHNrZhELR7xNCAE/40d0qEer1sNTGa3m+EcFC
-        zsSK2ISgtniREqh9MNT7h+IPkXgrNLUHCOMQKGz9tXLfHT7aPIQ3uEORsZQUxlLIuS4T6M3Q
-        /KCZWrXNbasnC5FCvyaZfk0a/Zo0+v++lUjUgLy4ZJ1axel2arhUf51SrUvWqPzjLqpbkPOX
-        WRa7Z56i9r9nzAjTSOEmpcf6Y2ViZYruitqMgCYVcunB15ZYmTReeSWN0148pU1O4HRm5EOL
-        FF7SXVXfT8qwSnmJu8BxiZx2dUvQLt6ZKKG0PDqlxzPq9n2/I5X7DyV1X+uIeOlRgDVGe0hZ
-        8oWF+G/uGflb1KUxpnvuMWkwRVg95n9G/ogQTUsnvuSkW3NmRqMaO5Nmkrqy3DZWP9rGhNub
-        5XrafHbAMX00XF8W+GGDtcbqZTAkZqQfG6lNjX5IhsmzVSPxvpH1u/v6UxUi3TlloB+p1Sn/
-        AQbWc6NhAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRmVeSWpSXmKPExsVy+t/xe7qHGK/GGZxqlrfYenAuq8WTA+2M
-        Fle+vmezaH7RwGix585rRoutt6QtTvR9YLW4vGsOm8X7T51MFo9XvGW3OHX3M7vFxq8eDjwe
-        i/e8ZPLYtKqTzePOtT1sHve7jzN5LO6bzOoxeeFFZo/Pm+Q8Pt9dzxrAEaVnU5RfWpKqkJFf
-        XGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX0XhDpOAhZ8XTaV+ZGhh7
-        OboYOTkkBEwktn97x9bFyMUhJLCUUeLN3SnsXYwcQAkZiePryyBqhCX+XOuCqnnNKPFucj8L
-        SIJNwEpiYvsqxi5Gdg5hgWSJ+Y4gUREBM4m5fbeZQcqZBdYzScw5/5sZonc6o8S8zsdsIFW8
-        AnYS//53M4PYLAIqEu9OX2IEsUUFIiQO75jFCFEjKHFy5hOwXZwCLhJPts4Fq2cWUJf4M+8S
-        lC0ucevJfCYIW15i+9s5zBMYhWYhaZ+FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtIrTswtLs1L
-        10vOz93ECIzebcd+btnB2PUu+BCjAAejEg/vhvtX4oRYE8uKK3MPMUpwMCuJ8DqdPR0nxJuS
-        WFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAxJJXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEk
-        NTs1tSC1CKaPiYNTqoFR0aM77YHmspdZ7ALedpErl64Ryda1YF151s/9O1dp5qTqf9OTKicG
-        RD31M2z8k9RwfOKh63dPZuc59S/nvaz8hl9U+ePvuxqF5/ps7f9by6usPHN5Tnnb21k3vkY1
-        XyrNjHe8s05rZX7rklVyO6q373nbqP5m/QOFXo/gCYGLGjj4ptjcdf+pxFKckWioxVxUnAgA
-        PUEHRvQCAAA=
-X-CMS-MailID: 20200601132522eucas1p2779cda96b3267b044b4eaae18c226d87
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2zmbR2l6nJovGqWjrMy0UT9WmqQUrH/1Q8ku2lFPOtqm7TjT
+        IrI/mQs1NVCXtfCSNnQuXU4NzBSc5TVviCQGmpuSWF4ItSwPZ5L/nve5fO/7wEdgoiq+DyFX
+        pdFqFaUQC1zwpq61/qOf0Gjssa55kXRkdVEgfTY1jUsbpsf40u68H3zpcGvZFleZj0tLBtp4
+        Z5xkU4+tPFlj5X3ZimEMky037L2AX3YJS6QV8nRaHRJ+3SX5Q2kRSv15MMPy/TmehTb8tMiZ
+        APIEvLDk87TIhRCRNQhqSysQN6wgyH2vdSjLCD4PTThtR+pHe504oRpBV8E3nBsWEGTn2DDW
+        JSBPQUG2AbHYgzwJje3mLRNBeJL+MGl2Y/0YaUVgLawUsB4hGQ761qeI9eDkfuh+48bSXuQl
+        WPrayecs7vCxdAZnsTN5Hppzh3ksxkhvmJjRO/A+sCyUYez7QBqdoD2rF3FXn4WKmgIBhz1g
+        3mp2tNkDf1v0PEcAwZ9HdkfagqC6aNORCIUv/esC9jqMPAz1rSEcHQG9g3M8lgbSFcYX3Lkj
+        XKGwqRjjaCE8eiji3AFgemUSbK/VtrzGniCxbkc13Y46uh11dP/3vkS4AXnTGkaZRDMSFX07
+        mKGUjEaVFJyQomxAW5+nZ9O61IxWh+I7EEkg8S6haWokVsSn0plMZQcCAhN7CiP7emJFwkQq
+        8w6tTolTaxQ004F8CVzsLTxePndNRCZRafRNmk6l1dsqj3D2yULyplpzQqQtetrIXO1VHAhO
+        jsuYDe9czifS5HWGmOK3ecFtxkN+R6Iy9YZoSaiOSIrqM95V577bsIetLeZEGKtKqJragSCb
+        l75k9+mYhf6l2R7/SI0hXj4fP24uDzzXb3OuM1gmLw7afX9f2bwxalH+urceIVEGPbCv3TIF
+        ZIhxJpmSBGJqhvoHW5fcpzgDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsVy+t/xu7qnGK/GGfSZWlz5+p7NYvb9xywW
+        mx5fY7U40feB1eLyrjlAsSX9LBYzzu9jcmD3uN99nMlj85J6jy+rrjF7fN4kF8ASpWdTlF9a
+        kqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJdxcOZkxoKP6hXb
+        38xlaWD8rdDFyMkhIWAisf7qGXYQW0hgKaPE19tWXYwcQHEZiePryyBKhCX+XOti62LkAip5
+        zSixe+lVNpAEm4CVxMT2VYwgtrCApcTmA1tYQHpFBBQl7m7hB6lnFjjOKPHlxBZWiOY5jBI7
+        Xt0Aa+AVsJOYv2sKI0gDi4CKxImN/CBhUYEIicM7ZkGVCEqcnPmEBcTmFPCU2NF7mQnEZhZQ
+        l/gz7xIzhC0ucevJfKi4vMT2t3OYJzAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltspFec
+        mFtcmpeul5yfu4kRGGPbjv3csoOx613wIUYBDkYlHt4N96/ECbEmlhVX5h5ilOBgVhLhdTp7
+        Ok6INyWxsiq1KD++qDQntfgQoynQbxOZpUST84Hxn1cSb2hqaG5haWhubG5sZqEkztshcDBG
+        SCA9sSQ1OzW1ILUIpo+Jg1OqgXGK5b15//Vnf/2SrPblSUDGonXJ24J2b5/+1PRontf/lSI5
+        7peD39QvmcS2NkLLXWXC1BU6WxkfpFf3zX7pHlKsr3K/XcHqcuyjyG/Xp9xdelAj/XKmRBPr
+        NWUhHp3ykLMXImVvzj3EK1/nMbcuY3NFLW8c2+5tPrsrhdJPnOiIPjRDZ7v5mlolluKMREMt
+        5qLiRABw3u1dxwIAAA==
+X-CMS-MailID: 20200601132530eucas1p273e2fc07bcc82b5acdc6329853398e59
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200429084519eucas1p2813ed7e76d573778607ac1270d8cb2e7
+X-RootMTR: 20200504232908eucas1p296927bc7c736ad924cefaea9a546459d
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200429084519eucas1p2813ed7e76d573778607ac1270d8cb2e7
-References: <CGME20200429084519eucas1p2813ed7e76d573778607ac1270d8cb2e7@eucas1p2.samsung.com>
-        <20200429084505.108897-1-christophe.jaillet@wanadoo.fr>
+X-CMS-RootMailID: 20200504232908eucas1p296927bc7c736ad924cefaea9a546459d
+References: <CGME20200504232908eucas1p296927bc7c736ad924cefaea9a546459d@eucas1p2.samsung.com>
+        <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/29/20 10:45 AM, Christophe JAILLET wrote:
-> 'dma_alloc_coherent()' must be balanced by a call to 'dma_free_coherent()'
-> not 'dma_free_wc()'.
-> The correct dma_free_ function is already used in the error handling path
-> of the probe function.
+On 5/5/20 1:29 AM, Joe Perches wrote:
+> IS_BUILTIN can be use to replace various initializations
+> like #if CONFIG_<FOO> int val = 1; #else int val = 0; #endif
+> so do so.
 > 
-> Fixes: 77e196752bdd ("[ARM] pxafb: allow video memory size to be configurable")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Signed-off-by: Joe Perches <joe@perches.com>
+
 
 Applied to drm-misc-next tree (patch should show up in v5.9), thanks.
 
@@ -136,22 +131,133 @@ Samsung R&D Institute Poland
 Samsung Electronics
 
 > ---
->  drivers/video/fbdev/pxafb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/video/fbdev/aty/aty128fb.c     | 6 +-----
+>  drivers/video/fbdev/aty/atyfb_base.c   | 7 +------
+>  drivers/video/fbdev/aty/radeon_base.c  | 6 +-----
+>  drivers/video/fbdev/nvidia/nvidia.c    | 6 +-----
+>  drivers/video/fbdev/omap/omapfb_main.c | 6 +-----
+>  drivers/video/fbdev/riva/fbdev.c       | 6 +-----
+>  drivers/video/fbdev/s3c2410fb.c        | 6 +-----
+>  7 files changed, 7 insertions(+), 36 deletions(-)
 > 
-> diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
-> index 00b96a78676e..6f972bed410a 100644
-> --- a/drivers/video/fbdev/pxafb.c
-> +++ b/drivers/video/fbdev/pxafb.c
-> @@ -2417,8 +2417,8 @@ static int pxafb_remove(struct platform_device *dev)
+> diff --git a/drivers/video/fbdev/aty/aty128fb.c b/drivers/video/fbdev/aty/aty128fb.c
+> index d05d4195acad..6fae6ad6cb77 100644
+> --- a/drivers/video/fbdev/aty/aty128fb.c
+> +++ b/drivers/video/fbdev/aty/aty128fb.c
+> @@ -384,11 +384,7 @@ static int default_lcd_on = 1;
+>  static bool mtrr = true;
 >  
->  	free_pages_exact(fbi->video_mem, fbi->video_mem_size);
+>  #ifdef CONFIG_FB_ATY128_BACKLIGHT
+> -#ifdef CONFIG_PMAC_BACKLIGHT
+> -static int backlight = 1;
+> -#else
+> -static int backlight = 0;
+> -#endif
+> +static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
+>  #endif
 >  
-> -	dma_free_wc(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
-> -		    fbi->dma_buff_phys);
-> +	dma_free_coherent(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
-> +			  fbi->dma_buff_phys);
+>  /* PLL constants */
+> diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+> index 49d192869cf5..23a29d61c2a2 100644
+> --- a/drivers/video/fbdev/aty/atyfb_base.c
+> +++ b/drivers/video/fbdev/aty/atyfb_base.c
+> @@ -317,12 +317,7 @@ static int mclk;
+>  static int xclk;
+>  static int comp_sync = -1;
+>  static char *mode;
+> -
+> -#ifdef CONFIG_PMAC_BACKLIGHT
+> -static int backlight = 1;
+> -#else
+> -static int backlight = 0;
+> -#endif
+> +static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
 >  
->  	return 0;
->  }
+>  #ifdef CONFIG_PPC
+>  static int default_vmode = VMODE_CHOOSE;
+> diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
+> index e116a3f9ad56..3fe509cb9b87 100644
+> --- a/drivers/video/fbdev/aty/radeon_base.c
+> +++ b/drivers/video/fbdev/aty/radeon_base.c
+> @@ -269,11 +269,7 @@ static bool force_measure_pll = 0;
+>  static bool nomtrr = 0;
+>  static bool force_sleep;
+>  static bool ignore_devlist;
+> -#ifdef CONFIG_PMAC_BACKLIGHT
+> -static int backlight = 1;
+> -#else
+> -static int backlight = 0;
+> -#endif
+> +static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
+>  
+>  /* Note about this function: we have some rare cases where we must not schedule,
+>   * this typically happen with our special "wake up early" hook which allows us to
+> diff --git a/drivers/video/fbdev/nvidia/nvidia.c b/drivers/video/fbdev/nvidia/nvidia.c
+> index c24de9107958..c6820e21875d 100644
+> --- a/drivers/video/fbdev/nvidia/nvidia.c
+> +++ b/drivers/video/fbdev/nvidia/nvidia.c
+> @@ -74,11 +74,7 @@ static int vram = 0;
+>  static int bpp = 8;
+>  static int reverse_i2c;
+>  static bool nomtrr = false;
+> -#ifdef CONFIG_PMAC_BACKLIGHT
+> -static int backlight = 1;
+> -#else
+> -static int backlight = 0;
+> -#endif
+> +static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
+>  
+>  static char *mode_option = NULL;
+>  
+> diff --git a/drivers/video/fbdev/omap/omapfb_main.c b/drivers/video/fbdev/omap/omapfb_main.c
+> index 1a9d6242916e..0cbcc74fa943 100644
+> --- a/drivers/video/fbdev/omap/omapfb_main.c
+> +++ b/drivers/video/fbdev/omap/omapfb_main.c
+> @@ -34,11 +34,7 @@ static unsigned long	def_vyres;
+>  static unsigned int	def_rotate;
+>  static unsigned int	def_mirror;
+>  
+> -#ifdef CONFIG_FB_OMAP_MANUAL_UPDATE
+> -static bool		manual_update = 1;
+> -#else
+> -static bool		manual_update;
+> -#endif
+> +static bool	manual_update = IS_BUILTIN(CONFIG_FB_OMAP_MANUAL_UPDATE);
+>  
+>  static struct platform_device	*fbdev_pdev;
+>  static struct lcd_panel		*fbdev_panel;
+> diff --git a/drivers/video/fbdev/riva/fbdev.c b/drivers/video/fbdev/riva/fbdev.c
+> index 764ec3285e62..9b3493846f4d 100644
+> --- a/drivers/video/fbdev/riva/fbdev.c
+> +++ b/drivers/video/fbdev/riva/fbdev.c
+> @@ -202,11 +202,7 @@ static int flatpanel = -1; /* Autodetect later */
+>  static int forceCRTC = -1;
+>  static bool noaccel  = 0;
+>  static bool nomtrr = 0;
+> -#ifdef CONFIG_PMAC_BACKLIGHT
+> -static int backlight = 1;
+> -#else
+> -static int backlight = 0;
+> -#endif
+> +static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
+>  
+>  static char *mode_option = NULL;
+>  static bool strictmode       = 0;
+> diff --git a/drivers/video/fbdev/s3c2410fb.c b/drivers/video/fbdev/s3c2410fb.c
+> index 2fb15a540167..6f8fa501583f 100644
+> --- a/drivers/video/fbdev/s3c2410fb.c
+> +++ b/drivers/video/fbdev/s3c2410fb.c
+> @@ -44,11 +44,7 @@
+>  #include "s3c2410fb.h"
+>  
+>  /* Debugging stuff */
+> -#ifdef CONFIG_FB_S3C2410_DEBUG
+> -static int debug	= 1;
+> -#else
+> -static int debug;
+> -#endif
+> +static int debug = IS_BUILTIN(CONFIG_FB_S3C2410_DEBUG);
+>  
+>  #define dprintk(msg...) \
+>  do { \
 > 
