@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFED7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E47C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E8C20825
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CFF207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035095;
-	bh=DTZXf56xoqkdM1pDwpE3oN8ES3/B1f9WROuREZ/xyew=;
+	s=default; t=1591035098;
+	bh=b/EUArRdVQdkWs2IhRIZmaWX7WUowYSahHk7SFy+5q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hf/ThHHVmraPgG2ACEPDLTpbHmiU7Rw83Z2QNNLtph1m6hY0bwCRRFbe2m4LvOvfq
-	 BWLFaet2RCKIuwzFpAPlTaqTfQ0LMaXiHNeMDtEgXDm4t0//qybBpYGxkQxoW1SpMT
-	 9xrPYpJORyOlKyyr1ugoxrJh6cdBypqxrg9ptDkI=
+	b=PPfifhtyOwLWdcfdG7oe8YlK+BvNahnIILT1Vis5dJCCkUqbekNCN/J4UGetsSHSq
+	 2xeDFqKdz16/JNm/5BO2pwDoHHQpo8Gi8oohPq2YmGbXatIdEMFDP3NpSShx37B0v0
+	 NyLP6eOnb1VPqdgPZGmlYhm5N2jjeUpT1OlYrki0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbgFASLe (ORCPT
+        id S1731130AbgFASLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgFASLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:25 -0400
+        id S1731097AbgFASL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC332077D;
-        Mon,  1 Jun 2020 18:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7BE52065C;
+        Mon,  1 Jun 2020 18:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035084;
-        bh=DTZXf56xoqkdM1pDwpE3oN8ES3/B1f9WROuREZ/xyew=;
+        s=default; t=1591035087;
+        bh=b/EUArRdVQdkWs2IhRIZmaWX7WUowYSahHk7SFy+5q0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pSO1MabWwDg+IYeAK5NuciCAOdRLw/NZxHhrB80M2e7cREX7z/kt2Da4m4qBvbrP0
-         Sv0M30Bj22rfG8Cf/+MJ6xn9vBx/d28wOU9Vmo5zWlOEozUH1o/74i1KkJ/dyxmWCE
-         zep63jYyMgp30M0MioiuMXwRuCQ1We+N5kAUVBYo=
+        b=JSckfL0POvKlA/JAIJTwtebov8XxnEBCaptzGkOO33vPQ1ciTHlnzzu8AE+zMYzAb
+         NIyOa8cGl0DrigniN+bbuuseXM4Z37RKFHHO05GHSH7wP0B7SMTycxXSBMLLldUkBq
+         eNw8P0N7nGc5o3q6ew0RyK83QNag2drKN6zA0b4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+fd5332e429401bf42d18@syzkaller.appspotmail.com,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.4 107/142] cfg80211: fix debugfs rename crash
-Date:   Mon,  1 Jun 2020 19:54:25 +0200
-Message-Id: <20200601174049.041697123@linuxfoundation.org>
+        stable@vger.kernel.org, Thorsten Glaser <t.glaser@tarent.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>, stable@kernel.org
+Subject: [PATCH 5.4 108/142] x86/syscalls: Revert "x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long"
+Date:   Mon,  1 Jun 2020 19:54:26 +0200
+Message-Id: <20200601174049.134783758@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,40 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 0bbab5f0301587cad4e923ccc49bb910db86162c upstream.
+commit 700d3a5a664df267f01ec8887fd2d8ff98f67e7f upstream.
 
-Removing the "if (IS_ERR(dir)) dir = NULL;" check only works
-if we adjust the remaining code to not rely on it being NULL.
-Check IS_ERR_OR_NULL() before attempting to dereference it.
+Revert
 
-I'm not actually entirely sure this fixes the syzbot crash as
-the kernel config indicates that they do have DEBUG_FS in the
-kernel, but this is what I found when looking there.
+  45e29d119e99 ("x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long")
 
-Cc: stable@vger.kernel.org
-Fixes: d82574a8e5a4 ("cfg80211: no need to check return value of debugfs_create functions")
-Reported-by: syzbot+fd5332e429401bf42d18@syzkaller.appspotmail.com
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200525113816.fc4da3ec3d4b.Ica63a110679819eaa9fb3bc1b7437d96b1fd187d@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+and add a comment to discourage someone else from making the same
+mistake again.
+
+It turns out that some user code fails to compile if __X32_SYSCALL_BIT
+is unsigned long. See, for example [1] below.
+
+ [ bp: Massage and do the same thing in the respective tools/ header. ]
+
+Fixes: 45e29d119e99 ("x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long")
+Reported-by: Thorsten Glaser <t.glaser@tarent.de>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: stable@kernel.org
+Link: [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=954294
+Link: https://lkml.kernel.org/r/92e55442b744a5951fdc9cfee10badd0a5f7f828.1588983892.git.luto@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/uapi/asm/unistd.h       |   11 +++++++++--
+ tools/arch/x86/include/uapi/asm/unistd.h |    2 +-
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
---- a/net/wireless/core.c
-+++ b/net/wireless/core.c
-@@ -142,7 +142,7 @@ int cfg80211_dev_rename(struct cfg80211_
- 	if (result)
- 		return result;
+--- a/arch/x86/include/uapi/asm/unistd.h
++++ b/arch/x86/include/uapi/asm/unistd.h
+@@ -2,8 +2,15 @@
+ #ifndef _UAPI_ASM_X86_UNISTD_H
+ #define _UAPI_ASM_X86_UNISTD_H
  
--	if (rdev->wiphy.debugfsdir)
-+	if (!IS_ERR_OR_NULL(rdev->wiphy.debugfsdir))
- 		debugfs_rename(rdev->wiphy.debugfsdir->d_parent,
- 			       rdev->wiphy.debugfsdir,
- 			       rdev->wiphy.debugfsdir->d_parent, newname);
+-/* x32 syscall flag bit */
+-#define __X32_SYSCALL_BIT	0x40000000UL
++/*
++ * x32 syscall flag bit.  Some user programs expect syscall NR macros
++ * and __X32_SYSCALL_BIT to have type int, even though syscall numbers
++ * are, for practical purposes, unsigned long.
++ *
++ * Fortunately, expressions like (nr & ~__X32_SYSCALL_BIT) do the right
++ * thing regardless.
++ */
++#define __X32_SYSCALL_BIT	0x40000000
+ 
+ #ifndef __KERNEL__
+ # ifdef __i386__
+--- a/tools/arch/x86/include/uapi/asm/unistd.h
++++ b/tools/arch/x86/include/uapi/asm/unistd.h
+@@ -3,7 +3,7 @@
+ #define _UAPI_ASM_X86_UNISTD_H
+ 
+ /* x32 syscall flag bit */
+-#define __X32_SYSCALL_BIT	0x40000000UL
++#define __X32_SYSCALL_BIT	0x40000000
+ 
+ #ifndef __KERNEL__
+ # ifdef __i386__
 
 
