@@ -2,556 +2,161 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83445C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCFE206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hJKVyQmE"
+	by mail.kernel.org (Postfix) with ESMTP id 60681206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591002749;
+	bh=XaBczYYm0dgNg26+7OPpYAKLtWaTtsU2jNmMocGEg+U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wvU/zq3gIOMlMfRpymsjeeFmOmNjzTw21qDFL9DQu0z3y0sZNtrunjRWs8N+6TJ4z
+	 XWOvFo6Z4hB21ntog+ALu+NFGIvtP1olAd8igWPr/5H2VdrnAkGZcF8S6dlyFwXs+4
+	 MOwpNajaadqpdMEWfRLNBrrGqkNr2jDmEKM3mT3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgFAJMN (ORCPT
+        id S1726125AbgFAJM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:12:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgFAJMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:12:10 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03987C03E96F
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 02:12:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u10so5958973ljj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zwsNqP++Yd0j9t4I9oB40PIam4iadToNOTNUKAoTQ1g=;
-        b=hJKVyQmEF07SGCOr9O3CzEQX8qJrS0edeJBOvcLU/rW9FqxH8CrN/hgQ33p9YH4Sl1
-         G89nOmE4Aqgig8d2Sz+KUM0XAzRfYIUILxO23BD+O+fU1HfbIxKXZVNgJsWBpyQlrm4O
-         xyfWaxLtsax4ZF3Qlf4Yo6zpa9MK/GgnIc9P4dMReUNMqUyfH1Tq6s/TT4HjVYC62krr
-         K+dAJs9vctF0mP/3bHVZN3RMCAS7fPLuta00WVWt2xPlZ0tf+kigRpYGo7ejqMDlwHds
-         l+9SxjQurzyKwKhwhI2LoJMo3InwKspb3M2HGbky+LaaA8m7A4IK6jnfIBZBwpR3tp/V
-         FRpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zwsNqP++Yd0j9t4I9oB40PIam4iadToNOTNUKAoTQ1g=;
-        b=EgQRBxRoBd9NFpdk7zzrYMnQ0upKR3Q2SaYmitO6yrYqzvEwj+ohMbVTIhGiX7wQ5P
-         ZgrtTIvQdoCrz8mpktM/ttsOxI48OnIbEfSwMpzLrNK3X90ZskwRmd7lgSiV8U2lFGdm
-         Gn6XYeirZ+Ft1DGzBjnhk7kI9W7sqALvLVk+8X7xfEuElut9mrTkH+Lb5arFtRXszpLj
-         wafYz2NdXsMLMNIDGmxpXvqz0/GemhFbhYCrzGBOF9d26X5dA94UIsS1ovc4F/3cVxOj
-         313wmUUpsjpIZtqhsdtmUgtlD55Nw+NIBDj1Q16aJk3zSsPEuSvuZPAJTA0GiJ7dcB9p
-         R3yQ==
-X-Gm-Message-State: AOAM533gtfulF7rSrC9Z3A3RpmJrBubruVhVm+lYUgHlDWWgKNrq2f16
-        leU3tLCi8dLCXCxKhx9p8arLIqKfSxMgZd9yCMbhgQ==
-X-Google-Smtp-Source: ABdhPJyF3jyb0DgUyk4TAOsr8yOlh7+aM4sovihpIW+gAYZ0/X73OOz59rzsQdkysUyKCFK2Dx1kmyVyPbCuijMekSs=
-X-Received: by 2002:a2e:7504:: with SMTP id q4mr9411258ljc.339.1591002728161;
- Mon, 01 Jun 2020 02:12:08 -0700 (PDT)
+        Mon, 1 Jun 2020 05:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725831AbgFAJM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:12:28 -0400
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCDD320734
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591002747;
+        bh=XaBczYYm0dgNg26+7OPpYAKLtWaTtsU2jNmMocGEg+U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zPG/R4YQGgMcVD1vDVWgtCV6QgaMzR7FnaRYsF325VamsGjd6hUptzQFJ5t+J9v6t
+         A4jgXaEWazhwka1vJ93/bzXgMABKduro30GhnDn4XmcykSuTx6Z0uyFoD07N2YrIrc
+         ILfCZYzXqFrw4NYe+aRK6RFOVRbSOpCiEkfbe6QM=
+Received: by mail-lj1-f174.google.com with SMTP id z6so7146691ljm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:12:26 -0700 (PDT)
+X-Gm-Message-State: AOAM532sQ61JioB496KCQluir0hsTOen0TTL4qMXqrwVNjLGsR47N6X9
+        SDCN/5zQuN3wr/EVCBoOX6UEVzY/+GiqyO+oYws=
+X-Google-Smtp-Source: ABdhPJwNN0gMX/urhnLnrniACiL2yZ/7oMTw3RyS/24I8Z1lmMyfh4PcjnoeMU6EeZpM2LSQDbPzd3egOk/2x79mNUo=
+X-Received: by 2002:a2e:9c95:: with SMTP id x21mr10387218lji.441.1591002745078;
+ Mon, 01 Jun 2020 02:12:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
- <1588758017-30426-2-git-send-email-sumit.garg@linaro.org> <20200601021132.GA796225@linux.intel.com>
-In-Reply-To: <20200601021132.GA796225@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Mon, 1 Jun 2020 14:41:55 +0530
-Message-ID: <CAFA6WYP55W2xKtjHWWwu6Pbqy2TGY=eymwAoXxQh-5mF8deR6A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] KEYS: trusted: Add generic trusted keys framework
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+References: <cover.1590474856.git.greentime.hu@sifive.com> <1f20f778318bf18e47eace08e54983fed23ba019.1590474856.git.greentime.hu@sifive.com>
+In-Reply-To: <1f20f778318bf18e47eace08e54983fed23ba019.1590474856.git.greentime.hu@sifive.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 1 Jun 2020 17:12:13 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRu63t7Ftv_V1ZLAEu4Vi57Q6uvp+sZjYBROkuJXX0=mg@mail.gmail.com>
+Message-ID: <CAJF2gTRu63t7Ftv_V1ZLAEu4Vi57Q6uvp+sZjYBROkuJXX0=mg@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 09/13] riscv: Add vector struct and assembler definitions
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+        Oleg Nesterov <oleg@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jun 2020 at 07:41, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+Since it has been redesigned with new version spec, please change the
+first-author :)
+
+And add me as Co-developed.
+
+On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
 >
-> On Wed, May 06, 2020 at 03:10:14PM +0530, Sumit Garg wrote:
-> > Current trusted keys framework is tightly coupled to use TPM device as
-> > an underlying implementation which makes it difficult for implementations
-> > like Trusted Execution Environment (TEE) etc. to provide trusked keys
-> > support in case platform doesn't posses a TPM device.
-> >
-> > So this patch tries to add generic trusted keys framework where underlying
-> > implemtations like TPM, TEE etc. could be easily plugged-in.
-> >
-> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  include/keys/trusted-type.h                 |  45 ++++
-> >  include/keys/trusted_tpm.h                  |  15 --
-> >  security/keys/trusted-keys/Makefile         |   1 +
-> >  security/keys/trusted-keys/trusted_common.c | 333 +++++++++++++++++++++++++++
-> >  security/keys/trusted-keys/trusted_tpm1.c   | 335 +++++-----------------------
-> >  5 files changed, 437 insertions(+), 292 deletions(-)
-> >  create mode 100644 security/keys/trusted-keys/trusted_common.c
-> >
-> > diff --git a/include/keys/trusted-type.h b/include/keys/trusted-type.h
-> > index a94c03a..5559010 100644
-> > --- a/include/keys/trusted-type.h
-> > +++ b/include/keys/trusted-type.h
-> > @@ -40,6 +40,51 @@ struct trusted_key_options {
-> >       uint32_t policyhandle;
-> >  };
-> >
-> > +struct trusted_key_ops {
-> > +     /*
-> > +      * flag to indicate if trusted key implementation supports migration
-> > +      * or not.
-> > +      */
-> > +     unsigned char migratable;
-> > +
-> > +     /* trusted key init */
-> > +     int (*init)(void);
-> > +
-> > +     /* seal a trusted key */
-> > +     int (*seal)(struct trusted_key_payload *p, char *datablob);
-> > +
-> > +     /* unseal a trusted key */
-> > +     int (*unseal)(struct trusted_key_payload *p, char *datablob);
-> > +
-> > +     /* get random trusted key */
-> > +     int (*get_random)(unsigned char *key, size_t key_len);
-> > +
-> > +     /* trusted key cleanup */
-> > +     void (*cleanup)(void);
-> > +};
-> > +
-> >  extern struct key_type key_type_trusted;
-> > +#if defined(CONFIG_TCG_TPM)
-> > +extern struct trusted_key_ops tpm_trusted_key_ops;
-> > +#endif
-> > +
-> > +#define TRUSTED_DEBUG 0
-> > +
-> > +#if TRUSTED_DEBUG
-> > +static inline void dump_payload(struct trusted_key_payload *p)
-> > +{
-> > +     pr_info("trusted_key: key_len %d\n", p->key_len);
-> > +     print_hex_dump(KERN_INFO, "key ", DUMP_PREFIX_NONE,
-> > +                    16, 1, p->key, p->key_len, 0);
-> > +     pr_info("trusted_key: bloblen %d\n", p->blob_len);
-> > +     print_hex_dump(KERN_INFO, "blob ", DUMP_PREFIX_NONE,
-> > +                    16, 1, p->blob, p->blob_len, 0);
-> > +     pr_info("trusted_key: migratable %d\n", p->migratable);
-> > +}
-> > +#else
-> > +static inline void dump_payload(struct trusted_key_payload *p)
-> > +{
-> > +}
-> > +#endif
-> >
-> >  #endif /* _KEYS_TRUSTED_TYPE_H */
-> > diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
-> > index a56d8e1..5753231 100644
-> > --- a/include/keys/trusted_tpm.h
-> > +++ b/include/keys/trusted_tpm.h
-> > @@ -60,17 +60,6 @@ static inline void dump_options(struct trusted_key_options *o)
-> >                      16, 1, o->pcrinfo, o->pcrinfo_len, 0);
-> >  }
-> >
-> > -static inline void dump_payload(struct trusted_key_payload *p)
-> > -{
-> > -     pr_info("trusted_key: key_len %d\n", p->key_len);
-> > -     print_hex_dump(KERN_INFO, "key ", DUMP_PREFIX_NONE,
-> > -                    16, 1, p->key, p->key_len, 0);
-> > -     pr_info("trusted_key: bloblen %d\n", p->blob_len);
-> > -     print_hex_dump(KERN_INFO, "blob ", DUMP_PREFIX_NONE,
-> > -                    16, 1, p->blob, p->blob_len, 0);
-> > -     pr_info("trusted_key: migratable %d\n", p->migratable);
-> > -}
-> > -
-> >  static inline void dump_sess(struct osapsess *s)
-> >  {
-> >       print_hex_dump(KERN_INFO, "trusted-key: handle ", DUMP_PREFIX_NONE,
-> > @@ -96,10 +85,6 @@ static inline void dump_options(struct trusted_key_options *o)
-> >  {
-> >  }
-> >
-> > -static inline void dump_payload(struct trusted_key_payload *p)
-> > -{
-> > -}
-> > -
-> >  static inline void dump_sess(struct osapsess *s)
-> >  {
-> >  }
-> > diff --git a/security/keys/trusted-keys/Makefile b/security/keys/trusted-keys/Makefile
-> > index 7b73ceb..2b1085b 100644
-> > --- a/security/keys/trusted-keys/Makefile
-> > +++ b/security/keys/trusted-keys/Makefile
-> > @@ -4,5 +4,6 @@
-> >  #
-> >
-> >  obj-$(CONFIG_TRUSTED_KEYS) += trusted.o
-> > +trusted-y += trusted_common.o
-> >  trusted-y += trusted_tpm1.o
-> >  trusted-y += trusted_tpm2.o
-> > diff --git a/security/keys/trusted-keys/trusted_common.c b/security/keys/trusted-keys/trusted_common.c
-> > new file mode 100644
-> > index 0000000..9bfd081
-> > --- /dev/null
-> > +++ b/security/keys/trusted-keys/trusted_common.c
-> > @@ -0,0 +1,333 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (C) 2010 IBM Corporation
-> > + * Copyright (c) 2019, Linaro Limited
-> > + *
-> > + * Author:
-> > + * David Safford <safford@us.ibm.com>
-> > + * Added generic trusted key framework: Sumit Garg <sumit.garg@linaro.org>
-> > + *
-> > + * See Documentation/security/keys/trusted-encrypted.rst
-> > + */
-> > +
-> > +#include <keys/user-type.h>
-> > +#include <keys/trusted-type.h>
-> > +#include <linux/capability.h>
-> > +#include <linux/err.h>
-> > +#include <linux/init.h>
-> > +#include <linux/key-type.h>
-> > +#include <linux/module.h>
-> > +#include <linux/parser.h>
-> > +#include <linux/rcupdate.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +#include <linux/uaccess.h>
-> > +
-> > +static struct trusted_key_ops *available_tk_ops[] = {
-> > +#if defined(CONFIG_TCG_TPM)
-> > +     &tpm_trusted_key_ops,
-> > +#endif
-> > +};
+> From: Guo Ren <guoren@linux.alibaba.com>
 >
-> This, I think is wrong. You should have a compile time flag for TPM e.g.
-> CONFIG_TRUSTED_TPM, not this dynamic mess.
+> Add vector state context struct in struct thread and asm-offsets.c
+> definitions.
+>
+> The vector registers will be saved in datap pointer of __riscv_v_state. It
+> will be dynamically allocated in kernel space. It will be put right after
+> the __riscv_v_state data structure in user space.
+>
+> [greentime.hu@sifive.com: add support for dynamic vlen, add vcsr and remove
+> vxsat, vxrm because these data can be get in vcsr, add new macros for
+> _riscv_v_state elements offset and remove unused ones]
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> ---
+>  arch/riscv/include/asm/processor.h   |  1 +
+>  arch/riscv/include/uapi/asm/ptrace.h | 13 +++++++++++++
+>  arch/riscv/kernel/asm-offsets.c      |  8 ++++++++
+>  3 files changed, 22 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+> index 3ddb798264f1..217273375cfb 100644
+> --- a/arch/riscv/include/asm/processor.h
+> +++ b/arch/riscv/include/asm/processor.h
+> @@ -32,6 +32,7 @@ struct thread_struct {
+>         unsigned long sp;       /* Kernel mode stack */
+>         unsigned long s[12];    /* s[0]: frame pointer */
+>         struct __riscv_d_ext_state fstate;
+> +       struct __riscv_v_state vstate;
+>  };
+>
+>  #define INIT_THREAD {                                  \
+> diff --git a/arch/riscv/include/uapi/asm/ptrace.h b/arch/riscv/include/uapi/asm/ptrace.h
+> index 882547f6bd5c..661b0466b850 100644
+> --- a/arch/riscv/include/uapi/asm/ptrace.h
+> +++ b/arch/riscv/include/uapi/asm/ptrace.h
+> @@ -77,6 +77,19 @@ union __riscv_fp_state {
+>         struct __riscv_q_ext_state q;
+>  };
+>
+> +struct __riscv_v_state {
+> +       __u32 magic;
+> +       __u32 size;
+> +       unsigned long vstart;
+> +       unsigned long vl;
+> +       unsigned long vtype;
+> +       unsigned long vcsr;
+> +       void *datap;
+> +#if __riscv_xlen == 32
+> +       __u32 __padding;
+> +#endif
+> +} __attribute__((aligned(16)));
+> +
+>  #endif /* __ASSEMBLY__ */
+>
+>  #endif /* _UAPI_ASM_RISCV_PTRACE_H */
+> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+> index 07cb9c10de4e..6627fde230b2 100644
+> --- a/arch/riscv/kernel/asm-offsets.c
+> +++ b/arch/riscv/kernel/asm-offsets.c
+> @@ -70,6 +70,14 @@ void asm_offsets(void)
+>         OFFSET(TASK_THREAD_F31, task_struct, thread.fstate.f[31]);
+>         OFFSET(TASK_THREAD_FCSR, task_struct, thread.fstate.fcsr);
+>
+> +       OFFSET(RISCV_V_STATE_MAGIC, __riscv_v_state, magic);
+> +       OFFSET(RISCV_V_STATE_SIZE, __riscv_v_state, size);
+> +       OFFSET(RISCV_V_STATE_VSTART, __riscv_v_state, vstart);
+> +       OFFSET(RISCV_V_STATE_VL, __riscv_v_state, vl);
+> +       OFFSET(RISCV_V_STATE_VTYPE, __riscv_v_state, vtype);
+> +       OFFSET(RISCV_V_STATE_VCSR, __riscv_v_state, vcsr);
+> +       OFFSET(RISCV_V_STATE_DATAP, __riscv_v_state, datap);
+> +
+>         DEFINE(PT_SIZE, sizeof(struct pt_regs));
+>         OFFSET(PT_EPC, pt_regs, epc);
+>         OFFSET(PT_RA, pt_regs, ra);
+> --
+> 2.26.2
+>
 >
 
-The whole idea to have it dynamic was to have a common trusted keys
-module which could support both TPM and TEE implementation depending
-on hardware. I guess it may be useful in scenarios where a particular
-hardware supports a TPM chip while other doesn't but both need to run
-a common kernel image.
 
-> Please make the whole choice compile time, not run-time.
->
-> > +static struct trusted_key_ops *tk_ops;
-> > +
-> > +enum {
-> > +     Opt_err,
-> > +     Opt_new, Opt_load, Opt_update,
-> > +};
-> > +
-> > +static const match_table_t key_tokens = {
-> > +     {Opt_new, "new"},
-> > +     {Opt_load, "load"},
-> > +     {Opt_update, "update"},
-> > +     {Opt_err, NULL}
-> > +};
-> > +
-> > +/*
-> > + * datablob_parse - parse the keyctl data and fill in the
-> > + *                  payload structure
-> > + *
-> > + * On success returns 0, otherwise -EINVAL.
-> > + */
-> > +static int datablob_parse(char *datablob, struct trusted_key_payload *p)
-> > +{
-> > +     substring_t args[MAX_OPT_ARGS];
-> > +     long keylen;
-> > +     int ret = -EINVAL;
-> > +     int key_cmd;
-> > +     char *c;
-> > +
-> > +     /* main command */
-> > +     c = strsep(&datablob, " \t");
-> > +     if (!c)
-> > +             return -EINVAL;
-> > +     key_cmd = match_token(c, key_tokens, args);
-> > +     switch (key_cmd) {
-> > +     case Opt_new:
-> > +             /* first argument is key size */
-> > +             c = strsep(&datablob, " \t");
-> > +             if (!c)
-> > +                     return -EINVAL;
-> > +             ret = kstrtol(c, 10, &keylen);
-> > +             if (ret < 0 || keylen < MIN_KEY_SIZE || keylen > MAX_KEY_SIZE)
-> > +                     return -EINVAL;
-> > +             p->key_len = keylen;
-> > +             ret = Opt_new;
-> > +             break;
-> > +     case Opt_load:
-> > +             /* first argument is sealed blob */
-> > +             c = strsep(&datablob, " \t");
-> > +             if (!c)
-> > +                     return -EINVAL;
-> > +             p->blob_len = strlen(c) / 2;
-> > +             if (p->blob_len > MAX_BLOB_SIZE)
-> > +                     return -EINVAL;
-> > +             ret = hex2bin(p->blob, c, p->blob_len);
-> > +             if (ret < 0)
-> > +                     return -EINVAL;
-> > +             ret = Opt_load;
-> > +             break;
-> > +     case Opt_update:
-> > +             ret = Opt_update;
-> > +             break;
-> > +     case Opt_err:
-> > +             return -EINVAL;
-> > +     }
-> > +     return ret;
-> > +}
-> > +
-> > +static struct trusted_key_payload *trusted_payload_alloc(struct key *key)
-> > +{
-> > +     struct trusted_key_payload *p = NULL;
-> > +     int ret;
-> > +
-> > +     ret = key_payload_reserve(key, sizeof(*p));
-> > +     if (ret < 0)
-> > +             return p;
-> > +     p = kzalloc(sizeof(*p), GFP_KERNEL);
-> > +
-> > +     p->migratable = tk_ops->migratable;
-> > +
-> > +     return p;
-> > +}
-> > +
-> > +/*
-> > + * trusted_instantiate - create a new trusted key
-> > + *
-> > + * Unseal an existing trusted blob or, for a new key, get a
-> > + * random key, then seal and create a trusted key-type key,
-> > + * adding it to the specified keyring.
-> > + *
-> > + * On success, return 0. Otherwise return errno.
-> > + */
-> > +static int trusted_instantiate(struct key *key,
-> > +                            struct key_preparsed_payload *prep)
-> > +{
-> > +     struct trusted_key_payload *payload = NULL;
-> > +     size_t datalen = prep->datalen;
-> > +     char *datablob;
-> > +     int ret = 0;
-> > +     int key_cmd;
-> > +     size_t key_len;
-> > +
-> > +     if (datalen <= 0 || datalen > 32767 || !prep->data)
-> > +             return -EINVAL;
-> > +
-> > +     datablob = kmalloc(datalen + 1, GFP_KERNEL);
-> > +     if (!datablob)
-> > +             return -ENOMEM;
-> > +     memcpy(datablob, prep->data, datalen);
-> > +     datablob[datalen] = '\0';
-> > +
-> > +     payload = trusted_payload_alloc(key);
-> > +     if (!payload) {
-> > +             ret = -ENOMEM;
-> > +             goto out;
-> > +     }
-> > +
-> > +     key_cmd = datablob_parse(datablob, payload);
-> > +     if (key_cmd < 0) {
-> > +             ret = key_cmd;
-> > +             goto out;
-> > +     }
-> > +
-> > +     dump_payload(payload);
-> > +
-> > +     switch (key_cmd) {
-> > +     case Opt_load:
-> > +             ret = tk_ops->unseal(payload, datablob);
-> > +             dump_payload(payload);
-> > +             if (ret < 0)
-> > +                     pr_info("trusted_key: key_unseal failed (%d)\n", ret);
-> > +             break;
-> > +     case Opt_new:
-> > +             key_len = payload->key_len;
-> > +             ret = tk_ops->get_random(payload->key, key_len);
-> > +             if (ret != key_len) {
-> > +                     pr_info("trusted_key: key_create failed (%d)\n", ret);
-> > +                     goto out;
-> > +             }
-> > +
-> > +             ret = tk_ops->seal(payload, datablob);
-> > +             if (ret < 0)
-> > +                     pr_info("trusted_key: key_seal failed (%d)\n", ret);
-> > +             break;
-> > +     default:
-> > +             ret = -EINVAL;
-> > +     }
-> > +out:
-> > +     kzfree(datablob);
-> > +     if (!ret)
-> > +             rcu_assign_keypointer(key, payload);
-> > +     else
-> > +             kzfree(payload);
-> > +     return ret;
-> > +}
-> > +
-> > +static void trusted_rcu_free(struct rcu_head *rcu)
-> > +{
-> > +     struct trusted_key_payload *p;
-> > +
-> > +     p = container_of(rcu, struct trusted_key_payload, rcu);
-> > +     kzfree(p);
-> > +}
-> > +
-> > +/*
-> > + * trusted_update - reseal an existing key with new PCR values
-> > + */
-> > +static int trusted_update(struct key *key, struct key_preparsed_payload *prep)
-> > +{
-> > +     struct trusted_key_payload *p;
-> > +     struct trusted_key_payload *new_p;
-> > +     size_t datalen = prep->datalen;
-> > +     char *datablob;
-> > +     int ret = 0;
-> > +
-> > +     if (key_is_negative(key))
-> > +             return -ENOKEY;
-> > +     p = key->payload.data[0];
-> > +     if (!p->migratable)
-> > +             return -EPERM;
-> > +     if (datalen <= 0 || datalen > 32767 || !prep->data)
-> > +             return -EINVAL;
-> > +
-> > +     datablob = kmalloc(datalen + 1, GFP_KERNEL);
-> > +     if (!datablob)
-> > +             return -ENOMEM;
-> > +
-> > +     new_p = trusted_payload_alloc(key);
-> > +     if (!new_p) {
-> > +             ret = -ENOMEM;
-> > +             goto out;
-> > +     }
-> > +
-> > +     memcpy(datablob, prep->data, datalen);
-> > +     datablob[datalen] = '\0';
-> > +     ret = datablob_parse(datablob, new_p);
-> > +     if (ret != Opt_update) {
-> > +             ret = -EINVAL;
-> > +             kzfree(new_p);
-> > +             goto out;
-> > +     }
-> > +
-> > +     /* copy old key values, and reseal with new pcrs */
-> > +     new_p->migratable = p->migratable;
-> > +     new_p->key_len = p->key_len;
-> > +     memcpy(new_p->key, p->key, p->key_len);
-> > +     dump_payload(p);
-> > +     dump_payload(new_p);
-> > +
-> > +     ret = tk_ops->seal(new_p, datablob);
-> > +     if (ret < 0) {
-> > +             pr_info("trusted_key: key_seal failed (%d)\n", ret);
-> > +             kzfree(new_p);
-> > +             goto out;
-> > +     }
-> > +
-> > +     rcu_assign_keypointer(key, new_p);
-> > +     call_rcu(&p->rcu, trusted_rcu_free);
-> > +out:
-> > +     kzfree(datablob);
-> > +     return ret;
-> > +}
-> > +
-> > +/*
-> > + * trusted_read - copy the sealed blob data to userspace in hex.
-> > + * On success, return to userspace the trusted key datablob size.
-> > + */
-> > +static long trusted_read(const struct key *key, char *buffer,
-> > +                      size_t buflen)
-> > +{
-> > +     const struct trusted_key_payload *p;
-> > +     char *bufp;
-> > +     int i;
-> > +
-> > +     p = dereference_key_locked(key);
-> > +     if (!p)
-> > +             return -EINVAL;
-> > +
-> > +     if (buffer && buflen >= 2 * p->blob_len) {
-> > +             bufp = buffer;
-> > +             for (i = 0; i < p->blob_len; i++)
-> > +                     bufp = hex_byte_pack(bufp, p->blob[i]);
-> > +     }
-> > +     return 2 * p->blob_len;
-> > +}
-> > +
-> > +/*
-> > + * trusted_destroy - clear and free the key's payload
-> > + */
-> > +static void trusted_destroy(struct key *key)
-> > +{
-> > +     kzfree(key->payload.data[0]);
-> > +}
-> > +
-> > +struct key_type key_type_trusted = {
-> > +     .name = "trusted",
-> > +     .instantiate = trusted_instantiate,
-> > +     .update = trusted_update,
-> > +     .destroy = trusted_destroy,
-> > +     .describe = user_describe,
-> > +     .read = trusted_read,
-> > +};
-> > +EXPORT_SYMBOL_GPL(key_type_trusted);
-> > +
-> > +static int __init init_trusted(void)
-> > +{
-> > +     int i, ret = 0;
-> > +
-> > +     for (i = 0; i < sizeof(available_tk_ops); i++) {
-> > +             tk_ops = available_tk_ops[i];
-> > +
-> > +             if (!(tk_ops && tk_ops->init && tk_ops->seal &&
-> > +                   tk_ops->unseal && tk_ops->get_random))
-> > +                     continue;
->
-> This check should not exist as there is no legit case for any of these
-> callbacks missing. Please remove it.
+-- 
+Best Regards
+ Guo Ren
 
-Okay.
-
->
-> > +
-> > +             ret = tk_ops->init();
-> > +             if (ret) {
-> > +                     if (tk_ops->cleanup)
-> > +                             tk_ops->cleanup();
->
-> Why is clean up called? What is "clean up"? Init should take care clean
-> up its dirt if it fails. Please remove the calll to clean up from here.
-
-Makes sense, will remove it.
-
--Sumit
-
->
-> /Jarkko
+ML: https://lore.kernel.org/linux-csky/
