@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ED2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1219B20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C14220679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037937;
-	bh=2ZPjej86uWTbLn4JuUOXaDIYjHQwrcYDh8zvLp7nqxA=;
+	s=default; t=1591037941;
+	bh=ExMKuf+azTmVVi/YGd55XhCM+QRC8qCRQFM9lqh3wtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tUGi3wJIXjoYoCjPdpi2Ej4Z2ipkjQikh5K6qQ5hOL4n0y1VtG+K1n+FZZM+HieNZ
-	 cLQbSDmhGdkZNU1sBz+XyyQ7pL7gA1SGZcCfQ5u+dgBbc24H8/6CnkEFhC8VZnCIxM
-	 ArrUGi1MSMYnQnWJ4hySvVO8M55FlGbfneN/xBI4=
+	b=c8QuKTvkrxxXQeK3try+BjB8HoBJwUO461S4mgEvxlJhC73RNrIuxnZLx9uwsZGnv
+	 aCjmlecnix2RvkALD1BKe/IaBvug3N+Xmk5RhoHjTVpOOpKDsHvTettWgv9NrYGD0k
+	 zf9thkP65Yb4ETX771pbU0khC66TZnpBpDecT6lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgFAS64 (ORCPT
+        id S1729107AbgFAR6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729149AbgFAR6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:16 -0400
+        id S1729053AbgFAR6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 172142076B;
-        Mon,  1 Jun 2020 17:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2887D2073B;
+        Mon,  1 Jun 2020 17:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034295;
-        bh=2ZPjej86uWTbLn4JuUOXaDIYjHQwrcYDh8zvLp7nqxA=;
+        s=default; t=1591034279;
+        bh=ExMKuf+azTmVVi/YGd55XhCM+QRC8qCRQFM9lqh3wtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s9DmKlsuv0uelZi/RUMlAjpFdQDnRY5WuIDOupCSFZjdvdwawo41E3xNVobOZbk0s
-         pfdCd9ysiGm536TJyrHCUd/SqlcufJl535SvLmkGiKbkih+qKNsULry0Xjf9U6HYKO
-         PTddYzfrksbzUq4QDQzk4cDrIlAj/+0O65AgkwAI=
+        b=eq2sCk7Iu1OSXMQBffb357jvuagU2kNVPmDrxrCId246IokLqTWFv5X63yo7lvoHz
+         sPZ0ScEJAf3abg5qNisuGD850PtoZ9hAAkTylqsmBbVjU+ZrYEIsqYUh+oIq24bmXE
+         HiSLFPKaSnfM2LBCROVgN1OzicqwnLRG6bwDpgZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Paukrt <tomas.paukrt@advantech.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Mathieu Maret <mathieu.maret@gmail.com>,
+        Brendan Shanks <bshanks@codeweavers.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 29/61] ARM: uaccess: fix DACR mismatch with nested exceptions
-Date:   Mon,  1 Jun 2020 19:53:36 +0200
-Message-Id: <20200601174017.231907792@linuxfoundation.org>
+Subject: [PATCH 4.9 22/61] Input: evdev - call input_flush_device() on release(), not flush()
+Date:   Mon,  1 Jun 2020 19:53:29 +0200
+Message-Id: <20200601174015.808285249@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,117 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Brendan Shanks <bshanks@codeweavers.com>
 
-[ Upstream commit 71f8af1110101facfad68989ff91f88f8e2c3e22 ]
+[ Upstream commit 09264098ff153f60866039d60b31d39b66f55a31 ]
 
-Tomas Paukrt reports that his SAM9X60 based system (ARM926, ARMv5TJ)
-fails to fix up alignment faults, eventually resulting in a kernel
-oops.
+input_flush_device() should only be called once the struct file is being
+released and no open descriptors remain, but evdev_flush() was calling
+it whenever a file descriptor was closed.
 
-The problem occurs when using CONFIG_CPU_USE_DOMAINS with commit
-e6978e4bf181 ("ARM: save and reset the address limit when entering an
-exception").  This is because the address limit is set back to
-TASK_SIZE on exception entry, and, although it is restored on exception
-exit, the domain register is not.
+This caused uploaded force-feedback effects to be erased when a process
+did a dup()/close() on the event FD, called system(), etc.
 
-Hence, this sequence can occur:
+Call input_flush_device() from evdev_release() instead.
 
-  interrupt
-    pt_regs->addr_limit = addr_limit		// USER_DS
-    addr_limit = USER_DS
-    alignment exception
-    __probe_kernel_read()
-      old_fs = get_fs()				// USER_DS
-      set_fs(KERNEL_DS)
-        addr_limit = KERNEL_DS
-        dacr.kernel = DOMAIN_MANAGER
-        interrupt
-          pt_regs->addr_limit = addr_limit	// KERNEL_DS
-          addr_limit = USER_DS
-          alignment exception
-          __probe_kernel_read()
-            old_fs = get_fs()			// USER_DS
-            set_fs(KERNEL_DS)
-              addr_limit = KERNEL_DS
-              dacr.kernel = DOMAIN_MANAGER
-            ...
-            set_fs(old_fs)
-              addr_limit = USER_DS
-              dacr.kernel = DOMAIN_CLIENT
-          ...
-          addr_limit = pt_regs->addr_limit	// KERNEL_DS
-        interrupt returns
-
-At this point, addr_limit is correctly restored to KERNEL_DS for
-__probe_kernel_read() to continue execution, but dacr.kernel is not,
-it has been reset by the set_fs(old_fs) to DOMAIN_CLIENT.
-
-This would not have happened prior to the mentioned commit, because
-addr_limit would remain KERNEL_DS, so get_fs() would have returned
-KERNEL_DS, and so would correctly nest.
-
-This commit fixes the problem by also saving the DACR on exception
-entry if either CONFIG_CPU_SW_DOMAIN_PAN or CONFIG_CPU_USE_DOMAINS are
-enabled, and resetting the DACR appropriately on exception entry to
-match addr_limit and PAN settings.
-
-Fixes: e6978e4bf181 ("ARM: save and reset the address limit when entering an exception")
-Reported-by: Tomas Paukrt <tomas.paukrt@advantech.cz>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reported-by: Mathieu Maret <mathieu.maret@gmail.com>
+Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
+Link: https://lore.kernel.org/r/20200421231003.7935-1-bshanks@codeweavers.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/uaccess-asm.h | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/input/evdev.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
-index e46468b91eaa..907571fd05c6 100644
---- a/arch/arm/include/asm/uaccess-asm.h
-+++ b/arch/arm/include/asm/uaccess-asm.h
-@@ -67,15 +67,21 @@
- #endif
- 	.endm
+diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
+index e9ae3d500a55..700f018df668 100644
+--- a/drivers/input/evdev.c
++++ b/drivers/input/evdev.c
+@@ -342,20 +342,6 @@ static int evdev_fasync(int fd, struct file *file, int on)
+ 	return fasync_helper(fd, file, on, &client->fasync);
+ }
  
--#ifdef CONFIG_CPU_SW_DOMAIN_PAN
-+#if defined(CONFIG_CPU_SW_DOMAIN_PAN) || defined(CONFIG_CPU_USE_DOMAINS)
- #define DACR(x...)	x
- #else
- #define DACR(x...)
- #endif
+-static int evdev_flush(struct file *file, fl_owner_t id)
+-{
+-	struct evdev_client *client = file->private_data;
+-	struct evdev *evdev = client->evdev;
+-
+-	mutex_lock(&evdev->mutex);
+-
+-	if (evdev->exist && !client->revoked)
+-		input_flush_device(&evdev->handle, file);
+-
+-	mutex_unlock(&evdev->mutex);
+-	return 0;
+-}
+-
+ static void evdev_free(struct device *dev)
+ {
+ 	struct evdev *evdev = container_of(dev, struct evdev, dev);
+@@ -469,6 +455,10 @@ static int evdev_release(struct inode *inode, struct file *file)
+ 	unsigned int i;
  
- 	/*
--	 * Save the address limit on entry to a privileged exception and
--	 * if using PAN, save and disable usermode access.
-+	 * Save the address limit on entry to a privileged exception.
-+	 *
-+	 * If we are using the DACR for kernel access by the user accessors
-+	 * (CONFIG_CPU_USE_DOMAINS=y), always reset the DACR kernel domain
-+	 * back to client mode, whether or not \disable is set.
-+	 *
-+	 * If we are using SW PAN, set the DACR user domain to no access
-+	 * if \disable is set.
- 	 */
- 	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
- 	ldr	\tmp1, [\tsk, #TI_ADDR_LIMIT]
-@@ -84,8 +90,17 @@
-  DACR(	mrc	p15, 0, \tmp0, c3, c0, 0)
-  DACR(	str	\tmp0, [sp, #SVC_DACR])
- 	str	\tmp1, [sp, #SVC_ADDR_LIMIT]
--	.if \disable
--	uaccess_disable \tmp0
-+	.if \disable && IS_ENABLED(CONFIG_CPU_SW_DOMAIN_PAN)
-+	/* kernel=client, user=no access */
-+	mov	\tmp2, #DACR_UACCESS_DISABLE
-+	mcr	p15, 0, \tmp2, c3, c0, 0
-+	instr_sync
-+	.elseif IS_ENABLED(CONFIG_CPU_USE_DOMAINS)
-+	/* kernel=client */
-+	bic	\tmp2, \tmp0, #domain_mask(DOMAIN_KERNEL)
-+	orr	\tmp2, \tmp2, #domain_val(DOMAIN_KERNEL, DOMAIN_CLIENT)
-+	mcr	p15, 0, \tmp2, c3, c0, 0
-+	instr_sync
- 	.endif
- 	.endm
+ 	mutex_lock(&evdev->mutex);
++
++	if (evdev->exist && !client->revoked)
++		input_flush_device(&evdev->handle, file);
++
+ 	evdev_ungrab(evdev, client);
+ 	mutex_unlock(&evdev->mutex);
+ 
+@@ -1331,7 +1321,6 @@ static const struct file_operations evdev_fops = {
+ 	.compat_ioctl	= evdev_ioctl_compat,
+ #endif
+ 	.fasync		= evdev_fasync,
+-	.flush		= evdev_flush,
+ 	.llseek		= no_llseek,
+ };
  
 -- 
 2.25.1
