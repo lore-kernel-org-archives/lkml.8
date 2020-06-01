@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1663E20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261572074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgFANNK (ORCPT
+        id S1727096AbgFANLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48218 "EHLO
+        Mon, 1 Jun 2020 09:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgFANLr (ORCPT
+        with ESMTP id S1725935AbgFANLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:11:47 -0400
+        Mon, 1 Jun 2020 09:11:39 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41FAC08C5C0;
-        Mon,  1 Jun 2020 06:11:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42594C08C5C0;
+        Mon,  1 Jun 2020 06:11:39 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfkE8-00073C-1K; Mon, 01 Jun 2020 15:11:40 +0200
+        id 1jfkE3-0006ya-VM; Mon, 01 Jun 2020 15:11:36 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9DE551C0481;
-        Mon,  1 Jun 2020 15:11:39 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 13:11:39 -0000
-From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8EF1A1C0481;
+        Mon,  1 Jun 2020 15:11:35 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 13:11:35 -0000
+From:   "tip-bot2 for Saravana Kannan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Do one override
- clock parent in prepare()
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+Subject: [tip: timers/core] clocksource/drivers/timer-versatile: Clear
+ OF_POPULATED flag
+Cc:     Saravana Kannan <saravanak@google.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200427172831.16546-1-lokeshvutla@ti.com>
-References: <20200427172831.16546-1-lokeshvutla@ti.com>
+In-Reply-To: <20200324195302.203115-1-saravanak@google.com>
+References: <20200324195302.203115-1-saravanak@google.com>
 MIME-Version: 1.0
-Message-ID: <159101709950.17951.17058038049148986185.tip-bot2@tip-bot2>
+Message-ID: <159101709544.17951.7062819245168956277.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,41 +60,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     264418e20d1fedbed8ad79683b63caa3d72c3b2e
-Gitweb:        https://git.kernel.org/tip/264418e20d1fedbed8ad79683b63caa3d72c3b2e
-Author:        Lokesh Vutla <lokeshvutla@ti.com>
-AuthorDate:    Mon, 27 Apr 2020 22:58:31 +05:30
+Commit-ID:     7a3768c206a006525afc090f92d4d618d8356b92
+Gitweb:        https://git.kernel.org/tip/7a3768c206a006525afc090f92d4d618d8356b92
+Author:        Saravana Kannan <saravanak@google.com>
+AuthorDate:    Tue, 24 Mar 2020 12:53:02 -07:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Sat, 23 May 2020 00:02:05 +02:00
+CommitterDate: Sat, 23 May 2020 00:03:25 +02:00
 
-clocksource/drivers/timer-ti-dm: Do one override clock parent in prepare()
+clocksource/drivers/timer-versatile: Clear OF_POPULATED flag
 
-omap_dm_timer_prepare() is setting up the parent 32KHz clock. This
-prepare() gets called by request_timer in the client's driver. Because of
-this, the timer clock parent that is set with assigned-clock-parent is being
-overwritten. So drop this default setting of parent in prepare().
+The commit 4f41fe386a94 ("clocksource/drivers/timer-probe: Avoid
+creating dead devices") broke the handling of arm,vexpress-sysreg [1].
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Reviewed-by: Suman Anna <s-anna@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
+The arm,vexpress-sysreg device is handled by both timer-versatile.c and
+drivers/mfd/vexpress-sysreg.c. While the timer driver doesn't use the
+device, the mfd driver still needs a device to probe.
+
+So, this patch clears the OF_POPULATED flag to continue creating the
+device.
+
+[1] - https://lore.kernel.org/lkml/20200324175955.GA16972@arm.com/
+
+Fixes: 4f41fe386a94 ("clocksource/drivers/timer-probe: Avoid creating dead devices")
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200427172831.16546-1-lokeshvutla@ti.com
+Link: https://lore.kernel.org/r/20200324195302.203115-1-saravanak@google.com
 ---
- drivers/clocksource/timer-ti-dm.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clocksource/timer-versatile.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 2531eab..60aff08 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -258,9 +258,7 @@ static int omap_dm_timer_prepare(struct omap_dm_timer *timer)
- 	__omap_dm_timer_enable_posted(timer);
- 	omap_dm_timer_disable(timer);
+diff --git a/drivers/clocksource/timer-versatile.c b/drivers/clocksource/timer-versatile.c
+index e4ebb65..f5d017b 100644
+--- a/drivers/clocksource/timer-versatile.c
++++ b/drivers/clocksource/timer-versatile.c
+@@ -6,6 +6,7 @@
  
--	rc = omap_dm_timer_set_source(timer, OMAP_TIMER_SRC_32_KHZ);
--
--	return rc;
-+	return 0;
- }
+ #include <linux/clocksource.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/sched_clock.h>
  
- static inline u32 omap_dm_timer_reserved_systimer(int id)
+@@ -22,6 +23,8 @@ static int __init versatile_sched_clock_init(struct device_node *node)
+ {
+ 	void __iomem *base = of_iomap(node, 0);
+ 
++	of_node_clear_flag(node, OF_POPULATED);
++
+ 	if (!base)
+ 		return -ENXIO;
+ 
