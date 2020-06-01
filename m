@@ -2,74 +2,204 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C470AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B26C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92DF72076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3AB206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O2UdUjD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgFADTW (ORCPT
+        id S1727776AbgFADWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 23:19:22 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54718 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726860AbgFADTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 23:19:22 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 318AD62EA3F5CD2E6BE9;
-        Mon,  1 Jun 2020 11:19:20 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 1 Jun 2020
- 11:19:12 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <akpm@linux-foundation.org>, <hannes@cmpxchg.org>,
-        <mhocko@suse.com>, <minchan@kernel.org>, <ziqian.lzq@antfin.com>,
-        <yang.shi@linux.alibaba.com>, <gustavo@embeddedor.com>,
-        <ying.huang@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <willy@infradead.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH RESEND] mm, swap: delete meaningless __add_to_swap_cache() declaration
-Date:   Mon, 1 Jun 2020 11:22:45 +0800
-Message-ID: <1590981765-22911-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+        Sun, 31 May 2020 23:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgFADWI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 23:22:08 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B355C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:22:08 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b135so11228763yba.11
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=cAL9AzTlR3/rckuz0QiBMeDp6G7+Z3C8GGU0gCN+rUE=;
+        b=O2UdUjD8EOczgn/SjK0fKFL0Zv4xhbEPuhxmDtj5bVx0uGLy+65C/pgAov0drvlu5M
+         fdLUJ/cY4PDDSlFxpcj4jNB3caWX6tsvWf6ngrtryjT9djpEPqg+03CSUjtgoEO0EN/T
+         NqGNPho1JQhBF4XnSu8EP9J3RQyUAq9KXt5g2A58syxbm05Ic99xDyeHy0TdH3uQIWqO
+         rCA8ga3goyC1hhi5tJkkkTLdlamubwNf+kBTaNZD0XWCYwLIjGRu4BxaY70vwQs9+Tk8
+         0WQnOERJvOdvExMPdmRHUF409YX3M5mCiIR27/VEip1u3T74GRPX7zWl1jCUCsco2iTt
+         n70Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=cAL9AzTlR3/rckuz0QiBMeDp6G7+Z3C8GGU0gCN+rUE=;
+        b=PmgO+EjNXhTsX+DW235P9aEcKUYp0DF2hBXUiXfHx6yczvP2re7Tlqdf9AvGa9SpZI
+         v517jYMoh15hgsUsrZAmKNs0fDXV0YQ8upmH6ayU2gAwpan4fRHzqj78teWyQguPT0Xo
+         yWwGdeBzYjaZL85Sonev926BpIxJ5R4H1RFmo0ZPPx75EnK0OvqDFZ7aV0WcJ9LLF5w2
+         oB+QlYtLYEcGVpEWBv+CIqrmHyVrvpwEKHdHo+GneXo33lGlDg/gFodvKx+AJgC4o08C
+         BQAywPkJEJXLTpMZNn1m799YRsagT4MXQhAXIATBuKcDwQYxRHfgJm4/lY35siga/RRf
+         Wpsw==
+X-Gm-Message-State: AOAM530mO1yKRIoLa3y0KXpH613LOUApXKcQel1vNYeyEpiBNG3FOo0g
+        AMvfK6DD9H2ybSbOh8kqyRTyIne36QXe
+X-Google-Smtp-Source: ABdhPJyiQN0OxMj6OkJD/8I4N+N1aiQSXh9A8vYaaHWG0D4IYmq0xioXXLwVDT7cexpNePzq0XmE9Oq4X5qi
+X-Received: by 2002:a25:3203:: with SMTP id y3mr20025143yby.77.1590981727300;
+ Sun, 31 May 2020 20:22:07 -0700 (PDT)
+Date:   Sun, 31 May 2020 20:22:04 -0700
+Message-Id: <20200601032204.124624-1-gthelen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH] shmem, memcg: enable memcg aware shrinker
+From:   Greg Thelen <gthelen@google.com>
+To:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Greg Thelen <gthelen@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+Since v4.19 commit b0dedc49a2da ("mm/vmscan.c: iterate only over charged
+shrinkers during memcg shrink_slab()") a memcg aware shrinker is only
+called when the per-memcg per-node shrinker_map indicates that the
+shrinker may have objects to release to the memcg and node.
 
-Since commit 8d93b41c09d1 ("mm: Convert add_to_swap_cache to XArray"),
-__add_to_swap_cache and add_to_swap_cache are combined into one function.
-There is no __add_to_swap_cache() anymore.
+shmem_unused_huge_count and shmem_unused_huge_scan support the per-tmpfs
+shrinker which advertises per memcg and numa awareness.  The shmem
+shrinker releases memory by splitting hugepages that extend beyond
+i_size.
 
-CC: Matthew Wilcox <willy@infradead.org>
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Shmem does not currently set bits in shrinker_map.  So, starting with
+b0dedc49a2da, memcg reclaim avoids calling the shmem shrinker under
+pressure.  This leads to undeserved memcg OOM kills.
+Example that reliably sees memcg OOM kill in unpatched kernel:
+  FS=/tmp/fs
+  CONTAINER=/cgroup/memory/tmpfs_shrinker
+  mkdir -p $FS
+  mount -t tmpfs -o huge=always nodev $FS
+  # Create 1000 MB container, which shouldn't suffer OOM.
+  mkdir $CONTAINER
+  echo 1000M > $CONTAINER/memory.limit_in_bytes
+  echo $BASHPID >> $CONTAINER/cgroup.procs
+  # Create 4000 files.  Ideally each file uses 4k data page + a little
+  # metadata.  Assume 8k total per-file, 32MB (4000*8k) should easily
+  # fit within container's 1000 MB.  But if data pages use 2MB
+  # hugepages (due to aggressive huge=always) then files consume 8GB,
+  # which hits memcg 1000 MB limit.
+  for i in {1..4000}; do
+    echo . > $FS/$i
+  done
+
+v5.4 commit 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg
+aware") maintains the per-node per-memcg shrinker bitmap for THP
+shrinker.  But there's no such logic in shmem.  Make shmem set the
+per-memcg per-node shrinker bits when it modifies inodes to have
+shrinkable pages.
+
+Fixes: b0dedc49a2da ("mm/vmscan.c: iterate only over charged shrinkers during memcg shrink_slab()")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Greg Thelen <gthelen@google.com>
 ---
- include/linux/swap.h | 1 -
- 1 file changed, 1 deletion(-)
+ mm/shmem.c | 61 +++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 26 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index e1bbf7a16b27..d70e6017d835 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -408,7 +408,6 @@ extern unsigned long total_swapcache_pages(void);
- extern void show_swap_cache_info(void);
- extern int add_to_swap(struct page *page);
- extern int add_to_swap_cache(struct page *, swp_entry_t, gfp_t);
--extern int __add_to_swap_cache(struct page *page, swp_entry_t entry);
- extern void __delete_from_swap_cache(struct page *, swp_entry_t entry);
- extern void delete_from_swap_cache(struct page *);
- extern void free_page_and_swap_cache(struct page *);
+diff --git a/mm/shmem.c b/mm/shmem.c
+index bd8840082c94..e11090f78cb5 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1002,6 +1002,33 @@ static int shmem_getattr(const struct path *path, struct kstat *stat,
+ 	return 0;
+ }
+ 
++/*
++ * Expose inode and optional page to shrinker as having a possibly splittable
++ * hugepage that reaches beyond i_size.
++ */
++static void shmem_shrinker_add(struct shmem_sb_info *sbinfo,
++			       struct inode *inode, struct page *page)
++{
++	struct shmem_inode_info *info = SHMEM_I(inode);
++
++	spin_lock(&sbinfo->shrinklist_lock);
++	/*
++	 * _careful to defend against unlocked access to ->shrink_list in
++	 * shmem_unused_huge_shrink()
++	 */
++	if (list_empty_careful(&info->shrinklist)) {
++		list_add_tail(&info->shrinklist, &sbinfo->shrinklist);
++		sbinfo->shrinklist_len++;
++	}
++	spin_unlock(&sbinfo->shrinklist_lock);
++
++#ifdef CONFIG_MEMCG
++	if (page && PageTransHuge(page))
++		memcg_set_shrinker_bit(page->mem_cgroup, page_to_nid(page),
++				       inode->i_sb->s_shrink.id);
++#endif
++}
++
+ static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
+ {
+ 	struct inode *inode = d_inode(dentry);
+@@ -1048,17 +1075,13 @@ static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
+ 			 * to shrink under memory pressure.
+ 			 */
+ 			if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+-				spin_lock(&sbinfo->shrinklist_lock);
+-				/*
+-				 * _careful to defend against unlocked access to
+-				 * ->shrink_list in shmem_unused_huge_shrink()
+-				 */
+-				if (list_empty_careful(&info->shrinklist)) {
+-					list_add_tail(&info->shrinklist,
+-							&sbinfo->shrinklist);
+-					sbinfo->shrinklist_len++;
+-				}
+-				spin_unlock(&sbinfo->shrinklist_lock);
++				struct page *page;
++
++				page = find_get_page(inode->i_mapping,
++					(newsize & HPAGE_PMD_MASK) >> PAGE_SHIFT);
++				shmem_shrinker_add(sbinfo, inode, page);
++				if (page)
++					put_page(page);
+ 			}
+ 		}
+ 	}
+@@ -1889,21 +1912,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+ 	if (PageTransHuge(page) &&
+ 	    DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE) <
+ 			hindex + HPAGE_PMD_NR - 1) {
+-		/*
+-		 * Part of the huge page is beyond i_size: subject
+-		 * to shrink under memory pressure.
+-		 */
+-		spin_lock(&sbinfo->shrinklist_lock);
+-		/*
+-		 * _careful to defend against unlocked access to
+-		 * ->shrink_list in shmem_unused_huge_shrink()
+-		 */
+-		if (list_empty_careful(&info->shrinklist)) {
+-			list_add_tail(&info->shrinklist,
+-				      &sbinfo->shrinklist);
+-			sbinfo->shrinklist_len++;
+-		}
+-		spin_unlock(&sbinfo->shrinklist_lock);
++		shmem_shrinker_add(sbinfo, inode, page);
+ 	}
+ 
+ 	/*
 -- 
-2.19.1
+2.27.0.rc0.183.gde8f92d652-goog
 
