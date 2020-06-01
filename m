@@ -4,85 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C88EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43C2720734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3163A20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591001020;
-	bh=YagICseskD/MQ9NyjY8gqaD0BIKAvzeNKznfKrkmz1Y=;
+	s=default; t=1591001071;
+	bh=++2cB/ePJhne1YRp0fru1zBYoji5d1nprT5N9O4udpk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PyhRupO2jyweft5/SfszwoQGAUWmotZLf4W1nYi85ZbKU7lUQQRotugTesZtJCgB0
-	 yw3zTdg2kdT/4XkEPVhb6I67YEipGXlULYdQAODEWvadBg8fyJltSlfAojSnml2O+Z
-	 YZXh/86kYVjRgH5L3PzrDq+5UGMhGdEDcKQEVZ+k=
+	b=e7yvBwVVVsGN5XrbKoFIHj/SStPeokFHbGhXDpnqo568tbykz/UmFA8BcwNzQCxog
+	 qpehlxdmW8VJO4ECW8seZBRipTd/mM+wIrdJBiXHlUd9ufe2eAvna/JY442jwbrb5X
+	 B6WagNBf6LlmWxG9+PlX4Coli4uktjV9PVguMXYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgFAInj (ORCPT
+        id S1728306AbgFAIoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38652 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 04:44:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgFAInj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:43:39 -0400
+        id S1726142AbgFAIo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 04:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EC7C206E2;
-        Mon,  1 Jun 2020 08:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0D94206E2;
+        Mon,  1 Jun 2020 08:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591001017;
-        bh=YagICseskD/MQ9NyjY8gqaD0BIKAvzeNKznfKrkmz1Y=;
+        s=default; t=1591001068;
+        bh=++2cB/ePJhne1YRp0fru1zBYoji5d1nprT5N9O4udpk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j0hLucYicv7L1jtVOhOW9BPFE0jHKDPqH9z+k7vG1k0dqNCj2mhipECCRb7oehPba
-         KJcMHxStlJv33OqWxujbODDwZt8rfr2j/5Adlb6KFJKJQBbr50PHPOvNcjRh6A5O/N
-         3Mle6HL3B98nae0//YJq3L3MVb3pyZUatOSVINQg=
-Date:   Mon, 1 Jun 2020 10:43:35 +0200
+        b=wVfow37nJUctQuczEjtuvdKVbO338MPrWmtxn6qzZZHMLNELwOQlIvzJoFUuF/1kq
+         q5DWi1Wf0naUXbCdA1uSgSP2CWJRK7dS8k1Y+Djaw8xRkHX+tVonEUHstDVdezlly+
+         CKUb/UU3oTLuSzgUFnUcgt1pHUYemwJpSNjNMHJk=
+Date:   Mon, 1 Jun 2020 10:44:26 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     syzbot <syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, balbi@kernel.org, ingrassia@epigenesys.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in snd_usbmidi_submit_urb/usb_submit_urb
-Message-ID: <20200601084335.GA1667318@kroah.com>
-References: <000000000000bbd09005a6fdc6cc@google.com>
- <000000000000f0261a05a700adf5@google.com>
+To:     Tao pilgrim <pilgrimtao@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, hch@lst.de, sth@linux.ibm.com,
+        viro@zeniv.linux.org.uk, clm@fb.com, jaegeuk@kernel.org,
+        hch@infradead.org, Mark Fasheh <mark@fasheh.com>,
+        dhowells@redhat.com, balbi@kernel.org, damien.lemoal@wdc.com,
+        bvanassche@acm.org, ming.lei@redhat.com,
+        martin.petersen@oracle.com, satyat@google.com,
+        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
+        asml.silence@gmail.com, ajay.joshi@wdc.com,
+        linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>, hoeppner@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        sagi@grimberg.me, linux-nvme@lists.infradead.org,
+        linux-usb@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        dsterba@suse.com, linux-btrfs@vger.kernel.org, chao@kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
+Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
+Message-ID: <20200601084426.GB1667318@kroah.com>
+References: <20200529141100.37519-1-pilgrimtao@gmail.com>
+ <c8412d98-0328-0976-e5f9-5beddc148a35@kernel.dk>
+ <CAAWJmAZOQQQeNiTr48OSRRdO2pG+q4c=6gjT55CkWC5FN=HXmA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000f0261a05a700adf5@google.com>
+In-Reply-To: <CAAWJmAZOQQQeNiTr48OSRRdO2pG+q4c=6gjT55CkWC5FN=HXmA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 12:24:03AM -0700, syzbot wrote:
-> syzbot has bisected this bug to:
+On Mon, Jun 01, 2020 at 03:22:01PM +0800, Tao pilgrim wrote:
+> On Fri, May 29, 2020 at 10:13 PM Jens Axboe <axboe@kernel.dk> wrote:
+> >
+> > On 5/29/20 8:11 AM, Kaitao Cheng wrote:
+> > > There is a function named ilog2() exist which can replace blksize.
+> > > The generated code will be shorter and more efficient on some
+> > > architecture, such as arm64. And ilog2() can be optimized according
+> > > to different architecture.
+> >
+> > When you posted this last time, I said:
+> >
+> > "I like the simplification, but do you have any results to back up
+> >  that claim? Is the generated code shorter? Runs faster?"
+> >
 > 
-> commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
-> Author: Andrey Konovalov <andreyknvl@google.com>
-> Date:   Mon Feb 24 16:13:03 2020 +0000
+> Hi  Jens Axboe:
 > 
->     usb: gadget: add raw-gadget interface
+> I did a test on ARM64.
+> unsigned int ckt_blksize(int size)
+> {
+>    return blksize_bits(size);
+> }
+> unsigned int ckt_ilog2(int size)
+> {
+>     return ilog2(size);
+> }
 > 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164afcf2100000
-> start commit:   bdc48fa1 checkpatch/coding-style: deprecate 80-column warn..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=154afcf2100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=114afcf2100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=129ea1e5950835e5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5f1d24c49c1d2c427497
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d70cf2100000
+> When I compiled it into assembly code, I got the following result,
 > 
-> Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
-> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+> 0000000000000088 <ckt_blksize>:
+>       88: 2a0003e8 mov w8, w0
+>       8c: 321d03e0 orr w0, wzr, #0x8
+>       90: 11000400 add w0, w0, #0x1
+>       94: 7108051f cmp w8, #0x201
+>       98: 53017d08 lsr w8, w8, #1
+>       9c: 54ffffa8 b.hi 90 <ckt_blksize+0x8>
+>       a0: d65f03c0 ret
+>       a4: d503201f nop
 > 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 00000000000000a8 <ckt_ilog2>:
+>       a8: 320013e8 orr w8, wzr, #0x1f
+>       ac: 5ac01009 clz w9, w0
+>       b0: 4b090108 sub w8, w8, w9
+>       b4: 7100001f cmp w0, #0x0
+>       b8: 5a9f1100 csinv w0, w8, wzr, ne
+>       bc: d65f03c0 ret
+> 
+> The generated code of ilog2  is shorter , and  runs faster
 
-So the tool that was used to create the bug has bisected the problem to
-the patch that adds the tool to the kernel to test for the issue?
+But does this code path actually show up anywhere that is actually
+measurable as mattering?
 
-This feels wrong...
+If so, please show that benchmark results.
+
+thanks,
 
 greg k-h
