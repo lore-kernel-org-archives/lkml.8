@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF604C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9A6D207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55A021702
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034890;
-	bh=VZJ0swokq0Z7+2sCy6hkjXMh45bZApnh6Xb3qmgCXog=;
+	s=default; t=1591034892;
+	bh=iGPnBlo8kyfDPRdtZjoXDIN1J6IGdWFa/3J4cMiOiuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ApU8lC8zabgePpP1rUow6FNyLFw62O4FRRSwlLC7I8/xIef8AWBLeGL1g6cT4lDkA
-	 ZZmPETlF/taryQiyteWiadf0IVG885eDwcBoBcX2q4jnse9TWJ5gLFJAY27ir9NM58
-	 gb0Vfh+NUwVLMzzQ1S04jchMHwPBdJ9QF0cu+fw8=
+	b=gyRjyy76DNVf8NhJvBCR4ZUcXzjnHhBXQkfoB0gYckXc+NQKe5Ylxw/s06Xqt2GpO
+	 KEbwAgugM2qyOaMSg8lMzyaTxsF4sN1tc7RJ8hY7f6xvB6jV+pDI/Inz5EQVilAK2x
+	 UPCVHdz0i2IfI1xKkwhqKqiqeQxKvRHjLnlWWzmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgFASIJ (ORCPT
+        id S1729967AbgFASIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgFASHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:41 -0400
+        id S1730623AbgFASHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92AE620872;
-        Mon,  1 Jun 2020 18:07:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10EC6206E2;
+        Mon,  1 Jun 2020 18:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034861;
-        bh=VZJ0swokq0Z7+2sCy6hkjXMh45bZApnh6Xb3qmgCXog=;
+        s=default; t=1591034865;
+        bh=iGPnBlo8kyfDPRdtZjoXDIN1J6IGdWFa/3J4cMiOiuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wG79nHYOwra4Rc4XDp6lzpcztMKrWwXaMXXqBwQ25+pFktvuIi6Ysd4WYdfcPK6Xm
-         tjzfIinEvIzT71un6pRF6uVLOvZgxqDFhpnFLheVpNWIw4jK+RR4NfdzsqINcgsc9+
-         wblQIXDwnzDyoWaUVz/mMNjV+H04SwdUm2aFLVi8=
+        b=p8Smh4R2ykpg/yIFanTic299tQ5dtUG7WFJnxXkM1yUxQBtq4jzMUpu3iajYUv639
+         jvJk1DCjhMgQ+1VOVUnMIqU6RG1Hw/qaobTdNRSvvmtC2WiEluMhkJ6ST6Vv9Ra4rs
+         LUMYLiJL7/yTrKQgZaLpKy6wyKL2BY7GGuAdjOUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Sierra <alex.sierra@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/142] drm/amd/powerplay: perform PG ungate prior to CG ungate
-Date:   Mon,  1 Jun 2020 19:53:23 +0200
-Message-Id: <20200601174042.557293613@linuxfoundation.org>
+Subject: [PATCH 5.4 046/142] drm/amdgpu: Use GEM obj reference for KFD BOs
+Date:   Mon,  1 Jun 2020 19:53:24 +0200
+Message-Id: <20200601174042.639429498@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,62 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
-[ Upstream commit f4fcfa4282c1a1bf51475ebb0ffda623eebf1191 ]
+[ Upstream commit 39b3128d7ffd44e400e581e6f49e88cb42bef9a1 ]
 
-Since gfxoff should be disabled first before trying to access those
-GC registers.
+Releasing the AMDGPU BO ref directly leads to problems when BOs were
+exported as DMA bufs. Releasing the GEM reference makes sure that the
+AMDGPU/TTM BO is not freed too early.
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Also take a GEM reference when importing BOs from DMABufs to keep
+references to imported BOs balances properly.
+
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Tested-by: Alex Sierra <alex.sierra@amd.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Sierra <alex.sierra@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/amd_powerplay.c | 6 +++---
- drivers/gpu/drm/amd/powerplay/amdgpu_smu.c    | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-index 8bb5fbef7de0..9eb3a0dcd1f2 100644
---- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-+++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-@@ -320,12 +320,12 @@ static void pp_dpm_en_umd_pstate(struct pp_hwmgr  *hwmgr,
- 		if (*level & profile_mode_mask) {
- 			hwmgr->saved_dpm_level = hwmgr->dpm_level;
- 			hwmgr->en_umd_pstate = true;
--			amdgpu_device_ip_set_clockgating_state(hwmgr->adev,
--						AMD_IP_BLOCK_TYPE_GFX,
--						AMD_CG_STATE_UNGATE);
- 			amdgpu_device_ip_set_powergating_state(hwmgr->adev,
- 					AMD_IP_BLOCK_TYPE_GFX,
- 					AMD_PG_STATE_UNGATE);
-+			amdgpu_device_ip_set_clockgating_state(hwmgr->adev,
-+						AMD_IP_BLOCK_TYPE_GFX,
-+						AMD_CG_STATE_UNGATE);
- 		}
- 	} else {
- 		/* exit umd pstate, restore level, enable gfx cg*/
-diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-index a066e9297777..b51a124e505a 100644
---- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-+++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-@@ -1541,12 +1541,12 @@ static int smu_enable_umd_pstate(void *handle,
- 		if (*level & profile_mode_mask) {
- 			smu_dpm_ctx->saved_dpm_level = smu_dpm_ctx->dpm_level;
- 			smu_dpm_ctx->enable_umd_pstate = true;
--			amdgpu_device_ip_set_clockgating_state(smu->adev,
--							       AMD_IP_BLOCK_TYPE_GFX,
--							       AMD_CG_STATE_UNGATE);
- 			amdgpu_device_ip_set_powergating_state(smu->adev,
- 							       AMD_IP_BLOCK_TYPE_GFX,
- 							       AMD_PG_STATE_UNGATE);
-+			amdgpu_device_ip_set_clockgating_state(smu->adev,
-+							       AMD_IP_BLOCK_TYPE_GFX,
-+							       AMD_CG_STATE_UNGATE);
- 		}
- 	} else {
- 		/* exit umd pstate, restore level, enable gfx cg*/
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index 6d021ecc8d59..edb561baf8b9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -1288,7 +1288,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
+ 	}
+ 
+ 	/* Free the BO*/
+-	amdgpu_bo_unref(&mem->bo);
++	drm_gem_object_put_unlocked(&mem->bo->tbo.base);
+ 	mutex_destroy(&mem->lock);
+ 	kfree(mem);
+ 
+@@ -1630,7 +1630,8 @@ int amdgpu_amdkfd_gpuvm_import_dmabuf(struct kgd_dev *kgd,
+ 		AMDGPU_VM_PAGE_READABLE | AMDGPU_VM_PAGE_WRITEABLE |
+ 		AMDGPU_VM_PAGE_EXECUTABLE | AMDGPU_VM_MTYPE_NC;
+ 
+-	(*mem)->bo = amdgpu_bo_ref(bo);
++	drm_gem_object_get(&bo->tbo.base);
++	(*mem)->bo = bo;
+ 	(*mem)->va = va;
+ 	(*mem)->domain = (bo->preferred_domains & AMDGPU_GEM_DOMAIN_VRAM) ?
+ 		AMDGPU_GEM_DOMAIN_VRAM : AMDGPU_GEM_DOMAIN_GTT;
 -- 
 2.25.1
 
