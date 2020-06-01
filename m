@@ -7,93 +7,102 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8036C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C532077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64442077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPpnXooY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zf2g5J8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgFANzX (ORCPT
+        id S1726751AbgFAN4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54966 "EHLO
+        Mon, 1 Jun 2020 09:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgFANzX (ORCPT
+        with ESMTP id S1726017AbgFAN4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:55:23 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CCFC05BD43;
-        Mon,  1 Jun 2020 06:55:23 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id c185so9057087qke.7;
-        Mon, 01 Jun 2020 06:55:22 -0700 (PDT)
+        Mon, 1 Jun 2020 09:56:33 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D7EC05BD43;
+        Mon,  1 Jun 2020 06:56:33 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v2so3499199pfv.7;
+        Mon, 01 Jun 2020 06:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MTId0Os/yg4rhbm+EeuQBxt1UqEtEawNrCHYfpmyKkg=;
-        b=kPpnXooYOT5d3nyDjaUTERRVJecKZ9IDmbZOQM+PJDrfGewsccmuewYh7EAISztcx/
-         zOvbNr05Jr9ns5O7gh+Fmrdt6npj/dKdHjgFu2f1X3Gx7QSHCEI7XDGjsVK6Bk7g+vML
-         uoR7TQ3xsf+TU1vXcE9oO7gcRsh+b6/fqxfzjgeszbmBybw0TPP0DUZ3WYypaBtXG+7u
-         SyHJO6WW9Esr6mB/xzNfU3qXPqhCp6MR96r6RyhmPezDsAL2r+Fwz0VeKH7aZnP5Ql35
-         u3T2gi9WgcT6f/6uF9g+gWMBx9+LPFZsTqmTd4uKSrixbLQpn34N1wJ5z/GK8b9lqAa+
-         XrVg==
+         :cc;
+        bh=NnJ2aNDnHxnX78YplbfmtL0qZ9sbXLKRHhLXydSwmbs=;
+        b=Zf2g5J8PciyeJ3M9+j9tm0SwFeo02JbuT4cP06zTvhbTncf3t6qGuKO3/zDXILg+VA
+         /lVKDICquxnsOLoCRpcX1QWuRbOsdmb/53MIiJOEs0NqIXvhe/JSmYpEi7kP6oFItp1a
+         aqN+vPmWGGZl7ha1s6daaAp31F3bz7A2zVCVXBgpZaopOCp3J9eQiHyhyF3Oq/bUDZ6V
+         C30GTaRiN68Q0QZB1pHk9lf+tLEHkYxkMuzLtTXhdYyNQ3icrxRjUlSaa86al0+kisyK
+         JXxeKcE7NozwBzv8b0ytibUZPujyh+QkpzNOAFhr5S10S10imEDYbpmUikjfyiC/QW4Y
+         qkGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MTId0Os/yg4rhbm+EeuQBxt1UqEtEawNrCHYfpmyKkg=;
-        b=hAiIwOJZ62Off1VSL4XHqt3QhAA8aHpBMJf0NtgSSXou2yHtGxgQhiYu8cAyfh0lDo
-         OVSUQr7IbR4Fj74MTLTwJhGax+XAEjj0GCPb/OM6DZ+z0AnWb3QHF5dK+kP7dcohUvvg
-         Zau/z6z0E7dlSHMXYLEj3JpXEguYCs/TIXNn++kisk7eJ+BD481lcEsdD045JNHBFsIs
-         AP5j+Qizgk0wi7SRIHI1lBpA7oaG8vfognL2wGRppf0HJ10BGu+HSJe4D7rP4ciIEOLF
-         Nw8ZJl+05yEJmEyhhSDUigCKsS6nBMTfgIRPqe+7Zg0UD67t+NP2pE33fLS7Z7ENJiog
-         lP0A==
-X-Gm-Message-State: AOAM533VCPFGLSbYmLBMrUt5B3VhIWKalrGnNyRvAxyYStXfCXA5fOiL
-        wvARtz3MId0ja1Z8ChGCU+Cq3Btfh1objQk+BWfCSPhC
-X-Google-Smtp-Source: ABdhPJwkz7qkU5U9ZiQYP0Xlzql09Al1JdsPf0KW7zuxSuK/rW69hHCI63snVLovh3Grc3c2FJ9tMHXzDwzFiP2fG7o=
-X-Received: by 2002:a37:a847:: with SMTP id r68mr21084003qke.45.1591019722322;
- Mon, 01 Jun 2020 06:55:22 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=NnJ2aNDnHxnX78YplbfmtL0qZ9sbXLKRHhLXydSwmbs=;
+        b=h7bXIEOu4YWUVdwbh0rXjwnnYc/cp26cwQU/nBtACqXR5+DNVti7wLyMBXU7Ny5aFb
+         kFnpPuHW8hW0H8YaKs9+J1YH2NnoJDiymlrQQAGTLpP8lMoLURVOw/rmc4i/MmaESYBZ
+         k10TBqsC/aintHRxlI1dpdFflwE2pu05SBG0z2g86ZdqNv9ayCAd0c8Uj9ykRbrqNJPd
+         KtM4YcxChtlg0RPgxyA5Tgyac82p4HzbPowQRlpXGsiSTp/JAkqNuZOkS2DysD2hRYgF
+         +6tY6m8u4RYNFqZw6JrmSOKE0NRh/n4g4Y9Lq96wke5kfM7LxNnuOanVVMfSb1lFbu2L
+         GNFw==
+X-Gm-Message-State: AOAM531x4Degw20qm8lEstYUUOGsFBZUmqFQEK4kP7gyhOxdAc3CdbmC
+        W4q8HJYZIOMxVYPHAZ8f6E0qli5YLKqm2oiAKv4=
+X-Google-Smtp-Source: ABdhPJzp4kqPEV9xtuw6yNWIcBe/q7YWBMM7fE0PPWGX8XNJn90BPLkgNVLDiPMj9eaJDZp2o54lQV8nSax2uYQma+4=
+X-Received: by 2002:a62:1c46:: with SMTP id c67mr14165404pfc.170.1591019793048;
+ Mon, 01 Jun 2020 06:56:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <2bec05b7-78d3-fa36-134a-efbe977933e3@web.de> <45e2cd69-93ec-a0b9-b2a6-d170eee44055@huawei.com>
-In-Reply-To: <45e2cd69-93ec-a0b9-b2a6-d170eee44055@huawei.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Mon, 1 Jun 2020 15:55:10 +0200
-Message-ID: <CAFLxGvxGqes3By2Qg6nouo8Eg-c--=fmvyS6pq1xgMC+JKAmpA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ubifs: Fix potential memory leaks while iterating entries
-To:     Zhihao Cheng <chengzhihao1@huawei.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Yi Zhang <yi.zhang@huawei.com>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru> <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Jun 2020 16:56:21 +0300
+Message-ID: <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 3:46 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote=
-:
+On Mon, Jun 1, 2020 at 3:26 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 >
-> =E5=9C=A8 2020/6/1 20:00, Markus Elfring =E5=86=99=E9=81=93:
-> >> Fix some potential memory leaks in error handling branches while
-> >> iterating xattr entries.
-> > Such information is useful.
-> >
-> >
-> >> For example, function ubifs_tnc_remove_ino()
-> >> forgets to free pxent if it exists. Similar problems also exist in
-> >> ubifs_purge_xattrs(), ubifs_add_orphan() and ubifs_jnl_write_inode().
-> > Can an other wording variant be a bit nicer?
-> Thanks for reminding, I will improve this description.
+> Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> and MIPS CPS CPUidle drivers.
+...
+> +MIPS CORE DRIVERS
+> +M:     Serge Semin <fancer.lancer@gmail.com>
+> +L:     linux-mips@vger.kernel.org
+> +S:     Supported
+> +F:     drivers/bus/mips_cdmm.c
+> +F:     drivers/irqchip/irq-mips-cpu.c
+> +F:     drivers/irqchip/irq-mips-gic.c
+> +F:     drivers/clocksource/mips-gic-timer.c
+> +F:     drivers/cpuidle/cpuidle-cps.c
 
-The description is fine. No need to resend. Patch will be queued after
-the merge window.
-Thanks for fixing these issues!
+I think nowadays checkpatch.pl warns on wrong ordering in this data base.
 
---=20
-Thanks,
-//richard
+
+-- 
+With Best Regards,
+Andy Shevchenko
