@@ -2,173 +2,132 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B66206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LA9cO1QE"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3E52074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591034140;
+	bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jWL7peKti2EmDfNtgb03g2gxvCQW0uJdRAmAKQT8j/99D5PEvKMW/NzkzBVmyTwmh
+	 guObqSqEKF8Pco1uB7mXs2uoKDHcJAaxi0ZdtGbYvLTsgMbFHYBbWs7m171stsJbAG
+	 Qv+f/p6ofySJvH8Bd1yuzwaqfW3YUKcUFbyaoCDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgFARzT (ORCPT
+        id S1728144AbgFARzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:55:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726176AbgFARzT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:55:19 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0670BC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:55:19 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id a45so176140pje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=TmGom53SZQSrKvwXINTQU0o5hFoM+HRNDvC2pYiq5Wc=;
-        b=LA9cO1QE8Wq2gx3uj8BPAZL6Kf+mdnR06sTaLe8Jrx7DVvxZinQmcNHUi9+R94OpA2
-         468ryRQ1sc0FuNSuk+a2YoxEoJVBfxBawiclmT1oQiCrR3dwavYyQza0PRH/OOJJlWIT
-         B8I1Ryxw/ahgye6QwKVRd8ujjuS6mFQvyFuKkdAtJC6KNzb5SYADMPPgR5G1mgg8l3Rv
-         qPT46qO27y21yCHjtA7KTGrDeVksyV+pb6KoLhU4kqJ4skH0FEcbTLL2KC+3cPzhiAyX
-         ogkeypoynayRDK+pukt+8xyJVMk9Bw7fQ6a2VORUPr7yXKe6j2CWDFEgxNU5tF/6NUFj
-         vMmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=TmGom53SZQSrKvwXINTQU0o5hFoM+HRNDvC2pYiq5Wc=;
-        b=PdfLrn/4jjuzoXrtteOd7BZeb1LRsGjcnW3xV9C+ye5p8jnJe+UiYoumBnjwbfqn4o
-         iKdjbibGutmFNTEnExyox427F1uOuB9MoiLuOU+J83Hx3VlngiL1McwE1joViNhjNAeC
-         bfkkYHTEsxzfemi/vqN2FK65fYtXTY6x6apvWA4UzOez18w3iY54j6FnWyIlLLARr+dL
-         L6RzBZ7FCUQhAff2gu1YyUFqjUYplF4kFksxAxFT2vTp0AlgtildRZ2zCNCQfGpUImt5
-         UrNNYDUZrCFwiy23kvRJLGX+NizfBiCoXXsYTNz+GGq7xJNdu5SOnuAa8ov7ecUi0bs/
-         ukZQ==
-X-Gm-Message-State: AOAM530sSoMqn2Uz9XKG+Bgb8HQsCqNsfkvoIqkp2q6NkjqdBt3kPGol
-        hK+YXam3ALULEga4Ia4Hf7sey8WEKSwO5w==
-X-Google-Smtp-Source: ABdhPJypz3d4j4B4HEuE5flI851EOzUZUHyWL2j4FWfMxrXaBlT2jUWTtFEETPhatuFKOIwrZw60gA==
-X-Received: by 2002:a17:902:d70a:: with SMTP id w10mr21552690ply.256.1591034117939;
-        Mon, 01 Jun 2020 10:55:17 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id h11sm103888pjk.20.2020.06.01.10.55.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 10:55:17 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring updates for 5.8-rc1
-Message-ID: <dacd50ff-f674-956b-18cd-9d30e2221b09@kernel.dk>
-Date:   Mon, 1 Jun 2020 11:55:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 13:55:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbgFARzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:55:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62A3A206E2;
+        Mon,  1 Jun 2020 17:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034137;
+        bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iV/jUDqrniDbH5zYY5SoFz0NM8gsb4I+b4b5/QcpmYR1OqtnmwRID4hr3D4dQ9gD+
+         qk0vBo3UleLOvL3oi3XKTOPzTQeZHNl+fTLPvRuoWOr7L+5uBkTH6E4yd8l5b8+BPr
+         YGi/eHXY5oIE3PDfQYK6zdwZZostQDAg3k38kjsg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 01/48] ax25: fix setsockopt(SO_BINDTODEVICE)
+Date:   Mon,  1 Jun 2020 19:53:11 +0200
+Message-Id: <20200601173952.614489581@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
+References: <20200601173952.175939894@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Eric Dumazet <edumazet@google.com>
 
-A relatively quiet round, mostly just fixes and code improvements. In
-particular:
+[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
 
-- Make statx just use the generic statx handler, instead of open coding
-  it. We don't need that anymore, as we always call it async safe
-  (Bijan)
+syzbot was able to trigger this trace [1], probably by using
+a zero optlen.
 
-- Enable closing of the ring itself. Also fixes O_PATH closure (me)
+While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
 
-- Properly name completion members (me)
+[1]
+BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
+CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ strnlen+0xf9/0x170 lib/string.c:569
+ dev_name_hash net/core/dev.c:207 [inline]
+ netdev_name_node_lookup net/core/dev.c:277 [inline]
+ __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
+ ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
+ __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
+ __do_compat_sys_setsockopt net/compat.c:413 [inline]
+ __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
+ __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f57dd9
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
+RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-- Batch reap of dead file registrations (me)
+Local variable ----devname@ax25_setsockopt created at:
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
 
-- Allow IORING_OP_POLL with double waitqueues (me)
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ax25/af_ax25.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-- Add tee(2) support (Pavel)
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -639,8 +639,10 @@ static int ax25_setsockopt(struct socket
+ 		break;
+ 
+ 	case SO_BINDTODEVICE:
+-		if (optlen > IFNAMSIZ)
+-			optlen = IFNAMSIZ;
++		if (optlen > IFNAMSIZ - 1)
++			optlen = IFNAMSIZ - 1;
++
++		memset(devname, 0, sizeof(devname));
+ 
+ 		if (copy_from_user(devname, optval, optlen)) {
+ 			res = -EFAULT;
 
-- Remove double off read (Pavel)
-
-- Fix overflow cancellations (Pavel)
-
-- Improve CQ timeouts (Pavel)
-
-- Async defer drain fixes (Pavel)
-
-- Add support for enabling/disabling notifications on a registered
-  eventfd (Stefano)
-
-- Remove dead state parameter (Xiaoguang)
-
-- Disable SQPOLL submit on dying ctx (Xiaoguang)
-
-- Various code cleanups
-
-Please pull!
-
-
-  git://git.kernel.dk/linux-block.git for-5.8/io_uring-2020-06-01
-
-
-----------------------------------------------------------------
-Bijan Mottahedeh (4):
-      io_uring: add io_statx structure
-      statx: allow system call to be invoked from io_uring
-      io_uring: call statx directly
-      statx: hide interfaces no longer used by io_uring
-
-Jens Axboe (7):
-      io_uring: remove 'fd is io_uring' from close path
-      io_uring: name sq thread and ref completions
-      io_uring: batch reap of dead file registrations
-      io_uring: allow POLL_ADD with double poll_wait() users
-      io_uring: file registration list and lock optimization
-      io_uring: cleanup io_poll_remove_one() logic
-      io_uring: async task poll trigger cleanup
-
-Pavel Begunkov (13):
-      io_uring: remove req->needs_fixed_files
-      io_uring: rename io_file_put()
-      io_uring: don't repeat valid flag list
-      splice: export do_tee()
-      io_uring: add tee(2) support
-      io_uring: fix flush req->refs underflow
-      io_uring: simplify io_timeout locking
-      io_uring: don't re-read sqe->off in timeout_prep()
-      io_uring: separate DRAIN flushing into a cold path
-      io_uring: get rid of manual punting in io_close
-      io_uring: move timeouts flushing to a helper
-      io_uring: off timeouts based only on completions
-      io_uring: fix overflowed reqs cancellation
-
-Stefano Garzarella (2):
-      io_uring: add 'cq_flags' field for the CQ ring
-      io_uring: add IORING_CQ_EVENTFD_DISABLED to the CQ ring flags
-
-Xiaoguang Wang (2):
-      io_uring: remove obsolete 'state' parameter
-      io_uring: don't submit sqes when ctx->refs is dying
-
-Xiaoming Ni (1):
-      io_uring: remove duplicate semicolon at the end of line
-
- fs/internal.h                 |   4 +-
- fs/io_uring.c                 | 752 +++++++++++++++++++++++-------------------
- fs/splice.c                   |   3 +-
- fs/stat.c                     |  37 ++-
- include/linux/splice.h        |   3 +
- include/uapi/linux/io_uring.h |  12 +-
- 6 files changed, 447 insertions(+), 364 deletions(-)
-
--- 
-Jens Axboe
 
