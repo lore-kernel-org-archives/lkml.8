@@ -2,105 +2,116 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D01C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8138720885
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE402077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591014545;
-	bh=xSWsBHkDqWQ80T1sU5xrLXTVIUlqUCziDAPCIYxDRvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qdNwVCc51SvfOFvVQzWz6vAoedMWjFeRqaQnmejgm7UiaLb1L55W+mIRvfd+e82ot
-	 MXpETequ8n/AQF7Ur+2Ce/4oIKB/M4fezDlRV4qQp9bJ0CCkCAjPE6CzCrxciDx5kh
-	 HEtZIarmECC57lPt9fRPRz4OMHTAHqwdiZAVW0hc=
+	s=default; t=1591014690;
+	bh=DEEaUOEt24o9uKz0Ey7PzyuEOfgwa1FgnGsP3iqM8hA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y2/TutyuitiaM0yKqZYdFTcqq7N1D5nhMZubkZfc5r6ne8E5pBMwwcBRNqv+Hcj4D
+	 PoRaPfw4Z4wEPKCeWNB2uPWUNYq9QUaJzm2BWzkY0d59c23tD530GU2ENoXOwcdGiE
+	 yBuX68JDdQ5woTjEILC+nwWTgxkynTLAGRvM4blw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgFAM3E (ORCPT
+        id S1726149AbgFAMba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38226 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 08:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbgFAM3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:29:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725838AbgFAMb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 08:31:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 871202077D;
-        Mon,  1 Jun 2020 12:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D68CF20679;
+        Mon,  1 Jun 2020 12:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591014540;
-        bh=xSWsBHkDqWQ80T1sU5xrLXTVIUlqUCziDAPCIYxDRvU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q60mwGHZYfj6pZuVQzKQS6CzxKfVhPejFWkWENd55kMRGtzASbjhC2y9kg+WjWHRB
-         kr47+9ROFNCruoQ7cP23bQKsKdij5AyojfJxscgiMiJA7RDz722wb7XgTmiSghRWn6
-         46jGVOIMaPYI5HPVBwbwzL6u/CaYZA/ve7L3Kt5I=
-Date:   Mon, 1 Jun 2020 14:28:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     syzbot <syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com>,
-        Felipe Balbi <balbi@kernel.org>, ingrassia@epigenesys.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in snd_usbmidi_submit_urb/usb_submit_urb
-Message-ID: <20200601122858.GA390561@kroah.com>
-References: <000000000000bbd09005a6fdc6cc@google.com>
- <000000000000f0261a05a700adf5@google.com>
- <20200601084335.GA1667318@kroah.com>
- <CAAeHK+zKLBX62D1MVAkBe7Q__32-K-4FewsfvF3Z_P8SK=oAHQ@mail.gmail.com>
+        s=default; t=1591014689;
+        bh=DEEaUOEt24o9uKz0Ey7PzyuEOfgwa1FgnGsP3iqM8hA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0CjmdrqbPcjg4n3n7xmuSB+DmHeJBjq9UcdxGvTjQEnWpKeZ3MrsgddfBUnWzKJEX
+         zzmb3e4pB8bSjWojsKLWXrWFmLzMj/Mfuv1pUg7fPKOMOabVdq7MnoClr2ZC5eCd8v
+         9y9NdiEc4U84iYsuML66RjoGviT9y1faIlL87DX8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jfjbD-00Gtms-CX; Mon, 01 Jun 2020 13:31:27 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+zKLBX62D1MVAkBe7Q__32-K-4FewsfvF3Z_P8SK=oAHQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 01 Jun 2020 13:31:27 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 0/6] mips: Add DT bindings for MIPS CDMM and
+ MIPS GIC
+In-Reply-To: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <d59ef33155e2ae965e79522ab220c177@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Sergey.Semin@baikalelectronics.ru, tsbogend@alpha.franken.de, tglx@linutronix.de, gregkh@linuxfoundation.org, fancer.lancer@gmail.com, Alexey.Malahov@baikalelectronics.ru, paul.burton@imgtec.com, robh+dt@kernel.org, arnd@arndb.de, jason@lakedaemon.net, rjw@rjwysocki.net, daniel.lezcano@linaro.org, jhogan@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 02:22:40PM +0200, Andrey Konovalov wrote:
-> On Mon, Jun 1, 2020 at 10:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jun 01, 2020 at 12:24:03AM -0700, syzbot wrote:
-> > > syzbot has bisected this bug to:
-> > >
-> > > commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
-> > > Author: Andrey Konovalov <andreyknvl@google.com>
-> > > Date:   Mon Feb 24 16:13:03 2020 +0000
-> > >
-> > >     usb: gadget: add raw-gadget interface
-> > >
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164afcf2100000
-> > > start commit:   bdc48fa1 checkpatch/coding-style: deprecate 80-column warn..
-> > > git tree:       upstream
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=154afcf2100000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=114afcf2100000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=129ea1e5950835e5
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=5f1d24c49c1d2c427497
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d70cf2100000
-> > >
-> > > Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
-> > > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
-> > >
-> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> >
-> > So the tool that was used to create the bug has bisected the problem to
-> > the patch that adds the tool to the kernel to test for the issue?
-> >
-> > This feels wrong...
-> 
-> That's the expected result of bisection with the way it's intended to
-> work. We'll be getting more bisection results pointing to that commit
-> for old USB bugs. For new ones (that are introduced after raw-gadget),
-> the bisection should point to proper commits.
+On 2020-06-01 13:21, Serge Semin wrote:
 
-Ok, can you then mute any bisection emails that are about to get sent
-out that resolve to this commit to save us the effort of just ignoring
-the thing on our end?
+[...]
 
-thanks,
+> Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
+> been seen maintaining MIPS for a long time, Thomas is only responsible
+> for the next part of it:
+> 	F:      Documentation/devicetree/bindings/mips/
+> 	F:      Documentation/mips/
+> 	F:      arch/mips/
+> 	F:      drivers/platform/mips/
+> the MIPS-specific drivers like:
+> 	F:	drivers/bus/mips_cdmm.c
+> 	F:	drivers/irqchip/irq-mips-cpu.c
+> 	F:	drivers/irqchip/irq-mips-gic.c
+> 	F:	drivers/clocksource/mips-gic-timer.c
+> 	F:	drivers/cpuidle/cpuidle-cps.c
+> seem to be left for the subsystems maintainers to support. So if you 
+> don't
+> mind or unless there is a better alternative, I can help with looking
+> after them to ease the maintainers review burden and since I'll be 
+> working
+> on our MIPS-based SoC drivers integrating into the mainline kernel repo
+> anyway. If you don't like this idea, please just decline the last
+> patch in the series.
 
-greg k-h
+Given how deeply integrated the MIPS GIC is in the architecture, I'd
+really like Thomas to co-maintain it, or at the very least give his
+blessing on you being the dedicated point of contact for MIPS GIC
+stuff.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
