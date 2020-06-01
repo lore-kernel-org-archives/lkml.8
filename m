@@ -2,180 +2,118 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86BCA20734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071F820678
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="coNPcBvr"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UgTmTyPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgFARPP (ORCPT
+        id S1728087AbgFARP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:15:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:14017 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgFARPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:15:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591031714; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=IRcNB0OpS0geFxfNcF8I6B/taWV6RDssBF+tdvwyM3o=;
- b=coNPcBvrvmb8LUX1zoiNoxZOUzdGHsL6GiORioo6HmRFbS32xAQdvZfdHZyzyxT2Tfi2PML/
- kPfji3qeJZ0ZuOgs12XOS2uDvWIxCiybknvjSSaWSKqdGtXFSXKDlQnEoP5RJlITyhz7mCsh
- MIwKDUlk9h2/Qt/xqjj0iPwKSNI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5ed5379ee276c808de2169b2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 17:15:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 40946C43395; Mon,  1 Jun 2020 17:15:10 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 55B32C433C9;
-        Mon,  1 Jun 2020 17:15:09 +0000 (UTC)
+        Mon, 1 Jun 2020 13:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgFARPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:15:25 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8337C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:15:24 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id fs4so99756pjb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WsYNSM2tJ88YCalPymb6HrMzWTrL06Vmn6FYR6YE7/Y=;
+        b=UgTmTyPNErDWoyfDpvqEdQs/U0cshfD8CeAre29uvZ/dsDLiaKCLIx+B0hmevfnub2
+         0tDRZhun5AbIaUe8SBeRwV24cBYLkx5zGsLhc5btRwWKuuENnv81W1XD4EzHeU2TFL+Y
+         YPXWGNMQB3ZfSNqm0aK6qvPU8H0P/AAcN3ohrkN+vUQc1U37ZPjHjGoxZ9FQoEXx9fFM
+         1wtG0Pg1H2Xqifo4XuQFBFtIU8HsukcHZMHwyTUDR+6WV7LFfjpVnCxNeUYBZQCA+ERb
+         +nkfqnqnfPlKH2LndTUNPgXx9+YkQF0yCX5ZGsn9nw2tkdHaJ11TlFd+n8Tq7PTfxJdJ
+         qQXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WsYNSM2tJ88YCalPymb6HrMzWTrL06Vmn6FYR6YE7/Y=;
+        b=WqCWTBbOFilljMLzxczXH4LvtvE68A4vthZ5f4i/gkPQFGSTiGgzr3VcApELXUvzkv
+         TPdbiobGnIhDV36nwmJWMlfdsXlF6zogokR8fQ4Rg2+6/d5Sx7GEP9WeSQh9XWdVByov
+         snzjECHdcPCW32v1jPE9i8mxNT1BO6wktKZdtmQaZ8UzWp/TidnMxTNKlL/JPYIwxwAl
+         D7IQwD39lB86nammF8ZPVwcEvq9OFlgHZjx6esG3NLuoN0kNaAPYof068qtJsWckWl/X
+         RCIb7R7igLiXNqOD+aU94xvpwxC2pL/ZdeJqdAJjsx5nM6vdFh2j5qemaFomGf4F2Ds6
+         AeqA==
+X-Gm-Message-State: AOAM530XFxcwnS/IxyMA4jGOn+AbqCfVwSpBfWk4hGfBybK/7N50pLGn
+        pyIgbkHSHLFZbzzh3EEGIDMcUxhKcbrGKA==
+X-Google-Smtp-Source: ABdhPJwfvpv+bJ+nV4YfmPVaXfQZIyLbxNwCqF8WqLkarYS7Wisy1DDnTyqP7EEmu/OsOjnF86QdFA==
+X-Received: by 2002:a17:90a:4d4e:: with SMTP id l14mr470026pjh.10.1591031724348;
+        Mon, 01 Jun 2020 10:15:24 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id mg14sm33297pjb.48.2020.06.01.10.15.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 10:15:23 -0700 (PDT)
+Subject: Re: [PATCH 04/12] mm: add support for async page locking
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+References: <20200526195123.29053-1-axboe@kernel.dk>
+ <20200526195123.29053-5-axboe@kernel.dk>
+ <20200601142649.GJ19604@bombadil.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2f4dbb05-4874-6386-f9ee-06fdbaf482bf@kernel.dk>
+Date:   Mon, 1 Jun 2020 11:15:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200601142649.GJ19604@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 01 Jun 2020 22:45:09 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-In-Reply-To: <CAJ9a7VgxDru8P_RXE2ewGkSA2mfCNvOp+hMuNLB4AszXBOUp1g@mail.gmail.com>
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <CAJ9a7VgxDru8P_RXE2ewGkSA2mfCNvOp+hMuNLB4AszXBOUp1g@mail.gmail.com>
-Message-ID: <f3c3a52effa9828d47712a9d4f852dfc@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-Thanks for the review.
-
-On 2020-06-01 19:05, Mike Leach wrote:
-> Hi,
-> 
-> On Mon, 1 Jun 2020 at 09:02, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Implement a shutdown callback to ensure ETR/ETF hardware is
->> properly shutdown in reboot/shutdown path. This is required
->> for ETR/ETF which has SMMU address translation enabled like
->> on SC7180 SoC and few others. If the hardware is still accessing
->> memory after SMMU translation is disabled as part of SMMU
->> shutdown callback in system reboot or shutdown path, then
->> IOVAs(I/O virtual address) which it was using will go on the bus
->> as the physical addresses which might result in unknown crashes
->> (NoC/interconnect errors). So we make sure from this shutdown
->> callback that the ETR/ETF is shutdown before SMMU translation is
->> disabled and device_link in SMMU driver will take care of ordering
->> of shutdown callbacks such that SMMU shutdown callback is not
->> called before any of its consumer shutdown callbacks.
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  .../hwtracing/coresight/coresight-tmc-etf.c   |  4 +--
->>  .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
->>  drivers/hwtracing/coresight/coresight-tmc.c   | 29 
->> +++++++++++++++++++
->>  drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
->>  4 files changed, 35 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c 
->> b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> index 36cce2bfb744..cba3e7592820 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> @@ -85,7 +85,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata 
->> *drvdata)
->>         CS_LOCK(drvdata->base);
->>  }
->> 
->> -static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->>         __tmc_etb_disable_hw(drvdata);
->>         coresight_disclaim_device(drvdata->base);
->> @@ -118,7 +118,7 @@ static int tmc_etf_enable_hw(struct tmc_drvdata 
->> *drvdata)
->>         return 0;
->>  }
->> 
->> -static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
->> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->>         CS_UNLOCK(drvdata->base);
->> 
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c 
->> b/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> index 625882bc8b08..b29c2db94d96 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> @@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct 
->> tmc_drvdata *drvdata)
->> 
->>  }
->> 
->> -static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->>         __tmc_etr_disable_hw(drvdata);
->>         /* Disable CATU device if this ETR is connected to one */
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c 
->> b/drivers/hwtracing/coresight/coresight-tmc.c
->> index 5a271ebc4585..7e687a356fe0 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
->> @@ -540,6 +540,34 @@ static int tmc_probe(struct amba_device *adev, 
->> const struct amba_id *id)
->>         return ret;
->>  }
->> 
->> +static void tmc_shutdown(struct amba_device *adev)
+On 6/1/20 8:26 AM, Matthew Wilcox wrote:
+> On Tue, May 26, 2020 at 01:51:15PM -0600, Jens Axboe wrote:
+>> +static int __wait_on_page_locked_async(struct page *page,
+>> +				       struct wait_page_queue *wait, bool set)
 >> +{
->> +       struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
+>> +	struct wait_queue_head *q = page_waitqueue(page);
+>> +	int ret = 0;
 >> +
+>> +	wait->page = page;
+>> +	wait->bit_nr = PG_locked;
+>> +
+>> +	spin_lock_irq(&q->lock);
+>> +	if (set)
+>> +		ret = !trylock_page(page);
+>> +	else
+>> +		ret = PageLocked(page);
+>> +	if (ret) {
+>> +		__add_wait_queue_entry_tail(q, &wait->wait);
+>> +		SetPageWaiters(page);
+>> +		if (set)
+>> +			ret = !trylock_page(page);
+>> +		else
+>> +			ret = PageLocked(page);
 > 
-> Take drvdata->spinlock here? The tmc_xxx_disable_hw functions are
-> normally called with the spinlock claimed.
-> 
+> Between the callers and this function, we actually look at PG_lock three
+> times; once in the caller, then after taking the spinlock, then after
+> adding ourselves to the waitqueue.  I understand the first and third, but
+> is it really worth doing the second test?  It feels unlikely to succeed
+> and only saves us setting PageWaiters.
 
-Sure will take spinlock here.
-
->> +       if (!drvdata->enable)
-> 
-> As per previous patch drvdata->mode can be used here.
-> 
-
-Yes, will use mode here and drop enable flag in the next version.
-
-Thanks,
-Sai
+That's probably true, and we can skip the 2nd one. I'll make the change.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Jens Axboe
+
