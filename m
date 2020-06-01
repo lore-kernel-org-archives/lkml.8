@@ -2,285 +2,187 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F05C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E7B206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF1120734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wd1epwVr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XfL655X5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726011AbgFAIu4 (ORCPT
+        id S1725965AbgFAIyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34910 "EHLO
+        Mon, 1 Jun 2020 04:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgFAIuz (ORCPT
+        with ESMTP id S1725290AbgFAIyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:50:55 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 970DCC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 01:50:55 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r9so9907273wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 01:50:55 -0700 (PDT)
+        Mon, 1 Jun 2020 04:54:05 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0B0C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 01:54:05 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id m81so6116706ioa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 01:54:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zhq0r1aqKRJx8DKO6VJME8TRiyFzcm/sFaXzVbsq4o8=;
-        b=wd1epwVrD0XUF3VXMvb1tS/X+E/1RiYakwh4uStJ149K6ffBVV3jp3+KqsWIuSwXa3
-         o8K8nMTtxMw1AzNU8J0tBqGH67uGa8jDTMFVKWYRzBC1wleW5exMLz/YsTL7wsLbZa4R
-         w3T4i7jsrF7AguQG2WqKIG4NKNQRc2uPJj4HLLOoNlxrQG+J6u465E21WbS3FOLcyGze
-         mTrtOyic1J772KkBab94cgkfIJ0PslOlmMwd9zAXtb9RRrb2/uSdGjN8Bu0PgMkiBg9y
-         7oX90KnKklgJ64UbuDx/SHUbBla1D/5+6KokTNJaJrb0APUoVS/dSkzwq0A/hJwXqVHf
-         IABA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bsPfdV/5AKKcKgIigNU4a7u3PzYati4l2g7jTpvHnCI=;
+        b=XfL655X5AnrPG9hnbvC0CTQpDBpavZGZwIi8uZ0BV9u3yim+4FmJH/73FiPphmJ70n
+         FL/dFVVTfc/oWiENP9PYS9+vTTCARn63J0BVioHXRWsrinxfxyH6JjwofoQ0avblU9M7
+         AIropMdNQ5RpZ0D0djB7gj/mOenFuxh7Wj9stRFWoctdj8Cxc8m+7fFvAU/fVZpn1HyG
+         pDcj9Hhu7J05aEemy4Xe+ss67Y8zTMl16XlUeAAJSB6TPIhMyCKMrmvSuaua7AjOL/oG
+         yLe0pRsOJ2GUIFkHTdcHz+jcn/tiFUMZhRJu/w7LAIWR8EOmmzwlXNlXoaFg8lX1XMt4
+         iGKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zhq0r1aqKRJx8DKO6VJME8TRiyFzcm/sFaXzVbsq4o8=;
-        b=JePDjv4uMrfmhfOhHRVMFwiJ/n2/RXiD+kWf0O9jofqFiJlCPcgLlrJSP0m3b0j+59
-         h9Gy6JPmSxmjCECl3gm+fDg7wdGwfcSkri2QOFQx3W7RoCndSvUKetrB0U2FGKjT2+Bm
-         ETOiaa68GyblMLusOt4PNU8aIBWR/q8HpcczarEYdNTKZlKxKQYJGD92Fmvm+KaIRnOr
-         yQbHSa/z70G+uRb0c+04USV0MPuomUV5SNu+tukceQ1gLDRQJCE9LmfjuZyowcwQ2r4h
-         QV3hRelC9t3efPrm89gf2g0tmJkULteBn2rrrpUFQs/j2DcKp7hcjYaAcxo6R3c+Hy9g
-         nGsA==
-X-Gm-Message-State: AOAM532k/IyaA4JdVc6M8dX2zUtANM6MV04ftvD7Klm37ayOforwxJEN
-        Am9fgKFYJ+VV18Weo7uC8re9bsvdUI4=
-X-Google-Smtp-Source: ABdhPJz45bZSRMJ3FZVlPLxUzk3KqPmNmZmHqXUb9pMGKSIUkoS06Uu4pZRfhEEvFW5A/8gGiVu3gA==
-X-Received: by 2002:a7b:c046:: with SMTP id u6mr19695187wmc.57.1591001454321;
-        Mon, 01 Jun 2020 01:50:54 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id s5sm10681134wme.37.2020.06.01.01.50.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jun 2020 01:50:53 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] nvmem: add ONIE NVMEM cells support
-To:     Vadym Kochan <vadym.kochan@plvision.eu>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Taras Chornyi <taras.chornyi@plvision.eu>
-References: <20200529230451.21337-1-vadym.kochan@plvision.eu>
- <20200529230451.21337-3-vadym.kochan@plvision.eu>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <8a8653c5-b112-4042-cbdf-8498e38d14ee@linaro.org>
-Date:   Mon, 1 Jun 2020 09:50:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bsPfdV/5AKKcKgIigNU4a7u3PzYati4l2g7jTpvHnCI=;
+        b=aWtzx2ZL9yeGi9Xu/PKYmLkBq2No2F7zzmLohwilgbg2WH0TJT4q4gHlbm4G182wc7
+         18HshNIenv7DjPu4Uzo1AWB5XewogGNHK60nGCgcnexhOPlEF9Y7NTGFIymFCs3GVX+B
+         ldPsPZocIhJ6z2N9yzBV6c1wftUTt9clDjwL14KdeYmjZvUtLuP8FlKD0mxJ0qAkgTSr
+         QLP2gvs0O1BqrJmjvnEp0GlvA3rTY5g0omUsdeSgNtvtCDXJ3GDTBUoJqJTIOqtVK9vK
+         Q0TAK+E/JyE7VBQLUqtqe4kZiwhVN8WwbMuA70CZkC5X6wlXJMmAYV+V2U7tfzqJqsCG
+         Vy2A==
+X-Gm-Message-State: AOAM532Jtb0boW+EW3lSNQZHulHA98QqvX92eyVFonigWF+d9PxJc12D
+        PZ4y720cGzzvGdaF7Vms8z7ykmI2nBWnAnE4grrb3w==
+X-Google-Smtp-Source: ABdhPJxzRTeq80o3OxUsTyw3dvEMuNVG5KroPwGREfjss++ZyQDuRFaexcEvcoGiw3KG4880Fjxci4/DJedD92IaeXw=
+X-Received: by 2002:a5d:9e51:: with SMTP id i17mr17061784ioi.8.1591001643401;
+ Mon, 01 Jun 2020 01:54:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200529230451.21337-3-vadym.kochan@plvision.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1590544271-125795-1-git-send-email-steve.maclean@linux.microsoft.com>
+ <CAP-5=fXGXqkTbSwKv7eq9UkPvVqRJXDm3E-XNxD8+5fmQk3bpg@mail.gmail.com>
+ <MN2PR21MB15185419971A29EF52B8138FF7B10@MN2PR21MB1518.namprd21.prod.outlook.com>
+ <CAP-5=fVHo262Lo_Re31wM8Bt0soJ-m51J7MEnwvdTg5P8J6e6A@mail.gmail.com>
+ <CAP-5=fV7F4u66388HC-q8btOYWKxtb1gTTi4LK_Besb-zE25Rw@mail.gmail.com> <xgl9tuzvz4wc.fsf@arm.com>
+In-Reply-To: <xgl9tuzvz4wc.fsf@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 1 Jun 2020 01:53:52 -0700
+Message-ID: <CAP-5=fWU==y-DMd5sD7AxHCUNg0L4Qt_VRVvyDVNYPCOdxmU_A@mail.gmail.com>
+Subject: Re: [EXTERNAL] Re: [PATCH v4] perf inject --jit: Remove //anon mmap events
+To:     Nick Gasson <nick.gasson@arm.com>
+Cc:     Steve MacLean <Steve.MacLean@microsoft.com>,
+        Steve MacLean <steve.maclean@linux.microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 31, 2020 at 11:17 PM Nick Gasson <nick.gasson@arm.com> wrote:
+>
+> On 05/28/20 17:32 PM, Ian Rogers wrote:
+> >
+> > So on tip/perf/core with:
+> > 1c0cd2dbb993 perf jvmti: Fix jitdump for methods without debug info
+> > 3ce17c1e52f4 perf jvmti: remove redundant jitdump line table entries
+> >
+> > I've been trying variants of:
+> >
+> > Before:
+> > /tmp/perf/perf record -k 1 -e cycles:u -o /tmp/perf.data java
+> > -agentpath:/tmp/perf/libperf-jvmti.so -XX:+PreserveFramePointer
+> > -XX:InitialCodeCacheSize=20M -XX:ReservedCodeCacheSize=1G -jar
+> > dacapo-9.12-bach.jar jython
+> > /tmp/perf/perf inject -i /tmp/perf.data -o /tmp/perf-jit.data -j
+> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep class\ |wc -l
+> > 578
+> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep unknown |wc -l
+> > 6
+> >
+> > After:
+> > /tmp/perf/perf record -k 1 -e cycles:u -o /tmp/perf.data java
+> > -agentpath:/tmp/perf/libperf-jvmti.so -XX:+PreserveFramePointer
+> > -XX:InitialCodeCacheSize=20M -XX:ReservedCodeCacheSize=1G -jar
+> > dacapo-9.12-bach.jar jython
+> > /tmp/perf/perf inject -i /tmp/perf.data -o /tmp/perf-jit.data -j
+> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep class\ |wc -l
+> > 589
+> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep unknown |wc -l
+> > 60
+> >
+> > So maybe the jit cache isn't behaving the way that the patch cures,
+> > the uptick in unknowns appears consistent in my testing though. I
+> > expect user error, is there an obvious explanation I'm missing?
+> >
+>
+> Hi Ian,
+>
+> I tried this as well with latest perf/core. The difference is that
+> unresolved addresses currently look like:
+>
+>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff451499a4
+>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff4514f3e8
+>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff45149394
+>
+> But after Steve's patch this becomes:
+>
+>      0.00%  java             [unknown]              [.] 0x0000ffff58557d14
+>      0.00%  java             [unknown]              [.] 0x0000ffff785c03b4
+>      0.00%  java             [unknown]              [.] 0x0000ffff58386520
+>
+> I couldn't see any events that were symbolised before but are no longer
+> symbolised after this patch.
 
+I see this, thanks for digging into the explanation! Were you able to
+get a test case where the unknowns went down? For example, by forcing
+the code cache size to be small? This is the result I'd expect to see.
 
-On 30/05/2020 00:04, Vadym Kochan wrote:
-> ONIE is a small operating system, pre-installed on bare metal network
-> switches, that provides an environment for automated provisioning.
-> 
-> This system requires that NVMEM (EEPROM) device holds various system
-> information (mac address, platform name, etc) in a special TLV layout.
-> 
-> The driver registers ONIE TLV attributes as NVMEM cells which can be
-> accessed by other platform driver. Also it allows to use
-> of_get_mac_address() to retrieve mac address for the netdev.
-> 
-> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> ---
->   drivers/nvmem/Kconfig      |   9 +
->   drivers/nvmem/Makefile     |   3 +
->   drivers/nvmem/onie-cells.c | 332 +++++++++++++++++++++++++++++++++++++
+> I think most of these unknown events are caused by the asynchronous
+> nature of the JVMTI event handling. After an nmethod is compiled the
+> JVMTI event is posted to the Service Thread (*). So there can be a delay
+> between the time the compiled code starts executing and the time the
+> plugin receives the compiled code load event.
+>
+> Here's an edited down example:
+>
+>             java 215881 750014.947873:    1289634 cycles:u:      ffff7856ad10 [unknown] ([unknown])
+>   Service Thread 215895 750014.947971: PERF_RECORD_MMAP2 215879/215895: [0xffff785694c0(0x640) @ 0x40 fd:01 121010091 1]:
+>             java 215881 750014.948665:    1295994 cycles:u:      ffff7856ad10 org.python.core.__builtin__.range(org.python
+>
+> The plugin receives the event ~100us after the first sample inside that
+> method. Ideally we would use the timestamp when the method was actually
+> compiled, but I can't see any way to extract this information.
 
-Is there a reason why Device tree bindings are missing for this driver?
+Hmm.. this is a bit weird as the compile_info at one point was a
+resource allocation and so would be cleared out when the resource mark
+was passed on the compiler's return. Not something you'd want to do
+asynchronously. Presumably this has changed to improve performance,
+but doing the jvmti on a separate thread defeats jitdump - if we see
+samples in code ahead of the code being loaded. Perhaps a profiler
+like async-profiler
+(https://github.com/jvm-profiling-tools/async-profiler) has a
+workaround for the lag.
 
+> However I also saw a few recurring [unknown] addresses that never have a
+> corresponding code load event. I'm not sure where these come from.
 
+C2 is pretty bad for having assembly stub routine helpers (aka stub
+routines) that aren't "documented". C1 is less like this, but it is
+increasingly hard to force C1 as the compiler. If you are seeing these
+things as leaf routines then its likely some stub routine clean up
+could fix the issue.
 
->   3 files changed, 344 insertions(+)
->   create mode 100644 drivers/nvmem/onie-cells.c
-> 
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index d7b7f6d688e7..dd9298487992 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -273,4 +273,13 @@ config SPRD_EFUSE
->   	  This driver can also be built as a module. If so, the module
->   	  will be called nvmem-sprd-efuse.
->   
-> +config NVMEM_ONIE_CELLS
-> +	tristate "ONIE TLV cells support"
-> +	help
-> +	  This is a driver to provide cells from ONIE TLV structure stored
-> +	  on NVME device.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem-onie-cells.
-> +
->   endif
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index a7c377218341..2199784a489f 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -55,3 +55,6 @@ obj-$(CONFIG_NVMEM_ZYNQMP)	+= nvmem_zynqmp_nvmem.o
->   nvmem_zynqmp_nvmem-y		:= zynqmp_nvmem.o
->   obj-$(CONFIG_SPRD_EFUSE)	+= nvmem_sprd_efuse.o
->   nvmem_sprd_efuse-y		:= sprd-efuse.o
-> +
-> +obj-$(CONFIG_NVMEM_ONIE_CELLS)	+= nvmem-onie-cells.o
-> +nvmem-onie-cells-y		:= onie-cells.o
-> diff --git a/drivers/nvmem/onie-cells.c b/drivers/nvmem/onie-cells.c
-> new file mode 100644
-> index 000000000000..1e8b4b8d1c0d
-> --- /dev/null
-> +++ b/drivers/nvmem/onie-cells.c
-> @@ -0,0 +1,332 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * ONIE NVMEM cells provider
-> + *
-> + * Author: Vadym Kochan <vadym.kochan@plvision.eu>
-> + */
-> +
-> +#define ONIE_NVMEM_DRVNAME	"onie-nvmem-cells"
-> +
-> +#define pr_fmt(fmt) ONIE_NVMEM_DRVNAME ": " fmt
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/nvmem-provider.h>
-> +
-> +#define ONIE_NVMEM_TLV_MAX_LEN	2048
-> +
-> +#define ONIE_NVMEM_HDR_ID	"TlvInfo"
-> +
+Thanks,
+Ian
 
-...
-
-> +
-> +static int onie_nvmem_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct nvmem_cell_info *cells;
-> +	struct onie_nvmem_attr *attr;
-> +	struct nvmem_device *nvmem;
-> +	struct onie_nvmem *onie;
-> +	unsigned int ncells = 0;
-> +	int err;
-> +
-> +	nvmem = of_nvmem_device_get(np, NULL);
-> +	if (IS_ERR(nvmem))
-> +		return PTR_ERR(nvmem);
-> +
-TBH, this looks completely incorrect way to do this and misuse of nvmem 
-consumer interface.
-
-Ideally nvmem provider driver should populate "cells" in struct 
-nvmem_config after decoding them and then register nvmem provider.
-
-That should just work!
-
-
---srini
-
-
-> +	onie = kmalloc(sizeof(*onie), GFP_KERNEL);
-> +	if (!onie) {
-> +		err = -ENOMEM;
-> +		goto err_nvmem_alloc;
-> +	}
-> +
-> +	INIT_LIST_HEAD(&onie->attrs);
-> +	onie->attr_count = 0;
-> +	onie->nvmem = nvmem;
-> +
-> +	err = onie_nvmem_decode(onie);
-> +	if (err)
-> +		goto err_nvmem_decode;
-> +
-> +	if (!onie->attr_count) {
-> +		pr_err("%s: has no ONIE attributes\n", nvmem_dev_name(nvmem));
-> +		err = -EINVAL;
-> +		goto err_no_attrs;
-> +	}
-> +
-> +	cells = kmalloc_array(onie->attr_count, sizeof(*cells), GFP_KERNEL);
-> +	if (!cells) {
-> +		err = -ENOMEM;
-> +		goto err_cells_alloc;
-> +	}
-> +
-> +	onie->cell_lookup = kmalloc_array(onie->attr_count,
-> +					  sizeof(struct nvmem_cell_lookup),
-> +					  GFP_KERNEL);
-> +	if (!onie->cell_lookup) {
-> +		err = -ENOMEM;
-> +		goto err_lookup_alloc;
-> +	}
-> +
-> +	list_for_each_entry(attr, &onie->attrs, head) {
-> +		struct nvmem_cell_lookup *lookup;
-> +		struct nvmem_cell_info *cell;
-> +
-> +		cell = &cells[ncells];
-> +
-> +		lookup = &onie->cell_lookup[ncells];
-> +		lookup->con_id = NULL;
-> +
-> +		cell->offset = attr->offset;
-> +		cell->name = attr->name;
-> +		cell->bytes = attr->len;
-> +		cell->bit_offset = 0;
-> +		cell->nbits = 0;
-> +
-> +		lookup->nvmem_name = nvmem_dev_name(onie->nvmem);
-> +		lookup->dev_id = dev_name(dev);
-> +		lookup->cell_name = cell->name;
-> +		lookup->con_id = cell->name;
-> +
-> +		ncells++;
-> +	}
-> +
-> +	onie->cell_tbl.nvmem_name = nvmem_dev_name(onie->nvmem);
-> +	onie->cell_tbl.ncells = ncells;
-> +	onie->cell_tbl.cells = cells;
-> +
-> +	nvmem_add_cell_table(&onie->cell_tbl);
-> +	nvmem_add_cell_lookups(onie->cell_lookup, ncells);
-> +
-> +	dev_set_drvdata(dev, onie);
-> +
-> +	onie_nvmem_attrs_free(onie);
-> +
-> +	nvmem_device_put(nvmem);
-> +
-> +	return 0;
-> +
-> +err_lookup_alloc:
-> +	kfree(onie->cell_tbl.cells);
-> +err_cells_alloc:
-> +	onie_nvmem_attrs_free(onie);
-> +err_no_attrs:
-> +err_nvmem_decode:
-> +	kfree(onie);
-> +err_nvmem_alloc:
-> +	nvmem_device_put(nvmem);
-> +
-> +	return err;
-> +}
-> +
+> (*) http://hg.openjdk.java.net/jdk/jdk/file/50fe8727ed79/src/hotspot/share/code/nmethod.cpp#l1591
+>
+> --
+> Nick
+>
