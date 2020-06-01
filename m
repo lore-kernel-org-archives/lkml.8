@@ -2,111 +2,154 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75EF320734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3962074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="Ry72V/R5"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sePMwbNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgFAGYV (ORCPT
+        id S1728078AbgFAGYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 02:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbgFAGYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 02:24:20 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2793C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 23:24:19 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j198so11319786wmj.0
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 23:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QFIV7FGtYRTpt76SqFuSWbwzzSofsQgm4fQkOksNz2Y=;
-        b=Ry72V/R5DRVGyD4SfTF1+CHsDIt3+4Yac6GqlWhZD2jyd7uP+ffC05i0S1qdJCPw/I
-         cG1KMAJni/PI8hdxw+Hd+5LxlmCJ3mJ0L3h4DG8rLt5yY6t6a2q/msh7cXIdhcWjKEj6
-         u8iRO7m22VCZ+hdcXG67dh1thaJYdzWGKwUt3XXqYg14TOIFHhkhHwFNLQL3wDM/Y7lo
-         PjdRsUncjg4bzQkP0WAbb7pV1lEUKKby6UgQ7bFjm3T1KY3KAwtoDmyQInYrfidOxzqi
-         APm3zHTjLllq4iVOCerws+uJ0RMQ6iY7/jHX8pNsS5TtNXQZzWakWieOdW4Hs57MTQMy
-         lVlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QFIV7FGtYRTpt76SqFuSWbwzzSofsQgm4fQkOksNz2Y=;
-        b=IBX4q+QHb97vxaCZ5uWvVVLJP0ymvDSyHqPn6X7OY98GTRLGA1UeeZ9zk4sEuLdtp2
-         sFJRFzCmQM74XCyh9sGBzTPI5GV8Zui0BwdiF2RJI5chdHiq0nGbvz62b7co26HMQPkA
-         o7oc124Hee1Jm7a5YoV32rt4pG9RI99Lt+tjJDt4zid4sp+HCdy6EvMMKBayeKzxHSqx
-         NNQTPeVAm2W6hsX6Akp2uslwzID7owkuNgvJ0g9rasx9gpOQxYXjxuJiT6YBsdGdZu8s
-         WSgbb27m6qMeNbdWqu7LiFTOHirDMoio2ip5IpKddY8/M0jWbzYN8xxAsIsZwKScaeqY
-         WiRw==
-X-Gm-Message-State: AOAM5327YwIPnUb6r55V0CMPFivld7WKYu/aS+vkXFcMk7JDW0yxJmhk
-        89gDP4yhpW1bxjPLOQ1IUNNgrg==
-X-Google-Smtp-Source: ABdhPJxPAMktkArwOxO/D5xc06ea2EMUEyTwCwxF1daPKDkxBjGrA9lQKdiGPFzbdM4DPIKrQHbg6A==
-X-Received: by 2002:a1c:e355:: with SMTP id a82mr19574219wmh.1.1590992658649;
-        Sun, 31 May 2020 23:24:18 -0700 (PDT)
-Received: from localhost (ip-78-102-58-167.net.upcbroadband.cz. [78.102.58.167])
-        by smtp.gmail.com with ESMTPSA id 5sm9698264wmz.16.2020.05.31.23.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 23:24:18 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 08:24:17 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Ido Schimmel <idosch@idosch.org>
-Cc:     Vadym Kochan <vadym.kochan@plvision.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mickey Rachamim <mickeyr@marvell.com>
-Subject: Re: [net-next 0/6] net: marvell: prestera: Add Switchdev driver for
- Prestera family ASIC device 98DX326x (AC3x)
-Message-ID: <20200601062417.GC2282@nanopsycho>
-References: <20200528151245.7592-1-vadym.kochan@plvision.eu>
- <20200530142928.GA1624759@splinter>
- <20200530145231.GB19411@plvision.eu>
- <20200530155429.GA1639307@splinter>
+        Mon, 1 Jun 2020 02:24:37 -0400
+Received: from mail-eopbgr60070.outbound.protection.outlook.com ([40.107.6.70]:65248
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725972AbgFAGYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 02:24:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XikagcgwH05wTojBLudYHNSZDv+KeEltQQQnL3PP/CXoJWzK7gchORCodhAPGqpuzGVTfhIfca7K/UGmXbsjDmN/fdo1uUX0jff7BRfgNoIMDT8OsDVNVlW3U+Rfcf5I6V1XwSxa3NIP0viRipohRSzTw08Kfj156Y8+5AzFQTAgAQCN97jfXm93hbMCH+1nlvX24s5lAQhmVoPXQ9dek4vGApSjy+PCnSEuqeO2oC6szANBF+GMrOwOGisInDfBffG8sQhPj5iNiOoGkFanT/Qr4XULZgMDizcODvw9jbTeajwbLm3NEgRkRze57xa316UVv8M+/ftjH7yKlbuIkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JiBDgNxOeIv10L0yafCEvbC8pgC1WDZ7ImqpGKRSPew=;
+ b=av5pexjiP5Avnt6na0tiH1auJ+oYZ2yow/JTFGoobnBTw53SFi/yncQsM3odxEZXnpUlFJ9Qxlv0bNz1uNLQwDU75BjtRvxKN/4LArdgSskr87H2cBGCAAJbsQYdVtzmhBEPZ4WVVRmdpb6VfZhihyhEng6h+Tt+EGwiJAO0dAQZOxuN6wPgEbqaTwv73Vg2nUBcpHA+yz5yBMq+/wuVbe4Rr7smII9jTYaqkO21MpBIuHtNLy5ORqorGvT9P8e7sSlEuyAHdFj0jramOwy8AQaKEwhz7PIJe5C2BnUu0VF2ikzxGzxkC60u3OlkFxzjo68busCODRVG3kk6S51ZJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JiBDgNxOeIv10L0yafCEvbC8pgC1WDZ7ImqpGKRSPew=;
+ b=sePMwbNcy3BsVgiyyscHrxzywIjdyDZ0bI/MHCpH0lArQB1D/+mVS3Uslq8IX4IVmjQPdu6flZuxx9WzT3ukFr3o2rUU9m8ELX0MosAKVrJs/ocS0oubO3UbdMlpFsgqhjjH63yXEXdCsDk99umiBWwERGf4WSqG2cjysrhCbCE=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM6PR0402MB3413.eurprd04.prod.outlook.com
+ (2603:10a6:209:11::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.25; Mon, 1 Jun
+ 2020 06:24:32 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
+ 06:24:32 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, "kjlu@umn.edu" <kjlu@umn.edu>
+CC:     Markus Elfring <Markus.Elfring@web.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, Wolfram Sang <wsa@kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH] [v3] i2c: imx-lpi2c: Fix runtime PM imbalance on
+ error
+Thread-Topic: [EXT] [PATCH] [v3] i2c: imx-lpi2c: Fix runtime PM imbalance on
+ error
+Thread-Index: AQHWN9w+YzYh2GSNZkyuyJOi3EJqXqjDSjyA
+Date:   Mon, 1 Jun 2020 06:24:32 +0000
+Message-ID: <AM6PR0402MB3607C88AD2E6087000D62F29FF8A0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <20200601061640.27632-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200601061640.27632-1-dinghao.liu@zju.edu.cn>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: zju.edu.cn; dkim=none (message not signed)
+ header.d=none;zju.edu.cn; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [101.224.80.86]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 40251208-4a11-49ed-3e8e-08d805f472c1
+x-ms-traffictypediagnostic: AM6PR0402MB3413:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0402MB3413EC308803AA6960F7A2AEFF8A0@AM6PR0402MB3413.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:161;
+x-forefront-prvs: 0421BF7135
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f469cGHwdOXEPVQPxPicHIslOqswNSd2XiTIUMxPtw1AmTz5dhvwTsEofJV3zhxsqd1ZhdOG3QqO8Pusjon1DcT3enjZrzZm4stDbG3tsc40dh74GbeuycVq8B7ihE2dXK2+QsCR9bwBw3uQs92MxxKz+k/ZtNMJAUbewchkUWzJn7+xYeis3g84Tjwd1UVStFvAocXO2sLNFCrXDH1VAFEm7sErD1NT70Eb3WaMQYcA7iBSzIDpTGMf/fRaglGwOWrCXBxdF/n0yHl+Vvc6o6otSBeKrWvn6y2JuQquYOrLG/HvtN+HRzl+aOmLVmyU
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(9686003)(55016002)(4326008)(478600001)(33656002)(52536014)(5660300002)(7416002)(64756008)(66946007)(26005)(66476007)(76116006)(86362001)(66446008)(66556008)(6506007)(71200400001)(110136005)(54906003)(8676002)(2906002)(83380400001)(8936002)(186003)(7696005)(316002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: yWGRiJljadya7K1UYnELmWSreN2xn8QG3qOp1CUV1ogZIbvVnxFBwRSDWu+2+KTqAlb4sVsy5s8hzyzO/SvGVUpJAjX1CrA6D9oyE571FbkwwKeuWR1/6Cu3495BB8JdlEBOILrjNsJxXFQzcsYxZcbE1Z1Ho3ymLtTsGHwfngoSYF8rUd2e+k3Zx4UpVXKm3yXgJ2kTmhp+7riGQrsnlo8jxFzeZkjXC45uQXIkionpvjACs58aB2nUDgq/t7Ctqhgx0YNbTsuy8EMWcgmA6Ir+8tDfcCpFj/6SDl/4dnNB+dZZ4pGoa/QCBPuRy2cWhdkEoV8F3C4ft6Br0nyXs/euKmX9ay8nfAatvDsF2rIElgpImYSVG4lR7KGhxWCbS3fPx0AfVqCRFFa7aDtK6UJnSbJRAKwKaLQxtu2rInkKWNworOEYeICKbCAWMKmgl6M5oJywxK/Nn8T+m5vMNK6va5QhYkD5hZ5ZrYubiho=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200530155429.GA1639307@splinter>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40251208-4a11-49ed-3e8e-08d805f472c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2020 06:24:32.7343
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ibtKse3DNFcFPveEBqV+P4xMX1+X9Wc9eUy8fL6shYq+wyAfuW0XymycQTjhEgoh7wAxaGvRzw+Fu9C+OR6odA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sat, May 30, 2020 at 05:54:29PM CEST, idosch@idosch.org wrote:
->On Sat, May 30, 2020 at 05:52:31PM +0300, Vadym Kochan wrote:
+From: Dinghao Liu <dinghao.liu@zju.edu.cn> Sent: Monday, June 1, 2020 2:17 =
+PM
+> pm_runtime_get_sync() increments the runtime PM usage counter even the
+> call returns an error code. Thus a corresponding decrement is needed on t=
+he
+> error handling path to keep the counter balanced.
+>=20
+> Fix this by adding the missed function call.
+>=20
+> Fixes: 13d6eb20fc79a ("i2c: imx-lpi2c: add runtime pm support")
+> Co-developed-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[...]
+Reviewed-by: Fugang Duan <fugang.duan@nxp.com>
+> ---
+>=20
+> Changelog:
+>=20
+> v2: - Use pm_runtime_put_noidle() instead of
+>       pm_runtime_put_autosuspend().
+>=20
+> v3: - Refine commit message.
+> ---
+>  drivers/i2c/busses/i2c-imx-lpi2c.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c
+> b/drivers/i2c/busses/i2c-imx-lpi2c.c
+> index 94743ba581fe..bdee02dff284 100644
+> --- a/drivers/i2c/busses/i2c-imx-lpi2c.c
+> +++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
+> @@ -260,8 +260,10 @@ static int lpi2c_imx_master_enable(struct
+> lpi2c_imx_struct *lpi2c_imx)
+>         int ret;
+>=20
+>         ret =3D pm_runtime_get_sync(lpi2c_imx->adapter.dev.parent);
+> -       if (ret < 0)
+> +       if (ret < 0) {
+> +               pm_runtime_put_noidle(lpi2c_imx->adapter.dev.parent);
+>                 return ret;
+> +       }
+>=20
+>         temp =3D MCR_RST;
+>         writel(temp, lpi2c_imx->base + LPI2C_MCR);
+> --
+> 2.17.1
 
-
->> > WARNING: do not add new typedefs
->> > #1064: FILE: drivers/net/ethernet/marvell/prestera/prestera_hw.h:32:
->> > +typedef void (*prestera_event_cb_t)
->> I may be wrong, as I remember Jiri suggested it and looks like
->> it makes sense. I really don't have strong opinion about this.
->
->OK, so I'll let Jiri comment when he is back at work.
-
-I was not aware of this warning, but for function callbacks, I think it
-is very handy to have them as typedef instead of repeating the prototype
-over and over. For that, I don't think this warning makes sense.
-
-[...]
