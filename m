@@ -5,71 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E41FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C53DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84B3206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF708206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzo7RFzn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tTYJlBEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgFASqV (ORCPT
+        id S1730583AbgFASqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
+        Mon, 1 Jun 2020 14:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730228AbgFASqQ (ORCPT
+        with ESMTP id S1728444AbgFASqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:46:16 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECDBFC03E96B
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:46:15 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f5so563986wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:46:15 -0700 (PDT)
+        Mon, 1 Jun 2020 14:46:17 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4147C061A0E;
+        Mon,  1 Jun 2020 11:46:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f5so564056wmh.2;
+        Mon, 01 Jun 2020 11:46:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WpZyj796ryAXOy5jG9QU2yR5Ej+vR4ZGFFVDCYg9LOs=;
-        b=hzo7RFznw6P4fV7/+dxSJ16wEpI7L5zZ8rska4xe7o0vhife9k7JzwqaqQNwIJN+ZS
-         9M/h57JJi3FKMApsvFEok8PAniX17hi76Op9oGATsgnFm3aIkng6gRUCasQVcsFJM9nh
-         MNOzhFRNZoNGhI684Xoey38LdlBoex0yF4TNQML6+nKeFA2XvGhsloa8A/fykHf1nrKG
-         SSslbeKRRvAqBt2mcRo/dyKcsqhpr97lj/6xXFNkvY9TV8koGH6pkAEHom6a8wdx9OJa
-         9HclkizEh6jkU1qNr+kPUxuuW8BcX0hr8GtkyB2wkZbGU9T6Dl/5pjyRHcuzyPsnHDYt
-         vHag==
+        bh=yC2JNqaMtAkcCstXMD1OLdmFXFYbSrgxv313zGmoBpg=;
+        b=tTYJlBEYMNZvBGCBO6TjRr0O6X67GYQMyMfKFjlLyLagf61IkcvdCiQhSFSyi7pIRJ
+         CjMclrZicbcfS9hpXyacz68X7gPO7Mhdqsr/G7uwLj6iIe8+iOBC/QfsVxow0AoeS/Vi
+         NbGtdY6b6NW9oLjO5OZagpcavd3/nfiP5c9+6tb/41miM1KStCGyD77L/FmCgD16Ne7V
+         DtzbigiIArZRCkyqidG3fbcHA0RFqHdbyoJHGu7xA6FwH2Ggoa7qV4oy0bhFQE9qQpM6
+         BtugETeaVK4C/AfcuGrO4zQiSPpo/VJzSFPvLcvU5XQKuwA/Lb95QNFvFZz/GFVzvI+Y
+         9Fvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=WpZyj796ryAXOy5jG9QU2yR5Ej+vR4ZGFFVDCYg9LOs=;
-        b=fd5HneIzOBs3q3j3/+elv2h9qi6zROt7mq95MiYFMxam9btOU4e5JumgP2QL3axvRn
-         Yk4SgPtfQept5KXVOmpuIblplPOxAISPzB4Hi5tjPbHsrOO6F53G+hhWPKsZYQob5KUY
-         UWwLLgrnUCz6BM+BcOX9rW9apxP/W8K32zMnxnDusDpqrQKbc7kceaf0twf7QkLTYoWb
-         edwqTxstiK2EZ8ZfjgH1wMoRoOPpBxSXYQg72KVga6pQac7v9grwAT+pPmMIIlqHFxhr
-         9hZ45JxNfhib/xs6E4Svru7vj9WphJFl8hPD45SrIUX8nSd4YVFWQ263ijyCvOXMs7Sb
-         NzBQ==
-X-Gm-Message-State: AOAM533oDyVOm5sNwu5Z6m/Iq0V92dUnM67tqjl7SM51j55lVmuKmfeu
-        szdYu5R8oCslhbqqsty1GDMN0FPz6++v
-X-Google-Smtp-Source: ABdhPJwngaL14/ZqlySoQUEbCGnaaf4IUJq4TE71jfy5AXv8gmPfPoEjUPK4lc6mZMeheododQzFGQ==
-X-Received: by 2002:a1c:b155:: with SMTP id a82mr595760wmf.46.1591037174401;
-        Mon, 01 Jun 2020 11:46:14 -0700 (PDT)
+        bh=yC2JNqaMtAkcCstXMD1OLdmFXFYbSrgxv313zGmoBpg=;
+        b=mpIYYapcDZE3Nj2SYlVZ2FRTqqxc/Rny7CFjNZPRiGADRBI9tBfFVbotXmv5I+BrXF
+         JZjj9ifREbNggUtJ45kA/1YoPPz2YTkOHmGbCzJsuuNc7M/wMd5HA+AJwJ1NaYbFshLm
+         28n7uhC6ZaSy+wFJzdHKe7BOZqWSwFSfOTlAmiNOKRFzXQxhfvSqpJ07560u7Lt6mskp
+         0FOB5rb+i/pJdurfctgvADmHLlvcQ/oaU0ad2wzYqdSmB0aj9x/fDGcyT/SPYnY6K7NR
+         X+dpeZutL4EElrcXRQeQfWutSKcQAsKGWxrKbV16JOeV4JVO7Uc1od1GeIptuQ/rYxLp
+         Z9Ug==
+X-Gm-Message-State: AOAM531TgSD7hxoFJ4rtll15tx3LLiptIfRiXavTamX3eUEXLkqKYiZc
+        L+4f2+DQjnhuybPraY///BRUegOEuGs9
+X-Google-Smtp-Source: ABdhPJxYAaKeGr4cCdAQgov6CqNU43C2XC13QVZdwZ1XaZCZ6K6WDudBOAjdkMCNUu6F5VhkUDUk/g==
+X-Received: by 2002:a7b:c311:: with SMTP id k17mr582316wmj.148.1591037175510;
+        Mon, 01 Jun 2020 11:46:15 -0700 (PDT)
 Received: from earth3.lan (host-92-15-172-76.as43234.net. [92.15.172.76])
-        by smtp.googlemail.com with ESMTPSA id 23sm302229wmg.10.2020.06.01.11.46.13
+        by smtp.googlemail.com with ESMTPSA id 23sm302229wmg.10.2020.06.01.11.46.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 11:46:13 -0700 (PDT)
+        Mon, 01 Jun 2020 11:46:15 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, paulmck@kernel.org, mingo@redhat.com,
         boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 4/5] x86/ftrace: Add annotations for ftrace_arch_code_modify_prepare() and ftrace_arch_code_modify_post_process()
-Date:   Mon,  1 Jun 2020 19:45:51 +0100
-Message-Id: <20200601184552.23128-5-jbi.octave@gmail.com>
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:SFC NETWORK DRIVER)
+Subject: [PATCH 5/5] sfc: add  missing annotation for efx_ef10_try_update_nic_stats_vf()
+Date:   Mon,  1 Jun 2020 19:45:52 +0100
+Message-Id: <20200601184552.23128-6-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200601184552.23128-1-jbi.octave@gmail.com>
 References: <20200601184552.23128-1-jbi.octave@gmail.com>
@@ -78,49 +79,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warnings
-
-warning: context imbalance in ftrace_arch_code_modify_prepare()
-	- wrong count at exit
-warning: context imbalance in ftrace_arch_code_modify_post_process()
-	- wrong count at exit
-
-The root cause is that even if
- the annotations on the function are correct,
-mutex do not support annotation
-This makes Sparse to complain.
-To fix this,
-__acquire(&text_mutex) and
- __release(&text_mutex) annotations are added
-inside ftrace_arch_code_modify_prepare()
-and ftrace_arch_code_modify_post_process()
-respectively.
+Sparse reports a warning at efx_ef10_try_update_nic_stats_vf()
+warning: context imbalance in efx_ef10_try_update_nic_stats_vf()
+	- unexpected unlock
+The root cause is the missing annotation at
+efx_ef10_try_update_nic_stats_vf()
+Add the missing _must_hold(&efx->stats_lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- arch/x86/kernel/ftrace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/sfc/ef10.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 37a0aeaf89e7..737c07ab2e07 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -46,6 +46,7 @@ int ftrace_arch_code_modify_prepare(void)
- 	 * ftrace has it set to "read/write".
- 	 */
- 	mutex_lock(&text_mutex);
-+	__acquire(&text_mutex);
- 	ftrace_poke_late = 1;
- 	return 0;
- }
-@@ -61,6 +62,7 @@ int ftrace_arch_code_modify_post_process(void)
- 	text_poke_finish();
- 	ftrace_poke_late = 0;
- 	mutex_unlock(&text_mutex);
-+	__release(&text_mutex);
- 	return 0;
+diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+index 3f16bd807c6e..e8bbbd366625 100644
+--- a/drivers/net/ethernet/sfc/ef10.c
++++ b/drivers/net/ethernet/sfc/ef10.c
+@@ -1820,6 +1820,7 @@ static size_t efx_ef10_update_stats_pf(struct efx_nic *efx, u64 *full_stats,
  }
  
+ static int efx_ef10_try_update_nic_stats_vf(struct efx_nic *efx)
++	__must_hold(&efx->stats_lock)
+ {
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_MAC_STATS_IN_LEN);
+ 	struct efx_ef10_nic_data *nic_data = efx->nic_data;
 -- 
 2.18.2
 
