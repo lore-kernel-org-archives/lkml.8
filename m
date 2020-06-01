@@ -2,92 +2,192 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C100C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0779EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8702073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591055228;
-	bh=WeGkpdeTlH9sVNS3yUaDBxNm2uoZZkZHLtBKh4PdjyA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dF2F70wNKT5v1sVLevcVY5Rjb2Iab+gwYZOtoPb0IxriWyhlBZwBjxTZOkPwFPHyi
-	 +PdENNuJn/UKkWBha8xWGvJTYC0XLcKXRpEaryw5EIDPm/gGjwv8UWu5CpeNLnZ23z
-	 uTyUFVjqkrlD+L6c7w+NBT47fR3reDGJK+dgGLps=
+	by mail.kernel.org (Postfix) with ESMTP id D4AD82073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9Njr4Jy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgFAXrH (ORCPT
+        id S1728673AbgFAXsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 19:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35380 "EHLO
+        Mon, 1 Jun 2020 19:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgFAXrH (ORCPT
+        with ESMTP id S1728372AbgFAXsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 19:47:07 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B77C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 16:47:05 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id r125so4971569lff.13
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 16:47:05 -0700 (PDT)
+        Mon, 1 Jun 2020 19:48:07 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE8EC03E96B
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 16:48:07 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r10so4203098pgv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 16:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YPAAhtEgMQMtmHDbk4KgNVVpl7a42uJF+VjoetnC8jI=;
-        b=bESB1wsrBJTiKsNhLK8BXuVH4tt31XqGwfNRhMk2+/Xu4/15TnKxr/43IFI11Ff20e
-         E71y386MHxjxyD7FDbtXRAwyaf210o9T33Um8QCdKVeopCwtiFvuy3IyPzIPDwLGTs6I
-         Skc//o42qw2/7f77dLgDy021eRqbsEEj0r+Ak=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :in-reply-to;
+        bh=oUI9bjSmxsFXcy3c3YFEpqm/JcIVr6x8hBb+2iwCu18=;
+        b=q9Njr4JyTAdWqbg68EOlGjKBwqFITb6/Bd6k91ddMhfQYRX5fMOwg377xGU9QHnMFX
+         UleutAhhhLwjWMtXLfbdCTbj4RY3lonHYYsBxOC3G/uJ1Xh5BqRW5O/pKtk6NspLluWY
+         iDGOyNdC50im7ICKo+fraGUot7kLaezYSNpmrUHtMMDMEU1RPbCAF/2QiYrpEQvO+Sdp
+         5PBCkOzY5DMROXmTlPuNpW/nkAllGyrRz2b/N7qhqpMFUOtvnTMBFQ/TRg9pmTsy5cFm
+         GoOeRobgu86UV1ALNjLir8H3tqC5XL9U/jUxEcV/LhLVgq+iVfgQitF6JuBULqzGHFuq
+         Id8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YPAAhtEgMQMtmHDbk4KgNVVpl7a42uJF+VjoetnC8jI=;
-        b=PtpCt020SAEltN7zYTUJcTM8kSv1Oupi0TiyNzKkWy14K6uthBd7LcLCeofjyT3elf
-         3YMw+SrEKxzr0GMuE5PM6zNK4VkymOXdNYp169fiLXqKsX8LNrYVqIYiPzbL0tKWdeFz
-         tDucI/c+lKzrp3xtqY3EEoHzEHqaxqGzAEevJIPCY3ley7izUK9j9yaVTrpWpvrvNxm3
-         HiA/Y0pykCXN+kzJzibYWs5ec5G74g9SvnUucDBkv774uCoppPM4uOIesMy0vSxPCFST
-         qDSq9IvJpmGPxkeKvd6h8a2ugW5aCPO09tJjj1ZdPpFRRSp9wjmOb5afXoGE6mkUXt5O
-         9IXQ==
-X-Gm-Message-State: AOAM532o47qn2BCFaX/cj9NssG0uLX2/4u3VghOzUmNbevft3ndYtm9o
-        2BG1qSqjYdq/lMYq9QSOU407BKy2ISY=
-X-Google-Smtp-Source: ABdhPJxdxQt4JhLyO/WyUswNZ4XSPR9kisEQcztxoqw6ZZ/TmlMV46pYrytCbgJd8B/V+R6Ci7AXNw==
-X-Received: by 2002:a19:c187:: with SMTP id r129mr12465470lff.35.1591055222904;
-        Mon, 01 Jun 2020 16:47:02 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id q4sm197544ljj.47.2020.06.01.16.47.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 16:47:02 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id r125so4971547lff.13
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 16:47:01 -0700 (PDT)
-X-Received: by 2002:ac2:5a0a:: with SMTP id q10mr12574943lfn.142.1591055221658;
- Mon, 01 Jun 2020 16:47:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:in-reply-to;
+        bh=oUI9bjSmxsFXcy3c3YFEpqm/JcIVr6x8hBb+2iwCu18=;
+        b=pDz8BejnWSTxHYlgW6TJtRIq7lTK6QHpqBUoYWcZLWEjrOtA/mGHnUoAXLmj5TssHF
+         +HMCPSU2Ws1PCMQa6+6mP8jP5cUF/qsUX6mVF10hVtelnm/C+iJ22OyvscPoqAY1utPI
+         AxMlUEMB3KaXbsj4hSdlQxYIUnDYcDCnBp9RsxVbWktOELtG+XzM1R/BfdENhrqxh/yY
+         R49xBDrnicoLI0Wfys0o5uEtW/YOcSMROutWnqmDZX6+nB3whPnSPZh6KfGA15FGJpmV
+         zCu86DLUrTS6AocY1uJK9yu1JdVRK3lFR9js2z3/bG02PNFmg6CZhBJ9Zeuhj+tTZFlG
+         0XtQ==
+X-Gm-Message-State: AOAM530Pb2zkHHJLyEvTtRdUXV9IvL/ANn+lFbSwqCeFbYyCMPOZW6ev
+        I5t1UEP4PzQw2GRE/rHewAwPFA==
+X-Google-Smtp-Source: ABdhPJwk+3c6p44VFSBek7g2KUt3R6FBLaMDtulRc3LFDsLfErb8cUO0IrJB5ZZukG2bf5LRX10hpQ==
+X-Received: by 2002:a62:4e91:: with SMTP id c139mr3893637pfb.18.1591055286443;
+        Mon, 01 Jun 2020 16:48:06 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:200:db56:ecca:5ade:2f85])
+        by smtp.gmail.com with ESMTPSA id q25sm448943pff.69.2020.06.01.16.48.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 16:48:05 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 16:47:56 -0700
+From:   Bob Haarman <inglorion@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Fangrui Song <maskray@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alistair Delva <adelva@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Baoquan He <bhe@redhat.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Ross Zwisler <zwisler@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] x86_64: fix jiffies ODR violation
+Message-ID: <20200601234756.GA10511@google.com>
+References: <20200515180544.59824-1-inglorion@google.com>
+ <20200519031742.GB499505@tassilo.jf.intel.com>
 MIME-Version: 1.0
-References: <20200601184036.GH23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200601184036.GH23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 1 Jun 2020 16:46:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjQ8vRE3jSby=KOejXORsL2qgQ2g=KQ=Y10NvVoVBFtxQ@mail.gmail.com>
-Message-ID: <CAHk-=wjQ8vRE3jSby=KOejXORsL2qgQ2g=KQ=Y10NvVoVBFtxQ@mail.gmail.com>
-Subject: Re: [git pull] vfs patches from Miklos
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200519031742.GB499505@tassilo.jf.intel.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000352f7805a70e6dfe"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 11:40 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
->         Assorted patches from Miklos; an interesting part here is /proc/mounts
-> stuff...
+--000000000000352f7805a70e6dfe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-You know, this could really have done with more of a real description, Al...
+On Mon, May 18, 2020 at 08:17:42PM -0700, Andi Kleen wrote:
+> > Instead, we can avoid the ODR violation by matching other arch's by
+> > defining jiffies only by linker script.  For -fno-semantic-interposition
+> > + Full LTO, there is no longer a global definition of jiffies for the
+> > compiler to produce a local symbol which the linker script won't ensure
+> > aliases to jiffies_64.
+> 
+> I guess it was an historical accident.
+> 
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
 
-              Linus
+Thank you, Andi. Do any other reviewers have comments?
+
+--000000000000352f7805a70e6dfe
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPDAYJKoZIhvcNAQcCoIIO/TCCDvkCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggxvMIIEkjCCA3qgAwIBAgINAewckktV4F6Q7sAtGDANBgkqhkiG9w0BAQsFADBMMSAwHgYDVQQL
+ExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMK
+R2xvYmFsU2lnbjAeFw0xODA2MjAwMDAwMDBaFw0yODA2MjAwMDAwMDBaMEsxCzAJBgNVBAYTAkJF
+MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSEwHwYDVQQDExhHbG9iYWxTaWduIFNNSU1FIENB
+IDIwMTgwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCUeobu8FdB5oJg6Fz6SFf8YsPI
+dNcq4rBSiSDAwqMNYbeTpRrINMBdWuPqVWaBX7WHYMsKQwCOvAF1b7rkD+ROo+CCTJo76EAY25Pp
+jt7TYP/PxoLesLQ+Ld088+BeyZg9pQaf0VK4tn23fOCWbFWoM8hdnF86Mqn6xB6nLsxJcz4CUGJG
+qAhC3iedFiCfZfsIp2RNyiUhzPAqalkrtD0bZQvCgi5aSNJseNyCysS1yA58OuxEyn2e9itZJE+O
+sUeD8VFgz+nAYI5r/dmFEXu5d9npLvTTrSJjrEmw2/ynKn6r6ONueZnCfo6uLmP1SSglhI/SN7dy
+L1rKUCU7R1MjAgMBAAGjggFyMIIBbjAOBgNVHQ8BAf8EBAMCAYYwJwYDVR0lBCAwHgYIKwYBBQUH
+AwIGCCsGAQUFBwMEBggrBgEFBQcDCTASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBRMtwWJ
+1lPNI0Ci6A94GuRtXEzs0jAfBgNVHSMEGDAWgBSP8Et/qC5FJK5NUPpjmove4t0bvDA+BggrBgEF
+BQcBAQQyMDAwLgYIKwYBBQUHMAGGImh0dHA6Ly9vY3NwMi5nbG9iYWxzaWduLmNvbS9yb290cjMw
+NgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIzLmNybDBn
+BgNVHSAEYDBeMAsGCSsGAQQBoDIBKDAMBgorBgEEAaAyASgKMEEGCSsGAQQBoDIBXzA0MDIGCCsG
+AQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG9w0B
+AQsFAAOCAQEAwREs1zjtnFIIWorsx5XejqZtqaq5pomEvpjM98ebexngUmd7hju2FpYvDvzcnoGu
+tjm0N3Sqj5vvwEgvDGB5CxDOBkDlmUT+ObRpKbP7eTafq0+BAhEd3z2tHFm3sKE15o9+KjY6O5bb
+M30BLgvKlLbLrDDyh8xigCPZDwVI7JVuWMeemVmNca/fidKqOVg7a16ptQUyT5hszqpj18MwD9U0
+KHRcR1CfVa+3yjK0ELDS+UvTufoB9wp2BoozsqD0yc2VOcZ7SzcwOzomSFfqv7Vdj88EznDbdy4s
+fq6QvuNiUs8yW0Vb0foCVRNnSlb9T8//uJqQLHxrxy2j03cvtTCCA18wggJHoAMCAQICCwQAAAAA
+ASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFIz
+MRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5MDMxODEwMDAw
+MFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzAR
+BgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqGSIb3DQEBAQUA
+A4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0EXyTLLkvhYIJG
+4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+JJ5U4nwbXPsnL
+JlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8unPvQu7/1PQDh
+BjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTvriBJ/K1AFUjR
+AjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGjQjBAMA4GA1Ud
+DwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5NUPpjmove4t0b
+vDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigHM8pr5nS5ugAt
+rqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmUY/vcU2hnVj6D
+uM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V14qWtNPeTCek
+TBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcya5QBqJnnLDMf
+Ojsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/XzCCBHIwggNa
+oAMCAQICEAFoVG98+DpI10G31jIM6WMwDQYJKoZIhvcNAQELBQAwSzELMAkGA1UEBhMCQkUxGTAX
+BgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExITAfBgNVBAMTGEdsb2JhbFNpZ24gU01JTUUgQ0EgMjAx
+ODAeFw0yMDAyMjEwMjAxMzJaFw0yMDA4MTkwMjAxMzJaMCUxIzAhBgkqhkiG9w0BCQEWFGluZ2xv
+cmlvbkBnb29nbGUuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtIlrTibsBYey
+D6lwKBc85OI2pTwUEcjFCUUgoschIzHBxgCbPH2tWRIdtyZVKdfLzeSCZLLH1vdw28WHyuCyr4J1
+50ag351yrhmGbzXO3PNl6SsoYp17yVwHksY/UIMQqEcyeYPGJ+AJLwWGWPKe4t8wL95GJF372cn/
+lj09+u/6eFXGAzkk/PKdmbVY1aZYB535Qx+S4ktEy/xgZmGMZiW5MzLt7nONcgxxPl+ny+RkTmN7
+X2/haIn9DqaY11V9FPMtcpR7XzHPj6gH7dyDKVcKSChv0ld1vx2HyDVg5EvooS60u4h9wyishc7K
+E9obDcDX5d08fVippb5mNgRdAwIDAQABo4IBdjCCAXIwHwYDVR0RBBgwFoEUaW5nbG9yaW9uQGdv
+b2dsZS5jb20wDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjAd
+BgNVHQ4EFgQUwMHBeEMLCBh7Y/tyzpSU6+SaYvEwTAYDVR0gBEUwQzBBBgkrBgEEAaAyASgwNDAy
+BggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wUQYIKwYB
+BQUHAQEERTBDMEEGCCsGAQUFBzAChjVodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2Vy
+dC9nc3NtaW1lY2EyMDE4LmNydDAfBgNVHSMEGDAWgBRMtwWJ1lPNI0Ci6A94GuRtXEzs0jA/BgNV
+HR8EODA2MDSgMqAwhi5odHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2NhL2dzc21pbWVjYTIwMTgu
+Y3JsMA0GCSqGSIb3DQEBCwUAA4IBAQCB8hJrRbW4aoR++6DS51XVSm7Xlb7bz7Ow5WPLVOiuVI3d
+tq/OTAbsdReypY8Dw3+/FXLKa3q9BVtaCuHPXRMtBW1YdR3Xt9eH3ri1dP1nfzzF4iRwmTMrzG70
+tLB0Rm+aqZtfoF1zt/ZvaQW+pfbELAh2TazUSguVRFZudpOzZsCsA/uL/gVMvrZc+LGG3M81s2+S
+Lpt2aAXO5sEMEti+CjIKRSwIC3PGkRALu1O3Y+RxuPrdcCc6zdjqR2Ge/KXgRyvHlgwKpyJRSozt
+qM7RsyNchlszR607DTfv4AkCuDGFp+2/lu1Pr90nos1lYQB7EM7bT/hvrnXK4veLjrKiMYICYTCC
+Al0CAQEwXzBLMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEhMB8GA1UE
+AxMYR2xvYmFsU2lnbiBTTUlNRSBDQSAyMDE4AhABaFRvfPg6SNdBt9YyDOljMA0GCWCGSAFlAwQC
+AQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAR5zY2qeGzyfkxNcxQccymZjtr5i46b2UXF+M9GApZujAY
+BgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMDA2MDEyMzQ4MDdaMGkG
+CSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYI
+KoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
+AQEBBQAEggEAljxbW/hC2qVJYvLocvfUSOYTdydynYEhDc1FGbDoYs8DraFZbcLOWaewCkNaj4Y8
++d6t6KLofi2+j/lk6M6nF+mPQpIujFk+q41VT3yfEG6dGE/cX6koYZtyV4v3kIttSEJFsHChLTGL
+1YwnQ433HsQYhoE9ZI2/NI2MGTKyc0ECVqwHkM/mgpGDhPQsqwT6qBGS8XN1LmRb2dMA+JDFaa79
+mIX//jr2fGcrvoyhOzSrtr88jZfQ/ktCtHi7+Tc1+atKHQl/PmWpBItQQ0nFBmqpB/nrMIz+FPMN
+ErBdATFuCxdZKq4dBMmppY86a3Be0zgGMW0+jpw6u7+MOaeGMg==
+--000000000000352f7805a70e6dfe--
