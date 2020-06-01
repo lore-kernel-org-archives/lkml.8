@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6960AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27029C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 496A021556
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0223C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034833;
-	bh=wLx6y1eN3MJhuBtGGAOWlU3fPBUosU6LRb4T/jZ0e38=;
+	s=default; t=1591034839;
+	bh=20+5iZ1H51nyEgXnKUFVmNC29bl/C0FVNrLzX9WCgsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMvJFf/HJdey2dqHVweIRQRvoIf+xW8NCb1efji3P8cShPyz+AF/y1AegKZw3M4Yv
-	 5g3SXlu4xhqSgU9iHszazWy4WjysLHFnUirDl/t4kp2XOtlAP1rOdeBadgvRt/q+f1
-	 umHjGE1c8cemefJg9F0YZukbDQjixeIWQ49gGe10=
+	b=H+rBuoBIl3/X2uovpmBVriZQtNfG0xOnkpSJizzwLvjtZ0RyjvAtB9UyhwOGKbxxB
+	 TESUQ1ygdVBgNcHGEALsHj10E4iuq4BfpWuvUO/sT4tGNU28KRSnplXn0D34ps/kgo
+	 tU9ofO8bol7QrOrvi7VV0ymHWnssolecw56pr0vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbgFASHM (ORCPT
+        id S1730107AbgFASHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730471AbgFASGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:06:34 -0400
+        id S1730033AbgFASGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:06:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82AE6207D0;
-        Mon,  1 Jun 2020 18:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C60B92068D;
+        Mon,  1 Jun 2020 18:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034793;
-        bh=wLx6y1eN3MJhuBtGGAOWlU3fPBUosU6LRb4T/jZ0e38=;
+        s=default; t=1591034795;
+        bh=20+5iZ1H51nyEgXnKUFVmNC29bl/C0FVNrLzX9WCgsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mFCSeEe0+lQun4gREWfzgiHPNPeuX52e/NpN0D8Fkxps/MIgKq3NSKeNE87NI204t
-         OO6eA9CvaKc6jrXXxts+57a4V+5oiHiwNLj4upuQPdtg1fvyVE/4PgwNLzjPAPUMyf
-         X2UgR+ZZBptwcCPkqxHONM5OQmhsgnI8UcBYF9So=
+        b=Rf/UVkv+G2vrSlCSOD2NI5xhPuBL65u07Qg0Yzbodm6g2jCbc2d3n9CgutNbNyDbO
+         DyASqP46d1+KUdBGnuCqWQXLzpLag6OtMcPK/VqI0Nq+CgramABwq4BzJwEB3IH7pq
+         ghDZOuh0CaoPVhFtoMUemkyNz59nxbJ30m9x8OmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 002/142] dpaa_eth: fix usage as DSA master, try 3
-Date:   Mon,  1 Jun 2020 19:52:40 +0200
-Message-Id: <20200601174038.257610173@linuxfoundation.org>
+Subject: [PATCH 5.4 003/142] net: dont return invalid table id error when we fall back to PF_UNSPEC
+Date:   Mon,  1 Jun 2020 19:52:41 +0200
+Message-Id: <20200601174038.389570989@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,73 +60,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 5d14c304bfc14b4fd052dc83d5224376b48f52f0 ]
+[ Upstream commit 41b4bd986f86331efc599b9a3f5fb86ad92e9af9 ]
 
-The dpaa-eth driver probes on compatible string for the MAC node, and
-the fman/mac.c driver allocates a dpaa-ethernet platform device that
-triggers the probing of the dpaa-eth net device driver.
+In case we can't find a ->dumpit callback for the requested
+(family,type) pair, we fall back to (PF_UNSPEC,type). In effect, we're
+in the same situation as if userspace had requested a PF_UNSPEC
+dump. For RTM_GETROUTE, that handler is rtnl_dump_all, which calls all
+the registered RTM_GETROUTE handlers.
 
-All of this is fine, but the problem is that the struct device of the
-dpaa_eth net_device is 2 parents away from the MAC which can be
-referenced via of_node. So of_find_net_device_by_node can't find it, and
-DSA switches won't be able to probe on top of FMan ports.
+The requested table id may or may not exist for all of those
+families. commit ae677bbb4441 ("net: Don't return invalid table id
+error when dumping all families") fixed the problem when userspace
+explicitly requests a PF_UNSPEC dump, but missed the fallback case.
 
-It would be a bit silly to modify a core function
-(of_find_net_device_by_node) to look for dev->parent->parent->of_node
-just for one driver. We're just 1 step away from implementing full
-recursion.
+For example, when we pass ipv6.disable=1 to a kernel with
+CONFIG_IP_MROUTE=y and CONFIG_IP_MROUTE_MULTIPLE_TABLES=y,
+the (PF_INET6, RTM_GETROUTE) handler isn't registered, so we end up in
+rtnl_dump_all, and listing IPv6 routes will unexpectedly print:
 
-Actually there have already been at least 2 previous attempts to make
-this work:
-- Commit a1a50c8e4c24 ("fsl/man: Inherit parent device and of_node")
-- One or more of the patches in "[v3,0/6] adapt DPAA drivers for DSA":
-  https://patchwork.ozlabs.org/project/netdev/cover/1508178970-28945-1-git-send-email-madalin.bucur@nxp.com/
-  (I couldn't really figure out which one was supposed to solve the
-  problem and how).
+  # ip -6 r
+  Error: ipv4: MR table does not exist.
+  Dump terminated
 
-Point being, it looks like this is still pretty much a problem today.
-On T1040, the /sys/class/net/eth0 symlink currently points to
+commit ae677bbb4441 introduced the dump_all_families variable, which
+gets set when userspace requests a PF_UNSPEC dump. However, we can't
+simply set the family to PF_UNSPEC in rtnetlink_rcv_msg in the
+fallback case to get dump_all_families == true, because some messages
+types (for example RTM_GETRULE and RTM_GETNEIGH) only register the
+PF_UNSPEC handler and use the family to filter in the kernel what is
+dumped to userspace. We would then export more entries, that userspace
+would have to filter. iproute does that, but other programs may not.
 
-../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/dpaa-ethernet.0/net/eth0
+Instead, this patch removes dump_all_families and updates the
+RTM_GETROUTE handlers to check if the family that is being dumped is
+their own. When it's not, which covers both the intentional PF_UNSPEC
+dumps (as dump_all_families did) and the fallback case, ignore the
+missing table id error.
 
-which pretty much illustrates the problem. The closest of_node we've got
-is the "fsl,fman-memac" at /soc@ffe000000/fman@400000/ethernet@e6000,
-which is what we'd like to be able to reference from DSA as host port.
-
-For of_find_net_device_by_node to find the eth0 port, we would need the
-parent of the eth0 net_device to not be the "dpaa-ethernet" platform
-device, but to point 1 level higher, aka the "fsl,fman-memac" node
-directly. The new sysfs path would look like this:
-
-../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/net/eth0
-
-And this is exactly what SET_NETDEV_DEV does. It sets the parent of the
-net_device. The new parent has an of_node associated with it, and
-of_dev_node_match already checks for the of_node of the device or of its
-parent.
-
-Fixes: a1a50c8e4c24 ("fsl/man: Inherit parent device and of_node")
-Fixes: c6e26ea8c893 ("dpaa_eth: change device used")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: cb167893f41e ("net: Plumb support for filtering ipv4 and ipv6 multicast route dumps")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/ip_fib.h    |    1 -
+ net/ipv4/fib_frontend.c |    3 +--
+ net/ipv4/ipmr.c         |    2 +-
+ net/ipv6/ip6_fib.c      |    2 +-
+ net/ipv6/ip6mr.c        |    2 +-
+ 5 files changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2802,7 +2802,7 @@ static int dpaa_eth_probe(struct platfor
- 	}
+--- a/include/net/ip_fib.h
++++ b/include/net/ip_fib.h
+@@ -244,7 +244,6 @@ struct fib_dump_filter {
+ 	u32			table_id;
+ 	/* filter_set is an optimization that an entry is set */
+ 	bool			filter_set;
+-	bool			dump_all_families;
+ 	bool			dump_routes;
+ 	bool			dump_exceptions;
+ 	unsigned char		protocol;
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -928,7 +928,6 @@ int ip_valid_fib_dump_req(struct net *ne
+ 	else
+ 		filter->dump_exceptions = false;
  
- 	/* Do this here, so we can be verbose early */
--	SET_NETDEV_DEV(net_dev, dev);
-+	SET_NETDEV_DEV(net_dev, dev->parent);
- 	dev_set_drvdata(dev, net_dev);
+-	filter->dump_all_families = (rtm->rtm_family == AF_UNSPEC);
+ 	filter->flags    = rtm->rtm_flags;
+ 	filter->protocol = rtm->rtm_protocol;
+ 	filter->rt_type  = rtm->rtm_type;
+@@ -1000,7 +999,7 @@ static int inet_dump_fib(struct sk_buff
+ 	if (filter.table_id) {
+ 		tb = fib_get_table(net, filter.table_id);
+ 		if (!tb) {
+-			if (filter.dump_all_families)
++			if (rtnl_msg_family(cb->nlh) != PF_INET)
+ 				return skb->len;
  
- 	priv = netdev_priv(net_dev);
+ 			NL_SET_ERR_MSG(cb->extack, "ipv4: FIB table does not exist");
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -2609,7 +2609,7 @@ static int ipmr_rtm_dumproute(struct sk_
+ 
+ 		mrt = ipmr_get_table(sock_net(skb->sk), filter.table_id);
+ 		if (!mrt) {
+-			if (filter.dump_all_families)
++			if (rtnl_msg_family(cb->nlh) != RTNL_FAMILY_IPMR)
+ 				return skb->len;
+ 
+ 			NL_SET_ERR_MSG(cb->extack, "ipv4: MR table does not exist");
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -613,7 +613,7 @@ static int inet6_dump_fib(struct sk_buff
+ 	if (arg.filter.table_id) {
+ 		tb = fib6_get_table(net, arg.filter.table_id);
+ 		if (!tb) {
+-			if (arg.filter.dump_all_families)
++			if (rtnl_msg_family(cb->nlh) != PF_INET6)
+ 				goto out;
+ 
+ 			NL_SET_ERR_MSG_MOD(cb->extack, "FIB table does not exist");
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -2498,7 +2498,7 @@ static int ip6mr_rtm_dumproute(struct sk
+ 
+ 		mrt = ip6mr_get_table(sock_net(skb->sk), filter.table_id);
+ 		if (!mrt) {
+-			if (filter.dump_all_families)
++			if (rtnl_msg_family(cb->nlh) != RTNL_FAMILY_IP6MR)
+ 				return skb->len;
+ 
+ 			NL_SET_ERR_MSG_MOD(cb->extack, "MR table does not exist");
 
 
