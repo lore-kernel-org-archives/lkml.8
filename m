@@ -2,52 +2,54 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E66FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB158206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E64D20885
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034263;
-	bh=zh+hjr+eJIQBo26ohfepRYxTdhIc+nP1ysNKviD1wAQ=;
+	s=default; t=1591034265;
+	bh=M/qD2bSLMro1+y1z/qphHFNwZ6JthlbwfLtVxqnMl/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIvX7Y3OzV2HMXwDKSbwIvpH5HtPcUmP8H3+p4Darti41jyQx4WFJV2oFWpZBWGT8
-	 6LT6iezYDbDGfoKpTRN6r32WduAQQQXmUsruUKeHURNf9wnH8SOsmAalMWUEk/xGHh
-	 fj9DI/BLmjLvuB3Bk8QgAYWMTidKwuViaS+wXzX8=
+	b=HdDZLiuGCjKIKSD7GD1ibqdLwFeFB2kz9NyFjQQLw/eguKl/aH9DoeM95EQzkr41H
+	 s6+4MtyLj9JWLcYlXCEexz/y/1/xduZV+qf+5fB6nmAZmxfP6yE2wpaD/NWR55fudf
+	 edXWpRPaAkspNkXgpcJqGNWizh8VjZbimo4QlEJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgFAR5m (ORCPT
+        id S1728987AbgFAR5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbgFAR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:39 -0400
+        id S1727924AbgFAR5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9D5E206E2;
-        Mon,  1 Jun 2020 17:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D0332074B;
+        Mon,  1 Jun 2020 17:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034259;
-        bh=zh+hjr+eJIQBo26ohfepRYxTdhIc+nP1ysNKviD1wAQ=;
+        s=default; t=1591034254;
+        bh=M/qD2bSLMro1+y1z/qphHFNwZ6JthlbwfLtVxqnMl/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N0wa0LyftWV2cXIOEKm5KKMOSkZ+V85MluG02irU7d1ZSWD7h2iqNJ2EsQLRxpKop
-         3klqzteKEAVcefR/8+tqIMrFTXRGsnEf0XbWKnaZ8MJ2BazLdJBXa9XmRyfM78CCGU
-         lcl5g+cCzPaX8JH/g65eZjtTgYdpllSSX8Sk8f8Y=
+        b=CQU2mr1gG6u4DG8MFzoAhf1eaXvD1pCJiOpp+9ux4juaLOTygYxz1Kl+GLubeOVSP
+         voj8MO3+ve0Aqedfywk4L+okptqJs/cmYwOpgANnbdZcn8dEMRIcpVFlEOpATk2YeP
+         yidxX4UyUF5CXqgSXDWRVfkAvtSfHeZ7KUwwNyvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 14/61] net: microchip: encx24j600: add missed kthread_stop
-Date:   Mon,  1 Jun 2020 19:53:21 +0200
-Message-Id: <20200601174014.377647504@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michal Kalderon <Michal.Kalderon@cavium.com>,
+        Ariel Elior <Ariel.Elior@cavium.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 12/61] IB/cma: Fix reference count leak when no ipv4 addresses are set
+Date:   Mon,  1 Jun 2020 19:53:19 +0200
+Message-Id: <20200601174013.911117659@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,53 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Kalderon, Michal <Michal.Kalderon@cavium.com>
 
-[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
+commit 963916fdb3e5ad4af57ac959b5a03bf23f7568ca upstream.
 
-This driver calls kthread_run() in probe, but forgets to call
-kthread_stop() in probe failure and remove.
-Add the missed kthread_stop() to fix it.
+Once in_dev_get is called to receive in_device pointer, the
+in_device reference counter is increased, but if there are
+no ipv4 addresses configured on the net-device the ifa_list
+will be null, resulting in a flow that doesn't call in_dev_put
+to decrease the ref_cnt.
+This was exposed when running RoCE over ipv6 without any ipv4
+addresses configured
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: commit 8e3867310c90 ("IB/cma: Fix a race condition in iboe_addr_get_sgid()")
+
+Signed-off-by: Michal Kalderon <Michal.Kalderon@cavium.com>
+Signed-off-by: Ariel Elior <Ariel.Elior@cavium.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/rdma/ib_addr.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
-index b14f0305aa31..ad661d1979c7 100644
---- a/drivers/net/ethernet/microchip/encx24j600.c
-+++ b/drivers/net/ethernet/microchip/encx24j600.c
-@@ -1058,7 +1058,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
- 	if (unlikely(ret)) {
- 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
- 			  ret);
--		goto out_free;
-+		goto out_stop;
+--- a/include/rdma/ib_addr.h
++++ b/include/rdma/ib_addr.h
+@@ -208,11 +208,13 @@ static inline void iboe_addr_get_sgid(st
+ 	dev = dev_get_by_index(&init_net, dev_addr->bound_dev_if);
+ 	if (dev) {
+ 		ip4 = in_dev_get(dev);
+-		if (ip4 && ip4->ifa_list && ip4->ifa_list->ifa_address) {
++		if (ip4 && ip4->ifa_list && ip4->ifa_list->ifa_address)
+ 			ipv6_addr_set_v4mapped(ip4->ifa_list->ifa_address,
+ 					       (struct in6_addr *)gid);
++
++		if (ip4)
+ 			in_dev_put(ip4);
+-		}
++
+ 		dev_put(dev);
  	}
- 
- 	eidled = encx24j600_read_reg(priv, EIDLED);
-@@ -1076,6 +1076,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
- 
- out_unregister:
- 	unregister_netdev(priv->ndev);
-+out_stop:
-+	kthread_stop(priv->kworker_task);
- out_free:
- 	free_netdev(ndev);
- 
-@@ -1088,6 +1090,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
- 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
- 
- 	unregister_netdev(priv->ndev);
-+	kthread_stop(priv->kworker_task);
- 
- 	free_netdev(priv->ndev);
- 
--- 
-2.25.1
-
+ }
 
 
