@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D37C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92442C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFB4020679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6560F20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037903;
-	bh=JSlbU1kHIKYTSMDFJHwtn2d0rJQ+nYpbgprf3p8WLb8=;
+	s=default; t=1591037910;
+	bh=SGiAv6shdVOKpwPOvW00N1lm9ZHiO/y4bOuCN+rRr/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JsJlU1mg0BkKsMwAkFZkYS5aEX2r4ehJ+5hO7NQu1YmbjLIYaN+QZ2akeEuEfOGkL
-	 mnOfU9FpXjO1dUxQ35fq6APgkmWZFRPE+rmH4SbkHer8mRf85pc8ZC7pqqqLbn2y0M
-	 MevIpz7qLJnZVfGAjrfWhzFDjVfE/sGtsicWasZA=
+	b=WFaVKqYqaPTruMLF33/ZPpNE35WQtTlw9dMzUbL8Nos7cWfmGGLqHLZd/suDVnDdB
+	 A/N6MySW4F7bPxj6ek8S09hTrpXn2ZxDX3rhHHsO2l4OqrADA0G94m+buEVEOMXzfV
+	 SwAFuWvNC7t6GTsKe0JnjcJgvHvzX4n9B/Km/YoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgFAS6X (ORCPT
+        id S1729673AbgFAS63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:58:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41186 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:58:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728751AbgFAR64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:56 -0400
+        id S1728552AbgFAR6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DBF92074B;
-        Mon,  1 Jun 2020 17:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B78242073B;
+        Mon,  1 Jun 2020 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034335;
-        bh=JSlbU1kHIKYTSMDFJHwtn2d0rJQ+nYpbgprf3p8WLb8=;
+        s=default; t=1591034329;
+        bh=SGiAv6shdVOKpwPOvW00N1lm9ZHiO/y4bOuCN+rRr/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyXAqwkJU20xXgqFla7sTR6QBRh1dLVdwCbjjAaNKThIZl5X2QYbLR2PTVr/B3laX
-         Qja+iZMTLMpkynT/AfR2kK4UMrj9hkcBIuTska3bJQCVdleH7e9iQLd9Ory41UWZZR
-         UY/xjAsl6838uhc8ecbGLzV2T5hQd6WA4meKaWig=
+        b=pj6XKEyMob0BtvsRozDMl7SXBry83mIdCcq8k2RzQkbl9x9Bpcl8eShwQWZt3QL9r
+         6x0Edmv6KCTzIv15BhnPUq16SDpdinwSaq8OvtHy6NCbkanaLNuA5JVBU6pXe0U6XF
+         ZvLpYhXHUNrkJOx2PXXMNwA5LIV/GJkUQgYISvwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 07/61] net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
-Date:   Mon,  1 Jun 2020 19:53:14 +0200
-Message-Id: <20200601174012.779601264@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.9 42/61] parisc: Fix kernel panic in mem_init()
+Date:   Mon,  1 Jun 2020 19:53:49 +0200
+Message-Id: <20200601174019.401534628@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -62,38 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit d28ea1fbbf437054ef339afec241019f2c4e2bb6 ]
+commit bf71bc16e02162388808949b179d59d0b571b965 upstream.
 
-Once the traversal of the list is completed with list_for_each_entry(),
-the iterator (node) will point to an invalid object. So passing this to
-qrtr_local_enqueue() which is outside of the iterator block is erroneous
-eventhough the object is not used.
+The Debian kernel v5.6 triggers this kernel panic:
 
-So fix this by passing NULL to qrtr_local_enqueue().
+ Kernel panic - not syncing: Bad Address (null pointer deref?)
+ Bad Address (null pointer deref?): Code=26 (Data memory access rights trap) at addr 0000000000000000
+ CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-2-parisc64 #1 Debian 5.6.14-1
+  IAOQ[0]: mem_init+0xb0/0x150
+  IAOQ[1]: mem_init+0xb4/0x150
+  RP(r2): start_kernel+0x6c8/0x1190
+ Backtrace:
+  [<0000000040101ab4>] start_kernel+0x6c8/0x1190
+  [<0000000040108574>] start_parisc+0x158/0x1b8
 
-Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+on a HP-PARISC rp3440 machine with this memory layout:
+ Memory Ranges:
+  0) Start 0x0000000000000000 End 0x000000003fffffff Size   1024 MB
+  1) Start 0x0000004040000000 End 0x00000040ffdfffff Size   3070 MB
+
+Fix the crash by avoiding virt_to_page() and similar functions in
+mem_init() until the memory zones have been fully set up.
+
+Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: stable@vger.kernel.org # v5.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- net/qrtr/qrtr.c |    2 +-
+ arch/parisc/mm/init.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -571,7 +571,7 @@ static int qrtr_bcast_enqueue(struct qrt
- 	}
- 	mutex_unlock(&qrtr_node_lock);
+--- a/arch/parisc/mm/init.c
++++ b/arch/parisc/mm/init.c
+@@ -604,7 +604,7 @@ void __init mem_init(void)
+ 			> BITS_PER_LONG);
  
--	qrtr_local_enqueue(node, skb);
-+	qrtr_local_enqueue(NULL, skb);
+ 	high_memory = __va((max_pfn << PAGE_SHIFT));
+-	set_max_mapnr(page_to_pfn(virt_to_page(high_memory - 1)) + 1);
++	set_max_mapnr(max_low_pfn);
+ 	free_all_bootmem();
  
- 	return 0;
- }
+ #ifdef CONFIG_PA11
 
 
