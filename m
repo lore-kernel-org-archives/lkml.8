@@ -2,121 +2,109 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C561BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9ADD2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F542206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgFAQFL (ORCPT
+        id S1727776AbgFAQGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:05:11 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34246 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgFAQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:05:09 -0400
-IronPort-SDR: 2FpO9/WGhY5hW3v9UNvEockSeDi3kq0yvjGMBTcHQDGZ95KXA/LMRooR37PdPfJcgEG7A10PQ4
- eiHERzHLBilw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 09:05:08 -0700
-IronPort-SDR: /75Xv6ldvsQH3t0rXKxpWyUwIfEkS1LKFoISrqLBSZ7WmC4XXYoxDKdAsmQBAjWdktr+Th7EqR
- CuODwSLE2Rbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,461,1583222400"; 
-   d="scan'208";a="293240866"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jun 2020 09:05:08 -0700
-Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
-        by linux.intel.com (Postfix) with ESMTP id 18245580378;
-        Mon,  1 Jun 2020 09:05:05 -0700 (PDT)
-Subject: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
-Date:   Mon, 1 Jun 2020 19:05:04 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 12:06:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55315 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgFAQGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 12:06:47 -0400
+Received: from mail-wr1-f72.google.com ([209.85.221.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jfmxZ-0006s6-01
+        for linux-kernel@vger.kernel.org; Mon, 01 Jun 2020 16:06:45 +0000
+Received: by mail-wr1-f72.google.com with SMTP id t5so167836wro.20
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:06:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bpQ13/Tb/1v9ESSJdhnUaEx5I/MEIqhF5at0rFUACNM=;
+        b=i7bYUu4pdZdA18BL3W0+kRh8UhQy3lFKdi0oESXHxrfYBQeEPrB1XQ7gDYpqBDWZSS
+         W6EJIbu6PPs5PF44jAm/94FsMO6m2fuubvTpn1eWL9BcTWwln7Vwf4g2f4+MY7fKMutk
+         2HPtEcourqj7mZuB8qttghShGDX4dF2uEm1rssyi/ONd4rqXfy/b0fatzZYIjEEAIZlq
+         vGVLkK/RwqTXf4vOwszkjO9d1/c9zPgvy6wutRQw+RhvAHehM63k3bcXMPsL4nYYKPtj
+         NCerwlArbpj4fCc1hDw62Q2F21swqgq2CXbKqci+/Lf0uMB1YIZwIMmsUeoBeyWgNsAn
+         /gqQ==
+X-Gm-Message-State: AOAM533HjziedlMoshKuMT+VrYzv1GMCuN8gR27dAXF05/0I/TQmr7ad
+        ZB9ecaSr1FQZP3bJyb+S+hmUYYQXUFSyQvVQaSo1sw8xR/PyBwDrey51DtBOs5bIPnNfRkDn/Nc
+        006w/RKhWWcwQ5p+WxULpfm10BYF10iEO+4U2RQCJcg==
+X-Received: by 2002:adf:dc42:: with SMTP id m2mr11722690wrj.342.1591027604648;
+        Mon, 01 Jun 2020 09:06:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwtIARnKWstXAKhlHKQE+KOrbq5RT+XW8IL/zXgEDl3x/r+gjZRu4PbPN3pWQtFh7apH9Bo4w==
+X-Received: by 2002:adf:dc42:: with SMTP id m2mr11722665wrj.342.1591027604369;
+        Mon, 01 Jun 2020 09:06:44 -0700 (PDT)
+Received: from xps-13.homenet.telecomitalia.it (host105-135-dynamic.43-79-r.retail.telecomitalia.it. [79.43.135.105])
+        by smtp.gmail.com with ESMTPSA id k16sm19719262wrp.66.2020.06.01.09.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 09:06:43 -0700 (PDT)
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Len Brown <len.brown@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] PM: hibernate: opportunistic memory reclaim
+Date:   Mon,  1 Jun 2020 18:06:34 +0200
+Message-Id: <20200601160636.148346-1-andrea.righi@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Here is the first attempt to provide an interface that allows user-space
+tasks to trigger an opportunistic memory reclaim before hibernating a
+system.
 
-Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
-from command line. Extend perf-record.txt file with --ctl-fd[-ack]
-options description. Document possible usage model introduced by
---ctl-fd[-ack] options by providing example bash shell script.
+Reclaiming memory in advance (e.g., when the system is idle) allows to
+reduce the size of the hibernation image and significantly speed up the
+time to hibernate and resume.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c | 6 ++++++
- tools/perf/util/record.h    | 2 ++
- 2 files changed, 8 insertions(+)
+The typical use case of this feature is to allow high-priority cloud
+instances to preempt low-priority instances (e.g., "spot" instances [1])
+by hibernating them.
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 0394e068dde8..fbe5069eb5d7 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1749,6 +1749,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		perf_evlist__start_workload(rec->evlist);
- 	}
- 
-+	if (evlist__initialize_ctlfd(rec->evlist, opts->ctl_fd, opts->ctl_fd_ack))
-+		goto out_child;
-+
- 	if (opts->initial_delay) {
- 		pr_info(EVLIST_DISABLED_MSG);
- 		if (opts->initial_delay > 0) {
-@@ -1895,6 +1898,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		record__synthesize_workload(rec, true);
- 
- out_child:
-+	evlist__finalize_ctlfd(rec->evlist);
- 	record__mmap_read_all(rec, true);
- 	record__aio_mmap_read_sync(rec);
- 
-@@ -2380,6 +2384,8 @@ static struct record record = {
- 		},
- 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 		.nr_threads_synthesize = 1,
-+		.ctl_fd              = -1,
-+		.ctl_fd_ack          = -1,
- 	},
- 	.tool = {
- 		.sample		= process_sample_event,
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index da138dcb4d34..4cb72a478af1 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -70,6 +70,8 @@ struct record_opts {
- 	int	      mmap_flush;
- 	unsigned int  comp_level;
- 	unsigned int  nr_threads_synthesize;
-+	int	      ctl_fd;
-+	int	      ctl_fd_ack;
- };
- 
- extern const char * const *record_usage;
--- 
-2.24.1
+Opportunistic memory reclaim is very effective to quickly hibernate
+instances that allocate a large chunk of memory and remain mostly idle
+for the majority of the time, only using a minimum working set.
 
+This topic has been mentioned during the OSPM 2020 conference [2].
+
+See [RFC PATCH 2/2] for details about the proposed solution.
+
+Feedbacks are welcome.
+
+Thanks,
+-Andrea
+
+[1] https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html
+[2] https://lwn.net/Articles/821158/
+
+----------------------------------------------------------------
+Andrea Righi (2):
+      mm: swap: allow partial swapoff with try_to_unuse()
+      PM: hibernate: introduce opportunistic memory reclaim
+
+ Documentation/ABI/testing/sysfs-power | 38 ++++++++++++++
+ include/linux/swapfile.h              |  8 +++
+ kernel/power/hibernate.c              | 94 ++++++++++++++++++++++++++++++++++-
+ mm/swapfile.c                         | 45 ++++++++++++++---
+ 4 files changed, 176 insertions(+), 9 deletions(-)
 
