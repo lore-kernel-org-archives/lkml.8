@@ -2,91 +2,198 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F528C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A815C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9882068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A732074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591026217;
-	bh=7AqRZenQrkm6vYlWUFu/IMWJbK6kYXMYDixKw6uv0rg=;
+	s=default; t=1591026237;
+	bh=M54SqmfXNpJrgqaOqAd+pymyFl9akDTCsGmDAumpLd0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KexMcIKVz2Lfe07RIGfaljmiwSO0+BVlUDQBuxy9pulqvfLhiAqCUx6o1ivjR5m9g
-	 +jblUBj0FghpEIyV8brXWqhReOrdOM06Kwqhw43zUGuor9mSZEIhFL5jRoXMYUoj5f
-	 R8wIixS2ICyKX45d9gAy+1Dgcd8LZnasGAcVfifc=
+	b=Pc6W2KOSTLLOYkapj4YEKk4bDQFybwYwbjsYhH+Shfs5V9+jtwUCAcqwDrdPMXC/2
+	 CisXarJKTOsmIX1k0z0g+6Vm7aZ3m2dm4x3OZoF+/jql7OWtshv4UEqIXmur8Lr2Or
+	 4WjnvJr2di3dc8OFTnor9I9SOUZgpON36DcbncOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgFAPng (ORCPT
+        id S1727826AbgFAPn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:43:36 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37745 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgFAPng (ORCPT
+        Mon, 1 Jun 2020 11:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgFAPn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:43:36 -0400
-Received: by mail-il1-f193.google.com with SMTP id r2so9794764ila.4;
-        Mon, 01 Jun 2020 08:43:34 -0700 (PDT)
+        Mon, 1 Jun 2020 11:43:56 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56459C05BD43;
+        Mon,  1 Jun 2020 08:43:55 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k22so8010413qtm.6;
+        Mon, 01 Jun 2020 08:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G2ppN+SO01U35andcJx4wK7uE7Y/yhFiQ+1V3mTLz5k=;
+        b=g9LHrVyOk4LXkO1djAdvgd7CoGtQeMTrsqvothE6BTPFJHbZe1UYxFWaj2XyM5+u2v
+         mIzUJNAuuxFS1k6lMjA0i5s4/9jM45hbiIf8z0Dygga25k5k+7D6d43ZbgDv61GZdkPh
+         vtRTrhph/+vvVXh6nvvH+GMtH5KdVjeQ4IMvg4ZWEu6I8tvl7HMF0VBK9vUfvMOEtC1T
+         ePkoMQeqZDC5D6jatZ0EUQgWuhwlYGRn+qhPlayT98/jFKvUdkeIJQQSSs5ZuvYtZDk3
+         ZGD5JVvRxwXieZvNhlpPZ9Dq0UEmyVz4cRGWwiGy4h/S27RV5TUM1ECVgCN1RejuUZcC
+         S2Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2Cv2OpMq6lgoXWKHII03pxl97bK7u9ytVqckOaVbDuk=;
-        b=gQ7u1gXpa7W9+jqp8yyZNL6nyssNtTaj4cSLD/oEu5aauzS0CCNscnLnh7eIRRZrx3
-         a+76pDpTBdG66CidYVnh3PrgURq0CJs0tXeM1cnlIKfH66y/I8698B3mKWgoAq8DX1oF
-         HzoVTFw/wk3h2IG/VHsnR+rpdQZU/AjusQ7vDr6efU60X9E8E57LP6Dc4VKW15wIoNdm
-         fcz7uzajwVa/yfSE83IERnY6fQDAzzKTULURU8/CVI1tg9e9kI7KGB5fTeGAEQcC3P5j
-         1LrKu3jFccO17b+iGlYKyjd3rLiShtDHii87m7vxzQFIUHge+eK/ouZTRtAeW2O5w0I1
-         Gblg==
-X-Gm-Message-State: AOAM533daEcsLDgxI8VHWVG5SRBV/KrjSEsRNfTwcV4OMhbo9hb1cRdn
-        BhCRft9FF92yxw40S9CrwQ==
-X-Google-Smtp-Source: ABdhPJy5xOF1cP/A25OBdRb23Fv9bPIVH9PkC8RQAXi+0x6Lk0dnBX72tppfHijJCcDFFxHT3jWqKw==
-X-Received: by 2002:a92:b00e:: with SMTP id x14mr16153308ilh.219.1591026214135;
-        Mon, 01 Jun 2020 08:43:34 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id o28sm9470510ili.12.2020.06.01.08.43.31
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=G2ppN+SO01U35andcJx4wK7uE7Y/yhFiQ+1V3mTLz5k=;
+        b=MObsS8hEysDZU4yvVP1/Xn1fUJier66htWgTaqi1EgPc5owkgEAvMg+ZeOVM6Bhvdx
+         Z5mzcvONSJWPH7WtNer6S2IF8qTcQj0PoXgY51ASwrZU/2kdAyBkxem9Ft/mDpidjNT1
+         Bcen3dnMyrKy42uQQPory8Wzrg8nRgCUqi2TuVZ7njlrtjmK/ZCajXdy+9a6r2dO25jQ
+         x+V6B9s+zEIhv+nfHwoRlar0MoF0okpmeCTK2i/8zVrU654XGGCywT32qEYAiVqPBT0L
+         xEWtuasXMaxWlIdYSEsVGsih9ojO/iUBJxcQUSwqIouAc6wqAlOu5D9KpPeax3rOq+9a
+         jR5w==
+X-Gm-Message-State: AOAM530P/hGqzsqtmBiemIXPfVrcJqliyRhtKNeLtc2R9ZzFWxo9ke2s
+        hCR9CblDgn8hc/6rtbWIYvjtlBJQ
+X-Google-Smtp-Source: ABdhPJydDc8pxC/hzfQQ5LLSzEsme2ZF1n790P7xvYsqHZEpPm8tvZgc/1nkS1CWxoo8SriQV8AQ0g==
+X-Received: by 2002:ac8:221a:: with SMTP id o26mr9593551qto.88.1591026234387;
+        Mon, 01 Jun 2020 08:43:54 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:eb8b])
+        by smtp.gmail.com with ESMTPSA id k43sm18081584qtk.67.2020.06.01.08.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 08:43:33 -0700 (PDT)
-Received: (nullmailer pid 963387 invoked by uid 1000);
-        Mon, 01 Jun 2020 15:43:30 -0000
-Date:   Mon, 1 Jun 2020 09:43:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, robh+dt@kernel.org, festevam@gmail.com,
-        ulf.hansson@linaro.org, Linux-imx@nxp.com, sboyd@kernel.org,
-        shawnguo@kernel.org, p.zabel@pengutronix.de,
-        andrew.smirnov@gmail.com, krzk@kernel.org,
-        linux-kernel@vger.kernel.org, s.hauer@pengutronix.de
-Subject: Re: [PATCH 1/2] dt-bindings: power: Convert imx gpc to json-schema
-Message-ID: <20200601154330.GA963331@bogus>
-References: <1590998803-29191-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 01 Jun 2020 08:43:53 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 11:43:51 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Boris Burkov <boris@bur.io>
+Cc:     Jens Axboe <axboe@kernel.dk>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH blk-cgroup/for-5.8] blk-cgroup: show global disk stats in
+ root cgroup io.stat
+Message-ID: <20200601154351.GD31548@mtj.thefacebook.com>
+References: <20200529232017.1795920-1-boris@bur.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590998803-29191-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200529232017.1795920-1-boris@bur.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 01 Jun 2020 16:06:42 +0800, Anson Huang wrote:
-> Convert the i.MX GPC binding to DT schema format using json-schema
-> 
-> >From latest reference manual, there is actually ONLY 1 interrupt for
-> GPC, so the additional GPC interrupt is removed.
-> 
-> Consumer's example is also removed since it is NOT that useful.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../devicetree/bindings/power/fsl,imx-gpc.txt      |  91 ---------------
->  .../devicetree/bindings/power/fsl,imx-gpc.yaml     | 124 +++++++++++++++++++++
->  2 files changed, 124 insertions(+), 91 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
->  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.yaml
-> 
+Hello, Boris.
 
-Applied, thanks!
+On Fri, May 29, 2020 at 04:20:17PM -0700, Boris Burkov wrote:
+> In order to improve consistency and usability in cgroup stat accounting,
+> we would like to support the root cgroup's io.stat.
+> 
+> Since the root cgroup has processes doing io even if the system has no
+> explicitly created cgroups, we need to be careful to avoid overhead in
+> that case.  For that reason, the rstat algorithms don't handle the root
+> cgroup, so just turning the file on wouldn't give correct statistics.
+> 
+> To get around this, we simulate flushing the iostat struct by filling it
+> out directly from global disk stats. The result is a root cgroup io.stat
+> file consistent with both /proc/diskstats and io.stat.
+> 
+> Signed-off-by: Boris Burkov <boris@bur.io>
+> Suggested-by: Tejun Heo <tj@kernel.org>
+...
+> +static void blkg_iostat_set(struct blkg_iostat *dst, struct blkg_iostat *src)
+> +{
+
+Can you please separate out code reorganization to a separate patch so that
+the actual change can be reviewed clearly?
+
+> +/*
+> + * The rstat algorithms intentionally don't handle the root cgroup to avoid
+> + * incurring overhead when no cgroups are defined. For that reason,
+> + * cgroup_rstat_flush in blkcg_print_stat does not actually fill out the
+> + * iostat in the root cgroup's blkcg_gq.
+> + *
+> + * However, we would like to re-use the printing code between the root and
+> + * non-root cgroups to the extent possible. For that reason, we simulate
+> + * flushing the root cgroup's stats by explicitly filling in the iostat
+> + * with disk level statistics.
+> + */
+
+This is clever and neat.
+
+> +static void blkcg_fill_root_iostats(void)
+> +{
+> +	struct class_dev_iter iter;
+> +	struct device *dev;
+> +
+> +	class_dev_iter_init(&iter, &block_class, NULL, &disk_type);
+> +	while ((dev = class_dev_iter_next(&iter))) {
+> +		struct gendisk *disk = dev_to_disk(dev);
+> +		struct hd_struct *part = disk_get_part(disk, 0);
+> +		struct blkcg_gq *blkg = blk_queue_root_blkg(disk->queue);
+> +		struct blkg_iostat tmp;
+> +		int cpu;
+> +
+> +		memset(&tmp, 0, sizeof(tmp));
+> +		for_each_possible_cpu(cpu) {
+> +			struct disk_stats *cpu_dkstats;
+> +
+> +			cpu_dkstats = per_cpu_ptr(part->dkstats, cpu);
+> +			tmp.ios[BLKG_IOSTAT_READ] +=
+> +				cpu_dkstats->ios[STAT_READ];
+> +			tmp.ios[BLKG_IOSTAT_WRITE] +=
+> +				cpu_dkstats->ios[STAT_WRITE];
+> +			tmp.ios[BLKG_IOSTAT_DISCARD] +=
+> +				cpu_dkstats->ios[STAT_DISCARD];
+> +			// convert sectors to bytes
+> +			tmp.bytes[BLKG_IOSTAT_READ] +=
+> +				cpu_dkstats->sectors[STAT_READ] << 9;
+> +			tmp.bytes[BLKG_IOSTAT_WRITE] +=
+> +				cpu_dkstats->sectors[STAT_WRITE] << 9;
+> +			tmp.bytes[BLKG_IOSTAT_DISCARD] +=
+> +				cpu_dkstats->sectors[STAT_DISCARD] << 9;
+> +
+> +			u64_stats_update_begin(&blkg->iostat.sync);
+> +			blkg_iostat_set(&blkg->iostat.cur, &tmp);
+> +			u64_stats_update_end(&blkg->iostat.sync);
+> +		}
+> +	}
+> +}
+...
+> diff --git a/block/genhd.c b/block/genhd.c
+> index afdb2c3e5b22..4f5f4590517c 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -38,8 +38,6 @@ static struct kobject *block_depr;
+>  static DEFINE_SPINLOCK(ext_devt_lock);
+>  static DEFINE_IDR(ext_devt_idr);
+>  
+> -static const struct device_type disk_type;
+> -
+>  static void disk_check_events(struct disk_events *ev,
+>  			      unsigned int *clearing_ptr);
+>  static void disk_alloc_events(struct gendisk *disk);
+> @@ -1566,7 +1564,7 @@ static char *block_devnode(struct device *dev, umode_t *mode,
+>  	return NULL;
+>  }
+>  
+> -static const struct device_type disk_type = {
+> +const struct device_type disk_type = {
+>  	.name		= "disk",
+>  	.groups		= disk_attr_groups,
+>  	.release	= disk_release,
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index a9384449465a..ea38bc36bc6d 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -26,6 +26,7 @@
+>  #define disk_to_dev(disk)	(&(disk)->part0.__dev)
+>  #define part_to_dev(part)	(&((part)->__dev))
+>  
+> +extern const struct device_type disk_type;
+
+So, this is fine but I'd explicitly mention it in the patch description.
+
+Thanks.
+
+-- 
+tejun
