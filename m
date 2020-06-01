@@ -2,54 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E11C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF52C2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E282073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035461;
-	bh=oiJD1lvlGpAMOl4+JyAb/XV8vol2tJ+m0TEGWwrbjG4=;
+	s=default; t=1591035464;
+	bh=S2SI/ZGiBbnJng5OesmlFF79jiK584W1YvWabB6Yq4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmNM8DNoSiVc3dmZ6F+/XAIJOXsaWo8ZGEHu+OwzV2TVuTE69Xxkn3yY4+1Hh5To5
-	 8pIEL5RmEWfeFEhU5gnkKdpC8zJEc3Yz+ZUtcG3+8+d5GdLr/gj1uF5UjILbjtQBuQ
-	 Vljork9meeFxq5lEXIfIJD0AhDMN+Fjm/u9pnWUA=
+	b=oE3fjeInhuE9GxK1ddQWI5ucHqrvFThOZ2wvcDRminN4KzthRz9OQxIxDD1Ji+zNA
+	 VZlCO0f9+WbKlGKFDQHoSnatqz9BlHZN7jxjbhvgN3qxOmgDypGrklg8XlGjuP8V0L
+	 eaPQruuY1LI1VxGk16WTVv19GBhpgCNLM1bwdtKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbgFASRj (ORCPT
+        id S1731861AbgFASRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731839AbgFASRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:36 -0400
+        id S1731586AbgFASRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 276D8207DF;
-        Mon,  1 Jun 2020 18:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7175F2065C;
+        Mon,  1 Jun 2020 18:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035455;
-        bh=oiJD1lvlGpAMOl4+JyAb/XV8vol2tJ+m0TEGWwrbjG4=;
+        s=default; t=1591035457;
+        bh=S2SI/ZGiBbnJng5OesmlFF79jiK584W1YvWabB6Yq4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tik1PayvXSP84nMQLO1l3Ej2B8dEBA8e2WAP7Sa1VglXPaeixGRDucYGOY67I1O03
-         rQu5FNolygtG/tFT4BamV0NQFrUi/hiLYR+E/NX2ddz5EbZYi5HGFYWNiIwPtbwJki
-         wSppkCR7yY7uXrHdW4DczO9qK06zHU8kD1jCzsNs=
+        b=SrdVGN2W57YoVk58HZkowVybne5vZ3W9u7HbRcUkJ02aEiv+VP5dr91u+0nBnAD8A
+         n8m8SvY25RbEDBUh/5u8K0qpySg1hQS+BIZughsDp3RppQDHZibK78pM70GBjSFlEp
+         X/5RTgYLxRWzjNh75cSQL+Ppe9nLYUrG0ZGW1awE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aric Cyr <aric.cyr@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 130/177] drm/amd/display: Fix potential integer wraparound resulting in a hang
-Date:   Mon,  1 Jun 2020 19:54:28 +0200
-Message-Id: <20200601174059.362346545@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 166/177] crypto: chelsio/chtls: properly set tp->lsndtime
+Date:   Mon,  1 Jun 2020 19:55:04 +0200
+Message-Id: <20200601174102.009683200@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,42 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4e5183200d9b66695c754ef214933402056e7b95 ]
+commit a4976a3ef844c510ae9120290b23e9f3f47d6bce upstream.
 
-[Why]
-If VUPDATE_END is before VUPDATE_START the delay calculated can become
-very large, causing a soft hang.
+TCP tp->lsndtime unit/base is tcp_jiffies32, not tcp_time_stamp()
 
-[How]
-Take the absolute value of the difference between START and END.
+Fixes: 36bedb3f2e5b ("crypto: chtls - Inline TLS record Tx")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Ayush Sawal <ayush.sawal@chelsio.com>
+Cc: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/chelsio/chtls/chtls_io.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 60cea910759b..0c987b5d68e2 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1651,6 +1651,8 @@ static void delay_cursor_until_vupdate(struct dc *dc, struct pipe_ctx *pipe_ctx)
- 		return;
- 
- 	/* Stall out until the cursor update completes. */
-+	if (vupdate_end < vupdate_start)
-+		vupdate_end += stream->timing.v_total;
- 	us_vupdate = (vupdate_end - vupdate_start + 1) * us_per_line;
- 	udelay(us_to_vupdate + us_vupdate);
- }
--- 
-2.25.1
-
+--- a/drivers/crypto/chelsio/chtls/chtls_io.c
++++ b/drivers/crypto/chelsio/chtls/chtls_io.c
+@@ -682,7 +682,7 @@ int chtls_push_frames(struct chtls_sock
+ 				make_tx_data_wr(sk, skb, immdlen, len,
+ 						credits_needed, completion);
+ 			tp->snd_nxt += len;
+-			tp->lsndtime = tcp_time_stamp(tp);
++			tp->lsndtime = tcp_jiffies32;
+ 			if (completion)
+ 				ULP_SKB_CB(skb)->flags &= ~ULPCB_FLAG_NEED_HDR;
+ 		} else {
 
 
