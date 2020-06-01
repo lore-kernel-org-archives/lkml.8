@@ -2,158 +2,136 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99ACE20734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591004887;
-	bh=t58s93YEjg685z8DSWWCBbOs5EB6tH/ebWHiYN4Wr8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YvxgFos4na6QTXnufVYd2Hh4SKxNwoFOK4bqqNTo1u5VPN8J/Dkh+va6DwJCxTBOL
-	 5S+m9oW3qeGbTaxd/OMRZV6zHTN22B63TVO30F5q7TVN/r37ug3pp1IvJRsHA1nUUW
-	 Dz8mUUNpdzQPymoAk/lBFMt4KaqacQGpjZIU93zg=
+	by mail.kernel.org (Postfix) with ESMTP id A2953206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgFAJsG (ORCPT
+        id S1726050AbgFAJwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgFAJsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:48:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6B53206C3;
-        Mon,  1 Jun 2020 09:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591004885;
-        bh=t58s93YEjg685z8DSWWCBbOs5EB6tH/ebWHiYN4Wr8I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vw6iMKZoMGkvhHzqZvOc5GnWU1yuK8WeZ7NQpTyJiJkvtgtzqC9LB0+Xsfthu9oOP
-         QaYbERmzIj/NZUX3TWU36u8uw4gsQPacwZ8lLQhxexqcXFFveEuZZJRB+InpLq9I2H
-         Lwadj8BbmWSx2ROq9Y4XcUk/wxfctjukLWM6bJpI=
-Date:   Mon, 1 Jun 2020 11:48:02 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        bgolaszewski@baylibre.com, mika.westerberg@linux.intel.com,
-        efremov@linux.com, ztuowen@gmail.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2] devres: keep both device name and resource name in
- pretty name
-Message-ID: <20200601094802.GA1824038@kroah.com>
-References: <20200531180758.1426455-1-olteanv@gmail.com>
- <39107d25-f6e6-6670-0df6-8ae6421e7f9a@cogentembedded.com>
- <CA+h21hq4tah3EAdFaLdxTR1JtEaSiZfOFuinwHq-p0AZ+ENesw@mail.gmail.com>
+        Mon, 1 Jun 2020 05:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgFAJwU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:52:20 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629FDC03E96F;
+        Mon,  1 Jun 2020 02:52:20 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jfh7C-0003eF-Ox; Mon, 01 Jun 2020 11:52:18 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 34C321C0244;
+        Mon,  1 Jun 2020 11:52:18 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 09:52:18 -0000
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/headers: Split out open-coded prototypes into
+ kernel/sched/smp.h
+Cc:     Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hq4tah3EAdFaLdxTR1JtEaSiZfOFuinwHq-p0AZ+ENesw@mail.gmail.com>
+Message-ID: <159100513800.17951.18103491836045415816.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 12:36:08PM +0300, Vladimir Oltean wrote:
-> Hi Sergei,
-> 
-> On Mon, 1 Jun 2020 at 10:51, Sergei Shtylyov
-> <sergei.shtylyov@cogentembedded.com> wrote:
-> >
-> > Hello!
-> >
-> > On 31.05.2020 21:07, Vladimir Oltean wrote:
-> >
-> > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > >
-> > > Sometimes debugging a device is easiest using devmem on its register
-> > > map, and that can be seen with /proc/iomem. But some device drivers have
-> > > many memory regions. Take for example a networking switch. Its memory
-> > > map used to look like this in /proc/iomem:
-> > >
-> > > 1fc000000-1fc3fffff : pcie@1f0000000
-> > >    1fc000000-1fc3fffff : 0000:00:00.5
-> > >      1fc010000-1fc01ffff : sys
-> > >      1fc030000-1fc03ffff : rew
-> > >      1fc060000-1fc0603ff : s2
-> > >      1fc070000-1fc0701ff : devcpu_gcb
-> > >      1fc080000-1fc0800ff : qs
-> > >      1fc090000-1fc0900cb : ptp
-> > >      1fc100000-1fc10ffff : port0
-> > >      1fc110000-1fc11ffff : port1
-> > >      1fc120000-1fc12ffff : port2
-> > >      1fc130000-1fc13ffff : port3
-> > >      1fc140000-1fc14ffff : port4
-> > >      1fc150000-1fc15ffff : port5
-> > >      1fc200000-1fc21ffff : qsys
-> > >      1fc280000-1fc28ffff : ana
-> > >
-> > > But after the patch in Fixes: was applied, the information is now
-> > > presented in a much more opaque way:
-> > >
-> > > 1fc000000-1fc3fffff : pcie@1f0000000
-> > >    1fc000000-1fc3fffff : 0000:00:00.5
-> > >      1fc010000-1fc01ffff : 0000:00:00.5
-> > >      1fc030000-1fc03ffff : 0000:00:00.5
-> > >      1fc060000-1fc0603ff : 0000:00:00.5
-> > >      1fc070000-1fc0701ff : 0000:00:00.5
-> > >      1fc080000-1fc0800ff : 0000:00:00.5
-> > >      1fc090000-1fc0900cb : 0000:00:00.5
-> > >      1fc100000-1fc10ffff : 0000:00:00.5
-> > >      1fc110000-1fc11ffff : 0000:00:00.5
-> > >      1fc120000-1fc12ffff : 0000:00:00.5
-> > >      1fc130000-1fc13ffff : 0000:00:00.5
-> > >      1fc140000-1fc14ffff : 0000:00:00.5
-> > >      1fc150000-1fc15ffff : 0000:00:00.5
-> > >      1fc200000-1fc21ffff : 0000:00:00.5
-> > >      1fc280000-1fc28ffff : 0000:00:00.5
-> > >
-> > > That patch made a fair comment that /proc/iomem might be confusing when
-> > > it shows resources without an associated device, but we can do better
-> > > than just hide the resource name altogether. Namely, we can print the
-> > > device name _and_ the resource name. Like this:
-> > >
-> > > 1fc000000-1fc3fffff : pcie@1f0000000
-> > >    1fc000000-1fc3fffff : 0000:00:00.5
-> > >      1fc010000-1fc01ffff : 0000:00:00.5 sys
-> > >      1fc030000-1fc03ffff : 0000:00:00.5 rew
-> > >      1fc060000-1fc0603ff : 0000:00:00.5 s2
-> > >      1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
-> > >      1fc080000-1fc0800ff : 0000:00:00.5 qs
-> > >      1fc090000-1fc0900cb : 0000:00:00.5 ptp
-> > >      1fc100000-1fc10ffff : 0000:00:00.5 port0
-> > >      1fc110000-1fc11ffff : 0000:00:00.5 port1
-> > >      1fc120000-1fc12ffff : 0000:00:00.5 port2
-> > >      1fc130000-1fc13ffff : 0000:00:00.5 port3
-> > >      1fc140000-1fc14ffff : 0000:00:00.5 port4
-> > >      1fc150000-1fc15ffff : 0000:00:00.5 port5
-> > >      1fc200000-1fc21ffff : 0000:00:00.5 qsys
-> > >      1fc280000-1fc28ffff : 0000:00:00.5 ana
-> > >
-> > > Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-> > > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > [...]
-> >
-> >     You didn't write the version log -- what changed since v1?
-> >
-> > MBR, Sergei
-> 
-> The changes in v2 are that I'm checking for memory allocation errors.
+The following commit has been merged into the sched/core branch of tip:
 
-You always need to mention that below the --- line, as the
-documentation says to.
+Commit-ID:     1f8db4150536431b031585ecc2a6793f69245de2
+Gitweb:        https://git.kernel.org/tip/1f8db4150536431b031585ecc2a6793f69245de2
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Thu, 28 May 2020 11:01:34 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 28 May 2020 11:03:20 +02:00
 
-Please send a v3 with that fixed up.
+sched/headers: Split out open-coded prototypes into kernel/sched/smp.h
 
-thanks,
+Move the prototypes for sched_ttwu_pending() and send_call_function_single_ipi()
+into the newly created kernel/sched/smp.h header, to make sure they are all
+the same, and to architectures happy that use -Wmissing-prototypes.
 
-greg k-h
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/core.c |  1 +
+ kernel/sched/smp.h  |  9 +++++++++
+ kernel/smp.c        |  5 +----
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+ create mode 100644 kernel/sched/smp.h
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index b3c64c6..43ba2d4 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -20,6 +20,7 @@
+ #include "../smpboot.h"
+ 
+ #include "pelt.h"
++#include "smp.h"
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/sched.h>
+diff --git a/kernel/sched/smp.h b/kernel/sched/smp.h
+new file mode 100644
+index 0000000..9620e32
+--- /dev/null
++++ b/kernel/sched/smp.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Scheduler internal SMP callback types and methods between the scheduler
++ * and other internal parts of the core kernel:
++ */
++
++extern void sched_ttwu_pending(void *arg);
++
++extern void send_call_function_single_ipi(int cpu);
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 0d61dc0..4dec04f 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -22,7 +22,7 @@
+ #include <linux/hypervisor.h>
+ 
+ #include "smpboot.h"
+-
++#include "sched/smp.h"
+ 
+ #define CSD_TYPE(_csd)	((_csd)->flags & CSD_FLAG_TYPE_MASK)
+ 
+@@ -133,8 +133,6 @@ static __always_inline void csd_unlock(call_single_data_t *csd)
+ 
+ static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, csd_data);
+ 
+-extern void send_call_function_single_ipi(int cpu);
+-
+ void __smp_call_single_queue(int cpu, struct llist_node *node)
+ {
+ 	/*
+@@ -196,7 +194,6 @@ void generic_smp_call_function_single_interrupt(void)
+ 	flush_smp_call_function_queue(true);
+ }
+ 
+-extern void sched_ttwu_pending(void *);
+ extern void irq_work_single(void *);
+ 
+ /**
