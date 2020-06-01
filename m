@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB28C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4533C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52632206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866DE207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034932;
-	bh=3mXHuIbUAn2ZlS3EHaOUlbTu8JdHRMn00oCcVfkK2NQ=;
+	s=default; t=1591034938;
+	bh=gM9YRzn3kuFgPVGpApvzadERLBeSrMqro91MQy0ovP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIEqz02gfPJfIq6ETDoL8kmdPzvoN1lBWYlkhHYKi6XqL4Se4BNVLUZyBXK3nIYnJ
-	 UYOOTCy0nENL1lINwbVq2squMjL0oLBqGq8Du09po4Q/hhPslaSviYTOj1mq5GlEiE
-	 t+545OYRffqLaqHoRbTlyT0qwjrm/QbwHhg751iY=
+	b=BIdQ2RjPDiQHFV6lAIouPWqv2WQiJVL7DTeedf4/mkIMNEsv9ee7z4X6eAQP2+Mwv
+	 sVA37e6a19bvq3/4gNkn1ehFplMUtbYsPgjoKkcrLqgsYOE54xJnms0WFr8j+RjIj+
+	 U+vPXmIWTT5aeMHcscxEs2yTnjGRoumrOqytB3Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbgFASIv (ORCPT
+        id S1729298AbgFASI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55010 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:08:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730770AbgFASIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:08:47 -0400
+        id S1730785AbgFASIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3EF92068D;
-        Mon,  1 Jun 2020 18:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 258AB2068D;
+        Mon,  1 Jun 2020 18:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034926;
-        bh=3mXHuIbUAn2ZlS3EHaOUlbTu8JdHRMn00oCcVfkK2NQ=;
+        s=default; t=1591034930;
+        bh=gM9YRzn3kuFgPVGpApvzadERLBeSrMqro91MQy0ovP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUdEAOhwG0sittEl/ivrRw3AVsjIx8WYnvx0ixPkTPEyKXAAtdk5o5o3sIlmMa46t
-         fFBxAAnS8lAJ0vQ80opl6mwIpXNC1HSvH/rfJZLvjFbJNnXdbJZs4+CvcE3u6tsBwY
-         eTSehGxah3IORDn0GGr0fVWyP0JAvuqtSkLHhGd8=
+        b=PPdWigsVNB1gOQzXmk0yxrFbuC4fNV3KaNLbMQ/h7eJeZxFGFPfx1GZP3YFQH2SnF
+         JE3wR6W90i/FVf4MHG7lJU7BheBgQTDaa5GS75X3O5f0cBZ99MrT65x42se4l5aXZe
+         HBSYoKvX4EL3nt911NkgsrGFX0PuI/eZ6XeYumXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org,
+        Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 075/142] gpio: exar: Fix bad handling for ida_simple_get error path
-Date:   Mon,  1 Jun 2020 19:53:53 +0200
-Message-Id: <20200601174045.626573803@linuxfoundation.org>
+Subject: [PATCH 5.4 077/142] soc: mediatek: cmdq: return send msg error code
+Date:   Mon,  1 Jun 2020 19:53:55 +0200
+Message-Id: <20200601174046.007180577@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,53 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
 
-[ Upstream commit 333830aa149a87cabeb5d30fbcf12eecc8040d2c ]
+[ Upstream commit 34c4e4072603ff5c174df73b973896abb76cbb51 ]
 
-The commit 7ecced0934e5 ("gpio: exar: add a check for the return value
-of ida_simple_get fails") added a goto jump to the common error
-handler for ida_simple_get() error, but this is wrong in two ways:
-it doesn't set the proper return code and, more badly, it invokes
-ida_simple_remove() with a negative index that shall lead to a kernel
-panic via BUG_ON().
+Return error code to client if send message fail,
+so that client has chance to error handling.
 
-This patch addresses those two issues.
-
-Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida_simple_get fails")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 576f1b4bc802 ("soc: mediatek: Add Mediatek CMDQ helper")
+Signed-off-by: Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Link: https://lore.kernel.org/r/1583664775-19382-6-git-send-email-dennis-yc.hsieh@mediatek.com
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-exar.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-index fae327d5b06e..6890d32d9f25 100644
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -145,8 +145,10 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 	mutex_init(&exar_gpio->lock);
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 73a852b2f417..34eec26b0c1f 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -258,7 +258,9 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+ 		spin_unlock_irqrestore(&client->lock, flags);
+ 	}
  
- 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
--	if (index < 0)
--		goto err_destroy;
-+	if (index < 0) {
-+		ret = index;
-+		goto err_mutex_destroy;
-+	}
+-	mbox_send_message(client->chan, pkt);
++	err = mbox_send_message(client->chan, pkt);
++	if (err < 0)
++		return err;
+ 	/* We can send next packet immediately, so just call txdone. */
+ 	mbox_client_txdone(client->chan, 0);
  
- 	sprintf(exar_gpio->name, "exar_gpio%d", index);
- 	exar_gpio->gpio_chip.label = exar_gpio->name;
-@@ -173,6 +175,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 
- err_destroy:
- 	ida_simple_remove(&ida_index, index);
-+err_mutex_destroy:
- 	mutex_destroy(&exar_gpio->lock);
- 	return ret;
- }
 -- 
 2.25.1
 
