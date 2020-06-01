@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2D8206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717142074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037464;
-	bh=/WcWh1uH2GLX/GmYiVRCx2a+7miDIIFtUB6J6mZ/vVc=;
+	s=default; t=1591037466;
+	bh=rh/iTIyXUgQYbWqo2GeJdWBSVP/4pOsnGFMjLcnxaoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yU+W/9FoN2nekAwu5tdR/NLUT4/t/Mz5FiSpVevSkySR+ueCyqkJ6fydVPAQG/LPk
-	 yEnUFiiPJOluk/Q5Syg3JsT6fe+Br8eq677r9zlbnOCkYDwHh3G+zHxuFhGQ8TajuV
-	 uDrAu9kmZ6zFs3cRvgd/jXK7lE4Cc7AHNdV7TlZM=
+	b=N9oATcQ/uAZJKx4G1MHFgssvY2SXiIafuZ73FHv60PJHaSrtgLJyinJ3M8BOgSbCN
+	 NvbJfE/QXdTnPl3ry/N1909Yy4HgN61Vv/mIeq8eCtT1qRg7lr1j7dFghAy0jKnZva
+	 MDDZHf2O8Xa5M5Z/BhijAYKagg9do3aQo18SQN0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbgFASvE (ORCPT
+        id S1730780AbgFASvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50342 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728740AbgFASFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:05:16 -0400
+        id S1729201AbgFASFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC2452068D;
-        Mon,  1 Jun 2020 18:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69D51207D0;
+        Mon,  1 Jun 2020 18:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034716;
-        bh=/WcWh1uH2GLX/GmYiVRCx2a+7miDIIFtUB6J6mZ/vVc=;
+        s=default; t=1591034711;
+        bh=rh/iTIyXUgQYbWqo2GeJdWBSVP/4pOsnGFMjLcnxaoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWsNmRhTOywjakDQC/s9qj2b2LIYgZwH6yPuZKrBgl5kygRSc9aBphcXfVnGZ5MoY
-         6AF385Xd2/dqc+kAzp0kMfQVjaNlZxv3lfF8i3EpbVkfbKNavs/jvSNfa1IvAX1igC
-         q5AO5ilpcZVe4MvJ7S6iXu07mPi1385bVy6iPsKk=
+        b=w9ZuBt/LtMubeOixWUwfYSzCfCW/BFudQEQLTFMn4VhN2NCzYlHvqu3b2iS/ZGLLS
+         9GYd8+ZqHY+AfbqvGS3dJRIN+JTzgPmQFqILxIAPnWg3VJ2LAYDtDi2jY4v5ou49W4
+         NLP42eB7yWAHL4huCgK1uxtDZOz4GtTbNehNDj40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Coverity <scan-admin@coverity.com>,
+        Steve French <stfrench@microsoft.com>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/95] Input: usbtouchscreen - add support for BonXeon TP
-Date:   Mon,  1 Jun 2020 19:53:37 +0200
-Message-Id: <20200601174026.741523579@linuxfoundation.org>
+Subject: [PATCH 4.19 35/95] cifs: Fix null pointer check in cifs_read
+Date:   Mon,  1 Jun 2020 19:53:35 +0200
+Message-Id: <20200601174026.412759141@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -60,35 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit e3b4f94ef52ae1592cbe199bd38dbdc0d58b2217 ]
+[ Upstream commit 9bd21d4b1a767c3abebec203342f3820dcb84662 ]
 
-Based on available information this uses the singletouch irtouch
-protocol. This is tested and confirmed to be fully functional on
-the BonXeon TP hardware I have.
+Coverity scan noted a redundant null check
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200413184217.55700-1-james.hilliard1@gmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Coverity-id: 728517
+Reported-by: Coverity <scan-admin@coverity.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/usbtouchscreen.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/cifs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
-index 48304e26f988..d939c1798518 100644
---- a/drivers/input/touchscreen/usbtouchscreen.c
-+++ b/drivers/input/touchscreen/usbtouchscreen.c
-@@ -195,6 +195,7 @@ static const struct usb_device_id usbtouch_devices[] = {
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
-+	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index cfb0d91289ec..128cbd69911b 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3532,7 +3532,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
+ 			 * than it negotiated since it will refuse the read
+ 			 * then.
+ 			 */
+-			if ((tcon->ses) && !(tcon->ses->capabilities &
++			if (!(tcon->ses->capabilities &
+ 				tcon->ses->server->vals->cap_large_files)) {
+ 				current_read_size = min_t(uint,
+ 					current_read_size, CIFSMaxBufSize);
 -- 
 2.25.1
 
