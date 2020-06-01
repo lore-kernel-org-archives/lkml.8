@@ -7,217 +7,167 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E958C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC257C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6438920659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7451206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P0JMFrnA"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mv9J7U/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgFAKE6 (ORCPT
+        id S1726035AbgFAKN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:04:58 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34118 "EHLO
+        Mon, 1 Jun 2020 06:13:27 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37140 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgFAKE5 (ORCPT
+        with ESMTP id S1725788AbgFAKN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:04:57 -0400
+        Mon, 1 Jun 2020 06:13:26 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200601100455euoutp0130b7c5b6e1cd690053ad7a546f74a331~UY266iGRg2582125821euoutp01I
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:04:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200601100455euoutp0130b7c5b6e1cd690053ad7a546f74a331~UY266iGRg2582125821euoutp01I
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200601101324euoutp0168d59c5d5ecaf47d720c22ab5c9a59d4~UY_U54yGL3128631286euoutp015
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200601101324euoutp0168d59c5d5ecaf47d720c22ab5c9a59d4~UY_U54yGL3128631286euoutp015
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591005895;
-        bh=CgeOOg8l1+lFHJgZGFt7jxgyRNwPoTigkymvXCh8EMw=;
+        s=mail20170921; t=1591006404;
+        bh=OHPpvFiZE34wyuaajTiViUqmeZXVmXg2EsQc6ds9wOQ=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=P0JMFrnAZzYvc2OhZOQhqRbbnrUuHBjvH5/xj8LxDZ0HreUsxtYZqqLXtqr9n6Ksn
-         n4baDK2Mj8S1Xy6c4gp9WMiS6WuTcdJNE7Cd1BHAEaUrwHZzM4Wmkik+0JgDp4mB7f
-         Jc/BGJMf71rvncfm6knp0uK4m350uZBRIdz0a9SY=
+        b=mv9J7U/d73ZUz19tReRboQNpB/izF7iF9yw4kTGhXwdzUCvgYQtNAVGmLkG/Lj8/d
+         EL25ZRDfA4uwGOESzba2VOxCvIBUHbLmdy2cKAIpPJ+PLIyMEhozreU59VWUSM3w8B
+         G+p/9ZdH2xPPdjkocXWeoijkTQooIENhGPfoQZgQ=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200601100455eucas1p23dd2f70c3e31ee7ffa60bc23b638652c~UY26bJrvF3216432164eucas1p2P;
-        Mon,  1 Jun 2020 10:04:55 +0000 (GMT)
+        20200601101324eucas1p2ae7ab4c7b9378ec6e04f1f7a3359a371~UY_U1BqEt2675526755eucas1p27;
+        Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 7D.7F.60698.6C2D4DE5; Mon,  1
-        Jun 2020 11:04:55 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 02.80.60698.4C4D4DE5; Mon,  1
+        Jun 2020 11:13:24 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200601100454eucas1p1b7aaa6f04b6bc51e0fbd4b51d248b217~UY26FsQBH0989109891eucas1p1f;
-        Mon,  1 Jun 2020 10:04:54 +0000 (GMT)
+        20200601101324eucas1p16837835ff355d5b42c8099c29270722d~UY_UhvFxF2001920019eucas1p1J;
+        Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200601100454eusmtrp1b57feacee2e3849770ee74e65ddbf649~UY26E09Jh2405824058eusmtrp1B;
-        Mon,  1 Jun 2020 10:04:54 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-b1-5ed4d2c62288
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200601101324eusmtrp263c67fd0180586027f1ce6e6b16fc016~UY_UhLpRQ2432024320eusmtrp2K;
+        Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-e2-5ed4d4c44590
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 26.40.07950.6C2D4DE5; Mon,  1
-        Jun 2020 11:04:54 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 31.51.07950.4C4D4DE5; Mon,  1
+        Jun 2020 11:13:24 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200601100453eusmtip1513aa3d67c5574c6ef2fc1a93595396f~UY24sI_oJ1722217222eusmtip1d;
-        Mon,  1 Jun 2020 10:04:53 +0000 (GMT)
-Subject: Re: [RFC PATCH v5 3/6] PM / devfreq: exynos-bus: Add registration
- of interconnect child device
-To:     Chanwoo Choi <chanwoo@kernel.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <8a977716-9e0e-5daf-fb22-32d943da42e5@samsung.com>
-Date:   Mon, 1 Jun 2020 12:04:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        20200601101323eusmtip182101ceb7f0eb212baafb1a6e4a21fe5~UY_UN6HOb1231112311eusmtip1d;
+        Mon,  1 Jun 2020 10:13:23 +0000 (GMT)
+Subject: Re: [PATCH] ata: omit superfluous error message
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <7c2974bd-5aa5-b423-ebb4-2fdf8a41f6ca@samsung.com>
+Date:   Mon, 1 Jun 2020 12:13:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAGTfZH1KC=jpQ5GXNtEf1cn7+WqXJdqbbVKmpxr8Snh4GEy8bA@mail.gmail.com>
+In-Reply-To: <20200420135342.11984-1-tangbin@cmss.chinamobile.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUhUURTHu2+bpzb2HE0PGgWDQgppYh8eVFbSMkWQ0YdA0Zr05ZKOMuOS
-        kegQWi7JuICTmopo2rSoo2i4gTI56JjGuGQuzYeGYgwzN1omLJ/PyG+/c/7/e8/5Xy6NS2ZI
-        TzpOkcIpFfIEKeVIdAz+HDtkNE9EHi4ax1hLdQ5iW7XNJFs8PUGw79Y+k2yNYZRkJ9aXKLa8
-        V0+xJRYNwY6NtYhY/ccpkh3vqqJY7Vgfxr4wzIvYWXUTxeb0GkSsttRGnWRkel0eJZub6qFk
-        lgIjJmurz5IVteuQbFW/P5QKczwWzSXEpXHKgODrjrH2J9/J5EKv23NlWlE2WnbNRzQNzBHQ
-        NDjlI0dawjQhsDeYyXzksFmsIXjbTAjCKgJD8XvEC/yB5aeLlCA0ItAvfcKEYhmBrauf4l2u
-        TBwYTfUint0YH2hZGSR5E840kDCUa926imIC4eHroi0WM8Ewoy8jeCYYb5h8psV43stEQKFl
-        ARc8LjD0yErwezswl6FSE8i3ccYDZqw1mMAHoHOxChc2VdNgHXcS+DR86WndTuAKC8Z2kcD7
-        wFRauBUTmHsICrtnRUKhQWAx1m6fOApzo78ofjDO+EJzV4DQPgUT9kZKeEdnmF50EXZwhpKO
-        clxoi+FBrkRwe4NdV44J7AkF1j+EBkkrdgSr2JGmYkeaiv9zaxGhQx5cqioxhlMFKbh0f5U8
-        UZWqiPGPSkrUo80fZ9owrr9Cfb9vDCCGRtLd4oPm8UgJKU9TZSQOIKBxqZs45I0pUiKOlmfc
-        4ZRJ15SpCZxqAHnRhNRDHFRni5AwMfIU7hbHJXPKfypGO3hmo7vHw20bF6wlKQry/MuRqqXM
-        VV/3EEitu3fxW8oJJVE3FDp/xe+M+XEUZVZkeiw5mCtP9o8qJFfXT6l7V8LPLX7d85yyroZh
-        LpN998F2892wZGFYba+W/YjSmeorjbl58SHx6V5kp6GT6Nb41AVd8jOrg2I2skbccbrt7K4P
-        UkIVKw/0w5Uq+V+3x83HbQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xu7rHLl2JMzg/R93i/rxWRouNM9az
-        Wky8cYXF4vqX56wW84+cY7W48vU9m8X0vZvYLCbdn8Bicf78BnaLTY+vsVpc3jWHzWLG+X1M
-        FmuP3GW3uN24gs2ide8RdosZk1+yOQh4bFrVyeZx59oeNo/73ceZPDYvqffo27KK0ePzJrkA
-        tig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jN/L
-        vrMW9EhX3Jkyg72B8aNwFyMnh4SAicTHlW/Zuhi5OIQEljJK/Lr6k72LkQMoISUxv0UJokZY
-        4s+1Lqia90A1q6awgSSEBTIlXnY8YQWxRQRUJTZ8OsYKUsQssJxV4tih9VAdHUwSr1qOsoNU
-        sQkYSvQe7WMEsXkF7CRubZrCAmKzCKhIXF09gwnEFhWIlehe/IMdokZQ4uTMJywgF3EKBErM
-        nmAIEmYWUJf4M+8SM4QtLnHryXwmCFteYvvbOcwTGIVmIemehaRlFpKWWUhaFjCyrGIUSS0t
-        zk3PLTbSK07MLS7NS9dLzs/dxAiM623Hfm7Zwdj1LvgQowAHoxIP74Xzl+OEWBPLiitzDzFK
-        cDArifA6nT0dJ8SbklhZlVqUH19UmpNafIjRFOi3icxSosn5wJSTVxJvaGpobmFpaG5sbmxm
-        oSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qB8dwmthDF531bGn7IT1/+9Pby5Iaizc7/Fy+Y
-        5qG+pzL+tMmZ1gccMx6kTDG9JipXst8mJPB1E5t/W17qhsupLAenPF9bynlC6sbHYhMFfwHn
-        AvXdPWuOLvrOoNTs8S5d9PZTrq0HQyZ+Vn/sYZBR3XT+mGOJ9/dqnbd84Ysf8d88sOdwaM2a
-        PiWW4oxEQy3mouJEAABzid8BAwAA
-X-CMS-MailID: 20200601100454eucas1p1b7aaa6f04b6bc51e0fbd4b51d248b217
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7djP87pHrlyJM/jWI26x+m4/m8WxHY+Y
+        LC7vmsNm8fF/M7MDi8f56b1sHpfPlnp83iQXwBzFZZOSmpNZllqkb5fAlfG2Zw1TwQW+iqXX
+        ZjI2ML7m7mLk5JAQMJG483EBexcjF4eQwApGiXezzrJCOF8YJfa92sUM4XxmlFi3bAMLTMvV
+        5nNQieWMEocfTmKCcN4ySjxYPpUNpEpYwELiwcPZzCC2iIC2xOZJEN3MAj4SJ+Z3M4LYbAJW
+        EhPbV4HZvAJ2EtcvbgWrYRFQkfi9rZsJxBYViJD49OAwK0SNoMTJmU/AajgFnCROTN3FDjFT
+        XOLWk/lMELa8xPa3c8CukxDoZpdo2f2AEeJsF4kbnZOgXhCWeHV8CzuELSPxf+d8JoiGdYwS
+        fzteQHVvZ5RYPvkfG0SVtcSdc7+AbA6gFZoS63fpQ4QdJX7PWMoKEpYQ4JO48VYQ4gg+iUnb
+        pjNDhHklOtqEIKrVJDYs28AGs7Zr50rmCYxKs5C8NgvJO7OQvDMLYe8CRpZVjOKppcW56anF
+        xnmp5XrFibnFpXnpesn5uZsYgSnl9L/jX3cw7vuTdIhRgINRiYdX49LlOCHWxLLiytxDjBIc
+        zEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnV
+        wGgjEJ6xOy/06qsLxzL7z7WsEdu88/xxGaZkw/6b/S/cl06aaqC1e8aftBccO5m+JJkFaWhL
+        zUiYHf1o8tE7ccL26z6q/zn64GnmhMAJm9qZShgEz7JaLervfSb53uUV29UdksfE93/vVJar
+        9F94t3Dr/rjvHuvmOi1k37p8/kT+1/K/s7kWRxUrsRRnJBpqMRcVJwIAPqV8sCUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xu7pHrlyJM3i1ksVi9d1+NotjOx4x
+        WVzeNYfN4uP/ZmYHFo/z03vZPC6fLfX4vEkugDlKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/I
+        xFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+Ntzxqmggt8FUuvzWRsYHzN3cXIySEhYCJxtfkc
+        cxcjF4eQwFJGiUUzfwA5HEAJGYnj68sgaoQl/lzrYoOoec0o8WLfFVaQhLCAhcSDh7OZQWwR
+        AW2JzZM2sIDYzAI+EifmdzNCNExllFh36hNYA5uAlcTE9lWMIDavgJ3E9YtbwRpYBFQkfm/r
+        ZgKxRQUiJA7vmAVVIyhxcuYTsBpOASeJE1N3sUMsUJf4M+8SM4QtLnHryXwmCFteYvvbOcwT
+        GIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAiMoG3Hfm7Zwdj1
+        LvgQowAHoxIP74Xzl+OEWBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIjRFOi5
+        icxSosn5wOjOK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAyH55
+        WfWrOS+tni1uCl8QscjiYerrzslFyyJDJml+nfkn7dS3m8FNRxN/imqc7dCJLrLuUgycsPDa
+        BJv6d2JbHXWDX2w57vIm88PWqRan175SenhZj9v+MLd44tOIXR2fqwUCtUJaTFpfvwl72BWU
+        8yJ2WdKBqT9Vvxie0OreaBtleOiO6CvGuUosxRmJhlrMRcWJAGmP0wG2AgAA
+X-CMS-MailID: 20200601101324eucas1p16837835ff355d5b42c8099c29270722d
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200529163225eucas1p1cfb2233c869dcc3dab84b754bbce17b6
+X-RootMTR: 20200420135215eucas1p2f807c43a232564804dc864db55bd09a8
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200529163225eucas1p1cfb2233c869dcc3dab84b754bbce17b6
-References: <CGME20200529163225eucas1p1cfb2233c869dcc3dab84b754bbce17b6@eucas1p1.samsung.com>
-        <20200529163200.18031-1-s.nawrocki@samsung.com>
-        <20200529163200.18031-4-s.nawrocki@samsung.com>
-        <CAGTfZH1KC=jpQ5GXNtEf1cn7+WqXJdqbbVKmpxr8Snh4GEy8bA@mail.gmail.com>
+X-CMS-RootMailID: 20200420135215eucas1p2f807c43a232564804dc864db55bd09a8
+References: <CGME20200420135215eucas1p2f807c43a232564804dc864db55bd09a8@eucas1p2.samsung.com>
+        <20200420135342.11984-1-tangbin@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Rob, devicetree ML
 
-On 31.05.2020 01:57, Chanwoo Choi wrote:
-> On Sat, May 30, 2020 at 1:33 AM Sylwester Nawrocki
-> <s.nawrocki@samsung.com> wrote:
->>
->> This patch adds registration of a child platform device for the exynos
->> interconnect driver. It is assumed that the interconnect provider will
->> only be needed when #interconnect-cells property is present in the bus
->> DT node, hence the child device will be created only when such a property
->> is present.
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->>
->> Changes for v5:
->>  - new patch.
->> ---
->>  drivers/devfreq/exynos-bus.c | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->> index 8fa8eb5..856e37d 100644
->> --- a/drivers/devfreq/exynos-bus.c
->> +++ b/drivers/devfreq/exynos-bus.c
->> @@ -24,6 +24,7 @@
->>
->>  struct exynos_bus {
->>         struct device *dev;
->> +       struct platform_device *icc_pdev;
->>
->>         struct devfreq *devfreq;
->>         struct devfreq_event_dev **edev;
->> @@ -156,6 +157,8 @@ static void exynos_bus_exit(struct device *dev)
->>         if (ret < 0)
->>                 dev_warn(dev, "failed to disable the devfreq-event devices\n");
->>
->> +       platform_device_unregister(bus->icc_pdev);
->> +
->>         dev_pm_opp_of_remove_table(dev);
->>         clk_disable_unprepare(bus->clk);
->>         if (bus->opp_table) {
->> @@ -168,6 +171,8 @@ static void exynos_bus_passive_exit(struct device *dev)
->>  {
->>         struct exynos_bus *bus = dev_get_drvdata(dev);
->>
->> +       platform_device_unregister(bus->icc_pdev);
->> +
->>         dev_pm_opp_of_remove_table(dev);
->>         clk_disable_unprepare(bus->clk);
->>  }
->> @@ -431,6 +436,18 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>         if (ret < 0)
->>                 goto err;
->>
->> +       /* Create child platform device for the interconnect provider */
->> +       if (of_get_property(dev->of_node, "#interconnect-cells", NULL)) {
->> +                   bus->icc_pdev = platform_device_register_data(
->> +                                               dev, "exynos-generic-icc",
->> +                                               PLATFORM_DEVID_AUTO, NULL, 0);
->> +
->> +                   if (IS_ERR(bus->icc_pdev)) {
->> +                           ret = PTR_ERR(bus->icc_pdev);
->> +                           goto err;
->> +                   }
->> +       }
->> +
->>         max_state = bus->devfreq->profile->max_state;
->>         min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
->>         max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
->> --
->> 2.7.4
->>
-> 
-> It looks like very similar like the registering the interconnect
-> device of imx-bus.c
-> and I already reviewed and agreed this approach.
-> 
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> 
-> nitpick: IMHO, I think that 'exynos-icc' is proper and simple without
-> 'generic' word.
-> If we need to add new icc compatible int the future, we will add
-> 'exynosXXXX-icc' new compatible.
-> But, I'm not forcing it. just opinion. Anyway, I agree this approach.
+Hi,
 
-Thanks for review. I will change the name to exynos-icc in next version, 
-as I commented at other patch, it is not part of any DT binding, 
-it is just for device/driver matching between devfreq and interconnect.
+On 4/20/20 3:53 PM, Tang Bin wrote:
+> In the probe function, when get irq failed, the function
+> platform_get_irq() logs an error message, so remove
+> redundant message here.
 
+platform_get_irq() doesn't log an error message for -EPROBE_DEFER
+case so the conversion shouldn't be done automatically for device
+drivers which don't support deferred probing (i.e. pata_rb532_cf &
+sata_highbank).
 
+Unless there is a proof that -PROBE_DEFER can't happen for these
+two drivers this patch shouldn't be applied.
+
+Best regards,
 --
-Thanks, 
-Sylwester
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  drivers/ata/pata_rb532_cf.c | 4 +---
+>  drivers/ata/sata_highbank.c | 4 +---
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/ata/pata_rb532_cf.c b/drivers/ata/pata_rb532_cf.c
+> index 479c4b29b..dcde84f57 100644
+> --- a/drivers/ata/pata_rb532_cf.c
+> +++ b/drivers/ata/pata_rb532_cf.c
+> @@ -115,10 +115,8 @@ static int rb532_pata_driver_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq <= 0) {
+> -		dev_err(&pdev->dev, "no IRQ resource found\n");
+> +	if (irq <= 0)
+>  		return -ENOENT;
+> -	}
+>  
+>  	gpiod = devm_gpiod_get(&pdev->dev, NULL, GPIOD_IN);
+>  	if (IS_ERR(gpiod)) {
+> diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
+> index ad3893c62..efd1925a9 100644
+> --- a/drivers/ata/sata_highbank.c
+> +++ b/drivers/ata/sata_highbank.c
+> @@ -469,10 +469,8 @@ static int ahci_highbank_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq <= 0) {
+> -		dev_err(dev, "no irq\n");
+> +	if (irq <= 0)
+>  		return -EINVAL;
+> -	}
+>  
+>  	hpriv = devm_kzalloc(dev, sizeof(*hpriv), GFP_KERNEL);
+>  	if (!hpriv) {
+> 
+
