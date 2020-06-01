@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27816C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF862C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F027620679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3C220679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037632;
-	bh=gVlM85lAfJZ6wDZrOwqCY+DymGscbAQxro//HxDRrkY=;
+	s=default; t=1591037638;
+	bh=IUwtny+/JWT/oUv6BjzT1fZrlqINPZfCEVin8clKFn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LnHDJv7AUzBJsxp5pqQ+Xybp7DxsjQ8e+bYiiVtLPC/zEcA33nJ1s17+TeoopwR9S
-	 HiPbhb3g12piiZc8jJhNM1Yk3TjkAd7m5MCcyfZrqweAM4+QHnsjYx6iPvT+zvFs/n
-	 S0Pb3rhq/AilJaAi2oDDsGbr/XBGLl8Mm9X9c3g8=
+	b=q8hSIZLFg3OckhsEaKPdI9C7VZuKR7ragzkTXwcsdVP7o1K8KsOLbzD3ribnI5blm
+	 90+x7Z+M13Eh89Vri8W0KzN7nn38jlbIcvdzIoC8A24ui7LOZ0ZI6pbwnzD5kZw4w5
+	 fM6xazhiEtP2idOSKVqBOaZvAFaS8339O6gcOHnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbgFASxv (ORCPT
+        id S1729889AbgFASx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728153AbgFASCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:35 -0400
+        id S1729935AbgFASC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8583B2065C;
-        Mon,  1 Jun 2020 18:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5F852065C;
+        Mon,  1 Jun 2020 18:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034555;
-        bh=gVlM85lAfJZ6wDZrOwqCY+DymGscbAQxro//HxDRrkY=;
+        s=default; t=1591034548;
+        bh=IUwtny+/JWT/oUv6BjzT1fZrlqINPZfCEVin8clKFn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JkFPnGN0Jkv6mui7old0UXfKNNu6nEJSvCeTt07hx/qMyxSR5zrsd5JXGsGuHKREy
-         qpT2QD2GsLdic9U4T4sXWEN7Tx/FRBkbf4zhbgU23QVCcsvF8J/jLFWSIp3ylu/WVn
-         bCyAhFQ6gdEwpFl5DJe4oBsBVqRkhUZ6GMJBd6c4=
+        b=bGfl50dLfOY/5oQXTbDbzFdX/OvJwjrX1/vtSxxNR3pnqYgwjXXH/V0nOyoHOBGO4
+         4zKvrs6cE0lDF8zVeT4a/P2HdJdwZtXo7SgQHNjDKKDLsl/Zpcys5nsozBngujTmJE
+         GKvpehUR6TWjWii66JFVJiXGEnQ6LVzU14fmVDq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.14 67/77] esp6: get the right proto for transport mode in esp6_gso_encap
-Date:   Mon,  1 Jun 2020 19:54:12 +0200
-Message-Id: <20200601174027.900174373@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.14 64/77] netfilter: ipset: Fix subcounter update skip
+Date:   Mon,  1 Jun 2020 19:54:09 +0200
+Message-Id: <20200601174027.423091577@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,54 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Phil Sutter <phil@nwl.cc>
 
-commit 3c96ec56828922e3fe5477f75eb3fc02f98f98b5 upstream.
+commit a164b95ad6055c50612795882f35e0efda1f1390 upstream.
 
-For transport mode, when ipv6 nexthdr is set, the packet format might
-be like:
+If IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE is set, user requested to not
+update counters in sub sets. Therefore IPSET_FLAG_SKIP_COUNTER_UPDATE
+must be set, not unset.
 
-    ----------------------------------------------------
-    |        | dest |     |     |      |  ESP    | ESP |
-    | IP6 hdr| opts.| ESP | TCP | Data | Trailer | ICV |
-    ----------------------------------------------------
-
-What it wants to get for x-proto in esp6_gso_encap() is the proto that
-will be set in ESP nexthdr. So it should skip all ipv6 nexthdrs and
-get the real transport protocol. Othersize, the wrong proto number
-will be set into ESP nexthdr.
-
-This patch is to skip all ipv6 nexthdrs by calling ipv6_skip_exthdr()
-in esp6_gso_encap().
-
-Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 6e01781d1c80e ("netfilter: ipset: set match: add support to match the counters")
+Signed-off-by: Phil Sutter <phil@nwl.cc>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv6/esp6_offload.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_list_set.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/esp6_offload.c
-+++ b/net/ipv6/esp6_offload.c
-@@ -121,9 +121,16 @@ static void esp6_gso_encap(struct xfrm_s
- 	struct ip_esp_hdr *esph;
- 	struct ipv6hdr *iph = ipv6_hdr(skb);
- 	struct xfrm_offload *xo = xfrm_offload(skb);
--	int proto = iph->nexthdr;
-+	u8 proto = iph->nexthdr;
- 
- 	skb_push(skb, -skb_network_offset(skb));
-+
-+	if (x->outer_mode->encap == XFRM_MODE_TRANSPORT) {
-+		__be16 frag;
-+
-+		ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &proto, &frag);
-+	}
-+
- 	esph = ip_esp_hdr(skb);
- 	*skb_mac_header(skb) = IPPROTO_ESP;
- 
+--- a/net/netfilter/ipset/ip_set_list_set.c
++++ b/net/netfilter/ipset/ip_set_list_set.c
+@@ -61,7 +61,7 @@ list_set_ktest(struct ip_set *set, const
+ 	/* Don't lookup sub-counters at all */
+ 	opt->cmdflags &= ~IPSET_FLAG_MATCH_COUNTERS;
+ 	if (opt->cmdflags & IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE)
+-		opt->cmdflags &= ~IPSET_FLAG_SKIP_COUNTER_UPDATE;
++		opt->cmdflags |= IPSET_FLAG_SKIP_COUNTER_UPDATE;
+ 	list_for_each_entry_rcu(e, &map->members, list) {
+ 		if (SET_WITH_TIMEOUT(set) &&
+ 		    ip_set_timeout_expired(ext_timeout(e, set)))
 
 
