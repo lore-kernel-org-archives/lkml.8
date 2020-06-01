@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8798C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB43C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B879820776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD0F20776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034521;
-	bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
+	s=default; t=1591034524;
+	bh=vcXZuq2+yMbWGoBhZSGMws23faRimjlbcAkjvX3KKms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=03d2vY2jdza2bcqVX1j96NUKoyXg/FuCJ72cmAH2LasgjO4qx9/wknyy0KGMpcYoa
-	 h9UIUlGvpKKCcbELImTP/dQATew++mY7llI0EVmHKHc3e+HIgRMu6iMLqMUpCz+3qV
-	 /12LmVpR7WXGVtLrLdos1/JXa+P3Y74HijDGN690=
+	b=OjRd2s23+zho+Znfjvu3GwqgJsreZTsmZu0WUe7PQfmRXHABdt9u+gqx7bSEYSKMP
+	 D2wheLRH7QPreVPgeICZaAeW96S3RP5ejxUjICjglX/xQSD+Fk8u4Cz6q3PRQNvlDO
+	 vY90Fip17/U+jz8k7ZevrO7FGozgEyFPUCPx/Nrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbgFASCA (ORCPT
+        id S1728456AbgFASCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44836 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbgFASBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:48 -0400
+        id S1729859AbgFASB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DAF120776;
-        Mon,  1 Jun 2020 18:01:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 519372065C;
+        Mon,  1 Jun 2020 18:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034507;
-        bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
+        s=default; t=1591034516;
+        bh=vcXZuq2+yMbWGoBhZSGMws23faRimjlbcAkjvX3KKms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAcMDXoH5TjHbH3ejFUQCPoYXQL84QO3JJl9JS6oQeweBsQjdAlRIbmAD3xGup0ru
-         o7c3BzdRSR6OWBZaOOo4QLKSmUcEkUlkMAq7Z7JZZAjUCzRy+VyE+8uOMe/asQGgjG
-         CQzKvDxefzmJNXRL+rzeSp15OGO1jxj43oY+gdnc=
+        b=eBiAXwzt+quaXT4T+/eEg1McxuGiLnEQhbRhroDZnX1T3o86F/W2L4109rGh+M+xD
+         T4kQp0GyHibcgA77NEe9rFnl4+ldOSHS68eLHiAHOLYJIrOkLHlFmkWBabYf3vm3wh
+         gTf5VzKaQmAYBDSCntD696U/6QnnNvQAM3gfNI6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/77] samples: bpf: Fix build error
-Date:   Mon,  1 Jun 2020 19:53:28 +0200
-Message-Id: <20200601174020.581088545@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 17/77] gfs2: move privileged user check to gfs2_quota_lock_check
+Date:   Mon,  1 Jun 2020 19:53:22 +0200
+Message-Id: <20200601174019.531321220@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,40 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 23ad04669f81f958e9a4121b0266228d2eb3c357 ]
+[ Upstream commit 4ed0c30811cb4d30ef89850b787a53a84d5d2bcb ]
 
-GCC 10 is very strict about symbol clash, and lwt_len_hist_user contains
-a symbol which clashes with libbpf:
+Before this patch, function gfs2_quota_lock checked if it was called
+from a privileged user, and if so, it bypassed the quota check:
+superuser can operate outside the quotas.
+That's the wrong place for the check because the lock/unlock functions
+are separate from the lock_check function, and you can do lock and
+unlock without actually checking the quotas.
 
-/usr/bin/ld: samples/bpf/lwt_len_hist_user.o:(.bss+0x0): multiple definition of `bpf_log_buf'; samples/bpf/bpf_load.o:(.bss+0x8c0): first defined here
-collect2: error: ld returned 1 exit status
+This patch moves the check to gfs2_quota_lock_check.
 
-bpf_log_buf here seems to be a leftover, so removing it.
-
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200511113234.80722-1-mcroce@redhat.com
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/lwt_len_hist_user.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/gfs2/quota.c | 3 +--
+ fs/gfs2/quota.h | 3 ++-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/samples/bpf/lwt_len_hist_user.c b/samples/bpf/lwt_len_hist_user.c
-index 7fcb94c09112..965108527a4f 100644
---- a/samples/bpf/lwt_len_hist_user.c
-+++ b/samples/bpf/lwt_len_hist_user.c
-@@ -15,8 +15,6 @@
- #define MAX_INDEX 64
- #define MAX_STARS 38
+diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
+index e700fb162664..a833e2e07167 100644
+--- a/fs/gfs2/quota.c
++++ b/fs/gfs2/quota.c
+@@ -1039,8 +1039,7 @@ int gfs2_quota_lock(struct gfs2_inode *ip, kuid_t uid, kgid_t gid)
+ 	u32 x;
+ 	int error = 0;
  
--char bpf_log_buf[BPF_LOG_BUF_SIZE];
--
- static void stars(char *str, long val, long max, int width)
- {
- 	int i;
+-	if (capable(CAP_SYS_RESOURCE) ||
+-	    sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
++	if (sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
+ 		return 0;
+ 
+ 	error = gfs2_quota_hold(ip, uid, gid);
+diff --git a/fs/gfs2/quota.h b/fs/gfs2/quota.h
+index 836f29480be6..e3a6e2404d11 100644
+--- a/fs/gfs2/quota.h
++++ b/fs/gfs2/quota.h
+@@ -47,7 +47,8 @@ static inline int gfs2_quota_lock_check(struct gfs2_inode *ip,
+ 	int ret;
+ 
+ 	ap->allowed = UINT_MAX; /* Assume we are permitted a whole lot */
+-	if (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
++	if (capable(CAP_SYS_RESOURCE) ||
++	    sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
+ 		return 0;
+ 	ret = gfs2_quota_lock(ip, NO_UID_QUOTA_CHANGE, NO_GID_QUOTA_CHANGE);
+ 	if (ret)
 -- 
 2.25.1
 
