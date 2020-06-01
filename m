@@ -2,174 +2,114 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82492C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0400D2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A626206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dA2CB31s"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="njQ2XrKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgFAFYk (ORCPT
+        id S1726056AbgFAF0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:24:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgFAFYj (ORCPT
+        Mon, 1 Jun 2020 01:26:39 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19602 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgFAF0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:24:39 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D2CC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 22:24:39 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id d128so10055491wmc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 22:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=6ZL8Ph/G4JgUrG27yx5jOAVsjITYufkbj9OoG3EiYg8=;
-        b=dA2CB31sQ3Af0qUnmPd1S0YDJqELMRRu+gA7/hUSep7Gkrb1fo/neGae7TZlSgmco4
-         HuxnDn48VwRNdoJ4L4uznitZuO9+exNsJ1l42htH3amQN9vybXbGG124lC0jd1xEVUuf
-         eilKDyn8QzkVREVQgOffBb5rn7EA+xEt5rVQBeRE9rrW+5ErUH4IkiUf7nZzE85UeLjx
-         wMl+bwp5zYT7i2PB+V7kmz8U8UVkoyPrAC8EDZ51yPG8DcTDCH6OYvZKreMNQATXxb2s
-         6friPAu8HN+1J1eniSAR69g+bQgojly4qQfVzIHoiU9eaCNF2yAH49QNbpivLxONxzfR
-         vQBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6ZL8Ph/G4JgUrG27yx5jOAVsjITYufkbj9OoG3EiYg8=;
-        b=rgLeOyFM8vEX0wLdzKncpJJ36YHWnYdwosjQCf8pb6FVFGJuKZXXmTpN0tM1mDvp0I
-         pFhJESwlHh3NOtfYn4tB8wZQB8seE75k3wnI9LqRO/YGU0I1RUOTws7OITQAQm/+cBPg
-         IB8pSUInaiATLcG0RJWeycBbFHqcMHu9TSiwO3TwW/WGv0XsjdWOtaPUv1pOK5MjHEEk
-         sLAkUuffxnngh9ny816qU2PWiqIYkxiwMf3lEmTg4/nPVmR7YTFYjmU4iacZHeT9bo2B
-         CWMc6M3Mf5uDMx5GoTMsUPUfrRHlj3zVo4lXUu+4XqNPZ1ErP6U/7qwj/lFK5V0mgJt8
-         X5Vg==
-X-Gm-Message-State: AOAM533epY9Eykf3TKmI2wBO0ED/ABabKfj43iNT/P5ZJdJM6ee7O0qh
-        l6Tth6P4UzKi9r0AeZPQylBW/2oVcUY=
-X-Google-Smtp-Source: ABdhPJxhx9/WQeqXLPdXyUP/V3m+hF0vRniSFumysbnrVtMqhxlQzfSXBPMnW0DCYiw90xvl8UL1fQ==
-X-Received: by 2002:a1c:2e41:: with SMTP id u62mr21047004wmu.91.1590989075882;
-        Sun, 31 May 2020 22:24:35 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id k12sm17543313wrn.42.2020.05.31.22.24.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 22:24:35 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 06:24:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     s.nawrocki@samsung.com, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 2/3] mfd: madera: Fix minor formatting issues
-Message-ID: <20200601052433.GA3714@dell>
-References: <20200529155742.18399-1-ckeepax@opensource.cirrus.com>
- <20200529155742.18399-2-ckeepax@opensource.cirrus.com>
+        Mon, 1 Jun 2020 01:26:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed491820001>; Sun, 31 May 2020 22:26:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 31 May 2020 22:26:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 31 May 2020 22:26:38 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jun
+ 2020 05:26:38 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 1 Jun 2020 05:26:37 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.56.10]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ed4918c0004>; Sun, 31 May 2020 22:26:37 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v2 0/2] vhost, docs: convert to pin_user_pages(), new "case 5"
+Date:   Sun, 31 May 2020 22:26:31 -0700
+Message-ID: <20200601052633.853874-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200529155742.18399-2-ckeepax@opensource.cirrus.com>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590989186; bh=oWhDekDqxx6fP3u/Pk90DFNTa0Jiv5OSfwybT44Pq1M=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=njQ2XrKfA5W2d6S2irff3GXFlkhESnmMzdRVd0Q/6B60AxagwtZSbLa4o+uUZPcEC
+         U9b4toQeqtCH2JLxeEdlYli0rRsWaLGGgu7lNzOE4A3V9yIjpiUmL++Z39WzDX8gm2
+         Y+SEzR/8oWDaFDEpzI6OOPvRCeV1MdbdreDatwd//9coer0YaPfJARKz6KpKuJNuki
+         i9df1soJa3Ku0wAC2kh8rE6HVP5UIGoO2FLioKhbkYmm1zpPOCFOrf+L8Fzx/m1u67
+         U87MTtgDiMhF3FWGCf9o8p0f0Fzq6zhQsQoCWpyZ5HjHySh/7RDgDY46C0swvVZLfy
+         +vVIjKS1sWtVQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020, Charles Keepax wrote:
+This is based on Linux 5.7, plus one prerequisite patch:
+   "mm/gup: update pin_user_pages.rst for "case 3" (mmu notifiers)" [1]
 
-Still needs a commit log.
+Changes since v1: removed references to set_page_dirty*(), in response to
+Souptick Joarder's review (thanks!).
 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  drivers/mfd/madera-core.c        | 12 ++++++------
->  drivers/mfd/madera-i2c.c         |  1 -
->  include/linux/mfd/madera/pdata.h |  1 -
->  3 files changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-> index 7e0835cb062b1..4724c1a01a39f 100644
-> --- a/drivers/mfd/madera-core.c
-> +++ b/drivers/mfd/madera-core.c
-> @@ -44,7 +44,7 @@ static const char * const madera_core_supplies[] = {
->  };
->  
->  static const struct mfd_cell madera_ldo1_devs[] = {
-> -	{ .name = "madera-ldo1" },
-> +	{ .name = "madera-ldo1", },
+Cover letter for v1, edited/updated slightly:
 
-What issue does this solve?
+It recently became clear to me that there are some get_user_pages*()
+callers that don't fit neatly into any of the four cases that are so
+far listed in pin_user_pages.rst. vhost.c is one of those.
 
-Why are ','s a requirement, even for single entries?
+Add a Case 5 to the documentation, and refer to that when converting
+vhost.c.
 
->  };
->  
->  static const char * const cs47l15_supplies[] = {
-> @@ -55,8 +55,8 @@ static const char * const cs47l15_supplies[] = {
->  
->  static const struct mfd_cell cs47l15_devs[] = {
->  	{ .name = "madera-pinctrl", },
-> -	{ .name = "madera-irq" },
-> -	{ .name = "madera-gpio" },
-> +	{ .name = "madera-irq", },
-> +	{ .name = "madera-gpio", },
->  	{
->  		.name = "madera-extcon",
->  		.parent_supplies = cs47l15_supplies,
-> @@ -108,7 +108,7 @@ static const char * const cs47l85_supplies[] = {
->  static const struct mfd_cell cs47l85_devs[] = {
->  	{ .name = "madera-pinctrl", },
->  	{ .name = "madera-irq", },
-> -	{ .name = "madera-micsupp" },
-> +	{ .name = "madera-micsupp", },
->  	{ .name = "madera-gpio", },
->  	{
->  		.name = "madera-extcon",
-> @@ -155,10 +155,10 @@ static const char * const cs47l92_supplies[] = {
->  };
->  
->  static const struct mfd_cell cs47l92_devs[] = {
-> -	{ .name = "madera-pinctrl" },
-> +	{ .name = "madera-pinctrl", },
->  	{ .name = "madera-irq", },
->  	{ .name = "madera-micsupp", },
-> -	{ .name = "madera-gpio" },
-> +	{ .name = "madera-gpio", },
->  	{
->  		.name = "madera-extcon",
->  		.parent_supplies = cs47l92_supplies,
-> diff --git a/drivers/mfd/madera-i2c.c b/drivers/mfd/madera-i2c.c
-> index 6b965eb034b6c..7df5b9ba58554 100644
-> --- a/drivers/mfd/madera-i2c.c
-> +++ b/drivers/mfd/madera-i2c.c
-> @@ -88,7 +88,6 @@ static int madera_i2c_probe(struct i2c_client *i2c,
->  	if (!madera)
->  		return -ENOMEM;
->  
-> -
->  	madera->regmap = devm_regmap_init_i2c(i2c, regmap_16bit_config);
->  	if (IS_ERR(madera->regmap)) {
->  		ret = PTR_ERR(madera->regmap);
-> diff --git a/include/linux/mfd/madera/pdata.h b/include/linux/mfd/madera/pdata.h
-> index fa9595dd42ba5..601cbbc10370c 100644
-> --- a/include/linux/mfd/madera/pdata.h
-> +++ b/include/linux/mfd/madera/pdata.h
-> @@ -21,7 +21,6 @@
->  
->  struct gpio_desc;
->  struct pinctrl_map;
-> -struct madera_codec_pdata;
+Thanks to Jan Kara for helping me (again) in understanding the
+interaction between get_user_pages() and page writeback [2].
 
-This is not a formatting issue.
+Note that I have only compile-tested the vhost.c patch, although that
+does also include cross-compiling for a few other arches. Any run-time
+testing would be greatly appreciated.
 
->  /**
->   * struct madera_pdata - Configuration data for Madera devices
+[1] https://lore.kernel.org/r/20200527194953.11130-1-jhubbard@nvidia.com
+[2] https://lore.kernel.org/r/20200529070343.GL14550@quack2.suse.cz
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+John Hubbard (2):
+  docs: mm/gup: pin_user_pages.rst: add a "case 5"
+  vhost: convert get_user_pages() --> pin_user_pages()
+
+ Documentation/core-api/pin_user_pages.rst | 18 ++++++++++++++++++
+ drivers/vhost/vhost.c                     |  5 ++---
+ 2 files changed, 20 insertions(+), 3 deletions(-)
+
+
+base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+--=20
+2.26.2
+
