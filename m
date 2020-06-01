@@ -2,94 +2,129 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE84C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CDB207DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591045004;
-	bh=HCz9UVZXCgKN3I40vPGv+sLWdK9si2POu1wW9gPJGjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VgzHGSTx1GoTsKnz89dlc4JUoReDBFX8fSx3mpLnpe9tH8QZ/dRFW3ZlraheEQd+O
-	 St37D0Ilo9kr7n1H4sGAT/lFyVqHyJBs6OMlwiZEk4bdPtm4Gs1wPSwXVoOTyN3uV4
-	 tcU8PxR6qDJMajicxsRNT4MVyNyHqKUSUFZdaWRg=
+	by mail.kernel.org (Postfix) with ESMTP id DBFB120734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:57:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmHrz8MV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgFAU4o (ORCPT
+        id S1728639AbgFAU5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:56:44 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39793 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgFAU4o (ORCPT
+        Mon, 1 Jun 2020 16:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgFAU5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:56:44 -0400
-Received: by mail-il1-f195.google.com with SMTP id p5so9691152ile.6;
-        Mon, 01 Jun 2020 13:56:43 -0700 (PDT)
+        Mon, 1 Jun 2020 16:57:43 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A6FDC061A0E;
+        Mon,  1 Jun 2020 13:57:43 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id x1so10534026ejd.8;
+        Mon, 01 Jun 2020 13:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q+q672Wm8RukSMAWeN/YA/sItHHH/mir9+L1tWbNB+s=;
+        b=GmHrz8MVf147mDH/wLfr8OfPIg+fBn52wicTgcXORVUKlX4JSGV0WwZkoT+hAEeglo
+         Ejy5Gf+7fHkCPBLFqr76r8eS4QCrLwXTVgHkJbHybdrJMz3MDGv2E5fsFM/wfmjkuafX
+         m57KQUgZCsIBrIIACm+YZel5rFdZaU3GNUtV76+hl86ogJxnCDdRGloKUZnrugTnwrep
+         w/DMGN+Lt31tPDflDPMA274YdK1XHSS8I3euiOoMTLAbIE65FHMpz/JLe0OMOeGRtUEe
+         8BmHL0nz1oLmQOQq+D4O5FvdOHAc0z4mQTEihcJCgBBbHy4VCRb+a/Sw83uz9RKX8J0v
+         afHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BITL98F0854rJrS/8AfTCyNP8QqONyxvkx/UcCn4Ghw=;
-        b=q4bRL5W17pyk3cIFE7+BS7X420whtK0D2FBcPs1fj4UjBJI2CT+/d4G/0EWVFFb8DW
-         KvmUzZ56r+kMaLBv1dc0Je/IN42RJ+778VmhwCGSYojuz++Xn85MRkoVyGPMFVXhCF0I
-         7XYkkqvyykBavFk2O7ZVx5Hb5nqzYpONWGoj8hVLY0vvcBUSOyGlHe8cRBKVwDMB4Gsg
-         26BNtG8X83GHOsXfZ7cjCISpOg8ncXRgCTMjA4znCCAWEQTiBab2tSbHFOlqaWwNoNXj
-         TEVuUD2ZsWbYJU/1hvd1fwH3WtM1kCszXxPOJmdTAk72CtIwc4gt8AqPXBY9RGcSboel
-         +wCg==
-X-Gm-Message-State: AOAM532mk6vz+pJ+fwU+soEjGk7diPP9ODSpBT5vTYu/AXzGX0H3c0iI
-        KFUHxZ5Tzc5SMmVr8NPV8A==
-X-Google-Smtp-Source: ABdhPJyuuvB/FS5C1fkxV/PLo1BQ2+acgAR7znlJ1e9A2P9nFp3yvEkY29q7lcPuS8p0Oy5o7R46aQ==
-X-Received: by 2002:a92:b644:: with SMTP id s65mr23068196ili.205.1591045002799;
-        Mon, 01 Jun 2020 13:56:42 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id h71sm368014ili.43.2020.06.01.13.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 13:56:42 -0700 (PDT)
-Received: (nullmailer pid 1480899 invoked by uid 1000);
-        Mon, 01 Jun 2020 20:56:40 -0000
-Date:   Mon, 1 Jun 2020 14:56:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 01/10] PCI: qcom: Add missing ipq806x clocks in PCIe
- driver
-Message-ID: <20200601205640.GA1480847@bogus>
-References: <20200514200712.12232-1-ansuelsmth@gmail.com>
- <20200514200712.12232-2-ansuelsmth@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q+q672Wm8RukSMAWeN/YA/sItHHH/mir9+L1tWbNB+s=;
+        b=N0/+AcY2tUexpvbfptFuExiBAGi8Bc8HTWKAuWKe0B8fGo9ZdDZ0FTrQ8+mTGPtmqD
+         kJ0Tvjz4VCKAVkG1vh+hEfMpbP856TPoE+61DmYvXmRSlQp1CsHFv66TONk+LIJQQd/W
+         mRkX7Hn0JUJQwiw0s0MW8YeycNqMamTRj9vs3CxnZ71T1Qll1E2dav1+3zATYeCiAEVt
+         pz2ZoaEpKoo/sUVg7zoRwcum0ni7HgUaYMxfE4AvQtct7y6YsAn9RYrw8oPZfn0sk8Zg
+         m/XPl467H+XMMIvmqmbS4mQZ3mjNW4EkjzjoHzwoYS6WFzKhy475JrywC8bsiOEYoL7T
+         UuPg==
+X-Gm-Message-State: AOAM532If+xvkLLAvbLujReDPy0KhckUkFs5mg5hFIiQZ1qXsn6fjDGv
+        1HUD5BEWQckymPuwWKZPDjnAX2C5h3tw/kDVFHk=
+X-Google-Smtp-Source: ABdhPJxNZXlLtgMBTb/NUfyafm9mA+K7TqA2PFOiO0urCp6L/2jatgEYM7dNNptJdifLlcjRCGxibjaVUFl/sRAux9A=
+X-Received: by 2002:a17:906:851:: with SMTP id f17mr9857533ejd.396.1591045061794;
+ Mon, 01 Jun 2020 13:57:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514200712.12232-2-ansuelsmth@gmail.com>
+References: <20200530214315.1051358-1-olteanv@gmail.com> <20200531001849.GG1551@shell.armlinux.org.uk>
+ <CA+h21ho6p=6JhR3Gyjt4L2_SnFhjamE7FuU_nnjUG6AUq04TcQ@mail.gmail.com> <20200601002753.GH1551@shell.armlinux.org.uk>
+In-Reply-To: <20200601002753.GH1551@shell.armlinux.org.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 1 Jun 2020 23:57:30 +0300
+Message-ID: <CA+h21hqongWM=M7E_0d+Zb_qOsw-Gc4soZXoXd_izciz6YeUpA@mail.gmail.com>
+Subject: Re: [PATCH stable-4.19.y] net: phy: reschedule state machine if AN
+ has not completed in PHY_AN state
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, zefir.kurtisi@neratec.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 22:07:02 +0200, Ansuel Smith wrote:
-> Aux and Ref clk are missing in PCIe qcom driver. Add support for this
-> optional clks for ipq8064/apq8064 SoC.
-> 
-> Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
->  1 file changed, 33 insertions(+), 5 deletions(-)
-> 
+On Mon, 1 Jun 2020 at 03:28, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Jun 01, 2020 at 12:00:16AM +0300, Vladimir Oltean wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > This is all relevant because our options for the stable trees boil
+> > down to 2 choices:
+> > - Revert f62265b53ef34a372b657c99e23d32e95b464316, fix an API misuse
+> > and a bug, but lose an (admittedly ad-hoc, but still) useful way of
+> > troubleshooting a system misconfiguration (hide the problem that Zefir
+> > Kurtisi was seeing).
+>
+> Or maybe just allow at803x_aneg_done() to return non-zero but still
+> print the warning (preferably identifying the affected PHY) so
+> your hard-to-debug problem still gets a useful kernel message pointing
+> out what the problem is?
+>
+
+Maybe.
+
+> > - Apply this patch which make the PHY state machine work even with
+> > this bent interpretation of the API. It's not as if all phylib users
+> > could migrate to phylink in stable trees, and even phylink doesn't
+> > catch all possible configuration cases currently.
+>
+> I wasn't even proposing that as a solution.
+>
+> And yes, I do have some copper SFP modules that have an (inaccessible)
+> AR803x PHY on them - Microtik S-RJ01 to be exact.  I forget exactly
+> which variant it is, and no, I haven't seen any of this "SGMII fails
+> to come up" - in fact, the in-band SGMII status is the only way to
+> know what the PHY negotiated with its link partner... and this SFP
+> module works with phylink with no issues.
+>
+
+See, you should also specify what kernel you're testing on. Since
+Heiner did the PHY_AN cleanup, phy_aneg_done is basically dead code
+from the state machine's perspective, only a few random drivers call
+it:
+https://elixir.bootlin.com/linux/latest/A/ident/phy_aneg_done
+So I would not be at all surprised that you're not hitting it simply
+because at803x_aneg_done is never in your call path.
+
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+
+Thanks,
+-Vladimir
