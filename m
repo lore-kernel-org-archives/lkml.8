@@ -2,191 +2,154 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C171C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57358C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5A0D20776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="x2S57Z6l"
+	by mail.kernel.org (Postfix) with ESMTP id 33AC6206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037330;
+	bh=ambusvve4PtBxJnzxj5h6RempnRnRW92w6VEnBVIJnE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k8BHApx1agm8XOiLH/Vf5qCsoCsHYmNoBS4nSmDWh653hBm+zlja66iurVd3DcwZy
+	 WN7Yf2/laYJmHzGdVColWK6LiBJEHoI3GCgRH21qdrUq9XQ8ccUfAgGAGuKu0wOVbS
+	 9bRZ+Wpjnj+DQAstWFMS1SRMsP9Uw8wEdcWb4D64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbgFASso (ORCPT
+        id S1730579AbgFASHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729333AbgFASsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:48:42 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82A5C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:48:41 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so4555947lfb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:48:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FniT9Ml6wIyy8/Ls6dQtBKpb/rENtgoXFOJ1BzcTW1E=;
-        b=x2S57Z6l2Sdn0X46KG7CI1HM5t7F0NH3qrvR1gLUjfv0Rs4OZaQCSPIwGgCj1LnTSY
-         edA8Myn4bTnIFOdIQLJnzgiHd1yA8xRUdClA8S40yLsYW5C6ufXEmDqLWeuRwfI4qVrw
-         nioMHE4GfnUB0PSNxAzH0MlbvQ9uNXVK4BWQJVNYrub8CCWJdPaZMNE37CcP+qm6RtXm
-         wW8PgIma/1st0buB3TYd9ntg38Uxo8fY4j/zvNwnBddZoAFY1ojA1/zkQK4AicrM+AD/
-         9kzm4zb0JwFtJHAbsFkUDspsSoAUmi+k8Iuci3iSrwj8UcpqqQd3hZPXNb/xg+I3el41
-         m3IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=FniT9Ml6wIyy8/Ls6dQtBKpb/rENtgoXFOJ1BzcTW1E=;
-        b=VfhXqixNAmu+pMqD21WYqIBI7s7HqUB7VflDpaeP3AxrHO6E++GWxHRpMQhsppu2UL
-         7bDdSvjRC6+prE+890j6wGmGrEET23yDg5crgsLCf1Gihh2i91sFn7ILqAEu+qofQ5l5
-         Lq6XRbVd/roi/ynYkVePt7k15Z+0rg4JpWm66Okw1mrie6ZEeqWNM4jkH80i1EqYCTYu
-         0Ax4I/DbvAQsivVMCD/qH6xTnAZmEatiHreoAsqD5Aq+TMJnMfSxCy6gpLN4wiSiSP5I
-         eAhI4vRy6OWVdaXRBUOO1yVtAYXi+wRNzpGgNydGNBfu2Z/yfrDy59ulpUkGWj7hzONH
-         ZAYg==
-X-Gm-Message-State: AOAM531+qB3QzcGdgszVeTsAtHtq1mKYT3iYxpADS+k7Jvn1nnU/ALa1
-        WdittRpfyuQQOD9XMbt+3KNbLQ==
-X-Google-Smtp-Source: ABdhPJyey34TGWOMWt0wFGaT0TVhygmHROLQ5Sx8cCp7gce/idPrPkWsdQteDdAJed2EdEm9x1Vgdw==
-X-Received: by 2002:a19:6c4:: with SMTP id 187mr11842080lfg.1.1591037320300;
-        Mon, 01 Jun 2020 11:48:40 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:42cb:40f3:c0fd:7859:f21:5d63])
-        by smtp.gmail.com with ESMTPSA id f9sm80328ljf.99.2020.06.01.11.48.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jun 2020 11:48:39 -0700 (PDT)
-Subject: Re: [PATCH v3] devres: keep both device name and resource name in
- pretty name
-To:     Vladimir Oltean <olteanv@gmail.com>, gregkh@linuxfoundation.org,
-        arnd@arndb.de, akpm@linux-foundation.org
-Cc:     bgolaszewski@baylibre.com, mika.westerberg@linux.intel.com,
-        efremov@linux.com, ztuowen@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200601095826.1757621-1-olteanv@gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <7d88d376-dde7-828e-ad0a-12c0cb596ac1@cogentembedded.com>
-Date:   Mon, 1 Jun 2020 21:48:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 1 Jun 2020 14:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730496AbgFASGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:06:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7633D2068D;
+        Mon,  1 Jun 2020 18:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034808;
+        bh=ambusvve4PtBxJnzxj5h6RempnRnRW92w6VEnBVIJnE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D0whhk+VDYoOIEAWBZDAOMdR5oJ0AATKyBeLDUNZH2s21WeDsCZ5ArM3vc9nB/4pQ
+         c0Z2FgVnyhhSH2JtZI7sZxLgdz4xyM1+kLlu0e3ic6NqySnCO8Pl70pX1CvRg1Sdpa
+         L/FGdCLHp4ooD7Hawus/xOM6vJaZTIPKH528w2VA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 009/142] net/mlx5: Add command entry handling completion
+Date:   Mon,  1 Jun 2020 19:52:47 +0200
+Message-Id: <20200601174038.975067779@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
+References: <20200601174037.904070960@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200601095826.1757621-1-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/2020 12:58 PM, Vladimir Oltean wrote:
+From: Moshe Shemesh <moshe@mellanox.com>
 
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> Sometimes debugging a device is easiest using devmem on its register
-> map, and that can be seen with /proc/iomem. But some device drivers have
-> many memory regions. Take for example a networking switch. Its memory
-> map used to look like this in /proc/iomem:
-> 
-> 1fc000000-1fc3fffff : pcie@1f0000000
->   1fc000000-1fc3fffff : 0000:00:00.5
->     1fc010000-1fc01ffff : sys
->     1fc030000-1fc03ffff : rew
->     1fc060000-1fc0603ff : s2
->     1fc070000-1fc0701ff : devcpu_gcb
->     1fc080000-1fc0800ff : qs
->     1fc090000-1fc0900cb : ptp
->     1fc100000-1fc10ffff : port0
->     1fc110000-1fc11ffff : port1
->     1fc120000-1fc12ffff : port2
->     1fc130000-1fc13ffff : port3
->     1fc140000-1fc14ffff : port4
->     1fc150000-1fc15ffff : port5
->     1fc200000-1fc21ffff : qsys
->     1fc280000-1fc28ffff : ana
-> 
-> But after the patch in Fixes: was applied, the information is now
-> presented in a much more opaque way:
-> 
-> 1fc000000-1fc3fffff : pcie@1f0000000
->   1fc000000-1fc3fffff : 0000:00:00.5
->     1fc010000-1fc01ffff : 0000:00:00.5
->     1fc030000-1fc03ffff : 0000:00:00.5
->     1fc060000-1fc0603ff : 0000:00:00.5
->     1fc070000-1fc0701ff : 0000:00:00.5
->     1fc080000-1fc0800ff : 0000:00:00.5
->     1fc090000-1fc0900cb : 0000:00:00.5
->     1fc100000-1fc10ffff : 0000:00:00.5
->     1fc110000-1fc11ffff : 0000:00:00.5
->     1fc120000-1fc12ffff : 0000:00:00.5
->     1fc130000-1fc13ffff : 0000:00:00.5
->     1fc140000-1fc14ffff : 0000:00:00.5
->     1fc150000-1fc15ffff : 0000:00:00.5
->     1fc200000-1fc21ffff : 0000:00:00.5
->     1fc280000-1fc28ffff : 0000:00:00.5
-> 
-> That patch made a fair comment that /proc/iomem might be confusing when
-> it shows resources without an associated device, but we can do better
-> than just hide the resource name altogether. Namely, we can print the
-> device name _and_ the resource name. Like this:
-> 
-> 1fc000000-1fc3fffff : pcie@1f0000000
->   1fc000000-1fc3fffff : 0000:00:00.5
->     1fc010000-1fc01ffff : 0000:00:00.5 sys
->     1fc030000-1fc03ffff : 0000:00:00.5 rew
->     1fc060000-1fc0603ff : 0000:00:00.5 s2
->     1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
->     1fc080000-1fc0800ff : 0000:00:00.5 qs
->     1fc090000-1fc0900cb : 0000:00:00.5 ptp
->     1fc100000-1fc10ffff : 0000:00:00.5 port0
->     1fc110000-1fc11ffff : 0000:00:00.5 port1
->     1fc120000-1fc12ffff : 0000:00:00.5 port2
->     1fc130000-1fc13ffff : 0000:00:00.5 port3
->     1fc140000-1fc14ffff : 0000:00:00.5 port4
->     1fc150000-1fc15ffff : 0000:00:00.5 port5
->     1fc200000-1fc21ffff : 0000:00:00.5 qsys
->     1fc280000-1fc28ffff : 0000:00:00.5 ana
-> 
-> Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
-> Changes in v2:
-> Checking for memory allocation errors and returning -ENOMEM.
-> 
-> Changes in v3:
-> Using devm_kasprintf instead of open-coding it.
-> 
->  lib/devres.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/devres.c b/lib/devres.c
-> index 6ef51f159c54..ca0d28727cce 100644
-> --- a/lib/devres.c
-> +++ b/lib/devres.c
-> @@ -119,6 +119,7 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
->  {
->  	resource_size_t size;
->  	void __iomem *dest_ptr;
-> +	char *pretty_name;
->  
->  	BUG_ON(!dev);
->  
-> @@ -129,7 +130,15 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
->  
->  	size = resource_size(res);
->  
-> -	if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
-> +	if (res->name)
-> +		pretty_name = devm_kasprintf(dev, GFP_KERNEL, "%s %s",
+[ Upstream commit 17d00e839d3b592da9659c1977d45f85b77f986a ]
 
-   What about "%s:%s"? I suspect it'd be better on the ABI side of things?
+When FW response to commands is very slow and all command entries in
+use are waiting for completion we can have a race where commands can get
+timeout before they get out of the queue and handled. Timeout
+completion on uninitialized command will cause releasing command's
+buffers before accessing it for initialization and then we will get NULL
+pointer exception while trying access it. It may also cause releasing
+buffers of another command since we may have timeout completion before
+even allocating entry index for this command.
+Add entry handling completion to avoid this race.
 
-[...]
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |   14 ++++++++++++++
+ include/linux/mlx5/driver.h                   |    1 +
+ 2 files changed, 15 insertions(+)
 
-MBR, Sergei
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -861,6 +861,7 @@ static void cmd_work_handler(struct work
+ 	int alloc_ret;
+ 	int cmd_mode;
+ 
++	complete(&ent->handling);
+ 	sem = ent->page_queue ? &cmd->pages_sem : &cmd->sem;
+ 	down(sem);
+ 	if (!ent->page_queue) {
+@@ -978,6 +979,11 @@ static int wait_func(struct mlx5_core_de
+ 	struct mlx5_cmd *cmd = &dev->cmd;
+ 	int err;
+ 
++	if (!wait_for_completion_timeout(&ent->handling, timeout) &&
++	    cancel_work_sync(&ent->work)) {
++		ent->ret = -ECANCELED;
++		goto out_err;
++	}
+ 	if (cmd->mode == CMD_MODE_POLLING || ent->polling) {
+ 		wait_for_completion(&ent->done);
+ 	} else if (!wait_for_completion_timeout(&ent->done, timeout)) {
+@@ -985,12 +991,17 @@ static int wait_func(struct mlx5_core_de
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
+ 	}
+ 
++out_err:
+ 	err = ent->ret;
+ 
+ 	if (err == -ETIMEDOUT) {
+ 		mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
+ 			       mlx5_command_str(msg_to_opcode(ent->in)),
+ 			       msg_to_opcode(ent->in));
++	} else if (err == -ECANCELED) {
++		mlx5_core_warn(dev, "%s(0x%x) canceled on out of queue timeout.\n",
++			       mlx5_command_str(msg_to_opcode(ent->in)),
++			       msg_to_opcode(ent->in));
+ 	}
+ 	mlx5_core_dbg(dev, "err %d, delivery status %s(%d)\n",
+ 		      err, deliv_status_to_str(ent->status), ent->status);
+@@ -1026,6 +1037,7 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 	ent->token = token;
+ 	ent->polling = force_polling;
+ 
++	init_completion(&ent->handling);
+ 	if (!callback)
+ 		init_completion(&ent->done);
+ 
+@@ -1045,6 +1057,8 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 	err = wait_func(dev, ent);
+ 	if (err == -ETIMEDOUT)
+ 		goto out;
++	if (err == -ECANCELED)
++		goto out_free;
+ 
+ 	ds = ent->ts2 - ent->ts1;
+ 	op = MLX5_GET(mbox_in, in->first.data, opcode);
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -756,6 +756,7 @@ struct mlx5_cmd_work_ent {
+ 	struct delayed_work	cb_timeout_work;
+ 	void		       *context;
+ 	int			idx;
++	struct completion	handling;
+ 	struct completion	done;
+ 	struct mlx5_cmd        *cmd;
+ 	struct work_struct	work;
+
+
