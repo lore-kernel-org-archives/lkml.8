@@ -2,112 +2,90 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7618C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3A020772
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF24120772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C44FdFHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgFANfo (ORCPT
+        id S1726340AbgFANfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 1 Jun 2020 09:35:44 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2263 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726067AbgFANfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgFANfn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jun 2020 09:35:43 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 16A8CE2054BA6C7C3EB6;
-        Mon,  1 Jun 2020 14:35:42 +0100 (IST)
-Received: from localhost (10.47.94.81) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 1 Jun 2020
- 14:35:41 +0100
-Date:   Mon, 1 Jun 2020 14:35:02 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-CC:     Jonathan Cameron <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <andy.shevchenko@gmail.com>,
-        <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 1/4] iio: chemical: scd30: add core driver
-Message-ID: <20200601143502.00005030@Huawei.com>
-In-Reply-To: <20200601121026.GB28560@arch>
-References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
-        <20200530213630.87159-2-tomasz.duszynski@octakon.com>
-        <20200531105840.27e17f3d@archlinux>
-        <20200531192152.GC27246@arch>
-        <20200601121026.GB28560@arch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04F7C061A0E;
+        Mon,  1 Jun 2020 06:35:42 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id q8so6879286iow.7;
+        Mon, 01 Jun 2020 06:35:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Mm9uE9NM2GVLX8GeiFA3Elt/+Sx++UDtpFbF9gjRBVU=;
+        b=C44FdFHBF68VTftOHu2ACXs+04O7zuVYuR1g0PsX3OKoy0PjAHyDMVmPdzF3bry9aM
+         Y68EysdAwYXirkOl57d0NM6IZIeEyvnVOAih4vVRdbl3cx3EwI1utpqNBALnK52Cv0v0
+         crF/6ouOP/kBa5CUUilQLDqrNwvAkx3lMqxV5pDl+hi9tMaOKIknaTdfefQvDDN7xx0u
+         ekscqu13cdX7aF5jH1fbT7pGYN2CpdFdEVyoGc8/PTRhAj6JECIM8fNEf0p2SB5creY2
+         7NHSW18RpUn0wKcQQKUjfuqMEVA+nArENCwIogXm+nMDFEZ/s7Z0jcr99AM53t3XW5lz
+         uzDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Mm9uE9NM2GVLX8GeiFA3Elt/+Sx++UDtpFbF9gjRBVU=;
+        b=O+mifLFkWx7bq3Wo5mKwRU1sxkF1AdjPVAjfx7xIsnq83kHOEmsD62l17EaLXD423m
+         o5IrvDU9Y4bNjzJp0thUbS2WPTchAIyVIAImF7me5qCU/Bs+rV+6ffk/kYLYajZVpXfb
+         fXF76Gu/s3iGqI0okvFVwfJfiAcDqSMJl6DQYWt/b0rRQHysdLp0tRrNOJTgvPVoG6xJ
+         KmWWTG9J3M67mMi/N1ndIAgh2P690W455E/8sZBWbFlbqkGe08/qu6Vz+zr+eYF0FQvJ
+         hQbr9pmYY9C4YuM6xREiBsivxnFg6ztSUz8ZxvNxgf/6gSSvHeVcms5tzqv2KYtpbeKb
+         TMIA==
+X-Gm-Message-State: AOAM533dWD+KYcHmvJfxN4oS9uAdZk08DPWOQwVrm5Yu5P2EB5AqaBYQ
+        ZvanJKkqA6ovtdGeVgT1/PawDs29Rz28hXUcs6NvBzVixRg=
+X-Google-Smtp-Source: ABdhPJwkH7gonz1/C5KKVb8WOk57OSgAr+6Z7cJaik9LJIMkyDM+qguJHo7DacZbWa0/P6rO2/sC9ATO9jBABEaBQp0=
+X-Received: by 2002:a05:6602:2dca:: with SMTP id l10mr19039638iow.163.1591018542171;
+ Mon, 01 Jun 2020 06:35:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.94.81]
-X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
+ <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk> <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
+ <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
+ <CA+icZUVJT8X3zyafrgbkJppsp4nJEKaLjYNs1kX8H+aY1Y10Qw@mail.gmail.com>
+ <CA+icZUWHOYcGUpw4gfT7xP2Twr15YbyXiWA_=Mc+f7NgzZCETw@mail.gmail.com>
+ <230d3380-0269-d113-2c32-6e4fb94b79b8@kernel.dk> <CA+icZUXxmOA-5+dukCgxfSp4eVHB+QaAHO6tsgq0iioQs3Af-w@mail.gmail.com>
+ <CA+icZUV4iSjL8=wLA3qd1c5OQHX2s1M5VKj2CmJoy2rHmzSVbQ@mail.gmail.com>
+In-Reply-To: <CA+icZUV4iSjL8=wLA3qd1c5OQHX2s1M5VKj2CmJoy2rHmzSVbQ@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 1 Jun 2020 15:35:31 +0200
+Message-ID: <CA+icZUXkWG=08rz9Lp1-ZaRCs+GMTwEiUaFLze9xpL2SpZbdsQ@mail.gmail.com>
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...
-> > > > +static const struct iio_chan_spec scd30_channels[] = {
-> > > > +	{
-> > > > +		.type = IIO_PRESSURE,
-> > > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_CALIBSCALE),
-> > > > +		.info_mask_separate_available = BIT(IIO_CHAN_INFO_CALIBSCALE),
-> > > > +		.scan_index = -1,
-> > > > +	},
-> > > > +	{
-> > > > +		.type = IIO_CONCENTRATION,
-> > > > +		.channel2 = IIO_MOD_CO2,
-> > > > +		.address = SCD30_CONC,
-> > > > +		.scan_index = SCD30_CONC,
-> > > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> > > > +				      BIT(IIO_CHAN_INFO_SCALE),
-> > > > +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-> > > > +		.modified = 1,
-> > > > +
-> > > > +		SCD30_CHAN_SCAN_TYPE('u', 16),
-> > > > +	},
-> > > > +	{
-> > > > +		.type = IIO_TEMP,
-> > > > +		.address = SCD30_TEMP,
-> > > > +		.scan_index = SCD30_TEMP,
-> > > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
-> > > > +				      BIT(IIO_CHAN_INFO_CALIBBIAS) |
-> > > > +				      BIT(IIO_CHAN_INFO_SCALE),  
-> > >
-> > > Combination of processed and scale is unusual.  Normally scale provides
-> > > a conversion factor or a _RAW reading.  
-> >
-> > Right that's pointless. Scales were for raw measurements inside buffer.
-> > Somehow I failed to realize that only co2 concentration is raw.
-> >  
-> 
-> One more thing occurred to me here. I just looked at CONCENTRATION_RAW
-> description and is states that this should return *percentage* reading.
-> Then after scaling what we should be left with?
+Hi Jens,
 
-It should say after application of scale and offset.  Patches welcome :)
+with Linux v5.7 final I switched to linux-block.git/for-next and reverted...
 
-> 
-> Or perhaps scale should return just 1.0 for completeness if we want to
-> live with percentages.
-> 
-> Though in case where percentage reading is fractional then passing
-> through buffers will not work. Or am I missing something?
-> 
-> On the other hand if abi said nothing about percentages one would just
-> push whatever raw reading sensor outputs and provide scaling info to
-> userspace.
-> 
+"block: read-ahead submission should imply no-wait as well"
 
-> > >  
+...and see no boot-slowdowns.
 
-
+Regards,
+- Sedat -
