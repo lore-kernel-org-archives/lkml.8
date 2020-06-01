@@ -2,53 +2,57 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF737C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A56C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9F42074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C1B206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591038034;
-	bh=2APBOq+KYnydsO4StmHpd7yFqluW/3Ctzm1uO7N8nF0=;
+	s=default; t=1591038037;
+	bh=8rLRduYBr4uj8gPkqhFl1/b3CdN/SHvNXzbfGXSTM0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eRwnKZd8bpua4hjcTRZ4VqOU0Cgp93G85/4zVfhDUj2vlY1xWPH+/szphr2THnrOS
-	 M0QLkCNfB/RJKc+VKxnapQgD6udAp6iddRcxFnwJoWu47QStikoXAVVRxisBWqFWDu
-	 llc8Jbsu31UygddWyFRf3OXLIkQXOi6dk6Iy4S8Q=
+	b=NPwrlBEOYLcLsgVnnF6caKEuQi5fGR3uFc6foEPXokx9Eoyuh03LRg5fUkFziAuFz
+	 Q34ggM2aPx2OsiuHuKISZaWm6ibdnKtoMAl9O77kPuHccdnGukKZmJinnYUKgFoAaV
+	 +D+JVXsD+MqMlRHdZThBifsgFCzlKwFczd5pICKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbgFATAe (ORCPT
+        id S1728596AbgFAR4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 15:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36902 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbgFAR41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:27 -0400
+        id S1728504AbgFAR4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90CED2074B;
-        Mon,  1 Jun 2020 17:56:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B1732076B;
+        Mon,  1 Jun 2020 17:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034187;
-        bh=2APBOq+KYnydsO4StmHpd7yFqluW/3Ctzm1uO7N8nF0=;
+        s=default; t=1591034169;
+        bh=8rLRduYBr4uj8gPkqhFl1/b3CdN/SHvNXzbfGXSTM0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9IWYEpTVaZt9BnoqSUg9WmRjvrZMGxaIs28Sek+dU0mKd1c4DFTD7QKV2iMfldzF
-         gAVSYrXEic+22xJhm5LRXmEJBc2pi85Rv9gXGeGIozRtl+qSj2ZXfYHE6bdqF74MzA
-         ggxyw+MfgJh+deArxfaZWleDzYAgUVot4Vy9qDQg=
+        b=zO6HngxsgBYXQiCt8PEIxmcMYAuH2i5+/t4I7eQgusaXXmNpbpe+KGFQOjZXIiZsg
+         MHA3qRI5GY3Sg7NlyUB/32e4g7jgRXJ5KVxGLqRSkhMODTjhXaV1xJTUSsQGUrHYeb
+         Zjy0vgyQovIxtimmzhik6Pd1lAwsH2YfxjSv5qQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 03/48] sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
-Date:   Mon,  1 Jun 2020 19:53:13 +0200
-Message-Id: <20200601173953.105202451@linuxfoundation.org>
+        stable@vger.kernel.org, sam <sunhaoyl@outlook.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 22/48] fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
+Date:   Mon,  1 Jun 2020 19:53:32 +0200
+Message-Id: <20200601173959.002445559@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -61,69 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jere Lepp‰nen" <jere.leppanen@nokia.com>
+From: Alexander Potapenko <glider@google.com>
 
-[ Upstream commit d3e8e4c11870413789f029a71e72ae6e971fe678 ]
+[ Upstream commit 1d605416fb7175e1adf094251466caa52093b413 ]
 
-Commit bdf6fa52f01b ("sctp: handle association restarts when the
-socket is closed.") starts shutdown when an association is restarted,
-if in SHUTDOWN-PENDING state and the socket is closed. However, the
-rationale stated in that commit applies also when in SHUTDOWN-SENT
-state - we don't want to move an association to ESTABLISHED state when
-the socket has been closed, because that results in an association
-that is unreachable from user space.
+KMSAN reported uninitialized data being written to disk when dumping
+core.  As a result, several kilobytes of kmalloc memory may be written
+to the core file and then read by a non-privileged user.
 
-The problem scenario:
-
-1.  Client crashes and/or restarts.
-
-2.  Server (using one-to-one socket) calls close(). SHUTDOWN is lost.
-
-3.  Client reconnects using the same addresses and ports.
-
-4.  Server's association is restarted. The association and the socket
-    move to ESTABLISHED state, even though the server process has
-    closed its descriptor.
-
-Also, after step 4 when the server process exits, some resources are
-leaked in an attempt to release the underlying inet sock structure in
-ESTABLISHED state:
-
-    IPv4: Attempt to release TCP socket in state 1 00000000377288c7
-
-Fix by acting the same way as in SHUTDOWN-PENDING state. That is, if
-an association is restarted in SHUTDOWN-SENT state and the socket is
-closed, then start shutdown and don't move the association or the
-socket to ESTABLISHED state.
-
-Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
-Signed-off-by: Jere Lepp√§nen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: sam <sunhaoyl@outlook.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200419100848.63472-1-glider@google.com
+Link: https://github.com/google/kmsan/issues/76
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/sm_statefuns.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/binfmt_elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -1793,12 +1793,13 @@ static sctp_disposition_t sctp_sf_do_dup
- 	/* Update the content of current association. */
- 	sctp_add_cmd_sf(commands, SCTP_CMD_UPDATE_ASSOC, SCTP_ASOC(new_asoc));
- 	sctp_add_cmd_sf(commands, SCTP_CMD_EVENT_ULP, SCTP_ULPEVENT(ev));
--	if (sctp_state(asoc, SHUTDOWN_PENDING) &&
-+	if ((sctp_state(asoc, SHUTDOWN_PENDING) ||
-+	     sctp_state(asoc, SHUTDOWN_SENT)) &&
- 	    (sctp_sstate(asoc->base.sk, CLOSING) ||
- 	     sock_flag(asoc->base.sk, SOCK_DEAD))) {
--		/* if were currently in SHUTDOWN_PENDING, but the socket
--		 * has been closed by user, don't transition to ESTABLISHED.
--		 * Instead trigger SHUTDOWN bundled with COOKIE_ACK.
-+		/* If the socket has been closed by user, don't
-+		 * transition to ESTABLISHED. Instead trigger SHUTDOWN
-+		 * bundled with COOKIE_ACK.
- 		 */
- 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
- 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 164e5fedd7b6..eddf5746cf51 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1726,7 +1726,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+ 		    (!regset->active || regset->active(t->task, regset) > 0)) {
+ 			int ret;
+ 			size_t size = regset->n * regset->size;
+-			void *data = kmalloc(size, GFP_KERNEL);
++			void *data = kzalloc(size, GFP_KERNEL);
+ 			if (unlikely(!data))
+ 				return 0;
+ 			ret = regset->get(t->task, regset,
+-- 
+2.25.1
+
 
 
