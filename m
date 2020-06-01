@@ -2,200 +2,135 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4382DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E204206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kaz+culs"
+	by mail.kernel.org (Postfix) with ESMTP id 101FA2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590995106;
+	bh=B3QD6jug+ogOzxUlyPb4F6UTjlIKD4f4RQZhFem4HJQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GoChZ5MKM0Qiu1FtSFr/HvJcNndcOoAZZPOBMtqxhxY5l5BpczA6a0L8VdwV8BlRn
+	 oRobR4HJRULWPh3HvgjwVziYsBuNdWgrLb2X6XEL71bsJuky3QeghrDigajz0evFx1
+	 0UJFXyS1PZgt01wieIX6YQdiKw15/nL/H64U7VM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgFAHDo (ORCPT
+        id S1727879AbgFAHFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFAHDo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:03:44 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7DBC061A0E;
-        Mon,  1 Jun 2020 00:03:43 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t8so7871715ilm.7;
-        Mon, 01 Jun 2020 00:03:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=58k1EKTlghaTWCF1GVnAnw6YMCNTVMwN3h07rzZnEbY=;
-        b=Kaz+culsoNUnUOZaySh9qqUxqXCNj5wxgjZkkPNVRdRce2CefqaSVv0kyAOUcQafac
-         RaDnpb7/x8FJaY6PA/yI0lx5ZvLokAhUTGX3f07Z2qlrIkMWMyvPvP/hDilgRA1DYnSy
-         aLa9pI4HGACF0ZZR1w9ZKOMgT8HYWNpY8TsEYQ3wZD8qt6Y+3U/S7XxwG1oNYtlj34zK
-         HSQX56CYu3IXgnheSLAnoeWhp97drn67RdtPlHN0OY+aSCu5wVjzwduhZ9L5IQNJZ6mB
-         S3Dm+lEYHNT2GgQJYIfF7uni3g1lUJEaSilDhmlsf4UhjeeJ4BJXQ/m5i6/2DyHE+F75
-         RjZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=58k1EKTlghaTWCF1GVnAnw6YMCNTVMwN3h07rzZnEbY=;
-        b=NZbixicc9V9tIXaeRD1EPuqYeiSHwH/iDTW8M//nak54yi9VVV/LK0KWTH7YaDl/E+
-         XriRFA4elT/5pBqRUlqoCyZ9JaOVMaFWhySMFRl4S0PqaqLcIC8vzUShAwW0fLHyqAO9
-         e8JDur849KR2krYDe4L6E5TMuif1q3Iv7lCs6sL7n9AuWMKKlr/NusiGj+UHFoLjEeh1
-         6Yp/hOps25gho6FmiCO45bi6Sdjp3HU5ok3gn71HW0XIEpFkJ9vtywHi7Uh/UYs4P3qu
-         zIPdqM4HF8P//IdBwrLy/J1at2dcbEjhDNHLpM7jKV2QH1GyLZPNYbGbZEOL4+pYt4Zv
-         3yGQ==
-X-Gm-Message-State: AOAM531NdtsjwvgSxzHiM4M2q4aWcsAiVaaFkvm21fp/xpBhFA1rPVzb
-        zZzoujeft9vmIomumox8WRM=
-X-Google-Smtp-Source: ABdhPJx59ZfGcZmtm7zFY6syV8SV7ShCRhxBuqgduEP1PV7quNNHkSp7AemeNzCr6UIMH1nKtRM9bQ==
-X-Received: by 2002:a92:b11:: with SMTP id b17mr19783620ilf.257.1590995023372;
-        Mon, 01 Jun 2020 00:03:43 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id p22sm9270608ill.52.2020.06.01.00.03.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 00:03:42 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu,
-        mccamant@cs.umn.edu, Navid <navid.emamdoost@gmail.com>
-Subject: [PATCH] power: supply: bq24190_charger.c: call pm_runtime_put in pm_runtime_get_sync failed case
-Date:   Mon,  1 Jun 2020 02:03:35 -0500
-Message-Id: <20200601070335.84800-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 1 Jun 2020 03:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbgFAHFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 03:05:05 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CF902074B;
+        Mon,  1 Jun 2020 07:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590995104;
+        bh=B3QD6jug+ogOzxUlyPb4F6UTjlIKD4f4RQZhFem4HJQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DIyZxKIpBbX7KMO6KiPQO8iHUlmr2rCiXeSPsi/nsD/csVbFUjQ511WD0pco/4587
+         4sxuBII1LQxSbg7P7vjRRQTfbTTV7rGT4RWxO6CPi6Jsn8WiSZ0wC+Qvf6/sERpgRJ
+         4NTHny9OIWYq+pWEtJihbcpITPmOXeAVlOC4FgxA=
+Date:   Mon, 1 Jun 2020 08:05:00 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     guohanjun@huawei.com, rjw@rjwysocki.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, ndesaulniers@google.com
+Subject: Re: arm64/acpi: NULL dereference reports from UBSAN at boot
+Message-ID: <20200601070459.GB8601@willie-the-truck>
+References: <20200521100952.GA5360@willie-the-truck>
+ <20200521173738.GA29590@e121166-lin.cambridge.arm.com>
+ <20200526202157.GE2206@willie-the-truck>
+ <20200527134104.GA16115@e121166-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527134104.GA16115@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid <navid.emamdoost@gmail.com>
+On Wed, May 27, 2020 at 02:41:04PM +0100, Lorenzo Pieralisi wrote:
+> On Tue, May 26, 2020 at 09:21:57PM +0100, Will Deacon wrote:
+> > Hi Lorenzo, Hanjun, [+Nick]
+> > 
+> > On Thu, May 21, 2020 at 06:37:38PM +0100, Lorenzo Pieralisi wrote:
+> > > On Thu, May 21, 2020 at 11:09:53AM +0100, Will Deacon wrote:
+> > > > Hi folks,
+> > > > 
+> > > > I just tried booting the arm64 for-kernelci branch under QEMU (version
+> > > > 4.2.50 (v4.2.0-779-g4354edb6dcc7)) with UBSAN enabled, and I see a
+> > > > couple of NULL pointer dereferences reported at boot. I think they're
+> > > > both GIC related (log below). I don't see a panic with UBSAN disabled,
+> > > > so something's fishy here.
+> > > 
+> > > May I ask you the QEMU command line please - just to make sure I can
+> > > replicate it.
+> > 
+> > As it turns out, I'm only able to reproduce this when building with Clang,
+> > but I don't know whether that's because GCC is missing something of Clang
+> > is signalling a false positive. You also don't need all of those whacky
+> > fuzzing options enabled.
+> > 
+> > Anyway, to reproduce:
+> > 
+> >  $ git checkout for-next/kernelci
+> >  $ make ARCH=arm64  CC=clang CROSS_COMPILE=aarch64-linux-gnu- defconfig
+> >  <then do a menuconfig and enable UBSAN>
+> >  $ make ARCH=arm64  CC=clang CROSS_COMPILE=aarch64-linux-gnu- Image
+> > 
+> > I throw that at QEMU using:
+> > 
+> > qemu-system-aarch64 -M virt -machine virtualization=true \
+> > 	-machine virt,gic-version=3 \
+> > 	-cpu max,sve=off -smp 2 -m 4096 \
+> > 	-drive if=pflash,format=raw,file=efi.img,readonly \
+> > 	-drive if=pflash,format=raw,file=varstore.img \
+> > 	-drive if=virtio,format=raw,file=disk.img \
+> > 	-device virtio-scsi-pci,id=scsi0 \
+> > 	-device virtio-rng-pci \
+> > 	-device virtio-net-pci,netdev=net0 \
+> > 	-netdev user,id=net0,hostfwd=tcp::8222-:22 \
+> > 	-nographic \
+> > 	-kernel ~/work/linux/arch/arm64/boot/Image \
+> > 	-append "earlycon root=/dev/vda2"
+> > 
+> > I built QEMU a while ago according to:
+> > 
+> > https://mirrors.edge.kernel.org/pub/linux/kernel/people/will/docs/qemu/qemu-arm64-howto.html
+> > 
+> > and its version 4.2.50 (v4.2.0-779-g4354edb6dcc7).
+> > 
+> > My clang is version 11.0.1.
+> 
+> Thanks a lot Will.
+> 
+> I *think* I was right - it is the ACPI_OFFSET() macro:
+> 
+> #define ACPI_OFFSET(d, f)  ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+> 
+> that triggers the warnings (I suspected it because at least in one of
+> the warnings I could not see any dereference of any dynamically
+> allocated data).
 
-Even in failed case of pm_runtime_get_sync, the usage_count
-is incremented. In order to keep the usage_count with correct
-value call pm_runtime_put_autosuspend.
+Cheers, Lorenzo.
 
-Signed-off-by: Navid <navid.emamdoost@gmail.com>
----
- drivers/power/supply/bq24190_charger.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+> Now on what to do with it - thoughts welcome.
 
-diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
-index 453d6332d43a..502ccdac2443 100644
---- a/drivers/power/supply/bq24190_charger.c
-+++ b/drivers/power/supply/bq24190_charger.c
-@@ -448,8 +448,10 @@ static ssize_t bq24190_sysfs_show(struct device *dev,
- 		return -EINVAL;
- 
- 	ret = pm_runtime_get_sync(bdi->dev);
--	if (ret < 0)
--		return ret;
-+	if (ret < 0) {
-+		count = ret;
-+		goto out;
-+	}
- 
- 	ret = bq24190_read_mask(bdi, info->reg, info->mask, info->shift, &v);
- 	if (ret)
-@@ -458,6 +460,7 @@ static ssize_t bq24190_sysfs_show(struct device *dev,
- 		count = scnprintf(buf, PAGE_SIZE, "%hhx\n", v);
- 
- 	pm_runtime_mark_last_busy(bdi->dev);
-+out:
- 	pm_runtime_put_autosuspend(bdi->dev);
- 
- 	return count;
-@@ -481,14 +484,17 @@ static ssize_t bq24190_sysfs_store(struct device *dev,
- 		return ret;
- 
- 	ret = pm_runtime_get_sync(bdi->dev);
--	if (ret < 0)
--		return ret;
-+	if (ret < 0) {
-+		count = ret;
-+		goto out;
-+	}
- 
- 	ret = bq24190_write_mask(bdi, info->reg, info->mask, info->shift, v);
- 	if (ret)
- 		count = ret;
- 
- 	pm_runtime_mark_last_busy(bdi->dev);
-+out:
- 	pm_runtime_put_autosuspend(bdi->dev);
- 
- 	return count;
-@@ -1076,7 +1082,7 @@ static int bq24190_charger_get_property(struct power_supply *psy,
- 
- 	ret = pm_runtime_get_sync(bdi->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_CHARGE_TYPE:
-@@ -1132,6 +1138,7 @@ static int bq24190_charger_get_property(struct power_supply *psy,
- 	}
- 
- 	pm_runtime_mark_last_busy(bdi->dev);
-+out:
- 	pm_runtime_put_autosuspend(bdi->dev);
- 
- 	return ret;
-@@ -1148,7 +1155,7 @@ static int bq24190_charger_set_property(struct power_supply *psy,
- 
- 	ret = pm_runtime_get_sync(bdi->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_ONLINE:
-@@ -1174,6 +1181,7 @@ static int bq24190_charger_set_property(struct power_supply *psy,
- 	}
- 
- 	pm_runtime_mark_last_busy(bdi->dev);
-+out:
- 	pm_runtime_put_autosuspend(bdi->dev);
- 
- 	return ret;
-@@ -1409,7 +1417,7 @@ static int bq24190_battery_get_property(struct power_supply *psy,
- 
- 	ret = pm_runtime_get_sync(bdi->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_STATUS:
-@@ -1438,6 +1446,7 @@ static int bq24190_battery_get_property(struct power_supply *psy,
- 	}
- 
- 	pm_runtime_mark_last_busy(bdi->dev);
-+out:
- 	pm_runtime_put_autosuspend(bdi->dev);
- 
- 	return ret;
-@@ -1455,7 +1464,7 @@ static int bq24190_battery_set_property(struct power_supply *psy,
- 
- 	ret = pm_runtime_get_sync(bdi->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_ONLINE:
-@@ -1469,6 +1478,7 @@ static int bq24190_battery_set_property(struct power_supply *psy,
- 	}
- 
- 	pm_runtime_mark_last_busy(bdi->dev);
-+out:
- 	pm_runtime_put_autosuspend(bdi->dev);
- 
- 	return ret;
--- 
-2.17.1
+Nick -- any idea what to do about the above? The '#define' pasted by
+Lorenzo is causing a couple of spurious UBSAN splats when compiling with
+clang 11.
 
+Cheers,
+
+Will
