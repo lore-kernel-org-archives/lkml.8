@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF41C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2061920679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30803206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037968;
-	bh=dOPcYIEJZeJxVltWjkdcPYiB+fLx4HejS2Qzk2arYxk=;
+	s=default; t=1591037973;
+	bh=6fU6roTFzC+TA+Ol0XxJWSS2BpufeCtqNSOpSiz+trk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgx7pEnDse4ZPDTg9yQTaOYYDKGhYZi2o//j3AOAm0RhOYNa+im/77oserXuVXYrn
-	 3sheKIu/GHHuPjXdHMNvs0aOnLnDb2eH/FQZTQdyJmEFo92Elay6nJ1HQysty1doak
-	 n9UigfPDCEOVIxFWE2f+dNXiho/CJAjIzakhaRxg=
+	b=UpB6cyACOOd9t0GU4Mk+ckfeD6IwK2tYGFdiRxe6n4R1Nk0JMvIcQH6CN1R+/RwTk
+	 E6Ve/lQD0Jf99YAWdMAa+VU346xOhWI0WZeQluah6InE15CSrDGmaIT2xKgRhCjiTS
+	 7P+N97AL+DfQYqtUko4qoxIA/WnwIzmtPRQPoxXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgFAS70 (ORCPT
+        id S1730354AbgFAS7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38706 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728926AbgFAR5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:30 -0400
+        id S1728358AbgFAR5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A548F2074B;
-        Mon,  1 Jun 2020 17:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC4CD206E2;
+        Mon,  1 Jun 2020 17:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034250;
-        bh=dOPcYIEJZeJxVltWjkdcPYiB+fLx4HejS2Qzk2arYxk=;
+        s=default; t=1591034241;
+        bh=6fU6roTFzC+TA+Ol0XxJWSS2BpufeCtqNSOpSiz+trk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgB9nQqJfsa7EdAy9mydkqCFR3qZjydZvzfBJkgTN8eWzWltPk7NPvpH8sAFY2H1o
-         aD7vw1tx3wlhh89WJ7S+BAD2jxpjlue6X3/46JqVWV5vOlB8z1QPq91qQpDpE6BblX
-         2VDwcM0VYcWH6AxKIr/G5PkxXpWt4m7HDxPXOHng=
+        b=TLrTJ8U/ZVn0J7wsM8hHSxBtTUtndeWYwqPBpf/vye7FsfdqpKTdEZZJk/0Wpn+RQ
+         RehXDlkCtoch2obZSM2c118XILB90riNszmUQM6vcclB/psbFoYQstsHeeAqMRVbue
+         sJbdB3Nc5P2pNLpLDZrOAxqNMNQSoPWlfDY14hYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 10/61] net/mlx4_core: fix a memory leak bug.
-Date:   Mon,  1 Jun 2020 19:53:17 +0200
-Message-Id: <20200601174013.658132864@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.4 38/48] netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
+Date:   Mon,  1 Jun 2020 19:53:48 +0200
+Message-Id: <20200601174003.198014582@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
-References: <20200601174010.316778377@linuxfoundation.org>
+In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
+References: <20200601173952.175939894@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,34 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit febfd9d3c7f74063e8e630b15413ca91b567f963 upstream.
+commit 4946ea5c1237036155c3b3a24f049fd5f849f8f6 upstream.
 
-In function mlx4_opreq_action(), pointer "mailbox" is not released,
-when mlx4_cmd_box() return and error, causing a memory leak bug.
-Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
-free this pointer.
+>> include/linux/netfilter/nf_conntrack_pptp.h:13:20: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+extern const char *const pptp_msg_name(u_int16_t msg);
+^~~~~~
 
-Fixes: fe6f700d6cbb ("net/mlx4_core: Respond to operation request by firmware")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 4c559f15efcc ("netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx4/fw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/netfilter/nf_conntrack_pptp.h |    2 +-
+ net/netfilter/nf_conntrack_pptp.c           |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
-@@ -2704,7 +2704,7 @@ void mlx4_opreq_action(struct work_struc
- 		if (err) {
- 			mlx4_err(dev, "Failed to retrieve required operation: %d\n",
- 				 err);
--			return;
-+			goto out;
- 		}
- 		MLX4_GET(modifier, outbox, GET_OP_REQ_MODIFIER_OFFSET);
- 		MLX4_GET(token, outbox, GET_OP_REQ_TOKEN_OFFSET);
+--- a/include/linux/netfilter/nf_conntrack_pptp.h
++++ b/include/linux/netfilter/nf_conntrack_pptp.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/netfilter/nf_conntrack_common.h>
+ 
+-extern const char *const pptp_msg_name(u_int16_t msg);
++const char *pptp_msg_name(u_int16_t msg);
+ 
+ /* state of the control session */
+ enum pptp_ctrlsess_state {
+--- a/net/netfilter/nf_conntrack_pptp.c
++++ b/net/netfilter/nf_conntrack_pptp.c
+@@ -90,7 +90,7 @@ static const char *const pptp_msg_name_a
+ 	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
+ };
+ 
+-const char *const pptp_msg_name(u_int16_t msg)
++const char *pptp_msg_name(u_int16_t msg)
+ {
+ 	if (msg > PPTP_MSG_MAX)
+ 		return pptp_msg_name_array[0];
 
 
