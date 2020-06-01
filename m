@@ -2,51 +2,51 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08357C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEEE020842
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387922073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035323;
-	bh=OombUnLDUghUILzH1ozKrrsKeWwOefgxuBCCbHaJg1Q=;
+	s=default; t=1591035326;
+	bh=tR7RK7u1PGceJn84JzgZk7L5t73iEGiPhrwtVcLgVsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYseSrJph8w19olCzcYGxnhdB8kQHoo2zJ5OzjOZiXqZ8hCl3TWZ1ga3avNhAGKF3
-	 CryvqSozBvKxP5jwdDsybwqJCkkLXjJ/Ga5L7+08Kv2uqgRp/6KEF1ZhlqTfK7lPYX
-	 SDvIu3qBLUI1vmH+SN8EWesyldfl4tESRH32lVwg=
+	b=x/CNBlYnk64x9lLvIVMG6PLkuc+udwhmRsVWYUNqPrekuTrx9fZdSIcGG52HmRGkj
+	 yjxquZH226M4VxBb+z5cBjrSzf/LGYRrNvYo4AeXOoWMfnu3mk/b7d/6wKJFsMHywA
+	 h4Z/K1TRBpmXpV4Czjirawmb6q+GALaQ/Y20gXJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbgFASPX (ORCPT
+        id S1731017AbgFASPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35568 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731574AbgFASPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:19 -0400
+        id S1730821AbgFASPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 723B72068D;
-        Mon,  1 Jun 2020 18:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE4962065C;
+        Mon,  1 Jun 2020 18:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035318;
-        bh=OombUnLDUghUILzH1ozKrrsKeWwOefgxuBCCbHaJg1Q=;
+        s=default; t=1591035321;
+        bh=tR7RK7u1PGceJn84JzgZk7L5t73iEGiPhrwtVcLgVsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zn4MhdDnddTYYZNs9Xw5JUjP4EkwtbrOvqt3a4zkxgeT1IpznXrmL8kiJ60l7Nept
-         fWGuO6Aii1nXUiREeNdruRpWWXRKy3jxvwrty5euV4LnQ/S1uNXULCOMoft5B5gXkB
-         nHkvpjbqM7o50B98av2L/CQOQhDp7dRp60jXbOsY=
+        b=rvh5biuD82Tmt29KFjN3pCz6wU+LwIYBaSxgEM4EBaStdytieNkN8N/9su8vab77V
+         EPyo+InO5YyWK96y4FF32kS+WJCz9uWOV7rTAMzU88rxjfMLcQfF693H2wYy1R2Aqv
+         dAw0DhdqO0Lv0EOFC+bpkniaoaUXIuVt6hGsTues=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 106/177] ARM: dts: mmp3: Use the MMP3 compatible string for /clocks
-Date:   Mon,  1 Jun 2020 19:54:04 +0200
-Message-Id: <20200601174057.455593638@linuxfoundation.org>
+Subject: [PATCH 5.6 107/177] ARM: dts: mmp3-dell-ariel: Fix the SPI devices
+Date:   Mon,  1 Jun 2020 19:54:05 +0200
+Message-Id: <20200601174057.533284548@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,34 +61,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit ec7d12faf81de983efce8ff23f41c5d1bff14c41 ]
+[ Upstream commit 233cbffaa0b9ca874731efee67a11f005da1f87c ]
 
-Clocks are in fact slightly different on MMP3. In particular, PLL2 is
-fixed to a different frequency, there's an extra PLL3, and the GPU
-clocks are configured differently.
+I've managed to get about everything wrong while digging these out of
+OEM's board file.
 
-Link: https://lore.kernel.org/r/20200419171157.672999-15-lkundrak@v3.sk
+Correct the bus numbers, the exact model of the NOR flash, polarity of
+the chip selects and align the SPI frequency with the data sheet.
+
+Tested that it works now, with a slight fix to the PXA SSP driver.
+
+Link: https://lore.kernel.org/r/20200419171157.672999-16-lkundrak@v3.sk
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/mmp3.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/mmp3-dell-ariel.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index 59a108e49b41..3e28f0dc9df4 100644
---- a/arch/arm/boot/dts/mmp3.dtsi
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -531,7 +531,7 @@
- 		};
+diff --git a/arch/arm/boot/dts/mmp3-dell-ariel.dts b/arch/arm/boot/dts/mmp3-dell-ariel.dts
+index 15449c72c042..b0ec14c42164 100644
+--- a/arch/arm/boot/dts/mmp3-dell-ariel.dts
++++ b/arch/arm/boot/dts/mmp3-dell-ariel.dts
+@@ -98,19 +98,19 @@
+ 	status = "okay";
+ };
  
- 		soc_clocks: clocks@d4050000 {
--			compatible = "marvell,mmp2-clock";
-+			compatible = "marvell,mmp3-clock";
- 			reg = <0xd4050000 0x1000>,
- 			      <0xd4282800 0x400>,
- 			      <0xd4015000 0x1000>;
+-&ssp3 {
++&ssp1 {
+ 	status = "okay";
+-	cs-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
++	cs-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+ 
+ 	firmware-flash@0 {
+-		compatible = "st,m25p80", "jedec,spi-nor";
++		compatible = "winbond,w25q32", "jedec,spi-nor";
+ 		reg = <0>;
+-		spi-max-frequency = <40000000>;
++		spi-max-frequency = <104000000>;
+ 		m25p,fast-read;
+ 	};
+ };
+ 
+-&ssp4 {
+-	cs-gpios = <&gpio 56 GPIO_ACTIVE_HIGH>;
++&ssp2 {
++	cs-gpios = <&gpio 56 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
 -- 
 2.25.1
 
