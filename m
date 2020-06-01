@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC488C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91270C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7D92077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705D72068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035123;
-	bh=INyIoLZR38S87I4PhecHV7SKIoJ1l7kF2k1fHiJg7wQ=;
+	s=default; t=1591035138;
+	bh=d61p7fz4JUsdt7OPm5Wqq4X7nwX/XVQpKdebrkA0rYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IcWN6//JOPToMAj9pQga1989M3e/N8UTPUOoSXdSl5hPlW2d1FpRxqcPaBiRetWJv
-	 wx3bvx0pvcoF0LN+ATEXzJxoB9UmIn7aGeeuUeI/nVY+L3WhQgWPbg9m8cbdaOH1aS
-	 7TDPLwIQn9KnypMrH3bC/S3iDF1kvvHBrE1KXdGw=
+	b=UzY6mvTQ2mGux28talNuReyfyzxGB+QFMU6cOGW+oh6sBxDKh1gg8Ng/5gXXLEOED
+	 M7J8gor+Mpief3l1KiM//PdR5gFehASKGwKxCCi092pRM62CNjJMYFqDbkbCMRWkL6
+	 QYo5jyL2e49h+FC+FoB5tlnmLptUwJouINnwFFWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbgFASMC (ORCPT
+        id S1731196AbgFASMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59132 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:12:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731160AbgFASLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:52 -0400
+        id S1731173AbgFASME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:12:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B2B2207D0;
-        Mon,  1 Jun 2020 18:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A7920776;
+        Mon,  1 Jun 2020 18:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035111;
-        bh=INyIoLZR38S87I4PhecHV7SKIoJ1l7kF2k1fHiJg7wQ=;
+        s=default; t=1591035123;
+        bh=d61p7fz4JUsdt7OPm5Wqq4X7nwX/XVQpKdebrkA0rYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6A0Cmbcy902Rv5X2zw9sORIdnGbaZmd3Pv629RMcn4nBz/iwNX7pkLhnSNS+PLgr
-         2ttObMBbWc7XiLyHsnKtKRq+gRrg4BV7I7QIqiK+LrUL2FVT5AKEbX75adoWOvoyu7
-         q6FeVHaT8X2UL3N6j05KjuEACjYzkcGh/xgy6r7g=
+        b=S4Ebgi0Tqzxkn4ePzvjGSh0kEs9yq5BOhgzMeTl56C9d6ArAg9mtnDVMIjHie9rsR
+         3I1Lz8yddL6s+AhV+1AYqk6T2WQEMAIi7gHKPYo7JLdJpWaZVe5ZwxaZMZ6xfJn99U
+         LR9vhGkyH4SERVTj9VCjOXhTmdfPIXHm00BdLJ1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Jiong Wang <jiongwang@huawei.com>,
-        Yuqi Jin <jinyuqi@huawei.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH 5.6 015/177] net: revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
-Date:   Mon,  1 Jun 2020 19:52:33 +0200
-Message-Id: <20200601174049.938201802@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 002/177] dpaa_eth: fix usage as DSA master, try 3
+Date:   Mon,  1 Jun 2020 19:52:20 +0200
+Message-Id: <20200601174048.727800313@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -68,66 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuqi Jin <jinyuqi@huawei.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit a6211caa634da39d861a47437ffcda8b38ef421b ]
+[ Upstream commit 5d14c304bfc14b4fd052dc83d5224376b48f52f0 ]
 
-Commit adb03115f459 ("net: get rid of an signed integer overflow in ip_idents_reserve()")
-used atomic_cmpxchg to replace "atomic_add_return" inside the function
-"ip_idents_reserve". The reason was to avoid UBSAN warning.
-However, this change has caused performance degrade and in GCC-8,
-fno-strict-overflow is now mapped to -fwrapv -fwrapv-pointer
-and signed integer overflow is now undefined by default at all
-optimization levels[1]. Moreover, it was a bug in UBSAN vs -fwrapv
-/-fno-strict-overflow, so Let's revert it safely.
+The dpaa-eth driver probes on compatible string for the MAC node, and
+the fman/mac.c driver allocates a dpaa-ethernet platform device that
+triggers the probing of the dpaa-eth net device driver.
 
-[1] https://gcc.gnu.org/gcc-8/changes.html
+All of this is fine, but the problem is that the struct device of the
+dpaa_eth net_device is 2 parents away from the MAC which can be
+referenced via of_node. So of_find_net_device_by_node can't find it, and
+DSA switches won't be able to probe on top of FMan ports.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jiong Wang <jiongwang@huawei.com>
-Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+It would be a bit silly to modify a core function
+(of_find_net_device_by_node) to look for dev->parent->parent->of_node
+just for one driver. We're just 1 step away from implementing full
+recursion.
+
+Actually there have already been at least 2 previous attempts to make
+this work:
+- Commit a1a50c8e4c24 ("fsl/man: Inherit parent device and of_node")
+- One or more of the patches in "[v3,0/6] adapt DPAA drivers for DSA":
+  https://patchwork.ozlabs.org/project/netdev/cover/1508178970-28945-1-git-send-email-madalin.bucur@nxp.com/
+  (I couldn't really figure out which one was supposed to solve the
+  problem and how).
+
+Point being, it looks like this is still pretty much a problem today.
+On T1040, the /sys/class/net/eth0 symlink currently points to
+
+../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/dpaa-ethernet.0/net/eth0
+
+which pretty much illustrates the problem. The closest of_node we've got
+is the "fsl,fman-memac" at /soc@ffe000000/fman@400000/ethernet@e6000,
+which is what we'd like to be able to reference from DSA as host port.
+
+For of_find_net_device_by_node to find the eth0 port, we would need the
+parent of the eth0 net_device to not be the "dpaa-ethernet" platform
+device, but to point 1 level higher, aka the "fsl,fman-memac" node
+directly. The new sysfs path would look like this:
+
+../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/net/eth0
+
+And this is exactly what SET_NETDEV_DEV does. It sets the parent of the
+net_device. The new parent has an of_node associated with it, and
+of_dev_node_match already checks for the of_node of the device or of its
+parent.
+
+Fixes: a1a50c8e4c24 ("fsl/man: Inherit parent device and of_node")
+Fixes: c6e26ea8c893 ("dpaa_eth: change device used")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -491,18 +491,16 @@ u32 ip_idents_reserve(u32 hash, int segs
- 	atomic_t *p_id = ip_idents + hash % IP_IDENTS_SZ;
- 	u32 old = READ_ONCE(*p_tstamp);
- 	u32 now = (u32)jiffies;
--	u32 new, delta = 0;
-+	u32 delta = 0;
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2902,7 +2902,7 @@ static int dpaa_eth_probe(struct platfor
+ 	}
  
- 	if (old != now && cmpxchg(p_tstamp, old, now) == old)
- 		delta = prandom_u32_max(now - old);
+ 	/* Do this here, so we can be verbose early */
+-	SET_NETDEV_DEV(net_dev, dev);
++	SET_NETDEV_DEV(net_dev, dev->parent);
+ 	dev_set_drvdata(dev, net_dev);
  
--	/* Do not use atomic_add_return() as it makes UBSAN unhappy */
--	do {
--		old = (u32)atomic_read(p_id);
--		new = old + delta + segs;
--	} while (atomic_cmpxchg(p_id, old, new) != old);
--
--	return new - segs;
-+	/* If UBSAN reports an error there, please make sure your compiler
-+	 * supports -fno-strict-overflow before reporting it that was a bug
-+	 * in UBSAN, and it has been fixed in GCC-8.
-+	 */
-+	return atomic_add_return(segs + delta, p_id) - segs;
- }
- EXPORT_SYMBOL(ip_idents_reserve);
- 
+ 	priv = netdev_priv(net_dev);
 
 
