@@ -2,267 +2,418 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA62BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0993C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2E42076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z3BMWfYG"
+	by mail.kernel.org (Postfix) with ESMTP id C539120734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgFAHz5 (ORCPT
+        id S1728197AbgFAH43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgFAHz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:55:57 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF9BC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 00:55:56 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id r2so8525271ila.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/4Ao71gzvQHCdFHHe3hyekjZAwDBVfIqIDhFzMvDFm8=;
-        b=Z3BMWfYGX2JXNpH5KISREDKnnAHeCNtDESsa4ilZz3mt7JVIygCTxt9avuqXjikAZD
-         jRuUDcCnHfugD9N3kH5OB9WoE5m23uxMng1RzuMLAZ/Iy5etm6xVJHNI5lDeZK2mWPyD
-         qePoqyg6bQFj9/H0yV8TLpPWSFmgKBUswBZWhmdW3mj/XSsVdr22hp5Ore1II6B0NzGW
-         zLFKEwlTk/WmUjWePbBMi1oTb777PWDgTfwjbPN967aJBPjOmh1bt179h6UYCsUMHA4A
-         GRZO9pBgL1F5A6lixOnxq0e9sXQmAKjw5okcVoo54bu/vBVaeGSmMDi4H9mo7T/khDh4
-         tPQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/4Ao71gzvQHCdFHHe3hyekjZAwDBVfIqIDhFzMvDFm8=;
-        b=r+oGzceRfO3Uu04QxY+6/VboJn6ix7AFK+zeVEC1OT6ioRyKX7GmEGHJ7R36/GEVXk
-         ru/jJd+RLp6/XcD+ysI82QtmjR8TCRUFGJkGEGbUnGHn4Gq08T+19bJfLeQw6f/prNHV
-         KCPwKRUJzoK9bjxAq/nhGGAgsWxi8g+wc+k3n5NTGe3jK1jzIPy3BgBU8MqpgA8kKL0G
-         AQVNY04YSyaZcAw8eVi10PhOKUKxcecl9CV3k/x2eu0UNGjkxhEb3tBmwwxSq1DK6nua
-         ey2Mc3uNOZGk3tO35KmaRlBf0eNiLrmP9qR4rwKZbni0godRG1HMVz6XXylqTR2BbUo8
-         fLKQ==
-X-Gm-Message-State: AOAM530Fm0DxDlE4PofhzgePeeoM6w7fP3xxV/99O0Oy8je+mv59IfqD
-        ltFZsoKi7svXaXTbyX4helBLGphX9lzOR6Mn9WSipw==
-X-Google-Smtp-Source: ABdhPJzlsVwtMHflRbdLWI2gGAhs+tMSC0sSpLPufG4/xoi5QIWE5KnARUU+6fh/a3w8W8fBoDQyaU2iEWMNhAaol14=
-X-Received: by 2002:a92:cd49:: with SMTP id v9mr20681847ilq.19.1590998155745;
- Mon, 01 Jun 2020 00:55:55 -0700 (PDT)
+        Mon, 1 Jun 2020 03:56:29 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7196 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgFAH42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 03:56:28 -0400
+IronPort-SDR: sGyXPydxnVTpLv/6jxBN40l/9+sJ3pbzOjo7rLLLIsEzSXBZcDMrHbV2M7UDae7wVy0hPFHqqE
+ OWqJFCAxaiVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 00:54:13 -0700
+IronPort-SDR: 4mXdWG5EHlcUw0yIE/q85MJCa9bQZDxBQ2DDoYVaio3u2T/rcH7CQcCNmdRItG9kpklUCwd+kh
+ FCSzrAj3R6Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,460,1583222400"; 
+   d="scan'208";a="311879748"
+Received: from yhanin-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.43.17])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Jun 2020 00:54:07 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: [PATCH v32 15/21] x86/vdso: Add support for exception fixup in vDSO functions
+Date:   Mon,  1 Jun 2020 10:52:12 +0300
+Message-Id: <20200601075218.65618-16-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200601075218.65618-1-jarkko.sakkinen@linux.intel.com>
+References: <20200601075218.65618-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-References: <20200524224219.234847-1-jolsa@kernel.org> <20200524224219.234847-14-jolsa@kernel.org>
-In-Reply-To: <20200524224219.234847-14-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 1 Jun 2020 00:55:44 -0700
-Message-ID: <CAP-5=fVmCZZhHfHU8EFcKDvs8555cuTfyH3VpW_k-oX42S1svg@mail.gmail.com>
-Subject: Re: [PATCH 13/14] perf tests: Add parse metric test for ipc metric
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 3:43 PM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding new test that process metrics code and checks
-> the expected results. Starting with easy ipc metric.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
+The basic concept and implementation is very similar to the kernel's
+exception fixup mechanism.  The key differences are that the kernel
+handler is hardcoded and the fixup entry addresses are relative to
+the overall table as opposed to individual entries.
 
-I wonder if there's a better organization with testing in
-pmu-events.c, expr.c and now parse-metric.c.
+Hardcoding the kernel handler avoids the need to figure out how to
+get userspace code to point at a kernel function.  Given that the
+expected usage is to propagate information to userspace, dumping all
+fault information into registers is likely the desired behavior for
+the vast majority of yet-to-be-created functions.  Use registers
+DI, SI and DX to communicate fault information, which follows Linux's
+ABI for register consumption and hopefully avoids conflict with
+hardware features that might leverage the fixup capabilities, e.g.
+register usage for SGX instructions was at least partially designed
+with calling conventions in mind.
 
-Thanks,
-Ian
+Making fixup addresses relative to the overall table allows the table
+to be stripped from the final vDSO image (it's a kernel construct)
+without complicating the offset logic, e.g. entry-relative addressing
+would also need to account for the table's location relative to the
+image.
 
-> ---
->  tools/perf/tests/Build          |   1 +
->  tools/perf/tests/builtin-test.c |   4 ++
->  tools/perf/tests/parse-metric.c | 117 ++++++++++++++++++++++++++++++++
->  tools/perf/tests/tests.h        |   1 +
->  4 files changed, 123 insertions(+)
->  create mode 100644 tools/perf/tests/parse-metric.c
->
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index c75557aeef0e..bb7c2d8364d1 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -57,6 +57,7 @@ perf-y += maps.o
->  perf-y += time-utils-test.o
->  perf-y += genelf.o
->  perf-y += api-io.o
-> +perf-y += parse-metric.o
->
->  $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
->         $(call rule_mkdir)
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index a9daaeb9fd27..bf20abdca0b0 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -324,6 +324,10 @@ static struct test generic_tests[] = {
->                 .desc = "maps__merge_in",
->                 .func = test__maps__merge_in,
->         },
-> +       {
-> +               .desc = "Parse and process metrics",
-> +               .func = test__parse_metric,
-> +       },
->         {
->                 .func = NULL,
->         },
-> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> new file mode 100644
-> index 000000000000..3005d27c5c48
-> --- /dev/null
-> +++ b/tools/perf/tests/parse-metric.c
-> @@ -0,0 +1,117 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/compiler.h>
-> +#include <string.h>
-> +#include "metricgroup.h"
-> +#include "tests.h"
-> +#include "pmu-events/pmu-events.h"
-> +#include "evlist.h"
-> +#include "rblist.h"
-> +#include "debug.h"
-> +#include "expr.h"
-> +#include "stat.h"
-> +
-> +static struct pmu_event pme_test[] = {
-> +{
-> +       .metric_expr    = "inst_retired.any / cpu_clk_unhalted.thread",
-> +       .metric_name    = "IPC",
-> +},
-> +};
-> +
-> +static struct pmu_events_map map = {
-> +       .cpuid          = "test",
-> +       .version        = "1",
-> +       .type           = "core",
-> +       .table          = pme_test,
-> +};
-> +
-> +static double compute_single(struct rblist *metric_events, struct evsel *evsel,
-> +                            struct runtime_stat *st)
-> +{
-> +       struct metric_event *me;
-> +
-> +       me = metricgroup__lookup(metric_events, evsel, false);
-> +       if (me != NULL) {
-> +               struct metric_expr *mexp;
-> +
-> +               mexp = list_first_entry(&me->head, struct metric_expr, nd);
-> +               return test_generic_metric(mexp, 0, st);
-> +       }
-> +
-> +       return 0.;
-> +}
-> +
-> +struct value {
-> +       const char      *event;
-> +       u64              val;
-> +};
-> +
-> +static u64 find_value(const char *name, struct value *values)
-> +{
-> +       struct value *v = values;
-> +
-> +       while (v->event) {
-> +               if (!strcmp(name, v->event))
-> +                       return v->val;
-> +               v++;
-> +       };
-> +
-> +       return 0;
-> +}
-> +
-> +static void load_runtime_stat(struct runtime_stat *st, struct evlist *evlist,
-> +                             struct value *values)
-> +{
-> +       struct evsel *evsel;
-> +       u64 count;
-> +
-> +       evlist__for_each_entry(evlist, evsel) {
-> +               count = find_value(evsel->name, values);
-> +               perf_stat__update_shadow_stats(evsel, count, 0, st);
-> +       }
-> +}
-> +
-> +static int test_ipc(void)
-> +{
-> +       double ratio;
-> +       struct rblist metric_events = {
-> +               .nr_entries = 0,
-> +       };
-> +       struct evlist *evlist;
-> +       struct evsel *evsel;
-> +       struct value vals[] = {
-> +               { .event = "inst_retired.any",        .val = 300 },
-> +               { .event = "cpu_clk_unhalted.thread", .val = 200 },
-> +               { 0 },
-> +       };
-> +       struct runtime_stat st;
-> +       int err;
-> +
-> +       evlist = evlist__new();
-> +       if (!evlist)
-> +               return -1;
-> +
-> +       err = metricgroup__parse_groups_test(evlist, &map,
-> +                                            "IPC",
-> +                                            false, false,
-> +                                            &metric_events);
-> +
-> +       TEST_ASSERT_VAL("failed to parse metrics", err == 0);
-> +
-> +       runtime_stat__init(&st);
-> +       load_runtime_stat(&st, evlist, vals);
-> +
-> +       evsel = evlist__first(evlist);
-> +       ratio = compute_single(&metric_events, evsel, &st);
-> +
-> +       TEST_ASSERT_VAL("IPC failed, wrong ratio", ratio == 1.5);
-> +
-> +       runtime_stat__exit(&st);
-> +       evlist__delete(evlist);
-> +       return 0;
-> +}
-> +
-> +int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
-> +{
-> +       TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
-> +       return 0;
-> +}
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index 6c6c4b6a4796..0a7853b72240 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -117,6 +117,7 @@ int test__maps__merge_in(struct test *t, int subtest);
->  int test__time_utils(struct test *t, int subtest);
->  int test__jit_write_elf(struct test *test, int subtest);
->  int test__api_io(struct test *test, int subtest);
-> +int test__parse_metric(struct test *test, int subtest);
->
->  bool test__bp_signal_is_supported(void);
->  bool test__bp_account_is_supported(void);
-> --
-> 2.25.4
->
+Regarding stripping the table, modify vdso2c to extract the table from
+the raw, a.k.a. unstripped, data and dump it as a standalone byte array
+in the resulting .c file.  The original base of the table, its length
+and a pointer to the byte array are captured in struct vdso_image.
+Alternatively, the table could be dumped directly into the struct,
+but because the number of entries can vary per image, that would
+require either hardcoding a max sized table into the struct definition
+or defining the table as a flexible length array.  The flexible length
+array approach has zero benefits, e.g. the base/size are still needed,
+and prevents reusing the extraction code, while hardcoding the max size
+adds ongoing maintenance just to avoid exporting the explicit size.
+
+The immediate use case is for Intel Software Guard Extensions (SGX).
+SGX introduces a new CPL3-only "enclave" mode that runs as a sort of
+black box shared object that is hosted by an untrusted "normal" CPl3
+process.
+
+Entering an enclave can only be done through SGX-specific instructions,
+EENTER and ERESUME, and is a non-trivial process.  Because of the
+complexity of transitioning to/from an enclave, the vast majority of
+enclaves are expected to utilize a library to handle the actual
+transitions.  This is roughly analogous to how e.g. libc implementations
+are used by most applications.
+
+Another crucial characteristic of SGX enclaves is that they can generate
+exceptions as part of their normal (at least as "normal" as SGX can be)
+operation that need to be handled *in* the enclave and/or are unique
+to SGX.
+
+And because they are essentially fancy shared objects, a process can
+host any number of enclaves, each of which can execute multiple threads
+simultaneously.
+
+Putting everything together, userspace enclaves will utilize a library
+that must be prepared to handle any and (almost) all exceptions any time
+at least one thread may be executing in an enclave.  Leveraging signals
+to handle the enclave exceptions is unpleasant, to put it mildly, e.g.
+the SGX library must constantly (un)register its signal handler based
+on whether or not at least one thread is executing in an enclave, and
+filter and forward exceptions that aren't related to its enclaves.  This
+becomes particularly nasty when using multiple levels of libraries that
+register signal handlers, e.g. running an enclave via cgo inside of the
+Go runtime.
+
+Enabling exception fixup in vDSO allows the kernel to provide a vDSO
+function that wraps the low-level transitions to/from the enclave, i.e.
+the EENTER and ERESUME instructions.  The vDSO function can intercept
+exceptions that would otherwise generate a signal and return the fault
+information directly to its caller, thus avoiding the need to juggle
+signal handlers.
+
+Note that unlike the kernel's _ASM_EXTABLE_HANDLE implementation, the
+'C' version of _ASM_VDSO_EXTABLE_HANDLE doesn't use a pre-compiled
+assembly macro.  Duplicating four lines of code is simpler than adding
+the necessary infrastructure to generate pre-compiled assembly and the
+intended benefit of massaging GCC's inlining algorithm is unlikely to
+realized in the vDSO any time soon, if ever.
+
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
+Acked-by: Jethro Beekman <jethro@fortanix.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/entry/vdso/Makefile          |  6 +--
+ arch/x86/entry/vdso/extable.c         | 46 +++++++++++++++++++++
+ arch/x86/entry/vdso/extable.h         | 29 ++++++++++++++
+ arch/x86/entry/vdso/vdso-layout.lds.S |  9 ++++-
+ arch/x86/entry/vdso/vdso2c.h          | 58 +++++++++++++++++++++++----
+ arch/x86/include/asm/vdso.h           |  5 +++
+ 6 files changed, 141 insertions(+), 12 deletions(-)
+ create mode 100644 arch/x86/entry/vdso/extable.c
+ create mode 100644 arch/x86/entry/vdso/extable.h
+
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 433a1259f61d..657e01d34d02 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -26,7 +26,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
+ vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
+ 
+ # files to link into kernel
+-obj-y				+= vma.o
++obj-y				+= vma.o extable.o
+ OBJECT_FILES_NON_STANDARD_vma.o	:= n
+ 
+ # vDSO images to build
+@@ -120,8 +120,8 @@ $(obj)/%-x32.o: $(obj)/%.o FORCE
+ 
+ targets += vdsox32.lds $(vobjx32s-y)
+ 
+-$(obj)/%.so: OBJCOPYFLAGS := -S
+-$(obj)/%.so: $(obj)/%.so.dbg FORCE
++$(obj)/%.so: OBJCOPYFLAGS := -S --remove-section __ex_table
++$(obj)/%.so: $(obj)/%.so.dbg
+ 	$(call if_changed,objcopy)
+ 
+ $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
+diff --git a/arch/x86/entry/vdso/extable.c b/arch/x86/entry/vdso/extable.c
+new file mode 100644
+index 000000000000..afcf5b65beef
+--- /dev/null
++++ b/arch/x86/entry/vdso/extable.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/err.h>
++#include <linux/mm.h>
++#include <asm/current.h>
++#include <asm/traps.h>
++#include <asm/vdso.h>
++
++struct vdso_exception_table_entry {
++	int insn, fixup;
++};
++
++bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
++			  unsigned long error_code, unsigned long fault_addr)
++{
++	const struct vdso_image *image = current->mm->context.vdso_image;
++	const struct vdso_exception_table_entry *extable;
++	unsigned int nr_entries, i;
++	unsigned long base;
++
++	/*
++	 * Do not attempt to fixup #DB or #BP.  It's impossible to identify
++	 * whether or not a #DB/#BP originated from within an SGX enclave and
++	 * SGX enclaves are currently the only use case for vDSO fixup.
++	 */
++	if (trapnr == X86_TRAP_DB || trapnr == X86_TRAP_BP)
++		return false;
++
++	if (!current->mm->context.vdso)
++		return false;
++
++	base =  (unsigned long)current->mm->context.vdso + image->extable_base;
++	nr_entries = image->extable_len / (sizeof(*extable));
++	extable = image->extable;
++
++	for (i = 0; i < nr_entries; i++) {
++		if (regs->ip == base + extable[i].insn) {
++			regs->ip = base + extable[i].fixup;
++			regs->di = trapnr;
++			regs->si = error_code;
++			regs->dx = fault_addr;
++			return true;
++		}
++	}
++
++	return false;
++}
+diff --git a/arch/x86/entry/vdso/extable.h b/arch/x86/entry/vdso/extable.h
+new file mode 100644
+index 000000000000..aafdac396948
+--- /dev/null
++++ b/arch/x86/entry/vdso/extable.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_EXTABLE_H
++#define __VDSO_EXTABLE_H
++
++/*
++ * Inject exception fixup for vDSO code.  Unlike normal exception fixup,
++ * vDSO uses a dedicated handler the addresses are relative to the overall
++ * exception table, not each individual entry.
++ */
++#ifdef __ASSEMBLY__
++#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
++	ASM_VDSO_EXTABLE_HANDLE from to
++
++.macro ASM_VDSO_EXTABLE_HANDLE from:req to:req
++	.pushsection __ex_table, "a"
++	.long (\from) - __ex_table
++	.long (\to) - __ex_table
++	.popsection
++.endm
++#else
++#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
++	".pushsection __ex_table, \"a\"\n"      \
++	".long (" #from ") - __ex_table\n"      \
++	".long (" #to ") - __ex_table\n"        \
++	".popsection\n"
++#endif
++
++#endif /* __VDSO_EXTABLE_H */
++
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index 4d152933547d..dc8da7695859 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -75,11 +75,18 @@ SECTIONS
+ 	 * stuff that isn't used at runtime in between.
+ 	 */
+ 
+-	.text		: { *(.text*) }			:text	=0x90909090,
++	.text		: {
++		*(.text*)
++		*(.fixup)
++	}						:text	=0x90909090,
++
++
+ 
+ 	.altinstructions	: { *(.altinstructions) }	:text
+ 	.altinstr_replacement	: { *(.altinstr_replacement) }	:text
+ 
++	__ex_table		: { *(__ex_table) }		:text
++
+ 	/DISCARD/ : {
+ 		*(.discard)
+ 		*(.discard.*)
+diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
+index a20b134de2a8..04d04e46c98c 100644
+--- a/arch/x86/entry/vdso/vdso2c.h
++++ b/arch/x86/entry/vdso/vdso2c.h
+@@ -5,6 +5,41 @@
+  * are built for 32-bit userspace.
+  */
+ 
++static void BITSFUNC(copy)(FILE *outfile, const unsigned char *data, size_t len)
++{
++	size_t i;
++
++	for (i = 0; i < len; i++) {
++		if (i % 10 == 0)
++			fprintf(outfile, "\n\t");
++		fprintf(outfile, "0x%02X, ", (int)(data)[i]);
++	}
++}
++
++
++/*
++ * Extract a section from the input data into a standalone blob.  Used to
++ * capture kernel-only data that needs to persist indefinitely, e.g. the
++ * exception fixup tables, but only in the kernel, i.e. the section can
++ * be stripped from the final vDSO image.
++ */
++static void BITSFUNC(extract)(const unsigned char *data, size_t data_len,
++			      FILE *outfile, ELF(Shdr) *sec, const char *name)
++{
++	unsigned long offset;
++	size_t len;
++
++	offset = (unsigned long)GET_LE(&sec->sh_offset);
++	len = (size_t)GET_LE(&sec->sh_size);
++
++	if (offset + len > data_len)
++		fail("section to extract overruns input data");
++
++	fprintf(outfile, "static const unsigned char %s[%lu] = {", name, len);
++	BITSFUNC(copy)(outfile, data + offset, len);
++	fprintf(outfile, "\n};\n\n");
++}
++
+ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 			 void *stripped_addr, size_t stripped_len,
+ 			 FILE *outfile, const char *image_name)
+@@ -14,9 +49,8 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	unsigned long mapping_size;
+ 	ELF(Ehdr) *hdr = (ELF(Ehdr) *)raw_addr;
+ 	int i;
+-	unsigned long j;
+ 	ELF(Shdr) *symtab_hdr = NULL, *strtab_hdr, *secstrings_hdr,
+-		*alt_sec = NULL;
++		*alt_sec = NULL, *extable_sec = NULL;
+ 	ELF(Dyn) *dyn = 0, *dyn_end = 0;
+ 	const char *secstrings;
+ 	INT_BITS syms[NSYMS] = {};
+@@ -78,6 +112,8 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		if (!strcmp(secstrings + GET_LE(&sh->sh_name),
+ 			    ".altinstructions"))
+ 			alt_sec = sh;
++		if (!strcmp(secstrings + GET_LE(&sh->sh_name), "__ex_table"))
++			extable_sec = sh;
+ 	}
+ 
+ 	if (!symtab_hdr)
+@@ -150,13 +186,11 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	fprintf(outfile,
+ 		"static unsigned char raw_data[%lu] __ro_after_init __aligned(PAGE_SIZE) = {",
+ 		mapping_size);
+-	for (j = 0; j < stripped_len; j++) {
+-		if (j % 10 == 0)
+-			fprintf(outfile, "\n\t");
+-		fprintf(outfile, "0x%02X, ",
+-			(int)((unsigned char *)stripped_addr)[j]);
+-	}
++	BITSFUNC(copy)(outfile, stripped_addr, stripped_len);
+ 	fprintf(outfile, "\n};\n\n");
++	if (extable_sec)
++		BITSFUNC(extract)(raw_addr, raw_len, outfile,
++				  extable_sec, "extable");
+ 
+ 	fprintf(outfile, "const struct vdso_image %s = {\n", image_name);
+ 	fprintf(outfile, "\t.data = raw_data,\n");
+@@ -167,6 +201,14 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		fprintf(outfile, "\t.alt_len = %lu,\n",
+ 			(unsigned long)GET_LE(&alt_sec->sh_size));
+ 	}
++	if (extable_sec) {
++		fprintf(outfile, "\t.extable_base = %lu,\n",
++			(unsigned long)GET_LE(&extable_sec->sh_offset));
++		fprintf(outfile, "\t.extable_len = %lu,\n",
++			(unsigned long)GET_LE(&extable_sec->sh_size));
++		fprintf(outfile, "\t.extable = extable,\n");
++	}
++
+ 	for (i = 0; i < NSYMS; i++) {
+ 		if (required_syms[i].export && syms[i])
+ 			fprintf(outfile, "\t.sym_%s = %" PRIi64 ",\n",
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index bbcdc7b8f963..b5d23470f56b 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -15,6 +15,8 @@ struct vdso_image {
+ 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
+ 
+ 	unsigned long alt, alt_len;
++	unsigned long extable_base, extable_len;
++	const void *extable;
+ 
+ 	long sym_vvar_start;  /* Negative offset to the vvar area */
+ 
+@@ -45,6 +47,9 @@ extern void __init init_vdso_image(const struct vdso_image *image);
+ 
+ extern int map_vdso_once(const struct vdso_image *image, unsigned long addr);
+ 
++extern bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
++				 unsigned long error_code,
++				 unsigned long fault_addr);
+ #endif /* __ASSEMBLER__ */
+ 
+ #endif /* _ASM_X86_VDSO_H */
+-- 
+2.25.1
+
