@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B61C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBA72073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2B720776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034515;
-	bh=YPYcDMnw4j/RYGH/xC9DxTYgb2x7HZqcUJnTpea8X38=;
+	s=default; t=1591034519;
+	bh=IcpnxHIxGuV4/d90h6QEyv3BV8vod2o5wUpxt9Rtmf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9LUvtgDNtMVmX0A07rGNeKjBlUttP7LOPD0OJhoVkZUlaHgzR157/xuXu9G+SAf4
-	 C9g+MT+frxCnsuUz8jpf1Bdpt4WnviKD5qCMyWpeNks9htzjKCufFQE986w9KyEyNI
-	 +6GhXqN0Fw1wbocEi11fVcfyQlSVwYkqWXyCgHBw=
+	b=UsnHuwNPo4reYY5EXDNR6I6jb4jvjA5vxNtK4tTuFDT+I+FT7OW+wie5nRlXiCTkq
+	 /wblD87Mm1e4UDBhnG3LG5NT6VVlCmtlOcELNIpaWOSasSb0jVzj7IBnpfgYqBbieF
+	 Pmg9Fhv0AV1NonirrVlVbZhA0IsPS3JwmpXPmmwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgFASBz (ORCPT
+        id S1729860AbgFASB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:01:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44696 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgFASBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:42 -0400
+        id S1729821AbgFASBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A18BF2065C;
-        Mon,  1 Jun 2020 18:01:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDD052073B;
+        Mon,  1 Jun 2020 18:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034501;
-        bh=YPYcDMnw4j/RYGH/xC9DxTYgb2x7HZqcUJnTpea8X38=;
+        s=default; t=1591034503;
+        bh=IcpnxHIxGuV4/d90h6QEyv3BV8vod2o5wUpxt9Rtmf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1cV3kBVVyQ9WdsyC3zB7ycA6zSx5ZrKLtRxaheLFSHMl1y1t/WCzmjETt3My/rBps
-         E80uBkjkfaaJ7gN8/Qn3Fmn3cOm0kUlcbnHQeiM68U+hpHjxkfVXtIeIVWaVKz5qHb
-         kW8tynj9RQGnxIvSso6sW7HgqF0Q+Bhp6yCS3A2w=
+        b=VomXsRWdOlsIwiMMYd9heJKCd9PCCHPZi2st0E+hD4n5nRso8nqc/pqmUpBta1tEt
+         LtBMQ+ub6KxGAVXPIxUxlPoW5UVAkEuZn60NaZeU1BE3l7Y9U2fCnCoKq66k18SkM2
+         g65ZXGZrhgmttKfNuDhMAVvI7XqxRtk9htjPJrwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
         Xin Long <lucien.xin@gmail.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.14 57/77] xfrm: call xfrm_output_gso when inner_protocol is set in xfrm_output
-Date:   Mon,  1 Jun 2020 19:54:02 +0200
-Message-Id: <20200601174026.334314756@linuxfoundation.org>
+Subject: [PATCH 4.14 58/77] xfrm: fix a warning in xfrm_policy_insert_list
+Date:   Mon,  1 Jun 2020 19:54:03 +0200
+Message-Id: <20200601174026.512034194@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -62,95 +62,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xin Long <lucien.xin@gmail.com>
 
-commit a204aef9fd77dce1efd9066ca4e44eede99cd858 upstream.
+commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd upstream.
 
-An use-after-free crash can be triggered when sending big packets over
-vxlan over esp with esp offload enabled:
+This waring can be triggered simply by:
 
-  [] BUG: KASAN: use-after-free in ipv6_gso_pull_exthdrs.part.8+0x32c/0x4e0
-  [] Call Trace:
-  []  dump_stack+0x75/0xa0
-  []  kasan_report+0x37/0x50
-  []  ipv6_gso_pull_exthdrs.part.8+0x32c/0x4e0
-  []  ipv6_gso_segment+0x2c8/0x13c0
-  []  skb_mac_gso_segment+0x1cb/0x420
-  []  skb_udp_tunnel_segment+0x6b5/0x1c90
-  []  inet_gso_segment+0x440/0x1380
-  []  skb_mac_gso_segment+0x1cb/0x420
-  []  esp4_gso_segment+0xae8/0x1709 [esp4_offload]
-  []  inet_gso_segment+0x440/0x1380
-  []  skb_mac_gso_segment+0x1cb/0x420
-  []  __skb_gso_segment+0x2d7/0x5f0
-  []  validate_xmit_skb+0x527/0xb10
-  []  __dev_queue_xmit+0x10f8/0x2320 <---
-  []  ip_finish_output2+0xa2e/0x1b50
-  []  ip_output+0x1a8/0x2f0
-  []  xfrm_output_resume+0x110e/0x15f0
-  []  __xfrm4_output+0xe1/0x1b0
-  []  xfrm4_output+0xa0/0x200
-  []  iptunnel_xmit+0x5a7/0x920
-  []  vxlan_xmit_one+0x1658/0x37a0 [vxlan]
-  []  vxlan_xmit+0x5e4/0x3ec8 [vxlan]
-  []  dev_hard_start_xmit+0x125/0x540
-  []  __dev_queue_xmit+0x17bd/0x2320  <---
-  []  ip6_finish_output2+0xb20/0x1b80
-  []  ip6_output+0x1b3/0x390
-  []  ip6_xmit+0xb82/0x17e0
-  []  inet6_csk_xmit+0x225/0x3d0
-  []  __tcp_transmit_skb+0x1763/0x3520
-  []  tcp_write_xmit+0xd64/0x5fe0
-  []  __tcp_push_pending_frames+0x8c/0x320
-  []  tcp_sendmsg_locked+0x2245/0x3500
-  []  tcp_sendmsg+0x27/0x40
+  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
+    priority 1 mark 0 mask 0x10  #[1]
+  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
+    priority 2 mark 0 mask 0x1   #[2]
+  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
+    priority 2 mark 0 mask 0x10  #[3]
 
-As on the tx path of vxlan over esp, skb->inner_network_header would be
-set on vxlan_xmit() and xfrm4_tunnel_encap_add(), and the later one can
-overwrite the former one. It causes skb_udp_tunnel_segment() to use a
-wrong skb->inner_network_header, then the issue occurs.
+Then dmesg shows:
 
-This patch is to fix it by calling xfrm_output_gso() instead when the
-inner_protocol is set, in which gso_segment of inner_protocol will be
-done first.
+  [ ] WARNING: CPU: 1 PID: 7265 at net/xfrm/xfrm_policy.c:1548
+  [ ] RIP: 0010:xfrm_policy_insert_list+0x2f2/0x1030
+  [ ] Call Trace:
+  [ ]  xfrm_policy_inexact_insert+0x85/0xe50
+  [ ]  xfrm_policy_insert+0x4ba/0x680
+  [ ]  xfrm_add_policy+0x246/0x4d0
+  [ ]  xfrm_user_rcv_msg+0x331/0x5c0
+  [ ]  netlink_rcv_skb+0x121/0x350
+  [ ]  xfrm_netlink_rcv+0x66/0x80
+  [ ]  netlink_unicast+0x439/0x630
+  [ ]  netlink_sendmsg+0x714/0xbf0
+  [ ]  sock_sendmsg+0xe2/0x110
 
-While at it, also improve some code around.
+The issue was introduced by Commit 7cb8a93968e3 ("xfrm: Allow inserting
+policies with matching mark and different priorities"). After that, the
+policies [1] and [2] would be able to be added with different priorities.
 
-Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
+However, policy [3] will actually match both [1] and [2]. Policy [1]
+was matched due to the 1st 'return true' in xfrm_policy_mark_match(),
+and policy [2] was matched due to the 2nd 'return true' in there. It
+caused WARN_ON() in xfrm_policy_insert_list().
+
+This patch is to fix it by only (the same value and priority) as the
+same policy in xfrm_policy_mark_match().
+
+Thanks to Yuehaibing, we could make this fix better.
+
+v1->v2:
+  - check policy->mark.v == pol->mark.v only without mask.
+
+Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
 Reported-by: Xiumei Mu <xmu@redhat.com>
 Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_output.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ net/xfrm/xfrm_policy.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
---- a/net/xfrm/xfrm_output.c
-+++ b/net/xfrm/xfrm_output.c
-@@ -236,18 +236,20 @@ int xfrm_output(struct sock *sk, struct
- 		xfrm_state_hold(x);
- 
- 		if (skb_is_gso(skb)) {
--			skb_shinfo(skb)->gso_type |= SKB_GSO_ESP;
-+			if (skb->inner_protocol)
-+				return xfrm_output_gso(net, sk, skb);
- 
--			return xfrm_output2(net, sk, skb);
-+			skb_shinfo(skb)->gso_type |= SKB_GSO_ESP;
-+			goto out;
- 		}
- 
- 		if (x->xso.dev && x->xso.dev->features & NETIF_F_HW_ESP_TX_CSUM)
- 			goto out;
-+	} else {
-+		if (skb_is_gso(skb))
-+			return xfrm_output_gso(net, sk, skb);
- 	}
- 
--	if (skb_is_gso(skb))
--		return xfrm_output_gso(net, sk, skb);
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -722,12 +722,7 @@ static void xfrm_policy_requeue(struct x
+ static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+ 				   struct xfrm_policy *pol)
+ {
+-	u32 mark = policy->mark.v & policy->mark.m;
 -
- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
- 		err = skb_checksum_help(skb);
- 		if (err) {
+-	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+-		return true;
+-
+-	if ((mark & pol->mark.m) == pol->mark.v &&
++	if (policy->mark.v == pol->mark.v &&
+ 	    policy->priority == pol->priority)
+ 		return true;
+ 
 
 
