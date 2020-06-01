@@ -2,124 +2,191 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A57C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02964C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14E42074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:30:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eQXpHVJu"
+	by mail.kernel.org (Postfix) with ESMTP id D715B2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgFAIat (ORCPT
+        id S1728220AbgFAIdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:30:49 -0400
-Received: from mail-db8eur05on2042.outbound.protection.outlook.com ([40.107.20.42]:37811
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725999AbgFAIar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:30:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UVjZ6FCfRoyhGZXP9fe0Wwq2RoALRM0dxH8qIm6aOW9S9iUc9QEMbq/UN4SEZz7rChhLXIuRf1BowN6BUHET+8lEnGFaKR6XuNjzQqolcT6ZoAgLKzbMCcJhbg3DAAW+DbQHwKdwZYhOe90FJ2uJiYI6H6T//HvQsKjA35nT6+nVGOA7TCbDz3kL0uBPOwbXCGcdMRxkFA6Iz6lGnZMCiHSDW9ZPWepMvgcPfi1cePotnfG784YWhZu0PMv4wOPRR8wwQXkEWVd0FQRvMbDisSFUEVwSUTf5NgynyL2q2gM2XEo5EthL1ONU3KlIc7uBWr3LhkUieLsDUYzxL8BUwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ruvIzOSMZF3SHzfC80qeNDBWE4NIJ+y4nAukjDkwis=;
- b=aiOddnOXIFvFYmTpetdqlPsPamwm2PBV06azkwTMWBsgqPzr+tNNYTLeIBcCo229LoYuzKTCK/aO6/hEL3m5Oo4CAxrLWJpHWZuAtLvtGhFdemhPCq6h+zaEfAqUcuVbuuRiRMwX7+7EJYp099zdeBzseXfpYp7cbdb2T12m9iaO17gpolXAQggKfszsYOtNXmotFvo/ZM9/gZ5d1UP+VQaONCWVy56tyKePYZisCgk3UBmkVh4gIwLjfgSOOhzjAWKcyfkFC4CbSW8R3u7oBmROSyrliqynhBKXq4z5VWpqwAHewBqqbVVNFl1Pbpc48ijZx0OH9+4E5Jhz1EmnGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ruvIzOSMZF3SHzfC80qeNDBWE4NIJ+y4nAukjDkwis=;
- b=eQXpHVJukbRZ2b2N5VCnraY2dBt9QhkwwaLr+dRrL79ATMM/m6kPKg26EaO2Lz34Izwy8fffxDfEe9fl86OjEI5NsB0AyXzZy/G1o0T5KqFwyjyzs0oX2OKfHR28b8f4vJI9cQTnrVDViajR/RqAUf7AcQeH8PVYnHgG3gVef6g=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2728.eurprd04.prod.outlook.com (2603:10a6:4:97::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.22; Mon, 1 Jun
- 2020 08:30:44 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3045.022; Mon, 1 Jun 2020
- 08:30:44 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de,
-        aisheng.dong@nxp.com, robh+dt@kernel.org, sboyd@kernel.org,
-        linux@rempel-privat.de, jaswinder.singh@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        l.stach@pengutronix.de, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V3 3/3] clk: imx8mp: add mu root clk
-Date:   Mon,  1 Jun 2020 16:20:02 +0800
-Message-Id: <1590999602-29482-4-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590999602-29482-1-git-send-email-peng.fan@nxp.com>
-References: <1590999602-29482-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0044.apcprd02.prod.outlook.com
- (2603:1096:3:18::32) To DB6PR0402MB2760.eurprd04.prod.outlook.com
- (2603:10a6:4:a1::14)
+        Mon, 1 Jun 2020 04:33:32 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27417 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727124AbgFAIdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 04:33:31 -0400
+IronPort-SDR: KX6H6pMMrbqkzUAKzlatfL5pga/BsPGolhlFgrDT++uvRu3JZjWX9hdz5qKjHDi25xWBpEZ7g0
+ B8p/9zzN3vhQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 01:33:30 -0700
+IronPort-SDR: DAo7x+02qxClWZIG/1Bacfwbe7CZJlqZJWF+aXEMf3lHZHv4NFS42A/jDMQkH20KBXfYWXT22w
+ rocpkbdKThNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,460,1583222400"; 
+   d="scan'208";a="303805935"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 01 Jun 2020 01:33:27 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jffsw-00ABLX-AN; Mon, 01 Jun 2020 11:33:30 +0300
+Date:   Mon, 1 Jun 2020 11:33:30 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Emil Velikov <emil.l.velikov@gmail.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <20200601083330.GB1634618@smile.fi.intel.com>
+References: <20200529183824.GW1634618@smile.fi.intel.com>
+ <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
+ <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
+ <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
+ <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com>
+ <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
+ <CAHp75VfBe-LMiAi=E4Cy8OasmE8NdSqevp+dsZtTEOLwF-TgmA@mail.gmail.com>
+ <CACG_h5p1UpLRoA+ubE4NTFQEvg-oT6TFmsLXXTAtBvzN9z3iPg@mail.gmail.com>
+ <CAHp75Vdxa1_ANBLEOB6g25x3O0V5h3yjZve8qpz-xkisD3KTLg@mail.gmail.com>
+ <20200531223716.GA20752@rikard>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR02CA0044.apcprd02.prod.outlook.com (2603:1096:3:18::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3021.27 via Frontend Transport; Mon, 1 Jun 2020 08:30:39 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 970f4402-ae71-4081-694a-08d806061399
-X-MS-TrafficTypeDiagnostic: DB6PR0402MB2728:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB27281E6AE59B1361FBF0DB5C888A0@DB6PR0402MB2728.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
-X-Forefront-PRVS: 0421BF7135
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2YmzK/YC/anJp5iGX2l14kss+M0mTXg8JgNVdVi7/3UJh46hA4Ox21fy66YuUnTqB6gAZ5TeLV0awau60nTx1c5YeaaWEape1/dkoKkWXqeiuf0PpGULe3Fb8Hj+J7y6A7ZAkSWM9nWJ3x7KsfjFKm3Vl33XbdU1JDOMl7Ii5IgwGPaRv6gxCTAStgpZ5xozWljKqmLtGZP9ADJzgCXwY/bTTijA9uRORv/nqEGaS73zbCwqkEmj5AXpoRoSpCf1INe89rFvMrviFSkeKP9GFL1oQELhLnqcAmvw6FiBv5kwNUmLqHQgyVbboM5OXB3YvZ5CWdTf0gOXzbl8O3yqFC9gMVtXtigUiatORQq6JqB71VA/t85m/SAGQs0y8IHt1b8vv8lISpnST61zVBy1JnGh01/CLd8fIb+w5VDhEo4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(136003)(39860400002)(346002)(396003)(316002)(36756003)(6486002)(6666004)(478600001)(86362001)(8676002)(4326008)(2906002)(83380400001)(69590400007)(66556008)(26005)(2616005)(6512007)(66476007)(8936002)(956004)(16526019)(5660300002)(66946007)(52116002)(9686003)(7416002)(6506007)(186003)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: m4PwUTpvzdSzSaRnf1Xg0fn6gimiW2Y6YUQSlfvBjh05Tun4LLh9scaqBeYWzUP+4ilAV5rmHvh0iK32GLfzoT/khg6TN6xOO0OngMhCYjQCbRnn1aGX14xetXZfsQ1LqGwlRUCXz/w+GAXzAoEDk/Y9xTjQPov1XAGIpOntFEJyqu0pSYRqtOb1DWeu28YBVWgPkgm3kZOhmWXAu4fUukLfrUNYTmccxIa1gSly9F5lrFM9HYPC47jt4ZS4FkxQZDu6bfpa1ePTgqXv3hOIAxMstGiJZAGI/Pb4Sdlza13WfAFCmupnGsDYOOt+MdhXDN/O6leDaJAC0COCH3o6vS7jeBk4QOKDnPpNAaXfBHTOy6Y6oAQ+8MicD6W/WNML6BreCoCw2MHmZGEd8HZfgFJOlhlRVFmMC+piHXRmb4aCcKquPeBLtcdh27p+8cuQTcaWvBb89eQACoW7zUIcxlEbGRm9CiTAhFuqukkOK2x09gZPz62POrVqlLbEaSEq
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 970f4402-ae71-4081-694a-08d806061399
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 08:30:44.4685
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SFHUashyaBlbvAKo3vNtUqBsQP04sTZlQFxuiesYZSj0RUqadGLt7jrxNI4cCBeeS7/FdlpNfHaz+EKGaFyT8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2728
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200531223716.GA20752@rikard>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Mon, Jun 01, 2020 at 12:37:16AM +0200, Rikard Falkeborn wrote:
+> + Emil who was working on a patch for this
+> 
+> On Sun, May 31, 2020 at 02:00:45PM +0300, Andy Shevchenko wrote:
+> > On Sun, May 31, 2020 at 4:11 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> > > On Sat, May 30, 2020 at 2:50 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Sat, May 30, 2020 at 11:45 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> > > > > On Sat, May 30, 2020 at 3:49 AM Andy Shevchenko
+> > > > > <andy.shevchenko@gmail.com> wrote:
+> > 
+> > ...
+> > 
+> Sorry about that, it seems it's only triggered by gcc-9, that's why I
+> missed it.
 
-Add mu root clk for mu mailbox usage.
+I guess every compiler (more or less recent) will warn here.
+(Sorry, there is a cut in the thread, the problem is with comparison unsigned
+ type(s) to 0).
 
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/clk/imx/clk-imx8mp.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > #if (l) == 0
+> > > #define GENMASK_INPUT_CHECK(h, l)  0
+> > > #elif
+> > > #define GENMASK_INPUT_CHECK(h, l) \
+> > >         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> > >                 __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> > > #endif
+> > >
+> > > I have verified that this works. Basically this just avoids the sanity
+> > > check when the 'lower' bound 'l' is zero. Let me know if it looks
+> > > fine.
+> 
+> I don't understand how you mean this? You can't use l before you have
+> defined GENMASK_INPUT_CHECK to take l as input? Am I missing something?
+> 
+> How about the following (with an added comment about why the casts are
+> necessary):
+> 
+> diff --git a/include/linux/bits.h b/include/linux/bits.h
+> index 4671fbf28842..5fdb9909fbff 100644
+> --- a/include/linux/bits.h
+> +++ b/include/linux/bits.h
+> @@ -23,7 +23,7 @@
+>  #include <linux/build_bug.h>
+>  #define GENMASK_INPUT_CHECK(h, l) \
+>         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> -               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> +               __builtin_constant_p((int)(l) > (int)(h)), (int)(l) > (int)(h), 0)))
+>  #else
+>  /*
+>   * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+> 
+> I can send a proper patch if this is ok.
+> > 
+> > Unfortunately, it's not enough. We need to take care about the following cases
+> 
+> The __GENMASK macro is only valid for values of h and l between 0 and 63
+> (or 31, if unsigned long is 32 bits). Negative values or values >=
+> sizeof(unsigned long) (or unsigned long long for GENMASK_ULL) result in
+> compiler warnings (-Wshift-count-negative or -Wshift-count-overflow). So
+> when I wrote the GENMASK_INPUT_CHECK macro, the intention was to catch
+> cases where l and h were swapped and let the existing compiler warnings
+> catch negative or too large values.
 
-diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
-index b4d9db9d5bf1..ca747712400f 100644
---- a/drivers/clk/imx/clk-imx8mp.c
-+++ b/drivers/clk/imx/clk-imx8mp.c
-@@ -680,6 +680,7 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 	hws[IMX8MP_CLK_I2C2_ROOT] = imx_clk_hw_gate4("i2c2_root_clk", "i2c2", ccm_base + 0x4180, 0);
- 	hws[IMX8MP_CLK_I2C3_ROOT] = imx_clk_hw_gate4("i2c3_root_clk", "i2c3", ccm_base + 0x4190, 0);
- 	hws[IMX8MP_CLK_I2C4_ROOT] = imx_clk_hw_gate4("i2c4_root_clk", "i2c4", ccm_base + 0x41a0, 0);
-+	hws[IMX8MP_CLK_MU_ROOT] = imx_clk_hw_gate4("mu_root_clk", "ipg_root", ccm_base + 0x4210, 0);
- 	hws[IMX8MP_CLK_OCOTP_ROOT] = imx_clk_hw_gate4("ocotp_root_clk", "ipg_root", ccm_base + 0x4220, 0);
- 	hws[IMX8MP_CLK_PCIE_ROOT] = imx_clk_hw_gate4("pcie_root_clk", "pcie_aux", ccm_base + 0x4250, 0);
- 	hws[IMX8MP_CLK_PWM1_ROOT] = imx_clk_hw_gate4("pwm1_root_clk", "pwm1", ccm_base + 0x4280, 0);
+GENAMSK sometimes is used with non-constant arguments that's why your check
+made a regression.
+
+What I described below are the cases to consider w/o what should we do. What
+you answered is the same what I implied. So, we are on the same page here.
+
+> > 1) h or l negative;
+> 
+> Any of these cases will trigger a compiler warning (h negative triggers 
+> Wshift-count-overflow, l negative triggers Wshift-count-negative).
+> 
+> > 2) h == 0, if l == 0, I dunno what is this. it's basically either 0 or warning;
+> 
+> h == l == 0 is a complicated way of saying 1 (or BIT(0)). l negative
+> triggers compiler warning.
+
+Oh, yes GENMASK(h, l), when h==l==0 should be equivalent to BIT(0) with no
+warning given.
+
+> > 3) l == 0;
+> 
+> if h is negative, compiler warning (see 1). If h == 0, see 2. If h is
+> positive, there is no error in GENMASK_INPUT_CHECK.
+> 
+> > 4) h and l > 0.
+> 
+> The comparisson works as intended.
+
+> > Now, on top of that (since it's a macro) we have to keep in mind that
+> > h and l can be signed and / or unsigned types.
+> > And macro shall work for all 4 cases (by type signedess).
+> 
+> If we cast to int, we don't need to worry about the signedness. If
+> someone enters a value that can't be cast to int, there will still
+> be a compiler warning about shift out of range.
+
+If the argument unsigned long long will it be the warning (it should not)?
+
+> > > Regarding min, max macro that you suggested I am also looking further into it.
+> > 
+> > Since this has been introduced in v5.7 and not only your code is
+> > affected by this I think we need to ping original author either to fix
+> > or revert.
+> > 
+> > So, I Cc'ed to the author and reviewers, because they probably know
+> > better why that had been done in the first place and breaking existing
+> > code.
+
+Please, when you do something there, add a test case to test_bitops.c.
+
 -- 
-2.16.4
+With Best Regards,
+Andy Shevchenko
+
 
