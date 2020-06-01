@@ -2,124 +2,120 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C13C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D14E20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB34A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:56:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cEmrZkDG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgFAFz1 (ORCPT
+        id S1726289AbgFAF4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:55:27 -0400
-Received: from mga12.intel.com ([192.55.52.136]:10974 "EHLO mga12.intel.com"
+        Mon, 1 Jun 2020 01:56:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44255 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgFAFz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:55:26 -0400
-IronPort-SDR: ll8YEk3pPFYYK1jMlvxl7VNd9kCuqMU+V9EGoEB3UYbr80Wl+MughsK0wKNz2eFtA32toIu6y1
- 0Tore4ifA5gQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 22:55:26 -0700
-IronPort-SDR: ktsIJ3CXy/ZmktK/veSWdbbFOjLfvvzLQoYCqmXEG5RkSFT0KTmV30Tjw0RjRNhQTYsL4ONGM5
- DCty+5ESuwTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
-   d="scan'208";a="303769823"
-Received: from lkp-server01.sh.intel.com (HELO 49d03d9b0ee7) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 31 May 2020 22:55:24 -0700
-Received: from kbuild by 49d03d9b0ee7 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jfdPw-0000ZH-0s; Mon, 01 Jun 2020 05:55:24 +0000
-Date:   Mon, 1 Jun 2020 13:54:29 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Amit, Daniel, Kachhap," <amit.kachhap@arm.com>
-Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: sh: 1: scripts/ld-version.sh: Permission denied
-Message-ID: <202006011327.VZKhJeiu%lkp@intel.com>
+        id S1725818AbgFAF4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 01:56:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590990982; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=qxNlodpscBoxykFUAQVlHFmPOZvwy8cggIcifiL/Li0=; b=cEmrZkDGMht59MeHm/IvO3+KZuVClKAY3e3zVTAHOtxnPyeov2nGHmdLv29lVdln09ECIcdP
+ lzYjVqvvtIAAp9p5ZPLANkesDQUYfayt26LDNVQLAQQMmEr4EO8/naNUP7NzGF35oEwZttHp
+ 2vhsAPs9Z1ilhaVUWxyF8cwxHSU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ed498832dd9e15ae345e86b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 05:56:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 454CEC433CB; Mon,  1 Jun 2020 05:56:18 +0000 (UTC)
+Received: from [10.50.34.11] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51DA3C433C9;
+        Mon,  1 Jun 2020 05:56:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51DA3C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+To:     Rob Herring <robh@kernel.org>
+Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+References: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
+ <20200527193638.GA2604206@bogus>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
+Date:   Mon, 1 Jun 2020 11:26:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200527193638.GA2604206@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
-commit: 9553d16fa671b9621c5e2847d08bd90d3be3349c init/kconfig: Add LD_VERSION Kconfig
-date:   9 weeks ago
-config: x86_64-allyesconfig
-compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 2388a096e7865c043e83ece4e26654bd3d1a20d5)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install x86_64 cross compiling tool for clang build
-        # apt-get install binutils-x86-64-linux-gnu
-        git checkout 9553d16fa671b9621c5e2847d08bd90d3be3349c
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64  allyesconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+On 5/28/2020 1:06 AM, Rob Herring wrote:
+> On Wed, May 13, 2020 at 11:33:27AM +0530, Rajendra Nayak wrote:
+>> Add an optional power domain which when specified can be used for
+>> setting the performance state of Venus.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+>>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+>>   2 files changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> index 764affa..ac1ed64 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> @@ -25,12 +25,16 @@ properties:
+>>       maxItems: 1
+>>   
+>>     power-domains:
+>> -    maxItems: 2
+>> +    minItems: 2
+>> +    maxItems: 3
+>>   
+>>     power-domain-names:
+>> +    minItems: 2
+>> +    maxItems: 3
+>>       items:
+>>         - const: venus
+>>         - const: vcodec0
+>> +      - const: opp-pd
+> 
+> Humm, looks suspicious. This is a phyical power island in this block?
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+yes, this is used to represent the physical 'cx' power island in the SoC
+(Its a shared power island, not a power island specific to this block)
+that can be scaled to different 'performance levels' based on the frequency
+the codec is expected to run at.
 
-sh: 1: scripts/gcc-version.sh: Permission denied
-sh: 1: scripts/gcc-version.sh: Permission denied
-init/Kconfig:18: syntax error
-init/Kconfig:17: invalid statement
-init/Kconfig:18: invalid statement
->> sh: 1: scripts/ld-version.sh: Permission denied
-init/Kconfig:23: syntax error
-init/Kconfig:22: invalid statement
-sh: 1: scripts/clang-version.sh: Permission denied
-init/Kconfig:30: syntax error
-init/Kconfig:29: invalid statement
-sh: 1: scripts/gcc-plugin.sh: Permission denied
-make[2]: *** [scripts/kconfig/Makefile:75: allyesconfig] Error 1
-make[1]: *** [Makefile:567: allyesconfig] Error 2
-make: *** [Makefile:179: sub-make] Error 2
---
-sh: 1: scripts/gcc-version.sh: Permission denied
-sh: 1: scripts/gcc-version.sh: Permission denied
-init/Kconfig:18: syntax error
-init/Kconfig:17: invalid statement
-init/Kconfig:18: invalid statement
->> sh: 1: scripts/ld-version.sh: Permission denied
-init/Kconfig:23: syntax error
-init/Kconfig:22: invalid statement
-sh: 1: scripts/clang-version.sh: Permission denied
-init/Kconfig:30: syntax error
-init/Kconfig:29: invalid statement
-sh: 1: scripts/gcc-plugin.sh: Permission denied
-make[2]: *** [scripts/kconfig/Makefile:75: oldconfig] Error 1
-make[1]: *** [Makefile:567: oldconfig] Error 2
-make: *** [Makefile:179: sub-make] Error 2
---
-sh: 1: scripts/gcc-version.sh: Permission denied
-sh: 1: scripts/gcc-version.sh: Permission denied
-init/Kconfig:18: syntax error
-init/Kconfig:17: invalid statement
-init/Kconfig:18: invalid statement
->> sh: 1: scripts/ld-version.sh: Permission denied
-init/Kconfig:23: syntax error
-init/Kconfig:22: invalid statement
-sh: 1: scripts/clang-version.sh: Permission denied
-init/Kconfig:30: syntax error
-init/Kconfig:29: invalid statement
-sh: 1: scripts/gcc-plugin.sh: Permission denied
-make[2]: *** [scripts/kconfig/Makefile:75: olddefconfig] Error 1
-make[1]: *** [Makefile:567: olddefconfig] Error 2
-make: *** [Makefile:179: sub-make] Error 2
+> Because that's what 'power-domains' are supposed to represent. Not $os
+> pm-domain construct.
+> 
+> Rob
+> 
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
