@@ -2,176 +2,122 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43883C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8977C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE5C2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D97207D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:46:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Om+p2SKX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xfXwxQLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgFAOqk (ORCPT
+        id S1727826AbgFAOqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34706 "EHLO
+        Mon, 1 Jun 2020 10:46:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgFAOqj (ORCPT
+        with ESMTP id S1727118AbgFAOql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:46:39 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6A9C03E96F
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 07:46:39 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id s88so4656784pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 07:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PJv6mD+yHUR+Vq/e8xKUWkbuEu0YctS5xT5X44k6oTo=;
-        b=Om+p2SKXwpHoqkI7QRrOtvHf52TeMgu//ne7X47C76RYZhF2dx6vUVrsvsuMKUYYiz
-         JVwtEgmWL2gkMt+Fh0caZ++5jORUSDQtdWdKC01rl+MryRE8Cu7AwvcNOuYioSmB2rHN
-         77GyRlgW3dejh95iQS6rWA/p3DOwH8R04Q9IDlab0nT9Is6XXphmg5I27E5G1pEE4bR/
-         5GnudhgNla9manTS8V7AvESciXfrOJGZdsbt0vZcBvM1hsuiI20ePbgbnpa7GEyI0ooT
-         YKM5BtlUSAdIRckTguVbGeVFYChUvumADSQVhPtjv7Ywm3T1Jwc9GUKuZICrgnUrnHXn
-         g7Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PJv6mD+yHUR+Vq/e8xKUWkbuEu0YctS5xT5X44k6oTo=;
-        b=kXqoXcqpE1zrt63sMkmmcAH7jjbfwd8Jf5PcgZnYuG6orgONovtKayzwEvQdKbu0Bs
-         6BCKCQx2bD2dskehoCXy0MZUG2ISqLFSGR5YW7+A4bKfP7Vi7nsOFyLMiRQLkyQMp0YV
-         8qpca7HdJiqxWkPho9ajM2A0VA6S6cDELwzAAu0OLwEidTx5jTiNkqmHplaX2W609p1p
-         GhU5kEfnIGshviZMNIPphh5j3X2jxfxON9KJxZdtRbuCGEuSfXAEUtYBCVCHRJcsmF4d
-         rP0YNhtCi2dURnT88qvzereZpWOnUQpAa0cRNdRRqpUA1MYj+GVu/XnSZaN/lq7JjeGC
-         1cNA==
-X-Gm-Message-State: AOAM530sLaU45EXLCPb0IZyRh31Q5yQkPbY7sv9HTiHG2NSL49UfDsTX
-        CNIT8DD29dzSO7lC65m63SOm0kND2G8UvA==
-X-Google-Smtp-Source: ABdhPJw/hsIt3L+CFQ9MXoRriiqusGFuvmvNIsT3yTbURUwDJ/jeBgruCjvHske5O3WWhR0OThOjnw==
-X-Received: by 2002:a17:90b:3d4:: with SMTP id go20mr25678281pjb.208.1591022799024;
-        Mon, 01 Jun 2020 07:46:39 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id z1sm6096066pfr.88.2020.06.01.07.46.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 07:46:38 -0700 (PDT)
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-To:     sedat.dilek@gmail.com
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
- <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
- <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
- <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
- <CA+icZUVJT8X3zyafrgbkJppsp4nJEKaLjYNs1kX8H+aY1Y10Qw@mail.gmail.com>
- <CA+icZUWHOYcGUpw4gfT7xP2Twr15YbyXiWA_=Mc+f7NgzZCETw@mail.gmail.com>
- <230d3380-0269-d113-2c32-6e4fb94b79b8@kernel.dk>
- <CA+icZUXxmOA-5+dukCgxfSp4eVHB+QaAHO6tsgq0iioQs3Af-w@mail.gmail.com>
- <CA+icZUV4iSjL8=wLA3qd1c5OQHX2s1M5VKj2CmJoy2rHmzSVbQ@mail.gmail.com>
- <CA+icZUXkWG=08rz9Lp1-ZaRCs+GMTwEiUaFLze9xpL2SpZbdsQ@mail.gmail.com>
- <cdb3ac15-0c41-6147-35f1-41b2a3be1c33@kernel.dk>
- <CA+icZUUfxAc9LaWSzSNV4tidW2KFeVLkDhU30OWbQP-=2bYFHw@mail.gmail.com>
- <b24101f1-c468-8f6b-9dcb-6dc59d0cd4b9@kernel.dk>
- <455dd2c1-7346-2d43-4266-1367c368cee1@kernel.dk>
- <CA+icZUVVL4W46Df5=eQVsb8S6A=_A0ho0jFVf3mde1wpx7kynQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <412ec6a7-90c9-5856-bafe-12c8fe2135e7@kernel.dk>
-Date:   Mon, 1 Jun 2020 08:46:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 10:46:41 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894A8C03E96F
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 07:46:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/UgT1POWifvMyJNciOhK8kmfi25RCwYtZsLhUmUhAxQ=; b=xfXwxQLIKqe6CYTZE8B3XMFjT
+        QohrjTCJ9iVED68MI64wBiPdRxYlTOwCytLQ8bepIUXyuRNrYkqX2DZWNbtNEjUtszhFapIgAFKwX
+        pcPL2C4PE9aS+E+XomPiBu1qbqAZRwZKbCzQhDwWqanV3+cFnxwndmRQM7Y968XzBxm2uiIXlI9SA
+        xixTqchLnibodP/P4pinLpT3OlouW8wjfGN2pqWsjOr2iuXTvIgIuhvkjWdkTUaHmBGlJ0dJGlLRZ
+        LblReP9VAmUhB7URVY0uK49wtuU9shUTPSsTI8LtzA+RBdUW4Jy0jM0qlUNL7t5WzoiCfBiNP16g1
+        yU57jiSxA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39982)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jflhl-0000XW-Bb; Mon, 01 Jun 2020 15:46:21 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jflhX-0003OW-Sb; Mon, 01 Jun 2020 15:46:07 +0100
+Date:   Mon, 1 Jun 2020 15:46:07 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Dooks <ben-linux@fluff.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 1/5] arm: decompressor: set malloc pool size for the
+ decompressor
+Message-ID: <20200601144607.GI1551@shell.armlinux.org.uk>
+References: <20200601142754.26139-1-l.stelmach@samsung.com>
+ <CGME20200601142810eucas1p1767585cf172d26aedb551d7453aa7402@eucas1p1.samsung.com>
+ <20200601142754.26139-2-l.stelmach@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+icZUVVL4W46Df5=eQVsb8S6A=_A0ho0jFVf3mde1wpx7kynQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200601142754.26139-2-l.stelmach@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/20 8:43 AM, Sedat Dilek wrote:
-> On Mon, Jun 1, 2020 at 4:35 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 6/1/20 8:14 AM, Jens Axboe wrote:
->>> On 6/1/20 8:13 AM, Sedat Dilek wrote:
->>>> On Mon, Jun 1, 2020 at 4:04 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>>
->>>>> On 6/1/20 7:35 AM, Sedat Dilek wrote:
->>>>>> Hi Jens,
->>>>>>
->>>>>> with Linux v5.7 final I switched to linux-block.git/for-next and reverted...
->>>>>>
->>>>>> "block: read-ahead submission should imply no-wait as well"
->>>>>>
->>>>>> ...and see no boot-slowdowns.
->>>>>
->>>>> Can you try with these patches applied instead? Or pull my async-readahead
->>>>> branch from the same location.
->>>>>
->>>>
->>>> Yes, I can do that.
->>>> I pulled from linux-block.git#async-readahead and will report later.
->>>>
->>>> Any specific testing desired by you?
->>>
->>> Just do your boot timing test and see if it works, thanks.
->>
->> Actually, can you just re-test with the current async-buffered.6 branch?
->> I think the major surgery should wait for 5.9, we can do this a bit
->> easier without having to touch everything around us.
->>
+On Mon, Jun 01, 2020 at 04:27:50PM +0200, Łukasz Stelmach wrote:
+> Move the definition of malloc pool size of the decompressor to
+> a single place. This value will be exposed later for kexec_file loader.
 > 
-> With linux-block.git#async-readahead:
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> ---
+>  arch/arm/boot/compressed/Makefile | 2 ++
+>  arch/arm/boot/compressed/head.S   | 6 ++++--
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 > 
->   mycompiler -Wp,-MD,kernel/.sys.o.d -nostdinc -isystem
-> /home/dileks/src/llvm-toolchain/install/lib/clang/10.0.1rc1/include
-> -I./arch/x86/include -I./arch/x86/include/generated  -I./include
-> -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi
-> -I./include/uapi -I./include/generated/uapi -include
-> ./include/linux/kconfig.h -include ./include/linux/compiler_types.h
-> -D__KERNEL__ -Qunused-arguments -Wall -Wundef
-> -Werror=strict-prototypes -Wno-trigraphs -fno-strict-aliasing
-> -fno-common -fshort-wchar -fno-PIE
-> -Werror=implicit-function-declaration -Werror=implicit-int
-> -Wno-format-security -std=gnu89 -no-integrated-as
-> -Werror=unknown-warning-option -mno-sse -mno-mmx -mno-sse2 -mno-3dnow
-> -mno-avx -m64 -mno-80387 -mstack-alignment=8 -mtune=generic
-> -mno-red-zone -mcmodel=kernel -Wno-sign-compare
-> -fno-asynchronous-unwind-tables -mretpoline-external-thunk
-> -fno-delete-null-pointer-checks -Wno-address-of-packed-member -O2
-> -Wframe-larger-than=2048 -fstack-protector-strong
-> -Wno-format-invalid-specifier -Wno-gnu -mno-global-merge
-> -Wno-unused-const-variable -g -gz=zlib -pg -mfentry -DCC_USING_FENTRY
-> -Wdeclaration-after-statement -Wvla -Wno-pointer-sign
-> -Wno-array-bounds -fno-strict-overflow -fno-merge-all-constants
-> -fno-stack-check -Werror=date-time -Werror=incompatible-pointer-types
-> -fmacro-prefix-map=./= -fcf-protection=none -Wno-initializer-overrides
-> -Wno-format -Wno-sign-compare -Wno-format-zero-length
-> -Wno-tautological-constant-out-of-range-compare
-> -DKBUILD_MODFILE='"kernel/sys"' -DKBUILD_BASENAME='"sys"'
-> -DKBUILD_MODNAME='"sys"' -c -o kernel/sys.o kernel/sys.c
-> fs/9p/vfs_addr.c:112:4: error: use of undeclared identifier 'filp'
->                         filp->private_data);
->                         ^
-> 1 error generated.
-> make[5]: *** [scripts/Makefile.build:267: fs/9p/vfs_addr.o] Error 1
-> make[4]: *** [scripts/Makefile.build:488: fs/9p] Error 2
-> make[3]: *** [Makefile:1735: fs] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> 
-> I guess block.git#async-buffered.6 needs the same revert of "block:
-> read-ahead submission should imply no-wait as well".
+> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+> index 9c11e7490292..b3594cd1588c 100644
+> --- a/arch/arm/boot/compressed/Makefile
+> +++ b/arch/arm/boot/compressed/Makefile
+> @@ -125,6 +125,8 @@ KBSS_SZ = $(shell echo $$(($$($(NM) $(obj)/../../../../vmlinux | \
+>  		sed -n -e 's/^\([^ ]*\) [AB] __bss_start$$/-0x\1/p' \
+>  		       -e 's/^\([^ ]*\) [AB] __bss_stop$$/+0x\1/p') )) )
+>  LDFLAGS_vmlinux = --defsym _kernel_bss_size=$(KBSS_SZ)
+> +# malloc pool size
+> +LDFLAGS_vmlinux += --defsym _malloc_size=0x10000
+>  # Supply ZRELADDR to the decompressor via a linker symbol.
+>  ifneq ($(CONFIG_AUTO_ZRELADDR),y)
+>  LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
+> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+> index e8e1c866e413..dcc1afa60fb9 100644
+> --- a/arch/arm/boot/compressed/head.S
+> +++ b/arch/arm/boot/compressed/head.S
+> @@ -309,7 +309,8 @@ restart:	adr	r0, LC0
+>  #ifndef CONFIG_ZBOOT_ROM
+>  		/* malloc space is above the relocated stack (64k max) */
+>  		add	sp, sp, r0
+> -		add	r10, sp, #0x10000
+> +		ldr	r10, =_malloc_size
+> +		add	r10, r10, sp
 
-Sorry, forgot to push out the updated version. But as per previous
-email, I think that major work should wait. Just try the updated
-async-buffered.6 branch instead.
+This says "locate _malloc_size in a literal pool somewhere, and load it
+using a PC-relative offset".  Are you sure that the literal pool is
+sensibly located?
+
+Would it be better to use a definition for this?
 
 -- 
-Jens Axboe
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
