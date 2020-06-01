@@ -2,151 +2,79 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1003420738
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3794720738
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sea9LlcO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="el08y0ms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgFAPJg (ORCPT
+        id S1727842AbgFAPJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgFAPJf (ORCPT
+        Mon, 1 Jun 2020 11:09:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21409 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726017AbgFAPJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:09:35 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887B0C05BD43;
-        Mon,  1 Jun 2020 08:09:35 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id fs4so5348043pjb.5;
-        Mon, 01 Jun 2020 08:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=apV5XVo/ogrFdU3BJNMeVW0YRhgijJcQ2gYLG1sV1Y4=;
-        b=Sea9LlcONkHB0iY+y0m1OEf2CH6YSIidMhefO1yUPjECFeptnWnAEozrYZ/ruNewpx
-         zVAB0spr0ZH/5jmLRFZz2jkPd5w0tHK8TZ9FUUVFqOTBxy7ykZ3X0jrwpkh9R7eV4vs+
-         i8Y5WwArF4lUm/2bOvGwHDpRxs9pPf9893QkNhVkwnwvYL3HxxDCRidRpK9OqQi7P45p
-         NpPOBJ77CW93UvHP5A5d877zxZ5e+xOr1mLdJUK2QfhS9VGMtAf+KlF/rrX1E/vaeOPA
-         hhK5SCrQZwTosrJw/G0RAFQ8DUU/arE4M5gVGZ2HgXhaf2X/Gb6txPiNsPW6K19SrFke
-         pKQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=apV5XVo/ogrFdU3BJNMeVW0YRhgijJcQ2gYLG1sV1Y4=;
-        b=gHwUnt+wQOQtkKvDRiuIY9rmw82wZfGWEWa+VgEETiCn1z9/X8cQvz1w5gzhrMuJ9F
-         uBL4h6b6ofLanRzbgzxUNzAyYZtWpIORGgzC+MIXpfVC6UIF7VMui9/nh3nyGlpCrfHt
-         n/XplCAjdbAdCTyO1zKL39KTFGSjyrII2I0iZWqVf51gN5EgAJS/1WbbKpp8CmmrIfa8
-         ewvtO2INi2uA2JE7EssszQ/9Ma2ScyiuYW3yqu96MF12VW83udrJMgeGfxA37tEBOdKe
-         tqyo1iUmSY9GlupGPZyL6dxRrVn1rTFpzMKH/Y0ncr22OHZxsrDzkM2eiIxErdl/W/D4
-         ll3Q==
-X-Gm-Message-State: AOAM530+7wCQi48WVIzyLk8EBdDylfF2inPDBR4ipqzy0lgml/5z0zEo
-        WjmZ6g9uhwBdAV4Bqxiiezvp1SDFolhG5UzaFac=
-X-Google-Smtp-Source: ABdhPJxbYzVEjN3soYUhXG6t+bnfQLBx2Yy5HTHKWAGI6fNDOsvW//f2Yfof+iOq6eSFbbcC6e+zMuK0u5QfSM4zq2U=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr9685824pjq.228.1591024175045;
- Mon, 01 Jun 2020 08:09:35 -0700 (PDT)
+        Mon, 1 Jun 2020 11:09:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591024180;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=D3RccGufA+FXMeFy4cF2DLyxYL+vFotiZlU7fjbCi7w=;
+        b=el08y0msDUoe2YZb1zW+H3ZnypWKjr2XpZ+SLaNEYsTD4zokErbbGvV2tvMQmfmtU7BsFc
+        aiqXx674R0uyuHZxMs7M5nZfStOqeZnvnn2YKtWeFMg2vK/ir6yFsIXph3Nhx2nK/R6mrl
+        cq05twY+e2DxnU6CqKGmFxBgRFlMDxI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-91-Mu6Vfn0oP3q3P3gzrHG0zQ-1; Mon, 01 Jun 2020 11:09:36 -0400
+X-MC-Unique: Mu6Vfn0oP3q3P3gzrHG0zQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45D37100A614;
+        Mon,  1 Jun 2020 15:09:35 +0000 (UTC)
+Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 84635768D6;
+        Mon,  1 Jun 2020 15:09:34 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 10:09:32 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julien Thierry <jthierry@redhat.com>
+Subject: Re: [PATCH 1/2] objtool: Rename rela to reloc
+Message-ID: <20200601150932.6cgpdswnhy26e6ph@treble>
+References: <cover.1590785960.git.mhelsley@vmware.com>
+ <39f183f3acec8a758939dcbede7908a7455be8b8.1590785960.git.mhelsley@vmware.com>
+ <20200529232200.xhjaemclbg2uqrih@treble>
+ <20200530005244.GZ9040@rlwimi.vmware.com>
 MIME-Version: 1.0
-References: <20200601133950.12420-1-johan@kernel.org> <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
- <20200601140117.GF19480@localhost> <CAHp75VdSLb7bnd4v52wYD8KfqcDxjkirBgJVEYMWo=cwdeLzsg@mail.gmail.com>
- <20200601142947.GG19480@localhost>
-In-Reply-To: <20200601142947.GG19480@localhost>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 1 Jun 2020 18:09:23 +0300
-Message-ID: <CAHp75VewzTiHnO0PZ6O47cLs4VyssFsqvrc2CORK6LbW+Gm3bQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] leds: fix broken devres usage
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200530005244.GZ9040@rlwimi.vmware.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 5:29 PM Johan Hovold <johan@kernel.org> wrote:
-> On Mon, Jun 01, 2020 at 05:08:40PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 1, 2020 at 5:01 PM Johan Hovold <johan@kernel.org> wrote:
-> > > On Mon, Jun 01, 2020 at 04:51:01PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, Jun 1, 2020 at 4:42 PM Johan Hovold <johan@kernel.org> wrote:
-> > > > >
-> > > > > Several MFD child drivers register their class devices directly under
-> > > > > the parent device (about half of the MFD LED drivers do so).
-> > > > >
-> > > > > This means you cannot blindly do devres conversions so that
-> > > > > deregistration ends up being tied to the parent device, something which
-> > > > > leads to use-after-free on driver unbind when the class device is
-> > > > > released while still being registered (and, for example, oopses on later
-> > > > > parent MFD driver unbind or LED class callbacks, or resource leaks and
-> > > > > name clashes on child driver reload).
-> > > >
-> > > > Shouldn't MFD take reference count for their children?
-> > >
-> > > That's not the issue here. The child driver is allocating memory for the
-> > > class device (for example using devres), and that will end up being
-> > > freed on unbind while said device is still registered. The child driver
-> > > may then even be unloaded. No extra reference can fix this.
-> >
-> > Okay, I didn't still get how dropping devres will help here.
-> >
-> > Say, we have
-> >
-> > ->probe()
-> > {
-> >  return devm_foo_register();
-> > }
-> >
-> > and no ->remove()
-> >
-> > vs.
-> >
-> > ->probe()
-> > {
-> >   return foo_register();
-> > }
-> >
-> > ->remove()
-> > {
-> >  foo_unregister();
-> > }
-> >
-> > So, basically what you seem to workaround is that ->remove() is not
-> > getting called?
->
-> Any driver which frees a resource before making sure it's no longer used
-> it is just plain broken. Unfortunately, devres makes this harder to
-> reason about and people get it wrong. This is roughly the current
-> situation with these drivers:
->
->         drv->probe(dev)
->           foo = devm_kzalloc(dev);
+On Fri, May 29, 2020 at 05:52:44PM -0700, Matt Helsley wrote:
+> So I was rebasing my future patches and I found a few spots where
+> objtool warning strings and code comments weren't fixed-up to
+> consistent. Here's the new, complete regex -- it includes the original
+> changes and the missed bits (e.g. note the new substitution for @rela
+> comments):
 
->           devm_foo_register(dev->parent, foo);  // NOTE: dev->parent
-
-A-ha! Thanks for this detail.
-But why are they doing so?
-
->         drv->remove(dev)
->         devres_release_all(dev)
->           kfree(foo);                           // foo still registered
-
-> but foo remains registered until the parent driver is unbound.
-
-Since the last fixes against kobject elimination, shouldn't be this
-simple fixed by not supplying dev->parent above?
+Thanks, fixed.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Josh
+
