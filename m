@@ -2,259 +2,162 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9590DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF04F2077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E59206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="o7DdYqEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgFADpo (ORCPT
+        id S1727121AbgFADpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 23:45:44 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43800 "EHLO inva020.nxp.com"
+        Sun, 31 May 2020 23:45:55 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:12612 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbgFADpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 23:45:43 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A759D1A0592;
-        Mon,  1 Jun 2020 05:45:40 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A95AD1A05CA;
-        Mon,  1 Jun 2020 05:45:36 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A85B5402E4;
-        Mon,  1 Jun 2020 11:45:31 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        hongtao.jia@freescale.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: thermal: Convert qoriq to json-schema
-Date:   Mon,  1 Jun 2020 11:35:20 +0800
-Message-Id: <1590982520-5437-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726002AbgFADpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 23:45:55 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49b1Kn0gCmz5Y;
+        Mon,  1 Jun 2020 05:45:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1590983152; bh=pndK1FjAmFq0047oc3zSn4GkaXw9CpwjFxLaj77UgdE=;
+        h=Date:From:Subject:To:Cc:From;
+        b=o7DdYqEd4GUixVvSOrNrzZ2bHeU3/zAx4a9D11aQnZZdwYuQbIz69ifVRrCznbUKj
+         GedeU9z/s5zMyfk+UQ0FpH53JtIh6ATUEHh8TryM6us92ncaETH0PyrYpKCha03ywH
+         EGSA7CrnlsjT13sq+eNEMyoZXBIkj1pqeugPUkArTNcj1OvYdmxgPlwzilJ+X/lN6I
+         PC6vabPd48+S+TqkluikcHeRakVoLhu37DOWiJs4MpK22/XiBmd2TSNXuQME9llTna
+         KqW4Sf2hx94O2qh1OxmFEAr8CXF1JfnuvG1zRQA2Dn6TgfxDbh76o3KCbGgXgV0Hh0
+         M/tYiCqtqeRYQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Mon, 01 Jun 2020 05:45:48 +0200
+Message-Id: <c18a68b3b7c25593c9b6db4bcea1d53de469f6e0.1590983023.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] misc: atmel-ssc: lock with mutex instead of spinlock
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the qoriq thermal binding to DT schema format using json-schema
+Uninterruptible context is not needed in the driver and causes lockdep
+warning because of mutex taken in of_alias_get_id(). Convert the lock to
+mutex to avoid the issue.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
-Changes since V1:
-	- add 'maxItems' for 'fsl,tmu-range' property;
-	- add 'minItems'/'maxItems' and items descriptions for 'fsl,tmu-calibration' property;
-	- remove description for common property '#thermal-sensor-cells';
-	- refine 'fsl,tmu-calibration' format in example.
----
- .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
- .../devicetree/bindings/thermal/qoriq-thermal.yaml | 112 +++++++++++++++++++++
- 2 files changed, 112 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+ drivers/misc/atmel-ssc.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-deleted file mode 100644
-index 28f2cba..0000000
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
--
--Required properties:
--- compatible : Must include "fsl,qoriq-tmu" or "fsl,imx8mq-tmu". The
--	version of the device is determined by the TMU IP Block Revision
--	Register (IPBRR0) at offset 0x0BF8.
--	Table of correspondences between IPBRR0 values and example  chips:
--		Value           Device
--		----------      -----
--		0x01900102      T1040
--- reg : Address range of TMU registers.
--- interrupts : Contains the interrupt for TMU.
--- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
--	the SoC reference manual. The first cell is TTR0CR, the second is
--	TTR1CR, etc.
--- fsl,tmu-calibration : A list of cell pairs containing temperature
--	calibration data, as specified by the SoC reference manual.
--	The first cell of each pair is the value to be written to TTCFGR,
--	and the second is the value to be written to TSCFGR.
--- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
--	site ID, and represents the "n" in TRITSRn and TRATSRn.
--
--Optional property:
--- little-endian : If present, the TMU registers are little endian. If absent,
--	the default is big endian.
--- clocks : the clock for clocking the TMU silicon.
--
--Example:
--
--tmu@f0000 {
--	compatible = "fsl,qoriq-tmu";
--	reg = <0xf0000 0x1000>;
--	interrupts = <18 2 0 0>;
--	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
--	fsl,tmu-calibration = <0x00000000 0x00000025
--			       0x00000001 0x00000028
--			       0x00000002 0x0000002d
--			       0x00000003 0x00000031
--			       0x00000004 0x00000036
--			       0x00000005 0x0000003a
--			       0x00000006 0x00000040
--			       0x00000007 0x00000044
--			       0x00000008 0x0000004a
--			       0x00000009 0x0000004f
--			       0x0000000a 0x00000054
--
--			       0x00010000 0x0000000d
--			       0x00010001 0x00000013
--			       0x00010002 0x00000019
--			       0x00010003 0x0000001f
--			       0x00010004 0x00000025
--			       0x00010005 0x0000002d
--			       0x00010006 0x00000033
--			       0x00010007 0x00000043
--			       0x00010008 0x0000004b
--			       0x00010009 0x00000053
--
--			       0x00020000 0x00000010
--			       0x00020001 0x00000017
--			       0x00020002 0x0000001f
--			       0x00020003 0x00000029
--			       0x00020004 0x00000031
--			       0x00020005 0x0000003c
--			       0x00020006 0x00000042
--			       0x00020007 0x0000004d
--			       0x00020008 0x00000056
--
--			       0x00030000 0x00000012
--			       0x00030001 0x0000001d>;
--	#thermal-sensor-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-new file mode 100644
-index 0000000..c5df999
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/qoriq-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-+
-+maintainers:
-+  - Hongtao Jia <hongtao.jia@freescale.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      The version of the device is determined by the TMU IP Block Revision
-+      Register (IPBRR0) at offset 0x0BF8.
-+      Table of correspondences between IPBRR0 values and example chips:
-+            Value           Device
-+            ----------      -----
-+            0x01900102      T1040
-+    enum:
-+      - fsl,qoriq-tmu
-+      - fsl,imx8mq-tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,tmu-range:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      The values to be programmed into TTRnCR, as specified by the SoC
-+      reference manual. The first cell is TTR0CR, the second is TTR1CR, etc.
-+    maxItems: 4
-+
-+  fsl,tmu-calibration:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
-+    description: |
-+      A list of cell pairs containing temperature calibration data, as
-+      specified by the SoC reference manual. The first cell of each pair
-+      is the value to be written to TTCFGR, and the second is the value
-+      to be written to TSCFGR.
-+    items:
-+      items:
-+        - description: value for TTCFGR
-+        - description: value for TSCFGR
-+    minItems: 1
-+    maxItems: 64
-+
-+  little-endian:
-+    description: |
-+      boolean, if present, the TMU registers are little endian. If absent,
-+      the default is big endian.
-+    type: boolean
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,tmu-range
-+  - fsl,tmu-calibration
-+  - '#thermal-sensor-cells'
-+
-+examples:
-+  - |
-+    tmu@f0000 {
-+        compatible = "fsl,qoriq-tmu";
-+        reg = <0xf0000 0x1000>;
-+        interrupts = <18 2 0 0>;
-+        fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
-+        fsl,tmu-calibration = <0x00000000 0x00000025>,
-+                              <0x00000001 0x00000028>,
-+                              <0x00000002 0x0000002d>,
-+                              <0x00000003 0x00000031>,
-+                              <0x00000004 0x00000036>,
-+                              <0x00000005 0x0000003a>,
-+                              <0x00000006 0x00000040>,
-+                              <0x00000007 0x00000044>,
-+                              <0x00000008 0x0000004a>,
-+                              <0x00000009 0x0000004f>,
-+                              <0x0000000a 0x00000054>,
-+                              <0x00010000 0x0000000d>,
-+                              <0x00010001 0x00000013>,
-+                              <0x00010002 0x00000019>,
-+                              <0x00010003 0x0000001f>,
-+                              <0x00010004 0x00000025>,
-+                              <0x00010005 0x0000002d>,
-+                              <0x00010006 0x00000033>,
-+                              <0x00010007 0x00000043>,
-+                              <0x00010008 0x0000004b>,
-+                              <0x00010009 0x00000053>,
-+                              <0x00020000 0x00000010>,
-+                              <0x00020001 0x00000017>,
-+                              <0x00020002 0x0000001f>,
-+                              <0x00020003 0x00000029>,
-+                              <0x00020004 0x00000031>,
-+                              <0x00020005 0x0000003c>,
-+                              <0x00020006 0x00000042>,
-+                              <0x00020007 0x0000004d>,
-+                              <0x00020008 0x00000056>,
-+                              <0x00030000 0x00000012>,
-+                              <0x00030001 0x0000001d>;
-+        #thermal-sensor-cells = <1>;
-+    };
+diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
+index 1322e29bc37a..5cc032097476 100644
+--- a/drivers/misc/atmel-ssc.c
++++ b/drivers/misc/atmel-ssc.c
+@@ -10,7 +10,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex.h>
+ #include <linux/atmel-ssc.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -20,7 +20,7 @@
+ #include "../../sound/soc/atmel/atmel_ssc_dai.h"
+ 
+ /* Serialize access to ssc_list and user count */
+-static DEFINE_SPINLOCK(user_lock);
++static DEFINE_MUTEX(user_lock);
+ static LIST_HEAD(ssc_list);
+ 
+ struct ssc_device *ssc_request(unsigned int ssc_num)
+@@ -28,7 +28,7 @@ struct ssc_device *ssc_request(unsigned int ssc_num)
+ 	int ssc_valid = 0;
+ 	struct ssc_device *ssc;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_for_each_entry(ssc, &ssc_list, list) {
+ 		if (ssc->pdev->dev.of_node) {
+ 			if (of_alias_get_id(ssc->pdev->dev.of_node, "ssc")
+@@ -44,18 +44,18 @@ struct ssc_device *ssc_request(unsigned int ssc_num)
+ 	}
+ 
+ 	if (!ssc_valid) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		pr_err("ssc: ssc%d platform device is missing\n", ssc_num);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 
+ 	if (ssc->user) {
+-		spin_unlock(&user_lock);
++		mutex_unlock(&user_lock);
+ 		dev_dbg(&ssc->pdev->dev, "module busy\n");
+ 		return ERR_PTR(-EBUSY);
+ 	}
+ 	ssc->user++;
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	clk_prepare(ssc->clk);
+ 
+@@ -67,14 +67,14 @@ void ssc_free(struct ssc_device *ssc)
+ {
+ 	bool disable_clk = true;
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	if (ssc->user)
+ 		ssc->user--;
+ 	else {
+ 		disable_clk = false;
+ 		dev_dbg(&ssc->pdev->dev, "device already free\n");
+ 	}
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	if (disable_clk)
+ 		clk_unprepare(ssc->clk);
+@@ -246,9 +246,9 @@ static int ssc_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_add_tail(&ssc->list, &ssc_list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	platform_set_drvdata(pdev, ssc);
+ 
+@@ -267,9 +267,9 @@ static int ssc_remove(struct platform_device *pdev)
+ 
+ 	ssc_sound_dai_remove(ssc);
+ 
+-	spin_lock(&user_lock);
++	mutex_lock(&user_lock);
+ 	list_del(&ssc->list);
+-	spin_unlock(&user_lock);
++	mutex_unlock(&user_lock);
+ 
+ 	return 0;
+ }
 -- 
-2.7.4
+2.20.1
 
