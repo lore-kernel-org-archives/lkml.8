@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B19DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BABFC20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECC520679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037919;
-	bh=YevsKnJQm72hyJeKtisd+4CBmvALpyXGW+kelyesg0M=;
+	s=default; t=1591037929;
+	bh=vrLs+xDMQUVAbWyqFt4x9YHsfhR9mx60FazFXQuCg90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jfge6G/14TTn1ChDD49XYdjzXKUooBhyrOUrCEcS/NDrr1cAJ5ELFgBE4Wdn8jkzG
-	 NkjbUsh+XLbzL9Y9u9IDW/MCXTNVa6n3Ni1qGFUliE6zNky5EuLw1Nuq0+ShmS3S6+
-	 7+lqo5QwtjD6BgPjUo2/hMsOBeaw7u7T6YnMbfyQ=
+	b=oJI4dKkkTs0lymkkS20gZtk7ONfE2Wsowhw+Qgoo5k09GwwriP5TBZFOxZMDmpA3i
+	 doPErc7p4olt8FVvAnun1ndUjH6vwRQEh7wIWhfo+prX+gZHUp95VhC2V1DBsnKb5c
+	 +eL/l7AAa1+seze22S5KiICOqqs46nMY1ac2RM6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgFAS6i (ORCPT
+        id S1728314AbgFAS6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:58:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:58:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbgFAR6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:34 -0400
+        id S1729178AbgFAR63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E462020825;
-        Mon,  1 Jun 2020 17:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 602F32074B;
+        Mon,  1 Jun 2020 17:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034313;
-        bh=YevsKnJQm72hyJeKtisd+4CBmvALpyXGW+kelyesg0M=;
+        s=default; t=1591034308;
+        bh=vrLs+xDMQUVAbWyqFt4x9YHsfhR9mx60FazFXQuCg90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2LYp2MEkbv2NisItKz/P5nw8U3f1mbeI00xwlk3tPeZwumJUWA4GEAABS75eS4Xr
-         o+yJ65+EUVbvbLdAyDKkfZhP8QfzyvsG+PIk6If79+spLZttLZLZhZSjRlfZHzQvy/
-         bQZcS0w43FjOvEGWq4OFzwyhkfklNMtBOgSo5JIM=
+        b=r6Gk9fIaaJGIXpnxM8Un4r18bKUEBGvKk6GpOkvXgbAncHrBFJ1Yv+QflJ8u8wx78
+         maVJ5c9T/a95c8nxHxCwioIZbYGECFsBWNowciJyH2lAeo20AbaGgwhEgH5chiIizO
+         djJDoYqebd3T8ubDkCbNX5boektoGEPKsfcRud5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 36/61] exec: Always set cap_ambient in cap_bprm_set_creds
-Date:   Mon,  1 Jun 2020 19:53:43 +0200
-Message-Id: <20200601174018.384802266@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Changming Liu <liu.changm@northeastern.edu>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 34/61] ALSA: hwdep: fix a left shifting 1 by 31 UB bug
+Date:   Mon,  1 Jun 2020 19:53:41 +0200
+Message-Id: <20200601174018.049748064@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,49 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Changming Liu <liu.changm@northeastern.edu>
 
-[ Upstream commit a4ae32c71fe90794127b32d26d7ad795813b502e ]
+[ Upstream commit fb8cd6481ffd126f35e9e146a0dcf0c4e8899f2e ]
 
-An invariant of cap_bprm_set_creds is that every field in the new cred
-structure that cap_bprm_set_creds might set, needs to be set every
-time to ensure the fields does not get a stale value.
+The "info.index" variable can be 31 in "1 << info.index".
+This might trigger an undefined behavior since 1 is signed.
 
-The field cap_ambient is not set every time cap_bprm_set_creds is
-called, which means that if there is a suid or sgid script with an
-interpreter that has neither the suid nor the sgid bits set the
-interpreter should be able to accept ambient credentials.
-Unfortuantely because cap_ambient is not reset to it's original value
-the interpreter can not accept ambient credentials.
+Fix this by casting 1 to 1u just to be sure "1u << 31" is defined.
 
-Given that the ambient capability set is expected to be controlled by
-the caller, I don't think this is particularly serious.  But it is
-definitely worth fixing so the code works correctly.
-
-I have tested to verify my reading of the code is correct and the
-interpreter of a sgid can receive ambient capabilities with this
-change and cannot receive ambient capabilities without this change.
-
-Cc: stable@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>
-Fixes: 58319057b784 ("capabilities: ambient capabilities")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/BL0PR06MB4548170B842CB055C9AF695DE5B00@BL0PR06MB4548.namprd06.prod.outlook.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/commoncap.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/core/hwdep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 8df676fbd393..b86aca8d6798 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -497,6 +497,7 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
- 	int ret;
- 	kuid_t root_uid;
- 
-+	new->cap_ambient = old->cap_ambient;
- 	if (WARN_ON(!cap_ambient_invariant_ok(old)))
- 		return -EPERM;
+diff --git a/sound/core/hwdep.c b/sound/core/hwdep.c
+index 36d2416f90d9..96b737adf4d2 100644
+--- a/sound/core/hwdep.c
++++ b/sound/core/hwdep.c
+@@ -228,14 +228,14 @@ static int snd_hwdep_dsp_load(struct snd_hwdep *hw,
+ 	if (copy_from_user(&info, _info, sizeof(info)))
+ 		return -EFAULT;
+ 	/* check whether the dsp was already loaded */
+-	if (hw->dsp_loaded & (1 << info.index))
++	if (hw->dsp_loaded & (1u << info.index))
+ 		return -EBUSY;
+ 	if (!access_ok(VERIFY_READ, info.image, info.length))
+ 		return -EFAULT;
+ 	err = hw->ops.dsp_load(hw, &info);
+ 	if (err < 0)
+ 		return err;
+-	hw->dsp_loaded |= (1 << info.index);
++	hw->dsp_loaded |= (1u << info.index);
+ 	return 0;
+ }
  
 -- 
 2.25.1
