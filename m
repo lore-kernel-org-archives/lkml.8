@@ -2,251 +2,208 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3126FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00922206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591032209;
-	bh=EIXGTIU3vmBz28YTv8XpjnShtIbF6A8KbmMp+gRWH9A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pu0x1khclXuio0ldiC2l3P+rwKIOOhebzsEsZGtejIE5LbU8OWhjSlaF3I/c5u74F
-	 HUgGkDiWd1qHkY43diK+3cDs/vHccYKl1xKC10zhq5WJD/yebnf3qJVGpVbOOehc32
-	 1OdOy+gvDsspK1juPF9UruMmPS90a/eGzoGm3yFM=
+	by mail.kernel.org (Postfix) with ESMTP id E3D90206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:25:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bcG2zv61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgFARX2 (ORCPT
+        id S1727803AbgFARZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54092 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:25:01 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57873 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgFARX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:23:27 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726073AbgFARZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:25:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591032299; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=Hi0C0mZan+3QLEFxLhKYYooAuOtgtwF2alU1JfOuQlE=; b=bcG2zv61U+BDuJj5j7QIzGNgU/Ra7Zb1gP67SuncplMeGuvm1+5d/XVwTuBV1lxfePu4Tz2B
+ H30yctQkqdeOlgdAVgjGoSvh4JelVaTPM6avBFKz6q9ajhSg9TUPvCoXfiHvvE8pzc5yoBOG
+ owrGKzj454NC+mDH3oA5B16oIAE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5ed539d42c54998475a1e180 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 17:24:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 79189C43391; Mon,  1 Jun 2020 17:24:35 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA79206A4;
-        Mon,  1 Jun 2020 17:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591032206;
-        bh=EIXGTIU3vmBz28YTv8XpjnShtIbF6A8KbmMp+gRWH9A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZpyccTbYU3vT9aBh1WgqbxCjmVAuDLrVHpPawhE9E3hPtWEgItrkwMFagXZRX5vU2
-         Vw8CLvaq/VfIl6XfnB4vV7YRSgH9ZkSsXwEzOOYGNO5EwWlkVr7DgmnY9C9gmwH7pv
-         E45qWVKjPLiQ7iLOQ6jQo7R0XqausnmkLU0zwd+0=
-Date:   Mon, 1 Jun 2020 18:23:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH v2 2/2] regulator: Add support for sync_state() callbacks
-Message-ID: <20200601172323.GE45647@sirena.org.uk>
-References: <20200528190610.179984-1-saravanak@google.com>
- <20200528190610.179984-3-saravanak@google.com>
- <20200529130012.GJ4610@sirena.org.uk>
- <CAGETcx9Y8VoPCjrVFdDwU=+m3_0OTZQgj9b5eSHSTgSqeCZrUQ@mail.gmail.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA803C433C9;
+        Mon,  1 Jun 2020 17:24:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA803C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+Date:   Mon,  1 Jun 2020 22:54:24 +0530
+Message-Id: <20200601172424.21131-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6e7ZaeXHKrTJCxdu"
-Content-Disposition: inline
-In-Reply-To: <CAGETcx9Y8VoPCjrVFdDwU=+m3_0OTZQgj9b5eSHSTgSqeCZrUQ@mail.gmail.com>
-X-Cookie: Help a swallow land at Capistrano.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Implement a shutdown callback to ensure ETR/ETF hardware is
+properly shutdown in reboot/shutdown path. This is required
+for ETR/ETF which has SMMU address translation enabled like
+on SC7180 SoC and few others. If the hardware is still accessing
+memory after SMMU translation is disabled as part of SMMU
+shutdown callback in system reboot or shutdown path, then
+IOVAs(I/O virtual address) which it was using will go on the bus
+as the physical addresses which might result in unknown crashes
+(NoC/interconnect errors). So we make sure from this shutdown
+callback that the ETR/ETF is shutdown before SMMU translation is
+disabled and device_link in SMMU driver will take care of ordering
+of shutdown callbacks such that SMMU shutdown callback is not
+called before any of its consumer shutdown callbacks.
 
---6e7ZaeXHKrTJCxdu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
 
-On Fri, May 29, 2020 at 07:39:33PM -0700, Saravana Kannan wrote:
-> On Fri, May 29, 2020 at 6:00 AM Mark Brown <broonie@kernel.org> wrote:
-> > On Thu, May 28, 2020 at 12:06:10PM -0700, Saravana Kannan wrote:
+Changes since v1:
+ * Use mode flag and drop enable flag as Mike suggested.
+ * Use spinlock before tmc hw disable as Mike suggested.
 
-> > > especially important for regulators that might be powering more than one
-> > > consumer. Otherwise, when the first consumer probes, enables and then
-> > > disables the "boot on" regulator, it'd turn off the power to rest of the
-> > > consumers of the "boot on" regulator.
+---
+ .../hwtracing/coresight/coresight-tmc-etf.c   |  4 +--
+ .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
+ drivers/hwtracing/coresight/coresight-tmc.c   | 33 +++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
+ 4 files changed, 39 insertions(+), 3 deletions(-)
 
-> > Which is a problem because...?
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 36cce2bfb744..cba3e7592820 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -85,7 +85,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+ 	CS_LOCK(drvdata->base);
+ }
+ 
+-static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
++void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+ {
+ 	__tmc_etb_disable_hw(drvdata);
+ 	coresight_disclaim_device(drvdata->base);
+@@ -118,7 +118,7 @@ static int tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
+ 	return 0;
+ }
+ 
+-static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
++void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
+ {
+ 	CS_UNLOCK(drvdata->base);
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 625882bc8b08..b29c2db94d96 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+ 
+ }
+ 
+-static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
++void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+ {
+ 	__tmc_etr_disable_hw(drvdata);
+ 	/* Disable CATU device if this ETR is connected to one */
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+index 39fba1d16e6e..c7902ce0bd3b 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.c
++++ b/drivers/hwtracing/coresight/coresight-tmc.c
+@@ -538,6 +538,38 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ 	return ret;
+ }
+ 
++static void tmc_shutdown(struct amba_device *adev)
++{
++	unsigned long flags;
++	struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
++
++	spin_lock_irqsave(&drvdata->spinlock, flags);
++
++	if (drvdata->mode == CS_MODE_DISABLED)
++		goto out;
++
++	/*
++	 * We do not care about the active trace sessions here
++	 * since the system is going down unlike remove callback,
++	 * just make sure that the hardware is shutdown.
++	 */
++	switch (drvdata->config_type) {
++	case TMC_CONFIG_TYPE_ETB:
++		tmc_etb_disable_hw(drvdata);
++		break;
++	case TMC_CONFIG_TYPE_ETF:
++		tmc_etf_disable_hw(drvdata);
++		break;
++	case TMC_CONFIG_TYPE_ETR:
++		tmc_etr_disable_hw(drvdata);
++	}
++
++out:
++	spin_unlock_irqrestore(&drvdata->spinlock, flags);
++	misc_deregister(&drvdata->miscdev);
++	coresight_unregister(drvdata->csdev);
++}
++
+ static const struct amba_id tmc_ids[] = {
+ 	CS_AMBA_ID(0x000bb961),
+ 	/* Coresight SoC 600 TMC-ETR/ETS */
+@@ -556,6 +588,7 @@ static struct amba_driver tmc_driver = {
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe		= tmc_probe,
++	.shutdown	= tmc_shutdown,
+ 	.id_table	= tmc_ids,
+ };
+ builtin_amba_driver(tmc_driver);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index 71de978575f3..0a77f2f25090 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -260,6 +260,8 @@ u32 tmc_get_memwidth_mask(struct tmc_drvdata *drvdata);
+ /* ETB/ETF functions */
+ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata);
+ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata);
++void tmc_etb_disable_hw(struct tmc_drvdata *drvdata);
++void tmc_etf_disable_hw(struct tmc_drvdata *drvdata);
+ extern const struct coresight_ops tmc_etb_cs_ops;
+ extern const struct coresight_ops tmc_etf_cs_ops;
+ 
+@@ -268,6 +270,7 @@ ssize_t tmc_etb_get_sysfs_trace(struct tmc_drvdata *drvdata,
+ /* ETR functions */
+ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata);
+ int tmc_read_unprepare_etr(struct tmc_drvdata *drvdata);
++void tmc_etr_disable_hw(struct tmc_drvdata *drvdata);
+ extern const struct coresight_ops tmc_etr_cs_ops;
+ ssize_t tmc_etr_get_sysfs_trace(struct tmc_drvdata *drvdata,
+ 				loff_t pos, size_t len, char **bufpp);
 
-> Those consumers that haven't probed can be powered on and active and
-> can crash the system if the power is pulled under their feet.
+base-commit: 059e38815950dbec65beafe03757bce9436e89a4
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-This is I think the first time anyone has suggested that this is likely
-to be an issue - the previous concerns have all been about screens
-glitching.
-
-> > > The sync_state() callback that's been added to drivers is meant for
-> > > situations like this. It gets called when all the consumers of a device
-> > > have probed successfully. To ease the transition to sync_state()
-> > > callbacks, it is never called before late_initcall_sync().
-
-> > This is not terribly useful for regulators where adding any of these
-> > delays is going to create surprises.  Frankly I can't really see why
-> > deferring things until late_initcall() would help anything.
-
-> Is this different from what's done already?
-
-At the minute we implement any requested changes immediately.
-
->                                              Not having this delay is
-> easy -- but will have to be at a global level across
-> devices/resources.
-
-That seems fine given that there appears to be no reason to introduce a
-delay.
-
-> > > +static void regulator_set_minimum_state(struct regulator_dev *rdev)
-> > > +{
-
-> > I find this name very confusing.  If anything it's doing the opposite of
-> > setting a minimum state, it's trying to prevent that happening.
-
-> I agree. I renamed it to try and make it better, but I can see how
-> it's more confusing once you called it out. Suggestions?
-
-> regulator_set_boot_limits? regulator_set_boot_constraints?
-
-ignore_consumer_requests()?
-
-> > > +     /*
-> > > +      * Wait for parent supply to be ready before trying to keep this
-> > > +      * regulator on.
-> > > +      */
-> > > +     if (rdev->supply_name && !rdev->supply)
-> > > +             return;
-
-> > I can't make sense of this.  This stuff only limits disabling, not
-> > enabling, regulators, we're keeping things on here anyway and why would
-> > we care about the supply for disabling?
-
-> We want to wait till supply is set up before we try to put the
-> "enable" vote on a regulator. Otherwise, it won't be propagated
-> properly? I do know that regulator_resolve_supply() takes care of
-> propagating the use count, but we could delete that code if we just
-> till the supply is resolved before "enabling" the regulator. The usual
-> clients can't "get" the regulator anyway without the supply being
-> resolved. Long story short, doing it this way can allow us to delete
-> some functionally duplicative code.
-
-So this is to support some future change that you either haven't
-written or haven't sent out yet.  Please don't do stuff like this, it
-makes everything more confusing.  Send out isolated, coherent changes
-that do a single thing per patch, if there's things you're thinking of
-for future work then save them for when you actually do that future
-work.  That makes everything clearer and easier to follow.
-
-> > I've just realised that this is even more restrictive than the
-> > descriptions have suggested - it's not just preventing any changes until
-> > all potential consumers of a given regulator have instantiated, it's
-> > preventing changes until all potential consumers of all resources
-> > provided by a given device have instantiated.  Given that many systems
-> > have a single PMIC which may also be providing other things like GPIOs
-> > that would mean that any consumer that doesn't instantiate would prevent
-> > any device getting turned off which seems even more concerning.
-
-> Your understanding is correct. I'll try to clarify the commit text as
-> best as I can. Your concerns are why this is not the default behavior.
-
-My concern is that introducing extra delays is likely to make things
-more fragile and complex.  As far as I can see this is just making
-things even worse by adding spurious dependencies and delaying things
-further.
-
-> For Android phones that are actually shipped, ensuring every enabled
-> consumer actually probes is trivial and desired.
-
-Other users exist and need to be considered.  People need to be able to
-run upstream kernels, they need to be able to run distros and other
-systems that aren't vertically integrated like yours where people aren't
-developing the DT and kernel together.
-
-> > > +     if (IS_ERR_OR_NULL(rdev->sync_supply))
-> > > +             return 0;
-> > > +
-> > > +     regulator_disable(rdev->sync_supply);
-
-> > I think sync_supply needs a better name, it's a consumer rather than a
-> > supply any sync doesn't really fit with what it's doing either - getting
-> > rid of it might be syncing but it's not syncing anything.
-
-> Agree about the naming. Maybe boot_limits?
-
-Possibly.
-
-> > > +     /*
-> > > +      * I'm not too enthusiastic about this. I'd rather just go set
-> > > +      * .sync_state() in all the regulator drivers. But let's get the rest
-> > > +      * of the patch sorted out first.
-> > > +      */
-> > > +     if (dev_set_drv_sync_state(rdev->dev.parent, regulator_sync_state))
-> > > +             dev_dbg(&rdev->dev, "parent sync_state() already set\n");
-> > > +     regulator_set_minimum_state(rdev);
-
-> > If you don't want this to be configurable per driver then why do you
-> > want to force it to be configured per driver?  I also think that is a
-> > bad idea, it's just make work as far as I can see.
-
-> I think the last line is a typo?
-
-No, it's not a typo - "make work" is busy work for the sake of it.  I'm
-saying that this is just requiring a mechanical update in all drivers
-both now and going forwards which is exactly the sort of thing we should
-be factoring out of drivers.
-
-> As to why this is configurable per driver, we discussed this in the v1
-> thread. sync_state() isn't specific to the regulator framework (which
-> I'm sure you understand) -- so it needs to be flexible.
-> Devices/drivers like MFDs, PMICs with GPIOs, power domains with reset
-> control, etc might want to call into multiple frameworks when they get
-> their sync state. Some devices/drivers might want to do more stuff
-> specific to their device/system when they get the sync state callback
-> -- they can spin their own sync_state() callback, do their stuff and
-> then call regulator_sync_state() or whatever other framework they
-> want. That's why it's configurable per device/driver.
-
-To repeat what I said at the time a device that's in multiple frameworks
-like this is most likely a MFD with a bunch of broadly unrelated things
-in it, where things are related we need to track those dependencies
-anyway.  At best this is working around a problem that has been
-introduced by the decision to do everything at far too broad a level,
-it feels like it's defeating the point of trying to track dependencies
-at all.  The whole performance seems completely redundant if we're
-trying to aggregate things so aggressively, we end up needing pretty
-much every device in the system to come up before we can do anything.
-Together with the late_initcall() stuff this is sounding like what it's
-really doing is going a very long way around introducing a new initcall
-that gets triggered after all modules are loaded (which *was* one of the
-earlier suggestions).
-
-I really think this would be a lot simpler and easier for all concerned
-if it operated per regulator like the changelog originally seemed to
-suggest.
-
---6e7ZaeXHKrTJCxdu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7VOYsACgkQJNaLcl1U
-h9Ac6Qf/eAo5vdTzPmqHCk8XaznS7SPwyZlPoT76Rsi/zBPYEyab08MK0QezlEvd
-bOLzrB9OmmRv7/TUjEX782ICQH/YWfYdKShqxxW3GkN1iqsImGvoZiVNrs52f2em
-ctYBVlHXibT18gZw3pdAk3s33CtjnObzlFXXPywyyEEEtRBx3cG1XrdZbcCJsf1f
-btxMwf+dzIvNuyKP3GjdMliFe7vZICWi2z0u7F2GFyCjgsY3dYM1pWTpaqDgg1t6
-KHtun7SuSBn+KgHxhUwZ10EjxLQ3v2JC8PcLcP7I9uDlmztl3Ryko9KNWmqGCdPx
-SmUZ5Dt5PNZmB7I/O5ulazMRENKUJw==
-=cXZi
------END PGP SIGNATURE-----
-
---6e7ZaeXHKrTJCxdu--
