@@ -2,85 +2,132 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6663EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39A9C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3272073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="D4y2Wt2k"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QbVXe76i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgFAFLT (ORCPT
+        id S1726102AbgFAFLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:11:19 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61164 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725283AbgFAFLS (ORCPT
+        Mon, 1 Jun 2020 01:11:51 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12104 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgFAFLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:11:18 -0400
-X-UUID: 7834e9f67cc342dd8eaacb6655bc76b2-20200601
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=mSnY8KhqyWrchwEP6pw4hG/od6FJgo3wLIYoRyPzhfE=;
-        b=D4y2Wt2kItSi47C01eQHHv66LTeaD0rn8P4b6LNPEyhuGnF1InSqOToJSt2GdadI87jgrkp2VDF6Plwxgv+N/jizrl4cDSFfFgj2LkwFcf3HBNaKlpGFiG3dFpNldh9FqudqCfqKbByQltePgJSqg6+OmglSgPfX0vTUpXC1VV0=;
-X-UUID: 7834e9f67cc342dd8eaacb6655bc76b2-20200601
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1839970914; Mon, 01 Jun 2020 13:11:14 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 1 Jun 2020 13:11:06 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 1 Jun 2020 13:11:06 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v7 4/4] kasan: update documentation for generic kasan
-Date:   Mon, 1 Jun 2020 13:11:11 +0800
-Message-ID: <20200601051111.1359-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 1 Jun 2020 01:11:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed48dbf0000>; Sun, 31 May 2020 22:10:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 31 May 2020 22:11:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 31 May 2020 22:11:50 -0700
+Received: from [10.2.56.10] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jun
+ 2020 05:11:49 +0000
+From:   John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH 1/2] docs: mm/gup: pin_user_pages.rst: add a "case 5"
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <virtualization@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <20200529234309.484480-1-jhubbard@nvidia.com>
+ <20200529234309.484480-2-jhubbard@nvidia.com>
+ <CAFqt6zaCSngh7-N_qZ6-S3Cj8CHF8DTSPv8anP_oJg5E6UWu9g@mail.gmail.com>
+X-Nvconfidentiality: public
+Message-ID: <b8de5a5e-b53a-81e8-9165-405d203deb33@nvidia.com>
+Date:   Sun, 31 May 2020 22:11:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: AD8C74DB6C0C24E053BEBE0CB306A11DA5F9CA9F00D17BE39A5608DC48F6A5BF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAFqt6zaCSngh7-N_qZ6-S3Cj8CHF8DTSPv8anP_oJg5E6UWu9g@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590988224; bh=9bFIJ1fdeUjA5o+dFxctvjpXw8nTkPS99fUnc8XcE0I=;
+        h=X-PGP-Universal:From:Subject:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=QbVXe76ixZyU/4kNOFUP5irHut9M8oYwtRvqVPMBs8MwCPoBca+201MH6KAunI+hC
+         YI80foKFhnvqpOlbkPGohIsaFJrF/KNCZGr+3ThzCd3bCk1avxVy3WXxbF/4r2quEF
+         7yrNewG5QVpWJoVuLj1oHvaRgry+KxpeM1VOIv3nmyznPJUllYlOKwL+c7N4xh6Uz+
+         +qU9FTcgG6RIPcdtoZ+KUxCbcCvD5lTT2AvEWImzE7NSJc+NbL3ZKHm+rp245WmBsC
+         +sdrJvoCqXCZvICidj76kgi5z1yDjAHsgJtBx183NoBxycsge6pMGpAdd0nSqbWfbK
+         z4XykyLCQxZNg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-R2VuZXJpYyBLQVNBTiB3aWxsIHN1cHBvcnQgdG8gcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3Jj
-dSgpIGNhbGwgc3RhY2tzDQphbmQgcHJpbnQgdGhlbSBpbiBLQVNBTiByZXBvcnQuIFNvIHRoYXQg
-bmVlZCB0byB1cGRhdGUgZG9jdW1lbnRhdGlvbi4NCg0KU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1
-IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYW5kLXRlc3RlZC1ieTogRG1p
-dHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KUmV2aWV3ZWQtYnk6IEFuZHJleSBLb25v
-dmFsb3YgPGFuZHJleWtudmxAZ29vZ2xlLmNvbT4NCkNjOiBBbmRyZXkgUnlhYmluaW4gPGFyeWFi
-aW5pbkB2aXJ0dW96em8uY29tPg0KQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29n
-bGUuY29tPg0KQ2M6IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+DQotLS0NCiBEb2N1
-bWVudGF0aW9uL2Rldi10b29scy9rYXNhbi5yc3QgfCAzICsrKw0KIDEgZmlsZSBjaGFuZ2VkLCAz
-IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2th
-c2FuLnJzdCBiL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2thc2FuLnJzdA0KaW5kZXggYzY1MmQ3
-NDA3MzVkLi5mZWRlNDJlNjUzNmIgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldi10b29s
-cy9rYXNhbi5yc3QNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2LXRvb2xzL2thc2FuLnJzdA0KQEAg
-LTE5Myw2ICsxOTMsOSBAQCBmdW5jdGlvbiBjYWxscyBHQ0MgZGlyZWN0bHkgaW5zZXJ0cyB0aGUg
-Y29kZSB0byBjaGVjayB0aGUgc2hhZG93IG1lbW9yeS4NCiBUaGlzIG9wdGlvbiBzaWduaWZpY2Fu
-dGx5IGVubGFyZ2VzIGtlcm5lbCBidXQgaXQgZ2l2ZXMgeDEuMS14MiBwZXJmb3JtYW5jZQ0KIGJv
-b3N0IG92ZXIgb3V0bGluZSBpbnN0cnVtZW50ZWQga2VybmVsLg0KIA0KK0dlbmVyaWMgS0FTQU4g
-cHJpbnRzIHVwIHRvIDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiByZXBvcnRzLCB0aGUgbGFz
-dCBvbmUNCithbmQgdGhlIHNlY29uZCB0byBsYXN0Lg0KKw0KIFNvZnR3YXJlIHRhZy1iYXNlZCBL
-QVNBTg0KIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KIA0KLS0gDQoyLjE4LjANCg==
+On 2020-05-31 00:11, Souptick Joarder wrote:
+...
+>> diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core-api/pin_user_pages.rst
+>> index 4675b04e8829..b9f2688a2c67 100644
+>> --- a/Documentation/core-api/pin_user_pages.rst
+>> +++ b/Documentation/core-api/pin_user_pages.rst
+>> @@ -171,6 +171,26 @@ If only struct page data (as opposed to the actual memory contents that a page
+>>   is tracking) is affected, then normal GUP calls are sufficient, and neither flag
+>>   needs to be set.
+>>
+>> +CASE 5: Pinning in order to write to the data within the page
+>> +-------------------------------------------------------------
+>> +Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
+>> +access page's data, unpin" can cause a problem.
+> 
+> Will it be, *"pin, access page's data, set page dirty, unpin" * ?
 
+Well...the problem can show up with just accessing (writing) the data.
+But it is true that this statement is a little different from the
+patterns below, which is confusing. I'll delete set_page_dirty() from each
+of them, in order to avoid confusing things. (Although each is correct.)
+And I'll also change the above to "pin, write to a page's data, upin".
+
+set_page_dirty() interactions are really just extra credit here. :) And
+fully read-only situations won't cause a problem.
+
+> 
+> Case 5 may be considered a
+>> +superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
+>> +other words, if the code is neither Case 1 nor Case 2, it may still require
+>> +FOLL_PIN, for patterns like this:
+>> +
+>> +Correct (uses FOLL_PIN calls):
+>> +    pin_user_pages()
+>> +    access the data within the pages
+>> +    set_page_dirty_lock()
+>> +    unpin_user_pages()
+>> +
+>> +INCORRECT (uses FOLL_GET calls):
+>> +    get_user_pages()
+>> +    access the data within the pages
+>> +    set_page_dirty_lock()
+>> +    put_page()
+>> +
+
+I'll send a v2 shortly.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
