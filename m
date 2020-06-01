@@ -2,52 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA75AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC582C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B56C2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA63E2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035501;
-	bh=Udrk6PPQuINl5wAym9dvTVOSxHBGcsig6j241eC9viM=;
+	s=default; t=1591035504;
+	bh=wuQqh8fOhNvY6d10GqxHYqqVtOT+Ne5Cw+miRVcHsCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HL/SOzVzN4oXfmV9M6SpF4sFbhbAV6Im8r11TZ0gPEyx3Et7yX0eZB8GqbHQaHLcW
-	 XxQUbPT4T4T66iozSd8qs7RP1Vxmlr2iJPhPCurXhkSo1uGvCr6y2MNgcyGHY4dy9Z
-	 5FeBlJa43f2AS+Nx9yY7iQNN7CrbmD6jVGK2Nef8=
+	b=rjsJywMKuQqjvMzM/IinsRok1AAO7BdNx15Fxkexb/HQo5OVHaQ8ACgxcxwn+xCnk
+	 X9VvoP+8Wo7zHQXSTOCvYqqtF4unR/TM/V0lcjdmzV1zGKM1cVtSjdAjValkdP3/Cf
+	 X1kYEDW0ydMMpnAKawSUZKGATAle1z3NKy7s7Xu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbgFASSQ (ORCPT
+        id S1731930AbgFASSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:18:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39784 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731073AbgFASSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:18:12 -0400
+        id S1731662AbgFASSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:18:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 373652065C;
-        Mon,  1 Jun 2020 18:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEA0D2068D;
+        Mon,  1 Jun 2020 18:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035491;
-        bh=Udrk6PPQuINl5wAym9dvTVOSxHBGcsig6j241eC9viM=;
+        s=default; t=1591035496;
+        bh=wuQqh8fOhNvY6d10GqxHYqqVtOT+Ne5Cw+miRVcHsCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ENBFAVVG0WFDbKhNtwLvLZIgrjSDVZJz3koqXlor+IaToN/iHhbDRoXMlgd+waUtV
-         CQ44HYJTsZMncIuW+MkvZV05TwELqIwF/2xm+ClAZiowRrAc2yHje4hjgo6REFCVCD
-         +9nwuKPBByZHq/rEwmMup024Y64PQMpHpPvmLILg=
+        b=pTp0O2fLr/IagMsoMxaDyjcmITsiBZLCF8mOsjwLffapjEzdq7XSig00/Gw9ibnfs
+         ZZW8siW2YdSrnW3X0VyyddfsqzxDeSC/AyddOtE/FttBv/lsUbr5zXxu+FWL+HZuj5
+         n8EaKTJiojGMYIxDaJ+hBKc230dWiOAahWNCTO+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 176/177] netfilter: conntrack: Pass value of ctinfo to __nf_conntrack_update
-Date:   Mon,  1 Jun 2020 19:55:14 +0200
-Message-Id: <20200601174102.691484958@linuxfoundation.org>
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 168/177] nexthops: dont modify published nexthop groups
+Date:   Mon,  1 Jun 2020 19:55:06 +0200
+Message-Id: <20200601174102.142642028@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,64 +61,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-commit 46c1e0621a72e0469ec4edfdb6ed4d387ec34f8a upstream.
+commit 90f33bffa382598a32cc82abfeb20adc92d041b6 upstream.
 
-Clang warns:
+We must avoid modifying published nexthop groups while they might be
+in use, otherwise we might see NULL ptr dereferences. In order to do
+that we allocate 2 nexthoup group structures upon nexthop creation
+and swap between them when we have to delete an entry. The reason is
+that we can't fail nexthop group removal, so we can't handle allocation
+failure thus we move the extra allocation on creation where we can
+safely fail and return ENOMEM.
 
-net/netfilter/nf_conntrack_core.c:2068:21: warning: variable 'ctinfo' is
-uninitialized when used here [-Wuninitialized]
-        nf_ct_set(skb, ct, ctinfo);
-                           ^~~~~~
-net/netfilter/nf_conntrack_core.c:2024:2: note: variable 'ctinfo' is
-declared here
-        enum ip_conntrack_info ctinfo;
-        ^
-1 warning generated.
-
-nf_conntrack_update was split up into nf_conntrack_update and
-__nf_conntrack_update, where the assignment of ctinfo is in
-nf_conntrack_update but it is used in __nf_conntrack_update.
-
-Pass the value of ctinfo from nf_conntrack_update to
-__nf_conntrack_update so that uninitialized memory is not used
-and everything works properly.
-
-Fixes: ee04805ff54a ("netfilter: conntrack: make conntrack userspace helpers work again")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1039
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_conntrack_core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/net/nexthop.h |    1 
+ net/ipv4/nexthop.c    |   91 +++++++++++++++++++++++++++++++-------------------
+ 2 files changed, 59 insertions(+), 33 deletions(-)
 
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -2015,11 +2015,11 @@ static void nf_conntrack_attach(struct s
+--- a/include/net/nexthop.h
++++ b/include/net/nexthop.h
+@@ -70,6 +70,7 @@ struct nh_grp_entry {
+ };
+ 
+ struct nh_group {
++	struct nh_group		*spare; /* spare group for removals */
+ 	u16			num_nh;
+ 	bool			mpath;
+ 	bool			has_v4;
+--- a/net/ipv4/nexthop.c
++++ b/net/ipv4/nexthop.c
+@@ -63,9 +63,16 @@ static void nexthop_free_mpath(struct ne
+ 	int i;
+ 
+ 	nhg = rcu_dereference_raw(nh->nh_grp);
+-	for (i = 0; i < nhg->num_nh; ++i)
+-		WARN_ON(nhg->nh_entries[i].nh);
++	for (i = 0; i < nhg->num_nh; ++i) {
++		struct nh_grp_entry *nhge = &nhg->nh_entries[i];
+ 
++		WARN_ON(!list_empty(&nhge->nh_list));
++		nexthop_put(nhge->nh);
++	}
++
++	WARN_ON(nhg->spare == nhg);
++
++	kfree(nhg->spare);
+ 	kfree(nhg);
  }
  
- static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
--				 struct nf_conn *ct)
-+				 struct nf_conn *ct,
-+				 enum ip_conntrack_info ctinfo)
+@@ -697,46 +704,53 @@ static void nh_group_rebalance(struct nh
+ static void remove_nh_grp_entry(struct net *net, struct nh_grp_entry *nhge,
+ 				struct nl_info *nlinfo)
  {
- 	struct nf_conntrack_tuple_hash *h;
- 	struct nf_conntrack_tuple tuple;
--	enum ip_conntrack_info ctinfo;
- 	struct nf_nat_hook *nat_hook;
- 	unsigned int status;
- 	int dataoff;
-@@ -2144,7 +2144,7 @@ static int nf_conntrack_update(struct ne
- 		return 0;
++	struct nh_grp_entry *nhges, *new_nhges;
+ 	struct nexthop *nhp = nhge->nh_parent;
+ 	struct nexthop *nh = nhge->nh;
+-	struct nh_grp_entry *nhges;
+-	struct nh_group *nhg;
+-	bool found = false;
+-	int i;
++	struct nh_group *nhg, *newg;
++	int i, j;
  
- 	if (!nf_ct_is_confirmed(ct)) {
--		err = __nf_conntrack_update(net, skb, ct);
-+		err = __nf_conntrack_update(net, skb, ct, ctinfo);
- 		if (err < 0)
- 			return err;
+ 	WARN_ON(!nh);
+ 
+-	list_del(&nhge->nh_list);
+-
+ 	nhg = rtnl_dereference(nhp->nh_grp);
+-	nhges = nhg->nh_entries;
+-	for (i = 0; i < nhg->num_nh; ++i) {
+-		if (found) {
+-			nhges[i-1].nh = nhges[i].nh;
+-			nhges[i-1].weight = nhges[i].weight;
+-			list_del(&nhges[i].nh_list);
+-			list_add(&nhges[i-1].nh_list, &nhges[i-1].nh->grp_list);
+-		} else if (nhg->nh_entries[i].nh == nh) {
+-			found = true;
+-		}
+-	}
++	newg = nhg->spare;
+ 
+-	if (WARN_ON(!found))
++	/* last entry, keep it visible and remove the parent */
++	if (nhg->num_nh == 1) {
++		remove_nexthop(net, nhp, nlinfo);
+ 		return;
++	}
+ 
+-	nhg->num_nh--;
+-	nhg->nh_entries[nhg->num_nh].nh = NULL;
++	newg->has_v4 = nhg->has_v4;
++	newg->mpath = nhg->mpath;
++	newg->num_nh = nhg->num_nh;
+ 
+-	nh_group_rebalance(nhg);
++	/* copy old entries to new except the one getting removed */
++	nhges = nhg->nh_entries;
++	new_nhges = newg->nh_entries;
++	for (i = 0, j = 0; i < nhg->num_nh; ++i) {
++		/* current nexthop getting removed */
++		if (nhg->nh_entries[i].nh == nh) {
++			newg->num_nh--;
++			continue;
++		}
+ 
+-	nexthop_put(nh);
++		list_del(&nhges[i].nh_list);
++		new_nhges[j].nh_parent = nhges[i].nh_parent;
++		new_nhges[j].nh = nhges[i].nh;
++		new_nhges[j].weight = nhges[i].weight;
++		list_add(&new_nhges[j].nh_list, &new_nhges[j].nh->grp_list);
++		j++;
++	}
++
++	nh_group_rebalance(newg);
++	rcu_assign_pointer(nhp->nh_grp, newg);
++
++	list_del(&nhge->nh_list);
++	nexthop_put(nhge->nh);
+ 
+ 	if (nlinfo)
+ 		nexthop_notify(RTM_NEWNEXTHOP, nhp, nlinfo);
+-
+-	/* if this group has no more entries then remove it */
+-	if (!nhg->num_nh)
+-		remove_nexthop(net, nhp, nlinfo);
+ }
+ 
+ static void remove_nexthop_from_groups(struct net *net, struct nexthop *nh,
+@@ -746,6 +760,9 @@ static void remove_nexthop_from_groups(s
+ 
+ 	list_for_each_entry_safe(nhge, tmp, &nh->grp_list, nh_list)
+ 		remove_nh_grp_entry(net, nhge, nlinfo);
++
++	/* make sure all see the newly published array before releasing rtnl */
++	synchronize_rcu();
+ }
+ 
+ static void remove_nexthop_group(struct nexthop *nh, struct nl_info *nlinfo)
+@@ -759,10 +776,7 @@ static void remove_nexthop_group(struct
+ 		if (WARN_ON(!nhge->nh))
+ 			continue;
+ 
+-		list_del(&nhge->nh_list);
+-		nexthop_put(nhge->nh);
+-		nhge->nh = NULL;
+-		nhg->num_nh--;
++		list_del_init(&nhge->nh_list);
  	}
+ }
+ 
+@@ -1085,6 +1099,7 @@ static struct nexthop *nexthop_create_gr
+ {
+ 	struct nlattr *grps_attr = cfg->nh_grp;
+ 	struct nexthop_grp *entry = nla_data(grps_attr);
++	u16 num_nh = nla_len(grps_attr) / sizeof(*entry);
+ 	struct nh_group *nhg;
+ 	struct nexthop *nh;
+ 	int i;
+@@ -1095,12 +1110,21 @@ static struct nexthop *nexthop_create_gr
+ 
+ 	nh->is_group = 1;
+ 
+-	nhg = nexthop_grp_alloc(nla_len(grps_attr) / sizeof(*entry));
++	nhg = nexthop_grp_alloc(num_nh);
+ 	if (!nhg) {
+ 		kfree(nh);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
++	/* spare group used for removals */
++	nhg->spare = nexthop_grp_alloc(num_nh);
++	if (!nhg) {
++		kfree(nhg);
++		kfree(nh);
++		return NULL;
++	}
++	nhg->spare->spare = nhg;
++
+ 	for (i = 0; i < nhg->num_nh; ++i) {
+ 		struct nexthop *nhe;
+ 		struct nh_info *nhi;
+@@ -1132,6 +1156,7 @@ out_no_nh:
+ 	for (; i >= 0; --i)
+ 		nexthop_put(nhg->nh_entries[i].nh);
+ 
++	kfree(nhg->spare);
+ 	kfree(nhg);
+ 	kfree(nh);
+ 
 
 
