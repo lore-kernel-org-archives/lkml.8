@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39430C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF4D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FC6206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036909;
-	bh=eb70qoh+OfrO/rHwsvzv7fHkdcQRk9oZcbVN3cI3xLU=;
+	s=default; t=1591036913;
+	bh=3MbiH+TIC0GESv7kxOSLQu21rOjeujlQsTSbHoaWDCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8MdH7Jc4TiUTyhyfCScWQpiXXVGERb96Dwf2CZkbubZwejs132cZ3l/uSKdZvwac
-	 3DGdbGzPJQX4Or6IN/wIZu8Hcdvcd8fwsr2Knt0B6XcXFmsPOryYTx36GtLYBGJhr8
-	 rr+oPFhcTVM6R+gk4/pgnLTyT/CrFnWt6Aff8BKg=
+	b=S423ZLvdVMM2xFUp09yNZVVtFCiJ2e1aCsnfwn6PCXnIbNdK3EVoRjqHZjbFMYdWs
+	 5o8Dy7BAbVIJy0hSN3RYmlmMJDSZs93br7vZmEwho7jwTs2ZBKsDwG7iBq7LXstoGW
+	 aN/ztDuvuDIIq+lzpQWr0Lofnc+XIuUgwrznfG2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731208AbgFASMU (ORCPT
+        id S1730970AbgFASlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59480 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:41:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730764AbgFASMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:12:08 -0400
+        id S1731194AbgFASMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:12:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3844C20776;
-        Mon,  1 Jun 2020 18:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AAB20776;
+        Mon,  1 Jun 2020 18:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035127;
-        bh=eb70qoh+OfrO/rHwsvzv7fHkdcQRk9oZcbVN3cI3xLU=;
+        s=default; t=1591035134;
+        bh=3MbiH+TIC0GESv7kxOSLQu21rOjeujlQsTSbHoaWDCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WdUvm0YY5ISePaxwztdAoxGCqrigUQ+lYJiDveaZJs1NARRsEkMQZUsgYWhClm+5G
-         n4cJwAiPcVrJFQGUV1U969Cp1A5qfdd/vVMN6AxTaTc2Re+tu/LrxuKGNwoHrftxUb
-         vvSaAlZMz7rqNsh0EOwtuuHP4SMnK43gGmE/DInM=
+        b=ScouxhaYMyn5IYVvNooAe8rg+xxAUQTOufjQdYLi1IpzoKTRPy5bXHodR4min348B
+         lFufya9y2GjNWPj8pDHBC5NPHn/V0aKy0WxbKGQDmIRz2jWGI5+Cp4GWM0PiGwU445
+         q8xAazP9TfwSxLs8UyWWzCLEak/SLcBC6wlsjWPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 021/177] sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
-Date:   Mon,  1 Jun 2020 19:52:39 +0200
-Message-Id: <20200601174050.479844476@linuxfoundation.org>
+        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 024/177] net/mlx5e: Fix inner tirs handling
+Date:   Mon,  1 Jun 2020 19:52:42 +0200
+Message-Id: <20200601174050.795075645@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,69 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jere Lepp‰nen" <jere.leppanen@nokia.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit d3e8e4c11870413789f029a71e72ae6e971fe678 ]
+[ Upstream commit a16b8e0dcf7043bee46174bed0553cc9e36b63a5 ]
 
-Commit bdf6fa52f01b ("sctp: handle association restarts when the
-socket is closed.") starts shutdown when an association is restarted,
-if in SHUTDOWN-PENDING state and the socket is closed. However, the
-rationale stated in that commit applies also when in SHUTDOWN-SENT
-state - we don't want to move an association to ESTABLISHED state when
-the socket has been closed, because that results in an association
-that is unreachable from user space.
+In the cited commit inner_tirs argument was added to create and destroy
+inner tirs, and no indication was added to mlx5e_modify_tirs_hash()
+function. In order to have a consistent handling, use
+inner_indir_tir[0].tirn in tirs destroy/modify function as an indication
+to whether inner tirs are created.
+Inner tirs are not created for representors and before this commit,
+a call to mlx5e_modify_tirs_hash() was sending HW commands to
+modify non-existent inner tirs.
 
-The problem scenario:
-
-1.  Client crashes and/or restarts.
-
-2.  Server (using one-to-one socket) calls close(). SHUTDOWN is lost.
-
-3.  Client reconnects using the same addresses and ports.
-
-4.  Server's association is restarted. The association and the socket
-    move to ESTABLISHED state, even though the server process has
-    closed its descriptor.
-
-Also, after step 4 when the server process exits, some resources are
-leaked in an attempt to release the underlying inet sock structure in
-ESTABLISHED state:
-
-    IPv4: Attempt to release TCP socket in state 1 00000000377288c7
-
-Fix by acting the same way as in SHUTDOWN-PENDING state. That is, if
-an association is restarted in SHUTDOWN-SENT state and the socket is
-closed, then start shutdown and don't move the association or the
-socket to ESTABLISHED state.
-
-Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
-Signed-off-by: Jere Lepp√§nen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 46dc933cee82 ("net/mlx5e: Provide explicit directive if to create inner indirect tirs")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_statefuns.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h          |    2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c     |   12 +++++++-----
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c      |    4 ++--
+ drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c |    4 ++--
+ 4 files changed, 12 insertions(+), 10 deletions(-)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -1856,12 +1856,13 @@ static enum sctp_disposition sctp_sf_do_
- 	/* Update the content of current association. */
- 	sctp_add_cmd_sf(commands, SCTP_CMD_UPDATE_ASSOC, SCTP_ASOC(new_asoc));
- 	sctp_add_cmd_sf(commands, SCTP_CMD_EVENT_ULP, SCTP_ULPEVENT(ev));
--	if (sctp_state(asoc, SHUTDOWN_PENDING) &&
-+	if ((sctp_state(asoc, SHUTDOWN_PENDING) ||
-+	     sctp_state(asoc, SHUTDOWN_SENT)) &&
- 	    (sctp_sstate(asoc->base.sk, CLOSING) ||
- 	     sock_flag(asoc->base.sk, SOCK_DEAD))) {
--		/* if were currently in SHUTDOWN_PENDING, but the socket
--		 * has been closed by user, don't transition to ESTABLISHED.
--		 * Instead trigger SHUTDOWN bundled with COOKIE_ACK.
-+		/* If the socket has been closed by user, don't
-+		 * transition to ESTABLISHED. Instead trigger SHUTDOWN
-+		 * bundled with COOKIE_ACK.
- 		 */
- 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
- 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1104,7 +1104,7 @@ void mlx5e_close_drop_rq(struct mlx5e_rq
+ int mlx5e_create_indirect_rqt(struct mlx5e_priv *priv);
+ 
+ int mlx5e_create_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
+-void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
++void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv);
+ 
+ int mlx5e_create_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
+ void mlx5e_destroy_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -2747,7 +2747,8 @@ void mlx5e_modify_tirs_hash(struct mlx5e
+ 		mlx5_core_modify_tir(mdev, priv->indir_tir[tt].tirn, in, inlen);
+ 	}
+ 
+-	if (!mlx5e_tunnel_inner_ft_supported(priv->mdev))
++	/* Verify inner tirs resources allocated */
++	if (!priv->inner_indir_tir[0].tirn)
+ 		return;
+ 
+ 	for (tt = 0; tt < MLX5E_NUM_INDIR_TIRS; tt++) {
+@@ -3394,14 +3395,15 @@ out:
+ 	return err;
+ }
+ 
+-void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc)
++void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
+ 		mlx5e_destroy_tir(priv->mdev, &priv->indir_tir[i]);
+ 
+-	if (!inner_ttc || !mlx5e_tunnel_inner_ft_supported(priv->mdev))
++	/* Verify inner tirs resources allocated */
++	if (!priv->inner_indir_tir[0].tirn)
+ 		return;
+ 
+ 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
+@@ -5107,7 +5109,7 @@ err_destroy_xsk_rqts:
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -5126,7 +5128,7 @@ static void mlx5e_cleanup_nic_rx(struct
+ 	mlx5e_destroy_direct_tirs(priv, priv->xsk_tir);
+ 	mlx5e_destroy_direct_rqts(priv, priv->xsk_tir);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -1667,7 +1667,7 @@ err_destroy_ttc_table:
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, false);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -1684,7 +1684,7 @@ static void mlx5e_cleanup_rep_rx(struct
+ 	mlx5_del_flow_rules(rpriv->vport_rx_rule);
+ 	mlx5e_destroy_ttc_table(priv, &priv->fs.ttc);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, false);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
+@@ -396,7 +396,7 @@ static int mlx5i_init_rx(struct mlx5e_pr
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -412,7 +412,7 @@ static void mlx5i_cleanup_rx(struct mlx5
+ {
+ 	mlx5i_destroy_flow_steering(priv);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
 
 
