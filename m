@@ -2,235 +2,174 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4461C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DB2206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0400D2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dA2CB31s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgFAFWs (ORCPT
+        id S1725999AbgFAFYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:22:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:8652 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgFAFWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:22:48 -0400
-IronPort-SDR: 3DJGJgq6SNHgHiRUsQuQ0f6Wfpc1UWD0nqSTQbK1rhEzvQNZFK5IiAzh96ItX6a+oH2qWPWVne
- 99VAKJKxwAow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 22:22:47 -0700
-IronPort-SDR: x/VS843ZPMV31YMBY+LvHL3NIKbKwx5UPVJLKGjiapJBCYhOgsdiBRyipqp8yFaHWCnxN5awoU
- t0GDNHNIY0fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
-   d="scan'208";a="470196419"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by fmsmga005.fm.intel.com with ESMTP; 31 May 2020 22:22:43 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: [PATCH] soundwire: clarify SPDX use of GPL-2.0
-Date:   Mon,  1 Jun 2020 01:28:07 +0800
-Message-Id: <20200531172807.27042-1-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 1 Jun 2020 01:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgFAFYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 01:24:39 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D2CC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 22:24:39 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d128so10055491wmc.1
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 22:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=6ZL8Ph/G4JgUrG27yx5jOAVsjITYufkbj9OoG3EiYg8=;
+        b=dA2CB31sQ3Af0qUnmPd1S0YDJqELMRRu+gA7/hUSep7Gkrb1fo/neGae7TZlSgmco4
+         HuxnDn48VwRNdoJ4L4uznitZuO9+exNsJ1l42htH3amQN9vybXbGG124lC0jd1xEVUuf
+         eilKDyn8QzkVREVQgOffBb5rn7EA+xEt5rVQBeRE9rrW+5ErUH4IkiUf7nZzE85UeLjx
+         wMl+bwp5zYT7i2PB+V7kmz8U8UVkoyPrAC8EDZ51yPG8DcTDCH6OYvZKreMNQATXxb2s
+         6friPAu8HN+1J1eniSAR69g+bQgojly4qQfVzIHoiU9eaCNF2yAH49QNbpivLxONxzfR
+         vQBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=6ZL8Ph/G4JgUrG27yx5jOAVsjITYufkbj9OoG3EiYg8=;
+        b=rgLeOyFM8vEX0wLdzKncpJJ36YHWnYdwosjQCf8pb6FVFGJuKZXXmTpN0tM1mDvp0I
+         pFhJESwlHh3NOtfYn4tB8wZQB8seE75k3wnI9LqRO/YGU0I1RUOTws7OITQAQm/+cBPg
+         IB8pSUInaiATLcG0RJWeycBbFHqcMHu9TSiwO3TwW/WGv0XsjdWOtaPUv1pOK5MjHEEk
+         sLAkUuffxnngh9ny816qU2PWiqIYkxiwMf3lEmTg4/nPVmR7YTFYjmU4iacZHeT9bo2B
+         CWMc6M3Mf5uDMx5GoTMsUPUfrRHlj3zVo4lXUu+4XqNPZ1ErP6U/7qwj/lFK5V0mgJt8
+         X5Vg==
+X-Gm-Message-State: AOAM533epY9Eykf3TKmI2wBO0ED/ABabKfj43iNT/P5ZJdJM6ee7O0qh
+        l6Tth6P4UzKi9r0AeZPQylBW/2oVcUY=
+X-Google-Smtp-Source: ABdhPJxhx9/WQeqXLPdXyUP/V3m+hF0vRniSFumysbnrVtMqhxlQzfSXBPMnW0DCYiw90xvl8UL1fQ==
+X-Received: by 2002:a1c:2e41:: with SMTP id u62mr21047004wmu.91.1590989075882;
+        Sun, 31 May 2020 22:24:35 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id k12sm17543313wrn.42.2020.05.31.22.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 22:24:35 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 06:24:33 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     s.nawrocki@samsung.com, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH 2/3] mfd: madera: Fix minor formatting issues
+Message-ID: <20200601052433.GA3714@dell>
+References: <20200529155742.18399-1-ckeepax@opensource.cirrus.com>
+ <20200529155742.18399-2-ckeepax@opensource.cirrus.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200529155742.18399-2-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+On Fri, 29 May 2020, Charles Keepax wrote:
 
-Change SPDX from GPL-2.0 to GPL-2.0-only for Intel-contributed
-code. This was explicit before the transition to SPDX and lost in
-translation.
+Still needs a commit log.
 
-No change to the dual-license parts, the only clarification is to the
-GPL-2.0 term.
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/mfd/madera-core.c        | 12 ++++++------
+>  drivers/mfd/madera-i2c.c         |  1 -
+>  include/linux/mfd/madera/pdata.h |  1 -
+>  3 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
+> index 7e0835cb062b1..4724c1a01a39f 100644
+> --- a/drivers/mfd/madera-core.c
+> +++ b/drivers/mfd/madera-core.c
+> @@ -44,7 +44,7 @@ static const char * const madera_core_supplies[] = {
+>  };
+>  
+>  static const struct mfd_cell madera_ldo1_devs[] = {
+> -	{ .name = "madera-ldo1" },
+> +	{ .name = "madera-ldo1", },
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- drivers/soundwire/bus.c                 | 2 +-
- drivers/soundwire/bus.h                 | 2 +-
- drivers/soundwire/bus_type.c            | 2 +-
- drivers/soundwire/cadence_master.c      | 2 +-
- drivers/soundwire/cadence_master.h      | 2 +-
- drivers/soundwire/intel.c               | 2 +-
- drivers/soundwire/intel.h               | 2 +-
- drivers/soundwire/intel_init.c          | 2 +-
- drivers/soundwire/mipi_disco.c          | 2 +-
- drivers/soundwire/slave.c               | 2 +-
- drivers/soundwire/stream.c              | 2 +-
- include/linux/soundwire/sdw.h           | 2 +-
- include/linux/soundwire/sdw_intel.h     | 2 +-
- include/linux/soundwire/sdw_registers.h | 2 +-
- include/linux/soundwire/sdw_type.h      | 2 +-
- 15 files changed, 15 insertions(+), 15 deletions(-)
+What issue does this solve?
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index 24ba77226376..2289c2ac8c5a 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- // Copyright(c) 2015-17 Intel Corporation.
- 
- #include <linux/acpi.h>
-diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-index 82484f741168..697a5b371568 100644
---- a/drivers/soundwire/bus.h
-+++ b/drivers/soundwire/bus.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* Copyright(c) 2015-17 Intel Corporation. */
- 
- #ifndef __SDW_BUS_H
-diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-index de9a671802b8..95a87d4e26c2 100644
---- a/drivers/soundwire/bus_type.c
-+++ b/drivers/soundwire/bus_type.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- // Copyright(c) 2015-17 Intel Corporation.
- 
- #include <linux/module.h>
-diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-index 9ea87538b9ef..fe238645ed2c 100644
---- a/drivers/soundwire/cadence_master.c
-+++ b/drivers/soundwire/cadence_master.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- // Copyright(c) 2015-17 Intel Corporation.
- 
- /*
-diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
-index b410656f8194..ea606b4fba76 100644
---- a/drivers/soundwire/cadence_master.h
-+++ b/drivers/soundwire/cadence_master.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* Copyright(c) 2015-17 Intel Corporation. */
- #include <sound/soc.h>
- 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 4cfdd074e310..1eda63f488f5 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- // Copyright(c) 2015-17 Intel Corporation.
- 
- /*
-diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
-index 38b7c125fb10..7b4af8018e1a 100644
---- a/drivers/soundwire/intel.h
-+++ b/drivers/soundwire/intel.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* Copyright(c) 2015-17 Intel Corporation. */
- 
- #ifndef __SDW_INTEL_LOCAL_H
-diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-index d5d42795a48f..947345d5c960 100644
---- a/drivers/soundwire/intel_init.c
-+++ b/drivers/soundwire/intel_init.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- // Copyright(c) 2015-17 Intel Corporation.
- 
- /*
-diff --git a/drivers/soundwire/mipi_disco.c b/drivers/soundwire/mipi_disco.c
-index 4ae62b452b8c..dbd8fc6f4dad 100644
---- a/drivers/soundwire/mipi_disco.c
-+++ b/drivers/soundwire/mipi_disco.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- // Copyright(c) 2015-17 Intel Corporation.
- 
- /*
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-index 0839445ee07b..8e8b62dff51c 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/slave.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- // Copyright(c) 2015-17 Intel Corporation.
- 
- #include <linux/acpi.h>
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index a9a72574b34a..296cea48bdcc 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- // Copyright(c) 2015-18 Intel Corporation.
- 
- /*
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 9c27a32df9bb..1fde044f5f3e 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* Copyright(c) 2015-17 Intel Corporation. */
- 
- #ifndef __SOUNDWIRE_H
-diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
-index 979b41b5dcb4..96a8633339a1 100644
---- a/include/linux/soundwire/sdw_intel.h
-+++ b/include/linux/soundwire/sdw_intel.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* Copyright(c) 2015-17 Intel Corporation. */
- 
- #ifndef __SDW_INTEL_H
-diff --git a/include/linux/soundwire/sdw_registers.h b/include/linux/soundwire/sdw_registers.h
-index a686f7988156..06d895168b32 100644
---- a/include/linux/soundwire/sdw_registers.h
-+++ b/include/linux/soundwire/sdw_registers.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* Copyright(c) 2015-17 Intel Corporation. */
- 
- #ifndef __SDW_REGISTERS_H
-diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
-index 52eb66cd11bc..25ab91f5c6be 100644
---- a/include/linux/soundwire/sdw_type.h
-+++ b/include/linux/soundwire/sdw_type.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /* Copyright(c) 2015-17 Intel Corporation. */
- 
- #ifndef __SOUNDWIRE_TYPES_H
+Why are ','s a requirement, even for single entries?
+
+>  };
+>  
+>  static const char * const cs47l15_supplies[] = {
+> @@ -55,8 +55,8 @@ static const char * const cs47l15_supplies[] = {
+>  
+>  static const struct mfd_cell cs47l15_devs[] = {
+>  	{ .name = "madera-pinctrl", },
+> -	{ .name = "madera-irq" },
+> -	{ .name = "madera-gpio" },
+> +	{ .name = "madera-irq", },
+> +	{ .name = "madera-gpio", },
+>  	{
+>  		.name = "madera-extcon",
+>  		.parent_supplies = cs47l15_supplies,
+> @@ -108,7 +108,7 @@ static const char * const cs47l85_supplies[] = {
+>  static const struct mfd_cell cs47l85_devs[] = {
+>  	{ .name = "madera-pinctrl", },
+>  	{ .name = "madera-irq", },
+> -	{ .name = "madera-micsupp" },
+> +	{ .name = "madera-micsupp", },
+>  	{ .name = "madera-gpio", },
+>  	{
+>  		.name = "madera-extcon",
+> @@ -155,10 +155,10 @@ static const char * const cs47l92_supplies[] = {
+>  };
+>  
+>  static const struct mfd_cell cs47l92_devs[] = {
+> -	{ .name = "madera-pinctrl" },
+> +	{ .name = "madera-pinctrl", },
+>  	{ .name = "madera-irq", },
+>  	{ .name = "madera-micsupp", },
+> -	{ .name = "madera-gpio" },
+> +	{ .name = "madera-gpio", },
+>  	{
+>  		.name = "madera-extcon",
+>  		.parent_supplies = cs47l92_supplies,
+> diff --git a/drivers/mfd/madera-i2c.c b/drivers/mfd/madera-i2c.c
+> index 6b965eb034b6c..7df5b9ba58554 100644
+> --- a/drivers/mfd/madera-i2c.c
+> +++ b/drivers/mfd/madera-i2c.c
+> @@ -88,7 +88,6 @@ static int madera_i2c_probe(struct i2c_client *i2c,
+>  	if (!madera)
+>  		return -ENOMEM;
+>  
+> -
+>  	madera->regmap = devm_regmap_init_i2c(i2c, regmap_16bit_config);
+>  	if (IS_ERR(madera->regmap)) {
+>  		ret = PTR_ERR(madera->regmap);
+> diff --git a/include/linux/mfd/madera/pdata.h b/include/linux/mfd/madera/pdata.h
+> index fa9595dd42ba5..601cbbc10370c 100644
+> --- a/include/linux/mfd/madera/pdata.h
+> +++ b/include/linux/mfd/madera/pdata.h
+> @@ -21,7 +21,6 @@
+>  
+>  struct gpio_desc;
+>  struct pinctrl_map;
+> -struct madera_codec_pdata;
+
+This is not a formatting issue.
+
+>  /**
+>   * struct madera_pdata - Configuration data for Madera devices
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
