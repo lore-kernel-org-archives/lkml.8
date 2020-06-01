@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5171C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811FCC433DF
 	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEF020897
+	by mail.kernel.org (Postfix) with ESMTP id 5F185207BB
 	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1591034304;
-	bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
+	bh=2sZJSMSMdb3TgYm1BGiyhujYNlA7g9fPsqxBzDM1vLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IDJDMhzsgWAmmMVSPwXsD+RRsUgwM1Xz2jggzL73VWy/j+J1zT6qKafqk895HpTFv
-	 u7CUeVJz9VmW4ToR9+q/fPmiLeoiwCe6QrXvXjbcSdLBgCsFCvWLwQC2FbbHI5mLA+
-	 xk+n5Y0gMqBbZZCFceNIUm2Fwo/5hAoz9L2aAocI=
+	b=2nhcxGO11uBPpIzrnyzYwjWCJiMLRzrsSPyZz4mydwcnLUITnjQPQSRz6BCWt04S7
+	 fPVs81nN459oJQl6SLbNHrb1hmEW+4zJ4+k2ybG2fhDkQRhIRlTzu7PJRtDvLjiFZz
+	 dXp2a4TbwSPYhmuo68jRNxjm4JsEZfTcb5RM/1xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgFAR6W (ORCPT
+        id S1729147AbgFAR6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39978 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbgFAR6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:14 -0400
+        id S1728162AbgFAR6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7AB92077D;
-        Mon,  1 Jun 2020 17:58:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41CCE20878;
+        Mon,  1 Jun 2020 17:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034293;
-        bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
+        s=default; t=1591034288;
+        bh=2sZJSMSMdb3TgYm1BGiyhujYNlA7g9fPsqxBzDM1vLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CkoiXAKH4hPI+q0fxf5dbmS93NiCyKskbV1Khfr3YCvHx5D1iOHH/kk6H4pDUFkzJ
-         qF2lUvNYOB8EuWVyy3/6PaQEWMewvveHjho8SbCFi6VFTmVyMBtl6JN/9fEHeXzAdi
-         p1ILnUtQb+SwSHmwKiC84xVjpJpbRkLvv4lYLKXw=
+        b=HY3Onh9xBOMTx208EcPiq4t9ePaCdQ+XLUWNnUd34bhijbawgJqPoC3OKPP/ZvIsS
+         rN0zMc9typnEz+6dDz4CRHZ1Dc/ejJsIjQL0bfV3lq1oq5nOxSFY/2PTOVPHfczdra
+         BLzUIEXu2b4W59p/gWe35M/x7np9T2zljf2mzZJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Nicolas Pitre <nico@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 28/61] ARM: uaccess: integrate uaccess_save and uaccess_restore
-Date:   Mon,  1 Jun 2020 19:53:35 +0200
-Message-Id: <20200601174017.030957705@linuxfoundation.org>
+Subject: [PATCH 4.9 26/61] ARM: 8843/1: use unified assembler in headers
+Date:   Mon,  1 Jun 2020 19:53:33 +0200
+Message-Id: <20200601174016.742512478@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -59,76 +61,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Stefan Agner <stefan@agner.ch>
 
-[ Upstream commit 8ede890b0bcebe8c760aacfe20e934d98c3dc6aa ]
+[ Upstream commit c001899a5d6c2d7a0f3b75b2307ddef137fb46a6 ]
 
-Integrate uaccess_save / uaccess_restore macros into the new
-uaccess_entry / uaccess_exit macros respectively.
+Use unified assembler syntax (UAL) in headers. Divided syntax is
+considered deprecated. This will also allow to build the kernel
+using LLVM's integrated assembler.
 
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Acked-by: Nicolas Pitre <nico@linaro.org>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/uaccess-asm.h | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ arch/arm/include/asm/assembler.h | 12 ++++++------
+ arch/arm/include/asm/vfpmacros.h |  8 ++++----
+ arch/arm/lib/bitops.h            |  8 ++++----
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
-index d475e3e8145d..e46468b91eaa 100644
---- a/arch/arm/include/asm/uaccess-asm.h
-+++ b/arch/arm/include/asm/uaccess-asm.h
-@@ -67,30 +67,23 @@
- #endif
- 	.endm
- 
--	.macro	uaccess_save, tmp
- #ifdef CONFIG_CPU_SW_DOMAIN_PAN
--	mrc	p15, 0, \tmp, c3, c0, 0
--	str	\tmp, [sp, #SVC_DACR]
--#endif
--	.endm
--
--	.macro	uaccess_restore
--#ifdef CONFIG_CPU_SW_DOMAIN_PAN
--	ldr	r0, [sp, #SVC_DACR]
--	mcr	p15, 0, r0, c3, c0, 0
-+#define DACR(x...)	x
-+#else
-+#define DACR(x...)
- #endif
--	.endm
- 
- 	/*
- 	 * Save the address limit on entry to a privileged exception and
- 	 * if using PAN, save and disable usermode access.
- 	 */
- 	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
--	ldr	\tmp0, [\tsk, #TI_ADDR_LIMIT]
--	mov	\tmp1, #TASK_SIZE
--	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
--	str	\tmp0, [sp, #SVC_ADDR_LIMIT]
--	uaccess_save \tmp0
-+	ldr	\tmp1, [\tsk, #TI_ADDR_LIMIT]
-+	mov	\tmp2, #TASK_SIZE
-+	str	\tmp2, [\tsk, #TI_ADDR_LIMIT]
-+ DACR(	mrc	p15, 0, \tmp0, c3, c0, 0)
-+ DACR(	str	\tmp0, [sp, #SVC_DACR])
-+	str	\tmp1, [sp, #SVC_ADDR_LIMIT]
- 	.if \disable
- 	uaccess_disable \tmp0
+diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+index 7d727506096f..c9ed0b0e0737 100644
+--- a/arch/arm/include/asm/assembler.h
++++ b/arch/arm/include/asm/assembler.h
+@@ -372,9 +372,9 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	.macro	usraccoff, instr, reg, ptr, inc, off, cond, abort, t=TUSER()
+ 9999:
+ 	.if	\inc == 1
+-	\instr\cond\()b\()\t\().w \reg, [\ptr, #\off]
++	\instr\()b\t\cond\().w \reg, [\ptr, #\off]
+ 	.elseif	\inc == 4
+-	\instr\cond\()\t\().w \reg, [\ptr, #\off]
++	\instr\t\cond\().w \reg, [\ptr, #\off]
+ 	.else
+ 	.error	"Unsupported inc macro argument"
  	.endif
-@@ -99,8 +92,11 @@
- 	/* Restore the user access state previously saved by uaccess_entry */
- 	.macro	uaccess_exit, tsk, tmp0, tmp1
- 	ldr	\tmp1, [sp, #SVC_ADDR_LIMIT]
--	uaccess_restore
-+ DACR(	ldr	\tmp0, [sp, #SVC_DACR])
- 	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
-+ DACR(	mcr	p15, 0, \tmp0, c3, c0, 0)
- 	.endm
- 
-+#undef DACR
-+
- #endif /* __ASM_UACCESS_ASM_H__ */
+@@ -413,9 +413,9 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	.rept	\rept
+ 9999:
+ 	.if	\inc == 1
+-	\instr\cond\()b\()\t \reg, [\ptr], #\inc
++	\instr\()b\t\cond \reg, [\ptr], #\inc
+ 	.elseif	\inc == 4
+-	\instr\cond\()\t \reg, [\ptr], #\inc
++	\instr\t\cond \reg, [\ptr], #\inc
+ 	.else
+ 	.error	"Unsupported inc macro argument"
+ 	.endif
+@@ -456,7 +456,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
+ #ifndef CONFIG_CPU_USE_DOMAINS
+ 	adds	\tmp, \addr, #\size - 1
+-	sbcccs	\tmp, \tmp, \limit
++	sbcscc	\tmp, \tmp, \limit
+ 	bcs	\bad
+ #ifdef CONFIG_CPU_SPECTRE
+ 	movcs	\addr, #0
+@@ -470,7 +470,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	sub	\tmp, \limit, #1
+ 	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
+ 	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
+-	subhss	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
++	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
+ 	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
+ 	csdb
+ #endif
+diff --git a/arch/arm/include/asm/vfpmacros.h b/arch/arm/include/asm/vfpmacros.h
+index 301c1db3e99b..66748c04aed2 100644
+--- a/arch/arm/include/asm/vfpmacros.h
++++ b/arch/arm/include/asm/vfpmacros.h
+@@ -28,13 +28,13 @@
+ 	ldr	\tmp, =elf_hwcap		    @ may not have MVFR regs
+ 	ldr	\tmp, [\tmp, #0]
+ 	tst	\tmp, #HWCAP_VFPD32
+-	ldcnel	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
++	ldclne	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
+ 	addeq	\base, \base, #32*4		    @ step over unused register space
+ #else
+ 	VFPFMRX	\tmp, MVFR0			    @ Media and VFP Feature Register 0
+ 	and	\tmp, \tmp, #MVFR0_A_SIMD_MASK	    @ A_SIMD field
+ 	cmp	\tmp, #2			    @ 32 x 64bit registers?
+-	ldceql	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
++	ldcleq	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
+ 	addne	\base, \base, #32*4		    @ step over unused register space
+ #endif
+ #endif
+@@ -52,13 +52,13 @@
+ 	ldr	\tmp, =elf_hwcap		    @ may not have MVFR regs
+ 	ldr	\tmp, [\tmp, #0]
+ 	tst	\tmp, #HWCAP_VFPD32
+-	stcnel	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
++	stclne	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
+ 	addeq	\base, \base, #32*4		    @ step over unused register space
+ #else
+ 	VFPFMRX	\tmp, MVFR0			    @ Media and VFP Feature Register 0
+ 	and	\tmp, \tmp, #MVFR0_A_SIMD_MASK	    @ A_SIMD field
+ 	cmp	\tmp, #2			    @ 32 x 64bit registers?
+-	stceql	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
++	stcleq	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
+ 	addne	\base, \base, #32*4		    @ step over unused register space
+ #endif
+ #endif
+diff --git a/arch/arm/lib/bitops.h b/arch/arm/lib/bitops.h
+index 7d807cfd8ef5..d9c32b822eda 100644
+--- a/arch/arm/lib/bitops.h
++++ b/arch/arm/lib/bitops.h
+@@ -6,7 +6,7 @@
+ ENTRY(	\name		)
+ UNWIND(	.fnstart	)
+ 	ands	ip, r1, #3
+-	strneb	r1, [ip]		@ assert word-aligned
++	strbne	r1, [ip]		@ assert word-aligned
+ 	mov	r2, #1
+ 	and	r3, r0, #31		@ Get bit offset
+ 	mov	r0, r0, lsr #5
+@@ -31,7 +31,7 @@ ENDPROC(\name		)
+ ENTRY(	\name		)
+ UNWIND(	.fnstart	)
+ 	ands	ip, r1, #3
+-	strneb	r1, [ip]		@ assert word-aligned
++	strbne	r1, [ip]		@ assert word-aligned
+ 	mov	r2, #1
+ 	and	r3, r0, #31		@ Get bit offset
+ 	mov	r0, r0, lsr #5
+@@ -61,7 +61,7 @@ ENDPROC(\name		)
+ ENTRY(	\name		)
+ UNWIND(	.fnstart	)
+ 	ands	ip, r1, #3
+-	strneb	r1, [ip]		@ assert word-aligned
++	strbne	r1, [ip]		@ assert word-aligned
+ 	and	r2, r0, #31
+ 	mov	r0, r0, lsr #5
+ 	mov	r3, #1
+@@ -88,7 +88,7 @@ ENDPROC(\name		)
+ ENTRY(	\name		)
+ UNWIND(	.fnstart	)
+ 	ands	ip, r1, #3
+-	strneb	r1, [ip]		@ assert word-aligned
++	strbne	r1, [ip]		@ assert word-aligned
+ 	and	r3, r0, #31
+ 	mov	r0, r0, lsr #5
+ 	save_and_disable_irqs ip
 -- 
 2.25.1
 
