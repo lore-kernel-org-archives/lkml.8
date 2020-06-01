@@ -2,150 +2,76 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30587206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BFE206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFAJOE (ORCPT
+        id S1726017AbgFAJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:14:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36560 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgFAJOB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:14:01 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 52E552A1629
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Philippe CORNU <philippe.cornu@st.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: Re: [Linux-stm32] [PATCH v8 08/10] drm: stm: dw-mipi-dsi: let the
- bridge handle the HW version check
-In-Reply-To: <4acc09e8-0610-01f6-b18d-3ffc390c45a3@st.com>
-References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
- <20200427081952.3536741-9-adrian.ratiu@collabora.com>
- <4acc09e8-0610-01f6-b18d-3ffc390c45a3@st.com>
-Date:   Mon, 01 Jun 2020 12:15:02 +0300
-Message-ID: <87blm387vt.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+        Mon, 1 Jun 2020 05:14:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:35244 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbgFAJOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:14:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE0E21FB;
+        Mon,  1 Jun 2020 02:14:44 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B12293F305;
+        Mon,  1 Jun 2020 02:14:43 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 10:14:41 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Keno Fischer <keno@juliacomputing.com>
+Cc:     Will Deacon <will@kernel.org>, Kyle Huey <khuey@pernos.co>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: arm64: Register modification during syscall entry/exit stop
+Message-ID: <20200601091441.GW5031@arm.com>
+References: <CABV8kRz0mKSc=u1LeonQSLroKJLOKWOWktCoGji2nvEBc=e7=w@mail.gmail.com>
+ <20200519081551.GA9980@willie-the-truck>
+ <CABV8kRzYzBrdzC1_opmmdpW63N2htfOsAUZ+RjiSDsy=SJW6Yg@mail.gmail.com>
+ <20200520174149.GB27629@willie-the-truck>
+ <CABV8kRzjCCsjVeRsBD7U_Lo0==sBw9EKm=1z7g=60KyJvJLZBQ@mail.gmail.com>
+ <CABV8kRxfet2RXXNcUoTKwfVzFWEQfxAkXUX4M5XhkP3nc-0+rQ@mail.gmail.com>
+ <20200527095528.GC11111@willie-the-truck>
+ <20200527101929.GT5031@arm.com>
+ <20200531093320.GA30204@willie-the-truck>
+ <CABV8kRyHo+EAWaMUzGA220z=HJRBCpH6UWiYGb84uSL3h8HQHw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABV8kRyHo+EAWaMUzGA220z=HJRBCpH6UWiYGb84uSL3h8HQHw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020, Philippe CORNU <philippe.cornu@st.com> wrote:
-> Hi Adrian, and thank you very much for the patchset.  Thank you 
-> also for having tested it on STM32F769 and STM32MP1.  Sorry for 
-> the late response, Yannick and I will review it as soon as 
-> possible and we will keep you posted.  Note: Do not hesitate to 
-> put us in copy for the next version  (philippe.cornu@st.com, 
-> yannick.fertre@st.com) Regards, Philippe :-) 
+On Sun, May 31, 2020 at 12:13:18PM -0400, Keno Fischer wrote:
+> > Keno -- are you planning to send out a patch? You previously spoke about
+> > implementing this using PTRACE_SETOPTIONS.
+> 
+> Yes, I'll have a patch for you. Though I've come to the conclusion
+> that introducing a new regset is probably a better way to solve it.
+> We can then also expose orig_x0 at the same time and give it sane semantics
+> (there's some problems with the way it works currently - I'll write it up
+> together with the patch).
 
-Hi Philippe,
+I'd worry that having a new ptrace option would be useless bug-
+compatibility that is just going to bitrot.
 
-Thank you very much for your previous and future STM testing, 
-really appreciate it! I've CC'd Yannick until now but I'll also CC 
-you sure :)
+Can you explain why userspace would write a changed value for x7
+but at the same time need that new to be thrown away?
 
-It's been over a month since I posted v8 and I was just gearing up 
-to address all feedback, rebase & retest to prepare v9 but I'll 
-wait a little longer, no problem, it's no rush.
+That sounds like a nonsensical thing for userspace to be doing.
 
-Have an awesome day,
-Adrian
-
->
->
-> On 4/27/20 10:19 AM, Adrian Ratiu wrote:
->> The stm mipi-dsi platform driver added a version test in
->> commit fa6251a747b7 ("drm/stm: dsi: check hardware version")
->> so that HW revisions other than v1.3x get rejected. The rockchip
->> driver had no such check and just assumed register layouts are
->> v1.3x compatible.
->> 
->> Having such tests was a good idea because only v130/v131 layouts
->> were supported at the time, however since adding multiple layout
->> support in the bridge, the version is automatically checked for
->> all drivers, compatible layouts get picked and unsupported HW is
->> automatically rejected by the bridge, so there's no use keeping
->> the test in the stm driver.
->> 
->> The main reason prompting this change is that the stm driver
->> test immediately disabled the peripheral clock after reading
->> the version, making the bridge read version 0x0 immediately
->> after in its own probe(), so we move the clock disabling after
->> the bridge does the version test.
->> 
->> Tested on STM32F769 and STM32MP1.
->> 
->> Cc: linux-stm32@st-md-mailman.stormreply.com
->> Reported-by: Adrian Pop <pop.adrian61@gmail.com>
->> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
->> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
->> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
->> ---
->> New in v6.
->> ---
->>   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 12 +++---------
->>   1 file changed, 3 insertions(+), 9 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> index 2e1f2664495d0..7218e405d7e2b 100644
->> --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> @@ -402,15 +402,6 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
->>   		goto err_dsi_probe;
->>   	}
->>   
->> -	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
->> -	clk_disable_unprepare(pclk);
->> -
->> -	if (dsi->hw_version != HWVER_130 && dsi->hw_version != HWVER_131) {
->> -		ret = -ENODEV;
->> -		DRM_ERROR("bad dsi hardware version\n");
->> -		goto err_dsi_probe;
->> -	}
->> -
->>   	dw_mipi_dsi_stm_plat_data.base = dsi->base;
->>   	dw_mipi_dsi_stm_plat_data.priv_data = dsi;
->>   
->> @@ -423,6 +414,9 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
->>   		goto err_dsi_probe;
->>   	}
->>   
->> +	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
->> +	clk_disable_unprepare(pclk);
->> +
->>   	return 0;
->>   
->>   err_dsi_probe:
->> 
+Cheers
+---Dave
