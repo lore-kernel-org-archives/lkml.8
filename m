@@ -2,259 +2,83 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C44C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13FB2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:20:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n3psH9fr"
+	by mail.kernel.org (Postfix) with ESMTP id BFC57206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFAFUo (ORCPT
+        id S1726108AbgFAFVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:20:44 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12722 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgFAFUn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:20:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed48fcc0000>; Sun, 31 May 2020 22:19:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 31 May 2020 22:20:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 31 May 2020 22:20:42 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jun
- 2020 05:20:42 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 1 Jun 2020 05:20:42 +0000
-Received: from sandipan-pc.nvidia.com (Not Verified[10.24.42.163]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ed490270001>; Sun, 31 May 2020 22:20:41 -0700
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     <treding@nvidia.com>, <jonathanh@nvidia.com>,
-        <u.kleine-koenig@pengutronix.de>
-CC:     <bbasu@nvidia.com>, <ldewangan@nvidia.com>,
-        <kyarlagadda@nvidia.com>, <linux-pwm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sandipan Patra <spatra@nvidia.com>
-Subject: [PATCH V4] pwm: tegra: dynamic clk freq configuration by PWM driver
-Date:   Mon, 1 Jun 2020 10:50:36 +0530
-Message-ID: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 1 Jun 2020 01:21:42 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:17738 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725847AbgFAFVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 01:21:41 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 1 Jun 2020 13:21:27
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.72.4]
+Date:   Mon, 1 Jun 2020 13:21:27 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Ben Skeggs" <skeggsb@gmail.com>
+Cc:     kjlu@umn.edu, "David Airlie" <airlied@linux.ie>,
+        "ML nouveau" <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "ML dri-devel" <dri-devel@lists.freedesktop.org>,
+        "Ben Skeggs" <bskeggs@redhat.com>, Markus.Elfring@web.de
+Subject: Re: Re: Re: [PATCH] drm/nouveau/clk/gm20b: Fix memory leak in
+ gm20b_clk_new
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <CACAvsv5t2gWDae_8b0-fH9e8fzgmxfiUtZTPeFuhmKXDFAmvGw@mail.gmail.com>
+References: <20200529080042.6082-1-dinghao.liu@zju.edu.cn>
+ <CACAvsv73wZK_pKk4TDHaTeBUqxYHvK0KhLQBgPC8Be_VviY2jg@mail.gmail.com>
+ <6a65a5b1.dd4b7.1726deaea0a.Coremail.dinghao.liu@zju.edu.cn>
+ <CACAvsv5kcUC_kOfMPxqY-irSAexmhm=WKO8Vk=wTZWdsbaartw@mail.gmail.com>
+ <CACAvsv5t2gWDae_8b0-fH9e8fzgmxfiUtZTPeFuhmKXDFAmvGw@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590988748; bh=m0+gNzFOFJSxgUGVHSY3yJJbrYn42+OaL51el2ldFCs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=n3psH9frE+Jl42iCwM1V5U1iyPBpln5T/iy0S4WjL1Xngz4dtZwFfUK9+0W401tr0
-         aXiznotRPO2aRL6BsNNE09GFSGTAQwhttTUkhRitm7Fe7vkGkRRrH8secXZqt5W1l7
-         fPFWr1W4haTNygx62Xxayyjff7kknPE7/FV32jXajCDI9RrFOvCXy6bxWw23jrs/Qj
-         XUKFoM8nkb1L3tIaPvwX6/jsPcvpre1g4RKkncz32J35i0iwcYjppZUoRWSCqJdjpO
-         5ETBrPDTYw7isMXtVAZezrlU8c1XIqsXjJAwHwzzjp9HDDrSMnEC4RNcat6JtgTBWL
-         0hsAt3hGa5GEg==
+Message-ID: <b3db4d2.ddd1e.1726e53d54b.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCHIARXkNRe+6VsAA--.10702W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUSBlZdtOZozQABsu
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r4rMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for dynamic clock freq configuration in pwm kernel driver.
-Earlier the pwm driver used to cache boot time clock rate by pwm clock
-parent during probe. Hence dynamically changing pwm frequency was not
-possible for all the possible ranges. With this change, dynamic calculation
-is enabled and it is able to set the requested period from sysfs knob
-provided the value is supported by clock source.
-
-Changes mainly have 2 parts:
-  - T186 and later chips [1]
-  - T210 and prior chips [2]
-
-For [1] - Changes implemented to set pwm period dynamically and
-          also checks added to allow only if requested period(ns) is
-          below or equals to higher range.
-
-For [2] - Only checks if the requested period(ns) is below or equals
-          to higher range defined by max clock limit. The limitation
-          in T210 or prior chips are due to the reason of having only
-          one pwm-controller supporting multiple channels. But later
-          chips have multiple pwm controller instances each having
-	  single channel support.
-
-Signed-off-by: Sandipan Patra <spatra@nvidia.com>
----
-PATCH V4:
-1. Code comments fixes
-
-PATCH V3:
-1. Return -EINVAL if requested period does not fall inside limit.
-2. Store the new clock rate for further references.
-3. Variable name change reverted.
-4. Comments corrected and new comments are added.
-
-PATCH V2:
-1. Maximum frequency calculation is moved to probe.
-2. Added descriptions for PWM register bits and functional behavior
-   of the controller when new configuration is applied.
-3. Setting period with possible value when supplied period is below limit.
-4. Corrected the earlier code comment:
-   plus 1 instead of minus 1 during pwm calculation
-
- drivers/pwm/pwm-tegra.c | 80 +++++++++++++++++++++++++++++++++++++++++++++=
-+---
- 1 file changed, 76 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-index d26ed8f..1daf591 100644
---- a/drivers/pwm/pwm-tegra.c
-+++ b/drivers/pwm/pwm-tegra.c
-@@ -4,8 +4,36 @@
-  *
-  * Tegra pulse-width-modulation controller driver
-  *
-- * Copyright (c) 2010, NVIDIA Corporation.
-+ * Copyright (c) 2010-2020, NVIDIA Corporation.
-  * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.d=
-e>
-+ *
-+ * Overview of Tegra Pulse Width Modulator Register:
-+ * 1. 13-bit: Frequency division (SCALE)
-+ * 2. 8-bit : Pulse division (DUTY)
-+ * 3. 1-bit : Enable bit
-+ *
-+ * The PWM clock frequency is divided by 256 before subdividing it based
-+ * on the programmable frequency division value to generate the required
-+ * frequency for PWM output. The maximum output frequency that can be
-+ * achieved is (max rate of source clock) / 256.
-+ * e.g. if source clock rate is 408 MHz, maximum output frequency can be:
-+ * 408 MHz/256 =3D 1.6 MHz.
-+ * This 1.6 MHz frequency can further be divided using SCALE value in PWM.
-+ *
-+ * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
-+ * To achieve 100% duty cycle, program Bit [24] of this register to
-+ * 1=E2=80=99b1. In which case the other bits [23:16] are set to don't car=
-e.
-+ *
-+ * Limitations:
-+ * -	When PWM is disabled, the output is driven to inactive.
-+ * -	It does not allow the current PWM period to complete and
-+ *	stops abruptly.
-+ *
-+ * -	If the register is reconfigured while PWM is running,
-+ *	it does not complete the currently running period.
-+ *
-+ * -	If the user input duty is beyond acceptible limits,
-+ *	-EINVAL is returned.
-  */
-=20
- #include <linux/clk.h>
-@@ -41,6 +69,7 @@ struct tegra_pwm_chip {
- 	struct reset_control*rst;
-=20
- 	unsigned long clk_rate;
-+	unsigned long min_period_ns;
-=20
- 	void __iomem *regs;
-=20
-@@ -68,7 +97,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct=
- pwm_device *pwm,
- {
- 	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
- 	unsigned long long c =3D duty_ns, hz;
--	unsigned long rate;
-+	unsigned long rate, required_clk_rate;
- 	u32 val =3D 0;
- 	int err;
-=20
-@@ -83,9 +112,47 @@ static int tegra_pwm_config(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
- 	val =3D (u32)c << PWM_DUTY_SHIFT;
-=20
- 	/*
-+	 *  min period =3D max clock limit >> PWM_DUTY_WIDTH
-+	 */
-+	if (period_ns < pc->min_period_ns)
-+		return -EINVAL;
-+
-+	/*
- 	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
- 	 * cycles at the PWM clock rate will take period_ns nanoseconds.
-+	 *
-+	 * num_channels: If single instance of PWM controller has multiple
-+	 * channels (e.g. Tegra210 or older) then it is not possible to
-+	 * configure separate clock rates to each of the channels, in such
-+	 * case the value stored during probe will be referred.
-+	 *
-+	 * If every PWM controller instance has one channel respectively, i.e.
-+	 * nums_channels =3D=3D 1 then only the clock rate can be modified
-+	 * dynamically (e.g. Tegra186 or Tegra194).
- 	 */
-+	if (pc->soc->num_channels =3D=3D 1) {
-+		/*
-+		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
-+		 * with the maximum possible rate that the controller can
-+		 * provide. Any further lower value can be derived by setting
-+		 * PFM bits[0:12].
-+		 *
-+		 * required_clk_rate is a reference rate for source clock and
-+		 * it is derived based on user requested period. By setting the
-+		 * source clock rate as required_clk_rate, PWM controller will
-+		 * be able to configure the requested period.
-+		 */
-+		required_clk_rate =3D
-+			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
-+
-+		err =3D clk_set_rate(pc->clk, required_clk_rate);
-+		if (err < 0)
-+			return -EINVAL;
-+
-+		/* Store the new rate for further references */
-+		pc->clk_rate =3D clk_get_rate(pc->clk);
-+	}
-+
- 	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
-=20
- 	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
-@@ -94,7 +161,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struc=
-t pwm_device *pwm,
-=20
- 	/*
- 	 * Since the actual PWM divider is the register's frequency divider
--	 * field minus 1, we need to decrement to get the correct value to
-+	 * field plus 1, we need to decrement to get the correct value to
- 	 * write to the register.
- 	 */
- 	if (rate > 0)
-@@ -205,6 +272,10 @@ static int tegra_pwm_probe(struct platform_device *pde=
-v)
- 	 */
- 	pwm->clk_rate =3D clk_get_rate(pwm->clk);
-=20
-+	/* Set minimum limit of PWM period for the IP */
-+	pwm->min_period_ns =3D
-+	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
-+
- 	pwm->rst =3D devm_reset_control_get_exclusive(&pdev->dev, "pwm");
- 	if (IS_ERR(pwm->rst)) {
- 		ret =3D PTR_ERR(pwm->rst);
-@@ -312,5 +383,6 @@ static struct platform_driver tegra_pwm_driver =3D {
- module_platform_driver(tegra_pwm_driver);
-=20
- MODULE_LICENSE("GPL");
--MODULE_AUTHOR("NVIDIA Corporation");
-+MODULE_AUTHOR("Sandipan Patra <spatra@nvidia.com>");
-+MODULE_DESCRIPTION("Tegra PWM controller driver");
- MODULE_ALIAS("platform:tegra-pwm");
---=20
-2.7.4
-
+PiA+IElmIHRoZXJlJ3MgKmFueSogZXJyb3IsIGl0J2xsIGNoZWNrIHRoZSBwb2ludGVyLCBpZiBp
+dCdzIG5vbi1OVUxMLAo+ID4gaXQnbGwgY2FsbCB0aGUgZGVzdHJ1Y3Rvci4gIElmIGt6YWxsb2Mo
+KSBmYWlscywgdGhlIHBvaW50ZXIgd2lsbCBiZQo+ID4gTlVMTCwgdGhlcmUncyBubyBkb3VibGUt
+ZnJlZSBidWcuICAqZXZlcnkqIHN1YmRldiBpcyB3cml0dGVuIHRoaXMgd2F5Cj4gPiB0byBhdm9p
+ZCBkdXBsaWNhdGluZyBjbGVhbnVwIGxvZ2ljLgo+IEFjdHVhbGx5LCBnbTIwYl9jbGtfbmV3X3Nw
+ZWVkbzAoKSBtYXkgaGF2ZSBhIGJ1ZyBoZXJlIGlmIGt6YWxsb2MoKQo+IGZhaWxzIGFzIGl0IGRv
+ZXNuJ3Qgb3ZlcndyaXRlIHRoZSBwcmV2aW91cyBwb2ludGVyIGZyb20KPiBnbTIwYl9jbGtfbmV3
+KCkuICBUaGF0IHdob2xlIGN0b3IoKSBzZXF1ZW5jZSBpcyB3cml0dGVuIGEgbGl0dGxlCj4gc3Ry
+YW5nZWx5Lgo+IAoKSXQncyBjbGVhciB0byBtZSwgdGhhbmsgeW91ciBmb3IgeW91ciBleHBsYW5h
+dGlvbiEgQXMgZm9yIApnbTIwYl9jbGtfbmV3X3NwZWVkbzAoKSwgSSB0aGluayBpdHMgYnVnIHBh
+dHRlcm4gaXMgbm90IHZlcnkgCmNsZWFyLiBNYXliZSB3ZSBzaG91bGQga2VlcCBpdCB1bnRpbCB3
+ZSBmaW5kIGFuIHVzZSBjaGFpbiB0aGF0CmNvdWxkIGxlYWQgdG8gYSBidWcuCgpSZWdhcmRzLApE
+aW5naGFvCg==
