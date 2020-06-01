@@ -2,55 +2,51 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9914BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C042073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BD1207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035555;
-	bh=G7pXJ7gjYCbsGDybjXy2ttQC5CykFVlMMwk7hZpNo30=;
+	s=default; t=1591035558;
+	bh=p9mgQPRfyqYbnCnnbEX16xQy+tQEDM8VkugbbjCuN+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Avq7feLbgi9qMc8XIRcP8pbH/K+jCT/BZ2CQnolVH60JCD90eeumJth6jZ+r1wqPT
-	 kVVNpKZMIBx3AHqKki98u8mG3sFlHnmzTHhRspJyW8BZQAb/8ZgtSPGx/7utktrNiu
-	 aCbyOokhLxe+K+Gt/3o1BrugePX+8Y/II7VIdGbM=
+	b=cGeNq/JpaQiCf33aroWHkM5fUAqFXodGhkQ4DgIlmfA3kfh+9VZ8cvfsGa9Yci+xh
+	 aNnDf7Rcsd9v9eTW8NatX5vjve9pLNdte0wB49Ac3Ar75SXk4fgRFdp+EezmAzXEwO
+	 iaMF4TUomBFpZDgfXL3pMnSJB6E4EJfruQVq6pi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731812AbgFASRS (ORCPT
+        id S1731772AbgFASTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38218 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730753AbgFASRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:13 -0400
+        id S1731808AbgFASRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DFF8206E2;
-        Mon,  1 Jun 2020 18:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E18D2065C;
+        Mon,  1 Jun 2020 18:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035431;
-        bh=G7pXJ7gjYCbsGDybjXy2ttQC5CykFVlMMwk7hZpNo30=;
+        s=default; t=1591035437;
+        bh=p9mgQPRfyqYbnCnnbEX16xQy+tQEDM8VkugbbjCuN+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gTSzNvY7+2qxDN2toWJqvsWGEkl+a6rT/64lnw/bZeZOvoVit8aLhepj9jgn8S+jQ
-         mAN5fEt/CcvMd6JiKflEzd+OnuuufhavBaHTIqhzVACSUWSl8Zyy0E8+l5Gexy2Tdq
-         LpQLyngSbfxkcJkqzFT+bc6eTgs0NGvToJwHaC+8=
+        b=AGc5LNQq/BMz5oQJS5m40MhoxsO7JEoZ2J94ajPq8mK3o+KuI4R1UjxcARym8PTdS
+         Uor3zDm8D6iG0lLaf7/Gusn10PQEsZFkno0dbLAF1+1cVXsP/ffpXVGzuMnNMOM0wm
+         FT98PoC6DNX11XE/3y555ihPq+/v3dHXm2nh+Y58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 129/177] drm/amd/display: Defer cursor lock until after VUPDATE
-Date:   Mon,  1 Jun 2020 19:54:27 +0200
-Message-Id: <20200601174059.291380865@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.6 158/177] netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
+Date:   Mon,  1 Jun 2020 19:54:56 +0200
+Message-Id: <20200601174101.483068621@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -63,222 +59,201 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 31ecebee9c36d5e5e113a357a655d993fa916174 ]
+commit 4c559f15efcc43b996f4da528cd7f9483aaca36d upstream.
 
-[Why]
-We dropped the delay after changed the cursor functions locking the
-entire pipe to locking just the CURSOR registers to fix page flip
-stuttering - this introduced cursor stuttering instead, and an underflow
-issue.
+Dan Carpenter says: "Smatch complains that the value for "cmd" comes
+from the network and can't be trusted."
 
-The cursor update can be delayed indefinitely if the cursor update
-repeatedly happens right around VUPDATE.
+Add pptp_msg_name() helper function that checks for the array boundary.
 
-The underflow issue can happen if we do a viewport update on a pipe
-on the same frame where a cursor update happens around VUPDATE - the
-old cursor registers are retained which can be in an invalid position.
+Fixes: f09943fefe6b ("[NETFILTER]: nf_conntrack/nf_nat: add PPTP helper port")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This can cause a pipe hang and indefinite underflow.
-
-[How]
-The complex, ideal solution to the problem would be a software
-triple buffering mechanism from the DM layer to program only one cursor
-update per frame just before VUPDATE.
-
-The simple workaround until we have that infrastructure in place is
-this change - bring back the delay until VUPDATE before locking, but
-with some corrections to the calculations.
-
-This didn't work for all timings before because the calculation for
-VUPDATE was wrong - it was using the offset from VSTARTUP instead and
-didn't correctly handle the case where VUPDATE could be in the back
-porch.
-
-Add a new hardware sequencer function to use the existing helper to
-calculate the real VUPDATE start and VUPDATE end - VUPDATE can last
-multiple lines after all.
-
-Change the udelay to incorporate the width of VUPDATE as well.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../amd/display/dc/dcn10/dcn10_hw_sequencer.c | 69 ++++++++++++++++++-
- .../amd/display/dc/dcn10/dcn10_hw_sequencer.h |  5 ++
- .../gpu/drm/amd/display/dc/dcn10/dcn10_init.c |  1 +
- .../gpu/drm/amd/display/dc/dcn20/dcn20_init.c |  1 +
- .../gpu/drm/amd/display/dc/dcn21/dcn21_init.c |  1 +
- .../gpu/drm/amd/display/dc/inc/hw_sequencer.h |  5 ++
- 6 files changed, 81 insertions(+), 1 deletion(-)
+ include/linux/netfilter/nf_conntrack_pptp.h |    2 
+ net/ipv4/netfilter/nf_nat_pptp.c            |    7 ---
+ net/netfilter/nf_conntrack_pptp.c           |   62 +++++++++++++++-------------
+ 3 files changed, 38 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 97a820b90541..60cea910759b 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1592,12 +1592,79 @@ void dcn10_pipe_control_lock(
- 		hws->funcs.verify_allow_pstate_change_high(dc);
- }
+--- a/include/linux/netfilter/nf_conntrack_pptp.h
++++ b/include/linux/netfilter/nf_conntrack_pptp.h
+@@ -10,7 +10,7 @@
+ #include <net/netfilter/nf_conntrack_expect.h>
+ #include <uapi/linux/netfilter/nf_conntrack_tuple_common.h>
  
-+/**
-+ * delay_cursor_until_vupdate() - Delay cursor update if too close to VUPDATE.
-+ *
-+ * Software keepout workaround to prevent cursor update locking from stalling
-+ * out cursor updates indefinitely or from old values from being retained in
-+ * the case where the viewport changes in the same frame as the cursor.
-+ *
-+ * The idea is to calculate the remaining time from VPOS to VUPDATE. If it's
-+ * too close to VUPDATE, then stall out until VUPDATE finishes.
-+ *
-+ * TODO: Optimize cursor programming to be once per frame before VUPDATE
-+ *       to avoid the need for this workaround.
-+ */
-+static void delay_cursor_until_vupdate(struct dc *dc, struct pipe_ctx *pipe_ctx)
+-extern const char *const pptp_msg_name[];
++extern const char *const pptp_msg_name(u_int16_t msg);
+ 
+ /* state of the control session */
+ enum pptp_ctrlsess_state {
+--- a/net/ipv4/netfilter/nf_nat_pptp.c
++++ b/net/ipv4/netfilter/nf_nat_pptp.c
+@@ -166,8 +166,7 @@ pptp_outbound_pkt(struct sk_buff *skb,
+ 		break;
+ 	default:
+ 		pr_debug("unknown outbound packet 0x%04x:%s\n", msg,
+-			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
+-					       pptp_msg_name[0]);
++			 pptp_msg_name(msg));
+ 		/* fall through */
+ 	case PPTP_SET_LINK_INFO:
+ 		/* only need to NAT in case PAC is behind NAT box */
+@@ -268,9 +267,7 @@ pptp_inbound_pkt(struct sk_buff *skb,
+ 		pcid_off = offsetof(union pptp_ctrl_union, setlink.peersCallID);
+ 		break;
+ 	default:
+-		pr_debug("unknown inbound packet %s\n",
+-			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
+-					       pptp_msg_name[0]);
++		pr_debug("unknown inbound packet %s\n", pptp_msg_name(msg));
+ 		/* fall through */
+ 	case PPTP_START_SESSION_REQUEST:
+ 	case PPTP_START_SESSION_REPLY:
+--- a/net/netfilter/nf_conntrack_pptp.c
++++ b/net/netfilter/nf_conntrack_pptp.c
+@@ -72,24 +72,32 @@ EXPORT_SYMBOL_GPL(nf_nat_pptp_hook_expec
+ 
+ #if defined(DEBUG) || defined(CONFIG_DYNAMIC_DEBUG)
+ /* PptpControlMessageType names */
+-const char *const pptp_msg_name[] = {
+-	"UNKNOWN_MESSAGE",
+-	"START_SESSION_REQUEST",
+-	"START_SESSION_REPLY",
+-	"STOP_SESSION_REQUEST",
+-	"STOP_SESSION_REPLY",
+-	"ECHO_REQUEST",
+-	"ECHO_REPLY",
+-	"OUT_CALL_REQUEST",
+-	"OUT_CALL_REPLY",
+-	"IN_CALL_REQUEST",
+-	"IN_CALL_REPLY",
+-	"IN_CALL_CONNECT",
+-	"CALL_CLEAR_REQUEST",
+-	"CALL_DISCONNECT_NOTIFY",
+-	"WAN_ERROR_NOTIFY",
+-	"SET_LINK_INFO"
++static const char *const pptp_msg_name_array[PPTP_MSG_MAX + 1] = {
++	[0]				= "UNKNOWN_MESSAGE",
++	[PPTP_START_SESSION_REQUEST]	= "START_SESSION_REQUEST",
++	[PPTP_START_SESSION_REPLY]	= "START_SESSION_REPLY",
++	[PPTP_STOP_SESSION_REQUEST]	= "STOP_SESSION_REQUEST",
++	[PPTP_STOP_SESSION_REPLY]	= "STOP_SESSION_REPLY",
++	[PPTP_ECHO_REQUEST]		= "ECHO_REQUEST",
++	[PPTP_ECHO_REPLY]		= "ECHO_REPLY",
++	[PPTP_OUT_CALL_REQUEST]		= "OUT_CALL_REQUEST",
++	[PPTP_OUT_CALL_REPLY]		= "OUT_CALL_REPLY",
++	[PPTP_IN_CALL_REQUEST]		= "IN_CALL_REQUEST",
++	[PPTP_IN_CALL_REPLY]		= "IN_CALL_REPLY",
++	[PPTP_IN_CALL_CONNECT]		= "IN_CALL_CONNECT",
++	[PPTP_CALL_CLEAR_REQUEST]	= "CALL_CLEAR_REQUEST",
++	[PPTP_CALL_DISCONNECT_NOTIFY]	= "CALL_DISCONNECT_NOTIFY",
++	[PPTP_WAN_ERROR_NOTIFY]		= "WAN_ERROR_NOTIFY",
++	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
+ };
++
++const char *const pptp_msg_name(u_int16_t msg)
 +{
-+	struct dc_stream_state *stream = pipe_ctx->stream;
-+	struct crtc_position position;
-+	uint32_t vupdate_start, vupdate_end;
-+	unsigned int lines_to_vupdate, us_to_vupdate, vpos;
-+	unsigned int us_per_line, us_vupdate;
++	if (msg > PPTP_MSG_MAX)
++		return pptp_msg_name_array[0];
 +
-+	if (!dc->hwss.calc_vupdate_position || !dc->hwss.get_position)
-+		return;
-+
-+	if (!pipe_ctx->stream_res.stream_enc || !pipe_ctx->stream_res.tg)
-+		return;
-+
-+	dc->hwss.calc_vupdate_position(dc, pipe_ctx, &vupdate_start,
-+				       &vupdate_end);
-+
-+	dc->hwss.get_position(&pipe_ctx, 1, &position);
-+	vpos = position.vertical_count;
-+
-+	/* Avoid wraparound calculation issues */
-+	vupdate_start += stream->timing.v_total;
-+	vupdate_end += stream->timing.v_total;
-+	vpos += stream->timing.v_total;
-+
-+	if (vpos <= vupdate_start) {
-+		/* VPOS is in VACTIVE or back porch. */
-+		lines_to_vupdate = vupdate_start - vpos;
-+	} else if (vpos > vupdate_end) {
-+		/* VPOS is in the front porch. */
-+		return;
-+	} else {
-+		/* VPOS is in VUPDATE. */
-+		lines_to_vupdate = 0;
-+	}
-+
-+	/* Calculate time until VUPDATE in microseconds. */
-+	us_per_line =
-+		stream->timing.h_total * 10000u / stream->timing.pix_clk_100hz;
-+	us_to_vupdate = lines_to_vupdate * us_per_line;
-+
-+	/* 70 us is a conservative estimate of cursor update time*/
-+	if (us_to_vupdate > 70)
-+		return;
-+
-+	/* Stall out until the cursor update completes. */
-+	us_vupdate = (vupdate_end - vupdate_start + 1) * us_per_line;
-+	udelay(us_to_vupdate + us_vupdate);
++	return pptp_msg_name_array[msg];
 +}
-+
- void dcn10_cursor_lock(struct dc *dc, struct pipe_ctx *pipe, bool lock)
- {
- 	/* cursor lock is per MPCC tree, so only need to lock one pipe per stream */
- 	if (!pipe || pipe->top_pipe)
- 		return;
+ EXPORT_SYMBOL(pptp_msg_name);
+ #endif
  
-+	/* Prevent cursor lock from stalling out cursor updates. */
-+	if (lock)
-+		delay_cursor_until_vupdate(dc, pipe);
-+
- 	dc->res_pool->mpc->funcs->cursor_lock(dc->res_pool->mpc,
- 			pipe->stream_res.opp->inst, lock);
- }
-@@ -3142,7 +3209,7 @@ int dcn10_get_vupdate_offset_from_vsync(struct pipe_ctx *pipe_ctx)
- 	return vertical_line_start;
- }
+@@ -276,7 +284,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
+ 	typeof(nf_nat_pptp_hook_inbound) nf_nat_pptp_inbound;
  
--static void dcn10_calc_vupdate_position(
-+void dcn10_calc_vupdate_position(
- 		struct dc *dc,
- 		struct pipe_ctx *pipe_ctx,
- 		uint32_t *start_line,
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h
-index af51424315d5..42b6e016d71e 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.h
-@@ -34,6 +34,11 @@ struct dc;
- void dcn10_hw_sequencer_construct(struct dc *dc);
+ 	msg = ntohs(ctlh->messageType);
+-	pr_debug("inbound control message %s\n", pptp_msg_name[msg]);
++	pr_debug("inbound control message %s\n", pptp_msg_name(msg));
  
- int dcn10_get_vupdate_offset_from_vsync(struct pipe_ctx *pipe_ctx);
-+void dcn10_calc_vupdate_position(
-+		struct dc *dc,
-+		struct pipe_ctx *pipe_ctx,
-+		uint32_t *start_line,
-+		uint32_t *end_line);
- void dcn10_setup_vupdate_interrupt(struct dc *dc, struct pipe_ctx *pipe_ctx);
- enum dc_status dcn10_enable_stream_timing(
- 		struct pipe_ctx *pipe_ctx,
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c
-index 4a8e4b797bea..0900c861204f 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_init.c
-@@ -72,6 +72,7 @@ static const struct hw_sequencer_funcs dcn10_funcs = {
- 	.set_clock = dcn10_set_clock,
- 	.get_clock = dcn10_get_clock,
- 	.get_vupdate_offset_from_vsync = dcn10_get_vupdate_offset_from_vsync,
-+	.calc_vupdate_position = dcn10_calc_vupdate_position,
- };
+ 	switch (msg) {
+ 	case PPTP_START_SESSION_REPLY:
+@@ -311,7 +319,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
+ 		pcid = pptpReq->ocack.peersCallID;
+ 		if (info->pns_call_id != pcid)
+ 			goto invalid;
+-		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name[msg],
++		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name(msg),
+ 			 ntohs(cid), ntohs(pcid));
  
- static const struct hwseq_private_funcs dcn10_private_funcs = {
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c
-index 0cae0c2f84c4..71bfde2cf646 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_init.c
-@@ -83,6 +83,7 @@ static const struct hw_sequencer_funcs dcn20_funcs = {
- 	.init_vm_ctx = dcn20_init_vm_ctx,
- 	.set_flip_control_gsl = dcn20_set_flip_control_gsl,
- 	.get_vupdate_offset_from_vsync = dcn10_get_vupdate_offset_from_vsync,
-+	.calc_vupdate_position = dcn10_calc_vupdate_position,
- };
+ 		if (pptpReq->ocack.resultCode == PPTP_OUTCALL_CONNECT) {
+@@ -328,7 +336,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
+ 			goto invalid;
  
- static const struct hwseq_private_funcs dcn20_private_funcs = {
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
-index 8fe8ec7c0882..7f53bf724fce 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_init.c
-@@ -86,6 +86,7 @@ static const struct hw_sequencer_funcs dcn21_funcs = {
- 	.optimize_pwr_state = dcn21_optimize_pwr_state,
- 	.exit_optimized_pwr_state = dcn21_exit_optimized_pwr_state,
- 	.get_vupdate_offset_from_vsync = dcn10_get_vupdate_offset_from_vsync,
-+	.calc_vupdate_position = dcn10_calc_vupdate_position,
- 	.set_cursor_position = dcn10_set_cursor_position,
- 	.set_cursor_attribute = dcn10_set_cursor_attribute,
- 	.set_cursor_sdr_white_level = dcn10_set_cursor_sdr_white_level,
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-index e57467d99d66..08307f3796e3 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-@@ -92,6 +92,11 @@ struct hw_sequencer_funcs {
- 	void (*get_position)(struct pipe_ctx **pipe_ctx, int num_pipes,
- 			struct crtc_position *position);
- 	int (*get_vupdate_offset_from_vsync)(struct pipe_ctx *pipe_ctx);
-+	void (*calc_vupdate_position)(
-+			struct dc *dc,
-+			struct pipe_ctx *pipe_ctx,
-+			uint32_t *start_line,
-+			uint32_t *end_line);
- 	void (*enable_per_frame_crtc_position_reset)(struct dc *dc,
- 			int group_size, struct pipe_ctx *grouped_pipes[]);
- 	void (*enable_timing_synchronization)(struct dc *dc,
--- 
-2.25.1
-
+ 		cid = pptpReq->icreq.callID;
+-		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
++		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
+ 		info->cstate = PPTP_CALL_IN_REQ;
+ 		info->pac_call_id = cid;
+ 		break;
+@@ -347,7 +355,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
+ 		if (info->pns_call_id != pcid)
+ 			goto invalid;
+ 
+-		pr_debug("%s, PCID=%X\n", pptp_msg_name[msg], ntohs(pcid));
++		pr_debug("%s, PCID=%X\n", pptp_msg_name(msg), ntohs(pcid));
+ 		info->cstate = PPTP_CALL_IN_CONF;
+ 
+ 		/* we expect a GRE connection from PAC to PNS */
+@@ -357,7 +365,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
+ 	case PPTP_CALL_DISCONNECT_NOTIFY:
+ 		/* server confirms disconnect */
+ 		cid = pptpReq->disc.callID;
+-		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
++		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
+ 		info->cstate = PPTP_CALL_NONE;
+ 
+ 		/* untrack this call id, unexpect GRE packets */
+@@ -384,7 +392,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
+ invalid:
+ 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
+ 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
+-		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
++		 pptp_msg_name(msg),
+ 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
+ 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
+ 	return NF_ACCEPT;
+@@ -404,7 +412,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
+ 	typeof(nf_nat_pptp_hook_outbound) nf_nat_pptp_outbound;
+ 
+ 	msg = ntohs(ctlh->messageType);
+-	pr_debug("outbound control message %s\n", pptp_msg_name[msg]);
++	pr_debug("outbound control message %s\n", pptp_msg_name(msg));
+ 
+ 	switch (msg) {
+ 	case PPTP_START_SESSION_REQUEST:
+@@ -426,7 +434,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
+ 		info->cstate = PPTP_CALL_OUT_REQ;
+ 		/* track PNS call id */
+ 		cid = pptpReq->ocreq.callID;
+-		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
++		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
+ 		info->pns_call_id = cid;
+ 		break;
+ 
+@@ -440,7 +448,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
+ 		pcid = pptpReq->icack.peersCallID;
+ 		if (info->pac_call_id != pcid)
+ 			goto invalid;
+-		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name[msg],
++		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name(msg),
+ 			 ntohs(cid), ntohs(pcid));
+ 
+ 		if (pptpReq->icack.resultCode == PPTP_INCALL_ACCEPT) {
+@@ -480,7 +488,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
+ invalid:
+ 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
+ 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
+-		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
++		 pptp_msg_name(msg),
+ 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
+ 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
+ 	return NF_ACCEPT;
 
 
