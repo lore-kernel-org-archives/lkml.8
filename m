@@ -2,51 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8741CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA75AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9BB2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B56C2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035499;
-	bh=RZgud379woqQfPViLyVEe4pZrasNvkKO0kuSoSCnJQg=;
+	s=default; t=1591035501;
+	bh=Udrk6PPQuINl5wAym9dvTVOSxHBGcsig6j241eC9viM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1q3tp1I1zdLgqKN2N5E2cx6ov6xAYBJd/2TSSoD+lz2vGWKyIb8+drklthdB43f1H
-	 Ommd+JU9cCxtvonMkqlm2ahZ1BDB4ks+fh6K/Z9VTeQUEFsDPKjabW+6ZHHrv03A4n
-	 2skkbj8ybryu8g9BClb7xzI19BucQ689JE71PW0c=
+	b=HL/SOzVzN4oXfmV9M6SpF4sFbhbAV6Im8r11TZ0gPEyx3Et7yX0eZB8GqbHQaHLcW
+	 XxQUbPT4T4T66iozSd8qs7RP1Vxmlr2iJPhPCurXhkSo1uGvCr6y2MNgcyGHY4dy9Z
+	 5FeBlJa43f2AS+Nx9yY7iQNN7CrbmD6jVGK2Nef8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbgFASSS (ORCPT
+        id S1731920AbgFASSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39836 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:18:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731911AbgFASSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:18:14 -0400
+        id S1731073AbgFASSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:18:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B84206E2;
-        Mon,  1 Jun 2020 18:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 373652065C;
+        Mon,  1 Jun 2020 18:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035493;
-        bh=RZgud379woqQfPViLyVEe4pZrasNvkKO0kuSoSCnJQg=;
+        s=default; t=1591035491;
+        bh=Udrk6PPQuINl5wAym9dvTVOSxHBGcsig6j241eC9viM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pBlsG/NLHjpxS4lKWCm45RqL1YmBxJtzHi49TOPsu2Pv3XTM3lfP3s74cP9fd+a6A
-         ofVasokhBUlgGKYyLJWKxDyu9ymYwHNQWCc2rbj+zPmpGcGnrC9QAvcoLX/Q5yicau
-         A7R23lDl3MUTMdwFHZMg96W3oJ1opR2RperBJFFk=
+        b=ENBFAVVG0WFDbKhNtwLvLZIgrjSDVZJz3koqXlor+IaToN/iHhbDRoXMlgd+waUtV
+         CQ44HYJTsZMncIuW+MkvZV05TwELqIwF/2xm+ClAZiowRrAc2yHje4hjgo6REFCVCD
+         +9nwuKPBByZHq/rEwmMup024Y64PQMpHpPvmLILg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 177/177] netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
-Date:   Mon,  1 Jun 2020 19:55:15 +0200
-Message-Id: <20200601174102.757163853@linuxfoundation.org>
+Subject: [PATCH 5.6 176/177] netfilter: conntrack: Pass value of ctinfo to __nf_conntrack_update
+Date:   Mon,  1 Jun 2020 19:55:14 +0200
+Message-Id: <20200601174102.691484958@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,45 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 4946ea5c1237036155c3b3a24f049fd5f849f8f6 upstream.
+commit 46c1e0621a72e0469ec4edfdb6ed4d387ec34f8a upstream.
 
->> include/linux/netfilter/nf_conntrack_pptp.h:13:20: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
-extern const char *const pptp_msg_name(u_int16_t msg);
-^~~~~~
+Clang warns:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 4c559f15efcc ("netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code")
+net/netfilter/nf_conntrack_core.c:2068:21: warning: variable 'ctinfo' is
+uninitialized when used here [-Wuninitialized]
+        nf_ct_set(skb, ct, ctinfo);
+                           ^~~~~~
+net/netfilter/nf_conntrack_core.c:2024:2: note: variable 'ctinfo' is
+declared here
+        enum ip_conntrack_info ctinfo;
+        ^
+1 warning generated.
+
+nf_conntrack_update was split up into nf_conntrack_update and
+__nf_conntrack_update, where the assignment of ctinfo is in
+nf_conntrack_update but it is used in __nf_conntrack_update.
+
+Pass the value of ctinfo from nf_conntrack_update to
+__nf_conntrack_update so that uninitialized memory is not used
+and everything works properly.
+
+Fixes: ee04805ff54a ("netfilter: conntrack: make conntrack userspace helpers work again")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1039
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/netfilter/nf_conntrack_pptp.h |    2 +-
- net/netfilter/nf_conntrack_pptp.c           |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/netfilter/nf_conntrack_core.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/include/linux/netfilter/nf_conntrack_pptp.h
-+++ b/include/linux/netfilter/nf_conntrack_pptp.h
-@@ -10,7 +10,7 @@
- #include <net/netfilter/nf_conntrack_expect.h>
- #include <uapi/linux/netfilter/nf_conntrack_tuple_common.h>
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -2015,11 +2015,11 @@ static void nf_conntrack_attach(struct s
+ }
  
--extern const char *const pptp_msg_name(u_int16_t msg);
-+const char *pptp_msg_name(u_int16_t msg);
- 
- /* state of the control session */
- enum pptp_ctrlsess_state {
---- a/net/netfilter/nf_conntrack_pptp.c
-+++ b/net/netfilter/nf_conntrack_pptp.c
-@@ -91,7 +91,7 @@ static const char *const pptp_msg_name_a
- 	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
- };
- 
--const char *const pptp_msg_name(u_int16_t msg)
-+const char *pptp_msg_name(u_int16_t msg)
+ static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
+-				 struct nf_conn *ct)
++				 struct nf_conn *ct,
++				 enum ip_conntrack_info ctinfo)
  {
- 	if (msg > PPTP_MSG_MAX)
- 		return pptp_msg_name_array[0];
+ 	struct nf_conntrack_tuple_hash *h;
+ 	struct nf_conntrack_tuple tuple;
+-	enum ip_conntrack_info ctinfo;
+ 	struct nf_nat_hook *nat_hook;
+ 	unsigned int status;
+ 	int dataoff;
+@@ -2144,7 +2144,7 @@ static int nf_conntrack_update(struct ne
+ 		return 0;
+ 
+ 	if (!nf_ct_is_confirmed(ct)) {
+-		err = __nf_conntrack_update(net, skb, ct);
++		err = __nf_conntrack_update(net, skb, ct, ctinfo);
+ 		if (err < 0)
+ 			return err;
+ 	}
 
 
