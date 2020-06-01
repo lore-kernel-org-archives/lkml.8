@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ABBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0547C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2EF2065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7042207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034482;
-	bh=Qgy1DkMyJttUV/EGcXoWIBjsNpldUuS9juZMdzMfCXQ=;
+	s=default; t=1591034485;
+	bh=CuBTDqU7i9gT/BrbieKiGX7Ca/D8uLOthjeVO9EfLPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1aN3H4Va6DuaByRccf/gEleog8w5i1QUMRQF77QNZqMsC2xdZ5A89bq7PauU7Po94
-	 Xxi+Ee3axRPUI2luBOjxzperXEgM5+79azgW07p7UFaUO5rm07tGiOWJ2iYcR3/WxB
-	 lHjAj7f/bP/IgRH/2UR+Uw32vBB+H6h/V43Z7T/M=
+	b=EPFdy3xLiDildGty1F/UfrQ0kaDvnnaPEIw1XOuHmve7Ckd9+lmfLSj+UFtK6a4g5
+	 gnBX3L7OgjF4KIAMNCvUdtxLcCTheUTJi3OPJg9AlasjJKG/o68mKR2gVzFU82X19I
+	 7hXIYybdLihLqXe0NqOACRp1RHrgRfpTui1ckoFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbgFASBV (ORCPT
+        id S1729784AbgFASBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:01:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:01:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729088AbgFASBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:10 -0400
+        id S1729759AbgFASBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 942912074B;
-        Mon,  1 Jun 2020 18:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0397E206E2;
+        Mon,  1 Jun 2020 18:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034470;
-        bh=Qgy1DkMyJttUV/EGcXoWIBjsNpldUuS9juZMdzMfCXQ=;
+        s=default; t=1591034474;
+        bh=CuBTDqU7i9gT/BrbieKiGX7Ca/D8uLOthjeVO9EfLPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KykdM8YfMK7978oQSvS94Rzh9XLKWpqX4hWShhjC6q/0wU2hOjVtMtkk+3MMqjHXk
-         fBHD2q9WrsZSl+T7Z7HOPlCF0T1QNiPKgp97zZPgPrJoNghU8Uc+eYX6cbpLBQw4yD
-         cvNKnrjfFL/dA4npI02rODtXaysH+bPjNNmBj38w=
+        b=TzvSCgrvLhpGYLMWL4TcgxvQqVcJjfZ7cagvnVT7f/Xvhu1mXF3rD//+i2JLlsdg4
+         JCNBiJnuyAc09pNjFZhMDmwpSrjIUaCK6LdbHL0yU35gLz3Y8juwNth4DHdJ3i46pu
+         xL96iLVrDUgOiZycVza73IxoTbfcxE/H7+icMclQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        kbuild test robot <lkp@intel.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 45/77] exec: Always set cap_ambient in cap_bprm_set_creds
-Date:   Mon,  1 Jun 2020 19:53:50 +0200
-Message-Id: <20200601174024.413430570@linuxfoundation.org>
+Subject: [PATCH 4.14 20/77] usb: gadget: legacy: fix redundant initialization warnings
+Date:   Mon,  1 Jun 2020 19:53:25 +0200
+Message-Id: <20200601174020.054553107@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,50 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit a4ae32c71fe90794127b32d26d7ad795813b502e ]
+[ Upstream commit d13cce757954fa663c69845611957396843ed87a ]
 
-An invariant of cap_bprm_set_creds is that every field in the new cred
-structure that cap_bprm_set_creds might set, needs to be set every
-time to ensure the fields does not get a stale value.
+Fix the following cppcheck warnings:
 
-The field cap_ambient is not set every time cap_bprm_set_creds is
-called, which means that if there is a suid or sgid script with an
-interpreter that has neither the suid nor the sgid bits set the
-interpreter should be able to accept ambient credentials.
-Unfortuantely because cap_ambient is not reset to it's original value
-the interpreter can not accept ambient credentials.
+drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
+ int    value = -EOPNOTSUPP;
+              ^
+drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EINVAL;
+       ^
+drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
+ ssize_t   value = len, length = len;
+                 ^
+drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
+ value = -EINVAL;
+       ^
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 
-Given that the ambient capability set is expected to be controlled by
-the caller, I don't think this is particularly serious.  But it is
-definitely worth fixing so the code works correctly.
-
-I have tested to verify my reading of the code is correct and the
-interpreter of a sgid can receive ambient capabilities with this
-change and cannot receive ambient capabilities without this change.
-
-Cc: stable@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>
-Fixes: 58319057b784 ("capabilities: ambient capabilities")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/commoncap.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/legacy/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/security/commoncap.c b/security/commoncap.c
-index ae26ef006988..ac031fa39190 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -711,6 +711,7 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
- 	int ret;
- 	kuid_t root_uid;
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index 5c28bee327e1..e431a8bc3a9d 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -1364,7 +1364,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
  
-+	new->cap_ambient = old->cap_ambient;
- 	if (WARN_ON(!cap_ambient_invariant_ok(old)))
- 		return -EPERM;
+ 	req->buf = dev->rbuf;
+ 	req->context = NULL;
+-	value = -EOPNOTSUPP;
+ 	switch (ctrl->bRequest) {
  
+ 	case USB_REQ_GET_DESCRIPTOR:
+@@ -1788,7 +1787,7 @@ static ssize_t
+ dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ {
+ 	struct dev_data		*dev = fd->private_data;
+-	ssize_t			value = len, length = len;
++	ssize_t			value, length = len;
+ 	unsigned		total;
+ 	u32			tag;
+ 	char			*kbuf;
 -- 
 2.25.1
 
