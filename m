@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6277DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626062086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D43207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037514;
-	bh=dcISaO5ZIf/Q0SbY++gUBhKTdgN9apg2neVbPtJy5wo=;
+	s=default; t=1591037519;
+	bh=G//XOzUJ0Xz0SRGApteYh963dc2gtUMjNDCmrwGsjoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mlbmtYlg4ovOVHtcUuOkcIyWCl3pnRvaWpOCsiPvBAR9LEFOSQOi8j+YIvT6d7N5b
-	 ErgavIdmq4i+PUnE0ChFaa6M+ZUfhPGw9vUrueuKVxQ0wzosRf1VDeyMAjeSKHjPy5
-	 n3lY54Pi+jJN5+kYSjNGLOKMoabneakmNgmL4JC8=
+	b=abpI3xmnqj9Qr4AiMIyZLamQvVYrUX88MZG1o4HHPmGCDP52Jy6Nkn5MU4ybwpKbt
+	 KcCiNDUyShmM7IXrscXiU75L1/qk8d1AEbiEaEKOqR3qlKOpZ+He6WkTJ7MijA1DAd
+	 bv8SihPWmRdXhCVsG0G0lCF8cyqChh9DRIpliUvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbgFASvx (ORCPT
+        id S1729861AbgFASv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49336 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730216AbgFASEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:04:36 -0400
+        id S1729735AbgFASEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:04:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C555206E2;
-        Mon,  1 Jun 2020 18:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04DF7206E2;
+        Mon,  1 Jun 2020 18:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034676;
-        bh=dcISaO5ZIf/Q0SbY++gUBhKTdgN9apg2neVbPtJy5wo=;
+        s=default; t=1591034671;
+        bh=G//XOzUJ0Xz0SRGApteYh963dc2gtUMjNDCmrwGsjoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wBTNxFucRKHb80Bcoy2wHzzyiJlROJLaYjw/IHSR7HIvvIqdKKY32QPRunlx1Pwn/
-         maSuyIsNv6DatkC0CoeYN/UEQ1PIE6sdHGOMon3PkXnAbJmxKrK+2JgU2IQOLtYR64
-         00KgFWi1TkNs07N+Wof6uau8WKKIjMk+QeD0w1fQ=
+        b=JwjQqk0oeyp08+gQYndAiAYF+0RJKeMZk9FrEE7p0lNTZ7toIY5IDHuU15U+QNmIH
+         iUdjQJkMurbUuf2bBDgZTtKU9Xfy368maKNGLCrtdvoLuoQoMsHzsZXGC0h6B8n+Y5
+         xKwcW1ivr5wiBaU7zhPcb8p0LAPIHRnyO4rqNV8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/95] net: freescale: select CONFIG_FIXED_PHY where needed
-Date:   Mon,  1 Jun 2020 19:53:32 +0200
-Message-Id: <20200601174025.867837444@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Changming Liu <liu.changm@northeastern.edu>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 57/95] ALSA: hwdep: fix a left shifting 1 by 31 UB bug
+Date:   Mon,  1 Jun 2020 19:53:57 +0200
+Message-Id: <20200601174030.222878432@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -61,64 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Changming Liu <liu.changm@northeastern.edu>
 
-[ Upstream commit 99352c79af3e5f2e4724abf37fa5a2a3299b1c81 ]
+[ Upstream commit fb8cd6481ffd126f35e9e146a0dcf0c4e8899f2e ]
 
-I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
-and CONFIG_GIANFAR=y:
+The "info.index" variable can be 31 in "1 << info.index".
+This might trigger an undefined behavior since 1 is signed.
 
-x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
+Fix this by casting 1 to 1u just to be sure "1u << 31" is defined.
 
-It seems the same thing can happen with dpaa and ucc_geth, so change
-all three to do an explicit 'select FIXED_PHY'.
-
-The fixed-phy driver actually has an alternative stub function that
-theoretically allows building network drivers when fixed-phy is
-disabled, but I don't see how that would help here, as the drivers
-presumably would not work then.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/BL0PR06MB4548170B842CB055C9AF695DE5B00@BL0PR06MB4548.namprd06.prod.outlook.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/Kconfig      | 2 ++
- drivers/net/ethernet/freescale/dpaa/Kconfig | 1 +
- 2 files changed, 3 insertions(+)
+ sound/core/hwdep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
-index a580a3dcbe59..e9f4326a0afa 100644
---- a/drivers/net/ethernet/freescale/Kconfig
-+++ b/drivers/net/ethernet/freescale/Kconfig
-@@ -76,6 +76,7 @@ config UCC_GETH
- 	depends on QUICC_ENGINE
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	---help---
- 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
- 	  which is available on some Freescale SOCs.
-@@ -89,6 +90,7 @@ config GIANFAR
- 	depends on HAS_DMA
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	select CRC32
- 	---help---
- 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,
-diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
-index a654736237a9..8fec41e57178 100644
---- a/drivers/net/ethernet/freescale/dpaa/Kconfig
-+++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
-@@ -2,6 +2,7 @@ menuconfig FSL_DPAA_ETH
- 	tristate "DPAA Ethernet"
- 	depends on FSL_DPAA && FSL_FMAN
- 	select PHYLIB
-+	select FIXED_PHY
- 	select FSL_FMAN_MAC
- 	---help---
- 	  Data Path Acceleration Architecture Ethernet driver,
+diff --git a/sound/core/hwdep.c b/sound/core/hwdep.c
+index 26e71cf05f1e..600ab2eb1b50 100644
+--- a/sound/core/hwdep.c
++++ b/sound/core/hwdep.c
+@@ -231,12 +231,12 @@ static int snd_hwdep_dsp_load(struct snd_hwdep *hw,
+ 	if (info.index >= 32)
+ 		return -EINVAL;
+ 	/* check whether the dsp was already loaded */
+-	if (hw->dsp_loaded & (1 << info.index))
++	if (hw->dsp_loaded & (1u << info.index))
+ 		return -EBUSY;
+ 	err = hw->ops.dsp_load(hw, &info);
+ 	if (err < 0)
+ 		return err;
+-	hw->dsp_loaded |= (1 << info.index);
++	hw->dsp_loaded |= (1u << info.index);
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
