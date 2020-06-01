@@ -2,384 +2,267 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53696C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA62BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCD920734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2E42076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z3BMWfYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgFAHzG (ORCPT
+        id S1728212AbgFAHz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:55:06 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59282 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728423AbgFAHzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:55:05 -0400
-IronPort-SDR: 0ptRb6RaXgqKFPUtMAvCVrWNoa4d6l8b5gNkGc06DXYXT5xXU+uaCTQ6fFvhtIgtMGnO0Q5olg
- YCjfrB8rIf6Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 00:54:34 -0700
-IronPort-SDR: DWEPvYCnd7O+mGGp4fS6gaw+wkzejVYUFT0gI0Efq//fTIGT9qmttc3lsmM/FWKHTcu8UNqYkq
- 2GXswSGBZUkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,460,1583222400"; 
-   d="scan'208";a="311879940"
-Received: from yhanin-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.43.17])
-  by FMSMGA003.fm.intel.com with ESMTP; 01 Jun 2020 00:54:26 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: [PATCH v32 18/21] x86/vdso: Implement a vDSO for Intel SGX enclave call
-Date:   Mon,  1 Jun 2020 10:52:15 +0300
-Message-Id: <20200601075218.65618-19-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200601075218.65618-1-jarkko.sakkinen@linux.intel.com>
-References: <20200601075218.65618-1-jarkko.sakkinen@linux.intel.com>
+        Mon, 1 Jun 2020 03:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgFAHz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 03:55:57 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF9BC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 00:55:56 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id r2so8525271ila.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:55:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/4Ao71gzvQHCdFHHe3hyekjZAwDBVfIqIDhFzMvDFm8=;
+        b=Z3BMWfYGX2JXNpH5KISREDKnnAHeCNtDESsa4ilZz3mt7JVIygCTxt9avuqXjikAZD
+         jRuUDcCnHfugD9N3kH5OB9WoE5m23uxMng1RzuMLAZ/Iy5etm6xVJHNI5lDeZK2mWPyD
+         qePoqyg6bQFj9/H0yV8TLpPWSFmgKBUswBZWhmdW3mj/XSsVdr22hp5Ore1II6B0NzGW
+         zLFKEwlTk/WmUjWePbBMi1oTb777PWDgTfwjbPN967aJBPjOmh1bt179h6UYCsUMHA4A
+         GRZO9pBgL1F5A6lixOnxq0e9sXQmAKjw5okcVoo54bu/vBVaeGSmMDi4H9mo7T/khDh4
+         tPQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/4Ao71gzvQHCdFHHe3hyekjZAwDBVfIqIDhFzMvDFm8=;
+        b=r+oGzceRfO3Uu04QxY+6/VboJn6ix7AFK+zeVEC1OT6ioRyKX7GmEGHJ7R36/GEVXk
+         ru/jJd+RLp6/XcD+ysI82QtmjR8TCRUFGJkGEGbUnGHn4Gq08T+19bJfLeQw6f/prNHV
+         KCPwKRUJzoK9bjxAq/nhGGAgsWxi8g+wc+k3n5NTGe3jK1jzIPy3BgBU8MqpgA8kKL0G
+         AQVNY04YSyaZcAw8eVi10PhOKUKxcecl9CV3k/x2eu0UNGjkxhEb3tBmwwxSq1DK6nua
+         ey2Mc3uNOZGk3tO35KmaRlBf0eNiLrmP9qR4rwKZbni0godRG1HMVz6XXylqTR2BbUo8
+         fLKQ==
+X-Gm-Message-State: AOAM530Fm0DxDlE4PofhzgePeeoM6w7fP3xxV/99O0Oy8je+mv59IfqD
+        ltFZsoKi7svXaXTbyX4helBLGphX9lzOR6Mn9WSipw==
+X-Google-Smtp-Source: ABdhPJzlsVwtMHflRbdLWI2gGAhs+tMSC0sSpLPufG4/xoi5QIWE5KnARUU+6fh/a3w8W8fBoDQyaU2iEWMNhAaol14=
+X-Received: by 2002:a92:cd49:: with SMTP id v9mr20681847ilq.19.1590998155745;
+ Mon, 01 Jun 2020 00:55:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200524224219.234847-1-jolsa@kernel.org> <20200524224219.234847-14-jolsa@kernel.org>
+In-Reply-To: <20200524224219.234847-14-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 1 Jun 2020 00:55:44 -0700
+Message-ID: <CAP-5=fVmCZZhHfHU8EFcKDvs8555cuTfyH3VpW_k-oX42S1svg@mail.gmail.com>
+Subject: Re: [PATCH 13/14] perf tests: Add parse metric test for ipc metric
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Sun, May 24, 2020 at 3:43 PM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding new test that process metrics code and checks
+> the expected results. Starting with easy ipc metric.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-An SGX runtime must be aware of the exceptions, which happen inside an
-enclave. Introduce a vDSO call that wraps EENTER/ERESUME cycle and returns
-the CPU exception back to the caller exactly when it happens.
+Acked-by: Ian Rogers <irogers@google.com>
 
-Kernel fixups the exception information to RDI, RSI and RDX. The SGX call
-vDSO handler fills this information to the user provided buffer or
-alternatively trigger user provided callback at the time of the exception.
+I wonder if there's a better organization with testing in
+pmu-events.c, expr.c and now parse-metric.c.
 
-The calling convention is custom and does not follow System V x86-64 ABI.
+Thanks,
+Ian
 
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Acked-by: Jethro Beekman <jethro@fortanix.com>
-Tested-by: Jethro Beekman <jethro@fortanix.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Cedric Xing <cedric.xing@intel.com>
-Signed-off-by: Cedric Xing <cedric.xing@intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- arch/x86/entry/vdso/Makefile             |   2 +
- arch/x86/entry/vdso/vdso.lds.S           |   1 +
- arch/x86/entry/vdso/vsgx_enter_enclave.S | 131 +++++++++++++++++++++++
- arch/x86/include/asm/enclu.h             |   8 ++
- arch/x86/include/uapi/asm/sgx.h          |  98 +++++++++++++++++
- 5 files changed, 240 insertions(+)
- create mode 100644 arch/x86/entry/vdso/vsgx_enter_enclave.S
- create mode 100644 arch/x86/include/asm/enclu.h
-
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 657e01d34d02..fa50c76a17a8 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -24,6 +24,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
- 
- # files to link into the vdso
- vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-+vobjs-$(VDSO64-y)		+= vsgx_enter_enclave.o
- 
- # files to link into kernel
- obj-y				+= vma.o extable.o
-@@ -90,6 +91,7 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS
- CFLAGS_REMOVE_vclock_gettime.o = -pg
- CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
- CFLAGS_REMOVE_vgetcpu.o = -pg
-+CFLAGS_REMOVE_vsgx_enter_enclave.o = -pg
- 
- #
- # X32 processes use x32 vDSO to access 64bit kernel data.
-diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-index 36b644e16272..4bf48462fca7 100644
---- a/arch/x86/entry/vdso/vdso.lds.S
-+++ b/arch/x86/entry/vdso/vdso.lds.S
-@@ -27,6 +27,7 @@ VERSION {
- 		__vdso_time;
- 		clock_getres;
- 		__vdso_clock_getres;
-+		__vdso_sgx_enter_enclave;
- 	local: *;
- 	};
- }
-diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-new file mode 100644
-index 000000000000..be7e467e1efb
---- /dev/null
-+++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-@@ -0,0 +1,131 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/linkage.h>
-+#include <asm/export.h>
-+#include <asm/errno.h>
-+#include <asm/enclu.h>
-+
-+#include "extable.h"
-+
-+#define EX_LEAF		0*8
-+#define EX_TRAPNR	0*8+4
-+#define EX_ERROR_CODE	0*8+6
-+#define EX_ADDRESS	1*8
-+
-+.code64
-+.section .text, "ax"
-+
-+SYM_FUNC_START(__vdso_sgx_enter_enclave)
-+	/* Prolog */
-+	.cfi_startproc
-+	push	%rbp
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%rbp, 0
-+	mov	%rsp, %rbp
-+	.cfi_def_cfa_register	%rbp
-+	push	%rbx
-+	.cfi_rel_offset		%rbx, -8
-+
-+	mov	%ecx, %eax
-+.Lenter_enclave:
-+	/* EENTER <= leaf <= ERESUME */
-+	cmp	$EENTER, %eax
-+	jb	.Linvalid_leaf
-+	cmp	$ERESUME, %eax
-+	ja	.Linvalid_leaf
-+
-+	/* Load TCS and AEP */
-+	mov	0x10(%rbp), %rbx
-+	lea	.Lasync_exit_pointer(%rip), %rcx
-+
-+	/* Single ENCLU serving as both EENTER and AEP (ERESUME) */
-+.Lasync_exit_pointer:
-+.Lenclu_eenter_eresume:
-+	enclu
-+
-+	/* EEXIT jumps here unless the enclave is doing something fancy. */
-+	xor	%eax, %eax
-+
-+	/* Invoke userspace's exit handler if one was provided. */
-+.Lhandle_exit:
-+	cmp	$0, 0x20(%rbp)
-+	jne	.Linvoke_userspace_handler
-+
-+.Lout:
-+	pop	%rbx
-+	leave
-+	.cfi_def_cfa		%rsp, 8
-+	ret
-+
-+	/* The out-of-line code runs with the pre-leave stack frame. */
-+	.cfi_def_cfa		%rbp, 16
-+
-+.Linvalid_leaf:
-+	mov	$(-EINVAL), %eax
-+	jmp	.Lout
-+
-+.Lhandle_exception:
-+	mov	0x18(%rbp), %rcx
-+	test    %rcx, %rcx
-+	je	.Lskip_exception_info
-+
-+	/* Fill optional exception info. */
-+	mov	%eax, EX_LEAF(%rcx)
-+	mov	%di,  EX_TRAPNR(%rcx)
-+	mov	%si,  EX_ERROR_CODE(%rcx)
-+	mov	%rdx, EX_ADDRESS(%rcx)
-+.Lskip_exception_info:
-+	mov	$(-EFAULT), %eax
-+	jmp	.Lhandle_exit
-+
-+.Linvoke_userspace_handler:
-+	/* Pass the untrusted RSP (at exit) to the callback via %rcx. */
-+	mov	%rsp, %rcx
-+
-+	/* Save the untrusted RSP offset in %rbx (non-volatile register). */
-+	mov	%rsp, %rbx
-+	and	$0xf, %rbx
-+
-+	/*
-+	 * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
-+	 * _after_ pushing the parameters on the stack, hence the bonus push.
-+	 */
-+	and	$-0x10, %rsp
-+	push	%rax
-+
-+	/* Push @e, the "return" value and @tcs as params to the callback. */
-+	push	0x18(%rbp)
-+	push	%rax
-+	push	0x10(%rbp)
-+
-+	/* Clear RFLAGS.DF per x86_64 ABI */
-+	cld
-+
-+	/* Load the callback pointer to %rax and invoke it via retpoline. */
-+	mov	0x20(%rbp), %rax
-+	call	.Lretpoline
-+
-+	/* Undo the post-exit %rsp adjustment. */
-+	lea	0x20(%rsp, %rbx), %rsp
-+
-+	/*
-+	 * If the return from callback is zero or negative, return immediately,
-+	 * else re-execute ENCLU with the postive return value interpreted as
-+	 * the requested ENCLU leaf.
-+	 */
-+	cmp	$0, %eax
-+	jle	.Lout
-+	jmp	.Lenter_enclave
-+
-+.Lretpoline:
-+	call	2f
-+1:	pause
-+	lfence
-+	jmp	1b
-+2:	mov	%rax, (%rsp)
-+	ret
-+	.cfi_endproc
-+
-+_ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
-+
-+SYM_FUNC_END(__vdso_sgx_enter_enclave)
-diff --git a/arch/x86/include/asm/enclu.h b/arch/x86/include/asm/enclu.h
-new file mode 100644
-index 000000000000..06157b3e9ede
---- /dev/null
-+++ b/arch/x86/include/asm/enclu.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_ENCLU_H
-+#define _ASM_X86_ENCLU_H
-+
-+#define EENTER	0x02
-+#define ERESUME	0x03
-+
-+#endif /* _ASM_X86_ENCLU_H */
-diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-index 57d0d30c79b3..3760e5d5dc0c 100644
---- a/arch/x86/include/uapi/asm/sgx.h
-+++ b/arch/x86/include/uapi/asm/sgx.h
-@@ -74,4 +74,102 @@ struct sgx_enclave_set_attribute {
- 	__u64 attribute_fd;
- };
- 
-+/**
-+ * struct sgx_enclave_exception - structure to report exceptions encountered in
-+ *				  __vdso_sgx_enter_enclave()
-+ *
-+ * @leaf:	ENCLU leaf from \%eax at time of exception
-+ * @trapnr:	exception trap number, a.k.a. fault vector
-+ * @error_code:	exception error code
-+ * @address:	exception address, e.g. CR2 on a #PF
-+ * @reserved:	reserved for future use
-+ */
-+struct sgx_enclave_exception {
-+	__u32 leaf;
-+	__u16 trapnr;
-+	__u16 error_code;
-+	__u64 address;
-+	__u64 reserved[2];
-+};
-+
-+/**
-+ * typedef sgx_enclave_exit_handler_t - Exit handler function accepted by
-+ *					__vdso_sgx_enter_enclave()
-+ *
-+ * @rdi:	RDI at the time of enclave exit
-+ * @rsi:	RSI at the time of enclave exit
-+ * @rdx:	RDX at the time of enclave exit
-+ * @ursp:	RSP at the time of enclave exit (untrusted stack)
-+ * @r8:		R8 at the time of enclave exit
-+ * @r9:		R9 at the time of enclave exit
-+ * @tcs:	Thread Control Structure used to enter enclave
-+ * @ret:	0 on success (EEXIT), -EFAULT on an exception
-+ * @e:		Pointer to struct sgx_enclave_exception (as provided by caller)
-+ */
-+typedef int (*sgx_enclave_exit_handler_t)(long rdi, long rsi, long rdx,
-+					  long ursp, long r8, long r9,
-+					  void *tcs, int ret,
-+					  struct sgx_enclave_exception *e);
-+
-+/**
-+ * __vdso_sgx_enter_enclave() - Enter an SGX enclave
-+ * @rdi:	Pass-through value for RDI
-+ * @rsi:	Pass-through value for RSI
-+ * @rdx:	Pass-through value for RDX
-+ * @leaf:	ENCLU leaf, must be EENTER or ERESUME
-+ * @r8:		Pass-through value for R8
-+ * @r9:		Pass-through value for R9
-+ * @tcs:	TCS, must be non-NULL
-+ * @e:		Optional struct sgx_enclave_exception instance
-+ * @handler:	Optional enclave exit handler
-+ *
-+ * NOTE: __vdso_sgx_enter_enclave() does not ensure full compliance with the
-+ * x86-64 ABI, e.g. doesn't explicitly clear EFLAGS.DF after EEXIT.  Except for
-+ * non-volatile general purpose registers, preserving/setting state in
-+ * accordance with the x86-64 ABI is the responsibility of the enclave and its
-+ * runtime, i.e. __vdso_sgx_enter_enclave() cannot be called from C code
-+ * without careful consideration by both the enclave and its runtime.
-+ *
-+ * All general purpose registers except RAX, RBX and RCX are passed as-is to
-+ * the enclave.  RAX, RBX and RCX are consumed by EENTER and ERESUME and are
-+ * loaded with @leaf, asynchronous exit pointer, and @tcs respectively.
-+ *
-+ * RBP and the stack are used to anchor __vdso_sgx_enter_enclave() to the
-+ * pre-enclave state, e.g. to retrieve @e and @handler after an enclave exit.
-+ * All other registers are available for use by the enclave and its runtime,
-+ * e.g. an enclave can push additional data onto the stack (and modify RSP) to
-+ * pass information to the optional exit handler (see below).
-+ *
-+ * Most exceptions reported on ENCLU, including those that occur within the
-+ * enclave, are fixed up and reported synchronously instead of being delivered
-+ * via a standard signal. Debug Exceptions (#DB) and Breakpoints (#BP) are
-+ * never fixed up and are always delivered via standard signals. On synchrously
-+ * reported exceptions, -EFAULT is returned and details about the exception are
-+ * recorded in @e, the optional sgx_enclave_exception struct.
-+
-+ * If an exit handler is provided, the handler will be invoked on synchronous
-+ * exits from the enclave and for all synchronously reported exceptions. In
-+ * latter case, @e is filled prior to invoking the handler.
-+ *
-+ * The exit handler's return value is interpreted as follows:
-+ *  >0:		continue, restart __vdso_sgx_enter_enclave() with @ret as @leaf
-+ *   0:		success, return @ret to the caller
-+ *  <0:		error, return @ret to the caller
-+ *
-+ * The exit handler may transfer control, e.g. via longjmp() or C++ exception,
-+ * without returning to __vdso_sgx_enter_enclave().
-+ *
-+ * Return:
-+ *  0 on success,
-+ *  -EINVAL if ENCLU leaf is not allowed,
-+ *  -EFAULT if an exception occurs on ENCLU or within the enclave
-+ *  -errno for all other negative values returned by the userspace exit handler
-+ */
-+typedef int (*vdso_sgx_enter_enclave_t)(unsigned long rdi, unsigned long rsi,
-+					unsigned long rdx, unsigned int leaf,
-+					unsigned long r8,  unsigned long r9,
-+					void *tcs,
-+					struct sgx_enclave_exception *e,
-+					sgx_enclave_exit_handler_t handler);
-+
- #endif /* _UAPI_ASM_X86_SGX_H */
--- 
-2.25.1
-
+> ---
+>  tools/perf/tests/Build          |   1 +
+>  tools/perf/tests/builtin-test.c |   4 ++
+>  tools/perf/tests/parse-metric.c | 117 ++++++++++++++++++++++++++++++++
+>  tools/perf/tests/tests.h        |   1 +
+>  4 files changed, 123 insertions(+)
+>  create mode 100644 tools/perf/tests/parse-metric.c
+>
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index c75557aeef0e..bb7c2d8364d1 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -57,6 +57,7 @@ perf-y += maps.o
+>  perf-y += time-utils-test.o
+>  perf-y += genelf.o
+>  perf-y += api-io.o
+> +perf-y += parse-metric.o
+>
+>  $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
+>         $(call rule_mkdir)
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index a9daaeb9fd27..bf20abdca0b0 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -324,6 +324,10 @@ static struct test generic_tests[] = {
+>                 .desc = "maps__merge_in",
+>                 .func = test__maps__merge_in,
+>         },
+> +       {
+> +               .desc = "Parse and process metrics",
+> +               .func = test__parse_metric,
+> +       },
+>         {
+>                 .func = NULL,
+>         },
+> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+> new file mode 100644
+> index 000000000000..3005d27c5c48
+> --- /dev/null
+> +++ b/tools/perf/tests/parse-metric.c
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/compiler.h>
+> +#include <string.h>
+> +#include "metricgroup.h"
+> +#include "tests.h"
+> +#include "pmu-events/pmu-events.h"
+> +#include "evlist.h"
+> +#include "rblist.h"
+> +#include "debug.h"
+> +#include "expr.h"
+> +#include "stat.h"
+> +
+> +static struct pmu_event pme_test[] = {
+> +{
+> +       .metric_expr    = "inst_retired.any / cpu_clk_unhalted.thread",
+> +       .metric_name    = "IPC",
+> +},
+> +};
+> +
+> +static struct pmu_events_map map = {
+> +       .cpuid          = "test",
+> +       .version        = "1",
+> +       .type           = "core",
+> +       .table          = pme_test,
+> +};
+> +
+> +static double compute_single(struct rblist *metric_events, struct evsel *evsel,
+> +                            struct runtime_stat *st)
+> +{
+> +       struct metric_event *me;
+> +
+> +       me = metricgroup__lookup(metric_events, evsel, false);
+> +       if (me != NULL) {
+> +               struct metric_expr *mexp;
+> +
+> +               mexp = list_first_entry(&me->head, struct metric_expr, nd);
+> +               return test_generic_metric(mexp, 0, st);
+> +       }
+> +
+> +       return 0.;
+> +}
+> +
+> +struct value {
+> +       const char      *event;
+> +       u64              val;
+> +};
+> +
+> +static u64 find_value(const char *name, struct value *values)
+> +{
+> +       struct value *v = values;
+> +
+> +       while (v->event) {
+> +               if (!strcmp(name, v->event))
+> +                       return v->val;
+> +               v++;
+> +       };
+> +
+> +       return 0;
+> +}
+> +
+> +static void load_runtime_stat(struct runtime_stat *st, struct evlist *evlist,
+> +                             struct value *values)
+> +{
+> +       struct evsel *evsel;
+> +       u64 count;
+> +
+> +       evlist__for_each_entry(evlist, evsel) {
+> +               count = find_value(evsel->name, values);
+> +               perf_stat__update_shadow_stats(evsel, count, 0, st);
+> +       }
+> +}
+> +
+> +static int test_ipc(void)
+> +{
+> +       double ratio;
+> +       struct rblist metric_events = {
+> +               .nr_entries = 0,
+> +       };
+> +       struct evlist *evlist;
+> +       struct evsel *evsel;
+> +       struct value vals[] = {
+> +               { .event = "inst_retired.any",        .val = 300 },
+> +               { .event = "cpu_clk_unhalted.thread", .val = 200 },
+> +               { 0 },
+> +       };
+> +       struct runtime_stat st;
+> +       int err;
+> +
+> +       evlist = evlist__new();
+> +       if (!evlist)
+> +               return -1;
+> +
+> +       err = metricgroup__parse_groups_test(evlist, &map,
+> +                                            "IPC",
+> +                                            false, false,
+> +                                            &metric_events);
+> +
+> +       TEST_ASSERT_VAL("failed to parse metrics", err == 0);
+> +
+> +       runtime_stat__init(&st);
+> +       load_runtime_stat(&st, evlist, vals);
+> +
+> +       evsel = evlist__first(evlist);
+> +       ratio = compute_single(&metric_events, evsel, &st);
+> +
+> +       TEST_ASSERT_VAL("IPC failed, wrong ratio", ratio == 1.5);
+> +
+> +       runtime_stat__exit(&st);
+> +       evlist__delete(evlist);
+> +       return 0;
+> +}
+> +
+> +int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
+> +{
+> +       TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
+> +       return 0;
+> +}
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index 6c6c4b6a4796..0a7853b72240 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -117,6 +117,7 @@ int test__maps__merge_in(struct test *t, int subtest);
+>  int test__time_utils(struct test *t, int subtest);
+>  int test__jit_write_elf(struct test *test, int subtest);
+>  int test__api_io(struct test *test, int subtest);
+> +int test__parse_metric(struct test *test, int subtest);
+>
+>  bool test__bp_signal_is_supported(void);
+>  bool test__bp_account_is_supported(void);
+> --
+> 2.25.4
+>
