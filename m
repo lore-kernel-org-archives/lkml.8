@@ -2,138 +2,162 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80192C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B580520738
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591027061;
-	bh=Zyr2z8ZGCJyccsVIOQJpyoC3X2N4M3M099fHdvE5f5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LbHGGeiz7jLlEzsVt1+gqJ+Sm3YnylXQ4JUOqP7bmVUymRpDh8kzedqA6AiONpfEn
-	 fmRpjhHX1MgQNWWof0x/G3U9DpxDnAVYHQ/dw/bA9txzPxDfZiyQXfkb7d6T7/b/IA
-	 iFqFYQREZ3hEjr6huR9xVumBhglovPJXOmJGUNVs=
+	by mail.kernel.org (Postfix) with ESMTP id 49FFD20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgFAP5l (ORCPT
+        id S1727804AbgFAP6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgFAP5k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:57:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AAC1C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 08:57:40 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j198so294015wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 08:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=trNZBbz3zJJbyAjn3/he6DtdhTM/y9W04rrvoCnUZ74=;
-        b=gTY9Q51xv7pfrQuLRtJRS+I1OgkWNWrTh1dnu9hz25eUPPOv7Ay3QR4ZPd2VzCJQVg
-         cLmhE6PWpYM5CT3/uGljsX/j+IoiKrEsiFH3jiE6TDvHmDx9J+KAvS8hL2R2KchUfVV/
-         P1RiF91WrCgu1ywuka7pUw7ZOLOParfIOacWCSWst4ss4OCKanyAoZYc1UuEy2isAh4v
-         UdGvIV83iTUspLnbT4oyPqGJjBpaBXDewibwj6rwq9xhF5qcSfXSKXZMw6lkJNdL27fU
-         CWfRB+wQahbDZ3xmsnmif7RGulIN+MN2lsLojN2FBHxp8cQ/X3czd9BYpZIGlRUIDS3V
-         wWLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=trNZBbz3zJJbyAjn3/he6DtdhTM/y9W04rrvoCnUZ74=;
-        b=YAKgRZ5tZCYSfe2w4xTyRRUZQgbG25s7VFGQ+Bnxbz0aONkdMbfgykd7VQph3WLQEJ
-         ZMs3Sh0Rupc6/Xjn1BJGxIopAuQ7aBtl8RAVeNmMxFsFzdGrU2nd8x6viAoJAQdlKzqX
-         iagDi4huFadAFHAyZw03/GCnhAw45cvA+iHOhCUQuJCRpOOPRSRvJ4hBxj2tKHNk2xd7
-         ipMFSt32GCWAHsa9TR+BLYVp20h6NpH9zVPdrrMgxU8akFUOjTdadlq5lBHbc5+Uo47U
-         Ut4sQB8Z5zD+EhHGLkPL+W2VtE0vMi1onryDu8rco1N1q3bpoVEVYJXnCIl1m3VZ+yMN
-         XkWg==
-X-Gm-Message-State: AOAM533f+03j27jXu6ZJVdWA1oDzAtvSFM5c3V1EYhFKYO2nltDpWfrV
-        zbWpRX//YfPmL3Avckh7hc6drywI
-X-Google-Smtp-Source: ABdhPJxRvjz/C1WKq8vFhNyPU2qLtrTpj3R+9u6VZuJz9LJ+38j9lNdGn2V5Ut4OBqmQsATAIS+1Iw==
-X-Received: by 2002:a1c:2e16:: with SMTP id u22mr37127wmu.168.1591027059072;
-        Mon, 01 Jun 2020 08:57:39 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id d5sm22089081wrb.14.2020.06.01.08.57.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 08:57:38 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 17:57:36 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] EFI changes for v5.8
-Message-ID: <20200601155736.GA1698764@gmail.com>
-References: <20200601132443.GA796373@gmail.com>
- <CAMj1kXEH+M6j0W8GbwmJ6B2g1Kxoj01XW0P2a5_1OBVFoiF7ZA@mail.gmail.com>
+        Mon, 1 Jun 2020 11:58:25 -0400
+Received: from mga01.intel.com ([192.55.52.88]:57197 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgFAP6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 11:58:25 -0400
+IronPort-SDR: nKnL9GXgNdV7y1eR79tXKRO4yaLnrkVrYkmDWmke23NxWzkpwXo3N6yMK/gGonyo/BMl8c272k
+ XrQ4rZdPwBgg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 08:58:24 -0700
+IronPort-SDR: MjXikgx+FgiPhATo4dDoBGA/8PaAOvSGuW8QPX9BBFThLnLJb83rY9OTd8ZMdHdz0hatxNby7j
+ n0yb0XyI8yrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,461,1583222400"; 
+   d="scan'208";a="347081992"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2020 08:58:24 -0700
+Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
+        by linux.intel.com (Postfix) with ESMTP id 81706580646;
+        Mon,  1 Jun 2020 08:58:22 -0700 (PDT)
+Subject: [PATCH v5 08/13] perf stat: extend -D,--delay option with -1 value
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <9a0ef5c9-e66c-bd64-5f9d-ef3d4a135e66@linux.intel.com>
+Date:   Mon, 1 Jun 2020 18:58:21 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEH+M6j0W8GbwmJ6B2g1Kxoj01XW0P2a5_1OBVFoiF7ZA@mail.gmail.com>
+In-Reply-To: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+Extend -D,--delay option with -1 value to start monitoring with
+events disabled to be enabled later by enable command provided
+via control file descriptor.
 
-> On Mon, 1 Jun 2020 at 15:24, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > Linus,
-> >
-> > Please pull the latest efi/core git tree from:
-> >
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-core-2020-06-01
-> >
-> >    # HEAD: e9524fb97ab5b41b85e1d3408f8e513433798f3c efi/x86: Don't blow away existing initrd
-> >
-> > The EFI changes for this cycle are:
-> >
-> >  - preliminary changes for RISC-V
-> >  - Add support for setting the resolution on the EFI framebuffer
-> >  - Simplify kernel image loading for arm64
-> >  - Move .bss into .data via the linker script instead of relying on symbol
-> >    annotations.
-> >  - Get rid of __pure getters to access global variables
-> >  - Clean up the config table matching arrays
-> >  - Rename pr_efi/pr_efi_err to efi_info/efi_err, and use them consistently
-> >  - Simplify and unify initrd loading
-> >  - Parse the builtin command line on x86 (if provided)
-> >  - Implement printk() support, including support for wide character strings
-> >  - Simplify GDT handling in early mixed mode thunking code
-> >  - Some other minor fixes and cleanups
-> >
-> >  Thanks,
-> >
-> >         Ingo
-> >
-> 
-> Please note that Stephen reported a conflict with the ARM32 tree, due
-> to the replacement of all instances of pr_efi_err() with efi_err(),
-> including a couple in some ARM code that is being modified.
-> 
-> https://lore.kernel.org/linux-next/20200529152907.2205a298@canb.auug.org.au/
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-stat.txt |  5 +++--
+ tools/perf/builtin-stat.c              | 18 ++++++++++++++----
+ tools/perf/util/evlist.h               |  3 +++
+ tools/perf/util/stat.h                 |  2 +-
+ 4 files changed, 21 insertions(+), 7 deletions(-)
 
-Indeed!
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index b029ee728a0b..9f32f6cd558d 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -238,8 +238,9 @@ mode, use --per-node in addition to -a. (system-wide).
+ 
+ -D msecs::
+ --delay msecs::
+-After starting the program, wait msecs before measuring. This is useful to
+-filter out the startup phase of the program, which is often very different.
++After starting the program, wait msecs before measuring (-1: start with events
++disabled). This is useful to filter out the startup phase of the program,
++which is often very different.
+ 
+ -T::
+ --transaction::
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 8eeaf92912d8..d0ddaa5fac96 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -441,16 +441,26 @@ static bool process_timeout(bool timeout, unsigned int interval, int *times)
+ 
+ static void enable_counters(void)
+ {
+-	if (stat_config.initial_delay)
++	if (stat_config.initial_delay < 0) {
++		pr_info(EVLIST_DISABLED_MSG);
++		return;
++	}
++
++	if (stat_config.initial_delay > 0) {
++		pr_info(EVLIST_DISABLED_MSG);
+ 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
++	}
+ 
+ 	/*
+ 	 * We need to enable counters only if:
+ 	 * - we don't have tracee (attaching to task or cpu)
+ 	 * - we have initial delay configured
+ 	 */
+-	if (!target__none(&target) || stat_config.initial_delay)
++	if (!target__none(&target) || stat_config.initial_delay) {
+ 		evlist__enable(evsel_list);
++		if (stat_config.initial_delay > 0)
++			pr_info(EVLIST_ENABLED_MSG);
++	}
+ }
+ 
+ static void disable_counters(void)
+@@ -1007,8 +1017,8 @@ static struct option stat_options[] = {
+ 		     "aggregate counts per thread", AGGR_THREAD),
+ 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
+ 		     "aggregate counts per numa node", AGGR_NODE),
+-	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
+-		     "ms to wait before starting measurement after program start"),
++	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
++		    "ms to wait before starting measurement after program start (-1: start with events disabled)"),
+ 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
+ 			"Only print computed metrics. No raw values", enable_metric_only),
+ 	OPT_BOOLEAN(0, "metric-no-group", &stat_config.metric_no_group,
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index bccf0a970371..7c3726a685f5 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -377,4 +377,7 @@ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
+ int evlist__finalize_ctlfd(struct evlist *evlist);
+ int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
+ 
++#define EVLIST_ENABLED_MSG "Events enabled\n"
++#define EVLIST_DISABLED_MSG "Events disabled\n"
++
+ #endif /* __PERF_EVLIST_H */
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index f75ae679eb28..626421ef35c2 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -116,7 +116,7 @@ struct perf_stat_config {
+ 	FILE			*output;
+ 	unsigned int		 interval;
+ 	unsigned int		 timeout;
+-	unsigned int		 initial_delay;
++	int			 initial_delay;
+ 	unsigned int		 unit_width;
+ 	unsigned int		 metric_only_len;
+ 	int			 times;
+-- 
+2.24.1
 
-Since these semantic conflicts and build failures would not trigger on 
-Linus's test builds normally, it might make sense to double check that 
-this comes up empty after both the EFI and the arm32 merge:
-
-  thule:~/tip> git grep -w pr_efi_err
-  thule:~/tip> 
-
-Thanks,
-
-	Ingo
