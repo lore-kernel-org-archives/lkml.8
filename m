@@ -2,241 +2,145 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A95C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEFE3206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037405;
-	bh=CdjpLSxhOy0T2GO/bKHD8333VdT7Rwpn/h9YDR5VHgo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tGp8FeirSXYc6g34NQQng4+HK2wtufSCl1omWGbkSRy4196ycxDraOCqJLPgxAwTX
-	 d1JDMLfKOoSKqy8vOoGVv9DKbQXtyVKjJqBTrI+MR8TII1DmGH6Hsz9VsSjGTIrba0
-	 FrDnM1h5FAd68QdWe8QVXtcPmdePO9OqYWvwfoqg=
+	by mail.kernel.org (Postfix) with ESMTP id 43F50206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:50:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWHuT2rA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgFASuE (ORCPT
+        id S1730440AbgFASGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:50:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730470AbgFASGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:06:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 1 Jun 2020 14:06:18 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43391 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730370AbgFASFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591034749;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=osjdztueMuaAwG61qi79PUuaa4pVp/qOeP56bfj88L4=;
+        b=XWHuT2rApHW2jLm8wOesofWZh+6w5A1BNR4c6B+T0VB5j4sBMF0n0yilJfj6FdkFX2fQRK
+        NUW85ydYkemkbMc0V1FS4wcKDHGF9MGHvi2VIUCX4NVHFPkmQr21sbEKnT0xpYuX6OwGKl
+        vfMaLTq7sl/HBGtyhBpBr0XIdA9AxTg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-ayfnyAN1PO6nfg34SZesjA-1; Mon, 01 Jun 2020 14:05:47 -0400
+X-MC-Unique: ayfnyAN1PO6nfg34SZesjA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44A3D2068D;
-        Mon,  1 Jun 2020 18:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034790;
-        bh=CdjpLSxhOy0T2GO/bKHD8333VdT7Rwpn/h9YDR5VHgo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YEpnBLiETd/eSiXGrn99j3UqV1ce8fFo+lisazpZnqVV5P64XUmjbDACYjUqS3nUj
-         yIFTV17vGFNNQsaU1ANALfnon3D6YfkomtOwtSdj23IBzgw+i/dcm4gldBvOVDkXBW
-         9jL4B1z/XaT9p+fwNV1EC522GB7ELUrg+Xf2Kl4Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 015/142] net/tls: fix race condition causing kernel panic
-Date:   Mon,  1 Jun 2020 19:52:53 +0200
-Message-Id: <20200601174039.492406918@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
-References: <20200601174037.904070960@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DF86107B266;
+        Mon,  1 Jun 2020 18:05:45 +0000 (UTC)
+Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D44F11002394;
+        Mon,  1 Jun 2020 18:05:40 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 13:05:38 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Cc:     huawei.libin@huawei.com, xiexiuqi@huawei.com,
+        cj.chengjian@huawei.com, mingo@redhat.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        mbenes@suse.cz, devel@etsukata.com, viro@zeniv.linux.org.uk,
+        esyr@redhat.com
+Subject: Re: Question: livepatch failed for new fork() task stack unreliable
+Message-ID: <20200601180538.o5agg5trbdssqken@treble>
+References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
+ <20200529174433.wpkknhypx2bmjika@treble>
+ <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+On Sat, May 30, 2020 at 10:21:19AM +0800, Wangshaobo (bobo) wrote:
+> 1) when a user mode task just fork start excuting ret_from_fork() till
+> schedule_tail, unwind_next_frame found
+> 
+> orc->sp_reg is ORC_REG_UNDEFINED but orc->end not equals zero, this time
+> arch_stack_walk_reliable()
+> 
+> terminates it's backtracing loop for unwind_done() return true. then 'if
+> (!(task->flags & (PF_KTHREAD | PF_IDLE)))'
+> 
+> in arch_stack_walk_reliable() true and return -EINVAL after.
+> 
+> * The stack trace looks like that:
+> 
+> ret_from_fork
+> 
+>       -=> UNWIND_HINT_EMPTY
+> 
+>       -=> schedule_tail             /* schedule out */
+> 
+>       ...
+> 
+>       -=> UNWIND_HINT_REGS      /*  UNDO */
 
-[ Upstream commit 0cada33241d9de205522e3858b18e506ca5cce2c ]
+Yes, makes sense.
 
-tls_sw_recvmsg() and tls_decrypt_done() can be run concurrently.
-// tls_sw_recvmsg()
-	if (atomic_read(&ctx->decrypt_pending))
-		crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
-	else
-		reinit_completion(&ctx->async_wait.completion);
+> 2) when using call_usermodehelper_exec_async() to create a user mode task,
+> ret_from_fork() still not exec whereas
+> 
+> the task has been scheduled in __schedule(), at this time, orc->sp_reg is
+> ORC_REG_UNDEFINED but orc->end equals zero,
+> 
+> unwind_error() return true and also terminates arch_stack_walk_reliable()'s
+> backtracing loop, end up return from
+> 
+> 'if (unwind_error())' branch.
+> 
+> * The stack trace looks like that:
+> 
+> -=> call_usermodehelper_exec
+> 
+>                  -=> do_exec
+> 
+>                            -=> search_binary_handler
+> 
+>                                       -=> load_elf_binary
+> 
+>                                                 -=> elf_map
+> 
+>                                                          -=> vm_mmap_pgoff
+> 
+> -=> down_write_killable
+> 
+> -=> _cond_resched
+> 
+>              -=> __schedule           /* scheduled to work */
+> 
+> -=> ret_from_fork       /* UNDO */
 
-//tls_decrypt_done()
-  	pending = atomic_dec_return(&ctx->decrypt_pending);
+I don't quite follow the stacktrace, but it sounds like the issue is the
+same as the first one you originally reported:
 
-  	if (!pending && READ_ONCE(ctx->async_notify))
-  		complete(&ctx->async_wait.completion);
+> 1) The task was not actually scheduled to excute, at this time
+> UNWIND_HINT_EMPTY in ret_from_fork() has not reset unwind_hint, it's
+> sp_reg and end field remain default value and end up throwing an error
+> in unwind_next_frame() when called by arch_stack_walk_reliable();
 
-Consider the scenario tls_decrypt_done() is about to run complete()
+Or am I misunderstanding?
 
-	if (!pending && READ_ONCE(ctx->async_notify))
+And to reiterate, these are not "livepatch failures", right?  Livepatch
+doesn't fail when stack_trace_save_tsk_reliable() returns an error.  It
+recovers gracefully and tries again later.
 
-and tls_sw_recvmsg() reads decrypt_pending == 0, does reinit_completion(),
-then tls_decrypt_done() runs complete(). This sequence of execution
-results in wrong completion. Consequently, for next decrypt request,
-it will not wait for completion, eventually on connection close, crypto
-resources freed, there is no way to handle pending decrypt response.
-
-This race condition can be avoided by having atomic_read() mutually
-exclusive with atomic_dec_return(),complete().Intoduced spin lock to
-ensure the mutual exclution.
-
-Addressed similar problem in tx direction.
-
-v1->v2:
-- More readable commit message.
-- Corrected the lock to fix new race scenario.
-- Removed barrier which is not needed now.
-
-Fixes: a42055e8d2c3 ("net/tls: Add support for async encryption of records for performance")
-Signed-off-by: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tls.h |    4 ++++
- net/tls/tls_sw.c  |   33 +++++++++++++++++++++++++++------
- 2 files changed, 31 insertions(+), 6 deletions(-)
-
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -157,6 +157,8 @@ struct tls_sw_context_tx {
- 	struct tls_rec *open_rec;
- 	struct list_head tx_list;
- 	atomic_t encrypt_pending;
-+	/* protect crypto_wait with encrypt_pending */
-+	spinlock_t encrypt_compl_lock;
- 	int async_notify;
- 	int async_capable;
- 
-@@ -177,6 +179,8 @@ struct tls_sw_context_rx {
- 	int async_capable;
- 	bool decrypted;
- 	atomic_t decrypt_pending;
-+	/* protect crypto_wait with decrypt_pending*/
-+	spinlock_t decrypt_compl_lock;
- 	bool async_notify;
- };
- 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -203,10 +203,12 @@ static void tls_decrypt_done(struct cryp
- 
- 	kfree(aead_req);
- 
-+	spin_lock_bh(&ctx->decrypt_compl_lock);
- 	pending = atomic_dec_return(&ctx->decrypt_pending);
- 
--	if (!pending && READ_ONCE(ctx->async_notify))
-+	if (!pending && ctx->async_notify)
- 		complete(&ctx->async_wait.completion);
-+	spin_unlock_bh(&ctx->decrypt_compl_lock);
- }
- 
- static int tls_do_decryption(struct sock *sk,
-@@ -464,10 +466,12 @@ static void tls_encrypt_done(struct cryp
- 			ready = true;
- 	}
- 
-+	spin_lock_bh(&ctx->encrypt_compl_lock);
- 	pending = atomic_dec_return(&ctx->encrypt_pending);
- 
--	if (!pending && READ_ONCE(ctx->async_notify))
-+	if (!pending && ctx->async_notify)
- 		complete(&ctx->async_wait.completion);
-+	spin_unlock_bh(&ctx->encrypt_compl_lock);
- 
- 	if (!ready)
- 		return;
-@@ -923,6 +927,7 @@ int tls_sw_sendmsg(struct sock *sk, stru
- 	int num_zc = 0;
- 	int orig_size;
- 	int ret = 0;
-+	int pending;
- 
- 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
- 		return -EOPNOTSUPP;
-@@ -1089,13 +1094,19 @@ trim_sgl:
- 		goto send_end;
- 	} else if (num_zc) {
- 		/* Wait for pending encryptions to get completed */
--		smp_store_mb(ctx->async_notify, true);
-+		spin_lock_bh(&ctx->encrypt_compl_lock);
-+		ctx->async_notify = true;
- 
--		if (atomic_read(&ctx->encrypt_pending))
-+		pending = atomic_read(&ctx->encrypt_pending);
-+		spin_unlock_bh(&ctx->encrypt_compl_lock);
-+		if (pending)
- 			crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
- 		else
- 			reinit_completion(&ctx->async_wait.completion);
- 
-+		/* There can be no concurrent accesses, since we have no
-+		 * pending encrypt operations
-+		 */
- 		WRITE_ONCE(ctx->async_notify, false);
- 
- 		if (ctx->async_wait.err) {
-@@ -1724,6 +1735,7 @@ int tls_sw_recvmsg(struct sock *sk,
- 	bool is_kvec = iov_iter_is_kvec(&msg->msg_iter);
- 	bool is_peek = flags & MSG_PEEK;
- 	int num_async = 0;
-+	int pending;
- 
- 	flags |= nonblock;
- 
-@@ -1886,8 +1898,11 @@ pick_next_record:
- recv_end:
- 	if (num_async) {
- 		/* Wait for all previously submitted records to be decrypted */
--		smp_store_mb(ctx->async_notify, true);
--		if (atomic_read(&ctx->decrypt_pending)) {
-+		spin_lock_bh(&ctx->decrypt_compl_lock);
-+		ctx->async_notify = true;
-+		pending = atomic_read(&ctx->decrypt_pending);
-+		spin_unlock_bh(&ctx->decrypt_compl_lock);
-+		if (pending) {
- 			err = crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
- 			if (err) {
- 				/* one of async decrypt failed */
-@@ -1899,6 +1914,10 @@ recv_end:
- 		} else {
- 			reinit_completion(&ctx->async_wait.completion);
- 		}
-+
-+		/* There can be no concurrent accesses, since we have no
-+		 * pending decrypt operations
-+		 */
- 		WRITE_ONCE(ctx->async_notify, false);
- 
- 		/* Drain records from the rx_list & copy if required */
-@@ -2285,6 +2304,7 @@ int tls_set_sw_offload(struct sock *sk,
- 
- 	if (tx) {
- 		crypto_init_wait(&sw_ctx_tx->async_wait);
-+		spin_lock_init(&sw_ctx_tx->encrypt_compl_lock);
- 		crypto_info = &ctx->crypto_send.info;
- 		cctx = &ctx->tx;
- 		aead = &sw_ctx_tx->aead_send;
-@@ -2293,6 +2313,7 @@ int tls_set_sw_offload(struct sock *sk,
- 		sw_ctx_tx->tx_work.sk = sk;
- 	} else {
- 		crypto_init_wait(&sw_ctx_rx->async_wait);
-+		spin_lock_init(&sw_ctx_rx->decrypt_compl_lock);
- 		crypto_info = &ctx->crypto_recv.info;
- 		cctx = &ctx->rx;
- 		skb_queue_head_init(&sw_ctx_rx->rx_list);
-
+-- 
+Josh
 
