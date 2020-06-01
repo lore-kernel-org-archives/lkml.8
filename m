@@ -5,47 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D42DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13242074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF9B2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgFANMy (ORCPT
+        id S1728272AbgFANM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48244 "EHLO
+        Mon, 1 Jun 2020 09:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgFANLw (ORCPT
+        with ESMTP id S1727879AbgFANLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jun 2020 09:11:52 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAC7C08C5C0;
-        Mon,  1 Jun 2020 06:11:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F199C061A0E;
+        Mon,  1 Jun 2020 06:11:52 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfkEB-000751-50; Mon, 01 Jun 2020 15:11:43 +0200
+        id 1jfkEF-00077k-K0; Mon, 01 Jun 2020 15:11:47 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C68931C0244;
-        Mon,  1 Jun 2020 15:11:42 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 13:11:42 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E25C1C04CE;
+        Mon,  1 Jun 2020 15:11:47 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 13:11:47 -0000
 From:   "tip-bot2 for Tony Lindgren" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Fix warning for
- set but not used
-Cc:     kbuild test robot <lkp@intel.com>,
-        Tony Lindgren <tony@atomide.com>,
+Subject: [tip: timers/core] clocksource/drivers/timer-ti-32k: Add support for
+ initializing directly
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200519155157.12804-1-tony@atomide.com>
-References: <20200519155157.12804-1-tony@atomide.com>
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Lindgren <tony@atomide.com>, x86 <x86@kernel.org>
+In-Reply-To: <20200507172330.18679-2-tony@atomide.com>
+References: <20200507172330.18679-2-tony@atomide.com>
 MIME-Version: 1.0
-Message-ID: <159101710255.17951.4636349672483050545.tip-bot2@tip-bot2>
+Message-ID: <159101710704.17951.8363727578897055242.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,61 +64,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     c177e2975430cec296aa52a0d413e447417d6cf9
-Gitweb:        https://git.kernel.org/tip/c177e2975430cec296aa52a0d413e447417d6cf9
+Commit-ID:     d15483bb49bae0f9cbb67c54becec252545752d3
+Gitweb:        https://git.kernel.org/tip/d15483bb49bae0f9cbb67c54becec252545752d3
 Author:        Tony Lindgren <tony@atomide.com>
-AuthorDate:    Tue, 19 May 2020 08:51:57 -07:00
+AuthorDate:    Thu, 07 May 2020 10:23:17 -07:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Sat, 23 May 2020 00:01:05 +02:00
+CommitterDate: Mon, 18 May 2020 18:56:35 +02:00
 
-clocksource/drivers/timer-ti-dm: Fix warning for set but not used
+clocksource/drivers/timer-ti-32k: Add support for initializing directly
 
-We can get a warning for dmtimer_clocksource_init() with 'pa' set but
-not used. This was used in the earlier revisions of the code but no
-longer needed, so let's remove the unused pa and of_translate_address().
-Let's also do it for dmtimer_clockevent_init() that has a similar issue.
+Let's allow probing the 32k counter directly based on devicetree data to
+prepare for dropping the related legacy platform code. Let's only do this
+if the parent node is compatible with ti-sysc to make sure we have the
+related devicetree data available.
 
-Reported-by: kbuild test robot <lkp@intel.com>
+Let's also show the 32k counter information before registering the
+clocksource, now we see it after the clocksource information which is a
+bit confusing.
+
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200519155157.12804-1-tony@atomide.com
+Link: https://lore.kernel.org/r/20200507172330.18679-2-tony@atomide.com
 ---
- drivers/clocksource/timer-ti-dm-systimer.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/clocksource/timer-ti-32k.c | 48 ++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
-index 1495618..7da998d 100644
---- a/drivers/clocksource/timer-ti-dm-systimer.c
-+++ b/drivers/clocksource/timer-ti-dm-systimer.c
-@@ -514,7 +514,6 @@ static int __init dmtimer_clockevent_init(struct device_node *np)
- 	struct clock_event_device *dev;
- 	struct dmtimer_systimer *t;
- 	int error;
--	u32 pa;
+diff --git a/drivers/clocksource/timer-ti-32k.c b/drivers/clocksource/timer-ti-32k.c
+index abd5f15..ae12bbf 100644
+--- a/drivers/clocksource/timer-ti-32k.c
++++ b/drivers/clocksource/timer-ti-32k.c
+@@ -24,6 +24,7 @@
+  * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
+  */
  
- 	clkevt = kzalloc(sizeof(*clkevt), GFP_KERNEL);
- 	if (!clkevt)
-@@ -563,7 +562,6 @@ static int __init dmtimer_clockevent_init(struct device_node *np)
- 	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->irq_ena);
- 	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->wakeup);
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/time.h>
+ #include <linux/sched_clock.h>
+@@ -76,6 +77,49 @@ static u64 notrace omap_32k_read_sched_clock(void)
+ 	return ti_32k_read_cycles(&ti_32k_timer.cs);
+ }
  
--	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
- 	pr_info("TI gptimer clockevent: %s%lu Hz at %pOF\n",
- 		of_find_property(np, "ti,timer-alwon", NULL) ?
- 		"always-on " : "", t->rate, np->parent);
-@@ -637,7 +635,6 @@ static int __init dmtimer_clocksource_init(struct device_node *np)
- 	struct dmtimer_systimer *t;
- 	struct clocksource *dev;
- 	int error;
--	u32 pa;
++static void __init ti_32k_timer_enable_clock(struct device_node *np,
++					     const char *name)
++{
++	struct clk *clock;
++	int error;
++
++	clock = of_clk_get_by_name(np->parent, name);
++	if (IS_ERR(clock)) {
++		/* Only some SoCs have a separate interface clock */
++		if (PTR_ERR(clock) == -EINVAL && !strncmp("ick", name, 3))
++			return;
++
++		pr_warn("%s: could not get clock %s %li\n",
++			__func__, name, PTR_ERR(clock));
++		return;
++	}
++
++	error = clk_prepare_enable(clock);
++	if (error) {
++		pr_warn("%s: could not enable %s: %i\n",
++			__func__, name, error);
++		return;
++	}
++}
++
++static void __init ti_32k_timer_module_init(struct device_node *np,
++					    void __iomem *base)
++{
++	void __iomem *sysc = base + 4;
++
++	if (!of_device_is_compatible(np->parent, "ti,sysc"))
++		return;
++
++	ti_32k_timer_enable_clock(np, "fck");
++	ti_32k_timer_enable_clock(np, "ick");
++
++	/*
++	 * Force idle module as wkup domain is active with MPU.
++	 * No need to tag the module disabled for ti-sysc probe.
++	 */
++	writel_relaxed(0, sysc);
++}
++
+ static int __init ti_32k_timer_init(struct device_node *np)
+ {
+ 	int ret;
+@@ -90,6 +134,7 @@ static int __init ti_32k_timer_init(struct device_node *np)
+ 		ti_32k_timer.cs.flags |= CLOCK_SOURCE_SUSPEND_NONSTOP;
  
- 	clksrc = kzalloc(sizeof(*clksrc), GFP_KERNEL);
- 	if (!clksrc)
-@@ -666,7 +663,6 @@ static int __init dmtimer_clocksource_init(struct device_node *np)
- 	writel_relaxed(OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR,
- 		       t->base + t->ctrl);
+ 	ti_32k_timer.counter = ti_32k_timer.base;
++	ti_32k_timer_module_init(np, ti_32k_timer.base);
  
--	pa = of_translate_address(np, of_get_address(np, 0, NULL, NULL));
- 	pr_info("TI gptimer clocksource: %s%pOF\n",
- 		of_find_property(np, "ti,timer-alwon", NULL) ?
- 		"always-on " : "", np->parent);
+ 	/*
+ 	 * 32k sync Counter IP register offsets vary between the highlander
+@@ -104,6 +149,8 @@ static int __init ti_32k_timer_init(struct device_node *np)
+ 	else
+ 		ti_32k_timer.counter += OMAP2_32KSYNCNT_CR_OFF_LOW;
+ 
++	pr_info("OMAP clocksource: 32k_counter at 32768 Hz\n");
++
+ 	ret = clocksource_register_hz(&ti_32k_timer.cs, 32768);
+ 	if (ret) {
+ 		pr_err("32k_counter: can't register clocksource\n");
+@@ -111,7 +158,6 @@ static int __init ti_32k_timer_init(struct device_node *np)
+ 	}
+ 
+ 	sched_clock_register(omap_32k_read_sched_clock, 32, 32768);
+-	pr_info("OMAP clocksource: 32k_counter at 32768 Hz\n");
+ 
+ 	return 0;
+ }
