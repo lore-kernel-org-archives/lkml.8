@@ -2,118 +2,143 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD05C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20824207DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7522073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bSGBjSvU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ox2Q7VbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgFARK1 (ORCPT
+        id S1728182AbgFARKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:10:27 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4197 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgFARK0 (ORCPT
+        Mon, 1 Jun 2020 13:10:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbgFARK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:10:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed5362b0000>; Mon, 01 Jun 2020 10:08:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 01 Jun 2020 10:10:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 01 Jun 2020 10:10:26 -0700
-Received: from [10.2.56.10] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jun
- 2020 17:10:17 +0000
-Subject: Re: [PATCH 0/2] video: fbdev: fix error handling, convert to
- pin_user_pages*()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Sam Ravnborg <sam@ravnborg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        "Jani Nikula" <jani.nikula@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Paul Mundt" <lethal@linux-sh.org>
-References: <20200522041506.39638-1-jhubbard@nvidia.com>
- <20200531205819.GC138722@ravnborg.org>
- <854fae07-3cb4-dbcf-fa93-35b447f9d084@nvidia.com>
- <CAHp75Vf6=UuC2Sef3m3CpRmjAOWt8ZgBW+OPf0-_53P3F__CWw@mail.gmail.com>
- <e7f95207-1b30-17a8-4667-ca58b77ec0a3@nvidia.com>
- <CAHp75VcaXTM86K9vzyxTQJP_oNnzJ8mMHzgm7ybEioVhG6DHDQ@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <8fa07f59-6d77-f76b-7539-c88bf85c5036@nvidia.com>
-Date:   Mon, 1 Jun 2020 10:10:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 13:10:29 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815D8C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:10:28 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id x6so540433wrm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fyn0qs5GSGOuYefLkslJD3CLyO6c5zZi4Yv7PFrSF8k=;
+        b=ox2Q7VbAPICKr+xa1H5fIS2632Dbo2pIFif9ozNYWrWD0ze0cHUkwowbJgXSXm9gbw
+         e/1pqIeBUgyDwtY/fL4tzaPqmFnnVRwxHWtyVNrtH+dzW0OBAFn9vwAmi44GnWd5FMl1
+         YS+5rJw/x938K7Z6FEmBbYK0ppw/UAce3unpGsSIndl+g4wSKNhB7cxh85PZSw0DQOWK
+         2nWLLatnTYNgsZJbQK2AF8KL+dyJ8VKfcIZZswYbsIys0fnMukFfRGYce4PlzLnDgqta
+         l+dU12mcGQYQDTT+20Q9IVmUlV/tzGwmcQG4Ic9kmkWZMZaBNNx5SFB5e+kBcn1rQ/0/
+         PDCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fyn0qs5GSGOuYefLkslJD3CLyO6c5zZi4Yv7PFrSF8k=;
+        b=BXF9BczK4hiybgil2jxuMTZpB4qpv4+Np3y2A4QBOpjJ/Q/so0w0QN15UTw+yXt/yM
+         sHJog2hGTaRQjg9Pg+KS32Pw60P4zrayQe967joMOardkjeemRYKSIs4QSHmxFeooiQ6
+         cq1MQ7PSFhRJdA4v2pxbBsP1P9LRfcBZrlb7dkJvkUME2VnrpANIYvqXw1wW128JWyQe
+         jiXV9Wq47d3cOCOBFN+UDX95b1tXgILnISh8T5w5Hv6JogLHn1IFy1D7eRbCk0fsKfx3
+         VQjMhEuKoDg9tMXMLMMnTHlLnYtLgnb+O0tIqNCq+yA7myR/IpFqKAAIJdV6qCmkPKdu
+         AVog==
+X-Gm-Message-State: AOAM531/x2kiIaCDRLVp3c+1LI5YUa9FTMzzg2HEPTN6rI4JxOoRyxGV
+        fV0QVHpli4ITHSpQU5sTLEHp1yeqLeMCIg==
+X-Google-Smtp-Source: ABdhPJxEGuE5CDPz0XXIa1RcR2/I290qzzSPvZEv6D7HX7bxUeS1gnkJiaAaMQzi6xaqVzuqg7/htw==
+X-Received: by 2002:adf:f5d0:: with SMTP id k16mr23875174wrp.288.1591031426492;
+        Mon, 01 Jun 2020 10:10:26 -0700 (PDT)
+Received: from localhost.localdomain (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.googlemail.com with ESMTPSA id s72sm232716wme.35.2020.06.01.10.10.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jun 2020 10:10:25 -0700 (PDT)
+From:   Elazar Leibovich <elazarl@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Elazar Leibovich <elazarl@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH] perf timechart: explain the SVG output
+Date:   Mon,  1 Jun 2020 20:10:14 +0300
+Message-Id: <20200601171015.23868-1-elazarl@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcaXTM86K9vzyxTQJP_oNnzJ8mMHzgm7ybEioVhG6DHDQ@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591031340; bh=+gVKA91Wuj6YNNamkXREV13fdKCX2X0cckR/xAC0a/8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bSGBjSvURux84TXnv7AIb6LHGg98Y9Z0Bd+JJI8mUameTP8gU0ksdMDn8kiyj5PGi
-         QUZytsVsMScs+OsTEtOwFGbqAbSo22Mody45pb5aIPNf910ER6RLyhS0HAGlrI7CVe
-         TZkXxv6wmTpjQY4fIRBPoJkgoFNZhItMQsCfwFQySj9dfSpDK2RK1aKn+CtigpzbHW
-         iECWV17WVLTxV+/nTpfj/Uxf+FsRoP0Yz+2yXgad6cH1nBug511boW5uL/mQnbUotu
-         ZETa0LeiPyeJUzXSXR7Q2E6Cld7obchV0IhK7IG3cyXmEuZDttArL9clJN1kGgjIWa
-         JWFIu5FRvHi6A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-01 03:35, Andy Shevchenko wrote:
-> On Mon, Jun 1, 2020 at 1:00 AM John Hubbard <jhubbard@nvidia.com> wrote:
->> On 2020-05-31 14:11, Andy Shevchenko wrote:
->>>      ...
->>> JFYI, we have history.git starting from v0.01.
->>>
->> OK, thanks for that note. According to that history.git [1],
->> then: drivers/video/pvr2fb.c had get_user_pages_fast() support added to
->> pvr2fb_write() back in 2004, but only for CONFIG_SH_DMA, as part of
->>
->>       commit 434502754f2 ("[PATCH] SH Merge")
->>
->> ...and that commit created the minor bug that patch 0001 here
->> addresses. (+Cc Paul just for the sake of completeness.)
->>
->>
->> [1] git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
-> 
-> I mentioned this one, but I guess content should be the same.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/
-> 
+It is not immediately clear what the SVG output means
+and how is it supposed to be used.
 
-Actually, that history.git *starts* at Linux 2.6.12-rc2, while
-tglx/history.git *ends* at Linux 2.6.12-rc2 (which is in April, 2005).
-And the commit I was looking for is in 2004. So that's why I needed a
-different stretch of history.
+Add links to example SVGs, and to annotated images
+explaining what each part in the SVG means.
 
+Signed-off-by: Elazar Leibovich <elazarl@gmail.com>
+---
+ tools/perf/Documentation/perf-timechart.txt | 22 +++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-
-thanks,
+diff --git a/tools/perf/Documentation/perf-timechart.txt b/tools/perf/Documentation/perf-timechart.txt
+index ef0c7565bd5c..460f3bd65789 100644
+--- a/tools/perf/Documentation/perf-timechart.txt
++++ b/tools/perf/Documentation/perf-timechart.txt
+@@ -12,6 +12,13 @@ SYNOPSIS
+ 
+ DESCRIPTION
+ -----------
++The perf-timechart tool will visualize what the system did in a certain timespan.
++Looking at 'perf timechart' output will allow you to see at a glance:
++
++  How much time was a certain process scheduled, when was it waiting for IO?
++  How many CPUs did the process use?
++  Did my process move between CPUs?
++
+ There are two variants of perf timechart:
+ 
+   'perf timechart record <command>' to record the system level events
+@@ -30,6 +37,15 @@ There are two variants of perf timechart:
+   There are also poll bars which show how much time application spent
+   in poll/epoll/select syscalls.
+ 
++See also annotated example of perf-timechart report:
++
++  http://elazarl.github.io/perf-timechart/perf_timechart_wrk_python.png
++  http://elazarl.github.io/perf-timechart/perf_timechart_cpu_chart.png
++
++Or annotated example of perf-timechart record -I:
++
++  http://elazarl.github.io/perf-timechart/perf_timechart_wrk_io.png
++
+ TIMECHART OPTIONS
+ -----------------
+ -o::
+@@ -123,6 +139,12 @@ Record system-wide IO events:
+ 
+   $ perf timechart
+ 
++Example SVGs for the wrk HTTP benchmark testing python3 -m http.server
++can be found here:
++
++  http://elazarl.github.io/perf-timechart/wrk.svg
++  http://elazarl.github.io/perf-timechart/wrk-io.svg
++
+ SEE ALSO
+ --------
+ linkperf:perf-record[1]
 -- 
-John Hubbard
-NVIDIA
+2.25.0
+
