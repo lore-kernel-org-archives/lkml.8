@@ -2,249 +2,127 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA99C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827AE20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD3B20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KKS3GUAt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQQtHrNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgFAOHF (ORCPT
+        id S1726322AbgFAOIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
+        Mon, 1 Jun 2020 10:08:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFAOHE (ORCPT
+        with ESMTP id S1726067AbgFAOIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:07:04 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C91DC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 07:07:04 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id v15so5256328ybk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 07:07:04 -0700 (PDT)
+        Mon, 1 Jun 2020 10:08:52 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC70C05BD43;
+        Mon,  1 Jun 2020 07:08:52 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ga6so2011880pjb.1;
+        Mon, 01 Jun 2020 07:08:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HoRvuHjTf7o1scixwGpIQ61G+IH077lS+/oIqFSJ+Tk=;
-        b=KKS3GUAtAB2uhjdFNbZB8SNlHptK6rbsPrRZICefS8v6CosCWLsW+VXO7g9lTwpIJy
-         tGUs2uaUfM0f0RtsVqpLGHTIrfMR0QN5Tnd8/nxdQnqwjHUE7Fb4Ii70SyQI+tpV9TWw
-         6TCnP1/6H+QtnHJpxNyVocTAjEzZKndEBiTiz/UlJLwIm4234cZYZXIy6zD+r3yUDlvU
-         6rf4g5iGxXT1oLd7HIPy4Z6FPcFt/Wmr5Ps/1LtFo1k1Qq95Gz+XMCW1BM9Wj52SyFj2
-         HJaAr972W5Sl8dNdQu05FCJKuyySd3gK2UEmraXOr4NqTSd68gSGzit6TpPqiATmnYFt
-         PYhA==
+        bh=NC4cdVwV5ZWinWX2PA33+wBFB2lTWR6HjkPGrQ12+PQ=;
+        b=aQQtHrNHR5DMlWm32EVjD/0gXcE8RqA4Ys6ssYXt5S4MS/LH0m+xW7bZT0Dxb8dlF4
+         gsnWLO0n0xFT6UTNO4VI+4bMebUirYHtNkkYpe5O9Lf3sM9Bu9AYDiTO573bAk97D7tY
+         rioil27yTpeF00QK3iKkF3Dlhrc2vP7wQ7HBuvPjn0UKZ4rV5BC7J03HT4/EH7dGOpjc
+         1MktXEewr+75QvFdHrVXQggaQPuOsyzRXJslmBvA4C/wgMxaRCVFkn9vJyXaYpZot5PO
+         CIg0dIWYNl8z9dSIZ8uf1VE56fzvIPLmicYen7/l0vM5nMfLoTnC9o9Xdn77tsdQhlmh
+         fz0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HoRvuHjTf7o1scixwGpIQ61G+IH077lS+/oIqFSJ+Tk=;
-        b=Be7JO6y2aF3IWX7iJy7fFW2Gn95Nfu/zMv15HSrLJzY2T/Upi0NK4/3zHFP4PhNr2s
-         nHAmS4Xx0G6tyoKuRx4lv6cJS127UCZ93sxTNql0QVLVSsz/O71FJmedqwllHNAwN2Dw
-         5Vvv6TFI4A263JJB4oZ+6RLGIUU1wR8eUeRsQIvRtZnKdGvsPmruS4m+eRkmaub/UZr5
-         gZOV372UCMT7paDTyiZR7AANN4hXNTLFXIcS9toywwbKsIhpTGjqdh724yucB736Dldu
-         4SnNWka8M6/Ll/Co9z6JCzrx3W9d1MklGnh62evazcoKOuk0BjBUMEn5+KHFmPW4NCpo
-         ed8w==
-X-Gm-Message-State: AOAM532SmKoh+YeeTKs4Qw6LFMKkPI0AwHE2a11WhTjevpaLjarXuwn2
-        Ob52wfgWVL9aZzTYRbelkHuYt/ezNGwe5dQRUW4uRA==
-X-Google-Smtp-Source: ABdhPJxo0s5+anf5DcECVl0XgeKKBRxRSjsbkmYirvZN/E0fDGEdt2w9d3QKe9EL1j2CZ10gY3SOVDX8HtB+QHNbZtY=
-X-Received: by 2002:a5b:c08:: with SMTP id f8mr14805344ybq.153.1591020420230;
- Mon, 01 Jun 2020 07:07:00 -0700 (PDT)
+        bh=NC4cdVwV5ZWinWX2PA33+wBFB2lTWR6HjkPGrQ12+PQ=;
+        b=q7/Ixd0o5faJ5RZhJZzWpjnMsUWXacO8QOdAyUBDfZxs5L7kJ/KWguhxXxg3q6e3nv
+         Nl70EbThhSOS0+Egrr/KyUNC2uGMqADukGsK734COrUDWlyeRrM6mRAgEycBD7v7Tud+
+         7JiN222zGJw5vBqv851p/xXYpS0wjk/9OE7D2LWlfZy7zVgXJC47Hm/jmphOXCP/MjHE
+         lJf5ine9rE3Z1QlT1G/5O1MK1EHBs3+HVAAYxHIR6lR4SY8aXwDBY49nJv1UzkCavA7o
+         YknWzhDz0iWc9wAHAgzSKv4xOerL9A3FeW4CSH/kPRvxTMFZpocDcTE4/m9hG8v3RBJv
+         DDvA==
+X-Gm-Message-State: AOAM5319H7tl9jIgj9TRYHqSJlyKfUwcZQETNuoFH23aD9weZXno3Pm1
+        Glqpl0jE5Fb4DlpeVoaWV0AkPE9mY7W9aM6snKc=
+X-Google-Smtp-Source: ABdhPJyexHXPtWLBkDsHGH4tmiveftaIBH4ulS960Vk8grr1GPpQrezhKc3s44XenJQ7mhWd1MWwTqJqRm1HFmathZU=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr23257144pjd.181.1591020531758;
+ Mon, 01 Jun 2020 07:08:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200529082701.13457-1-maxim.uvarov@linaro.org>
- <20200529082701.13457-4-maxim.uvarov@linaro.org> <CAFA6WYM56ec-V0vv=4pVcu02FhR==1B+jMMDkU5WSjLdbP4kTw@mail.gmail.com>
-In-Reply-To: <CAFA6WYM56ec-V0vv=4pVcu02FhR==1B+jMMDkU5WSjLdbP4kTw@mail.gmail.com>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Mon, 1 Jun 2020 17:06:49 +0300
-Message-ID: <CAD8XO3ahKTFt54w71ECtDrnD=WH0d_opptdM24kUcHPZUi-xMQ@mail.gmail.com>
-Subject: Re: [PATCHv5 3/3] tpm_ftpm_tee: register driver on TEE bus
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
+References: <20200601133950.12420-1-johan@kernel.org> <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
+ <20200601140117.GF19480@localhost>
+In-Reply-To: <20200601140117.GF19480@localhost>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Jun 2020 17:08:40 +0300
+Message-ID: <CAHp75VdSLb7bnd4v52wYD8KfqcDxjkirBgJVEYMWo=cwdeLzsg@mail.gmail.com>
+Subject: Re: [PATCH 0/6] leds: fix broken devres usage
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thanks, will send an updated version soon.
+On Mon, Jun 1, 2020 at 5:01 PM Johan Hovold <johan@kernel.org> wrote:
+>
+> On Mon, Jun 01, 2020 at 04:51:01PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 1, 2020 at 4:42 PM Johan Hovold <johan@kernel.org> wrote:
+> > >
+> > > Several MFD child drivers register their class devices directly under
+> > > the parent device (about half of the MFD LED drivers do so).
+> > >
+> > > This means you cannot blindly do devres conversions so that
+> > > deregistration ends up being tied to the parent device, something which
+> > > leads to use-after-free on driver unbind when the class device is
+> > > released while still being registered (and, for example, oopses on later
+> > > parent MFD driver unbind or LED class callbacks, or resource leaks and
+> > > name clashes on child driver reload).
+> >
+> > Shouldn't MFD take reference count for their children?
+>
+> That's not the issue here. The child driver is allocating memory for the
+> class device (for example using devres), and that will end up being
+> freed on unbind while said device is still registered. The child driver
+> may then even be unloaded. No extra reference can fix this.
 
-On Mon, 1 Jun 2020 at 14:12, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> On Fri, 29 May 2020 at 13:57, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
-> >
-> > Register driver on the TEE bus. The module tee registers bus,
-> > and module optee calls optee_enumerate_devices() to scan
-> > all devices on the bus. Trusted Application for this driver
-> > can be Early TA's (can be compiled into optee-os). In that
-> > case it will be on OPTEE bus before linux booting. Also
-> > optee-suplicant application is needed to be loaded between
-> > OPTEE module and ftpm module to maintain functionality
-> > for fTPM driver.
->
-> I think this description merely describes the functioning of TEE bus
-> and misses what value add does TEE bus provide compared to platform
-> bus.
->
-> Consider:
->
-> ====
-> OP-TEE based fTPM Trusted Application depends on tee-supplicant to
-> provide NV RAM implementation based on RPMB secure storage. So this
-> dependency can be resolved via TEE bus where we only invoke fTPM
-> driver probe once fTPM device is registered on the bus which is only
-> true after the tee-supplicant is up and running. Additionally, TEE bus
-> provides auto device enumeration.
-> ====
->
-> With that, implementation looks good to me. So feel free to add:
->
-> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
->
-> -Sumit
->
-> >
-> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> > Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-> > Suggested-by: Arnd Bergmann <arnd@linaro.org>
-> > ---
-> >  drivers/char/tpm/tpm_ftpm_tee.c | 70 ++++++++++++++++++++++++++++-----
-> >  1 file changed, 60 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-> > index 22bf553ccf9d..28da638360d8 100644
-> > --- a/drivers/char/tpm/tpm_ftpm_tee.c
-> > +++ b/drivers/char/tpm/tpm_ftpm_tee.c
-> > @@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
-> >   * Return:
-> >   *     On success, 0. On failure, -errno.
-> >   */
-> > -static int ftpm_tee_probe(struct platform_device *pdev)
-> > +static int ftpm_tee_probe(struct device *dev)
-> >  {
-> >         int rc;
-> >         struct tpm_chip *chip;
-> > -       struct device *dev = &pdev->dev;
-> >         struct ftpm_tee_private *pvt_data = NULL;
-> >         struct tee_ioctl_open_session_arg sess_arg;
-> >
-> > @@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
-> >         return rc;
-> >  }
-> >
-> > +static int ftpm_plat_tee_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +
-> > +       return ftpm_tee_probe(dev);
-> > +}
-> > +
-> >  /**
-> >   * ftpm_tee_remove() - remove the TPM device
-> >   * @pdev: the platform_device description.
-> > @@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
-> >   * Return:
-> >   *     0 always.
-> >   */
-> > -static int ftpm_tee_remove(struct platform_device *pdev)
-> > +static int ftpm_tee_remove(struct device *dev)
-> >  {
-> > -       struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
-> > +       struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
-> >
-> >         /* Release the chip */
-> >         tpm_chip_unregister(pvt_data->chip);
-> > @@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
-> >         return 0;
-> >  }
-> >
-> > +static int ftpm_plat_tee_remove(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +
-> > +       return ftpm_tee_remove(dev);
-> > +}
-> > +
-> >  /**
-> >   * ftpm_tee_shutdown() - shutdown the TPM device
-> >   * @pdev: the platform_device description.
-> >   */
-> > -static void ftpm_tee_shutdown(struct platform_device *pdev)
-> > +static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
-> >  {
-> >         struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
-> >
-> > @@ -347,17 +360,54 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
-> >
-> > -static struct platform_driver ftpm_tee_driver = {
-> > +static struct platform_driver ftpm_tee_plat_driver = {
-> >         .driver = {
-> >                 .name = "ftpm-tee",
-> >                 .of_match_table = of_match_ptr(of_ftpm_tee_ids),
-> >         },
-> > -       .probe = ftpm_tee_probe,
-> > -       .remove = ftpm_tee_remove,
-> > -       .shutdown = ftpm_tee_shutdown,
-> > +       .shutdown = ftpm_plat_tee_shutdown,
-> > +       .probe = ftpm_plat_tee_probe,
-> > +       .remove = ftpm_plat_tee_remove,
-> > +};
-> > +
-> > +/* UUID of the fTPM TA */
-> > +static const struct tee_client_device_id optee_ftpm_id_table[] = {
-> > +       {UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
-> > +                  0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
-> > +       {}
-> >  };
-> >
-> > -module_platform_driver(ftpm_tee_driver);
-> > +MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
-> > +
-> > +static struct tee_client_driver ftpm_tee_driver = {
-> > +       .id_table       = optee_ftpm_id_table,
-> > +       .driver         = {
-> > +               .name           = "optee-ftpm",
-> > +               .bus            = &tee_bus_type,
-> > +               .probe          = ftpm_tee_probe,
-> > +               .remove         = ftpm_tee_remove,
-> > +       },
-> > +};
-> > +
-> > +static int __init ftpm_mod_init(void)
-> > +{
-> > +       int rc;
-> > +
-> > +       rc = platform_driver_register(&ftpm_tee_plat_driver);
-> > +       if (rc)
-> > +               return rc;
-> > +
-> > +       return driver_register(&ftpm_tee_driver.driver);
-> > +}
-> > +
-> > +static void __exit ftpm_mod_exit(void)
-> > +{
-> > +       platform_driver_unregister(&ftpm_tee_plat_driver);
-> > +       driver_unregister(&ftpm_tee_driver.driver);
-> > +}
-> > +
-> > +module_init(ftpm_mod_init);
-> > +module_exit(ftpm_mod_exit);
-> >
-> >  MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
-> >  MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
-> > --
-> > 2.17.1
-> >
+Okay, I didn't still get how dropping devres will help here.
+
+Say, we have
+
+->probe()
+{
+ return devm_foo_register();
+}
+
+and no ->remove()
+
+vs.
+
+->probe()
+{
+  return foo_register();
+}
+
+->remove()
+{
+ foo_unregister();
+}
+
+So, basically what you seem to workaround is that ->remove() is not
+getting called?
+
+-- 
+With Best Regards,
+Andy Shevchenko
