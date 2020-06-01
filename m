@@ -2,148 +2,87 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6966CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A37CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F1E2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="t6szS6wV";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Q+Eb0E/+"
+	by mail.kernel.org (Postfix) with ESMTP id 2F33E2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590993113;
+	bh=zAUnY41Sgc7xpNLHu9M0CHlSS/dkDaYIV+HRhlmWnpY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WVI0voTAw4fW220EF4T+dyXHmyeuG1B/0yGkz6DEeBAS0gewf3y8+SYWxPz42Ia5F
+	 +PRKVHe6kAzmBl4CdS0I8VQwN6kvxzxkT4Fyq1gERwaXANPlo644beHOKS+XH1Ila7
+	 yCZZ9GJ+CyLTLB1dmnMJRkQ+XuSEKtRSnAPjauDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgFAGbU (ORCPT
+        id S1727894AbgFAGbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 02:31:20 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:64628 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgFAGbT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 02:31:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590993078; x=1622529078;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=BBSWtcmn4SGel36kKgN6R6WjQ8EpO1oSp1aNkZZA9bA=;
-  b=t6szS6wVIQJHX4dwQwQGzYICL+lLWNE5NIpgr/lZykk/vWt/rf+e6HO0
-   lwytz04OaIG9YuYViYIClIbsQQKaaOzlQtNVXxAVEs36jtG1jBkGCvFf4
-   AUpM4TmlTyaLBMjpwEh0r2RF4frRXDoNsj1NpQNRYe7mFXQfMl0CZu2HU
-   qbhb4v2anLM0ICsDw/IEyUr/QCCBk+xezTOeaBjax+rNIB++xbs7FL2NC
-   Zf3Zz1+fZvCBTAqHAHo/NooJzyMeRMSLr3jcYShuY0suHyts+9qiB70AO
-   tRdUjgnC1yx6vCP7TWID2xfybPMhbtT2QG4ah+T052YLvonJe7mVgec1J
-   A==;
-IronPort-SDR: WwnjEd9mSQEXJIaTYqkjbxpg6siFlP0ZV4gF+1EIbiXbym/Q5QudbFM+JyECjq2FaUzaw6fqnW
- DbM1hboYMU/45URq6ApTRwE3tVoe3S+9cr9XoOPhiJRolGAjX2vrShTJb1fb0DXm3Ce8+oj584
- S5a3PtY2/9eDSv8DNfRYov73oGxwGOhCfJIM0emfRKdvTKnmZ/DF471CUFJAr0p516GbguawxJ
- ZXCT9gKlldU30aZtMfHjTNyqBnpZ6AdLKxcAerR2XB2QYI1hWWBZsCvtSjKGFHRSxPzVzwmf8W
- GLs=
-X-IronPort-AV: E=Sophos;i="5.73,459,1583218800"; 
-   d="scan'208";a="75057090"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 May 2020 23:31:17 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 31 May 2020 23:31:17 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Sun, 31 May 2020 23:31:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n0H05WaewHGWRble1tjGR6rb1OvF99uj/uULW5cJn/KPeRYKVEDmQo+IXWn5wYlHE26SAHEYLOIxjUJEQViTBNKaZ1ot+DxRBTs8qcCPwwTCuEIOpfQIMJORSbs0hZZtbSBgeb2bgxXy+I+MBIATf0fdtE2/taYES1AujfxMb265lnGGHZFkk+G+84y6dttIGAu2snRJS9U0nUL/rLHgC403IzQIEO/2nKWDKPctaN1CUGna1rtpCRplWUReE4a1xXR36BtlVraZHjOunIW3BBJt3jMp/GDM0umPzRfmUrAbYL6w3oDUThhzt7NFv91AgVfoehzfJYnFr2BqcCc4zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3GEbi9d0ANblDX+i4kSM1QHInvXzM1X5qKyc8rKEUu4=;
- b=fbnyGefoGsuNlkiEHaNoGotP+/QqgxfjsU+dkr9JJ+Lwf7Ds7pm/mQ31aMdaPxjwR56lyOCohi0o5wnU8722/vbWxB8woFoIFY0tXuRrLCl0vOaaCMwcXgjzASQdeMwEdOpoZy5bzY0hafMjzNbx+WeiL5/VgSl77gBBwByEF9a/k2e2Z5MTxQO4OJkcTkqMcohymMvA8Q05oL08zK7YiSPQJRo2JqHTgicPFzDGjucOTIER2PpHfkf5/ozBmI+iQwm2T/YY8HNwz2I+poxH5EUKXWOMFvFyAjOetkSVch0N2TWSTra4obUnGKEIjHalBUhYp3zKxk9b3b+VSwNToQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3GEbi9d0ANblDX+i4kSM1QHInvXzM1X5qKyc8rKEUu4=;
- b=Q+Eb0E/+BZGaYIp1kKQ4nrpDXjDjpLQstGsh7369+gK+1X4cJbxXsK+XSqpZ+u8WxO34Zs9PAmskf9oTKfoiy+PBesrbOpzXoy2dx8YH8un9x5o7eW4RZCwoB5tTE17uyrPfXqFEj/N8TJOgWM7U5Ll18X0cie8h2ofBoAmOCYI=
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
- by BY5PR11MB4482.namprd11.prod.outlook.com (2603:10b6:a03:1ca::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.22; Mon, 1 Jun
- 2020 06:31:13 +0000
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3045.022; Mon, 1 Jun 2020
- 06:31:13 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vigneshr@ti.com>
-CC:     <broonie@kernel.org>, <bbrezillon@kernel.org>,
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
-        <dinguyen@kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
- deferral while requesting DMA channel
-Thread-Topic: [PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
- deferral while requesting DMA channel
-Thread-Index: AQHWN9hDLp2/kM6jfUiBO4uiVGA5TqjDTMsA
-Date:   Mon, 1 Jun 2020 06:31:13 +0000
-Message-ID: <2115856.WxyBM9s6e4@192.168.0.120>
-References: <20200601054725.2060-1-vigneshr@ti.com>
- <20200601054725.2060-6-vigneshr@ti.com>
-In-Reply-To: <20200601054725.2060-6-vigneshr@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bd89ba3c-1b60-44a3-c8c6-08d805f56193
-x-ms-traffictypediagnostic: BY5PR11MB4482:
-x-microsoft-antispam-prvs: <BY5PR11MB448291CEB9034B758124272AF08A0@BY5PR11MB4482.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:2733;
-x-forefront-prvs: 0421BF7135
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XbdZwXDb3eHfpSO9B/vEpi0G8gVD/DOBYkqHMNZf4YRdXeGDx3A2o2UoKV9ttbUhhvvSsQPld27de1NP7xQpU8qtaQitgpwFGVGALFlJ94IIbtwevE8SrvNDm6X0H5IA796+P1FMUuajtmf6WhPkCTqm9MvORsAiPBxfaW5gymYSGdBFKgajvrrdDmoY0mAt/djBDkm+81w3gNcPZZV76960o2/jO2zL+iDlt4i9dch5NcXukxMVVpNK0oQHxePTrixd4OonPqq1hb3mFAeq1bdA9V93X4/9xGc0BsF/H30dvkyYoxKZe2uvD+2u7tAVLG2JqYAmU8aLFNeDECI9F203BwR6KofBfvxDKTrrp5ZXR1qO1YsH0Ao4j9IdR+mt
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(396003)(346002)(136003)(39860400002)(66446008)(64756008)(66476007)(66556008)(66946007)(86362001)(6512007)(5660300002)(6486002)(9686003)(186003)(4326008)(14286002)(91956017)(316002)(478600001)(76116006)(54906003)(6916009)(4744005)(8676002)(83380400001)(8936002)(26005)(2906002)(6506007)(7416002)(71200400001)(53546011)(39026012);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: IuzufmPLg+SpcFrz+fEnSeULdzrdatqDZifT2z7M2v/C1EvWbJjZGqeqk5pSA8DxCUU7m+6QE72IyoFj3K5pgC7JumajxcWz+AAPSEHAuvLnETr3woR4wskwo+CRm1bQ58L+PZmKpEG2p4aZUwlUU9y5natZ8g2P4KDnvkVQdf1PCp/lSvfqacqwbqXDeer7S4adNqYsi9iL3YLT9yFes0RI3NvbKe83PX7cKI3lcK1sOlyqVeR9nW4Z3MGGtgVaBchsVcCu5JrX6JL+ltbk1saXFrk+jpxa8FWrc0gjRwYGzmdZAGniEcsc80EHf+TMNjPa6FG6NB3lq+mET1vU6X0lAnQYFQGgkTY8vy7Wc2ffhA00nWM1o0OLXrAeRAM6oAwjmBwv7H2qmfbPmsUmvhNnr7SoCuHQlj0ULq7A4U7N0rrmu0L8c3YSr1PnB7c9Zmv2U/wnuVkEozXBbIrW7C74CphYNqunH62MScHRiQk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A2B61C84E8F5FF4B8476EE2FAD606D7B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Jun 2020 02:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgFAGbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 02:31:52 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B1612074B;
+        Mon,  1 Jun 2020 06:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590993111;
+        bh=zAUnY41Sgc7xpNLHu9M0CHlSS/dkDaYIV+HRhlmWnpY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CSFPCFQ3+RJAVJDO4ksMLGmjHP29cVIclWcjuK6+F4Ot2xJRz4+VzIz7cME+w5T/k
+         XKMGsKBtOlf3e9DVbH1EixVTg6hzJY4FtRDZP/N1ybdBVTd9ZqER4G6mJR6DHs9xlo
+         hFDZw+49i6TGMILwmJq3J6QlRd/w3rKhBecJHFjI=
+Date:   Sun, 31 May 2020 23:31:50 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [GIT PULL] fsverity updates for 5.8
+Message-ID: <20200601063150.GB11054@sol.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd89ba3c-1b60-44a3-c8c6-08d805f56193
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2020 06:31:13.3817
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4pcULYw/p0ZMld+wd8omsMRVWXyuORD8cPcp515hbCv5/qEESTQ9zLttAp/++ER6enwKG9N2tiDQKKsuJcxT3e9+J4C9sus9Z4lywxBR1f4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4482
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, June 1, 2020 8:47:22 AM EEST Vignesh Raghavendra wrote:
-> dma_request_chan_by_mask() can throw EPROBE_DEFER if DMA provider
-> is not yet probed. Currently driver just falls back to using PIO mode
-> (which is less efficient) in this case. Instead return probe deferral
-> error as is so that driver will be re probed once DMA provider is
-> available.
->=20
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  .../mtd/spi-nor/controllers/cadence-quadspi.c  | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fsverity-for-linus
+
+for you to fetch changes up to 9cd6b593cfc9eaa476c9a3fa768b08bca73213d0:
+
+  fs-verity: remove unnecessary extern keywords (2020-05-12 16:44:00 -0700)
+
+----------------------------------------------------------------
+
+Fix kerneldoc warnings and some coding style inconsistencies.
+This mirrors the similar cleanups being done in fs/crypto/.
+
+----------------------------------------------------------------
+Eric Biggers (2):
+      fs-verity: fix all kerneldoc warnings
+      fs-verity: remove unnecessary extern keywords
+
+ fs/verity/enable.c           |  2 ++
+ fs/verity/fsverity_private.h |  4 ++--
+ fs/verity/measure.c          |  2 ++
+ fs/verity/open.c             |  1 +
+ fs/verity/signature.c        |  3 +++
+ fs/verity/verify.c           |  3 +++
+ include/linux/fsverity.h     | 19 +++++++++++--------
+ 7 files changed, 24 insertions(+), 10 deletions(-)
