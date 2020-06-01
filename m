@@ -2,72 +2,75 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9615DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 618CB2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622BB20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="RLtlU5Np"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="cbHrA0JH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgFAPQE (ORCPT
+        id S1728101AbgFAPQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:16:04 -0400
-Received: from gproxy6-pub.mail.unifiedlayer.com ([67.222.39.168]:46985 "EHLO
-        gproxy6-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728037AbgFAPQD (ORCPT
+        Mon, 1 Jun 2020 11:16:06 -0400
+Received: from gproxy5-pub.mail.unifiedlayer.com ([67.222.38.55]:58386 "EHLO
+        gproxy5-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728049AbgFAPQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:16:03 -0400
-Received: from CMGW (unknown [10.9.0.13])
-        by gproxy6.mail.unifiedlayer.com (Postfix) with ESMTP id 3AB9D1E0B49
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 08:54:31 -0600 (MDT)
+        Mon, 1 Jun 2020 11:16:04 -0400
+X-Greylist: delayed 1246 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jun 2020 11:16:02 EDT
+Received: from cmgw14.unifiedlayer.com (unknown [10.9.0.14])
+        by gproxy5.mail.unifiedlayer.com (Postfix) with ESMTP id 2A6D2140693
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 08:55:15 -0600 (MDT)
 Received: from md-in-79.webhostbox.net ([43.225.55.182])
         by cmsmtp with ESMTP
-        id flpcjvw6WtoKZflpejY281; Mon, 01 Jun 2020 08:54:31 -0600
+        id flqKj0GKL1EW3flqMjqYMm; Mon, 01 Jun 2020 08:55:15 -0600
 X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.2 cv=cPSQihWN c=1 sm=1 tr=0
+X-Authority-Analysis: v=2.3 cv=A7RCwZeG c=1 sm=1 tr=0
  a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=nTHF0DUjJn0A:10
- a=oz0wMknONp8A:10 a=vU9dKmh3AAAA:8 a=JfrnYn6hAAAA:8 a=yk56JuNMXvj-j4NLtGMA:9
- a=k7fQ0PofDHJ_D0n9:21 a=eGWgZIWGoZCdjxqI:21 a=QEXdDO2ut3YA:10
- a=rsP06fVo5MYu2ilr0aT5:22 a=1CNFftbPRP8L7MoqJWF3:22
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10:nop_charset_1
+ a=nTHF0DUjJn0A:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
+ a=vzkQzeYxvNWxcUWojyIA:9 a=S98yGVt2Wv-XtSOH:21 a=EiBAABpLls2hw3GD:21
+ a=QEXdDO2ut3YA:10:nop_charset_2 a=rsP06fVo5MYu2ilr0aT5:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
         ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
         MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ABsPewTX/44/kRoSBC3OMTE4BQw/66NmwHcg2pjgaoM=; b=RLtlU5NpQ+gtHvuB8r789zlhHa
-        lGEbithqfZVxDHhS563wBSLp5z/VHSfgvm8heut4APLaT/KtoKXjTpgwcY7EWga1P2IQtPTU0CO0C
-        ZPmXGG7fOAVfX3VwVAW8kIhTQTCDCuT9wh0lEJK08CJxhWzDGP98Dya882UdKM5sopUHyPWxKRdgD
-        ilqQhD9ezsdANerJoV3RszSct8LZVUl5/+L1/f+1i9QcEJwjco3PiNg5njjnubsCvcNkQULusGHFb
-        fKIfaUEiKcqoYqpqQpKFKyxk4aJJdun6BCPJp4HvB/TwpNeFb2uHGkRDdCZJFskiOhs7ejto/OfLm
-        YMiTpePQ==;
-Received: from dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([2.205.73.81]:51476 helo=[192.168.178.164])
+        bh=+Xu7l6hzOuH+trrTVismt5vHgjqhSWauB5JkIiiPwYc=; b=cbHrA0JHvmnRgimXA9GIwodGL7
+        86IJQLgQnMJjadzWicFo3eOVxMnTXYDx+pCy+6UU0bb85ibHHpHtkvX1BLmlpPobtxnfGN0gRPjfo
+        lRrnC9YNBxLuWp1dlvN1bSYEGtWTcyRvHJs0+NdWk1kRhsXbBMBMC7Q6lLKOkMO91cNDEyJYCPF1z
+        /MR62im3YCqJUsBcm1Py9vI2oz3LyOADgughp13FNEJNrevTocXW/VK6s45sQcrSZqaqKJr9ib4fi
+        6LVkw01QuxwbO17RYJKMSkkkKG+vm2ReuaDm4NR/IgygvR8f20Xry8YDqclAyQKqwaM2qICw9+hZK
+        D5VU2HLA==;
+Received: from dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([2.205.73.81]:51482 helo=[192.168.178.164])
         by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <parthiban@linumiz.com>)
-        id 1jflpb-00047q-SK; Mon, 01 Jun 2020 14:54:28 +0000
+        id 1jflqJ-0004h4-Mc; Mon, 01 Jun 2020 14:55:11 +0000
 Subject: Re: [PATCH] ARM: dts: imx6ull: add MYiR MYS-6ULX SBC
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Parthiban <parthiban@linumiz.com>
 References: <20200408184351.135716-1-parthiban@linumiz.com>
- <20200426133300.GE30501@dragon>
+ <20200427061844.i5hb2xatq2ntdqbe@pengutronix.de>
 From:   Parthiban <parthiban@linumiz.com>
-Message-ID: <3cfed170-ea23-e92f-e10e-e3b5c6e96008@linumiz.com>
-Date:   Mon, 1 Jun 2020 16:54:15 +0200
+Message-ID: <9077f6b0-66ac-8854-75fe-5bebb8314fc2@linumiz.com>
+Date:   Mon, 1 Jun 2020 16:55:08 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200426133300.GE30501@dragon>
+In-Reply-To: <20200427061844.i5hb2xatq2ntdqbe@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,13 +82,13 @@ X-AntiAbuse: Sender Address Domain - linumiz.com
 X-BWhitelist: no
 X-Source-IP: 2.205.73.81
 X-Source-L: No
-X-Exim-ID: 1jflpb-00047q-SK
+X-Exim-ID: 1jflqJ-0004h4-Mc
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([192.168.178.164]) [2.205.73.81]:51476
+X-Source-Sender: dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([192.168.178.164]) [2.205.73.81]:51482
 X-Source-Auth: parthiban@linumiz.com
-X-Email-Count: 8
+X-Email-Count: 18
 X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -95,65 +98,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 4/26/20 3:33 PM, Shawn Guo wrote:
-> On Wed, Apr 08, 2020 at 08:43:51PM +0200, Parthiban Nallathambi wrote:
->> Add support for the MYiR imx6ULL based single board computer
->> equipped with on board 256MB NAND & RAM. The board also
->> provides expansion header for expansion board, but this
->> commit adds only support for SBC.
->>
->> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
->> ---
->>  arch/arm/boot/dts/Makefile                       |   1 +
->>  arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts |  19 ++
->>  arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi     | 247 +++++++++++++++++++++++
->>  3 files changed, 267 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
->>  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index e8dd99201397..eab86051d782 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -612,6 +612,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
->>  	imx6ull-14x14-evk.dtb \
->>  	imx6ull-colibri-eval-v3.dtb \
->>  	imx6ull-colibri-wifi-eval-v3.dtb \
->> +	imx6ull-myir-mys-6ulx-nand.dtb \
->>  	imx6ull-opos6uldev.dtb \
->>  	imx6ull-phytec-segin-ff-rdk-nand.dtb \
->>  	imx6ull-phytec-segin-ff-rdk-emmc.dtb \
->> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
->> new file mode 100644
->> index 000000000000..6eaba8a8d7a9
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
->> @@ -0,0 +1,19 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2020 Linumiz
->> + * Author: Parthiban Nallathambi <parthiban@linumiz.com>
->> + */
->> +
->> +/dts-v1/;
->> +#include "imx6ull.dtsi"
->> +#include "imx6ull-myir-mys-6ulx.dtsi"
->> +
->> +/ {
->> +	model = "MYiR i.MX6ULL MYS-6ULX Single Board Computer with NAND";
->> +	compatible = "myir,imx6ul-mys-6ulx-nand", "myir,imx6ul-mys-6ulx",
->> +		     "fsl,imx6ull";
+On 4/27/20 8:18 AM, Marco Felsch wrote:
+> Hi Parthiban,
 > 
-> Any new compatible needs to be documented.
-
-Sure, thanks.
-
+> a few more minor comments..
 > 
->> +};
->> +
->> +&gpmi {
->> +	status = "okay";
->> +};
+> On 20-04-08 20:43, Parthiban Nallathambi wrote:
+> 
+> ...
+> 
 >> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
 >> new file mode 100644
 >> index 000000000000..f0a514187c21
@@ -182,19 +135,6 @@ Sure, thanks.
 >> +		compatible = "simple-bus";
 >> +		#address-cells = <1>;
 >> +		#size-cells = <0>;
-> 
-> Drop the container node and put fixed regulator nodes directly under
-> root.  Suggest to use name schema below:
-> 
-> 	regulator-xxx {
-> 		...
-> 	};
-
-Fixed in v2. thanks
-
-> 
-> Shawn
-> 
 >> +
 >> +		vdd_5v: regulator@0 {
 >> +			compatible = "regulator-fixed";
@@ -236,6 +176,12 @@ Fixed in v2. thanks
 >> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
 >> +			clock-names = "rmii-ref";
 >> +			status = "okay";
+> 
+> Status not needed here.
+
+Thanks, removed it.
+
+> 
 >> +		};
 >> +	};
 >> +};
@@ -289,6 +235,15 @@ Fixed in v2. thanks
 >> +	keep-power-in-suspend;
 >> +	vmmc-supply = <&vdd_3v3>;
 >> +	status = "disabled";
+> 
+> Status not needed here.
+
+Removed, thanks.
+
+> 
+> Regards,
+>   Marco
+> 
 >> +};
 >> +
 >> +&iomuxc {
@@ -423,11 +378,6 @@ Fixed in v2. thanks
 >> -- 
 >> 2.11.0
 >>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
 Thanks,
