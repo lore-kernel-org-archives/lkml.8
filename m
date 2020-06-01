@@ -2,123 +2,189 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F81C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C620C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856EA20707
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575E720723
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="NKIPuOb+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aDA2GwNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgFAAAD (ORCPT
+        id S1728439AbgFAAFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 20:00:03 -0400
-Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:51846 "EHLO
-        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgFAAAD (ORCPT
+        Sun, 31 May 2020 20:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgFAAE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 20:00:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Z74uNfK0Ym5ZqaEdxADt4Ndt6oocQxYkHvKwmfAtpGM=; b=NKIPuOb+LvM8rpEjsEOiK041Cu
-        445U05kGiuR7JUzKp+H5+FIxHgNaRyp8p/1eKU9a4KJzE4ngE45HB2I5JuZBGQgFJ6uAa9DjTDJfK
-        fB6q8LSZTU9mtUBbkqn2ACUE/Hp6hhvLvg4mt0ignezSakcCUl9aRci/DR1ZpQ+3aAJ09evntX3L7
-        qSLhN3dI79mbPh0v+oXwhAgwHy4FHJppNH3xUfe8bzVtskDtgmiDRlqpQ3tHtcKlgwFSfUm602maO
-        CPctl8xBNxaL8k4yPXv1H+cuOkUT2EqnwHXznWdcrZU0k71tRSD3QzwkeiK6Sw6PAvbWDYEo7DPvK
-        oPXHB8OQ==;
-Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jfXrx-0002hO-0D; Sun, 31 May 2020 18:00:01 -0600
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-References: <20200528054043.621510-1-hch@lst.de>
- <20200528054043.621510-10-hch@lst.de>
- <CAHk-=wgpnR9sBeie_z0xA3mYzG50Oiw1jZjyHt0eLX6p45ARvQ@mail.gmail.com>
- <20200529123239.GA28608@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <02497609-e0cf-1aca-eaab-030becf57152@deltatee.com>
-Date:   Sun, 31 May 2020 17:59:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 31 May 2020 20:04:59 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDF6C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 17:04:59 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id p123so4319282yba.6
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 17:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jjj6eWvS7e1mj+eJam5N+2rvoKgDVsk9FDt9PbhoqpY=;
+        b=aDA2GwNKefW0b0673a1OSraFtu3qnzx/a02mNNikuBNMHd0y4zKy9t3UjzcSOoDITy
+         se32lqZ+qFW4raVgkryWrgaeMvhzByfDcURBVy53mNA+Fgtc2Gl++KQnrwEdUmehyFob
+         5dqWy1EXCHCyTAhoTNZPnTvYsO10fnDjTC7a1ZV+mxhWC7ShPZDY+VyoVRLHnemmP5sL
+         D3D3KZu5vN74hSh8fRXIWo7/mz0OvzOj3vyOKF8QWoAKN1ap/1Kcscs0BSSp/Y+uP6at
+         vueTCOwM2fY2TkZBcpG0FOsvUQzM/pQOYGplIBxCoMDPcTc7KliD7MGa3aCwDcDu9Nr0
+         7CWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jjj6eWvS7e1mj+eJam5N+2rvoKgDVsk9FDt9PbhoqpY=;
+        b=OdPxiUyFtx7noAexZ5krNshFxlrmIhRN2bOM6A0B1KW1wyvQFSmUPqWzj8qC/ibFvQ
+         S1mwCeGOfMSrD8q99GUIP4h13VjfhL+G2g3jWZGyTVxUFGGgTtzdg8d4qXWrMHPNV7nt
+         2I/4Jhc5czcwWuLSExBBE+8/Bdu4AYRVKI3i0kwWFhmF3KO3BXxU4HsylXf2PkbUtCgu
+         /QDxjqlaD4Ep6wVdl68sSM0fs1r0j2lO/h/6azMvNxR9GH5WuvZ19pXqrqY4Jl8AH4h2
+         zaiLPwRU9w4gNe2b+mP/hHNOXcNLDWz6hGC/qYQRMHiT7wKseagO/QQGqi1z98PPuRSN
+         N0DA==
+X-Gm-Message-State: AOAM531UPErWsNdS1POYfKrcFnnwMKfsvmF5nLNIUBVDgRht7g9LuRXV
+        DTSVjl6G7bX41QDJRcbc5+5pClAW01IW+sIuTHLkVy+O
+X-Google-Smtp-Source: ABdhPJz4rGRL5Jkuspj93VWMocMBL6JgCsO5otMcIog8ue7DfHNRT+jjvBenNWEfxXnvknkQix3gLRbLR+C4k82JBLg=
+X-Received: by 2002:a25:c08b:: with SMTP id c133mr30227264ybf.286.1590969898250;
+ Sun, 31 May 2020 17:04:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200529123239.GA28608@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.191.165
-X-SA-Exim-Rcpt-To: netfilter-devel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, raven@themaw.net, viro@zeniv.linux.org.uk, torvalds@linux-foundation.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: Re: [PATCH 09/14] fs: don't change the address limit for
- ->write_iter in __kernel_write
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20200531162206.911168-1-jolsa@kernel.org>
+In-Reply-To: <20200531162206.911168-1-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Sun, 31 May 2020 17:04:47 -0700
+Message-ID: <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Ensure group is defined on top of the same cpu mask
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 31, 2020 at 9:22 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Jin Yao reported the issue (and posted first versions of this change)
+> with groups being defined over events with different cpu mask.
+>
+> This causes assert aborts in get_group_fd, like:
+>
+>   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+>   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
+>   Aborted
+>
+> All the events in the group have to be defined over the same
+> cpus so the group_fd can be found for every leader/member pair.
+>
+> Adding check to ensure this condition is met and removing the
+> group (with warning) if we detect mixed cpus, like:
+>
+>   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+>   WARNING: event cpu maps do not match, disabling group:
+>     anon group { power/energy-cores/, cycles }
+>     anon group { instructions, power/energy-cores/ }
 
+This is really cool! I wonder if there is a better wording for 'event
+cpu maps' ? It may be useful to list what the cpu maps are for the
+events as a diagnostic aid.
 
-On 2020-05-29 6:32 a.m., Christoph Hellwig wrote:
-> On Thu, May 28, 2020 at 11:43:13AM -0700, Linus Torvalds wrote:
->> On Wed, May 27, 2020 at 10:41 PM Christoph Hellwig <hch@lst.de> wrote:
->>>
->>> -ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t *pos)
->>> +ssize_t __kernel_write(struct file *file, const void *buf, size_t count,
->>> +               loff_t *pos)
->>
->> Please don't do these kinds of pointless whitespace changes.
->>
->> If you have an actual 80x25 vt100 sitting in a corner, it's not really
->> conducive to kernel development any more.
-> 
-> I have real 80x25 xterms, as that allows me to comfortably fit 4 of
-> them onto my latop screen.
+Thanks,
+Ian
 
-I second this. Doing work on a compact laptop is a legitimate use case
-and we can't all lug around big monitors with our laptops. I also find
-more terminals on a screen to be more productive.
-
-I'd also like to make the point that I never thought the width limit was
-all that related to the hardware. It's been widely accepted for ages
-that it's easier to read narrower blocks of text (try reading a book on
-a landscape tablet: it's very difficult and causes eye strain). This is
-why newspapers and magazines have always laid out their text in columns
-and professional websites limit the width of their content. They have
-the hardware to write much longer lines but chose not to for
-readability. (Sadly, the *one* news source that I respect that doesn't
-do this is LWN and I have to resort to reader view in Firefox to make it
-readable.)
-
-Furthermore, I find enforcing a line length limit on newer coders is one
-of the easiest ways to improve the readability of their code. Without
-it, I've seen developers generate lines of code that don't even fit in
-the full width of a standard monitor. Putting in a little extra effort
-to try to be clear in a shorter line (or adding more lines) usually pays
-off in spades for readability. Or, it at least gets them to start
-thinking about readability as an important concern. 90% of the time it
-is better to refactor code that doesn't fit comfortably within the line
-length limit than it is to violate it.
-
-I personally set my terminal size to 80 chars because I believe it helps
-the readability of the code I write. It has nothing to do with the width
-of my monitor or the amount of characters I could theoretically fit
-across my screen.
-
-Logan
+> Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
+> Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/builtin-stat.c | 51 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index b2b79aa161dd..512a41363d07 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -190,6 +190,55 @@ static struct perf_stat_config stat_config = {
+>         .big_num                = true,
+>  };
+>
+> +static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+> +{
+> +       if (!a->core.cpus && !b->core.cpus)
+> +               return true;
+> +
+> +       if (!a->core.cpus || !b->core.cpus)
+> +               return false;
+> +
+> +       if (a->core.cpus->nr != b->core.cpus->nr)
+> +               return false;
+> +
+> +       for (int i = 0; i < a->core.cpus->nr; i++) {
+> +               if (a->core.cpus->map[i] != b->core.cpus->map[i])
+> +                       return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +static void evlist__check_cpu_maps(struct evlist *evlist)
+> +{
+> +       struct evsel *evsel, *pos, *leader;
+> +       char buf[1024];
+> +
+> +       evlist__for_each_entry(evlist, evsel) {
+> +               leader = evsel->leader;
+> +
+> +               /* Check that leader matches cpus with each member. */
+> +               if (leader == evsel)
+> +                       continue;
+> +               if (cpus_map_matched(leader, evsel))
+> +                       continue;
+> +
+> +               /*
+> +                * If there's mismatch display dismantle the
+> +                * group and warn user.
+> +                */
+> +               WARN_ONCE(1, "WARNING: group events cpu maps do not match, disabling group:\n");
+> +               evsel__group_desc(leader, buf, sizeof(buf));
+> +               pr_warning("  %s\n", buf);
+> +
+> +               for_each_group_evsel(pos, leader) {
+> +                       pos->leader = pos;
+> +                       pos->core.nr_members = 0;
+> +               }
+> +               evsel->leader->core.nr_members = 0;
+> +       }
+> +}
+> +
+>  static inline void diff_timespec(struct timespec *r, struct timespec *a,
+>                                  struct timespec *b)
+>  {
+> @@ -1962,6 +2011,8 @@ int cmd_stat(int argc, const char **argv)
+>         } else if (argc && !strncmp(argv[0], "rep", 3))
+>                 return __cmd_report(argc, argv);
+>
+> +       evlist__check_cpu_maps(evsel_list);
+> +
+>         interval = stat_config.interval;
+>         timeout = stat_config.timeout;
+>
+> --
+> 2.25.4
+>
