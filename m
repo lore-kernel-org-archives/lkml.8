@@ -2,53 +2,51 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E247C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA005206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A94206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037783;
-	bh=Uu427Pif+dmGwUKTeKrRVMNQQRMF0AAQYGAbly+3Wr4=;
+	s=default; t=1591037785;
+	bh=lEs7O1rZBUCuzb/jSCMrxt3jnkduhVK1kGNYfbO8NQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xEi6In7qHsPjELzwumpjh/8Cs0N83aJkk4TjYTGExtCpZrk/arhAnJ0rg70jZ0/g7
-	 dEOg+XDlYTS4ctH4VgMNW99ci1CCGSGiEXRDQcfvQe6Y+tjUJtm4FKX9XhjyhrmH5G
-	 cLN8SL+N6hof2dVRqmJiEmfKhpJS/kNMkyfZKn2g=
+	b=xQNvNeT1J1LRn6yfThiZszjA2V3hdt3dybL1v0stoghi7E/Y8AZkc7/zA6Eaexx58
+	 6OgyNuP53aXkhUtUnzw1dvvnxO7T4jMmPb4BXMaUIQyjWa5GRudwGsFGmgGUxLH7pq
+	 1wqjAOJGA4s1KlepJViWQNn4/82AT2+43PR+R0c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgFAS4W (ORCPT
+        id S1729671AbgFASAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43398 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729677AbgFASAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:39 -0400
+        id S1729606AbgFASAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53BAD2065C;
-        Mon,  1 Jun 2020 18:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7CF3206E2;
+        Mon,  1 Jun 2020 18:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034438;
-        bh=Uu427Pif+dmGwUKTeKrRVMNQQRMF0AAQYGAbly+3Wr4=;
+        s=default; t=1591034414;
+        bh=lEs7O1rZBUCuzb/jSCMrxt3jnkduhVK1kGNYfbO8NQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZTPdaz7Mzrqk2x/u2vYAKTWvaTux0Whxmw+lXw34MzCKXzYyAQ0OkDBxJBQml2oP
-         yfT6Z6IYXXYhdlsxAHhcUlMap2/C6zqMy1RM7JxWspdJTBFV0nxPyZk8+fKTgjUsGj
-         PIBhnqz6647OVXohg62wEBMZ5va+Zd7issAA2iwA=
+        b=ayWs9azZVJejB2X7ASSvKqHHR2dpB3V2buTe7Rg3IL7400lNB2sk/DluBAebi6Rsx
+         JKDJL34oOBWjsAHK3VOThjayHX1RZqkApuvbarDf426zp+4LjLzlO0D2nyOIrw8jdD
+         2n5+kf1j8yNOysaMZKtzPXSEa9cUGORZfyUJxgmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Nicolas Pitre <nico@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/77] ARM: 8843/1: use unified assembler in headers
-Date:   Mon,  1 Jun 2020 19:53:37 +0200
-Message-Id: <20200601174022.344327002@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Payne <marc.payne@mdpsys.co.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 06/77] r8152: support additional Microsoft Surface Ethernet Adapter variant
+Date:   Mon,  1 Jun 2020 19:53:11 +0200
+Message-Id: <20200601174017.556921943@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -61,148 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+From: Marc Payne <marc.payne@mdpsys.co.uk>
 
-[ Upstream commit c001899a5d6c2d7a0f3b75b2307ddef137fb46a6 ]
+[ Upstream commit c27a204383616efba5a4194075e90819961ff66a ]
 
-Use unified assembler syntax (UAL) in headers. Divided syntax is
-considered deprecated. This will also allow to build the kernel
-using LLVM's integrated assembler.
+Device id 0927 is the RTL8153B-based component of the 'Surface USB-C to
+Ethernet and USB Adapter' and may be used as a component of other devices
+in future. Tested and working with the r8152 driver.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Update the cdc_ether blacklist due to the RTL8153 'network jam on suspend'
+issue which this device will cause (personally confirmed).
+
+Signed-off-by: Marc Payne <marc.payne@mdpsys.co.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/include/asm/assembler.h | 12 ++++++------
- arch/arm/include/asm/vfpmacros.h |  8 ++++----
- arch/arm/lib/bitops.h            |  8 ++++----
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/usb/cdc_ether.c |   11 +++++++++--
+ drivers/net/usb/r8152.c     |    1 +
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
-index 88286dd483ff..965224d14e6c 100644
---- a/arch/arm/include/asm/assembler.h
-+++ b/arch/arm/include/asm/assembler.h
-@@ -374,9 +374,9 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	.macro	usraccoff, instr, reg, ptr, inc, off, cond, abort, t=TUSER()
- 9999:
- 	.if	\inc == 1
--	\instr\cond\()b\()\t\().w \reg, [\ptr, #\off]
-+	\instr\()b\t\cond\().w \reg, [\ptr, #\off]
- 	.elseif	\inc == 4
--	\instr\cond\()\t\().w \reg, [\ptr, #\off]
-+	\instr\t\cond\().w \reg, [\ptr, #\off]
- 	.else
- 	.error	"Unsupported inc macro argument"
- 	.endif
-@@ -415,9 +415,9 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	.rept	\rept
- 9999:
- 	.if	\inc == 1
--	\instr\cond\()b\()\t \reg, [\ptr], #\inc
-+	\instr\()b\t\cond \reg, [\ptr], #\inc
- 	.elseif	\inc == 4
--	\instr\cond\()\t \reg, [\ptr], #\inc
-+	\instr\t\cond \reg, [\ptr], #\inc
- 	.else
- 	.error	"Unsupported inc macro argument"
- 	.endif
-@@ -458,7 +458,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
- #ifndef CONFIG_CPU_USE_DOMAINS
- 	adds	\tmp, \addr, #\size - 1
--	sbcccs	\tmp, \tmp, \limit
-+	sbcscc	\tmp, \tmp, \limit
- 	bcs	\bad
- #ifdef CONFIG_CPU_SPECTRE
- 	movcs	\addr, #0
-@@ -472,7 +472,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	sub	\tmp, \limit, #1
- 	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
- 	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
--	subhss	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
-+	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
- 	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
- 	csdb
- #endif
-diff --git a/arch/arm/include/asm/vfpmacros.h b/arch/arm/include/asm/vfpmacros.h
-index ef5dfedacd8d..628c336e8e3b 100644
---- a/arch/arm/include/asm/vfpmacros.h
-+++ b/arch/arm/include/asm/vfpmacros.h
-@@ -29,13 +29,13 @@
- 	ldr	\tmp, =elf_hwcap		    @ may not have MVFR regs
- 	ldr	\tmp, [\tmp, #0]
- 	tst	\tmp, #HWCAP_VFPD32
--	ldcnel	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
-+	ldclne	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
- 	addeq	\base, \base, #32*4		    @ step over unused register space
- #else
- 	VFPFMRX	\tmp, MVFR0			    @ Media and VFP Feature Register 0
- 	and	\tmp, \tmp, #MVFR0_A_SIMD_MASK	    @ A_SIMD field
- 	cmp	\tmp, #2			    @ 32 x 64bit registers?
--	ldceql	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
-+	ldcleq	p11, cr0, [\base],#32*4		    @ FLDMIAD \base!, {d16-d31}
- 	addne	\base, \base, #32*4		    @ step over unused register space
- #endif
- #endif
-@@ -53,13 +53,13 @@
- 	ldr	\tmp, =elf_hwcap		    @ may not have MVFR regs
- 	ldr	\tmp, [\tmp, #0]
- 	tst	\tmp, #HWCAP_VFPD32
--	stcnel	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
-+	stclne	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
- 	addeq	\base, \base, #32*4		    @ step over unused register space
- #else
- 	VFPFMRX	\tmp, MVFR0			    @ Media and VFP Feature Register 0
- 	and	\tmp, \tmp, #MVFR0_A_SIMD_MASK	    @ A_SIMD field
- 	cmp	\tmp, #2			    @ 32 x 64bit registers?
--	stceql	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
-+	stcleq	p11, cr0, [\base],#32*4		    @ FSTMIAD \base!, {d16-d31}
- 	addne	\base, \base, #32*4		    @ step over unused register space
- #endif
- #endif
-diff --git a/arch/arm/lib/bitops.h b/arch/arm/lib/bitops.h
-index 93cddab73072..95bd35991288 100644
---- a/arch/arm/lib/bitops.h
-+++ b/arch/arm/lib/bitops.h
-@@ -7,7 +7,7 @@
- ENTRY(	\name		)
- UNWIND(	.fnstart	)
- 	ands	ip, r1, #3
--	strneb	r1, [ip]		@ assert word-aligned
-+	strbne	r1, [ip]		@ assert word-aligned
- 	mov	r2, #1
- 	and	r3, r0, #31		@ Get bit offset
- 	mov	r0, r0, lsr #5
-@@ -32,7 +32,7 @@ ENDPROC(\name		)
- ENTRY(	\name		)
- UNWIND(	.fnstart	)
- 	ands	ip, r1, #3
--	strneb	r1, [ip]		@ assert word-aligned
-+	strbne	r1, [ip]		@ assert word-aligned
- 	mov	r2, #1
- 	and	r3, r0, #31		@ Get bit offset
- 	mov	r0, r0, lsr #5
-@@ -62,7 +62,7 @@ ENDPROC(\name		)
- ENTRY(	\name		)
- UNWIND(	.fnstart	)
- 	ands	ip, r1, #3
--	strneb	r1, [ip]		@ assert word-aligned
-+	strbne	r1, [ip]		@ assert word-aligned
- 	and	r2, r0, #31
- 	mov	r0, r0, lsr #5
- 	mov	r3, #1
-@@ -89,7 +89,7 @@ ENDPROC(\name		)
- ENTRY(	\name		)
- UNWIND(	.fnstart	)
- 	ands	ip, r1, #3
--	strneb	r1, [ip]		@ assert word-aligned
-+	strbne	r1, [ip]		@ assert word-aligned
- 	and	r3, r0, #31
- 	mov	r0, r0, lsr #5
- 	save_and_disable_irqs ip
--- 
-2.25.1
-
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -821,14 +821,21 @@ static const struct usb_device_id	produc
+ 	.driver_info = 0,
+ },
+ 
+-/* Microsoft Surface 3 dock (based on Realtek RTL8153) */
++/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x07c6, USB_CLASS_COMM,
+ 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
+ 	.driver_info = 0,
+ },
+ 
+-	/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
++/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153B) */
++{
++	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x0927, USB_CLASS_COMM,
++			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
++	.driver_info = 0,
++},
++
++/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(TPLINK_VENDOR_ID, 0x0601, USB_CLASS_COMM,
+ 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5329,6 +5329,7 @@ static const struct usb_device_id rtl815
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6)},
++	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0927)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
 
 
