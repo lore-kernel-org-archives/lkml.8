@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB83C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257272065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E22206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035203;
-	bh=ANJLV3hUN0eVoqgiZj7BF9PIdjzd9Cn33TUSH8PQwo4=;
+	s=default; t=1591035209;
+	bh=JOvf7Z0unFZPa0R3IIQFYG1Wc1kvGB+pDnGn35Q+6iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BArhxGsuV+ozMleW+yBc/Nnpd2p9UkQuoI8Bar18L2k0WPXQuyl/JhVdWGL5Vm8l4
-	 bw+gw19k/Uze1RK3uqKeF7tETL+E2uo31TJzt5FpotvLDwGu5/FvP1ZDufYEfQ8VGs
-	 HYzFU8p/fyzD2arQMxSOFQUgWlyHaq3wUvAefYxo=
+	b=zJBnXUlC5VfbFZjWJFrrXIBT0ZhURR8HFGOJSdVx7MH8QDlC4NGNcoRlKnB2e2CFI
+	 UY3z4zmLRPliMxJZqIGaWqP68W0qt1AVLAtxXazPYcWGg9NaAMTNbr5uxmVP+jm2dz
+	 oR0KAxfNkLOKHweaG0/RkcUtH9VaC4xQ5UQXVNtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbgFASNW (ORCPT
+        id S1731338AbgFASN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60710 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731305AbgFASNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:09 -0400
+        id S1731329AbgFASNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:13:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FB332068D;
-        Mon,  1 Jun 2020 18:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B22482068D;
+        Mon,  1 Jun 2020 18:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035188;
-        bh=ANJLV3hUN0eVoqgiZj7BF9PIdjzd9Cn33TUSH8PQwo4=;
+        s=default; t=1591035202;
+        bh=JOvf7Z0unFZPa0R3IIQFYG1Wc1kvGB+pDnGn35Q+6iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WI8C1Qx/oJnS572uKg8/K/VBlvUqDHaU2wGEFn0naIGyURdFnkfsk57IS0AY2i4BK
-         CrehjE6FibNKmt9iGqw/qsDHIkBtaPK0HE8hWb+ZzWbyrRzZmy3Dj6JxWd8BWZJhWW
-         juWrcb1+CRIiZgxjx/TIS9Ctwezrc2/uLE8kd0OI=
+        b=ED+jprWkWqQ0kXisqIZnKnMP97joxIQ6tHf0OFp6N/DhHriNNbWwYvs1euDe7Qy4X
+         UoO9Kvzs1VAAACwYk47h6/7U8p2JAwKi0eu9SmM+1VP63D3AmznD+dBLki6XK7nSwL
+         6oUIjAGl6Gz/qc7K1saFgylvKQ9JuZPCFaI86PWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 049/177] ARM: dts: rockchip: swap clock-names of gpu nodes
-Date:   Mon,  1 Jun 2020 19:53:07 +0200
-Message-Id: <20200601174053.130677414@linuxfoundation.org>
+Subject: [PATCH 5.6 055/177] net: microchip: encx24j600: add missed kthread_stop
+Date:   Mon,  1 Jun 2020 19:53:13 +0200
+Message-Id: <20200601174053.607328934@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,65 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit b14f3898d2c25a9b47a61fb879d0b1f3af92c59b ]
+[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
 
-Dts files with Rockchip 'gpu' nodes were manually verified.
-In order to automate this process arm,mali-utgard.txt
-has been converted to yaml. In the new setup dtbs_check with
-arm,mali-utgard.yaml expects clock-names values
-in the same order, so fix that.
+This driver calls kthread_run() in probe, but forgets to call
+kthread_stop() in probe failure and remove.
+Add the missed kthread_stop() to fix it.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200425192500.1808-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
- arch/arm/boot/dts/rk322x.dtsi | 2 +-
- arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index cf36e25195b4..8c4b8f56c9e0 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -128,7 +128,7 @@
- 		assigned-clocks = <&cru SCLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		clocks = <&cru SCLK_GPU>, <&cru SCLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 4e90efdc9630..729119952c68 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -561,7 +561,7 @@
- 				  "pp1",
- 				  "ppmmu1";
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU_A>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 241f43e29c77..bb5ff10b9110 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -84,7 +84,7 @@
- 		compatible = "arm,mali-400";
- 		reg = <0x10090000 0x10000>;
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		assigned-clocks = <&cru ACLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		resets = <&cru SRST_GPU>;
+diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
+index 39925e4bf2ec..b25a13da900a 100644
+--- a/drivers/net/ethernet/microchip/encx24j600.c
++++ b/drivers/net/ethernet/microchip/encx24j600.c
+@@ -1070,7 +1070,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 	if (unlikely(ret)) {
+ 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
+ 			  ret);
+-		goto out_free;
++		goto out_stop;
+ 	}
+ 
+ 	eidled = encx24j600_read_reg(priv, EIDLED);
+@@ -1088,6 +1088,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 
+ out_unregister:
+ 	unregister_netdev(priv->ndev);
++out_stop:
++	kthread_stop(priv->kworker_task);
+ out_free:
+ 	free_netdev(ndev);
+ 
+@@ -1100,6 +1102,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
+ 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
+ 
+ 	unregister_netdev(priv->ndev);
++	kthread_stop(priv->kworker_task);
+ 
+ 	free_netdev(priv->ndev);
+ 
 -- 
 2.25.1
 
