@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CCDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4A0720679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CFC20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037706;
-	bh=zSDmvYYRnv1+LlKvRo10Y1i8mPchkOobWDngou8BWwQ=;
+	s=default; t=1591037714;
+	bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iaeW3UVsOzuJ/GU9nrAJnESfFsiD6C2xHxQBhiIkoswbFBm2gEzY1WpFtbKRXDY2T
-	 y2kDH2Q3oU0vPnosxHr4Ev3lRUGoyJYIqr05igRBjiJa226O+EWn52NxWg+vFCo2ER
-	 jA1LD6MSLMnSL8+AL3ewQ/a0kWFQNBmPGT49DAxI=
+	b=kwBHCEGEWSQieUUG/qvbTZTZUqlD5E+6UCT25Uv1G/sdq20DENZsZCqJBhp62nCJi
+	 zGlLWlPe3DA4m66RwpbPd3upgKJPnZgc1aa93sfJsqJWOtwLpEt3r1nS4NFsOhhR9c
+	 e3kjuTIzxZIPt3KfD6jGv7RnT8eyMFQ3xYXNy72I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbgFASzG (ORCPT
+        id S1730085AbgFASzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44568 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729814AbgFASBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:35 -0400
+        id S1729809AbgFASBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E75EB20776;
-        Mon,  1 Jun 2020 18:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A96112073B;
+        Mon,  1 Jun 2020 18:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034494;
-        bh=zSDmvYYRnv1+LlKvRo10Y1i8mPchkOobWDngou8BWwQ=;
+        s=default; t=1591034492;
+        bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EoO3rpa93i/bz5AcS4/7ohiD4ALCnaVx8jkNGe/ghBIVKd7gTLh/YdOi4V4IeFBHd
-         YTUDeQ/FEGcTJm2xZD/fbL8yhoNssa74ya/QHqMHbrwZra7HSTl/Foz2CEdj7zYVoI
-         9WkCHe/qUB+boo5E7Q5aQkUOh5db7DO8gm22KHPM=
+        b=wwnwf/Jo+VibTriLs5Utn45Ttqj9o4n6flB9xvlXTtYhsnSaMJ8+TVaHrm+FFhGTT
+         Y+7I8Wtt4+XmJp+m6SkuL2AD/GnZoD82suGN2M1Bhn//W2CPHC6ib17xZuQcSVuj5R
+         V5h6bU/wSgaa/nVGCk7JTXMssQqZpmYEhMLzIFR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Borislav Petkov <bp@suse.de>, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.14 55/77] copy_xstate_to_kernel(): dont leave parts of destination uninitialized
-Date:   Mon,  1 Jun 2020 19:54:00 +0200
-Message-Id: <20200601174025.927328180@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alexander Dahl <post@lespocky.de>, Borislav Petkov <bp@suse.de>
+Subject: [PATCH 4.14 54/77] x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
+Date:   Mon,  1 Jun 2020 19:53:59 +0200
+Message-Id: <20200601174025.781995133@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,146 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Alexander Dahl <post@lespocky.de>
 
-commit 9e4636545933131de15e1ecd06733538ae939b2f upstream.
+commit 88743470668ef5eb6b7ba9e0f99888e5999bf172 upstream.
 
-copy the corresponding pieces of init_fpstate into the gaps instead.
+The intermediate result of the old term (4UL * 1024 * 1024 * 1024) is
+4 294 967 296 or 0x100000000 which is no problem on 64 bit systems.
+The patch does not change the later overall result of 0x100000 for
+MAX_DMA32_PFN (after it has been shifted by PAGE_SHIFT). The new
+calculation yields the same result, but does not require 64 bit
+arithmetic.
 
-Cc: stable@kernel.org
-Tested-by: Alexander Potapenko <glider@google.com>
-Acked-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+On 32 bit systems the old calculation suffers from an arithmetic
+overflow in that intermediate term in braces: 4UL aka unsigned long int
+is 4 byte wide and an arithmetic overflow happens (the 0x100000000 does
+not fit in 4 bytes), the in braces result is truncated to zero, the
+following right shift does not alter that, so MAX_DMA32_PFN evaluates to
+0 on 32 bit systems.
+
+That wrong value is a problem in a comparision against MAX_DMA32_PFN in
+the init code for swiotlb in pci_swiotlb_detect_4gb() to decide if
+swiotlb should be active.  That comparison yields the opposite result,
+when compiling on 32 bit systems.
+
+This was not possible before
+
+  1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
+
+when that MAX_DMA32_PFN was first made visible to x86_32 (and which
+landed in v3.0).
+
+In practice this wasn't a problem, unless CONFIG_SWIOTLB is active on
+x86-32.
+
+However if one has set CONFIG_IOMMU_INTEL, since
+
+  c5a5dc4cbbf4 ("iommu/vt-d: Don't switch off swiotlb if bounce page is used")
+
+there's a dependency on CONFIG_SWIOTLB, which was not necessarily
+active before. That landed in v5.4, where we noticed it in the fli4l
+Linux distribution. We have CONFIG_IOMMU_INTEL active on both 32 and 64
+bit kernel configs there (I could not find out why, so let's just say
+historical reasons).
+
+The effect is at boot time 64 MiB (default size) were allocated for
+bounce buffers now, which is a noticeable amount of memory on small
+systems like pcengines ALIX 2D3 with 256 MiB memory, which are still
+frequently used as home routers.
+
+We noticed this effect when migrating from kernel v4.19 (LTS) to v5.4
+(LTS) in fli4l and got that kernel messages for example:
+
+  Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
+  …
+  Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
+  …
+  PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+  software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
+
+The initial analysis and the suggested fix was done by user 'sourcejedi'
+at stackoverflow and explicitly marked as GPLv2 for inclusion in the
+Linux kernel:
+
+  https://unix.stackexchange.com/a/520525/50007
+
+The new calculation, which does not suffer from that overflow, is the
+same as for arch/mips now as suggested by Robin Murphy.
+
+The fix was tested by fli4l users on round about two dozen different
+systems, including both 32 and 64 bit archs, bare metal and virtualized
+machines.
+
+ [ bp: Massage commit message. ]
+
+Fixes: 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
+Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Alexander Dahl <post@lespocky.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Link: https://unix.stackexchange.com/q/520065/50007
+Link: https://web.nettworks.org/bugs/browse/FFL-2560
+Link: https://lkml.kernel.org/r/20200526175749.20742-1-post@lespocky.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/fpu/xstate.c |   86 ++++++++++++++++++++++++-------------------
- 1 file changed, 48 insertions(+), 38 deletions(-)
+ arch/x86/include/asm/dma.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -964,18 +964,31 @@ static inline bool xfeatures_mxcsr_quirk
- 	return true;
- }
+--- a/arch/x86/include/asm/dma.h
++++ b/arch/x86/include/asm/dma.h
+@@ -74,7 +74,7 @@
+ #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
  
--/*
-- * This is similar to user_regset_copyout(), but will not add offset to
-- * the source data pointer or increment pos, count, kbuf, and ubuf.
-- */
--static inline void
--__copy_xstate_to_kernel(void *kbuf, const void *data,
--			unsigned int offset, unsigned int size, unsigned int size_total)
-+static void fill_gap(unsigned to, void **kbuf, unsigned *pos, unsigned *count)
- {
--	if (offset < size_total) {
--		unsigned int copy = min(size, size_total - offset);
-+	if (*pos < to) {
-+		unsigned size = to - *pos;
-+
-+		if (size > *count)
-+			size = *count;
-+		memcpy(*kbuf, (void *)&init_fpstate.xsave + *pos, size);
-+		*kbuf += size;
-+		*pos += size;
-+		*count -= size;
-+	}
-+}
+ /* 4GB broken PCI/AGP hardware bus master zone */
+-#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
++#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
  
--		memcpy(kbuf + offset, data, copy);
-+static void copy_part(unsigned offset, unsigned size, void *from,
-+			void **kbuf, unsigned *pos, unsigned *count)
-+{
-+	fill_gap(offset, kbuf, pos, count);
-+	if (size > *count)
-+		size = *count;
-+	if (size) {
-+		memcpy(*kbuf, from, size);
-+		*kbuf += size;
-+		*pos += size;
-+		*count -= size;
- 	}
- }
- 
-@@ -988,8 +1001,9 @@ __copy_xstate_to_kernel(void *kbuf, cons
-  */
- int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int offset_start, unsigned int size_total)
- {
--	unsigned int offset, size;
- 	struct xstate_header header;
-+	const unsigned off_mxcsr = offsetof(struct fxregs_state, mxcsr);
-+	unsigned count = size_total;
- 	int i;
- 
- 	/*
-@@ -1005,46 +1019,42 @@ int copy_xstate_to_kernel(void *kbuf, st
- 	header.xfeatures = xsave->header.xfeatures;
- 	header.xfeatures &= ~XFEATURE_MASK_SUPERVISOR;
- 
-+	if (header.xfeatures & XFEATURE_MASK_FP)
-+		copy_part(0, off_mxcsr,
-+			  &xsave->i387, &kbuf, &offset_start, &count);
-+	if (header.xfeatures & (XFEATURE_MASK_SSE | XFEATURE_MASK_YMM))
-+		copy_part(off_mxcsr, MXCSR_AND_FLAGS_SIZE,
-+			  &xsave->i387.mxcsr, &kbuf, &offset_start, &count);
-+	if (header.xfeatures & XFEATURE_MASK_FP)
-+		copy_part(offsetof(struct fxregs_state, st_space), 128,
-+			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
-+	if (header.xfeatures & XFEATURE_MASK_SSE)
-+		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
-+			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
-+	/*
-+	 * Fill xsave->i387.sw_reserved value for ptrace frame:
-+	 */
-+	copy_part(offsetof(struct fxregs_state, sw_reserved), 48,
-+		  xstate_fx_sw_bytes, &kbuf, &offset_start, &count);
- 	/*
- 	 * Copy xregs_state->header:
- 	 */
--	offset = offsetof(struct xregs_state, header);
--	size = sizeof(header);
--
--	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
-+	copy_part(offsetof(struct xregs_state, header), sizeof(header),
-+		  &header, &kbuf, &offset_start, &count);
- 
--	for (i = 0; i < XFEATURE_MAX; i++) {
-+	for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
- 		/*
- 		 * Copy only in-use xstates:
- 		 */
- 		if ((header.xfeatures >> i) & 1) {
- 			void *src = __raw_xsave_addr(xsave, 1 << i);
- 
--			offset = xstate_offsets[i];
--			size = xstate_sizes[i];
--
--			/* The next component has to fit fully into the output buffer: */
--			if (offset + size > size_total)
--				break;
--
--			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
-+			copy_part(xstate_offsets[i], xstate_sizes[i],
-+				  src, &kbuf, &offset_start, &count);
- 		}
- 
- 	}
--
--	if (xfeatures_mxcsr_quirk(header.xfeatures)) {
--		offset = offsetof(struct fxregs_state, mxcsr);
--		size = MXCSR_AND_FLAGS_SIZE;
--		__copy_xstate_to_kernel(kbuf, &xsave->i387.mxcsr, offset, size, size_total);
--	}
--
--	/*
--	 * Fill xsave->i387.sw_reserved value for ptrace frame:
--	 */
--	offset = offsetof(struct fxregs_state, sw_reserved);
--	size = sizeof(xstate_fx_sw_bytes);
--
--	__copy_xstate_to_kernel(kbuf, xstate_fx_sw_bytes, offset, size, size_total);
-+	fill_gap(size_total, &kbuf, &offset_start, &count);
- 
- 	return 0;
- }
+ #ifdef CONFIG_X86_32
+ /* The maximum address that we can perform a DMA transfer to on this platform */
 
 
