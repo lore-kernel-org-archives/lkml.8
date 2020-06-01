@@ -2,59 +2,68 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5641D2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60EA2207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:55:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591055704;
+	bh=MoUu60NYsXeP5Uag9clrWlvwKZqqibA3Qh+X93+U7ac=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=qqA+rFGk5+gfOLb+JkrZcZRo3I/DqtfnIrWV5l8SFzIs53RJIjC9dM+fX0n+ei6wA
+	 2pw7hW3hr8nnFD+uigg7H3uP/WA/K1KlLkPwZVDaBuSiH0GE377Vj7KsSY28t7+6MH
+	 4Yok6MeuvORgRiXcpPZSMoKp/ROChBSfz4+FsQps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgFAXtl (ORCPT
+        id S1726450AbgFAXzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 19:49:41 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:51858 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgFAXtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 19:49:41 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 2472C27449;
-        Mon,  1 Jun 2020 19:49:37 -0400 (EDT)
-Date:   Tue, 2 Jun 2020 09:49:36 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joshua Thompson <funaho@jurai.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH 8/8] macintosh/adb-iop: Implement SRQ autopolling
-In-Reply-To: <CAMuHMdVs8ur9pWWEFbYmPLRgdH67coSSrPO0QE8RqFvKjhgyYg@mail.gmail.com>
-Message-ID: <alpine.LNX.2.22.394.2006020936430.8@nippy.intranet>
-References: <cover.1590880623.git.fthain@telegraphics.com.au> <0fb7fdcd99d7820bb27faf1f27f7f6f1923914ef.1590880623.git.fthain@telegraphics.com.au> <CAMuHMdUjrFDob01EWC4e04tAkj5JTm_2Ei5WsPqN1eGDz=x3+Q@mail.gmail.com> <alpine.LNX.2.22.394.2006011006080.8@nippy.intranet>
- <CAMuHMdVs8ur9pWWEFbYmPLRgdH67coSSrPO0QE8RqFvKjhgyYg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 1 Jun 2020 19:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgFAXzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 19:55:03 -0400
+Subject: Re: [git pull] vfs patches from Miklos
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591055702;
+        bh=MoUu60NYsXeP5Uag9clrWlvwKZqqibA3Qh+X93+U7ac=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=il0HK6KmJ0V9W4qmDDejd5+wkS0sgWiwh5/BjEU1T2V2TwOuN/hTsKYnJmImEhsFp
+         0l8QkKGH85hP/G3JZCWIG74XkihgUoguxS7nCO42XqcF7u/YfS33B3ZVDdTL5P3T7B
+         3uu9rYJNvbkUmaHwm0dY2yWXPs6UWR/1V3d0GzMw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200601184036.GH23230@ZenIV.linux.org.uk>
+References: <20200601184036.GH23230@ZenIV.linux.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200601184036.GH23230@ZenIV.linux.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git from-miklos
+X-PR-Tracked-Commit-Id: c8ffd8bcdd28296a198f237cc595148a8d4adfbe
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f359287765c04711ff54fbd11645271d8e5ff763
+Message-Id: <159105570255.29263.11096578901806814897.pr-tracker-bot@kernel.org>
+Date:   Mon, 01 Jun 2020 23:55:02 +0000
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Miklos Szeredi <mszeredi@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jun 2020, Geert Uytterhoeven wrote:
+The pull request you sent on Mon, 1 Jun 2020 19:40:36 +0100:
 
-> >
-> > Sure, it could be absorbed by both asm/mac_iop.h and 
-> > drivers/macintosh/adb-iop.c [...]
-> 
-> asm/mac_iop.h doesn't include asm/adb_iop.h (at least not in my tree, 
-> but perhaps you have plans to change that?), so there's only a single 
-> user.
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git from-miklos
 
-What I meant by "both" was that part of asm/adb_iop.h could be absorbed by 
-drivers/macintosh.adb-iop.c and the rest by asm/mac_iop.h. (And some of it 
-could be tossed out.) I suspect that much of arch/m68k/include/asm could 
-get the same treatment. But I doubt that there is any pay off, because the 
-headers rarely change where they relate to hardware characteristics.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f359287765c04711ff54fbd11645271d8e5ff763
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
