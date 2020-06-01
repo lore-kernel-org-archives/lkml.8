@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE849C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E323C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF6882068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CEF206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035037;
-	bh=IOw+J8XmQdEWpk3fJCeMAQfnTr/XR0y/8woKI1j5Bks=;
+	s=default; t=1591035052;
+	bh=Syz0oJeLENcBeZiJymoRK63ZsyGJDQbC94aTQ556b6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2UyY7NLkC2HT3/ipjcRjPit5MCAeFjEWPJiKvSHqyERJN6MPewupxEZ7w/eBtR3Wf
-	 o4DbnyqPEkcMQxjanIAil8dnwBiwVVEIXM+u1KsCSctmkWM2l/90EfTVAL6zWA2Kl6
-	 +LWtyB8yZznNveCtDN211glX9Qgx9Z+pdjifA1eU=
+	b=JhF3dO1QSrrVweYqkjKlNia5dQg0wZLGlbPHXz8oIFx6qfq7G8K+MRzAaOa436tok
+	 fg/0t7V1rsL0XoxTCCbyTXTTbcxqY0sFVjIbAfMt/Ri4OyTkJLNUhiEU0E6OJOEKB1
+	 jakgV+XTRhbb8yu8vIaIMAobwGAEgBgIOlelFf3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgFASKh (ORCPT
+        id S1730550AbgFASKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:10:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57098 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730980AbgFASKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:20 -0400
+        id S1730993AbgFASK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523582065C;
-        Mon,  1 Jun 2020 18:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44D1A207BB;
+        Mon,  1 Jun 2020 18:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035019;
-        bh=IOw+J8XmQdEWpk3fJCeMAQfnTr/XR0y/8woKI1j5Bks=;
+        s=default; t=1591035028;
+        bh=Syz0oJeLENcBeZiJymoRK63ZsyGJDQbC94aTQ556b6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15uE7JdIybq0LPsLYyvdX8bulTieTxA+h7DFFtfmSjdGvo/fwwFLUkaNnFUDaOUut
-         GbEVsVtaa4wlZ9YDiOipfTuUIUNBAEU2iiQhuW/AGIUNCA5+cc0hK9gXWLMkdrvULb
-         axgZHPpXkDNdAlgiQOtj4/Lu9PoLuaTHoabxyjMU=
+        b=bNhPwIanmK5N7XWTWTy39Pok9nguvKuVNH+vnrnHhJLsaWX1Y/Y9375KhReOGrKxU
+         F8n4rrATQPh9u7n/DevVqOUShOZ1+G/ahuGp19ZCYASmLBoQXxk8BH4ZNpq83JseoP
+         SKqDCZZYzVVDU59DtoUkGIMfkK5UJmSxXoO0yqbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 117/142] xfrm: fix a warning in xfrm_policy_insert_list
-Date:   Mon,  1 Jun 2020 19:54:35 +0200
-Message-Id: <20200601174049.979542925@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Braun <michael-dev@fami-braun.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 121/142] netfilter: nft_reject_bridge: enable reject with bridge vlan
+Date:   Mon,  1 Jun 2020 19:54:39 +0200
+Message-Id: <20200601174050.333572615@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,76 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Michael Braun <michael-dev@fami-braun.de>
 
-commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd upstream.
+commit e9c284ec4b41c827f4369973d2792992849e4fa5 upstream.
 
-This waring can be triggered simply by:
+Currently, using the bridge reject target with tagged packets
+results in untagged packets being sent back.
 
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 1 mark 0 mask 0x10  #[1]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x1   #[2]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x10  #[3]
+Fix this by mirroring the vlan id as well.
 
-Then dmesg shows:
-
-  [ ] WARNING: CPU: 1 PID: 7265 at net/xfrm/xfrm_policy.c:1548
-  [ ] RIP: 0010:xfrm_policy_insert_list+0x2f2/0x1030
-  [ ] Call Trace:
-  [ ]  xfrm_policy_inexact_insert+0x85/0xe50
-  [ ]  xfrm_policy_insert+0x4ba/0x680
-  [ ]  xfrm_add_policy+0x246/0x4d0
-  [ ]  xfrm_user_rcv_msg+0x331/0x5c0
-  [ ]  netlink_rcv_skb+0x121/0x350
-  [ ]  xfrm_netlink_rcv+0x66/0x80
-  [ ]  netlink_unicast+0x439/0x630
-  [ ]  netlink_sendmsg+0x714/0xbf0
-  [ ]  sock_sendmsg+0xe2/0x110
-
-The issue was introduced by Commit 7cb8a93968e3 ("xfrm: Allow inserting
-policies with matching mark and different priorities"). After that, the
-policies [1] and [2] would be able to be added with different priorities.
-
-However, policy [3] will actually match both [1] and [2]. Policy [1]
-was matched due to the 1st 'return true' in xfrm_policy_mark_match(),
-and policy [2] was matched due to the 2nd 'return true' in there. It
-caused WARN_ON() in xfrm_policy_insert_list().
-
-This patch is to fix it by only (the same value and priority) as the
-same policy in xfrm_policy_mark_match().
-
-Thanks to Yuehaibing, we could make this fix better.
-
-v1->v2:
-  - check policy->mark.v == pol->mark.v only without mask.
-
-Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 85f5b3086a04 ("netfilter: bridge: add reject support")
+Signed-off-by: Michael Braun <michael-dev@fami-braun.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_policy.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ net/bridge/netfilter/nft_reject_bridge.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -1433,12 +1433,7 @@ static void xfrm_policy_requeue(struct x
- static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
- 				   struct xfrm_policy *pol)
- {
--	u32 mark = policy->mark.v & policy->mark.m;
--
--	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
--		return true;
--
--	if ((mark & pol->mark.m) == pol->mark.v &&
-+	if (policy->mark.v == pol->mark.v &&
- 	    policy->priority == pol->priority)
- 		return true;
+--- a/net/bridge/netfilter/nft_reject_bridge.c
++++ b/net/bridge/netfilter/nft_reject_bridge.c
+@@ -31,6 +31,12 @@ static void nft_reject_br_push_etherhdr(
+ 	ether_addr_copy(eth->h_dest, eth_hdr(oldskb)->h_source);
+ 	eth->h_proto = eth_hdr(oldskb)->h_proto;
+ 	skb_pull(nskb, ETH_HLEN);
++
++	if (skb_vlan_tag_present(oldskb)) {
++		u16 vid = skb_vlan_tag_get(oldskb);
++
++		__vlan_hwaccel_put_tag(nskb, oldskb->vlan_proto, vid);
++	}
+ }
  
+ static int nft_bridge_iphdr_validate(struct sk_buff *skb)
 
 
