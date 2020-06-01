@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B92C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5115C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACEF2077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97568207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034725;
-	bh=IksiygbT99GRCqa8/aa3+JnLZ2faE/tp8hNH6jKo0dg=;
+	s=default; t=1591034728;
+	bh=O0IUcCotJqvn57fIvBnT5GRM7UlJZX1nZkWx+A41r8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UdEpPUAUWoSVcSJ7zOdvac6bXMoRBEbeNG4IlCCrvCKbh7RXm0ZYVmFerCK4RotI8
-	 91Wv2wBg4q1x1nsi0p7WtktRwY/x6zm1+/rUChgCDD+CQtRoJ3mNAye0pwQ1o+4Ecp
-	 LqeDxV/9xOu+E+i4BmPNPfhnc1Q9UvDiPRYfBDeo=
+	b=G+5cLtBcl05AypJz+5K72iE56Xvm78ownrFDOBuf1OVg2kqmeF5EtzMD4142Fcy5e
+	 F9+IO+uVtXRoj/epoVxJ/eLTDNPy5pME2c4Lo31O1PPdkDAV5FXJMQfMPww4CpJ/BG
+	 azfdS3jS7F4fRVPd+5fQiRugAoW4/VcyAMVdouQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgFASFY (ORCPT
+        id S1729578AbgFASF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730294AbgFASFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:05:05 -0400
+        id S1730298AbgFASFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A27D22074B;
-        Mon,  1 Jun 2020 18:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED79B2074B;
+        Mon,  1 Jun 2020 18:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034705;
-        bh=IksiygbT99GRCqa8/aa3+JnLZ2faE/tp8hNH6jKo0dg=;
+        s=default; t=1591034707;
+        bh=O0IUcCotJqvn57fIvBnT5GRM7UlJZX1nZkWx+A41r8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tYv2xgnbPnb74bt3a4+Rvsl/KkLe3tyny1G16kvqxCYHM39EUYskfHNT+aZkuAbD4
-         VWT4K9cm1fHveftsYuIe29SxpJEM0e25c+h90ld7nWwua+ga7XHIzJFSUBu0gHTN2y
-         OHXjdogUOZUolg2s7uxPBaiEFVSh4y84XYvIXuA4=
+        b=dHnHTkuf95LGhSIsbFQ3iIHrKSgBux0nPRYpn9jbX3tk3bUYbGi9q8bS8bCfc/38b
+         UOk8vmv5KpG/FrnPh6Hdej+dtRjFxntiQHa2NTcea6wg+Niuyl6PTmK6e+EiUC6NeC
+         cWKjo9/PhW52yTfC7OZWgqSZ7s1vpVSBrHnb8gbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Sarthak Garg <sartgarg@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 70/95] mmc: core: Fix recursive locking issue in CQE recovery path
-Date:   Mon,  1 Jun 2020 19:54:10 +0200
-Message-Id: <20200601174031.830103680@linuxfoundation.org>
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 71/95] RDMA/core: Fix double destruction of uobject
+Date:   Mon,  1 Jun 2020 19:54:11 +0200
+Message-Id: <20200601174031.924639543@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -61,72 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sarthak Garg <sartgarg@codeaurora.org>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 39a22f73744d5baee30b5f134ae2e30b668b66ed upstream.
+commit c85f4abe66bea0b5db8d28d55da760c4fe0a0301 upstream.
 
-Consider the following stack trace
+Fix use after free when user user space request uobject concurrently for
+the same object, within the RCU grace period.
 
--001|raw_spin_lock_irqsave
--002|mmc_blk_cqe_complete_rq
--003|__blk_mq_complete_request(inline)
--003|blk_mq_complete_request(rq)
--004|mmc_cqe_timed_out(inline)
--004|mmc_mq_timed_out
+In that case, remove_handle_idr_uobject() is called twice and we will have
+an extra put on the uobject which cause use after free.  Fix it by leaving
+the uobject write locked after it was removed from the idr.
 
-mmc_mq_timed_out acquires the queue_lock for the first
-time. The mmc_blk_cqe_complete_rq function also tries to acquire
-the same queue lock resulting in recursive locking where the task
-is spinning for the same lock which it has already acquired leading
-to watchdog bark.
+Call to rdma_lookup_put_uobject with UVERBS_LOOKUP_DESTROY instead of
+UVERBS_LOOKUP_WRITE will do the work.
 
-Fix this issue with the lock only for the required critical section.
+  refcount_t: underflow; use-after-free.
+  WARNING: CPU: 0 PID: 1381 at lib/refcount.c:28 refcount_warn_saturate+0xfe/0x1a0
+  Kernel panic - not syncing: panic_on_warn set ...
+  CPU: 0 PID: 1381 Comm: syz-executor.0 Not tainted 5.5.0-rc3 #8
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+   dump_stack+0x94/0xce
+   panic+0x234/0x56f
+   __warn+0x1cc/0x1e1
+   report_bug+0x200/0x310
+   fixup_bug.part.11+0x32/0x80
+   do_error_trap+0xd3/0x100
+   do_invalid_op+0x31/0x40
+   invalid_op+0x1e/0x30
+  RIP: 0010:refcount_warn_saturate+0xfe/0x1a0
+  Code: 0f 0b eb 9b e8 23 f6 6d ff 80 3d 6c d4 19 03 00 75 8d e8 15 f6 6d ff 48 c7 c7 c0 02 55 bd c6 05 57 d4 19 03 01 e8 a2 58 49 ff <0f> 0b e9 6e ff ff ff e8 f6 f5 6d ff 80 3d 42 d4 19 03 00 0f 85 5c
+  RSP: 0018:ffffc90002df7b98 EFLAGS: 00010282
+  RAX: 0000000000000000 RBX: ffff88810f6a193c RCX: ffffffffba649009
+  RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88811b0283cc
+  RBP: 0000000000000003 R08: ffffed10236060e3 R09: ffffed10236060e3
+  R10: 0000000000000001 R11: ffffed10236060e2 R12: ffff88810f6a193c
+  R13: ffffc90002df7d60 R14: 0000000000000000 R15: ffff888116ae6a08
+   uverbs_uobject_put+0xfd/0x140
+   __uobj_perform_destroy+0x3d/0x60
+   ib_uverbs_close_xrcd+0x148/0x170
+   ib_uverbs_write+0xaa5/0xdf0
+   __vfs_write+0x7c/0x100
+   vfs_write+0x168/0x4a0
+   ksys_write+0xc8/0x200
+   do_syscall_64+0x9c/0x390
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x465b49
+  Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007f759d122c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+  RAX: ffffffffffffffda RBX: 000000000073bfa8 RCX: 0000000000465b49
+  RDX: 000000000000000c RSI: 0000000020000080 RDI: 0000000000000003
+  RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000246 R12: 00007f759d1236bc
+  R13: 00000000004ca27c R14: 000000000070de40 R15: 00000000ffffffff
+  Dumping ftrace buffer:
+     (ftrace buffer empty)
+  Kernel Offset: 0x39400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
-Cc: <stable@vger.kernel.org>
-Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
-Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/1588868135-31783-1-git-send-email-vbadigan@codeaurora.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 7452a3c745a2 ("IB/uverbs: Allow RDMA_REMOVE_DESTROY to work concurrently with disassociate")
+Link: https://lore.kernel.org/r/20200527135534.482279-1-leon@kernel.org
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/queue.c |   13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/infiniband/core/rdma_core.c |   19 +++++++++++++------
+ include/rdma/uverbs_std_types.h     |    2 +-
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -108,7 +108,7 @@ static enum blk_eh_timer_return mmc_cqe_
- 	case MMC_ISSUE_DCMD:
- 		if (host->cqe_ops->cqe_timeout(host, mrq, &recovery_needed)) {
- 			if (recovery_needed)
--				__mmc_cqe_recovery_notifier(mq);
-+				mmc_cqe_recovery_notifier(mrq);
- 			return BLK_EH_RESET_TIMER;
- 		}
- 		/* The request has gone already */
-@@ -125,18 +125,13 @@ static enum blk_eh_timer_return mmc_mq_t
- 	struct request_queue *q = req->q;
- 	struct mmc_queue *mq = q->queuedata;
- 	unsigned long flags;
--	int ret;
-+	bool ignore_tout;
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -158,9 +158,9 @@ static int uverbs_destroy_uobject(struct
+ 	uobj->context = NULL;
  
- 	spin_lock_irqsave(q->queue_lock, flags);
--
--	if (mq->recovery_needed || !mq->use_cqe)
--		ret = BLK_EH_RESET_TIMER;
--	else
--		ret = mmc_cqe_timed_out(req);
--
-+	ignore_tout = mq->recovery_needed || !mq->use_cqe;
- 	spin_unlock_irqrestore(q->queue_lock, flags);
+ 	/*
+-	 * For DESTROY the usecnt is held write locked, the caller is expected
+-	 * to put it unlock and put the object when done with it. Only DESTROY
+-	 * can remove the IDR handle.
++	 * For DESTROY the usecnt is not changed, the caller is expected to
++	 * manage it via uobj_put_destroy(). Only DESTROY can remove the IDR
++	 * handle.
+ 	 */
+ 	if (reason != RDMA_REMOVE_DESTROY)
+ 		atomic_set(&uobj->usecnt, 0);
+@@ -192,7 +192,7 @@ static int uverbs_destroy_uobject(struct
+ /*
+  * This calls uverbs_destroy_uobject() using the RDMA_REMOVE_DESTROY
+  * sequence. It should only be used from command callbacks. On success the
+- * caller must pair this with rdma_lookup_put_uobject(LOOKUP_WRITE). This
++ * caller must pair this with uobj_put_destroy(). This
+  * version requires the caller to have already obtained an
+  * LOOKUP_DESTROY uobject kref.
+  */
+@@ -203,6 +203,13 @@ int uobj_destroy(struct ib_uobject *uobj
  
--	return ret;
-+	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
+ 	down_read(&ufile->hw_destroy_rwsem);
+ 
++	/*
++	 * Once the uobject is destroyed by RDMA_REMOVE_DESTROY then it is left
++	 * write locked as the callers put it back with UVERBS_LOOKUP_DESTROY.
++	 * This is because any other concurrent thread can still see the object
++	 * in the xarray due to RCU. Leaving it locked ensures nothing else will
++	 * touch it.
++	 */
+ 	ret = uverbs_try_lock_object(uobj, UVERBS_LOOKUP_WRITE);
+ 	if (ret)
+ 		goto out_unlock;
+@@ -221,7 +228,7 @@ out_unlock:
+ /*
+  * uobj_get_destroy destroys the HW object and returns a handle to the uobj
+  * with a NULL object pointer. The caller must pair this with
+- * uverbs_put_destroy.
++ * uobj_put_destroy().
+  */
+ struct ib_uobject *__uobj_get_destroy(const struct uverbs_api_object *obj,
+ 				      u32 id, struct ib_uverbs_file *ufile)
+@@ -256,7 +263,7 @@ int __uobj_perform_destroy(const struct
+ 	if (IS_ERR(uobj))
+ 		return PTR_ERR(uobj);
+ 
+-	rdma_lookup_put_uobject(uobj, UVERBS_LOOKUP_WRITE);
++	uobj_put_destroy(uobj);
+ 	return success_res;
  }
  
- static void mmc_mq_recovery_handler(struct work_struct *work)
+--- a/include/rdma/uverbs_std_types.h
++++ b/include/rdma/uverbs_std_types.h
+@@ -95,7 +95,7 @@ struct ib_uobject *__uobj_get_destroy(co
+ 
+ static inline void uobj_put_destroy(struct ib_uobject *uobj)
+ {
+-	rdma_lookup_put_uobject(uobj, UVERBS_LOOKUP_WRITE);
++	rdma_lookup_put_uobject(uobj, UVERBS_LOOKUP_DESTROY);
+ }
+ 
+ static inline void uobj_put_read(struct ib_uobject *uobj)
 
 
