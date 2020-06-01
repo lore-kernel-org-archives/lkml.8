@@ -2,127 +2,82 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB643C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07424C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8102073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="dB/C9Zjc"
+	by mail.kernel.org (Postfix) with ESMTP id D28F4208A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725952AbgFAFm7 (ORCPT
+        id S1725999AbgFAFpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:42:59 -0400
-Received: from mail-eopbgr750044.outbound.protection.outlook.com ([40.107.75.44]:40514
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725283AbgFAFm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:42:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IiLNBR69NkEaHSyloncVFgkO0YsJunEzezWLcr5lWJ+fV5kIir4jwB6aHZ/AR10z0Jtg57wzvQGfSTjuwlMV1HAAwM1eV6RVuzhuQ4Io9xQKlb9lS+uIEPUjDsi5APwjXasvDBm+pdZCOYHvMZ220q60XknGGb/aAbCN9TktVa8VS5A0YuDzDnkgvTyaAdIvACA3COEFpgTM6HU9MQSXtvg0ddTUNsYZo4E5NRGC/U1xQ5BfrqPjiWwbj0LLo3xjIef4w0MNgt2JuAaDeolhxY3U6Spj6PD6p3WYZX1eoDDp4BzOjKQ3ZAxPJ5E/nnGieX6Pw9Ho6MEZx/rVXkQa9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ejrhjoBHAdhARXPkLTr4VMCW8/StXZ0D8pBTcvNId1Q=;
- b=gBa8DPQKrjLpY/TJV1P6wSU0WpepoERvl2+77i5r1Dgstt3qHaGO+Le5pGv2vZ8v6c3Dtzw7lDXBs6mdjnPMkuEPU41BiMfWEx0s+aYIUYA/xOYJ/nlR4Vh+gwhqSQuiUxRXpEbokoiblYvF7dAdUXWPLwM9ua0j2Wm2g05R80pYgc9CPYRoPv+roQ0tcJ84NZZsBuSfyn9Xuy0JHp44NRoep0iq1iFjnmBpS8mUQLdPhdxdnjddxtEfgz+3vBnPfbSN+5uCWpQpqWgIUonu7FAnyorLeNpaeBkSd16l5oKCKV4XjCgy0RV6pWK3mvw2uV5Q+eOn6zYOzzNBFLZNKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ejrhjoBHAdhARXPkLTr4VMCW8/StXZ0D8pBTcvNId1Q=;
- b=dB/C9Zjc8NQukerJ7TvbSeLbkGh0+N+f1Nqw+lR7to6hdGJGcp/qjNExltwB1qfgqF0mO2p0r4EJtLdqTqOzNIbNqQgnWH3KVwLwaVbUcMPkQnAyOFLGSbtgbxKHeQdsCq7uAtTKbzsyT1BEaxR80qsV8F5q8TzILUTm6rbaYo0=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
- DM5PR12MB2567.namprd12.prod.outlook.com (2603:10b6:4:b2::27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.22; Mon, 1 Jun 2020 05:42:56 +0000
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
- 05:42:56 +0000
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc:     joro@8bytes.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: [PATCH] iommu: amd: Fix IO_PAGE_FAULT due to __unmap_single() size overflow
-Date:   Mon,  1 Jun 2020 05:42:40 +0000
-Message-Id: <20200601054240.237477-1-suravee.suthikulpanit@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0401CA0007.namprd04.prod.outlook.com
- (2603:10b6:803:21::17) To DM5PR12MB1163.namprd12.prod.outlook.com
- (2603:10b6:3:7a::18)
+        Mon, 1 Jun 2020 01:45:16 -0400
+Received: from mga05.intel.com ([192.55.52.43]:39018 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbgFAFpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 01:45:16 -0400
+IronPort-SDR: J1oYJwaUd8OYyjJKqX0EytjGJlmCupzJPuazQRSMm8m7Qcluirc5hFW2vZqrhWXkp2Z/cBigku
+ sfSgCtAIvnkw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 22:45:16 -0700
+IronPort-SDR: JxZ75MqOuUf8l5cClPSYYtbPsPm4Ulj/NgfMiJbogtdgBvy1GiF1e89Udz1NeecgJz8tvnjWVy
+ T/wcQzU3zerg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
+   d="scan'208";a="268206982"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga003.jf.intel.com with ESMTP; 31 May 2020 22:45:15 -0700
+Date:   Sun, 31 May 2020 22:45:15 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Shuai He <hexiaoshuaishuai@gmail.com>
+Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/dax/bus: Use kobj_to_dev() API
+Message-ID: <20200601054515.GB1505637@iweiny-DESK2.sc.intel.com>
+References: <1590723777-8718-1-git-send-email-hexiaoshuaishuai@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ethanolx5673host.amd.com (165.204.78.2) by SN4PR0401CA0007.namprd04.prod.outlook.com (2603:10b6:803:21::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Mon, 1 Jun 2020 05:42:55 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7ee19977-5089-4537-0251-08d805eea270
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2567:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB2567D0B6CDA4E800D63291B9F38A0@DM5PR12MB2567.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:478;
-X-Forefront-PRVS: 0421BF7135
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pLIEe3pW5psXYA3w/5dNGGGVI4VeWX0jWz+qNAWAR7BcFWW55/yfy2CGn8TEX81hE98X+gm+SIeEBgQfVEqtOFtLSE4VFyTRpzjgeYP1N1v5lQWayKJNQJ2YmhxkDIP6KKo3BwvYJoij79jye+g5NVWT0G6XM+A866oEhYngK+mzBQlZAApHPN6YspKj7EtYbULedIhou8RSRubganL5UCAK9kyR2h+RI3EZpvfxL10lzwq3elbebtNF56OfrN/6YF1e1m4SORoHcfPsmouQvqIqksBBwAeB2uc7vOTJmsSTTYL9gS0pqCCcJ8sqF2yiNW3LsDMwaPnOmkqquHuFOA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(2906002)(36756003)(26005)(6486002)(478600001)(83380400001)(86362001)(2616005)(956004)(66946007)(1076003)(6666004)(8676002)(16526019)(5660300002)(186003)(66556008)(66476007)(8936002)(4326008)(52116002)(7696005)(316002)(44832011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: hoBSlxhFq/vs6NpqkD04e1BJKRxlvZbJKQBxxERn9dVehHYGxG788mwtB6v0GEclqj8cVIpMWQjIpV23GlIplfl88IBwqZIPaOMKuURSDFdou5fmh1TgrJHkh2vgE1pz5Yu6fM86if5zcRGWUyF9YTf4UM1ChkGNL/gMmR8K8/3SC1tznazNRcNTGrecZz8W5LMjEYWsfJ4kU9yeFXyB4vDqf/DauIWz7Uh6nmeficnk7nOEg2E2Q2bOnm/MjeZ7Qt20h4lxGrjY0bPiS2bT9UEiXZ4mVQl0WIRgEE+mLnr0TpLEbrpxFDT3hSOQDpi7Tl1+rFPd7lPLxVSBF6NCsT2lYe5Ul68HXSZOj3rcWEvU5X9VjBTekfYzxvyn4EV/XWC/me7DhmyLl/Asm5hZaJdm20GID4bmRbV7kOGnEdmLSO4THyhFnRLgbESeNIct9YoDk7WDXbZP3SlXyWNiycRYMGX8P2F809qbszdUEI8=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ee19977-5089-4537-0251-08d805eea270
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 05:42:56.2288
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aiMtiBcQuFWYahCb/hKlvyL9Vy2AVoMYoPFP9ccmki8cdrgOroUFrH3la9bgOcj41GwK+Ks/FCglEBhOo8AisQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2567
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590723777-8718-1-git-send-email-hexiaoshuaishuai@gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, an integer is used to specify the size in unmap_sg().
-With 2GB worth of pages (512k 4k pages), it requires 31 bits
-(i.e. (1 << 19) << 12), which overflows the integer, and ends up
-unmapping more pages than intended. Subsequently, this results in
-IO_PAGE_FAULT.
+On Fri, May 29, 2020 at 11:42:57AM +0800, Shuai He wrote:
+> Use kobj_to_dev() API instead of container_of().
+> 
+> Signed-off-by: Shuai He <hexiaoshuaishuai@gmail.com>
 
-Uses size_t instead of int to pass parameter to __unmap_single().
+Seems reasonable:
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Reported-by: Robert Lippert <rlippert@google.com>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
----
-Note: This patch is intended for stable tree prior 5.5 due to commit
-be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-iommu api"),
-where the function unmap_sg() was removed.
-
- drivers/iommu/amd_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 32de8e7bb8b4..7adc021932b8 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2670,7 +2670,7 @@ static void unmap_sg(struct device *dev, struct scatterlist *sglist,
- 	struct protection_domain *domain;
- 	struct dma_ops_domain *dma_dom;
- 	unsigned long startaddr;
--	int npages;
-+	size_t npages;
- 
- 	domain = get_domain(dev);
- 	if (IS_ERR(domain))
--- 
-2.17.1
-
+> ---
+>  drivers/dax/bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index df238c8..24625d2 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -331,7 +331,7 @@ static DEVICE_ATTR_RO(numa_node);
+>  
+>  static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
+>  {
+> -	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct device *dev = kobj_to_dev(kobj);
+>  	struct dev_dax *dev_dax = to_dev_dax(dev);
+>  
+>  	if (a == &dev_attr_target_node.attr && dev_dax_target_node(dev_dax) < 0)
+> -- 
+> 2.7.4
+> _______________________________________________
+> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
+> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
