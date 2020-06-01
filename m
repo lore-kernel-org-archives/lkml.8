@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC314C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD14C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B133D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A175F20776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035305;
-	bh=fI0DzAU9GLVa8esFFM30UHEYhA2aD0DBiWdQTB/DY1k=;
+	s=default; t=1591035309;
+	bh=rzrYpD4H3USNARFfpfftSd3ujezBAAJ8O2kT9Cc2uUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2EaHInRPewNyCrvXzQq1K6XeIxfG7ieMgWHMjx741WFMkf1lDLO9iLS+Iq8axlrtv
-	 M9iUTWZ1DvWGiO5qy0UPcDSKykKFWX9tYQZKKO31ZG3DXEJrKHL2QB1B5VnpY5YKn4
-	 JTcCg0RtIkKcYvl8une61m8bEwpkyZhtQMXOpE9Y=
+	b=gSJqRQTEJyZevqO3vW/uKN1avMgrCvTK09sDa3GfsGD34PR77bnHOAu4Y3NUywM00
+	 JE2ihGxflsnq1TiiuKnE4fVS4a7oAzKfpMVNGOMxoUGLmsDixyqZNKjVeR1YVBT3BC
+	 G0fDXZpwHXu0av3GXNbYibPQLXBIMX/R27G1gKNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbgFASPF (ORCPT
+        id S1730944AbgFASPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34908 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:15:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731528AbgFASO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:14:57 -0400
+        id S1731536AbgFASO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:14:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7710206E2;
-        Mon,  1 Jun 2020 18:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE682065C;
+        Mon,  1 Jun 2020 18:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035296;
-        bh=fI0DzAU9GLVa8esFFM30UHEYhA2aD0DBiWdQTB/DY1k=;
+        s=default; t=1591035298;
+        bh=rzrYpD4H3USNARFfpfftSd3ujezBAAJ8O2kT9Cc2uUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G13eyUgq2pNo+Nlg10YOWaCive8ABZcHuTvqaWpHWR96r7Jn8XeJEGcL/Ja3szPh7
-         uCS+VNnjgTquMvLRKKce3x9UwVEM3tHryVbIlEy2vdQ5egDkWVz8A2ITxU46TqHeID
-         bm578pzwG3+Dr3QDyh8tAa0GYYxh75C+FX+eH/6Y=
+        b=k/8vXWEvrPVY86msqNFdxbQ6H9pR+itBCe0S4+PYR+MuoJO1+5e9yJ0EcingNeL0r
+         wvjvPkq2zaqWckoWMguTNozRC8bG0zakRrLFV10irFTdBkEA9NaBvlV74Cd3QC0bPQ
+         uuPDemkAK3Hd7we3kDzwgx3b0Q/z/2NJLrFjSNmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 097/177] gpio: exar: Fix bad handling for ida_simple_get error path
-Date:   Mon,  1 Jun 2020 19:53:55 +0200
-Message-Id: <20200601174056.819818306@linuxfoundation.org>
+Subject: [PATCH 5.6 098/177] arm64: dts: mt8173: fix vcodec-enc clock
+Date:   Mon,  1 Jun 2020 19:53:56 +0200
+Message-Id: <20200601174056.885023125@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,53 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 333830aa149a87cabeb5d30fbcf12eecc8040d2c ]
+[ Upstream commit 3b1f6c5e4dfaf767f6f2f120cd93b347b5a9f1aa ]
 
-The commit 7ecced0934e5 ("gpio: exar: add a check for the return value
-of ida_simple_get fails") added a goto jump to the common error
-handler for ida_simple_get() error, but this is wrong in two ways:
-it doesn't set the proper return code and, more badly, it invokes
-ida_simple_remove() with a negative index that shall lead to a kernel
-panic via BUG_ON().
+Fix the assigned-clock-parents to higher frequency clock to avoid h264
+encode timeout:
 
-This patch addresses those two issues.
+[  134.763465] mtk_vpu 10020000.vpu: vpu ipi 4 ack time out !
+[  134.769008] [MTK_VCODEC][ERROR][18]: vpu_enc_send_msg() vpu_ipi_send msg_id c002 len 32 fail -5
+[  134.777707] [MTK_VCODEC][ERROR][18]: vpu_enc_encode() AP_IPIMSG_ENC_ENCODE 0 fail
 
-Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida_simple_get fails")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+venc_sel is the clock used by h264 encoder, and venclt_sel is the clock
+used by vp8 encoder. Assign venc_sel to vcodecpll_ck and venclt_sel to
+vcodecpll_370p5.
+
+    vcodecpll                         1482000000
+       vcodecpll_ck                    494000000
+          venc_sel                     494000000
+...
+       vcodecpll_370p5                 370500000
+          venclt_sel                   370500000
+
+Fixes: fbbad0287cec ("arm64: dts: Using standard CCF interface to set vcodec clk")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Link: https://lore.kernel.org/r/20200504124442.208004-1-hsinyi@chromium.org
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-exar.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-index da1ef0b1c291..b1accfba017d 100644
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -148,8 +148,10 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 	mutex_init(&exar_gpio->lock);
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 8b4e806d5119..125c78321ab4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -1401,8 +1401,8 @@
+ 				      "venc_lt_sel";
+ 			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
+ 					  <&topckgen CLK_TOP_VENC_LT_SEL>;
+-			assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
+-						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
++			assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL>,
++						 <&topckgen CLK_TOP_VCODECPLL_370P5>;
+ 		};
  
- 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
--	if (index < 0)
--		goto err_destroy;
-+	if (index < 0) {
-+		ret = index;
-+		goto err_mutex_destroy;
-+	}
- 
- 	sprintf(exar_gpio->name, "exar_gpio%d", index);
- 	exar_gpio->gpio_chip.label = exar_gpio->name;
-@@ -176,6 +178,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 
- err_destroy:
- 	ida_simple_remove(&ida_index, index);
-+err_mutex_destroy:
- 	mutex_destroy(&exar_gpio->lock);
- 	return ret;
- }
+ 		jpegdec: jpegdec@18004000 {
 -- 
 2.25.1
 
