@@ -2,221 +2,113 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57398C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34FC7206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036854;
-	bh=L69sRHDoCOr3Slf0DcmnoRG4CYhgjU948ru6Pw5sZt0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOl2WVxlLZHdkM+ocL3X90QKwzRL5WW/fdO4lJxxVtOlLflDxdHotv6x6O8CDYdL+
-	 0hnhF6kkwkud0Sr5IPr1uPdPd+V3kAIBXiyd50DB7tPriAjSIPxKkgWCabJATckyM1
-	 LEybK8j06bV7MNuazIsL5wKxWVij8YM9Lm1VUfFQ=
+	by mail.kernel.org (Postfix) with ESMTP id BF05B2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbgFASkx (ORCPT
+        id S1731521AbgFASkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731301AbgFASNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60E3E2068D;
-        Mon,  1 Jun 2020 18:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035181;
-        bh=L69sRHDoCOr3Slf0DcmnoRG4CYhgjU948ru6Pw5sZt0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QHOIbGscrCRHtA5dJDtnOMgxITrrzOr04C93E7rlN6GG++x1aZWpZrk+NsggHZqm9
-         VpjmUg0bnfs6emwRoPNP/yK7s3Bvu7pzNQETV3J3GnO3SqJroJvqu9VFcpJeh2vLsc
-         HyHjoNZJHfNSlHnR182+vcM9SO2mTyo9yYhdh2iY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <jbacik@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 009/177] net: inet_csk: Fix so_reuseport bind-address cache in tb->fast*
-Date:   Mon,  1 Jun 2020 19:52:27 +0200
-Message-Id: <20200601174049.377204943@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
-References: <20200601174048.468952319@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 1 Jun 2020 14:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbgFASkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:40:40 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2CD9C008630;
+        Mon,  1 Jun 2020 11:40:39 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jfpMS-001XRC-OT; Mon, 01 Jun 2020 18:40:36 +0000
+Date:   Mon, 1 Jun 2020 19:40:36 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [git pull] vfs patches from Miklos
+Message-ID: <20200601184036.GH23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+	Assorted patches from Miklos; an interesting part here is /proc/mounts
+stuff...
 
-[ Upstream commit 88d7fcfa3b1fe670f0412b95be785aafca63352b ]
+The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
 
-The commit 637bc8bbe6c0 ("inet: reset tb->fastreuseport when adding a reuseport sk")
-added a bind-address cache in tb->fast*.  The tb->fast* caches the address
-of a sk which has successfully been binded with SO_REUSEPORT ON.  The idea
-is to avoid the expensive conflict search in inet_csk_bind_conflict().
+  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
 
-There is an issue with wildcard matching where sk_reuseport_match() should
-have returned false but it is currently returning true.  It ends up
-hiding bind conflict.  For example,
+are available in the git repository at:
 
-bind("[::1]:443"); /* without SO_REUSEPORT. Succeed. */
-bind("[::2]:443"); /* with    SO_REUSEPORT. Succeed. */
-bind("[::]:443");  /* with    SO_REUSEPORT. Still Succeed where it shouldn't */
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git from-miklos
 
-The last bind("[::]:443") with SO_REUSEPORT on should have failed because
-it should have a conflict with the very first bind("[::1]:443") which
-has SO_REUSEPORT off.  However, the address "[::2]" is cached in
-tb->fast* in the second bind. In the last bind, the sk_reuseport_match()
-returns true because the binding sk's wildcard addr "[::]" matches with
-the "[::2]" cached in tb->fast*.
+for you to fetch changes up to c8ffd8bcdd28296a198f237cc595148a8d4adfbe:
 
-The correct bind conflict is reported by removing the second
-bind such that tb->fast* cache is not involved and forces the
-bind("[::]:443") to go through the inet_csk_bind_conflict():
+  vfs: add faccessat2 syscall (2020-05-14 16:44:25 +0200)
 
-bind("[::1]:443"); /* without SO_REUSEPORT. Succeed. */
-bind("[::]:443");  /* with    SO_REUSEPORT. -EADDRINUSE */
+----------------------------------------------------------------
+Miklos Szeredi (13):
+      vfs: allow unprivileged whiteout creation
+      aio: fix async fsync creds
+      proc/mounts: add cursor
+      vfs: split out access_override_creds()
+      utimensat: AT_EMPTY_PATH support
+      uapi: deprecate STATX_ALL
+      statx: don't clear STATX_ATIME on SB_RDONLY
+      statx: add mount ID
+      statx: add mount_root
+      vfs: don't parse forbidden flags
+      vfs: don't parse "posixacl" option
+      vfs: don't parse "silent" option
+      vfs: add faccessat2 syscall
 
-The expected behavior for sk_reuseport_match() is, it should only allow
-the "cached" tb->fast* address to be used as a wildcard match but not
-the address of the binding sk.  To do that, the current
-"bool match_wildcard" arg is split into
-"bool match_sk1_wildcard" and "bool match_sk2_wildcard".
-
-This change only affects the sk_reuseport_match() which is only
-used by inet_csk (e.g. TCP).
-The other use cases are calling inet_rcv_saddr_equal() and
-this patch makes it pass the same "match_wildcard" arg twice to
-the "ipv[46]_rcv_saddr_equal(..., match_wildcard, match_wildcard)".
-
-Cc: Josef Bacik <jbacik@fb.com>
-Fixes: 637bc8bbe6c0 ("inet: reset tb->fastreuseport when adding a reuseport sk")
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/inet_connection_sock.c |   43 ++++++++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
-
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -24,17 +24,19 @@
- #include <net/addrconf.h>
- 
- #if IS_ENABLED(CONFIG_IPV6)
--/* match_wildcard == true:  IPV6_ADDR_ANY equals to any IPv6 addresses if IPv6
-- *                          only, and any IPv4 addresses if not IPv6 only
-- * match_wildcard == false: addresses must be exactly the same, i.e.
-- *                          IPV6_ADDR_ANY only equals to IPV6_ADDR_ANY,
-- *                          and 0.0.0.0 equals to 0.0.0.0 only
-+/* match_sk*_wildcard == true:  IPV6_ADDR_ANY equals to any IPv6 addresses
-+ *				if IPv6 only, and any IPv4 addresses
-+ *				if not IPv6 only
-+ * match_sk*_wildcard == false: addresses must be exactly the same, i.e.
-+ *				IPV6_ADDR_ANY only equals to IPV6_ADDR_ANY,
-+ *				and 0.0.0.0 equals to 0.0.0.0 only
-  */
- static bool ipv6_rcv_saddr_equal(const struct in6_addr *sk1_rcv_saddr6,
- 				 const struct in6_addr *sk2_rcv_saddr6,
- 				 __be32 sk1_rcv_saddr, __be32 sk2_rcv_saddr,
- 				 bool sk1_ipv6only, bool sk2_ipv6only,
--				 bool match_wildcard)
-+				 bool match_sk1_wildcard,
-+				 bool match_sk2_wildcard)
- {
- 	int addr_type = ipv6_addr_type(sk1_rcv_saddr6);
- 	int addr_type2 = sk2_rcv_saddr6 ? ipv6_addr_type(sk2_rcv_saddr6) : IPV6_ADDR_MAPPED;
-@@ -44,8 +46,8 @@ static bool ipv6_rcv_saddr_equal(const s
- 		if (!sk2_ipv6only) {
- 			if (sk1_rcv_saddr == sk2_rcv_saddr)
- 				return true;
--			if (!sk1_rcv_saddr || !sk2_rcv_saddr)
--				return match_wildcard;
-+			return (match_sk1_wildcard && !sk1_rcv_saddr) ||
-+				(match_sk2_wildcard && !sk2_rcv_saddr);
- 		}
- 		return false;
- 	}
-@@ -53,11 +55,11 @@ static bool ipv6_rcv_saddr_equal(const s
- 	if (addr_type == IPV6_ADDR_ANY && addr_type2 == IPV6_ADDR_ANY)
- 		return true;
- 
--	if (addr_type2 == IPV6_ADDR_ANY && match_wildcard &&
-+	if (addr_type2 == IPV6_ADDR_ANY && match_sk2_wildcard &&
- 	    !(sk2_ipv6only && addr_type == IPV6_ADDR_MAPPED))
- 		return true;
- 
--	if (addr_type == IPV6_ADDR_ANY && match_wildcard &&
-+	if (addr_type == IPV6_ADDR_ANY && match_sk1_wildcard &&
- 	    !(sk1_ipv6only && addr_type2 == IPV6_ADDR_MAPPED))
- 		return true;
- 
-@@ -69,18 +71,19 @@ static bool ipv6_rcv_saddr_equal(const s
- }
- #endif
- 
--/* match_wildcard == true:  0.0.0.0 equals to any IPv4 addresses
-- * match_wildcard == false: addresses must be exactly the same, i.e.
-- *                          0.0.0.0 only equals to 0.0.0.0
-+/* match_sk*_wildcard == true:  0.0.0.0 equals to any IPv4 addresses
-+ * match_sk*_wildcard == false: addresses must be exactly the same, i.e.
-+ *				0.0.0.0 only equals to 0.0.0.0
-  */
- static bool ipv4_rcv_saddr_equal(__be32 sk1_rcv_saddr, __be32 sk2_rcv_saddr,
--				 bool sk2_ipv6only, bool match_wildcard)
-+				 bool sk2_ipv6only, bool match_sk1_wildcard,
-+				 bool match_sk2_wildcard)
- {
- 	if (!sk2_ipv6only) {
- 		if (sk1_rcv_saddr == sk2_rcv_saddr)
- 			return true;
--		if (!sk1_rcv_saddr || !sk2_rcv_saddr)
--			return match_wildcard;
-+		return (match_sk1_wildcard && !sk1_rcv_saddr) ||
-+			(match_sk2_wildcard && !sk2_rcv_saddr);
- 	}
- 	return false;
- }
-@@ -96,10 +99,12 @@ bool inet_rcv_saddr_equal(const struct s
- 					    sk2->sk_rcv_saddr,
- 					    ipv6_only_sock(sk),
- 					    ipv6_only_sock(sk2),
-+					    match_wildcard,
- 					    match_wildcard);
- #endif
- 	return ipv4_rcv_saddr_equal(sk->sk_rcv_saddr, sk2->sk_rcv_saddr,
--				    ipv6_only_sock(sk2), match_wildcard);
-+				    ipv6_only_sock(sk2), match_wildcard,
-+				    match_wildcard);
- }
- EXPORT_SYMBOL(inet_rcv_saddr_equal);
- 
-@@ -273,10 +278,10 @@ static inline int sk_reuseport_match(str
- 					    tb->fast_rcv_saddr,
- 					    sk->sk_rcv_saddr,
- 					    tb->fast_ipv6_only,
--					    ipv6_only_sock(sk), true);
-+					    ipv6_only_sock(sk), true, false);
- #endif
- 	return ipv4_rcv_saddr_equal(tb->fast_rcv_saddr, sk->sk_rcv_saddr,
--				    ipv6_only_sock(sk), true);
-+				    ipv6_only_sock(sk), true, false);
- }
- 
- /* Obtain a reference to a local port for the given sock,
-
-
+ arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+ arch/arm/tools/syscall.tbl                  |  1 +
+ arch/arm64/include/asm/unistd.h             |  2 +-
+ arch/arm64/include/asm/unistd32.h           |  2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+ fs/aio.c                                    |  8 +++
+ fs/char_dev.c                               |  3 +
+ fs/fs_context.c                             | 30 ----------
+ fs/internal.h                               |  1 -
+ fs/mount.h                                  | 12 +++-
+ fs/namei.c                                  | 21 +------
+ fs/namespace.c                              | 91 ++++++++++++++++++++++++-----
+ fs/open.c                                   | 58 +++++++++++++-----
+ fs/proc_namespace.c                         |  4 +-
+ fs/stat.c                                   | 11 +++-
+ fs/utimes.c                                 |  6 +-
+ include/linux/device_cgroup.h               |  3 +
+ include/linux/fs.h                          |  6 +-
+ include/linux/mount.h                       |  4 +-
+ include/linux/stat.h                        |  1 +
+ include/linux/syscalls.h                    |  6 +-
+ include/uapi/asm-generic/unistd.h           |  4 +-
+ include/uapi/linux/fcntl.h                  | 10 ++++
+ include/uapi/linux/stat.h                   | 18 +++++-
+ samples/vfs/test-statx.c                    |  2 +-
+ tools/include/uapi/linux/stat.h             | 11 +++-
+ 39 files changed, 234 insertions(+), 96 deletions(-)
