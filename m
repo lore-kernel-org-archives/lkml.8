@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D311C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89079C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C72120679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621C120679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037880;
-	bh=nDPx907IiAgKo62mVevumnODl8p64fK6WNMF6tym8/I=;
+	s=default; t=1591037885;
+	bh=74+IIIRpJHMgoiPC+c9xybwgJsFk9/HAPtNXW8pzjf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lZH9c8VxTJrdh0f14ozJRowp8OUmtflXw2Nc4zuMqA8s7glCw6tWMYu2LZLSVDRgZ
-	 v772xMLlZ9lwlqfiH40/8Pv8wHAf/Bzu4zMdFi++PBlJu9UETmNvSaLZpG1TW87ibF
-	 vKw/7kx9z1oxWhyoOUnkNM9D5CZqvZSqWFdosMzc=
+	b=KZkciUH/TO80poOC0MWJ6hIjBaiQmZAVX+v8ec/t2YVzhUwzz2FRqEATFbgJgOPS7
+	 4KqqOikOb5haXHXaWUpxtM43NmpNY9eQXl9WoPf7Wke+IFfIrZKRmn51Fdll4p20NH
+	 LWlmmYUaMDkCSsIYY8M2gb/fMyNpr9R1m3nJdMHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbgFAS57 (ORCPT
+        id S1729346AbgFAR72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42046 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:59:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbgFAR7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:59:36 -0400
+        id S1728860AbgFAR67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6592073B;
-        Mon,  1 Jun 2020 17:59:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A75BC2073B;
+        Mon,  1 Jun 2020 17:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034376;
-        bh=nDPx907IiAgKo62mVevumnODl8p64fK6WNMF6tym8/I=;
+        s=default; t=1591034338;
+        bh=74+IIIRpJHMgoiPC+c9xybwgJsFk9/HAPtNXW8pzjf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRxlzo7P/ZdbJSJCjoGKkMrABAnZZSgI6CbsuDqdRByJEV8w08OwXE4Y5wQJzlnvo
-         59uQ9n6UwilMHlgaQ16GS7LDEQKQsZLhdS/uD4WiwauOC9oAQLQCR6O3f0sOzH9/n3
-         ffhW7eEq6LIGkcJwhZ9IX8XKb1dpJSy6oecXYEkg=
+        b=X5KMcetY5naBldcO4EqrofUstmyPOwAA9XQmdJMvnUxvfUn1yw1wHxizxeA8PPeiY
+         KOoMNHD7uAMxDsXQuaBaZ/zn+eNi78trp9V9PE49pvKxEHjP1rKMFF63cMZ9vVYdzW
+         YiAwGiX0Vp2HptmcZg/rk40aViYWJ0UshvH0gZCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.9 49/61] ip_vti: receive ipip packet by calling ip_tunnel_rcv
-Date:   Mon,  1 Jun 2020 19:53:56 +0200
-Message-Id: <20200601174020.554744373@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.9 08/61] net/mlx5: Add command entry handling completion
+Date:   Mon,  1 Jun 2020 19:53:15 +0200
+Message-Id: <20200601174013.333784428@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,65 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-commit 976eba8ab596bab94b9714cd46d38d5c6a2c660d upstream.
+[ Upstream commit 17d00e839d3b592da9659c1977d45f85b77f986a ]
 
-In Commit dd9ee3444014 ("vti4: Fix a ipip packet processing bug in
-'IPCOMP' virtual tunnel"), it tries to receive IPIP packets in vti
-by calling xfrm_input(). This case happens when a small packet or
-frag sent by peer is too small to get compressed.
+When FW response to commands is very slow and all command entries in
+use are waiting for completion we can have a race where commands can get
+timeout before they get out of the queue and handled. Timeout
+completion on uninitialized command will cause releasing command's
+buffers before accessing it for initialization and then we will get NULL
+pointer exception while trying access it. It may also cause releasing
+buffers of another command since we may have timeout completion before
+even allocating entry index for this command.
+Add entry handling completion to avoid this race.
 
-However, xfrm_input() will still get to the IPCOMP path where skb
-sec_path is set, but never dropped while it should have been done
-in vti_ipcomp4_protocol.cb_handler(vti_rcv_cb), as it's not an
-ipcomp4 packet. This will cause that the packet can never pass
-xfrm4_policy_check() in the upper protocol rcv functions.
-
-So this patch is to call ip_tunnel_rcv() to process IPIP packets
-instead.
-
-Fixes: dd9ee3444014 ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/ipv4/ip_vti.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |   15 +++++++++++++++
+ include/linux/mlx5/driver.h                   |    1 +
+ 2 files changed, 16 insertions(+)
 
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -98,7 +98,28 @@ static int vti_rcv_proto(struct sk_buff
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -786,6 +786,7 @@ static void cmd_work_handler(struct work
+ 	int alloc_ret;
+ 	int cmd_mode;
  
- static int vti_rcv_tunnel(struct sk_buff *skb)
- {
--	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
-+	struct ip_tunnel_net *itn = net_generic(dev_net(skb->dev), vti_net_id);
-+	const struct iphdr *iph = ip_hdr(skb);
-+	struct ip_tunnel *tunnel;
-+
-+	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
-+				  iph->saddr, iph->daddr, 0);
-+	if (tunnel) {
-+		struct tnl_ptk_info tpi = {
-+			.proto = htons(ETH_P_IP),
-+		};
-+
-+		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
-+			goto drop;
-+		if (iptunnel_pull_header(skb, 0, tpi.proto, false))
-+			goto drop;
-+		return ip_tunnel_rcv(tunnel, skb, &tpi, NULL, false);
++	complete(&ent->handling);
+ 	sem = ent->page_queue ? &cmd->pages_sem : &cmd->sem;
+ 	down(sem);
+ 	if (!ent->page_queue) {
+@@ -904,6 +905,12 @@ static int wait_func(struct mlx5_core_de
+ 	struct mlx5_cmd *cmd = &dev->cmd;
+ 	int err;
+ 
++	if (!wait_for_completion_timeout(&ent->handling, timeout) &&
++	    cancel_work_sync(&ent->work)) {
++		ent->ret = -ECANCELED;
++		goto out_err;
 +	}
 +
-+	return -EINVAL;
-+drop:
-+	kfree_skb(skb);
-+	return 0;
- }
+ 	if (cmd->mode == CMD_MODE_POLLING) {
+ 		wait_for_completion(&ent->done);
+ 	} else if (!wait_for_completion_timeout(&ent->done, timeout)) {
+@@ -911,12 +918,17 @@ static int wait_func(struct mlx5_core_de
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
+ 	}
  
- static int vti_rcv_cb(struct sk_buff *skb, int err)
++out_err:
+ 	err = ent->ret;
+ 
+ 	if (err == -ETIMEDOUT) {
+ 		mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
+ 			       mlx5_command_str(msg_to_opcode(ent->in)),
+ 			       msg_to_opcode(ent->in));
++	} else if (err == -ECANCELED) {
++		mlx5_core_warn(dev, "%s(0x%x) canceled on out of queue timeout.\n",
++			       mlx5_command_str(msg_to_opcode(ent->in)),
++			       msg_to_opcode(ent->in));
+ 	}
+ 	mlx5_core_dbg(dev, "err %d, delivery status %s(%d)\n",
+ 		      err, deliv_status_to_str(ent->status), ent->status);
+@@ -951,6 +963,7 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 
+ 	ent->token = token;
+ 
++	init_completion(&ent->handling);
+ 	if (!callback)
+ 		init_completion(&ent->done);
+ 
+@@ -970,6 +983,8 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 	err = wait_func(dev, ent);
+ 	if (err == -ETIMEDOUT)
+ 		goto out;
++	if (err == -ECANCELED)
++		goto out_free;
+ 
+ 	ds = ent->ts2 - ent->ts1;
+ 	op = MLX5_GET(mbox_in, in->first.data, opcode);
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -656,6 +656,7 @@ struct mlx5_cmd_work_ent {
+ 	struct delayed_work	cb_timeout_work;
+ 	void		       *context;
+ 	int			idx;
++	struct completion	handling;
+ 	struct completion	done;
+ 	struct mlx5_cmd        *cmd;
+ 	struct work_struct	work;
 
 
