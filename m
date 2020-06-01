@@ -2,133 +2,225 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2B1206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:04:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="l67SRuA8"
+	by mail.kernel.org (Postfix) with ESMTP id 8456B2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgFAUEm (ORCPT
+        id S1728369AbgFAUFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgFAUEm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:04:42 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8753C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:04:41 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l26so703720wme.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 13:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s5Dn7h8F8p+9hiFtim1wM4aaeJzWbt5/JlaxHO0hK24=;
-        b=l67SRuA8PBupQ7fNCIDym72270aida6TA0K/imDtClEIRKSkhBKgy9+1yFC0juX9+m
-         LIFR2HpW+Y/YRv5Q7HSqFeyH/yM7vKvpHkLdPBsqJtv2MRQ0pp8sfcJ7cHrrb1u6Aqw9
-         g81acLRL3UVGHjnyWWymDPldpIppTYdhzbGLx9Uub8loMmNs0w4KRoabp0d1WpB/miF+
-         4d+tUd53hJU1mwIwinyoe0ewffZH7cdP96KkldvyOF8z8o6UVkZkye7Ll0DsoJ/7s+k9
-         ru2VmbQytV3hJuV+29DPmZb6DJiNzkbUkgzc5V7AArClc6dbKD0jD67wN8Mle+vg3VAE
-         4Z0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s5Dn7h8F8p+9hiFtim1wM4aaeJzWbt5/JlaxHO0hK24=;
-        b=hygnxkmFPnXpmotjltG1OjGRcSLUaDsWnrmS05GlyPxhHU9JRkurrynrsMfnELDwfm
-         eawg4WHVCRGjxAuak9/IcK8lTyDlKUGR1GOzsUFxh5AYJeL5mvEKgzKr9TSTvU3Mu2Tw
-         2fH37yNdi5tWdTBcSwZNpSuYyIuQzJztrQZWFymSyzy8lOCH5mPRfiiG9WTfdRYCQTI2
-         foHPoNQFmO3q91bBYxHtOQDXu8R+KfdorWexMVc1oJxUCKgwcUTlob3T2i92DzwrzJuT
-         h+KKNaAeSSSb90xSr7Mt3WkPUaaR9tqBXz8l3YHVZfc6uSmanowWi29XKQVDqhAqIjgB
-         S+SA==
-X-Gm-Message-State: AOAM532CqBsYM7oqdD2I1w45wxc/ytKsyNlu4Eze0hrjVSaVSlbsIK5b
-        EFWROzjFruY7vZyaE/DBHys=
-X-Google-Smtp-Source: ABdhPJzRb8zSAFQ6wsfxxoYSHAaMpja+sGsf3SPHYEbdIY/I0SegpgESf3NRVDz71fWygY8zMyq3OQ==
-X-Received: by 2002:a1c:49:: with SMTP id 70mr790457wma.184.1591041880550;
-        Mon, 01 Jun 2020 13:04:40 -0700 (PDT)
-Received: from localhost.localdomain (p200300f137189200428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3718:9200:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id g3sm773130wrb.46.2020.06.01.13.04.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 13:04:39 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Thomas Graichen <thomas.graichen@gmail.com>
-Subject: [PATCH] ARM: dts: meson8: remove two invalid interrupt lines from the GPU node
-Date:   Mon,  1 Jun 2020 22:04:11 +0200
-Message-Id: <20200601200411.2006603-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 1 Jun 2020 16:05:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:13227 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726201AbgFAUFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 16:05:35 -0400
+IronPort-SDR: wO+kDYeheDQ/OXdBpL5qYa1y1IM2ZL2etKxNlsj/Ok/yvC7aUv5HtNQW+FoJLcXHybuW/j3BdV
+ hkrFIFLTKa/A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:05:34 -0700
+IronPort-SDR: um3bJ+vQWuAhPQ0J9SdHHZIkXZ13y1Dugc/F1r9FDDBAQYoL7BeqSHjbh0pQxQSIrT4ETdMBTw
+ AIVojG/96T5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
+   d="scan'208";a="347155049"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2020 13:05:34 -0700
+Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
+        by linux.intel.com (Postfix) with ESMTP id 15F6C58002E;
+        Mon,  1 Jun 2020 13:05:31 -0700 (PDT)
+Subject: [PATCH v6 01/13] tools/libperf: introduce notion of static polled
+ file descriptors
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <40643542-6676-e0bc-2d10-165dfde41e29@linux.intel.com>
+Date:   Mon, 1 Jun 2020 23:05:31 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 3.10 vendor kernel defines the following GPU 20 interrupt lines:
-  #define INT_MALI_GP                 AM_IRQ(160)
-  #define INT_MALI_GP_MMU             AM_IRQ(161)
-  #define INT_MALI_PP                 AM_IRQ(162)
-  #define INT_MALI_PMU                AM_IRQ(163)
-  #define INT_MALI_PP0                AM_IRQ(164)
-  #define INT_MALI_PP0_MMU            AM_IRQ(165)
-  #define INT_MALI_PP1                AM_IRQ(166)
-  #define INT_MALI_PP1_MMU            AM_IRQ(167)
-  #define INT_MALI_PP2                AM_IRQ(168)
-  #define INT_MALI_PP2_MMU            AM_IRQ(169)
-  #define INT_MALI_PP3                AM_IRQ(170)
-  #define INT_MALI_PP3_MMU            AM_IRQ(171)
-  #define INT_MALI_PP4                AM_IRQ(172)
-  #define INT_MALI_PP4_MMU            AM_IRQ(173)
-  #define INT_MALI_PP5                AM_IRQ(174)
-  #define INT_MALI_PP5_MMU            AM_IRQ(175)
-  #define INT_MALI_PP6                AM_IRQ(176)
-  #define INT_MALI_PP6_MMU            AM_IRQ(177)
-  #define INT_MALI_PP7                AM_IRQ(178)
-  #define INT_MALI_PP7_MMU            AM_IRQ(179)
 
-However, the driver from the 3.10 vendor kernel does not use the
-following four interrupt lines:
-- INT_MALI_PP3
-- INT_MALI_PP3_MMU
-- INT_MALI_PP7
-- INT_MALI_PP7_MMU
+Implement adding of file descriptors by fdarray__add_stat() to
+fix-sized (currently 1) stat_entries array located at struct fdarray.
+Append added file descriptors to the array used by poll() syscall
+during fdarray__poll() call. Copy poll() result of the added
+descriptors from the array back to the storage for separate analysis.
 
-Drop the "pp3" and "ppmmu3" interrupt lines. This is also important
-because there is no matching entry in interrupt-names for it (meaning
-the "pp2" interrupt is actually assigned to the "pp3" interrupt line).
-
-Fixes: 7d3f6b536e72c9 ("ARM: dts: meson8: add the Mali-450 MP6 GPU")
-Reported-by: Thomas Graichen <thomas.graichen@gmail.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- arch/arm/boot/dts/meson8.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ tools/lib/api/fd/array.c                 | 42 +++++++++++++++++++++++-
+ tools/lib/api/fd/array.h                 |  7 ++++
+ tools/lib/perf/evlist.c                  | 11 +++++++
+ tools/lib/perf/include/internal/evlist.h |  2 ++
+ 4 files changed, 61 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index eedb92526968..a4ab8b96d0eb 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -239,8 +239,6 @@ mali: gpu@c0000 {
- 				     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+index 58d44d5eee31..b0027f2169c7 100644
+--- a/tools/lib/api/fd/array.c
++++ b/tools/lib/api/fd/array.c
+@@ -11,10 +11,16 @@
+ 
+ void fdarray__init(struct fdarray *fda, int nr_autogrow)
+ {
++	int i;
++
+ 	fda->entries	 = NULL;
+ 	fda->priv	 = NULL;
+ 	fda->nr		 = fda->nr_alloc = 0;
+ 	fda->nr_autogrow = nr_autogrow;
++
++	fda->nr_stat = 0;
++	for (i = 0; i < FDARRAY__STAT_ENTRIES_MAX; i++)
++		fda->stat_entries[i].fd = -1;
+ }
+ 
+ int fdarray__grow(struct fdarray *fda, int nr)
+@@ -83,6 +89,20 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
+ 	return pos;
+ }
+ 
++int fdarray__add_stat(struct fdarray *fda, int fd, short revents)
++{
++	int pos = fda->nr_stat;
++
++	if (pos >= FDARRAY__STAT_ENTRIES_MAX)
++		return -1;
++
++	fda->stat_entries[pos].fd = fd;
++	fda->stat_entries[pos].events = revents;
++	fda->nr_stat++;
++
++	return pos;
++}
++
+ int fdarray__filter(struct fdarray *fda, short revents,
+ 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
+ 		    void *arg)
+@@ -113,7 +133,27 @@ int fdarray__filter(struct fdarray *fda, short revents,
+ 
+ int fdarray__poll(struct fdarray *fda, int timeout)
+ {
+-	return poll(fda->entries, fda->nr, timeout);
++	int nr, i, pos, res;
++
++	nr = fda->nr;
++
++	for (i = 0; i < fda->nr_stat; i++) {
++		if (fda->stat_entries[i].fd != -1) {
++			pos = fdarray__add(fda, fda->stat_entries[i].fd,
++					   fda->stat_entries[i].events);
++			if (pos >= 0)
++				fda->priv[pos].idx = i;
++		}
++	}
++
++	res = poll(fda->entries, fda->nr, timeout);
++
++	for (i = nr; i < fda->nr; i++)
++		fda->stat_entries[fda->priv[i].idx] = fda->entries[i];
++
++	fda->nr = nr;
++
++	return res;
+ }
+ 
+ int fdarray__fprintf(struct fdarray *fda, FILE *fp)
+diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
+index b39557d1a88f..9bca72e80b09 100644
+--- a/tools/lib/api/fd/array.h
++++ b/tools/lib/api/fd/array.h
+@@ -3,6 +3,7 @@
+ #define __API_FD_ARRAY__
+ 
+ #include <stdio.h>
++#include <poll.h>
+ 
+ struct pollfd;
+ 
+@@ -16,6 +17,9 @@ struct pollfd;
+  *	  I.e. using 'fda->priv[N].idx = * value' where N < fda->nr is ok,
+  *	  but doing 'fda->priv = malloc(M)' is not allowed.
+  */
++
++#define FDARRAY__STAT_ENTRIES_MAX	1
++
+ struct fdarray {
+ 	int	       nr;
+ 	int	       nr_alloc;
+@@ -25,6 +29,8 @@ struct fdarray {
+ 		int    idx;
+ 		void   *ptr;
+ 	} *priv;
++	int	       nr_stat;
++	struct pollfd  stat_entries[FDARRAY__STAT_ENTRIES_MAX];
+ };
+ 
+ void fdarray__init(struct fdarray *fda, int nr_autogrow);
+@@ -34,6 +40,7 @@ struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow);
+ void fdarray__delete(struct fdarray *fda);
+ 
+ int fdarray__add(struct fdarray *fda, int fd, short revents);
++int fdarray__add_stat(struct fdarray *fda, int fd, short revents);
+ int fdarray__poll(struct fdarray *fda, int timeout);
+ int fdarray__filter(struct fdarray *fda, short revents,
+ 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 6a875a0f01bb..e68e4c08e7c2 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -317,6 +317,17 @@ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
+ 	return pos;
+ }
+ 
++int perf_evlist__add_pollfd_stat(struct perf_evlist *evlist, int fd,
++			         short revent)
++{
++	int pos = fdarray__add_stat(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
++
++	if (pos >= 0)
++		fcntl(fd, F_SETFL, O_NONBLOCK);
++
++	return pos;
++}
++
+ static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
+ 					 void *arg __maybe_unused)
+ {
+diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+index 74dc8c3f0b66..2b3b4518c05e 100644
+--- a/tools/lib/perf/include/internal/evlist.h
++++ b/tools/lib/perf/include/internal/evlist.h
+@@ -46,6 +46,8 @@ struct perf_evlist_mmap_ops {
+ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
+ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
+ 			    void *ptr, short revent);
++int perf_evlist__add_pollfd_stat(struct perf_evlist *evlist, int fd,
++			         short revent);
+ 
+ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 			  struct perf_evlist_mmap_ops *ops,
 -- 
-2.26.2
+2.24.1
 
