@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E22206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05102206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035209;
-	bh=JOvf7Z0unFZPa0R3IIQFYG1Wc1kvGB+pDnGn35Q+6iY=;
+	s=default; t=1591035214;
+	bh=PwGEB/vLSvl2vUNqv3qWtWIltm08uq5RJYrsOTA1Xek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zJBnXUlC5VfbFZjWJFrrXIBT0ZhURR8HFGOJSdVx7MH8QDlC4NGNcoRlKnB2e2CFI
-	 UY3z4zmLRPliMxJZqIGaWqP68W0qt1AVLAtxXazPYcWGg9NaAMTNbr5uxmVP+jm2dz
-	 oR0KAxfNkLOKHweaG0/RkcUtH9VaC4xQ5UQXVNtQ=
+	b=jBvWiQeOLGmJhdYQ2VZxL2NMfMlUxyjsLOHq7D6epnbdK55dJFSQbcoMCSCbYnsQ1
+	 FdvAKUyAcowf8/OgMuFGTqhaoOxYMLbG3cQy8BM0roov6PkKDUXMw/ZbbbfXKSOrby
+	 GmVALb4gmDLPVFTrYT1+I7y9ZKhDIphnibwTnbSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731338AbgFASN1 (ORCPT
+        id S1731361AbgFASNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731329AbgFASNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:22 -0400
+        id S1730984AbgFASN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:13:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22482068D;
-        Mon,  1 Jun 2020 18:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B00C2068D;
+        Mon,  1 Jun 2020 18:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035202;
-        bh=JOvf7Z0unFZPa0R3IIQFYG1Wc1kvGB+pDnGn35Q+6iY=;
+        s=default; t=1591035206;
+        bh=PwGEB/vLSvl2vUNqv3qWtWIltm08uq5RJYrsOTA1Xek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ED+jprWkWqQ0kXisqIZnKnMP97joxIQ6tHf0OFp6N/DhHriNNbWwYvs1euDe7Qy4X
-         UoO9Kvzs1VAAACwYk47h6/7U8p2JAwKi0eu9SmM+1VP63D3AmznD+dBLki6XK7nSwL
-         6oUIjAGl6Gz/qc7K1saFgylvKQ9JuZPCFaI86PWs=
+        b=HM0bcWE8EfcBxPofBY2V/zsZQh1YSDtEUCd5+D06LW3VBoHkXKdcqxw0Ucdy0dMQW
+         HRGi2oIhnhFeTB3SyC0RqbqudoPZwlfIEhPvVGY5PJ8gHy4q0hCv9yvPvVdsoYVW/i
+         kvAiKyeirENpS3e/wVIqVnTapB4Lpv7hJYJuTj1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 055/177] net: microchip: encx24j600: add missed kthread_stop
-Date:   Mon,  1 Jun 2020 19:53:13 +0200
-Message-Id: <20200601174053.607328934@linuxfoundation.org>
+Subject: [PATCH 5.6 057/177] gfs2: move privileged user check to gfs2_quota_lock_check
+Date:   Mon,  1 Jun 2020 19:53:15 +0200
+Message-Id: <20200601174053.747201649@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,51 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
+[ Upstream commit 4ed0c30811cb4d30ef89850b787a53a84d5d2bcb ]
 
-This driver calls kthread_run() in probe, but forgets to call
-kthread_stop() in probe failure and remove.
-Add the missed kthread_stop() to fix it.
+Before this patch, function gfs2_quota_lock checked if it was called
+from a privileged user, and if so, it bypassed the quota check:
+superuser can operate outside the quotas.
+That's the wrong place for the check because the lock/unlock functions
+are separate from the lock_check function, and you can do lock and
+unlock without actually checking the quotas.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch moves the check to gfs2_quota_lock_check.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/gfs2/quota.c | 3 +--
+ fs/gfs2/quota.h | 3 ++-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
-index 39925e4bf2ec..b25a13da900a 100644
---- a/drivers/net/ethernet/microchip/encx24j600.c
-+++ b/drivers/net/ethernet/microchip/encx24j600.c
-@@ -1070,7 +1070,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
- 	if (unlikely(ret)) {
- 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
- 			  ret);
--		goto out_free;
-+		goto out_stop;
- 	}
+diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
+index e9f93045eb01..832d44782f74 100644
+--- a/fs/gfs2/quota.c
++++ b/fs/gfs2/quota.c
+@@ -1040,8 +1040,7 @@ int gfs2_quota_lock(struct gfs2_inode *ip, kuid_t uid, kgid_t gid)
+ 	u32 x;
+ 	int error = 0;
  
- 	eidled = encx24j600_read_reg(priv, EIDLED);
-@@ -1088,6 +1088,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+-	if (capable(CAP_SYS_RESOURCE) ||
+-	    sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
++	if (sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
+ 		return 0;
  
- out_unregister:
- 	unregister_netdev(priv->ndev);
-+out_stop:
-+	kthread_stop(priv->kworker_task);
- out_free:
- 	free_netdev(ndev);
+ 	error = gfs2_quota_hold(ip, uid, gid);
+diff --git a/fs/gfs2/quota.h b/fs/gfs2/quota.h
+index 765627d9a91e..fe68a91dc16f 100644
+--- a/fs/gfs2/quota.h
++++ b/fs/gfs2/quota.h
+@@ -44,7 +44,8 @@ static inline int gfs2_quota_lock_check(struct gfs2_inode *ip,
+ 	int ret;
  
-@@ -1100,6 +1102,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
- 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
- 
- 	unregister_netdev(priv->ndev);
-+	kthread_stop(priv->kworker_task);
- 
- 	free_netdev(priv->ndev);
- 
+ 	ap->allowed = UINT_MAX; /* Assume we are permitted a whole lot */
+-	if (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
++	if (capable(CAP_SYS_RESOURCE) ||
++	    sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
+ 		return 0;
+ 	ret = gfs2_quota_lock(ip, NO_UID_QUOTA_CHANGE, NO_GID_QUOTA_CHANGE);
+ 	if (ret)
 -- 
 2.25.1
 
