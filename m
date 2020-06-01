@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5644C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155F22068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F76B206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035562;
-	bh=sZZbkn4E+N2Dc4AfsH7MpASgJIO0PRmnyl1Y7PTnAUU=;
+	s=default; t=1591035565;
+	bh=rcGXyxVBSk7HlozhEm2slr0mzTvuHZEvCmq80wwX4hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2JDGtXPUhaEOW7p1KB67dXsbEHwVY3MdgUFojTxVL4xu3iXIkPJcE25bxXB1d9gQ
-	 2HlWW7Ge95+9Kc2EWGLszsV9pEZFeJm5zYJ1tBYpQzrsaRt0rSh7QXJ0nRDAFaXPHE
-	 ngQKUbcHbaEbXa9wTtYNfV57CvxqC/XkPVuNNqsA=
+	b=lAbz4DB/UajyBv073D//kfe2mboPka7bff3uQKxD0p1SdsNjbOijW35HAiE8b78Dn
+	 lP4E3yQpOoErenWmdov9EGJnFCi8UkRJrDcwvoM2fGA4Kld45YlhKZK34t0eBf1Wxs
+	 csWKN99mqeIBdrHk5BDXkZ/PpbwUox/uKAA5MzmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731803AbgFASRR (ORCPT
+        id S1729126AbgFASRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38266 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730590AbgFASRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:13 -0400
+        id S1729783AbgFASRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5E0B2065C;
-        Mon,  1 Jun 2020 18:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A342068D;
+        Mon,  1 Jun 2020 18:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035433;
-        bh=sZZbkn4E+N2Dc4AfsH7MpASgJIO0PRmnyl1Y7PTnAUU=;
+        s=default; t=1591035422;
+        bh=rcGXyxVBSk7HlozhEm2slr0mzTvuHZEvCmq80wwX4hc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jg72LHg5wUtuoE3zdqDFEpd7+eNvDkFh8bwr0GNTtiwWLprJxD0ujSCYv3UVphwJL
-         MQ9ymEQjrCS6nwWZmogCGn45HCXJr5lxxMUgXhpxdyEt/0vIAxzcRf2zrR43PjyWd9
-         lDGGUk0ua5/xP2HPt0BxDbe9dhbPvLcOWcNK5wo4=
+        b=vxG2SuVebm74tlG6D6TXXzz5Imx7XHQLk9igQfEIIYbewoLqHl9d9iaNg1IfXDpDX
+         cugeHva4zKrMEqV20L2tET5UTaRGTiPdacC97E0MhVxXIQX1T0aV1ncZAy+hyVg3+B
+         6l/k3ii0EtoBCg+6IF9IboMfQ1TwGpfzVRQTyJ9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 156/177] netfilter: conntrack: make conntrack userspace helpers work again
-Date:   Mon,  1 Jun 2020 19:54:54 +0200
-Message-Id: <20200601174101.348908263@linuxfoundation.org>
+        stable@vger.kernel.org, Antony Antony <antony@phenome.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.6 152/177] xfrm: fix error in comment
+Date:   Mon,  1 Jun 2020 19:54:50 +0200
+Message-Id: <20200601174101.073042657@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,145 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Antony Antony <antony@phenome.org>
 
-commit ee04805ff54a63ffd90bc6749ebfe73473734ddb upstream.
+commit 29e4276667e24ee6b91d9f91064d8fda9a210ea1 upstream.
 
-Florian Westphal says:
+s/xfrm_state_offload/xfrm_user_offload/
 
-"Problem is that after the helper hook was merged back into the confirm
-one, the queueing itself occurs from the confirm hook, i.e. we queue
-from the last netfilter callback in the hook-list.
-
-Therefore, on return, the packet bypasses the confirm action and the
-connection is never committed to the main conntrack table.
-
-To fix this there are several ways:
-1. revert the 'Fixes' commit and have a extra helper hook again.
-   Works, but has the drawback of adding another indirect call for
-   everyone.
-
-2. Special case this: split the hooks only when userspace helper
-   gets added, so queueing occurs at a lower priority again,
-   and normal enqueue reinject would eventually call the last hook.
-
-3. Extend the existing nf_queue ct update hook to allow a forced
-   confirmation (plus run the seqadj code).
-
-This goes for 3)."
-
-Fixes: 827318feb69cb ("netfilter: conntrack: remove helper hook again")
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: d77e38e612a ("xfrm: Add an IPsec hardware offloading API")
+Signed-off-by: Antony Antony <antony@phenome.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_conntrack_core.c |   78 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 72 insertions(+), 6 deletions(-)
+ include/uapi/linux/xfrm.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -2014,22 +2014,18 @@ static void nf_conntrack_attach(struct s
- 	nf_conntrack_get(skb_nfct(nskb));
- }
- 
--static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
-+static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
-+				 struct nf_conn *ct)
- {
- 	struct nf_conntrack_tuple_hash *h;
- 	struct nf_conntrack_tuple tuple;
- 	enum ip_conntrack_info ctinfo;
- 	struct nf_nat_hook *nat_hook;
- 	unsigned int status;
--	struct nf_conn *ct;
- 	int dataoff;
- 	u16 l3num;
- 	u8 l4num;
- 
--	ct = nf_ct_get(skb, &ctinfo);
--	if (!ct || nf_ct_is_confirmed(ct))
--		return 0;
--
- 	l3num = nf_ct_l3num(ct);
- 
- 	dataoff = get_l4proto(skb, skb_network_offset(skb), l3num, &l4num);
-@@ -2086,6 +2082,76 @@ static int nf_conntrack_update(struct ne
- 	return 0;
- }
- 
-+/* This packet is coming from userspace via nf_queue, complete the packet
-+ * processing after the helper invocation in nf_confirm().
-+ */
-+static int nf_confirm_cthelper(struct sk_buff *skb, struct nf_conn *ct,
-+			       enum ip_conntrack_info ctinfo)
-+{
-+	const struct nf_conntrack_helper *helper;
-+	const struct nf_conn_help *help;
-+	unsigned int protoff;
-+
-+	help = nfct_help(ct);
-+	if (!help)
-+		return 0;
-+
-+	helper = rcu_dereference(help->helper);
-+	if (!(helper->flags & NF_CT_HELPER_F_USERSPACE))
-+		return 0;
-+
-+	switch (nf_ct_l3num(ct)) {
-+	case NFPROTO_IPV4:
-+		protoff = skb_network_offset(skb) + ip_hdrlen(skb);
-+		break;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case NFPROTO_IPV6: {
-+		__be16 frag_off;
-+		u8 pnum;
-+
-+		pnum = ipv6_hdr(skb)->nexthdr;
-+		protoff = ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &pnum,
-+					   &frag_off);
-+		if (protoff < 0 || (frag_off & htons(~0x7)) != 0)
-+			return 0;
-+		break;
-+	}
-+#endif
-+	default:
-+		return 0;
-+	}
-+
-+	if (test_bit(IPS_SEQ_ADJUST_BIT, &ct->status) &&
-+	    !nf_is_loopback_packet(skb)) {
-+		if (!nf_ct_seq_adjust(skb, ct, ctinfo, protoff)) {
-+			NF_CT_STAT_INC_ATOMIC(nf_ct_net(ct), drop);
-+			return -1;
-+		}
-+	}
-+
-+	/* We've seen it coming out the other side: confirm it */
-+	return nf_conntrack_confirm(skb) == NF_DROP ? - 1 : 0;
-+}
-+
-+static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
-+{
-+	enum ip_conntrack_info ctinfo;
-+	struct nf_conn *ct;
-+	int err;
-+
-+	ct = nf_ct_get(skb, &ctinfo);
-+	if (!ct)
-+		return 0;
-+
-+	if (!nf_ct_is_confirmed(ct)) {
-+		err = __nf_conntrack_update(net, skb, ct);
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	return nf_confirm_cthelper(skb, ct, ctinfo);
-+}
-+
- static bool nf_conntrack_get_tuple_skb(struct nf_conntrack_tuple *dst_tuple,
- 				       const struct sk_buff *skb)
- {
+--- a/include/uapi/linux/xfrm.h
++++ b/include/uapi/linux/xfrm.h
+@@ -304,7 +304,7 @@ enum xfrm_attr_type_t {
+ 	XFRMA_PROTO,		/* __u8 */
+ 	XFRMA_ADDRESS_FILTER,	/* struct xfrm_address_filter */
+ 	XFRMA_PAD,
+-	XFRMA_OFFLOAD_DEV,	/* struct xfrm_state_offload */
++	XFRMA_OFFLOAD_DEV,	/* struct xfrm_user_offload */
+ 	XFRMA_SET_MARK,		/* __u32 */
+ 	XFRMA_SET_MARK_MASK,	/* __u32 */
+ 	XFRMA_IF_ID,		/* __u32 */
 
 
