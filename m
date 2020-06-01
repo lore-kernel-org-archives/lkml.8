@@ -2,242 +2,156 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE97BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7BCC433F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8A820823
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9FED2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="2Bfbk/Vh"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="p2waj1F1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFAHYu (ORCPT
+        id S1728129AbgFAHZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFAHYu (ORCPT
+        Mon, 1 Jun 2020 03:25:33 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:27847 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725283AbgFAHZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:24:50 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE3EC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 00:24:49 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r15so10241801wmh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries-io.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FAKMpIpHFvQp3zgS4QFpXD2KONnNwtUil2UzoSlI21A=;
-        b=2Bfbk/Vh3g2NKKULAuwDi+0omjMueFykMBrUZJdsSPf1JxF/+BBFpN553HYvz7aXgf
-         6WDD/ML9fWpUe7ISNqGrJDzq0x436l2fKzJTXoFMGUrIo3R0lpld5cYORJApUeGVuZCc
-         HIND5FcSNGPR4uZ+njQGcnHKWdkQRD/DmBH3c360mSNpBIilZsJdFnUGvO0CKQdiCRb/
-         99qAc95/n9oVB7ZAF+SVwblQ6UsFg72+/pu0lOQyFTrJ+v1GlzCWryEs2ypF0mCCmC8b
-         CD9fTsnjEsguJCk3Q9zQjaW1YCvp58Yze97bInIwJZMOJ0GaERqY1arYvW6wMH0ZKg8F
-         YDzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FAKMpIpHFvQp3zgS4QFpXD2KONnNwtUil2UzoSlI21A=;
-        b=av4uXQByDs3ZMPcKbSwkyCuJVBpbyRDaoe4IDzLznYo1gTp6diZ3dIOTukaVstLFIS
-         ccwATHvmK0wNjtiw40KZOLYnJc9vn9j2Twt+z6rtY1eiqCxSLTyEw/rytllZK2oCdzxH
-         P+thsjUvip8MzH0HAY6JwkhAzs4srhlrZw7v13h1pdZPtsz4qsVOow1ETUkh4zfwW/ey
-         cWDQF6+1bRKbkk1EfRBuoF1hOBXpppxZyyoUqDvVc+aGJ3tj5d4VToePTgVaGe+zEqR4
-         UYv+P5nzrgm9s2utIXF1irmHFiWZSBv+GZvA5K5VexazUUqVgk39RWrwuYLFi1cIXNZR
-         k5VQ==
-X-Gm-Message-State: AOAM5306KV05OxvAPq4Ry1hh8+B+I5As5AbKVwsShg0oPA/As1sHEPv2
-        zm3JVZfu+5Pn0h4wPN4TvVrEUQ==
-X-Google-Smtp-Source: ABdhPJyRjr/Zfbd/hgqYFOOW/jxNx/VurioZJczFgBl70Yx543UZuZYycdSjMuZqA06bFw+AYaNEiw==
-X-Received: by 2002:a05:600c:21d3:: with SMTP id x19mr22034719wmj.137.1590996288218;
-        Mon, 01 Jun 2020 00:24:48 -0700 (PDT)
-Received: from trex (108.red-83-34-185.dynamicip.rima-tde.net. [83.34.185.108])
-        by smtp.gmail.com with ESMTPSA id a3sm3906885wrp.91.2020.06.01.00.24.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Jun 2020 00:24:47 -0700 (PDT)
-From:   "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
-X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
-Date:   Mon, 1 Jun 2020 09:24:46 +0200
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Jorge Ramirez-Ortiz <jorge@foundries.io>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        ricardo@foundries.io, mike@foundries.io,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [Tee-dev] [PATCH v2] drivers: optee: allow op-tee to access
- devices on the i2c bus
-Message-ID: <20200601072446.GA28120@trex>
-References: <20200531231135.12670-1-jorge@foundries.io>
- <CAFA6WYNKSgkGzuz47MBzdYzKd3__zPP2HNaOv7P-KR8RFea9fg@mail.gmail.com>
+        Mon, 1 Jun 2020 03:25:33 -0400
+X-UUID: e3a4533e8cda44bb913745a8fdd50f8c-20200601
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NTVuyzYbTFO6DFfp2wMnvMERcsSISRnV9jG7gsuPvng=;
+        b=p2waj1F149vQe/RvJ1Fnw9HP3qt2JNm0TZDTq1x+XyMp8D+Abtes359bvUrJzjqJldrMytdlrWw1sEKE7bPJeLQFCDHZZTPNCRtTFZMzCkXQNwpZ+K2TlwusuaeolRpfgxDtXnPvDAwZvSXxnPSS6W0TwDptFstNmI09gLTDy6s=;
+X-UUID: e3a4533e8cda44bb913745a8fdd50f8c-20200601
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 200174250; Mon, 01 Jun 2020 15:25:28 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 1 Jun 2020 15:25:25 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 1 Jun 2020 15:25:24 +0800
+Message-ID: <1590996325.25636.30.camel@mtkswgap22>
+Subject: RE: [PATCH v1 1/2] scsi: ufs: Support WriteBooster on Samsung UFS
+ devices
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>
+Date:   Mon, 1 Jun 2020 15:25:25 +0800
+In-Reply-To: <SN6PR04MB46400873245235EA56838A19FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200530151337.6182-1-stanley.chu@mediatek.com>
+         <20200530151337.6182-2-stanley.chu@mediatek.com>
+         <SN6PR04MB46400873245235EA56838A19FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYNKSgkGzuz47MBzdYzKd3__zPP2HNaOv7P-KR8RFea9fg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-SNTS-SMTP: CA49A87DC9E16E8F08365655C751610B75A6F21121B1FD7877FDA8D5650F85E22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/06/20, Sumit Garg wrote:
-> Hi Jorge,
+SGkgQXZyaSwNCg0KT24gU2F0LCAyMDIwLTA1LTMwIGF0IDIwOjM3ICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gPiBAQCAtMjgwMSwxMSArMjgwMSwxNyBAQCBpbnQgdWZzaGNkX3F1ZXJ5X2Zs
+YWcoc3RydWN0IHVmc19oYmEgKmhiYSwgZW51bQ0KPiA+IHF1ZXJ5X29wY29kZSBvcGNvZGUsDQo+
+ID4gIHsNCj4gPiAgICAgICAgIHN0cnVjdCB1ZnNfcXVlcnlfcmVxICpyZXF1ZXN0ID0gTlVMTDsN
+Cj4gPiAgICAgICAgIHN0cnVjdCB1ZnNfcXVlcnlfcmVzICpyZXNwb25zZSA9IE5VTEw7DQo+ID4g
+LSAgICAgICBpbnQgZXJyLCBzZWxlY3RvciA9IDA7DQo+ID4gKyAgICAgICBpbnQgZXJyOw0KPiA+
+ICAgICAgICAgaW50IHRpbWVvdXQgPSBRVUVSWV9SRVFfVElNRU9VVDsNCj4gPiArICAgICAgIHU4
+IHNlbGVjdG9yID0gMDsNCj4gPiANCj4gPiAgICAgICAgIEJVR19PTighaGJhKTsNCj4gPiANCj4g
+PiArICAgICAgIGlmIChoYmEtPmRldl9xdWlya3MgJiBVRlNfREVWSUNFX1FVSVJLX1dCX1NQRUNJ
+QUxfU0VMRUNUT1IpIHsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHVmc2hjZF9pc193Yl9mbGFn
+cyhpZG4pKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHNlbGVjdG9yID0gMTsNCj4gPiAr
+ICAgICAgIH0NCj4gPiArDQo+IFdoeSBub3QgbWFrZSB0aGUgY2FsbGVyIHNldCB0aGUgYXBwbGlj
+YWJsZSBzZWxlY3RvciwNCj4gSW5zdGVhZCBvZiBjaGVja2luZyB0aGlzIGZvciBldmVyeSBmbGFn
+Pw0KDQpUaGlzIHdheSBoYXZlIHRoZSBtaW5pbXVtIG1vZGlmaWNhdGlvbiBlZmZvcnRzIGFuZCBw
+bGFjZXMgY29tcGFyZWQgdG8NCm90aGVyIHdheXMuIEhvd2V2ZXIgaXQgbG9va3MgYSBsaXR0bGUg
+d2lyZWQgYmVjYXVzZSB0aGUgc2VsZWN0b3IgY29udHJvbA0KaXMgYmV0dGVyIGFzc2lnbmVkIGJ5
+IHVzZXJzLiBJIHdpbGwgc3VibWl0IG5leHQgdmVyc2lvbiB3aXRoIGNoYW5naW5nDQp0aGUgd2F5
+IHNlbGVjdG9yIGFzc2lnbmVkIGZvciBjb21wYXJpc29uLg0KDQo+IA0KPiA+ICAgICAgICAgdWZz
+aGNkX2hvbGQoaGJhLCBmYWxzZSk7DQo+ID4gICAgICAgICBtdXRleF9sb2NrKCZoYmEtPmRldl9j
+bWQubG9jayk7DQo+ID4gICAgICAgICB1ZnNoY2RfaW5pdF9xdWVyeShoYmEsICZyZXF1ZXN0LCAm
+cmVzcG9uc2UsIG9wY29kZSwgaWRuLCBpbmRleCwNCj4gPiBAQCAtMjg4Miw2ICsyODg4LDExIEBA
+IGludCB1ZnNoY2RfcXVlcnlfYXR0cihzdHJ1Y3QgdWZzX2hiYSAqaGJhLCBlbnVtDQo+ID4gcXVl
+cnlfb3Bjb2RlIG9wY29kZSwNCj4gPiAgICAgICAgICAgICAgICAgZ290byBvdXQ7DQo+ID4gICAg
+ICAgICB9DQo+ID4gDQo+ID4gKyAgICAgICBpZiAoaGJhLT5kZXZfcXVpcmtzICYgVUZTX0RFVklD
+RV9RVUlSS19XQl9TUEVDSUFMX1NFTEVDVE9SKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGlmICh1
+ZnNoY2RfaXNfd2JfYXR0cnMoaWRuKSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBzZWxl
+Y3RvciA9IDE7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiBTYW1lIGhlcmUNCj4gDQo+ID4gICAg
+ICAgICBtdXRleF9sb2NrKCZoYmEtPmRldl9jbWQubG9jayk7DQo+ID4gICAgICAgICB1ZnNoY2Rf
+aW5pdF9xdWVyeShoYmEsICZyZXF1ZXN0LCAmcmVzcG9uc2UsIG9wY29kZSwgaWRuLCBpbmRleCwN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBzZWxlY3Rvcik7DQo+ID4gQEAgLTMwNDIsNiAr
+MzA1MywxMSBAQCBpbnQgdWZzaGNkX3F1ZXJ5X2Rlc2NyaXB0b3JfcmV0cnkoc3RydWN0IHVmc19o
+YmENCj4gPiAqaGJhLA0KPiA+ICAgICAgICAgaW50IGVycjsNCj4gPiAgICAgICAgIGludCByZXRy
+aWVzOw0KPiA+IA0KPiA+ICsgICAgICAgaWYgKGhiYS0+ZGV2X3F1aXJrcyAmIFVGU19ERVZJQ0Vf
+UVVJUktfV0JfU1BFQ0lBTF9TRUxFQ1RPUikgew0KPiA+ICsgICAgICAgICAgICAgICBpZiAodWZz
+aGNkX2lzX3diX2Rlc2MoaWRuLCBpbmRleCkpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+c2VsZWN0b3IgPSAxOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gQW5kIGhlcmUuDQo+IEJ1dCB0
+aGlzIGNhbid0IGJlIHRydWUgLSANCj4gQXJlIHlvdSBzZXR0aW5nIHRoZSBzZWxlY3RvciA9IDEg
+Zm9yIHJlYWRpbmcgYW55IGZpZWxkIGZvciB0aG9zZSBkZXNjcmlwdG9ycz8NCj4gU2hvdWxkbid0
+IGl0IGJlIGZvciB0aGUgd2Igc3BlY2lmaWMgZmllbGRzPw0KDQpZZXMsIHRoYW5rcyBmb3IgcmVt
+aW5kIHRoaXMuDQpJIHNoYWxsIGFzc2lnbiBzZWxlY3RvciA9IDEgZm9yIFdCIHJlbGF0ZWQgZmll
+bGRzIG9ubHkgaW4gZGVzY3JpcHRvcnMuDQoNCj4gIA0KPiANCj4gPiAgICAgICAgIGZvciAocmV0
+cmllcyA9IFFVRVJZX1JFUV9SRVRSSUVTOyByZXRyaWVzID4gMDsgcmV0cmllcy0tKSB7DQo+ID4g
+ICAgICAgICAgICAgICAgIGVyciA9IF9fdWZzaGNkX3F1ZXJ5X2Rlc2NyaXB0b3IoaGJhLCBvcGNv
+ZGUsIGlkbiwgaW5kZXgsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgc2VsZWN0b3IsIGRlc2NfYnVmLCBidWZfbGVuKTsNCj4gPiBAQCAtNjkwNyw4
+ICs2OTIzLDEwIEBAIHN0YXRpYyBpbnQgdWZzX2dldF9kZXZpY2VfZGVzYyhzdHJ1Y3QgdWZzX2hi
+YSAqaGJhKQ0KPiA+ICAgICAgICAgc2l6ZV90IGJ1ZmZfbGVuOw0KPiA+ICAgICAgICAgdTggbW9k
+ZWxfaW5kZXg7DQo+ID4gICAgICAgICB1OCAqZGVzY19idWY7DQo+ID4gKyAgICAgICB1OCByZXRy
+eV9jbnQgPSAwOw0KPiA+ICAgICAgICAgc3RydWN0IHVmc19kZXZfaW5mbyAqZGV2X2luZm8gPSAm
+aGJhLT5kZXZfaW5mbzsNCj4gPiANCj4gPiArcmV0cnk6DQo+ID4gICAgICAgICBidWZmX2xlbiA9
+IG1heF90KHNpemVfdCwgaGJhLT5kZXNjX3NpemUuZGV2X2Rlc2MsDQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgIFFVRVJZX0RFU0NfTUFYX1NJWkUgKyAxKTsNCj4gPiAgICAgICAgIGRlc2Nf
+YnVmID0ga21hbGxvYyhidWZmX2xlbiwgR0ZQX0tFUk5FTCk7DQo+ID4gQEAgLTY5NDgsNiArNjk2
+NiwyOSBAQCBzdGF0aWMgaW50IHVmc19nZXRfZGV2aWNlX2Rlc2Moc3RydWN0IHVmc19oYmEgKmhi
+YSkNCj4gPiANCj4gPiAgICAgICAgIHVmc19maXh1cF9kZXZpY2Vfc2V0dXAoaGJhKTsNCj4gPiAN
+Cj4gPiArICAgICAgIGlmICghcmV0cnlfY250ICYmIChoYmEtPmRldl9xdWlya3MgJg0KPiA+ICsg
+ICAgICAgICAgICAgICBVRlNfREVWSUNFX1FVSVJLX1dCX1NQRUNJQUxfU0VMRUNUT1IpKSB7DQo+
+IElmIHlvdSBvbmx5IHdhbnQgdG8gZW50ZXIgdGhpcyBjbGF1c2Ugb25jZSAtIHlvdSBzaG91bGQg
+dXNlIHNvbWV0aGluZyBvdGhlciB0aGFuIHJldHJ5X2NudCwNCj4gV2hpY2ggdGhlIHJlYWRlciBl
+eHBlY3RzIHRvIHBlcmZvcm1zIHJldHJpZXMuLi4uDQoNCk9LISBJIHdpbGwgZml4IHRoaXMgbGFi
+ZWwgYnkgdXNpbmcgYW5vdGhlciBtb3JlIGNvbXByZWhlbnNpYmxlIG5hbWUuDQo+IA0KPiBBbHNv
+LCB0aGlzIGlzIGJlY29taW5nIHRvbyB3aXJlZCAtIA0KPiBGcm9tIHlvdXIgY29tbWl0IGxvZyBJ
+IGdldCB0aGF0IGZvciBzcGVjaWZpYyBTYW1zdW5nIGRldmljZXMsDQo+IFlvdSBuZWVkIHRvIHF1
+ZXJ5IHdiIGRlc2NyaXB0b3IgZmllbGRzL2F0dHJpYnV0ZXMvZmxhZ3MgdXNpbmcgc2VsZWN0b3Jl
+ID0gMS4NCj4gQnV0IHdoYXQgaXQgaGFzIHRvIGRvIHdpdGggZGVzY3JpcHRvciBzaXplcz8NCg0K
+U29ycnkgdG8gbm90IG1lbnRpb24gY2xlYXJseSBpbiB0aGUgY29tbWl0IGxvZy4NCg0KSGVyZSBk
+cml2ZXIgbmVlZHMgdG8gdXBkYXRlIHRoZSBkZXNjcmlwdG9yIHNpemUgdG8gYSAibG9uZ2VyIHNp
+emUiIHdoaWNoDQppbmNsdWRlcyB0aGUgImhpZGRlbiBXQiByZWxhdGVkIGZpZWxkcyIgd2hpY2gg
+Y2FuIGJlICJmb3VuZCIgYnkgc2VsZWN0b3INCj0gMS4NCg0KSWYgZGVzY3JpcHRvciBzaXplIGlz
+IG5vdCB1cGRhdGVkLCBhbnkgcXVlcnkgY2FuIG9ubHkgZ2V0IHRoZSBmaWVsZHMNCm9mZnNldCB3
+aXRoaW4gY3VycmVudCBkZXNjcmlwdG9yIHNpemUgZXZlbiBpZiBzZWxlY3RvciA9IDEsIGFuZA0K
+b3V0LW9mLWJvdW5kYXJ5IGRlc2NfYnVmW10gYWNjZXNzIHdpbGwgaGFwcGVuIGluDQp1ZnNoY2Rf
+cmVhZF9kZXNjX3BhcmFtKCkuDQoNClBTLiBUaGUgY2hlY2sgb2YgInBhcmFtX29mZnNldCIgdG8g
+cHJldmVudCBwb3NzaWJsZSBvdXQtb2YtYm91bmRhcnkNCmRlc2NfYnVmW10gYWNjZXNzIGNhbiBi
+ZSBwYXRjaGVkIGFzIHdlbGwuDQoNCg0KVGhhbmtzLA0KU3RhbmxleSBDaHUNCg0KDQo=
 
-hey
-
-> 
-> On Mon, 1 Jun 2020 at 04:41, Jorge Ramirez-Ortiz <jorge@foundries.io> wrote:
-> >
-> > Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
-> > control this type of cryptographic devices it needs coordinated access
-> > to the bus, so collisions and RUNTIME_PM dont get in the way.
-> >
-> > This trampoline driver allow OP-TEE to access them.
-> >
-> 
-> This sounds like an interesting use-case but I would like to
-> understand how secure is this communication interface with the secure
-> element? Like in the case of RPMB, secure world data is encrypted
-> which flows via tee-supplicant to RPMB device.
-
-right, the data in the buffer should be encrypted in both directions
-(in the case of the SE050 [1] we have the option to operate with or
-without encryption which is what I am doing during development
-[2]).
-
-But ultimately -before any product can be shipped- all comms must be
-encrypted: this means that when OP-TEE uses the SE050 for crypto, it
-must encrypt the data on write and decrypt what is comming from the
-SE050 on read. I am now looking into how to enable this.
-
-[1] https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf
-[2] https://github.com/ldts/optee_os/commits/se050
-
-> 
-> -Sumit
-> 
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
-> > ---
-> >  drivers/tee/optee/optee_msg.h | 18 +++++++++++
-> >  drivers/tee/optee/rpc.c       | 57 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 75 insertions(+)
-> >
-> > diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
-> > index 795bc19ae17a..b6cc964fdeea 100644
-> > --- a/drivers/tee/optee/optee_msg.h
-> > +++ b/drivers/tee/optee/optee_msg.h
-> > @@ -419,4 +419,22 @@ struct optee_msg_arg {
-> >   */
-> >  #define OPTEE_MSG_RPC_CMD_SHM_FREE     7
-> >
-> > +/*
-> > + * Access a device on an i2c bus
-> > + *
-> > + * [in]  param[0].u.value.a            mode: RD(0), WR(1)
-> > + * [in]  param[0].u.value.b            i2c adapter
-> > + * [in]  param[0].u.value.c            i2c chip
-> > + *
-> > + * [io]  param[1].u.tmem.buf_ptr       physical address
-> > + * [io]  param[1].u.tmem.size          transfer size in bytes
-> > + * [io]  param[1].u.tmem.shm_ref       shared memory reference
-> > + *
-> > + * [out]  param[0].u.value.a           bytes transferred
-> > + *
-> > + */
-> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER 8
-> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD 0
-> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR 1
-> > +
-> >  #endif /* _OPTEE_MSG_H */
-> > diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
-> > index b4ade54d1f28..21d452805c6f 100644
-> > --- a/drivers/tee/optee/rpc.c
-> > +++ b/drivers/tee/optee/rpc.c
-> > @@ -9,6 +9,7 @@
-> >  #include <linux/device.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/tee_drv.h>
-> > +#include <linux/i2c.h>
-> >  #include "optee_private.h"
-> >  #include "optee_smc.h"
-> >
-> > @@ -48,6 +49,59 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
-> >  bad:
-> >         arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-> >  }
-> > +static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
-> > +                                            struct optee_msg_arg *arg)
-> > +{
-> > +       struct i2c_client client;
-> > +       struct tee_shm *shm;
-> > +       int i, ret;
-> > +       char *buf;
-> > +       uint32_t attr[] = {
-> > +               OPTEE_MSG_ATTR_TYPE_VALUE_INPUT,
-> > +               OPTEE_MSG_ATTR_TYPE_TMEM_INOUT,
-> > +               OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT,
-> > +       };
-> > +
-> > +       if (arg->num_params != ARRAY_SIZE(attr))
-> > +               goto bad;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(attr); i++)
-> > +               if ((arg->params[i].attr & OPTEE_MSG_ATTR_TYPE_MASK) != attr[i])
-> > +                       goto bad;
-> > +
-> > +       shm = (struct tee_shm *)(unsigned long)arg->params[1].u.tmem.shm_ref;
-> > +       buf = (char *)shm->kaddr;
-> > +
-> > +       client.addr = arg->params[0].u.value.c;
-> > +       client.adapter = i2c_get_adapter(arg->params[0].u.value.b);
-> > +       if (!client.adapter)
-> > +               goto bad;
-> > +
-> > +       snprintf(client.name, I2C_NAME_SIZE, "i2c%d", client.adapter->nr);
-> > +
-> > +       switch (arg->params[0].u.value.a) {
-> > +       case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD:
-> > +               ret = i2c_master_recv(&client, buf, arg->params[1].u.tmem.size);
-> > +               break;
-> > +       case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR:
-> > +               ret = i2c_master_send(&client, buf, arg->params[1].u.tmem.size);
-> > +               break;
-> > +       default:
-> > +               i2c_put_adapter(client.adapter);
-> > +               goto bad;
-> > +       }
-> > +
-> > +       if (ret >= 0) {
-> > +               arg->params[2].u.value.a = ret;
-> > +               arg->ret = TEEC_SUCCESS;
-> > +       } else
-> > +               arg->ret = TEEC_ERROR_COMMUNICATION;
-> > +
-> > +       i2c_put_adapter(client.adapter);
-> > +       return;
-> > +bad:
-> > +       arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-> > +}
-> >
-> >  static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
-> >  {
-> > @@ -382,6 +436,9 @@ static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
-> >         case OPTEE_MSG_RPC_CMD_SHM_FREE:
-> >                 handle_rpc_func_cmd_shm_free(ctx, arg);
-> >                 break;
-> > +       case OPTEE_MSG_RPC_CMD_I2C_TRANSFER:
-> > +               handle_rpc_func_cmd_i2c_transfer(ctx, arg);
-> > +               break;
-> >         default:
-> >                 handle_rpc_supp_cmd(ctx, arg);
-> >         }
-> > --
-> > 2.17.1
-> >
-> > _______________________________________________
-> > Tee-dev mailing list
-> > Tee-dev@lists.linaro.org
-> > https://lists.linaro.org/mailman/listinfo/tee-dev
