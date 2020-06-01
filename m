@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B30C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF1B4206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9542073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035425;
-	bh=xr+cNPrIdf1C12cNTU1/aKdibL4caOdZ0UILFHZY4a0=;
+	s=default; t=1591035431;
+	bh=Syz0oJeLENcBeZiJymoRK63ZsyGJDQbC94aTQ556b6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOX6r1DGTIGOmDve/fn7FpM5IsaIF6Vj/EPjX6Kqnb2/V7ywNand8o9wnNYyUBZhX
-	 YaKet4KGh97xr5muQqkc7LjXqKpqPX06JkCuK1Ikgd2JdF3zHox+uoREtWYXEMwNNQ
-	 JUOVjNdg2qGL28vmFe3aTPq8RmNZzp95T5JvUrIA=
+	b=zc3wUx9/8FaAOJBX1yw5RTGUu/8SAXYxRbPdEwSjCFUqV/uEMvN4pcIH3vgyE7E82
+	 uFMKcOJxmi3u1dOBnELV4RNZx5S+a5NLOdGPgQQrZ2Aj0ony01lwDr4hYnFccj4RV5
+	 peqmNbsmawhX0h3mhYkqu7l41TMFf37HbhgpLHR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbgFASRE (ORCPT
+        id S1731792AbgFASRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731186AbgFASRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:00 -0400
+        id S1731785AbgFASRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DACB2065C;
-        Mon,  1 Jun 2020 18:16:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2EC206E2;
+        Mon,  1 Jun 2020 18:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035419;
-        bh=xr+cNPrIdf1C12cNTU1/aKdibL4caOdZ0UILFHZY4a0=;
+        s=default; t=1591035426;
+        bh=Syz0oJeLENcBeZiJymoRK63ZsyGJDQbC94aTQ556b6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kk2wXM7xFtkyG2nObhCTe5qhbhKp+1J63uoYMjHLgPOc9XMO7zk/txLE0u4J4w73/
-         iuI8ldppJpoPbNr7f4M/Psw1//v5OtPXd8gvAuVmEapxER7n36DHpCk9LrRx+/PD/2
-         n5UOwZVXQeBN6eaKULvyjpXsewM0xE90eCKXPCWg=
+        b=HnlGPRaT4XZWzANDZYhxMplKeY6Jthz3XTPpewIt5npE82O/FmmgI9aNc2Ai3VsfO
+         8lByhIL5iYdIS1UNHIe+vagim8dxFzK0zq4hGLWblJqvJyOG72oxiooxwZtl/xAm+W
+         pdsgxm9PvBlmqZdjJYdxxJ1jj9KcUM6DbLbt3qd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.6 151/177] xfrm: fix a NULL-ptr deref in xfrm_local_error
-Date:   Mon,  1 Jun 2020 19:54:49 +0200
-Message-Id: <20200601174100.997886917@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Braun <michael-dev@fami-braun.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.6 154/177] netfilter: nft_reject_bridge: enable reject with bridge vlan
+Date:   Mon,  1 Jun 2020 19:54:52 +0200
+Message-Id: <20200601174101.212699341@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,65 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Michael Braun <michael-dev@fami-braun.de>
 
-commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
+commit e9c284ec4b41c827f4369973d2792992849e4fa5 upstream.
 
-This patch is to fix a crash:
+Currently, using the bridge reject target with tagged packets
+results in untagged packets being sent back.
 
-  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
-  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
-  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
-  [ ] Call Trace:
-  [ ]  xfrm6_local_error+0x1eb/0x300
-  [ ]  xfrm_local_error+0x95/0x130
-  [ ]  __xfrm6_output+0x65f/0xb50
-  [ ]  xfrm6_output+0x106/0x46f
-  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
-  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
-  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
-  [ ]  dev_hard_start_xmit+0x165/0x820
-  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
-  [ ]  ip_finish_output2+0xd3e/0x1480
-  [ ]  ip_do_fragment+0x182d/0x2210
-  [ ]  ip_output+0x1d0/0x510
-  [ ]  ip_send_skb+0x37/0xa0
-  [ ]  raw_sendmsg+0x1b4c/0x2b80
-  [ ]  sock_sendmsg+0xc0/0x110
+Fix this by mirroring the vlan id as well.
 
-This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
-skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
-xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
-to get ipv6 info from a ipv4 sk.
-
-This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
-error reporting more robust"), but brought back by Commit 844d48746e4b
-("xfrm: choose protocol family by skb protocol").
-
-So to fix it, we should call xfrm6_local_error() only when skb->protocol
-is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
-
-Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 85f5b3086a04 ("netfilter: bridge: add reject support")
+Signed-off-by: Michael Braun <michael-dev@fami-braun.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_output.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/bridge/netfilter/nft_reject_bridge.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/xfrm/xfrm_output.c
-+++ b/net/xfrm/xfrm_output.c
-@@ -642,7 +642,8 @@ void xfrm_local_error(struct sk_buff *sk
+--- a/net/bridge/netfilter/nft_reject_bridge.c
++++ b/net/bridge/netfilter/nft_reject_bridge.c
+@@ -31,6 +31,12 @@ static void nft_reject_br_push_etherhdr(
+ 	ether_addr_copy(eth->h_dest, eth_hdr(oldskb)->h_source);
+ 	eth->h_proto = eth_hdr(oldskb)->h_proto;
+ 	skb_pull(nskb, ETH_HLEN);
++
++	if (skb_vlan_tag_present(oldskb)) {
++		u16 vid = skb_vlan_tag_get(oldskb);
++
++		__vlan_hwaccel_put_tag(nskb, oldskb->vlan_proto, vid);
++	}
+ }
  
- 	if (skb->protocol == htons(ETH_P_IP))
- 		proto = AF_INET;
--	else if (skb->protocol == htons(ETH_P_IPV6))
-+	else if (skb->protocol == htons(ETH_P_IPV6) &&
-+		 skb->sk->sk_family == AF_INET6)
- 		proto = AF_INET6;
- 	else
- 		return;
+ static int nft_bridge_iphdr_validate(struct sk_buff *skb)
 
 
