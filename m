@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DBBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544AE2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E492076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034229;
-	bh=Sv50GhNdNfAEmQPgwJon282Ryl8sV1jtnma2waxrDZg=;
+	s=default; t=1591034232;
+	bh=ehOoFKpAgqAUWFOKBYLRoV4KD26jKHw9qA5kmd73qLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oG3GPjn6QGqsAyiNpEDoq46ZtRNmEuT9oJZsKJI1OWsPpid+Xyd9gjOTtQdvnpRQa
-	 4eny3skBOJI/Tpul5xKLX5/rXNTeZRWCrqGat7IrXQ9VyBsRbYANFwyoEkwN7VoQ/E
-	 cIyEaJLxYk5jFMa9L1yfXY/l2IRlQQKDyCijjErU=
+	b=tcOMeaEp1o/7LYHJ0cTd6xBi0ZjZOY/heyGi5mofk6GLay7rN0OmEQP7dXuoTWO8C
+	 ONgnv7YUPlhQKhdtMHzEx+8Dy8PtaCNfcM34bUoF7SqhTSd+7RVjW8R/tRafFSz0cd
+	 SireDGQLmZHFs3thXlUauRzDmhZKKtNjW/KDWA7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgFAR5I (ORCPT
+        id S1728860AbgFAR5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbgFAR5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:06 -0400
+        id S1728841AbgFAR5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAA28207DF;
-        Mon,  1 Jun 2020 17:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3603A2076B;
+        Mon,  1 Jun 2020 17:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034225;
-        bh=Sv50GhNdNfAEmQPgwJon282Ryl8sV1jtnma2waxrDZg=;
+        s=default; t=1591034227;
+        bh=ehOoFKpAgqAUWFOKBYLRoV4KD26jKHw9qA5kmd73qLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LU+cS3QUqRQpaI0Y5Hk8AewS74OppJJIiEiLkbTqs1NpaiJ2pyNjnr1EALHf1pmqX
-         yue6ZvXKJHCx7F+RoojtaSLIE3yF1jb+rl0xJBZLA+IjXxpecGirJOs1EJAklLMJFo
-         2v0OkfR4k5JRy2H3DevylOSfYrOhuQATXt8BpVj8=
+        b=0Un4upDz/zXwkd3/k0gWutBD26xiOF0QPcpcXvzUztA1Vc0owe6u75z52BOZTD36L
+         cpfhPl4jPK0zvGuMdB92vJk5fYKID3zWq0on2Bk6+iFsrxOV6bha+0MMKZQppW5UtC
+         NLitvWiyPRPaWWHDOMq07o28CxsKv0iJhJCY3mJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 48/48] drm/msm: Fix possible null dereference on failure of get_pages()
-Date:   Mon,  1 Jun 2020 19:53:58 +0200
-Message-Id: <20200601174005.784720752@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Braun <michael-dev@fami-braun.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.4 32/48] netfilter: nft_reject_bridge: enable reject with bridge vlan
+Date:   Mon,  1 Jun 2020 19:53:42 +0200
+Message-Id: <20200601174002.056829859@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -62,63 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben.hutchings@codethink.co.uk>
+From: Michael Braun <michael-dev@fami-braun.de>
 
-commit 3976626ea3d2011f8fd3f3a47070a8b792018253 upstream.
+commit e9c284ec4b41c827f4369973d2792992849e4fa5 upstream.
 
-Commit 62e3a3e342af changed get_pages() to initialise
-msm_gem_object::pages before trying to initialise msm_gem_object::sgt,
-so that put_pages() would properly clean up pages in the failure
-case.
+Currently, using the bridge reject target with tagged packets
+results in untagged packets being sent back.
 
-However, this means that put_pages() now needs to check that
-msm_gem_object::sgt is not null before trying to clean it up, and
-this check was only applied to part of the cleanup code.  Move
-it all into the conditional block.  (Strictly speaking we don't
-need to make the kfree() conditional, but since we can't avoid
-checking for null ourselves we may as well do so.)
+Fix this by mirroring the vlan id as well.
 
-Fixes: 62e3a3e342af ("drm/msm: fix leak in failed get_pages")
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: 85f5b3086a04 ("netfilter: bridge: add reject support")
+Signed-off-by: Michael Braun <michael-dev@fami-braun.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/msm/msm_gem.c |   20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ net/bridge/netfilter/nft_reject_bridge.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -116,17 +116,19 @@ static void put_pages(struct drm_gem_obj
- 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
+--- a/net/bridge/netfilter/nft_reject_bridge.c
++++ b/net/bridge/netfilter/nft_reject_bridge.c
+@@ -35,6 +35,12 @@ static void nft_reject_br_push_etherhdr(
+ 	ether_addr_copy(eth->h_dest, eth_hdr(oldskb)->h_source);
+ 	eth->h_proto = eth_hdr(oldskb)->h_proto;
+ 	skb_pull(nskb, ETH_HLEN);
++
++	if (skb_vlan_tag_present(oldskb)) {
++		u16 vid = skb_vlan_tag_get(oldskb);
++
++		__vlan_hwaccel_put_tag(nskb, oldskb->vlan_proto, vid);
++	}
+ }
  
- 	if (msm_obj->pages) {
--		/* For non-cached buffers, ensure the new pages are clean
--		 * because display controller, GPU, etc. are not coherent:
--		 */
--		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--			dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
--					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		if (msm_obj->sgt) {
-+			/* For non-cached buffers, ensure the new
-+			 * pages are clean because display controller,
-+			 * GPU, etc. are not coherent:
-+			 */
-+			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
-+				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
-+					     msm_obj->sgt->nents,
-+					     DMA_BIDIRECTIONAL);
- 
--		if (msm_obj->sgt)
- 			sg_free_table(msm_obj->sgt);
--
--		kfree(msm_obj->sgt);
-+			kfree(msm_obj->sgt);
-+		}
- 
- 		if (use_pages(obj))
- 			drm_gem_put_pages(obj, msm_obj->pages, true, false);
+ /* We cannot use oldskb->dev, it can be either bridge device (NF_BRIDGE INPUT)
 
 
