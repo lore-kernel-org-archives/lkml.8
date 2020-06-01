@@ -2,163 +2,182 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A33C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF310207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lLP7HgHy"
+	by mail.kernel.org (Postfix) with ESMTP id ABF2D2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591036703;
+	bh=8LJc41QcyHQrn0teuEmx2Q/YGdsOXZ7Go3DE8eV8WUA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q2LdlGqbMfMRp43RK/EQwNBVKlld+LQp6wwToPxlBLHmhrp4jac96zpb/hk9xT29Q
+	 D5j6tnuOk1db61uzQHkZawEae9hFoW02UiE8/I4JxRJKz1vZkk2jeqF6alQYTlOYk+
+	 eCwqLDmMZsBbTrwgIBTxhKQIRGO4+guXoASxiva8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbgFASiL (ORCPT
+        id S1731580AbgFASiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbgFAShm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:37:42 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27388C008630
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CpB7nCiOHth7G0+bKDlWGpYMQSufxub4WvL1UZYxUiM=; b=lLP7HgHyNrFOSucRGlI0jVd/9
-        XQWkmPUBiOeOVFqJQRYfR8oZF/og/m2RQXsIISmVygdlgv+hwsIbsJVxsPCE2Odk5iAHPFQGVmhd6
-        yJRo+Xohg/igU96un8t3FG3eCWOH52u+1pUvSwCbDYDmmDPoD2z+BFMU8KaQ4JP0/oRVRRY7tJ8JP
-        NLRTI8N+AVR249xDDLmmHeZRQeqbwxGJcCthH28DMrO1RRgBynjvXEtgogo709jXA3lh8H+IpRo0Q
-        GKbuviSTibX6fshgTHCtQAeEjCJTU6tRvFAqhEQyd4IsOD0+EaNJcUc7lD5ahqplO9HtsW9dQCR/w
-        ItYnxLNiA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37610)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jfp8Q-00010n-AB; Mon, 01 Jun 2020 19:26:06 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jfp8F-0003XJ-QP; Mon, 01 Jun 2020 19:25:55 +0100
-Date:   Mon, 1 Jun 2020 19:25:55 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 3/5] arm: decompressor: define a new zImage tag
-Message-ID: <20200601182555.GP1551@shell.armlinux.org.uk>
-References: <20200601145502.GJ1551@shell.armlinux.org.uk>
- <CGME20200601162002eucas1p28eb08a42de6f313458e9391bd5976e90@eucas1p2.samsung.com>
- <dleftjwo4qsqqf.fsf%l.stelmach@samsung.com>
+        Mon, 1 Jun 2020 14:38:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729948AbgFASPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D332065C;
+        Mon,  1 Jun 2020 18:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591035312;
+        bh=8LJc41QcyHQrn0teuEmx2Q/YGdsOXZ7Go3DE8eV8WUA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PT4tVQd/akG22qzQavRTGWcxPHLct0OS+L4eTKoMrnRjiWGso0OME/ng3XvoTcXug
+         gjZtH3rPBfC/h3HmyxMMNPo3Ie5ItAZBFbed6/qILXkVVNtwDbMQ8nKd6roAt/sKjN
+         aQ2875VKg//P81jhqpe/OiQSji6/iK2coE7jTz8g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Robert Beckett <bob.beckett@collabora.com>,
+        Ian Ray <ian.ray@ge.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 103/177] ARM: dts/imx6q-bx50v3: Set display interface clock parents
+Date:   Mon,  1 Jun 2020 19:54:01 +0200
+Message-Id: <20200601174057.230750147@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
+References: <20200601174048.468952319@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <dleftjwo4qsqqf.fsf%l.stelmach@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 06:19:52PM +0200, Lukasz Stelmach wrote:
-> It was <2020-06-01 pon 15:55>, when Russell King - ARM Linux admin wrote:
-> > On Mon, Jun 01, 2020 at 04:27:52PM +0200, Łukasz Stelmach wrote:
-> >> Add DCSZ tag which holds dynamic memory (stack, bss, malloc pool)
-> >> requirements of the decompressor code.
-> >
-> > Why do we need to know the stack and BSS size, when the userspace
-> > kexec tool doesn't need to know this to perform the same function.
-> 
-> 
-> kexec-tools load zImage as low in DRAM as possible and rely on two
-> assumptions:
-> 
->     + the zImage will copy itself to make enough room for the kernel,
->     + sizeof(zImage+mem) < sizeof(kernel+mem), which is true because
->       of compression.
-> 
->        DRAM start
->        + 0x8000
-> 
-> zImage    |-----------|-----|-------|
->             text+data   bss   stack 
-> 
->                  text+data           bss   
-> kernel    |---------------------|-------------------|
-> 
-> 
-> initrd                                              |-initrd-|-dtb-|
+From: Robert Beckett <bob.beckett@collabora.com>
 
-This is actually incorrect, because the decompressor will self-
-relocate itself to avoid the area that it is going to decompress
-into.  So, while the decompressor runs, in the above situation it
-ends up as:
+[ Upstream commit 665e7c73a7724a393b4ec92d1ae1e029925ef2b7 ]
 
+Avoid LDB and IPU DI clocks both using the same parent. LDB requires
+pasthrough clock to avoid breaking timing while IPU DI does not.
 
-ram    |------------------------------------------------------...
-                 text+data           bss   
-kernel    |---------------------|-------------------|
-zImage                          |-----------|-----|-------|
-                                  text+data   bss   stack+malloc
+Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
+and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
 
-Where "text+data" is actually smaller than the image size that
-was loaded - the part of the image that performs the relocation
-is discarded (the first chunk of code up to "restart" - 200
-bytes.)  The BSS is typically smaller than 200 bytes, so we've
-been able to get away without knowing the actual BSS size so
-far.
+This fixes an issue where attempting atomic modeset while using
+HDMI and display port at the same time causes LDB clock programming
+to destroy the programming of HDMI that was done during the same
+modeset.
 
+Cc: stable@vger.kernel.org
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+[Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
+ originally chosen by Robert Beckett to avoid affecting eMMC clock
+ by DRM atomic updates]
+Signed-off-by: Ian Ray <ian.ray@ge.com>
+[Squash Robert's and Ian's commits for bisectability, update patch
+ description and add stable tag]
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx6q-b450v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b650v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b850v3.dts  | 11 -----------
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 15 +++++++++++++++
+ 4 files changed, 15 insertions(+), 25 deletions(-)
 
-ram    |--|-----------------------------------------|---------...
-       |<>| TEXT_OFFSET
-kernel    |---------------------|-------------------|
-          |<----edata_size----->|<-----bss_size---->|
-          |<---------------kernel_size------------->|
-zImage                          |-----------|-----|-------|
-                                |<-------len------->| (initial)
-				|<----------len------------>| (final)
-
-The "final" len value is what the decompressor prints as the "zImage
-requires" debugging value.
-
-Hence, the size that the decompressed kernel requires is kernel_size.
-
-The size that the decompressor requires is edata_size + len(final).
-
-Now, if you intend to load the kernel to ram + TEXT_OFFSET + edata_size
-then it isn't going to lose the first 200 bytes of code, so as you
-correctly point out, we need to know the BSS size.
-
-> >> +struct arm_zimage_tag_dc {
-> >> +	struct tag_header hdr;
-> >> +	union {
-> >> +#define ZIMAGE_TAG_DECOMP_SIZE ARM_ZIMAGE_MAGIC4
-> >> +		struct zimage_decomp_size {
-> >> +			__le32 bss_size;
-> >> +			__le32 stack_size;
-> >> +			__le32 malloc_size;
-> >> +		} decomp_size;
-
-You certainly don't need to know all this.  All you need to know is
-how much space the decompressor requires after the end of the image,
-encompassing the BSS size, stack size and malloc size, which is one
-value.
-
+diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
+index 95b8f2d71821..fb0980190aa0 100644
+--- a/arch/arm/boot/dts/imx6q-b450v3.dts
++++ b/arch/arm/boot/dts/imx6q-b450v3.dts
+@@ -65,13 +65,6 @@
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+index 611cb7ae7e55..8f762d9c5ae9 100644
+--- a/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -65,13 +65,6 @@
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index e4cb118f88c6..1ea64ecf4291 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -53,17 +53,6 @@
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
+-};
+-
+ &ldb {
+ 	fsl,dual-channel;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index fa27dcdf06f1..1938b04199c4 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -377,3 +377,18 @@
+ 		#interrupt-cells = <1>;
+ 	};
+ };
++
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI1_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI1_PRE_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>;
++};
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+2.25.1
+
+
+
