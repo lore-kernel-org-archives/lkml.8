@@ -1,99 +1,123 @@
 Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BEFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57895C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7086C20707
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D44D2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EcXQ31HM"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="xwRDj4p2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgFAEOg (ORCPT
+        id S1725909AbgFAEU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 00:14:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48974 "EHLO
+        Mon, 1 Jun 2020 00:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFAEOg (ORCPT
+        with ESMTP id S1725283AbgFAEU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 00:14:36 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084ABC08C5C0
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:14:35 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id b5so1958115iln.5
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:14:35 -0700 (PDT)
+        Mon, 1 Jun 2020 00:20:26 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D301C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:20:26 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c71so9340754wmd.5
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=x8a609a5qZV/8uK75Z+5pZGlJvWxTwewnSI1kRcruvg=;
-        b=EcXQ31HMxvgQLQA3X19WLJf7eLN+UICimuf8ahojOCfjxhipVAcPXK6rUNSLcFoWM7
-         zCy9sXmj/KUmWr0BQpFzAMQhWpIMOQ6OvYkeLH+SRjwIhwVvpjQZsBv21/QRCGKjODHM
-         qSHaOnht3ufj3s18UykNubcE3++uJC4wO0C9s=
+        bh=8gaMeZxKRbbnoVLMQF6dqM6cOYIG1D5PJgYvrar+GJw=;
+        b=xwRDj4p2YorlEnHTACn3XXVJQgsANhpObQcpjzC94GITlGstEOoiXLrC9N0kcg9uCT
+         8Q7bJusUHFS6AALVDmmxwiqw/+UIBfFGOzmzom09Ixj5/SNMY45MAUSTUg56uwscGso/
+         TNMYvsEhs9y3upvTHpG9Wu8hQ1w7c5ZEEfvt8tjj0w9fTYgA4cL/+sa4EtQDC4js9bQD
+         zip8ZVFQGYKY1iBos5h1OVHEMQgJODeH3DUZi2qoiX6lHn5jrosM5Zl7GLMRPtGO/3NP
+         WbOiNeiwzb2/uz3BRP+iefC+FQe/PnDH0F3L0ukmg9MBhPNEgWANuZum4wQ4ZJ+bzs/J
+         GfGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x8a609a5qZV/8uK75Z+5pZGlJvWxTwewnSI1kRcruvg=;
-        b=f6pd8xSCvpoO7/oNOVv620PbYbw8QYMpqlDNhuGk9TO9E/9DmIcHzppVrdxelgyJuJ
-         twjAUFyOS44CCoC8K5UTrkmor67tJurpZWLPcoqwU7pB571eecOFjk/pFRGuqWXyz2lk
-         q5FvWt2MLBPEkr21mKHwTzhfPnSJWzprcSzQz5xSSmwwLq3MbfSsNapka/TkPRE3Un3H
-         O86JBE3VVHfl+/mfSBsjiYttLXkchyN5n4izs5pQQR5ipwEljhl956j9kh9Y8PRy65jS
-         bruAjGrB51MG7vVjt7SYFikLODpihn9EvpB5kMqrpr+oDnJ90xpyYirlzYquujaTb5ym
-         6FSg==
-X-Gm-Message-State: AOAM5314viveZTqDT+1xkTaZt3fH7Ung+WTBRDwaJJSK1fXOO5zYuYiw
-        e07gjYemXM4Trho9gENVChCkdSBhIFPLtIWLtDMd7Q==
-X-Google-Smtp-Source: ABdhPJwDkiEP8Fr2F3U+zwZn2Cnk0c+q57D8FlJ0+ONjXpxJhdRbpWqi0aGoLKsD8uIuEDU5EshV/8yDSE1Eqot3/Qs=
-X-Received: by 2002:a92:d908:: with SMTP id s8mr18767942iln.283.1590984875133;
- Sun, 31 May 2020 21:14:35 -0700 (PDT)
+        bh=8gaMeZxKRbbnoVLMQF6dqM6cOYIG1D5PJgYvrar+GJw=;
+        b=Udnf6kjP3U21JMaCZ3NErSC4encI/SBRKdK/y3MN4DbVIorwJVsnIjNJVWoph43JVh
+         8w5xhXS75U9WnNo2EgEX4Bd+5o7SeOPxIE5x0g3eZC4f0PDP4tY+c9FurCtUZYVjVtYv
+         s/EPQZ/VaHM2kV0qLU0YeL8oykj8cvUfJgUu5THRBDHTsuEvSUiXD5H7eNm4TXN2nWYZ
+         QYTpx4fBlVjKAMNMvApydepY5//qDgXQwIerKtFoDS7NI3r0ggd8pKI/qpzzd+gDaUcd
+         uVNRbyUkhlRzxCvH7WfdpooE90i8J0jhU5arosl2oj8wQlJkK3rHa42NZD9x4PpztQq3
+         ZbSg==
+X-Gm-Message-State: AOAM531h0R5ix2rMPjncJ/dJni3iumZBIrwnNf4gNaP25nD6U5FE0sGR
+        0+EPP66j7hoUnCVQKoMTR9p+Q/NVtHyiKBB+uU22fA==
+X-Google-Smtp-Source: ABdhPJzo7iLG02tKKWTkJMhu/UxFu4NxgWLfYWaCeH4TxLc/E/khLp5PztuHnrvqowmY+ODxYov7L2PUtXa41zGmW1Q=
+X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr8963040wme.152.1590985224670;
+ Sun, 31 May 2020 21:20:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1589511894.git.xji@analogixsemi.com> <3946984ac1024b53b72c2eb39ee41967a2bf9c3d.1589511894.git.xji@analogixsemi.com>
-In-Reply-To: <3946984ac1024b53b72c2eb39ee41967a2bf9c3d.1589511894.git.xji@analogixsemi.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Mon, 1 Jun 2020 12:14:09 +0800
-Message-ID: <CAJMQK-hkrsgbvi91=uBhPfn0scwTSh3OJBGLcy9tC3GYiW1i9Q@mail.gmail.com>
-Subject: Re: [PATCH v11 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
- DP bridge driver
-To:     Xin Ji <xji@analogixsemi.com>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
+References: <20200531095748.753388-1-anup.patel@wdc.com>
+In-Reply-To: <20200531095748.753388-1-anup.patel@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 1 Jun 2020 09:50:13 +0530
+Message-ID: <CAAhSdy2aoHkJL6Rj5yEE_xvsH-UDv=Cya3b_6CWORZeTqeWPbw@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Don't mark init section as non-executable
+To:     Anup Patel <anup.patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 2:53 PM Xin Ji <xji@analogixsemi.com> wrote:
+On Sun, May 31, 2020 at 3:28 PM Anup Patel <anup.patel@wdc.com> wrote:
+>
+> The head text section (i.e. _start, secondary_start_sbi, etc) and the
+> init section fall under same page table level-1 mapping.
+>
+> Currently, the runtime CPU hotplug is broken because we are marking
+> init section as non-executable which in-turn marks head text section
+> as non-executable.
+>
+> Further investigating other architectures, it seems marking the init
+> section as non-executable is redundant because the init section pages
+> are anyway poisoned and freed.
+>
+> To fix broken runtime CPU hotplug, we simply remove the code marking
+> the init section as non-executable.
+>
+> Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/mm/init.c | 5 -----
+>  1 file changed, 5 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 736de6c8739f..e0f8ccab8a41 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -482,11 +482,6 @@ static void __init setup_vm_final(void)
+>
+>  void free_initmem(void)
+>  {
+> -       unsigned long init_begin = (unsigned long)__init_begin;
+> -       unsigned long init_end = (unsigned long)__init_end;
+> -
+> -       /* Make the region as non-execuatble. */
+> -       set_memory_nx(init_begin, (init_end - init_begin) >> PAGE_SHIFT);
+>         free_initmem_default(POISON_FREE_INITMEM);
+>  }
 
-> +
-> +static int anx7625_bridge_attach(struct drm_bridge *bridge)
+I just realized that updated free_initmem() over here is exactly
+same as generic free_initmem() defined in init/main.c so it's better
+to remove free_initmem() from here. I will send v2.
 
-Latest drm_bridge api:
-
-int (*attach)(struct drm_bridge *bridge,
-     enum drm_bridge_attach_flags flags);
-
-https://elixir.bootlin.com/linux/v5.7-rc7/source/include/drm/drm_bridge.h#L70
-
-> +{
-> +       struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> +       int err;
+Regards,
+Anup
