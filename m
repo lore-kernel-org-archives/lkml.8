@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9914BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BD1207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155F22068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035558;
-	bh=p9mgQPRfyqYbnCnnbEX16xQy+tQEDM8VkugbbjCuN+U=;
+	s=default; t=1591035562;
+	bh=sZZbkn4E+N2Dc4AfsH7MpASgJIO0PRmnyl1Y7PTnAUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGeNq/JpaQiCf33aroWHkM5fUAqFXodGhkQ4DgIlmfA3kfh+9VZ8cvfsGa9Yci+xh
-	 aNnDf7Rcsd9v9eTW8NatX5vjve9pLNdte0wB49Ac3Ar75SXk4fgRFdp+EezmAzXEwO
-	 iaMF4TUomBFpZDgfXL3pMnSJB6E4EJfruQVq6pi4=
+	b=N2JDGtXPUhaEOW7p1KB67dXsbEHwVY3MdgUFojTxVL4xu3iXIkPJcE25bxXB1d9gQ
+	 2HlWW7Ge95+9Kc2EWGLszsV9pEZFeJm5zYJ1tBYpQzrsaRt0rSh7QXJ0nRDAFaXPHE
+	 ngQKUbcHbaEbXa9wTtYNfV57CvxqC/XkPVuNNqsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbgFASTS (ORCPT
+        id S1731803AbgFASRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:19:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38370 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:17:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731808AbgFASRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:18 -0400
+        id S1730590AbgFASRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E18D2065C;
-        Mon,  1 Jun 2020 18:17:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5E0B2065C;
+        Mon,  1 Jun 2020 18:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035437;
-        bh=p9mgQPRfyqYbnCnnbEX16xQy+tQEDM8VkugbbjCuN+U=;
+        s=default; t=1591035433;
+        bh=sZZbkn4E+N2Dc4AfsH7MpASgJIO0PRmnyl1Y7PTnAUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AGc5LNQq/BMz5oQJS5m40MhoxsO7JEoZ2J94ajPq8mK3o+KuI4R1UjxcARym8PTdS
-         Uor3zDm8D6iG0lLaf7/Gusn10PQEsZFkno0dbLAF1+1cVXsP/ffpXVGzuMnNMOM0wm
-         FT98PoC6DNX11XE/3y555ihPq+/v3dHXm2nh+Y58=
+        b=jg72LHg5wUtuoE3zdqDFEpd7+eNvDkFh8bwr0GNTtiwWLprJxD0ujSCYv3UVphwJL
+         MQ9ymEQjrCS6nwWZmogCGn45HCXJr5lxxMUgXhpxdyEt/0vIAxzcRf2zrR43PjyWd9
+         lDGGUk0ua5/xP2HPt0BxDbe9dhbPvLcOWcNK5wo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 158/177] netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
-Date:   Mon,  1 Jun 2020 19:54:56 +0200
-Message-Id: <20200601174101.483068621@linuxfoundation.org>
+Subject: [PATCH 5.6 156/177] netfilter: conntrack: make conntrack userspace helpers work again
+Date:   Mon,  1 Jun 2020 19:54:54 +0200
+Message-Id: <20200601174101.348908263@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,199 +61,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 4c559f15efcc43b996f4da528cd7f9483aaca36d upstream.
+commit ee04805ff54a63ffd90bc6749ebfe73473734ddb upstream.
 
-Dan Carpenter says: "Smatch complains that the value for "cmd" comes
-from the network and can't be trusted."
+Florian Westphal says:
 
-Add pptp_msg_name() helper function that checks for the array boundary.
+"Problem is that after the helper hook was merged back into the confirm
+one, the queueing itself occurs from the confirm hook, i.e. we queue
+from the last netfilter callback in the hook-list.
 
-Fixes: f09943fefe6b ("[NETFILTER]: nf_conntrack/nf_nat: add PPTP helper port")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Therefore, on return, the packet bypasses the confirm action and the
+connection is never committed to the main conntrack table.
+
+To fix this there are several ways:
+1. revert the 'Fixes' commit and have a extra helper hook again.
+   Works, but has the drawback of adding another indirect call for
+   everyone.
+
+2. Special case this: split the hooks only when userspace helper
+   gets added, so queueing occurs at a lower priority again,
+   and normal enqueue reinject would eventually call the last hook.
+
+3. Extend the existing nf_queue ct update hook to allow a forced
+   confirmation (plus run the seqadj code).
+
+This goes for 3)."
+
+Fixes: 827318feb69cb ("netfilter: conntrack: remove helper hook again")
+Reviewed-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/netfilter/nf_conntrack_pptp.h |    2 
- net/ipv4/netfilter/nf_nat_pptp.c            |    7 ---
- net/netfilter/nf_conntrack_pptp.c           |   62 +++++++++++++++-------------
- 3 files changed, 38 insertions(+), 33 deletions(-)
+ net/netfilter/nf_conntrack_core.c |   78 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 72 insertions(+), 6 deletions(-)
 
---- a/include/linux/netfilter/nf_conntrack_pptp.h
-+++ b/include/linux/netfilter/nf_conntrack_pptp.h
-@@ -10,7 +10,7 @@
- #include <net/netfilter/nf_conntrack_expect.h>
- #include <uapi/linux/netfilter/nf_conntrack_tuple_common.h>
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -2014,22 +2014,18 @@ static void nf_conntrack_attach(struct s
+ 	nf_conntrack_get(skb_nfct(nskb));
+ }
  
--extern const char *const pptp_msg_name[];
-+extern const char *const pptp_msg_name(u_int16_t msg);
+-static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
++static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
++				 struct nf_conn *ct)
+ {
+ 	struct nf_conntrack_tuple_hash *h;
+ 	struct nf_conntrack_tuple tuple;
+ 	enum ip_conntrack_info ctinfo;
+ 	struct nf_nat_hook *nat_hook;
+ 	unsigned int status;
+-	struct nf_conn *ct;
+ 	int dataoff;
+ 	u16 l3num;
+ 	u8 l4num;
  
- /* state of the control session */
- enum pptp_ctrlsess_state {
---- a/net/ipv4/netfilter/nf_nat_pptp.c
-+++ b/net/ipv4/netfilter/nf_nat_pptp.c
-@@ -166,8 +166,7 @@ pptp_outbound_pkt(struct sk_buff *skb,
- 		break;
- 	default:
- 		pr_debug("unknown outbound packet 0x%04x:%s\n", msg,
--			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
--					       pptp_msg_name[0]);
-+			 pptp_msg_name(msg));
- 		/* fall through */
- 	case PPTP_SET_LINK_INFO:
- 		/* only need to NAT in case PAC is behind NAT box */
-@@ -268,9 +267,7 @@ pptp_inbound_pkt(struct sk_buff *skb,
- 		pcid_off = offsetof(union pptp_ctrl_union, setlink.peersCallID);
- 		break;
- 	default:
--		pr_debug("unknown inbound packet %s\n",
--			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
--					       pptp_msg_name[0]);
-+		pr_debug("unknown inbound packet %s\n", pptp_msg_name(msg));
- 		/* fall through */
- 	case PPTP_START_SESSION_REQUEST:
- 	case PPTP_START_SESSION_REPLY:
---- a/net/netfilter/nf_conntrack_pptp.c
-+++ b/net/netfilter/nf_conntrack_pptp.c
-@@ -72,24 +72,32 @@ EXPORT_SYMBOL_GPL(nf_nat_pptp_hook_expec
+-	ct = nf_ct_get(skb, &ctinfo);
+-	if (!ct || nf_ct_is_confirmed(ct))
+-		return 0;
+-
+ 	l3num = nf_ct_l3num(ct);
  
- #if defined(DEBUG) || defined(CONFIG_DYNAMIC_DEBUG)
- /* PptpControlMessageType names */
--const char *const pptp_msg_name[] = {
--	"UNKNOWN_MESSAGE",
--	"START_SESSION_REQUEST",
--	"START_SESSION_REPLY",
--	"STOP_SESSION_REQUEST",
--	"STOP_SESSION_REPLY",
--	"ECHO_REQUEST",
--	"ECHO_REPLY",
--	"OUT_CALL_REQUEST",
--	"OUT_CALL_REPLY",
--	"IN_CALL_REQUEST",
--	"IN_CALL_REPLY",
--	"IN_CALL_CONNECT",
--	"CALL_CLEAR_REQUEST",
--	"CALL_DISCONNECT_NOTIFY",
--	"WAN_ERROR_NOTIFY",
--	"SET_LINK_INFO"
-+static const char *const pptp_msg_name_array[PPTP_MSG_MAX + 1] = {
-+	[0]				= "UNKNOWN_MESSAGE",
-+	[PPTP_START_SESSION_REQUEST]	= "START_SESSION_REQUEST",
-+	[PPTP_START_SESSION_REPLY]	= "START_SESSION_REPLY",
-+	[PPTP_STOP_SESSION_REQUEST]	= "STOP_SESSION_REQUEST",
-+	[PPTP_STOP_SESSION_REPLY]	= "STOP_SESSION_REPLY",
-+	[PPTP_ECHO_REQUEST]		= "ECHO_REQUEST",
-+	[PPTP_ECHO_REPLY]		= "ECHO_REPLY",
-+	[PPTP_OUT_CALL_REQUEST]		= "OUT_CALL_REQUEST",
-+	[PPTP_OUT_CALL_REPLY]		= "OUT_CALL_REPLY",
-+	[PPTP_IN_CALL_REQUEST]		= "IN_CALL_REQUEST",
-+	[PPTP_IN_CALL_REPLY]		= "IN_CALL_REPLY",
-+	[PPTP_IN_CALL_CONNECT]		= "IN_CALL_CONNECT",
-+	[PPTP_CALL_CLEAR_REQUEST]	= "CALL_CLEAR_REQUEST",
-+	[PPTP_CALL_DISCONNECT_NOTIFY]	= "CALL_DISCONNECT_NOTIFY",
-+	[PPTP_WAN_ERROR_NOTIFY]		= "WAN_ERROR_NOTIFY",
-+	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
- };
-+
-+const char *const pptp_msg_name(u_int16_t msg)
+ 	dataoff = get_l4proto(skb, skb_network_offset(skb), l3num, &l4num);
+@@ -2086,6 +2082,76 @@ static int nf_conntrack_update(struct ne
+ 	return 0;
+ }
+ 
++/* This packet is coming from userspace via nf_queue, complete the packet
++ * processing after the helper invocation in nf_confirm().
++ */
++static int nf_confirm_cthelper(struct sk_buff *skb, struct nf_conn *ct,
++			       enum ip_conntrack_info ctinfo)
 +{
-+	if (msg > PPTP_MSG_MAX)
-+		return pptp_msg_name_array[0];
++	const struct nf_conntrack_helper *helper;
++	const struct nf_conn_help *help;
++	unsigned int protoff;
 +
-+	return pptp_msg_name_array[msg];
++	help = nfct_help(ct);
++	if (!help)
++		return 0;
++
++	helper = rcu_dereference(help->helper);
++	if (!(helper->flags & NF_CT_HELPER_F_USERSPACE))
++		return 0;
++
++	switch (nf_ct_l3num(ct)) {
++	case NFPROTO_IPV4:
++		protoff = skb_network_offset(skb) + ip_hdrlen(skb);
++		break;
++#if IS_ENABLED(CONFIG_IPV6)
++	case NFPROTO_IPV6: {
++		__be16 frag_off;
++		u8 pnum;
++
++		pnum = ipv6_hdr(skb)->nexthdr;
++		protoff = ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &pnum,
++					   &frag_off);
++		if (protoff < 0 || (frag_off & htons(~0x7)) != 0)
++			return 0;
++		break;
++	}
++#endif
++	default:
++		return 0;
++	}
++
++	if (test_bit(IPS_SEQ_ADJUST_BIT, &ct->status) &&
++	    !nf_is_loopback_packet(skb)) {
++		if (!nf_ct_seq_adjust(skb, ct, ctinfo, protoff)) {
++			NF_CT_STAT_INC_ATOMIC(nf_ct_net(ct), drop);
++			return -1;
++		}
++	}
++
++	/* We've seen it coming out the other side: confirm it */
++	return nf_conntrack_confirm(skb) == NF_DROP ? - 1 : 0;
 +}
- EXPORT_SYMBOL(pptp_msg_name);
- #endif
- 
-@@ -276,7 +284,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 	typeof(nf_nat_pptp_hook_inbound) nf_nat_pptp_inbound;
- 
- 	msg = ntohs(ctlh->messageType);
--	pr_debug("inbound control message %s\n", pptp_msg_name[msg]);
-+	pr_debug("inbound control message %s\n", pptp_msg_name(msg));
- 
- 	switch (msg) {
- 	case PPTP_START_SESSION_REPLY:
-@@ -311,7 +319,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 		pcid = pptpReq->ocack.peersCallID;
- 		if (info->pns_call_id != pcid)
- 			goto invalid;
--		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name[msg],
-+		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name(msg),
- 			 ntohs(cid), ntohs(pcid));
- 
- 		if (pptpReq->ocack.resultCode == PPTP_OUTCALL_CONNECT) {
-@@ -328,7 +336,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 			goto invalid;
- 
- 		cid = pptpReq->icreq.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->cstate = PPTP_CALL_IN_REQ;
- 		info->pac_call_id = cid;
- 		break;
-@@ -347,7 +355,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 		if (info->pns_call_id != pcid)
- 			goto invalid;
- 
--		pr_debug("%s, PCID=%X\n", pptp_msg_name[msg], ntohs(pcid));
-+		pr_debug("%s, PCID=%X\n", pptp_msg_name(msg), ntohs(pcid));
- 		info->cstate = PPTP_CALL_IN_CONF;
- 
- 		/* we expect a GRE connection from PAC to PNS */
-@@ -357,7 +365,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 	case PPTP_CALL_DISCONNECT_NOTIFY:
- 		/* server confirms disconnect */
- 		cid = pptpReq->disc.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->cstate = PPTP_CALL_NONE;
- 
- 		/* untrack this call id, unexpect GRE packets */
-@@ -384,7 +392,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- invalid:
- 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
- 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
--		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
-+		 pptp_msg_name(msg),
- 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
- 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
- 	return NF_ACCEPT;
-@@ -404,7 +412,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 	typeof(nf_nat_pptp_hook_outbound) nf_nat_pptp_outbound;
- 
- 	msg = ntohs(ctlh->messageType);
--	pr_debug("outbound control message %s\n", pptp_msg_name[msg]);
-+	pr_debug("outbound control message %s\n", pptp_msg_name(msg));
- 
- 	switch (msg) {
- 	case PPTP_START_SESSION_REQUEST:
-@@ -426,7 +434,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 		info->cstate = PPTP_CALL_OUT_REQ;
- 		/* track PNS call id */
- 		cid = pptpReq->ocreq.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->pns_call_id = cid;
- 		break;
- 
-@@ -440,7 +448,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 		pcid = pptpReq->icack.peersCallID;
- 		if (info->pac_call_id != pcid)
- 			goto invalid;
--		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name[msg],
-+		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name(msg),
- 			 ntohs(cid), ntohs(pcid));
- 
- 		if (pptpReq->icack.resultCode == PPTP_INCALL_ACCEPT) {
-@@ -480,7 +488,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- invalid:
- 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
- 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
--		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
-+		 pptp_msg_name(msg),
- 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
- 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
- 	return NF_ACCEPT;
++
++static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
++{
++	enum ip_conntrack_info ctinfo;
++	struct nf_conn *ct;
++	int err;
++
++	ct = nf_ct_get(skb, &ctinfo);
++	if (!ct)
++		return 0;
++
++	if (!nf_ct_is_confirmed(ct)) {
++		err = __nf_conntrack_update(net, skb, ct);
++		if (err < 0)
++			return err;
++	}
++
++	return nf_confirm_cthelper(skb, ct, ctinfo);
++}
++
+ static bool nf_conntrack_get_tuple_skb(struct nf_conntrack_tuple *dst_tuple,
+ 				       const struct sk_buff *skb)
+ {
 
 
