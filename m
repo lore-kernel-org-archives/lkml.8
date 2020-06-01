@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89079C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621C120679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F5E206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037885;
-	bh=74+IIIRpJHMgoiPC+c9xybwgJsFk9/HAPtNXW8pzjf4=;
+	s=default; t=1591037888;
+	bh=GjPMxnQInA0U7psosxd2ObWWpJovqqdg5yXN5dKzD4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZkciUH/TO80poOC0MWJ6hIjBaiQmZAVX+v8ec/t2YVzhUwzz2FRqEATFbgJgOPS7
-	 4KqqOikOb5haXHXaWUpxtM43NmpNY9eQXl9WoPf7Wke+IFfIrZKRmn51Fdll4p20NH
-	 LWlmmYUaMDkCSsIYY8M2gb/fMyNpr9R1m3nJdMHg=
+	b=YV4JNM2PYlkWpybejopKvVaeQY2lvV2YnqVP+Teboh/dB2Ikh59I7VQNgDGL15J4I
+	 6zUwByDl8zODvj5T4BlH4mOjL09UZFrtN56rEXVImQApfKWahNzemOrlHMxd4rnNAa
+	 snUXO1kCnyawmvUl5hco6cyF8isYA+na5ZHzcE1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbgFAR72 (ORCPT
+        id S1729992AbgFAS6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:59:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:58:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728860AbgFAR67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:59 -0400
+        id S1728351AbgFAR7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:59:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A75BC2073B;
-        Mon,  1 Jun 2020 17:58:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B6CD208A7;
+        Mon,  1 Jun 2020 17:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034338;
-        bh=74+IIIRpJHMgoiPC+c9xybwgJsFk9/HAPtNXW8pzjf4=;
+        s=default; t=1591034371;
+        bh=GjPMxnQInA0U7psosxd2ObWWpJovqqdg5yXN5dKzD4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5KMcetY5naBldcO4EqrofUstmyPOwAA9XQmdJMvnUxvfUn1yw1wHxizxeA8PPeiY
-         KOoMNHD7uAMxDsXQuaBaZ/zn+eNi78trp9V9PE49pvKxEHjP1rKMFF63cMZ9vVYdzW
-         YiAwGiX0Vp2HptmcZg/rk40aViYWJ0UshvH0gZCA=
+        b=t4gUQsJ+iIIRzgEg0blDjG6TZgiAN2L1Fj+9MxpUbtqPBcyQEVQolQk9Jto13LUrX
+         11VMIwhky7i/w1sOX6GyH+0zo/IxJgoisL6aj2xEc8LVWZBCDgW8nFCvlyG7y8nQPr
+         X2Gt57Ii1OF+68FO137Y/paoofpihRVV7dDY01vI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.9 08/61] net/mlx5: Add command entry handling completion
-Date:   Mon,  1 Jun 2020 19:53:15 +0200
-Message-Id: <20200601174013.333784428@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.9 47/61] xfrm: fix a NULL-ptr deref in xfrm_local_error
+Date:   Mon,  1 Jun 2020 19:53:54 +0200
+Message-Id: <20200601174020.229798344@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,97 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 17d00e839d3b592da9659c1977d45f85b77f986a ]
+commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
 
-When FW response to commands is very slow and all command entries in
-use are waiting for completion we can have a race where commands can get
-timeout before they get out of the queue and handled. Timeout
-completion on uninitialized command will cause releasing command's
-buffers before accessing it for initialization and then we will get NULL
-pointer exception while trying access it. It may also cause releasing
-buffers of another command since we may have timeout completion before
-even allocating entry index for this command.
-Add entry handling completion to avoid this race.
+This patch is to fix a crash:
 
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
+  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
+  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
+  [ ] Call Trace:
+  [ ]  xfrm6_local_error+0x1eb/0x300
+  [ ]  xfrm_local_error+0x95/0x130
+  [ ]  __xfrm6_output+0x65f/0xb50
+  [ ]  xfrm6_output+0x106/0x46f
+  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
+  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
+  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
+  [ ]  dev_hard_start_xmit+0x165/0x820
+  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
+  [ ]  ip_finish_output2+0xd3e/0x1480
+  [ ]  ip_do_fragment+0x182d/0x2210
+  [ ]  ip_output+0x1d0/0x510
+  [ ]  ip_send_skb+0x37/0xa0
+  [ ]  raw_sendmsg+0x1b4c/0x2b80
+  [ ]  sock_sendmsg+0xc0/0x110
+
+This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
+skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
+xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
+to get ipv6 info from a ipv4 sk.
+
+This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
+error reporting more robust"), but brought back by Commit 844d48746e4b
+("xfrm: choose protocol family by skb protocol").
+
+So to fix it, we should call xfrm6_local_error() only when skb->protocol
+is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
+
+Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |   15 +++++++++++++++
- include/linux/mlx5/driver.h                   |    1 +
- 2 files changed, 16 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -786,6 +786,7 @@ static void cmd_work_handler(struct work
- 	int alloc_ret;
- 	int cmd_mode;
+---
+ net/xfrm/xfrm_output.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/net/xfrm/xfrm_output.c
++++ b/net/xfrm/xfrm_output.c
+@@ -240,7 +240,8 @@ void xfrm_local_error(struct sk_buff *sk
  
-+	complete(&ent->handling);
- 	sem = ent->page_queue ? &cmd->pages_sem : &cmd->sem;
- 	down(sem);
- 	if (!ent->page_queue) {
-@@ -904,6 +905,12 @@ static int wait_func(struct mlx5_core_de
- 	struct mlx5_cmd *cmd = &dev->cmd;
- 	int err;
- 
-+	if (!wait_for_completion_timeout(&ent->handling, timeout) &&
-+	    cancel_work_sync(&ent->work)) {
-+		ent->ret = -ECANCELED;
-+		goto out_err;
-+	}
-+
- 	if (cmd->mode == CMD_MODE_POLLING) {
- 		wait_for_completion(&ent->done);
- 	} else if (!wait_for_completion_timeout(&ent->done, timeout)) {
-@@ -911,12 +918,17 @@ static int wait_func(struct mlx5_core_de
- 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
- 	}
- 
-+out_err:
- 	err = ent->ret;
- 
- 	if (err == -ETIMEDOUT) {
- 		mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
- 			       mlx5_command_str(msg_to_opcode(ent->in)),
- 			       msg_to_opcode(ent->in));
-+	} else if (err == -ECANCELED) {
-+		mlx5_core_warn(dev, "%s(0x%x) canceled on out of queue timeout.\n",
-+			       mlx5_command_str(msg_to_opcode(ent->in)),
-+			       msg_to_opcode(ent->in));
- 	}
- 	mlx5_core_dbg(dev, "err %d, delivery status %s(%d)\n",
- 		      err, deliv_status_to_str(ent->status), ent->status);
-@@ -951,6 +963,7 @@ static int mlx5_cmd_invoke(struct mlx5_c
- 
- 	ent->token = token;
- 
-+	init_completion(&ent->handling);
- 	if (!callback)
- 		init_completion(&ent->done);
- 
-@@ -970,6 +983,8 @@ static int mlx5_cmd_invoke(struct mlx5_c
- 	err = wait_func(dev, ent);
- 	if (err == -ETIMEDOUT)
- 		goto out;
-+	if (err == -ECANCELED)
-+		goto out_free;
- 
- 	ds = ent->ts2 - ent->ts1;
- 	op = MLX5_GET(mbox_in, in->first.data, opcode);
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -656,6 +656,7 @@ struct mlx5_cmd_work_ent {
- 	struct delayed_work	cb_timeout_work;
- 	void		       *context;
- 	int			idx;
-+	struct completion	handling;
- 	struct completion	done;
- 	struct mlx5_cmd        *cmd;
- 	struct work_struct	work;
+ 	if (skb->protocol == htons(ETH_P_IP))
+ 		proto = AF_INET;
+-	else if (skb->protocol == htons(ETH_P_IPV6))
++	else if (skb->protocol == htons(ETH_P_IPV6) &&
++		 skb->sk->sk_family == AF_INET6)
+ 		proto = AF_INET6;
+ 	else
+ 		return;
 
 
