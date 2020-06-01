@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC65C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D3C20872
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327702074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034700;
-	bh=qrwYDyN1gZxYgoTK11al2qCRlRwHyEHCs51f1VxQSl0=;
+	s=default; t=1591034706;
+	bh=815sd3/N/OJXu0yntgcFczQk9XkEatPIzA9X8Rd9R/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zoi8Qev6br/KNEinP93Q6kuQZ0TYn0oe2a/CE75B6VA2/F1i/0SGHYFT5+zkXYkAr
-	 pDldomoP4jqjFm9xrggKkosL/i8eUl9wMDC/OFUTxxApPpyg9JDcYlPF2lXgK8ZSrw
-	 rNLIGawQT7gFQKYUBitslA1FJN75wlluycR+T8v8=
+	b=CvVmEPx7kfk/pHMGR5AMCwVbNQu+T2GMAob/ijyt6Y+pL/RHiEeYuAHD3nWnFnxzJ
+	 mct6abKaG/cF/2J3fc+KUWpsZqxlW0LCylc1pBaFBgAup6e0cyWz1DERkkxVw8DXrz
+	 Kyd8i0NupU/4WNWd40efnD11qhLnSDhOPwxST+vA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbgFASFA (ORCPT
+        id S1730293AbgFASFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730235AbgFASEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:04:44 -0400
+        id S1730246AbgFASEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:04:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44988206E2;
-        Mon,  1 Jun 2020 18:04:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D72EF2077D;
+        Mon,  1 Jun 2020 18:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034682;
-        bh=qrwYDyN1gZxYgoTK11al2qCRlRwHyEHCs51f1VxQSl0=;
+        s=default; t=1591034687;
+        bh=815sd3/N/OJXu0yntgcFczQk9XkEatPIzA9X8Rd9R/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hLAiyh9gqoVaTuCCfJ3lJ6YLY6iNakAIedZYsavEvu+Y6c0y1V80/TL1GlGQqFnEZ
-         m6JbGlDNKgpJXt2VfUlLv61ZJ7HTGwwJUdfdIOrplnhONEiVK+loRhbq6GXFueTVis
-         /dslkdQlHGaI4PO1yy/NJ98a2SIXU23XhHl4B6ss=
+        b=1157LnbtOx6HGDHB1GbV8luTA+PVnAiDMymW9IRQmIETPUBVyTU6/PFd2TTpIXwMh
+         TXe4B91q67zhmo60DmTIekRpnvvrbo52yfwAxAymHMD9I1ZwCwjS9dhTabAxRCNCaq
+         OyorgZAvhvroqDtHEXtl2Ior8P05ypxPzh7AMk9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 61/95] ALSA: usb-audio: Quirks for Gigabyte TRX40 Aorus Master onboard audio
-Date:   Mon,  1 Jun 2020 19:54:01 +0200
-Message-Id: <20200601174030.768861130@linuxfoundation.org>
+        stable@vger.kernel.org, Jerry Lee <leisurelysw24@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 63/95] libceph: ignore pool overlay and cache logic on redirects
+Date:   Mon,  1 Jun 2020 19:54:03 +0200
+Message-Id: <20200601174031.022840356@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -60,117 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jerry Lee <leisurelysw24@gmail.com>
 
-[ Upstream commit 7f5ad9c9003425175f46c94df380e8c9e558cfb5 ]
+[ Upstream commit 890bd0f8997ae6ac0a367dd5146154a3963306dd ]
 
-Gigabyte TRX40 Aorus Master is equipped with two USB-audio devices,
-a Realtek ALC1220-VB codec (USB ID 0414:a001) and an ESS SABRE9218 DAC
-(USB ID 0414:a000).  The latter serves solely for the headphone output
-on the front panel while the former serves for the rest I/Os (mostly
-for the I/Os in the rear panel but also including the front mic).
+OSD client should ignore cache/overlay flag if got redirect reply.
+Otherwise, the client hangs when the cache tier is in forward mode.
 
-Both chips do work more or less with the unmodified USB-audio driver,
-but there are a few glitches.  The ALC1220-VB returns an error for an
-inquiry to some jacks, as already seen on other TRX40-based mobos.
-However this machine has a slightly incompatible configuration, hence
-the existing mapping cannot be used as is.
+[ idryomov: Redirects are effectively deprecated and no longer
+  used or tested.  The original tiering modes based on redirects
+  are inherently flawed because redirects can race and reorder,
+  potentially resulting in data corruption.  The new proxy and
+  readproxy tiering modes should be used instead of forward and
+  readforward.  Still marking for stable as obviously correct,
+  though. ]
 
-Meanwhile the ESS chip seems working without any quirk.  But since
-both audio devices don't provide any specific names, both cards appear
-as "USB-Audio", and it's quite confusing for users.
-
-This patch is an attempt to overcome those issues:
-
-- The specific mapping table for ALC1220-VB is provided, reducing the
-  non-working nodes and renaming the badly chosen controls.
-  The connector map isn't needed here unlike other TRX40 quirks.
-
-- For both USB IDs (0414:a000 and 0414:a001), provide specific card
-  name strings, so that user-space can identify more easily; and more
-  importantly, UCM profile can be applied to each.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526082810.29506-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+URL: https://tracker.ceph.com/issues/23296
+URL: https://tracker.ceph.com/issues/36406
+Signed-off-by: Jerry Lee <leisurelysw24@gmail.com>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer_maps.c   | 19 +++++++++++++++++++
- sound/usb/quirks-table.h | 25 +++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ net/ceph/osd_client.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index d7a8b23b335b..10323e6f7f97 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -401,6 +401,21 @@ static const struct usbmix_connector_map trx40_mobo_connector_map[] = {
- 	{}
- };
- 
-+/* Rear panel + front mic on Gigabyte TRX40 Aorus Master with ALC1220-VB */
-+static const struct usbmix_name_map aorus_master_alc1220vb_map[] = {
-+	{ 17, NULL },			/* OT, IEC958?, disabled */
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
-+	{ 16, "Line Out" },		/* OT */
-+	{ 22, "Line Out Playback" },	/* FU */
-+	{ 7, "Line" },			/* IT */
-+	{ 19, "Line Capture" },		/* FU */
-+	{ 8, "Mic" },			/* IT */
-+	{ 20, "Mic Capture" },		/* FU */
-+	{ 9, "Front Mic" },		/* IT */
-+	{ 21, "Front Mic Capture" },	/* FU */
-+	{}
-+};
-+
- /*
-  * Control map entries
-  */
-@@ -520,6 +535,10 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 		.id = USB_ID(0x05a7, 0x1020),
- 		.map = bose_companion5_map,
- 	},
-+	{	/* Gigabyte TRX40 Aorus Master (rear panel + front mic) */
-+		.id = USB_ID(0x0414, 0xa001),
-+		.map = aorus_master_alc1220vb_map,
-+	},
- 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
- 		.id = USB_ID(0x0414, 0xa002),
- 		.map = trx40_mobo_map,
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index 4f8a2b98e090..b798eae0a785 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3415,4 +3415,29 @@ ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
- ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* Asrock TRX40 Creator */
- #undef ALC1220_VB_DESKTOP
- 
-+/* Two entries for Gigabyte TRX40 Aorus Master:
-+ * TRX40 Aorus Master has two USB-audio devices, one for the front headphone
-+ * with ESS SABRE9218 DAC chip, while another for the rest I/O (the rear
-+ * panel and the front mic) with Realtek ALC1220-VB.
-+ * Here we provide two distinct names for making UCM profiles easier.
-+ */
-+{
-+	USB_DEVICE(0x0414, 0xa000),
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
-+		.vendor_name = "Gigabyte",
-+		.product_name = "Aorus Master Front Headphone",
-+		.profile_name = "Gigabyte-Aorus-Master-Front-Headphone",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
-+{
-+	USB_DEVICE(0x0414, 0xa001),
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
-+		.vendor_name = "Gigabyte",
-+		.product_name = "Aorus Master Main Audio",
-+		.profile_name = "Gigabyte-Aorus-Master-Main-Audio",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
-+
- #undef USB_DEVICE_VENDOR_SPEC
+diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+index 76c41a84550e..b8c4aea42917 100644
+--- a/net/ceph/osd_client.c
++++ b/net/ceph/osd_client.c
+@@ -3540,7 +3540,9 @@ static void handle_reply(struct ceph_osd *osd, struct ceph_msg *msg)
+ 		 * supported.
+ 		 */
+ 		req->r_t.target_oloc.pool = m.redirect.oloc.pool;
+-		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED;
++		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED |
++				CEPH_OSD_FLAG_IGNORE_OVERLAY |
++				CEPH_OSD_FLAG_IGNORE_CACHE;
+ 		req->r_tid = 0;
+ 		__submit_request(req, false);
+ 		goto out_unlock_osdc;
 -- 
 2.25.1
 
