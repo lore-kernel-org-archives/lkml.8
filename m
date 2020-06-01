@@ -2,210 +2,103 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9342FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 01:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3152FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 01:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 679F120659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 01:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RqVc/4sW"
+	by mail.kernel.org (Postfix) with ESMTP id 0F0A42067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 01:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgFABpA (ORCPT
+        id S1727078AbgFABrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 21:45:00 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10064 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgFABpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 21:45:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed45d900000>; Sun, 31 May 2020 18:44:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 31 May 2020 18:45:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 31 May 2020 18:45:00 -0700
-Received: from [10.2.56.10] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Jun
- 2020 01:44:59 +0000
-Subject: Re: [PATCH] staging: kpc2000: kpc_dma: Convert get_user_pages() -->
- pin_user_pages()
-To:     Souptick Joarder <jrdr.linux@gmail.com>,
-        <gregkh@linuxfoundation.org>, <jane.pnx9@gmail.com>,
-        <simon@nikanor.nu>, <harshjain32@gmail.com>,
-        <linux.bhar@gmail.com>, <festevam@gmail.com>, <jeremy@azazel.net>
-CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        Bharath Vedartham <linux.bhar@gmail.com>
-References: <1590947491-11194-1-git-send-email-jrdr.linux@gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7e725dd0-7423-b85b-ff56-9705419d13b9@nvidia.com>
-Date:   Sun, 31 May 2020 18:44:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 31 May 2020 21:47:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49961 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726555AbgFABrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 21:47:11 -0400
+IronPort-SDR: bnwIKUdM3zFGyjUmHo6alrAQeLildxFQCybqlrLXRd95/AvGmsgfE9vMd6FaLteF1+C9e+xzru
+ 7GbgEgV0XqJA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 18:47:11 -0700
+IronPort-SDR: yY+ReLDEh0PbAWeRxdaZMOTuz4lwLRP3yWWA+ziY3HY4jQzQ+eN9wrh0WcZuqOkkUE5afipicH
+ kj+VzC5AOQEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
+   d="scan'208";a="444115094"
+Received: from dytagah-mobl.amr.corp.intel.com (HELO localhost) ([10.252.58.236])
+  by orsmga005.jf.intel.com with ESMTP; 31 May 2020 18:47:08 -0700
+Date:   Mon, 1 Jun 2020 04:47:07 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Andrey Pronin <apronin@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm_tis_spi: Don't send anything during flow control
+Message-ID: <20200601014646.GA794847@linux.intel.com>
+References: <20200528151912.1.Id689a39ce8d1ec6f29f4287277ad977ff4f57d7d@changeid>
 MIME-Version: 1.0
-In-Reply-To: <1590947491-11194-1-git-send-email-jrdr.linux@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590975888; bh=M9GV6xaLkhJBGouXIJ6CG5x618w3wdb5bnBANGmrS34=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=RqVc/4sWSPLbUnPHouSnYX03vGKdECFMGfPXTg7jZzoHLrTTtR9MDAbwGEwbgGwsz
-         8SNOMrS4VofywfYqKgRPwEGyPVfVbGL+SyvlUXI45d8SV0EyFBRskvWLlhC5Zf+1J/
-         H8qR5ryZgO1jTbAWr9Zqe2/zJmA/S+sJoZjp7d4F7hvp+mUKJxFNCnUbSWZV9yyxU4
-         0l/hlTk5U6xBQ1p/WFtSPwJ9UHh2l0xyKCNI6+1FJL9pwUdfyDFR7crAbuLL1ap6ZU
-         FniGMIQX98aFFB6WuRwHQ/NZ13ehbZ9U8MKED3nWCqhvYcQXqS9ms+LB6WKVp8KMqe
-         eUp8U1Ds7e/Eg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528151912.1.Id689a39ce8d1ec6f29f4287277ad977ff4f57d7d@changeid>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-31 10:51, Souptick Joarder wrote:
-> In 2019, we introduced pin_user_pages*() and now we are converting
-> get_user_pages*() to the new API as appropriate. [1] & [2] could
-> be referred for more information.
+On Thu, May 28, 2020 at 03:19:30PM -0700, Douglas Anderson wrote:
+> During flow control we are just reading from the TPM, yet our spi_xfer
+> has the tx_buf and rx_buf both non-NULL which means we're requesting a
+> full duplex transfer.
 > 
-> When pin_user_pages() returns numbers of partially mapped pages,
-> those pages were not unpinned as part of error handling. Fixed
-> it as part of this patch.
+> SPI is always somewhat of a full duplex protocol anyway and in theory
+> the other side shouldn't really be looking at what we're sending it
+> during flow control, but it's still a bit ugly to be sending some
+> "random" data when we shouldn't.
 > 
-
-Hi Souptick,
-
-btw, Bharath (+cc) attempted to do the "put" side of this, last year.
-That got as far as a v4 patch [1], and then I asked him to let me put
-it into my tree. But then it didn't directly apply anymore after the
-whole design moved to pin+unpin, and so here we are now.
-
-
-If Bharath is still doing kernel work, you might offer him a Co-Developed-by:
-tag (see https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html).
-
-Anyway, I'd recommend splitting the bug fix(es) into it at least one
-separate patch. That's a "best practice", and I don't see any reason
-not to do it here, even though the bugs are not huge.
-
-Also I think there may be more than one bug to fix, because I just
-noticed that the pre-existing code is doing set_page_dirty(), when
-it should be doing set_page_dirty_lock(). See below.
-
-
-> [1] Documentation/core-api/pin_user_pages.rst
+> The default tpm_tis_spi_flow_control() tries to address this by
+> setting 'phy->iobuf[0] = 0'.  This partially avoids the problem of
+> sending "random" data, but since our tx_buf and rx_buf both point to
+> the same place I believe there is the potential of us sending the
+> TPM's previous byte back to it if we hit the retry loop.
 > 
-> [2] "Explicit pinning of user-space pages":
->          https://lwn.net/Articles/807108/
+> Another flow control implementation, cr50_spi_flow_control(), doesn't
+> address this at all.
 > 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
+> Let's clean this up and just make the tx_buf NULL before we call
+> flow_control().  Not only does this ensure that we're not sending any
+> "random" bytes but it also possibly could make the SPI controller
+> behave in a slightly more optimal way.
+> 
+> NOTE: no actual observed problems are fixed by this patch--it's was
+> just made based on code inspection.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
-> Hi,
 > 
-> I'm compile tested this, but unable to run-time test, so any testing
-> help is much appriciated.
+>  drivers/char/tpm/tpm_tis_spi_main.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
->   drivers/staging/kpc2000/kpc_dma/fileops.c | 15 ++++++++-------
->   1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-> index 8975346..29bab13 100644
-> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-> @@ -48,6 +48,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
->   	u64 card_addr;
->   	u64 dma_addr;
->   	u64 user_ctl;
-> +	int nr_pages = 0;
-
-Probably best to correct the "rv" type as well: it should be an int, rather
-than a long.
-
->   
->   	ldev = priv->ldev;
->   
-> @@ -76,13 +77,15 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
->   
->   	// Lock the user buffer pages in memory, and hold on to the page pointers (for the sglist)
->   	mmap_read_lock(current->mm);      /*  get memory map semaphore */
-> -	rv = get_user_pages(iov_base, acd->page_count, FOLL_TOUCH | FOLL_WRITE | FOLL_GET, acd->user_pages, NULL);
-> +	rv = pin_user_pages(iov_base, acd->page_count, FOLL_TOUCH | FOLL_WRITE, acd->user_pages, NULL);
->   	mmap_read_unlock(current->mm);        /*  release the semaphore */
->   	if (rv != acd->page_count) {
-> -		dev_err(&priv->ldev->pldev->dev, "Couldn't get_user_pages (%ld)\n", rv);
-> +		dev_err(&priv->ldev->pldev->dev, "Couldn't pin_user_pages (%ld)\n", rv);
-> +		nr_pages = rv;
->   		goto err_get_user_pages;
->   	}
->   
-> +	nr_pages = acd->page_count;
->   	// Allocate and setup the sg_table (scatterlist entries)
->   	rv = sg_alloc_table_from_pages(&acd->sgt, acd->user_pages, acd->page_count, iov_base & (PAGE_SIZE - 1), iov_len, GFP_KERNEL);
->   	if (rv) {
-> @@ -189,10 +192,9 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
->   	sg_free_table(&acd->sgt);
->    err_dma_map_sg:
->    err_alloc_sg_table:
-
-So now we end up with two unnecessary labels. Probably best to delete two of these
-three and name the remaining one appropriately:
-
-  err_dma_map_sg:
-  err_alloc_sg_table:
-  err_get_user_pages:
-
-> -	for (i = 0 ; i < acd->page_count ; i++)
-> -		put_page(acd->user_pages[i]);
+> diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
+> index d96755935529..8d2c581a93c6 100644
+> --- a/drivers/char/tpm/tpm_tis_spi_main.c
+> +++ b/drivers/char/tpm/tpm_tis_spi_main.c
+> @@ -53,8 +53,6 @@ static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
+>  
+>  	if ((phy->iobuf[3] & 0x01) == 0) {
+>  		// handle SPI wait states
+> -		phy->iobuf[0] = 0;
 > -
->    err_get_user_pages:
-> +	if (nr_pages > 0)
-> +		unpin_user_pages(acd->user_pages, nr_pages);
->   	kfree(acd->user_pages);
->    err_alloc_userpages:
->   	kfree(acd);
-> @@ -217,8 +219,7 @@ void  transfer_complete_cb(struct aio_cb_data *acd, size_t xfr_count, u32 flags)
->   
 
-There is code up here (not shown in this diff), that does a set_page_dirty().
-First of all, that should be set_page_dirty_lock(), and second, maybe (or maybe not)
-it can all be done after the dma_unmap_sg(), at the same time as the unpin, via
-unpin_user_pages_dirty_lock(). In fact, it's misleading at best to leave those
-pages mapped, because there is an interval in there after set_page_dirty() and
-before put_page(), in which the device could be running and setting pages dirty.
-(Remember that writeback attempts can be happening concurrently with all of this,
-and writeback is deeply involved with page dirtiness.)
+Why this should be removed?
 
-I remember Bharath wrestled with this in an earlier conversion attempt (back when
-we were only converting the "put_page" side of things), let me see if I can dig up
-that email thread for some guidance...OK, in [1] it appears that everyone
-finally settled on keeping the PageReserved check, but OK to move everything below
-the dma_unmap_sg() call.
-
-[1] https://lore.kernel.org/r/20190720173214.GA4250@bharath12345-Inspiron-5559
-
-
->   	dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd->ldev->dir);
->   
-> -	for (i = 0 ; i < acd->page_count ; i++)
-> -		put_page(acd->user_pages[i]);
-> +	unpin_user_pages(acd->user_pages, acd->page_count);
->   
->   	sg_free_table(&acd->sgt);
->   
-> 
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+/Jarkko
