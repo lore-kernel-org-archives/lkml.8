@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54017C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC14C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3438420878
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9366D2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034324;
-	bh=cChF2ARnFROjgWHvgMtMTnu9IVOOALLdq4gw/5/d9GY=;
+	s=default; t=1591034329;
+	bh=DqGTROlF+JGpGO0Wg0primTgD15YHMdxdYCdxQV2pJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fiXkvPaJ3LXU1R5QuRAw7w/hht1MjmTgEMNkWA/42w1Qu5A0/J65pcr9hh6XoHYjm
-	 LqJ5V8GxoLVCQV86jli3eoZo11HS4M/CAejsO5yAbZQ6jACysWCio7HtK86Jzb7xJL
-	 yaKaP2Ev88ypP2b/QvKPmi3FAKckg9gVnmgrdpAU=
+	b=p5/9L1Fo5oIK9gbgsK29Ya80GDItysS09K6VGNa3Pf6kUt57V5IW6FJ7BUfoq0Zw7
+	 xmZnNyhabc/05XyMdJZc3phh+yEBfxItOFBTuQHTJowGUR9tNNyQK5ZQ/w6lvwlJzk
+	 cuwcYOaFF3bFlEM5wGftjQ13JOXYpaf+HY/wpEjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgFAR6m (ORCPT
+        id S1726901AbgFAR6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40492 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbgFAR6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:31 -0400
+        id S1728576AbgFAR6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A32C32076B;
-        Mon,  1 Jun 2020 17:58:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F6012077D;
+        Mon,  1 Jun 2020 17:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034311;
-        bh=cChF2ARnFROjgWHvgMtMTnu9IVOOALLdq4gw/5/d9GY=;
+        s=default; t=1591034315;
+        bh=DqGTROlF+JGpGO0Wg0primTgD15YHMdxdYCdxQV2pJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e5JTFwShQyrKocWYrNceErygGgJmEvbIwC9mi0RZ4WSvFPg5gImMB+X9pUb7VCfVO
-         lXeVgF82ptD39ITPVaJq/hIcqev3Np+TMuEmHpU25zZAPL+4Xp087uLMMdbO2JNmY/
-         ztEm0iG3kUcPciUw+yavhe6P8g8dJcFIlKrVmAmU=
+        b=cqRh9O3CuenJpyhKn+trjPEQ0g5lHnDdSkjkPBgyTnJN957Vv5OGc+AaC99QyBm9n
+         lwMikcozlTQXRqLMmKFrLPGfi5zuCUDbjIs4vxE+CCTBawPoNkGBGw4Zsh8nfVIQty
+         3vfijYppkCPPdIJ6uF6h6Zd2anQjLI4Qa6vqhons=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 35/61] ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
-Date:   Mon,  1 Jun 2020 19:53:42 +0200
-Message-Id: <20200601174018.213700943@linuxfoundation.org>
+        stable@vger.kernel.org, Jerry Lee <leisurelysw24@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 37/61] libceph: ignore pool overlay and cache logic on redirects
+Date:   Mon,  1 Jun 2020 19:53:44 +0200
+Message-Id: <20200601174018.662057915@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -59,50 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Jerry Lee <leisurelysw24@gmail.com>
 
-[ Upstream commit 4020d1ccbe55bdf67b31d718d2400506eaf4b43f ]
+[ Upstream commit 890bd0f8997ae6ac0a367dd5146154a3963306dd ]
 
-The Asus USB DAC is a USB type-C audio dongle for connecting to
-the headset and headphone. The volume minimum value -23040 which
-is 0xa600 in hexadecimal with the resolution value 1 indicates
-this should be endianness issue caused by the firmware bug. Add
-a volume quirk to fix the volume control problem.
+OSD client should ignore cache/overlay flag if got redirect reply.
+Otherwise, the client hangs when the cache tier is in forward mode.
 
-Also fixes this warning:
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [5] FU [Headset Capture Volume] ch = 1, val = -23040/0/1
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [7] FU [Headset Playback Volume] ch = 1, val = -23040/0/1
+[ idryomov: Redirects are effectively deprecated and no longer
+  used or tested.  The original tiering modes based on redirects
+  are inherently flawed because redirects can race and reorder,
+  potentially resulting in data corruption.  The new proxy and
+  readproxy tiering modes should be used instead of forward and
+  readforward.  Still marking for stable as obviously correct,
+  though. ]
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526062613.55401-1-chiu@endlessm.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+URL: https://tracker.ceph.com/issues/23296
+URL: https://tracker.ceph.com/issues/36406
+Signed-off-by: Jerry Lee <leisurelysw24@gmail.com>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/ceph/osd_client.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index e2f62362a0b0..024864ce3f76 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -980,6 +980,14 @@ static void volume_control_quirks(struct usb_mixer_elem_info *cval,
- 			cval->res = 384;
- 		}
- 		break;
-+	case USB_ID(0x0495, 0x3042): /* ESS Technology Asus USB DAC */
-+		if ((strstr(kctl->id.name, "Playback Volume") != NULL) ||
-+			strstr(kctl->id.name, "Capture Volume") != NULL) {
-+			cval->min >>= 8;
-+			cval->max = 0;
-+			cval->res = 1;
-+		}
-+		break;
- 	}
- }
- 
+diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+index 70ccb0716fc5..4fd679b30b19 100644
+--- a/net/ceph/osd_client.c
++++ b/net/ceph/osd_client.c
+@@ -2879,7 +2879,9 @@ static void handle_reply(struct ceph_osd *osd, struct ceph_msg *msg)
+ 		 * supported.
+ 		 */
+ 		req->r_t.target_oloc.pool = m.redirect.oloc.pool;
+-		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED;
++		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED |
++				CEPH_OSD_FLAG_IGNORE_OVERLAY |
++				CEPH_OSD_FLAG_IGNORE_CACHE;
+ 		req->r_tid = 0;
+ 		__submit_request(req, false);
+ 		goto out_unlock_osdc;
 -- 
 2.25.1
 
