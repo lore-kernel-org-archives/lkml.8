@@ -3,80 +3,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA98BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2B5206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD86C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgFARxR (ORCPT
+        id S1728362AbgFARxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:53:17 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41466 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgFARxR (ORCPT
+        Mon, 1 Jun 2020 13:53:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbgFARxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:53:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 7A1252A2519
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Paul Gofman <gofmanp@gmail.com>, Kees Cook <keescook@chromium.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        linux-security-module@vger.kernel.org,
-        Zebediah Figura <zfigura@codeweavers.com>
-Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory areas
-Organization: Collabora
-References: <20200530055953.817666-1-krisman@collabora.com>
-        <202005300923.B245392C@keescook> <851rn0ejg9.fsf@collabora.com>
-        <9a512096-7707-3fc6-34ba-22f969c0f964@gmail.com>
-        <20200531164938.GF19604@bombadil.infradead.org>
-Date:   Mon, 01 Jun 2020 13:53:11 -0400
-In-Reply-To: <20200531164938.GF19604@bombadil.infradead.org> (Matthew Wilcox's
-        message of "Sun, 31 May 2020 09:49:38 -0700")
-Message-ID: <857dwq7jw8.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 1 Jun 2020 13:53:45 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C74EC05BD43;
+        Mon,  1 Jun 2020 10:53:45 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CD2D811D69C3B;
+        Mon,  1 Jun 2020 10:53:42 -0700 (PDT)
+Date:   Mon, 01 Jun 2020 10:53:39 -0700 (PDT)
+Message-Id: <20200601.105339.1821963108388271707.davem@davemloft.net>
+To:     luobin9@huawei.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        luoxianjun@huawei.com, yin.yinshi@huawei.com,
+        cloud.wangxiaoyun@huawei.com
+Subject: Re: [PATCH net-next v5] hinic: add set_channels ethtool_ops support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200601105748.27511-1-luobin9@huawei.com>
+References: <20200601105748.27511-1-luobin9@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 10:53:43 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> writes:
+From: Luo bin <luobin9@huawei.com>
+Date: Mon, 1 Jun 2020 18:57:48 +0800
 
-> On Sun, May 31, 2020 at 03:39:33PM +0300, Paul Gofman wrote:
->> > Paul (cc'ed) is the wine expert, but my understanding is that memory
->> > allocation and initial program load of the emulated binary will go
->> > through wine.  It does the allocation and mark the vma accordingly
->> > before returning the allocated range to the windows application.
->> Yes, exactly. Pretty much any memory allocation which Wine does needs
->> syscalls (if those are ever encountered later during executing code from
->> those areas) to be trapped by Wine and passed to Wine's implementation
->> of the corresponding Windows API function. Linux native libraries
->> loading and memory allocations performed by them go outside of Wine control.
->
-> I don't like Gabriel's approach very much.  Could we do something like
+> @@ -470,6 +470,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
+>  	struct hinic_txq *txq;
+>  	struct hinic_qp *qp;
+>  
+> +	if (unlikely(!netif_carrier_ok(netdev))) {
+> +		dev_kfree_skb_any(skb);
+> +		return NETDEV_TX_OK;
+> +	}
 
-Hi Matthew,
-
-I don't oppose your suggestion, as Paul said, it should be enough for
-us.  But could you elaborate on the problems you see in the original
-approach, even if only for my own education?
-
-> issue a syscall before executing a Windows region and then issue another
-> syscall when exiting?  If so, we could switch the syscall entry point (ie
-> change MSR_LSTAR).  I'm thinking something like a personality() syscall.
-> But maybe that would be too high an overhead.
->
-
--- 
-Gabriel Krisman Bertazi
+As stated by another reviewer, this change is unrelated to adding
+set_channels support.  Please remove it from this patch.
