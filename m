@@ -2,125 +2,132 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C11BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC13C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792782077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A87E2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ripf+8nv"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VLme64G4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgFAOfH (ORCPT
+        id S1726287AbgFAOlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:35:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgFAOfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:35:06 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66004C03E96B
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 07:35:04 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x11so16232plv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 07:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BYjlMWMX+w4rGY423Gm8SdYzNmV4yO5dT2R9qllwqiQ=;
-        b=Ripf+8nvKMhWWgU1eelOSFnSn1oOvCpOiQNMrOpGsI1bToTYeIhMloQ//T6NA8X2ay
-         o4fOqkTi+3xglQvwgbp5WorSUoWxTQ+8Er2DD8je2Q5JZ8gSV75DJZme2AT7p3ziLVtM
-         E2plWHIo/LNO1XYVnvXk48I+rVAfBUrOP2NfY0bXnkXmdz5SABKusA22WTaV7SMjU6T0
-         2jR1IWk0cNaA7eYbftzfGpWoeRwWgjBWKcKRi3r62riIm4VRNE9K161KnEy2z+Q1KeDa
-         f//bpa1QRa87nNRMbxsf9P/qKjGvkxf5+tnFF0ppFcZf38LR05Zx33krRd5WWr1C320M
-         bHNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BYjlMWMX+w4rGY423Gm8SdYzNmV4yO5dT2R9qllwqiQ=;
-        b=FPmYsSQNtcmg8mXYQswb4KO38cNTY1KC6rvT0FB3F5I31F1kx4PCXYiOn46YBixWVJ
-         JQo3Xm5/P0bpW2sjjSAfpE6E1Y/88DFC6Zvt4PV1Fx/Bz3uQhoqF4YceIPJ/DAzgFV6A
-         L8GnCFcNDqhJIz/vDV4MM+6my2vXeGhihUeFgwtVmuAgHq+wNiotHVXcP2n97VvaEBs2
-         Hmr2ymPahAW9xkUZ1XJTz4pqNAT5ivwu9zg3d3ONMcl+ApUl+j4kepVYC+gTBhX+I6nu
-         M2v+O6rJ5M4QCidBLJrePRMs5cOQ8yukqQ4fhVkOnqrvQL/1ZaAsclWeSYS/qyIb311B
-         e98w==
-X-Gm-Message-State: AOAM533vQZRa8ENKhW5ICoiISJdZoP8QOrZhSuqC0h4Qk1RwWWT8C9bo
-        ErCvrtMed7CkBEulpLINEalGWw==
-X-Google-Smtp-Source: ABdhPJyi6fGAj6YRMVEKQXpjs6sg6hV6icwsH9xAhUOG9BvC/DxGVV6zF173TL65jPi1QGHst/9Uyw==
-X-Received: by 2002:a17:902:a60d:: with SMTP id u13mr5850657plq.46.1591022103704;
-        Mon, 01 Jun 2020 07:35:03 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id t64sm13192087pgd.24.2020.06.01.07.35.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 07:35:03 -0700 (PDT)
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-From:   Jens Axboe <axboe@kernel.dk>
-To:     sedat.dilek@gmail.com
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
- <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
- <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
- <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
- <CA+icZUVJT8X3zyafrgbkJppsp4nJEKaLjYNs1kX8H+aY1Y10Qw@mail.gmail.com>
- <CA+icZUWHOYcGUpw4gfT7xP2Twr15YbyXiWA_=Mc+f7NgzZCETw@mail.gmail.com>
- <230d3380-0269-d113-2c32-6e4fb94b79b8@kernel.dk>
- <CA+icZUXxmOA-5+dukCgxfSp4eVHB+QaAHO6tsgq0iioQs3Af-w@mail.gmail.com>
- <CA+icZUV4iSjL8=wLA3qd1c5OQHX2s1M5VKj2CmJoy2rHmzSVbQ@mail.gmail.com>
- <CA+icZUXkWG=08rz9Lp1-ZaRCs+GMTwEiUaFLze9xpL2SpZbdsQ@mail.gmail.com>
- <cdb3ac15-0c41-6147-35f1-41b2a3be1c33@kernel.dk>
- <CA+icZUUfxAc9LaWSzSNV4tidW2KFeVLkDhU30OWbQP-=2bYFHw@mail.gmail.com>
- <b24101f1-c468-8f6b-9dcb-6dc59d0cd4b9@kernel.dk>
-Message-ID: <455dd2c1-7346-2d43-4266-1367c368cee1@kernel.dk>
-Date:   Mon, 1 Jun 2020 08:35:01 -0600
+        Mon, 1 Jun 2020 10:41:04 -0400
+Received: from mout.web.de ([212.227.15.4]:41143 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgFAOlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 10:41:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591022441;
+        bh=GYixJJl+eyc0q3fXwyw3p+6RUj+8MkKKi7YziDYNgKs=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=VLme64G4xdV+B4m2ln4WMnxDDOFjTCE13uKFjf4dAFrPabATzS2rKi7GLfdO3EtPO
+         tgMhx6eYwFa8EFPHtMMhhEYIbamoD7SDvdKZBXqILIF84meEswjnq4ZtgzNiIRa9jP
+         KT1ND6ouwZLIGjEH5FYqoxylyf9zC0CcgixtevKQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.133.32]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lvjoa-1iuhrp0Pdc-017UNL; Mon, 01
+ Jun 2020 16:40:41 +0200
+Cc:     linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Yi Zhang <yi.zhang@huawei.com>
+Subject: Re: [PATCH v2] afs: Fix memory leak in afs_put_sysnames()
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Zhihao Cheng <chengzhihao1@huawei.com>,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <779b327f-b0fa-e21f-cbf6-5cadeca58581@web.de>
+Date:   Mon, 1 Jun 2020 16:40:40 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <b24101f1-c468-8f6b-9dcb-6dc59d0cd4b9@kernel.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:HuDV7hfpr+tWrow1bafEA/tCXUy8759Rc0x0dQuEig0BH9hVc7+
+ 4K2TNZ1zxkgHIvOVqoCYizsP82qHOwpxh8kxg/1SST75eyX7DP2L5fNGCd5prG8aqSk9kAp
+ lJCXqP4koGD2NTk0GNup3pr4LN/N3a9FciGGhjHh+9m2l6GrpWLQBO9nbrARgjyIXW/2aPd
+ sOepHSrDDlN4PLfYr991g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nqZJSZQvFL4=:zRNQCrIrHifOQBYMwf/oFv
+ dADWoDN7nxVf+sZtmS74WDLHLOnxKuUg8p3Rv5SnAYWfGHROf6UXo3lOoXX+UZrHfakU6rlu0
+ 5gnvEhuWfUvB+K1Pdscy0gFyiHZLNv0roIsjEWszHRds5o81qHi5tzaGlDhpX6H9+OVKK6MSk
+ 8kkhx4mMg+3aplRA0oqP+KlR9hvJo61RwVePW4yA+DACykYP0W5iPspoSEe6EER0EMK2E3U8A
+ XdDE6Sq2tJEP5Z2AAW1NTYSZJMCE4hFzq3Gp5Cio3kiT5un9iFWA8MEP0A7n03j8eaButqWtd
+ CRx3+MhgMKsSs03GEkl1EZuWQU4oBlIHTzG3O6F+xnOTMwgbVaI+BQZj4U0FHgww92fdA3ZXi
+ 8BuDtEiqRZbbWf8C8ZFjYN9cKjMHU/6TBSN2F/jZjH9AQ4tZUHAtTY2hpmu5cviYWBZIJlkbt
+ kApW5dfOmXotkgbDCfZvmF9DcQD4xI+VvFfBSptjVVDt/v7mTGKDmxlHKt3mEQR1yFGPBX9Uv
+ 9QqdEvS1zoGJX1yx/Xof/RyGJ9m2rLqHCczEEjq+nJQalZ2ahFPpJP7786w5BrLBPfT335V25
+ eDqb/mRUIExjAoWwIvTBm18ILDT8Y1epwb517M+JL1Q3lowdWJ+lljYfhmttU2aeQy6v9G89A
+ Zecfx16I8904t9hDlajcRNWcdwlS7nKQFaE8aEykKNE1gAPvQKpcQc/7HrVe54MULlJuxGZUn
+ ZT/e4tWI6xeGTDX8G+hTzL6Q7GW2ii3FYOWPJi0VnlTSksUEuofrWF+D+y+5e2u6mw+MA0dRB
+ XawcKbiiHL0DWqao98htZg0vBTmDBWBM7vheVgBiLW4w9NF3sB1QCHDFiHug5U6U5aAVcByIg
+ kyTnjhoCrsETaSnJ3C5iO47RtWuyYH8ZG5DB548/HKqZGkX7ao5gSUwQtZPy6lUd9V+OplrFm
+ Z8cy16G3jt2ESPoz5Yg0fky6p/d2FqDdLqQD3rtCFoAU3jsDrJmFzX9EolHceIgpvnWOFSBBQ
+ JHwzfuH2eTXYFu0k7TbyPnwsbTGk/nUy/WpPdG3wxODJzogjHzRHGdspD9MvQloQf1CrHOr4T
+ mX7QPegqryFsJjW3GXbqKI0nE0NBMMt/RZbWxuWYinkXHZzo1V0E8pF1V9++GUs3hKicP6Var
+ +IBdo2VmXG44SjMsSEfzgukNmUubm0i83duTuR28a9ZFJDO4iw8kmG1b6f1lAr3/WcGAsiiHh
+ EF7egx/W13cyVId98
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/20 8:14 AM, Jens Axboe wrote:
-> On 6/1/20 8:13 AM, Sedat Dilek wrote:
->> On Mon, Jun 1, 2020 at 4:04 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>
->>> On 6/1/20 7:35 AM, Sedat Dilek wrote:
->>>> Hi Jens,
->>>>
->>>> with Linux v5.7 final I switched to linux-block.git/for-next and reverted...
->>>>
->>>> "block: read-ahead submission should imply no-wait as well"
->>>>
->>>> ...and see no boot-slowdowns.
->>>
->>> Can you try with these patches applied instead? Or pull my async-readahead
->>> branch from the same location.
->>>
->>
->> Yes, I can do that.
->> I pulled from linux-block.git#async-readahead and will report later.
->>
->> Any specific testing desired by you?
-> 
-> Just do your boot timing test and see if it works, thanks.
+> sysnames should be freed after refcnt being decreased to zero in
+> afs_put_sysnames().
 
-Actually, can you just re-test with the current async-buffered.6 branch?
-I think the major surgery should wait for 5.9, we can do this a bit
-easier without having to touch everything around us.
+How do you think about a wording variant like the following?
 
--- 
-Jens Axboe
+   Release the sysnames object after its reference counter was decreased
+   to zero.
 
+
+Will it matter to mention the size of the data structure "afs_sysnames"?
+
+Regards,
+Markus
