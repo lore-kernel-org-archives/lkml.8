@@ -2,103 +2,114 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC682073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E07C20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFAPvy (ORCPT
+        id S1728144AbgFAPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:51:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23579 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbgFAPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:51:54 -0400
-IronPort-SDR: orH7nET1FFlyrmX0oIRdPYWt3Lv5j0YrL2YOq+K5QmzEqQBmFwpiGENUdcjN4BmVoLzHIj+Ebx
- xIjIZsI918eA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 08:51:53 -0700
-IronPort-SDR: CoTntLLfTHf6yTa3VfNwPg4rBg+K37HUe0buOAYWs4DRLvuNuq+Aa0pXGXzT78QD1nCuAwNdnW
- 05kzT6cBRYGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,461,1583222400"; 
-   d="scan'208";a="444334490"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 01 Jun 2020 08:51:53 -0700
-Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
-        by linux.intel.com (Postfix) with ESMTP id D7AA8580378;
-        Mon,  1 Jun 2020 08:51:51 -0700 (PDT)
-Subject: [PATCH v5 02/13] perf evlist: introduce control file descriptors
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <db5482d7-7906-6ccf-c851-e40505f2618f@linux.intel.com>
-Date:   Mon, 1 Jun 2020 18:51:50 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 11:52:10 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:51260 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgFAPwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 11:52:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 682DD8030802;
+        Mon,  1 Jun 2020 15:52:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZBZK0Artunwm; Mon,  1 Jun 2020 18:52:05 +0300 (MSK)
+Date:   Mon, 1 Jun 2020 18:52:04 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+Message-ID: <20200601155204.hsatjbukj6haxhld@mobilestation>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+ <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+ <20200601151903.ipd5ikw35z53eq2t@mobilestation>
+ <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 01, 2020 at 06:30:22PM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 1, 2020 at 6:19 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Jun 1, 2020 at 3:26 PM Serge Semin
+> > > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > >
+> > > > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> > > > and MIPS CPS CPUidle drivers.
+> > > ...
+> > > > +MIPS CORE DRIVERS
+> > > > +M:     Serge Semin <fancer.lancer@gmail.com>
+> > > > +L:     linux-mips@vger.kernel.org
+> > > > +S:     Supported
+> > > > +F:     drivers/bus/mips_cdmm.c
+> > > > +F:     drivers/irqchip/irq-mips-cpu.c
+> > > > +F:     drivers/irqchip/irq-mips-gic.c
+> > > > +F:     drivers/clocksource/mips-gic-timer.c
+> > > > +F:     drivers/cpuidle/cpuidle-cps.c
+> > >
+> > > I think nowadays checkpatch.pl warns on wrong ordering in this data base.
+> >
+> > Alas it doesn't.
+> 
 
-Define and initialize control file descriptors.
+> Ah, it definitely will.
+> it was relatively recently added by:
+> commit 9bbce40a4f72fe01a65669aee9f4036baa7fa26e
+> Author: Joe Perches <joe@perches.com>
+> Date:   Tue May 26 10:36:34 2020 +1000
+> 
+>    checkpatch: additional MAINTAINER section entry ordering checks
+> 
+> 
+> > Good point though.
+> 
+> You're welcome.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/evlist.c | 3 +++
- tools/perf/util/evlist.h | 5 +++++
- 2 files changed, 8 insertions(+)
+Next time I won't forget that then. BTW the notes at the top of the MAINTAINERS
+file don't explicitly say about the files-list order. Only about the
+whole maintainers list entries order. Seeing the rest of the sub-entries like
+L:, M:, etc. aren't ordered then it's probably better to have an explicit
+statement, that files should be alphabetically listed, especially when
+checkpatch.pl starts warning about that.
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 173b4f0e0e6e..47541b5cab46 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -63,6 +63,9 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 	evlist->workload.pid = -1;
- 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
-+	evlist->ctl_fd.fd = -1;
-+	evlist->ctl_fd.ack = -1;
-+	evlist->ctl_fd.pos = -1;
- }
- 
- struct evlist *evlist__new(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index b6f325dfb4d2..0d8b361f1c8e 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -74,6 +74,11 @@ struct evlist {
- 		pthread_t		th;
- 		volatile int		done;
- 	} thread;
-+	struct {
-+		int	fd;
-+		int	ack;
-+		int	pos;
-+	} ctl_fd;
- };
- 
- struct evsel_str_handler {
--- 
-2.24.1
+-Sergey
 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
