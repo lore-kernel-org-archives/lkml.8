@@ -2,233 +2,77 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A95C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1EAD2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACFD20772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgFANmE (ORCPT
+        id S1726232AbgFANp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:42:04 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2264 "EHLO huawei.com"
+        Mon, 1 Jun 2020 09:45:56 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47866 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725974AbgFANmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:42:03 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 5D2CA80A4B98C2E3164F;
-        Mon,  1 Jun 2020 14:42:01 +0100 (IST)
-Received: from localhost (10.47.94.81) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 1 Jun 2020
- 14:42:00 +0100
-Date:   Mon, 1 Jun 2020 14:41:20 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-CC:     Jonathan Cameron <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <andy.shevchenko@gmail.com>,
-        <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 1/4] iio: chemical: scd30: add core driver
-Message-ID: <20200601144120.000038ba@Huawei.com>
-In-Reply-To: <20200601113006.GA28560@arch>
-References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
-        <20200530213630.87159-2-tomasz.duszynski@octakon.com>
-        <20200531105840.27e17f3d@archlinux>
-        <20200531192152.GC27246@arch>
-        <20200601113604.00002d70@Huawei.com>
-        <20200601113006.GA28560@arch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1725974AbgFANpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 09:45:55 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C65D430C51C257326BBE;
+        Mon,  1 Jun 2020 21:45:52 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.18) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 1 Jun 2020
+ 21:45:45 +0800
+Subject: Re: [PATCH 1/2] ubifs: Fix potential memory leaks while iterating
+ entries
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        <linux-mtd@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Richard Weinberger" <richard@nod.at>,
+        Yi Zhang <yi.zhang@huawei.com>
+References: <2bec05b7-78d3-fa36-134a-efbe977933e3@web.de>
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <45e2cd69-93ec-a0b9-b2a6-d170eee44055@huawei.com>
+Date:   Mon, 1 Jun 2020 21:45:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.94.81]
-X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
+In-Reply-To: <2bec05b7-78d3-fa36-134a-efbe977933e3@web.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.18]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...
+在 2020/6/1 20:00, Markus Elfring 写道:
+>> Fix some potential memory leaks in error handling branches while
+>> iterating xattr entries.
+> Such information is useful.
+>
+>
+>> For example, function ubifs_tnc_remove_ino()
+>> forgets to free pxent if it exists. Similar problems also exist in
+>> ubifs_purge_xattrs(), ubifs_add_orphan() and ubifs_jnl_write_inode().
+> Can an other wording variant be a bit nicer?
+Thanks for reminding, I will improve this description.
+>
+> I suggest to avoid the specification of duplicate function calls
+> (also for the desired exception handling).
+> Will it be helpful to add a few jump targets?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162#n455
+I've thought about using "goto err_tag_2" in kill_xattrs code block to 
+release prev xent, but later it needs to jump to 'out_release tag‘ for 
+releasing previously requested memory, which can clutter the code. It 
+seems that two consecutive 'goto tags' will make the code less readable.
+> Regards,
+> Markus
+>
+> .
 
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
-> > > > > +		scd30_command_t command)
-> > > > > +{
-> > > > > +	static const unsigned long scd30_scan_masks[] = { 0x07, 0x00 };
-> > > > > +	struct scd30_state *state;
-> > > > > +	struct iio_dev *indio_dev;
-> > > > > +	int ret;
-> > > > > +	u16 val;
-> > > > > +
-> > > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-> > > > > +	if (!indio_dev)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	state = iio_priv(indio_dev);
-> > > > > +	state->dev = dev;  
-> > > >
-> > > > Doesn't seem to be used.
-> > > >  
-> > > > > +	state->priv = priv;  
-> > > >
-> > > > What's this for?  At least at first glance I can't find it being used
-> > > > anywhere.
-> > > >  
-> > > > > +	state->irq = irq;
-> > > > > +	state->pressure_comp = SCD30_PRESSURE_COMP_DEFAULT;
-> > > > > +	state->meas_interval = SCD30_MEAS_INTERVAL_DEFAULT;
-> > > > > +	state->command = command;
-> > > > > +	mutex_init(&state->lock);
-> > > > > +	init_completion(&state->meas_ready);
-> > > > > +
-> > > > > +	dev_set_drvdata(dev, indio_dev);
-> > > > > +
-> > > > > +	indio_dev->dev.parent = dev;  
-> > > >
-> > > > Side note that there is a series moving this into the core under revision at
-> > > > the moment.  Hopefully I'll remember to fix this up when applying your patch
-> > > > if that one has gone in ahead of it.
-> > > >  
-> > > > > +	indio_dev->info = &scd30_info;
-> > > > > +	indio_dev->name = name;
-> > > > > +	indio_dev->channels = scd30_channels;
-> > > > > +	indio_dev->num_channels = ARRAY_SIZE(scd30_channels);
-> > > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > > > +	indio_dev->available_scan_masks = scd30_scan_masks;
-> > > > > +
-> > > > > +	state->vdd = devm_regulator_get(dev, "vdd");
-> > > > > +	if (IS_ERR(state->vdd)) {
-> > > > > +		if (PTR_ERR(state->vdd) == -EPROBE_DEFER)
-> > > > > +			return -EPROBE_DEFER;
-> > > > > +
-> > > > > +		dev_err(dev, "failed to get regulator\n");
-> > > > > +		return PTR_ERR(state->vdd);
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = regulator_enable(state->vdd);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = devm_add_action_or_reset(dev, scd30_disable_regulator, state);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +  
-> > > >
-> > > > A comment here on why it makes sense to register this here.  What
-> > > > started mesurement? It seems that happens well below here so
-> > > > we should really call this after that start all.
-> > > >  
-> > >
-> > > Sensor after being powered up starts in mode it was left in.
-> > > Chances are it was continuous mode and we want to shut it down.  
-> >
-> > That's fine.  The question is why 'here' as opposed to after the below where you
-> > put it into continuous mode.
-> >  
-> 
-> Let's suppose sensor got energized and started measuring. Then without
-> registering action which stops measurement we jump to device reset etc.
-> 
-> Now if reset failed for whatever reason (same applies to everything
-> below reset) devm will gracefully unwind previous actions but sensor
-> will continue doing his job. But there's no point. Better to save some
-> milliaps for later.
-
-I'm not convinced. Note that in your example, the sensor was already on.
-If we never loaded the driver it would stay on.  We should
-deal with only problems we have potentially created.
-
-If reset fails, it shouldn't 'enable' the sensor hence we are just in
-the same state as if the driver hadn't loaded at all.  Also if reset
-fails the chance of a disable succeeding is very low.
-
-The code is much more logical with this being done immediately after
-the action to enable thing we are disabling.  So please put it down
-there.
-
-
-
-> 
-> In case we have real regulator then there's no real issue because
-> power gets cut off during cleanup.
-> 
-> Quite often though there's only a dummy one which does nothing useful
-> except making regulator framework happy.
-> 
-> So my thinking here is that we're slightly better off registering
-> scd30_stop_meas() action earlier to prevent such scenario from happening.
-> 
-> > >  
-> > > > > +	ret = devm_add_action_or_reset(dev, scd30_stop_meas, state);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = scd30_reset(state);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to reset device: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	if (state->irq > 0) {
-> > > > > +		ret = scd30_setup_trigger(indio_dev);
-> > > > > +		if (ret) {
-> > > > > +			dev_err(dev, "failed to setup trigger: %d\n", ret);
-> > > > > +			return ret;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-> > > > > +					      scd30_trigger_handler, NULL);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = scd30_command_read(state, CMD_FW_VERSION, &val);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to read firmware version: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
-> > > > > +
-> > > > > +	ret = scd30_command_write(state, CMD_MEAS_INTERVAL,
-> > > > > +				  state->meas_interval);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to set measurement interval: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "failed to start measurement: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-Here is where we should register that cleanup handler.
-
-Jonathan
-
-> > > > > +
-> > > > > +	return devm_iio_device_register(dev, indio_dev);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(scd30_probe);
-> > > > > +
-> > > > > +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
-> > > > > +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor core driver");
-> > > > > +MODULE_LICENSE("GPL v2");
-> > > > > --
-> > > > > 2.26.2
-> > > > >  
-> > > >  
-> >
-> >  
 
 
