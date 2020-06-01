@@ -2,109 +2,98 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C68C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8166FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A7B207BC
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:27:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XeshdPlP"
+	by mail.kernel.org (Postfix) with ESMTP id 5BC6A20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbgFAM1X (ORCPT
+        id S1727013AbgFAM2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:27:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53825 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725838AbgFAM1W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:27:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591014441;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Zo6RuHp2sjoLM+K5Td7Eh7/Ep0BrLjWQwrY5C7jL79M=;
-        b=XeshdPlPLKGcw5sclTzArjmXGOL6OufWjrv9WQHQ12zqrg0PkaRDHX04bHt4IaIypI+nkL
-        kTyP6WqvRlEu4pR1GuEwniWx68WNEzJytbhHQvxiaTxaZb+p686qWpBg7kniBIHdWBNWpp
-        vaIKplqL0a0Nv0M2X1sa+0ynoZFBszs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-vZ4ihf78PEKhbHIbqXvL9Q-1; Mon, 01 Jun 2020 08:27:17 -0400
-X-MC-Unique: vZ4ihf78PEKhbHIbqXvL9Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 1 Jun 2020 08:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726176AbgFAM2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 08:28:08 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00D6680B73A;
-        Mon,  1 Jun 2020 12:27:16 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E5A27E7F1;
-        Mon,  1 Jun 2020 12:27:13 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH] xen: Fix build with recent suspend_hvm.c changes
-Date:   Mon,  1 Jun 2020 14:27:11 +0200
-Message-Id: <20200601122711.222696-1-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mail.kernel.org (Postfix) with ESMTPSA id 025312077D;
+        Mon,  1 Jun 2020 12:28:08 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jfjXz-00273d-0u; Mon, 01 Jun 2020 08:28:07 -0400
+Message-ID: <20200601122729.727113609@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Mon, 01 Jun 2020 08:27:29 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 00/12] tracing: Updates for 5.8 (finally finished testing them)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kbuild test robot reports the following issues with some randconfig build:
-...
-In file included from ./include/xen/interface/hvm/params.h:24,
-                 from ./include/xen/hvm.h:6,
-                 from arch/x86/xen/suspend_hvm.c:5:
-./include/xen/interface/hvm/hvm_op.h:29:5: error: unknown type name ‘domid_t’
-   29 |     domid_t  domid;    /* IN */
-      |     ^~~~~~~
-./include/xen/interface/hvm/hvm_op.h:33:1: warning: data definition has no
-  type or storage class
-   33 | DEFINE_GUEST_HANDLE_STRUCT(xen_hvm_param);
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/xen/interface/hvm/hvm_op.h:33:1: error: type defaults to ‘int’ in
-  declaration of ‘DEFINE_GUEST_HANDLE_STRUCT’ [-Werror=implicit-int]
-...
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+for-next
 
-These definitions are in xen/interface/xen.h, add the include to hvm.h.
+Head SHA1: c200784a08d4ea82f82a30678955b7f2c7550af4
 
-Fixes: 28447ea41542 ("xen: Move xen_setup_callback_vector() definition to include/xen/hvm.h")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-- I'm failing to see why this was compiling when 28447ea41542 ("xen: Move
- xen_setup_callback_vector() definition to include/xen/hvm.h") was
- submitted, just keeping playing whack-a-mole game fixing the immediate
- issue, thanks kbuild robot for the report!
----
- include/xen/hvm.h | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/include/xen/hvm.h b/include/xen/hvm.h
-index b7fd7fc9ad41..7cf0c529ab4a 100644
---- a/include/xen/hvm.h
-+++ b/include/xen/hvm.h
-@@ -3,6 +3,7 @@
- #ifndef XEN_HVM_H__
- #define XEN_HVM_H__
- 
-+#include <xen/interface/xen.h>
- #include <xen/interface/hvm/params.h>
- #include <asm/xen/hypercall.h>
- 
--- 
-2.25.4
+Cheng Jian (1):
+      ftrace: show debugging information when panic_on_warn set
 
+Julia Lawall (1):
+      tracing/probe: reverse arguments to list_add
+
+Masami Hiramatsu (1):
+      tools/bootconfig: Add a summary of test cases and return error
+
+Peter Zijlstra (1):
+      ftrace,bug: Improve traceoff_on_warn
+
+Steven Rostedt (VMware) (2):
+      tracing/doc: Fix typos in histogram-design.rst
+      tracing: Add a trace print when traceoff_on_warning is triggered
+
+Tom Zanussi (6):
+      tracing: Check state.disabled in synth event trace functions
+      tracing: Add histogram-design document
+      tracing: Add hist_debug trace event files for histogram debugging
+      tracing: Fix events.rst section numbering
+      tracing: Move synthetic events to a separate file
+      selftests/ftrace: Distinguish between hist and synthetic event checks
+
+----
+ Documentation/trace/events.rst                     |   28 +-
+ Documentation/trace/histogram-design.rst           | 2115 +++++++++++++++++++
+ kernel/trace/Kconfig                               |   43 +-
+ kernel/trace/Makefile                              |    1 +
+ kernel/trace/ftrace.c                              |    8 +-
+ kernel/trace/trace.c                               |    5 +-
+ kernel/trace/trace.h                               |    1 +
+ kernel/trace/trace_events.c                        |    4 +
+ kernel/trace/trace_events_hist.c                   | 2193 +++-----------------
+ kernel/trace/trace_events_synth.c                  | 1789 ++++++++++++++++
+ kernel/trace/trace_probe.c                         |    2 +-
+ kernel/trace/trace_synth.h                         |   36 +
+ lib/bug.c                                          |    3 +
+ tools/bootconfig/test-bootconfig.sh                |    7 +
+ .../inter-event/trigger-field-variable-support.tc  |    5 +
+ .../trigger-inter-event-combined-hist.tc           |    5 +
+ .../inter-event/trigger-multi-actions-accept.tc    |    5 +
+ .../inter-event/trigger-onmatch-action-hist.tc     |    5 +
+ .../trigger-onmatch-onmax-action-hist.tc           |    5 +
+ .../inter-event/trigger-onmax-action-hist.tc       |    5 +
+ .../inter-event/trigger-snapshot-action-hist.tc    |    5 +
+ .../inter-event/trigger-trace-action-hist.tc       |    5 +
+ 22 files changed, 4396 insertions(+), 1879 deletions(-)
+ create mode 100644 Documentation/trace/histogram-design.rst
+ create mode 100644 kernel/trace/trace_events_synth.c
+ create mode 100644 kernel/trace/trace_synth.h
