@@ -2,212 +2,133 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23102C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F60C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F100E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:21:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T8HLFGd4"
+	by mail.kernel.org (Postfix) with ESMTP id 1E988206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591028588;
+	bh=sYsHGCZGXO1Q3BckbVF76yQIJfyp90b+T56aNJ1NsbQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=rO5Eb+0QeKYIve9Yvk12d/7LETZ79RwwI/yUfpAl7//tSww/Db5woktosK+GkTsBD
+	 kjTG+agJ5OhYmocPEIlqKDRDBb07YOeriqHh9dCeMo1YLZnPHABjxZ91YULGbfMYwe
+	 bqijBFYodC7atm06E3Ig+nvl7LUzwBys68j6isZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgFAQVC (ORCPT
+        id S1727004AbgFAQXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
+        Mon, 1 Jun 2020 12:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFAQVB (ORCPT
+        with ESMTP id S1726067AbgFAQXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:21:01 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA5DC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:21:01 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id t9so2492509ybk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:21:01 -0700 (PDT)
+        Mon, 1 Jun 2020 12:23:07 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94492C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:23:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c3so394966wru.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:23:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W40DinL331qIeXqWX5ayxHagpklU6DhmULvE0lzv51U=;
-        b=T8HLFGd473UtnDsiesS/gwKlqFtr1it/5KEOFHrOMlOXlGROXXWMW/lDAcJGnxIs8a
-         vXhDXwjkGdm3ZJbiHBVa8y96I3A9EG8TP+Mt20aLjQm/6X8Wn/2rPgKldhJJGbyWO/KS
-         oGRCSTdlkAKzesD8A8zNHK+fdofClKRabIvTI1KbplDrpcToUewsflBVCagX/eLRO279
-         Ghh0AtKl15RHzifaWlyXvHUFgcjBrzm4Qu41Xj5AELYdRGdPsDdrFhjOXyGsTvzx7VqH
-         RvMI2Bj7qTM9AgpkCZDDTiuVZwRUw0rgCD96RX+xj8JOc+nygl8SrQV6RIOe2N3HbaoH
-         jEVQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=MKmHiaFINZPLg82Dw2TKjTnxk0X6EWpuOFGm/aRIn0o=;
+        b=EbG/9POs7lhCLbPyJmRqU4I/RRHW3gzPM/OUcWyXaGw2hGeDfCqqlvuSKD1Qlkc7+N
+         HbUs6wydQTnqKyeTxjpBP4LMjXQ6zFX/CxuYYMz9njyD4pXoLM4o0urg2UXsY1dvIIP/
+         BvmeQTRy+6EILm5pDZul0+1y0fhLxHO9uJzpXw3LypLvafzohIc8xmtT/BeqKfU0OVR5
+         rWR2HtcKtrMRzSYgaoSbtFg+n8ShNs2qq1i3DBCrPN1kUWxjDIu6KwJXhNEzgufrSxxq
+         P4YWo/+NNci+5ExqgZTuCGKkRMPQ/4g+a1rrTSUfkce0V5kOGswN04kGUgqYbxJLv3so
+         pKKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W40DinL331qIeXqWX5ayxHagpklU6DhmULvE0lzv51U=;
-        b=AMaJiZMRg5FKhTFSsatGtQHY5Ixu4m8lVaZHwLNR54W35qQEq6s9Jq5e5AdmTjZ7Fk
-         8I/nhVzcct24mYu1Jrjuqz7MA5GPq/N4nSVn+gVxGpwwkuIe/yIUyZIT3/9SCD1Ak59c
-         qetl50s1faXM6BKr9mK5iStKfbqjv48Oydz61DW3xKWKqXS6HU84zQIP6RA/QX7PGZoB
-         UiN4tjU7+1cHkqMH/58cWWf5Q/gELQ6kK0w3tB/lWQs9forNZBw9hBGrYJM0MPMVZx+P
-         7ttuikRXdMay4hbB6p85AZF7sQMoeYIE36J4Uvz6jJmc+nzUsMEtwc0t2L0ekPExl685
-         9rTQ==
-X-Gm-Message-State: AOAM5334r5q9wTHj2TFdEgrTB3Rch5IrtSv2Q/x7p/A18ll2mqXHOVIb
-        WzuU/Lp/E61VyNB3+ktsLTN1ZmzfNo+N54oJeFkjwg==
-X-Google-Smtp-Source: ABdhPJxZ6R+TWfNoVTbAIPqkWBx8Lgsy5ed62ApaAgfbfxEP8RigUcW39XL1vv9x9872nX4TbPSbFlwytHmg+nSruvo=
-X-Received: by 2002:a25:be81:: with SMTP id i1mr34991850ybk.184.1591028460554;
- Mon, 01 Jun 2020 09:21:00 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=MKmHiaFINZPLg82Dw2TKjTnxk0X6EWpuOFGm/aRIn0o=;
+        b=QOmGyopcgASDDflzzrMz9GDUuW3xkRk2wM2o9u26fwxDP3lj7CXAHeq7r0AaU1CN8z
+         hRD08s3IQvc+rI89K6M+b+Opcf3M5d0Tq9McJ3wwIxRv967Zb3YeJ8bexcmWRPfqXe6+
+         sGj1Omol/aU6J470HL8NHJw3t7LrJcshGEu7yt1Uhsfv2nN2kbl6WjEeKyJOlGafPeSY
+         UBm6ss9rpjPk9B8B4oqUVqmF8qArxS13uDz5dPNPnMcTNX13ZPqlslic4cWAXEVhAmMM
+         1MAwmZM/bXcEG70pQmvH6qgV5R3Mw67IMPcAMxJ6Un9WXALcXKf89xypJmadFWpcFsG4
+         wWEg==
+X-Gm-Message-State: AOAM530MBb4a8fP3V0QWHIeurktEMsp9Zp1/RdjmJ1dMjvvSGcEl4suH
+        nfXJMpZU48ahNOIJhicOizx0jHLo
+X-Google-Smtp-Source: ABdhPJwPV/acAlvoKP2GOH7XTNxXZs8YRFcEy+TVgLe2ixraNlhBGc2jXlExFKQ7ieeA09ygg3Gvkg==
+X-Received: by 2002:adf:b348:: with SMTP id k8mr24796518wrd.157.1591028585285;
+        Mon, 01 Jun 2020 09:23:05 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id s8sm19032807wrm.96.2020.06.01.09.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 09:23:04 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 18:23:02 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/boot updates for v5.8
+Message-ID: <20200601162302.GA1138465@gmail.com>
 MIME-Version: 1.0
-References: <20200531162206.911168-1-jolsa@kernel.org> <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
- <20200601082027.GF881900@krava>
-In-Reply-To: <20200601082027.GF881900@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 1 Jun 2020 09:20:49 -0700
-Message-ID: <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
-Subject: Re: [PATCHv2] perf stat: Ensure group is defined on top of the same
- cpu mask
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 1:20 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> Jin Yao reported the issue (and posted first versions of this change)
-> with groups being defined over events with different cpu mask.
->
-> This causes assert aborts in get_group_fd, like:
->
->   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
->   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
->   Aborted
->
-> All the events in the group have to be defined over the same
-> cpus so the group_fd can be found for every leader/member pair.
->
-> Adding check to ensure this condition is met and removing the
-> group (with warning) if we detect mixed cpus, like:
->
->   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
->   WARNING: event cpu maps do not match, disabling group:
->     anon group { power/energy-cores/, cycles }
->     anon group { instructions, power/energy-cores/ }
->
-> Ian asked also for cpu maps details, it's displayed in verbose mode:
->
->   $ sudo perf stat -e '{cycles,power/energy-cores/}' -v
->   WARNING: group events cpu maps do not match, disabling group:
->     anon group { power/energy-cores/, cycles }
->        power/energy-cores/: 0
->        cycles: 0-7
->     anon group { instructions, power/energy-cores/ }
->        instructions: 0-7
->        power/energy-cores/: 0
+Linus,
 
-This is great! A nit, would 'grouped events cpus do not match' read
-better? I think the cpu map is more of an internal naming convention.
+Please pull the latest x86/boot git tree from:
 
-Thanks,
-Ian
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-2020-06-01
 
-> Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
-> Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/builtin-stat.c | 58 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->
-> v2 changes:
->   - display mixed events maps in verbose mode
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index b2b79aa161dd..dda60b9dbc63 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -190,6 +190,62 @@ static struct perf_stat_config stat_config = {
->         .big_num                = true,
->  };
->
-> +static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-> +{
-> +       if (!a->core.cpus && !b->core.cpus)
-> +               return true;
-> +
-> +       if (!a->core.cpus || !b->core.cpus)
-> +               return false;
-> +
-> +       if (a->core.cpus->nr != b->core.cpus->nr)
-> +               return false;
-> +
-> +       for (int i = 0; i < a->core.cpus->nr; i++) {
-> +               if (a->core.cpus->map[i] != b->core.cpus->map[i])
-> +                       return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +static void evlist__check_cpu_maps(struct evlist *evlist)
-> +{
-> +       struct evsel *evsel, *pos, *leader;
-> +       char buf[1024];
-> +
-> +       evlist__for_each_entry(evlist, evsel) {
-> +               leader = evsel->leader;
-> +
-> +               /* Check that leader matches cpus with each member. */
-> +               if (leader == evsel)
-> +                       continue;
-> +               if (cpus_map_matched(leader, evsel))
-> +                       continue;
-> +
-> +               /*
-> +                * If there's mismatch display dismantle the
-> +                * group and warn user.
-> +                */
-> +               WARN_ONCE(1, "WARNING: group events cpu maps do not match, disabling group:\n");
-> +               evsel__group_desc(leader, buf, sizeof(buf));
-> +               pr_warning("  %s\n", buf);
-> +
-> +               if (verbose) {
-> +                       cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
-> +                       pr_warning("     %s: %s\n", leader->name, buf);
-> +                       cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
-> +                       pr_warning("     %s: %s\n", evsel->name, buf);
-> +               }
-> +
-> +               for_each_group_evsel(pos, leader) {
-> +                       pos->leader = pos;
-> +                       pos->core.nr_members = 0;
-> +               }
-> +               evsel->leader->core.nr_members = 0;
-> +       }
-> +}
-> +
->  static inline void diff_timespec(struct timespec *r, struct timespec *a,
->                                  struct timespec *b)
->  {
-> @@ -2113,6 +2169,8 @@ int cmd_stat(int argc, const char **argv)
->                 goto out;
->         }
->
-> +       evlist__check_cpu_maps(evsel_list);
-> +
->         /*
->          * Initialize thread_map with comm names,
->          * so we could print it out on output.
-> --
-> 2.25.4
->
+   # HEAD: 5214028dd89e49ba27007c3ee475279e584261f0 x86/boot: Correct relocation destination on old linkers
+
+Misc updates:
+
+ - Add the initrdmem= boot option to specify an initrd embedded in RAM (flash most likely)
+ - Sanitize the CS value earlier during boot, which also fixes SEV-ES.
+ - Various fixes and smaller cleanups.
+
+  out-of-topic modifications in x86/boot:
+  -----------------------------------------
+  include/linux/tboot.h              # 767dea211cd0: x86/tboot: Mark tboot static
+  init/do_mounts_initrd.c            # 694cfd87b0c8: x86/setup: Add an initrdmem=
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Arvind Sankar (1):
+      x86/boot: Correct relocation destination on old linkers
+
+Christoph Hellwig (1):
+      x86/tboot: Mark tboot static
+
+Joerg Roedel (1):
+      x86/boot/compressed/64: Switch to __KERNEL_CS after GDT is loaded
+
+Ronald G. Minnich (1):
+      x86/setup: Add an initrdmem= option to specify initrd physical address
+
+Vamshi K Sthambamkadi (2):
+      x86/boot: Add kstrtoul() from lib/
+      x86/boot: Fix -Wint-to-pointer-cast build warning
+
+
+ Documentation/admin-guide/kernel-parameters.txt |  7 ++++
+ arch/x86/boot/compressed/acpi.c                 |  7 ++--
+ arch/x86/boot/compressed/head_32.S              |  5 +--
+ arch/x86/boot/compressed/head_64.S              |  9 ++++++
+ arch/x86/boot/string.c                          | 43 ++++++++++++++++++++++++-
+ arch/x86/boot/string.h                          |  1 +
+ arch/x86/kernel/setup.c                         |  6 ++++
+ arch/x86/kernel/tboot.c                         |  8 +++--
+ include/linux/tboot.h                           |  8 +----
+ init/do_mounts_initrd.c                         | 13 +++++++-
+ 10 files changed, 90 insertions(+), 17 deletions(-)
+
