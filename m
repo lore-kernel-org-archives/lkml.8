@@ -2,85 +2,115 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60588C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86786206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3117F206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:32:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ImCDKxj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgFAD1J (ORCPT
+        id S1727013AbgFADcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 23:27:09 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:8380 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726860AbgFAD1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 23:27:09 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 1 Jun 2020 11:26:51
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.72.4]
-Date:   Mon, 1 Jun 2020 11:26:51 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Ben Skeggs" <skeggsb@gmail.com>
-Cc:     kjlu@umn.edu, "David Airlie" <airlied@linux.ie>,
-        "ML nouveau" <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "ML dri-devel" <dri-devel@lists.freedesktop.org>,
-        "Ben Skeggs" <bskeggs@redhat.com>, Markus.Elfring@web.de
-Subject: Re: Re: [PATCH] drm/nouveau/clk/gm20b: Fix memory leak in
- gm20b_clk_new
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <CACAvsv73wZK_pKk4TDHaTeBUqxYHvK0KhLQBgPC8Be_VviY2jg@mail.gmail.com>
-References: <20200529080042.6082-1-dinghao.liu@zju.edu.cn>
- <CACAvsv73wZK_pKk4TDHaTeBUqxYHvK0KhLQBgPC8Be_VviY2jg@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Sun, 31 May 2020 23:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgFADcQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 23:32:16 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E107C08C5C9
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:32:11 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g12so17160pll.10
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GiN6URCGOi3zRMrgGTBxhLW3I/ES5CEjKSS6Efx8Rn8=;
+        b=ImCDKxj6g9w1zOY09EE2wYtZmGjUvkxmO/6oBVTbP0l962iXO11Pw3cB+X7Bl1LsOA
+         9sow2JwLIVNGKEUSlIkOw4FwTSDp/NtcUACWvQ1jFMzHw2CrwjAHv70+qe9q8iMP3AFh
+         RXaG0gWPDgxJHcI4T3YbvbJFVtQHbQAOWIGmfpps4TfOjDfc4VOIG0fMJDUMvNnRgihQ
+         KQ7tsmVmb49D22qAruIdUn6UsUYZ5mis8hsWrYU4Z399XCzwcEPufqU1fuL+pw3MqRMg
+         q3kiIlvoSzXONKofT1mkJu2md1IdV08xjSdJacVoORVljabL1hLinP8qKuuC86NR5zev
+         doww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GiN6URCGOi3zRMrgGTBxhLW3I/ES5CEjKSS6Efx8Rn8=;
+        b=cgh8HS8jJemnjPlV1oumJy/ExIQW5/a3m9rjh3wcnZABmvXKYas0pZLCLRqhSH00ba
+         M6TdgmTUNzeM6vS63KKjlAF7yCmCLKI9qVDboMPRYdsUyB7mRpU6mslyp/a2DKUBgb6u
+         Sxr7vbeBeVDkjdd7bIBuVNwk+nZBC4bpXB0Pzvo6Xft226+crB4A5NpyN8mlfsKNWJ5h
+         z7AQS3FQOQ6EwhX7JIMUwhG5jfwseCkfFpwZLT8EtP2/NtPkw2BzCUgbd+dV+OgeXZWd
+         iLj4oJbUJu4Jx1EDuhy44liI83up1UY2zDvDjkjPNDsKHzL9eMqq78J6KafdK6L1gzH6
+         qdyA==
+X-Gm-Message-State: AOAM5311OlOKKSG3ZHAttAbfJVgUq0W52fpMG+x41HLInTZUnpEOiJ/G
+        omZ3vBfbmq4w1vWX77SVUwUR7Q==
+X-Google-Smtp-Source: ABdhPJym07gd+NSj3jXYzvEjjDY2repB3sRc/S4lw1IVMp0MmA2Dg8j3uqQWKiFQIPm8IfYjGh4qhg==
+X-Received: by 2002:a17:902:7618:: with SMTP id k24mr18753586pll.167.1590982330607;
+        Sun, 31 May 2020 20:32:10 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id a5sm12895162pfk.210.2020.05.31.20.32.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 May 2020 20:32:09 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 09:02:07 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] opp: avoid uninitialized-variable use
+Message-ID: <20200601033207.ekro7fckvguguuxf@vireshk-i7>
+References: <20200529201731.545859-1-arnd@arndb.de>
+ <20200530092052.ksuncmgx3cahokzo@vireshk-i7>
+ <CAK8P3a2dADAG9-NnsR8opP++xq6T_BB3C6i-wvkzrKvXNOghiQ@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <6a65a5b1.dd4b7.1726deaea0a.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgAXblB7ddRewnRrAA--.6592W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgYSBlZdtOZhVAABs9
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGCS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r48MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
-        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
-        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
-        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
-        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
-        x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2dADAG9-NnsR8opP++xq6T_BB3C6i-wvkzrKvXNOghiQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CkhpIEJlbiwKCj4gPiBXaGVuIGdrMjBhX2Nsa19jdG9yKCkgcmV0dXJucyBhbiBlcnJvciBjb2Rl
-LCBwb2ludGVyICJjbGsiCj4gPiBzaG91bGQgYmUgcmVsZWFzZWQuIEl0J3MgdGhlIHNhbWUgd2hl
-biBnbTIwYl9jbGtfbmV3KCkKPiA+IHJldHVybnMgZnJvbSBlbHNld2hlcmUgZm9sbG93aW5nIHRo
-aXMgY2FsbC4KPiBUaGlzIHNob3VsZG4ndCBiZSBuZWNlc3NhcnkuICBJZiBhIHN1YmRldiBjb25z
-dHJ1Y3RvciBmYWlscywgYW5kCj4gcmV0dXJucyBhIHBvaW50ZXIsIHRoZSBjb3JlIHdpbGwgY2Fs
-bCB0aGUgZGVzdHJ1Y3RvciB0byBjbGVhbiB0aGluZ3MKPiB1cC4KPiAKCkknbSBub3QgZmFtaWxp
-YXIgd2l0aCB0aGUgYmVoYXZpb3Igb2YgdGhlIGNhbGxlciBvZiBnbTIwYl9jbGtfbmV3KCkuIApJ
-ZiB0aGUgc3ViZGV2IGNvbnN0cnVjdG9yIGZhaWxzLCB0aGUgY29yZSB3aWxsIGNoZWNrIHRoZSBw
-b2ludGVyCihoZXJlIGlzICJwY2xrIiksIHRoZW4gaXQncyBvayBhbmQgdGhlcmUgaXMgbm8gYnVn
-IChEbyB5b3UgbWVhbiAKdGhpcz8pLiBJZiB0aGUgY29yZSBleGVjdXRlcyBlcnJvciBoYW5kbGlu
-ZyBjb2RlIG9ubHkgYWNjb3JkaW5nIHRvIAp0aGUgZXJyb3IgY29kZSwgdGhlcmUgbWF5IGJlIGEg
-bWVtb3J5IGxlYWsgYnVnICh0aGUgY2FsbGVyIGNhbm5vdCAKa25vdyBpZiAtRU5PTUVNIGNvbWVz
-IGZyb20gdGhlIGZhaWx1cmUgb2Yga3phbGxvYyBvciBnazIwYV9jbGtfY3RvcikuIApJZiB0aGUg
-Y29yZSBhbHdheXMgY2FsbHMgdGhlIGRlc3RydWN0b3IgYXMgbG9uZyBhcyB0aGUgY29uc3RydWN0
-b3IgCmZhaWxzIChldmVuIGlmIHRoZSBremFsbG9jIGZhaWxzKSwgd2UgbWF5IGhhdmUgYSBkb3Vi
-bGUgZnJlZSBidWcuIAoKV291bGQgeW91IGxpa2UgdG8gZ2l2ZSBhIG1vcmUgZGV0YWlsZWQgZXhw
-bGFuYXRpb24gYWJvdXQgdGhlIGJlaGF2aW9yCm9mIHRoZSBjb3JlPyAKClJlZ2FyZHMsCkRpbmdo
-YW8=
+On 30-05-20, 14:40, Arnd Bergmann wrote:
+> On Sat, May 30, 2020 at 11:21 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > On 29-05-20, 22:17, Arnd Bergmann wrote:
+> > > An uninitialized pointer is passed into another function but
+> > > --- a/drivers/opp/core.c
+> > > +++ b/drivers/opp/core.c
+> > > @@ -872,7 +872,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+> > >                       goto put_opp_table;
+> > >               }
+> > >
+> > > -             ret = _set_opp_bw(opp_table, opp, dev, true);
+> > > +             ret = _set_opp_bw(opp_table, NULL, dev, true);
+> > >               if (ret)
+> > >                       return ret;
+> > >
+> >
+> > Not sure why people are still seeing this, I pushed a fix for this 2
+> > days back.
+> 
+> I was on next-20200528, which was the first version that was broken for me,
+> and I sent all my fixes after I had tested them. Since a lot of things
+> got broken
+> at once that day, it took me until the end of 20200529 to get it all tested
+> properly and then send them out.
+
+Okay, I asked as around 3-4 people have already sent out this patch to
+me :)
+
+-- 
+viresh
