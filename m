@@ -2,91 +2,132 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5E25206F1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34E62073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0WYEz0m"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fek/fKkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgFAWCV (ORCPT
+        id S1728910AbgFAWDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 18:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47290 "EHLO
+        Mon, 1 Jun 2020 18:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgFAWCU (ORCPT
+        with ESMTP id S1728777AbgFAWDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 18:02:20 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E66BC061A0E;
-        Mon,  1 Jun 2020 15:02:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z6so10048717ljm.13;
-        Mon, 01 Jun 2020 15:02:19 -0700 (PDT)
+        Mon, 1 Jun 2020 18:03:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA64C08C5C9
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 15:03:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y17so478081plb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 15:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=28IDDw8HM/QpEtquXlco0ovqKhcVd+N9TrIHHVHfSZc=;
-        b=N0WYEz0mVwPtvxMgILf0uU9UOt7cknWnAKxxl/JVG+o2pJHHQHI2VeaTLbv8wirlf4
-         cmeUvmOlS+iLpu2Ay4fUt9eSHuy5MfWnb+v+hFGFxdg8YnjUNu5IUJGFLLtoQqBKvG6q
-         DoN8o3zlVaNhyCFztWK19QJ/DW8CUgiuULvYW6erl97TlDRNRpy0+Lx+5zVSdTPWML9p
-         +ek8+QlRInSt9ymZjbV5QGj2d6PUjP3L8iNGhR7BiRx4TjlVloUCYAZqgCGlOMTvsBzW
-         XWiSgD2hdIymKBxNFfYlacjphRLNI62lyHy3D5fyCZKvoJUh3PhMGaw6JnS01254hGcZ
-         xX5Q==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XFnIQB7ncVF63T1pY2NMmD5MUjtRKH/Cyt/vduuOCr4=;
+        b=fek/fKkwjOdhsv+J8geTqfhekmIfVg31GBFgDaJGfViiSS3F/TsrEDBUE9wVv/9R8E
+         SLECz+XjlLL63WPLyFxiSgONAHsFBoColGWxAzWM9st+Pt4+fuDZvusd10ecebte6xxm
+         cZP+Te8MKz3ySAe3gVd2jr865slvk2yVvi9Hg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=28IDDw8HM/QpEtquXlco0ovqKhcVd+N9TrIHHVHfSZc=;
-        b=rYxPZJjXUN9B7OIFnXay3zTVTKYz7JEtPiiaCE5Rj1EC1/yRH+s62DhMkxQnVMBMYr
-         56TEKzRfOjTts5f0dprGCcjU5q9ECpECSo5K4p1dgrp1ajQp+luNKQujKg+Ouvm/sYsL
-         wB28yDYCAfkapALQK+mBWeB+Zw5n5zy2MrcBl+bB28tlmXyWmqr6FctInvswyKU3jM65
-         1a5U6JHdQq4JLeflN52feRGAxCBbYnNmPd/M2AZ20jZizixbFwBuyEIivBqiTuNjnPpK
-         awemPm5CAy4WjjabM2mEPHjD3F1DWX/o5Mo+63te4PHxIriCq+OcpHWA+/3l+E1q9FY+
-         FORg==
-X-Gm-Message-State: AOAM533mi1rIoqug2uvfkojkhGGqR7BOdRQOVwfuYit0GysFCrubU0Fh
-        Jxi8yzwjedGougyqDM+ePLkXAWFrbqr04tUBIRU=
-X-Google-Smtp-Source: ABdhPJygItLNvavDHJ6vXhjXK/4zzTwyPSrq04ENAeMiA2fy2e9S2Scw0THZlGwqwV10gSNGDNmuLLDSh+6pEcdHZDA=
-X-Received: by 2002:a2e:150e:: with SMTP id s14mr11038853ljd.290.1591048938509;
- Mon, 01 Jun 2020 15:02:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XFnIQB7ncVF63T1pY2NMmD5MUjtRKH/Cyt/vduuOCr4=;
+        b=oWhQLEGl2Qjkw7KGqjRIVtlQvEGBTdC0STM7HJlISuDnEOOtLItWpM7bJvWTjMKk2h
+         ZQJyEIw042PmFOtM3rt/4lOOuvn9NIyzHIfN5s7327Pca/2Tz1LBtBkLjXnYO28514x4
+         ECVyqVDfv+E+SpIRH6FjpUfaPpKn8nFYvTiykfzPjOPo1S/qhZrP5TF4zAEHjsq3dq9v
+         1lMrrpHiWdC8MlNed7xhdM9/SRiRFs8wSfI3a0k0y4L8QHyHGiwvG6ZVrw7Z7QTQsAhA
+         cfc+ujCa1LotHmY2kLcwkDevd7P4TXunZN7mKVIOu/Qb6lRlvm5mVZ//ym8i7s8fuDVd
+         /8EA==
+X-Gm-Message-State: AOAM530mBWK/8C7otDKVKQOzMh9S9uJwHWpaSu4efWK25QOdC0nYM253
+        xs2zZROds1PZYgTG3oIJHEYpcw==
+X-Google-Smtp-Source: ABdhPJweeLR8G4rZkKaY74PZV+ncoWYY84wN8268AueoBMTYcuSWzeDoqapxC9otqNOiOJ4igNbeRg==
+X-Received: by 2002:a17:902:7041:: with SMTP id h1mr22988066plt.169.1591049026875;
+        Mon, 01 Jun 2020 15:03:46 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id 67sm346948pfg.84.2020.06.01.15.03.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 15:03:46 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     amasule@codeaurora.org, stanimir.varbanov@linaro.org
+Cc:     swboyd@chromium.org, jkardatzke@google.com, mka@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: [RFC PATCH] media: venus: Fix NULL pointer dereference in core selection
+Date:   Mon,  1 Jun 2020 15:03:22 -0700
+Message-Id: <20200601150314.RFC.1.I1e40623bbe8fa43ff1415fc273cba66503b9b048@changeid>
+X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
 MIME-Version: 1.0
-References: <cover.1590871065.git.fejes@inf.elte.hu>
-In-Reply-To: <cover.1590871065.git.fejes@inf.elte.hu>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 1 Jun 2020 15:02:07 -0700
-Message-ID: <CAADnVQJvPAibc3a98hfeFxu3OKC98+FQdCKmovgVvgeExBq2VQ@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next 0/3] Extending bpf_setsockopt with
- SO_BINDTODEVICE sockopt
-To:     Ferenc Fejes <fejes@inf.elte.hu>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        "David S . Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 2:11 PM Ferenc Fejes <fejes@inf.elte.hu> wrote:
->
-> This option makes it possible to programatically bind sockets
-> to netdevices. With the help of this option sockets
-> of VRF unaware applications could be distributed between
-> multiple VRFs with an eBPF program. This lets the applications
-> benefit from multiple possible routes.
->
-> v2:
-> - splitting up the patch to three parts
-> - lock_sk parameter for optional locking in sock_bindtoindex - Stanislav Fomichev
-> - testing the SO_BINDTODEVICE option - Andrii Nakryiko
+The newly-introduced function min_loaded_core() iterates over all of
+the venus instances an tries to figure out how much load each instance
+is putting on each core.  Not all instances, however, might be fully
+initialized.  Specifically the "codec_freq_data" is initialized as
+part of vdec_queue_setup(), but an instance may already be in the list
+of all instances before that time.
 
-Applied. Thanks
+Let's band-aid this by checking to see if codec_freq_data is NULL
+before dereferencing.
+
+NOTE: without this fix I was running into a crash.  Specifically there
+were two venus instances.  One was doing start_streaming.  The other
+was midway through queue_setup but hadn't yet gotten to initting
+"codec_freq_data".
+
+Fixes: eff82f79c562 ("media: venus: introduce core selection")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+I'm not massively happy about this commit but it's the best I could
+come up with without being much more of an expert in the venus codec.
+If someone has a better patch then please just consider this one to be
+a bug report and feel free to submit a better fix!  :-)
+
+In general I wonder a little bit about whether it's safe to be peeking
+at all the instances without grabbing the "inst->lock" on each one.  I
+guess it is since we do it both here and in load_scale_v4() but I
+don't know why.
+
+One thought I had was that we could fully avoid accessing the other
+instances, at least in min_loaded_core(), by just keeping track of
+"core1_load" and "core2_load" in "struct venus_core".  Whenever we add
+a new instance we could add to the relevant variables and whenever we
+release an instance we could remove.  Such a change seems cleaner but
+would require someone to test to make sure we didn't miss any case
+(AKA we always properly added/removed our load from the globals).
+
+ drivers/media/platform/qcom/venus/pm_helpers.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+index abf93158857b..a1d998f62cf2 100644
+--- a/drivers/media/platform/qcom/venus/pm_helpers.c
++++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+@@ -496,6 +496,8 @@ min_loaded_core(struct venus_inst *inst, u32 *min_coreid, u32 *min_load)
+ 	list_for_each_entry(inst_pos, &core->instances, list) {
+ 		if (inst_pos == inst)
+ 			continue;
++		if (!inst_pos->clk_data.codec_freq_data)
++			continue;
+ 		vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
+ 		coreid = inst_pos->clk_data.core_id;
+ 
+-- 
+2.27.0.rc2.251.g90737beb825-goog
+
