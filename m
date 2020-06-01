@@ -2,172 +2,206 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC257C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7451206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE04206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mv9J7U/d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kEsmvL3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgFAKN1 (ORCPT
+        id S1726113AbgFAKNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:13:27 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37140 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFAKN0 (ORCPT
+        Mon, 1 Jun 2020 06:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgFAKN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:13:26 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200601101324euoutp0168d59c5d5ecaf47d720c22ab5c9a59d4~UY_U54yGL3128631286euoutp015
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200601101324euoutp0168d59c5d5ecaf47d720c22ab5c9a59d4~UY_U54yGL3128631286euoutp015
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591006404;
-        bh=OHPpvFiZE34wyuaajTiViUqmeZXVmXg2EsQc6ds9wOQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=mv9J7U/d73ZUz19tReRboQNpB/izF7iF9yw4kTGhXwdzUCvgYQtNAVGmLkG/Lj8/d
-         EL25ZRDfA4uwGOESzba2VOxCvIBUHbLmdy2cKAIpPJ+PLIyMEhozreU59VWUSM3w8B
-         G+p/9ZdH2xPPdjkocXWeoijkTQooIENhGPfoQZgQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200601101324eucas1p2ae7ab4c7b9378ec6e04f1f7a3359a371~UY_U1BqEt2675526755eucas1p27;
-        Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 02.80.60698.4C4D4DE5; Mon,  1
-        Jun 2020 11:13:24 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200601101324eucas1p16837835ff355d5b42c8099c29270722d~UY_UhvFxF2001920019eucas1p1J;
-        Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200601101324eusmtrp263c67fd0180586027f1ce6e6b16fc016~UY_UhLpRQ2432024320eusmtrp2K;
-        Mon,  1 Jun 2020 10:13:24 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-e2-5ed4d4c44590
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 31.51.07950.4C4D4DE5; Mon,  1
-        Jun 2020 11:13:24 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200601101323eusmtip182101ceb7f0eb212baafb1a6e4a21fe5~UY_UN6HOb1231112311eusmtip1d;
-        Mon,  1 Jun 2020 10:13:23 +0000 (GMT)
-Subject: Re: [PATCH] ata: omit superfluous error message
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <7c2974bd-5aa5-b423-ebb4-2fdf8a41f6ca@samsung.com>
-Date:   Mon, 1 Jun 2020 12:13:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Mon, 1 Jun 2020 06:13:29 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6BE9C061A0E;
+        Mon,  1 Jun 2020 03:13:28 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a25so1483791ejg.5;
+        Mon, 01 Jun 2020 03:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yqNUR4MSIicJxwTqODWkb4nWYD+Gqo3yaTC/YrSgY/0=;
+        b=kEsmvL3l8qAXlCshnoFKub+/k14frs+Or7UVObjs02NciMlf4ttW8sCYpDnBb5/yvS
+         F5Ds+SSQOQatY0eT/p/1DjG0iGizMlwcsGoUQ7OPcNq5lbReTw92VCcWCAjVOaE6y21X
+         vWovueUYHKyS7pLps57cpaOJm0bn1QedBHAahtv6gr7SRRPgiUPrje06HXcDjdhmEpN3
+         E6HMxSoBptXzQvquBH7rXD4uljs0M+M9S8ywi2GuMxXc1jHkYk7yAqRBQwjFRMssuqJa
+         19+G0pgWtB9h15VHTJylKzLnRAE48u9+IGrbNUJJ4G/yBm7B7ZU5f1SFKS3ugI97XdhW
+         twGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yqNUR4MSIicJxwTqODWkb4nWYD+Gqo3yaTC/YrSgY/0=;
+        b=gO1p+YjJ5mOxL4jYQnT+tSgR7bzwpQs0z3gsRHf91GlDUDSRegucYe9O99u9U/KnCx
+         yi03yTaq3aul0YAw3Js/92B8Q1dZA+n2mH1ZJBSyL+lNKNTG8tZ9Q4vMzqpcUGK2ifsb
+         strHolG2Lml1bvVY5u1ThzACdqmsz4hbkTBAYE+zaaq9QD3ZdsyB2Br/xyU8UtDgZfOu
+         pEqVM1g62AsvFM7GrJUwDHOqAfl8fH1D+Qx5HZENZkAZza22686YbH/NAhGyixr0sP1S
+         qWkfGO+xGYVIWIZ6aJaGuYFs4Xy/B5zIfmpeSQoHlv195iIo0z1tHg4pk4Sbb0+ATCPh
+         5KiQ==
+X-Gm-Message-State: AOAM531dE3TZOOZwSzA+A6BneNpU8wKG0kKhvkqQf2ubZIknZC7mxDZe
+        eeNBDahQEkD7Y1c5VTNczKolvAheJF9P1Qe3vmU=
+X-Google-Smtp-Source: ABdhPJyr/p3kIEUH9CTjnMMnEFMFj6ZcOeiUQGXAUKlOKgg3JtX4ZI7CWVx4TkOCbfJV1wzv9ChAQyU1KmE4tDXGMPY=
+X-Received: by 2002:a17:906:2e50:: with SMTP id r16mr18249609eji.305.1591006407219;
+ Mon, 01 Jun 2020 03:13:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420135342.11984-1-tangbin@cmss.chinamobile.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7djP87pHrlyJM/jWI26x+m4/m8WxHY+Y
-        LC7vmsNm8fF/M7MDi8f56b1sHpfPlnp83iQXwBzFZZOSmpNZllqkb5fAlfG2Zw1TwQW+iqXX
-        ZjI2ML7m7mLk5JAQMJG483EBexcjF4eQwApGiXezzrJCOF8YJfa92sUM4XxmlFi3bAMLTMvV
-        5nNQieWMEocfTmKCcN4ySjxYPpUNpEpYwELiwcPZzCC2iIC2xOZJEN3MAj4SJ+Z3M4LYbAJW
-        EhPbV4HZvAJ2EtcvbgWrYRFQkfi9rZsJxBYViJD49OAwK0SNoMTJmU/AajgFnCROTN3FDjFT
-        XOLWk/lMELa8xPa3c8CukxDoZpdo2f2AEeJsF4kbnZOgXhCWeHV8CzuELSPxf+d8JoiGdYwS
-        fzteQHVvZ5RYPvkfG0SVtcSdc7+AbA6gFZoS63fpQ4QdJX7PWMoKEpYQ4JO48VYQ4gg+iUnb
-        pjNDhHklOtqEIKrVJDYs28AGs7Zr50rmCYxKs5C8NgvJO7OQvDMLYe8CRpZVjOKppcW56anF
-        xnmp5XrFibnFpXnpesn5uZsYgSnl9L/jX3cw7vuTdIhRgINRiYdX49LlOCHWxLLiytxDjBIc
-        zEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnV
-        wGgjEJ6xOy/06qsLxzL7z7WsEdu88/xxGaZkw/6b/S/cl06aaqC1e8aftBccO5m+JJkFaWhL
-        zUiYHf1o8tE7ccL26z6q/zn64GnmhMAJm9qZShgEz7JaLervfSb53uUV29UdksfE93/vVJar
-        9F94t3Dr/rjvHuvmOi1k37p8/kT+1/K/s7kWRxUrsRRnJBpqMRcVJwIAPqV8sCUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xu7pHrlyJM3i1ksVi9d1+NotjOx4x
-        WVzeNYfN4uP/ZmYHFo/z03vZPC6fLfX4vEkugDlKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/I
-        xFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+Ntzxqmggt8FUuvzWRsYHzN3cXIySEhYCJxtfkc
-        cxcjF4eQwFJGiUUzfwA5HEAJGYnj68sgaoQl/lzrYoOoec0o8WLfFVaQhLCAhcSDh7OZQWwR
-        AW2JzZM2sIDYzAI+EifmdzNCNExllFh36hNYA5uAlcTE9lWMIDavgJ3E9YtbwRpYBFQkfm/r
-        ZgKxRQUiJA7vmAVVIyhxcuYTsBpOASeJE1N3sUMsUJf4M+8SM4QtLnHryXwmCFteYvvbOcwT
-        GIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAiMoG3Hfm7Zwdj1
-        LvgQowAHoxIP74Xzl+OEWBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIjRFOi5
-        icxSosn5wOjOK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAyH55
-        WfWrOS+tni1uCl8QscjiYerrzslFyyJDJml+nfkn7dS3m8FNRxN/imqc7dCJLrLuUgycsPDa
-        BJv6d2JbHXWDX2w57vIm88PWqRan175SenhZj9v+MLd44tOIXR2fqwUCtUJaTFpfvwl72BWU
-        8yJ2WdKBqT9Vvxie0OreaBtleOiO6CvGuUosxRmJhlrMRcWJAGmP0wG2AgAA
-X-CMS-MailID: 20200601101324eucas1p16837835ff355d5b42c8099c29270722d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200420135215eucas1p2f807c43a232564804dc864db55bd09a8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200420135215eucas1p2f807c43a232564804dc864db55bd09a8
-References: <CGME20200420135215eucas1p2f807c43a232564804dc864db55bd09a8@eucas1p2.samsung.com>
-        <20200420135342.11984-1-tangbin@cmss.chinamobile.com>
+References: <20200601095826.1757621-1-olteanv@gmail.com> <20200601100441.GA1845725@kroah.com>
+In-Reply-To: <20200601100441.GA1845725@kroah.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 1 Jun 2020 13:13:16 +0300
+Message-ID: <CA+h21hp2UmMqE_=Ky5J=B=X-ZdU78Fp52zb=vWEPGw9CbcjjVw@mail.gmail.com>
+Subject: Re: [PATCH v3] devres: keep both device name and resource name in
+ pretty name
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        sergei.shtylyov@cogentembedded.com, bgolaszewski@baylibre.com,
+        mika.westerberg@linux.intel.com, efremov@linux.com,
+        ztuowen@gmail.com, lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
-Hi,
+On Mon, 1 Jun 2020 at 13:04, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jun 01, 2020 at 12:58:26PM +0300, Vladimir Oltean wrote:
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > Sometimes debugging a device is easiest using devmem on its register
+> > map, and that can be seen with /proc/iomem. But some device drivers have
+> > many memory regions. Take for example a networking switch. Its memory
+> > map used to look like this in /proc/iomem:
+> >
+> > 1fc000000-1fc3fffff : pcie@1f0000000
+> >   1fc000000-1fc3fffff : 0000:00:00.5
+> >     1fc010000-1fc01ffff : sys
+> >     1fc030000-1fc03ffff : rew
+> >     1fc060000-1fc0603ff : s2
+> >     1fc070000-1fc0701ff : devcpu_gcb
+> >     1fc080000-1fc0800ff : qs
+> >     1fc090000-1fc0900cb : ptp
+> >     1fc100000-1fc10ffff : port0
+> >     1fc110000-1fc11ffff : port1
+> >     1fc120000-1fc12ffff : port2
+> >     1fc130000-1fc13ffff : port3
+> >     1fc140000-1fc14ffff : port4
+> >     1fc150000-1fc15ffff : port5
+> >     1fc200000-1fc21ffff : qsys
+> >     1fc280000-1fc28ffff : ana
+> >
+> > But after the patch in Fixes: was applied, the information is now
+> > presented in a much more opaque way:
+> >
+> > 1fc000000-1fc3fffff : pcie@1f0000000
+> >   1fc000000-1fc3fffff : 0000:00:00.5
+> >     1fc010000-1fc01ffff : 0000:00:00.5
+> >     1fc030000-1fc03ffff : 0000:00:00.5
+> >     1fc060000-1fc0603ff : 0000:00:00.5
+> >     1fc070000-1fc0701ff : 0000:00:00.5
+> >     1fc080000-1fc0800ff : 0000:00:00.5
+> >     1fc090000-1fc0900cb : 0000:00:00.5
+> >     1fc100000-1fc10ffff : 0000:00:00.5
+> >     1fc110000-1fc11ffff : 0000:00:00.5
+> >     1fc120000-1fc12ffff : 0000:00:00.5
+> >     1fc130000-1fc13ffff : 0000:00:00.5
+> >     1fc140000-1fc14ffff : 0000:00:00.5
+> >     1fc150000-1fc15ffff : 0000:00:00.5
+> >     1fc200000-1fc21ffff : 0000:00:00.5
+> >     1fc280000-1fc28ffff : 0000:00:00.5
+> >
+> > That patch made a fair comment that /proc/iomem might be confusing when
+> > it shows resources without an associated device, but we can do better
+> > than just hide the resource name altogether. Namely, we can print the
+> > device name _and_ the resource name. Like this:
+> >
+> > 1fc000000-1fc3fffff : pcie@1f0000000
+> >   1fc000000-1fc3fffff : 0000:00:00.5
+> >     1fc010000-1fc01ffff : 0000:00:00.5 sys
+> >     1fc030000-1fc03ffff : 0000:00:00.5 rew
+> >     1fc060000-1fc0603ff : 0000:00:00.5 s2
+> >     1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
+> >     1fc080000-1fc0800ff : 0000:00:00.5 qs
+> >     1fc090000-1fc0900cb : 0000:00:00.5 ptp
+> >     1fc100000-1fc10ffff : 0000:00:00.5 port0
+> >     1fc110000-1fc11ffff : 0000:00:00.5 port1
+> >     1fc120000-1fc12ffff : 0000:00:00.5 port2
+> >     1fc130000-1fc13ffff : 0000:00:00.5 port3
+> >     1fc140000-1fc14ffff : 0000:00:00.5 port4
+> >     1fc150000-1fc15ffff : 0000:00:00.5 port5
+> >     1fc200000-1fc21ffff : 0000:00:00.5 qsys
+> >     1fc280000-1fc28ffff : 0000:00:00.5 ana
+>
+> As this is changing the format of a user-visable file, what tools just
+> broke that are used to parsing the old format?
+>
 
-On 4/20/20 3:53 PM, Tang Bin wrote:
-> In the probe function, when get irq failed, the function
-> platform_get_irq() logs an error message, so remove
-> redundant message here.
+All the same tools that broke after 8d84b18f5678 was merged. I am not
+entirely sure why the 'stable ABI' argument was not brought up there
+as well.
 
-platform_get_irq() doesn't log an error message for -EPROBE_DEFER
-case so the conversion shouldn't be done automatically for device
-drivers which don't support deferred probing (i.e. pata_rb532_cf &
-sata_highbank).
+> And are you sure about this?  That's not how my system looks at all, I
+> have fun things like:
+>
+>    ac000000-da0fffff : PCI Bus 0000:03
+>     ac000000-da0fffff : PCI Bus 0000:04
+>       ac000000-c3efffff : PCI Bus 0000:06
+>       c3f00000-c3ffffff : PCI Bus 0000:39
+>         c3f00000-c3f0ffff : 0000:39:00.0
+>           c3f00000-c3f0ffff : xhci-hcd
+>       c4000000-d9ffffff : PCI Bus 0000:3a
+>         c4000000-d9ffffff : PCI Bus 0000:3b
+>           c4000000-c40fffff : PCI Bus 0000:3c
+>           c4000000-c400ffff : 0000:3c:00.0
+>           c4000000-c400ffff : xhci-hcd
+>           c4010000-c4010fff : 0000:3c:00.0
+>           c4011000-c4011fff : 0000:3c:00.0
+>           c4100000-c41fffff : PCI Bus 0000:3d
+>           c4100000-c410ffff : 0000:3d:00.0
+>           c4100000-c410ffff : xhci-hcd
+>           c4110000-c4110fff : 0000:3d:00.0
+>           c4111000-c4111fff : 0000:3d:00.0
+>           c4200000-c42fffff : PCI Bus 0000:3e
+>           c4200000-c4207fff : 0000:3e:00.0
+>           c4200000-c4207fff : xhci-hcd
+>           c4300000-c43fffff : PCI Bus 0000:3f
+>           c4300000-c437ffff : 0000:3f:00.0
+>           c4380000-c4383fff : 0000:3f:00.0
+>           c4400000-d9ffffff : PCI Bus 0000:40
+>       da000000-da0fffff : PCI Bus 0000:05
+>         da000000-da03ffff : 0000:05:00.0
+>         da040000-da040fff : 0000:05:00.0
+>
+>
+> which is a mix of the resources in some places, and just driver names in
+> others.
+>
+> But, that does imply that your change will not break anything as the
+> parsing of this mess is probably just "anything after the ':'
+> character...
+>
+> thanks,
+>
+> greg k-h
 
-Unless there is a proof that -PROBE_DEFER can't happen for these
-two drivers this patch shouldn't be applied.
+With this patch you'll just have more (potentially redundant)
+information. I'm not really sure how to satisfy everyone here. I was
+completely fine with pre-8d84b18f5678 behavior.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> ---
->  drivers/ata/pata_rb532_cf.c | 4 +---
->  drivers/ata/sata_highbank.c | 4 +---
->  2 files changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/ata/pata_rb532_cf.c b/drivers/ata/pata_rb532_cf.c
-> index 479c4b29b..dcde84f57 100644
-> --- a/drivers/ata/pata_rb532_cf.c
-> +++ b/drivers/ata/pata_rb532_cf.c
-> @@ -115,10 +115,8 @@ static int rb532_pata_driver_probe(struct platform_device *pdev)
->  	}
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq <= 0) {
-> -		dev_err(&pdev->dev, "no IRQ resource found\n");
-> +	if (irq <= 0)
->  		return -ENOENT;
-> -	}
->  
->  	gpiod = devm_gpiod_get(&pdev->dev, NULL, GPIOD_IN);
->  	if (IS_ERR(gpiod)) {
-> diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
-> index ad3893c62..efd1925a9 100644
-> --- a/drivers/ata/sata_highbank.c
-> +++ b/drivers/ata/sata_highbank.c
-> @@ -469,10 +469,8 @@ static int ahci_highbank_probe(struct platform_device *pdev)
->  	}
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq <= 0) {
-> -		dev_err(dev, "no irq\n");
-> +	if (irq <= 0)
->  		return -EINVAL;
-> -	}
->  
->  	hpriv = devm_kzalloc(dev, sizeof(*hpriv), GFP_KERNEL);
->  	if (!hpriv) {
-> 
-
+Thanks,
+-Vladimir
