@@ -2,57 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A56C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C1B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7816208A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591038037;
-	bh=8rLRduYBr4uj8gPkqhFl1/b3CdN/SHvNXzbfGXSTM0w=;
+	s=default; t=1591038040;
+	bh=G4vunYqrKK7lfoC64pimrWpN6qp8VXiDtAvvurEGmQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPwrlBEOYLcLsgVnnF6caKEuQi5fGR3uFc6foEPXokx9Eoyuh03LRg5fUkFziAuFz
-	 Q34ggM2aPx2OsiuHuKISZaWm6ibdnKtoMAl9O77kPuHccdnGukKZmJinnYUKgFoAaV
-	 +D+JVXsD+MqMlRHdZThBifsgFCzlKwFczd5pICKU=
+	b=mAAif5aN63VaiERdI+HsDuyxktlTJQTbdJLplIGebUmbx3Ve30lqtkqjtVsOf7nHq
+	 eUOFnnMVRYeXvmL7VwZaYLSDwxt+7bFDNjVNnyClP5N6PXLzbWBPw8oT/0hTa6uv+w
+	 3FsGOLjW0MDguuQL4ZzU2gptbt/OSRoNiH0QhxQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgFAR4Y (ORCPT
+        id S1729210AbgFATAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 15:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728504AbgFAR4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:09 -0400
+        id S1728604AbgFAR4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B1732076B;
-        Mon,  1 Jun 2020 17:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5482D2073B;
+        Mon,  1 Jun 2020 17:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034169;
-        bh=8rLRduYBr4uj8gPkqhFl1/b3CdN/SHvNXzbfGXSTM0w=;
+        s=default; t=1591034184;
+        bh=G4vunYqrKK7lfoC64pimrWpN6qp8VXiDtAvvurEGmQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zO6HngxsgBYXQiCt8PEIxmcMYAuH2i5+/t4I7eQgusaXXmNpbpe+KGFQOjZXIiZsg
-         MHA3qRI5GY3Sg7NlyUB/32e4g7jgRXJ5KVxGLqRSkhMODTjhXaV1xJTUSsQGUrHYeb
-         Zjy0vgyQovIxtimmzhik6Pd1lAwsH2YfxjSv5qQo=
+        b=Nhd3/EEl1FowvlUBskJujk8V6yFn2JXwgZq6274wXA0wT9VhfRJ44dNNJmifXFlEC
+         u+z8qklorYRuMSKZhxFpqBmwJYe20HQHofWVs26uuGwUS+4QcgGFqZ1AwZNJIngcUB
+         grJEiYG6TnW/nKZSxzr7OCYQRJVATbkJa39LdU0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, sam <sunhaoyl@outlook.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 22/48] fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
-Date:   Mon,  1 Jun 2020 19:53:32 +0200
-Message-Id: <20200601173959.002445559@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 29/48] xfrm: fix a NULL-ptr deref in xfrm_local_error
+Date:   Mon,  1 Jun 2020 19:53:39 +0200
+Message-Id: <20200601174000.973079180@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -65,44 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 1d605416fb7175e1adf094251466caa52093b413 ]
+commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
 
-KMSAN reported uninitialized data being written to disk when dumping
-core.  As a result, several kilobytes of kmalloc memory may be written
-to the core file and then read by a non-privileged user.
+This patch is to fix a crash:
 
-Reported-by: sam <sunhaoyl@outlook.com>
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200419100848.63472-1-glider@google.com
-Link: https://github.com/google/kmsan/issues/76
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
+  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
+  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
+  [ ] Call Trace:
+  [ ]  xfrm6_local_error+0x1eb/0x300
+  [ ]  xfrm_local_error+0x95/0x130
+  [ ]  __xfrm6_output+0x65f/0xb50
+  [ ]  xfrm6_output+0x106/0x46f
+  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
+  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
+  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
+  [ ]  dev_hard_start_xmit+0x165/0x820
+  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
+  [ ]  ip_finish_output2+0xd3e/0x1480
+  [ ]  ip_do_fragment+0x182d/0x2210
+  [ ]  ip_output+0x1d0/0x510
+  [ ]  ip_send_skb+0x37/0xa0
+  [ ]  raw_sendmsg+0x1b4c/0x2b80
+  [ ]  sock_sendmsg+0xc0/0x110
+
+This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
+skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
+xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
+to get ipv6 info from a ipv4 sk.
+
+This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
+error reporting more robust"), but brought back by Commit 844d48746e4b
+("xfrm: choose protocol family by skb protocol").
+
+So to fix it, we should call xfrm6_local_error() only when skb->protocol
+is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
+
+Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/binfmt_elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xfrm/xfrm_output.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 164e5fedd7b6..eddf5746cf51 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1726,7 +1726,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
- 		    (!regset->active || regset->active(t->task, regset) > 0)) {
- 			int ret;
- 			size_t size = regset->n * regset->size;
--			void *data = kmalloc(size, GFP_KERNEL);
-+			void *data = kzalloc(size, GFP_KERNEL);
- 			if (unlikely(!data))
- 				return 0;
- 			ret = regset->get(t->task, regset,
--- 
-2.25.1
-
+--- a/net/xfrm/xfrm_output.c
++++ b/net/xfrm/xfrm_output.c
+@@ -237,7 +237,8 @@ void xfrm_local_error(struct sk_buff *sk
+ 
+ 	if (skb->protocol == htons(ETH_P_IP))
+ 		proto = AF_INET;
+-	else if (skb->protocol == htons(ETH_P_IPV6))
++	else if (skb->protocol == htons(ETH_P_IPV6) &&
++		 skb->sk->sk_family == AF_INET6)
+ 		proto = AF_INET6;
+ 	else
+ 		return;
 
 
