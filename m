@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16925C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8F5B207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90D7207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036604;
-	bh=gS+ITyncI+2CVGcZehbzZOHbOogfLFM1ova1qvsnAU8=;
+	s=default; t=1591036608;
+	bh=wtn7EdCa698or5TkAj8+NLx0LcLzplalDi2MP5Q8pLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncJqeJPy+JnpsQ3ps5Ae1gF4ZdUxTWKIKWJ1pxzfyMvDxLzw3h7qyeYy0JLyaZFzk
-	 jNhK7T0Z90z7WTX1Ixlrgl5y2VHTXcO0MimuCILuBuwgKyhB5AvYuUScl2lKyiL0J3
-	 daNuC9SlYE2QBQyARzQ92aW8bqJIbzXpP6ahGNPE=
+	b=gvnNJhfN/PZdUhaXN9/acb0FbNNf2xLKob1dpd7a9dQ5xAnP8usktY6JzdeRu1rYD
+	 Fe3727fUwbBgQ0/C5uHCK940K7Hkc6qLAD0rVQ3XGOdDmFjcom+dLJW5Mn3J5UEGvy
+	 hrLDVAwSeO9L+DUN+yfLOTNZHGcu27SKeK+zn/Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgFASgj (ORCPT
+        id S1729286AbgFASgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36584 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731368AbgFASQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:16:02 -0400
+        id S1731656AbgFASQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:16:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B980B2068D;
-        Mon,  1 Jun 2020 18:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3757206E2;
+        Mon,  1 Jun 2020 18:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035361;
-        bh=gS+ITyncI+2CVGcZehbzZOHbOogfLFM1ova1qvsnAU8=;
+        s=default; t=1591035370;
+        bh=wtn7EdCa698or5TkAj8+NLx0LcLzplalDi2MP5Q8pLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r5PeBKWry2tXqPHrqp5M1vKo/+XMbyiO7R2WmVAX3EKB4Dw5wAjpax0vD9CvK1AXr
-         lCfqqds0NeChBUdaKhwKPCrBj55xIKl4BfpKQRcj4aEGYV0Y2sCJB3QtUUzWKzPRy1
-         pDapVP27Fbj4rRIvTQW8r1IrFgJ9PETyFc0RoKr0=
+        b=eYIfoDj6HZc+fXSOFkdSjJ1CubwgleIHOVlmdhfw+AyedVpnwC7gqguZQtkDwxjMp
+         jngf5VkkXsQHh/lWGtHPiexjuDJQ+82uBl0rPmdpWSFXbIqUNgt0D0y6amw/cPJ4xE
+         kUnIpgQOTmyEc1htkAXmEDehKRFtWA5QtF9eG+Kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 123/177] RDMA/core: Fix double destruction of uobject
-Date:   Mon,  1 Jun 2020 19:54:21 +0200
-Message-Id: <20200601174058.821431517@linuxfoundation.org>
+Subject: [PATCH 5.6 089/177] gpio: mvebu: Fix probing for chips without PWM
+Date:   Mon,  1 Jun 2020 19:53:47 +0200
+Message-Id: <20200601174056.278348627@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,146 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit c85f4abe66bea0b5db8d28d55da760c4fe0a0301 ]
+[ Upstream commit 19c26d90ff4ca08ef2a2fef23cc9c13cfbfd891e ]
 
-Fix use after free when user user space request uobject concurrently for
-the same object, within the RCU grace period.
+The PWM iomem resource is optional and its presence indicates whether
+the GPIO chip has a PWM or not, which is why mvebu_pwm_probe() returned
+successfully when the PWM resource was not present. With f51b18d92b66
+the driver switched to devm_platform_ioremap_resource_byname() and
+its error return is propagated to the caller, so now a missing PWM resource
+leads to a probe error in the driver.
 
-In that case, remove_handle_idr_uobject() is called twice and we will have
-an extra put on the uobject which cause use after free.  Fix it by leaving
-the uobject write locked after it was removed from the idr.
+To fix this explicitly test for the presence of the PWM resource and
+return successfully when it's not there. Do this check before the check
+for the clock is done (which GPIO chips without a PWM do not have). Also
+move the existing comment why the PWM resource is optional up to the
+actual check.
 
-Call to rdma_lookup_put_uobject with UVERBS_LOOKUP_DESTROY instead of
-UVERBS_LOOKUP_WRITE will do the work.
-
-  refcount_t: underflow; use-after-free.
-  WARNING: CPU: 0 PID: 1381 at lib/refcount.c:28 refcount_warn_saturate+0xfe/0x1a0
-  Kernel panic - not syncing: panic_on_warn set ...
-  CPU: 0 PID: 1381 Comm: syz-executor.0 Not tainted 5.5.0-rc3 #8
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x94/0xce
-   panic+0x234/0x56f
-   __warn+0x1cc/0x1e1
-   report_bug+0x200/0x310
-   fixup_bug.part.11+0x32/0x80
-   do_error_trap+0xd3/0x100
-   do_invalid_op+0x31/0x40
-   invalid_op+0x1e/0x30
-  RIP: 0010:refcount_warn_saturate+0xfe/0x1a0
-  Code: 0f 0b eb 9b e8 23 f6 6d ff 80 3d 6c d4 19 03 00 75 8d e8 15 f6 6d ff 48 c7 c7 c0 02 55 bd c6 05 57 d4 19 03 01 e8 a2 58 49 ff <0f> 0b e9 6e ff ff ff e8 f6 f5 6d ff 80 3d 42 d4 19 03 00 0f 85 5c
-  RSP: 0018:ffffc90002df7b98 EFLAGS: 00010282
-  RAX: 0000000000000000 RBX: ffff88810f6a193c RCX: ffffffffba649009
-  RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88811b0283cc
-  RBP: 0000000000000003 R08: ffffed10236060e3 R09: ffffed10236060e3
-  R10: 0000000000000001 R11: ffffed10236060e2 R12: ffff88810f6a193c
-  R13: ffffc90002df7d60 R14: 0000000000000000 R15: ffff888116ae6a08
-   uverbs_uobject_put+0xfd/0x140
-   __uobj_perform_destroy+0x3d/0x60
-   ib_uverbs_close_xrcd+0x148/0x170
-   ib_uverbs_write+0xaa5/0xdf0
-   __vfs_write+0x7c/0x100
-   vfs_write+0x168/0x4a0
-   ksys_write+0xc8/0x200
-   do_syscall_64+0x9c/0x390
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x465b49
-  Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007f759d122c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-  RAX: ffffffffffffffda RBX: 000000000073bfa8 RCX: 0000000000465b49
-  RDX: 000000000000000c RSI: 0000000020000080 RDI: 0000000000000003
-  RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000246 R12: 00007f759d1236bc
-  R13: 00000000004ca27c R14: 000000000070de40 R15: 00000000ffffffff
-  Dumping ftrace buffer:
-     (ftrace buffer empty)
-  Kernel Offset: 0x39400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-
-Fixes: 7452a3c745a2 ("IB/uverbs: Allow RDMA_REMOVE_DESTROY to work concurrently with disassociate")
-Link: https://lore.kernel.org/r/20200527135534.482279-1-leon@kernel.org
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: f51b18d92b66 ("gpio: mvebu: use devm_platform_ioremap_resource_byname()")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/rdma_core.c | 20 +++++++++++++-------
- include/rdma/uverbs_std_types.h     |  2 +-
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ drivers/gpio/gpio-mvebu.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
-index bf8e149d3191..e0a5e897e4b1 100644
---- a/drivers/infiniband/core/rdma_core.c
-+++ b/drivers/infiniband/core/rdma_core.c
-@@ -153,9 +153,9 @@ static int uverbs_destroy_uobject(struct ib_uobject *uobj,
- 	uobj->context = NULL;
- 
- 	/*
--	 * For DESTROY the usecnt is held write locked, the caller is expected
--	 * to put it unlock and put the object when done with it. Only DESTROY
--	 * can remove the IDR handle.
-+	 * For DESTROY the usecnt is not changed, the caller is expected to
-+	 * manage it via uobj_put_destroy(). Only DESTROY can remove the IDR
-+	 * handle.
- 	 */
- 	if (reason != RDMA_REMOVE_DESTROY)
- 		atomic_set(&uobj->usecnt, 0);
-@@ -187,7 +187,7 @@ static int uverbs_destroy_uobject(struct ib_uobject *uobj,
- /*
-  * This calls uverbs_destroy_uobject() using the RDMA_REMOVE_DESTROY
-  * sequence. It should only be used from command callbacks. On success the
-- * caller must pair this with rdma_lookup_put_uobject(LOOKUP_WRITE). This
-+ * caller must pair this with uobj_put_destroy(). This
-  * version requires the caller to have already obtained an
-  * LOOKUP_DESTROY uobject kref.
-  */
-@@ -198,6 +198,13 @@ int uobj_destroy(struct ib_uobject *uobj, struct uverbs_attr_bundle *attrs)
- 
- 	down_read(&ufile->hw_destroy_rwsem);
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index d2b999c7987f..f0c5433a327f 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -782,6 +782,15 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 				     "marvell,armada-370-gpio"))
+ 		return 0;
  
 +	/*
-+	 * Once the uobject is destroyed by RDMA_REMOVE_DESTROY then it is left
-+	 * write locked as the callers put it back with UVERBS_LOOKUP_DESTROY.
-+	 * This is because any other concurrent thread can still see the object
-+	 * in the xarray due to RCU. Leaving it locked ensures nothing else will
-+	 * touch it.
++	 * There are only two sets of PWM configuration registers for
++	 * all the GPIO lines on those SoCs which this driver reserves
++	 * for the first two GPIO chips. So if the resource is missing
++	 * we can't treat it as an error.
 +	 */
- 	ret = uverbs_try_lock_object(uobj, UVERBS_LOOKUP_WRITE);
- 	if (ret)
- 		goto out_unlock;
-@@ -216,7 +223,7 @@ out_unlock:
- /*
-  * uobj_get_destroy destroys the HW object and returns a handle to the uobj
-  * with a NULL object pointer. The caller must pair this with
-- * uverbs_put_destroy.
-+ * uobj_put_destroy().
-  */
- struct ib_uobject *__uobj_get_destroy(const struct uverbs_api_object *obj,
- 				      u32 id, struct uverbs_attr_bundle *attrs)
-@@ -250,8 +257,7 @@ int __uobj_perform_destroy(const struct uverbs_api_object *obj, u32 id,
- 	uobj = __uobj_get_destroy(obj, id, attrs);
- 	if (IS_ERR(uobj))
- 		return PTR_ERR(uobj);
--
--	rdma_lookup_put_uobject(uobj, UVERBS_LOOKUP_WRITE);
-+	uobj_put_destroy(uobj);
- 	return 0;
- }
++	if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
++		return 0;
++
+ 	if (IS_ERR(mvchip->clk))
+ 		return PTR_ERR(mvchip->clk);
  
-diff --git a/include/rdma/uverbs_std_types.h b/include/rdma/uverbs_std_types.h
-index 1b28ce1aba07..325fdaa3bb66 100644
---- a/include/rdma/uverbs_std_types.h
-+++ b/include/rdma/uverbs_std_types.h
-@@ -88,7 +88,7 @@ struct ib_uobject *__uobj_get_destroy(const struct uverbs_api_object *obj,
+@@ -804,12 +813,6 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	mvchip->mvpwm = mvpwm;
+ 	mvpwm->mvchip = mvchip;
  
- static inline void uobj_put_destroy(struct ib_uobject *uobj)
- {
--	rdma_lookup_put_uobject(uobj, UVERBS_LOOKUP_WRITE);
-+	rdma_lookup_put_uobject(uobj, UVERBS_LOOKUP_DESTROY);
- }
- 
- static inline void uobj_put_read(struct ib_uobject *uobj)
+-	/*
+-	 * There are only two sets of PWM configuration registers for
+-	 * all the GPIO lines on those SoCs which this driver reserves
+-	 * for the first two GPIO chips. So if the resource is missing
+-	 * we can't treat it as an error.
+-	 */
+ 	mvpwm->membase = devm_platform_ioremap_resource_byname(pdev, "pwm");
+ 	if (IS_ERR(mvpwm->membase))
+ 		return PTR_ERR(mvpwm->membase);
 -- 
 2.25.1
 
