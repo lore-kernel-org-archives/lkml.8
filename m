@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93004C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB54206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A82206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037026;
-	bh=RZgud379woqQfPViLyVEe4pZrasNvkKO0kuSoSCnJQg=;
+	s=default; t=1591037031;
+	bh=MWL1sEHK2jPMKUmfRd6hIeDXg5zzx+400shcTXcX7Ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GVHbb8pa/hyny1oM89+TUxMovlNIFG6pvtxkzEhFxqmq/IseARvPiYcwqVES3FTHj
-	 IhZHvp21EXm9vg7n8Ze9LPLe50YLdC9eUXYfZf6coTEvymJB7UM21U5cpPqcC0vY5L
-	 8047b2CIB5jcmS3nUJaQGYlL6Ql7bzn/U+hOZMMM=
+	b=FsvBLyCT0MzYyiqI2y2oiVvMnWgQe+Aof6aH55NwCXLuOwlNzIa5J1Jb29FUTsotV
+	 UlgGCcQ5eQabFDx9oTKwjnBHz0y0Vj5Ow8QzqVgmwe9aPU26cicOj3caFqmZjmiOss
+	 v8E30hvBWG89E2BTkJ6MRBIdilieZ/zUhRcaF+/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731102AbgFASnp (ORCPT
+        id S1731311AbgFASnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58446 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730077AbgFASLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:18 -0400
+        id S1731077AbgFASLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D1F2065C;
-        Mon,  1 Jun 2020 18:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E410A2065C;
+        Mon,  1 Jun 2020 18:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035078;
-        bh=RZgud379woqQfPViLyVEe4pZrasNvkKO0kuSoSCnJQg=;
+        s=default; t=1591035071;
+        bh=MWL1sEHK2jPMKUmfRd6hIeDXg5zzx+400shcTXcX7Ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K5ZFyJ0HsLuNME727chRH3Nsxvtys8d47+Gi7eicCc7AjTD3YbMorfqc5hayEEXSA
-         1OL3ThBEzIrSHQhTAw4oaJu9IzFS+giePi7O0cOy7tre5T5NfypbyHRCduVNsEdTyN
-         5eus4KPxv3cuDNOGkQscOEWO1vIZhc4aHGrhnqXk=
+        b=dVAXb6iLT5AxnugvOqR1geRPpLTK+ja22xLHRR8b////pFaPChXHJqBcd8iOdbP/T
+         Spd2gi3DIM3CdhMI2ejDB8OEZe65JfTUprW0fgsvTDJ5aLmhyjFXAMfzGFOsw6tl1p
+         AwlR3b6yj6NqIunqXiijKn0ilZPpkgOS0VJg9rhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 141/142] netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
-Date:   Mon,  1 Jun 2020 19:54:59 +0200
-Message-Id: <20200601174052.294153462@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 138/142] Revert "Input: i8042 - add ThinkPad S230u to i8042 nomux list"
+Date:   Mon,  1 Jun 2020 19:54:56 +0200
+Message-Id: <20200601174052.001815557@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -59,45 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 4946ea5c1237036155c3b3a24f049fd5f849f8f6 upstream.
+commit f4dec2d6160976b14e54be9c3950ce0f52385741 upstream.
 
->> include/linux/netfilter/nf_conntrack_pptp.h:13:20: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
-extern const char *const pptp_msg_name(u_int16_t msg);
-^~~~~~
+This reverts commit 18931506465a762ffd3f4803d36a18d336a67da9. From Kevin
+Locke:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 4c559f15efcc ("netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+"... nomux only appeared to fix the issue because the controller
+continued working after warm reboots. After more thorough testing from
+both warm and cold start, I now believe the entry should be added to
+i8042_dmi_reset_table rather than i8042_dmi_nomux_table as i8042.reset=1
+alone is sufficient to avoid the issue from both states while
+i8042.nomux is not."
+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/netfilter/nf_conntrack_pptp.h |    2 +-
- net/netfilter/nf_conntrack_pptp.c           |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/serio/i8042-x86ia64io.h |    7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/include/linux/netfilter/nf_conntrack_pptp.h
-+++ b/include/linux/netfilter/nf_conntrack_pptp.h
-@@ -10,7 +10,7 @@
- #include <net/netfilter/nf_conntrack_expect.h>
- #include <uapi/linux/netfilter/nf_conntrack_tuple_common.h>
- 
--extern const char *const pptp_msg_name(u_int16_t msg);
-+const char *pptp_msg_name(u_int16_t msg);
- 
- /* state of the control session */
- enum pptp_ctrlsess_state {
---- a/net/netfilter/nf_conntrack_pptp.c
-+++ b/net/netfilter/nf_conntrack_pptp.c
-@@ -91,7 +91,7 @@ static const char *const pptp_msg_name_a
- 	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -541,13 +541,6 @@ static const struct dmi_system_id __init
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
+ 		},
+ 	},
+-	{
+-		/* Lenovo ThinkPad Twist S230u */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
+-		},
+-	},
+ 	{ }
  };
  
--const char *const pptp_msg_name(u_int16_t msg)
-+const char *pptp_msg_name(u_int16_t msg)
- {
- 	if (msg > PPTP_MSG_MAX)
- 		return pptp_msg_name_array[0];
 
 
