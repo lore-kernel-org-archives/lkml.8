@@ -2,71 +2,92 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F73B20772
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68542074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dD/yk3Kq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgFANsp (ORCPT
+        id S1726287AbgFANvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:48:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgFANsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:48:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB4202068D;
-        Mon,  1 Jun 2020 13:48:43 +0000 (UTC)
-Date:   Mon, 1 Jun 2020 09:48:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/5] seq_buf: Export seq_buf_printf
-Message-ID: <20200601094842.3cd0cab6@gandalf.local.home>
-In-Reply-To: <87367f9eqs.fsf@linux.ibm.com>
-References: <20200527041244.37821-1-vaibhav@linux.ibm.com>
-        <20200527041244.37821-3-vaibhav@linux.ibm.com>
-        <87367f9eqs.fsf@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 1 Jun 2020 09:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgFANvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 09:51:13 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486EBC05BD43;
+        Mon,  1 Jun 2020 06:51:13 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d10so3530493pgn.4;
+        Mon, 01 Jun 2020 06:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V07abGvLsBx8obB0OPoaIdlm7yOU8GObbMFWPclA3w4=;
+        b=dD/yk3Kqs9wBRoh13WBxCkUhJ3JcJiAPWBhSLPE1naboNb7zvVECBjrObtzyTamB9r
+         VoaBVVOQ0JqonlH0PLXL66j/A9rU2ZeFiUcZeoH54uUrNLrLGeB8cFWMSTYlUUkw70En
+         GyxyMvlhYp+pZMuwuVvJ5ekpbMcwG/vwwCKGR2fV/qQIHKkjFfasrB3qEbPo6VxpG6xF
+         ccok/HTo9acBS19SgYW5vZ3OfSf9IW3EKg97HNxzufjE1qJpscguZ8kbfFr1uZ4VeOXA
+         jlK9qVqZaB/LeTwDyLeDw6dvls3VtTLEATaIf7DqYtP7yHhxLUzoa5Mfqk3wRctqWRjq
+         23qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V07abGvLsBx8obB0OPoaIdlm7yOU8GObbMFWPclA3w4=;
+        b=QsqFZx6mnIVfr2qjtmW5jZ7U4fQ/aLIBRiREerA/zVHFfdpNvgSBDZ25prvGe5XR8Y
+         DhIaEltxh6CHJAHlglyc71cV0Yfnj7cl3Hto2OaG7iDrI3tDK93f/eQo2caA/fBHuLOi
+         rtUA7NWtHuYV1EE3WjwVAkjCmcfb0/UV9T9DOUcchqYf/6oy/sUZPzBpbhA7zNM74U40
+         trbzVnoUvFp5YQrGSuCbdXGZtJsoTo9PxgW9SuTnb+f5FSAqmylG/4rR4bmW/Ch9bVu1
+         uh0TKeMJ7reZsYpn1lv/RfiF5uhd3rbeC1+rRSUk4nGLNDd63QpiWWJK0O25D5bRCQWF
+         zb0Q==
+X-Gm-Message-State: AOAM532CN3GJCi6sSrUCtjGjiJ59oSGFgxuB7EKHULnCQGb/7s1p0hCU
+        SBQWGpYCWpbE3CtGH+XRfPxqdmjKNEsQwrqp1CXJM5P4zAg=
+X-Google-Smtp-Source: ABdhPJwhhsub9MERbTsMYc3VaYkN6I9l2QjYeJZh0Dzf9d0CRw6M1Bl0HbE5yLMBXPaMIR8EEAe05meTESQVIdsB+D0=
+X-Received: by 2002:a62:148f:: with SMTP id 137mr19895197pfu.130.1591019472784;
+ Mon, 01 Jun 2020 06:51:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200601133950.12420-1-johan@kernel.org>
+In-Reply-To: <20200601133950.12420-1-johan@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Jun 2020 16:51:01 +0300
+Message-ID: <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
+Subject: Re: [PATCH 0/6] leds: fix broken devres usage
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 01 Jun 2020 17:31:31 +0530
-Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
+On Mon, Jun 1, 2020 at 4:42 PM Johan Hovold <johan@kernel.org> wrote:
+>
+> Several MFD child drivers register their class devices directly under
+> the parent device (about half of the MFD LED drivers do so).
+>
+> This means you cannot blindly do devres conversions so that
+> deregistration ends up being tied to the parent device, something which
+> leads to use-after-free on driver unbind when the class device is
+> released while still being registered (and, for example, oopses on later
+> parent MFD driver unbind or LED class callbacks, or resource leaks and
+> name clashes on child driver reload).
 
-> Hi Christoph and Steven,
-> 
-> Have addressed your review comment to update the patch description and
-> title for this patch. Can you please provide your ack to this patch.
-> 
-> 
+Shouldn't MFD take reference count for their children?
 
-I thought I already did, but it appears it was a reply to a private email
-you sent to me. I didn't realize it was off list.
-
-Anyway:
-
- Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
+-- 
+With Best Regards,
+Andy Shevchenko
