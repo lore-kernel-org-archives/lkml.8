@@ -2,256 +2,169 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D629C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43C9A207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D482073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="hW/f3fxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgFBBZ7 (ORCPT
+        id S1726363AbgFBB3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 21:25:59 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:53224 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbgFBBZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 21:25:59 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE2171A09DE;
-        Tue,  2 Jun 2020 03:25:55 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EF7431A09CF;
-        Tue,  2 Jun 2020 03:25:51 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EE13240285;
-        Tue,  2 Jun 2020 09:25:46 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        hongtao.jia@nxp.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3] dt-bindings: thermal: Convert qoriq to json-schema
-Date:   Tue,  2 Jun 2020 09:15:32 +0800
-Message-Id: <1591060532-14727-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 1 Jun 2020 21:29:54 -0400
+Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21198 "EHLO
+        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgFBB3x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 21:29:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1591061351; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=X8YxfuPazl7mHnj3IxfR+M405TYMuZxNB09ddihbLVcWq4wa8Wq288iYKiDBTabkEVV//NdJSF3vOMaYzAh1e81jiT+/HRy5fG7NM1d+ZzRKa11hdoYKObR2MNYp3MELk/0n+1CZV2biMbOVxSaEhWQUKt5me+UCjsPUmkdR9d4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1591061351; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=I+UGxvPJIllkMa39UOn+I1LFV6NgfWusHXOM8wN/vO4=; 
+        b=SeAbEfI6UQlWUHnuMxDPtxSEMxuRD+2AWNjbg5j6a4LaFjdY2LLzU6xTnylwDdaynLn6WPEakHC9us98uGhz6LSe9dCY/Qj9xmNEmr/oyVm39Bm2kKHLYjsxkyeeZLnAASjQNzUV+Fu7wd1GDuGw8R0YoKRLjr9C2dm/myWmCb4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=apertussolutions.com;
+        spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+        dmarc=pass header.from=<dpsmith@apertussolutions.com> header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1591061351;
+        s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=I+UGxvPJIllkMa39UOn+I1LFV6NgfWusHXOM8wN/vO4=;
+        b=hW/f3fxVOGD7YCFd+5KsGL74sgwFOK/v+FpykSGK24tNYtyFhEbxmeJtxRxyHE1E
+        3N5G3qXNmd2RC4o2dcEwJgiPE7vOnzu1BXcwOYT+sPB7M4rkd9ZIr5gehEjOcuJdfKe
+        yZWx219hkcdzI7v5fLzjAzgzhXnfPPKbICApLXNY=
+Received: from [10.10.1.24] (c-73-129-47-101.hsd1.md.comcast.net [73.129.47.101]) by mx.zohomail.com
+        with SMTPS id 1591061348180264.5929256851624; Mon, 1 Jun 2020 18:29:08 -0700 (PDT)
+Subject: Re: [GRUB PATCH RFC 00/18] i386: Intel TXT secure launcher
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>,
+        grub-devel@gnu.org, LKML <linux-kernel@vger.kernel.org>,
+        trenchboot-devel@googlegroups.com, X86 ML <x86@kernel.org>,
+        alexander.burmashev@oracle.com,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        eric.snowberg@oracle.com, javierm@redhat.com,
+        kanth.ghatraju@oracle.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
+        Matthew Garrett <mjg59@google.com>, phcoder@gmail.com,
+        piotr.krol@3mdeb.com, Peter Jones <pjones@redhat.com>,
+        Ross Philipson <ross.philipson@oracle.com>
+References: <f954e9ef-295a-a8ce-0ff8-a88ad81b01a3@apertussolutions.com>
+ <C6007C2B-AEFF-4A48-B791-323CDC04266D@amacapital.net>
+From:   "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Message-ID: <01cc067e-f2f2-d4da-6944-2724dbc7b61e@apertussolutions.com>
+Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Mon, 1 Jun 2020 21:29:05 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <C6007C2B-AEFF-4A48-B791-323CDC04266D@amacapital.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the qoriq thermal binding to DT schema format using json-schema
+On 6/1/20 8:49 PM, Andy Lutomirski wrote:
+>=20
+>=20
+>> On Jun 1, 2020, at 5:14 PM, Daniel P. Smith <dpsmith@apertussolutions.co=
+m> wrote:
+>>
+>> =EF=BB=BFOn 6/1/20 3:39 PM, Andy Lutomirski wrote:
+>>>>> .
+>>
+>> In other words, the log for the relaunch to attest what is currently
+>> running is really no less useful than using the first launch log to
+>> attest to the what was running in the first launch.
+>>
+>=20
+> Maybe it would help if you give some examples of what=E2=80=99s actually =
+in this log and why anyone, Linux or otherwise, cares for any purpose other=
+ than debugging.  We=E2=80=99re talking about a log written by something li=
+ke GRUB, right?  If so, I=E2=80=99m imagining things like:
+>=20
+> GRUB: loading such-and-such module
+> GRUB: loading the other module
+> GRUB: loading Linux at /boot/vmlinuz-whatever
+> GRUB: about to do the DRTM launch. Bye-bye.
+>=20
+> This is surely useful for debugging.  But, if I understand your security =
+model correctly, it=E2=80=99s untrustworthy in the sense that this all come=
+s from before the DRTM launch and it could have been tampered with by SMM c=
+ode or even just a malicious USB stick.  Or even a malicious compromised ke=
+rnel on the same machine. So you could hash this log into a PCR, but I don=
+=E2=80=99t see what you=E2=80=99ve accomplished by doing so.
+>=20
+> Or have I misunderstood what this log is?  Perhaps you=E2=80=99re talking=
+ about something else entirely.
+>=20
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- correct maintainer's email address.
----
- .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
- .../devicetree/bindings/thermal/qoriq-thermal.yaml | 112 +++++++++++++++++++++
- 2 files changed, 112 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+Oh I see! Yes we are discussing two different logs and yes there are two
+"logs" in play here. The start of this thread by Lukasz was on the TPM
+Event log. This is the log that is a record of TPM events for the DRTM
+chain, you can see the equivalent for SRTM with `cat
+/sys/kernel/security/tpm0/ascii_bios_measurements`(provided you system
+configuration is set up for SRTM). The second log, which for lack of a
+better name is the "debug log", is what you are referring to and is in
+another proposal that just recently came out, "[BOOTLOADER SPECIFICATION
+RFC] The bootloader log format for TrenchBoot"[1].
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-deleted file mode 100644
-index 28f2cba..0000000
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
--
--Required properties:
--- compatible : Must include "fsl,qoriq-tmu" or "fsl,imx8mq-tmu". The
--	version of the device is determined by the TMU IP Block Revision
--	Register (IPBRR0) at offset 0x0BF8.
--	Table of correspondences between IPBRR0 values and example  chips:
--		Value           Device
--		----------      -----
--		0x01900102      T1040
--- reg : Address range of TMU registers.
--- interrupts : Contains the interrupt for TMU.
--- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
--	the SoC reference manual. The first cell is TTR0CR, the second is
--	TTR1CR, etc.
--- fsl,tmu-calibration : A list of cell pairs containing temperature
--	calibration data, as specified by the SoC reference manual.
--	The first cell of each pair is the value to be written to TTCFGR,
--	and the second is the value to be written to TSCFGR.
--- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
--	site ID, and represents the "n" in TRITSRn and TRATSRn.
--
--Optional property:
--- little-endian : If present, the TMU registers are little endian. If absent,
--	the default is big endian.
--- clocks : the clock for clocking the TMU silicon.
--
--Example:
--
--tmu@f0000 {
--	compatible = "fsl,qoriq-tmu";
--	reg = <0xf0000 0x1000>;
--	interrupts = <18 2 0 0>;
--	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
--	fsl,tmu-calibration = <0x00000000 0x00000025
--			       0x00000001 0x00000028
--			       0x00000002 0x0000002d
--			       0x00000003 0x00000031
--			       0x00000004 0x00000036
--			       0x00000005 0x0000003a
--			       0x00000006 0x00000040
--			       0x00000007 0x00000044
--			       0x00000008 0x0000004a
--			       0x00000009 0x0000004f
--			       0x0000000a 0x00000054
--
--			       0x00010000 0x0000000d
--			       0x00010001 0x00000013
--			       0x00010002 0x00000019
--			       0x00010003 0x0000001f
--			       0x00010004 0x00000025
--			       0x00010005 0x0000002d
--			       0x00010006 0x00000033
--			       0x00010007 0x00000043
--			       0x00010008 0x0000004b
--			       0x00010009 0x00000053
--
--			       0x00020000 0x00000010
--			       0x00020001 0x00000017
--			       0x00020002 0x0000001f
--			       0x00020003 0x00000029
--			       0x00020004 0x00000031
--			       0x00020005 0x0000003c
--			       0x00020006 0x00000042
--			       0x00020007 0x0000004d
--			       0x00020008 0x00000056
--
--			       0x00030000 0x00000012
--			       0x00030001 0x0000001d>;
--	#thermal-sensor-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-new file mode 100644
-index 0000000..4bc344a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/qoriq-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-+
-+maintainers:
-+  - Hongtao Jia <hongtao.jia@nxp.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      The version of the device is determined by the TMU IP Block Revision
-+      Register (IPBRR0) at offset 0x0BF8.
-+      Table of correspondences between IPBRR0 values and example chips:
-+            Value           Device
-+            ----------      -----
-+            0x01900102      T1040
-+    enum:
-+      - fsl,qoriq-tmu
-+      - fsl,imx8mq-tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,tmu-range:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      The values to be programmed into TTRnCR, as specified by the SoC
-+      reference manual. The first cell is TTR0CR, the second is TTR1CR, etc.
-+    maxItems: 4
-+
-+  fsl,tmu-calibration:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
-+    description: |
-+      A list of cell pairs containing temperature calibration data, as
-+      specified by the SoC reference manual. The first cell of each pair
-+      is the value to be written to TTCFGR, and the second is the value
-+      to be written to TSCFGR.
-+    items:
-+      items:
-+        - description: value for TTCFGR
-+        - description: value for TSCFGR
-+    minItems: 1
-+    maxItems: 64
-+
-+  little-endian:
-+    description: |
-+      boolean, if present, the TMU registers are little endian. If absent,
-+      the default is big endian.
-+    type: boolean
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,tmu-range
-+  - fsl,tmu-calibration
-+  - '#thermal-sensor-cells'
-+
-+examples:
-+  - |
-+    tmu@f0000 {
-+        compatible = "fsl,qoriq-tmu";
-+        reg = <0xf0000 0x1000>;
-+        interrupts = <18 2 0 0>;
-+        fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
-+        fsl,tmu-calibration = <0x00000000 0x00000025>,
-+                              <0x00000001 0x00000028>,
-+                              <0x00000002 0x0000002d>,
-+                              <0x00000003 0x00000031>,
-+                              <0x00000004 0x00000036>,
-+                              <0x00000005 0x0000003a>,
-+                              <0x00000006 0x00000040>,
-+                              <0x00000007 0x00000044>,
-+                              <0x00000008 0x0000004a>,
-+                              <0x00000009 0x0000004f>,
-+                              <0x0000000a 0x00000054>,
-+                              <0x00010000 0x0000000d>,
-+                              <0x00010001 0x00000013>,
-+                              <0x00010002 0x00000019>,
-+                              <0x00010003 0x0000001f>,
-+                              <0x00010004 0x00000025>,
-+                              <0x00010005 0x0000002d>,
-+                              <0x00010006 0x00000033>,
-+                              <0x00010007 0x00000043>,
-+                              <0x00010008 0x0000004b>,
-+                              <0x00010009 0x00000053>,
-+                              <0x00020000 0x00000010>,
-+                              <0x00020001 0x00000017>,
-+                              <0x00020002 0x0000001f>,
-+                              <0x00020003 0x00000029>,
-+                              <0x00020004 0x00000031>,
-+                              <0x00020005 0x0000003c>,
-+                              <0x00020006 0x00000042>,
-+                              <0x00020007 0x0000004d>,
-+                              <0x00020008 0x00000056>,
-+                              <0x00030000 0x00000012>,
-+                              <0x00030001 0x0000001d>;
-+        #thermal-sensor-cells = <1>;
-+    };
--- 
-2.7.4
+You are correct, the "debug log" is just filled with messages from
+components during the DRTM launch chain. While relaunch is being kept in
+mind as we work through getting first launch complete, not all aspects
+have been considered. What happens to the debug log on relaunch has no
+security relevance, as you called out earlier, and at this point I would
+say is an exercise for those integrating relaunch when it becomes
+available. I would expect them to treat it no different than the kmesg
+and syslog buffers on kexec/reboot, some may opt to kept a historical
+record and others will just let it disappear into the ether.
+
+Apologies that we got disconnected, I hope we are in sync now.
+
+[1] https://lists.gnu.org/archive/html/grub-devel/2020-05/msg00223.html
 
