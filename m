@@ -2,295 +2,100 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BADA620678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PXZ3Ye+C"
+	by mail.kernel.org (Postfix) with ESMTP id 9027F2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591136071;
+	bh=+dxvJIrjntJH0nAf4MP7QjSNZZOP42me2PX93dArUCw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UFtZbp+oVmLA+jMnvZkS7GArIlCnkN0qzc0ZYECHd8MfkZotM06KDsSs0uduFmruE
+	 8jPGxuTYBS2EGb7jim/KIXmM757/ulh5YtEg2VS2ueusJrLfUCTOMgLNLPDdt28/q4
+	 gfVbbdJ7SmYqCkHwZy+/GJHATd0+coZkLutPGbLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgFBWMv (ORCPT
+        id S1728234AbgFBWOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        Tue, 2 Jun 2020 18:14:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFBWMt (ORCPT
+        with ESMTP id S1726174AbgFBWOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 18:12:49 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2A8C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 15:12:49 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e2so14320997eje.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 15:12:49 -0700 (PDT)
+        Tue, 2 Jun 2020 18:14:30 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A109EC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 15:14:28 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z9so156265ljh.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 15:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Rs5FX8yr8F2XCiZEbHfoUy6e6QfRwHSSUVkzIr/99n8=;
-        b=PXZ3Ye+CqRNQtPKlmEvy11W37Mm7Dv3RSRYHNiaY7QXqqqGjprEoszJiYRYwoCkVjc
-         +FTsxpBmlEEGYC/8sJEamatCJj04YTRz1/w4l8A1zkj9jqWg+DY3Zg2eB87sKr+UJh31
-         9iHBbQPcTl/lHwlP//H46v8M93kgOSbWH6w5iscN3S7pAt3mBMu1/9IWBZxSwd1pVV/V
-         8cBSVfs90sMy9VwkjkmO+0nEtgtAhXuuOh8Ek5uZQX80KR7etPr+VDJraFRIlp+gxreT
-         fydtQqnE+FnNy17tV8iVuSY+1YYxTtst8o53NAMDiXFpRoGCROpVLJBNFmOsGC0gu4Zy
-         JVUw==
+        bh=LLGNp0bYqdgoODnvR5dT8Alq+1KnKRZvTkwH6Z7/c6A=;
+        b=M2QrFy/uhcAqgs+stRlkgrzMXz/FWWJpJ5dKW1BGDexrTXGHHVMZmsouEZMEH+k6At
+         40O3iTvokENTGG6qULnrnjBRquHj5u8RPumGZHE1lWNorzc8sz3ZcexmrYgX+oqMyTE4
+         bIaWbyJDbvrfvBVKL8D2l1wicRwTaRrctwaZM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Rs5FX8yr8F2XCiZEbHfoUy6e6QfRwHSSUVkzIr/99n8=;
-        b=FQhdCkSHoX0leN71Qy21fXem9DVWFAP2cMO0aCnqNXCUCiayk9GuIdMlzJ7ZbiM4Qt
-         NAL3f1NFY7n3TW0UsCAaktL0b1IKTXeLG0avadV2f1EQIeuK9vOFX2TM5Tom+D34Ybe3
-         AGMoJc6zRTsdz9jrv4SMr9z0UPpfxtBoWCXwdp4MNbQYf1LsimZTJEeCczFd0vLpk2SQ
-         NASNxJHGuDOieSATo3xa/Dr59Fb0H0X4iEI02HEaSZ/IfOtrHkZ8oo6VfslsHnC6rRtw
-         d2FVe1w9A7/aqXAXpj1e/9Hft5o5PH7LX7x+fCcQXuyF/3s8ic+5oIlgleExckPvzFXT
-         Ngaw==
-X-Gm-Message-State: AOAM531XMZp2orwSD5tFFLWroAJZZXiN36/F27ZZ88oQHAmiW6LzijXQ
-        umrwdyYOgrQ+Q3574W0DVNkMB/k0UFr88u76S5DaRMQV
-X-Google-Smtp-Source: ABdhPJwjiVD15IacnxpGUm68kBMkN3bWqA9RX615wyQ8deBfEWN1Wb6NnaV/refbySfK35t9Z/5bggLn+Nn96h90HjM=
-X-Received: by 2002:a17:907:9d8:: with SMTP id bx24mr24813707ejc.517.1591135968133;
- Tue, 02 Jun 2020 15:12:48 -0700 (PDT)
+        bh=LLGNp0bYqdgoODnvR5dT8Alq+1KnKRZvTkwH6Z7/c6A=;
+        b=jQHNq4q0cg5/aUf1JWS9wneP/BITxjyyfzKynYXHHhfp4ePD+wfMGNrfcGL04GP3h0
+         UgWdgfvtgLJW1yK+ptKA7o+FodPCtq2pcAK9uZUpwQB2w9UkDM3hhai+sDR4J4F/PNgk
+         /V4GziDB56MLhJpnH07F/2unjWB198cVHdcUDuzmO3Ahuh+M8HBBTAAlCrXIdac0WEt2
+         dDWfMfWJdYVJPffInim4UdDQh26usGW6PnaN4NmPL7ynXfkpFDnKEYKIgNsJUTdDNw75
+         yRV7GT8GouLA+kwxCZDwbhM5HmwvfQH1wrpo5wAtcP2cIKebM19GQBrTZZ/6XJBCVtB/
+         BCsQ==
+X-Gm-Message-State: AOAM531xq3a/8QHwwftaZwY2LaP4CRWzi9+KfK69ri9QwMWHL1HBjE+Q
+        MJ5idDQB4BhgHOBhbakDRl6dRkyqcWA=
+X-Google-Smtp-Source: ABdhPJz5XDzJq1aepJ4f0hbS/KjyLBlAYDEr/Bgh9MAJ8ffRwWgFKMmFO9G1ZRxC/5dSQee+58P4hw==
+X-Received: by 2002:a2e:9192:: with SMTP id f18mr595467ljg.383.1591136066790;
+        Tue, 02 Jun 2020 15:14:26 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id h10sm37241ljl.121.2020.06.02.15.14.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 15:14:26 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id u16so18122lfl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 15:14:25 -0700 (PDT)
+X-Received: by 2002:a05:6512:7b:: with SMTP id i27mr294066lfo.30.1591136065530;
+ Tue, 02 Jun 2020 15:14:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15> <6d759cc28628ea72767c1304883630eb@codeaurora.org>
-In-Reply-To: <6d759cc28628ea72767c1304883630eb@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 2 Jun 2020 23:12:37 +0100
-Message-ID: <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, robin.murphy@arm.com
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+In-Reply-To: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 2 Jun 2020 15:14:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=winp5YQv7rFmUe2z=xYSuzF9t1mMt+_C_1iFwxjoqG6gw@mail.gmail.com>
+Message-ID: <CAHk-=winp5YQv7rFmUe2z=xYSuzF9t1mMt+_C_1iFwxjoqG6gw@mail.gmail.com>
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
-
-On Tue, 2 Jun 2020 at 08:30, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
+On Mon, Jun 1, 2020 at 11:06 PM Dave Airlie <airlied@gmail.com> wrote:
 >
-> Hi Mathieu,
->
-> Thanks for taking your time for review.
->
-> On 2020-06-02 02:58, Mathieu Poirier wrote:
-> > Hi Sai,
-> >
-> > On top of the comments already privided by Mike, I have the following:
-> >
-> > On Mon, Jun 01, 2020 at 01:32:26PM +0530, Sai Prakash Ranjan wrote:
-> >> Implement a shutdown callback to ensure ETR/ETF hardware is
-> >> properly shutdown in reboot/shutdown path. This is required
-> >> for ETR/ETF which has SMMU address translation enabled like
-> >> on SC7180 SoC and few others. If the hardware is still accessing
-> >> memory after SMMU translation is disabled as part of SMMU
-> >> shutdown callback in system reboot or shutdown path, then
-> >> IOVAs(I/O virtual address) which it was using will go on the bus
-> >> as the physical addresses which might result in unknown crashes
-> >> (NoC/interconnect errors). So we make sure from this shutdown
-> >> callback that the ETR/ETF is shutdown before SMMU translation is
-> >> disabled and device_link in SMMU driver will take care of ordering
-> >> of shutdown callbacks such that SMMU shutdown callback is not
-> >> called before any of its consumer shutdown callbacks.
-> >>
-> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> >> ---
-> >>  .../hwtracing/coresight/coresight-tmc-etf.c   |  4 +--
-> >>  .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
-> >>  drivers/hwtracing/coresight/coresight-tmc.c   | 29
-> >> +++++++++++++++++++
-> >>  drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
-> >>  4 files changed, 35 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> >> b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> >> index 36cce2bfb744..cba3e7592820 100644
-> >> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> >> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> >> @@ -85,7 +85,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata
-> >> *drvdata)
-> >>      CS_LOCK(drvdata->base);
-> >>  }
-> >>
-> >> -static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
-> >> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
-> >>  {
-> >>      __tmc_etb_disable_hw(drvdata);
-> >>      coresight_disclaim_device(drvdata->base);
-> >> @@ -118,7 +118,7 @@ static int tmc_etf_enable_hw(struct tmc_drvdata
-> >> *drvdata)
-> >>      return 0;
-> >>  }
-> >>
-> >> -static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
-> >> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
-> >>  {
-> >>      CS_UNLOCK(drvdata->base);
-> >>
-> >
-> > Why do we care about ETB and ETF when they both use RAM internal to the
-> > device?
-> > Moreover, the system RAM they use is not dedicated and as such falls
-> > back to the
-> > kernel's memory pool.
-> >
->
-> Actually we don't, I added the disable for ETF/ETB for completeness
-> since we are
-> adding shutdown callback for TMC devices and not just ETR although this
-> issue applies
-> only for ETR and it doesn't hurt to disable these devices in shutdown
-> path.
->
+> I've pushed a merged by me tree here, which I think gets them all
+> correct, but please let me know if you think different.
+> https://cgit.freedesktop.org/~airlied/linux/log/?h=drm-5.8-merged
 
-If they don't affect the issue you are fixing, there are good reasons
-for leaving ETB./ETF running.
-If a system is not completely powered down, then the static ram in
-these devices can sometimes be used for post-mortem diagnosis after
-re-start.
+Ok, I get the same result, except my resolution to the simple encoder
+issue was slightly different. I removed the simple helper header
+include too as part of basically undoing the whole simple encoder
+conversion.
 
-> >> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> >> b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> >> index 625882bc8b08..b29c2db94d96 100644
-> >> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> >> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> >> @@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct
-> >> tmc_drvdata *drvdata)
-> >>
-> >>  }
-> >>
-> >> -static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
-> >> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
-> >>  {
-> >>      __tmc_etr_disable_hw(drvdata);
-> >>      /* Disable CATU device if this ETR is connected to one */
-> >> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c
-> >> b/drivers/hwtracing/coresight/coresight-tmc.c
-> >> index 5a271ebc4585..7e687a356fe0 100644
-> >> --- a/drivers/hwtracing/coresight/coresight-tmc.c
-> >> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
-> >> @@ -540,6 +540,34 @@ static int tmc_probe(struct amba_device *adev,
-> >> const struct amba_id *id)
-> >>      return ret;
-> >>  }
-> >>
-> >> +static void tmc_shutdown(struct amba_device *adev)
-> >> +{
-> >> +    struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
-> >> +
-> >> +    if (!drvdata->enable)
-> >> +            goto out;
-> >> +
-> >> +    /*
-> >> +     * We do not care about the active trace sessions here
-> >> +     * since the system is going down unlike remove callback,
-> >> +     * just make sure that the hardware is shutdown.
-> >> +     */
-> >> +    switch (drvdata->config_type) {
-> >> +    case TMC_CONFIG_TYPE_ETB:
-> >> +            tmc_etb_disable_hw(drvdata);
-> >> +            break;
-> >> +    case TMC_CONFIG_TYPE_ETF:
-> >> +            tmc_etf_disable_hw(drvdata);
-> >> +            break;
-> >> +    case TMC_CONFIG_TYPE_ETR:
-> >> +            tmc_etr_disable_hw(drvdata);
-> >> +    }
-> >> +
-> >> +out:
-> >> +    misc_deregister(&drvdata->miscdev);
-> >> +    coresight_unregister(drvdata->csdev);
-> >
-> > If a session is active when tmc_shutdown() is called, unregistering the
-> > ETF/ETR
-> > will result in a kernel crash if the session is stopped before the
-> > kernel has
-> > had the opportunity to shutdown.  It is the problem as trying to make
-> > coresight
-> > drivers modular.
-> >
-> > For this to really work the ongoing session would need to be stopped.
-> > That
-> > would teardown the path and stop the sink.
->
-> I have tested this with and without active trace sessions multiple times
-> on 2 devices
-> and did not observe a single crash. The crash should be easily triggered
-> as per
-> what you are saying if we have active sessions but I do not see any
-> crash.
->
-> >
-> > That being said I'm sure that dependencies on an IOMMU isn't a problem
-> > confined
-> > to coresight. I am adding Robin Murphy, who added this commit [1], to
-> > the thread
-> > in the hope that he can provide guidance on the right way to do this.
-> >
->
-> SMMU/IOMMU won't be able to do much here as it is the client's
-> responsiblity to
-> properly shutdown and SMMU device link just makes sure that
-> SMMU(supplier) shutdown is
-> called only after its consumers shutdown callbacks are called.
+But other than that we're identical, which is a good sign. Apparently
+the drm mis-merge in the middle got fixed up.
 
-I think this use case can be handled slightly differently than the
-general requirements for modular CoreSight drivers.
-
-What is needed here is a way of stopping the underlying ETR hardware
-from issuing data to the SMMU, until the entire device has been shut
-down, in a way that does not remove the driver, breaking existing
-references and causing a system crash.
-
-We could introduce a new mode to the ETR driver - e.g. CS_MODE_SHUTDOWN.
-
-At the end of the block tmc_shutdown(struct amba_device *adev), set
-drvdata->mode to CS_MODE_SHUTDOWN & remove the coresight_unregister().
-This new mode can be used to  prevent the underlying hardware from
-being able to restart until the device is re-powered.
-
-This mode can be detected in the code that enables / disables the ETR
-and handled appropriately (updates to tmc_enable_etr_sink and
-tmc_disable_etr_sink).
-This mode will persist until the device is re-started - but because we
-are on the device shutdown path this is not an issue.
-
-This should leave the CoreSight infrastructure stable until the
-drivers are shut down normally as part of the device power down
-process.
-
-Regards
-
-Mike
-
-
-
->
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
-
-
-
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+             Linus
