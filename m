@@ -2,110 +2,129 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B91EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3BF82072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E92207DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onppgC6J"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rVRr6k1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgFBXKH (ORCPT
+        id S1729077AbgFBXKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgFBXKG (ORCPT
+        Tue, 2 Jun 2020 19:10:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43582 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgFBXKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:10:06 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B60C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:10:06 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c35so157149edf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W6pIMQuCx2FvcQCQIr+mySiEAYaY2PXwWjQI/eEdqeY=;
-        b=onppgC6JJBYBzWFyOmNgKBH1vmu1Cs42w8mqOWlcg+HN1bjcWX0c0tiQnzlFfJZngF
-         JHW4oxp2ApoR4Z6UinzjT6yd5ILe9EH+IVtO+la5yBYRqn1Mw8ucFAHMs/+xtTgsnyIA
-         NVpXAR2kJJ8mUo6gXEYZQOeapHsUGonOoUyZwbpHQ3EH5c8ZQegLql5WE9tvo34ENB2l
-         UgNHgxvePNoYyxowE8Vea+zG2OQv4ArzgacsBs111wuzgljQNvPAtu+d/4IOiecK9ggb
-         tO6sA2KTJ9zoJb5J+YfFi7ts8Ymx+OnRiIOhQKdin2cUn0M46EcRrXn91NViX+gBNKc/
-         mcCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W6pIMQuCx2FvcQCQIr+mySiEAYaY2PXwWjQI/eEdqeY=;
-        b=V8G/hqTA+3gf2fpFqWHd6758unaT5H9XUzsR8avMgm8twMv89bDZERVYmJJzJPGKRK
-         zdtDfIv2AjRK8Zd5nye4l/UbvvOO2AwVg7SKR4LY68PQxxcueqZhirJ8ke/wCfV6n9Lf
-         B+ZeTocUURi/kjeIaHOqHTfnqnFJ0l7mI/yPPJuxE0e15C927vN7uvzvhFfKsYyUJ0A6
-         QZdh/NaCtDORXtWZ/TmMAsQtDz/VVOCTOkzAaA/TX/gSghbiPzw2ixiMGI6GFEJqnplx
-         CmUFn1pluzF9MW5Ean0LnOqPTmTFqRAT3d9pqugkcGI9MI99P51FwQvl6bXuK0Le007K
-         ok9g==
-X-Gm-Message-State: AOAM530e8NHgVBTFXfBhDVKOqZDOS+iMzgyKTPioSc1C4Ysm2IAqweHl
-        UETlAMcKh2wtHS2ovj6u8rI=
-X-Google-Smtp-Source: ABdhPJyIhph/lKVmx5fR9A1UfjyC6wlRBNYQp2lZNLQWdWoTpV1ZzRfkPhnY5dEiCEcLBfbm0Sicxw==
-X-Received: by 2002:a05:6402:959:: with SMTP id h25mr28038748edz.287.1591139405175;
-        Tue, 02 Jun 2020 16:10:05 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:6c14:f667:d8de:40c1])
-        by smtp.gmail.com with ESMTPSA id 64sm109524eda.85.2020.06.02.16.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 16:10:03 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 01:10:00 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, paulmck@kernel.org, mingo@redhat.com,
-        boqun.feng@gmail.com, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 4/5] x86/ftrace: Add annotations for
- ftrace_arch_code_modify_prepare() and ftrace_arch_code_modify_post_process()
-Message-ID: <20200602231000.6pfrgdgm4vd7sbvn@ltop.local>
-References: <20200601184552.23128-1-jbi.octave@gmail.com>
- <20200601184552.23128-5-jbi.octave@gmail.com>
- <20200601154647.581fa345@oasis.local.home>
+        Tue, 2 Jun 2020 19:10:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052NASrt118881;
+        Tue, 2 Jun 2020 18:10:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591139428;
+        bh=dE0qBYvIatQtqxHG5Y7eamyWzzcpi2JcluSxv2foNYo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rVRr6k1nJAKKSCqp997lWVbYLF2j3y8WJrLtvGMazrKUtGUofd+lKlxpkpoFZG3ys
+         D4aqm11ptCs6tPhu+ciNstSB/tSFbFR/DqCX6IVDeqWlZ62MImJzktDivSKV19QV/9
+         b6Mf++f2N/6iRiRYIwGGOm7CWoUrLPdM6LREC6pQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052NARda022346
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 18:10:27 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 18:10:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 18:10:27 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052NAReI127270;
+        Tue, 2 Jun 2020 18:10:27 -0500
+Subject: Re: [PATCH net-next v5 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200602164522.3276-1-dmurphy@ti.com>
+ <20200602164522.3276-5-dmurphy@ti.com>
+ <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <61888788-041f-7b93-9d99-7dad4c148021@ti.com>
+Date:   Tue, 2 Jun 2020 18:10:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601154647.581fa345@oasis.local.home>
+In-Reply-To: <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 03:46:47PM -0400, Steven Rostedt wrote:
-> On Mon,  1 Jun 2020 19:45:51 +0100
-> Jules Irenge <jbi.octave@gmail.com> wrote:
-> 
-> > Sparse reports warnings
-> > 
-> > warning: context imbalance in ftrace_arch_code_modify_prepare()
-> > 	- wrong count at exit
-> > warning: context imbalance in ftrace_arch_code_modify_post_process()
-> > 	- wrong count at exit
-> > 
-> > The root cause is that even if
-> >  the annotations on the function are correct,
-> > mutex do not support annotation
+Florian
 
-Yes.
+On 6/2/20 5:33 PM, Florian Fainelli wrote:
+>
+> On 6/2/2020 9:45 AM, Dan Murphy wrote:
+>> Add RGMII internal delay configuration for Rx and Tx.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+> [snip]
+>
+>> +
+>>   enum {
+>>   	DP83869_PORT_MIRRORING_KEEP,
+>>   	DP83869_PORT_MIRRORING_EN,
+>> @@ -108,6 +113,8 @@ enum {
+>>   struct dp83869_private {
+>>   	int tx_fifo_depth;
+>>   	int rx_fifo_depth;
+>> +	s32 rx_id_delay;
+>> +	s32 tx_id_delay;
+>>   	int io_impedance;
+>>   	int port_mirroring;
+>>   	bool rxctrl_strap_quirk;
+>> @@ -232,6 +239,22 @@ static int dp83869_of_init(struct phy_device *phydev)
+>>   				 &dp83869->tx_fifo_depth))
+>>   		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
+>>   
+>> +	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
+>> +				   &dp83869->rx_id_delay);
+>> +	if (ret) {
+>> +		dp83869->rx_id_delay =
+>> +				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>> +		ret = 0;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>> +				   &dp83869->tx_id_delay);
+>> +	if (ret) {
+>> +		dp83869->tx_id_delay =
+>> +				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>> +		ret = 0;
+>> +	}
+> It is still not clear to me why is not the parsing being done by the PHY
+> library helper directly?
 
-> Wait what? This looks like either a bug in sparse, or we just remove the
-> annotations. This just makes the code ugly, and looks silly.
+Why would we do that for these properties and not any other?
 
-The annotations added by commit
-  074376ac0e1d ("ftrace/x86: Anotate text_mutex split between ...
-are indeed wrong (because they don't match what the functions are
-really doing / mutex operations have never been annotated).
-The're also pointless since their prototypes are un-annotated.
+Unless there is a new precedence being set here by having the PHY 
+framework do all the dt node parsing for common properties.
 
--- Luc
+Dan
+
+
+
