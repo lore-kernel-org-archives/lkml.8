@@ -2,157 +2,231 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A38BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE780C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE33207FB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z2jt/IiE"
+	by mail.kernel.org (Postfix) with ESMTP id 9943F20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgFBI2X (ORCPT
+        id S1726445AbgFBI25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgFBI2T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:28:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 849CBC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 01:28:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x13so2455708wrv.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 01:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=THpbqsIqcsaX8JFjkYqBpTRk1wV1aSkOMzOPc76FV+E=;
-        b=Z2jt/IiEH08fKBjSDJW/rFkEDpi1SROeqBKQwYrsMkbHq7Dk0FvTxMe18SCdyWn6DA
-         cA7BkgouNeJ2A7P1omaDU8w8B91/5SCDKgmVGagtq0OQs8PrixL9xFUzs+pALxIKecSU
-         vOHjiyh7QDf/XqPep7KcBc6jTB9OaU9RYAQ+HSgUTVGn4lLHChfpp4t1Tn9XktuWJbc1
-         u9GwPRfQV65HNE4RYo03toMPhu9gqrAotSVEmwwNKMIGcE32PgYrdRKt6LGFszNh4OMG
-         tZc6ajirZPPYUDTwyrN/iyIE3WKyotRCT6gJqNAfvU4tXgrLZfMg8HloFXERP7qv8th3
-         rILg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=THpbqsIqcsaX8JFjkYqBpTRk1wV1aSkOMzOPc76FV+E=;
-        b=DVX0EN+3xTFcCoOqSnbVdf9xoPt0Aav2hlqdvMVBJpnsGoHQIwKfQSiWfWrjDCqP1z
-         cXa9nzhsDK+wz8zKtIWOPEFzy9PahWJGztb20nxUbj32vObkPUjN3idFwu1E2Ftpa3EQ
-         9g2c+R65UTIw2pP+yP1Hb+Gi3EWfvZUU8G9PT2dgv5mb/bd4LTncLfsN2NfnKDc/Mx0R
-         UwQngT8sMZTiixPP3sD22kxPZIBeKzmtwWfwSiBDB9RDJhV7Kjk4gk3UUk8309CfXW4F
-         /NzB9wV4p2JMu6tfUH8ZiUGyk5JWbq0bXKnPVSIDq0HwQpG75eTE6B2sDqehyPBEgVGB
-         ujOw==
-X-Gm-Message-State: AOAM530XkJIl3XLrr36Mc7Cwf2TJHgw4GnztPyttHydi6X6gA4ro8Fur
-        8xczrDv+AcCfrg7ceYUC8wtx9oq5738=
-X-Google-Smtp-Source: ABdhPJyfWM51ssitVrKZ+ILxEdr3bQxiA49aRTHpesRfUbEo6cvOqTynK9IKviDUA5E06Y92l1RKIg==
-X-Received: by 2002:adf:fd41:: with SMTP id h1mr26422025wrs.374.1591086498236;
-        Tue, 02 Jun 2020 01:28:18 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id l2sm2480817wru.58.2020.06.02.01.28.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 01:28:17 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 09:28:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH v10] mfd: mt6360: add pmic mt6360 driver
-Message-ID: <20200602082816.GC3714@dell>
-References: <1591070142-7653-1-git-send-email-gene.chen.richtek@gmail.com>
+        Tue, 2 Jun 2020 04:28:57 -0400
+Received: from relay.sw.ru ([185.231.240.75]:52076 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725897AbgFBI24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 04:28:56 -0400
+Received: from [192.168.15.86]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1jg2Ho-0000Xn-4B; Tue, 02 Jun 2020 11:28:40 +0300
+Subject: Re: [PATCH] shmem, memcg: enable memcg aware shrinker
+To:     Greg Thelen <gthelen@google.com>, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20200601032204.124624-1-gthelen@google.com>
+ <ffdff0be-f2b6-c7c0-debc-9c5e8a33ae4e@virtuozzo.com>
+ <xr93d06i4fus.fsf@gthelen.svl.corp.google.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <5da3cdac-cf05-456f-867f-f09d5a6a2621@virtuozzo.com>
+Date:   Tue, 2 Jun 2020 11:28:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
+In-Reply-To: <xr93d06i4fus.fsf@gthelen.svl.corp.google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1591070142-7653-1-git-send-email-gene.chen.richtek@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 02 Jun 2020, Gene Chen wrote:
+On 02.06.2020 00:48, Greg Thelen wrote:
+> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> 
+>> Hi, Greg,
+>>
+>> good finding. See comments below.
+>>
+>> On 01.06.2020 06:22, Greg Thelen wrote:
+>>> Since v4.19 commit b0dedc49a2da ("mm/vmscan.c: iterate only over charged
+>>> shrinkers during memcg shrink_slab()") a memcg aware shrinker is only
+>>> called when the per-memcg per-node shrinker_map indicates that the
+>>> shrinker may have objects to release to the memcg and node.
+>>>
+>>> shmem_unused_huge_count and shmem_unused_huge_scan support the per-tmpfs
+>>> shrinker which advertises per memcg and numa awareness.  The shmem
+>>> shrinker releases memory by splitting hugepages that extend beyond
+>>> i_size.
+>>>
+>>> Shmem does not currently set bits in shrinker_map.  So, starting with
+>>> b0dedc49a2da, memcg reclaim avoids calling the shmem shrinker under
+>>> pressure.  This leads to undeserved memcg OOM kills.
+>>> Example that reliably sees memcg OOM kill in unpatched kernel:
+>>>   FS=/tmp/fs
+>>>   CONTAINER=/cgroup/memory/tmpfs_shrinker
+>>>   mkdir -p $FS
+>>>   mount -t tmpfs -o huge=always nodev $FS
+>>>   # Create 1000 MB container, which shouldn't suffer OOM.
+>>>   mkdir $CONTAINER
+>>>   echo 1000M > $CONTAINER/memory.limit_in_bytes
+>>>   echo $BASHPID >> $CONTAINER/cgroup.procs
+>>>   # Create 4000 files.  Ideally each file uses 4k data page + a little
+>>>   # metadata.  Assume 8k total per-file, 32MB (4000*8k) should easily
+>>>   # fit within container's 1000 MB.  But if data pages use 2MB
+>>>   # hugepages (due to aggressive huge=always) then files consume 8GB,
+>>>   # which hits memcg 1000 MB limit.
+>>>   for i in {1..4000}; do
+>>>     echo . > $FS/$i
+>>>   done
+>>>
+>>> v5.4 commit 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg
+>>> aware") maintains the per-node per-memcg shrinker bitmap for THP
+>>> shrinker.  But there's no such logic in shmem.  Make shmem set the
+>>> per-memcg per-node shrinker bits when it modifies inodes to have
+>>> shrinkable pages.
+>>>
+>>> Fixes: b0dedc49a2da ("mm/vmscan.c: iterate only over charged shrinkers during memcg shrink_slab()")
+>>> Cc: <stable@vger.kernel.org> # 4.19+
+>>> Signed-off-by: Greg Thelen <gthelen@google.com>
+>>> ---
+>>>  mm/shmem.c | 61 +++++++++++++++++++++++++++++++-----------------------
+>>>  1 file changed, 35 insertions(+), 26 deletions(-)
+>>>
+>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>> index bd8840082c94..e11090f78cb5 100644
+>>> --- a/mm/shmem.c
+>>> +++ b/mm/shmem.c
+>>> @@ -1002,6 +1002,33 @@ static int shmem_getattr(const struct path *path, struct kstat *stat,
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +/*
+>>> + * Expose inode and optional page to shrinker as having a possibly splittable
+>>> + * hugepage that reaches beyond i_size.
+>>> + */
+>>> +static void shmem_shrinker_add(struct shmem_sb_info *sbinfo,
+>>> +			       struct inode *inode, struct page *page)
+>>> +{
+>>> +	struct shmem_inode_info *info = SHMEM_I(inode);
+>>> +
+>>> +	spin_lock(&sbinfo->shrinklist_lock);
+>>> +	/*
+>>> +	 * _careful to defend against unlocked access to ->shrink_list in
+>>> +	 * shmem_unused_huge_shrink()
+>>> +	 */
+>>> +	if (list_empty_careful(&info->shrinklist)) {
+>>> +		list_add_tail(&info->shrinklist, &sbinfo->shrinklist);
+>>> +		sbinfo->shrinklist_len++;
+>>> +	}
+>>> +	spin_unlock(&sbinfo->shrinklist_lock);
+>>> +
+>>> +#ifdef CONFIG_MEMCG
+>>> +	if (page && PageTransHuge(page))
+>>> +		memcg_set_shrinker_bit(page->mem_cgroup, page_to_nid(page),
+>>> +				       inode->i_sb->s_shrink.id);
+>>> +#endif
+>>> +}
+>>> +
+>>>  static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
+>>>  {
+>>>  	struct inode *inode = d_inode(dentry);
+>>> @@ -1048,17 +1075,13 @@ static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
+>>>  			 * to shrink under memory pressure.
+>>>  			 */
+>>>  			if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+>>> -				spin_lock(&sbinfo->shrinklist_lock);
+>>> -				/*
+>>> -				 * _careful to defend against unlocked access to
+>>> -				 * ->shrink_list in shmem_unused_huge_shrink()
+>>> -				 */
+>>> -				if (list_empty_careful(&info->shrinklist)) {
+>>> -					list_add_tail(&info->shrinklist,
+>>> -							&sbinfo->shrinklist);
+>>> -					sbinfo->shrinklist_len++;
+>>> -				}
+>>> -				spin_unlock(&sbinfo->shrinklist_lock);
+>>> +				struct page *page;
+>>> +
+>>> +				page = find_get_page(inode->i_mapping,
+>>> +					(newsize & HPAGE_PMD_MASK) >> PAGE_SHIFT);
+>>> +				shmem_shrinker_add(sbinfo, inode, page);
+>>> +				if (page)
+>>> +					put_page(page);
+>>
+>> 1)I'd move PageTransHuge() check from shmem_shrinker_add() to here. In case of page is not trans huge,
+>>   it looks strange and completely useless to add inode to shrinklist and then to avoid memcg_set_shrinker_bit().
+>>   Nothing should be added to the shrinklist in this case.
+> 
+> Ack,  I'll take a look at this.
+> 
+>> 2)In general I think this "last inode page spliter" does not fit SHINKER_MEMCG_AWARE conception, and
+>>   shmem_unused_huge_shrink() should be reworked as a new separate !memcg-aware shrinker instead of
+>>   .nr_cached_objects callback of generic fs shrinker.
+>>
+>> CC: Kirill Shutemov
+>>
+>> Kirill, are there any fundamental reasons to keep this shrinking logic in the generic fs shrinker?
+>> Are there any no-go to for conversion this as a separate !memcg-aware shrinker?
+> 
+> Making the shmem shrinker !memcg-aware seems like it would require tail
+> pages beyond i_size not be charged to memcg.  Otherwise memcg pressure
+> (which only calls memcg aware shrinkers) won't uncharge them.  Currently
+> the entire compound page is charged.
 
-> From: Gene Chen <gene_chen@richtek.com>
-> 
-> Add MFD driver for mt6360 pmic chip include Battery Charger/
-> USB_PD/Flash, LED/RGB and LED/LDO/Buck
-> 
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Shrinker is not about charging, shrinker is about uncharging ;) The pages will remain be charged
+like they used to be and where they used to be.
 
-I did not sign this off.
+The thing is we have single shrinklist for a superblock. An inode with pending tail page splitting
+is added to this list. Later, shmem_unused_huge_scan() iterates over the list. It splits the tail
+page for every inode in case of the inode size is still unaligned by huge page.
 
-> ---
->  drivers/mfd/Kconfig        |  12 ++
->  drivers/mfd/Makefile       |   1 +
->  drivers/mfd/mt6360-core.c  | 424 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6360.h | 240 +++++++++++++++++++++++++
->  4 files changed, 677 insertions(+)
->  create mode 100644 drivers/mfd/mt6360-core.c
->  create mode 100644 include/linux/mfd/mt6360.h
-> 
-> changelogs between v1 & v2
-> - include missing header file
-> 
-> changelogs between v2 & v3
-> - add changelogs
-> 
-> changelogs between v3 & v4
-> - fix Kconfig description
-> - replace mt6360_pmu_info with mt6360_pmu_data
-> - replace probe with probe_new
-> - remove unnecessary irq_chip variable
-> - remove annotation
-> - replace MT6360_MFD_CELL with OF_MFD_CELL
-> 
-> changelogs between v4 & v5
-> - remove unnecessary parse dt function
-> - use devm_i2c_new_dummy_device
-> - add base-commit message
-> 
-> changelogs between v5 & v6
-> - review return value
-> - remove i2c id_table
-> - use GPL license v2
-> 
-> changelogs between v6 & v7
-> - add author description
-> - replace MT6360_REGMAP_IRQ_REG by REGMAP_IRQ_REG_LINE
-> - remove mt6360-private.h
-> 
-> changelogs between v7 & v8
-> - fix kbuild auto reboot by include interrupt header
-> 
-> changelogs between v8 & v9
-> - fix GPL license out of date
-> - add commit message about Acked-for-MFD-by
-> 
-> changelogs between v9 & v10
+We do not care about memcg here. Tail pages for two inodes may be related to different memcg. But
+shmem_unused_huge_scan() shrink all of them, it does not care about memcg in sc->memcg. Even more:
+nobody in mm/shmem.c cares about memcg.
 
-v9 of this patch is already applied.
+In traditional memcg-aware shrinkers we maintain separate lists for every existing memcg. Object,
+which is charged to a memcg, is added to a specific shrinker list related to the memcg. So, shrinker
+is able to iterate only that objects, which are charged to the memcg.
 
-You cannot send a v10.
+In case of shmem we have single list for that objects (shrinklist). Even more, we have shrinklist
+not for charged objects, we link inodes there. Imagine a situation: file was shrinked and inode
+became linked to shrinklist. Tail page is unaligned and it is related to memcg1. Then file became
+shrinked one more time. New tail page is also unaligned and it related to another memcg2. So, shmem
+shrinker doesn't introduce lists for every memcg (i.e. list_lru), since inode's tail page relation
+to a memcg is not constant. So, as shmem shrinker splits any memcg pages (despite its sc->memcg),
+it can't be called memcg-aware.
 
-> - fix duplicate define of kbuild test reboot initializer-overrides
+Revisiting this once again today, I think we should make shrinklist a list_lru type. Every time,
+when inode is considered to be added to a shrinklist, we should move it to appropriate memcg list.
+In case of it's already linked and memcg is changed, we should move it to another memcg list. I.e.,
+every place like:
 
-I fixed this already.
+	if (list_empty(&info->shrinklist)) {
+		list_add_tail(&info->shrinklist, &sbinfo->shrinklist); 
+		sbinfo->shrinklist_len++;
+	}
 
-https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/?h=for-mfd-next&id=098c4adf249c198519a4abebe482b1e6b8c50e47
+Convert into:
 
-> - sync commit message format
+	if (list_empty(&info->shrinklist)) {
+		list_lru_add(&sbinfo->shrinklist, &info->shrinklist);
+		info->memcg_id = memcg->id;
+	} else if (memcg_changed(info)) {
+		/* Remove from old memcg list */
+		list_lru_del(&info->shrinklist);
+		/* Link to new memcg list */
+		list_lru_add(&sbinfo->shrinklist, &info->shrinklist);
+	}
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+We may cache memcg->id into info, so memcg_changed() we be able to compare cached memcg
+and current, and we will avoid del/add in case of tail page memcg remain the same.
+
+Kirill
