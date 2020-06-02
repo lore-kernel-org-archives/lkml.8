@@ -2,146 +2,248 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7658BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C147CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54687206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E43520835
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1kKD74N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Clmum6eI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgFBRhn (ORCPT
+        id S1728272AbgFBRhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:37:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60138 "EHLO
+        Tue, 2 Jun 2020 13:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgFBRhl (ORCPT
+        with ESMTP id S1726937AbgFBRhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:37:41 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F39CC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:37:41 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id p15so2171356qvr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:37:41 -0700 (PDT)
+        Tue, 2 Jun 2020 13:37:45 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B3EC05BD1E;
+        Tue,  2 Jun 2020 10:37:45 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g12so1619301pll.10;
+        Tue, 02 Jun 2020 10:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EXuKs/ZrhAnv+laNRxA/w5a8bqOks5gwI8BCofPUoP4=;
-        b=K1kKD74NXq9TQWEP0sN+piMgV5Qov4NszLh2L4gD2NHoMGAbTTKafgW22Mho7nLrzg
-         uKvxUOq+OPaLhktD9N6CuXEPpx5kAtHiXz4fW5qZpuQPShjxhb8LJ1foAE9oqTFsz5GR
-         ZIlsETRWogZ1GHXT4X8iqVRjmMggoNxpNiew/BUvETXCOR0lUHiHEjJCw72q6OlDXq0G
-         mOaz/TabGjB/zEY2sRVSMN7k/Z5ntlE6anJO2/FIzfE4rq/2lBENct4nUcTuNNUe0j5/
-         X8RG4ovMuJX29Iql1ICFQnxEYfC26V6DFRF2s488ZoxSA9VwOqRLFXF6Xip0/PqH8VWc
-         bNHQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=E+2KNhccpvYloQu0PsdQGEpNQg5/dPaiop5EurBVv1E=;
+        b=Clmum6eIR6XcmO2XMZ0pyzIVvBytBGDCsz1BRX7EFnilH0qLu34+Wxp236+r/oOMpn
+         r7eJHXb+0zBBklmFhNuN8SCRb0k/3UdC0Ke6ofK4UtwxPxRa6U15rjVwbbLv0285Z/nx
+         /6cXqpEkaPTFVMcECnQBDv6BqcYExE4z4ujkJC0lwehm2luaEKfjNbEGSI39Zo3GUFk1
+         IH9HN2nEjgY7uW+QSBVOQASWP/rDqQO2ZZ0j2b+8ZeNcKrZtfAzRLrzK576sfRnnJ98/
+         MRqF9Sh8Kfj1YirYq8LoU4Amgdeh8PPRqE4Ikoq5WBNWM3+pmWbak4apeSHPB3fACVqG
+         Da9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EXuKs/ZrhAnv+laNRxA/w5a8bqOks5gwI8BCofPUoP4=;
-        b=eLQzZGcWcr40me1EDTOgFDqPpS8c5oVXsEi2OgJPMS4XQDeBVoKZJT+Y7BChAbr0Ap
-         D1LONpLprRX0DSSC9udW8sR5IvEljBFIllDnIguYtcogN0m24q6TrPzqRIeQkVNEwNFu
-         5aoMTE7Hb/LLU1hXj4fqY98TfPdgsV0KYhU/xlrYjC7POwpxEXx80haOlP9Ixf64simO
-         mHe/HRfM1BqDQKuRq2IYKsPb4uE5FDE9W8h9mLTc1SAWE3La0Q95gunsdlVPhT4DTr1T
-         GlZLbfmT84sayd87EjsZiYJRzOKtY0n/lNIgKxqbPtA818PJXY75Cz6DLVVwiLIc2TgM
-         YM1A==
-X-Gm-Message-State: AOAM533opA/+DPO7OhsVHpwWfs0W3AYP2Kq26ulfYTz7Foc8LZfYnkNq
-        RLYsApgbxd3k0y5Op6+VCKmT2C/f
-X-Google-Smtp-Source: ABdhPJxeUBkVU1bt0GkQezqeoW9EO3j+VcdH4W8n5jRKSlDGAWqyQzgcpF2ImtHedm+wtqRJyQf00A==
-X-Received: by 2002:ad4:54ea:: with SMTP id k10mr2889124qvx.66.1591119460142;
-        Tue, 02 Jun 2020 10:37:40 -0700 (PDT)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id p63sm2959711qkf.50.2020.06.02.10.37.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 10:37:38 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id a80so6682337ybg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:37:38 -0700 (PDT)
-X-Received: by 2002:a25:f413:: with SMTP id q19mr45233147ybd.178.1591119457607;
- Tue, 02 Jun 2020 10:37:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200602080535.1427-1-victor@inliniac.net> <CA+FuTSfD2-eF0H=Qu09=JXK6WTiWKNtcqRXqv3TfMfB-=0GiMg@mail.gmail.com>
- <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
-In-Reply-To: <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 2 Jun 2020 13:37:01 -0400
-X-Gmail-Original-Message-ID: <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
-Message-ID: <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] af-packet: new flag to indicate all csums are good
-To:     Victor Julien <victor@inliniac.net>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
-        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexander Drozdov <al.drozdov@gmail.com>,
-        Tom Herbert <tom@herbertland.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=E+2KNhccpvYloQu0PsdQGEpNQg5/dPaiop5EurBVv1E=;
+        b=msRwLRA86OEnVJYrStGcGtVCXDoQCiTPEs6eQ43cicEsN6cMV0pDPysN2y9ElK8Knb
+         fvjsDduXROahgUr7/RHKMtCFCFURdlM+cQpmKODXr0cDmJAUrdWYsEiTi7NVRhCK4QkC
+         YNIUAyoeYr1orgpnaOgiVWkc5sgSV/DGBMXjDgKHrMeTKyCzKM29fpZZAgvqG3l6xwGM
+         NWHiCn4kljEPIIEV4s8z/oGsnTs0eXzmeQ6JmyK7dR6b2UbCe9XTe8nykT0to1ZAGxIy
+         CS7G1pI0V4ceRW21yR9W7nX0AlKCN5ZouPBVnku0h0zWlSjRFWbiI7LmtGOCJ+d99Op1
+         ZChQ==
+X-Gm-Message-State: AOAM531mmfgsPsfoxT9pXec8kT7jZWo/DSa78UQrhIJmb4lhUdOg3XMf
+        8k+i1lvXNvk1Tr5tcmEVqoI=
+X-Google-Smtp-Source: ABdhPJzZolzcCOfoXwrX67EAdfHxoHcGcuiRuqWt+GtbjqmjiIiL53Ag7XirWPXStW/CtkAuv0PTeA==
+X-Received: by 2002:a17:90b:28d:: with SMTP id az13mr304999pjb.67.1591119464856;
+        Tue, 02 Jun 2020 10:37:44 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.152.125])
+        by smtp.gmail.com with ESMTPSA id i22sm2864382pfo.92.2020.06.02.10.37.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 10:37:44 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de, vkoul@kernel.org,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 05/10] dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
+Date:   Tue,  2 Jun 2020 23:03:07 +0530
+Message-Id: <1591119192-18538-6-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 1:03 PM Victor Julien <victor@inliniac.net> wrote:
->
-> On 02-06-2020 16:29, Willem de Bruijn wrote:
-> > On Tue, Jun 2, 2020 at 4:05 AM Victor Julien <victor@inliniac.net> wrote:
-> >>
-> >> Introduce a new flag (TP_STATUS_CSUM_UNNECESSARY) to indicate
-> >> that the driver has completely validated the checksums in the packet.
-> >>
-> >> The TP_STATUS_CSUM_UNNECESSARY flag differs from TP_STATUS_CSUM_VALID
-> >> in that the new flag will only be set if all the layers are valid,
-> >> while TP_STATUS_CSUM_VALID is set as well if only the IP layer is valid.
-> >
-> > transport, not ip checksum.
->
-> Allow me a n00b question: what does transport refer to here? Things like
-> ethernet? It isn't clear to me from the doc.
+Converts the device tree bindings for the Actions Semi Owl SoCs DMA
+Controller over to YAML schemas.
 
-The TCP/UDP/.. transport protocol checksum.
+It also adds new compatible string "actions,s700-dma".
 
-> (happy to follow up with a patch to clarify the doc when I understand
-> things better)
->
-> > But as I understand it drivers set CHECKSUM_COMPLETE if they fill in
-> > skb->csum over the full length of the packet. This does not
-> > necessarily imply that any of the checksum fields in the packet are
-> > valid yet (see also skb->csum_valid). Protocol code later compares
-> > checksum fields against this using __skb_checksum_validate_complete and friends.
-> >
-> > But packet sockets may be called before any of this, however. So I wonder
-> > how valid the checksum really is right now when setting TP_STATUS_CSUM_VALID.
-> > I assume it's correct, but don't fully understand where the validation
-> > has taken place..
->
-> I guess I'm more confused now about what TP_STATUS_CSUM_VALID actually
-> means. It sounds almost like the opposite of TP_STATUS_CSUMNOTREADY, but
-> I'm not sure I understand what the value would be.
->
-> It would be great if someone could help clear this up. Everything I
-> thought I knew/understood so far has been proven wrong, so I'm not too
-> confident about my patch anymore...
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v2:
+	* Addressed Rob's comments:
+           - removed unnecessary description. 
+	   - added unevaluatedProperties
+	   - added relevant information about
+             dma-channels and dma-request
+	* Added power-domain property.   	
+Change since v1:
+        * Updated the description field to reflect
+          only the necessary information.
+        * replaced the maxItems field with description for each
+          controller attribute(except interrupts).
+        * Replaced the clock macro with number to keep the example
+          as independent as possible.
 
-Agreed that we should clear this up.
+ New patch, was not there in RFC.
+---
+ Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
+ Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
 
-> > Similar to commit 682f048bd494 ("af_packet: pass checksum validation
-> > status to the user"), please update tpacket_rcv and packet_rcv.
->
-> Ah yes, good catch. Will add it there as well.
->
-> > Note also that net-next is currently closed.
->
-> Should I hold off on sending a v3 until it reopens?
+diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
+deleted file mode 100644
+index 03e9bb12b75f..000000000000
+--- a/Documentation/devicetree/bindings/dma/owl-dma.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* Actions Semi Owl SoCs DMA controller
+-
+-This binding follows the generic DMA bindings defined in dma.txt.
+-
+-Required properties:
+-- compatible: Should be "actions,s900-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain 4 interrupts shared by all channel.
+-- #dma-cells: Must be <1>. Used to represent the number of integer
+-              cells in the dmas property of client device.
+-- dma-channels: Physical channels supported.
+-- dma-requests: Number of DMA request signals supported by the controller.
+-                Refer to Documentation/devicetree/bindings/dma/dma.txt
+-- clocks: Phandle and Specifier of the clock feeding the DMA controller.
+-
+-Example:
+-
+-Controller:
+-                dma: dma-controller@e0260000 {
+-                        compatible = "actions,s900-dma";
+-                        reg = <0x0 0xe0260000 0x0 0x1000>;
+-                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+-                        #dma-cells = <1>;
+-                        dma-channels = <12>;
+-                        dma-requests = <46>;
+-                        clocks = <&clock CLK_DMAC>;
+-                };
+-
+-Client:
+-
+-DMA clients connected to the Actions Semi Owl SoCs DMA controller must
+-use the format described in the dma.txt file, using a two-cell specifier
+-for each channel.
+-
+-The two cells in order are:
+-1. A phandle pointing to the DMA controller.
+-2. The channel id.
+-
+-uart5: serial@e012a000 {
+-        ...
+-        dma-names = "tx", "rx";
+-        dmas = <&dma 26>, <&dma 27>;
+-        ...
+-};
+diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+new file mode 100644
+index 000000000000..5577cd910781
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/owl-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Actions Semi Owl SoCs DMA controller
++
++description: |
++  The OWL DMA is a general-purpose direct memory access controller capable of
++  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
++  respectively.
++
++maintainers:
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - actions,s900-dma
++      - actions,s700-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      controller supports 4 interrupts, which are freely assignable to the
++      DMA channels.
++    maxItems: 4
++
++  "#dma-cells":
++    const: 1
++
++  dma-channels:
++    maximum: 12
++
++  dma-requests:
++    maximum: 46
++
++  clocks:
++    maxItems: 1
++    description:
++      Phandle and Specifier of the clock feeding the DMA controller.
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - dma-channels
++  - dma-requests
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    dma: dma-controller@e0260000 {
++        compatible = "actions,s900-dma";
++        reg = <0x0 0xe0260000 0x0 0x1000>;
++        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++        #dma-cells = <1>;
++        dma-channels = <12>;
++        dma-requests = <46>;
++        clocks = <&clock 22>;
++    };
++
++...
+-- 
+2.7.4
 
-Yep, thanks. You can always check
-http://vger.kernel.org/~davem/net-next.html when unsure.
