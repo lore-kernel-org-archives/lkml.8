@@ -2,173 +2,105 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6276BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACEAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 456C12074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99EDB2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:36:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXvGJP1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgFBPfm (ORCPT
+        id S1727769AbgFBPgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbgFBPfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:35:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68DE720674;
-        Tue,  2 Jun 2020 15:35:37 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 11:35:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <benh@kernel.crashing.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v14 09/15] mm/damon: Add tracepoints
-Message-ID: <20200602113536.16e8e767@gandalf.local.home>
-In-Reply-To: <20200602131249.22765-1-sjpark@amazon.com>
-References: <20200602130125.20467-1-sjpark@amazon.com>
-        <20200602131249.22765-1-sjpark@amazon.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 2 Jun 2020 11:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgFBPgA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:36:00 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3979C08C5C0;
+        Tue,  2 Jun 2020 08:35:58 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id h185so4211895pfg.2;
+        Tue, 02 Jun 2020 08:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5EYkzwEV9xYGFRcvjgUXkBaYtfbadsZOtEiHhmejCdU=;
+        b=jXvGJP1gZu9liak+Ab3bimqHSewwSk9Fv4qLyhrGSuU2hdUx6Q1uzTJTRmjMpopOXq
+         hFTdX94fal0c6nUyqJIaHo7nDvssgJizbJdj4ksvsvsxPAWoG3luZ99UCziqZl07otRp
+         RwuD51KehZYOd3bA7JDEsAN58cF0ri4ruxcYIwD9+VECCzPZOJuxhQE90Q5geynUa0Gv
+         +OtW2iq+qr71MGPu5Ncth2kBVFlgJ4rOPngX2QLnIg+5iHiDylBd++/bWoR3Xz3XGUge
+         EuyFgTYMKruwyyf2jrLDgMQbGYOg6TKo/gcTODqBCUH4A+fZ5RX6tEu2rfCB69kcOw73
+         w+uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5EYkzwEV9xYGFRcvjgUXkBaYtfbadsZOtEiHhmejCdU=;
+        b=PygJAUpMcTRqXQgJIOx9ioAEA1/UBBaNLzjBrl2jsPq4QVcRPpkvwMN3hwYGIB4w1i
+         q9O+52QYEeaY3QAzcb+g5q8hDZUUBH1VWz6EjPevER0K5rk1MtttYbUsjgnzcLgoo5wt
+         wYIxV6th1MRkZt9uB/flyYEyjL4Vrj3iFQeI1rGIm4tW9gjlMMmxkmTqJGG4VAVTp8t2
+         RJUwSUJ9DexetsokGG132E6rXMgg6xWlMDL4cyR3qZKQW0zf2/NAgxm//pnmuuiQdeUj
+         DYuAC+h4hTotGgfendiblHA6eRH/zmTn6g5IZuwutitsTG3xZ9tJDezo9RdXNLaf4SU9
+         XDRw==
+X-Gm-Message-State: AOAM5300ilyR9ljANbiay0V49QVvYSpHqxY0HTVdwP6ZbcEYyVtbRE3U
+        SrSUYp85edSW32czJ4hXmthX/Y1cQTpTG37q1mk=
+X-Google-Smtp-Source: ABdhPJyrUrtx2tzUesymBMoc0kdJViRXxTZ2EDEFS/7FPRQVJG33RuLHgEDquM+cx++UWJIkCIICcAQNM4q9wTB39Uc=
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr8466830pgk.203.1591112158239;
+ Tue, 02 Jun 2020 08:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200602092041.32011-1-piotr.stankiewicz@intel.com>
+In-Reply-To: <20200602092041.32011-1-piotr.stankiewicz@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jun 2020 18:35:46 +0300
+Message-ID: <CAHp75Vf6xzuD2MPLr2xW0=1-040uNS-Ady1LSZ-9hqGPjK6sxg@mail.gmail.com>
+Subject: Re: [PATCH 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 15:12:49 +0200
-SeongJae Park <sjpark@amazon.com> wrote:
+On Tue, Jun 2, 2020 at 12:25 PM Piotr Stankiewicz
+<piotr.stankiewicz@intel.com> wrote:
+>
+> Seeing as there is shorthand available to use when asking for any type
+> of interrupt, or any type of message signalled interrupt, leverage it.
 
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> This commit adds a tracepoint for DAMON.  It traces the monitoring
-> results of each region for each aggregation interval.  Using this, DAMON
-> will be easily integrated with any tracepoints supporting tools such as
-> perf.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> Reviewed-by: Leonard Foerster <foersleo@amazon.de>
-> ---
->  include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
->  mm/damon.c                   |  5 +++++
->  2 files changed, 48 insertions(+)
->  create mode 100644 include/trace/events/damon.h
-> 
-> diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-> new file mode 100644
-> index 000000000000..22236642d366
-> --- /dev/null
-> +++ b/include/trace/events/damon.h
-> @@ -0,0 +1,43 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM damon
-> +
-> +#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_DAMON_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(damon_aggregated,
-> +
-> +	TP_PROTO(int pid, unsigned int nr_regions,
-> +		unsigned long vm_start, unsigned long vm_end,
-> +		unsigned int nr_accesses),
-> +
-> +	TP_ARGS(pid, nr_regions, vm_start, vm_end, nr_accesses),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(int, pid)
-> +		__field(unsigned int, nr_regions)
-> +		__field(unsigned long, vm_start)
-> +		__field(unsigned long, vm_end)
-> +		__field(unsigned int, nr_accesses)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->pid = pid;
-> +		__entry->nr_regions = nr_regions;
-> +		__entry->vm_start = vm_start;
-> +		__entry->vm_end = vm_end;
-> +		__entry->nr_accesses = nr_accesses;
-> +	),
-> +
-> +	TP_printk("pid=%d nr_regions=%u %lu-%lu: %u", __entry->pid,
-> +			__entry->nr_regions, __entry->vm_start,
-> +			__entry->vm_end, __entry->nr_accesses)
-> +);
-> +
-> +#endif /* _TRACE_DAMON_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/mm/damon.c b/mm/damon.c
-> index 6b0b8f21a6c6..af6f395fe06c 100644
-> --- a/mm/damon.c
-> +++ b/mm/damon.c
-> @@ -9,6 +9,8 @@
->  
->  #define pr_fmt(fmt) "damon: " fmt
->  
-> +#define CREATE_TRACE_POINTS
-> +
->  #include <linux/damon.h>
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
-> @@ -20,6 +22,7 @@
->  #include <linux/sched/mm.h>
->  #include <linux/sched/task.h>
->  #include <linux/slab.h>
-> +#include <trace/events/damon.h>
->  
->  /* Minimal region size.  Every damon_region is aligned by this. */
->  #define MIN_REGION PAGE_SIZE
-> @@ -650,6 +653,8 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
->  			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
->  			damon_write_rbuf(c, &r->nr_accesses,
->  					sizeof(r->nr_accesses));
-> +			trace_damon_aggregated(t->pid, nr,
-> +					r->vm_start, r->vm_end, r->nr_accesses);
+...
 
-For a little better code, what about passing in t and r directly, and then
-having the TP_fast_assign just do the dereferencing there?
+> -       unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
+> +       unsigned int flags = PCI_IRQ_MSI_TYPES;
+>
+>         if (!pci_is_pcie(dd->pcidev)) {
+>                 qib_dev_err(dd, "Can't find PCI Express capability!\n");
 
-	__entry->pid = t->pid;
-	__entry->vm_start = r->vm_start;
-	__entry->vm_end = r->vm_end;
-	__entry->nr_accesses = r->nr_accesses;
+Internally I have proposed at last this:
 
-It will produce better code at the trace point call (which is the important
-part) and make the trace event a bit more flexible in the future, without
-having to modify the call site.
+convert the following
+        if (dd->flags & QIB_HAS_INTX)
+               flags |= PCI_IRQ_LEGACY;
 
--- Steve
+to
+        if (dd->flags & QIB_HAS_INTX)
+               flags = PCI_IRQ_ALL_TYPES;
+        if (dd->flags & QIB_HAS_INTX)
+               flags = PCI_IRQ_MSI_TYPES;
 
-
->  			r->nr_accesses = 0;
->  		}
->  	}
-
+-- 
+With Best Regards,
+Andy Shevchenko
