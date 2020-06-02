@@ -2,126 +2,200 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D554C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DAB206F1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A26206F1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:12:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X+nZcMEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgFBEMs (ORCPT
+        id S1726171AbgFBEMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:12:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8236 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726003AbgFBEMs (ORCPT
+        Tue, 2 Jun 2020 00:12:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42985 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726003AbgFBEMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:12:48 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05243cGU128488;
-        Tue, 2 Jun 2020 00:12:27 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31c53yyxdp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 00:12:27 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05243cip128459;
-        Tue, 2 Jun 2020 00:12:27 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31c53yyxd9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 00:12:26 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05240nnL022718;
-        Tue, 2 Jun 2020 04:12:25 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma05fra.de.ibm.com with ESMTP id 31bf482464-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 04:12:24 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0524CLrS65602010
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jun 2020 04:12:22 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDFCB11C050;
-        Tue,  2 Jun 2020 04:12:21 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5470F11C04A;
-        Tue,  2 Jun 2020 04:12:19 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.55.113])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Jun 2020 04:12:19 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org,
-        apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hw_breakpoint: Fix build warnings with clang
-Date:   Tue,  2 Jun 2020 09:42:08 +0530
-Message-Id: <20200602041208.128913-1-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 2 Jun 2020 00:12:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591071169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a9lp4kCk0EoQLJ2l6jfmvjFXr0WGukdLqUGAxnFUiPM=;
+        b=X+nZcMEmXSlOxhfYtfgpbdWSJWeEYft0Mu/QAlEl/t/6ILTUyEHUlGiR5xa+Tc1pQ1XCmA
+        MvRa0vfs7gxchmtS32mKNo4PpYU+E9qF3X607PS7fKEn0qd9NRsShukiAHiAgYmbCAjvvD
+        ZhvMfBtWiMyGZyZcODHAb0AB/HQ430Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-HUdDd-FCOpyejH6QrIHWYQ-1; Tue, 02 Jun 2020 00:12:47 -0400
+X-MC-Unique: HUdDd-FCOpyejH6QrIHWYQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D252C100CCC0;
+        Tue,  2 Jun 2020 04:12:45 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 68C9411CC00;
+        Tue,  2 Jun 2020 04:12:45 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 22:12:44 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Diana Craciun <diana.craciun@oss.nxp.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        laurentiu.tudor@nxp.com, bharatb.linux@gmail.com,
+        Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Subject: Re: [PATCH v2 5/9] vfio/fsl-mc: Allow userspace to MMAP fsl-mc
+ device MMIO regions
+Message-ID: <20200601221244.5dadbb26@x1.home>
+In-Reply-To: <20200508072039.18146-6-diana.craciun@oss.nxp.com>
+References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
+        <20200508072039.18146-6-diana.craciun@oss.nxp.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-02_04:2020-06-01,2020-06-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- mlxlogscore=985 cotscore=-2147483648 mlxscore=0 adultscore=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020020
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kbuild test robot reported few build warnings with hw_breakpoint code
-when compiled with clang[1]. Fix those.
+On Fri,  8 May 2020 10:20:35 +0300
+Diana Craciun <diana.craciun@oss.nxp.com> wrote:
 
-[1]: https://lore.kernel.org/linuxppc-dev/202005192233.oi9CjRtA%25lkp@intel.com/
+> Allow userspace to mmap device regions for direct access of
+> fsl-mc devices.
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 60 ++++++++++++++++++++++-
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  2 +
+>  2 files changed, 60 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> index c162fa27c02c..a92c6c97c29a 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> @@ -33,7 +33,11 @@ static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
+>  
+>  		vdev->regions[i].addr = res->start;
+>  		vdev->regions[i].size = PAGE_ALIGN((resource_size(res)));
+> -		vdev->regions[i].flags = 0;
+> +		vdev->regions[i].flags = VFIO_REGION_INFO_FLAG_MMAP;
+> +		vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_READ;
+> +		if (!(mc_dev->regions[i].flags & IORESOURCE_READONLY))
+> +			vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_WRITE;
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
-Note: Prepared on top of powerpc/next.
 
- arch/powerpc/include/asm/hw_breakpoint.h | 3 ---
- include/linux/hw_breakpoint.h            | 4 ++++
- 2 files changed, 4 insertions(+), 3 deletions(-)
+I'm a little confused that we advertise read and write here, but it's
+only relative to the mmap and even later in the series where we add
+read and write callback support, it's only for the dprc and dpmcp
+devices.  Doesn't this leave dpaa2 accelerator devices with only mmap
+access?  vfio doesn't really have a way to specify that a device only
+has mmap access and the read/write interfaces can be quite useful when
+debugging or tracing.
 
-diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index f42a55eb77d2..cb424799da0d 100644
---- a/arch/powerpc/include/asm/hw_breakpoint.h
-+++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -70,9 +70,6 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
- 						unsigned long val, void *data);
- int arch_install_hw_breakpoint(struct perf_event *bp);
- void arch_uninstall_hw_breakpoint(struct perf_event *bp);
--int arch_reserve_bp_slot(struct perf_event *bp);
--void arch_release_bp_slot(struct perf_event *bp);
--void arch_unregister_hw_breakpoint(struct perf_event *bp);
- void hw_breakpoint_pmu_read(struct perf_event *bp);
- extern void flush_ptrace_hw_breakpoint(struct task_struct *tsk);
- 
-diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-index 6058c3844a76..521481f0d320 100644
---- a/include/linux/hw_breakpoint.h
-+++ b/include/linux/hw_breakpoint.h
-@@ -80,6 +80,10 @@ extern int dbg_reserve_bp_slot(struct perf_event *bp);
- extern int dbg_release_bp_slot(struct perf_event *bp);
- extern int reserve_bp_slot(struct perf_event *bp);
- extern void release_bp_slot(struct perf_event *bp);
-+extern int hw_breakpoint_weight(struct perf_event *bp);
-+extern int arch_reserve_bp_slot(struct perf_event *bp);
-+extern void arch_release_bp_slot(struct perf_event *bp);
-+extern void arch_unregister_hw_breakpoint(struct perf_event *bp);
- 
- extern void flush_ptrace_hw_breakpoint(struct task_struct *tsk);
- 
--- 
-2.26.2
+> +		vdev->regions[i].type = mc_dev->regions[i].flags & IORESOURCE_BITS;
+>  	}
+>  
+>  	vdev->num_regions = mc_dev->obj_desc.region_count;
+> @@ -164,9 +168,61 @@ static ssize_t vfio_fsl_mc_write(void *device_data, const char __user *buf,
+>  	return -EINVAL;
+>  }
+>  
+> +static int vfio_fsl_mc_mmap_mmio(struct vfio_fsl_mc_region region,
+> +				 struct vm_area_struct *vma)
+> +{
+> +	u64 size = vma->vm_end - vma->vm_start;
+> +	u64 pgoff, base;
+> +
+> +	pgoff = vma->vm_pgoff &
+> +		((1U << (VFIO_FSL_MC_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
+> +	base = pgoff << PAGE_SHIFT;
+> +
+> +	if (region.size < PAGE_SIZE || base + size > region.size)
+
+We've already aligned region.size up to PAGE_SIZE, so that test can't
+be true.  Whether it was a good idea to do that alignment, I'm not so
+sure.
+
+> +		return -EINVAL;
+> +
+> +	if (!(region.type & VFIO_DPRC_REGION_CACHEABLE))
+> +		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+> +
+> +	vma->vm_pgoff = (region.addr >> PAGE_SHIFT) + pgoff;
+> +
+> +	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+> +			       size, vma->vm_page_prot);
+> +}
+> +
+>  static int vfio_fsl_mc_mmap(void *device_data, struct vm_area_struct *vma)
+>  {
+> -	return -EINVAL;
+> +	struct vfio_fsl_mc_device *vdev = device_data;
+> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
+> +	int index;
+> +
+> +	index = vma->vm_pgoff >> (VFIO_FSL_MC_OFFSET_SHIFT - PAGE_SHIFT);
+> +
+> +	if (vma->vm_end < vma->vm_start)
+> +		return -EINVAL;
+> +	if (vma->vm_start & ~PAGE_MASK)
+> +		return -EINVAL;
+> +	if (vma->vm_end & ~PAGE_MASK)
+> +		return -EINVAL;
+> +	if (!(vma->vm_flags & VM_SHARED))
+> +		return -EINVAL;
+> +	if (index >= vdev->num_regions)
+> +		return -EINVAL;
+> +
+> +	if (!(vdev->regions[index].flags & VFIO_REGION_INFO_FLAG_MMAP))
+> +		return -EINVAL;
+> +
+> +	if (!(vdev->regions[index].flags & VFIO_REGION_INFO_FLAG_READ)
+> +			&& (vma->vm_flags & VM_READ))
+> +		return -EINVAL;
+> +
+> +	if (!(vdev->regions[index].flags & VFIO_REGION_INFO_FLAG_WRITE)
+> +			&& (vma->vm_flags & VM_WRITE))
+> +		return -EINVAL;
+> +
+> +	vma->vm_private_data = mc_dev;
+> +
+> +	return vfio_fsl_mc_mmap_mmio(vdev->regions[index], vma);
+>  }
+>  
+>  static const struct vfio_device_ops vfio_fsl_mc_ops = {
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> index 818dfd3df4db..89d2e2a602d8 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> @@ -15,6 +15,8 @@
+>  #define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
+>  	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
+>  
+> +#define VFIO_DPRC_REGION_CACHEABLE	0x00000001
+
+
+There appears to be some sort of magic mapping of this to bus specific
+bits in the IORESOURCE_BITS range.  If the bus specific bits get
+shifted we'll be subtly broken here.  Can't we use the bus #define so
+that we can't get out of sync?  Thanks,
+
+Alex
+
+
+> +
+>  struct vfio_fsl_mc_region {
+>  	u32			flags;
+>  	u32			type;
 
