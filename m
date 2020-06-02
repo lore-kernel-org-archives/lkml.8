@@ -2,128 +2,131 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,PDS_BTC_ID,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90681C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E67CF20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7264920679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:49:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WoDUn//r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgFBJsJ (ORCPT
+        id S1726693AbgFBJtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:48:09 -0400
-Received: from m176150.mail.qiye.163.com ([59.111.176.150]:11487 "EHLO
-        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBJsI (ORCPT
+        Tue, 2 Jun 2020 05:49:13 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:39654 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgFBJtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:48:08 -0400
-Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
-        by m176150.mail.qiye.163.com (Hmail) with ESMTP id B33C11A31FD;
-        Tue,  2 Jun 2020 17:48:04 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AL2AMwDwCA5eGEO341Qckarq.1.1591091284601.Hmail.zhucancan@vivo.com>
-To:     tiwai@suse.com, perex@perex.cz, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel <kernel@vivo.com>, wenhu wang <wenhu.wang@vivo.com>,
-        cancan zhu <zhucancan@vivo.com>
-Subject: =?UTF-8?B?W1BBVENIXSBBTFNBOiBjb3JlOiBGaXggY29udHJvbCBkZXZpY2UgcmVsZWFzZSBpc3N1ZQ==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
+        Tue, 2 Jun 2020 05:49:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591091352; x=1622627352;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=XYWvcTMnu5gYjXeMs5ChljnhBkkNboMpnYYArlKHA2Y=;
+  b=WoDUn//rTpWgTuD+HxRRkDzKDOV3Xp69/yl+MDI9lQFz2tvBYpthWNMT
+   9WEddTAzz5Grr4DZDqaJPTa6zvwG/uqqI1QMjKMw54oSdehVunlUhrBW9
+   XREu++t50pZBVWl2MgMjr9hncSaaCXYEYr8jqMFp3qqZz59nXifN3+k32
+   lvCrE1WObAca/SPQHnAHS4vZlAM6TP7TEUzSpisnegZy0hfSJOvxC+EqO
+   ghtoAFBG+vFtr2y5CtV7zL82Jfmg0apLEG1LLLKVmsdt7OvTlQVzDMSey
+   uICZr+ubPEMUJk06YN5bgBmKSKIuNx9Kj1DSsqgLoRt/VN+UmaJGlhifu
+   g==;
+IronPort-SDR: vkMrKR4DTnFoAhQgn4Xj1OqpqZBjuz9tFOz8GKffkGjDmng3TRtTay4RgFkq7ULrjECwGmLp2m
+ MdaD91OpomcTxZoazsPtP8rBvk1J/QPwvHPriOj4gjHo6X3yW+V7odKuskYGG/vk5coh3y+k4v
+ 5vkWGsKDTL2niv/nkykeYnFTG4jIV0YXk4WAsd2uVrVbQ89uuxfPhB3A8oxGLQzsiG5teIAGDZ
+ GxjzyHPPXkMhugow9mwMqubhKeLm9tfEeYLqLs8YPwhZ3VbI/aLrVZOqNwif5U3PoYtoSP0QBS
+ LIk=
+X-IronPort-AV: E=Sophos;i="5.73,463,1583218800"; 
+   d="scan'208";a="78594449"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jun 2020 02:49:12 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 2 Jun 2020 02:49:12 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 2 Jun 2020 02:49:09 -0700
+References: <20200513130842.24847-1-lars.povlsen@microchip.com> <20200513130842.24847-4-lars.povlsen@microchip.com> <20200528022502.GA3234572@bogus>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Sebastian Reichel <sre@kernel.org>, SoC Team <soc@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/5] dt-bindings: reset: ocelot: Add documentation for 'microchip,reset-switch-core' property
+In-Reply-To: <20200528022502.GA3234572@bogus>
+Date:   Tue, 2 Jun 2020 11:49:08 +0200
+Message-ID: <87wo4piyqz.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Received: from zhucancan@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 2 Jun 2020 17:48:04 +0800 (GMT+08:00)
-From:   =?UTF-8?B?5pyx54G/54G/?= <zhucancan@vivo.com>
-Date:   Tue, 2 Jun 2020 17:48:04 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVKSU1CQkJDTk5LT0pOWVdZKFlBSE
-        83V1ktWUFJV1kPCRoVCBIfWUFZLRYpTzgcPxU1Ok4uMjUhHk4XMks6OlZWVUhLTyhJWVdZCQ4XHg
-        hZQVk1NCk2OjckKS43PllXWRYaDxIVHRRZQVk0MFkG
-X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo3STo2DD8MODpOHjw#NEhPSioY
-        EBoJClVKVUpOQkpLQkpJQ09DSE9VMxYaEhdVARMOGBoVGBoVOw0SDRRVGBQWRVlXWRILWUFZTkNV
-        SU5KVUxPVUlJTFlXWQgBWUFMSE5PNwY+
-X-HM-Tid: 0a72746e4b0d93b4kuwsb33c11a31fd
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogemh1Y2FuY2FuIDx6aHVjYW5jYW5Adml2by5jb20+CkRhdGU6IFR1ZSwgMiBKdW4gMjAy
-MCAxNjoyMjo1NyArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIEFMU0E6IGNvcmU6IEZpeCBjb250cm9s
-IGRldmljZSByZWxlYXNlIGlzc3VlCgpXZSB1c2Ugc25kX3BjbV9hZGRfdXNyX2N0bHMoKSBpbiBj
-b21wb25lbnQncyAucGNtX25ldygpLAp1bmZvcnR1bmF0ZWx5IHNuZF9zb2NfZGFwbV9hZGRfcm91
-dGVzKCkgbWVldHMgZXJyb3IgZHVyaW5nCmFkZGluZyBjYXJkLT5kYXBtX3JvdXRlcy9vZl9kYXBt
-X3JvdXRlcywgaXQgd2lsbCBnb3RvIHByb2JlX2VuZAp0byBjYWxsIHNvY19jbGVhbnVwX2NhcmRf
-cmVzb3VyY2VzKCkuCgpUaGUgY29tbWl0IGRjODJlNTI0OTJmNiAoIkFMU0E6IGNvcmU6IEFzc3Vy
-ZSBjb250cm9sIGRldmljZQp0byBiZSByZWdpc3RlcmVkIGF0IGxhc3QiKSB3aWxsIG1ha2UgcGNt
-IGRldmljZSByZWxlYXNlIGlzCnByaW9yIHRvIGNvbnRyb2wgZGV2aWNlIHJlbGVhc2UsIGJ1dCB0
-aGUgY29udHJvbCBkZXZpY2UgbmVlZHMKdG8gdXNlIHBjbSBwb2ludG9yLCB3aGljaCBpcyBhbHJl
-YWR5IGZyZWVkIGJ5IHBjbSBkZXZpY2UgcmVsZWFzZS4KClsgICA3MC4wNTYwMDBdIFVuYWJsZSB0
-byBoYW5kbGUga2VybmVsIHBhZ2luZyByZXF1ZXN0IGF0IHZpcnR1YWwgYWRkcmVzcyBmZmZmZmY4
-MGYyZDJjNDgwClsgICA3MC4wNjYxMzldIGluaXQ6IHByb2Nlc3NpbmcgYWN0aW9uIChpbml0LnN2
-Yy5tZWRpYT0qKSBmcm9tICgvc3lzdGVtL2V0Yy9pbml0L21lZGlhc2VydmVyLnJjOjEpClsgICA3
-MC4wNzYzMTFdIE1lbSBhYm9ydCBpbmZvOgpbICAgNzAuMTI2Njc5XSAgIEVTUiA9IDB4OTYwMDAw
-NDcKWyAgIDcwLjEyNjY4NV0gICBFQyA9IDB4MjU6IERBQlQgKGN1cnJlbnQgRUwpLCBJTCA9IDMy
-IGJpdHMKWyAgIDcwLjEyNjY4OV0gICBTRVQgPSAwLCBGblYgPSAwClsgICA3MC4xMjY2OTNdICAg
-RUEgPSAwLCBTMVBUVyA9IDAKWyAgIDcwLjEyNjY5Nl0gRGF0YSBhYm9ydCBpbmZvOgpbICAgNzAu
-MTI2NzAwXSAgIElTViA9IDAsIElTUyA9IDB4MDAwMDAwNDcKWyAgIDcwLjEyNjcwNF0gICBDTSA9
-IDAsIFduUiA9IDEKWyAgIDcwLjEyNjcxMF0gc3dhcHBlciBwZ3RhYmxlOiA0ayBwYWdlcywgMzkt
-Yml0IFZBcywgcGdkcD0wMDAwMDAwMGEyMTZiMDAwClsgICA3MC4xMjY3MTVdIFtmZmZmZmY4MGYy
-ZDJjNDgwXSBwZ2Q9MDAwMDAwMDFmZmI3ZjAwMywgcHVkPTAwMDAwMDAxZmZiN2YwMDMsIHBtZD0w
-MDAwMDAwMWZmOWU4MDAzLCBwdGU9MDA2ODAwMDE3MmQyY2YxMgpbICAgNzAuMTI2NzMxXSBJbnRl
-cm5hbCBlcnJvcjogT29wczogOTYwMDAwNDcgWyMxXSBQUkVFTVBUIFNNUApbICAgNzAuMTI2ODIx
-XSBDUFU6IDAgUElEOiA1IENvbW06IGt3b3JrZXIvMDowIFRhaW50ZWQ6IEcgICAgICAgIFcgIE8g
-ICAgICA1LjQuMTItcWdraS1kZWJ1Zy1nNGM3Y2E5ZjIwICMxMApbICAgNzAuMTI2ODQwXSBXb3Jr
-cXVldWU6IGV2ZW50cyBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMkMmI1MDBlODUyY2VhZDY5ZmRl
-MDVhMmI5OGNlYjJmYTYuY2ZpX2p0ClsgICA3MC4xMjY4NDVdIHBzdGF0ZTogODBjMDAwMDUgKE56
-Y3YgZGFpZiArUEFOICtVQU8pClsgICA3MC4xMjY4NTRdIHBjIDogcGNtX3Vzcl9jdGxfcHJpdmF0
-ZV9mcmVlJDE2NWY0NDAwZWU2NzMyYzdjOGM4MTU3YmUwZjcyNTE4KzB4MjAvMHgzNApbICAgNzAu
-MTI2ODYxXSBsciA6IHNuZF9jdGxfcmVtb3ZlKzB4ZjQvMHgxNTQKWyAgIDcwLjEyNjg2Ml0gc3Ag
-OiBmZmZmZmZjMDEwMDdiNzUwClsgICA3MC4xMjY4NjVdIHgyOTogZmZmZmZmYzAxMDA3Yjc1MCB4
-Mjg6IGZmZmZmZmQ5NzNjMmJiMmMKWyAgIDcwLjEyNjg2OF0geDI3OiBmZmZmZmY4MTA3Yjc0MWEw
-IHgyNjogZGVhZDAwMDAwMDAwMDEwMApbICAgNzAuMTI2ODc0XSB4MjU6IDAwMDAwMDAwMDAwMDAw
-MDIgeDI0OiBmZmZmZmZkOTczYzJiYjhjClsgICA3MC4xMjY4NzddIHgyMzogZmZmZmZmZDk3NTAy
-N2M4MCB4MjI6IGZmZmZmZmQ5NzQxNTQzN2YKWyAgIDcwLjEyNjg4MF0geDIxOiAwMDAwMDAwMDAw
-MDAwMDAxIHgyMDogZmZmZmZmZDk3M2MzN2UxMApbICAgNzAuMTI2ODgzXSB4MTk6IGZmZmZmZjgw
-ZjJkNTVkMDAgeDE4OiBmZmZmZmY4MDQ1MWRlNGQwClsgICA3MC4xMjY4ODZdIHgxNzogZmZmZmZm
-ODBmMmQ1ODAwMCB4MTY6IDAwMDAwMDAwMDAwMDA0MDAKWyAgIDcwLjEyNjg4OV0geDE1OiBhNmZl
-NGU5YmRjNWE2YjA1IHgxNDogMDAwMDAwMDAwMDAwMDAwMApbICAgNzAuMTI2ODkyXSB4MTM6IGZm
-ZmZmZmZmMDNhYjU0MDggeDEyOiAwMDAwMDAwMDAwMDAwMDAxClsgICA3MC4xMjY4OTZdIHgxMTog
-NzA3OTU0MjA3MDcwNDEyMCB4MTA6IDAwMDAwMDAwMDAwMDAzOTgKWyAgIDcwLjEyNjg5OV0geDkg
-OiAwMDAwMDAwMDAwMDAwMDAxIHg4IDogZmZmZmZmODBmMmQyYzM5OApbICAgNzAuMTI2OTAyXSB4
-NyA6IDAwMDAwMDAwMDAwMDAwMDAgeDYgOiBmZmZmZmY4MGY2YjRkMTc4ClsgICA3MC4xMjY5MDVd
-IHg1IDogZmZmZmZmZDk3MzM1ZmU4YyB4NCA6IDAwMDAwMDAwMDAwMDAwMDAKWyAgIDcwLjEyNjkw
-OF0geDMgOiBmZmZmZmZjMDEwMDdiNjUwIHgyIDogZmZmZmZmYzAxMDA3Yjc2OApbICAgNzAuMTI2
-OTExXSB4MSA6IDAwMDAwMDAwZmZmZmZmZmYgeDAgOiBmZmZmZmY4MTFmZjQxNDgwClsgICA3MC4x
-MjY5MTZdIENhbGwgdHJhY2U6ClsgICA3MC4xMjY5MjBdICBwY21fdXNyX2N0bF9wcml2YXRlX2Zy
-ZWUkMTY1ZjQ0MDBlZTY3MzJjN2M4YzgxNTdiZTBmNzI1MTgrMHgyMC8weDM0ClsgICA3MC4xMjY5
-MjNdICBzbmRfY3RsX3JlbW92ZSsweGY0LzB4MTU0ClsgICA3MC4xMjY5MjddICBzbmRfY3RsX2Rl
-dl9mcmVlJDFiOGVmZWE0OTE4NmI3OWU2ZTRhMzljYWM1NzQ4ZjFjKzB4M2MvMHg3MApbICAgNzAu
-MTI2OTMwXSAgc25kX2RldmljZV9mcmVlX2FsbCsweDIzNC8weDJjOApbICAgNzAuMTI2OTM0XSAg
-cmVsZWFzZV9jYXJkX2RldmljZSRmYjczMjgzODZjYWMwYmRmMWIzZjJmODhkYTc5NTIxZisweDI0
-LzB4Y2MKWyAgIDcwLjEyNjk0MV0gIGRldmljZV9yZWxlYXNlJGQyZmRkODkxMmJlYjcxZjljY2M3
-Y2E3MmZjZWIwNTIyKzB4NDgvMHgxMTgKWyAgIDcwLjEyNjk0OV0gIGtvYmplY3RfY2xlYW51cCsw
-eDEzOC8weDI1YwpbICAgNzAuMTI2OTUyXSAga29iamVjdF9wdXQrMHg1MC8weDYwClsgICA3MC4x
-MjY5NTVdICBwdXRfZGV2aWNlKzB4MTQvMHgyMApbICAgNzAuMTI2OTU3XSAgc25kX2NhcmRfZnJl
-ZSsweDYwLzB4OTgKWyAgIDcwLjEyNjk2M10gIHNvY19jbGVhbnVwX2NhcmRfcmVzb3VyY2VzKzB4
-MmMvMHg0MjAKWyAgIDcwLjEyNjk2Nl0gIHNuZF9zb2NfYmluZF9jYXJkKzB4Y2MwLzB4ZmE4Clsg
-ICA3MC4xMjY5NjhdICBzbmRfc29jX3JlZ2lzdGVyX2NhcmQrMHgxMTAvMHgxMjgKWyAgIDcwLjEy
-Njk3NF0gIGRldm1fc25kX3NvY19yZWdpc3Rlcl9jYXJkKzB4NGMvMHg5MAoKRml4ZXM6IGRjODJl
-NTI0OTJmNiAoIkFMU0E6IGNvcmU6IEFzc3VyZSBjb250cm9sIGRldmljZSB0byBiZSByZWdpc3Rl
-cmVkIGF0IGxhc3QiKQpTaWduZWQtb2ZmLWJ5OiB6aHVjYW5jYW4gPHpodWNhbmNhbkB2aXZvLmNv
-bT4KLS0tCiBzb3VuZC9jb3JlL2RldmljZS5jIHwgOCAtLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQs
-IDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvc291bmQvY29yZS9kZXZpY2UuYyBiL3NvdW5k
-L2NvcmUvZGV2aWNlLmMKaW5kZXggYmYwYjA0YTdlZTc5Li4xYWVlMGY1NjIzYTIgMTAwNjQ0Ci0t
-LSBhL3NvdW5kL2NvcmUvZGV2aWNlLmMKKysrIGIvc291bmQvY29yZS9kZXZpY2UuYwpAQCAtMjI1
-LDE0ICsyMjUsNiBAQCB2b2lkIHNuZF9kZXZpY2VfZnJlZV9hbGwoc3RydWN0IHNuZF9jYXJkICpj
-YXJkKQogCiAJaWYgKHNuZF9CVUdfT04oIWNhcmQpKQogCQlyZXR1cm47Ci0JbGlzdF9mb3JfZWFj
-aF9lbnRyeV9zYWZlX3JldmVyc2UoZGV2LCBuZXh0LCAmY2FyZC0+ZGV2aWNlcywgbGlzdCkgewot
-CQkvKiBleGNlcHRpb246IGZyZWUgY3RsIGFuZCBsb3dsZXZlbCBzdHVmZiBsYXRlciAqLwotCQlp
-ZiAoZGV2LT50eXBlID09IFNORFJWX0RFVl9DT05UUk9MIHx8Ci0JCSAgICBkZXYtPnR5cGUgPT0g
-U05EUlZfREVWX0xPV0xFVkVMKQotCQkJY29udGludWU7Ci0JCV9fc25kX2RldmljZV9mcmVlKGRl
-dik7Ci0JfQotCiAJLyogZnJlZSBhbGwgKi8KIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmVfcmV2
-ZXJzZShkZXYsIG5leHQsICZjYXJkLT5kZXZpY2VzLCBsaXN0KQogCQlfX3NuZF9kZXZpY2VfZnJl
-ZShkZXYpOwotLSAKMi4yMS4wCgoKCgoKCgoNCg0K
+
+Rob Herring writes:
+
+> On Wed, May 13, 2020 at 03:08:40PM +0200, Lars Povlsen wrote:
+>> This documents the 'microchip,reset-switch-core' property in the
+>> ocelot-reset driver.
+>>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  .../devicetree/bindings/power/reset/ocelot-reset.txt        | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+>> index 4d530d8154848..20fff03753ad2 100644
+>> --- a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+>> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+>> @@ -9,9 +9,15 @@ microchip Sparx5 armv8 SoC's.
+>>  Required Properties:
+>>   - compatible: "mscc,ocelot-chip-reset" or "microchip,sparx5-chip-reset"
+>>
+>> +Optional properties:
+>> +- microchip,reset-switch-core : Perform a switch core reset at the
+>> +  time of driver load. This is may be used to initialize the switch
+>> +  core to a known state (before other drivers are loaded).
+>
+> How do you know when other drivers are loaded? This could be a module
+> perhaps. Doesn't seem like something that belongs in DT.
+>
+
+The reset driver is loaded at postcore_initcall() time, which ensures it
+is loaded before other drivers using the switch core. I noticed other
+drivers do the same to do low-level system reset and initialization at
+early boot time.
+
+> Can this behavior be implied with "microchip,sparx5-chip-reset"?
+
+Since we need to cater for both modus operandi, I would need two driver
+compatible strings per platform, which scales worse than a single
+property.
+
+The "microchip,reset-switch-core" is a device configuration property
+which tells the system (driver) how the hw should be handled. Since you
+do not *always* want to reset the switch core (f.ex. when implementing
+systems with warm reboot), I think it makes perfect sense - but I may be
+biased off course :-)
+
+Thank you for (all) of your comments, by the way!
+
+---Lars
+
+>
+> Rob
+
+-- 
+Lars Povlsen,
+Microchip
