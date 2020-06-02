@@ -2,99 +2,206 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4579C2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591085147;
-	bh=qMCdOay4lIR30Np+yg8W4fEE5Gwfw5Dh4A3wyrGJw5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oC5lSwetkZNRtv5oPn17QkLe5Us/yBuSKZyCv6lz7f4kvhjiejIN2yV6ebJlH34Au
-	 1Ixc9pPmgFUvEtUVoIV4/+qktJgXoWUkgK4mc918O0WsAiXd2TyE4mBHSVU1mbRxU9
-	 4AtmD9qtVHXXjv9cVJuLmGu8w546IFR86zFR9kz0=
+	by mail.kernel.org (Postfix) with ESMTP id 5B2E92072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgFBIFq convert rfc822-to-8bit (ORCPT
+        id S1726598AbgFBIGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:05:46 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40972 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgFBIFo (ORCPT
+        Tue, 2 Jun 2020 04:06:00 -0400
+Received: from static-27.netfusion.at ([83.215.238.27]:56064 "EHLO
+        mail.inliniac.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBIF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:05:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id ce8so3213691edb.8;
-        Tue, 02 Jun 2020 01:05:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=SCR2cHiabRKqtkGaERDcoYhLdk1hHk/2OBBAMb5lQNY=;
-        b=SSTnPobq3H7q9kcHjP1hoz3gIoOTfh/FbhzMV0W3gdVaWYGlK1CXaS6Scr+EuiZxqI
-         BnW0QrTgigImDlbj3stiSD9O1dly0PcGPuKK/65Kj6VFB07XYA0Y5lh4ZKoDU2mVkzWC
-         x6r+u07Q17qZxtjEVnnGLardR0ZpdyMFKINLO/BGVVObc3l7oRXmy7h3LU1NO1S7hw47
-         s+DzpBiRH8dLDGcO8iKqEp7orR1bJNtdeONuYF6TbV3ExbtwMJNtDN/IErGZq1twgCDi
-         dLIoAXb1NciavJJBb2qjpyVMQiPQ/FrzldOhTXhHMi87YvZA1liuw1sMd4v7+jzFN4ia
-         V7EQ==
-X-Gm-Message-State: AOAM532SDF22FkZyR602bsXyhwmHHy9HiLUxsrCfP+tDA81UfXYrS5xa
-        f7q+U7VbNM+NKUhyzXkHt9Q=
-X-Google-Smtp-Source: ABdhPJwZlPDhteUZ4oQPMQH3bkm+GkPpXcVWfKiuXmPmtRXf3HlXBuN/miC3BujdGRr/785rYqnlRQ==
-X-Received: by 2002:a50:af85:: with SMTP id h5mr17930429edd.86.1591085141913;
-        Tue, 02 Jun 2020 01:05:41 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.118])
-        by smtp.googlemail.com with ESMTPSA id u10sm1177397edb.65.2020.06.02.01.05.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 01:05:41 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 10:05:38 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     georgi.djakov@linaro.org, cw00.choi@samsung.com,
-        a.swigon@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/6] dt-bindings: exynos-bus: Add documentation
- for interconnect properties
-Message-ID: <20200602080538.GA8216@kozik-lap>
-References: <20200529163200.18031-1-s.nawrocki@samsung.com>
- <CGME20200529163219eucas1p2d127fe3936921f53f6fe7902e7d14a3e@eucas1p2.samsung.com>
- <20200529163200.18031-2-s.nawrocki@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200529163200.18031-2-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 2 Jun 2020 04:05:58 -0400
+Received: by mail.inliniac.net (Postfix, from userid 108)
+        id 5BD4F1A3B; Tue,  2 Jun 2020 10:08:07 +0200 (CEST)
+Received: from z440.inliniac.lan (a80-127-179-75.adsl.xs4all.nl [80.127.179.75])
+        (Authenticated sender: victor)
+        by mail.inliniac.net (Postfix) with ESMTPSA id 1C6E510C;
+        Tue,  2 Jun 2020 10:07:56 +0200 (CEST)
+From:   Victor Julien <victor@inliniac.net>
+To:     netdev@vger.kernel.org
+Cc:     victor@inliniac.net, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2] af-packet: new flag to indicate all csums are good
+Date:   Tue,  2 Jun 2020 10:05:33 +0200
+Message-Id: <20200602080535.1427-1-victor@inliniac.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:31:55PM +0200, Sylwester Nawrocki wrote:
-> Add documentation for new optional properties in the exynos bus nodes:
-> samsung,interconnect-parent, #interconnect-cells.
-> These properties allow to specify the SoC interconnect structure which
-> then allows the interconnect consumer devices to request specific
-> bandwidth requirements.
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes for v5:
->  - exynos,interconnect-parent-node renamed to samsung,interconnect-parent
-> ---
->  Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+Introduce a new flag (TP_STATUS_CSUM_UNNECESSARY) to indicate
+that the driver has completely validated the checksums in the packet.
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+The TP_STATUS_CSUM_UNNECESSARY flag differs from TP_STATUS_CSUM_VALID
+in that the new flag will only be set if all the layers are valid,
+while TP_STATUS_CSUM_VALID is set as well if only the IP layer is valid.
 
-Best regards,
-Krzysztof
+The name is derived from the skb->ip_summed setting CHECKSUM_UNNECESSARY.
+
+Security tools such as Suricata, Snort, Zeek/Bro need to know not
+only that a packet has not been corrupted, but also that the
+checksums are correct. Without this an attacker could send a packet,
+for example a TCP RST packet, that would be accepted by the
+security tool, but rejected by the end host creating an impendance
+mismatch.
+
+To avoid this scenario tools currently will have to (re)calcultate/validate
+the checksums as well. With this patch this becomes unnecessary for many
+of the packets.
+
+This patch has been tested with Suricata with the virtio driver,
+where it reduced the ammount of time spent in the Suricata TCP
+checksum validation to about half.
+
+Signed-off-by: Victor Julien <victor@inliniac.net>
+---
+ Documentation/networking/packet_mmap.rst | 80 +++++++++++++-----------
+ include/uapi/linux/if_packet.h           |  1 +
+ net/packet/af_packet.c                   | 11 ++--
+ 3 files changed, 52 insertions(+), 40 deletions(-)
+
+diff --git a/Documentation/networking/packet_mmap.rst b/Documentation/networking/packet_mmap.rst
+index 6c009ceb1183..1711be47d61d 100644
+--- a/Documentation/networking/packet_mmap.rst
++++ b/Documentation/networking/packet_mmap.rst
+@@ -437,42 +437,50 @@ and the following flags apply:
+ Capture process
+ ^^^^^^^^^^^^^^^
+ 
+-     from include/linux/if_packet.h
+-
+-     #define TP_STATUS_COPY          (1 << 1)
+-     #define TP_STATUS_LOSING        (1 << 2)
+-     #define TP_STATUS_CSUMNOTREADY  (1 << 3)
+-     #define TP_STATUS_CSUM_VALID    (1 << 7)
+-
+-======================  =======================================================
+-TP_STATUS_COPY		This flag indicates that the frame (and associated
+-			meta information) has been truncated because it's
+-			larger than tp_frame_size. This packet can be
+-			read entirely with recvfrom().
+-
+-			In order to make this work it must to be
+-			enabled previously with setsockopt() and
+-			the PACKET_COPY_THRESH option.
+-
+-			The number of frames that can be buffered to
+-			be read with recvfrom is limited like a normal socket.
+-			See the SO_RCVBUF option in the socket (7) man page.
+-
+-TP_STATUS_LOSING	indicates there were packet drops from last time
+-			statistics where checked with getsockopt() and
+-			the PACKET_STATISTICS option.
+-
+-TP_STATUS_CSUMNOTREADY	currently it's used for outgoing IP packets which
+-			its checksum will be done in hardware. So while
+-			reading the packet we should not try to check the
+-			checksum.
+-
+-TP_STATUS_CSUM_VALID	This flag indicates that at least the transport
+-			header checksum of the packet has been already
+-			validated on the kernel side. If the flag is not set
+-			then we are free to check the checksum by ourselves
+-			provided that TP_STATUS_CSUMNOTREADY is also not set.
+-======================  =======================================================
++from include/linux/if_packet.h::
++
++     #define TP_STATUS_COPY		(1 << 1)
++     #define TP_STATUS_LOSING		(1 << 2)
++     #define TP_STATUS_CSUMNOTREADY	(1 << 3)
++     #define TP_STATUS_CSUM_VALID	(1 << 7)
++     #define TP_STATUS_CSUM_UNNECESSARY	(1 << 8)
++
++==========================  =====================================================
++TP_STATUS_COPY		    This flag indicates that the frame (and associated
++			    meta information) has been truncated because it's
++			    larger than tp_frame_size. This packet can be
++			    read entirely with recvfrom().
++
++			    In order to make this work it must to be
++			    enabled previously with setsockopt() and
++			    the PACKET_COPY_THRESH option.
++
++			    The number of frames that can be buffered to
++			    be read with recvfrom is limited like a normal socket.
++			    See the SO_RCVBUF option in the socket (7) man page.
++
++TP_STATUS_LOSING	    indicates there were packet drops from last time
++			    statistics where checked with getsockopt() and
++			    the PACKET_STATISTICS option.
++
++TP_STATUS_CSUMNOTREADY	    currently it's used for outgoing IP packets which
++			    its checksum will be done in hardware. So while
++			    reading the packet we should not try to check the
++			    checksum.
++
++TP_STATUS_CSUM_VALID	    This flag indicates that at least the transport
++			    header checksum of the packet has been already
++			    validated on the kernel side. If the flag is not set
++			    then we are free to check the checksum by ourselves
++			    provided that TP_STATUS_CSUMNOTREADY is also not set.
++
++TP_STATUS_CSUM_UNNECESSARY  This flag indicates that the driver validated all
++			    the packets csums. If it is not set it might be that
++			    the driver doesn't support this, or that one of the
++			    layers csums is bad. TP_STATUS_CSUM_VALID may still
++			    be set if the transport layer csum is correct or
++			    if the driver supports only this mode.
++==========================  =====================================================
+ 
+ for convenience there are also the following defines::
+ 
+diff --git a/include/uapi/linux/if_packet.h b/include/uapi/linux/if_packet.h
+index 3d884d68eb30..76a5c762e2e0 100644
+--- a/include/uapi/linux/if_packet.h
++++ b/include/uapi/linux/if_packet.h
+@@ -113,6 +113,7 @@ struct tpacket_auxdata {
+ #define TP_STATUS_BLK_TMO		(1 << 5)
+ #define TP_STATUS_VLAN_TPID_VALID	(1 << 6) /* auxdata has valid tp_vlan_tpid */
+ #define TP_STATUS_CSUM_VALID		(1 << 7)
++#define TP_STATUS_CSUM_UNNECESSARY	(1 << 8)
+ 
+ /* Tx ring - header status */
+ #define TP_STATUS_AVAILABLE	      0
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 29bd405adbbd..94e213537646 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2215,10 +2215,13 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+ 
+ 	if (skb->ip_summed == CHECKSUM_PARTIAL)
+ 		status |= TP_STATUS_CSUMNOTREADY;
+-	else if (skb->pkt_type != PACKET_OUTGOING &&
+-		 (skb->ip_summed == CHECKSUM_COMPLETE ||
+-		  skb_csum_unnecessary(skb)))
+-		status |= TP_STATUS_CSUM_VALID;
++	else if (skb->pkt_type != PACKET_OUTGOING) {
++		if (skb->ip_summed == CHECKSUM_UNNECESSARY)
++			status |= TP_STATUS_CSUM_UNNECESSARY | TP_STATUS_CSUM_VALID;
++		else if (skb->ip_summed == CHECKSUM_COMPLETE ||
++			 skb_csum_unnecessary(skb))
++			status |= TP_STATUS_CSUM_VALID;
++	}
+ 
+ 	if (snaplen > res)
+ 		snaplen = res;
+-- 
+2.17.1
+
