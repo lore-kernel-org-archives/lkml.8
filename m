@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA80C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21288C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57146206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C4520772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgFBFYN (ORCPT
+        id S1727971AbgFBFYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:24:13 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44434 "EHLO inva020.nxp.com"
+        Tue, 2 Jun 2020 01:24:18 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40846 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgFBFYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:24:07 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 05BB31A00EC;
-        Tue,  2 Jun 2020 07:24:06 +0200 (CEST)
+        id S1726964AbgFBFYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 01:24:17 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B045320094A;
+        Tue,  2 Jun 2020 07:24:14 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 778A21A0B71;
-        Tue,  2 Jun 2020 07:23:56 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B23C20094E;
+        Tue,  2 Jun 2020 07:24:05 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6FA7D402E8;
-        Tue,  2 Jun 2020 13:23:44 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 274A940323;
+        Tue,  2 Jun 2020 13:23:53 +0800 (SGT)
 From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
 To:     xiaoliang.yang_1@nxp.com, po.liu@nxp.com, claudiu.manoil@nxp.com,
         alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
@@ -41,9 +41,9 @@ To:     xiaoliang.yang_1@nxp.com, po.liu@nxp.com, claudiu.manoil@nxp.com,
         horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
         allan.nielsen@microchip.com, joergen.andreasen@microchip.com,
         UNGLinuxDriver@microchip.com, linux-devel@linux.nxdi.nxp.com
-Subject: [PATCH v2 net-next 04/10] net: mscc: ocelot: change vcap to be compatible with full and quad entry
-Date:   Tue,  2 Jun 2020 13:18:22 +0800
-Message-Id: <20200602051828.5734-5-xiaoliang.yang_1@nxp.com>
+Subject: [PATCH v2 net-next 08/10] net: ocelot: return error if rule is not found
+Date:   Tue,  2 Jun 2020 13:18:26 +0800
+Message-Id: <20200602051828.5734-9-xiaoliang.yang_1@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
 References: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
@@ -53,31 +53,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calculating vcap data offset, the function only supports half key
-entry. This patch modify vcap_data_offset_get function to calculate a
-correct data offset when setting VCAP Type-Group to VCAP_TG_FULL or
-VCAP_TG_QUARTER.
+Return error if rule is not found in rule list to avoid Kernel panic.
 
 Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
 ---
- drivers/net/ethernet/mscc/ocelot_ace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mscc/ocelot_ace.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/mscc/ocelot_ace.c b/drivers/net/ethernet/mscc/ocelot_ace.c
-index b76593b40097..8c384b0771bb 100644
+index bf2b7a03c832..2ba2859fa2cd 100644
 --- a/drivers/net/ethernet/mscc/ocelot_ace.c
 +++ b/drivers/net/ethernet/mscc/ocelot_ace.c
-@@ -175,8 +175,8 @@ static void vcap_data_offset_get(const struct vcap_props *vcap,
- 	u32 i, col, offset, count, cnt, base;
- 	u32 width = vcap->tg_width;
+@@ -982,9 +982,9 @@ static int ocelot_ace_rule_get_index_id(struct ocelot_acl_block *block,
+ 	list_for_each_entry(tmp, &block->rules, list) {
+ 		++index;
+ 		if (rule->id == tmp->id)
+-			break;
++			return index;
+ 	}
+-	return index;
++	return -ENOENT;
+ }
  
--	count = (data->tg_sw == VCAP_TG_HALF ? 2 : 4);
--	col = (ix % 2);
-+	count = (1 << (data->tg_sw - 1));
-+	col = (ix % count);
- 	cnt = (vcap->sw_count / count);
- 	base = (vcap->sw_count - col * cnt - cnt);
- 	data->tg_value = 0;
+ static struct ocelot_ace_rule*
+@@ -1197,6 +1197,8 @@ int ocelot_ace_rule_offload_del(struct ocelot *ocelot, int block_id,
+ 
+ 	/* Gets index of the rule */
+ 	index = ocelot_ace_rule_get_index_id(block, rule);
++	if (index < 0)
++		return -ENOENT;
+ 
+ 	/* Delete rule */
+ 	ocelot_ace_rule_del(ocelot, block, rule);
+@@ -1221,6 +1223,9 @@ int ocelot_ace_rule_stats_update(struct ocelot *ocelot, int block_id,
+ 	int index;
+ 
+ 	index = ocelot_ace_rule_get_index_id(block, rule);
++	if (index < 0)
++		return -ENOENT;
++
+ 	vcap_entry_get(ocelot, rule, index, block_id);
+ 
+ 	/* After we get the result we need to clear the counters */
 -- 
 2.17.1
 
