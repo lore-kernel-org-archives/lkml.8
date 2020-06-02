@@ -2,138 +2,121 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32185C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4EB206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:33:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GaBAQhGI"
+	by mail.kernel.org (Postfix) with ESMTP id D0607206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgFBGdP (ORCPT
+        id S1726213AbgFBGeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:33:15 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:51141 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgFBGdP (ORCPT
+        Tue, 2 Jun 2020 02:34:07 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:37240 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgFBGeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:33:15 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200602063310epoutp0110221213e3d95cd250ca640a3f7d4713~UpnVCNPP40594205942epoutp017
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 06:33:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200602063310epoutp0110221213e3d95cd250ca640a3f7d4713~UpnVCNPP40594205942epoutp017
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591079590;
-        bh=SKTSQHN27yku0aCMVC0SXjrdfRnYbfPM0BNdMKlfeqs=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=GaBAQhGI1P9XBuLD34JqT0Nl3lZ7bKNmGenl4z4tagc7w8s0GsyxQjwJPVmjr2fky
-         04h9TqkCqYTNyG2GXlj4zxjFZJ9zgTty8OIWhbVOyKynbEKpBjt0cl91hw02ZiiqOH
-         L1XhWYwW9+8UjPVYPt5skQBAPgjceTlWd2/y+NA0=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200602063310epcas1p25d70858f33640f535c6f8900b5beff1f~UpnUX1Zyi2915829158epcas1p2b;
-        Tue,  2 Jun 2020 06:33:10 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49bj0P0sc6zMqYm1; Tue,  2 Jun
-        2020 06:33:09 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0B.EA.28581.3A2F5DE5; Tue,  2 Jun 2020 15:33:07 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200602063307epcas1p1ac6a463514f46a1025d372a9806abcba~UpnRm0tY13253132531epcas1p1e;
-        Tue,  2 Jun 2020 06:33:07 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200602063307epsmtrp20ed0b8d91e867394124c4c960689c9f2~UpnRiHgk41350113501epsmtrp2E;
-        Tue,  2 Jun 2020 06:33:07 +0000 (GMT)
-X-AuditID: b6c32a38-85df1a8000006fa5-66-5ed5f2a37644
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1D.04.08382.2A2F5DE5; Tue,  2 Jun 2020 15:33:07 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200602063306epsmtip15578da615ea3679a13e7110229905f0a~UpnRTr4ey2646826468epsmtip1B;
-        Tue,  2 Jun 2020 06:33:06 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
-Cc:     <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>
-In-Reply-To: <1ffc01d6380d$656e3520$304a9f60$@samsung.com>
-Subject: RE: [PATCH] exfat: optimize dir-cache
-Date:   Tue, 2 Jun 2020 15:33:06 +0900
-Message-ID: <011201d638a7$ad371350$07a539f0$@samsung.com>
+        Tue, 2 Jun 2020 02:34:06 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 0526WqhW083980;
+        Tue, 2 Jun 2020 14:32:52 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id C42C77D7708EA654953F;
+        Tue,  2 Jun 2020 14:32:52 +0800 (CST)
+In-Reply-To: <20200529092353.56nfczya6ygfbki2@yadavpratyush.com>
+References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw> <1590737775-4798-2-git-send-email-masonccyang@mxic.com.tw> <20200529092353.56nfczya6ygfbki2@yadavpratyush.com>
+To:     "Pratyush Yadav" <me@yadavpratyush.com>
+Cc:     boris.brezillon@collabora.com, broonie@kernel.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        matthias.bgg@gmail.com, miquel.raynal@bootlin.com, p.yadav@ti.com,
+        richard@nod.at, tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v4 1/7] mtd: spi-nor: sfdp: get octal mode maximum speed from
+ BFPT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKbEd8GOCYeHYQBe/Vm0kX/gmqw5wMD/7F2Af7EGpmnExSvgA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMJsWRmVeSWpSXmKPExsWy7bCmru7iT1fjDHa90bV4c3Iqi8WevSdZ
-        LC7vmsNmcfn/JxaLZV8ms1hs+XeE1YHN48uc4+webZP/sXs0H1vJ5tG3ZRWjx+dNcgGsUTk2
-        GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUAXKCmUJeaU
-        AoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKDA0K9IoTc4tL89L1kvNzrQwNDIxMgSoTcjJe
-        /V/JVPCKuWLhopOsDYy9zF2MnBwSAiYSX/9dB7OFBHYwSlx54tbFyAVkf2KU2L3oBDuE841R
-        Yu2iy2wwHbOPLWCDSOxllPjdsIYRwnnJKDGpt40dpIpNQFfi35/9YB0iAu4SOxYeYAEpYhY4
-        zygxY/VvsASngJXE2Yt/wJYLC+hJfPz2kgnEZhFQkbi1YSULiM0rYCmxdeZPRghbUOLkzCdg
-        cWYBeYntb+dAPaEg8fPpMlaIZU4Sd+f9YIaoEZGY3dnGDLJYQmAih8SCb08YIRpcJDa+7GWC
-        sIUlXh3fwg5hS0l8frcX6DgOILta4uN+qPkdjBIvvttC2MYSN9dvYAUpYRbQlFi/Sx8irCix
-        8/dcRoi1fBLvvvawQkzhlehoE4IoUZXou3QYaqm0RFf7B/YJjEqzkDw2C8ljs5A8MAth2QJG
-        llWMYqkFxbnpqcWGBSbIkb2JEZw6tSx2MM59+0HvECMTB+MhRgkOZiUR3snql+KEeFMSK6tS
-        i/Lji0pzUosPMZoCg3ois5Rocj4weeeVxBuaGhkbG1uYmJmbmRorifOetLoQJySQnliSmp2a
-        WpBaBNPHxMEp1cAk39mg+/3vW+YJHLlrG/OOxu17c+CpB9vLLKVHNsfKcxs+Tjtvyt3N8PCF
-        h9YqywKeWRO/R5ge6ePVU9PQjVvjW/B5w7Zr93g+uKswOORd1eI+lT/LZvK2rGlq6vvzv334
-        cO/0/g2bS9YyzF76rXjyi6/p/8Ru8MqcOevnFbr/60OtFUdaMg+6qAQUrZn2t27aZlO/nKlq
-        DU9/15eF53LYvNjVUnJLcsnvKrbLx5c9Lfd+W7pcj9e6cpfqXY01pnO0qsU9K1/9YNKIzP/K
-        f95R97OTbUV8ANPFC58yf0akTE6d4HAqrnBau8MVtiTvhvuGr0Of7z1e8mZrwFaWO5H7m1Pe
-        LReyLN8p61T94s5hJZbijERDLeai4kQAxtGWkyYEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPLMWRmVeSWpSXmKPExsWy7bCSnO7iT1fjDHpXMVu8OTmVxWLP3pMs
-        Fpd3zWGzuPz/E4vFsi+TWSy2/DvC6sDm8WXOcXaPtsn/2D2aj61k8+jbsorR4/MmuQDWKC6b
-        lNSczLLUIn27BK6MV/9XMhW8Yq5YuOgkawNjL3MXIyeHhICJxOxjC9i6GLk4hAR2M0o07ehg
-        g0hISxw7cQaoiAPIFpY4fLgYouY5o8SPDR3sIDVsAroS//7sB6sXEXCX2LHwAAtIEbPARUaJ
-        VQ0tzBAdQM7sbaeZQKo4Bawkzl78A7ZaWEBP4uO3l2BxFgEViVsbVrKA2LwClhJbZ/5khLAF
-        JU7OfAIWZxbQluh92MoIYctLbH87B+oFBYmfT5exQlzhJHF33g9miBoRidmdbcwTGIVnIRk1
-        C8moWUhGzULSsoCRZRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnAcaWnuYNy+6oPe
-        IUYmDsZDjBIczEoivJPVL8UJ8aYkVlalFuXHF5XmpBYfYpTmYFES571RuDBOSCA9sSQ1OzW1
-        ILUIJsvEwSnVwGSZOCslRMA2dP5E+8qzYcxsKYvO3jm1SvLPC2uz/yJBhYLha5o/lT510i7n
-        fXTvnkbZ6icvWNb4hppZHDiv0Fkx/Wf3l27VoiUmiY2zSm/+7dp5Nb8neXb7kWcBDaHz5lws
-        YNFeryF0JDlC5NW6vQGBSx7/Nz9m1qdm7pd++v0TjxMtWyOtzfWrFXZ9nZpgLJLYvin/5NfA
-        ixMOObaWSTGVZD4S08x6p7m+uV36QsOv8IMnP3/2y1G13Cje0O5VH/HD6mzcg8eG25TZ3k1c
-        OlXie5+4m8KNtYe3vGDnt1jVsngp+/7lLhLvz/8KYQ6ePGuOyeyTty95P/xZ8XZu8eXZNRv0
-        RTZtZPZ5zm6UJKrEUpyRaKjFXFScCADAwsh3EgMAAA==
-X-CMS-MailID: 20200602063307epcas1p1ac6a463514f46a1025d372a9806abcba
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200520075735epcas1p269372d222e25f3fd51b7979f5b7cdc61
-References: <CGME20200520075735epcas1p269372d222e25f3fd51b7979f5b7cdc61@epcas1p2.samsung.com>
-        <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
-        <1ffc01d6380d$656e3520$304a9f60$@samsung.com>
+X-KeepSent: 61F39C24:01B2337A-4825857B:00238327;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF61F39C24.01B2337A-ON4825857B.00238327-4825857B.0023F82E@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 2 Jun 2020 14:32:53 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/06/02 PM 02:32:52,
+        Serialize complete at 2020/06/02 PM 02:32:52
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 0526WqhW083980
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Optimize directory access based on exfat_entry_set_cache.
-> >  - Hold bh instead of copied d-entry.
-> >  - Modify bh->data directly instead of the copied d-entry.
-> >  - Write back the retained bh instead of rescanning the d-entry-set.
-> > And
-> >  - Remove unused cache related definitions.
-> >
-> > Signed-off-by: Tetsuhiro Kohada
-> > <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+
+Hi Pratyush,
+
 > 
-> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-Applied your 5 patches.
-Thanks!
+> Subject
+> 
+> Re: [PATCH v4 1/7] mtd: spi-nor: sfdp: get octal mode maximum speed from 
+BFPT
+> 
+> On 29/05/20 03:36PM, Mason Yang wrote:
+> > Get maximum operation speed of device in octal mode from
+> > BFPT 20th DWORD.
+> 
+> I don't like the idea of getting the maximum operation speed from BFPT 
+> when the Profile 1.0 table already tells us that. For example, the 
+> 200MHz operation dummy cycles field in the 4th DWORD says that a value 
+> of 0 means the frequency is not supported. So the Profile 1.0 table 
+> already tells us what frequencies the flash can run at in xSPI Profile 
+> 1.0 mode.
+
+As JEDEC spec. mentioned that 
+Operation faster than 200MHz is not part of the current xSPI Spec. 
+However, this does not prevent vendors from making devices that operate at 
+higher speed.
+
+In addition, current xSPP profile 1.0 table only defined up to 200MHz.
+
+> 
+> So IMO we should use the Profile 1.0 table for this instead because
+> it will be a localized change which is easier to maintain. I also get 
+> the feeling it will be less prone to mis-interpretations.
+> 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+
+thanks for your time & comments.
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
