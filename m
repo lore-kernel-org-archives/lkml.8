@@ -2,170 +2,79 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3780EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB21BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFD820823
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591115579;
-	bh=KEF/4sEpuXc2S9hUWzC5Rg9NoWrf4iyqBG4+55SorsI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=M4VAFr+0zbcWBY34WI41p4Huqk02gZvkgdb3AfabELwK0vdPGNqhCvyWjH+vAHOXx
-	 uLDdJ4W2Cb8j56W3O5eKY1HglKij0sNTQM1D10nUraQ79fpA/h8b8z4V2ee2+Jr6wE
-	 h1wuOB1l4HKT3VgyEk5DzJhFA/C02h4rdPGgYVuM=
+	by mail.kernel.org (Postfix) with ESMTP id B177620738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgFBQc6 (ORCPT
+        id S1727842AbgFBQdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgFBQc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:32:58 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B50A20738;
-        Tue,  2 Jun 2020 16:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591115577;
-        bh=KEF/4sEpuXc2S9hUWzC5Rg9NoWrf4iyqBG4+55SorsI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MinDMEL1xXnxdjvjLnAJ0W14PWa2eGUT44UUqj4dYj6QfLB2UuhGQphHqg9Ueodxb
-         4CZHHTPeUrOli+baLyISlpfKEb9BoWd8aQ8ARjBAJTchbaQjm8xL2PCjORtcnl5qud
-         da8sXHO4WjNhRbchbnTrVBwxEEStlBCI8h2ypBwg=
-Date:   Tue, 2 Jun 2020 11:32:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
-Message-ID: <20200602163255.GA821782@bjorn-Precision-5520>
+        Tue, 2 Jun 2020 12:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgFBQdK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 12:33:10 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABEBC05BD1E;
+        Tue,  2 Jun 2020 09:33:09 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jg9qc-0021g4-VR; Tue, 02 Jun 2020 16:33:07 +0000
+Date:   Tue, 2 Jun 2020 17:33:06 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Message-ID: <20200602163306.GM23230@ZenIV.linux.org.uk>
+References: <20200602084257.134555-1-mst@redhat.com>
+ <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200602115353.20143-12-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 01:53:52PM +0200, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
+On Tue, Jun 02, 2020 at 06:15:57PM +0800, Jason Wang wrote:
 > 
-> Add Force GEN1 support needed in some ipq8064 board that needs to limit
-> some PCIe line to gen1 for some hardware limitation. This is set by the
-> max-link-speed binding and needed by some soc based on ipq8064. (for
-> example Netgear R7800 router)
+> On 2020/6/2 下午4:45, Michael S. Tsirkin wrote:
+> > So vhost needs to poke at userspace *a lot* in a quick succession.  It
+> > is thus benefitial to enable userspace access, do our thing, then
+> > disable. Except access_ok has already been pre-validated with all the
+> > relevant nospec checks, so we don't need that.  Add an API to allow
+> > userspace access after access_ok and barrier_nospec are done.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> > 
+> > Jason, so I've been thinking using something along these lines,
+> > then switching vhost to use unsafe_copy_to_user and friends would
+> > solve lots of problems you observed with SMAP.
+> > 
+> > What do you think?
 > 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 259b627bf890..0ce15d53c46e 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -27,6 +27,7 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  
->  #define PCIE20_PARF_SYS_CTRL			0x00
-> @@ -99,6 +100,8 @@
->  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
->  #define SLV_ADDR_SPACE_SZ			0x10000000
->  
-> +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
-> +
->  #define DEVICE_TYPE_RC				0x4
->  
->  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> @@ -195,6 +198,7 @@ struct qcom_pcie {
->  	struct phy *phy;
->  	struct gpio_desc *reset;
->  	const struct qcom_pcie_ops *ops;
-> +	int gen;
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	/* wait for clock acquisition */
->  	usleep_range(1000, 1500);
->  
-> +	if (pcie->gen == 1) {
-> +		val = readl(pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +		val |= 1;
+> I'm fine with this approach.
 
-Is this the same bit that's visible in config space as
-PCI_EXP_LNKSTA_CLS_2_5GB?  Why not use that #define?
+I am not.
 
-There are a bunch of other #defines in this file that look like
-redefinitions of standard things:
-
-  #define PCIE20_COMMAND_STATUS                   0x04
-    Looks like PCI_COMMAND
-
-  #define CMD_BME_VAL                             0x4
-    Looks like PCI_COMMAND_MASTER
-
-  #define PCIE20_DEVICE_CONTROL2_STATUS2          0x98
-    Looks like (PCIE20_CAP + PCI_EXP_DEVCTL2)
-
-  #define PCIE_CAP_CPL_TIMEOUT_DISABLE            0x10
-    Looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
-
-  #define PCIE20_CAP                              0x70
-    This one is obviously device-specific
-
-  #define PCIE20_CAP_LINK_CAPABILITIES            (PCIE20_CAP + 0xC)
-    Looks like (PCIE20_CAP + PCI_EXP_LNKCAP)
-
-  #define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT (BIT(10) | BIT(11))
-    Looks like PCI_EXP_LNKCAP_ASPMS
-
-  #define PCIE20_CAP_LINK_1                       (PCIE20_CAP + 0x14)
-  #define PCIE_CAP_LINK1_VAL                      0x2FD7F
-    This looks like PCIE20_CAP_LINK_1 should be (PCIE20_CAP +
-    PCI_EXP_SLTCAP), but "CAP_LINK_1" doesn't sound like the Slot
-    Capabilities register, and I don't know what PCIE_CAP_LINK1_VAL
-    means.
-
-> +		writel(val, pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +	}
->  
->  	/* Set the Max TLP size to 2K, instead of using default of 4K */
->  	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
-> @@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> +	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-> +	if (pcie->gen < 0)
-> +		pcie->gen = 2;
-> +
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
->  	pcie->parf = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(pcie->parf)) {
-> -- 
-> 2.25.1
+> >   Do we need any other APIs to make it practical?
 > 
+> 
+> It's not clear whether we need a new API, I think __uaccess_being() has the
+> assumption that the address has been validated by access_ok().
+
+__uaccess_begin() is a stopgap, not a public API.
+
+The problem is real, but "let's add a public API that would do user_access_begin()
+with access_ok() already done" is no-go.
