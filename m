@@ -2,226 +2,140 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F36C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF55CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F0F206F1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81DB20897
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:07:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OjWbkvni"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMxPxSbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgFBEFo (ORCPT
+        id S1726003AbgFBEHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47344 "EHLO
+        Tue, 2 Jun 2020 00:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgFBEFl (ORCPT
+        with ESMTP id S1725781AbgFBEHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:05:41 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2B5C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 21:05:41 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id p70so6204083oic.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 21:05:41 -0700 (PDT)
+        Tue, 2 Jun 2020 00:07:52 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AB4C061A0E;
+        Mon,  1 Jun 2020 21:07:52 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id k15so6432992otp.8;
+        Mon, 01 Jun 2020 21:07:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=S4Epu3xa2Ci7Myw/pv98HTfWuwXBA6kc2AufKTtjml4=;
-        b=OjWbkvnilpj6uK3mPFqU6sdHksoSYOhNAKicf112UNoT7Kn7yrRSQwzJ0myhlA0j/6
-         IR7DnmDOflU/Xl8aD6ceqFwiXhRZAAQFZ5ud6sulPoHgR1Hdchr3S4JGo4kjPQZgRDrV
-         +meBCu34nSU/1H3Y9FEH/Df/QVRoZgsxN8EHCLjn69Ka/3GrivmNNFdBj+6Wp9Mw8m7g
-         3Zw/HuT4NhLgoKFmw9BSS6PTiW60B3m4e4NaVuWP2v5l9FISMf9fyplpISRdSrGq7oJJ
-         QdVjOyeTzOKATyQXkubrgev1FAIEOk9jnNhVfO0Wk7oLp+TFcCj7m//9755xKoH+T9yN
-         Qixw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KMSPv9lovPpFYq/LUSFG6QcTM2yJAf6mkVnhkUqAWFE=;
+        b=WMxPxSbb+ih0evnuvt75qFV3j8/ZNo5BoD18gBSZrmuRB4x6eae1MSmhNbPveib8Cb
+         vG9YA93T4cM2T9KxFOrqXQPSCswFTfrBHeDT7K3csLywYfYJnG1bK47kH2B5IkpfFDTv
+         7AclSnVyGL3RM659NhBjQiWSNH6AszZr3hagD+SFuyd8BmUHP9tGbUz9BSOUdZ/CHCrz
+         2oCtAI3pdEMUiiEjNiDZFonC6ESR4R17iOsexI1pf0Fi2tNzAdohkOdFU0pRIkgbwvsv
+         0SF2prYH888MMi3xOuUOIPJjBhTu6bzXuN4Hr1FkGzc9TpENlMzHGozAyZ/90+5ihXpv
+         aQJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=S4Epu3xa2Ci7Myw/pv98HTfWuwXBA6kc2AufKTtjml4=;
-        b=i/0dzhB0PQPXG/Vw10p8M9DiC7cY8j4eZ5yWGYX2VBdbPpUQBpjwhKHSvoDDNP6ji5
-         zq9M6zevX75BUDm84UQbojUOo2YlLV95THm48EBsERikoO4BNNOyQ4EatY5LmU5lV4/2
-         iDDD21KzZwg4tXnFspm6rMqO7sBFc0M7XqgLoz2ozV6AkNOj9TRKQPqiyllD0p6uvpwQ
-         VazLHHCvZSP4XvT2WyyX4NxoUrVFxlW8fvPm+bSTC3iyADRK3ZsxZ1gc9eBTSRp21QES
-         gFVJaSEt2HTbtNON1sjV+Xn+Zxt58xZbRqu+DdWboBB+zdx2x0yGggcY9DUiXD1+nI/X
-         3hcQ==
-X-Gm-Message-State: AOAM531u1LK7EzU9o+4LWoDZauuPYc5eU46Az66XHLURWc7XVMVWqAWk
-        aDhrWY2VS5+9BQBj6DkTU4XWuw==
-X-Google-Smtp-Source: ABdhPJxAtlu67+gas4cLhHeVeAKl2GzIj3LCgXYHytnfHGmpi4o1EySnpqntKOnv9l174IToFy1hDg==
-X-Received: by 2002:a05:6808:5d5:: with SMTP id d21mr1726236oij.30.1591070740231;
-        Mon, 01 Jun 2020 21:05:40 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id x7sm410802ooj.16.2020.06.01.21.05.38
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Mon, 01 Jun 2020 21:05:39 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 21:05:25 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm/compaction: avoid VM_BUG_ON(PageSlab()) in
- page_mapcount()
-In-Reply-To: <alpine.LSU.2.11.2005231650070.1171@eggly.anvils>
-Message-ID: <alpine.LSU.2.11.2006012022440.1288@eggly.anvils>
-References: <158937872515.474360.5066096871639561424.stgit@buzz> <alpine.LSU.2.11.2005231650070.1171@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KMSPv9lovPpFYq/LUSFG6QcTM2yJAf6mkVnhkUqAWFE=;
+        b=EB6aK9FeAjo2vR6xrTbgun8JicTEpDkdnQmhHpVsdKvUySIuQJl5c3Ahi0YCLDlB6D
+         tOl+3U12mwcYg6egUP3jKwmpgpS+Su8wktK/2yfmO/EVm6lsAKovgRxQEZzNAVzHKoab
+         /KdxFxLgRE/wt5TnJRiED3ERi7EGuC8PX/sVtpg2J4VAT/DV0Z04eXO21RubgDzm9MMF
+         wTNiGKF6tjY0lodyhirmAMq0F/vbdMDsdOtw969k2GSuzhW3DXSqypJnI20padt8OieE
+         AEyqPigDLq9PST3o9N0N3pgnGlPqV22Tx6l2ZHCNqtilTEQ4w3ovkUMSF+bcF8uWbFYx
+         3lxQ==
+X-Gm-Message-State: AOAM531gIxYA9n+J/pJRWxqNPdDh5UW8LcrsqP1DN/mlWR8R6JCUmJip
+        kGYLvoxQQfUhJ0u5WKrGYEc=
+X-Google-Smtp-Source: ABdhPJzXrPxUYjRIUy87NNVlcUO9m5FQh/SjJVEgeC1PytNMgZBHluBrkNXvuWeXy4XPqPBswW9+Jw==
+X-Received: by 2002:a9d:1d43:: with SMTP id m61mr19800887otm.190.1591070871042;
+        Mon, 01 Jun 2020 21:07:51 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id v1sm418926ooi.13.2020.06.01.21.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 21:07:50 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 21:07:48 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH net-next] mlx5: Restore err assignment in mlx5_mdev_init
+Message-ID: <20200602040748.GA1435528@ubuntu-n2-xlarge-x86>
+References: <20200530055447.1028004-1-natechancellor@gmail.com>
+ <20200531095810.GF66309@unreal>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200531095810.GF66309@unreal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 May 2020, Hugh Dickins wrote:
-> On Wed, 13 May 2020, Konstantin Khlebnikov wrote:
-> 
-> > Function isolate_migratepages_block() runs some checks out of lru_lock
-> > when choose pages for migration. After checking PageLRU() it checks extra
-> > page references by comparing page_count() and page_mapcount(). Between
-> > these two checks page could be removed from lru, freed and taken by slab.
-> > 
-> > As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
-> > Race window is tiny. For certain workload this happens around once a year.
-> 
-> Around once a year, that was my guess too. I have no record of us ever
-> hitting this, but yes it could happen when you have CONFIG_DEBUG_VM=y
-> (which I too like to run with, but would not recommend for users).
-> 
-> > 
-> > 
-> >  page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
-> >  flags: 0x500000000008100(slab|head)
-> >  raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
-> >  raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
-> >  page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
-> >  ------------[ cut here ]------------
-> >  kernel BUG at ./include/linux/mm.h:628!
-> >  invalid opcode: 0000 [#1] SMP NOPTI
-> >  CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
-> >  Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
-> >  RIP: 0010:isolate_migratepages_block+0x986/0x9b0
-> > 
-> > 
-> > To fix just opencode page_mapcount() in racy check for 0-order case and
-> > recheck carefully under lru_lock when page cannot escape from lru.
-> > 
-> > Also add checking extra references for file pages and swap cache.
-> > 
-> > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> > Fixes: 119d6d59dcc0 ("mm, compaction: avoid isolating pinned pages")
-> 
-> Not really, that commit was correct at the time it went in.
-> 
-> > Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
-> 
-> Exactly, that commit was well-intentioned, but did not allow for this
-> (admittedly very exceptional) usage.  How many developers actually
-> make the mistake of applying page_mapcount() to their slab pages?
-> None, I expect.  That VM_BUG_ON_PAGE() is there for documentation,
-> and could just be replaced by a comment - and Linus would be happy
-> with that.
-> 
+On Sun, May 31, 2020 at 12:58:10PM +0300, Leon Romanovsky wrote:
+> On Fri, May 29, 2020 at 10:54:48PM -0700, Nathan Chancellor wrote:
+> > Clang warns:
+> >
+> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:6: warning: variable
+> > 'err' is used uninitialized whenever 'if' condition is true
+> > [-Wsometimes-uninitialized]
+> >         if (!priv->dbg_root) {
+> >             ^~~~~~~~~~~~~~~
+> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1303:9: note:
+> > uninitialized use occurs here
+> >         return err;
+> >                ^~~
+> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:2: note: remove the
+> > 'if' if its condition is always false
+> >         if (!priv->dbg_root) {
+> >         ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1259:9: note: initialize
+> > the variable 'err' to silence this warning
+> >         int err;
+> >                ^
+> >                 = 0
+> > 1 warning generated.
+> >
+> > This path previously returned -ENOMEM, restore that error code so that
+> > it is not uninitialized.
+> >
+> > Fixes: 810cbb25549b ("net/mlx5: Add missing mutex destroy")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1042
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > > ---
-> >  mm/compaction.c |   17 +++++++++++++----
-> >  1 file changed, 13 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/mm/compaction.c b/mm/compaction.c
-> > index 46f0fcc93081..91bb87fd9420 100644
-> > --- a/mm/compaction.c
-> > +++ b/mm/compaction.c
-> > @@ -935,12 +935,16 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
-> >  		}
-> >  
-> >  		/*
-> > -		 * Migration will fail if an anonymous page is pinned in memory,
-> > +		 * Migration will fail if an page is pinned in memory,
-> >  		 * so avoid taking lru_lock and isolating it unnecessarily in an
-> > -		 * admittedly racy check.
-> > +		 * admittedly racy check simplest case for 0-order pages.
-> > +		 *
-> > +		 * Open code page_mapcount() to avoid VM_BUG_ON(PageSlab(page)).
-> 
-> But open coding page_mapcount() is not all that you did.  You have
-> (understandably) chosen to avoid calling page_mapping(page), but...
-> 
-> > +		 * Page could have extra reference from mapping or swap cache.
-> >  		 */
-> > -		if (!page_mapping(page) &&
-> > -		    page_count(page) > page_mapcount(page))
-> > +		if (!PageCompound(page) &&
-> > +		    page_count(page) > atomic_read(&page->_mapcount) + 1 +
-> > +				(!PageAnon(page) || PageSwapCache(page)))
-> >  			goto isolate_fail;
-> 
-> Isn't that test going to send all the file cache pages with buffer heads
-> in page->private, off to isolate_fail when they're actually great
-> candidates for migration?
-> 
-> Given that the actual bug spotted was with the VM_BUG_ON_PAGE(PageSlab),
-> and nobody has reported any crash from the use of page_mapping() there
-> (and we only need the test to be right most of the time: all of this 
-> knowingly racy, as you explain in other mail): I'd go for just replacing
-> the VM_BUG_ON_PAGE in page_mapcount() by a comment about this case.
-> 
-> But if you think developers are really in danger of coding page_mapcount()
-> on their slab pages, then you could add a _page_mapcount() to linux/mm.h,
-> which omits the VM_BUG_ON_PAGE, for use here only.
-> 
-> Then we wouldn't have to think so hard about the counting above!
-> 
-> >  
-> >  		/*
-> > @@ -975,6 +979,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
-> >  				low_pfn += compound_nr(page) - 1;
-> >  				goto isolate_fail;
-> >  			}
-> > +
-> > +			/* Recheck page extra references under lock */
-> > +			if (page_count(page) > page_mapcount(page) +
-> > +				    (!PageAnon(page) || PageSwapCache(page)))
-> > +				goto isolate_fail;
-> 
-> Well, that lru_lock (and the intervening PageLRU check after getting it)
-> may restrict PageAnon and PageSwapCache transitions to some extent, but
-> it certainly has no effect on page_count and page_mapcount: so I think
-> such an additional check here is rather superfluous, and we should just
-> rely on the final checks in migrate_page_move_mapping(), as before.
-> 
-> >  		}
-> >  
-> >  		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> >  drivers/net/ethernet/mellanox/mlx5/core/main.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> > index df46b1fce3a7..ac68445fde2d 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> > @@ -1277,6 +1277,7 @@ static int mlx5_mdev_init(struct mlx5_core_dev *dev, int profile_idx)
+> >  					    mlx5_debugfs_root);
+> >  	if (!priv->dbg_root) {
+> >  		dev_err(dev->device, "mlx5_core: error, Cannot create debugfs dir, aborting\n");
+> > +		err = -ENOMEM;
+> >  		goto err_dbg_root;
+>                 ^^^^^^^^^^^^^^^^^^ this is wrong.
+> Failure to create debugfs should never fail the driver.
 
-Andrew, I've noticed that this buggy
-mm-compaction-avoid-vm_bug_onpageslab-in-page_mapcount.patch
-was still in Friday's mmotm 2020-05-29-16-09, despite its replacement
-6988f31d558a ("mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()")
-getting into 5.7, thanks to your "incoming" to Linus on that day.
+Fair enough, could you guys deal with this then to make sure it gets
+fixed properly? It appears to be introduced in 11f3b84d7068 ("net/mlx5:
+Split mdev init and pci init").
 
-Please be sure to remove this patch to mm/compaction.c from your tree
-and queue to Linus for 5.8: it imposes an unintended and significant
-limitation on the current behavior of compaction. (And in some loads,
-some of that additional limitation may actually be beneficial: but if
-so, must be argued separately, not as page_mapcount BUG avoidance).
-
-Cc'ing Alex Shi, because I noticed this when trying his v11 per-memcg
-lru_lock series (which appears to be a big improvement over earlier
-versions, thanks in particular to Johannes's memcg swap simplifications);
-and Alex's 12/16 makes a change on top of Konstantin's latter check,
-which will now just be reverted. I'm not yet confident in Alex's
-isolate_migratepages_block(), in part because this muddle.
-
-Thanks,
-Hugh
+> >  	}
+> >
+> >
+> > base-commit: c0cc73b79123e67b212bd537a7af88e52c9fbeac
+> > --
+> > 2.27.0.rc0
+> >
