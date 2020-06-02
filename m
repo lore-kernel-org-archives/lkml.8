@@ -2,100 +2,122 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD72C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD89DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C15320772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="R1/NZBR1"
+	by mail.kernel.org (Postfix) with ESMTP id 8E4B520872
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591093572;
+	bh=TrGhn5EbApP0rTldnGBC/61hiEOwWaKzZ7RQMycm4gI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WCUYaMiioGgsBbA8YjkQuFyvMzX7IGHkxYJ2R4qlVyUfAz34ohQfFLBGJitoINHZQ
+	 6csdcod+/fUG1IDLjC1Z24RHTS+VssuVm+9uiN0mX6ZZPZjlyhAa/0jJ3PDnY+l4d2
+	 FhmdTxLr7Qy0htuPlritUQWnbvK1WcD27WmIRRt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgFBK0I (ORCPT
+        id S1728170AbgFBK0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:26:08 -0400
-Received: from ozlabs.org ([203.11.71.1]:39659 "EHLO ozlabs.org"
+        Tue, 2 Jun 2020 06:26:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbgFBKZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:25:26 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727785AbgFBKYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:24:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bp8N3T04z9sSg;
-        Tue,  2 Jun 2020 20:25:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1591093524;
-        bh=bN3rqa6f6l9DlK7L1JNF8T+VNnchQEaRZ8dgVazwIy8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=R1/NZBR10nlS7ll7pX2mk/fNINJZy+PwyKktbGIg2EldKGyP0lxI5mgaKPeLTkw0J
-         Hvmu/kSOTp6jQk7f4Agg10q2+XVIS+yJmDllATSjHioYsrlvDS6zl2VVvZf1sp0nk4
-         ZIJ8LLounljxtQZLdSkXQeszAvrAzyWj7rNLXtT280ij0Khs1Ft2Vv4IICTNrtVbE3
-         RhOmX5FIAprMv5VTOhaK1SqrgvflqBIGCut8PW2ETD2y0VFUxVDbs1pNsasLeNDHGk
-         LtEM42rX1w91hdpauSeBzYJtNrjkN9jlVUnxQn6cxo6+eLpw4foZIhPeTLZhoZ7xaw
-         t9t9p1jZvievw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/32: disable KASAN with pages bigger than 16k
-In-Reply-To: <afb1a3a9-8d7d-4c99-d42f-f6d78dcef0a5@csgroup.eu>
-References: <7195fcde7314ccbf7a081b356084a69d421b10d4.1590660977.git.christophe.leroy@csgroup.eu> <afb1a3a9-8d7d-4c99-d42f-f6d78dcef0a5@csgroup.eu>
-Date:   Tue, 02 Jun 2020 20:25:48 +1000
-Message-ID: <87ftbdix1v.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 612E8206C3;
+        Tue,  2 Jun 2020 10:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591093488;
+        bh=TrGhn5EbApP0rTldnGBC/61hiEOwWaKzZ7RQMycm4gI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c22P/nX3NTr76YgD8tg54gr/BppeXI9M3ugHuwhRB7tKQ0gqipPrtJ7nxeM4lQUzM
+         K9zTOafCvzLgxGZRTwK23OWGivNdPced+F1nBgejRA/Jt7dXkGcHaAHSwdWCkxW04H
+         lS64x7DaRYab3G8yNR4x5pxNltn4JXhUUrsFyvAg=
+Date:   Tue, 2 Jun 2020 12:24:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chris Paterson <Chris.Paterson2@renesas.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.4 00/48] 4.4.226-rc1 review
+Message-ID: <20200602102447.GA2987707@kroah.com>
+References: <20200601173952.175939894@linuxfoundation.org>
+ <OSAPR01MB23858265B59669B78394A94CB78A0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
+ <20200602020651.GM1407771@sasha-vm>
+ <OSAPR01MB2385A58EDAF34A14A3756230B78B0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSAPR01MB2385A58EDAF34A14A3756230B78B0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> Le 28/05/2020 =C3=A0 12:17, Christophe Leroy a =C3=A9crit=C2=A0:
->> Mapping of early shadow area is implemented by using a single static
->> page table having all entries pointing to the same early shadow page.
->> The shadow area must therefore occupy full PGD entries.
->>=20
->> The shadow area has a size of 128Mbytes starting at 0xf8000000.
->> With 4k pages, a PGD entry is 4Mbytes
->> With 16k pages, a PGD entry is 64Mbytes
->> With 64k pages, a PGD entry is 256Mbytes which is too big.
->
-> That's for 32k pages that a PGD is 256Mbytes.
->
-> With 64k pages, a PGD entry is 1Gbytes which is too big.
->
-> Michael, can you fix the commit log ?
+On Tue, Jun 02, 2020 at 09:07:15AM +0000, Chris Paterson wrote:
+> Hello Sasha,
+> 
+> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > Behalf Of Sasha Levin
+> > Sent: 02 June 2020 03:07
+> > 
+> > On Mon, Jun 01, 2020 at 10:14:20PM +0000, Chris Paterson wrote:
+> > >Hi Greg,
+> > >
+> > >> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > >> Behalf Of Greg Kroah-Hartman
+> > >> Sent: 01 June 2020 18:53
+> > >>
+> > >> This is the start of the stable review cycle for the 4.4.226 release.
+> > >> There are 48 patches in this series, all will be posted as a response
+> > >> to this one.  If anyone has any issues with these being applied, please
+> > >> let me know.
+> > >
+> > >I'm seeing some issues with Linux 4.4.226-rc1 (dc230329b026).
+> > >
+> > >We have 4 configurations that fail, 2x Armv7 and 2x x86, whilst building the
+> > modules.
+> > >
+> > >Error message:
+> > >  ERROR: "pptp_msg_name" [net/netfilter/nf_conntrack_pptp.ko] undefined!
+> > >  ERROR: "pptp_msg_name" [net/ipv4/netfilter/nf_nat_pptp.ko] undefined!
+> > >
+> > >Relevant patches are:
+> > >  69969e0f7e37 ("netfilter: nf_conntrack_pptp: prevent buffer overflows in
+> > debug code")
+> > >  3441cc75e4d1 ("netfilter: nf_conntrack_pptp: fix compilation warning with
+> > W=1 build")
+> > >
+> > >I haven't had a chance to dig deeper yet but will do in the morning.
+> > >
+> > >Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-stable-
+> > rc-ci/pipelines/151700917
+> > >GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-
+> > pipelines/-/blob/master/trees/linux-4.4.y.yml
+> > >Relevant LAVA jobs:
+> > https://lava.ciplatform.org/scheduler/alljobs?length=25&search=dc2303#table
+> > 
+> > Thats and interesting one... I've queued fe22cd9b7c98 ("printk: help
+> > pr_debug and pr_devel to optimize out arguments") for 4.4 to address
+> > this.
+> 
+> This patch resolves the issue for me.
+> 
+> Test pipeline: https://gitlab.com/cip-project/cip-kernel/linux-cip/pipelines/151885545
 
-Yes.
+Thanks for testing -rc2 is out with this fixed.
 
-  powerpc/32: Disable KASAN with pages bigger than 16k
-=20=20
-  Mapping of early shadow area is implemented by using a single static
-  page table having all entries pointing to the same early shadow page.
-  The shadow area must therefore occupy full PGD entries.
-=20=20
-  The shadow area has a size of 128MB starting at 0xf8000000.
-  With 4k pages, a PGD entry is 4MB
-  With 16k pages, a PGD entry is 64MB
-  With 64k pages, a PGD entry is 1GB which is too big.
-=20=20
-  Until we rework the early shadow mapping, disable KASAN when the page
-  size is too big.
-
-  Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-  Cc: stable@vger.kernel.org # v5.2+
-  Reported-by: kbuild test robot <lkp@intel.com>
-  Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-  Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-  Link: https://lore.kernel.org/r/7195fcde7314ccbf7a081b356084a69d421b10d4.=
-1590660977.git.christophe.leroy@csgroup.eu
-
-
-cheers
+greg k-h
