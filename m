@@ -2,160 +2,101 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A781AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB133C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 707DD206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591129560;
-	bh=AHjEmJ7U0OYUipYTkwgoxUgEYg3OPlzl1W+N9Up4phU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=jBKQaOmDdPEzGG9JuVQfxIj0rOYDe3Tsa1Uyz/dTiJYJc101EhuEhaOfgk8NcxVIz
-	 tra5FSUUZmLzQqiK+9vy0CQQulENyG3xqFFQ5h92jk+spPhPVKdTd7NuwRIYk33yFC
-	 xa0gBtACdjMhzEu7xn3eP1IneuQlWEnHigG2aZ8Y=
+	by mail.kernel.org (Postfix) with ESMTP id A79D0206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WzENPptp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgFBUZ7 (ORCPT
+        id S1727032AbgFBU2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58158 "EHLO
+        Tue, 2 Jun 2020 16:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgFBUZ6 (ORCPT
+        with ESMTP id S1726112AbgFBU2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:25:58 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAABC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:25:58 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id 69so7010otv.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:25:58 -0700 (PDT)
+        Tue, 2 Jun 2020 16:28:15 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8708C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:28:14 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so47341pgv.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:28:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0VkbADwNNL4t8G+Nl0yEBT+sG9zYHlegci6mldBU13Y=;
-        b=M5wAwey1R6AjLyR6zhAr4Mpq3OcoUq5oRmv0alkvKituK2UFsV9YsoowLwmP7ckkhv
-         iEQiCoCjRkzxUMirgAQVPtdcBWS8k1Mq8icDa7QVdRvpJ8BLwHDJkFs6Y+e/PXJETKdo
-         7belOu9rdJZtt8eC4X02eItmbB10YzzmS1sX4=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L4s8ELkDI44C3t1msJoEfHdf1WqgoBLz+UoYOg97UZw=;
+        b=WzENPptpkYq02HZSRlZAcNZXcu5Qn9AmIlB8wIVNgRHDFlGlrJu3S5Xh9l2aPtmvGD
+         ZAvm6PSICZsDx1Fpdqwh2gJhlTKWtn9ZYiOCwAtlcHiUBuG8OQbwheTw3zApkEcA6rG2
+         PxdC9fCRnPi83/Pkl5iqN9QT/QZ8Levr1SxCdULavUJqWpK927pkRpOjV9f8iF+qAXVD
+         c/iZxDSrvRO0wCuzhZASKnCbwEjrRNvASdOShB7/dJtSE32qq+yflkPF047mcnqyUkqV
+         +l50HgySnppbzMy2+Ue85UODRiJ6AdNKHAC1bl/nIq3X/plkl9HII7YDjhh+JPJ6wvm9
+         SVfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0VkbADwNNL4t8G+Nl0yEBT+sG9zYHlegci6mldBU13Y=;
-        b=c7xiRXnUepugyBdkFChmgFd51Sep3uHNAMaraVSbcUxRc07bGZHci3rMg2CDHcIKxz
-         Jd8Ci4LnKok6gcCXFLwbxVJ/j3kKos81I572IvEBGTwI8B4twtU56cgnQ7+utQRw0cDV
-         ciwMbsdNI/lqj4Ggbi6hOe8uC3Hba65dzPXde3r+gry5QwOqfsxhepOh1wvY8IccWFOr
-         +TpPxP+2C09PDdd6XxoG8KQeqcpaKQpWi6DwkFE8rY6UFoIFYZRnJu6K0jwuOm0cVffm
-         3p6pvDPOuamMWZbvQX/HVPYfvfZLQC9GsXzcTnQ49J3YJLkNxAZMgzzJChd0Xckg1yLs
-         BClA==
-X-Gm-Message-State: AOAM53252aoDZwxz2Mksd8JAJ24Xlvnxi9Zgb/DuVoljtWS4qD0E7F+z
-        bj+6i4XhY/On8bDvB4VGHUFpX1pde+w=
-X-Google-Smtp-Source: ABdhPJygg7YgN4Su8lffxlYwOaMZvO9xKa6xEYOTJMPYYNrSkrsDqKu04VllsWOZa5yCnrrJWxg7Ig==
-X-Received: by 2002:a9d:6ad5:: with SMTP id m21mr704370otq.307.1591129557722;
-        Tue, 02 Jun 2020 13:25:57 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id u93sm881318otb.33.2020.06.02.13.25.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 13:25:57 -0700 (PDT)
-Subject: Re: [PATCH] arch/x86: reset MXCSR to default in kernel_fpu_begin()
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Petteri Aimonen <jpa@git.mail.kapsi.fi>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, skhan@linuxfoundation.org
-References: <8b1f0bfa-79b0-74e4-0241-8b2a94491807@linuxfoundation.org>
- <C6F6F6E4-CBD8-4E72-812B-99F008ECAA4F@amacapital.net>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <b4629042-21c7-2b38-4c3f-44f9be469cca@linuxfoundation.org>
-Date:   Tue, 2 Jun 2020 14:25:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L4s8ELkDI44C3t1msJoEfHdf1WqgoBLz+UoYOg97UZw=;
+        b=ZSAyrRhuEvkFe2gVObntsSYCdUR4fhHIp16I10KAjPbp/f57n+3xbynY88SqbkUXly
+         gJrN/pQ2W/L/WcYNIrlxNFBcf51KLuYTaaVPJF0rVuGttPGphZ4p+owxyVMwUr02FZCr
+         TAz41sf8cYvu7oUYF1KqTU/ICAiB6KNnILXg+QjLM9Pg4bKI+m1yiMc2XNOaaH8HPgng
+         9IlA0gL+7BbWm/+bWQF38JoTUHpDiQnPmwxmAnyWC8Z46lNmmMejSQePXTH0FN0lXHd1
+         MuyFvLC0gUZm32MwK/vEV7aL/QgxyS2vOVqDoA3kQLbF3GLWIf6PJ9SrclFjfOSdgKlm
+         6nNA==
+X-Gm-Message-State: AOAM53207KhMnpNnCOqMy5YpQ/aI9V4/u71QSfw+Jy5tJ0I3WbVvvnAv
+        vCt/RA3+6JzrcNKdPOiWtkikfeEt8C/BvYtzGXxyKw==
+X-Google-Smtp-Source: ABdhPJz2NSXepY/bxd9qMnQmNxaRNsuzQ7rmW7BzRrqROrvVq8b7ZKziCEBrT8C2w3f9uBmP1qrwHCnLNi+VE274Ipk=
+X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr1094446pjb.20.1591129693958;
+ Tue, 02 Jun 2020 13:28:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <C6F6F6E4-CBD8-4E72-812B-99F008ECAA4F@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200602130125.20467-1-sjpark@amazon.com> <20200602131549.23617-1-sjpark@amazon.com>
+In-Reply-To: <20200602131549.23617-1-sjpark@amazon.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 2 Jun 2020 13:28:03 -0700
+Message-ID: <CAFd5g447MLhQ5F2MeizMEM+V1kSUY7Cqjp-1XxrfdLvEzxXFEg@mail.gmail.com>
+Subject: Re: [PATCH v14 13/15] mm/damon-test: Add a kunit test for recording setup
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, Jonathan.Cameron@huawei.com,
+        aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        brendan.d.gregg@gmail.com, cai@lca.pw,
+        Colin King <colin.king@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>, dwmw@amazon.com,
+        foersleo@amazon.de, Ian Rogers <irogers@google.com>,
+        jolsa@redhat.com, kirill@shutemov.name,
+        Mark Rutland <mark.rutland@arm.com>, mgorman@suse.de,
+        minchan@kernel.org, Ingo Molnar <mingo@redhat.com>,
+        namhyung@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, riel@surriel.com,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, sblbir@amazon.com,
+        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
+        SeongJae Park <sj38.park@gmail.com>, snu@amazon.de,
+        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/2/20 1:50 PM, Andy Lutomirski wrote:
-> 
-> 
->> On Jun 2, 2020, at 10:27 AM, Shuah Khan <skhan@linuxfoundation.org> wrote:
->>
->> ﻿On 6/2/20 11:03 AM, Andy Lutomirski wrote:
->>>> On Tue, Jun 2, 2020 at 3:56 AM Borislav Petkov <bp@alien8.de> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On Tue, Jun 02, 2020 at 01:29:51PM +0300, Petteri Aimonen wrote:
->>>>> The kernel module is not actually x86-specific, even though it is
->>>>> currently only enabled for x86. amdgpu driver already does kernel mode
->>>>> floating point operations on PPC64 also, and the same module could be
->>>>> used to test the same thing there.
->>>>
->>>> Then make it generic please and put the user portion in, say,
->>>> tools/testing/selftests/fpu/ and we can ask ppc people to test it too.
->>>> People might wanna add more stuff to it in the future, which would be
->>>> good.
->>>>
->>>>> To deterministically trigger the bug, the syscall has to come from the
->>>>> same thread that has modified MXCSR. Going through /usr/sbin/modprobe
->>>>> won't work, and manually doing the necessary syscalls for module loading
->>>>> seems too complicated.
->>>>
->>>> Ok, fair enough. But put that file in debugfs pls.
->>> I think I agree.  While it would be delightful to have general
->>> selftest tooling for kernel modules, we don't have that right now, and
->>> having the test just work with an appropriately configured kernel
->>> would be nice.
->>
->> Let's extend it to do what we want it to do. I will happy to take
->> patches. If you have some concrete ideas on what we can add, please
->> do a short summary of what is missing. I will find a way to get this
->> done.
->>
->>> How about putting the file you frob in
->>> /sys/kernel/debug/selftest_helpers/something_or_other.  The idea would
->>> be that /sys/kernel/debug/selftest_helpers would be a general place
->>> for kernel helpers needed to make selftests work.
->>
->> Is this a workaround for the lack of selftest tooling for kernel
->> modules? In which case, let's us focus on fix selftest tooling.
-> 
-> The goal here is to have a selftest that runs kernel code as part of its operation. That is, the selftest is, logically, starting in userspace:
-> 
-> setup_evil_state();
+On Tue, Jun 2, 2020 at 6:16 AM SeongJae Park <sjpark@amazon.com> wrote:
+>
+> From: SeongJae Park <sjpark@amazon.de>
+>
+> This commit adds another unit test case for the recording setup.
+>
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
 
-Is it correct to assume the stuff checked differs from test to test
-and done in user-space.
-
-> ret = call_kernel_helper();
-
-> check_some_other_stuff();
-
-Is it correct to assume the stuff checked differs from test to test
-and done in user-space.
-
-> undo_evil_state();
-
-Is it correct to assume undoing evil differs from test to test
-and done in user-space, provide it can be done from userspace.
-
-> 
-> And the call_kernel_helper() could be moderately specific to the test.
-> 
-The overall plan sounds good to me. I am all for adding support to
-selftests so we can keep extending it.
-
-thanks,
--- Shuah
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
