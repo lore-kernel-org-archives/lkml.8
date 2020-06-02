@@ -2,250 +2,103 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51227C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2070620757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WwGJABCV"
+	by mail.kernel.org (Postfix) with ESMTP id CB7FB20757
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591114697;
+	bh=GOxWZFW5p0R4Mb6m/Bo6zAMohTrK5btdVpKdH3RUxMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P3OOzl/eDB7ffxxwwp+z1B+XMyuNJBqn/+GDrzL/2N6dVUL4gGK/3UBFja3mIbTSz
+	 eOTE/ESuOsbZk+1aEFWtsnK+i9vrY4DeLioXbwzT5DpSutMfts8hTOnobTpMp0V5B7
+	 e7JCvUvEITtjJDNIKBiItftkrRL2PRdMGwOUuh8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgFBQR6 (ORCPT
+        id S1728202AbgFBQSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:17:58 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39375 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFBQRk (ORCPT
+        Tue, 2 Jun 2020 12:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgFBQSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:17:40 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200602161738euoutp0155e4907effa3170b5eedce043800f837~UxloZVORZ2974529745euoutp01E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:17:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200602161738euoutp0155e4907effa3170b5eedce043800f837~UxloZVORZ2974529745euoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591114658;
-        bh=6fQXZmSTsOXD9PCsKsQlhyyv57eMpT0Awzxum+3ePUA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WwGJABCV3T5YO2T+ZVMu0rRDD0bc/H7+1y7Te8I7hyhDH7Ckemw64+oyYedWSe5rQ
-         kzBZeB1lm/22jPX/tV64F5ncDXn3+Y6YskBjWip6CPJPbrJ9iXZ+/lfDLZZhOPivjr
-         5N/PoWSgLFc5fNe5PG/N3sg2JRAYA/nJIyDmJ2FY=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200602161738eucas1p2f68006fddfbaf01f75f6b20de9c15cbc~UxloGtt9a1812318123eucas1p25;
-        Tue,  2 Jun 2020 16:17:38 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id FC.23.60698.2AB76DE5; Tue,  2
-        Jun 2020 17:17:38 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200602161738eucas1p27dfbe386bd76555598d5574faf4fdad3~Uxln1dQ011811918119eucas1p25;
-        Tue,  2 Jun 2020 16:17:38 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200602161737eusmtrp1f8d7b2dfe4b25ce023e560009a294e0a~UxlnvCMqX2876728767eusmtrp1P;
-        Tue,  2 Jun 2020 16:17:37 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-18-5ed67ba2c0f1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E0.DE.08375.1AB76DE5; Tue,  2
-        Jun 2020 17:17:37 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200602161737eusmtip2ae861338ba4a9a14a2c82f662c12b774~UxlnjrcYK0295502955eusmtip2k;
-        Tue,  2 Jun 2020 16:17:37 +0000 (GMT)
-From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH v2 2/5] arm: add image header definitions
-Date:   Tue,  2 Jun 2020 18:17:28 +0200
-Message-Id: <20200602161731.23033-3-l.stelmach@samsung.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200602161731.23033-1-l.stelmach@samsung.com>
+        Tue, 2 Jun 2020 12:18:16 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CC6C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 09:18:16 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id z9so2026792qvi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 09:18:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QnnRV7rBYpuwTlzjoMcd++pjDHDWrMhQw3hcrAJQ594=;
+        b=WQ4N3HzBq/erSPg6m3Gl82qjtrEH5qF97Lji6xhOP72AObalMv/O288C0sPNfQTocB
+         vNB8wtxVDBaAELiXdol6Yzsyw2XpL0AcHLSP9U23UyX+JeZo9q8Xt+vIcBKwAPR8qN/2
+         pfy2h7CjmAgjQJvo3OlVrObeAJ47qL9z/YBbTB34icAwtzBD+3Rt0j6rFREReFh6VfFx
+         UnMWFWDtMJDUINbmMtTk9lBLa2Jm6OyH0OnlTysovnPKwiroqkZjemCAJoCsZ92MSbZR
+         +uCehcEpTpSLUZ+IuLDBhd/OpMe/hd0oF+p5h2HSw2aK98+54J9C1qZEp/kQKWN4krzP
+         wDJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=QnnRV7rBYpuwTlzjoMcd++pjDHDWrMhQw3hcrAJQ594=;
+        b=HXxQKc/fvDgkVB1kaxQK/z/2JltYDpAO1s6N1Y5DqLH4ItlLqVX2dU8I91v7cD8tfF
+         wgTQRUyMhwLGgX1BSEvwbN7C4FDEPmZlzo1SciHRv3PWAX8yKZetT63d59W3moaD6NFP
+         CpLbHb0ag4DSMdieZ2BJxLszgB9TPm9SaLsUHFm1l1opr/V3oFQukq0J8SovEc6sWC6w
+         W3aySL3aV8lmN+jeFUDQ9FqspG8UYgc/VlRHMGt+whSEaVPogIkt1eQ02j1oBYDpTevx
+         oLyXMF0L7eYqSmyD5+iwY4lQ/CahqIxf7F6hZErHpOwQR2H7n/VBu9xCB6PpyDYt2p2I
+         bQrA==
+X-Gm-Message-State: AOAM532mGRX2kQ+turrtx6YrpirceY1g80l8PUr9gjGCoHvpQDc/QgrI
+        BBDfrnAoatnvXrZUBgriplMl3t6M
+X-Google-Smtp-Source: ABdhPJz1tkuCl3kLGoHvwv/meSx/T7pJg17HVSVIPLSMKQYAO9rdqY9DfiZRNnyxu5br9F64kGrJwg==
+X-Received: by 2002:a05:6214:9ce:: with SMTP id dp14mr25520546qvb.216.1591114695623;
+        Tue, 02 Jun 2020 09:18:15 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id 63sm2726578qkm.82.2020.06.02.09.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 09:18:15 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 12:18:14 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] workqueue: slash half memory usage in 32bit system
+Message-ID: <20200602161814.GI31548@mtj.thefacebook.com>
+References: <20200601084442.8284-1-laijs@linux.alibaba.com>
+ <20200601084442.8284-5-laijs@linux.alibaba.com>
+ <20200601150723.GA31548@mtj.thefacebook.com>
+ <CAJhGHyCn4R-0rv2bDBWuYs1SE0PyJe8GoMEhHo4xwtUy23YpWg@mail.gmail.com>
 MIME-Version: 1.0
-Organization: Samsung R&D Institute Poland
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTcRTnv3t3dzVn/80eJ42iUR+SfGXFTaMyom5PLIpAaLX0YtE2Y2tW
-        BqVLfGU5jWE5P9gyGuaD5lzlI3NGVtZCrKWUtejhAypDR1k2c7tKffud83ucc+DQhLRPGEof
-        UR/nNGqFUkYFkvaHY84I82mXPNr5VcLculwnZEpq7wuY3qwmAfP0vIrpdVgQY/3gEjLdjeUU
-        4zC2IKbmQZ+Iee/uETI3vU8QM2yYEDDjrWMkU281EuuD2W5XF8GaMrtI9k/VAMFWWHWstSqf
-        Yt+4min2q9MpYusrz7KG4S8Ue9FWhdgR64LEGUmBa1I45ZF0ThO19mDg4VJ3ruhYX9jJrvwB
-        lIkezClAATTgFZD9xy4qQIG0FFsQGOxuii9GEXQU100xIwiGLa9F05aakisCnriBwF14daro
-        R/C2zSb0qSicAEXXHwl9xCzsEUCjMdcfTOAXCN632gU+VQheDXWlXuTDJF4CxXq9vy/G8fCu
-        rQXx8xZC7o3bk2aaDsBrwDSq5CUSeHzlI+nDM3E4VOtf+TExKT/XYCJ8swAbaaj3TOdshPL2
-        QYLHITDUYZu6Zz50XiokffmAz8KlklW8txCBvfwnyWvi4Y3zl38HAi+FusYovp0AnrEJircG
-        Q88XCb9CMJTYSwm+LYa8HCmvXgy1Rc1TgaFwYciCDEhW9t8xZf8dUPZvVgUiqtBcTqdVpXLa
-        WDV3IlKrUGl16tTI5DSVFU0+Xae3w3MH3Rs/5ECYRrIgcXSMSy4VKtK1p1QOBDQhmyXe8KxT
-        LhWnKE5lcJq0AxqdktM6UBhNyuaKY82D+6U4VXGcO8pxxzjNNCugA0Izkdmmouqbs1XpWwz7
-        YvaYT37qjtgV/YG6ZkmSNGz+ptZj0bZ1RU3VZ570pW/P+Y4r+18uokzLRPqi/DxxVuzo7KB5
-        t01H92ZszcpOSVra0JpYoEys3Lm7oGN7YmazPI0OyRn4EZcRt/K5bot3fCj3brj5c/tv4vJE
-        wKbl66t3dCb/lpHaw4qYcEKjVfwFqt11vHADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsVy+t/xe7oLq6/FGRycamqxccZ6VotJ6w4w
-        Wdxs3M1kcaY71+LmoRWMFpseX2O1uLxrDpvFoal7GS3WHrnLbvHwwQ1Wi9X/TjFafJjwn8ni
-        z/6fLBabN01lduDzuHztIrPH7IaLLB5/V71g9liwqdRj06pONo871/awebw7d47dY/OSeo8J
-        H96yefRtWcXo8XmTXAB3lJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1N
-        SmpOZllqkb5dgl7G9Aft7AV3pSsudr5gbGA8ItbFyMkhIWAisXbSTKYuRi4OIYGljBLP3qxi
-        7GLkAEpISaycmw5RIyzx51oXG0TNU0aJ0+f3MIMk2AQcJfqXnmAFSYgI/GWSODjrNFgVs8A1
-        RomNE06CVQkLWEqsn/6PEcRmEVCVmNjUxARi8wpYS9w/uJcRYoW8RPvy7WwgmzkFbCRmf8kB
-        CQsJ5Eo8XP6KHaJcUOLkzCcsICXMAuoS6+cJgYT5BbQk1jRdZwGxmYGmNG+dzTyBUWgWko5Z
-        CB2zkFQtYGRexSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERjV24793LyD8dLG4EOMAhyMSjy8
-        BobX4oRYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6MuJzFKiyfnAhJNX
-        Em9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFR2//k8dAlpzK4v3RU
-        Vwf33U95f7j40LGyXOZleg3sbI1fHdcJPSyW5kkR6J99cMnsO+43a3hy/d7qezye8WZq2aq/
-        j9tfXHPk1dxjxPg651QBl6rvzTcFrK/ULT8mqe5a+H3xvfbba7RYymI3cfxl+7Fnfr1ey3sH
-        CaNPeWYd17i+9sbEf4hSYinOSDTUYi4qTgQACKAKBwADAAA=
-X-CMS-MailID: 20200602161738eucas1p27dfbe386bd76555598d5574faf4fdad3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200602161738eucas1p27dfbe386bd76555598d5574faf4fdad3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200602161738eucas1p27dfbe386bd76555598d5574faf4fdad3
-References: <20200601142754.26139-1-l.stelmach@samsung.com>
-        <20200602161731.23033-1-l.stelmach@samsung.com>
-        <CGME20200602161738eucas1p27dfbe386bd76555598d5574faf4fdad3@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJhGHyCn4R-0rv2bDBWuYs1SE0PyJe8GoMEhHo4xwtUy23YpWg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This structure will be used later by kexec_file loader.
+Hello,
 
-Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
----
- arch/arm/boot/compressed/head.S        |  3 +-
- arch/arm/boot/compressed/vmlinux.lds.S | 13 ++-----
- arch/arm/include/asm/image.h           | 48 ++++++++++++++++++++++++++
- 3 files changed, 53 insertions(+), 11 deletions(-)
- create mode 100644 arch/arm/include/asm/image.h
+On Tue, Jun 02, 2020 at 08:08:10AM +0800, Lai Jiangshan wrote:
+> It is not noticable from the "free" command.
+> By counting the number of allocated pwq (mainly percpu pwq),
+> it saves 20k in my simple kvm guest (4cpu).
+> I guess it highly various in different boxes with various
+> kernel modules loaded.
 
-diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-index 55758264e776..005b172d504f 100644
---- a/arch/arm/boot/compressed/head.S
-+++ b/arch/arm/boot/compressed/head.S
-@@ -7,6 +7,7 @@
-  */
- #include <linux/linkage.h>
- #include <asm/assembler.h>
-+#include <asm/image.h>
- #include <asm/v7m.h>
- 
- #include "efi-header.S"
-@@ -211,7 +212,7 @@ start:
- 		.word	_magic_start	@ absolute load/run zImage address
- 		.word	_magic_end	@ zImage end address
- 		.word	0x04030201	@ endianness flag
--		.word	0x45454545	@ another magic number to indicate
-+		.word	ARM_ZIMAGE_MAGIC2 @ another magic number to indicate
- 		.word	_magic_table	@ additional data table
- 
- 		__EFI_HEADER
-diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
-index f82b5962d97e..308e9cd6a897 100644
---- a/arch/arm/boot/compressed/vmlinux.lds.S
-+++ b/arch/arm/boot/compressed/vmlinux.lds.S
-@@ -3,14 +3,7 @@
-  *  Copyright (C) 2000 Russell King
-  */
- 
--#ifdef CONFIG_CPU_ENDIAN_BE8
--#define ZIMAGE_MAGIC(x) ( (((x) >> 24) & 0x000000ff) | \
--			  (((x) >>  8) & 0x0000ff00) | \
--			  (((x) <<  8) & 0x00ff0000) | \
--			  (((x) << 24) & 0xff000000) )
--#else
--#define ZIMAGE_MAGIC(x) (x)
--#endif
-+#include <asm/image.h>
- 
- OUTPUT_ARCH(arm)
- ENTRY(_start)
-@@ -43,7 +36,7 @@ SECTIONS
-   .table : ALIGN(4) {
-     _table_start = .;
-     LONG(ZIMAGE_MAGIC(4))
--    LONG(ZIMAGE_MAGIC(0x5a534c4b))
-+    LONG(ARM_ZIMAGE_MAGIC3)
-     LONG(ZIMAGE_MAGIC(__piggy_size_addr - _start))
-     LONG(ZIMAGE_MAGIC(_kernel_bss_size))
-     LONG(0)
-@@ -107,7 +100,7 @@ SECTIONS
-     _edata_real = .;
-   }
- 
--  _magic_sig = ZIMAGE_MAGIC(0x016f2818);
-+  _magic_sig = ARM_ZIMAGE_MAGIC1;
-   _magic_start = ZIMAGE_MAGIC(_start);
-   _magic_end = ZIMAGE_MAGIC(_edata);
-   _magic_table = ZIMAGE_MAGIC(_table_start - _start);
-diff --git a/arch/arm/include/asm/image.h b/arch/arm/include/asm/image.h
-new file mode 100644
-index 000000000000..d5c18a0f6a34
---- /dev/null
-+++ b/arch/arm/include/asm/image.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ASM_IMAGE_H
-+#define __ASM_IMAGE_H
-+
-+#ifdef CONFIG_CPU_ENDIAN_BE8
-+#define ZIMAGE_MAGIC(x) ((((x) >> 24) & 0x000000ff) | \
-+			 (((x) >>  8) & 0x0000ff00) |  \
-+			 (((x) <<  8) & 0x00ff0000) |  \
-+			 (((x) << 24) & 0xff000000))
-+#else
-+#define ZIMAGE_MAGIC(x) (x)
-+#endif
-+
-+#define ARM_ZIMAGE_MAGIC1 ZIMAGE_MAGIC(0x016f2818)
-+#define ARM_ZIMAGE_MAGIC2 (0x45454545)
-+#define ARM_ZIMAGE_MAGIC3 ZIMAGE_MAGIC(0x5a534c4b)
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/types.h>
-+#include <asm/setup.h>
-+
-+/* ARM zImage header format */
-+struct arm_zimage_header {
-+	__le32 code[9];
-+	__le32 magic;
-+	__le32 start;
-+	__le32 end;
-+	__le32 endian;
-+	__le32 magic2;
-+	__le32 extension_tag_offset;
-+};
-+
-+struct arm_zimage_tag {
-+	struct tag_header hdr;
-+	union {
-+#define ZIMAGE_TAG_KRNL_SIZE ARM_ZIMAGE_MAGIC3
-+		struct zimage_krnl_size {
-+			__le32 size_ptr;
-+			__le32 bss_size;
-+		} krnl_size;
-+	} u;
-+};
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* __ASM_IMAGE_H */
+Hmm... I find it difficult to judge in any direction. 32 bit machines are
+smaller and have less of everything - including CPUs and workqueues
+themselves, so while changing configuration for 32bit systems would reduce
+memory usage the impact isn't gonna be that big either and I have no data
+supporting whether the reduction is gonna help or hurt.
+
+Thanks.
+
 -- 
-2.26.2
-
+tejun
