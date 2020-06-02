@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1198C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD84EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A4C207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9964420810
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgFBN7T (ORCPT
+        id S1728129AbgFBN7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:59:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5771 "EHLO huawei.com"
+        Tue, 2 Jun 2020 09:59:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54148 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725841AbgFBN7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:59:12 -0400
+        id S1727946AbgFBN7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:59:18 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CEA41722FE87F9BA00E8;
-        Tue,  2 Jun 2020 21:59:10 +0800 (CST)
+        by Forcepoint Email with ESMTP id C2DC2D8BB11A073C63A0;
+        Tue,  2 Jun 2020 21:59:15 +0800 (CST)
 Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 2 Jun 2020 21:59:01 +0800
+ 14.3.487.0; Tue, 2 Jun 2020 21:59:05 +0800
 From:   Zhenyu Ye <yezhenyu2@huawei.com>
 To:     <catalin.marinas@arm.com>, <peterz@infradead.org>,
         <mark.rutland@arm.com>, <will@kernel.org>,
@@ -38,9 +38,9 @@ CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
         <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
         <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
         <kuhn.chenqun@huawei.com>
-Subject: [PATCH v4 2/6] arm64: Add level-hinted TLB invalidation helper
-Date:   Tue, 2 Jun 2020 21:58:32 +0800
-Message-ID: <20200602135836.1620-3-yezhenyu2@huawei.com>
+Subject: [PATCH v4 6/6] arm64: tlb: Set the TTL field in flush_*_tlb_range
+Date:   Tue, 2 Jun 2020 21:58:36 +0800
+Message-ID: <20200602135836.1620-7-yezhenyu2@huawei.com>
 X-Mailer: git-send-email 2.22.0.windows.1
 In-Reply-To: <20200602135836.1620-1-yezhenyu2@huawei.com>
 References: <20200602135836.1620-1-yezhenyu2@huawei.com>
@@ -54,65 +54,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+This patch implement flush_{pmd|pud}_tlb_range() in arm64 by
+calling __flush_tlb_range() with the corresponding stride and
+tlb_level values.
 
-Add a level-hinted TLB invalidation helper that only gets used if
-ARMv8.4-TTL gets detected.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/include/asm/tlbflush.h | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm64/include/asm/pgtable.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index bc3949064725..8adbd6fd8489 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -10,6 +10,7 @@
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 538c85e62f86..bc59814eda64 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -40,6 +40,16 @@ extern void __pmd_error(const char *file, int line, unsigned long val);
+ extern void __pud_error(const char *file, int line, unsigned long val);
+ extern void __pgd_error(const char *file, int line, unsigned long val);
  
- #ifndef __ASSEMBLY__
- 
-+#include <linux/bitfield.h>
- #include <linux/mm_types.h>
- #include <linux/sched.h>
- #include <asm/cputype.h>
-@@ -59,6 +60,34 @@
- 		__ta;						\
- 	})
- 
-+#define TLBI_TTL_MASK	GENMASK_ULL(47, 44)
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++#define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
 +
-+#define __tlbi_level(op, addr, level) do {			\
-+	u64 arg = addr;						\
-+								\
-+	if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL) &&	\
-+	    level) {						\
-+		u64 ttl = level;				\
-+								\
-+		switch (PAGE_SIZE) {				\
-+		case SZ_4K:					\
-+			ttl |= 1 << 2;				\
-+			break;					\
-+		case SZ_16K:					\
-+			ttl |= 2 << 2;				\
-+			break;					\
-+		case SZ_64K:					\
-+			ttl |= 3 << 2;				\
-+			break;					\
-+		}						\
-+								\
-+		arg &= ~TLBI_TTL_MASK;				\
-+		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);		\
-+	}							\
-+								\
-+	__tlbi(op,  arg);					\
-+} while (0)
++/* Set stride and tlb_level in flush_*_tlb_range */
++#define flush_pmd_tlb_range(vma, addr, end)	\
++	__flush_tlb_range(vma, addr, end, PMD_SIZE, false, 2)
++#define flush_pud_tlb_range(vma, addr, end)	\
++	__flush_tlb_range(vma, addr, end, PUD_SIZE, false, 1)
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 +
  /*
-  *	TLB Invalidation
-  *	================
+  * ZERO_PAGE is a global shared page that is always zero: used
+  * for zero-mapped memory areas etc..
 -- 
 2.19.1
 
