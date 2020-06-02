@@ -2,99 +2,145 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A77C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38E820757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B6220772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591114435;
-	bh=QAx6VmM1gRvw8ifuanL11pkVOJePyJocfoTt/0wSC6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i7bkcZIS/LBmv68rksEZJQ89Wf6jF4ObVCn/E/w1Xv2gqehqfs1GOHOJaZ67kdq56
-	 5i+urkCMVtaG/Oc3QKT4vUnrtwBLna3fg4ZVnoqGJAE9tZMBKMO3/n2gXzHb6haF1m
-	 7wnLBzIHlZkvz2gQl5fEhasNEjrlBkAvqBODGVW4=
+	s=default; t=1591114578;
+	bh=wXgLOJxVGle1BDxCZNtuXoFbDdCWnNg1OH84w9X05l0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sGJi4LYNTDj5Mu5+7CktZBGOTiCUv2fSIQAMFto0HcNPr1pzvktjasctAGCM+LtC/
+	 3ffszUgiiMsSO6upaL1ZasesIlPQfee9/LDfFrYSzEFAqbN6vifGBSh6rfgBZQEigU
+	 nTNd6BTL4hqY8QRHuqeB/KWht4KV1UB3c49v6yBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgFBQNy (ORCPT
+        id S1726380AbgFBQQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgFBQNx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:13:53 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D64C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 09:13:53 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id fc4so2044530qvb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 09:13:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=f1SCMGiSvYq/QtT/Ww5PkTW2Sjxad0RJG/18EYoZNnM=;
-        b=RdRm5etUCw9UZu96SfmiANn88hWM0ZQ46UWybJr5/qHJRFrwPRL/YbtnD0W6VBaldu
-         AqiTdZPjLNv2zTIOS5Qlz+HdmgR8TurLK3HHPon1Ygl5DPjjprw+0zpNjqG3OENz9vhx
-         b1z2u8X4eiWcbIH/oLwDMpewHVESzJ8SLEaGJjOcZDBP2n/8xgUKsfFdtErqInVJqjP3
-         BCGIW3Bz49N4ja2lc5Pw7bmabEMOihG8Bb875YrdVO/CPp6xSauWSUZ+l6vZZpinuuNw
-         1D1XoC2Tgv0gzsmKQK3Pi7c/UhGddCMdXUIx+qH30RQs3DV0PCh0KOXc4XI4YcYS3+5X
-         IUhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=f1SCMGiSvYq/QtT/Ww5PkTW2Sjxad0RJG/18EYoZNnM=;
-        b=E8Q/NyZLh1hsZdXCAAahfer/jeJGuh/WOT/J/ygDl9aoBt5/iPZPHCtsXN/oCrzJ0v
-         gHlLOCbPI5dq/a4cuqm6pD9UIbjxqZSPVwfc77HBl8mklXOppIf7RxEsiv/kFHzBRuFX
-         ER/1Nd9khopeGth4N0FmjmDGxd7JazRTvw5m0vbvq+VavPH6R2vQIQ1xnTy1ovaOVwUO
-         z2RCyhE+qjNz4JL/rpGyH1+bZzYaEQdkNwXMkGaop8X19/T0y+hMcSr9/RjJvGbNXf9W
-         HPK/WNffKDUCH++uWA3YKQFKE7T92CSg871vwo5R6/RtgMTfLiSV3ymlTTK82GFLrxLC
-         j5BA==
-X-Gm-Message-State: AOAM532ihIC/cRNZuS3u7JWf0hIBVPaqlgXazxHmJ3iRy6e5V4lqCxSx
-        dPHkeS3TEuHhLmlR4bpA6VsQYVFk
-X-Google-Smtp-Source: ABdhPJwzFXMh/6e/by1U7Bdyw3Qwkwiu8338w+/7lotYV0zmbZc+MTbXOj+SLXxKXb5rEpzQ5a5uMA==
-X-Received: by 2002:a0c:fa4b:: with SMTP id k11mr9910317qvo.136.1591114432611;
-        Tue, 02 Jun 2020 09:13:52 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id z20sm2869924qtn.93.2020.06.02.09.13.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 09:13:51 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 12:13:50 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH] workqueue: ensure all flush_work() completed when being
- destoryed
-Message-ID: <20200602161350.GH31548@mtj.thefacebook.com>
-References: <20200601060802.3260-1-laijs@linux.alibaba.com>
- <20200602134915.2644-1-laijs@linux.alibaba.com>
+        Tue, 2 Jun 2020 12:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbgFBQQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 12:16:16 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF1C7206E2;
+        Tue,  2 Jun 2020 16:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591114575;
+        bh=wXgLOJxVGle1BDxCZNtuXoFbDdCWnNg1OH84w9X05l0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=l9YSxmW+mSqCwSe+Qk3zGCtQZYJBcK9aDNk/389Q2PeGZ7CHpbNZTQ6Zmeren9V8A
+         TZs+3tnI3hycomY/NjW0OO2iYC9McOh3nQ5c+0WDdEXKky/daU+wgdrBYwk/0tSPgt
+         bBd9R8n53PUbO/gANSXNAYO+rY2FCZdZEW/2ZpPg=
+Date:   Tue, 2 Jun 2020 09:16:13 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
+Cc:     po.liu@nxp.com, claudiu.manoil@nxp.com,
+        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
+        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
+        vinicius.gomes@intel.com, nikolay@cumulusnetworks.com,
+        roopa@cumulusnetworks.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
+        linux-devel@linux.nxdi.nxp.com
+Subject: Re: [PATCH v2 net-next 05/10] net: mscc: ocelot: VCAP IS1 support
+Message-ID: <20200602091613.73d692a1@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <20200602051828.5734-6-xiaoliang.yang_1@nxp.com>
+References: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
+        <20200602051828.5734-6-xiaoliang.yang_1@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602134915.2644-1-laijs@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Lai.
+On Tue,  2 Jun 2020 13:18:23 +0800 Xiaoliang Yang wrote:
+> VCAP IS1 is a VCAP module which can filter MAC, IP, VLAN, protocol, and
+> TCP/UDP ports keys, and do Qos classified and VLAN retag actions.
+>=20
+> This patch added VCAP IS1 support in ocelot ace driver, which can supports
+> vlan modify and skbedit priority action of tc filter.
+> Usage:
+> 	tc qdisc add dev swp0 ingress
+> 	tc filter add dev swp0 protocol 802.1Q parent ffff: flower \
+> 	skip_sw vlan_id 1 vlan_prio 1 action vlan modify id 2 priority 2
+>=20
+> Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
 
-On Tue, Jun 02, 2020 at 01:49:14PM +0000, Lai Jiangshan wrote:
-> +static void dec_nr_in_flight_flush_work(struct workqueue_struct *wq)
-> +{
-> +	if (atomic_dec_and_test(&wq->nr_flush_work))
-
-Do you think it'd make sense to put this in pwq so that it can be
-synchronized with the pool lock instead of using a separate atomic counter?
-
-Makes sense to me otherwise.
-
-Thanks.
-
--- 
-tejun
+drivers/net/dsa/ocelot/felix_vsc9959.c:570:19: warning: symbol 'vsc9959_vca=
+p_is1_keys' was not declared. Should it be static?
+drivers/net/dsa/ocelot/felix_vsc9959.c:621:19: warning: symbol 'vsc9959_vca=
+p_is1_actions' was not declared. Should it be static?
+drivers/net/ethernet/mscc/ocelot_ace.c: In function =C3=A2=E2=82=AC=CB=9Cis=
+1_entry_set=C3=A2=E2=82=AC=E2=84=A2:
+drivers/net/ethernet/mscc/ocelot_ace.c:733:27: warning: variable =C3=A2=E2=
+=82=AC=CB=9Cip_data=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-=
+set-variable]
+ 733 |   struct ocelot_vcap_u48 *ip_data;
+     |                           ^~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:732:32: warning: variable =C3=A2=E2=
+=82=AC=CB=9Cds=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-set-v=
+ariable]
+ 732 |   struct ocelot_vcap_u8 proto, ds;
+     |                                ^~
+drivers/net/ethernet/mscc/ocelot_ace.c:727:51: warning: variable =C3=A2=E2=
+=82=AC=CB=9Ctcp_psh=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-=
+set-variable]
+ 727 |   enum ocelot_vcap_bit tcp_fin, tcp_syn, tcp_rst, tcp_psh;
+     |                                                   ^~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:727:42: warning: variable =C3=A2=E2=
+=82=AC=CB=9Ctcp_rst=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-=
+set-variable]
+ 727 |   enum ocelot_vcap_bit tcp_fin, tcp_syn, tcp_rst, tcp_psh;
+     |                                          ^~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:727:33: warning: variable =C3=A2=E2=
+=82=AC=CB=9Ctcp_syn=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-=
+set-variable]
+ 727 |   enum ocelot_vcap_bit tcp_fin, tcp_syn, tcp_rst, tcp_psh;
+     |                                 ^~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:727:24: warning: variable =C3=A2=E2=
+=82=AC=CB=9Ctcp_fin=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-=
+set-variable]
+ 727 |   enum ocelot_vcap_bit tcp_fin, tcp_syn, tcp_rst, tcp_psh;
+     |                        ^~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:726:33: warning: variable =C3=A2=E2=
+=82=AC=CB=9Ctcp_urg=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-=
+set-variable]
+ 726 |   enum ocelot_vcap_bit tcp_ack, tcp_urg;
+     |                                 ^~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:726:24: warning: variable =C3=A2=E2=
+=82=AC=CB=9Ctcp_ack=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-=
+set-variable]
+ 726 |   enum ocelot_vcap_bit tcp_ack, tcp_urg;
+     |                        ^~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:725:24: warning: variable =C3=A2=E2=
+=82=AC=CB=9Cttl=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-set-=
+variable]
+ 725 |   enum ocelot_vcap_bit ttl, fragment, options;
+     |                        ^~~
+drivers/net/ethernet/mscc/ocelot_ace.c:724:24: warning: variable =C3=A2=E2=
+=82=AC=CB=9Cseq_zero=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but=
+-set-variable]
+ 724 |   enum ocelot_vcap_bit seq_zero, tcp;
+     |                        ^~~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:723:36: warning: variable =C3=A2=E2=
+=82=AC=CB=9Csport_eq_dport=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunus=
+ed-but-set-variable]
+ 723 |   enum ocelot_vcap_bit sip_eq_dip, sport_eq_dport;
+     |                                    ^~~~~~~~~~~~~~
+drivers/net/ethernet/mscc/ocelot_ace.c:723:24: warning: variable =C3=A2=E2=
+=82=AC=CB=9Csip_eq_dip=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-b=
+ut-set-variable]
+ 723 |   enum ocelot_vcap_bit sip_eq_dip, sport_eq_dport;
+     |                        ^~~~~~~~~~
