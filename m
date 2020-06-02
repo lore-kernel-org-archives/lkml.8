@@ -2,109 +2,147 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB621C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A498A2077D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B045F2065C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TWk3STfz"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="bitYm4Vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgFBQeG (ORCPT
+        id S1727011AbgFBQfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:34:06 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18823 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFBQeF (ORCPT
+        Tue, 2 Jun 2020 12:35:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgFBQfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:34:05 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed67f700001>; Tue, 02 Jun 2020 09:33:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 02 Jun 2020 09:34:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 02 Jun 2020 09:34:04 -0700
-Received: from [10.26.72.151] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jun
- 2020 16:34:02 +0000
-Subject: Re: [PATCH 4.4 00/47] 4.4.226-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200602100034.001608787@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f6c8ef22-648c-e0fc-0dbb-5db8ab1801df@nvidia.com>
-Date:   Tue, 2 Jun 2020 17:34:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 12:35:03 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE9BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 09:35:02 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id q19so8110752eja.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 09:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=GTp3v0xs6mu5kFIbCxhtRB6gkwXEBZW6SmRoVZ5I7s8=;
+        b=bitYm4VsV59axD8Yyh4/9Ainp4Ejsxy3f6GGf06ZdUqBePwsXjnxUv7AmcsFBxvAy+
+         sDgixVmXWE6rE7BLZHD3F1/LiFked4NddpNfvEFHK/NblwSiZoc9dwiIABl4C18iogld
+         C2nem6F99yGeMb5XU56PVEoWwTQ2o8qPyaMB6SkojPG1j908NQJhpg8LYDaPIVXxWOd9
+         BNm+13BoZV0nIpK21TFz6d+M7RIzMWciWSxuwtcHm9t9eGgH+irmW4Ews6p5nUE03jI5
+         ZQUWTlmxEzbsAJRn9CsQ34znh7kYX/db89XVj6UXQgRXDW9qCmRKCffbHNcW24DpcDlE
+         /UVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=GTp3v0xs6mu5kFIbCxhtRB6gkwXEBZW6SmRoVZ5I7s8=;
+        b=dz2oi7UQcgNmEZ+m0GMeaTktE9I601VsWLuLe3uVRyoZ9j9QfdovNc5vOTeu8/7ujw
+         BQFp8HNNVG8oOlR6u+Y3an5l+OK3GazWLWCsZPwa64L2b27Bk8b/0ejoWEku5sZdHz60
+         Bbx3Du+nQjggGsGVxMo5PSJIeA1S+dny/nDjvqJplthLq7hmgTbjY+JljVw2gIvReskQ
+         KxWwKZJx2aa4/S4uSMINH5ASNaqAm9XiHlEmfLGd1ubX5MfHd+vq5bQ7YgsSPoy57c0Y
+         ymLP4wn9LrxQGpQH8JX0v9MprcyFQg/ajjwAmpP+0FISCQFATLkgAE+CsBVJhyOdW+Fi
+         2amA==
+X-Gm-Message-State: AOAM5314luAofqY9Xz7TkYYNeAn9+6ToBGshKh7XFqQ6o82a68TpwxZq
+        uF2ynsQln+5xPTFE81FUSTDsNw==
+X-Google-Smtp-Source: ABdhPJwDC5xZ0HQrYmCYTAi9W3vztRFSPp2byu4s2Wfk9myNfuwm4bvRwoMVZ7BolQqQim/GmZ2krg==
+X-Received: by 2002:a17:906:1c8c:: with SMTP id g12mr13519380ejh.456.1591115701447;
+        Tue, 02 Jun 2020 09:35:01 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id ce16sm1829533ejb.76.2020.06.02.09.35.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 09:35:00 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 18:34:58 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, jkridner@beagleboard.org,
+        robertcnelson@gmail.com
+Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
+Message-ID: <20200602163458.GA847883@x1>
+References: <20200602131428.GA496390@x1>
+ <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+ <20200602135155.GE37466@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <20200602100034.001608787@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591115632; bh=dO9FAXY2H297iJOHtU92SBoDR8kGdEM8PvbArK2JJjc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=TWk3STfzl2RVgJAsFHoalAhhDqkhz/gE6gHdPUrVyqiIkod6zeAIu8fi0SbDG2SZz
-         n//l41PXOSHT5IQ/ElYL+FKhZNX+SpfXKBIgP37NWfJ9jeZpltZ9pXhN9ClJbrQKQf
-         vP1rsXAcd5vltEzl8IfB68E7veKAd2/9mgXKyXsq1XI86595fdzEIxIAlegEqojwln
-         YuKjBcRfuy2SQcNtm6Vl//1dSiFRKN7XSU0NL9MMG518X22j6cVTZZEvzW0EC+kyec
-         ZkspJFfr3mEkH7DiEHOThxjcnL4cVgOfXmBz1kaZV8yILlvF86CaZ18sitPWyvs1sC
-         2Xcw01ktI4Msw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200602135155.GE37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 02/06/2020 11:16, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.226 release.
-> There are 47 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Jun 02, 2020 at 06:51:55AM -0700, Tony Lindgren wrote:
+> * Grygorii Strashko <grygorii.strashko@ti.com> [200602 13:44]:
+> > 
+> > 
+> > On 02/06/2020 16:14, Drew Fustini wrote:
+> > > Add gpio-ranges properties to the gpio controller nodes.
+> > > 
+> > > These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
+> > > REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
+> > > 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
+> > > A csv file with this data is available for reference [2].
+> > 
+> > It will be good if you can explain not only "what" is changed, but
+> > also "why" it's needed in commit message.
 > 
-> Responses should be made by Thu, 04 Jun 2020 09:57:12 +0000.
-> Anything received after that time might be too late.
+> Also, please check (again) that this is the same for all the am3
+> variants. For omap3, we had different pad assignments even between
+> SoC revisions. Different pad routings should be easy to deal with
+> in the dts if needed though.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.226-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
+> Regards,
 > 
-> thanks,
-> 
-> greg k-h
+> Tony
 
+It appears that the only usage of am33xx-l4.dtsi is for am335x for which
+specific parts mentioned in those dtsi files are 3352, 3358, and 3359.
 
-All tests are passing for Tegra ...
+$ git grep am33xx-l4.dtsi 
+arch/arm/boot/dts/am33xx.dtsi:#include "am33xx-l4.dtsi"
+$ git grep -l '#include "am33xx.dtsi"' arch/ |wc -l
+27
+$ git grep -l '#include "am33xx.dtsi"' arch/ |grep -v am335x |wc -l
+0
 
-Test results for stable-v4.4:
-    6 builds:	6 pass, 0 fail
-    12 boots:	12 pass, 0 fail
-    19 tests:	19 pass, 0 fail
+Also, it appears that the only AM33xx parts that actually exist are [0]:
 
-Linux version:	4.4.226-rc2-gab13e7ba60cc
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra30-cardhu-a04
+AM3351, AM3352, AM3354, AM3356, AM3357, AM3358, AM3359
 
-Cheers
-Jon
+I clicked on the datasheet link for each product page and while the URL
+has the specific part number in it [1], they all end up loading the
+exact same PDF. The header states:
 
--- 
-nvpublic
+"AM3359, AM3358, AM3357, AM3356, AM3354, AM3352, AM3351
+SPRS717L – OCTOBER 2011 – REVISED MARCH 2020"
+
+Thus, I do believe all SoC's using am33xx-l4.dtsi would have the same
+memory map for the pin control registers and the same relationshop from
+pin to gpio line.  For example, GPMC_A0 has mode 7 and it is labeled
+gpio1_16.  conf_gpmc_a0 is at offset 840h which makes it pin 16.
+
+Maybe am33xx-l4.dtsi should have actually been named am335x-l4.dtsi?
+
+Though I suppose there is no point in changing that now.
+
+thanks,
+drew
+
+[0] http://www.ti.com/processors/sitara-arm/am335x-cortex-a8/overview.html
+[1] https://www.ti.com/lit/ds/symlink/am3359.pdf
