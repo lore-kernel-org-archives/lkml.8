@@ -2,302 +2,228 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4111C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E0A206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31DA2077D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgFBSaI (ORCPT
+        id S1727011AbgFBSbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:30:08 -0400
-Received: from fieldses.org ([173.255.197.46]:33742 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgFBSaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:30:08 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 0720E36E1; Tue,  2 Jun 2020 14:30:07 -0400 (EDT)
-Date:   Tue, 2 Jun 2020 14:30:06 -0400
-To:     kernel test robot <lkp@intel.com>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        LKP <lkp@lists.01.org>
-Subject: Re: 3ba75830ce ("nfsd4: drc containerization"): [   51.013875]
- WARNING: possible circular locking dependency detected
-Message-ID: <20200602183006.GC1769@fieldses.org>
-References: <20200527051159.GR12456@shao2-debian>
+        Tue, 2 Jun 2020 14:31:34 -0400
+Received: from static-27.netfusion.at ([83.215.238.27]:56314 "EHLO
+        mail.inliniac.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgFBSbd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 14:31:33 -0400
+Received: from [192.168.0.36] (a212-238-163-105.adsl.xs4all.nl [212.238.163.105])
+        (Authenticated sender: victor)
+        by mail.inliniac.net (Postfix) with ESMTPSA id 670C010C;
+        Tue,  2 Jun 2020 20:33:41 +0200 (CEST)
+Subject: Re: [PATCH net-next v2] af-packet: new flag to indicate all csums are
+ good
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Drozdov <al.drozdov@gmail.com>,
+        Tom Herbert <tom@herbertland.com>
+References: <20200602080535.1427-1-victor@inliniac.net>
+ <CA+FuTSfD2-eF0H=Qu09=JXK6WTiWKNtcqRXqv3TfMfB-=0GiMg@mail.gmail.com>
+ <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
+ <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
+From:   Victor Julien <victor@inliniac.net>
+Autocrypt: addr=victor@inliniac.net; prefer-encrypt=mutual; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUVOQkZBamQvUUJDQURY
+ S3FvR0xmclhGTDB5R2k3cHozdjU5dG5TN3hsVTl0NHVSUnd6YThrN3piVW9oTFlJCkFNVkp1
+ dFk5Mm9BRDYrOTJtSVNIZDNDZkU0bGZuRlFBNHY1MllXOUUvRHBTaVQzWnFMZ0RHcmdVMHRs
+ Qm1OUG8Kd0tJMjZyUnVCejBER3dVZkdocjlud3dTbVRDM213NU80cFlYR0wyd3ludHA0THZ2
+ Q1lTdFJDVkZIMEhWL0lDVwozT2d6ejQzNGdtelU2N2xOaXpxMDdmL1R2SWtkd3ZHL1ZGVU5u
+ WTZLQXRzUysrRTZZdzl5MEo5SStVYktFUDl4CnkySHl3RFFLRVVqck9FMCtlREtoblRXVGhX
+ YnZEZm5CTGZJUGNla3dYbXVPYjVycGFXblE1MTkwNXVETTFzcm8KUGFZK015NEQ3b3N2ZUFN
+ di9SbmhuN1VuVlg5M3JUS05RRUhaQUJFQkFBRzBJMVpwWTNSdmNpQktkV3hwWlc0ZwpQSFpw
+ WTNSdmNrQnBibXhwYm1saFl5NXVaWFEraVFFN0JCTUJBZ0FsQWhzREJnc0pDQWNEQWdZVkNB
+ SUpDZ3NFCkZnSURBUUllQVFJWGdBVUNVQ045WWdJWkFRQUtDUkRCOUpYamttaFd0SlFOQi85
+ UVhwOXZCbnlwbm1RaDlHb2cKNE0vR2V6TERWbFJoVnQxL2FnYXByWDFhR09kZ29uRHd4WFR1
+ MUs3Wnk5RkcrZysrb3lkRzdaYzFaT3JwSEtjTQp4dWxGams2MUEvODVMLzg1ZktHM0hlTFpX
+ M2szR0p1OUhCRnZqNllrbXdmbHdTRk9KWmdkT3k5SGh0b3hTQnVwCmI4WTlKL0Q5MVB5Vi91
+ YWdaa21ITjRuQmJldGNkSU9PNXdudWV0VnNrNGJsVjdhVk1kU2JEVXNrbU9Nc0hWTDcKRDN2
+ WGFwSG1MbGhWSXZNQjBPTndQQVY5MHV6WUtNRlQ0SWdFbm04VXBFT0hsL0tFNWJyWlAzQkU4
+ SXRJajUrZwpJRkNMNTRrdVphMWY5MUlDMzNocUJaNUZQNitNamt3ZmswOVdyQURsVmt4S3NP
+ RkgyMHQ2NVVLT2EyeTNLM3pyCnhaYll0Q05XYVdOMGIzSWdTblZzYVdWdUlEeDJhV04wYjNK
+ QWRuVjFjbTExZFhJdWIzSm5Qb2tCT0FRVEFRSUEKSWdVQ1VDTjVwZ0liQXdZTENRZ0hBd0lH
+ RlFnQ0NRb0xCQllDQXdFQ0hnRUNGNEFBQ2drUXdmU1Y0NUpvVnJSawpxZ2dBa01pODdnZzNT
+ K3FkQlVjSjVXd3VLTERPL1M0MTNzR09FaEU0SzU3YXpUVTNOVWNPVnVOZW5mNDB1L3F3Ckt4
+ VitEUDJuSzE4Rk9CdDdwcVdyQzRrNThaUWMxTm9SR0VWQjY4elhieVI5L2xIMWNocXB5Mmhv
+ enoyL0xhRG4KT0ptUWgvWUorYUhZbVdETGVuK3BtNWc5NzFJTUE5bUdiK3FrMTQ4aFBBMTBn
+ b0h0ZHIyNzNPeXpQaldzU0JnVwp4bVU2amhNOE1Ld0tSSkFsTmxoMTVSbFpWNEM5Rmhkdi9V
+ b01LZXhpaWltbGZIY1hVR1dtZ2I2RXBnVW5ab2piCklYQlNsYk5FMVZFTk5IcDVaeEhYNUU5
+ dmQxV3BiMFV0Zmd2ZCtqaWo5VEtuMHpSSDlFTHFTYmxtUTFTamF4bEsKVnhhUDd1ejRpUHpJ
+ NFk0RDVxMHJERHhTVmJRcGEyVjVZbUZ6WlM1cGJ5OXBibXhwYm1saFl5QThhVzVzYVc1cApZ
+ V05BYTJWNVltRnpaUzVwYno2SkFTMEVFd0VLQUJjRkFsQWpkL1FDR3dNREN3a0hBeFVLQ0FJ
+ ZUFRSVhnQUFLCkNSREI5Slhqa21oV3RKdndCLzlNdDZCWXkzTlZMUU1WQ05YSjRzZm95eUJJ
+ Q1p2ODNnN3lpQzVEako2dUxXUE0KVFl2M0ZLRDFWa2tUQ2hWOHNXaDhvMkhHUGduUVk5eisx
+ Q1hQM1dSUFdkWG9MNTFha3lPd3pFdEZVRG5JaHBtMApkWFhxQlJ3Qi90WExXN3R0VnkxR3VF
+ eExkaDNaaDkwOHZ3SU1xVU51NC83ODB1VTZiRFpLQW9rZmZKekcxbzZMCm45dVF3bEx1WmNH
+ MnhnTTZiN0RaN2MvNHZ5ejM1ak9jWUozWkREb25xR3BETTNvZFdnWXp4UHN4a0JVRnlKeFkK
+ aDA4MHhzdHR0MFVJMWlmODRyVmdtQXRHblZFQjJ3YklsSktTa3d5ZXI0NGFTQ201WTEyNXNn
+ MUtIZFQwMEREQgpWTTRNZ3k0NTJJYUZJVndpNHcwdVdZR09nblQ1MWx2VTY4NmV3VHh2dVFF
+ TkJGQWpkL1FCQ0FEVkFoU08wR1YwCkxHdnh0a0hWQ1hzaGdSR2srNmdTSFpRVzc4a3F2V0dM
+ OU95UDhzK0ZpUS8vQWFMa1NETzNpSVZTbWVrZVhiZlkKNkcxa2l2aDJLN0NaYlBTMzdDVGVL
+ L0p0L2ZFbzY1bTJvcWtMWStDTnZVeElvYVdhMitQY1Z4UXNLem1aZ0hDRApDRVdzN21rK01Z
+ UUxNZnluanVoVVorWmlaa2Y1U2ZBY1hQTEQ5emRkTFlSdUJtOTgwRDN1UVJsbXlqRTVOZTJa
+ CkRZVEMwU1ZLNDFRMVVDdDFoZFdNOUlWczg2UXEybUU5Y21KWkthUUNRc1ZEMVlMZUdxYTJk
+ UVdLYnIyc2EyRHUKd2pCbEhzWk83NFZjTHR2L2lQV1Nad2FxNkdBZTJGZXB0TFhJQWd2Y3lB
+ WDlxOHczWDBjdWtsa1RTWFUwbU5ISQpuWHFnRHRBRGtOVnRBQkVCQUFHSkFSOEVHQUVDQUFr
+ RkFsQWpkL1FDR3d3QUNna1F3ZlNWNDVKb1ZyU01od2dBCmlicHNMNUtnaEhnK0h2TktocXpV
+ b0JGTDMya2xNS1R5Ums0ekhzbzZDNHBKVDNvbjRqOVF2dnJLU2tsaUJ4a1IKM2ZMdVFOVWE5
+ YlVYeDNmeUFheVF2ekxnV1FycVc3eTU1Z1dCRUZPQTVQQXdFU1pDdTNYKzNGODZPK2w0N1k0
+ dwpOZTRDRDJLYTRLKzlXTHQvR3RlUnBQQU5lVldNUHRRQktqc3BFSFBSeWNidnJGV20xMUJI
+ djV2eC9GYVNXN2tICjdkaHFkRHNxMFlJaWYwUkdjUVNySlBBQm00ZHkva1hrcFJQUEFHSGdN
+ dVMvejZwY3c0RFVsaTZQVE1aTzNyT0oKbVJQQUlFRUNTVngvRlZERjJXeVREQUlWanBuMENN
+ Zjl1dnliVEU4Q25CNEQxcDZLNkgyZ0d0YVRlRlhJUVkraAoxcmNDY0JVNE9zZlQvWFkwZXZO
+ aWpnPT0KPWFWT0YKLS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQo=
+Message-ID: <06479df9-9da4-dbda-5bd1-f6e4d61471d0@inliniac.net>
+Date:   Tue, 2 Jun 2020 20:31:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527051159.GR12456@shao2-debian>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:11:59PM +0800, kernel test robot wrote:
-> Greetings,
+Hi Willem,
+
+On 02-06-2020 19:37, Willem de Bruijn wrote:
+> On Tue, Jun 2, 2020 at 1:03 PM Victor Julien <victor@inliniac.net> wrote:
+>>
+>> On 02-06-2020 16:29, Willem de Bruijn wrote:
+>>> On Tue, Jun 2, 2020 at 4:05 AM Victor Julien <victor@inliniac.net> wrote:
+>>>>
+>>>> Introduce a new flag (TP_STATUS_CSUM_UNNECESSARY) to indicate
+>>>> that the driver has completely validated the checksums in the packet.
+>>>>
+>>>> The TP_STATUS_CSUM_UNNECESSARY flag differs from TP_STATUS_CSUM_VALID
+>>>> in that the new flag will only be set if all the layers are valid,
+>>>> while TP_STATUS_CSUM_VALID is set as well if only the IP layer is valid.
+>>>
+>>> transport, not ip checksum.
+>>
+>> Allow me a n00b question: what does transport refer to here? Things like
+>> ethernet? It isn't clear to me from the doc.
 > 
-> 0day kernel testing robot got the below dmesg and the first bad commit is
+> The TCP/UDP/.. transport protocol checksum.
+
+Hmm that is what I thought originally, but then it didn't seem to work.
+Hence my patch.
+
+However I just redid my testing. I took the example tpacketv3 program
+and added the status flag checks to the 'display()' func:
+
+                if (ppd->tp_status & TP_STATUS_CSUM_VALID) {
+                        printf("TP_STATUS_CSUM_VALID, ");
+                }
+                if (ppd->tp_status & (1<<8)) {
+                        printf("TP_STATUS_CSUM_UNNECESSARY, ");
+
+                }
+
+Then using scapy sent some packets in 2 variants:
+- default (good csums)
+- deliberately bad csums
+(then also added a few things like ip6 over ip)
+
+
+srp1(Ether()/IP(src="1.2.3.4", dst="5.6.7.8")/IPv6()/TCP(),
+iface="enp1s0") // good csums
+
+srp1(Ether()/IP(src="1.2.3.4", dst="5.6.7.8")/IPv6()/TCP(chksum=1),
+iface="enp1s0") //bad tcp
+
+1.2.3.4 -> 5.6.7.8, TP_STATUS_CSUM_VALID, TP_STATUS_CSUM_UNNECESSARY,
+rxhash: 0x81ad5744
+1.2.3.4 -> 5.6.7.8, rxhash: 0x81ad5744
+
+So this suggests that what you're saying is correct, that it sets
+TP_STATUS_CSUM_VALID if the TCP/UDP csum (and IPv4 csum) is valid, and
+does not set it when either of them are invalid.
+
+I'll also re-evaluate things in Suricata.
+
+
+One thing I wonder if what this "at least" from the 682f048bd494 commit
+message means:
+
+"Introduce TP_STATUS_CSUM_VALID tp_status flag to tell the
+ af_packet user that at least the transport header checksum
+ has been already validated."
+
+For TCP/UDP there wouldn't be a higher layer with csums, right? And
+based on my testing it seems lower levels (at least IP) is also
+included. Or would that perhaps refer to something like VXLAN or Geneve
+over UDP? That the csums of packets on top of those layers aren't
+(necessarily) considered?
+
+Thanks,
+Victor
+
+
+>> (happy to follow up with a patch to clarify the doc when I understand
+>> things better)
+>>
+>>> But as I understand it drivers set CHECKSUM_COMPLETE if they fill in
+>>> skb->csum over the full length of the packet. This does not
+>>> necessarily imply that any of the checksum fields in the packet are
+>>> valid yet (see also skb->csum_valid). Protocol code later compares
+>>> checksum fields against this using __skb_checksum_validate_complete and friends.
+>>>
+>>> But packet sockets may be called before any of this, however. So I wonder
+>>> how valid the checksum really is right now when setting TP_STATUS_CSUM_VALID.
+>>> I assume it's correct, but don't fully understand where the validation
+>>> has taken place..
+>>
+>> I guess I'm more confused now about what TP_STATUS_CSUM_VALID actually
+>> means. It sounds almost like the opposite of TP_STATUS_CSUMNOTREADY, but
+>> I'm not sure I understand what the value would be.
+>>
+>> It would be great if someone could help clear this up. Everything I
+>> thought I knew/understood so far has been proven wrong, so I'm not too
+>> confident about my patch anymore...
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> Agreed that we should clear this up.
 > 
-> commit 3ba75830ce175550ef45c6524ec62faab8f62c1b
+>>> Similar to commit 682f048bd494 ("af_packet: pass checksum validation
+>>> status to the user"), please update tpacket_rcv and packet_rcv.
+>>
+>> Ah yes, good catch. Will add it there as well.
+>>
+>>> Note also that net-next is currently closed.
+>>
+>> Should I hold off on sending a v3 until it reopens?
+> 
+> Yep, thanks. You can always check
+> http://vger.kernel.org/~davem/net-next.html when unsure.
+> 
 
-Thanks!  I looked at the code quickly and can't figure out where the
-deadlock is exactly.
 
-It seems to involve the kmem_cache_create() call in nfsd's net init
-method.  Anyone know if there's a reason why creating a new slab cache
-during network namespace initialization is a potential deadlock?
+-- 
+---------------------------------------------
+Victor Julien
+http://www.inliniac.net/
+PGP: http://www.inliniac.net/victorjulien.asc
+---------------------------------------------
 
-It was probably a dumb thing to do in this case--I can apply the below
-to make the slab global again.  Kinda curious what exactly the bug is,
-though.
-
---b.
-
-commit 027690c75e8f
-Author: J. Bruce Fields <bfields@redhat.com>
-Date:   Mon Jun 1 17:44:45 2020 -0400
-
-    nfsd4: make drc_slab global, not per-net
-    
-    I made every global per-network-namespace instead.  But perhaps doing
-    that to this slab was a step too far.
-    
-    The kmem_cache_create call in our net init method also seems to be
-    responsible for this lockdep warning:
-    
-    [   45.163710] Unable to find swap-space signature
-    [   45.375718] trinity-c1 (855): attempted to duplicate a private mapping with mremap.  This is not supported.
-    [   46.055744] futex_wake_op: trinity-c1 tries to shift op by -209; fix this program
-    [   51.011723]
-    [   51.013378] ======================================================
-    [   51.013875] WARNING: possible circular locking dependency detected
-    [   51.014378] 5.2.0-rc2 #1 Not tainted
-    [   51.014672] ------------------------------------------------------
-    [   51.015182] trinity-c2/886 is trying to acquire lock:
-    [   51.015593] 000000005405f099 (slab_mutex){+.+.}, at: slab_attr_store+0xa2/0x130
-    [   51.016190]
-    [   51.016190] but task is already holding lock:
-    [   51.016652] 00000000ac662005 (kn->count#43){++++}, at: kernfs_fop_write+0x286/0x500
-    [   51.017266]
-    [   51.017266] which lock already depends on the new lock.
-    [   51.017266]
-    [   51.017909]
-    [   51.017909] the existing dependency chain (in reverse order) is:
-    [   51.018497]
-    [   51.018497] -> #1 (kn->count#43){++++}:
-    [   51.018956]        __lock_acquire+0x7cf/0x1a20
-    [   51.019317]        lock_acquire+0x17d/0x390
-    [   51.019658]        __kernfs_remove+0x892/0xae0
-    [   51.020020]        kernfs_remove_by_name_ns+0x78/0x110
-    [   51.020435]        sysfs_remove_link+0x55/0xb0
-    [   51.020832]        sysfs_slab_add+0xc1/0x3e0
-    [   51.021332]        __kmem_cache_create+0x155/0x200
-    [   51.021720]        create_cache+0xf5/0x320
-    [   51.022054]        kmem_cache_create_usercopy+0x179/0x320
-    [   51.022486]        kmem_cache_create+0x1a/0x30
-    [   51.022867]        nfsd_reply_cache_init+0x278/0x560
-    [   51.023266]        nfsd_init_net+0x20f/0x5e0
-    [   51.023623]        ops_init+0xcb/0x4b0
-    [   51.023928]        setup_net+0x2fe/0x670
-    [   51.024315]        copy_net_ns+0x30a/0x3f0
-    [   51.024653]        create_new_namespaces+0x3c5/0x820
-    [   51.025257]        unshare_nsproxy_namespaces+0xd1/0x240
-    [   51.025881]        ksys_unshare+0x506/0x9c0
-    [   51.026381]        __x64_sys_unshare+0x3a/0x50
-    [   51.026937]        do_syscall_64+0x110/0x10b0
-    [   51.027509]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [   51.028175]
-    [   51.028175] -> #0 (slab_mutex){+.+.}:
-    [   51.028817]        validate_chain+0x1c51/0x2cc0
-    [   51.029422]        __lock_acquire+0x7cf/0x1a20
-    [   51.029947]        lock_acquire+0x17d/0x390
-    [   51.030438]        __mutex_lock+0x100/0xfa0
-    [   51.030995]        mutex_lock_nested+0x27/0x30
-    [   51.031516]        slab_attr_store+0xa2/0x130
-    [   51.032020]        sysfs_kf_write+0x11d/0x180
-    [   51.032529]        kernfs_fop_write+0x32a/0x500
-    [   51.033056]        do_loop_readv_writev+0x21d/0x310
-    [   51.033627]        do_iter_write+0x2e5/0x380
-    [   51.034148]        vfs_writev+0x170/0x310
-    [   51.034616]        do_pwritev+0x13e/0x160
-    [   51.035100]        __x64_sys_pwritev+0xa3/0x110
-    [   51.035633]        do_syscall_64+0x110/0x10b0
-    [   51.036200]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [   51.036924]
-    [   51.036924] other info that might help us debug this:
-    [   51.036924]
-    [   51.037876]  Possible unsafe locking scenario:
-    [   51.037876]
-    [   51.038556]        CPU0                    CPU1
-    [   51.039130]        ----                    ----
-    [   51.039676]   lock(kn->count#43);
-    [   51.040084]                                lock(slab_mutex);
-    [   51.040597]                                lock(kn->count#43);
-    [   51.041062]   lock(slab_mutex);
-    [   51.041320]
-    [   51.041320]  *** DEADLOCK ***
-    [   51.041320]
-    [   51.041793] 3 locks held by trinity-c2/886:
-    [   51.042128]  #0: 000000001f55e152 (sb_writers#5){.+.+}, at: vfs_writev+0x2b9/0x310
-    [   51.042739]  #1: 00000000c7d6c034 (&of->mutex){+.+.}, at: kernfs_fop_write+0x25b/0x500
-    [   51.043400]  #2: 00000000ac662005 (kn->count#43){++++}, at: kernfs_fop_write+0x286/0x500
-    
-    Reported-by: kernel test robot <lkp@intel.com>
-    Fixes: 3ba75830ce17 "drc containerization"
-    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-
-diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
-index 10ec5ecdf117..65c331f75e9c 100644
---- a/fs/nfsd/cache.h
-+++ b/fs/nfsd/cache.h
-@@ -78,6 +78,8 @@ enum {
- /* Checksum this amount of the request */
- #define RC_CSUMLEN		(256U)
- 
-+int	nfsd_drc_slab_create(void);
-+void	nfsd_drc_slab_free(void);
- int	nfsd_reply_cache_init(struct nfsd_net *);
- void	nfsd_reply_cache_shutdown(struct nfsd_net *);
- int	nfsd_cache_lookup(struct svc_rqst *);
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 09aa545825bd..9217cb64bf0e 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -139,7 +139,6 @@ struct nfsd_net {
- 	 * Duplicate reply cache
- 	 */
- 	struct nfsd_drc_bucket   *drc_hashtbl;
--	struct kmem_cache        *drc_slab;
- 
- 	/* max number of entries allowed in the cache */
- 	unsigned int             max_drc_entries;
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 945d2f5e760e..f30a7def7899 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -35,6 +35,8 @@ struct nfsd_drc_bucket {
- 	spinlock_t cache_lock;
- };
- 
-+static struct kmem_cache	*drc_slab;
-+
- static int	nfsd_cache_append(struct svc_rqst *rqstp, struct kvec *vec);
- static unsigned long nfsd_reply_cache_count(struct shrinker *shrink,
- 					    struct shrink_control *sc);
-@@ -94,7 +96,7 @@ nfsd_reply_cache_alloc(struct svc_rqst *rqstp, __wsum csum,
- {
- 	struct svc_cacherep	*rp;
- 
--	rp = kmem_cache_alloc(nn->drc_slab, GFP_KERNEL);
-+	rp = kmem_cache_alloc(drc_slab, GFP_KERNEL);
- 	if (rp) {
- 		rp->c_state = RC_UNUSED;
- 		rp->c_type = RC_NOCACHE;
-@@ -128,7 +130,7 @@ nfsd_reply_cache_free_locked(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
- 		atomic_dec(&nn->num_drc_entries);
- 		nn->drc_mem_usage -= sizeof(*rp);
- 	}
--	kmem_cache_free(nn->drc_slab, rp);
-+	kmem_cache_free(drc_slab, rp);
- }
- 
- static void
-@@ -140,6 +142,18 @@ nfsd_reply_cache_free(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
- 	spin_unlock(&b->cache_lock);
- }
- 
-+int nfsd_drc_slab_create(void)
-+{
-+	drc_slab = kmem_cache_create("nfsd_drc",
-+				sizeof(struct svc_cacherep), 0, 0, NULL);
-+	return drc_slab ? 0: -ENOMEM;
-+}
-+
-+void nfsd_drc_slab_free(void)
-+{
-+	kmem_cache_destroy(drc_slab);
-+}
-+
- int nfsd_reply_cache_init(struct nfsd_net *nn)
- {
- 	unsigned int hashsize;
-@@ -158,18 +172,13 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- 	if (status)
- 		goto out_nomem;
- 
--	nn->drc_slab = kmem_cache_create("nfsd_drc",
--				sizeof(struct svc_cacherep), 0, 0, NULL);
--	if (!nn->drc_slab)
--		goto out_shrinker;
--
- 	nn->drc_hashtbl = kcalloc(hashsize,
- 				sizeof(*nn->drc_hashtbl), GFP_KERNEL);
- 	if (!nn->drc_hashtbl) {
- 		nn->drc_hashtbl = vzalloc(array_size(hashsize,
- 						 sizeof(*nn->drc_hashtbl)));
- 		if (!nn->drc_hashtbl)
--			goto out_slab;
-+			goto out_shrinker;
- 	}
- 
- 	for (i = 0; i < hashsize; i++) {
-@@ -179,8 +188,6 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- 	nn->drc_hashsize = hashsize;
- 
- 	return 0;
--out_slab:
--	kmem_cache_destroy(nn->drc_slab);
- out_shrinker:
- 	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
- out_nomem:
-@@ -208,8 +215,6 @@ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
- 	nn->drc_hashtbl = NULL;
- 	nn->drc_hashsize = 0;
- 
--	kmem_cache_destroy(nn->drc_slab);
--	nn->drc_slab = NULL;
- }
- 
- /*
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index b48eac3bb72b..b68e96681522 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1533,6 +1533,9 @@ static int __init init_nfsd(void)
- 		goto out_free_slabs;
- 	nfsd_fault_inject_init(); /* nfsd fault injection controls */
- 	nfsd_stat_init();	/* Statistics */
-+	retval = nfsd_drc_slab_create();
-+	if (retval)
-+		goto out_free_stat;
- 	nfsd_lockd_init();	/* lockd->nfsd callbacks */
- 	retval = create_proc_exports_entry();
- 	if (retval)
-@@ -1546,6 +1549,8 @@ static int __init init_nfsd(void)
- 	remove_proc_entry("fs/nfs", NULL);
- out_free_lockd:
- 	nfsd_lockd_shutdown();
-+	nfsd_drc_slab_free();
-+out_free_stat:
- 	nfsd_stat_shutdown();
- 	nfsd_fault_inject_cleanup();
- 	nfsd4_exit_pnfs();
-@@ -1560,6 +1565,7 @@ static int __init init_nfsd(void)
- 
- static void __exit exit_nfsd(void)
- {
-+	nfsd_drc_slab_free();
- 	remove_proc_entry("fs/nfs/exports", NULL);
- 	remove_proc_entry("fs/nfs", NULL);
- 	nfsd_stat_shutdown();
