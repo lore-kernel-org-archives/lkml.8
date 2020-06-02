@@ -2,147 +2,195 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0234C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C20C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B712D207D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B29B206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Lf1QciFe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HETgOJAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgFBHoZ (ORCPT
+        id S1726183AbgFBHpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:44:25 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:50838 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgFBHoY (ORCPT
+        Tue, 2 Jun 2020 03:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbgFBHpy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:44:24 -0400
+        Tue, 2 Jun 2020 03:45:54 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEEFEC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 00:45:53 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h188so5564258lfd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:45:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591083863; x=1622619863;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=queorqomKSP9LekWnpkGGKIrzqw9PFAECPBLzFJM84U=;
-  b=Lf1QciFeG42tnGPqVnAHDlqAwEyQQ4589PbhD+HX/mi7F/qCoevPftRG
-   hdq8sQOlBvh17s7df+1d91g1RvWOWm5iczbgNqULLt+KwIZEpQSCedhN9
-   a8xZvSJXDYHAv8GHXV2vdAGTf02XzN4bdIPAM9/rlAwQRF0V4557iKGS3
-   E=;
-IronPort-SDR: 53ixTy8+W3rMwU5SnSkgQ52kEc6BPqVsG7+PdqTi8+Ck1Q1s8i715Qh6tnsQglPVWZPThLN3L3
- 2HVMznPqVslg==
-X-IronPort-AV: E=Sophos;i="5.73,463,1583193600"; 
-   d="scan'208";a="49098053"
-Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
-Thread-Topic: [PATCH v1] PCI: controller: Remove duplicate error message
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 02 Jun 2020 07:44:21 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id B2237A176B;
-        Tue,  2 Jun 2020 07:44:19 +0000 (UTC)
-Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 07:44:19 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 07:44:18 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1497.006;
- Tue, 2 Jun 2020 07:44:18 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "zhengdejin5@gmail.com" <zhengdejin5@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tjoseph@cadence.com" <tjoseph@cadence.com>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>
-Thread-Index: AQHWM3A7ZXCRFcozsESZq5tPMlXzIai6rncAgAE9uoCACRAogA==
-Date:   Tue, 2 Jun 2020 07:44:18 +0000
-Message-ID: <1b54c08f759c101a8db162f4f62c6b6a8a455d3f.camel@amazon.com>
-References: <20200526150954.4729-1-zhengdejin5@gmail.com>
-         <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
-         <20200527132005.GA7143@nuc8i5>
-In-Reply-To: <20200527132005.GA7143@nuc8i5>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.53]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2C6E3733F2D2BE428C02143171B2B362@amazon.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+Rqjk/Xbtdib0IiL06nHtxev/7sEQLBo21mHm3Yd/2s=;
+        b=HETgOJAbxUO3aGo2UA2n/Nf7NM3NTefbdRQlST2Y0agzPPQ7hGuz6MXn1LIj5Ha4B9
+         pEKpXUKe9oBzsTqNhl9VHUUzxprECIMfBgWBpLkPAN0HhG8TJHYHO22Lj2mKoZ0rjfqt
+         KFVP7TzUY/094c6+HXizsTCSdZls40mhJhGP0KByYBOUOeBP5u/kcxvPZgScRcZVkFBb
+         55tUZJkdbjXne78xIAEbdBajQm7g+KyAdILxsD1qYB875ILU/5i0K25SZiUvjWkxEZuj
+         9ZwljBryUHG1CajU/PbyPUTtWF5g2zpUp2fDhw6P1Z5Y2HqVPEtdSltx2p974Uk62lDL
+         fpgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+Rqjk/Xbtdib0IiL06nHtxev/7sEQLBo21mHm3Yd/2s=;
+        b=YevgbYJ7K0mSjYrTwTriq0rnAjWffqOg4U7C4rCKWzTYt3xkLWcZxVulGbXE01fUUD
+         TqLv/Rph+vDOR9kIBk0m/xxG6J5Zu0eed3HSCXLV5DqoC70Mr4YYyX5T+5KBT1rjArtb
+         cdaBTlTifrvAHrpgd9z0RU+rOk3GsRSsz/nydGJetpKcT/DonNVde6k6DfvdayMrE3mv
+         NoAXLkBCtqbn2J/QcLXQkx2mhZLtSsgXheFngN1wf+LLkqfBqfoq6XJy5epBDhGvj0yu
+         Uq4Giqa1vhzRarIGfQdcNAQgtrOO6XnWSk4m6nFnon52CXNG1oVqfqyZsvk/m3M8xH/t
+         RDmQ==
+X-Gm-Message-State: AOAM531yksn4Qy3GEAurEheWU4rf38gDhjyY8s97G141TZsAh6dNUqJF
+        8QRi4WB2RG8oRknBvqiZPWTxUOGlZYhcsA9BI6Kl4A==
+X-Google-Smtp-Source: ABdhPJw7EUyRpnzBLg49ikdXxXIrG7kPkfVfgUWI/B3FYMT1PQO4OCk4EDirjZkuTebcGSPAU+obIjUG5JKAI4an5x4=
+X-Received: by 2002:a05:6512:533:: with SMTP id o19mr13066918lfc.6.1591083952218;
+ Tue, 02 Jun 2020 00:45:52 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200601174020.759151073@linuxfoundation.org>
+In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 2 Jun 2020 13:15:39 +0530
+Message-ID: <CA+G9fYsf4_7hUPd0MhSYQZT1a9qegqJGbrFiCtpL56x6OxTwDQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/95] 4.19.126-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTI3IGF0IDIxOjIwICswODAwLCBEZWppbiBaaGVuZyB3cm90ZToNCj4g
-Q0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5p
-emF0aW9uLiBEbw0KPiBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3Mg
-eW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXINCj4gYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2Fm
-ZS4NCj4gDQo+IA0KPiANCj4gT24gVHVlLCBNYXkgMjYsIDIwMjAgYXQgMDY6MjI6NTZQTSArMDAw
-MCwgQ2hvY3JvbiwgSm9uYXRoYW4gd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTA1LTI2IGF0IDIz
-OjA5ICswODAwLCBEZWppbiBaaGVuZyB3cm90ZToNCj4gPiA+IENBVVRJT046IFRoaXMgZW1haWwg
-b3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9yZ2FuaXphdGlvbi4NCj4gPiA+IERvDQo+
-ID4gPiBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGNhbiBj
-b25maXJtIHRoZQ0KPiA+ID4gc2VuZGVyDQo+ID4gPiBhbmQga25vdyB0aGUgY29udGVudCBpcyBz
-YWZlLg0KPiA+ID4gDQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gSXQgd2lsbCBwcmludCBhbiBlcnJv
-ciBtZXNzYWdlIGJ5IGl0c2VsZiB3aGVuDQo+ID4gPiBkZXZtX3BjaV9yZW1hcF9jZmdfcmVzb3Vy
-Y2UoKSBnb2VzIHdyb25nLiBzbyByZW1vdmUgdGhlIGR1cGxpY2F0ZQ0KPiA+ID4gZXJyb3IgbWVz
-c2FnZS4NCj4gPiA+IA0KPiA+IA0KPiA+IEl0IHNlZW1zIGxpa2UgdGhhdCBpbiB0aGUgZmlyc3Qg
-ZXJyb3IgY2FzZSBpbg0KPiA+IGRldm1fcGNpX3JlbWFwX2NmZ19yZXNvdXJjZSgpLCB0aGUgcHJp
-bnQgd2lsbCBiZSBsZXNzIGluZGljYXRpdmUuDQo+ID4gQ291bGQNCj4gPiB5b3UgcGxlYXNlIHNo
-YXJlIGFuIGV4YW1wbGUgcHJpbnQgbG9nIHdpdGggdGhlIGR1cGxpY2F0ZSBwcmludD8NCj4gPiAN
-Cj4gDQo+IEhpIEpvbmF0aGFuOg0KPiANCj4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgdXNpbmcg
-eW91ciBwcmVjaW91cyB0aW1lIHRvIHJldmlldyBteSBwYXRjaC4NCj4gDQpTdXJlLCBubyBwcm9i
-bGVtLg0KDQo+IEkgZGlkIG5vdCBoYXZlIHRoaXMgbG9nIGFuZCBqdXN0IGZvdW5kIGl0IGJ5IHJl
-dmlldyBjb2Rlcy4gdGhlDQo+IGZ1bmN0aW9uDQo+IG9mIGRldm1fcGNpX3JlbWFwX2NmZ19yZXNv
-dXJjZSgpIGlzIGRlc2lnbmVkIHRvIGhhbmRsZSBlcnJvciBtZXNzYWdlcw0KPiBieQ0KPiBpdHNl
-bGYuIGFuZCBJdHMgcmVjb21tZW5kZWQgdXNhZ2UgaXMgYXMgZm9sbG93cyBpbiB0aGUgZnVuY3Rp
-b24NCj4gZGVzY3JpcHRpb24NCj4gDQo+ICAgICAgICAgYmFzZSA9IGRldm1fcGNpX3JlbWFwX2Nm
-Z19yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0KPiAgICAgICAgIGlmIChJU19FUlIoYmFzZSkp
-DQo+ICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihiYXNlKTsNCj4gDQpJIGFzc3VtZSB0
-aGF0IHRoZSByZWNvbW1lbmRlZCB1c2FnZSdzIG1haW4gaW50ZW50IHdhcyB0byBwb2ludCBvdXQg
-dGhhdA0KSVNfRVJSKCkgc2hvdWxkIGJlIHVzZWQsIGJ1dCB0aGlzIGlzIG1haW5seSBzcGVjdWxh
-dGlvbi4NCg0KPiBJbiBmYWN0LCBJIHRoaW5rIGl0cyBlcnJvciBoYW5kbGluZyBpcyBjbGVhciBl
-bm91Z2gsIEl0IGp1c3QgZ29lcw0KPiB3cm9uZw0KPiBpbiB0aHJlZSBwbGFjZXMsIGFzIGZvbGxv
-d3M6DQo+IA0KPiB2b2lkIF9faW9tZW0gKmRldm1fcGNpX3JlbWFwX2NmZ19yZXNvdXJjZShzdHJ1
-Y3QgZGV2aWNlICpkZXYsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHN0cnVjdCByZXNvdXJjZSAqcmVzKQ0KPiB7DQo+ICAgICAgICAgcmVzb3VyY2Vfc2l6ZV90
-IHNpemU7DQo+ICAgICAgICAgY29uc3QgY2hhciAqbmFtZTsNCj4gICAgICAgICB2b2lkIF9faW9t
-ZW0gKmRlc3RfcHRyOw0KPiANCj4gICAgICAgICBCVUdfT04oIWRldik7DQo+IA0KPiAgICAgICAg
-IGlmICghcmVzIHx8IHJlc291cmNlX3R5cGUocmVzKSAhPSBJT1JFU09VUkNFX01FTSkgew0KPiAg
-ICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJpbnZhbGlkIHJlc291cmNlXG4iKTsNCj4gICAg
-ICAgICAgICAgICAgIHJldHVybiBJT01FTV9FUlJfUFRSKC1FSU5WQUwpOw0KPiAgICAgICAgIH0N
-Cj4gDQpJbiB0aGUgYWJvdmUgZXJyb3IgY2FzZSB0aGVyZSBpcyBubyBpbmRpY2F0aW9uIG9mIHdo
-aWNoIHJlc291cmNlIGZhaWxlZA0KKG1haW5seSByZWxldmFudCBpZiB0aGUgcmVzb3VyY2UgbmFt
-ZSBpcyBtaXNzaW5nIGluIHRoZSBkZXZpY2V0cmVlLA0Kc2luY2UgaW4gdGhlIGRyaXZlcnMgeW91
-IGFyZSBjaGFuZ2luZyBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKCkgaXMNCm1vc3RseSB1
-c2VkKS4gSW4gdGhlIGV4aXN0aW5nIGRyaXZlcnMnIGNvZGUsIG9uIHJldHVybiBmcm9tIHRoaXMN
-CmZ1bmN0aW9uIGluIHRoaXMgY2FzZSwgdGhlIG5hbWUgd291bGQgYmUgcHJpbnRlZCBieSB0aGUg
-Y2FsbGVyLg0KDQo+ICAgICAgICAgc2l6ZSA9IHJlc291cmNlX3NpemUocmVzKTsNCj4gICAgICAg
-ICBuYW1lID0gcmVzLT5uYW1lID86IGRldl9uYW1lKGRldik7DQo+IA0KPiAgICAgICAgIGlmICgh
-ZGV2bV9yZXF1ZXN0X21lbV9yZWdpb24oZGV2LCByZXMtPnN0YXJ0LCBzaXplLCBuYW1lKSkgew0K
-PiAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJjYW4ndCByZXF1ZXN0IHJlZ2lvbiBmb3Ig
-cmVzb3VyY2UNCj4gJXBSXG4iLCByZXMpOw0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIElPTUVN
-X0VSUl9QVFIoLUVCVVNZKTsNCj4gICAgICAgICB9DQo+IA0KPiAgICAgICAgIGRlc3RfcHRyID0g
-ZGV2bV9wY2lfcmVtYXBfY2Znc3BhY2UoZGV2LCByZXMtPnN0YXJ0LCBzaXplKTsNCj4gICAgICAg
-ICBpZiAoIWRlc3RfcHRyKSB7DQo+ICAgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgImlvcmVt
-YXAgZmFpbGVkIGZvciByZXNvdXJjZSAlcFJcbiIsDQo+IHJlcyk7DQo+ICAgICAgICAgICAgICAg
-ICBkZXZtX3JlbGVhc2VfbWVtX3JlZ2lvbihkZXYsIHJlcy0+c3RhcnQsIHNpemUpOw0KPiAgICAg
-ICAgICAgICAgICAgZGVzdF9wdHIgPSBJT01FTV9FUlJfUFRSKC1FTk9NRU0pOw0KPiAgICAgICAg
-IH0NCj4gDQpUaGUgb3RoZXIgMiBlcnJvciBjYXNlcyBhcyB3ZWxsIGRvbid0IHByaW50IHRoZSBy
-ZXNvdXJjZSBuYW1lIGFzIGZhciBhcw0KSSByZWNhbGwgKHRoZXkgd2lsbCBhdCBsZWFzdCBwcmlu
-dCB0aGUgcmVzb3VyY2Ugc3RhcnQvZW5kKS4NCg0KPiAgICAgICAgIHJldHVybiBkZXN0X3B0cjsN
-Cj4gfQ0KPiANCj4gQlIsDQo+IERlamluDQo+IA0KPiA+IFRoYW5rcywNCj4gPiAgICBKb25hdGhh
-bg0K
+On Mon, 1 Jun 2020 at 23:33, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.126 release.
+> There are 95 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.126-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.126-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 47f49ba00628e7ce16eda75304e947f7ddb149d1
+git describe: v4.19.125-96-g47f49ba00628
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.125-96-g47f49ba00628
+
+
+No regressions (compared to build v4.19.125)
+
+No fixes (compared to build v4.19.125)
+
+Ran 28272 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2800
+* linux-log-parser
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* libhugetlbfs
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--
+Linaro LKFT
+https://lkft.linaro.org
