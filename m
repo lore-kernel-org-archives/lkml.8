@@ -2,148 +2,275 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF79C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD37DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9AD2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44CE2077D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IdyNqTNS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lSddc/Av"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgFBKKG (ORCPT
+        id S1728187AbgFBKKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:10:06 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5289 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbgFBKKA (ORCPT
+        Tue, 2 Jun 2020 06:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbgFBKJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:10:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed625210000>; Tue, 02 Jun 2020 03:08:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 02 Jun 2020 03:09:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 02 Jun 2020 03:09:59 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jun
- 2020 10:09:54 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 2 Jun 2020 10:09:54 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ed6256e0001>; Tue, 02 Jun 2020 03:09:53 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH 1/2] PCI: dwc: Add support to handle prefetchable memory separately
-Date:   Tue, 2 Jun 2020 15:39:39 +0530
-Message-ID: <20200602100940.10575-2-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200602100940.10575-1-vidyas@nvidia.com>
-References: <20200602100940.10575-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 2 Jun 2020 06:09:59 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57675C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 03:09:58 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q24so1223316pjd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 03:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wsqa0aiNnjxSKSxZ07dY/8X+UeLS5BJ6SaHqCOj/zLM=;
+        b=lSddc/AvN4z9zX0shlWtxeHp4IJFJCOtqh4MGjrINjiStIZWUQKc3yOAQuFdZJI06k
+         Vgy0UakBX9xert0KE1UF87P6NBRdcXPOptUNsYNpDvrAnNp1csMaFaG6DaxQeLZTBFt1
+         +HoTwMoBRqgd7Kx6DaTJKw9XgING9jXQsWc3DtKEdhn2tKdTbZEB2kkGmk2VBgyPjTh6
+         e9wj6eyF2irxqoUdh51pQk+J/3XrBBgkHPFn5f+2m0+sjSP4g2cq9nT3RbJymdxn+gOv
+         bydoevKbA+rxapu0nSr+tOr1TEEJPW01CMxZe7OMGPr9/LAMY2MvEQy6dcJxQRhCg4AW
+         aGdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wsqa0aiNnjxSKSxZ07dY/8X+UeLS5BJ6SaHqCOj/zLM=;
+        b=Dbol1A1x8tP8HhC9VgwlSkClfZHCpc/8wIrwvBOhzFBuBBvssQaGv/5lxYH2LzWkuI
+         tynUOvs4jkrP0Z8KC/Sa3VmVxC3ZV7EL2hA2ezM49JWGKO2CsvtpBtlNdgY7VESWJ7r8
+         KsLptL00s4DwagvLl2FI5lfsJBAwgUSFzGWsqwOicg+M2cX4YZK+JFZlU3+staH34Yjh
+         qo54FiVUT/hsbADZoemG0WG/fn0Er6w2Yc29V1szX1p2jzqdz+kAlQvqbo2zJAiEnmIH
+         zGd/PujSHX/VsgFvbY/gzh2SWP7JrLySQHoR3GAFOiRLtCjgbCowXwsIU8LTeafMtmCk
+         KF6Q==
+X-Gm-Message-State: AOAM532vAgjBuKmBOYoCf4n7j3qoD8LDNohRftTMX3eTI739kCG8+kb0
+        kl3x+8ysp4gMXrBg2x2mgwL7rw==
+X-Google-Smtp-Source: ABdhPJxBYq+KqFnjJ1UQ+HHg3VFRhBmTfHQTgVlsT9+2hmQTf2hYbGj9JKW5daP2oYzepPi6Pw4uMg==
+X-Received: by 2002:a17:90a:3669:: with SMTP id s96mr4644955pjb.149.1591092597818;
+        Tue, 02 Jun 2020 03:09:57 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id d8sm1931276pgb.42.2020.06.02.03.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 03:09:57 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org
+Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v4 5/5] regulator: qcom: labibb: Add SC interrupt handling
+Date:   Tue,  2 Jun 2020 15:39:24 +0530
+Message-Id: <20200602100924.26256-6-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200602100924.26256-1-sumit.semwal@linaro.org>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591092513; bh=cT5G8s0tuAY7ryjlQpRrXd7Ziy0127lhAECR/SIk7dQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=IdyNqTNSFDTXb0+FTNTNin7kRwm1M7ulsVP17ymj3nbxjfsY750b6Vik1Lw0+jk9T
-         B5ZIoESMII0KUyLDk/YRdvXVTI+S/qmDyfIvPoYkH5Yps+Lkq8WNRQ4W2HoK/VkuB/
-         Z0nIKG0e/xUV70+PJHG0kb70wWX8cXL4cUii0qSqiFs+dCPN3ArT1xv4QDF5m2CIRa
-         4Km5zlDG6Afv7QvVPWPpXnKNa55qlECb0iam2/Jd/5Pw1o8LNQKyDCRhtridjOjpUj
-         8aKxcSfZoGmImMhbF8yOC9To8uV+KkDGjVJwsC9fO1KGm7Zt4ZhzX7QvmgHNeVd1PG
-         aPZXCZqRG6tSg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add required structure members to struct pcie_port to handle prefetchable
-memory aperture separately from non-prefetchable memory aperture so that
-any dependency on the order of their appearance in the 'ranges' property
-of the respective PCIe device tree node can be removed.
+From: Nisha Kumari <nishakumari@codeaurora.org>
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Add Short circuit interrupt handling and recovery for the lab and ibb
+regulators on qcom platforms.
+
+The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
+notification which will be triggered on short circuit. They should
+try to enable the regulator once, and if it doesn't get enabled,
+handle shutting down the panel accordingly.
+
+Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+    [sumits: updated to rework to use regmap_read_poll_timeout, handle it per
+             regulator, add REGULATOR_EVENT_OVER_CURRENT handling and
+             notification to clients and other cleanup]
+--
+v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
+     per-regulator instead of clearing both lab and ibb errors on either irq
+     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
+     notification to clients.
+v3: sumits: updated as per review comments of v2: removed spurious check for
+     irq in handler and some unused variables; inlined some of the code,
+     omitted IRQF_TRIGGER_RISING as it's coming from DT.
+v4: sumits: updated 'int vreg_enabled' to 'boot enabled', made sc_irq a local var
+     and other review comments from v3.
 ---
- .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++-------
- drivers/pci/controller/dwc/pcie-designware.h  |  4 +++
- 2 files changed, 21 insertions(+), 9 deletions(-)
+ drivers/regulator/qcom-labibb-regulator.c | 102 +++++++++++++++++++++-
+ 1 file changed, 99 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 42fbfe2a1b8f..6f06d6bd9f00 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -363,13 +363,23 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			pp->io_base = pci_pio_to_address(pp->io->start);
- 			break;
- 		case IORESOURCE_MEM:
--			pp->mem = win->res;
--			pp->mem->name = "MEM";
--			mem_size = resource_size(pp->mem);
--			if (upper_32_bits(mem_size))
--				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
--			pp->mem_size = mem_size;
--			pp->mem_bus_addr = pp->mem->start - win->offset;
-+			if (win->res->flags & IORESOURCE_PREFETCH) {
-+				pp->prefetch = win->res;
-+				pp->prefetch->name = "PREFETCH";
-+				pp->prefetch_base = pp->prefetch->start;
-+				pp->prefetch_size = resource_size(pp->prefetch);
-+				pp->perfetch_bus_addr = pp->prefetch->start -
-+							win->offset;
-+			} else {
-+				pp->mem = win->res;
-+				pp->mem->name = "MEM";
-+				pp->mem_base = pp->mem->start;
-+				mem_size = resource_size(pp->mem);
-+				if (upper_32_bits(mem_size))
-+					dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-+				pp->mem_size = mem_size;
-+				pp->mem_bus_addr = pp->mem->start - win->offset;
-+			}
- 			break;
- 		case 0:
- 			pp->cfg = win->res;
-@@ -394,8 +404,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		}
- 	}
+diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
+index 33b764ac69d1..bca0308b26dd 100644
+--- a/drivers/regulator/qcom-labibb-regulator.c
++++ b/drivers/regulator/qcom-labibb-regulator.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ // Copyright (c) 2020, The Linux Foundation. All rights reserved.
  
--	pp->mem_base = pp->mem->start;
--
- 	if (!pp->va_cfg0_base) {
- 		pp->va_cfg0_base = devm_pci_remap_cfgspace(dev,
- 					pp->cfg0_base, pp->cfg0_size);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 656e00f8fbeb..c87c1b2a1177 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -186,9 +186,13 @@ struct pcie_port {
- 	u64			mem_base;
- 	phys_addr_t		mem_bus_addr;
- 	u32			mem_size;
-+	u64			prefetch_base;
-+	phys_addr_t		perfetch_bus_addr;
-+	u64			prefetch_size;
- 	struct resource		*cfg;
- 	struct resource		*io;
- 	struct resource		*mem;
-+	struct resource		*prefetch;
- 	struct resource		*busn;
- 	int			irq;
- 	const struct dw_pcie_host_ops *ops;
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of_irq.h>
+ #include <linux/of.h>
+@@ -18,6 +19,7 @@
+ #define REG_LABIBB_ENABLE_CTL		0x46
+ #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
+ #define LABIBB_CONTROL_ENABLE		BIT(7)
++#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
+ 
+ #define LAB_ENABLE_CTL_MASK		BIT(7)
+ #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
+@@ -27,12 +29,16 @@
+ #define IBB_ENABLE_TIME			(LABIBB_OFF_ON_DELAY * 10)
+ #define LABIBB_POLL_ENABLED_TIME	1000
+ 
++#define POLLING_SCP_DONE_INTERVAL_US	5000
++#define POLLING_SCP_TIMEOUT		16000
++
+ struct labibb_regulator {
+ 	struct regulator_desc		desc;
+ 	struct device			*dev;
+ 	struct regmap			*regmap;
+ 	struct regulator_dev		*rdev;
+ 	u16				base;
++	bool				enabled;
+ 	u8				type;
+ };
+ 
+@@ -59,12 +65,26 @@ static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
+ 
+ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+ {
+-	return regulator_enable_regmap(rdev);
++	int ret;
++	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
++
++	ret = regulator_enable_regmap(rdev);
++	if (ret >= 0)
++		reg->enabled = true;
++
++	return ret;
+ }
+ 
+ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+ {
+-	return regulator_disable_regmap(rdev);
++	int ret = 0;
++	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
++
++	ret = regulator_disable_regmap(rdev);
++	if (ret >= 0)
++		reg->enabled = false;
++
++	return ret;
+ }
+ 
+ static struct regulator_ops qcom_labibb_ops = {
+@@ -73,12 +93,70 @@ static struct regulator_ops qcom_labibb_ops = {
+ 	.is_enabled		= qcom_labibb_regulator_is_enabled,
+ };
+ 
++static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
++{
++	int ret;
++	u16 reg;
++	unsigned int val;
++	struct labibb_regulator *labibb_reg = _reg;
++	bool in_sc_err, scp_done = false;
++
++	ret = regmap_read(labibb_reg->regmap,
++			  labibb_reg->base + REG_LABIBB_STATUS1, &val);
++	if (ret < 0) {
++		dev_err(labibb_reg->dev, "sc_err_irq: Read failed, ret=%d\n",
++			ret);
++		return IRQ_HANDLED;
++	}
++
++	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
++		labibb_reg->desc.name, val);
++
++	in_sc_err = !!(val & LABIBB_STATUS1_SC_DETECT_BIT);
++
++	/*
++	 * The SC(short circuit) fault would trigger PBS(Portable Batch
++	 * System) to disable regulators for protection. This would
++	 * cause the SC_DETECT status being cleared so that it's not
++	 * able to get the SC fault status.
++	 * Check if the regulator is enabled in the driver but
++	 * disabled in hardware, this means a SC fault had happened
++	 * and SCP handling is completed by PBS.
++	 */
++	if (!in_sc_err) {
++
++		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
++
++		ret = regmap_read_poll_timeout(labibb_reg->regmap,
++					reg, val,
++					!(val & LABIBB_CONTROL_ENABLE),
++					POLLING_SCP_DONE_INTERVAL_US,
++					POLLING_SCP_TIMEOUT);
++
++		if (!ret && labibb_reg->enabled) {
++			dev_dbg(labibb_reg->dev,
++				"%s has been disabled by SCP\n",
++				labibb_reg->desc.name);
++			scp_done = true;
++		}
++	}
++
++	if (in_sc_err || scp_done) {
++		regulator_lock(labibb_reg->rdev);
++		regulator_notifier_call_chain(labibb_reg->rdev,
++						REGULATOR_EVENT_OVER_CURRENT,
++						NULL);
++		regulator_unlock(labibb_reg->rdev);
++	}
++	return IRQ_HANDLED;
++}
++
+ static struct regulator_dev *register_labibb_regulator(struct labibb_regulator *reg,
+ 				const struct labibb_regulator_data *reg_data,
+ 				struct device_node *of_node)
+ {
+ 	struct regulator_config cfg = {};
+-	int ret;
++	int ret, sc_irq;
+ 
+ 	reg->base = reg_data->base;
+ 	reg->type = reg_data->type;
+@@ -95,6 +173,24 @@ static struct regulator_dev *register_labibb_regulator(struct labibb_regulator *
+ 	reg->desc.poll_enabled_time = LABIBB_POLL_ENABLED_TIME;
+ 	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
+ 
++	sc_irq = of_irq_get_byname(of_node, "sc-err");
++	if (sc_irq < 0) {
++		dev_err(reg->dev, "Unable to get sc-err, ret = %d\n",
++			sc_irq);
++		return ERR_PTR(sc_irq);
++	} else {
++		ret = devm_request_threaded_irq(reg->dev,
++						sc_irq,
++						NULL, labibb_sc_err_handler,
++						IRQF_ONESHOT,
++						"sc-err", reg);
++		if (ret) {
++			dev_err(reg->dev, "Failed to register sc-err irq ret=%d\n",
++				ret);
++			return ERR_PTR(ret);
++		}
++	}
++
+ 	cfg.dev = reg->dev;
+ 	cfg.driver_data = reg;
+ 	cfg.regmap = reg->regmap;
 -- 
-2.17.1
+2.26.2
 
