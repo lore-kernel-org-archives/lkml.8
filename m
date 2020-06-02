@@ -2,92 +2,89 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D01C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC9DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A60A120659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AA020659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ot7axcbC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="NtLZtOks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFBPQX (ORCPT
+        id S1726320AbgFBPSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:16:23 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31916 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726817AbgFBPQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:16:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591110981;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W+jm8RZj0eEZNUCx8pItgFj239Ty9q6VVmPvCtDVvWo=;
-        b=Ot7axcbCotaU00bNRZzRqZAqdyQ43IByuOMgT0I1KX53u5fNvkxlH5lMqVnUSqz0ZWYAAK
-        dhP0p6cpsxAVGF9rHyGg2mzQZ2rpZyxINNXu1HA/Z8A83lUC9gSsk+urUdw+i8kwrvjrEr
-        xuZzX/3yj1Fx5eJs2eYlFeAjByPtzwE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-jiVHUJsONHWevsy7DxQBsg-1; Tue, 02 Jun 2020 11:16:17 -0400
-X-MC-Unique: jiVHUJsONHWevsy7DxQBsg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43F27107ACCA;
-        Tue,  2 Jun 2020 15:16:16 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A02155D9CC;
-        Tue,  2 Jun 2020 15:16:15 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 09:16:15 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>, KVM <kvm@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jun 2 (vfio)
-Message-ID: <20200602091615.145e6f09@x1.home>
-In-Reply-To: <96573328-d6d6-8da2-e388-f448d461abb3@infradead.org>
-References: <20200602203737.6eec243f@canb.auug.org.au>
-        <96573328-d6d6-8da2-e388-f448d461abb3@infradead.org>
-Organization: Red Hat
+        Tue, 2 Jun 2020 11:18:15 -0400
+Received: from vern.gendns.com ([98.142.107.122]:54424 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgFBPSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:18:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=fY5IJpcG4taKk/Z1c0/fQ/EvxTolmAQsbeDYBoiR5u0=; b=NtLZtOksQBZaiN/MHofooBohHZ
+        yLz+q25OmAY1J1RyUf0/feKCObejImLWtjna8ZQ0uxzyiM0BFAN0yDX/su6TOIdUcGIecBhnEROeu
+        rKnMT7PBoOjCgJ5vb0Q1/WYMJJsUi2fad3XkcM2aAX+rmw/oQuHeYgFayIW4DHtjZWCjL0C0JdloA
+        EJmFEPCJYbcI0E3MvqUidpxpBsP5vMLJIC0bAfadEuogsfdlzjtG4dLbE1H49nR1ApyieO4qyGQR9
+        awbtgQdycWeGLXshgfJT6uoHQIWbLdvRkNat/h/qg5GQs2Rac1w5nmqgjHRft6HUE3aaBO749uASj
+        s3W/P9fQ==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:42134 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1jg8g5-00049A-Lh; Tue, 02 Jun 2020 11:18:09 -0400
+Subject: Re: [PATCH v2 0/4] Introduce the Counter character device interface
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+References: <cover.1589654470.git.vilhelm.gray@gmail.com>
+ <20200524172542.31ff6ac7@archlinux> <20200524175439.GA14300@shinobu>
+ <20200531161813.658ffdfb@archlinux> <20200531171351.GA10597@shinobu>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <ac473c9a-f9cd-21ae-8f8f-d5181df2c134@lechnology.com>
+Date:   Tue, 2 Jun 2020 10:18:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200531171351.GA10597@shinobu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 07:36:45 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
-
-> On 6/2/20 3:37 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > News: The merge window has opened, so please do *not* add v5.9 material
-> > to your linux-next included branches until after v5.8-rc1 has been
-> > released.
-> > 
-> > Changes since 20200529:
-> >   
+On 5/31/20 12:14 PM, William Breathitt Gray wrote:
+> Yielding the following /dev/counter0 memory layout:
 > 
-> on i386:
-> 
-> ld: drivers/vfio/vfio_iommu_type1.o: in function `vfio_dma_populate_bitmap':
-> vfio_iommu_type1.c:(.text.unlikely+0x41): undefined reference to `__udivdi3'
+> +------------+-----------------+------------+-------------------+
+> | Byte 0     | Byte 1 - Byte 8 | Byte 9     | Byte 10 - Byte 17 |
+> +------------+-----------------+------------+-------------------+
+> | Boundary 0 | Count 0         | Boundary 1 | Count 1           |
+> +------------+-----------------+------------+-------------------+
 
-I think Kirti received a 0-day report on this.  Kirti, could you please
-post the fix you identified?  Thanks,
-
-Alex
-
+A potential pitfall with this sort of packing is that some platforms
+do not support unaligned access, so data would have to be "unpacked"
+before it could be used.
