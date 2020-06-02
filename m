@@ -2,123 +2,151 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F612C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D51C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE5B206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEA62074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:37:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d4x1Eadc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ha/pn0BX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgFBTgq (ORCPT
+        id S1727863AbgFBThe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:36:46 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55726 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgFBTgp (ORCPT
+        Tue, 2 Jun 2020 15:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFBThd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:36:45 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JW4JY125967;
-        Tue, 2 Jun 2020 19:36:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : reply-to : mime-version : content-type;
- s=corp-2020-01-29; bh=//t/xn6k1e3S2dramBlocepFkrrrWwexf1J1V0NoWKw=;
- b=d4x1Eadc9JzMGRZY/aH8YvBkccLwe9Vb1O98tV6jpq5NVdCov8xqMHRvP83u6lKAQrm9
- ctrzp5CL4Ftxv5h92MI+fmDbe1Pyn0EBz1YtYt6vk3STxqZe88sKJ8x4EWiuq6ym6L6S
- I9WaLS7EQUHTzO0QFjQXGNPMquywJ7XDUqRQTh4UNpmmJvFezJG6ddthwWNB00LVNQAE
- SOCqnlgLv6hLaaO3XbHTZxzViXuCnsuT0LXJXqGKP9OrdE30/UPtSp45gkD7wPZAqZb8
- hIlwA+kumfD5eolQhReGUTOEo7LXk+o2Iw0hLK7DZkc471MGg4Ku8fJ65g2kh/tsldwG Yg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31dkruju1f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 19:36:22 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JRQ6F074395;
-        Tue, 2 Jun 2020 19:36:21 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 31c12pr4sv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 19:36:21 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052JaJYp005301;
-        Tue, 2 Jun 2020 19:36:19 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 12:36:18 -0700
-Date:   Tue, 2 Jun 2020 22:36:11 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] x86/resctrl: fix a NULL vs IS_ERR() static checker warning
-Message-ID: <20200602193611.GA190851@mwanda>
-Reply-To: e27321cb-293e-7919-33fe-ad8381cd9993@intel.com
+        Tue, 2 Jun 2020 15:37:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48462C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:37:33 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b16so891126pfi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bJnC8pb9inJ4WASV7qVCuCabCRcXZDxttLDFcET0dPc=;
+        b=Ha/pn0BXsUvRjOzGNc0GJXisWDaYC6hsmIaIt4veiwt/qOBrFIyP91gWdk0MIjL3SP
+         CtXg3HDwFvPW9uc6fKiYNh0Rdg8AapVZng26a36EW9Ul23Yk3vMUneyzBf4ON8PFZLOP
+         Yni5OWTIjVYNJ55ki+7sCflmTV3aRAX7Okn1Wwj6zv04gZHLuxFaZKb9QIEPfg/R7izY
+         v0gGGqsRfp3lhMfXDevaHCmuH/Nu6XiKLLW8HkKoKKGqyqOWF1ZS6dBjcyZbxRRItrSX
+         cGa2QzSeSMMclncAx8VzL5FZzWi4q8206AVEcoTiyu4h0vPuwIA97o387htSfu+b20l4
+         6u2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bJnC8pb9inJ4WASV7qVCuCabCRcXZDxttLDFcET0dPc=;
+        b=kGmNatKqDPiw58psVIKaIg1lDMi/ZAZL0ZYK79N3IpnV8xdMGOQA0mpFTekS4TnkBy
+         O8WHJrN1MsP7xjzmMmQ/CPcWif5GH3fZULq5YRUeE5lLp07olF4jQERcanKqHLpWwJy9
+         /VrKX9OTKR/cfI3t4tByJYHhtidUkFOnCMNSCUCG2ZoTOB6L7YnitoOm+A7pwfWYJodC
+         37AQqHbTEQpvh7XA0awGTYCtFYnoj9u/c6FCdgv4mTOQaJ6KdLQf6tCQEVzg+q0vSnsZ
+         ML7ZJF6xzNSghzoGTXvw90jyJzMUjI6Rx6+wWL25MUyPme4IhHaMgVfhR/9Eexbjmy0T
+         tgug==
+X-Gm-Message-State: AOAM533HNLZt6L2n2+qSJ05w07daH6E8zyc9IXRRUwcp4fvRfBTWybRP
+        rcz4CPI5s7MHxT2ocKJUYKpZdg==
+X-Google-Smtp-Source: ABdhPJy3Abo428EgMH5dNF9Mw8Ft+chYmLJaz1u5kKFL3gpyXhgREJRJ/iH853fmYqj1SDPu5DREaw==
+X-Received: by 2002:a63:4f09:: with SMTP id d9mr24769623pgb.10.1591126652763;
+        Tue, 02 Jun 2020 12:37:32 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id y9sm3105189pjy.56.2020.06.02.12.37.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 12:37:32 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 13:37:30 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] remoteproc: Introduce rproc_of_parse_firmware()
+ helper
+Message-ID: <20200602193730.GA29840@xps15>
+References: <20200521001006.2725-1-s-anna@ti.com>
+ <20200521001006.2725-2-s-anna@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=1 spamscore=0 bulkscore=0 mlxlogscore=973
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=1 malwarescore=0 clxscore=1015
- adultscore=0 mlxlogscore=979 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020142
+In-Reply-To: <20200521001006.2725-2-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The callers don't expect *d_cdp to be set to an error pointer, they only
-check for NULL.  This leads to a static checker warning:
+On Wed, May 20, 2020 at 07:10:03PM -0500, Suman Anna wrote:
+> Add a new helper function rproc_of_parse_firmware() to the remoteproc
+> core that can be used by various remoteproc drivers to look up the
+> the "firmware-name" property from a rproc device node. This property
+> is already being used by multiple drivers, so this helper can avoid
+> repeating equivalent code in remoteproc drivers.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> v2: New patch
+> 
+>  drivers/remoteproc/remoteproc_core.c     | 23 +++++++++++++++++++++++
+>  drivers/remoteproc/remoteproc_internal.h |  2 ++
+>  2 files changed, 25 insertions(+)
+> 
 
-    arch/x86/kernel/cpu/resctrl/rdtgroup.c:2648 __init_one_rdt_domain()
-    warn: 'd_cdp' could be an error pointer
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-This would not trigger a bug in this specific case because
-__init_one_rdt_domain() calls it with a valid domain that would not have
-a negative id and thus not trigger the return of the ERR_PTR(). If this
-was a negative domain id then the call to rdt_find_domain() in
-domain_add_cpu() would have returned the ERR_PTR() much earlier and the
-creation of the domain with an invalid id would have been prevented.
-
-Even though a bug is not triggered currently the right and safe thing to
-do is to set the pointer to NULL because that is what can be checked for
-when the caller is handling the CDP and non-CDP cases.
-
-Fixes: 52eb74339a62 ("x86/resctrl: Fix rdt_find_domain() return value and checks")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
----
-v2: improve commit message with extra information from the maintainer
-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 23b4b61319d3f..3f844f14fc0a6 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1117,6 +1117,7 @@ static int rdt_cdp_peer_get(struct rdt_resource *r, struct rdt_domain *d,
- 	_d_cdp = rdt_find_domain(_r_cdp, d->id, NULL);
- 	if (WARN_ON(IS_ERR_OR_NULL(_d_cdp))) {
- 		_r_cdp = NULL;
-+		_d_cdp = NULL;
- 		ret = -EINVAL;
- 	}
- 
--- 
-2.26.2
-
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 9f04c30c4aaf..c458b218d524 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1034,6 +1034,29 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
+>  }
+>  EXPORT_SYMBOL(rproc_of_resm_mem_entry_init);
+>  
+> +/**
+> + * rproc_of_parse_firmware() - parse and return the firmware-name
+> + * @dev: pointer on device struct representing a rproc
+> + * @index: index to use for the firmware-name retrieval
+> + * @fw_name: pointer to a character string, in which the firmware
+> + *           name is returned on success and unmodified otherwise.
+> + *
+> + * This is an OF helper function that parses a device's DT node for
+> + * the "firmware-name" property and returns the firmware name pointer
+> + * in @fw_name on success.
+> + *
+> + * Return: 0 on success, or an appropriate failure.
+> + */
+> +int rproc_of_parse_firmware(struct device *dev, int index, const char **fw_name)
+> +{
+> +	int ret;
+> +
+> +	ret = of_property_read_string_index(dev->of_node, "firmware-name",
+> +					    index, fw_name);
+> +	return ret ? ret : 0;
+> +}
+> +EXPORT_SYMBOL(rproc_of_parse_firmware);
+> +
+>  /*
+>   * A lookup table for resource handlers. The indices are defined in
+>   * enum fw_resource_type.
+> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+> index 4ba7cb59d3e8..e5341e91d2fc 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -28,6 +28,8 @@ struct rproc_debug_trace {
+>  void rproc_release(struct kref *kref);
+>  irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
+>  void rproc_vdev_release(struct kref *ref);
+> +int rproc_of_parse_firmware(struct device *dev, int index,
+> +			    const char **fw_name);
+>  
+>  /* from remoteproc_virtio.c */
+>  int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id);
+> -- 
+> 2.26.0
+> 
