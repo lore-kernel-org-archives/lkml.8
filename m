@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B33C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA8F820823
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A563820772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591098700;
-	bh=TZ8kFOKY9jEFgB529jHI+0yCSFUIuXJAXS0kk9D0zDg=;
+	s=default; t=1591098703;
+	bh=QPvwJBEng8QT+oqHe3Ym/cqMPdcWd4p8VQgTTi85inU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IzTMBhuxO6OTGfimJXIZl6zMHf9poxLiCNRqDN36OBvx/ru9F+xTCa4hAyc5JsAx+
-	 WqKcYGAkgFMqsZqtIKKWlpRrfBwM51SNXMnulJqJrJCxSLRhCLucOrR7pPgJ1vuzoB
-	 X/gJ6thbvyDuJRfzyDUuL8jx0Hb6fGPjEGDLvFYY=
+	b=iP8dRpSO/3RNPT6xcS10lhWtQWiD00skylOOKQDw8lfDmPxxqg+LdI9lHt8gNXYQl
+	 Bn93+vgNlPDRqZE0YpSS+mdnsbk5MRlJ4W1yf9Pa3OoJyKeocDbbZLC/HmMtiplOTh
+	 a6oUH/H82VLfFdJXIaIwPEd3PybYzwoB4wi6HOD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgFBLvk convert rfc822-to-8bit (ORCPT
+        id S1728306AbgFBLvm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:51:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44404 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728145AbgFBLvh (ORCPT
+        Tue, 2 Jun 2020 07:51:42 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52343 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728273AbgFBLvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:51:37 -0400
+        Tue, 2 Jun 2020 07:51:41 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-173-4v8k6PzbP1On0sDJq3xXJQ-1; Tue, 02 Jun 2020 07:51:30 -0400
-X-MC-Unique: 4v8k6PzbP1On0sDJq3xXJQ-1
+ us-mta-219-NNEkWOMfM42oLFXHcpnO8A-1; Tue, 02 Jun 2020 07:51:35 -0400
+X-MC-Unique: NNEkWOMfM42oLFXHcpnO8A-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C0BF464;
-        Tue,  2 Jun 2020 11:51:28 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDCD61800D42;
+        Tue,  2 Jun 2020 11:51:33 +0000 (UTC)
 Received: from krava.redhat.com (unknown [10.40.195.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39A2810013D7;
-        Tue,  2 Jun 2020 11:51:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 790DF10013D7;
+        Tue,  2 Jun 2020 11:51:31 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -50,9 +50,9 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         Stephane Eranian <eranian@google.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 11/13] perf tools: Add test_generic_metric function
-Date:   Tue,  2 Jun 2020 13:50:53 +0200
-Message-Id: <20200602115055.1168446-12-jolsa@kernel.org>
+Subject: [PATCH 13/13] perf tests: Add parse metric test for frontend metric
+Date:   Tue,  2 Jun 2020 13:50:55 +0200
+Message-Id: <20200602115055.1168446-14-jolsa@kernel.org>
 In-Reply-To: <20200602115055.1168446-1-jolsa@kernel.org>
 References: <20200602115055.1168446-1-jolsa@kernel.org>
 MIME-Version: 1.0
@@ -66,52 +66,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding test_generic_metric that prepares and runs given metric
-over the data from psswd struct runtime_stat object.
+Adding new metri test for frontend metric. It's stolen
+from x86 pmu events.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/util/stat-shadow.c | 14 ++++++++++++++
- tools/perf/util/stat.h        |  3 +++
- 2 files changed, 17 insertions(+)
+ tools/perf/tests/parse-metric.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 27be7ce2fff4..8fdef47005e6 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -842,6 +842,20 @@ static void generic_metric(struct perf_stat_config *config,
- 	expr__ctx_clear(&pctx);
+diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+index 717a73fa7446..1939e567a8b3 100644
+--- a/tools/perf/tests/parse-metric.c
++++ b/tools/perf/tests/parse-metric.c
+@@ -17,6 +17,11 @@ static struct pmu_event pme_test[] = {
+ 	.metric_expr	= "inst_retired.any / cpu_clk_unhalted.thread",
+ 	.metric_name	= "IPC",
+ },
++{
++	.metric_expr	= "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
++			  "( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
++	.metric_name	= "Frontend_Bound_SMT",
++},
+ };
+ 
+ static struct pmu_events_map map = {
+@@ -138,8 +143,28 @@ static int test_ipc(void)
+ 	return 0;
  }
  
-+double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_stat *st)
++static int test_frontend(void)
 +{
-+	struct expr_parse_ctx pctx;
 +	double ratio;
++	struct value vals[] = {
++		{ .event = "idq_uops_not_delivered.core",        .val = 300 },
++		{ .event = "cpu_clk_unhalted.thread",            .val = 200 },
++		{ .event = "cpu_clk_unhalted.one_thread_active", .val = 400 },
++		{ .event = "cpu_clk_unhalted.ref_xclk",          .val = 600 },
++		{ 0 },
++	};
 +
-+	if (prepare_metric(mexp->metric_events, &pctx, cpu, st) < 0)
-+		return 0.;
++	TEST_ASSERT_VAL("failed to compute metric",
++			compute_metric("Frontend_Bound_SMT", vals, &ratio) == 0);
 +
-+	if (expr__parse(&ratio, &pctx, mexp->metric_expr, 1))
-+		return 0.;
-+
-+	return ratio;
++	TEST_ASSERT_VAL("Frontend_Bound_SMT failed, wrong ratio",
++			ratio == 0.45);
++	return 0;
 +}
 +
- void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 				   struct evsel *evsel,
- 				   double avg, int cpu,
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index f75ae679eb28..6911c7249199 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -230,4 +230,7 @@ perf_evlist__print_counters(struct evlist *evlist,
- 			    struct target *_target,
- 			    struct timespec *ts,
- 			    int argc, const char **argv);
-+
-+struct metric_expr;
-+double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_stat *st);
- #endif
+ int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
+ {
+ 	TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
++	TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
+ 	return 0;
+ }
 -- 
 2.25.4
 
