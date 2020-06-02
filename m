@@ -2,260 +2,194 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA72C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD4D2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C4520734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GzRCg9rK"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pJSs2+Yz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgFBW4s (ORCPT
+        id S1728984AbgFBXBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgFBW4r (ORCPT
+        Tue, 2 Jun 2020 19:01:37 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:40313 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728128AbgFBXBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 18:56:47 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F93EC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 15:56:47 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id q2so280166vsr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 15:56:47 -0700 (PDT)
+        Tue, 2 Jun 2020 19:01:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cWtHJtfLC9d0nEIoWT/oO21JE7/zvhk7ZTs2Y4u9vW8=;
-        b=GzRCg9rKNU+yxFhyt7Y94K3FE2nuBuYPKzRDH2BJGAhhjYp498XAOeyMFqILCZ0Cv4
-         IFaNmedGfSHxonbdWaA3cCPKu6XLaiG02Mg3haTRA/UJJyMh9/X/3W8txu3ePl+MWGVL
-         jmwWzG/gLFVKYJFLjOUhynMQAKW3O9ibF8HUU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cWtHJtfLC9d0nEIoWT/oO21JE7/zvhk7ZTs2Y4u9vW8=;
-        b=m/NTpVQX4Z1QsEWR6AMUxxWYTpaxCE+GapxQQoKxlifdrXGIj9t16Nx2pK619JVMiP
-         YJCDaZ8GJR9+zRNvFIkFNjurpfeN9nrQgUyME2JGKaDVbf5N6ZAgI+WsjaYomvMxS6sm
-         kgvyjfdvTbgh53OyhCQZG2zghMPf1ZFcA1XzE8RkCYU5uNkiKxn6tYny7qR4BQTPNHeU
-         SGsG7qK3JSrkiGEFR+1TzlxmmlJnVb+9vSD/8amouNS1tDnZHmTnD6tRJGEBGoPaDwBi
-         27pr7ya76HJnWfG4ktjsw+jpw2ZMd5INu1fGHd28Vwq+dPqmUj7uP44KUKjOTvhJ/ZSx
-         6mrg==
-X-Gm-Message-State: AOAM5323/yTGMwUfbCcXbYZk0LUbw5Kwmr01xCySrVTTIcoRjXBVRwzL
-        0Yx8YZYRkGA0CnXtmK8BTM/i+B+djTs=
-X-Google-Smtp-Source: ABdhPJzyiZfWkDxZbKijuFoPM2Km2fSRstmVx/zm+UuyNRZ/VSEO8dIdKKI9HuAlY2p/ayf0XkdXAA==
-X-Received: by 2002:a67:7c54:: with SMTP id x81mr9773940vsc.129.1591138606257;
-        Tue, 02 Jun 2020 15:56:46 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id c193sm58573vke.17.2020.06.02.15.56.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 15:56:45 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id u17so257610vsu.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 15:56:45 -0700 (PDT)
-X-Received: by 2002:a67:1703:: with SMTP id 3mr20541485vsx.169.1591138604810;
- Tue, 02 Jun 2020 15:56:44 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591138894; x=1622674894;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=l/Jj+/dET04nsdnsJEq1bqlkPC8WKlzMxAegeS82xv0=;
+  b=pJSs2+YzyFHhQqZ/AtGAyCYlyqOtEkXahVULXcSsW30KScwlYqyLMkRZ
+   oxy2qTKpx7mWVGClXXb3TY5LtQk8ynV5UHDcFCzqcKmtsMPZcPxPl3hZ5
+   3J30jOhjs/h4coNoyh/n5gD3YV75FtoyPHzpt3cryPNvAw1U/NkMsFiNC
+   w=;
+IronPort-SDR: I/HBhV+SM5Ad7FJufkUgKu+KX1ByeD//0dhy8R2U/pbeuweBSkB1UqlpnLzKVsw7G3mZtxPEbb
+ Mw7QbosCbzcg==
+X-IronPort-AV: E=Sophos;i="5.73,466,1583193600"; 
+   d="scan'208";a="34130895"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-98acfc19.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 02 Jun 2020 23:01:21 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS id 887ECA2396;
+        Tue,  2 Jun 2020 23:01:18 +0000 (UTC)
+Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 23:01:17 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 23:01:17 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Tue, 2 Jun 2020 23:01:17 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "mingo@kernel.org" <mingo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re:  [GIT PULL] x86/mm changes for v5.8
+Thread-Topic: [GIT PULL] x86/mm changes for v5.8
+Thread-Index: AQHWOTG5gmd4DdUrwk2Zwf2I6d8ayQ==
+Date:   Tue, 2 Jun 2020 23:01:17 +0000
+Message-ID: <105f5a87b689eab38baf4d51d03e9f9707e74c66.camel@amazon.com>
+References: <20200601170102.GA1346815@gmail.com>
+         <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
+         <20200602073350.GA481221@gmail.com>
+         <b159ba4c53fcf04cc4eb747c45e1d4d2d83310a3.camel@kernel.crashing.org>
+         <871rmxgw4d.fsf@nanos.tec.linutronix.de>
+         <CAHk-=wgOFnMW-EgymmrTyqTPLrpGJrUJ_wBzehMpyT=SO4-JRQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgOFnMW-EgymmrTyqTPLrpGJrUJ_wBzehMpyT=SO4-JRQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.161.193]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C3A0B4F4634C1E4BA9337E8DB8E9E014@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200507153444.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid>
- <20200519104151.6evv3hizm5dbjjq2@holly.lan> <CAD=FV=XCFxgO-s--jw9CTgQUxtQfteoQ4XSL_bbjW4s82Wd3pg@mail.gmail.com>
- <20200601161952.3hx6sv5hzdnjnvtj@holly.lan>
-In-Reply-To: <20200601161952.3hx6sv5hzdnjnvtj@holly.lan>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 2 Jun 2020 15:56:33 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UJLTuMp0uvTY0rC51ir_GgRKYxiPCK_w8TY+MBzkqjeA@mail.gmail.com>
-Message-ID: <CAD=FV=UJLTuMp0uvTY0rC51ir_GgRKYxiPCK_w8TY+MBzkqjeA@mail.gmail.com>
-Subject: Re: [PATCH] kgdb: Avoid suspicious RCU usage warning
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Jun 1, 2020 at 9:20 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Wed, May 27, 2020 at 05:02:27PM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Tue, May 19, 2020 at 3:41 AM Daniel Thompson
-> > <daniel.thompson@linaro.org> wrote:
-> > >
-> > > On Thu, May 07, 2020 at 03:53:58PM -0700, Douglas Anderson wrote:
-> > > > At times when I'm using kgdb I see a splat on my console about
-> > > > suspicious RCU usage.  I managed to come up with a case that could
-> > > > reproduce this that looked like this:
-> > > >
-> > > >   WARNING: suspicious RCU usage
-> > > >   5.7.0-rc4+ #609 Not tainted
-> > > >   -----------------------------
-> > > >   kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
-> > > >
-> > > >   other info that might help us debug this:
-> > > >
-> > > >     rcu_scheduler_active = 2, debug_locks = 1
-> > > >   3 locks held by swapper/0/1:
-> > > >    #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
-> > > >    #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
-> > > >    #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-> > > >
-> > > >   stack backtrace:
-> > > >   CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
-> > > >   Hardware name: Google Cheza (rev3+) (DT)
-> > > >   Call trace:
-> > > >    dump_backtrace+0x0/0x1b8
-> > > >    show_stack+0x1c/0x24
-> > > >    dump_stack+0xd4/0x134
-> > > >    lockdep_rcu_suspicious+0xf0/0x100
-> > > >    find_task_by_pid_ns+0x5c/0x80
-> > > >    getthread+0x8c/0xb0
-> > > >    gdb_serial_stub+0x9d4/0xd04
-> > > >    kgdb_cpu_enter+0x284/0x7ac
-> > > >    kgdb_handle_exception+0x174/0x20c
-> > > >    kgdb_brk_fn+0x24/0x30
-> > > >    call_break_hook+0x6c/0x7c
-> > > >    brk_handler+0x20/0x5c
-> > > >    do_debug_exception+0x1c8/0x22c
-> > > >    el1_sync_handler+0x3c/0xe4
-> > > >    el1_sync+0x7c/0x100
-> > > >    rpmh_rsc_probe+0x38/0x420
-> > > >    platform_drv_probe+0x94/0xb4
-> > > >    really_probe+0x134/0x300
-> > > >    driver_probe_device+0x68/0x100
-> > > >    __device_attach_driver+0x90/0xa8
-> > > >    bus_for_each_drv+0x84/0xcc
-> > > >    __device_attach+0xb4/0x13c
-> > > >    device_initial_probe+0x18/0x20
-> > > >    bus_probe_device+0x38/0x98
-> > > >    device_add+0x38c/0x420
-> > > >
-> > > > If I understand properly we should just be able to blanket kgdb under
-> > > > one big RCU read lock and the problem should go away.  We'll add it to
-> > > > the beast-of-a-function known as kgdb_cpu_enter().
-> > > >
-> > > > With this I no longer get any splats and things seem to work fine.
-> > > >
-> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > >
-> > > In principle this looks OK but I'm curious why we don't cuddle these
-> > > calls up to the local interrupt locking (and also whether we want to
-> > > keep hold of the lock during stepping). If nothing else that would make
-> > > review easier.
-> >
-> > It probably wouldn't hurt to keep hold of the lock during single
-> > stepping but I don't think there's any real reason we'd want to.
-> > Specifically the only real reason we're calling rcu_read_lock() is to
-> > avoid the warning.  Since we're a stop-the-world debugger it's not
-> > like something else could be messing with state at the same time.
-> >
-> > I'm looking at the whole function though and I don't really understand
-> > all the comments about interrupts being restored by the 'trap return'
-> > code, do you?
->
-> Not as much as I'd like but, in principle at least, I think the trap
-> handler is written to make it an architecture decision to whether it
-> will be entered with interrupt disabled or not (which would in turn
-> depend on how the architecture manages exception stacks and what else
-> it uses the breakpoint machinery for).
->
->
-> > Specifically: as far as I can tell we _always_ restore
-> > interrupts when exiting the function.  There are only two return
-> > statements and both have "local_irq_restore(flags);" right before
-> > them.  We never modify the flags directly and the one other usage of
-> > "flags" is effectively the statement "local_irq_restore(flags);
-> > local_irq_save(flags);" which will, I guess, allow any interrupts that
-> > were already pending to take place.  Are you saying that you want me
-> > to match that and do a "rcu_read_unlock(); rcu_read_lock()" there?
-> >
-> > If I understand things correctly (and there's maybe a better chance
-> > after I read Wei Li's recent patches) the disabling of IRQs for single
-> > stepping happens in a different way.  It looks like we update the
-> > "struct pt_regs" of the task we're stepping so that when we exit kgdb
-> > and start running the task again that the interrupts are off.  That
-> > seems reasonable to me and this function has nothing to do with it.
-> >
-> > ...and further confusion on my part: does the whole saving / restoring
-> > of interrupts in kgdb_cpu_enter() make any sense anyway?  Is this
-> > function ever called from a context that's not an interrupt context?
-> > How do we get the pt_regs in that case?  Just for fun, I tried doing
-> > this:
-> >
-> >     local_irq_save(flags);
-> > +   if (!arch_irqs_disabled_flags(flags))
-> > +           pr_warn("I was wrong\n");
-> >
-> > ...and I never saw "I was wrong" on my system.  Maybe it matters for
-> > something not arm64?  ...or, maybe, this is from when kgdb worked in a
-> > completely different way?
->
-> I'm not yet in a position to test kgdb on all architectures. Mostly
-> this is because it can be hard to discover suitable qemu stanzas to
-> launch an emulator... and in one case because buildroot doesn't support
-> cross-gdb yet. Anyhow, right now, it is difficult to tour the niche
-> architectures to give a definitive answer.
-
-OK, fair enough.  I guess I just really don't understand how it could
-work if an architecture didn't do this, but perhaps it would be clear
-if there was code demonstrating it.  ;-)
-
-
-> > In general I made my patch by:
-> > * Calling rcu_read_lock() at the start of the function.
-> > * Calling rcu_read_unlock() right before all 2 of the "return" calls of
-> >   the function.
-> >
-> > ...I was hoping that would actually make it easier to reason about
-> > even if the function is a beast.
-> >
-> >
-> > Hopefully the above makes sense.  I wouldn't rule out me just being
-> > utterly confused, but I _think_ I reasoned through it all.  ;-)  If it
-> > all makes sense, I'm inclined to:
-> >
-> > 1. Leave my patch the way it is.
->
-> I'm still a little reluctant on this.
->
-> It's not that I think the current patch is buggy, more that I view the
-> interrupt locks as the place in the function that we start to "assert"
-> what our execution context is going to be. Seeing all the entry/exit
-> logic in one place makes reasoning easier and should make the eventual
-> refactoring of "the beast" a little easier too.
-
-OK, I give in.  Posted v2 doing it how I think you want it.
-
-
-> > 2. Perhaps remove the whole irq saving / restoring in kgdb_cpu_enter().
->
-> Are you feeling lucky?
->
-> I think there will come a time when bravery is called for but I'd rather
-> see this as part of a bigger rewrite instead of a single high risk
-> change.
-
-Hrm, maybe.  I guess it depends on whether we want to take baby steps
-there or try to do it all at once.  If we take baby steps we will
-occasionally fall down but we'll slowly start getting things cleaned
-up.  If we wait for a full rewrite then we might be waiting for a long
-time.  It'll also be harder to figure out which of the big changes in
-the major rewrite broken someone.  ...or if the major rewrite comes in
-20 small/bisectable patches it may be hard to revert patch 2 out of 20
-if the future patches all build upon it.  If we do one small high-risk
-change and then wait before building upon it then it'll be easy for
-someone to bisect and then yell for a revert.
-
-
--Doug
+T24gVHVlLCAyMDIwLTA2LTAyIGF0IDEyOjE0IC0wNzAwLCBMaW51cyBUb3J2YWxkcyB3cm90ZToN
+Cj4gDQo+IE9uIFR1ZSwgSnVuIDIsIDIwMjAgYXQgMTE6MjkgQU0gVGhvbWFzIEdsZWl4bmVyIDx0
+Z2x4QGxpbnV0cm9uaXguZGU+IHdyb3RlOg0KPiA+IA0KPiA+IEl0J3MgdHJpdmlhbCBlbm91Z2gg
+dG8gZml4LiBXZSBoYXZlIGEgc3RhdGljIGtleSBhbHJlYWR5IHdoaWNoIGlzDQo+ID4gdGVsbGlu
+ZyB1cyB3aGV0aGVyIFNNVCBzY2hlZHVsaW5nIGlzIGFjdGl2ZS4NCj4gDQo+IC4uIGJ1dCBzaG91
+bGQgd2UgZG8gaXQgaGVyZSwgaW4gc3dpdGNoX21tKCkgaW4gdGhlIGZpcnN0IHBsYWNlPw0KPiAN
+Cj4gU2hvdWxkIGl0IHBlcmhhcHMganVzdCByZXR1cm4gYW4gZXJyb3IgaWYgdXNlciBsYW5kIHRy
+aWVzIHRvIHNldCB0aGUNCj4gImZsdXNoIEwxJCIgdGhpbmcgb24gYW4gU01UIHN5c3RlbT8gQW5k
+IG5vLCBJIGRvbid0IHRoaW5rIHdlIGNhcmUgYXQNCj4gYWxsIGlmIHBlb3BsZSB0aGVuIHN0YXJ0
+IHBsYXlpbmcgZ2FtZXMgYW5kIGVuYWJsaW5nL2Rpc2FibGluZyBTTVQNCj4gZHluYW1pY2FsbHkg
+d2hpbGUgYXBwbGljYXRpb25zIGFyZSB3b3JraW5nLiBBdCB0aGF0IHBvaW50IHRoZSBhZG1pbg0K
+PiBrZXRzIHRvIGtlZXAgYm90aCBvZiB0aGUgYnJva2VuIHBpZWNlcy4NCj4gDQo+IEFsc28sIHNl
+ZSBteSBvdGhlciBwb2ludCBhYm91dCBob3cgInN3aXRjaF9tbSgpIiByZWFsbHkgaXNuJ3QgZXZl
+biBhDQo+IHByb3RlY3Rpb24gZG9tYWluIHN3aXRjaCB0byBiZWdpbiB3aXRoLiBXZSdyZSBzdGls
+bCBpbiB0aGUgZXhhY3Qgc2FtZQ0KPiBwcm90ZWN0aW9uIGRvbWFpbiB3ZSB1c2VkIHRvIGJlIGlu
+LCB3aXRoIHRoZSBleGFjdCBzYW1lIGRpcmVjdCBhY2Nlc3MNCj4gdG8gTDFEJC4NCj4gDQo+IFdo
+eSB3b3VsZCB3ZSBmbHVzaCB0aGUgY2FjaGVzIG9uIGEgcmFuZG9tIGFuZCBpcnJlbGV2YW50IGV2
+ZW50IGluDQo+IGtlcm5lbCBzcGFjZT8gc3dpdGNoX21tKCkgc2ltcGx5IGlzbid0IHJlbGV2YW50
+IGZvciBjYWNoZXMgKHdlbGwsDQo+IHVubGVzcyB5b3UgaGF2ZSBmdWxseSB2aXJ0dWFsIG9uZXMs
+IGJ1dCB0aGF0J3MgYSBjb21wbGV0ZWx5IGRpZmZlcmVudA0KPiBpc3N1ZSkuDQo+IA0KPiBXb3Vs
+ZG4ndCBpdCBiZSBtb3JlIHNlbnNpYmxlIHRvIHRyZWF0IGl0IG1vcmUgbGlrZSBUSUZfTkVFRF9G
+UFVfTE9BRCAtDQo+IGhhdmUgYSBwZXItY3B1ICJJIG5lZWQgdG8gZmx1c2ggdGhlIGNhY2hlIiB2
+YXJpYWJsZSwgYW5kIHRoZW4gdGhlIG9ubHkNCj4gdGhpbmcgYSBjb250ZXh0IHN3aXRjaCBkb2Vz
+IGlzIHRvIHNlZSBpZiB0aGUgdXNlciBjaGFuZ2VkIChvcg0KPiB3aGF0ZXZlcikgYW5kIHRoZW4g
+c2V0IHRoZSBiaXQsIGFuZCBzZXQgVElGX05PVElGWV9SRVNVTUUgaW4gdGhlDQo+IHRocmVhZC4N
+Cj4gDQo+IEJlY2F1c2UgdGhlIEwxRCQgZmx1c2ggaXNuJ3QgYSBrZXJuZWwgaXNzdWUsIGl0J3Mg
+YSAiZG9uJ3QgbGV0IHVzZXINCj4gc3BhY2UgdHJ5IHRvIGF0dGFjayBpdCIgaXNzdWUuIFRoZSBr
+ZXJuZWwgY2FuIGFscmVhZHkgcmVhZCBpdCBpZiBpdA0KPiB3YW50cyB0by4NCj4gDQo+IEFuZCB0
+aGF0J3MganVzdCB0aGUgImJpZyBwaWN0dXJlIiBpc3N1ZXMgSSBzZWUuIEluIHRoZSBiaWcgcGlj
+dHVyZSwNCj4gZG9pbmcgdGhpcyB3aGVuIFNNVCBpcyBlbmFibGVkIGlzIHVuYmVsaWV2YWJseSBz
+dHVwaWQuIEFuZCBpbiB0aGUgYmlnDQo+IHBpY3R1cmUsIGNvbnRleHQgc3dpdGNoIHJlYWxseSBp
+c24ndCBhIHNlY3VyaXR5IGRvbWFpbiBjaGFuZ2Ugd3J0IHRoZQ0KPiBMMUQkLg0KPg0KDQorIEtl
+ZXMgKHNvcnJ5IG15IGJhZCwgSSBzaG91bGQgaGF2ZSBhZGRlZCBoaW0gZWFybGllcikNCg0KSSBh
+bSBnb2luZyB0byB0YWtlIGEgc3RlcCBiYWNrIGFuZCBwb2ludCB0bw0KDQpodHRwczovL3NvZnR3
+YXJlLmludGVsLmNvbS9zZWN1cml0eS1zb2Z0d2FyZS1ndWlkYW5jZS9zb2Z0d2FyZS1ndWlkYW5j
+ZS9zbm9vcC1hc3Npc3RlZC1sMS1kYXRhLXNhbXBsaW5nDQpodHRwczovL3NvZnR3YXJlLmludGVs
+LmNvbS9zZWN1cml0eS1zb2Z0d2FyZS1ndWlkYW5jZS9pbnNpZ2h0cy9kZWVwLWRpdmUtc25vb3At
+YXNzaXN0ZWQtbDEtZGF0YS1zYW1wbGluZw0KDQpUaGUgc3VnZ2VzdGVkIG1pdGlnYXRpb24gaXMN
+Cg0KIlNub29wLWFzc2lzdGVkIEwxRCBzYW1wbGluZyBjb3VsZCBiZSBtaXRpZ2F0ZWQgYnkgZmx1
+c2hpbmcgdGhlIEwxRCBjYWNoZQ0KYmVmb3JlIGV4ZWN1dGluZyBwb3RlbnRpYWxseSBtYWxpY2lv
+dXMgYXBwbGljYXRpb25zIg0KDQpXZSBkaXNjdXNzZWQgdGhlIG1pdGlnYXRpb25zIGluIGFuIFJG
+Qw0KDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjAwMzEzMjIwNDE1Ljg1Ni0xLXNi
+bGJpckBhbWF6b24uY29tLw0KDQpzd2l0Y2hfbW0oKSB3YXMgY2hvc2VuIGFzIGEgdHJhZGUtb2Zm
+IGJldHdlZW4sIGhvdyBsb25nIGRvIHdlIGtlZXAgdGhlIGRhdGENCmluIHRoZSBjYWNoZSB2cyBo
+b3cgZnJlcXVlbnRseSBkbyB3ZSBmbHVzaC4gV2hhdCB5b3VyIHN1Z2dlc3RpbmcgaXMgdGhhdCB3
+ZQ0KdXNlIHN3aXRjaF9tbSgpICsgcmV0dXJuIHRvIHVzZXIgbW9kZSB0byBkZWNpZGUgd2hlbiB0
+aGUgc2VjdXJpdHkgZG9tYWluDQpjaGFuZ2VzPw0KDQogDQo+IFRoZSBtb3JlIEkgbG9vayBhdCB0
+aG9zZSBwYXRjaGVzLCB0aGUgbW9yZSBJIGdvICJ0aGF0J3MganVzdCB3cm9uZyIgb24NCj4gc29t
+ZSBvZiB0aGUgInNtYWxsIHBpY3R1cmUiIGltcGxlbWVudGF0aW9uIGRldGFpbHMuDQo+IA0KPiBI
+ZXJlJ3MganVzdCBhIGZldyBjYXNlcyB0aGF0IEkgcmVhY3RlZCB0bw0KPiANCj4gQWN0dWFsIGxv
+dy1sZXZlbCBmbHVzaGluZyBjb2RlOg0KPiANCj4gICgxKSB0aGUgU1cgZmFsbGJhY2sNCj4gDQo+
+ICAgICAgKGEpIGlzIG9ubHkgZGVmaW5lZCBvbiBJbnRlbCwgYW5kIGluaXRpYWxpemluZyB0aGUg
+c2lsbHkgY2FjaGUNCj4gZmx1c2ggcGFnZXMgb24gYW55IG90aGVyIHZlbmRvciB3aWxsIGZhaWwu
+DQo+IA0KPiAgICAgIChiKSBzZWVtcyB0byBhc3N1bWUgdGhhdCAxNiBwYWdlcyAob3JkZXItNCkg
+aXMgc3VmZmljaWVudCBhbmQNCj4gbmVjZXNzYXJ5LiBQcm9iYWJseSAiZ29vZCBlbm91Z2giLCBi
+dXQgaXQncyBhbHNvIGFuIGV4YW1wbGUgb2YgInllYWgsDQo+IHRoYXQncyBleHBlbnNpdmUiLg0K
+PiANCg0KVGhlIHNvZnR3YXJlIGZsdXNoIGlzIGxhcmdlbHkgY29kZSByZXVzZSBhc3N1bWluZyB0
+aGUgTDFURiBiaXRzDQp3ZXJlIHJpZ2h0DQoNCj4gICAgICAoYykgYW5kIGlmIEkgcmVhZCB0aGUg
+Y29kZSBjb3JyZWN0bHksIHRyeWluZyB0byBmbHVzaCB0aGUgTDFEJCBvbg0KPiBub24taW50ZWwg
+d2l0aG91dCB0aGUgSFcgc3VwcG9ydCwgaXQgY2F1c2VzIGEgV0FSTl9PTl9PTkNFKCkhIFdURj8N
+Cg0KVGhhdCBpcyBub3QgY29ycmVjdCwgdGhlIGZ1bmN0aW9uIG9ubHkgY29tcGxhaW5zIGlmIHdl
+IGRvIGEgc29mdHdhcmUgZmFsbGJhY2sNCmZsdXNoIHdpdGhvdXQgYWxsb2NhdGluZyB0aGUgZmx1
+c2ggcGFnZXMuIFRoYXQgZnVuY3Rpb24gaXMgbm90IGV4cG9zZWQgd2l0aG91dA0KdGhlIHVzZXIg
+dXNpbmcgdGhlIHByY3RsKCkgQVBJLCB3aGljaCBhbGxvY2F0ZXMgdGhvc2UgZmx1c2ggcGFnZXMu
+IFRoZSBvdGhlcg0KdXNlciBvZiB0aGlzIEFQSSBpcyB0aGUgTDFURiBmbHVzaCBsb2dpYw0KDQo+
+IA0KPiAgKDIpIHRoZSBIVyBjYXNlIGlzIGRvbmUgZm9yIGFueSB2ZW5kb3IsIGlmIGl0IHJlcG9y
+dHMgdGhlICJJIGhhdmUgdGhlIE1TUiINCg0KTm8gbDFkX2ZsdXNoX2luaXRfb25jZSgpIGZhaWxz
+IGZvciB1c2VycyBvcHRpbmcgaW4gdmlhIHRoZSBwcmN0bCgpLCBpdA0Kc3VjY2VlZHMgZm9yIHVz
+ZXJzIG9mIEwxVEYuDQoNCg0KPiANCj4gICgzKSB0aGUgVk1YIHN1cHBvcnQgY2VydGFpbmx5IGhh
+cyB2YXJpb3VzIHNhbml0eSBjaGVja3MgbGlrZSAib2gsIENQVQ0KPiBkb2Vzbid0IGhhdmUgWDg2
+X0JVR19MMVRGLCB0aGVuIEkgd29uJ3QgZG8gdGhpcyBldmVuIGlmIHRoZXJlIHdhcyBzb21lDQo+
+IGtlcm5lbCBjb21tYW5kIGxpbmUgdG8gc2F5IEkgc2hvdWxkIi4gQnV0IHRoZSBuZXcgcHJjdHJs
+IGRvZXNuJ3QgaGF2ZQ0KPiBhbnl0aGluZyBsaWtlIHRoYXQuIEl0IGp1c3QgZW5hYmxlcyB0aGF0
+IEwxRCQgdGhpbmcgbWluZGxlc3NseSwNCj4gdGhpbmtpbmcgdGhhdCB1c2VyLWxhbmQgc29mdHdh
+cmUgc29tZWhvdyBrbm93cyB3aGF0IGl0J3MgZG9pbmcuIEJTLg0KDQpTbyB5b3UnZCBsaWtlIHRv
+IHNlZSBhIGRvdWJsZSBvcHQtaW4/IFVuZm9ydW5hdGVseSB0aGVyZSBpcyBubyBnYXRpbmcNCm9m
+IHRoZSBidWcgYW5kIEkgdHJpZWQgdG8gbWFrZSBpdCBnZW5lcmljIC0gY2xlYXJseSBjYWxsaW5n
+IGl0IG9wdC1pbg0KZmx1c2hpbmcgZm9yIHRoZSBwYXJhbm9pZCwgZm9yIHRob3NlIHdobyByZWFs
+bHkgY2FyZSBhYm91dCBDVkUtMjAyMC0wNTUwLg0KDQo+IA0KPiAgKDQpIHdoYXQgZG9lcyBMMURf
+RkxVU0hfUE9QVUxBVEVfVExCIG1lYW4/DQo+IA0KPiAgICBUaGF0ICJvcHRpb24iIG1ha2VzIHpl
+cm8gc2Vuc2UuIEl0IHByZS1wb3B1bGF0ZXMgdGhlIFRMQiBiZWZvcmUNCj4gZG9pbmcgdGhlIGFj
+Y2Vzc2VzIHRvIHRoZSBMMUQkIHBhZ2VzIGluIHRoZSBTVyBjYXNlLCBidXQgbm90aGluZyBhdA0K
+PiBhbGwgZXhwbGFpbnMgd2h5IHRoYXQgaXMgbmVlZGVkLiBJdCdzIGNsZWFybHkgbm90IG5lZWRl
+ZCBmb3IgdGhlDQo+IGNhbGxlciwgc2luY2UgdGhlIFRMQiBwb3B1bGF0aW9uIG9ubHkgaGFwcGVu
+cyBmb3IgdGhlIFNXIGZhbGxiYWNrLCBub3QNCj4gZm9yIHRoZSBIVyBvbmUuDQoNCkdvb2QgcXVl
+c3Rpb24sIEkgYXNrZWQgYXJvdW5kIGluIHRoZSBSRkMgYW5kIGluIG15IGVtYWlsIHRocmVhZHMg
+YXMNCnRvIHdoeSB3ZSBuZWVkZWQgdGhpcyBldmVuIGZvciB0aGUgTDFURiBjYXNlIHdpdGggbm8g
+cmVzcG9uc2UuIEkgZGVjaWRlZA0Kbm90IHRvIGRvIGl0LCB1bmxlc3MgSSBmdWxseSB1bmRlcnN0
+b29kIHdoeSBpdCdzIG5lZWRlZC4NCg0KSSBhbSBoYXBweSB0byByZW1vdmUgdGhlIFNXIGZhbGxi
+YWNrIGlmIG5lZWRlZC4NCg0KPiANCj4gICAgTm8gZG9jdW1lbnRhdGlvbiwgbm8gbm90aGluZy4g
+SXQncyBlbmFibGVkIGZvciB0aGUgVk1YIGNhc2UsIG5vdA0KPiBmb3IgdGhlIG5vbi12bXggY2Fz
+ZSwgd2hpY2ggbWFrZXMgbWUgc3VzcGVjdCBpdCdzIHNvbWUgY3JhenkgIndvcmsNCj4gYXJvdW5k
+IHZtIG1vbml0b3IgcGFnZSBmYXVsdHMsIGJlY2F1c2Ugd2Uga25vdyBvdXIgU1cgZmx1c2ggZmFs
+bGJhY2sNCj4gaXMganVzdCByYW5kb20gZ2FyYmFnZSIuDQo+DQoNCldvdWxkIHRoaXMgbWFrZSB5
+b3UgaGFwcGllcj8NCg0KMS4gUmVtb3ZlIFNXIGZhbGxiYWNrIGZsdXNoDQoyLiBJbXBsZW1lbnQg
+YSBkb3VibGUgb3B0LWluIChDQVBfU1lTX0FETUlOIGZvciB0aGUgcHJjdGwgb3IgYQ0KICAgc3lz
+dGVtIHdpZGUgZGlzYWJsZSk/DQozLiBFbnN1cmUgdGhlIGZsdXNoIGhhcHBlbnMgb25seSB3aGVu
+IHRoZSBjdXJyZW50IGNvcmUgaGFzDQogICBTTVQgZGlzYWJsZWQNCg0Kdy5yLnQuIHN3aXRjaF9t
+bSgpIHZzIGFub3RoZXIgcGxhY2UgdG8gZmx1c2gsIGl0IGlzIGEgdHJhZGUtb2ZmLA0Kd291bGQg
+MSB0byAzIGNvbnZpbmNlIHlvdT8NCg0KSW4gc3VtbWFyeSB0aGVyZSB3YXMgYSBkaXNjdXNzaW9u
+LCB0d28gUkZDcyBhbmQgdGhlIHBhdGNoZXMgd2VyZSByZXZpZXdlZC4NCllvdSdkIGxpa2UgdG8g
+c2VlIGZ1cnRoZXIgZmlsdGVycyB0byB0aGUgZmx1c2gsIHdoaWNoIGlzIGNvdmVyZWQgaW4gcG9p
+bnRzDQoxIHRvIDMgYWJvdmUuDQoNCkJhbGJpciBTaW5naC4NCiANCg0K
