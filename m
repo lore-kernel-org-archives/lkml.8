@@ -2,184 +2,123 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38449C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85378C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDB520772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6039E204EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="ZftUt73G"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7FJRzwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgFBIoV (ORCPT
+        id S1726261AbgFBIpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:44:21 -0400
-Received: from mail-eopbgr690096.outbound.protection.outlook.com ([40.107.69.96]:11589
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725835AbgFBIoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:44:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sq6MOXsdxk9ETP5Sdl7ZjC9U2RdOiJ/P1ongxHqLIDBzrIxlClYp2b9CjeZwWlvhF3jDwCasCBJrRvTfuMTBxzn99ReFYiPqKf90x9+sohNcr/uXkGwMcaIlFjSdaEVMyPMuvdwId+zIBKOfggIHBl3JbQ+hboQOnLZ3WdKRX8nRqk1oH+bpXBsRmMDUWKh2jv3UgO+Z1YZ7lFzQIhwtpAWuFVzHl+K+1ZMN43PjWBPjqj2tc63Nn2kfy0vqZUEP96QV2ZvGH34OmyHCdaMi7Ft5iJjsrTwz+1A5AVI1Idor9PWx3gFRgb88bmm/vGF/Ti1w1GEHe4rIPffeKUw2BA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ymLiV1mrG5Oz7Ulv3QIq03ZuC8dnksniBhorGy+hhIo=;
- b=nnB3M6B8BAtdpIGgtrSmp5cCkJarZzWGjMd2b8yuG07hBPpfa4BEr/ydQdTvQBLUJWV1Jvy9O6WXHLvpSkbB1cPKN3KNS03ilpuPTB1TiSSDnxbeMfiqIhb2sY2FwFF4pQNyqIIKWDcOUFDfH0DHs9sbgMen5kd1w0h/wEsdOLNfbXAdyBgKcbxFrHMX97OtICp31lPRxUgtkVsgPSknbRqHyGGhCQeZ60HsmcUhil7IPiyxFIckh0FN3TTsKtVCkM5MJ9t1WJvaqPkjSJaipMnx9YckI1O4F2wQKX1egvsftVHzZTfmsf1xXvmcR6sxs20Zd2J+z5PEsnwKwheQ9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
- header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=maximintegrated.onmicrosoft.com;
- s=selector2-maximintegrated-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ymLiV1mrG5Oz7Ulv3QIq03ZuC8dnksniBhorGy+hhIo=;
- b=ZftUt73GL3IhEIs+u35CLsrd6xYUGe0yIZjTNn0DcF0v/QcaBWr8DVEluou6J09AsVVt1+OXQEtplsASl/65zf9FbLJQYRcIR/uh5ijmijCebq7hD6RI6gsCrCS6o/3BOLxBI7i2KAcfJM69QgBJWaAMuSRynwP+nyULEQpjx2g=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none
- header.from=maximintegrated.com;
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
- by MWHPR11MB1901.namprd11.prod.outlook.com (2603:10b6:300:110::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.22; Tue, 2 Jun
- 2020 08:44:18 +0000
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
- 08:44:18 +0000
-From:   Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee.maxim@gmail.com,
-        Steve Lee <steves.lee@maximintegrated.com>
-Subject: [V7 PATCH] dt-bindings: Added device tree binding for max98390
-Date:   Tue,  2 Jun 2020 17:43:37 +0900
-Message-Id: <20200602084337.22116-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SL2PR04CA0011.apcprd04.prod.outlook.com
- (2603:1096:100:2d::23) To MWHPR11MB2047.namprd11.prod.outlook.com
- (2603:10b6:300:2a::12)
+        Tue, 2 Jun 2020 04:45:13 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59269 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725900AbgFBIpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 04:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591087511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=CuKIvsOKOIvk4PgTEV+w10FX9zJ+bEdYmI8o+OCWkZ8=;
+        b=a7FJRzwr1k+/8/NlQzjmcQuUQobPVBYmw+SgPRa7s9zHulc8rU9lJfrEKaWJhnI2OB4BcI
+        hKpWBuSF9rAq2mEuoGDcXWITrtw2q2yQwK4aCWtkPQJSgcYC9ydUZ3XkRVbWp0oR9zizSW
+        nL16hBNS7Wy2+nN3nbEyYZdxjvrqtXQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-z7E6xE1XN7S55j8usNCuDQ-1; Tue, 02 Jun 2020 04:45:09 -0400
+X-MC-Unique: z7E6xE1XN7S55j8usNCuDQ-1
+Received: by mail-wr1-f70.google.com with SMTP id p10so1092814wrn.19
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 01:45:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=CuKIvsOKOIvk4PgTEV+w10FX9zJ+bEdYmI8o+OCWkZ8=;
+        b=SOEeTTRvIO1dKEioyYzkc21DLQdWctr+S8r5whZuyPSqlfdBKmv9gk1YOHtp2SVXJD
+         GD/Kcq2kkAocCr3h4b9ouGvj+mJGB3SWwfaqaMekXufgZFo48nAfMDoeRVYmx67ivCBD
+         gBITofz3TMhnU72otPSBz6a4Ey1vSSaSjp/e0HEpMae/DnsMc37OHot5L3Qbevz+woxR
+         1RyNgXS3Ali80RcGn0ldRr1R3Lq/TIUiPN3qtIrA2j7j0nARQMcE706P+9TOgtLSmkci
+         kKXhuCGrJAhNc60dSuMZuagV3r3Rv8uAYouxyO3wDqA2tR/FCHKco8wyNkU5q4+PVXw5
+         XuKA==
+X-Gm-Message-State: AOAM532tWJTxOAg7fC0Oj++/I31zKdYYjYi7YnBOiFTQq5OO+0H9h3T7
+        p6GJ5im2+Mwh+R/mkOZego7VbufbDK0oxu8Pp8rXi01dG9KGReK5JWz/fdDWSWe1g+9ZY3VMlsS
+        bUDbU6j/2x6sWPlSYvaQ0ZQox
+X-Received: by 2002:a5d:630f:: with SMTP id i15mr24940743wru.309.1591087507796;
+        Tue, 02 Jun 2020 01:45:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzZ22UiA8sXk0/1qLnLosKcnojExBRC52xg//ViCQ9TUbf65ilRTCSHKvDsX3BUKlBzqgKotw==
+X-Received: by 2002:a5d:630f:: with SMTP id i15mr24940731wru.309.1591087507613;
+        Tue, 02 Jun 2020 01:45:07 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id u3sm2642917wrw.89.2020.06.02.01.45.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 01:45:07 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 04:45:05 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>, netdev@vger.kernel.org
+Subject: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Message-ID: <20200602084257.134555-1-mst@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (2001:2d8:959:1878:d447:7247:839:5c8e) by SL2PR04CA0011.apcprd04.prod.outlook.com (2603:1096:100:2d::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Tue, 2 Jun 2020 08:44:14 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [2001:2d8:959:1878:d447:7247:839:5c8e]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6f522d1d-9d2e-4fbe-3f42-08d806d122e3
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1901:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR11MB1901C186D34E721354E26AC5928B0@MWHPR11MB1901.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0422860ED4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JHy5y2AL/A5U2QeIavo71uB0iQi0otvvlTIIcpqc+kAiLyJ7D3Kxz0ib9wl+qg+yPXbiMSKA3EWpj3YPx2eh+CVHlT0srjXW6WL23lq8QSOdf3L+57LxMSBbZ+btddsNBf0QlRgkgWI1UVpnY29Ytjb3Ac0tm67CEGABzOpc/jrHWBJNHqtpmjolbn+awEhAgF1djofqxNMjBkwio24Szpl8+WEBxnDTNwbKtgPJtWJRvirIT7YAImt7uHB/e0BCo2BzYkx0iJIxBxrh7aGOLTC7juBibo/fmO1D2KQrS460h9XVVuphDGL/tHsOMxTODRa282JdwaNR+XaAHPYC/N3moaMt5BInumSUUBvVoIGQ2c9v0zJEyJZ8zdBTqHXkkbAuZweCgNz6tfC7FpgfJDVU8/5RG4o+FYteXzeuxpBxPSkL03nWDsvbtBjr963ZpLRC82i/huXX/ZBTuKsCaA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(86362001)(6512007)(1076003)(83380400001)(478600001)(2906002)(6486002)(186003)(66556008)(4326008)(316002)(5660300002)(966005)(52116002)(6506007)(107886003)(66476007)(16526019)(69590400007)(66946007)(2616005)(36756003)(8676002)(6666004)(8936002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: j0xOhFrB3CyQwRO3ZsAab1Y6xmPJ674ieSlEuyy6ZiXUAOpyOvU0t+IC0eO+lB/Iw3zKMX2C8kn7Vct/4rTANK5lZiy30HOXjMQ3YVt6+cA9ncOBvEmPmwec1+3ig+p8sv8C2uO4HIh8kPFugSu7dEKv9NrrRfcbRbJ2d617fQy4prU17vx135Fq76F5Gm0v4S7wht9+WAd282JS0aL3k//a/AndJrtf346PIcs1FpkfvJ6GSRNBYElr5xnTjjIQrH+dMkixYuGwJTZsyTmEpCnkJYy7tWiTVaACSEl3wvhA8VExYcdaTcBvcXoJuN5HvSIIDh6cl8piNvBOXf7to81cyoUaczzcG6mhH2g3YQ6ar9gORL/6owYi16woMHmHtXSzwhRDmz4+/m7fVU/wG5KDsZDFqk/hXjITr8Ll2TvCwqqo/RiIdZ6OVBL8+BGuK43OUbAeXwZ4bT+0TseR2rwxqs9rFK40iTmDQ1n6Z78zrs8jgEvU6FrkJgS6ftaLefu91jzAszMNgGe+qeG4zqAlzVRlXsLjZfBuvC3s510=
-X-OriginatorOrg: maximintegrated.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f522d1d-9d2e-4fbe-3f42-08d806d122e3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 08:44:17.8683
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p8R93IdWgxgTeQpd2lL4+K9UXddTFYZjJzOZt236Zvd3Q22DkeKk6qix07g+qDdA0MIALrr7Wg6pH8H/HfPEmWO8x+2fgv3GobMSn8u6osA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1901
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT binding of max98390 amplifier driver.
+So vhost needs to poke at userspace *a lot* in a quick succession.  It
+is thus benefitial to enable userspace access, do our thing, then
+disable. Except access_ok has already been pre-validated with all the
+relevant nospec checks, so we don't need that.  Add an API to allow
+userspace access after access_ok and barrier_nospec are done.
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
 
-Changed since V6:
-	* Re-confirm yaml dt binding check
-	* Add minimum and maximum value for each temperature_calib and r0_calib
-	* Add maxim prefix for naming.
-Changed since V5:
-	* Change txt to yaml and fix up the examples.
-Changed since V4:
-	* No changes.
-Changed since V3:
-	* No changes.
-Changed since V2:
-	* No changes.
-Changed since V1:
-	* Modified sample text in example
+Jason, so I've been thinking using something along these lines,
+then switching vhost to use unsafe_copy_to_user and friends would
+solve lots of problems you observed with SMAP.
 
- .../bindings/sound/maxim,max98390.yaml        | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+What do you think? Do we need any other APIs to make it practical?
 
-diff --git a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-new file mode 100644
-index 000000000000..e5ac35280da3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/maxim,max98390.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Maxim Integrated MAX98390 Speaker Amplifier with Integrated Dynamic Speaker Management
-+
-+maintainers:
-+  - Steve Lee <steves.lee@maximintegrated.com>
-+
-+properties:
-+  compatible:
-+      const: maxim,max98390
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the device.
-+
-+  maxim,temperature_calib:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: The calculated temperature data was measured while doing the calibration.
-+    minimum: 0
-+    maximum: 65535
-+
-+  maxim,r0_calib:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: This is r0 calibration data which was measured in factory mode.
-+    minimum: 1
-+    maximum: 8388607
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      max98390: amplifier@38 {
-+        compatible = "maxim,max98390";
-+        reg = <0x38>;
-+        maxim,temperature_calib = <1024>;
-+        maxim,r0_calib = <100232>;
-+      };
-+    };
+ arch/x86/include/asm/uaccess.h | 1 +
+ include/linux/uaccess.h        | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index d8f283b9a569..fa5afb3a54fe 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -483,6 +483,7 @@ static __must_check __always_inline bool user_access_begin(const void __user *pt
+ 	return 1;
+ }
+ #define user_access_begin(a,b)	user_access_begin(a,b)
++#define user_access_begin_after_access_ok()	__uaccess_begin()
+ #define user_access_end()	__uaccess_end()
+ 
+ #define user_access_save()	smap_save()
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 67f016010aad..4c0a959ad639 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -370,6 +370,7 @@ extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
+ 
+ #ifndef user_access_begin
+ #define user_access_begin(ptr,len) access_ok(ptr, len)
++#define user_access_begin_after_access_ok() do { } while (0)
+ #define user_access_end() do { } while (0)
+ #define unsafe_op_wrap(op, err) do { if (unlikely(op)) goto err; } while (0)
+ #define unsafe_get_user(x,p,e) unsafe_op_wrap(__get_user(x,p),e)
 -- 
-2.17.1
+MST
 
