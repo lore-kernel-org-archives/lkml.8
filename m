@@ -2,136 +2,160 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A781AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B896B206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707DD206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591129560;
+	bh=AHjEmJ7U0OYUipYTkwgoxUgEYg3OPlzl1W+N9Up4phU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=jBKQaOmDdPEzGG9JuVQfxIj0rOYDe3Tsa1Uyz/dTiJYJc101EhuEhaOfgk8NcxVIz
+	 tra5FSUUZmLzQqiK+9vy0CQQulENyG3xqFFQ5h92jk+spPhPVKdTd7NuwRIYk33yFC
+	 xa0gBtACdjMhzEu7xn3eP1IneuQlWEnHigG2aZ8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgFBUTy (ORCPT
+        id S1726589AbgFBUZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:19:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:35834 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgFBUTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:19:53 -0400
-IronPort-SDR: 85vdbTejo40HvfL2TCVMgqYGVkjhm1Npx2srmKJ7kkUUI2mHWnLQaxt5paRS7+M++CRIMSBWwm
- M3sD5+jIuAig==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 13:19:52 -0700
-IronPort-SDR: suWFequyiB4FMrmPrmoOl+BWU7ncwyzr9QXxGnTG8pVc5JrkgS3IG2sNn1ZcuYbR4jIN/BD82S
- zQ1ZbE4YMz6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,465,1583222400"; 
-   d="scan'208";a="272489927"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga006.jf.intel.com with ESMTP; 02 Jun 2020 13:19:52 -0700
-Date:   Tue, 2 Jun 2020 13:19:52 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Mika Westerberg <mika.westerberg@intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Alex Levin <levinale@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Todd Broch <tbroch@google.com>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] iommu/vt-d: Don't apply gfx quirks to untrusted devices
-Message-ID: <20200602201952.GB17363@otc-nc-03>
-References: <20200602054517.191244-1-rajatja@google.com>
- <20200602095003.GI247495@lahna.fi.intel.com>
- <CACK8Z6F2n6yx7Fs43rmUQko3PAHZYcnc_eyE_xPdUHXwf2hhLw@mail.gmail.com>
+        Tue, 2 Jun 2020 16:25:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgFBUZ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 16:25:58 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAABC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:25:58 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 69so7010otv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0VkbADwNNL4t8G+Nl0yEBT+sG9zYHlegci6mldBU13Y=;
+        b=M5wAwey1R6AjLyR6zhAr4Mpq3OcoUq5oRmv0alkvKituK2UFsV9YsoowLwmP7ckkhv
+         iEQiCoCjRkzxUMirgAQVPtdcBWS8k1Mq8icDa7QVdRvpJ8BLwHDJkFs6Y+e/PXJETKdo
+         7belOu9rdJZtt8eC4X02eItmbB10YzzmS1sX4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0VkbADwNNL4t8G+Nl0yEBT+sG9zYHlegci6mldBU13Y=;
+        b=c7xiRXnUepugyBdkFChmgFd51Sep3uHNAMaraVSbcUxRc07bGZHci3rMg2CDHcIKxz
+         Jd8Ci4LnKok6gcCXFLwbxVJ/j3kKos81I572IvEBGTwI8B4twtU56cgnQ7+utQRw0cDV
+         ciwMbsdNI/lqj4Ggbi6hOe8uC3Hba65dzPXde3r+gry5QwOqfsxhepOh1wvY8IccWFOr
+         +TpPxP+2C09PDdd6XxoG8KQeqcpaKQpWi6DwkFE8rY6UFoIFYZRnJu6K0jwuOm0cVffm
+         3p6pvDPOuamMWZbvQX/HVPYfvfZLQC9GsXzcTnQ49J3YJLkNxAZMgzzJChd0Xckg1yLs
+         BClA==
+X-Gm-Message-State: AOAM53252aoDZwxz2Mksd8JAJ24Xlvnxi9Zgb/DuVoljtWS4qD0E7F+z
+        bj+6i4XhY/On8bDvB4VGHUFpX1pde+w=
+X-Google-Smtp-Source: ABdhPJygg7YgN4Su8lffxlYwOaMZvO9xKa6xEYOTJMPYYNrSkrsDqKu04VllsWOZa5yCnrrJWxg7Ig==
+X-Received: by 2002:a9d:6ad5:: with SMTP id m21mr704370otq.307.1591129557722;
+        Tue, 02 Jun 2020 13:25:57 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id u93sm881318otb.33.2020.06.02.13.25.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 13:25:57 -0700 (PDT)
+Subject: Re: [PATCH] arch/x86: reset MXCSR to default in kernel_fpu_begin()
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Petteri Aimonen <jpa@git.mail.kapsi.fi>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, skhan@linuxfoundation.org
+References: <8b1f0bfa-79b0-74e4-0241-8b2a94491807@linuxfoundation.org>
+ <C6F6F6E4-CBD8-4E72-812B-99F008ECAA4F@amacapital.net>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <b4629042-21c7-2b38-4c3f-44f9be469cca@linuxfoundation.org>
+Date:   Tue, 2 Jun 2020 14:25:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACK8Z6F2n6yx7Fs43rmUQko3PAHZYcnc_eyE_xPdUHXwf2hhLw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <C6F6F6E4-CBD8-4E72-812B-99F008ECAA4F@amacapital.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 06:43:00PM +0000, Rajat Jain wrote:
-> Hi MIka,
+On 6/2/20 1:50 PM, Andy Lutomirski wrote:
 > 
-> Thanks for taking a look.
 > 
-> On Tue, Jun 2, 2020 at 2:50 AM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Mon, Jun 01, 2020 at 10:45:17PM -0700, Rajat Jain wrote:
-> > > Currently, an external malicious PCI device can masquerade the VID:PID
-> > > of faulty gfx devices, and thus apply iommu quirks to effectively
-> > > disable the IOMMU restrictions for itself.
-> > >
-> > > Thus we need to ensure that the device we are applying quirks to, is
-> > > indeed an internal trusted device.
-> > >
-> > > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > > ---
-> > >  drivers/iommu/intel-iommu.c | 28 ++++++++++++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >
-> > > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> > > index ef0a5246700e5..f2a480168a02f 100644
-> > > --- a/drivers/iommu/intel-iommu.c
-> > > +++ b/drivers/iommu/intel-iommu.c
-> > > @@ -6214,6 +6214,11 @@ const struct iommu_ops intel_iommu_ops = {
-> > >
-> > >  static void quirk_iommu_igfx(struct pci_dev *dev)
-> > >  {
-> > > +     if (dev->untrusted) {
-> > > +             pci_warn(dev, "skipping iommu quirk for untrusted gfx dev\n");
-> >
-> > I think you should be consistent with other messages. For example iommu
-> > should be spelled IOMMU as done below.
-> >
-> > Also this is visible to users so maybe put bit more information there:
-> >
-> >   pci_warn(dev, "Will not apply IOMMU quirk for untrusted graphics device\n");
-> >
-> > Ditto for all the other places. Also is "untrusted" good word here? If
-> > an ordinary user sees this will it trigger some sort of panic reaction.
-> > Perhaps we should call it "potentially untrusted" or something like
-> > that?
+>> On Jun 2, 2020, at 10:27 AM, Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> ﻿On 6/2/20 11:03 AM, Andy Lutomirski wrote:
+>>>> On Tue, Jun 2, 2020 at 3:56 AM Borislav Petkov <bp@alien8.de> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On Tue, Jun 02, 2020 at 01:29:51PM +0300, Petteri Aimonen wrote:
+>>>>> The kernel module is not actually x86-specific, even though it is
+>>>>> currently only enabled for x86. amdgpu driver already does kernel mode
+>>>>> floating point operations on PPC64 also, and the same module could be
+>>>>> used to test the same thing there.
+>>>>
+>>>> Then make it generic please and put the user portion in, say,
+>>>> tools/testing/selftests/fpu/ and we can ask ppc people to test it too.
+>>>> People might wanna add more stuff to it in the future, which would be
+>>>> good.
+>>>>
+>>>>> To deterministically trigger the bug, the syscall has to come from the
+>>>>> same thread that has modified MXCSR. Going through /usr/sbin/modprobe
+>>>>> won't work, and manually doing the necessary syscalls for module loading
+>>>>> seems too complicated.
+>>>>
+>>>> Ok, fair enough. But put that file in debugfs pls.
+>>> I think I agree.  While it would be delightful to have general
+>>> selftest tooling for kernel modules, we don't have that right now, and
+>>> having the test just work with an appropriately configured kernel
+>>> would be nice.
+>>
+>> Let's extend it to do what we want it to do. I will happy to take
+>> patches. If you have some concrete ideas on what we can add, please
+>> do a short summary of what is missing. I will find a way to get this
+>> done.
+>>
+>>> How about putting the file you frob in
+>>> /sys/kernel/debug/selftest_helpers/something_or_other.  The idea would
+>>> be that /sys/kernel/debug/selftest_helpers would be a general place
+>>> for kernel helpers needed to make selftests work.
+>>
+>> Is this a workaround for the lack of selftest tooling for kernel
+>> modules? In which case, let's us focus on fix selftest tooling.
+> 
+> The goal here is to have a selftest that runs kernel code as part of its operation. That is, the selftest is, logically, starting in userspace:
+> 
+> setup_evil_state();
 
-Wish we called it external_facing rather than untrusted attribute, so its
-description is consistent with the spec that defines it. Once we have
-Platform Component Security Enhancements. 
+Is it correct to assume the stuff checked differs from test to test
+and done in user-space.
 
-to be correct, maybe call "Device located on an untrusted link" rather than
-assert blame on the device.
+> ret = call_kernel_helper();
 
-Since the information is harvsted from BIOS tables and there are chances
-this could be wrongly grouped such, add "Check with your BIOS/Platform
-Vendor.
+> check_some_other_stuff();
 
+Is it correct to assume the stuff checked differs from test to test
+and done in user-space.
 
+> undo_evil_state();
+
+Is it correct to assume undoing evil differs from test to test
+and done in user-space, provide it can be done from userspace.
 
 > 
-> Fixed it, posted new patch at
-> https://lkml.org/lkml/2020/6/2/822
+> And the call_kernel_helper() could be moderately specific to the test.
 > 
-> Thanks,
-> 
-> Rajat
-> 
-> >
-> > > +             return;
-> > > +     }
-> > > +
-> > >       pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
-> > >       dmar_map_gfx = 0;
+The overall plan sounds good to me. I am all for adding support to
+selftests so we can keep extending it.
+
+thanks,
+-- Shuah
