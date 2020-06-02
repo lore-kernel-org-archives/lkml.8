@@ -2,185 +2,169 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD799C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2C92067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169112067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgFBX2T (ORCPT
+        id S1728341AbgFBX2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:28:19 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58382 "EHLO mga03.intel.com"
+        Tue, 2 Jun 2020 19:28:52 -0400
+Received: from mga06.intel.com ([134.134.136.31]:38173 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgFBX2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:28:18 -0400
-IronPort-SDR: T+1ReKr1T7wcC6J6gN1+ZOv/ySPs5Jx30p6vbdL9LlGJdrxzKWCtJQalajjGOLzUAP6YY1FSBI
- g7m5mutnNixA==
+        id S1726589AbgFBX2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 19:28:51 -0400
+IronPort-SDR: H7+PLikNW0S3HMJ2m+Ebu9YD1SE4din8SYPrT0OYbojWxRckn26ZM2RlxX1hyf3Kjtoyj/TDKD
+ 4VzrtxakNahw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 16:28:18 -0700
-IronPort-SDR: N09uJ+7Y0dNPSgwYr9zhSYvR1e3DZdCOjixmglYP2XfmiKe5V2xpLo5sXLOd4Kei/ePRxXUJ3M
- /n7D3W5wfC9Q==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 16:28:51 -0700
+IronPort-SDR: OKjQEHjHSnkvSt2tRndVRvOSocqBUBfTrLaYv+V4qnwAfjFhPzrPDaLEvqVzCuAVrFxWPL3j6b
+ gTYN6yObRsVg==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
-   d="scan'208";a="272535837"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.209.123.248]) ([10.209.123.248])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 16:28:17 -0700
-Subject: Re: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
-To:     Babu Moger <babu.moger@amd.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
- <b7625596-c1f9-798d-a138-b619178497b2@intel.com>
- <c7c5c0e5-6839-234e-38e0-69834aa2c8dd@amd.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <6cc9bdb5-bf41-ed8b-0b30-3464d6c290b9@intel.com>
-Date:   Tue, 2 Jun 2020 16:28:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+   d="scan'208";a="257269222"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Jun 2020 16:28:49 -0700
+Date:   Tue, 2 Jun 2020 16:28:49 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        lalithambika.krishnakumar@intel.com, rajatxjain@gmail.com,
+        pmalani@google.com, bleung@google.com, levinale@google.com,
+        zsm@google.com, mnissler@google.com, tbroch@google.com,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v3] iommu/vt-d: Don't apply gfx quirks to untrusted
+ devices
+Message-ID: <20200602232849.GA17696@otc-nc-03>
+References: <20200602232602.156049-1-rajatja@google.com>
 MIME-Version: 1.0
-In-Reply-To: <c7c5c0e5-6839-234e-38e0-69834aa2c8dd@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602232602.156049-1-rajatja@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Babu,
-
-On 6/2/2020 3:12 PM, Babu Moger wrote:
+On Tue, Jun 02, 2020 at 04:26:02PM -0700, Rajat Jain wrote:
+> Currently, an external malicious PCI device can masquerade the VID:PID
+> of faulty gfx devices, and thus apply iommu quirks to effectively
+> disable the IOMMU restrictions for itself.
 > 
+> Thus we need to ensure that the device we are applying quirks to, is
+> indeed an internal trusted device.
 > 
->> -----Original Message-----
->> From: Reinette Chatre <reinette.chatre@intel.com>
->> Sent: Tuesday, June 2, 2020 4:51 PM
->> To: Moger, Babu <Babu.Moger@amd.com>; fenghua.yu@intel.com;
->> tglx@linutronix.de; mingo@redhat.com; bp@alien8.de; x86@kernel.org;
->> hpa@zytor.com; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
->>
->> Hi Babu,
->>
->> On 6/1/2020 4:00 PM, Babu Moger wrote:
->>> Memory bandwidth is calculated reading the monitoring counter
->>> at two intervals and calculating the delta. It is the software’s
->>> responsibility to read the count often enough to avoid having
->>> the count roll over _twice_ between reads.
->>>
->>> The current code hardcodes the bandwidth monitoring counter's width
->>> to 24 bits for AMD. This is due to default base counter width which
->>> is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
->>> to adjust the counter width. But, the AMD hardware supports much
->>> wider bandwidth counter with the default width of 44 bits.
->>>
->>> Kernel reads these monitoring counters every 1 second and adjusts the
->>> counter value for overflow. With 24 bits and scale value of 64 for AMD,
->>> it can only measure up to 1GB/s without overflowing. For the rates
->>> above 1GB/s this will fail to measure the bandwidth.
->>>
->>> Fix the issue setting the default width to 44 bits by adjusting the
->>> offset.
->>>
->>> AMD future products will implement the CPUID 0xF.[ECX=1]:EAX.
->>>
->>> Signed-off-by: Babu Moger <babu.moger@amd.com>
->>> ---
->>> - Sending it second time. Email client had some issues first time.
->>> - Generated the patch on top of
->>>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (x86/cache).
->>>
->>>  arch/x86/kernel/cpu/resctrl/core.c     |    8 +++++++-
->>>  arch/x86/kernel/cpu/resctrl/internal.h |    1 +
->>>  2 files changed, 8 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/x86/kernel/cpu/resctrl/core.c
->> b/arch/x86/kernel/cpu/resctrl/core.c
->>> index 12f967c6b603..6040e9ae541b 100644
->>> --- a/arch/x86/kernel/cpu/resctrl/core.c
->>> +++ b/arch/x86/kernel/cpu/resctrl/core.c
->>> @@ -983,7 +983,13 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
->>>  		c->x86_cache_occ_scale = ebx;
->>>  		if (c->x86_vendor == X86_VENDOR_INTEL)
->>>  			c->x86_cache_mbm_width_offset = eax & 0xff;
->>> -		else
->>> +		else if (c->x86_vendor == X86_VENDOR_AMD) {
->>> +			if (eax)
->>
->> This test checks if _any_ bit is set in eax ...
->>
->>> +				c->x86_cache_mbm_width_offset = eax & 0xff;
->>
->> ... with the assumption that the first eight bits contain a value.
->>
->> Even so, now that Intel and AMD will be using eax in the same way,
->> perhaps it can be done simpler by always using eax to obtain the offset
->> (and thus avoid the code duplication) and on AMD initialize the default
->> if it cannot be obtained from eax?
->>
->> What I mean is something like:
->>
->> @@ -1024,10 +1024,12 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
->>
->>  		c->x86_cache_max_rmid  = ecx;
->>  		c->x86_cache_occ_scale = ebx;
->> -		if (c->x86_vendor == X86_VENDOR_INTEL)
->> -			c->x86_cache_mbm_width_offset = eax & 0xff;
->> -		else
->> -			c->x86_cache_mbm_width_offset = -1;
->> +		c->x86_cache_mbm_width_offset = eax & 0xff;
->> +		if (c->x86_vendor == X86_VENDOR_AMD &&
->> +		    c->x86_cache_mbm_width_offset == 0) {
->> +			c->x86_cache_mbm_width_offset =
->> +				MBM_CNTR_WIDTH_OFFSET_AMD;
->> +		}
->>  	}
->>  }
->>
->> What do you think?
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+With these changes
+
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+
+> ---
+> v3: - Separate out the warning mesage in a function to be called from
+>       other places. Change the warning string as suggested.
+> v2: - Change the warning print strings.
+>     - Add Lu Baolu's acknowledgement.
 > 
-> That looks good. But we still need to keep the
-> default(c->x86_cache_mbm_width_offset = -1;) for non-AMD and non-Intel.
-> How about this?
-
-This original default of -1 was added to deal with AMD when it was not
-known to support eax. Now that AMD's support of eax is captured among
-the default code I did not find it necessary to keep that considering
-resctrl_cpu_detect() is only called on AMD and Intel.
-
+>  drivers/iommu/intel-iommu.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
 > 
-> diff --git a/arch/x86/kernel/cpu/resctrl/core.c
-> b/arch/x86/kernel/cpu/resctrl/core.c
-> index 12f967c6b603..7269bd896ba9 100644
-> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> @@ -983,6 +983,9 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
->                 c->x86_cache_occ_scale = ebx;
->                 if (c->x86_vendor == X86_VENDOR_INTEL)
->                         c->x86_cache_mbm_width_offset = eax & 0xff;
-> +               else if (c->x86_vendor == X86_VENDOR_AMD)
-> +                       c->x86_cache_mbm_width_offset = eax ? eax & 0xff :
-
-This has the same concern that I mentioned earlier where the contents of
-the entire register is used to determine if the first eight bits
-contains a value. Did I miss something obvious?
-
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index ef0a5246700e5..dc859f02985a0 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -6185,6 +6185,23 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Check that the device does not live on an external facing PCI port that is
+> + * marked as untrusted. Such devices should not be able to apply quirks and
+> + * thus not be able to bypass the IOMMU restrictions.
+> + */
+> +static bool risky_device(struct pci_dev *pdev)
+> +{
+> +	if (pdev->untrusted) {
+> +		pci_warn(pdev,
+> +			 "Skipping IOMMU quirk for dev (%04X:%04X) on untrusted"
+> +			 " PCI link. Please check with your BIOS/Platform"
+> +			 " vendor about this\n", pdev->vendor, pdev->device);
+> +		return true;
+> +	}
+> +	return false;
+> +}
 > +
-> MBM_CNTR_WIDTH_OFFSET_AMD;
->                 else
->                         c->x86_cache_mbm_width_offset = -1;
->         }
+>  const struct iommu_ops intel_iommu_ops = {
+>  	.capable		= intel_iommu_capable,
+>  	.domain_alloc		= intel_iommu_domain_alloc,
+> @@ -6214,6 +6231,9 @@ const struct iommu_ops intel_iommu_ops = {
+>  
+>  static void quirk_iommu_igfx(struct pci_dev *dev)
+>  {
+> +	if (risky_device(dev))
+> +		return;
+> +
+>  	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
+>  	dmar_map_gfx = 0;
+>  }
+> @@ -6255,6 +6275,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+>  
+>  static void quirk_iommu_rwbf(struct pci_dev *dev)
+>  {
+> +	if (risky_device(dev))
+> +		return;
+> +
+>  	/*
+>  	 * Mobile 4 Series Chipset neglects to set RWBF capability,
+>  	 * but needs it. Same seems to hold for the desktop versions.
+> @@ -6285,6 +6308,9 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
+>  {
+>  	unsigned short ggc;
+>  
+> +	if (risky_device(dev))
+> +		return;
+> +
+>  	if (pci_read_config_word(dev, GGC, &ggc))
+>  		return;
+>  
+> @@ -6318,6 +6344,12 @@ static void __init check_tylersburg_isoch(void)
+>  	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
+>  	if (!pdev)
+>  		return;
+> +
+> +	if (risky_device(pdev)) {
+> +		pci_dev_put(pdev);
+> +		return;
+> +	}
+> +
+>  	pci_dev_put(pdev);
+>  
+>  	/* System Management Registers. Might be hidden, in which case
+> @@ -6327,6 +6359,11 @@ static void __init check_tylersburg_isoch(void)
+>  	if (!pdev)
+>  		return;
+>  
+> +	if (risky_device(pdev)) {
+> +		pci_dev_put(pdev);
+> +		return;
+> +	}
+> +
+>  	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
+>  		pci_dev_put(pdev);
+>  		return;
+> -- 
+> 2.27.0.rc2.251.g90737beb825-goog
 > 
-
-Reinette
