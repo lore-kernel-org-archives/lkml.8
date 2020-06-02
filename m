@@ -2,158 +2,149 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C93C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6A02072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679492067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:33:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="GC6MNw/X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKBZK0fK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFBXcV (ORCPT
+        id S1728306AbgFBXdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:32:21 -0400
-Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:58878
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726223AbgFBXcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:32:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IjESByxC5CYlYF6+gl60KcPziXbfyDJpoc5x4uH7ChYZww8lrJM7MLAGeeY6M06Cjdeu5rL8kE6naKgBDPw/SU5V2DYlbszjVHmzVf3TT2KLLNTOSxHfW/A8MrjKl5oeameFVv3nSNtxnj+GDyL8jAaR4ZA4rJdFju/933VKJFtwy5z7/08IhlgHAgRJDmjfPetIYLe50ibYz2qw0FONRlRJPNSM+eCgaT9JTtM29tcincxf2nmSHdjlBLmgsHGBYzIxIFAuwbk6e5Xe8hsm5xYkp5gcrzQbnCMUQqeWd9ySCTyxsmuHxEcH+NplwbVHM3q2fnKUf9CumV/e2NvGeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=skFgLhjGYSqU/PfJcc/KVL/ffwiV5zlthTlvtyirmNg=;
- b=fRS0Q7hb2pw5rNqdPVW3wgs6qeUr8tgk4wo2wUj3+b5LkNlJF1h2pboSP2YMLcNKldsUYn35SjpXzvHs/Y5fXNRZO7o0tRkGBUD/LwVmG4qFDLIs99I/jecPH4+arJkNCFXIJhyIr+eJKetem8Jyh3tvc33XrzbJ78yVE0ZgxHmYaT8lLEvcxl/tiKb2io8f3biW1Wbvnv+VqoLclS8SX/OLj0vTO5ATKBQyHiSiaKfdSV1F+KpwcLytbZ7jUjmLWWubSBqSGyU0r7zHjJBuuApfiFUkomXdqybehfTlXdF9YHqcpydLwLpmKI3bMHKnOf4tVXg39eX8zZYrfezSNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=skFgLhjGYSqU/PfJcc/KVL/ffwiV5zlthTlvtyirmNg=;
- b=GC6MNw/XkYxTU2Z67w0j/1LkfuOTCsE0LdHeY/nEmBhNSdi2yaX+Ur7/DCMNcfISwGPrLgBKdNZwwFDJvwAPHOvIMJI+tPadZQIEppOhHll5lrhMJx8JbRevjOIlb/q5bBJW7cPR2fuydH8R3sGUjPcbfwgkLUmRGU46dne/f5o=
-Authentication-Results: mellanox.com; dkim=none (message not signed)
- header.d=none;mellanox.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5759.eurprd05.prod.outlook.com (2603:10a6:803:cc::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Tue, 2 Jun
- 2020 23:32:18 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3066.018; Tue, 2 Jun 2020
- 23:32:18 +0000
-Date:   Tue, 2 Jun 2020 20:32:01 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Max Gurtovoy <maxg@mellanox.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yamin Friedman <yaminf@mellanox.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the block tree with the rdma tree
-Message-ID: <20200602233201.GE65026@mellanox.com>
-References: <20200602125647.5f5ed151@canb.auug.org.au>
- <3717aca8-9d75-33f1-ea8c-044af767ab5c@mellanox.com>
- <20200602190153.GA65026@mellanox.com>
- <8be03d71-9c72-bf88-7fd7-76ec7700474a@kernel.dk>
- <20200602190945.GC65026@mellanox.com>
- <b8ad79a0-57cc-e823-6b99-47d59ce5dc7d@kernel.dk>
- <b3b08c2f-b22f-1e8a-ba0f-d50f2db1abd3@mellanox.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3b08c2f-b22f-1e8a-ba0f-d50f2db1abd3@mellanox.com>
-X-ClientProxiedBy: BL0PR01CA0032.prod.exchangelabs.com (2603:10b6:208:71::45)
- To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+        Tue, 2 Jun 2020 19:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbgFBXdD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 19:33:03 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1166C08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:33:02 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u26so3272327wmn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gRIfKnJl6SPT0TJEscdrNR/IF4u0o0KTS5V3RmcEUyM=;
+        b=JKBZK0fKK1R/SWy7yxMUC8suZIyxultiSmdoxR3UvAqPTsEh9pJ12gIrHrzxSaP/wJ
+         1KwHQ4uoqdDgRKP0rUf2ngjWH7KZegwN3bN3V0kq9BXoNNPADqqSu7p+CrNekbPkRtfT
+         XY2cvpv2j70n9V+knYIMoo6y+UfAxd1/go08NJBEzjSHP9N5MB0RJKmI28BhLy7XlwqM
+         lCJxePHePQ8cjXxRuURh2oe5D/XWTn2F/3MKpL6fOZbesn/sVSh3daVKWyOccvCXi45v
+         Iu9yNec0gWwQRQBwywqYhtf4mEyXK3s/RT4q/DGWc/HUW/7/sM2ur/sD8LjJgaMuomWc
+         LLwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gRIfKnJl6SPT0TJEscdrNR/IF4u0o0KTS5V3RmcEUyM=;
+        b=UMAOjYkN1IyEbWJ8RNOtLLqFq6geelF6bi4iP5m96XzXWtjbCG1rzYzcRyoX25+w93
+         7OCTAn/h2AmPHTSQX6mIcQINBBrzo7EsDi9BTXrnJkn2OyzfYZWYcENAeNQPc5PYkHPE
+         vyFrD0auB5A/fDu5+OX5APrqTE5hbxn/C5x5N7nNLC3++rqlnwMAcZ73M0Ogqb6cMJGz
+         GMyuw+u1nqhBeCUlEuHlgRawee56pt6l+AENW7GrXceVRhBewt1BcMsoUOIe/nB0f/uV
+         GATw9fCIu5totaCSvNInRK6JOXOyqhPj7Q1FL4ZWXFqVRUD7RZxCt6usoYEWtuhxFuVC
+         7F7A==
+X-Gm-Message-State: AOAM532Y4RghmwPDnV24tyPUIHLKcBaRyw69fMqe5N1+YfEGpY3rsETO
+        T6t/g9G8XFFQ8vcsgddz9Zpe02PDv5Y=
+X-Google-Smtp-Source: ABdhPJwcp1KiPxegia0Y7JYvV9kaPCj1e5qD1uO6/BUPm79pbtxCR2NUJxnMNO9b3KYzZzZvZw3CLg==
+X-Received: by 2002:a1c:5987:: with SMTP id n129mr5999760wmb.60.1591140780694;
+        Tue, 02 Jun 2020 16:33:00 -0700 (PDT)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id l18sm418067wmj.22.2020.06.02.16.32.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 16:33:00 -0700 (PDT)
+Subject: Re: [PATCH 1/4] drivers: clk: qcom: Add msm8992 GCC driver
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200531174612.260113-1-konradybcio@gmail.com>
+ <20200531174612.260113-2-konradybcio@gmail.com>
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Message-ID: <7e618280-ecb8-cf1a-5243-737e56278662@linaro.org>
+Date:   Wed, 3 Jun 2020 00:33:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (193.47.165.251) by BL0PR01CA0032.prod.exchangelabs.com (2603:10b6:208:71::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Tue, 2 Jun 2020 23:32:17 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jgGO1-000Msq-ES; Tue, 02 Jun 2020 20:32:01 -0300
-X-Originating-IP: [193.47.165.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4383a56d-de15-4705-662b-08d8074d304e
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5759:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB57597B7786B0CC664B78206CCF8B0@VI1PR05MB5759.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0422860ED4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1ONjocoDpFcliLzkrvwmOjJp2kULD0DQkjokqTwCxQMmbc7HB0n0FfJ1EZ+QnnTHxKeewa0NOw5TEYTj5KPPX9YFF2CPwVhW9jhuZ5l2CGWe+eDuTo4rEOk4R4sWevzGCJyJwXdayFpk4rHqNFkegQ8C41dzJeupPQkFOEaU19kHOVOOcClxKMXjbF/OBZAWzOjrPWB8CaqNX8Fa6b6x/40ZiRVRyetTascApi7rK8u3ARtu6tvr1EcQTzkKOIXZkYlcTEXx7bzhrH8VOJcJRYDAA2627pDkGmh3gu2HpElhzgCsPPsd/5yG2H1vbAWneuqA0b0eVGsOD3JGtDeoYw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(366004)(39850400004)(396003)(8936002)(1076003)(36756003)(5660300002)(9786002)(66946007)(66476007)(66556008)(33656002)(2906002)(37006003)(316002)(426003)(9746002)(2616005)(54906003)(53546011)(478600001)(83380400001)(86362001)(6636002)(186003)(8676002)(6862004)(26005)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: D2QfnC3ulKI5aDDnpGvL0zZYJ7WmI+ER8hPJtpTdSfKjE+CN7iTHKVqubMtqFF1g5y1huqYmooPGxHpnh3aGhG9A9y4LkONIHBgSdJNNB8EqR4OLfL8O+QNvTmyX5X2ZJx12M6mJAuU2wxaFjM9wvWsKvI5wILNnfQADe4UWXvYrB2wTilm/0BZYiRuc+dPoiNgsuPMOIEfM9SljjjUgUmTqsvSYrB4vnCoPbhAYxqnK6FlajnFHWPAzBXuYEX0SV2aAfLhgdrUsYMpgLLukvBJQcDd2QriSDSu+3JXy1tB+DgvDJsDBaQ31SMx1VXaeBQRFZiuNnkQNTkONfXzCDrwEOSy3fwn3iG0PDvFAdVdn8XeX0KXyFKlzSB9ukLIveT5ZGJBk/dZAEWzp9QXLfr7l6ajwdLx/9sW9hsqyAKqN7VxI0ePc3nIk7LpAb+Zw1i+6zVkItnN9Iu872+qFS1aUW5X7Q0LFLLXzJzWDGq3u+il+VaSOh0BTdnSeVHwC
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4383a56d-de15-4705-662b-08d8074d304e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 23:32:17.9134
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fwhiTyigp4AYS7wBgWfkn+B+CqDyIG/RYFyFE0EGHKi/9C9KkZ4S7zDzQlgnnFzazUoKY7gD3GMa+2xOcLwtQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5759
+In-Reply-To: <20200531174612.260113-2-konradybcio@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:40:51AM +0300, Max Gurtovoy wrote:
-> 
-> On 6/3/2020 12:37 AM, Jens Axboe wrote:
-> > On 6/2/20 1:09 PM, Jason Gunthorpe wrote:
-> > > On Tue, Jun 02, 2020 at 01:02:55PM -0600, Jens Axboe wrote:
-> > > > On 6/2/20 1:01 PM, Jason Gunthorpe wrote:
-> > > > > On Tue, Jun 02, 2020 at 11:37:26AM +0300, Max Gurtovoy wrote:
-> > > > > > On 6/2/2020 5:56 AM, Stephen Rothwell wrote:
-> > > > > > > Hi all,
-> > > > > > Hi,
-> > > > > > 
-> > > > > > This looks good to me.
-> > > > > > 
-> > > > > > Can you share a pointer to the tree so we'll test it in our labs ?
-> > > > > > 
-> > > > > > need to re-test:
-> > > > > > 
-> > > > > > 1. srq per core
-> > > > > > 
-> > > > > > 2. srq per core + T10-PI
-> > > > > > 
-> > > > > > And both will run with shared CQ.
-> > > > > Max, this is too much conflict to send to Linus between your own
-> > > > > patches. I am going to drop the nvme part of this from RDMA.
-> > > > > 
-> > > > > Normally I don't like applying partial series, but due to this tree
-> > > > > split, you can send the rebased nvme part through the nvme/block tree
-> > > > > at rc1 in two weeks..
-> 
-> Yes, I'll send it in 2 weeks.
-> 
-> Actually I hoped the iSER patches for CQ pool will be sent in this series
-> but eventually they were not.
-> 
-> This way we could have taken only the iser part and the new API.
-> 
-> I saw the pulled version too late since I wasn't CCed to it and it was
-> already merged before I had a chance to warn you about possible conflict.
-> 
-> I think in general we should try to add new RDMA APIs first with iSER/SRP
-> and avoid conflicting trees.
+On 31/05/2020 18:46, Konrad Dybcio wrote:
 
-If you are careful we can construct a shared branch and if Jens/etc is
-willing he can pull the RDMA base code after RDMA merges the branch
-and then apply the nvme parts. This is how things work with netdev
+> +static struct clk_fixed_factor xo = {
+> +	.mult = 1,
+> +	.div = 1,
+> +	.hw.init = &(struct clk_init_data)
+> +	{
+> +		.name = "xo",
+> +		.parent_names = (const char *[]) { "xo_board" },
+> +		.num_parents = 1,
+> +		.ops = &clk_fixed_factor_ops,
+> +	},
+> +};
 
-It is tricky and you have to plan for it during your submission step,
-but we should be able to manage in most cases if this comes up more
-often.
+I think you can drop that, and use the DTS definition.
 
-Jason
+xo_board: xo_board {
+     compatible = "fixed-clock";
+     #clock-cells = <0>;
+     clock-frequency = <19200000>;
+};
+
+sleep_clk: sleep_clk {
+     compatible = "fixed-clock";
+     #clock-cells = <0>;
+     clock-frequency = <32768>;
+};
+
+clock_gcc: clock-controller@fc400000 {
+     compatible = "qcom,gcc-msm8994";
+     #clock-cells = <1>;
+     #reset-cells = <1>;
+     #power-domain-cells = <1>;
+     reg = <0xfc400000 0x2000>;
+
++    clock-names = "xo",
++                  "sleep_clk";
++    clocks = <&xo_board>,
++             <&sleep_clk>;
+
+};
+
+
+> +static int gcc_msm8992_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct clk *clk;
+> +
+> +	clk = devm_clk_register(dev, &xo.hw);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+
+You should drop this too.
+
+
+> +MODULE_ALIAS("platform:gcc-msm8992");
+
+and that.
+
+---
+bod
+
