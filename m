@@ -2,141 +2,249 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A99C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD336207D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0C02067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fAoQPsCm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ED6Y6fr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgFBPsp (ORCPT
+        id S1726589AbgFBPwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:48:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:48184 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgFBPso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:48:44 -0400
-Received: from zn.tnic (p200300ec2f0bbb004c909b752ca088bd.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bb00:4c90:9b75:2ca0:88bd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0D9271EC038A;
-        Tue,  2 Jun 2020 17:48:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591112923;
+        Tue, 2 Jun 2020 11:52:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59884 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726214AbgFBPwG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:52:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591113123;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=fCE7XnSzuHCBf0EmgG3ZG39d7yjE0cZazFJrEr58cHE=;
-        b=fAoQPsCm79xYXWrZ6kEAimJr0hQAGlNoqVWQQaEsH1RK2gWMFeOTiNP4cBcFCmagH/n6Hh
-        +s/bO0IYd3b4HhIsCLJ+RYAfLW7Zpvt5BslquT6QoQsBpSX/3cGpmyx32mBexAiPSQh63T
-        9V5Ep1+sS3p5RxBZfWfIFM4BqlpWRDk=
-Date:   Tue, 2 Jun 2020 17:48:43 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] EDAC/ghes: Setup DIMM label from DMI and use it in
- error reports
-Message-ID: <20200602154843.GD11634@zn.tnic>
-References: <20200528101307.23245-1-rrichter@marvell.com>
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XuSKMkbItueamTokOqRg0AWTflYyn03ssDlVOSWZxOY=;
+        b=ED6Y6fr4A9LdOQkH6QfWRBVgj/gugEM9vz8qjqUpXoL2N64zgG1ltFfg2I6CFobh1POVhM
+        JXe1cXSorusRR0ChiT5ZqqxfWzUiQeCRHjmg+7dLg4+skkXb/f0dZ/TCV8vpkkoEKKZ9Wf
+        o3HG6Ulc59PSgKCQGsTuGrZlb4pTjIc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-412-uIOploahNJm0gymkDBmlAQ-1; Tue, 02 Jun 2020 11:51:49 -0400
+X-MC-Unique: uIOploahNJm0gymkDBmlAQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E20D3107ACCA;
+        Tue,  2 Jun 2020 15:51:47 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E6CC5C1D6;
+        Tue,  2 Jun 2020 15:51:44 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, dray@redhat.com,
+        kzak@redhat.com, mszeredi@redhat.com, swhiteho@redhat.com,
+        jlayton@redhat.com, raven@themaw.net, andres@anarazel.de,
+        christian.brauner@ubuntu.com, jarkko.sakkinen@linux.intel.com,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] General notification queue and key notifications
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200528101307.23245-1-rrichter@marvell.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1503046.1591113104.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 02 Jun 2020 16:51:44 +0100
+Message-ID: <1503047.1591113104@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:13:06PM +0200, Robert Richter wrote:
-> The ghes driver reports errors with 'unknown label' even if the actual
-> DIMM label is known, e.g.:
-> 
->  EDAC MC0: 1 CE Single-bit ECC on unknown label (node:0 card:0
->    module:0 rank:1 bank:0 col:13 bit_pos:16 DIMM location:N0 DIMM_A0
->    page:0x966a9b3 offset:0x0 grain:1 syndrome:0x0 - APEI location:
->    node:0 card:0 module:0 rank:1 bank:0 col:13 bit_pos:16 DIMM
->    location:N0 DIMM_A0 status(0x0000000000000400): Storage error in
->    DRAM memory)
-> 
-> Fix this by using struct dimm_info's label string in error reports:
-> 
->  EDAC MC0: 1 CE Single-bit ECC on N0 DIMM_A0 (node:0 card:0 module:0
->    rank:1 bank:515 col:14 bit_pos:16 DIMM location:N0 DIMM_A0
->    page:0x99223d8 offset:0x0 grain:1 syndrome:0x0 - APEI location:
->    node:0 card:0 module:0 rank:1 bank:515 col:14 bit_pos:16 DIMM
->    location:N0 DIMM_A0 status(0x0000000000000400): Storage error in
->    DRAM memory)
-> 
-> The labels are initialized by reading the bank and device strings from
-> DMI. Now, the label information can also read from sysfs. E.g. a
-> ThunderX2 system will show the following:
-> 
->  /sys/devices/system/edac/mc/mc0/dimm0/dimm_label:N0 DIMM_A0
->  /sys/devices/system/edac/mc/mc0/dimm1/dimm_label:N0 DIMM_B0
->  /sys/devices/system/edac/mc/mc0/dimm2/dimm_label:N0 DIMM_C0
->  /sys/devices/system/edac/mc/mc0/dimm3/dimm_label:N0 DIMM_D0
->  /sys/devices/system/edac/mc/mc0/dimm4/dimm_label:N0 DIMM_E0
->  /sys/devices/system/edac/mc/mc0/dimm5/dimm_label:N0 DIMM_F0
->  /sys/devices/system/edac/mc/mc0/dimm6/dimm_label:N0 DIMM_G0
->  /sys/devices/system/edac/mc/mc0/dimm7/dimm_label:N0 DIMM_H0
->  /sys/devices/system/edac/mc/mc0/dimm8/dimm_label:N1 DIMM_I0
->  /sys/devices/system/edac/mc/mc0/dimm9/dimm_label:N1 DIMM_J0
->  /sys/devices/system/edac/mc/mc0/dimm10/dimm_label:N1 DIMM_K0
->  /sys/devices/system/edac/mc/mc0/dimm11/dimm_label:N1 DIMM_L0
->  /sys/devices/system/edac/mc/mc0/dimm12/dimm_label:N1 DIMM_M0
->  /sys/devices/system/edac/mc/mc0/dimm13/dimm_label:N1 DIMM_N0
->  /sys/devices/system/edac/mc/mc0/dimm14/dimm_label:N1 DIMM_O0
->  /sys/devices/system/edac/mc/mc0/dimm15/dimm_label:N1 DIMM_P0
-> 
-> Since dimm_labels can be rewritten, that label will be used in a later
-> error report:
-> 
->  # echo foobar >/sys/devices/system/edac/mc/mc0/dimm0/dimm_label
->  # # some error injection here
->  # dmesg | grep foobar
->  [ 751.383533] EDAC MC0: 1 CE Single-bit ECC on foobar (node:0 card:0
->  module:0 rank:1 bank:259 col:3 bit_pos:16 DIMM location:N0 DIMM_A0
->  page:0x8c8dc74 offset:0x0 grain:1 syndrome:0x0 - APEI location:
->  node:0 card:0 module:0 rank:1 bank:259 col:3 bit_pos:16 DIMM
->  location:N0 DIMM_A0 status(0x0000000000000400): Storage error in DRAM
->  memory)
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
-> v4:
-> 
->  * dimm->label: Only update dimm->label in if bank/device is found in
->    the SMBIOS table, this keeps current behavior for machines that do
->    not provide this information.
-> 
->  * e->location: Keep current behavior how e->location is written.
-> 
->  * e->label: Use dimm->label if a DIMM was found by its handle and
->    "unknown memory" otherwise. This aligns with the edac_mc
->    implementation.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/ghes_edac.c | 37 ++++++++++++++++++++++++++-----------
->  1 file changed, 26 insertions(+), 11 deletions(-)
+Hi Linus,
 
-Yap, looks good. I'll queue it after the merge window.
+Can you pull this, please?  It adds a general notification queue concept
+and adds an event source for keys/keyrings, such as linking and unlinking
+keys and changing their attributes.
 
-Thx.
+Thanks to Debarshi Ray, we do have a pull request to use this to fix a
+problem with gnome-online-accounts - as mentioned last time:
 
--- 
-Regards/Gruss,
-    Boris.
+    https://gitlab.gnome.org/GNOME/gnome-online-accounts/merge_requests/47
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Without this, g-o-a has to constantly poll a keyring-based kerberos cache
+to find out if kinit has changed anything.
+
+[[ With regard to the mount/sb notifications and fsinfo(), Karel Zak and
+   Ian Kent have been working on making libmount use them, preparatory to
+   working on systemd:
+
+	https://github.com/karelzak/util-linux/commits/topic/fsinfo
+	https://github.com/raven-au/util-linux/commits/topic/fsinfo.public
+
+   Development has stalled briefly due to other commitments, so I'm not
+   sure I can ask you to pull those parts of the series for now.  Christia=
+n
+   Brauner would like to use them in lxc, but hasn't started.
+   ]]
+
+
+LSM hooks are included:
+
+ (1) A set of hooks are provided that allow an LSM to rule on whether or
+     not a watch may be set.  Each of these hooks takes a different
+     "watched object" parameter, so they're not really shareable.  The LSM
+     should use current's credentials.  [Wanted by SELinux & Smack]
+
+ (2) A hook is provided to allow an LSM to rule on whether or not a
+     particular message may be posted to a particular queue.  This is give=
+n
+     the credentials from the event generator (which may be the system) an=
+d
+     the watch setter.  [Wanted by Smack]
+
+I've provided SELinux and Smack with implementations of some of these hook=
+s.
+
+
+WHY
+=3D=3D=3D
+
+Key/keyring notifications are desirable because if you have your kerberos
+tickets in a file/directory, your Gnome desktop will monitor that using
+something like fanotify and tell you if your credentials cache changes.
+
+However, we also have the ability to cache your kerberos tickets in the
+session, user or persistent keyring so that it isn't left around on disk
+across a reboot or logout.  Keyrings, however, cannot currently be
+monitored asynchronously, so the desktop has to poll for it - not so good
+on a laptop.  This facility will allow the desktop to avoid the need to
+poll.
+
+
+DESIGN DECISIONS
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+ (1) The notification queue is built on top of a standard pipe.  Messages
+     are effectively spliced in.  The pipe is opened with a special flag:
+
+	pipe2(fds, O_NOTIFICATION_PIPE);
+
+     The special flag has the same value as O_EXCL (which doesn't seem lik=
+e
+     it will ever be applicable in this context)[?].  It is given up front
+     to make it a lot easier to prohibit splice and co. from accessing the
+     pipe.
+
+     [?] Should this be done some other way?  I'd rather not use up a new
+     	 O_* flag if I can avoid it - should I add a pipe3() system call
+     	 instead?
+
+     The pipe is then configured::
+
+	ioctl(fds[1], IOC_WATCH_QUEUE_SET_SIZE, queue_depth);
+	ioctl(fds[1], IOC_WATCH_QUEUE_SET_FILTER, &filter);
+
+     Messages are then read out of the pipe using read().
+
+ (2) It should be possible to allow write() to insert data into the
+     notification pipes too, but this is currently disabled as the kernel
+     has to be able to insert messages into the pipe *without* holding
+     pipe->mutex and the code to make this work needs careful auditing.
+
+ (3) sendfile(), splice() and vmsplice() are disabled on notification pipe=
+s
+     because of the pipe->mutex issue and also because they sometimes want
+     to revert what they just did - but one or more notification messages
+     might've been interleaved in the ring.
+
+ (4) The kernel inserts messages with the wait queue spinlock held.  This
+     means that pipe_read() and pipe_write() have to take the spinlock to
+     update the queue pointers.
+
+ (5) Records in the buffer are binary, typed and have a length so that the=
+y
+     can be of varying size.
+
+     This allows multiple heterogeneous sources to share a common buffer;
+     there are 16 million types available, of which I've used just a few,
+     so there is scope for others to be used.  Tags may be specified when =
+a
+     watchpoint is created to help distinguish the sources.
+
+ (6) Records are filterable as types have up to 256 subtypes that can be
+     individually filtered.  Other filtration is also available.
+
+ (7) Notification pipes don't interfere with each other; each may be bound
+     to a different set of watches.  Any particular notification will be
+     copied to all the queues that are currently watching for it - and onl=
+y
+     those that are watching for it.
+
+ (8) When recording a notification, the kernel will not sleep, but will
+     rather mark a queue as having lost a message if there's insufficient
+     space.  read() will fabricate a loss notification message at an
+     appropriate point later.
+
+ (9) The notification pipe is created and then watchpoints are attached to
+     it, using one of:
+
+	keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fds[1], 0x01);
+	watch_mount(AT_FDCWD, "/", 0, fd, 0x02);
+	watch_sb(AT_FDCWD, "/mnt", 0, fd, 0x03);
+
+     where in both cases, fd indicates the queue and the number after is a
+     tag between 0 and 255.
+
+(10) Watches are removed if either the notification pipe is destroyed or
+     the watched object is destroyed.  In the latter case, a message will
+     be generated indicating the enforced watch removal.
+
+
+Things I want to avoid:
+
+ (1) Introducing features that make the core VFS dependent on the network
+     stack or networking namespaces (ie. usage of netlink).
+
+ (2) Dumping all this stuff into dmesg and having a daemon that sits there
+     parsing the output and distributing it as this then puts the
+     responsibility for security into userspace and makes handling
+     namespaces tricky.  Further, dmesg might not exist or might be
+     inaccessible inside a container.
+
+ (3) Letting users see events they shouldn't be able to see.
+
+
+TESTING AND MANPAGES
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+ (*) The keyutils tree has a pipe-watch branch that has keyctl commands fo=
+r
+     making use of notifications.  Proposed manual pages can also be found
+     on this branch, though a couple of them really need to go to the main
+     manpages repository instead.
+
+     If the kernel supports the watching of keys, then running "make test"
+     on that branch will cause the testing infrastructure to spawn a
+     monitoring process on the side that monitors a notifications pipe for
+     all the key/keyring changes induced by the tests and they'll all be
+     checked off to make sure they happened.
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/log=
+/?h=3Dpipe-watch
+
+ (*) A test program is provided (samples/watch_queue/watch_test) that can
+     be used to monitor for keyrings, mount and superblock events.
+     Information on the notifications is simply logged to stdout.
+
+Thanks,
+David
+
