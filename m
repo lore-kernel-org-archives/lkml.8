@@ -2,114 +2,132 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D336CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13397C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA0152074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:51:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LQzwc1HZ";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LQzwc1HZ"
+	by mail.kernel.org (Postfix) with ESMTP id DFE9C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgFBVvO (ORCPT
+        id S1728280AbgFBVv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 17:51:14 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:50292 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726112AbgFBVvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 17:51:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D14438EE269;
-        Tue,  2 Jun 2020 14:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591134672;
-        bh=zzBXsNBuXIwx4FJrfyfpP3vuGw4PqkY/lK7qzNfsglo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LQzwc1HZNUbTfmYftCpq2xCukFV8tsieIvpDth5OA7lIsnd6EAP1Zigp2nc8HkSp6
-         BpI0NhuAkN+5tm7X7iZ+cyXeCVY+C7yTJjsfRRD1oD+lA4W7IiS3Yp96uXQKO4OCg/
-         egW6kXZhKBA9W8gQRKqZQaRX60Y5WVmCojW7yeSE=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SocALtf7texX; Tue,  2 Jun 2020 14:51:12 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 646708EE0F8;
-        Tue,  2 Jun 2020 14:51:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591134672;
-        bh=zzBXsNBuXIwx4FJrfyfpP3vuGw4PqkY/lK7qzNfsglo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LQzwc1HZNUbTfmYftCpq2xCukFV8tsieIvpDth5OA7lIsnd6EAP1Zigp2nc8HkSp6
-         BpI0NhuAkN+5tm7X7iZ+cyXeCVY+C7yTJjsfRRD1oD+lA4W7IiS3Yp96uXQKO4OCg/
-         egW6kXZhKBA9W8gQRKqZQaRX60Y5WVmCojW7yeSE=
-Message-ID: <1591134670.16819.18.camel@HansenPartnership.com>
-Subject: Re: kobject_init_and_add is easy to misuse
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Wang Hai <wanghai38@huawei.com>, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Tue, 02 Jun 2020 14:51:10 -0700
-In-Reply-To: <20200602200756.GA3933938@kroah.com>
-References: <20200602115033.1054-1-wanghai38@huawei.com>
-         <20200602121035.GL19604@bombadil.infradead.org>
-         <1591111514.4253.32.camel@HansenPartnership.com>
-         <20200602173603.GB3579519@kroah.com>
-         <1591127656.16819.7.camel@HansenPartnership.com>
-         <20200602200756.GA3933938@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jun 2020 17:51:27 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51001 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgFBVv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 17:51:26 -0400
+IronPort-SDR: tVfeXCV5y15PITqE0UCcz5b0quFbCvHlZuRD8gumP287hiSaSncN16fJdXLm1pC83tjwGHmPaM
+ w9qvnrtDf+5g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 14:51:25 -0700
+IronPort-SDR: iR8+Ln0fstDHE88ku259NVDG2r5XkvuDTsIJu61j1g1IhhZqGXk62HyEOVwlz/47rYS3ek4I4r
+ 2Td9PUOFtx8Q==
+X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
+   d="scan'208";a="272511868"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.209.123.248]) ([10.209.123.248])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 14:51:25 -0700
+Subject: Re: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
+To:     Babu Moger <babu.moger@amd.com>, fenghua.yu@intel.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, linux-kernel@vger.kernel.org
+References: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <b7625596-c1f9-798d-a138-b619178497b2@intel.com>
+Date:   Tue, 2 Jun 2020 14:51:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-02 at 22:07 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 02, 2020 at 12:54:16PM -0700, James Bottomley wrote:
-[...]
-> > I think the only way we can make the failure semantics consistent
-> > is to have the kobject_init() ones (so kfree on failure).  That
-> > means for the add part, the function would have to unwind
-> > everything it did from init on so kfree() is still an option.  If
-> > people agree, then I can produce the patch ... it's just the
-> > current drive to transform everyone who's doing kfree() into
-> > kobject_put() would become wrong ...
+Hi Babu,
+
+On 6/1/2020 4:00 PM, Babu Moger wrote:
+> Memory bandwidth is calculated reading the monitoring counter
+> at two intervals and calculating the delta. It is the software’s
+> responsibility to read the count often enough to avoid having
+> the count roll over _twice_ between reads.
 > 
-> Everyone should be putting their kfree into the kobject release
-> anyway, right?
+> The current code hardcodes the bandwidth monitoring counter's width
+> to 24 bits for AMD. This is due to default base counter width which
+> is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
+> to adjust the counter width. But, the AMD hardware supports much
+> wider bandwidth counter with the default width of 44 bits.
+> 
+> Kernel reads these monitoring counters every 1 second and adjusts the
+> counter value for overflow. With 24 bits and scale value of 64 for AMD,
+> it can only measure up to 1GB/s without overflowing. For the rates
+> above 1GB/s this will fail to measure the bandwidth.
+> 
+> Fix the issue setting the default width to 44 bits by adjusting the
+> offset.
+> 
+> AMD future products will implement the CPUID 0xF.[ECX=1]:EAX.
+> 
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+> - Sending it second time. Email client had some issues first time.
+> - Generated the patch on top of 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (x86/cache).
+> 
+>  arch/x86/kernel/cpu/resctrl/core.c     |    8 +++++++-
+>  arch/x86/kernel/cpu/resctrl/internal.h |    1 +
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> index 12f967c6b603..6040e9ae541b 100644
+> --- a/arch/x86/kernel/cpu/resctrl/core.c
+> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> @@ -983,7 +983,13 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
+>  		c->x86_cache_occ_scale = ebx;
+>  		if (c->x86_vendor == X86_VENDOR_INTEL)
+>  			c->x86_cache_mbm_width_offset = eax & 0xff;
+> -		else
+> +		else if (c->x86_vendor == X86_VENDOR_AMD) {
+> +			if (eax)
 
-No, that's the problem ... for a static kobject you can't free it; and
-the release path may make assumption which aren't valid depending on
-the kobject state.
+This test checks if _any_ bit is set in eax ...
 
-> Anyway, let's see your patch before I start to object further :)
+> +				c->x86_cache_mbm_width_offset = eax & 0xff;
 
-My first thought was "what?  I got suckered into creating a patch",
-thanks ;-)  But now I look, all the error paths do unwind back to the
-initial state, so kfree() on error looks to be completely correct.  I
-got confused by a bogus patch set like this:
+... with the assumption that the first eight bits contain a value.
 
-https://lore.kernel.org/linux-scsi/20200528201353.14849-1-wu000273@umn.edu/
+Even so, now that Intel and AMD will be using eax in the same way,
+perhaps it can be done simpler by always using eax to obtain the offset
+(and thus avoid the code duplication) and on AMD initialize the default
+if it cannot be obtained from eax?
 
-But it turns out the person sending the patch didn't understand the
-network failure they quote:
+What I mean is something like:
 
-b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+@@ -1024,10 +1024,12 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
 
-Has the problem precisely because the kobject is static.  The release
-path clears it and that allows it to be readded.  I'll just reply to
-the sender of the bogus patches.
+ 		c->x86_cache_max_rmid  = ecx;
+ 		c->x86_cache_occ_scale = ebx;
+-		if (c->x86_vendor == X86_VENDOR_INTEL)
+-			c->x86_cache_mbm_width_offset = eax & 0xff;
+-		else
+-			c->x86_cache_mbm_width_offset = -1;
++		c->x86_cache_mbm_width_offset = eax & 0xff;
++		if (c->x86_vendor == X86_VENDOR_AMD &&
++		    c->x86_cache_mbm_width_offset == 0) {
++			c->x86_cache_mbm_width_offset =
++				MBM_CNTR_WIDTH_OFFSET_AMD;
++		}
+ 	}
+ }
 
-James
+What do you think?
 
-
+Reinette
