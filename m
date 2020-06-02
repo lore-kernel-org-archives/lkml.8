@@ -2,102 +2,118 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86370207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E7820679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qv3Td0OK"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Z4VUDVFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgFBKo3 (ORCPT
+        id S1727055AbgFBKog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBKo2 (ORCPT
+        Tue, 2 Jun 2020 06:44:36 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59537 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbgFBKoe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:44:28 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B400C061A0E;
-        Tue,  2 Jun 2020 03:44:24 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n9so1206018plk.1;
-        Tue, 02 Jun 2020 03:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=H05OVuwlBgrwjdIL249fOEZc54JAKac/tUGyHC08gQs=;
-        b=Qv3Td0OKHbhrSjgPbGqNpIAKA6svKHpglY3/U1gOS8lKHtAGsEwtP7zDxMfz/TZiUL
-         M6OrU7sdrP4rDUevsQ3bL8Nkj716L5v2mEMoTDF5LFU68rMRxh/q3rSyVZdLd+REmzpW
-         oKqIIZ053AkrJwYi/CU67ypkZ7/GMlS3AGKybC0chI/z2EXothcEPyAPIKmkc3VcS3GG
-         pxNrJkD7Je35YPJVyJPNN890Ud8VuF36LpGAyecDCYY7p4vwiz1gc9/yAV+EXB6Uehia
-         eD8fuA9xFMaGdu5M9kmb2nb2M0Vt7nUxxHXKnWX9NyWu+oiLqbfJDwhR87ezKXjT0WTR
-         9fOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H05OVuwlBgrwjdIL249fOEZc54JAKac/tUGyHC08gQs=;
-        b=P+j7BHTNJkjKtFtRGA5/VnbM+kQQcjpaJgWTRIF5pUl373Kxzi8HS/YEdhh2lrqH/e
-         qtjpJ4Fux4E7uHN4gZmr5At1x+ZrEkqlBAeysIbBV5C4M9rq4lZ3+4PuT9bWpkNbbMWP
-         P6PJoUz27HQnNkJGDMrP/TT87BcS/cRjWMfwuZ2pMqRtyOfXGcOFUqmWubTFcwJuOmCc
-         YSbHTdOzrNuwaVywftR/8t4m/+az7NkvfWRuInV0Q7E4KNa/Qf9s8cskq16JIUZfe0BM
-         xQjL7aD0ZkA6h1klxnhyd15XU5gY+WTuXtl4GgsPn6lmHhJx8xTtUSXvtpJ4czckPaHe
-         JwMg==
-X-Gm-Message-State: AOAM533lMCQMF9NzSDEakLMVlL3hVICSbWcyUXPh/dKQ1oKFuUNN2aNI
-        iZnhv80NSNa/4mVgMZ8uSBXvdjcopXM=
-X-Google-Smtp-Source: ABdhPJzXuYCZSWZu64djI+B3rB1TLa7slAy257nEGuURgXUsCEyR63VaznbGh9DGgkKX8FEtRDW1vA==
-X-Received: by 2002:a17:902:8204:: with SMTP id x4mr11259413pln.153.1591094663735;
-        Tue, 02 Jun 2020 03:44:23 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:189:c86a:7149:74ab:b584:ecf8])
-        by smtp.gmail.com with ESMTPSA id s98sm153046pjb.33.2020.06.02.03.44.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 03:44:23 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     aishwaryarj100@gmail.com
-Subject: [PATCH] net: stmmac: Drop condition with no effect
-Date:   Tue,  2 Jun 2020 16:14:04 +0530
-Message-Id: <20200602104405.28851-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jun 2020 06:44:34 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id g4P6jXBaDCKzeg4PAjJ3Qt; Tue, 02 Jun 2020 12:44:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591094672; bh=1WzPUPBIE0Uaz6t74C5WQPm2crJOnZO/Fn4WuxbrM0s=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Z4VUDVFHsqJqWJs8+DlWcTaWPdwdnw8gko60VMLYOilDzsUb3W8+durQUBUvL5+oP
+         Sthoq+4c1YJQUssMAIP8WtDOkOEttFDeVrrD6AZGYw8oYA+2yI2TQnBF2X6kmgWGV4
+         Zk0/NJHVeACTXGcWwimmntqZ3nYTeN+VDhP8Oa1q4nKJBQxh02kYO2Xza7ByPTIxqK
+         rLUZh0fwu14Db/HnVXJhj/fnwO+XXzH/c0reY9pENHv9o0NymHsHrKZSeL5ijvifZS
+         eqGQmISUDPh3UywOeyL0vtdLYH+uo/HdMuJoKr4p6EfTB7byOgX4OUYfl4MiXNISuo
+         6mq+X5GqEFaGg==
+Subject: Re: [PATCH v2 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
+ Subsystem driver
+To:     Vishal Sagar <vsagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Joe Perches <joe@perches.com>
+References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
+ <20200429141705.18755-3-vishal.sagar@xilinx.com>
+ <368b7efb-3faf-bb71-2bd0-826f2ab031e6@xs4all.nl>
+ <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <d696e0ed-3e59-f6a6-1f8d-b1725083de84@xs4all.nl>
+Date:   Tue, 2 Jun 2020 12:44:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJcogKHJH5sedMLRm7iDVY5GJFXG6YtbvUoqEh55LOJH4zg6u1HF2mt9uivno374New6GAHucz89E7ee6JkqmobSD9+UdFIcUjJTBhrXxr5AdnMfRE74
+ IMdRhfoZKwXJPM8ECuNkEsezBa6X1mvtV4C6MBu0ZomrW+4QlMaMTpqpLWO/6EYrP/2ckZFtKcBLQW5Ddzy88Wa35QCRf/48b9AMvCXQr8TW5ZgAEEJRKM3h
+ bwY7Daae8yl4w/g8npNRVCkNpqSPm01e0HLBVkYDFnCWHqaD7LFxubGvdWsFmTpE/72ELPTClNJNNBt6Q5kBdPfNbiivna8seASaVVRG8sfFICbSJU3wqKrq
+ pDYUz/72ubcrJrgkEB9hsNIN8Li4IpUqOhIZU44mmxGeX+GKtOz+SkXsD65pKw25YJXttlyij3MnBQoeDn1BNNeZrvieDrRfAlHbxAjyxro5a2xiEuMiQC7Y
+ gart/4mzMjX0unDnfGYGtXhZIcbp3CWs+spCpm8pWVMkeTqok8tXkkWltkChM5/1Z3ocRSInar4we11HmjVoZi4S4+puW3Y74ROVUyvtZYeJM7rxIquIDwoK
+ 4OBxnALO+J5qqW91BP7C5Bqz3Z13dtgsPoZLco6VYfTcWRIRuxe706YwxEytmsV1lK8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the "else if" and "else" branch body are identical the
-condition has no effect. So removing "else if" condition.
+On 01/06/2020 16:59, Vishal Sagar wrote:
+> Hi Hans,
+> 
+> Thanks for reviewing!
+> 
+>>> +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
+>>> +		if (!xsdirxss->vidlocked) {
+>>> +			dev_err(dev, "Can't get values when video not
+>> locked!\n");
+>>> +			return -EINVAL;
+>>> +		}
+>>> +		ctrl->val = xsdirxss->ts_is_interlaced;
+>>
+>> This control makes no sense: the v4l2_dv_timings struct will already tell you
+>> if it is an interlaced format or not. Same for v4l2_mbus_framefmt.
+>>
+> 
+> The SDI has a concept of supporting progressive, interlaced (both as we know normally) and a progressive segmented frames(psf).
+> The progressive segmented frames have their video content in progressive format but the transport stream is interlaced.
+> This is distinguished using the bit 6 and 7 of Byte 2 in the 4 byte ST352 payload.
+> Refer to sec 5.3 in SMPTE ST 352:2010.
+> 
+> This control can be used by the application to distinguish normal interlaced and progressive segmented frames.
 
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 --
- 1 file changed, 2 deletions(-)
+Ah, interesting. So this relies on the receiver to reconstruct the progressive
+frame by combining the top and bottom field, right?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index bcda49dcf619..f59813a0405c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -229,8 +229,6 @@ static int stmmac_mtl_setup(struct platform_device *pdev,
- 		plat->tx_sched_algorithm = MTL_TX_ALGORITHM_WFQ;
- 	else if (of_property_read_bool(tx_node, "snps,tx-sched-dwrr"))
- 		plat->tx_sched_algorithm = MTL_TX_ALGORITHM_DWRR;
--	else if (of_property_read_bool(tx_node, "snps,tx-sched-sp"))
--		plat->tx_sched_algorithm = MTL_TX_ALGORITHM_SP;
- 	else
- 		plat->tx_sched_algorithm = MTL_TX_ALGORITHM_SP;
- 
--- 
-2.17.1
+I think this deserves a new v4l2_field value:
 
+V4L2_FIELD_ALTERNATE_PROG
+
+Basically this is identical to V4L2_FIELD_ALTERNATE, except that the two fields
+combine to a single progressive frame.
+
+Regards,
+
+	Hans
+
+PS: I'll look at your other comments separately
