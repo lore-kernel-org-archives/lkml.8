@@ -6,89 +6,147 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA8620663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EEA20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgFBXhy (ORCPT
+        id S1727826AbgFBXoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:37:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54659 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbgFBXhx (ORCPT
+        Tue, 2 Jun 2020 19:44:39 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57864 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFBXoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:37:53 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jgGTe-000281-Ps; Tue, 02 Jun 2020 23:37:50 +0000
-Date:   Wed, 3 Jun 2020 01:37:49 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Kyle Evans <self@kyle-evans.net>,
-        Victor Stinner <victor.stinner@gmail.com>,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, fweimer@redhat.com, jannh@google.com,
-        oleg@redhat.com, arnd@arndb.de, shuah@kernel.org,
-        dhowells@redhat.com, ldv@altlinux.org
-Subject: Re: [PATCH v5 1/3] open: add close_range()
-Message-ID: <20200602233749.mo65o2enokiypwiz@wittgenstein>
-References: <20200602204219.186620-1-christian.brauner@ubuntu.com>
- <20200602204219.186620-2-christian.brauner@ubuntu.com>
- <87d06hdozy.fsf@mid.deneb.enyo.de>
+        Tue, 2 Jun 2020 19:44:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 739AD8030808;
+        Tue,  2 Jun 2020 23:44:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vYqbvJLx9H0f; Wed,  3 Jun 2020 02:44:35 +0300 (MSK)
+Date:   Wed, 3 Jun 2020 02:44:34 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/10] spi: Adding support for Microchip Sparx5 SoC
+Message-ID: <20200602234434.tznhbtt3sgpz5lxz@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200529162130.hsjcde27xhohl6jl@mobilestation>
+ <87img9q3sb.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <87d06hdozy.fsf@mid.deneb.enyo.de>
+In-Reply-To: <87img9q3sb.fsf@soft-dev15.microsemi.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:30:57AM +0200, Florian Weimer wrote:
-> * Christian Brauner:
+On Tue, Jun 02, 2020 at 10:18:28AM +0200, Lars Povlsen wrote:
 > 
-> > The performance is striking. For good measure, comparing the following
-> > simple close_all_fds() userspace implementation that is essentially just
-> > glibc's version in [6]:
+> Serge Semin writes:
+> 
+> > Hello Lars,
 > >
-> > static int close_all_fds(void)
-> > {
-> >         int dir_fd;
-> >         DIR *dir;
-> >         struct dirent *direntp;
+> > On Wed, May 13, 2020 at 04:00:21PM +0200, Lars Povlsen wrote:
+> >> This is an add-on series to the main SoC Sparx5 series
+> >> (Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
+> >>
+> >> The series add support for Sparx5 on top of the existing
+> >> ocelot/jaguar2 spi driver.
+> >>
+> >> It spins off the existing support for the MSCC platforms into a
+> >> separate driver, as adding new platforms from the MSCC/Microchip
+> >> product lines will further complicate (clutter) the original driver.
+> >>
+> >> New YAML dt-bindings are provided for the resulting driver.
+> >>
+> >> It is expected that the DT patches are to be taken directly by the arm-soc
+> >> maintainers.
 > >
-> >         dir = opendir("/proc/self/fd");
-> >         if (!dir)
-> >                 return -1;
-> >         dir_fd = dirfd(dir);
-> >         while ((direntp = readdir(dir))) {
-> >                 int fd;
-> >                 if (strcmp(direntp->d_name, ".") == 0)
-> >                         continue;
-> >                 if (strcmp(direntp->d_name, "..") == 0)
-> >                         continue;
-> >                 fd = atoi(direntp->d_name);
-> >                 if (fd == dir_fd || fd == 0 || fd == 1 || fd == 2)
-> >                         continue;
-> >                 close(fd);
-> >         }
-> >         closedir(dir);
-> >         return 0;
-> > }
+> > Regarding our cooperation. It can be implemented as follows. Since your patchset
+> > is less cumbersome than mine and is more ready to be integrated into the generic DW
+> > APB SSI code, it would be better to first make it through Mark', Andy' and my reviews
+> > to be further merged into the kernel version of the driver. After that I'll have
+> > my code altered so it could be applied on top of your patches. When everything
+> > is done we'll have a more comprehensive DW APB SSI driver with poll-based
+> > PIO operations support, new features like rx-delay, etc.
 > >
 > 
-> > [6]: https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/grantpt.c;h=2030e07fa6e652aac32c775b8c6e005844c3c4eb;hb=HEAD#l17
-> >      Note that this is an internal implementation that is not exported.
-> >      Currently, libc seems to not provide an exported version of this
-> >      because of missing kernel support to do this.
-> 
-> Just to be clear, this code is not compiled into glibc anymore in
-> typical configurations.  I have posted a patch to turn grantpt into a
-> no-op: <https://sourceware.org/pipermail/libc-alpha/2020-May/114379.html>
 
-That's great! (I remember commenting on that thread.)
+> Hi Serge!
+> 
+> I think I would be able to work on the SPI patches this week. Should I
+> base it on the current spi-next or 5.7? Then address the comments and
+> send out a new revision?
+
+Finally I've done a part of review. It must be enough for v2. As Mark said the
+new version is supposed to be based on the spi-next, since that branch's got
+all recent DW APB SSI patches applied.
+
+-Sergey
+
+> 
+> Thanks for reaching out.
+> 
+> ---Lars
+> 
+> > Thank you one more time for the series you've shared with us. Let's see what can
+> > be done to improve it...
+> >
+> > -Sergey
+> >
+> >>
+> >> Lars Povlsen (10):
+> >>   spi: dw: Add support for polled operation via no IRQ specified in DT
+> >>   spi: dw: Add support for RX sample delay register
+> >>   spi: dw: Add support for client driver memory operations
+> >>   dt-bindings: spi: Add bindings for spi-dw-mchp
+> >>   spi: spi-dw-mmio: Spin off MSCC platforms into spi-dw-mchp
+> >>   dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
+> >>   spi: spi-dw-mchp: Add Sparx5 support
+> >>   arm64: dts: sparx5: Add SPI controller
+> >>   arm64: dts: sparx5: Add spi-nor support
+> >>   arm64: dts: sparx5: Add spi-nand devices
+> >>
+> >>  .../bindings/spi/mscc,ocelot-spi.yaml         |  89 ++++
+> >>  .../bindings/spi/snps,dw-apb-ssi.txt          |   7 +-
+> >>  MAINTAINERS                                   |   2 +
+> >>  arch/arm64/boot/dts/microchip/sparx5.dtsi     |  37 ++
+> >>  .../boot/dts/microchip/sparx5_pcb125.dts      |  16 +
+> >>  .../boot/dts/microchip/sparx5_pcb134.dts      |  22 +
+> >>  .../dts/microchip/sparx5_pcb134_board.dtsi    |   9 +
+> >>  .../boot/dts/microchip/sparx5_pcb135.dts      |  23 +
+> >>  .../dts/microchip/sparx5_pcb135_board.dtsi    |   9 +
+> >>  arch/mips/configs/generic/board-ocelot.config |   2 +-
+> >>  drivers/spi/Kconfig                           |   7 +
+> >>  drivers/spi/Makefile                          |   1 +
+> >>  drivers/spi/spi-dw-mchp.c                     | 399 ++++++++++++++++++
+> >>  drivers/spi/spi-dw-mmio.c                     |  93 ----
+> >>  drivers/spi/spi-dw.c                          |  31 +-
+> >>  drivers/spi/spi-dw.h                          |   4 +
+> >>  16 files changed, 644 insertions(+), 107 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+> >>  create mode 100644 drivers/spi/spi-dw-mchp.c
+> >>
+> >> --
+> >> 2.26.2
+> >>
+> >> _______________________________________________
+> >> linux-arm-kernel mailing list
+> >> linux-arm-kernel@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> --
+> Lars Povlsen,
+> Microchip
