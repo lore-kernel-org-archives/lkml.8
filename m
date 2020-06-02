@@ -2,208 +2,226 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24809C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2767C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F09C3206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65F2206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pEiK76GU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iNvcnNWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFBONw (ORCPT
+        id S1728101AbgFBOOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
+        Tue, 2 Jun 2020 10:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBONv (ORCPT
+        with ESMTP id S1726320AbgFBOOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:13:51 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E55C08C5C0;
-        Tue,  2 Jun 2020 07:13:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r15so3284983wmh.5;
-        Tue, 02 Jun 2020 07:13:51 -0700 (PDT)
+        Tue, 2 Jun 2020 10:14:44 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E677BC08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 07:14:43 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y17so1389214plb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 07:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=620qNBOcG6B1tL2G5KN1nGka3Y3eV855G4nRd31cB/g=;
-        b=pEiK76GUfECMMh7p6iixv+TojW4SqeYW2/H9HZUO5ToxHDGogJXJ8TT64O+pklo2OC
-         IFfa0Nvv2YkKD2A9YTv2BMfe7TMGY0Z521DSVcPB2mrf1HXSU4YrWrQxThwzf9m+Z/HH
-         kDbn2WStIxQ/CkVFgehheGIeDG3vM48oHaOrYgpIHbyuPuIz5AYDA1nKrLb41LrGtcos
-         NIw2O0CWG/6AjhdOzcTWc600uSbOalSNCnrpfm1jTPG1m96BPnYAAV58Xdx+KYWaq/N3
-         h2NRrlancweR3/aVMnb8vmrC8FsaBIuThUx/Fmp5S/GDT8B7mlAVkjMntzDnw3PH6FBp
-         DeSQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H48Dtjb26Y6aJBKqqk8tf63ll6/f3aU/WJ3tDbC6/4U=;
+        b=iNvcnNWRCBNFFRZ5v4a1+M7Tsf2DG06cC77WBS7lgo52gbT3v9aVafGFL5WMlBqUBi
+         AJyAraqd6Ic4JN0NqHkwleDbcjPMaYmfqUwaI8AIGoE6UxhbIngmOFEblVuLqCcdopKJ
+         RUFi+Jm5yxce/TD4d856GOS+oH+ts8Ma3a8O4sudJ/QS4GgBrTdiM3+812CRT9sZyxR/
+         WxJXEvq0Hmc8crMdu+etNfSQy94OImcaHiZ1JRiDdTiYnOhctzSMla3ih9z9R06PfOQ+
+         ErBzeI55nl83R7ZGMfSnV2NDMxKkHWwYUAv1SrZ/YQxgqHxjQfW7VgFQ41TgkyiL14fv
+         c66Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=620qNBOcG6B1tL2G5KN1nGka3Y3eV855G4nRd31cB/g=;
-        b=HRJCyYaTVdG/ILr6rjIt86UOsociKkIz6rGQJ5yZ7rTiZqhN2fO8Cy8Jwu3yygigK/
-         aKdxia1nZ5UhRM/jzSWZPCf0nfRWhwlZNUf0bkLWZPRWD6mUlxyNyF0u6m1JwKjqlYBT
-         n25h0sXf4PbQP1bGPyQ68hHk7mltSSqn7JNnf64+LLB8iiH+CBCQJJuj2ZPX3xEXTqN4
-         lHkO4lVo7wkYbIRqG1fsx+Kz8hxjll/JPWaJWQlTRLUoh2bbRdJciFqn/87t5AOVjYST
-         LedDaLBHVAD3BSQ6658hooYDKgDhlQyG2sMVWpi4RqAVn0nSVZGX4zXf2NX+nhqRFFNP
-         BDDw==
-X-Gm-Message-State: AOAM532irOnPzxUBW/irHDlH58xuhU3mDMQmm+7V4oq3a9uk8X+OUqnD
-        RXiMfd3P7jvPq3ax0sT7yExgh9ko
-X-Google-Smtp-Source: ABdhPJyQarfh0+AY6RidR3a8yFd4KsABn2631aiXvSyMEz9ijrEIdJH7BRppWkAqInCOZ9e4xD4dFQ==
-X-Received: by 2002:a1c:dc44:: with SMTP id t65mr4640511wmg.128.1591107229699;
-        Tue, 02 Jun 2020 07:13:49 -0700 (PDT)
-Received: from [192.168.43.154] ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id d13sm3508700wmb.39.2020.06.02.07.13.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 07:13:49 -0700 (PDT)
-Subject: Re: [PATCH 1/4] io_uring: fix open/close/statx with {SQ,IO}POLL
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1591100205.git.asml.silence@gmail.com>
- <aacbeec9c7ed21971119aec3669dff7f707bccb2.1591100205.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <b3e14e84-727a-9edc-8e69-d41282123241@gmail.com>
-Date:   Tue, 2 Jun 2020 17:12:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H48Dtjb26Y6aJBKqqk8tf63ll6/f3aU/WJ3tDbC6/4U=;
+        b=hmpObZqINC343CS0s/HGn0lxQiyBH8G8imTukUE2VURwF90GC2bE/xqg5Pn+Ee+yz/
+         4To7olnfDuEP1feCJPgg6q7YSrr/UNre+ZY15ORijSXTxwKnvpuxJKUtf0ySdIMIghAy
+         qBUkoij/4C+psZK8zoEPk++KWCUTpJeqLSoCe+s3QtMKWtDivL6Rdx+sFYTBM6TSGFlz
+         bLhmlyWZC8gvHSva+CIZu9/qwUqCYk/NQmtfuVAHMNie2eLJogRwJFE4oIsPx3GirKrt
+         YgRoNj6+QjuVt8jT63n6jb+y4CBNFnH9ka5yJIjlhiYWMbgGDy9HHP9hNqGxZ/xTzOKa
+         FL8Q==
+X-Gm-Message-State: AOAM532GatzaLFqjkT7z42L7OdB87F/Osl6jsQWqvQnLV1eEgcP4LUCW
+        AfhXUwsOgWcST0KKvdGq1NO0YDkYc0d7fv+7KanX0w==
+X-Google-Smtp-Source: ABdhPJzbP2WVOcVpP2y5PxqDJtQRHydE30I/yUrHaPl/xtbWFAYkICSxh6iI6aichb24biZL5pzUnTXRkxt5XhhuI0g=
+X-Received: by 2002:a17:90a:2a8e:: with SMTP id j14mr5750844pjd.136.1591107282850;
+ Tue, 02 Jun 2020 07:14:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <aacbeec9c7ed21971119aec3669dff7f707bccb2.1591100205.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000004afcae05a7041e98@google.com>
+In-Reply-To: <0000000000004afcae05a7041e98@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 2 Jun 2020 16:14:31 +0200
+Message-ID: <CAAeHK+ykPQ8Fmit_3cn17YKzrCWtX010HRKmBCJAQ__OMdwCDA@mail.gmail.com>
+Subject: Re: INFO: task hung in corrupted (2)
+To:     syzbot <syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     amir73il@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, kuba@kernel.org,
+        linux-fsdevel@vger.kernel.org, mathew.j.martineau@linux.intel.com,
+        matthieu.baerts@tessares.net, mptcp@lists.01.org,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06/2020 15:34, Pavel Begunkov wrote:
-> Trying to use them with IORING_SETUP_IOPOLL:
-> 
-> RIP: 0010:io_iopoll_getevents+0x111/0x5a0
+On Mon, Jun 1, 2020 at 1:30 PM syzbot
+<syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    b0c3ba31 Merge tag 'fsnotify_for_v5.7-rc8' of git://git.ke..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14089eee100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ce116858301bc2ea
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6921abfb75d6fc79c0eb
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14947d26100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172726d2100000
+>
+> The bug was bisected to:
+>
+> commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
+> Author: Andrey Konovalov <andreyknvl@google.com>
+> Date:   Mon Feb 24 16:13:03 2020 +0000
+>
+>     usb: gadget: add raw-gadget interface
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=119e4702100000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=139e4702100000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=159e4702100000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com
+> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+>
+> INFO: task syz-executor610:7072 blocked for more than 143 seconds.
+>       Not tainted 5.7.0-rc7-syzkaller #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor610 D24336  7072   7071 0x80004002
 > Call Trace:
->  ? _raw_spin_unlock_irqrestore+0x24/0x40
->  ? do_send_sig_info+0x64/0x90
->  io_iopoll_reap_events.part.0+0x5e/0xa0
->  io_ring_ctx_wait_and_kill+0x132/0x1c0
->  io_uring_release+0x20/0x30
->  __fput+0xcd/0x230
->  ____fput+0xe/0x10
->  task_work_run+0x67/0xa0
->  do_exit+0x353/0xb10
->  ? handle_mm_fault+0xd4/0x200
->  ? syscall_trace_enter+0x18c/0x2c0
->  do_group_exit+0x43/0xa0
->  __x64_sys_exit_group+0x18/0x20
->  do_syscall_64+0x60/0x1e0
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>  context_switch kernel/sched/core.c:3367 [inline]
+>  __schedule+0x805/0xc90 kernel/sched/core.c:4083
+>
+> Showing all locks held in the system:
+> 1 lock held by khungtaskd/1134:
+>  #0: ffffffff892e85d0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire+0x0/0x30 net/mptcp/pm_netlink.c:860
+> 1 lock held by in:imklog/6715:
+>  #0: ffff8880a441e6b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0x25d/0x2f0 fs/file.c:826
+> 6 locks held by kworker/1:0/7064:
+> 1 lock held by syz-executor610/7072:
+>  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:290 [inline]
+>  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x1bd/0x5b0 kernel/rcu/tree_exp.h:856
+> 4 locks held by systemd-udevd/7099:
+>  #0: ffff8880a7fdcc70 (&p->lock){+.+.}-{3:3}, at: seq_read+0x60/0xce0 fs/seq_file.c:153
+>  #1: ffff888096486888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x50/0x3b0 fs/kernfs/file.c:111
+>  #2: ffff88809fc0d660 (kn->count#78){.+.+}-{0:0}, at: kernfs_seq_start+0x6f/0x3b0 fs/kernfs/file.c:112
+>  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: device_lock_interruptible include/linux/device.h:773 [inline]
+>  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: serial_show+0x22/0xa0 drivers/usb/core/sysfs.c:142
+>
+> =============================================
+>
+> NMI backtrace for cpu 0
+> CPU: 0 PID: 1134 Comm: khungtaskd Not tainted 5.7.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+>  nmi_cpu_backtrace+0x9f/0x180 lib/nmi_backtrace.c:101
+>  nmi_trigger_cpumask_backtrace+0x16a/0x280 lib/nmi_backtrace.c:62
+>  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+>  watchdog+0xd2a/0xd40 kernel/hung_task.c:289
+>  kthread+0x353/0x380 kernel/kthread.c:268
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+> Sending NMI from CPU 0 to CPUs 1:
+> NMI backtrace for cpu 1
+> CPU: 1 PID: 7064 Comm: kworker/1:0 Not tainted 5.7.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x0/0x90 kernel/kcov.c:275
+> Code: 4c f2 08 48 c1 e0 03 48 83 c8 18 49 89 14 02 4d 89 44 f2 18 49 ff c1 4d 89 0a c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <4c> 8b 04 24 65 48 8b 04 25 40 1e 02 00 65 8b 0d 78 96 8e 7e f7 c1
+> RSP: 0018:ffffc90001676cf0 EFLAGS: 00000246
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88809fb9e240
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000ffffffff
+> RBP: ffff888092d24a04 R08: ffffffff86034f3b R09: ffffc900016790cc
+> R10: 0000000000000004 R11: 0000000000000000 R12: ffff888092d24a00
+> R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888092d24a00
+> FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000004c6e68 CR3: 0000000092d41000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  hid_apply_multiplier drivers/hid/hid-core.c:1106 [inline]
 
-io_do_iopoll()
-{
-	...
-	ret = kiocb->*ki_filp*->f_op->iopoll(kiocb, spin);
-}
+Looks like an issue in the HID subsystem, adding HID maintainers.
 
-Hmm, I'll double check later that only read*/write* can be done
-with IOPOLL, and send a follow-up patch if necessary.
-
-> 
-> Also SQPOLL thread can't know which file table to use with
-> open/close. Disallow all these cases.
-> 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+>  hid_setup_resolution_multiplier+0x2ab/0xbe0 drivers/hid/hid-core.c:1163
+>  hid_open_report+0xab2/0xdd0 drivers/hid/hid-core.c:1274
+>  hid_parse include/linux/hid.h:1017 [inline]
+>  ms_probe+0x12f/0x3f0 drivers/hid/hid-microsoft.c:388
+>  hid_device_probe+0x26c/0x410 drivers/hid/hid-core.c:2263
+>  really_probe+0x704/0xf60 drivers/base/dd.c:520
+>  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
+>  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
+>  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
+>  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
+>  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
+>  hid_add_device+0xa2a/0xef0 drivers/hid/hid-core.c:2419
+>  usbhid_probe+0x9bd/0xd10 drivers/hid/usbhid/hid-core.c:1407
+>  usb_probe_interface+0x614/0xac0 drivers/usb/core/driver.c:374
+>  really_probe+0x761/0xf60 drivers/base/dd.c:524
+>  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
+>  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
+>  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
+>  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
+>  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
+>  usb_set_configuration+0x19d2/0x1f20 drivers/usb/core/message.c:2032
+>  usb_generic_driver_probe+0x82/0x140 drivers/usb/core/generic.c:241
+>  usb_probe_device+0x12d/0x1d0 drivers/usb/core/driver.c:272
+>  really_probe+0x761/0xf60 drivers/base/dd.c:524
+>  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
+>  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
+>  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
+>  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
+>  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
+>  usb_new_device+0xcc3/0x1650 drivers/usb/core/hub.c:2554
+>  hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+>  hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+>  port_event drivers/usb/core/hub.c:5494 [inline]
+>  hub_event+0x2823/0x4cb0 drivers/usb/core/hub.c:5576
+>  process_one_work+0x76e/0xfd0 kernel/workqueue.c:2268
+>  worker_thread+0xa7f/0x1450 kernel/workqueue.c:2414
+>  kthread+0x353/0x380 kernel/kthread.c:268
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+>
+>
 > ---
->  fs/io_uring.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 732ec73ec3c0..7208f91e9e77 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2990,6 +2990,8 @@ static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
->  	const char __user *fname;
->  	int ret;
->  
-> +	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
-> +		return -EINVAL;
->  	if (sqe->ioprio || sqe->buf_index)
->  		return -EINVAL;
->  	if (req->flags & REQ_F_FIXED_FILE)
-> @@ -3023,6 +3025,8 @@ static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
->  	size_t len;
->  	int ret;
->  
-> +	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
-> +		return -EINVAL;
->  	if (sqe->ioprio || sqe->buf_index)
->  		return -EINVAL;
->  	if (req->flags & REQ_F_FIXED_FILE)
-> @@ -3373,6 +3377,8 @@ static int io_fadvise(struct io_kiocb *req, bool force_nonblock)
->  
->  static int io_statx_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
->  {
-> +	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-> +		return -EINVAL;
->  	if (sqe->ioprio || sqe->buf_index)
->  		return -EINVAL;
->  	if (req->flags & REQ_F_FIXED_FILE)
-> @@ -3417,6 +3423,8 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
->  	 */
->  	req->work.flags |= IO_WQ_WORK_NO_CANCEL;
->  
-> +	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
-> +		return -EINVAL;
->  	if (sqe->ioprio || sqe->off || sqe->addr || sqe->len ||
->  	    sqe->rw_flags || sqe->buf_index)
->  		return -EINVAL;
-> 
-
--- 
-Pavel Begunkov
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
