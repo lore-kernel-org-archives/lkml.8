@@ -2,154 +2,147 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0655820738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C787420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgFBFKF convert rfc822-to-8bit (ORCPT
+        id S1726096AbgFBFLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:10:05 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2097 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbgFBFKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:10:05 -0400
-Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 479011FABFC121EBD0EF;
-        Tue,  2 Jun 2020 13:10:03 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.10]) by
- dggemi402-hub.china.huawei.com ([10.3.17.135]) with mapi id 14.03.0487.000;
- Tue, 2 Jun 2020 13:09:57 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "rafael@kernel.org" <rafael@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: RE: [PATCH] driver core: platform: expose numa_node to users in
- sysfs
-Thread-Topic: [PATCH] driver core: platform: expose numa_node to users in
- sysfs
-Thread-Index: AQHWOIpUwdvGGcJ/+UCxidEm0PhHvqjEM/4AgACJWmCAAAdA0A==
-Date:   Tue, 2 Jun 2020 05:09:57 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD24D8F9E@DGGEMI525-MBS.china.huawei.com>
-References: <20200602030139.73012-1-song.bao.hua@hisilicon.com>
- <20200602042340.GA2130884@kroah.com> 
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.14]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 2 Jun 2020 01:11:01 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:29584 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgFBFLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 01:11:00 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49bg9X1GFkz9v6fV;
+        Tue,  2 Jun 2020 07:10:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 3ldYUwlK1F5r; Tue,  2 Jun 2020 07:10:56 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49bg9W6c28z9v6fT;
+        Tue,  2 Jun 2020 07:10:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EFB0B8B789;
+        Tue,  2 Jun 2020 07:10:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id asvamB4ZYI96; Tue,  2 Jun 2020 07:10:56 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4B2548B77C;
+        Tue,  2 Jun 2020 07:10:56 +0200 (CEST)
+Subject: Re: [PATCH] hw_breakpoint: Fix build warnings with clang
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au
+Cc:     christophe.leroy@c-s.fr, mikey@neuling.org, apopple@linux.ibm.com,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com, paulus@samba.org,
+        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+References: <20200602041208.128913-1-ravi.bangoria@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <0217bbaf-a831-8aea-3ecd-fa217fca1669@csgroup.eu>
+Date:   Tue, 2 Jun 2020 07:10:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200602041208.128913-1-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >
-> > Platform devices are NUMA?  That's crazy, and feels like a total abuse
-> > of platform devices and drivers that really should belong on a "real"
-> > bus.
+
+
+Le 02/06/2020 à 06:12, Ravi Bangoria a écrit :
+> kbuild test robot reported few build warnings with hw_breakpoint code
+> when compiled with clang[1]. Fix those.
 > 
-> I am not sure if it is an abuse of platform device. But smmu is a platform
-> device,
-> drivers/iommu/arm-smmu-v3.c is a platform driver.
-> In a typical ARM server, there are maybe multiple SMMU devices which can
-> support
-> IO virtual address and page tables for other devices on PCI-like busses.
-> Each different SMMU device might be close to different NUMA node. There is
-> really a hardware topology.
+> [1]: https://lore.kernel.org/linuxppc-dev/202005192233.oi9CjRtA%25lkp@intel.com/
 > 
-> If you have multiple CPU packages in a NUMA server, some platform devices
-> might
-> Belong to CPU0, some other might belong to CPU1.
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+> Note: Prepared on top of powerpc/next.
+> 
+>   arch/powerpc/include/asm/hw_breakpoint.h | 3 ---
+>   include/linux/hw_breakpoint.h            | 4 ++++
+>   2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+> index f42a55eb77d2..cb424799da0d 100644
+> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+> @@ -70,9 +70,6 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
+>   						unsigned long val, void *data);
+>   int arch_install_hw_breakpoint(struct perf_event *bp);
+>   void arch_uninstall_hw_breakpoint(struct perf_event *bp);
+> -int arch_reserve_bp_slot(struct perf_event *bp);
+> -void arch_release_bp_slot(struct perf_event *bp);
+> -void arch_unregister_hw_breakpoint(struct perf_event *bp);
+>   void hw_breakpoint_pmu_read(struct perf_event *bp);
+>   extern void flush_ptrace_hw_breakpoint(struct task_struct *tsk);
+>   
+> diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
+> index 6058c3844a76..521481f0d320 100644
+> --- a/include/linux/hw_breakpoint.h
+> +++ b/include/linux/hw_breakpoint.h
+> @@ -80,6 +80,10 @@ extern int dbg_reserve_bp_slot(struct perf_event *bp);
+>   extern int dbg_release_bp_slot(struct perf_event *bp);
+>   extern int reserve_bp_slot(struct perf_event *bp);
+>   extern void release_bp_slot(struct perf_event *bp);
+> +extern int hw_breakpoint_weight(struct perf_event *bp);
+> +extern int arch_reserve_bp_slot(struct perf_event *bp);
+> +extern void arch_release_bp_slot(struct perf_event *bp);
+> +extern void arch_unregister_hw_breakpoint(struct perf_event *bp);
 
-Those devices are populated by acpi_iort for an ARM server:
+Please no new 'extern'. In the old days 'extern' keyword was used, but 
+new code shall not introduce new unnecessary usage of 'extern' keyword. 
+See report from Checkpatch below:
 
-drivers/acpi/arm64/iort.c:
+WARNING:COMMIT_LOG_LONG_LINE: Possible unwrapped commit description 
+(prefer a maximum 75 chars per line)
+#9:
+[1]: 
+https://lore.kernel.org/linuxppc-dev/202005192233.oi9CjRtA%25lkp@intel.com/
 
-static const struct iort_dev_config iort_arm_smmu_v3_cfg __initconst = {
-        .name = "arm-smmu-v3",
-        .dev_dma_configure = arm_smmu_v3_dma_configure,
-        .dev_count_resources = arm_smmu_v3_count_resources,
-        .dev_init_resources = arm_smmu_v3_init_resources,
-        .dev_set_proximity = arm_smmu_v3_set_proximity,
-};
+CHECK:AVOID_EXTERNS: extern prototypes should be avoided in .h files
+#40: FILE: include/linux/hw_breakpoint.h:83:
++extern int hw_breakpoint_weight(struct perf_event *bp);
 
-void __init acpi_iort_init(void)
-{
-        acpi_status status;
+CHECK:AVOID_EXTERNS: extern prototypes should be avoided in .h files
+#41: FILE: include/linux/hw_breakpoint.h:84:
++extern int arch_reserve_bp_slot(struct perf_event *bp);
 
-        status = acpi_get_table(ACPI_SIG_IORT, 0, &iort_table);
-        ...
-        iort_check_id_count_workaround(iort_table);
-        iort_init_platform_devices();
-}
+CHECK:AVOID_EXTERNS: extern prototypes should be avoided in .h files
+#42: FILE: include/linux/hw_breakpoint.h:85:
++extern void arch_release_bp_slot(struct perf_event *bp);
 
-static void __init iort_init_platform_devices(void)
-{
-        ...
+CHECK:AVOID_EXTERNS: extern prototypes should be avoided in .h files
+#43: FILE: include/linux/hw_breakpoint.h:86:
++extern void arch_unregister_hw_breakpoint(struct perf_event *bp);
 
-        for (i = 0; i < iort->node_count; i++) {
-                if (iort_node >= iort_end) {
-                        pr_err("iort node pointer overflows, bad table\n");
-                        return;
-                }
+total: 0 errors, 1 warnings, 4 checks, 19 lines checked
 
-                iort_enable_acs(iort_node);
+NOTE: For some of the reported defects, checkpatch may be able to
+       mechanically convert to the typical style using --fix or 
+--fix-inplace.
 
-                ops = iort_get_dev_cfg(iort_node);
-                if (ops) {
-                        fwnode = acpi_alloc_fwnode_static();
-                        if (!fwnode)
-                                return;
+the.patch has style problems, please review.
 
-                        iort_set_fwnode(iort_node, fwnode);
+NOTE: Ignored message types: ARCH_INCLUDE_LINUX BIT_MACRO 
+COMPARISON_TO_NULL DT_SPLIT_BINDING_PATCH EMAIL_SUBJECT 
+FILE_PATH_CHANGES GLOBAL_INITIALISERS LINE_SPACING MULTIPLE_ASSIGNMENTS
 
-                        ret = iort_add_platform_device(iort_node, ops);
-                        if (ret) {
-                                iort_delete_fwnode(iort_node);
-                                acpi_free_fwnode_static(fwnode);
-                                return;
-                        }
-                }
+NOTE: If any of the errors are false positives, please report
+       them to the maintainer, see CHECKPATCH in MAINTAINERS.
 
-                ...
-        }
-...
-}
-
-NUMA node is got from ACPI:
-
-static int  __init arm_smmu_v3_set_proximity(struct device *dev,
-                                              struct acpi_iort_node *node)
-{
-        struct acpi_iort_smmu_v3 *smmu;
-
-        smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
-        if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
-                int dev_node = acpi_map_pxm_to_node(smmu->pxm);
-
-                ...
-
-                set_dev_node(dev, dev_node);
-                ...
-        }
-        return 0;
-}
-
-Barry
-
-                                                    
+Christophe
