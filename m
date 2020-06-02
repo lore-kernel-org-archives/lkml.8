@@ -2,152 +2,110 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20A02072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BF82072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h6AqdG8K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onppgC6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgFBXIX (ORCPT
+        id S1729057AbgFBXKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:08:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40277 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgFBXIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:08:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49c74f0J6Gz9sPF;
-        Wed,  3 Jun 2020 09:08:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591139300;
-        bh=3X31qWO/1Ul5RhQ1agdJfn/17XFGSliumzUhlLvsTWw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=h6AqdG8KBXbdaHWJrOK9z/qtFoo9CElq3dh+VR7SUxXU1Oma2WWnHcZ/1EDqPv27C
-         N4jxKHzzMFQkvgBDxOgyzoE6uJqgXsbMrSs4qf4PcGuUl6VVZl04yZS5c8t6kYMapE
-         dxfLkN8P14p5bFMTV4JB41g5YIwOwYaQ5D/r2a2CTLgjUW7b21ifzklwFU244ETIZr
-         r8qpC/bdxVdI0jW07MHuMX8vgVATO9UOkY4MBWWDifE2EiewO1ziRjXWSin8Mapdre
-         sCyfwh1qTEQiY9LBKfclN0smKOjf2C0m9TkWwjzej/UTZJTZOJoU4DkadT1KZzPh/J
-         ClziuHdVJEyqQ==
-Date:   Wed, 3 Jun 2020 09:08:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the drm-intel-fixes tree with Linus'
- tree
-Message-ID: <20200603090816.6437acec@canb.auug.org.au>
+        Tue, 2 Jun 2020 19:10:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgFBXKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 19:10:06 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B60C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:10:06 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c35so157149edf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W6pIMQuCx2FvcQCQIr+mySiEAYaY2PXwWjQI/eEdqeY=;
+        b=onppgC6JJBYBzWFyOmNgKBH1vmu1Cs42w8mqOWlcg+HN1bjcWX0c0tiQnzlFfJZngF
+         JHW4oxp2ApoR4Z6UinzjT6yd5ILe9EH+IVtO+la5yBYRqn1Mw8ucFAHMs/+xtTgsnyIA
+         NVpXAR2kJJ8mUo6gXEYZQOeapHsUGonOoUyZwbpHQ3EH5c8ZQegLql5WE9tvo34ENB2l
+         UgNHgxvePNoYyxowE8Vea+zG2OQv4ArzgacsBs111wuzgljQNvPAtu+d/4IOiecK9ggb
+         tO6sA2KTJ9zoJb5J+YfFi7ts8Ymx+OnRiIOhQKdin2cUn0M46EcRrXn91NViX+gBNKc/
+         mcCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W6pIMQuCx2FvcQCQIr+mySiEAYaY2PXwWjQI/eEdqeY=;
+        b=V8G/hqTA+3gf2fpFqWHd6758unaT5H9XUzsR8avMgm8twMv89bDZERVYmJJzJPGKRK
+         zdtDfIv2AjRK8Zd5nye4l/UbvvOO2AwVg7SKR4LY68PQxxcueqZhirJ8ke/wCfV6n9Lf
+         B+ZeTocUURi/kjeIaHOqHTfnqnFJ0l7mI/yPPJuxE0e15C927vN7uvzvhFfKsYyUJ0A6
+         QZdh/NaCtDORXtWZ/TmMAsQtDz/VVOCTOkzAaA/TX/gSghbiPzw2ixiMGI6GFEJqnplx
+         CmUFn1pluzF9MW5Ean0LnOqPTmTFqRAT3d9pqugkcGI9MI99P51FwQvl6bXuK0Le007K
+         ok9g==
+X-Gm-Message-State: AOAM530e8NHgVBTFXfBhDVKOqZDOS+iMzgyKTPioSc1C4Ysm2IAqweHl
+        UETlAMcKh2wtHS2ovj6u8rI=
+X-Google-Smtp-Source: ABdhPJyIhph/lKVmx5fR9A1UfjyC6wlRBNYQp2lZNLQWdWoTpV1ZzRfkPhnY5dEiCEcLBfbm0Sicxw==
+X-Received: by 2002:a05:6402:959:: with SMTP id h25mr28038748edz.287.1591139405175;
+        Tue, 02 Jun 2020 16:10:05 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:b7f9:7600:6c14:f667:d8de:40c1])
+        by smtp.gmail.com with ESMTPSA id 64sm109524eda.85.2020.06.02.16.10.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 16:10:03 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 01:10:00 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, paulmck@kernel.org, mingo@redhat.com,
+        boqun.feng@gmail.com, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 4/5] x86/ftrace: Add annotations for
+ ftrace_arch_code_modify_prepare() and ftrace_arch_code_modify_post_process()
+Message-ID: <20200602231000.6pfrgdgm4vd7sbvn@ltop.local>
+References: <20200601184552.23128-1-jbi.octave@gmail.com>
+ <20200601184552.23128-5-jbi.octave@gmail.com>
+ <20200601154647.581fa345@oasis.local.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+LWcEw/dTcCMMLWI1+PUaar";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601154647.581fa345@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+LWcEw/dTcCMMLWI1+PUaar
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 01, 2020 at 03:46:47PM -0400, Steven Rostedt wrote:
+> On Mon,  1 Jun 2020 19:45:51 +0100
+> Jules Irenge <jbi.octave@gmail.com> wrote:
+> 
+> > Sparse reports warnings
+> > 
+> > warning: context imbalance in ftrace_arch_code_modify_prepare()
+> > 	- wrong count at exit
+> > warning: context imbalance in ftrace_arch_code_modify_post_process()
+> > 	- wrong count at exit
+> > 
+> > The root cause is that even if
+> >  the annotations on the function are correct,
+> > mutex do not support annotation
 
-Hi all,
+Yes.
 
-Today's linux-next merge of the drm-intel-fixes tree got a conflict in:
+> Wait what? This looks like either a bug in sparse, or we just remove the
+> annotations. This just makes the code ugly, and looks silly.
 
-  drivers/gpu/drm/i915/gt/intel_lrc.c
+The annotations added by commit
+  074376ac0e1d ("ftrace/x86: Anotate text_mutex split between ...
+are indeed wrong (because they don't match what the functions are
+really doing / mutex operations have never been annotated).
+The're also pointless since their prototypes are un-annotated.
 
-between commit:
-
-  f53ae29c0ea1 ("drm/i915/gt: Include a few tracek for timeslicing")
-
-from Linus' tree and commit:
-
-  00febf644648 ("drm/i915/gt: Incorporate the virtual engine into timeslici=
-ng")
-
-from the drm-intel-fixes tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/gt/intel_lrc.c
-index 87e6c5bdd2dc,e77f89b43e5f..000000000000
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@@ -1971,20 -1853,12 +1990,19 @@@ static void set_timeslice(struct intel_
-  	if (!intel_engine_has_timeslices(engine))
-  		return;
- =20
- -	set_timer_ms(&engine->execlists.timer, active_timeslice(engine));
- +	duration =3D active_timeslice(engine);
- +	ENGINE_TRACE(engine, "bump timeslicing, interval:%lu", duration);
- +
- +	set_timer_ms(&engine->execlists.timer, duration);
-  }
- =20
-- static void start_timeslice(struct intel_engine_cs *engine)
-+ static void start_timeslice(struct intel_engine_cs *engine, int prio)
-  {
-  	struct intel_engine_execlists *execlists =3D &engine->execlists;
-- 	const int prio =3D queue_prio(execlists);
- +	unsigned long duration;
- +
- +	if (!intel_engine_has_timeslices(engine))
- +		return;
- =20
-  	WRITE_ONCE(execlists->switch_priority_hint, prio);
-  	if (prio =3D=3D INT_MIN)
-@@@ -2140,13 -1994,8 +2158,13 @@@ static void execlists_dequeue(struct in
-  			__unwind_incomplete_requests(engine);
- =20
-  			last =3D NULL;
-- 		} else if (need_timeslice(engine, last) &&
-+ 		} else if (need_timeslice(engine, last, rb) &&
-  			   timeslice_expired(execlists, last)) {
- +			if (i915_request_completed(last)) {
- +				tasklet_hi_schedule(&execlists->tasklet);
- +				return;
- +			}
- +
-  			ENGINE_TRACE(engine,
-  				     "expired last=3D%llx:%lld, prio=3D%d, hint=3D%d, yield?=3D%s\n",
-  				     last->fence.context,
-
---Sig_/+LWcEw/dTcCMMLWI1+PUaar
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7W2+AACgkQAVBC80lX
-0Gzk6Qf+NgipWpAbO9j938t18ykGpgXDxSrAyqX/47f6+DOhTjaz0Ak7P69ECbR5
-zBYdNjOevpGH96Cn6EQV615b+1ldZe/7A4V4uxdCLtwPCccekbqoS2vEX4uetMsZ
-852YsDvkV/6U0RFgmjHEi2Famrde6hjrfajJ49aP0quHo3RNickZIe5xQj8IbtSC
-lX05WBNlr62yWk3aj5KJhVx7fVsC7ul76Yuxq16oqbHAexbJVjrfRaSZ5+xqEE9A
-qg0PaE/Ezdk/DtCaOlc51WDCvYwI5teLVjze+pXG8MDtTPVsoWyKLoyoTOwCZt+n
-+bU80q9HXJ95BOR6e84+vEgB2Y18vw==
-=glNj
------END PGP SIGNATURE-----
-
---Sig_/+LWcEw/dTcCMMLWI1+PUaar--
+-- Luc
