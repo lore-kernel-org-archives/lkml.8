@@ -2,135 +2,149 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB05C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0FF206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74932206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sDdwGkN1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J6A+PSoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgFBUa7 (ORCPT
+        id S1727860AbgFBUdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:30:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFBUa6 (ORCPT
+        Tue, 2 Jun 2020 16:33:04 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35503 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726162AbgFBUdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:30:58 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B744CC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:30:58 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id j8so7688427ybj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dG2W30ikv7IrUlDO3uoRpNzwGtub0ifXIazr40I7HqQ=;
-        b=sDdwGkN1aw+rFG87Zy/vBPI61YaYEMyJpvOrSu4Wod1Q79GO3E5FqvelR+/3Ud8IyU
-         y2QEE9JQ8Pacn4MKRA7VRnmAAurkthXh5tLyRsqFIQSCfuVK0VWJZJb0MSF4v5XaA//8
-         gpIvEuyGePst/EVnG9jXgQluwhXZ8Ik/Vz7s7sKXR3Qc/IZHFyzkT9j77InsukBy5eC8
-         hsUsUjRG2hUBl4btt8uFZr+gCB2PO2Ilf5UUjNobN4xFu46HmtEfXzzNMDX+CSHFY6oR
-         b1vh/Iacn4Xnb/BwSlFDZokXltbO9xRhG9j371UfY0/bVcshkR+q6oOLfbp+07UGqHGt
-         J7dQ==
+        Tue, 2 Jun 2020 16:33:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591129981;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=l1JOIh6x8pU16e+KeIxJ3985QnaxQPsUtC1NFDK742A=;
+        b=J6A+PSoOMeIDeRum0VyAa7Wt9QGAWXIBv4Q0ueXU0Zl95jVyn28gPDYEdGEyb7yDKjWuX/
+        ZyKhOcvxFUkhlV48zaERE8Ux+o6Fb4hInZFmfLM5l7EwuLwC09MkCGhiF3NanTXBVoOpmj
+        GNO741J5+z1pMHI5/0EfpmYBJoAXg5I=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-4BVKEddIPNS69m6uzp6-2A-1; Tue, 02 Jun 2020 16:32:59 -0400
+X-MC-Unique: 4BVKEddIPNS69m6uzp6-2A-1
+Received: by mail-wr1-f69.google.com with SMTP id a4so27560wrp.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:32:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dG2W30ikv7IrUlDO3uoRpNzwGtub0ifXIazr40I7HqQ=;
-        b=acd6j/0Axp0lw3q8xva/Sgb2MFF0dUxeQAzIWuTO+3aaeRQb4giWZD70thO1k/t8KC
-         TWb3WrwV70INtjaVs38u3Ek0iOcsU6WzYHByQYnTI8XAakRQzKz4MOef37DopPEr5+Lf
-         GlVsD2PugnrHnu595rJn+9iw4HoOalBUHcuVKI8vU9YttlKpLMILRqGCCTOhMEhTiXQu
-         tiNu8tsdue2Uwc2iCjxg3YmcoUsYn+i5M/uP4PAFN6s8GgalgqjOev6pdHuYhfdPRqMz
-         xLuhaOILhVeDU6FXFmAjgG6/Pq4LXTUr1rq8YGgatGC6grED7utbWOOqTdaQmudopL2W
-         Q2IA==
-X-Gm-Message-State: AOAM533ryjPeuiAIkAZ68QE0ZzMXiOyS1LXXpnDDO4qi8m/OxpPf6YAd
-        k9NlXmdkaqUhsjIBb9Ws6now0adUXT6Sa7s8+2doeA==
-X-Google-Smtp-Source: ABdhPJz5r8XzDs6ct4fU0Wz5IOgXddNtGgB0aDw/R1jZjBJfR6vXAvlDsvp3+ZMXX+BDew2vwrIsnpnjI4WekMFGKi4=
-X-Received: by 2002:a25:be81:: with SMTP id i1mr44795639ybk.184.1591129857654;
- Tue, 02 Jun 2020 13:30:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l1JOIh6x8pU16e+KeIxJ3985QnaxQPsUtC1NFDK742A=;
+        b=EV3eGF4P4AYL/JfRLKmQRq/czK0s3ORZHp926NCk0XSOcI6edxn00ofhPm2nyF/MaR
+         ZoisgiaCwfQel5JOteKQRjeJb71hhxLU+LZ2iEw/FNbvvMYRXMKRUA/KQqiyNll02uAI
+         XzanrllBys7tw9s16e5DrYKtLc/0fe7ejpwwMlZ1tEul6ydzoh6EbCEZjuTjgBjg4nH+
+         zhims41HXItw+K/HA8JYOW6AQYbW40vReqz5xej67x7AlGI7xK4HDCLUTkzm5syZPSQI
+         y5MMdjPJrXpCsVUEKNffZ0KSFDPLABWU2Xial2GMQ1K8ODl8q4JiR+2f9eRrVgC9oRAY
+         jzOQ==
+X-Gm-Message-State: AOAM531Fm8oZaiEOPIVW9JbN12lrbo+7hm+QQq7Ji4mU3Ma6Dc/gOOwa
+        renJVqkclc+38E/Rzw0TfjtsodUyHHv0UemS1atMwIXEbHW1FRcAfn89/SDSw4HTd30ySt0Uhbp
+        xaaZ3BFQKNzpkdijG9jccGYSS
+X-Received: by 2002:a5d:4009:: with SMTP id n9mr8335982wrp.97.1591129978167;
+        Tue, 02 Jun 2020 13:32:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwxta+duSnnM6Sw6TP8Il90bmNxS0TxUdVpTMsswgIhh7OWkM/g/xNw1APhqHm+S8wMt2yCXQ==
+X-Received: by 2002:a5d:4009:: with SMTP id n9mr8335971wrp.97.1591129977909;
+        Tue, 02 Jun 2020 13:32:57 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id s132sm10118wmf.12.2020.06.02.13.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 13:32:57 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 16:32:55 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jason Wang <jasowang@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Message-ID: <20200602162931-mutt-send-email-mst@kernel.org>
+References: <20200602084257.134555-1-mst@redhat.com>
+ <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
+ <20200602163306.GM23230@ZenIV.linux.org.uk>
+ <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200602115055.1168446-1-jolsa@kernel.org> <20200602115055.1168446-5-jolsa@kernel.org>
- <CAP-5=fXjQ0ZgtrsizH6F7y2VRZ6dnsu54BXRxszyM+mMAvP-cQ@mail.gmail.com> <20200602190815.GH1169993@krava>
-In-Reply-To: <20200602190815.GH1169993@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 Jun 2020 13:30:46 -0700
-Message-ID: <CAP-5=fUPaS97FSYP6bzRedqFS5CV7VYq8D2qcny_mmp+pkOUJg@mail.gmail.com>
-Subject: Re: [PATCH 04/13] perf tests: Add another metric parsing test
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 12:08 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Tue, Jun 02, 2020 at 10:58:32AM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> > > +static int check_parse_fake(const char *id)
-> > > +{
-> > > +       struct parse_events_error error;
+On Tue, Jun 02, 2020 at 10:18:09AM -0700, Linus Torvalds wrote:
+> On Tue, Jun 2, 2020 at 9:33 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
 > >
-> > nit: this reads funny as it isn't clear, without looking at
-> > check_parse_id, that error is zero initialized.
->
-> right, how about something like below?
+> > >
+> > > It's not clear whether we need a new API, I think __uaccess_being() has the
+> > > assumption that the address has been validated by access_ok().
+> >
+> > __uaccess_begin() is a stopgap, not a public API.
+> 
+> Correct. It's just an x86 implementation detail.
+> 
+> > The problem is real, but "let's add a public API that would do user_access_begin()
+> > with access_ok() already done" is no-go.
+> 
+> Yeah, it's completely pointless.
+> 
+> The solution to this is easy: remove the incorrect and useless early
+> "access_ok()". Boom, done.
 
-Thanks, looks good!
-Ian
+Hmm are you sure we can drop it? access_ok is done in the context
+of the process. Access itself in the context of a kernel thread
+that borrows the same mm. IIUC if the process can be 32 bit
+while the kernel is 64 bit, access_ok in the context of the
+kernel thread will not DTRT.
 
-> thanks,
-> jirka
->
->
-> ---
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> index d3343827eb4d..c745b6e13cbe 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -403,7 +403,6 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
->         evlist = evlist__new();
->         if (!evlist)
->                 return -ENOMEM;
-> -       memset(error, 0, sizeof(*error));
->         ret = parse_events(evlist, id, error, fake_pmu);
->         evlist__delete(evlist);
->         return ret;
-> @@ -411,7 +410,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
->
->  static int check_parse_cpu(const char *id, bool same_cpu, struct pmu_event *pe)
->  {
-> -       struct parse_events_error error;
-> +       struct parse_events_error error = { 0 };
->
->         int ret = check_parse_id(id, &error, false);
->         if (ret && same_cpu) {
-> @@ -433,7 +432,7 @@ static int check_parse_cpu(const char *id, bool same_cpu, struct pmu_event *pe)
->
->  static int check_parse_fake(const char *id)
->  {
-> -       struct parse_events_error error;
-> +       struct parse_events_error error = { 0 };
->         int ret = check_parse_id(id, &error, true);
->
->         free(error.str);
->
+
+> Then use user_access_begin() and the appropriate unsage_get/put_user()
+> sequence, and user_access_end().
+> 
+> The range test that user-access-begin does is not just part of the
+> ABI, it's just required in general. We have almost thirty years of
+> history of trying to avoid it, AND IT WAS ALL BOGUS.
+> 
+> The fact is, the range check is pretty damn cheap, and not doing the
+> range check has always been a complete and utter disaster.
+> 
+> You have exactly two cases:
+> 
+>  (a) the access_ok() would be right above the code and can't be missed
+> 
+>  (b) not
+> 
+> and in (a) the solution is: remove the access_ok() and let
+> user_access_begin() do the range check.
+> 
+> In (b), the solution is literally "DON'T DO THAT!"
+> 
+> Because EVERY SINGLE TIME people have eventually noticed (possibly
+> after code movement) that "oops, we never did the access_ok at all,
+> and now we can be fooled into kernel corruption and a security issue".
+> 
+> And even if that didn't happen, the worry was there.
+> 
+> End result: use user_access_begin() and stop trying to remove the two
+> cycles or whatever of the limit checking cost. The "upside" of
+> removing that limit check just isn't. It's a downside.
+> 
+>                  Linus
+
+That's true. Limit check cost is measureable but very small.
+It's the speculation barrier that's costly.
+
+-- 
+MST
+
