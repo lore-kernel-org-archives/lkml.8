@@ -2,116 +2,156 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F54C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1303C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9AB320757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591106827;
-	bh=3TeniVPNuHVczMGCDWiwG04eRmSLOGv+9JLbaE+yQWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GY6vS8OwFRhsHxDVNPDjvyqISdD/Rw3IJ8yoEX/e68dEKCmkl1fOraJvLjpsUTIUg
-	 W9tWeRjD+nEjrfKWsUf3mkM91p1+5riiRIg/cVfScoStD5MDIkTBIBv7n3pmf6x6dQ
-	 2hN2StihmqdmKuyGxwlCh+0p0d+VFPMaKjhpyB64=
+	by mail.kernel.org (Postfix) with ESMTP id 9DA2C206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:07:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qq3QGiTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgFBOHH (ORCPT
+        id S1727818AbgFBOHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:07:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgFBOHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:07:06 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16D13206E2;
-        Tue,  2 Jun 2020 14:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591106826;
-        bh=3TeniVPNuHVczMGCDWiwG04eRmSLOGv+9JLbaE+yQWE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wTNrV7RQRBK0rtWmlX13xaSXM0XeyRSAjqfS9V71QqLRbGGuZmEwO5T3E0pLoY9U2
-         Uk6ndmDqFW67ABevzhzonZBvjRXcnktdtPGFTjV+XZiAAhoqqbgCL4Alnwex4w3VkA
-         H1GfBpK+AWbW3c7qxPFMe4nqmwysudv3PO95xyp0=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 68BD440AFD; Tue,  2 Jun 2020 11:07:03 -0300 (-03)
-Date:   Tue, 2 Jun 2020 11:07:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix kernel maps for kcore and eBPF
-Message-ID: <20200602140703.GP31795@kernel.org>
-References: <20200602112505.1406-1-adrian.hunter@intel.com>
+        Tue, 2 Jun 2020 10:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgFBOHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 10:07:48 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563A8C08C5C0;
+        Tue,  2 Jun 2020 07:07:48 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o6so5127464pgh.2;
+        Tue, 02 Jun 2020 07:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dIkaVHtmcI7ZAayN2rp02gz9INiaKKtMhPyk6d6P6pM=;
+        b=Qq3QGiTbEF+puo1ZXtzIaWPT7MuJKYI0butXpXyTBvJlvOlZ/Tmfrh4atIYuL/CJ/7
+         C5BjwCj1LjayEuABGjeU8WJKEoHsaKNXj5ZIdmDOwdm2Ye76KM2/U1LilloMhV84g+aM
+         qTT4o6gmiMey+CcbpQgJuciwkq8Yw6lirxeORPmrE7QJrjegvHt0GmZaGK3jA3BDDZ52
+         fSI4XmQJmzLxvPB6JpxU6lAeN8PLQ3+oqScGyMswOKNMedE/aINJh7lY7gNfmXmbvZKx
+         NsTXOVcJ93A/xZwMPxe+M5ZNQla56maPMKmygI2MUPROXsg8ViJMCn97L2uCAeXgzXaB
+         oe+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dIkaVHtmcI7ZAayN2rp02gz9INiaKKtMhPyk6d6P6pM=;
+        b=olnolkCOQz/PDFTAIIrmgbtfgUjwu+grsYfIBfNXrxFDRG1eM6qvSYsFIVj1vDmB4g
+         GzQ2jYqdzc382FZIA+catiUkj495jWGFyPEirWvcjfF2TY+gOf4GpIAWCijxdxx0D78v
+         1UJciGgV8H40N+yamC6/gCMAtdes9hR/gnIMd7vpV3/4QAPAYmUfruuXMOYKCdwrUUhf
+         NMr1bEs0AqwfFFFalRwd0jMNu/9dQTx4vNsTdprpHrNLDBnDatbyvTTLFGGMpodvRpuj
+         W1x2tcSHb/wrzcYBEAdlbvXqcQdDGlq++AkfFGYOwl8n3/ToffS5Af8ZTtoqSEqoUrsW
+         TqaQ==
+X-Gm-Message-State: AOAM530IRhxOhXc1wOtpvPGxRtylz4+qBiLFE4c5Nr/0Od7CEJqw5D/A
+        gbSLE4SoP93lCmpoJcqPn/I=
+X-Google-Smtp-Source: ABdhPJz9vk/G08Em341SldnNjxuUXxoI4581YnYvZk6LKwI1LPpc2ydRpBmuTkE19qAWFKWKHWgPQQ==
+X-Received: by 2002:a62:b40b:: with SMTP id h11mr24856949pfn.183.1591106867824;
+        Tue, 02 Jun 2020 07:07:47 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l23sm2525732pff.80.2020.06.02.07.07.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jun 2020 07:07:47 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 07:07:46 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: bt1-pvt: Declare Temp- and Volt-to-N poly when
+ alarms are enabled
+Message-ID: <20200602140746.GA82514@roeck-us.net>
+References: <20200602091219.24404-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602112505.1406-1-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200602091219.24404-1-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 02, 2020 at 02:25:05PM +0300, Adrian Hunter escreveu:
-> Adjust pgoff also when moving a map's start address.
+On Tue, Jun 02, 2020 at 12:12:19PM +0300, Serge Semin wrote:
+> Clang-based kernel building with W=1 warns that some static const
+> variables are unused:
 > 
-> Example with v5.4.34 based kernel:
+> drivers/hwmon/bt1-pvt.c:67:30: warning: unused variable 'poly_temp_to_N' [-Wunused-const-variable]
+> static const struct pvt_poly poly_temp_to_N = {
+>                              ^
+> drivers/hwmon/bt1-pvt.c:99:30: warning: unused variable 'poly_volt_to_N' [-Wunused-const-variable]
+> static const struct pvt_poly poly_volt_to_N = {
+>                              ^
 > 
->   Before:
+> Indeed these polynomials are utilized only when the PVT sensor alarms are
+> enabled. In that case they are used to convert the temperature and
+> voltage alarm limits from normal quantities (Volts and degree Celsius) to
+> the sensor data representation N = [0, 1023]. Otherwise when alarms are
+> disabled the driver only does the detected data conversion to the human
+> readable form and doesn't need that polynomials defined. So let's declare
+> the Temp-to-N and Volt-to-N polynomials only if the PVT alarms are
+> switched on at compile-time.
 > 
->     $ sudo tools/perf/perf record -a --kcore -e intel_pt//k sleep 1
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 1.958 MB perf.data ]
->     $ sudo tools/perf/perf script --itrace=e >/dev/null
->     Warning:
->     961 instruction trace errors
+> Note gcc with W=1 doesn't notice the problem.
 > 
->   After:
-> 
->     $ sudo tools/perf/perf script --itrace=e >/dev/null
->     $
+> Fixes: 87976ce2825d ("hwmon: Add Baikal-T1 PVT sensor driver")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 
-Thanks, tested on a kaby lake system (i5-7500) and applied,
+I don't really like the added #if. Can you use __maybe_unused instead ?
 
-- Arnaldo
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Fixes: fb5a88d4131a ("perf tools: Preserve eBPF maps when loading kcore")
-> Cc: stable@vger.kernel.org
+Thanks,
+Guenter
+
 > ---
->  tools/perf/util/symbol.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/hwmon/bt1-pvt.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 57cbe7a29868..5ddf84dcbae7 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1224,6 +1224,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+> diff --git a/drivers/hwmon/bt1-pvt.c b/drivers/hwmon/bt1-pvt.c
+> index 1a9772fb1f73..1a5212c04549 100644
+> --- a/drivers/hwmon/bt1-pvt.c
+> +++ b/drivers/hwmon/bt1-pvt.c
+> @@ -64,6 +64,7 @@ static const struct pvt_sensor_info pvt_info[] = {
+>   *     48380,
+>   * where T = [-48380, 147438] mC and N = [0, 1023].
+>   */
+> +#if defined(CONFIG_SENSORS_BT1_PVT_ALARMS)
+>  static const struct pvt_poly poly_temp_to_N = {
+>  	.total_divider = 10000,
+>  	.terms = {
+> @@ -74,6 +75,7 @@ static const struct pvt_poly poly_temp_to_N = {
+>  		{0, 1720400, 1, 1}
+>  	}
+>  };
+> +#endif /* CONFIG_SENSORS_BT1_PVT_ALARMS */
 >  
->  				m->end = old_map->start;
->  				list_add_tail(&m->node, &merged);
-> +				new_map->pgoff += old_map->end - new_map->start;
->  				new_map->start = old_map->end;
->  			}
->  		} else {
-> @@ -1244,6 +1245,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
->  				 *      |new......| ->         |new...|
->  				 * |old....|        -> |old....|
->  				 */
-> +				new_map->pgoff += old_map->end - new_map->start;
->  				new_map->start = old_map->end;
->  			}
->  		}
-> -- 
-> 2.17.1
-> 
-
--- 
-
-- Arnaldo
+>  static const struct pvt_poly poly_N_to_temp = {
+>  	.total_divider = 1,
+> @@ -96,6 +98,7 @@ static const struct pvt_poly poly_N_to_temp = {
+>   * N = (18658e-3*V - 11572) / 10,
+>   * V = N * 10^5 / 18658 + 11572 * 10^4 / 18658.
+>   */
+> +#if defined(CONFIG_SENSORS_BT1_PVT_ALARMS)
+>  static const struct pvt_poly poly_volt_to_N = {
+>  	.total_divider = 10,
+>  	.terms = {
+> @@ -103,6 +106,7 @@ static const struct pvt_poly poly_volt_to_N = {
+>  		{0, -11572, 1, 1}
+>  	}
+>  };
+> +#endif /* CONFIG_SENSORS_BT1_PVT_ALARMS */
+>  
+>  static const struct pvt_poly poly_N_to_volt = {
+>  	.total_divider = 10,
