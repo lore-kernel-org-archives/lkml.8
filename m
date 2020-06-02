@@ -2,80 +2,97 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DB7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D982073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591063827;
-	bh=D9+DhHL3sK80bJoX2x75L8U/xMOiFssEJfNRjohaEpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T16h7wOew6vFXCqQRvL5vxi3Pi5mBlO7LFBx9IBqs2Veek1gudwittXzl+qGuGxFX
-	 RtizP6QF8+XZVS9JfiTVYaN+L9KuB41fWE8OW4a+XS6f/VimwIcR727xgYepJe0rkm
-	 U1pfIYLZVVco6GQmKIe8RxUi19m4eOdVs8ZfgYMg=
+	by mail.kernel.org (Postfix) with ESMTP id 337C1207BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgFBCK0 (ORCPT
+        id S1725944AbgFBCPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 22:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 22:15:07 -0400
+Received: from namei.org ([65.99.196.166]:40356 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725841AbgFBCK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 22:10:26 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D417020734;
-        Tue,  2 Jun 2020 02:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591063825;
-        bh=D9+DhHL3sK80bJoX2x75L8U/xMOiFssEJfNRjohaEpI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oBIHKeU+SzS/J8BnPmRRp+TrUUL+WoikahoTv9G2+GFxXeo2T8iHHpZd0XtjcP2yO
-         kew5oQ0h+g6jsHNU7U2PbSEFUvZ2HDAUAoG2ZUtGOp0QjhqkyiOWg4glij51kxNbyz
-         NNFpu7qKg/xsUSRmnKgLgbGRcqSystEy1yYus8tU=
-Date:   Mon, 1 Jun 2020 22:10:23 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kevin Locke <kevin@kevinlocke.name>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 4.19 38/95] Input: i8042 - add ThinkPad S230u to i8042
- nomux list
-Message-ID: <20200602021023.GN1407771@sasha-vm>
-References: <20200601174020.759151073@linuxfoundation.org>
- <20200601174026.880387783@linuxfoundation.org>
- <20200601213852.GD17898@amd>
+        id S1725801AbgFBCPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 22:15:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 0522F4UU012542;
+        Tue, 2 Jun 2020 02:15:04 GMT
+Date:   Tue, 2 Jun 2020 12:15:04 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: [GIT PULL][Security] lockdown: Allow unprivileged users to see
+ lockdown status
+Message-ID: <alpine.LRH.2.21.2006021212490.12446@namei.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200601213852.GD17898@amd>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 11:38:52PM +0200, Pavel Machek wrote:
->Hi!
->
->> Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
->> and although the [BIOS changelog] notes "Fixed an issue of UEFI
->> touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
->> insufficient.
->>
->> Adding 33474HU to the nomux list avoids the issue on my system.
->
->This patch is known bad, and is reverted as a step 93/ in this
->series. I believe it would be better to remove this and the revert
->before -stable kernel is released.
+Hi Linus,
 
-Good point, I'll drop both. Thanks!
+Just one update for the security subsystem: allows unprivileged users to 
+see the status of the lockdown feature. From Jeremy Cline.
 
--- 
-Thanks,
-Sasha
+Please pull.
+
+
+The following changes since commit 3e27a33932df104f4f9ff811467b0b4ccebde773:
+
+  security: remove duplicated include from security.h (2020-02-21 08:53:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-general
+
+for you to fetch changes up to 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c:
+
+  lockdown: Allow unprivileged users to see lockdown status (2020-05-14 10:23:05 -0700)
+
+----------------------------------------------------------------
+Jeremy Cline (1):
+      lockdown: Allow unprivileged users to see lockdown status
+
+ security/lockdown/lockdown.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+---
+commit 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c
+Author: Jeremy Cline <jcline@redhat.com>
+Date:   Thu May 14 10:05:46 2020 -0400
+
+    lockdown: Allow unprivileged users to see lockdown status
+    
+    A number of userspace tools, such as systemtap, need a way to see the
+    current lockdown state so they can gracefully deal with the kernel being
+    locked down. The state is already exposed in
+    /sys/kernel/security/lockdown, but is only readable by root. Adjust the
+    permissions so unprivileged users can read the state.
+    
+    Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
+    Cc: Frank Ch. Eigler <fche@redhat.com>
+    Signed-off-by: Jeremy Cline <jcline@redhat.com>
+    Signed-off-by: James Morris <jmorris@namei.org>
+
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 40b790536def..ae594c0a127f 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -175,7 +175,7 @@ static int __init lockdown_secfs_init(void)
+ {
+ 	struct dentry *dentry;
+ 
+-	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
++	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
+ 					&lockdown_ops);
+ 	return PTR_ERR_OR_ZERO(dentry);
+ }
