@@ -2,98 +2,195 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6344E20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:29:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591115394;
-	bh=VFs8yg/elK3ibF+9cEZitJMFULzRJwLM1UfBHyfKtCM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v2GSXdcoQ/oIziHUzHRyIviOaUpOpsYPcagH7on1mjC/Nd1EJvLzQyBird+ZagpmX
-	 r00SryU2J10q8arPgvN8pxUO7WCnywstL0itezvHazLs7ToPLmo6pd/ksUbK0vr3kW
-	 IMr3hUpS8xMR9WbkyJMpHUGwCzqPamW1qSyrxpYs=
+	by mail.kernel.org (Postfix) with ESMTP id 14EB0207DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:30:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AiBC9Da9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFBQ3y (ORCPT
+        id S1726867AbgFBQa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:29:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37641 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBQ3x (ORCPT
+        Tue, 2 Jun 2020 12:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBQa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:29:53 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x13so4064903wrv.4;
-        Tue, 02 Jun 2020 09:29:51 -0700 (PDT)
+        Tue, 2 Jun 2020 12:30:28 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98493C05BD1E;
+        Tue,  2 Jun 2020 09:30:28 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i12so1618508pju.3;
+        Tue, 02 Jun 2020 09:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oPyGdBUnzVvgkB3aUzywZOPwpJVyWdo1joozTV5qdHQ=;
+        b=AiBC9Da91CASqXYBYUQx0aTurxmYzvTNEldDZ+swyu1czxoN/B592J9gVPAIq/VMP/
+         o9AxCB9i8pmiw1fxG9ROGWPufeEn3FZwWTnHb5+HXj17a6lmCNzBaIq3f8pOe5E/9FjQ
+         /petRefRnkX9Z6Rx0FdcWa0c9372PWJ//IoqmrSSMfhAYv5PxWBlp05AJg5yzFE/1zoZ
+         iesN8KM5YegXEiOs6mJ/2zJBE2o1RD3FlZpnHd6RjZl/T7c2O0Pn9FHGZCnIZC5LLp/H
+         ncC7adxK31kfe3xYAv5BlHuE1r7P38uQtxbxQXCb4cx/3U+gdJHMF3gRp/1QSPCGy+Bb
+         4WsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=grj2CD92FpDw05CnIagvOgvwut5Hrck8wRdVE5tNepE=;
-        b=PjWQZ8GkVvldADP4VqRlvnYLNrMaLRwcJLALh0emcdl/BgspjsHXFFskfPdQ5CbiGp
-         baAg5fW95+6gzl9Ssd3eRo9i3kjIkZA032eV1a3ObBPBxFP83u4tubCPNQlB9dK+4a9G
-         OnUOzTVj3/6zxR10XK4M9ibYdM3hZNC62Q1Nv+ys9D1rOtiOSNIto0cDerdgtNUsrxFo
-         tb+BRrHXfy0WnNHxBCnDbHtlBUGLXbr8FsbGeRC6kaZRCOJzAfsDkJ65csA1yrRblW3s
-         Dk/vkPqIKgIddbK+dmwXRStc3iI1P/kzOcNWPIo6+1AaTw+y43/H3yUgltnfN8fG2isN
-         P2JA==
-X-Gm-Message-State: AOAM531A3s57LSXh9esKhuQ+TD0xROXpRBvLoYbnxEn5Fd8qRONQepik
-        Mms35F+0iRMGALc0hzzHYRc=
-X-Google-Smtp-Source: ABdhPJwj7ACPWeLcVCtJq+ZO6vqa/uLz3Pyy+cGfDn8e9V/X9REn1sHMGM0j8aIQ1mHdwcusNk0AvQ==
-X-Received: by 2002:a05:6000:10c3:: with SMTP id b3mr28987548wrx.53.1591115391146;
-        Tue, 02 Jun 2020 09:29:51 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b132sm423020wmh.3.2020.06.02.09.29.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 09:29:50 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 16:29:49 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        KVM <kvm@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Doron <arilou@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: linux-next: manual merge of the hyperv tree with the kvm tree
-Message-ID: <20200602162949.apy2lzpecyedqtiw@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200602171802.560d07bc@canb.auug.org.au>
- <20200602135618.5iw6zd2jqzqqcwxm@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
- <feb8e292-8dff-58ad-0bb2-5006bf475e6b@redhat.com>
+        bh=oPyGdBUnzVvgkB3aUzywZOPwpJVyWdo1joozTV5qdHQ=;
+        b=D7UsofBazfI7jcqaQAiyU8+UN+c/63Zip5Eunpa/02foEH6zmmlcenb5khLGq3L5cs
+         6pkOqft3tBeL8qPR/aB7i4FXgxzv8xWgrW59Wxi/0o0u05IxxIQxwviksI0+vZ67FuxA
+         CfRRj7LI+1kURnDs1o7VUu5FjTFHPEEptFNFAKS88G+7dwIEb23kz/dH3cgEIHaCa5MJ
+         KHyWLhT+KNg8IZud7y9/vjHq16Czt6okKzWKC/8NtzYbbdFzZaowLXt1Kk0UPFVYF3zU
+         HrkuqTE0ESEj4jGzcMhcMiAuEvbC5uH7hhduAE8G4uWh7qsJSyteULHK7faiLYJK3fmx
+         YY5A==
+X-Gm-Message-State: AOAM531C+dNYQ8hZU1sL0sYqhndj25NknWS/ubrN3yhmJ1qNGexvcdAq
+        KWL9FoLyqm6TUIxHz1XAHVU=
+X-Google-Smtp-Source: ABdhPJx6Ls/DWASSP5arWojUIcrvrYeeG7D2JhRbQ8KTcnLGNmVQhL4CfAsuOUxzvX7eKOG4FEFOCQ==
+X-Received: by 2002:a17:902:bd42:: with SMTP id b2mr24532845plx.13.1591115428064;
+        Tue, 02 Jun 2020 09:30:28 -0700 (PDT)
+Received: from localhost ([162.211.223.96])
+        by smtp.gmail.com with ESMTPSA id s197sm3024029pfc.188.2020.06.02.09.30.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jun 2020 09:30:27 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 00:30:22 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Kevin Groeneveld <kgroeneveld@gmail.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, David Miller <davem@davemloft.net>,
+        corbet@lwn.net, tglx@linutronix.de, gregkh@linuxfoundation.org,
+        allison@lohutok.net, mchehab+samsung@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 09/10] net: phy: smsc: use
+ phy_read_poll_timeout() to simplify the code
+Message-ID: <20200602163022.GA6169@nuc8i5>
+References: <20200323150600.21382-1-zhengdejin5@gmail.com>
+ <20200323150600.21382-10-zhengdejin5@gmail.com>
+ <CABF+-6W-yo=CzaMaASdRGm5TS-JCnC5kGwPZHMce9OLPDCUw-g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <feb8e292-8dff-58ad-0bb2-5006bf475e6b@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CABF+-6W-yo=CzaMaASdRGm5TS-JCnC5kGwPZHMce9OLPDCUw-g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 06:26:26PM +0200, Paolo Bonzini wrote:
-> On 02/06/20 15:56, Wei Liu wrote:
-> >>
-> >> between commit:
-> >>
-> >>   22ad0026d097 ("x86/hyper-v: Add synthetic debugger definitions")
-> >>
-> > Paolo
-> > 
-> > As far as I can tell you merged that series a few days ago. Do you plan
-> > to submit it to Linus in this merge window? How do you want to proceed
-> > to fix the conflict?
+On Mon, Jun 01, 2020 at 02:58:21PM -0400, Kevin Groeneveld wrote:
+> On Mon, Mar 23, 2020 at 11:10 AM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+> >
+> > use phy_read_poll_timeout() to replace the poll codes for
+> > simplify lan87xx_read_status() function.
+> >
+> > Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> > v6 -> v7:
+> >         - adapt to a newly added parameter sleep_before_read.
+> > v5 -> v6:
+> >         - no changed.
+> > v4 -> v5:
+> >         - add msleep before phy_read_poll_timeout() to keep the
+> >           code more similar
+> > v3 -> v4:
+> >         - add this patch by Andrew's suggestion. Thanks Andrew!
+> >
+> >  drivers/net/phy/smsc.c | 16 +++++-----------
+> >  1 file changed, 5 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
+> > index b73298250793..93da7d3d0954 100644
+> > --- a/drivers/net/phy/smsc.c
+> > +++ b/drivers/net/phy/smsc.c
+> > @@ -112,8 +112,6 @@ static int lan87xx_read_status(struct phy_device
+> *phydev)
+> >         int err = genphy_read_status(phydev);
+> >
+> >         if (!phydev->link && priv->energy_enable) {
+> > -               int i;
+> > -
+> >                 /* Disable EDPD to wake up PHY */
+> >                 int rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
+> >                 if (rc < 0)
+> > @@ -125,15 +123,11 @@ static int lan87xx_read_status(struct phy_device
+> *phydev)
+> >                         return rc;
+> >
+> >                 /* Wait max 640 ms to detect energy */
+> > -               for (i = 0; i < 64; i++) {
+> > -                       /* Sleep to allow link test pulses to be sent */
+> > -                       msleep(10);
+> > -                       rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
+> > -                       if (rc < 0)
+> > -                               return rc;
+> > -                       if (rc & MII_LAN83C185_ENERGYON)
+> > -                               break;
+> > -               }
+> > +               phy_read_poll_timeout(phydev, MII_LAN83C185_CTRL_STATUS,
+> > +                                     rc & MII_LAN83C185_ENERGYON, 10000,
+> > +                                     640000, true);
+> > +               if (rc < 0)
+> > +                       return rc;
+> >
+> >                 /* Re-enable EDPD */
+> >                 rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
+> > --
+> > 2.25.0
+> >
 > 
-> Hi, Linus can fix this conflict.
+> This patch causes the kernel log to be spammed with the following when
+> Ethernet cable is not connected:
+> SMSC LAN8710/LAN8720 2188000.ethernet-1:00: lan87xx_read_status failed: -110
+>
+Kevin, I am very sorry for the trouble caused by my patch. 
 
-OK. I will write down in my pull request what needs to be done to fix
-the conflicts.
-
-Wei.
-
+> It still seems to work but I think that is only a fluke.
 > 
-> Paolo
-> 
+> The "if (rc < 0)" is not actually checking the return value of
+> phy_read_poll_timeout but is looking at the value of the register read.  I
+> don't think rc will ever be negative in this case.  If you change the code
+> to "rc = phy_read_poll_timeout(...)" so that it actually checks the error
+> then the function will behave differently than before.  The original code
+> would only return an error if phy_read returned an error.  On a timeout it
+> just continued.  So the "if" could be changed to "if (rc < 0 && rc !=
+> -ETIMEDOUT)".  But you will still get the extra messages in the log that
+> were not there before.
+>
+Yes, My patch did change the original behavior. It will not have error message
+whether it is timeout or phy_read fails, but my patch changed it and will
+print some error messages. It is my mistake. I'm so sorry for that.
+How do you think of the following fix?
+
+> >                 /* Wait max 640 ms to detect energy */
+> > -               for (i = 0; i < 64; i++) {
+> > -                       /* Sleep to allow link test pulses to be sent */
+> > -                       msleep(10);
+> > -                       rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
+> > -                       if (rc < 0)
+> > -                               return rc;
+> > -                       if (rc & MII_LAN83C185_ENERGYON)
+> > -                               break;
+> > -               }
+> > +               phy_read_poll_timeout(phydev, MII_LAN83C185_CTRL_STATUS,
+> > +                                     rc & MII_LAN83C185_ENERGYON, 10000,
+> > +                                     640000, true);
+> > +               if (rc < 0)
+> > +                       return rc;
+
+		ret = read_poll_timeout(phy_read, rc, rc & MII_LAN83C185_ENERGYON || rc < 0,                                                         
+		       		10000, 640000, true, phydev, MII_LAN83C185_CTRL_STATUS);
+		if (!ret && rc < 0)
+			return rc;
+BR,
+Dejin
+>
+> Kevin
