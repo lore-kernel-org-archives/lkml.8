@@ -2,97 +2,124 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C772C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B4F20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C256220734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:16:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IMukX3sO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rM7Q3kkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgFBFPW (ORCPT
+        id S1726062AbgFBFQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:15:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42441 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725841AbgFBFPV (ORCPT
+        Tue, 2 Jun 2020 01:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbgFBFQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:15:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591074920;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Omt9gJipjlxk0xAiBkDipMLYpK/jCtWILzTzD1eFi2g=;
-        b=IMukX3sOMlM8mgpuDBgEJx7qRf7dV6flhp4QzdZOJqHVfHbzK6nzzOZWIZwPmaA1ERyUMZ
-        xZkdHXhr8FDX1cxfedAp1VGBp1VNI4cSze6y8E4cG3yLSZujyi2z07heo3SgCLfy8qxxG4
-        4y5VuwtYiW15TQRz1ND4sbDy7VDFUto=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-320-WN6aMau5OVWM74m0XJzd1w-1; Tue, 02 Jun 2020 01:09:38 -0400
-X-MC-Unique: WN6aMau5OVWM74m0XJzd1w-1
-Received: by mail-wr1-f70.google.com with SMTP id m14so881215wrj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 22:09:38 -0700 (PDT)
+        Tue, 2 Jun 2020 01:16:13 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 923E2C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 22:16:13 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q24so889847pjd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 22:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wDwA49qlibi8ifBKcQK5YxVr+aaj4hDDJcJVTNeIJ48=;
+        b=rM7Q3kkjKcwtSFNIipJS/A4g/HnsQ1TsKTtLks8FS5hyB/S44lrzWqoImAeehYh+Dz
+         WTjzuvsYIhRxoBgcTryPVTOIWEL+q+ftsR62L86UDYi6dFfHRyJLKulD1KLE8H+l+OSt
+         CPu6no5aD/z8x8E6Ggvtgxq4dxz5BtDAKpNF3kF5G5436Km6Y+t8vh5DRd2f6WG9HZSo
+         8f6yhbnLOtumZ3Nqau4SorDMFk2J/8VCtT7EmFVP/RteSMBD/kw18Qjjihr8x0xZ/mdR
+         Wpi0Pr7n6FmV1r4qBYNjk3i36rX1IoST1Aqu91UbSEB/xm3wbC6fBrzrbE6+YJMfcZcy
+         DRAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Omt9gJipjlxk0xAiBkDipMLYpK/jCtWILzTzD1eFi2g=;
-        b=fKWyfxtqjPQcoZ1vE5FSO4vAQ7HmJTYlfmk2jE0lZ+mI7lEp87LBSyllluS0Nt3R0P
-         FmrpsJHdv7c4EfGZpHdCmvsQ7yI/yEB8w9CehPo9GFcKjE9GeBFw1IMB5qna4wQH2yly
-         t/c26Y8DTAZirpNM08kJaJgnGMxvNopM76Visfho7sNcRnKLDlt5iopwjRLsLixbhqpF
-         koeE1Ms2xzSvqGirGN5rA3X7Xhi2dDk6VXdbs15+DGr+h/A82kv1t4o1vfOXLGEjywoB
-         aedgbl1I7X5vreLQspQGD4CUp2/cuMhfkZcnUkv9Nu7cY6BegutW9FY9LniC038XGIwB
-         oKxg==
-X-Gm-Message-State: AOAM530R6OjIwiucbT5BA4DDZQInjTkRWYfJo7HhJv1z8ByI9zNr0wR5
-        0mGe7NIWTDF/QszjNexHJqg0eP45nWWyHnkokVAc92juLc/TRb3saW7YQjDh7vomXRQtHVjn2Ll
-        4jwVKZItTGhP7IT1DFHaD3zao
-X-Received: by 2002:a05:6000:11cd:: with SMTP id i13mr23481643wrx.141.1591074577588;
-        Mon, 01 Jun 2020 22:09:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzC4LVeDOhERR8qf9AS4nc4Mi6WpaPRsevGBTu/GWRHQywd6PHu2y8E93bGd9V5IBqDeftUgQ==
-X-Received: by 2002:a05:6000:11cd:: with SMTP id i13mr23481639wrx.141.1591074577444;
-        Mon, 01 Jun 2020 22:09:37 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id a3sm1785369wmb.7.2020.06.01.22.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 22:09:36 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 01:09:34 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
-Message-ID: <20200602010809-mutt-send-email-mst@kernel.org>
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-6-jasowang@redhat.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wDwA49qlibi8ifBKcQK5YxVr+aaj4hDDJcJVTNeIJ48=;
+        b=fkazOubZqwGyX5Itc6O9OD3beVW13wozmDZneEC2S+lk6BQCMpkKZbH/m/sNucmGmQ
+         HMidDoJMjEXYiA1tRat58/0sp6pkbkasBaEpEpPaa/al+HLu9dY1GykCenmx1i6E4P+7
+         67Io+gEysAqowV+RTcE6eDzDNoFSYhaQ3xX8X3e1EkNxTKELxpRBwq9agCCB6cMMsKvH
+         3LH8VZZxL4V6VjoRP/SpBDvRM9v/64w2jnim8sN3kjBarXyQ/SWvN4SJPZQBOWpvIk+E
+         0oD4tWx+kqhh2bp2ydgt57dfn9IMuV8zSz6CBSOZTNdisTcsVlgUGhFZiQO8bpM38kRr
+         YwCA==
+X-Gm-Message-State: AOAM532t0nxKBBlSyLqlGXzgQ3XLZ9qi67wWMCKXJSHq4muPqYRLdO1h
+        inNRwPPNxU/BPsN85X0IxEai5pngULk=
+X-Google-Smtp-Source: ABdhPJxK9MCNSAN72Ms1ilFwN/924RoU9ltixe5/gs2CCe/vT8GeVBVorAjhiJip1VvS9nwHngjmLQ==
+X-Received: by 2002:a17:90b:30d8:: with SMTP id hi24mr3472370pjb.78.1591074973062;
+        Mon, 01 Jun 2020 22:16:13 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id s8sm994752pjz.44.2020.06.01.22.16.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jun 2020 22:16:12 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 10:46:09 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     rjw@rjwysocki.net, Souvik.Chakravarty@arm.com,
+        Thanu.Rangarajan@arm.com, Sudeep.Holla@arm.com,
+        guohanjun@huawei.com, john.garry@huawei.com,
+        jonathan.cameron@huawei.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] add SW BOOST support for CPPC
+Message-ID: <20200602051609.ahot4qv2nlb6yh3t@vireshk-i7>
+References: <1590804511-9672-1-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529080303.15449-6-jasowang@redhat.com>
+In-Reply-To: <1590804511-9672-1-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:03:02PM +0800, Jason Wang wrote:
-> Note that since virtio specification does not support get/restore
-> virtqueue state. So we can not use this driver for VM. This can be
-> addressed by extending the virtio specification.
+On 30-05-20, 10:08, Xiongfeng Wang wrote:
+> ACPI spec 6.2 section 8.4.7.1 provide the following two CPC registers.
+> 
+> "Highest performance is the absolute maximum performance an individual
+> processor may reach, assuming ideal conditions. This performance level
+> may not be sustainable for long durations, and may only be achievable if
+> other platform components are in a specific state; for example, it may
+> require other processors be in an idle state.
+> 
+> Nominal Performance is the maximum sustained performance level of the
+> processor, assuming ideal operating conditions. In absence of an
+> external constraint (power, thermal, etc.) this is the performance level
+> the platform is expected to be able to maintain continuously. All
+> processors are expected to be able to sustain their nominal performance
+> state simultaneously."
+> 
+> We can use Highest Performance as the max performance in boost mode and
+> Nomial Performance as the max performance in non-boost mode. If the
+> Highest Performance is greater than the Nominal Performance, we assume
+> SW BOOST is supported.
+> 
+> Changelog:
+> 
+> v4 -> v5:
+> 	add 'cpu_hotplug_lock' before calling '.set_boost'
+> v3 -> v4:
+> 	run 'boost_set_msr_each' for each CPU in the policy rather than
+> 	each CPU in the system for 'acpi-cpufreq'
+> 	add 'Suggested-by'
+> 
+> Xiongfeng Wang (2):
+>   cpufreq: change '.set_boost' to act on only one policy
+>   CPPC: add support for SW BOOST
+> 
+>  drivers/cpufreq/acpi-cpufreq.c | 14 ++++++-----
+>  drivers/cpufreq/cppc_cpufreq.c | 39 +++++++++++++++++++++++++++--
+>  drivers/cpufreq/cpufreq.c      | 57 +++++++++++++++++++++++-------------------
+>  include/linux/cpufreq.h        |  2 +-
+>  4 files changed, 77 insertions(+), 35 deletions(-)
 
-Looks like exactly the kind of hardware limitation VDPA is supposed to
-paper over within guest. So I suggest we use this as
-a litmus test, and find ways for VDPA to handle this without
-spec changes.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-MST
-
+viresh
