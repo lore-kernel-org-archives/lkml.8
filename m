@@ -2,195 +2,85 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C72C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B857206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BB7206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v6HbjXlC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="WLn12D3g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgFBGuh (ORCPT
+        id S1726390AbgFBGuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgFBGuh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:50:37 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08AF5C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 23:50:37 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s1so11221300ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 23:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7Wo7fT19tXyFFYyKiTjQy59VceiF2uEuq4cijfOLwUI=;
-        b=v6HbjXlC9ACLtEvChrpt07F5wUIMbtYke18tLj+orBAtNKu8USAaquH/F/6ekNBB2S
-         V26ZHcNrdOHLPESB1/b1jLtutPBKWANurqW6K2seSGzH735tuIswhGyoeyk64h9GEhNA
-         iqOeYj9qNFbwzzTo92DP81rS4uTPJ11WKsL3lr9JPgmfcEztV9G/EC8ICl+oSdPT/GUA
-         4hs8dpSia/CV0d0gUMkCA4ViWUrPXyOIDqcBF9f8Nv+K6ytdXf4kK/pzD1oRHlpU1ye0
-         V/D3YRtlCvUDVShtAzS9GXgX0wQOUZqJceK6BlFkzVXQf0tHFtsX5Bo4FkT1NaKFJA+r
-         KDxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7Wo7fT19tXyFFYyKiTjQy59VceiF2uEuq4cijfOLwUI=;
-        b=jasKQb3ayGeOkpoEETsBspxQRAq6indCo0K57ZPFlV+NVp3gB5nBvewEDaWIwkP1qJ
-         BCY2ruIjqQFUCNCTbAf+B9evrXzinfzpOG0A3jM1Irj+hL8zqJUFlB8aOQbP7BkLIDLN
-         pGTax2BIvp7BWQLQk9jl89ji0DSJNArssIA8NgUtFUCGoqOOQa27UifD/bXeidmJzDT8
-         hDBnJwIkmleHGdhjVG0ogpzzzp/9OXECK1WQ1BHFpvAa5MAmW3oxdGVE/HFjoVfjr/Rw
-         yo6W7ph9tRbAKVf3eVy4m6y9EmL84anqUDLtF7Cx5ZdOf8ZQ5nYpYT+LWWilnIqWf790
-         wGuQ==
-X-Gm-Message-State: AOAM531FpzJQYEQajwr0fqQLJeGQNXwTKTIubvUjjTsCUmHsasDZRjtl
-        /mOPVDmI8QBuYLVYvHG2CExyJ/QoesISK0Gkwztjpg==
-X-Google-Smtp-Source: ABdhPJzUAYGiV7DKMjwbpS0prtxHtSvjG7yx11ItYL2IcE/iv4zlYWKgRA/5cWmCrIemKGgRUq7C8CoH0P5tax8hbvs=
-X-Received: by 2002:a2e:9a4f:: with SMTP id k15mr9093168ljj.55.1591080635263;
- Mon, 01 Jun 2020 23:50:35 -0700 (PDT)
+        Tue, 2 Jun 2020 02:50:51 -0400
+Received: from www.zeus03.de ([194.117.254.33]:39944 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbgFBGuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 02:50:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=RCJHqL+Z886EHM5VavwMg5JSQmFl
+        gh6yghG4/1fgO/Y=; b=WLn12D3gdpiklh/rB0ofFBfjjniDNBWXUExYpv4L0v7r
+        s9El1nV159A7w0NQ54ecFVZhGEQaWY18vYOHK2+zwju+Un3yA6nFuMOEJG4TkKuk
+        50+juBsczSUCLVLJUKUKmGaMc/WWdPghGfQRWFG7wZCGtnuoXhf1XgHXT5JQK8Q=
+Received: (qmail 848087 invoked from network); 2 Jun 2020 08:50:48 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 Jun 2020 08:50:48 +0200
+X-UD-Smtp-Session: l3s3148p1@LYrfVBSnzqogAwDPXw/+AIHdrwCIvkcp
+Date:   Tue, 2 Jun 2020 08:50:39 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: sh_mobile: Fix compilation warning
+Message-ID: <20200602065039.GA1453@kunai>
+References: <f526f90ea62741716de2ecfa310ba22d8cf1d3c2.1557377015.git.viresh.kumar@linaro.org>
+ <20200529121245.GA20272@ninjato>
+ <20200601035922.5eovt7yt2qcokglo@vireshk-i7>
 MIME-Version: 1.0
-References: <20200601174037.904070960@linuxfoundation.org>
-In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 2 Jun 2020 12:20:23 +0530
-Message-ID: <CA+G9fYvG6oy-KRj42-EaRK841od=4W8qrVpkoYEpS7fTT5Sh5A@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/142] 5.4.44-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Disposition: inline
+In-Reply-To: <20200601035922.5eovt7yt2qcokglo@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jun 2020 at 23:36, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.44 release.
-> There are 142 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.44-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
 
-Summary
-------------------------------------------------------------------------
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-kernel: 5.4.44-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 1fd4226c4fe1a358bb8277e25ebb03950180443a
-git describe: v5.4.43-143-g1fd4226c4fe1
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.43-143-g1fd4226c4fe1
 
-No regressions (compared to build v5.4.43)
+> Almost after an year, wondering on how you reached this patch now :)
 
-No fixes (compared to build v5.4.43)
+Another developer sent the same patch. And last time I was unsure if I
+liked the new code better (for reasons I can't recall anymore); this
+time it was clear to me.
 
-Ran 31360 total tests in the following environments and test suites.
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* libgpiod
-* linux-log-parser
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* perf
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
+-----BEGIN PGP SIGNATURE-----
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7V9rsACgkQFA3kzBSg
+KbZSeQ//SctheGbskJsU8buEoMEThvQrHHrv23uhQrYS00mn+CFJT4kqK8b0HrVE
+lQCx4RoTYPdM7JUH+TdB/Swev826GP+cQQU3z6PhNcjxTc6JqQs4p/uUJicHYhqS
+QIyGP44i2VhPlawz4dBQp9FwNeqXL6ydQ9k4kEGVVY3/X5/hCVjbONIr+I+cpUSZ
+nq9Qw/zZsqq4daGlrgVyT5x/r/BBBea3JELZ6NOaN783Bb8Pv9xd/Kk3AEokEqGy
+QEqFPGE5pcgjA16CjhTEDco58lV3XVoQkOBC67QiptxRUjdQyO86InGh/jDNfUvz
+iOeuFr7YRU0B6P8mKe1X9zakqozQW841SJIH6sXbxMMPcqMghWcrfbCgveaKgPi8
+J62uI/Xj9xyvuV7iPVKJzV+iq6+QdD+j4XuMNPcmk6GWj5vgK/D1AyPb83m79btp
+0JmuK97dnnameNNrqUjFXW1J9mqE76XvZ8J8RiGMq1h05lXXCp62R1W2V09ztRoj
+BqfV338+Z4kTIMqbyetGDYNEPqlVp3gl3An3iFhCMU1Vne+qiIaKo5329wIUlejU
+8cFEpg5IroTOup8n5hTjBspA0aXkzw1lPrroWpBAqn1kmsqa85RfIJR70utXU+J5
+JOKjL2qLKp3cLnkduensQVCST4XsNpcMj2wox/24kw8SJM/sL3E=
+=+/dw
+-----END PGP SIGNATURE-----
+
+--4Ckj6UjgE2iN1+kY--
