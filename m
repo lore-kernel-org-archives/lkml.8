@@ -1,69 +1,101 @@
-Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A12C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FB3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 472F92063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57061207BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591055735;
-	bh=Lrlg5REYFrwSNquOV5J/idJJxR2xlsu8rLNybN+dmpk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=it9BTG7Crg5UHghPMnu1e7n/1x+NVSbYbKjyWfsmyEKBwDfCZHt/836Zm1wqPEFbJ
-	 gTvJB5E8+VRmS8XcRyGglRkEJpT4jJKjInLhlNkFhkpgqOYu/XPvW2nEAawptoHdB1
-	 lHe1n9fwlEdX2nRkNftUF9noW21cVhNQgLEAeSO4=
+	s=default; t=1591056125;
+	bh=m/A9exI6hCT7HrMZiS79aYvM5xMnJxLqw67x4zmRnak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=F4sM0GP7TxbSFNwBH7HuzE3D4wyebiT6hKT+vccb/PFq3vkZZFecqbZ8Ayrz3v940
+	 YdnPVEQF8uCZmWeo//YRPidxeqKQPySqJK2A0yucaGsNWwY7gokzC/7JIuV7PlRs/j
+	 rYsBS9R/JOe+sNqn/8nJpIsIGmibOz9U/TnZeVn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgFAXze (ORCPT
+        id S1726337AbgFBACE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 19:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42538 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 20:02:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728887AbgFAXzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 19:55:08 -0400
-Subject: Re: [git pull] uaccess __copy_to_user
+        id S1725446AbgFBACE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 20:02:04 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14B022072E;
+        Tue,  2 Jun 2020 00:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591055708;
-        bh=Lrlg5REYFrwSNquOV5J/idJJxR2xlsu8rLNybN+dmpk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xgEh+Q56Xkn3JKWFc5eit51bNTDiTXk7YetPridQh43cy3PXdkqmdh49gW7tN1EQ6
-         oPggQwrK5vXbn7BeXfVzurTL/RY/i7wDlVB7TUCWOydIwZrIVEp/VEjAAx4o4Qe6dF
-         AKH0Rm8kPYkuHLLScupU1FIAhoL+1Ridfreu7taY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200601183159.GF23230@ZenIV.linux.org.uk>
-References: <20200601183159.GF23230@ZenIV.linux.org.uk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200601183159.GF23230@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git
- uaccess.__copy_to_user
-X-PR-Tracked-Commit-Id: 0702e4f39034f15855def3165fe7213c7c2c0163
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 062ea674ae8ad93530dbf7176c59daef098863df
-Message-Id: <159105570805.29263.17331996368597513222.pr-tracker-bot@kernel.org>
-Date:   Mon, 01 Jun 2020 23:55:08 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
+        s=default; t=1591056123;
+        bh=m/A9exI6hCT7HrMZiS79aYvM5xMnJxLqw67x4zmRnak=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QlUK8Fpd9R3dGozfIUXBzSEEM3d2dUORNDsOcLFfBUf+gGIZu8OZrxER7Vs+9EGdB
+         G6seZZahYdzO4NZK00Vf/UdSt+X2g+U6zoPfgJ2dfDo97WAlSm5jbctGSSVPrPyfns
+         pDHC0kJtbuKW40KdKbaJkoNzLjpWhxivIr8ss1/k=
+Date:   Tue, 2 Jun 2020 09:01:57 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     "Zanussi, Tom" <tom.zanussi@linux.intel.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 4/7] selftests/ftrace: Convert required interface checks
+ into requires list
+Message-Id: <20200602090157.45cf58947267cec561da67ea@kernel.org>
+In-Reply-To: <e23a0d5c-5e7e-13db-e9c1-2a093d3327be@linux.intel.com>
+References: <159102252279.31199.12855129586058455119.stgit@devnote2>
+        <159102256204.31199.842249429317038334.stgit@devnote2>
+        <e23a0d5c-5e7e-13db-e9c1-2a093d3327be@linux.intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 1 Jun 2020 19:31:59 +0100:
+On Mon, 1 Jun 2020 14:54:12 -0500
+"Zanussi, Tom" <tom.zanussi@linux.intel.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git uaccess.__copy_to_user
+> Hi Masami,
+> 
+> On 6/1/2020 9:42 AM, Masami Hiramatsu wrote:
+> > Convert the required tracefs interface checking code with
+> > requires: list.
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org
+> [ SNIP ]
+> 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
+> > index c80007aa9f86..59f876c80d45 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
+> > @@ -1,17 +1,13 @@
+> >   #!/bin/sh
+> >   # SPDX-License-Identifier: GPL-2.0
+> >   # description: event trigger - test inter-event histogram trigger onchange action
+> > +# requires: synthetic_events
+> 
+> I think this should be 'set_event'
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/062ea674ae8ad93530dbf7176c59daef098863df
+Thank you for point it out. I found another missed requirement.
+I'll fix it.
 
-Thank you!
+Thank you,
+
+> Thanks,
+> 
+> Tom
+
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Masami Hiramatsu <mhiramat@kernel.org>
