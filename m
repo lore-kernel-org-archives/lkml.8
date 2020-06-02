@@ -2,222 +2,127 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F24C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F39E3206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82A2206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:31:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lKTcFEgW"
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="VG2CJ5t+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgFBTbW (ORCPT
+        id S1728087AbgFBTbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:31:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
+        Tue, 2 Jun 2020 15:31:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgFBTbV (ORCPT
+        with ESMTP id S1726320AbgFBTbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:31:21 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F339C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:31:21 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id n7so27146ybh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:31:21 -0700 (PDT)
+        Tue, 2 Jun 2020 15:31:50 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D4E9C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:31:50 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z9so3380351ljh.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rclZP01j1InoS/3XtOg/bC1dGPlx80uQ6aMTFnGzZ2w=;
-        b=lKTcFEgWzsBAVwkz4pKNgMxfzTA/rGF9JodhNthDiBoH7YkwDBV0kuC35tGrGmUPa7
-         vigobAbCfGHSoCDBNiiNxGCo7ry+l11xNDbwclXy4FRbvLdz1Yv3eqb8rD4o311vIRV6
-         NpmILM/4g7+ijufcHgNkg4AdMRRfwaUT1X0pS7DCnceJFn8bDOjsoNsZDYC6xv9nOuWg
-         oBIKuuzUNJbFU0/tAlZtsBNYOjUnDAbe8I0Qxs1y2Ikzs3uN0bccFj+Iby/ZIT//ZKjR
-         fgN+4PcwfA4n6RA2eU1K9QyQilXZEkUcXZqwz2AYKNfI6kQB0S/S7OhaqcgDbolreiHl
-         ZAjw==
+        bh=IQbEYa0oW0Il8mjfCzR4SoEfB7EUDs8d+32KPqK0uG4=;
+        b=VG2CJ5t+FQePnvjuONDwr6Dql0NvazBNVRqadOsYgGBHsWUl15Ct8FtXwYihJnDz4P
+         roesHC2nlZ1W+rf0yu/PrUqwzwy9amDLGR8maWs7F7LOLxt51R6tgnYvEXzcAPzEY5/C
+         A3syAi0TEP9TFKGEiO5g+0hlkjSzNyG6QQG+3cF+LfRsQdyWyzrXblFKTUdRm84VvTRM
+         90fejGTEfsQCFOcBHCCd2S/eQs0TKYCv7mMunvHHl4cPh9vJDYMGI2Qj6UNQZhNYyl4A
+         6YKeBUUuielCOD2+N2SFexpH6ft4bMjwWpo58iuHfwApd6/fnY69lPErh6E1cNhXyw4o
+         9R7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=rclZP01j1InoS/3XtOg/bC1dGPlx80uQ6aMTFnGzZ2w=;
-        b=L1bc2p9UF0bK0IR7zujmDxMQA+W85K8OmVLCYLH4FYRyHD8ZZx3JJG4UBF6glc4JIl
-         EABWGAZtsjInZEsSgyEj8DuEnw04/W6k9mwtIv2CGpEmZyrzCTfwapn+xG0EEXEcuPBB
-         bh+iWG1HkAgsWw4kjUMroNquo1Gpga3PqE+v4BJF4XZsNY8dXIhLhOrom6DmpFTYqM4P
-         K3SjFlerBBJ4j7j/Eu4sjB9C87rbhd0IseXiIjyyL/9MNeHOYgFs5u5havjItdvozWGt
-         MzjKLunUmJ2V371TLmrJ6uZkANcfZ7crdKRzAYXvt968wglG/sKsHkSH/hrScHnUDbtj
-         546g==
-X-Gm-Message-State: AOAM533pxVYeG0lqPtHFvnBEPrE8aTlXcO+FvOVTxBs5fOZmuOOJzhRK
-        bGmA7G7eUbcFst5+QkTkmMmXPVWlp53gscY=
-X-Google-Smtp-Source: ABdhPJwx0Lnv0amOjqwgyGjnGBXNYRxRwJOaVB5GXUgExCVr3FTb91vVxXmRJ+HznOHa2zVWvNFKsvqcVfjrfhU=
-X-Received: by 2002:a25:c186:: with SMTP id r128mr46983177ybf.92.1591126280496;
- Tue, 02 Jun 2020 12:31:20 -0700 (PDT)
-Date:   Tue,  2 Jun 2020 12:30:59 -0700
-In-Reply-To: <20200602132702.y3tjwvqdbww7oy5i@treble>
-Message-Id: <20200602193100.229287-1-inglorion@google.com>
-Mime-Version: 1.0
-References: <20200602132702.y3tjwvqdbww7oy5i@treble>
-X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
-Subject: [PATCH v2] x86_64: fix jiffies ODR violation
-From:   Bob Haarman <inglorion@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Bob Haarman <inglorion@google.com>, stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alistair Delva <adelva@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andi Kleen <ak@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Ross Zwisler <zwisler@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IQbEYa0oW0Il8mjfCzR4SoEfB7EUDs8d+32KPqK0uG4=;
+        b=TcnwGhroKHSzTibcxSmslVOxPNG19IH87akTDUKAxFwRUbZtOFbaDwXYjtX85Xy0//
+         596Kv8BjCSA6WXNCSw4XQvIfPVesydstNoKp76hkC0sBJ4ADbTQX/vo2TcEh7EEbguXO
+         7j37BUdOa+8DrpkYRR1pOP+6cIVagtRKyjk/5ynY4Ua/+32RBIdzxpD3CeLpIfGLrGgw
+         UlMgCeFJLi3i8EZO2EZCuQCnqfa0ufkB2cntbdHSy0oNO3qnvAo4tnH7y+q7pIuQKz2w
+         HPYpM0RgltcsRr/yPxMFq6Jgx2NGrhsQNBG83CkmebvCLOq4U1G6dt0BeWVOGzMrkE0j
+         DLWw==
+X-Gm-Message-State: AOAM532vu0WJD+zt4yb7bGXJdvUehlXygr61IavJ8NIm5PCGitOlYtX8
+        KmGJ4FaAkvPcsPFx7VjdC5TA1V1xiFBATjD4F9Da0Q==
+X-Google-Smtp-Source: ABdhPJxA2pW7yh8mSs3AzE0QrgE8KUJRrdHsiJaMgBJ2xDsVXK8ITtIHOEPS1WjP3x7YzPtQAVEFE55uqBSjObbn8hU=
+X-Received: by 2002:a2e:9147:: with SMTP id q7mr326807ljg.430.1591126308681;
+ Tue, 02 Jun 2020 12:31:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+ <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
+ <CADaigPU7c=1u47R9GzvGCH_Z2fywY1foGYEy=KbBikjUQpwUFg@mail.gmail.com>
+ <20200602141228.7zbkob7bw3owajsq@gilmour> <CAPY8ntDZWJeu14mL5a0jqUWHFOEWm2OOBBkh4yjjP0oLU83UCQ@mail.gmail.com>
+In-Reply-To: <CAPY8ntDZWJeu14mL5a0jqUWHFOEWm2OOBBkh4yjjP0oLU83UCQ@mail.gmail.com>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Tue, 2 Jun 2020 12:31:37 -0700
+Message-ID: <CADaigPUHPhdrt9JkTfaw0iT7Z8z3Si-v2VJ-s+dhnFQaDNkAaA@mail.gmail.com>
+Subject: Re: [PATCH v3 032/105] drm/vc4: crtc: Enable and disable the PV in
+ atomic_enable / disable
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'jiffies' and 'jiffies_64' are meant to alias (two different symbols
-that share the same address).  Most architectures make the symbols alias
-to the same address via linker script assignment in their
-arch/<arch>/kernel/vmlinux.lds.S:
+On Tue, Jun 2, 2020 at 8:02 AM Dave Stevenson
+<dave.stevenson@raspberrypi.com> wrote:
+>
+> Hi Maxime and Eric
+>
+> On Tue, 2 Jun 2020 at 15:12, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi Eric
+> >
+> > On Wed, May 27, 2020 at 09:54:44AM -0700, Eric Anholt wrote:
+> > > On Wed, May 27, 2020 at 8:50 AM Maxime Ripard <maxime@cerno.tech> wrote:
+> > > >
+> > > > The VIDEN bit in the pixelvalve currently being used to enable or disable
+> > > > the pixelvalve seems to not be enough in some situations, which whill end
+> > > > up with the pixelvalve stalling.
+> > > >
+> > > > In such a case, even re-enabling VIDEN doesn't bring it back and we need to
+> > > > clear the FIFO. This can only be done if the pixelvalve is disabled though.
+> > > >
+> > > > In order to overcome this, we can configure the pixelvalve during
+> > > > mode_set_no_fb, but only enable it in atomic_enable and flush the FIFO
+> > > > there, and in atomic_disable disable the pixelvalve again.
+> > >
+> > > What displays has this been tested with?  Getting this sequencing
+> > > right is so painful, and things like DSI are tricky to get to light
+> > > up.
+> >
+> > That FIFO is between the HVS and the HDMI PVs, so this was obviously
+> > tested against that. Dave also tested the DSI output IIRC, so we should
+> > be covered here.
+>
+> DSI wasn't working on the first patch set that Maxime sent - I haven't
+> tested this one as yet but will do so.
+> DPI was working early on to both an Adafruit 800x480 DPI panel, and
+> via a VGA666 as VGA.
+> HDMI is obviously working.
+> VEC is being ignored now. The clock structure is more restricted than
+> earlier chips, so to get the required clocks for the VEC without using
+> fractional divides it compromises the clock that other parts of the
+> system can run at (IIRC including the ARM). That's why the VEC has to
+> be explicitly enabled for the firmware to enable it as the only
+> output. It's annoying, but that's just a restriction of the chip.
 
-jiffies = jiffies_64;
-
-which is effectively a definition of jiffies.
-
-jiffies and jiffies_64 are both forward declared for all arch's in:
-include/linux/jiffies.h.
-
-jiffies_64 is defined in kernel/time/timer.c for all arch's.
-
-x86_64 was peculiar in that it wasn't doing the above linker script
-assignment, but rather was:
-1. defining jiffies in arch/x86/kernel/time.c instead via linker script.
-2. overriding the symbol jiffies_64 from kernel/time/timer.c in
-arch/x86/kernel/vmlinux.lds.s via 'jiffies_64 = jiffies;'.
-
-As Fangrui notes:
-
-  In LLD, symbol assignments in linker scripts override definitions in
-  object files. GNU ld appears to have the same behavior. It would
-  probably make sense for LLD to error "duplicate symbol" but GNU ld
-  is unlikely to adopt for compatibility reasons.
-
-So we have an ODR violation (UB), which we seem to have gotten away
-with thus far. Where it becomes harmful is when we:
-
-1. Use -fno-semantic-interposition.
-
-As Fangrui notes:
-
-  Clang after LLVM commit 5b22bcc2b70d
-  ("[X86][ELF] Prefer to lower MC_GlobalAddress operands to .Lfoo$local")
-  defaults to -fno-semantic-interposition similar semantics which help
-  -fpic/-fPIC code avoid GOT/PLT when the referenced symbol is defined
-  within the same translation unit. Unlike GCC
-  -fno-semantic-interposition, Clang emits such relocations referencing
-  local symbols for non-pic code as well.
-
-This causes references to jiffies to refer to '.Ljiffies$local' when
-jiffies is defined in the same translation unit. Likewise, references
-to jiffies_64 become references to '.Ljiffies_64$local' in translation
-units that define jiffies_64.  Because these differ from the names
-used in the linker script, they will not be rewritten to alias one
-another.
-
-Combined with ...
-
-2. Full LTO effectively treats all source files as one translation
-unit, causing these local references to be produced everywhere.  When
-the linker processes the linker script, there are no longer any
-references to jiffies_64' anywhere to replace with 'jiffies'.  And
-thus '.Ljiffies$local' and '.Ljiffies_64$local' no longer alias
-at all.
-
-In the process of porting patches enabling Full LTO from arm64 to
-x86_64, we observe spooky bugs where the kernel appeared to boot, but
-init doesn't get scheduled.
-
-Instead, we can avoid the ODR violation by matching other arch's by
-defining jiffies only by linker script.  For -fno-semantic-interposition
-+ Full LTO, there is no longer a global definition of jiffies for the
-compiler to produce a local symbol which the linker script won't ensure
-aliases to jiffies_64.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/852
-Fixes: 40747ffa5aa8 ("asmlinkage: Make jiffies visible")
-Cc: stable@vger.kernel.org
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Alistair Delva <adelva@google.com>
-Suggested-by: Fangrui Song <maskray@google.com>
-Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
-Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Bob Haarman <inglorion@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
-v2:
-* Changed commit message as requested by Josh Poimboeuf
-  (no code change)
-
----
- arch/x86/kernel/time.c        | 4 ----
- arch/x86/kernel/vmlinux.lds.S | 4 ++--
- 2 files changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
-index 371a6b348e44..e42faa792c07 100644
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -25,10 +25,6 @@
- #include <asm/hpet.h>
- #include <asm/time.h>
- 
--#ifdef CONFIG_X86_64
--__visible volatile unsigned long jiffies __cacheline_aligned_in_smp = INITIAL_JIFFIES;
--#endif
--
- unsigned long profile_pc(struct pt_regs *regs)
- {
- 	unsigned long pc = instruction_pointer(regs);
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 1bf7e312361f..7c35556c7827 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -40,13 +40,13 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
- #ifdef CONFIG_X86_32
- OUTPUT_ARCH(i386)
- ENTRY(phys_startup_32)
--jiffies = jiffies_64;
- #else
- OUTPUT_ARCH(i386:x86-64)
- ENTRY(phys_startup_64)
--jiffies_64 = jiffies;
- #endif
- 
-+jiffies = jiffies_64;
-+
- #if defined(CONFIG_X86_64)
- /*
-  * On 64-bit, align RODATA to 2MB so we retain large page mappings for
--- 
-2.27.0.rc2.251.g90737beb825-goog
-
+I'm more concerned with "make sure we don't regress pre-pi4 with this
+series" than "pi4 displays all work from the beginning"
