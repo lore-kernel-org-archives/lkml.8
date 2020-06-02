@@ -2,130 +2,128 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB4B206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE779206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:46:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y1TD+V2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgFBNof (ORCPT
+        id S1726946AbgFBNq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:44:35 -0400
-Received: from mga11.intel.com ([192.55.52.93]:24956 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgFBNoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:44:34 -0400
-IronPort-SDR: W7vQptyI5pLIqXoMqjCflOS7OTXa0wSLH9Msvd91c+2uS8fEYscqW3LTEDmOvDIRHrKmccpskS
- L0urDQRnymZw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 06:44:34 -0700
-IronPort-SDR: 1hLlep6tcToeKjR8jx1vzpz2MQV4f9AqvBcce0HhaQb5ZJ77PNJgxxNEIep+8MOMP+XFnEb0xJ
- Ok8nJIQV+IcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,464,1583222400"; 
-   d="scan'208";a="444697984"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga005.jf.intel.com with ESMTP; 02 Jun 2020 06:44:31 -0700
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
- <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
- <20200601233732.GA691017@tassilo.jf.intel.com>
- <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
- <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
-Date:   Tue, 2 Jun 2020 16:43:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 09:46:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBNqz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:46:55 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FBBDC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 06:46:55 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q25so3223385wmj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 06:46:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qSTMEdvjk3TF6RfwsS1dypnjhMY3GyU5XrIVPs/JS5Y=;
+        b=Y1TD+V2YHn6cONPIQz2HtNHu42aROGvx5fTK74Y/eXE/BpTSFPKO97aZAU+6LAcDD2
+         9eGLijRbtxLbjqHPVYMtMMWMCX4L71GKSR/D3vk3ONBGn0ZuUSYzaZzOPzUwhVTfkdyL
+         m9kqQJBKc26Wx6iXh0OJu4ne5z3abM4GnbYFvR4NRbx7c5ilsNggcNXt0gP1y8QDdcY+
+         C4HHl3457Vo4dPJ7/dl2BbymecQiJdYL0NvVKWjpfH44stka49Jtgv9CbYEqOhKxBIPb
+         SV8zjJVZ8Mqi35YB5QHQJC65BR7b/m7AAL8BMfG4q8jE/a/1tygDsEeYknjTIy5ZB8n2
+         sl4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qSTMEdvjk3TF6RfwsS1dypnjhMY3GyU5XrIVPs/JS5Y=;
+        b=UTWlBB3AHtE7fO4/UmQTiLf+kk+1aJT32omcYlifWDHfIl0Ym9fPmDOxZLcZxGe+V0
+         BBOQ5dPSTNtEJnE9Iwo0oOn5kIF3cGm7KhumStHh9u0IRy1RLkH3ktDEEFQFUGj5I2nY
+         3IeyQsww/J1LhFIIivrskitZsK6xo9nvksnd/C3K+gl2aIjg0P5kXXSMd8eDPLZRFVJn
+         J3TSrbMJf0W+fSNf0ApDB1Wg/ur8FjF3zAPISYjHEYv+bVuseVRmYdgIQHf5mOizIfy1
+         +0UaaYWyreystfNoAUbu3zRcwMcLnTzHe6UHBIkbT/YrQvUMhSSALANqaJ7X17nJKIO/
+         HyWQ==
+X-Gm-Message-State: AOAM530brsiG+XJ78uVzWNrv8+Nljs67ESOJkPqB1V/JoSqH8pEmuoLY
+        95rbQhZpMT1nxnD0vbD0UZWVIg==
+X-Google-Smtp-Source: ABdhPJyjTmzSO2w5j42gGxx21vuAkkZvWzGoUQv7gnIV0Xj7BY0fEtNOZY9l9pz9e+Qlxp8caIOedg==
+X-Received: by 2002:a1c:f003:: with SMTP id a3mr4170692wmb.119.1591105613992;
+        Tue, 02 Jun 2020 06:46:53 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id d13sm3407055wmb.39.2020.06.02.06.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 06:46:52 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 14:46:50 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, jason.wessel@windriver.com,
+        dianders@chromium.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] kdb: Switch to use safer dbg_io_ops over console
+ APIs
+Message-ID: <20200602134650.mdovxoa6cj2hgvei@holly.lan>
+References: <1590751607-29676-1-git-send-email-sumit.garg@linaro.org>
+ <1590751607-29676-5-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590751607-29676-5-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/06/20 12:12 pm, Alexey Budankov wrote:
+On Fri, May 29, 2020 at 04:56:47PM +0530, Sumit Garg wrote:
+> In kgdb context, calling console handlers aren't safe due to locks used
+> in those handlers which could in turn lead to a deadlock. Although, using
+> oops_in_progress increases the chance to bypass locks in most console
+> handlers but it might not be sufficient enough in case a console uses
+> more locks (VT/TTY is good example).
 > 
-> On 02.06.2020 11:32, Alexey Budankov wrote:
->>
->> On 02.06.2020 2:37, Andi Kleen wrote:
->>>>> or a pathname, or including also the event default of "disabled".
->>>>
->>>> For my cases conversion of pathnames into open fds belongs to external
->>>> controlling process e.g. like in the examples provided in the patch set.
->>>> Not sure about "event default of 'disabled'"
->>>
->>> It would be nicer for manual use cases if perf supported the path names
->>> directly like in Adrian's example, not needing a complex wrapper script.
->>
->> fds interface is required for VTune integration since VTune wants control
->> over files creation aside of Perf tool process. The script demonstrates
->> just one possible use case.
->>
->> Control files could easily be implemented on top of fds making open operations
->> for paths and then initializing fds. Interface below is vague and with explicit
->> options like below it could be more explicit:
->> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
+> Currently when a driver provides both polling I/O and a console then kdb
+> will output using the console. We can increase robustness by using the
+> currently active polling I/O driver (which should be lockless) instead
+> of the corresponding console. For several common cases (e.g. an
+> embedded system with a single serial port that is used both for console
+> output and debugger I/O) this will result in no console handler being
+> used.
 > 
-> Or even clearer:
+> In order to achieve this we need to reverse the order of preference to
+> use dbg_io_ops (uses polling I/O mode) over console APIs. So we just
+> store "struct console" that represents debugger I/O in dbg_io_ops and
+> while emitting kdb messages, skip console that matches dbg_io_ops
+> console in order to avoid duplicate messages. After this change,
+> "is_console" param becomes redundant and hence removed.
 > 
-> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
+> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-If people are OK with having so many options, then that is fine by me.
+Looking good, only one minor comment left on my side (including the
+three patches prior).
 
-> 
->>
->> Make either fds and or files provided on the command line. Implement file
->> options handling callbacks that would open paths and setting fds. Close fds
->> if they were opened by Perf tool process.
->>
->> Adrian, please share your mind and use case.
->>
->> ~Alexey
->>
->>>
->>> -Andi
->>>>
->>>>>
->>>>> e.g. add "--control" and support all of:
->>>>>
->>>>> --control
->>>>> --control 11
->>>>> --control 11,15
->>>>> --control 11,15,disabled
->>>>> --control 11,,disabled
->>>>> --control /tmp/my-perf.fifo
->>>>> --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
->>>>> --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
->>>>> --control /tmp/my-perf.fifo,,disabled
->>>>>
->>>>> Regards
->>>>> Adrian
->>>>>
->>>>
->>>> Regards,
->>>> Alexey
->>>>
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 9e5a40d..5e00bc8 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -560,12 +560,14 @@ static void kdb_msg_write(char *msg, int msg_len)
+>  	if (msg_len == 0)
+>  		return;
+>  
+> -	if (dbg_io_ops && !dbg_io_ops->is_console)
+> +	if (dbg_io_ops)
+>  		kdb_io_write(msg, msg_len);
 
+Since this now slots on so cleanly and there are not multiple calls
+to kdb_io_write() then I think perhaps factoring this out into its
+own function (in patch 1) is no long necessary. The character write
+loop can go directly into this function.
+
+
+Daniel.
