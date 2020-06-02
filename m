@@ -2,210 +2,141 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85223C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B8C2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD336207D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GGppdtml"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fAoQPsCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgFBPsS (ORCPT
+        id S1727773AbgFBPsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgFBPsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:48:17 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8323C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 08:48:16 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id d13so3965877ybk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 08:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7D+Gesf5VeOY6UB8iu5HAPTN7vFAkIyi9oq1WiCYfKI=;
-        b=GGppdtml8Hmg6cHU7eTwhoNvI/HWEpa3UrZJRkleKa1iXqtfWI8DxDPtK3f/pUfbKM
-         +zohXgMKwbQ03A2N5pkbfPDWqWaDKFrxF+lVVFgv+ur3Wh0qjBgpyepQGL6KIamdBEE1
-         Y1d8SGUowbb3PV3/SWK7xI28Aa41XAxnNysIBHRVu3Vbtaa053ZTsiROOrH2XkXwi52R
-         GTiH54DpThKngl5QargmQWzMZnB2nt/sPTUYRg2N/89/sByL6rSUyd+ZECPkEhSeykw0
-         094d/bxxV3k2mQHlfycgfdxilGSCfw+vvKGc9Et1B/gd/zqnjgW8Z0x+2Dgvng4vDzTF
-         wWPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7D+Gesf5VeOY6UB8iu5HAPTN7vFAkIyi9oq1WiCYfKI=;
-        b=cPimpD9cJ75eUr2GNwqv6aKYHGXsIn16TOQf2Z5KrIA3tOzZmF/cYvAovjNwc6RuMV
-         KNcbUAQa1x0KVdzrgRW4zToIwo+WFKcGv4CO88YVSNy8LhLO0hmQ7a3yyYeVTspuZfLM
-         fYTDtb+bvLZpRDRXAb76CwkV/KTuO8p+vTN91Z4oMdw/cX6RwGFSDANCTwtNobCUQRMn
-         vARyc9/aVZ83aLTZ6ttGQzU9HWvaXDbc5MaqXBA55SZWJTw/3PdFzbg/szsULFlc28Qh
-         urCSA5A0YyJwxzK1TzKdkGMBOJrkZ63d1kjF37UxP8ImtxCM7u9RJzGhgNhLTNybuVYc
-         6VkA==
-X-Gm-Message-State: AOAM531epXoryQcfDQqpZE36IQRC/Edxhjhht4OtZKwZv3e4s1UOKWOF
-        eueRRaX+SrMF5sNO74nIOlMqmJDTOfmUjVdvUflU8Q==
-X-Google-Smtp-Source: ABdhPJwv/XL42FjlaV4YmCa1W6/N3Og+4Jo4QusVLtPKkrXZG2cE7REgeeOY3V4WmP7CC0ywMKK8tCkZjLq3IaF2zWs=
-X-Received: by 2002:a5b:ec1:: with SMTP id a1mr18721631ybs.41.1591112895689;
- Tue, 02 Jun 2020 08:48:15 -0700 (PDT)
+        Tue, 2 Jun 2020 11:48:45 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48184 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgFBPso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:48:44 -0400
+Received: from zn.tnic (p200300ec2f0bbb004c909b752ca088bd.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bb00:4c90:9b75:2ca0:88bd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0D9271EC038A;
+        Tue,  2 Jun 2020 17:48:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591112923;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fCE7XnSzuHCBf0EmgG3ZG39d7yjE0cZazFJrEr58cHE=;
+        b=fAoQPsCm79xYXWrZ6kEAimJr0hQAGlNoqVWQQaEsH1RK2gWMFeOTiNP4cBcFCmagH/n6Hh
+        +s/bO0IYd3b4HhIsCLJ+RYAfLW7Zpvt5BslquT6QoQsBpSX/3cGpmyx32mBexAiPSQh63T
+        9V5Ep1+sS3p5RxBZfWfIFM4BqlpWRDk=
+Date:   Tue, 2 Jun 2020 17:48:43 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] EDAC/ghes: Setup DIMM label from DMI and use it in
+ error reports
+Message-ID: <20200602154843.GD11634@zn.tnic>
+References: <20200528101307.23245-1-rrichter@marvell.com>
 MIME-Version: 1.0
-References: <20200531162206.911168-1-jolsa@kernel.org> <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
- <20200601082027.GF881900@krava> <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
- <20200602101736.GE1112120@krava>
-In-Reply-To: <20200602101736.GE1112120@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 Jun 2020 08:48:04 -0700
-Message-ID: <CAP-5=fVrxpXAp3btYWJAXnnSC4fMLOza+hULRXVm1LKTj7P20A@mail.gmail.com>
-Subject: Re: [PATCHv3] perf stat: Ensure group is defined on top of the same
- cpu mask
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200528101307.23245-1-rrichter@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 3:17 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> Jin Yao reported the issue (and posted first versions of this change)
-> with groups being defined over events with different cpu mask.
->
-> This causes assert aborts in get_group_fd, like:
->
->   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
->   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
->   Aborted
->
-> All the events in the group have to be defined over the same
-> cpus so the group_fd can be found for every leader/member pair.
->
-> Adding check to ensure this condition is met and removing the
-> group (with warning) if we detect mixed cpus, like:
->
->   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
->   WARNING: event cpu maps do not match, disabling group:
->     anon group { power/energy-cores/, cycles }
->     anon group { instructions, power/energy-cores/ }
->
-> Ian asked also for cpu maps details, it's displayed in verbose mode:
->
->   $ sudo perf stat -e '{cycles,power/energy-cores/}' -v
->   WARNING: group events cpu maps do not match, disabling group:
->     anon group { power/energy-cores/, cycles }
->        power/energy-cores/: 0
->        cycles: 0-7
->     anon group { instructions, power/energy-cores/ }
->        instructions: 0-7
->        power/energy-cores/: 0
->
-> Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
-> Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-
-Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks!
-Ian
-
+On Thu, May 28, 2020 at 12:13:06PM +0200, Robert Richter wrote:
+> The ghes driver reports errors with 'unknown label' even if the actual
+> DIMM label is known, e.g.:
+> 
+>  EDAC MC0: 1 CE Single-bit ECC on unknown label (node:0 card:0
+>    module:0 rank:1 bank:0 col:13 bit_pos:16 DIMM location:N0 DIMM_A0
+>    page:0x966a9b3 offset:0x0 grain:1 syndrome:0x0 - APEI location:
+>    node:0 card:0 module:0 rank:1 bank:0 col:13 bit_pos:16 DIMM
+>    location:N0 DIMM_A0 status(0x0000000000000400): Storage error in
+>    DRAM memory)
+> 
+> Fix this by using struct dimm_info's label string in error reports:
+> 
+>  EDAC MC0: 1 CE Single-bit ECC on N0 DIMM_A0 (node:0 card:0 module:0
+>    rank:1 bank:515 col:14 bit_pos:16 DIMM location:N0 DIMM_A0
+>    page:0x99223d8 offset:0x0 grain:1 syndrome:0x0 - APEI location:
+>    node:0 card:0 module:0 rank:1 bank:515 col:14 bit_pos:16 DIMM
+>    location:N0 DIMM_A0 status(0x0000000000000400): Storage error in
+>    DRAM memory)
+> 
+> The labels are initialized by reading the bank and device strings from
+> DMI. Now, the label information can also read from sysfs. E.g. a
+> ThunderX2 system will show the following:
+> 
+>  /sys/devices/system/edac/mc/mc0/dimm0/dimm_label:N0 DIMM_A0
+>  /sys/devices/system/edac/mc/mc0/dimm1/dimm_label:N0 DIMM_B0
+>  /sys/devices/system/edac/mc/mc0/dimm2/dimm_label:N0 DIMM_C0
+>  /sys/devices/system/edac/mc/mc0/dimm3/dimm_label:N0 DIMM_D0
+>  /sys/devices/system/edac/mc/mc0/dimm4/dimm_label:N0 DIMM_E0
+>  /sys/devices/system/edac/mc/mc0/dimm5/dimm_label:N0 DIMM_F0
+>  /sys/devices/system/edac/mc/mc0/dimm6/dimm_label:N0 DIMM_G0
+>  /sys/devices/system/edac/mc/mc0/dimm7/dimm_label:N0 DIMM_H0
+>  /sys/devices/system/edac/mc/mc0/dimm8/dimm_label:N1 DIMM_I0
+>  /sys/devices/system/edac/mc/mc0/dimm9/dimm_label:N1 DIMM_J0
+>  /sys/devices/system/edac/mc/mc0/dimm10/dimm_label:N1 DIMM_K0
+>  /sys/devices/system/edac/mc/mc0/dimm11/dimm_label:N1 DIMM_L0
+>  /sys/devices/system/edac/mc/mc0/dimm12/dimm_label:N1 DIMM_M0
+>  /sys/devices/system/edac/mc/mc0/dimm13/dimm_label:N1 DIMM_N0
+>  /sys/devices/system/edac/mc/mc0/dimm14/dimm_label:N1 DIMM_O0
+>  /sys/devices/system/edac/mc/mc0/dimm15/dimm_label:N1 DIMM_P0
+> 
+> Since dimm_labels can be rewritten, that label will be used in a later
+> error report:
+> 
+>  # echo foobar >/sys/devices/system/edac/mc/mc0/dimm0/dimm_label
+>  # # some error injection here
+>  # dmesg | grep foobar
+>  [ 751.383533] EDAC MC0: 1 CE Single-bit ECC on foobar (node:0 card:0
+>  module:0 rank:1 bank:259 col:3 bit_pos:16 DIMM location:N0 DIMM_A0
+>  page:0x8c8dc74 offset:0x0 grain:1 syndrome:0x0 - APEI location:
+>  node:0 card:0 module:0 rank:1 bank:259 col:3 bit_pos:16 DIMM
+>  location:N0 DIMM_A0 status(0x0000000000000400): Storage error in DRAM
+>  memory)
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
 > ---
->  tools/perf/builtin-stat.c | 55 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->
->  v3 changes:
->    - reword the warning with Ian's suggestion
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index b2b79aa161dd..9be020e0098a 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -190,6 +190,59 @@ static struct perf_stat_config stat_config = {
->         .big_num                = true,
->  };
->
-> +static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-> +{
-> +       if (!a->core.cpus && !b->core.cpus)
-> +               return true;
-> +
-> +       if (!a->core.cpus || !b->core.cpus)
-> +               return false;
-> +
-> +       if (a->core.cpus->nr != b->core.cpus->nr)
-> +               return false;
-> +
-> +       for (int i = 0; i < a->core.cpus->nr; i++) {
-> +               if (a->core.cpus->map[i] != b->core.cpus->map[i])
-> +                       return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +static void evlist__check_cpu_maps(struct evlist *evlist)
-> +{
-> +       struct evsel *evsel, *pos, *leader;
-> +       char buf[1024];
-> +
-> +       evlist__for_each_entry(evlist, evsel) {
-> +               leader = evsel->leader;
-> +
-> +               /* Check that leader matches cpus with each member. */
-> +               if (leader == evsel)
-> +                       continue;
-> +               if (cpus_map_matched(leader, evsel))
-> +                       continue;
-> +
-> +               /* If there's mismatch disable the group and warn user. */
-> +               WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
-> +               evsel__group_desc(leader, buf, sizeof(buf));
-> +               pr_warning("  %s\n", buf);
-> +
-> +               if (verbose) {
-> +                       cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
-> +                       pr_warning("     %s: %s\n", leader->name, buf);
-> +                       cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
-> +                       pr_warning("     %s: %s\n", evsel->name, buf);
-> +               }
-> +
-> +               for_each_group_evsel(pos, leader) {
-> +                       pos->leader = pos;
-> +                       pos->core.nr_members = 0;
-> +               }
-> +               evsel->leader->core.nr_members = 0;
-> +       }
-> +}
-> +
->  static inline void diff_timespec(struct timespec *r, struct timespec *a,
->                                  struct timespec *b)
->  {
-> @@ -2113,6 +2166,8 @@ int cmd_stat(int argc, const char **argv)
->                 goto out;
->         }
->
-> +       evlist__check_cpu_maps(evsel_list);
-> +
->         /*
->          * Initialize thread_map with comm names,
->          * so we could print it out on output.
-> --
-> 2.25.4
->
+> v4:
+> 
+>  * dimm->label: Only update dimm->label in if bank/device is found in
+>    the SMBIOS table, this keeps current behavior for machines that do
+>    not provide this information.
+> 
+>  * e->location: Keep current behavior how e->location is written.
+> 
+>  * e->label: Use dimm->label if a DIMM was found by its handle and
+>    "unknown memory" otherwise. This aligns with the edac_mc
+>    implementation.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/ghes_edac.c | 37 ++++++++++++++++++++++++++-----------
+>  1 file changed, 26 insertions(+), 11 deletions(-)
+
+Yap, looks good. I'll queue it after the merge window.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
