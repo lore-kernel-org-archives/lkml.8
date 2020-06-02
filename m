@@ -2,129 +2,65 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71733C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCB82073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JRLmveyb"
+	by mail.kernel.org (Postfix) with ESMTP id 50EF0206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgFBBtO (ORCPT
+        id S1728392AbgFBBur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 21:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgFBBtN (ORCPT
+        Mon, 1 Jun 2020 21:50:47 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:52495 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725940AbgFBBur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 21:49:13 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FBFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 18:49:12 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id c1so1097358vsc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 18:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NDWXl875dqN44wgKFWnb7J8N8ciIKNPrxB/hfgmRf6E=;
-        b=JRLmveybXPnxAdAR5ejEglrEmyOiyP2YL2RN5n/MlBp2MeNBhvGO9anSMkR3eqhh2t
-         MgO/u4vY2vqOpbDz0WmA+G8JfN3AvlcSQNL+pgdrCUxXm7CigG5cODeMhRLWCjwTGpRn
-         7eZF8CynOwdiB9tMawAwrh2u90FVicvWPMPcM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NDWXl875dqN44wgKFWnb7J8N8ciIKNPrxB/hfgmRf6E=;
-        b=tr+w+Pp1yIAdW5u6HHel+ocaCxh5JUjH21PhhllWANZobmh0NXRK0Mxt5h116oROF/
-         T2mpQ9GWGuJgZnKrGkyUxdkk8U6ARCbQIvhXX8EY208rm5iK7y5XbjBRFI9N31XqPBT7
-         LQjxpfNvQwPNpTeC5xbI8qMEZkXymqCliBZp+1FojITakFXtmSs34p7YWSNQAPMpYVFl
-         hORwHrWJ6ij0KzJtzBf8UfjbGnPgekuxt4xkdIk3+7/y5mxEtmcclqdTZLfXwKjLk+KQ
-         jMtzuy1WeeGJD/kVXBg4XfFM9xTWiRKKUMnYvtxd+6jB3Zk4+XdibMjMWMlQxZ6YfPpB
-         QKAA==
-X-Gm-Message-State: AOAM531RPeMMr4jhtnAiOH5Y4ZOmigCvW/bVaFTP5Wa5nBV0lgiq0x4f
-        irPvaB4cbmeY3rjXTgZex0D9VZ9K+m5N6DQBTgqGjw==
-X-Google-Smtp-Source: ABdhPJxnHpMSeb4VtSaFWRyXvmhoyEPhwE9kbpqMX2s88ZGNeqayUOtFxrd5o6oexWenHvUstmO2cW6SOHcwY/BFIpg=
-X-Received: by 2002:a67:b10c:: with SMTP id w12mr2735002vsl.96.1591062551158;
- Mon, 01 Jun 2020 18:49:11 -0700 (PDT)
+        Mon, 1 Jun 2020 21:50:47 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U-Kjvi7_1591062644;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U-Kjvi7_1591062644)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 02 Jun 2020 09:50:44 +0800
+Date:   Tue, 2 Jun 2020 09:50:44 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     =?iso-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu: Improve exception handling in iommu_group_alloc()
+Message-ID: <20200602015044.GA89266@VM20190228-100.tbsite.net>
+Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
+References: <9f8d8308-2056-8e33-7b38-0b7d96e51c3c@web.de>
 MIME-Version: 1.0
-References: <20200601184223.1.I281c81384150e8fefbebf32fa79cb091d0311208@changeid>
-In-Reply-To: <20200601184223.1.I281c81384150e8fefbebf32fa79cb091d0311208@changeid>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Mon, 1 Jun 2020 18:48:56 -0700
-Message-ID: <CANFp7mXDvdicvyEpU-oDu4fBj92nQ7SENVdd_rG9TFQkqDevZg@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: Check scan state before disabling during suspend
-To:     Manish Mandlik <mmandlik@google.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=gb2312
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f8d8308-2056-8e33-7b38-0b7d96e51c3c@web.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey linux-bluetooth,
+On Mon, Jun 01, 2020 at 02:38:05PM +0200, Markus Elfring wrote:
+> > Optimize the error handling to free the resources correctly when
+> > failed to allocate an iommu group.
+> 
+> * I would not categorise the desired completion of exception handling
+>   as a software optimisation.
+> 
+> * Would you like to add the tag ¡°Fixes¡± to the commit message?
 
-We found this bug when reverting some Chromium maintained patches in
-our repository that was conditionally dropping LE scan enable commands
-if it wasn't toggling between true/false. On some Intel controllers,
-disabling LE scan when it's already disabled resulted in a "Command
-Disallowed" and this was causing suspend to fail.
+Sure.
 
-On Mon, Jun 1, 2020 at 6:43 PM Manish Mandlik <mmandlik@google.com> wrote:
->
-> Check current scan state by checking HCI_LE_SCAN flag and send scan
-> disable command only if scan is already enabled.
->
-> Signed-off-by: Manish Mandlik <mmandlik@google.com>
-> ---
->
->  net/bluetooth/hci_request.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-> index 1fc55685da62d..1acf5b8e0910c 100644
-> --- a/net/bluetooth/hci_request.c
-> +++ b/net/bluetooth/hci_request.c
-> @@ -998,8 +998,9 @@ static void hci_req_set_event_filter(struct hci_request *req)
->
->  static void hci_req_config_le_suspend_scan(struct hci_request *req)
->  {
-> -       /* Can't change params without disabling first */
-> -       hci_req_add_le_scan_disable(req);
-> +       /* Before changing params disable scan if enabled */
-> +       if (hci_dev_test_flag(req->hdev, HCI_LE_SCAN))
-> +               hci_req_add_le_scan_disable(req);
->
->         /* Configure params and enable scanning */
->         hci_req_add_le_passive_scan(req);
-> @@ -1065,8 +1066,9 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
->                 page_scan = SCAN_DISABLED;
->                 hci_req_add(&req, HCI_OP_WRITE_SCAN_ENABLE, 1, &page_scan);
->
-> -               /* Disable LE passive scan */
-> -               hci_req_add_le_scan_disable(&req);
-> +               /* Disable LE passive scan if enabled */
-> +               if (hci_dev_test_flag(hdev, HCI_LE_SCAN))
-> +                       hci_req_add_le_scan_disable(&req);
->
->                 /* Mark task needing completion */
->                 set_bit(SUSPEND_SCAN_DISABLE, hdev->suspend_tasks);
-> --
-> 2.27.0.rc2.251.g90737beb825-goog
->
+> 
+> * I suggest to avoid the specification of duplicate function calls.
+>   Will it be helpful to add a few jump targets?
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162#n455
 
-Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+I don't think it is helpful or readable to add some jump targets here, since the exception handling is very simple here.
+
