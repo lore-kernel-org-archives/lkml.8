@@ -8,39 +8,53 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 024AE2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F502072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Recp2UW/"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TolpJbbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgFBFBU (ORCPT
+        id S1726479AbgFBFCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:01:20 -0400
-Received: from mout.web.de ([212.227.15.14]:41923 "EHLO mout.web.de"
+        Tue, 2 Jun 2020 01:02:01 -0400
+Received: from mout.web.de ([212.227.15.4]:37269 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbgFBFBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:01:19 -0400
+        id S1725787AbgFBFCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 01:02:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591074069;
-        bh=zHqI1GAMJwZqmIDPE5y3OugxrSVMavbO35UgSeAkYXY=;
+        s=dbaedf251592; t=1591074093;
+        bh=rSRqzrMRlXkfuEUgD9N5R7LD1UlBMLz60V9os+TxIUY=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Recp2UW/oYs710LQsfdGOhPF8lrR0tKFkzaW5jZH24wy8MqX+/vrY0Y43ofY8DWIZ
-         0h+beahtPRDhWZiy/CYS6fkbZ+X7hwiUZOAb86GLPRbDsp5HR3vSeQSvfevjwDk+ZX
-         9E7cTb3RmZz4Ts4Zz3s6c7MSchVr7VBA+lhfpucI=
+        b=TolpJbbEj396FLD6uW5TZaec2SPDbH7z/EMLD893Drbo7lYhr/rmmRsS/5gBoOWGb
+         OXhx/FHJ2TrmQTQFych1YsZn35tl7Py2VHWIk+j7DdjwcgjLUFb24vu4dxx8zwRsit
+         jGmsXUzAlsTsw49lrixUMCv+4Ar3IfsztU+ZFTSA=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LzsHL-1itft93i9j-0150xe; Tue, 02
- Jun 2020 07:01:08 +0200
-Subject: Re: iommu: Improve exception handling in iommu_group_alloc()
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>,
-        iommu@lists.linux-foundation.org
-Cc:     =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <9f8d8308-2056-8e33-7b38-0b7d96e51c3c@web.de>
- <20200602015044.GA89266@VM20190228-100.tbsite.net>
+Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LvOd9-1iy5jK2Z1f-010faM; Tue, 02
+ Jun 2020 07:01:33 +0200
+Subject: Re: [PATCH] powerpc/nvram: Replace kmalloc with kzalloc in the error
+ message
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Liao Pingfang <liao.pingfang@zte.com.cn>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Allison Randal <allison@lohutok.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colin Cross <ccross@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Wang Liang <wang.liang82@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <c3d22d89-9133-30aa-8270-c515df214963@web.de>
+ <87imgai394.fsf@mpe.ellerman.id.au>
 From:   Markus Elfring <Markus.Elfring@web.de>
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -85,54 +99,77 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <b31fbcd1-b5f8-992b-a994-2a950ab36b61@web.de>
-Date:   Tue, 2 Jun 2020 07:01:02 +0200
+Message-ID: <a3c158fa-3829-f38a-9202-8984b5ef5f21@web.de>
+Date:   Tue, 2 Jun 2020 07:01:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200602015044.GA89266@VM20190228-100.tbsite.net>
-Content-Type: text/plain; charset=gbk
+In-Reply-To: <87imgai394.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IjVHXgPRzlfa123te7yZO+U4OOeKvoJhxBrMAQrVa8Etkvs6hzr
- ozslxFmzsjgF32z4qxORpNQu0oVG9tU8BzPsggnN6HRyO6n8f2lRZPODSdvGXNus00RQvB5
- nXrpYGMVrcD2vZGMuGvA5JEnLdklF7biuvTR6j1o1fNIvMrkpn9jIOn/rK6A9xPCqJR93f+
- Kw6pV4a5BYvjr/HkTms/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LGZxHV+/tWg=:cwNdpUHF3HBFpoxqeaI8nq
- eqZmAQj0ZIxKXCPZWGKZZTwRVRdIuf2XUsbIpF8kP5SAzWjVPgCrQieNA7/sJlAF84a3P9dKF
- S2WRvExAW/yA8f/sKZarIViaiT8SqFpVGaE+wqIxhuTN5r9wfltGIr6PMwezBCp2b6R4jaHEU
- jF0EwWA1s65YCSqrFy4F+3R2Nw+mMV9kz/snqJt6DPbSPxNCI+TTwNraD5Z/j9enue6Jij3u2
- UviizRoZUuTqe5JSqllFaNKAJ78t0M69P8Rh3cndxngkQcSx28sjwnKB76G6rTjtC4+48SIXM
- rwyJu98g7bk6jdsxsq7iCf5kCq90bch/EC7jiloUsp2ODTZ692MDQhEzwPiaeOwo9Lavd8qXA
- rDMSTiupHwAFyvBZ5dJIn+xvHqqjLO2GoxEYW6bGOOTIGz5N/s3UgeqMDVlXcz2fHLqnV/Zht
- vJkSg/T4PYsk4Msvtif9mG2rtLD11pnGR475pl9p32IF/hSZwK8Nl81+KrmCOSaa/v8VVOYVE
- P9ZhgKdqhUcyprpYbVQZ06QGC2KYkLPB26WIS1CJer825QxQZDvBDnR9sLM+IUdS8/x36ECNx
- gmWC+3LePYaHtTztFyKI/xqgE+8c+LcuLXdnLxHxQ+kGL3AXnRZ6lknWbjOy/sAUqTqBSMmEz
- f3YcTBDHfQ+10PV/7Rp4pvKMXlxGe30ckUxfz+GeKSHPyQs9iletV4G9YkvEkvnf9MGFvu6lv
- /529YJqptGmJSebz6Ssb9UiJo0nBo0TDr8VcsDdbQBHy3lQahBq5xz/Bwz8hBRF+d43GzNon6
- +RCEfefI/sZvQJDVaRmM740uj1asg58l475LPt/IxJUyNeJk4RkZnGrb05MPADchwBI3nMWc2
- 8ZY6ZnruFvtzk+maivYymTKugGoToK5v/2zl/WlLnECvuzicYQJs4z6cLQ2nAVBMhWVljdI9f
- DEt1mNc3W86W2WhCoIiaS18gYrj6CcJ3mentE3UBeP8POsE9D9lcjzNr1vvS3W2HTuB0cGxM0
- F1Su5sw0CmvgwiEaIRZiUNwlCqU7QgHHWWq40/hr8YmZOXsK4NNS7X+dMUeiFbHykhqhONfkl
- BxbLWThiHnqF+rmILChjqpw0REQiYfAh1ufcqEflgGPWxtFmSyyUyId37UO38GwSwtg8iqkcA
- sMp3mFLvlGv8dqyb8wl4j+qNpWtiej8trbFl4jr2cBgzfgkCZg7ke1/WSQADohNO6oood7ugV
- SX6weTaeM836GfUuu
+X-Provags-ID: V03:K1:tmc1YrdmCshGCD/Q5q5Xc0KQ0HVjn/UW1vFu9dTbM7TncNrhkjU
+ zhDaI7SpDjgEVN4wirGuwznGU2hp3/muPxd1zdB0eNLqriXLTIyeRmLv4yQSwnQyxGtYsuT
+ 8NDYvmUTWfkdvFJoxTYz4Vam1jl8SVzDYhmvnnXhIG4c+vIsW9F17qyPbUMe36MtSPHpQsS
+ eRW9zwhlX9NK2pjHF9dXQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aGZLdZQ/QRc=:vnEqsY9dpuIRAOez5bVJ6Z
+ 9hKV9wXdlkwj40H0rCTKMsGWBmfM+NL5v8vTaPZXXlxGwFTI5vKb1TqTkb+9gznuO8cY9DSuT
+ T4DYNNBT7j7wcLv0muLQI/G0ct6+XfNrkYAIaB0E3xh4qkzqOhy+7oP0CI/CjGjbgI1GhrPac
+ 2F3xIZQ49YdmGdLWQb9OPbEnOz2GQhwtjm/hejUn6wLNHM6bvv6GWrcPuVK2VEzfqLs9MJV1/
+ nTc+WcNUY/HEBV+0eiuiuobczht6r5YNVj6Z4f+XwPvvBzMtcQULgDTeLolWHIqEtzFL7h/AS
+ coylKDRJ1luwQSRtZCnyyzvp4L0D6qXAtXtGC3lDxFdnmn8gk30ZEArV7IgSCh/Ef2wElKJoR
+ 5fkUhQAs3QQCdh2vFjdplTQOcL/2ZL18+p7shAJdhMRouCymXhmA1XqGu8XGZAG3wZK5Ytyhd
+ h83rB6t14Aoba9XLbGb3g5Wu7K/mcdopU4c574qUq3kTQGKVJj/oIuehvY+GAYpgYWPWAAu6V
+ JnOnijz8OFKh6fBbgtiNkrbZfrbflhlG0Nmt76mptrG+ZBxfJc6aJffpbeNE1B673IT2bZ6q5
+ chBOGxdUyVOVRgxadlMsFSfpRdQOzI1mPiH1yn8t/bwFkHyb6cGdDwAwu7bkAcNC+x0lYrr7P
+ DW/S9Yd6oFhnLh6sZdTyN3xuTf9LoOhRfQ+5L37Ro9aufP840YoEg70cUS88c8R/0Bo6ftSFf
+ Zb8j2MKwi95GoS0iL73JAdNLI5+7eLHNTSCrj64rcbpRzlnyrPuH5CXFXiLwxcTGB4LZ7SUkV
+ eEXYmPKe6rqGe7cZbVIKXigRMDPz3tFEVePWO1NntMyMmLDTFc3g2joZTeAAadJJRs8VcwV0T
+ tLlhGkVYDaYoYs4eS5llNEuFhUorZzdLPA5hPz27HPkMszuaRhX0iAcIKPfK1diWpGazBX1sf
+ PjES5WdA04ZKjK4F6ajn0+gJNgc8z+tgra91bl4pLs5/ygbTQl/+eV5eQ2obVz/jP0doRA9l9
+ COoi4LaFblAvLz+TDH+BH25vnXzfEFxxwkYWvLK0J4lbeQqOjEg1FWeyh3yzRhdK0ms3cHAFN
+ VBH/pMT5HGXy8z674NKa8XraduMj27oYubODtm3MxrcMqs7bIzPTRpJJx5y8uCfNu++b7fXw0
+ 0uDOiI5cltYKkOba0D8PCC7qO7AfyVQ5RWU/VkMex9FXpY1g0xQah/uaIvuRylFOpYzAvohCX
+ 0dNtPHy8cz7jn/yCa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> * I suggest to avoid the specification of duplicate function calls.
->>   Will it be helpful to add a few jump targets?
->>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/Documentation/process/coding-style.rst?id=3D3d77e6a8804abcc0504c904bd6e=
-5cdf3a5cf8162#n455
+>>> Please just remove the message instead, it's a tiny allocation that's
+>>> unlikely to ever fail, and the caller will print an error anyway.
+>>
+>> How do you think about to take another look at a previous update sugges=
+tion
+>> like the following?
+>>
+>> powerpc/nvram: Delete three error messages for a failed memory allocati=
+on
+>> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/00845261-8528-d=
+011-d3b8-e9355a231d3a@users.sourceforge.net/
+>> https://lore.kernel.org/linuxppc-dev/00845261-8528-d011-d3b8-e9355a231d=
+3a@users.sourceforge.net/
+>> https://lore.kernel.org/patchwork/patch/752720/
+>> https://lkml.org/lkml/2017/1/19/537
 >
-> I don't think it is helpful or readable to add some jump targets here,
-> since the exception handling is very simple here.
+> That deleted the messages from nvram_scan_partitions(), but neither of
+> the callers of nvram_scan_paritions() check its return value or print
+> anything if it fails. So removing those messages would make those
+> failures silent which is not what we want.
 
-Do you disagree to the application of the Linux coding style then
-for the recommended exception handling?
+* How do you think about information like the following?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/coding-style.rst?id=3Df359287765c04711ff54fbd1164527=
+1d8e5ff763#n883
+=E2=80=9C=E2=80=A6
+These generic allocation functions all emit a stack dump on failure when u=
+sed
+without __GFP_NOWARN so there is no use in emitting an additional failure
+message when NULL is returned.
+=E2=80=A6=E2=80=9D
+
+* Would you like to clarify software development concerns around
+  the Linux allocation failure report any more?
 
 Regards,
 Markus
