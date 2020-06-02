@@ -2,180 +2,231 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D145E2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F18207D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="iXfuwD/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgFBQqJ (ORCPT
+        id S1726485AbgFBQsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:46:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:52658 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728194AbgFBQqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:46:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B9E331B;
-        Tue,  2 Jun 2020 09:46:05 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1F343F52E;
-        Tue,  2 Jun 2020 09:46:01 -0700 (PDT)
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-To:     Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200511154053.7822-1-qais.yousef@arm.com>
- <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200529100806.GA3070@suse.de>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
-Date:   Tue, 2 Jun 2020 18:46:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 12:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBQsB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 12:48:01 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 251D0C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 09:48:01 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id i16so4528988qtr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 09:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=yfHwoHEEV5QL/aPzxV6Lxt7b4KjqGfFRukmk4UWU4Eo=;
+        b=iXfuwD/1eJMbgoibB0GhywAuIPYFweGOJWelKhOAL0/I9vM5xGnRGzX6FzWLb98DKC
+         jNxNWkwac7/q27BL7HiSxewrHmRkel4MeEDY5UaCN1B7pVYZ69r3TwyFkpc3UpKm1DUh
+         z9Dd9qrJHboOvjbUj2iXohU4nGSSQHQS72BbDx4aA3oA1EmwJfAen+iWl7L9edrUPTtQ
+         iAMmcDcaHZMDdWwcMdwdYQN/ZuQXmvWVBgfJbT5k+NuaL8Tmsc021adF2NxttOIghuL8
+         hQrT7ZvA4oxMSzRJ45QEtqya0KxYSfi7twccFGzk4m3hldkG2L2JMpNchWNsQQ/F90oo
+         H/9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yfHwoHEEV5QL/aPzxV6Lxt7b4KjqGfFRukmk4UWU4Eo=;
+        b=Qc728XL6YnYUvn+Ddl+zv7sFU9gI/jPjuMqVb/1Nfh11j4wNZJPUSMBQVovy60ofjQ
+         8M0/kSOF2RO5du3r6KTiVtw3bBO+LrmQbLExK+nK10r93qmcHXskJ7//yARcSuMQXgbc
+         B5gysq++ofvJmSApxmfsE8a4be0VNICVCQBj3sPN4iKZ9JqYjiGryScIaPqkzuig7mcD
+         ovKn3ZaXJxsqxgvkYka6Z437CbxmKRqRcviGYtQB7AMeTG8nxuQee4/br2fTNVozBasb
+         82PMXlL4OenaxDF3dnJ9PBWIa9/q98RZifU2TSH0ilFYnoyM+woMnNic78MZHtvOJqmG
+         cxCg==
+X-Gm-Message-State: AOAM532ZC0F27wnHNdTEKcn5+D4SK6ZHs2auT84by28BHx6383iwBm51
+        Ko3iPnfrR1RNC1xtXv5bGzgkSQ==
+X-Google-Smtp-Source: ABdhPJwBUSMRhMSr3A93/eStB3AVK2wrSHs6QWoxrCs8SnoVfB8Brx+0QRrCn3tM5ktj3rbTD6rrlQ==
+X-Received: by 2002:ac8:2c57:: with SMTP id e23mr19758537qta.231.1591116480146;
+        Tue, 02 Jun 2020 09:48:00 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:a7d7])
+        by smtp.gmail.com with ESMTPSA id a188sm2757826qkg.11.2020.06.02.09.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 09:47:59 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 12:47:26 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Subject: Re: [PATCH 05/14] mm: workingset: let cache workingset challenge anon
+Message-ID: <20200602164726.GA225032@cmpxchg.org>
+References: <20200520232525.798933-6-hannes@cmpxchg.org>
+ <CAAmzW4MMLw=4BHRtt=g8BHpQLTaSmhG03Ct6WMjmDxVnOkNQYA@mail.gmail.com>
+ <20200527134333.GF6781@cmpxchg.org>
+ <CAAmzW4NW+cv7VnNApWKJr4r9=QKaufK3y5apyNXo-M-y=q0dgg@mail.gmail.com>
+ <20200528170155.GA69521@cmpxchg.org>
+ <CAAmzW4NEPZRWL5PBXEWwg9kBOL9fYUNqTTzh3WRDWbaSPLv=CQ@mail.gmail.com>
+ <20200529151228.GA92892@cmpxchg.org>
+ <CAAmzW4Pccc4UcBThhKyqbtY=kK83Fz7k4vYR4eJN4te2E25=_A@mail.gmail.com>
+ <20200601155615.GA131075@cmpxchg.org>
+ <CAAmzW4NDVznjOsW1Vgg1P+0vSQarE1ziY=MN5S5f70pQiOPn-Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529100806.GA3070@suse.de>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAmzW4NDVznjOsW1Vgg1P+0vSQarE1ziY=MN5S5f70pQiOPn-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.05.20 12:08, Mel Gorman wrote:
-> On Thu, May 28, 2020 at 06:11:12PM +0200, Peter Zijlstra wrote:
->>> FWIW, I think you're referring to Mel's notice in OSPM regarding the overhead.
->>> Trying to see what goes on in there.
->>
->> Indeed, that one. The fact that regular distros cannot enable this
->> feature due to performance overhead is unfortunate. It means there is a
->> lot less potential for this stuff.
+On Tue, Jun 02, 2020 at 11:34:17AM +0900, Joonsoo Kim wrote:
+> 2020년 6월 2일 (화) 오전 12:56, Johannes Weiner <hannes@cmpxchg.org>님이 작성:
+> > On Mon, Jun 01, 2020 at 03:14:24PM +0900, Joonsoo Kim wrote:
+> > > But, I still think that modified refault activation equation isn't
+> > > safe. The next
+> > > problem I found is related to the scan ratio limit patch ("limit the range of
+> > > LRU type balancing") on this series. See the below example.
+> > >
+> > > anon: Hot (X M)
+> > > file: Hot (200 M) / dummy (200 M)
+> > > P: 1200 M (3 parts, each one 400 M, P1, P2, P3)
+> > > Access Pattern: A -> F(H) -> P1 -> A -> F(H) -> P2 -> ... ->
+> > >
+> > > Without this patch, A and F(H) are kept on the memory and look like
+> > > it's correct.
+> > >
+> > > With this patch and below fix, refault equation for Pn would be:
+> > >
+> > > Refault dist of Pn = 1200 (from file non-resident) + 1200 * anon scan
+> > > ratio (from anon non-resident)
+> > > anon + active file = X + 200
+> > > 1200 + 1200 * anon scan ratio (0.5 ~ 2) < X + 200
+> >
+> > That doesn't look quite right to me. The anon part of the refault
+> > distance is driven by X, so the left-hand of this formula contains X
+> > as well.
+> >
+> > 1000 file (1200M reuse distance, 200M in-core size) + F(H) reactivations + X * scan ratio < X + 1000
 > 
-> During that talk, I was a vague about the cost, admitted I had not looked
-> too closely at mainline performance and had since deleted the data given
-> that the problem was first spotted in early April. If I heard someone
-> else making statements like I did at the talk, I would consider it a bit
-> vague, potentially FUD, possibly wrong and worth rechecking myself. In
-> terms of distributions "cannot enable this", we could but I was unwilling
-> to pay the cost for a feature no one has asked for yet. If they had, I
-> would endevour to put it behind static branches and disable it by default
-> (like what happened for PSI). I was contacted offlist about my comments
-> at OSPM and gathered new data to respond properly. For the record, here
-> is an editted version of my response;
+> As I said before, there is no X on left-hand of this formula. To
+> access all Pn and
+> re-access P1, we need 1200M file list scan and reclaim. More scan isn't needed.
+> With your patch "limit the range of LRU type balancing", scan ratio
+> between file/anon
+> list is limited to 0.5 ~ 2.0, so, maximum anon scan would be 1200 M *
+> 2.0, that is,
+> 2400 M and not bounded by X. That means that file list cannot be
+> stable with some X.
 
-[...]
+Oh, no X on the left because you're talking about the number of pages
+scanned until the first refaults, which is fixed - so why are we still
+interpreting the refault distance against a variable anon size X?
 
-I ran these tests on 'Ubuntu 18.04 Desktop' on Intel E5-2690 v2
-(2 sockets * 10 cores * 2 threads) with powersave governor as:
+Well, that's misleading. We compare against anon because part of the
+cache is already encoded in the refault distance. What we're really
+checking is access distance against total amount of available RAM.
 
-$ numactl -N 0 ./run-mmtests.sh XXX
+Consider this. We want to activate pages where
 
-w/ config-network-netperf-unbound.
+	access_distance <= RAM
 
-Running w/o 'numactl -N 0' gives slightly worse results.
+and our measure of access distance is:
 
-without-clamp      : CONFIG_UCLAMP_TASK is not set
-with-clamp         : CONFIG_UCLAMP_TASK=y,
-                     CONFIG_UCLAMP_TASK_GROUP is not set
-with-clamp-tskgrp  : CONFIG_UCLAMP_TASK=y,
-                     CONFIG_UCLAMP_TASK_GROUP=y
+	access_distance = refault_distance + inactive_file
 
+So the comparison becomes:
 
-netperf-udp
-                                ./5.7.0-rc7            ./5.7.0-rc7            ./5.7.0-rc7
-                              without-clamp             with-clamp      with-clamp-tskgrp
+	refault_distance + inactive_file < RAM
 
-Hmean     send-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-Hmean     send-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-Hmean     send-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-Hmean     send-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-Hmean     send-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.96 *   1.24%*
-Hmean     send-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-Hmean     send-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-Hmean     send-8192     14961.77 (   0.00%)    14418.92 *  -3.63%*    14908.36 *  -0.36%*
-Hmean     send-16384    25799.50 (   0.00%)    25025.64 *  -3.00%*    25831.20 *   0.12%*
-Hmean     recv-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-Hmean     recv-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-Hmean     recv-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-Hmean     recv-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-Hmean     recv-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.95 *   1.24%*
-Hmean     recv-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-Hmean     recv-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-Hmean     recv-8192     14961.61 (   0.00%)    14418.88 *  -3.63%*    14908.30 *  -0.36%*
-Hmean     recv-16384    25799.39 (   0.00%)    25025.49 *  -3.00%*    25831.00 *   0.12%*
+which we simplify to:
 
-netperf-tcp
- 
-Hmean     64              818.65 (   0.00%)      812.98 *  -0.69%*      826.17 *   0.92%*
-Hmean     128            1569.55 (   0.00%)     1555.79 *  -0.88%*     1586.94 *   1.11%*
-Hmean     256            2952.86 (   0.00%)     2915.07 *  -1.28%*     2968.15 *   0.52%*
-Hmean     1024          10425.91 (   0.00%)    10296.68 *  -1.24%*    10418.38 *  -0.07%*
-Hmean     2048          17454.51 (   0.00%)    17369.57 *  -0.49%*    17419.24 *  -0.20%*
-Hmean     3312          22509.95 (   0.00%)    22229.69 *  -1.25%*    22373.32 *  -0.61%*
-Hmean     4096          25033.23 (   0.00%)    24859.59 *  -0.69%*    24912.50 *  -0.48%*
-Hmean     8192          32080.51 (   0.00%)    31744.51 *  -1.05%*    31800.45 *  -0.87%*
-Hmean     16384         36531.86 (   0.00%)    37064.68 *   1.46%*    37397.71 *   2.37%*
+	refault_distance < active_file + anon
 
-The diffs are smaller than on openSUSE Leap 15.1 and some of the
-uclamp taskgroup results are better?
+There is a certain threshold for X simply because there is a certain
+threshold for RAM beyond which we need to start activating. X cannot
+be arbitrary, it must be X + cache filling up memory - after all we
+have page reclaim evicting pages.
 
-With this test setup we now can play with the uclamp code in
-enqueue_task() and dequeue_task().
+Again, this isn't new. In the current code, we activate when:
 
----
+	refault_distance < active_file
 
-W/ config-network-netperf-unbound (only netperf-udp and buffer size 64):
+which is
 
-$ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp/perf.data | grep activate_task
+	access_distance <= RAM - anon
 
-# Event 'cycles:ppp'
-#
-# Baseline  Delta Abs  Shared Object            Symbol
+You can see, whether things are stable or not always depends on the
+existing workingset size. It's just a proxy for how much total RAM we
+have potentially available to the refaulting page.
 
-     0.02%     +0.54%  [kernel.vmlinux]         [k] activate_task
-     0.02%     +0.38%  [kernel.vmlinux]         [k] deactivate_task
+> If my lastly found example is a correct example (your confirm is required),
+> it is also related to the correctness issue since cold pages causes
+> eviction of the hot pages repeatedly.
 
-$ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp-tskgrp/perf.data | grep activate_task
+I think your example is correct, but it benefits from the VM
+arbitrarily making an assumption that has a 50/50 shot of being true.
 
-     0.02%     +0.35%  [kernel.vmlinux]         [k] activate_task
-     0.02%     +0.34%  [kernel.vmlinux]         [k] deactivate_task
+You and I know which pages are hot and which are cold because you
+designed the example.
 
----
+All the VM sees is this:
 
-I still see 20 out of 90 tests with the warning message that the
-desired confidence was not achieved though.
+- We have an established workingset that has previously shown an
+  access distance <= RAM and therefor was activated.
 
-"
-!!! WARNING
-!!! Desired confidence was not achieved within the specified iterations.
-!!! This implies that there was variability in the test environment that
-!!! must be investigated before going further.
-!!! Confidence intervals: Throughput      : 6.727% <-- more than 5% !!!
-!!!                       Local CPU util  : 0.000%
-!!!                       Remote CPU util : 0.000%
-"
+- We now have another set that also appears to have an access distance
+  <= RAM. The only way to know for sure, however, is sample the
+  established workingset and compare the relative access frequencies.
 
-mmtests seems to run netperf with the following '-I' and 'i' parameter
-hardcoded: 'netperf -t UDP_STREAM -i 3,3 -I 95,5' 
+Currently, we just assume the incoming pages are colder. Clearly
+that's beneficial when it's true. Clearly that can be totally wrong.
+
+We must allow a fair comparison between these two sets.
+
+For cache, that's already the case - that's why I brought up the
+cache-only example: if refault distances are 50M and you have 60M of
+active cache, we activate all refaults and force an even competition
+between the established workingset and the new pages.
+
+Whether we can protect active file when anon needs to shrink first and
+can't (the activate/iocost split) that's a different question. But I'm
+no longer so sure after looking into it further.
+
+First, we would need two different refault distances: either we
+consider anon age and need to compare to active_file + anon, or we
+don't and compare to active_file only. We cannot mix willy nilly,
+because the metrics wouldn't be comparable. We don't have the space to
+store two different eviction timestamps, nor could we afford to cut
+the precision in half.
+
+Second, the additional page flag required to implement it.
+
+Third, it's somewhat moot because we still have the same behavior when
+active_file would need to shrink and can't. There can't be a stable
+state as long as refault distances <= active_file.
+
+> In this case, they (without patch, with patch) all have some correctness
+> issue so we need to judge which one is better in terms of overall impact.
+> I don't have strong opinion about it so it's up to you to decide the way to go.
+
+If my patch was simply changing the default assumption on which pages
+are hot and which are cold, I would agree with you - the pros would be
+equal to the cons, one way wouldn't be more correct than the other.
+
+But that isn't what my patch is doing. What it does is get rid of the
+assumption, to actually sample and compare the access frequencies when
+there isn't enough data to make an informed decision.
+
+That's a net improvement.
