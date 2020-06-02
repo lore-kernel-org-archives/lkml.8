@@ -2,117 +2,362 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9BF0206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD39206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bU4zfy0S"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ofSqB/0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgFBM60 (ORCPT
+        id S1726728AbgFBNCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:58:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34054 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgFBM6Z (ORCPT
+        Tue, 2 Jun 2020 09:02:25 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:6146 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgFBNCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:58:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052Cq4g5026266;
-        Tue, 2 Jun 2020 12:57:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=GZDp8wmQt7YFI5yVG/apFRbBuqEEBQ8exPXA3c138bM=;
- b=bU4zfy0SbhOb+nqYhPsTEAFVkGDExsLmEB/8tMGfh8MnrFfpsF1j9nngBvou6GMxCvNA
- rWV3UZXnJwlTlw1Hy1RHTocBAk/NGmoUtzRqEcT69pLSdlqGO7ncq5pL7n2KyFc+8c1x
- TkACg+4YY95h2fxJYJ60jmieqyBw8V1QC7eblJnPHV6bbFXamahuIc43GyEt4txCIgJO
- jDRmApha7fit3F63FELdhKOCEPJrqGjAvk3G0wBPo6Ko9crKhhzXT1ekd+FzAvlCBsPZ
- g7Y5I1pmc27RStbmJ9FDNd0A61TLnzYmcMb9D2sUIGTCOVZPlHZrhNWahXBNIp21ND7P HQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31dkrugwvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 12:57:34 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052Crvvq086376;
-        Tue, 2 Jun 2020 12:57:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 31c25ntsb8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 12:57:33 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052CvShi031357;
-        Tue, 2 Jun 2020 12:57:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 05:57:27 -0700
-Date:   Tue, 2 Jun 2020 15:57:15 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        devel@driverdev.osuosl.org, alsa-devel@alsa-project.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
-Subject: Re: [RESEND PATCH v1 6/6] staging: greybus: audio: Enable GB codec,
- audio module compilation.
-Message-ID: <20200602125715.GI30374@kadam>
-References: <cover.1591040859.git.vaibhav.sr@gmail.com>
- <77cfc355b87ee21636430f787764700de1983f38.1591040859.git.vaibhav.sr@gmail.com>
+        Tue, 2 Jun 2020 09:02:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591102941; x=1622638941;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=ptURaZE0Jr2RCtXkgcJXtt5mAk1brClOtM8cpFKX1uo=;
+  b=ofSqB/0sgExEVXq22+hO/5RLG232c7PnZ1VRuAwhiDMmJE7qbBetg7ck
+   MkorLn+xJtufGfjE4i2KlZCu4CeObAjQ4Zcj9TbQgEkOZNTZbXJ7BQHPu
+   VnXseVJ19VkHUiahXldUQ9va0jpRa8ar0j4WzyjeBAvx/rfLJEHfD25ye
+   M=;
+IronPort-SDR: 81udHbJ5KtLzJf/TUJlIzUS2SwzyLdYwsDMY6PWEXATKuIawlgXvcFBVpTYqySfhoxi2wXu8Cn
+ mPKWEnjC/00w==
+X-IronPort-AV: E=Sophos;i="5.73,464,1583193600"; 
+   d="scan'208";a="40911012"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 02 Jun 2020 13:02:17 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 90CA7A22FF;
+        Tue,  2 Jun 2020 13:02:06 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 13:02:05 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.175) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 13:01:48 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v14 00/15] Introduce Data Access MONitor (DAMON)
+Date:   Tue, 2 Jun 2020 15:01:10 +0200
+Message-ID: <20200602130125.20467-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77cfc355b87ee21636430f787764700de1983f38.1591040859.git.vaibhav.sr@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020091
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020091
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.175]
+X-ClientProxiedBy: EX13D29UWC002.ant.amazon.com (10.43.162.254) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 10:51:15AM +0530, Vaibhav Agarwal wrote:
-> Currently, GB codec and audio module is conditionally compiled based on
-> GREYBUS_AUDIO_MSM8994. However, audio module is not dependent on MSM8994
-> platform and can be used generically with any platform that follows
-> GB Audio class specification.
-> 
-> Also, GB codec driver corresponds to dummy codec represented by I2S port
-> available on Toshiba AP Bridge. Added config option for the same in
-> kconfig file and accordingly updated Makefile.
-> 
+From: SeongJae Park <sjpark@amazon.de>
 
-This commit message was a bit confusing to me.  Just say:
+Introduction
+============
 
-"Currently you can't enable the Grey Bus Audio Codec because there is no
-entry for it in the Kconfig file.  Originally the config name was going
-to be AUDIO_MSM8994 but that's not correct because other types of
-hardware are supported now.  I have chosen the name AUDIO_APB_CODEC
-instead.  Also I had to update the dependencies for GREYBUS_AUDIO to
-make the compile work."
+DAMON is a data access monitoring framework subsystem for the Linux kernel.
+The core mechanisms of DAMON called 'region based sampling' and adaptive
+regions adjustment' (refer to :doc:`mechanisms` for the detail) make it
 
-Otherwise this looks fine.
+ - accurate (The monitored information is useful for DRAM level memory
+   management. It might not appropriate for Cache-level accuracy, though.),
+ - ligfht-weight (The monitoring overhead is low enough to be applied online
+   while making no impact on the performance of the target workloads.), and
+ - scalable (the upper-bound of the instrumentation overhead is controllable
+   regardless of the size of target workloads.).
 
-regards,
-dan carpenter
+Using this framework, therefore, the kernel's core memory management mechanisms
+including reclamation and THP can be optimized for better memory management.
+The experimental memory management optimization works that incurring high
+instrumentation overhead will be able to have another try.  In user space,
+meanwhile, users who have some special workloads will be able to write
+personalized tools or applications for deeper understanding and specialized
+optimizations of their systems.
+
+Evaluations
+===========
+
+We evaluated DAMON's overhead, monitoring quality and usefulness using 25
+realistic workloads on my QEMU/KVM based virtual machine running a kernel that
+v13 DAMON patchset is applied.
+
+DAMON is lightweight.  It increases system memory usage by only -0.39% and
+consumes less than 1% CPU time in most case.  It slows target workloads down by
+only 0.63%.
+
+DAMON is accurate and useful for memory management optimizations.  An
+experimental DAMON-based operation scheme for THP, 'ethp', removes 69.43% of
+THP memory overheads while preserving 37.11% of THP speedup.  Another
+experimental DAMON-based 'proactive reclamation' implementation, 'prcl',
+reduces 89.30% of residential sets and 22.40% of system memory footprint while
+incurring only 1.98% runtime overhead in the best case (parsec3/freqmine).
+
+NOTE that the experimentail THP optimization and proactive reclamation are not
+for production, just only for proof of concepts.
+
+Please refer to the official document[1] or "Documentation/admin-guide/mm: Add
+a document for DAMON" patch in this patchset for detailed evaluation setup and
+results.
+
+[1] https://damonitor.github.io/doc/html/latest-damon
+
+More Information
+================
+
+We prepared a showcase web site[1] that you can get more information.  There
+are
+
+- the official documentations[2],
+- the heatmap format dynamic access pattern of various realistic workloads for
+  heap area[3], mmap()-ed area[4], and stack[5] area,
+- the dynamic working set size distribution[6] and chronological working set
+  size changes[7], and
+- the latest performance test results[8].
+
+[1] https://damonitor.github.io/_index
+[2] https://damonitor.github.io/doc/html/latest-damon
+[3] https://damonitor.github.io/test/result/visual/latest/heatmap.0.html
+[4] https://damonitor.github.io/test/result/visual/latest/heatmap.1.html
+[5] https://damonitor.github.io/test/result/visual/latest/heatmap.2.html
+[6] https://damonitor.github.io/test/result/visual/latest/wss_sz.html
+[7] https://damonitor.github.io/test/result/visual/latest/wss_time.html
+[8] https://damonitor.github.io/test/result/perf/latest/html/index.html
+
+Baseline and Complete Git Trees
+===============================
+
+The patches are based on the v5.7.  You can also clone the complete git
+tree:
+
+    $ git clone git://github.com/sjp38/linux -b damon/patches/v14
+
+The web is also available:
+https://github.com/sjp38/linux/releases/tag/damon/patches/v14
+
+There are a couple of trees for entire DAMON patchset series.  It includes
+future features.  The first one[1] contains the changes for latest release,
+while the other one[2] contains the changes for next release.
+
+[1] https://github.com/sjp38/linux/tree/damon/master
+[2] https://github.com/sjp38/linux/tree/damon/next
+
+Sequence Of Patches
+===================
+
+The 1st patch exports 'lookup_page_ext()' to GPL modules so that it can be used
+by DAMON even though it is built as a loadable module.
+
+Next four patches implement the core of DAMON and it's programming interface.
+The 2nd patch introduces DAMON module, it's data structures, and data structure
+related common functions.  Following three patches (3rd to 5th) implements the
+core mechanisms of DAMON, namely regions based sampling (patch 3), adaptive
+regions adjustment (patch 4), and dynamic memory mapping chage adoption
+(patch 5).
+
+Following four patches are for low level users of DAMON.  The 6th patch
+implements callbacks for each of monitoring steps so that users can do whatever
+they want with the access patterns.  The 7th one implements recording of access
+patterns in DAMON for better convenience and efficiency.  Each of next two
+patches (8th and 9th) respectively adds a debugfs interface for privileged
+people and/or programs in user space, and a tracepoint for other tracepoints
+supporting tracers such as perf.
+
+Two patches for high level users of DAMON follows.  To provide a minimal
+reference to the debugfs interface and for high level use/tests of the DAMON,
+the next patch (10th) implements an user space tool.  The 11th patch adds a
+document for administrators of DAMON.
+
+Next three patches are for tests.  The 12th and 13th patches provide unit tests
+(based on the kunit) while the 14th patch adds user space tests (based on the
+kselftest).
+
+Finally, the last patch (15th) updates the MAINTAINERS file.
+
+Patch History
+=============
+
+Changes from v13
+(https://lore.kernel.org/linux-mm/20200525091512.30391-1-sjpark@amazon.com/)
+ - Fix a typo (Leonard Foerster)
+ - Fix wring condition of three sub ranges split (Leonard Foerster)
+ - Rebase on v5.7
+
+Changes from v12
+(https://lore.kernel.org/linux-mm/20200518100018.2293-1-sjpark@amazon.com/)
+ - Avoid races between debugfs readers and writers
+ - Add kernel-doc comments in damon.h
+
+Changes from v11
+(https://lore.kernel.org/linux-mm/20200511123302.12520-1-sjpark@amazon.com/)
+ - Rewrite the document (Stefan Nuernberger)
+ - Make 'damon_for_each_*' argument order consistent (Leonard Foerster)
+ - Fix wrong comment in 'kdamond_merge_regions()' (Leonard Foerster)
+
+Changes from v10
+(https://lore.kernel.org/linux-mm/20200505110815.10532-1-sjpark@amazon.com/)
+ - Reduce aggressive split overhead by doing it only if required
+
+Changes from v9
+(https://lore.kernel.org/linux-mm/20200427120442.24179-1-sjpark@amazon.com/)
+ - Split each region into 4 subregions if possible (Jonathan Cameraon)
+ - Update kunit test for the split code change
+
+Changes from v8
+(https://lore.kernel.org/linux-mm/20200406130938.14066-1-sjpark@amazon.com/)
+ - Make regions always aligned by minimal region size that can be changed
+   (Stefan Nuernberger)
+ - Store binary format version in the recording file (Stefan Nuernberger)
+ - Use 'int' for pid instead of 'unsigned long' (Stefan Nuernberger)
+ - Fix a race condition in damon thread termination (Stefan Nuernberger)
+ - Optimize random value generation and recording (Stefan Nuernberger)
+ - Clean up commit messages and comments (Stefan Nuernberger)
+ - Clean up code (Stefan Nuernberger)
+ - Use explicit signalling and 'do_exit()' for damon thread termination 
+ - Add more typos to spelling.txt
+ - Update the performance evaluation results
+ - Describe future plans in the cover letter
+
+Changes from v7
+(https://lore.kernel.org/linux-mm/20200318112722.30143-1-sjpark@amazon.com/)
+ - Cleanup variable names (Jonathan Cameron)
+ - Split sampling address setup from access_check() (Jonathan Cameron)
+ - Make sampling address to always locate in the region (Jonathan Cameron)
+ - Make initial region's sampling addr to be old (Jonathan Cameron)
+ - Split kdamond on/off function to seperate functions (Jonathan Cameron)
+ - Fix wrong kernel doc comments (Jonathan Cameron)
+ - Reset 'last_accessed' to false in kdamond_check_access() if necessary
+ - Rebase on v5.6
+
+Please refer to v7 patchset to get older history.
+
+SeongJae Park (15):
+  mm/page_ext: Export lookup_page_ext() to GPL modules
+  mm: Introduce Data Access MONitor (DAMON)
+  mm/damon: Implement region based sampling
+  mm/damon: Adaptively adjust regions
+  mm/damon: Apply dynamic memory mapping changes
+  mm/damon: Implement callbacks
+  mm/damon: Implement access pattern recording
+  mm/damon: Add debugfs interface
+  mm/damon: Add tracepoints
+  tools: Add a minimal user-space tool for DAMON
+  Documentation/admin-guide/mm: Add a document for DAMON
+  mm/damon: Add kunit tests
+  mm/damon-test: Add a kunit test for recording setup
+  mm/damon: Add user space selftests
+  MAINTAINERS: Update for DAMON
+
+ Documentation/admin-guide/mm/damon/api.rst    |   20 +
+ .../admin-guide/mm/damon/damon_heatmap.png    |  Bin 0 -> 8366 bytes
+ .../admin-guide/mm/damon/damon_wss_change.png |  Bin 0 -> 7211 bytes
+ .../admin-guide/mm/damon/damon_wss_dist.png   |  Bin 0 -> 6173 bytes
+ Documentation/admin-guide/mm/damon/eval.rst   |  215 +++
+ Documentation/admin-guide/mm/damon/faq.rst    |   39 +
+ .../admin-guide/mm/damon/freqmine_heatmap.png |  Bin 0 -> 8687 bytes
+ .../admin-guide/mm/damon/freqmine_wss_sz.png  |  Bin 0 -> 4986 bytes
+ .../mm/damon/freqmine_wss_time.png            |  Bin 0 -> 6283 bytes
+ Documentation/admin-guide/mm/damon/guide.rst  |  196 +++
+ Documentation/admin-guide/mm/damon/index.rst  |   36 +
+ .../admin-guide/mm/damon/mechanisms.rst       |  111 ++
+ Documentation/admin-guide/mm/damon/plans.rst  |   49 +
+ Documentation/admin-guide/mm/damon/start.rst  |  119 ++
+ .../mm/damon/streamcluster_heatmap.png        |  Bin 0 -> 37916 bytes
+ .../mm/damon/streamcluster_wss_sz.png         |  Bin 0 -> 5522 bytes
+ .../mm/damon/streamcluster_wss_time.png       |  Bin 0 -> 6322 bytes
+ Documentation/admin-guide/mm/damon/usage.rst  |  305 ++++
+ Documentation/admin-guide/mm/index.rst        |    1 +
+ MAINTAINERS                                   |   12 +
+ include/linux/damon.h                         |  136 ++
+ include/trace/events/damon.h                  |   43 +
+ mm/Kconfig                                    |   23 +
+ mm/Makefile                                   |    1 +
+ mm/damon-test.h                               |  635 +++++++
+ mm/damon.c                                    | 1516 +++++++++++++++++
+ mm/page_ext.c                                 |    1 +
+ tools/damon/.gitignore                        |    1 +
+ tools/damon/_dist.py                          |   36 +
+ tools/damon/_recfile.py                       |   23 +
+ tools/damon/bin2txt.py                        |   67 +
+ tools/damon/damo                              |   37 +
+ tools/damon/heats.py                          |  362 ++++
+ tools/damon/nr_regions.py                     |   91 +
+ tools/damon/record.py                         |  212 +++
+ tools/damon/report.py                         |   45 +
+ tools/damon/wss.py                            |   97 ++
+ tools/testing/selftests/damon/Makefile        |    7 +
+ .../selftests/damon/_chk_dependency.sh        |   28 +
+ tools/testing/selftests/damon/_chk_record.py  |  108 ++
+ .../testing/selftests/damon/debugfs_attrs.sh  |  139 ++
+ .../testing/selftests/damon/debugfs_record.sh |   50 +
+ 42 files changed, 4761 insertions(+)
+ create mode 100644 Documentation/admin-guide/mm/damon/api.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/damon_heatmap.png
+ create mode 100644 Documentation/admin-guide/mm/damon/damon_wss_change.png
+ create mode 100644 Documentation/admin-guide/mm/damon/damon_wss_dist.png
+ create mode 100644 Documentation/admin-guide/mm/damon/eval.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/faq.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/freqmine_heatmap.png
+ create mode 100644 Documentation/admin-guide/mm/damon/freqmine_wss_sz.png
+ create mode 100644 Documentation/admin-guide/mm/damon/freqmine_wss_time.png
+ create mode 100644 Documentation/admin-guide/mm/damon/guide.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/index.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/mechanisms.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/plans.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/start.rst
+ create mode 100644 Documentation/admin-guide/mm/damon/streamcluster_heatmap.png
+ create mode 100644 Documentation/admin-guide/mm/damon/streamcluster_wss_sz.png
+ create mode 100644 Documentation/admin-guide/mm/damon/streamcluster_wss_time.png
+ create mode 100644 Documentation/admin-guide/mm/damon/usage.rst
+ create mode 100644 include/linux/damon.h
+ create mode 100644 include/trace/events/damon.h
+ create mode 100644 mm/damon-test.h
+ create mode 100644 mm/damon.c
+ create mode 100644 tools/damon/.gitignore
+ create mode 100644 tools/damon/_dist.py
+ create mode 100644 tools/damon/_recfile.py
+ create mode 100644 tools/damon/bin2txt.py
+ create mode 100755 tools/damon/damo
+ create mode 100644 tools/damon/heats.py
+ create mode 100644 tools/damon/nr_regions.py
+ create mode 100644 tools/damon/record.py
+ create mode 100644 tools/damon/report.py
+ create mode 100644 tools/damon/wss.py
+ create mode 100644 tools/testing/selftests/damon/Makefile
+ create mode 100644 tools/testing/selftests/damon/_chk_dependency.sh
+ create mode 100644 tools/testing/selftests/damon/_chk_record.py
+ create mode 100755 tools/testing/selftests/damon/debugfs_attrs.sh
+ create mode 100755 tools/testing/selftests/damon/debugfs_record.sh
+
+-- 
+2.17.1
 
