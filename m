@@ -2,210 +2,183 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB324C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54055C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2F53206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301E32068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLOrD2RH"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VK6ymbgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgFBCsP (ORCPT
+        id S1726666AbgFBCs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 22:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgFBCsN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 22:48:13 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34CD0C061A0E;
-        Mon,  1 Jun 2020 19:48:12 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d10so4404654pgn.4;
-        Mon, 01 Jun 2020 19:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=tXLfb8REYstQRtUYyN/YAll9QOXoM7PZgW3xD5sxjrI=;
-        b=rLOrD2RHIa/F7ZMBJweppXnO7dugX2a+2XftHYtJaFnfBNxmTBoNMLUL7ahHdqnfaK
-         NoTM7tWTI8TkNiVRCzurJSSZ985pb+EvY4A9FzVOlRoJ95BgnpoEa1Y7NzVzA4kDa2vB
-         IC6Yb79NV/QQBxLo8aBGZtPiT58M5NCKcsgNpt6Bc3yiKrUjc5jCJF/xsxAxWtVlqqMh
-         I2jmlZ97i+9+bOOc9VgK/qooBYy3iKq/oypTN01NhwXi4b+UZOPjbeq5TMySQLTDRFYp
-         QID97Y2eEN2zUE2HnTXXtu5wyMxlaBDbbTm//F7ETTAwmFd8t1FphYAci4CNTAGdYoHP
-         tM8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=tXLfb8REYstQRtUYyN/YAll9QOXoM7PZgW3xD5sxjrI=;
-        b=gFTaeb/3oizIuXVNK55mPhwrpkRMeEvk7ZCQaFNnfEzXB19nrIqP4HULqkN5U8jS/C
-         FMs9uuKA+vNG8e5xJVHixk/hVvdBZVplrff9foeoJ7U87LOD5v/nsSehDLmflOZcPNG6
-         tBwOvZkkxupQohNCepB8mlGjXdp3+NxkslSHNlFYJkGo3q2qafZ511yOdho+KioNzkPN
-         0Wbw++CkbXqGIqNwCcRuHBevNJr4u0K5VjTJyHDy1nd81z044APgcpqnbEoncWmkZoso
-         GpEAbh0qfbZ7jbZdAgKYtHJNhBkKyUOAb89EeqzjbmlZIHfHVxrsRsOefBmhMzh9UKeD
-         H9ZQ==
-X-Gm-Message-State: AOAM533pbY3nSH2LVyF0Y2qeB2/8QWr9Bp3U8K3qZvDokEAsynoTMJpE
-        sYTy1LPhdpIaD474IkWX51g+EK9d0dY=
-X-Google-Smtp-Source: ABdhPJz9tbIORI2xekpkOdbrkc//J9XWNHxoeaMDAvup7qt7AZ0lq5HldfTLFBv34uzKSpqmY6gC2A==
-X-Received: by 2002:a62:6846:: with SMTP id d67mr23969488pfc.167.1591066091708;
-        Mon, 01 Jun 2020 19:48:11 -0700 (PDT)
-Received: from localhost ([108.161.26.224])
-        by smtp.gmail.com with ESMTPSA id x9sm648723pfi.13.2020.06.01.19.48.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 19:48:10 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 19:48:04 -0700
-From:   Matt Turner <mattst88@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org
-Subject: Regression bisected to f2f84b05e02b (bug: consolidate
- warn_slowpath_fmt() usage)
-Message-ID: <20200602024804.GA3776630@p50-ethernet.mattst88.com>
+        Mon, 1 Jun 2020 22:48:29 -0400
+Received: from ozlabs.org ([203.11.71.1]:56857 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgFBCs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 22:48:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bc162dMLz9sSc;
+        Tue,  2 Jun 2020 12:48:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591066106;
+        bh=zDFy0h6+y15Uqzi+4IitwLquzt23JMwBoKe9trjj3ow=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VK6ymbgva8Op87k/pw/YqtHCUIkyCiaj2B/vic+RG73S1DDkgDCcl7ks8GEIy6DVW
+         XDhMBXRv3NC+XQ8YSGu//hlvwrE6VUruYfLdC2CKVlLqxkITR9Uf+XQABW8RpBvaOE
+         S+oMG17PWIe+0hLZlUiVjBuvfZAa+HNAxa8azEHhgKumbM/XE3SB1FEUV9YGMMiJOt
+         xxFJFIj4Azi8lesSf0R4DpPrN9nYyC0KKoKefVVIHwcV7aADHMWKoycophNyikUQdu
+         HkdpIex1G7FS0C1tgjLUc34pmyCeebN7UhfBQgmnpmxCCvdNV+u3LMRS/2C44Rc8Mn
+         6mMPq24e4kxzg==
+Date:   Tue, 2 Jun 2020 12:48:24 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yamin Friedman <yaminf@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the block tree with the rdma tree
+Message-ID: <20200602124824.4293d0dc@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+--Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-I bisected a regression on alpha to f2f84b05e02b (bug: consolidate
-warn_slowpath_fmt() usage) which looks totally innocuous.
+Hi all,
 
-Reverting it on master confirms that it somehow is the trigger. At or a
-little after starting userspace, I'll see an oops like this:
+Today's linux-next merge of the block tree got a conflict in:
 
-Unable to handle kernel paging request at virtual address 0000000000000000
-CPU 0
-kworker/u2:5(98): Oops -1
-pc =3D [<0000000000000000>]  ra =3D [<0000000000000000>]  ps =3D 0000    No=
-t tainted
-pc is at 0x0
-ra is at 0x0
-v0 =3D 0000000000000007  t0 =3D 0000000000000001  t1 =3D 0000000000000001
-t2 =3D 0000000000000000  t3 =3D fffffc00bfe68780  t4 =3D 0000000000000001
-t5 =3D fffffc00bf8cc780  t6 =3D 00000000026f8000  t7 =3D fffffc00bfe70000
-s0 =3D fffffc000250d310  s1 =3D fffffc000250d310  s2 =3D fffffc000250d310
-s3 =3D fffffc000250ca40  s4 =3D fffffc000250caa0  s5 =3D 0000000000000000
-s6 =3D fffffc000250ca40
-a0 =3D fffffc00024f0488  a1 =3D fffffc00bfe73d98  a2 =3D fffffc00bfe68800
-a3 =3D fffffc00bf881400  a4 =3D 0001000000000000  a5 =3D 0000000000000002
-t8 =3D 0000000000000000  t9 =3D 0000000000000000  t10=3D 0000000001321800
-t11=3D 000000000000ba4e  pv =3D fffffc000189ca00  at =3D 0000000000000000
-gp =3D fffffc000253e430  sp =3D 0000000043a83c2e
-Disabling lock debugging due to kernel taint
-Trace:
-[<fffffc000105c8ac>] process_one_work+0x25c/0x5a0
-[<fffffc000105cc4c>] worker_thread+0x5c/0x7d0
-[<fffffc0001066c88>] kthread+0x188/0x1f0
-[<fffffc0001011b48>] ret_from_kernel_thread+0x18/0x20
-[<fffffc0001066b00>] kthread+0x0/0x1f0
-[<fffffc000105cbf0>] worker_thread+0x0/0x7d0
+  drivers/nvme/host/rdma.c
 
-Code:
-  00000000
-  00000000
-  00063301
-  000012e2
-  00001111
-  0005ffde
+between commit:
 
-It seems to cause a hard lock on an SMP system, but not on a system with
-a single CPU. Similarly, if I boot the SMP system (2 CPUs) with
-maxcpus=3D1 the oops doesn't happen. Until I tested on a non-SMP system
-today I suspected that it was unaffected, but I saw the oops there too.
-With the revert applied, I don't see a warning or an oops.
+  583f69304b91 ("nvme-rdma: use new shared CQ mechanism")
 
-Any clues how this patch could have triggered the oops?
+from the rdma tree and commit:
 
-Here's the revert, with a trivial conflict resolved, that I've used in
-testing:
+  5ec5d3bddc6b ("nvme-rdma: add metadata/T10-PI support")
 
- From fdbdd0f606f0f412ee06c1152e33a22ca17102bc Mon Sep 17 00:00:00 2001
-=46rom: Matt Turner <mattst88@gmail.com>
-Date: Sun, 24 May 2020 20:46:00 -0700
-Subject: [PATCH] Revert "bug: consolidate warn_slowpath_fmt() usage"
+from the block tree.
 
-This reverts commit f2f84b05e02b7710a201f0017b3272ad7ef703d1.
----
-  include/asm-generic/bug.h |  3 ++-
-  kernel/panic.c            | 15 +++++++--------
-  2 files changed, 9 insertions(+), 9 deletions(-)
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index 384b5c835ced..a4a311d4b4b0 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -82,7 +82,8 @@ struct bug_entry {
-  extern __printf(4, 5)
-  void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
-  		       const char *fmt, ...);
--#define __WARN()		__WARN_printf(TAINT_WARN, NULL)
-+extern void warn_slowpath_null(const char *file, const int line);
-+#define __WARN()		warn_slowpath_null(__FILE__, __LINE__)
-  #define __WARN_printf(taint, arg...)					\
-  	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
-  #else
-diff --git a/kernel/panic.c b/kernel/panic.c
-index b69ee9e76cb2..c8ed8046b484 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -603,20 +603,19 @@ void warn_slowpath_fmt(const char *file, int line, un=
-signed taint,
-  {
-  	struct warn_args args;
- =20
--	pr_warn(CUT_HERE);
--
--	if (!fmt) {
--		__warn(file, line, __builtin_return_address(0), taint,
--		       NULL, NULL);
--		return;
--	}
--
-  	args.fmt =3D fmt;
-  	va_start(args.args, fmt);
-  	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
-  	va_end(args.args);
-  }
-  EXPORT_SYMBOL(warn_slowpath_fmt);
-+
-+void warn_slowpath_null(const char *file, int line)
-+{
-+	pr_warn(CUT_HERE);
-+	__warn(file, line, __builtin_return_address(0), TAINT_WARN, NULL, NULL);
-+}
-+EXPORT_SYMBOL(warn_slowpath_null);
-  #else
-  void __warn_printk(const char *fmt, ...)
-  {
 --=20
-2.26.2
+Cheers,
+Stephen Rothwell
 
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --cc drivers/nvme/host/rdma.c
+index 83d5f292c937,f8f856dc0c67..000000000000
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@@ -85,7 -95,7 +95,8 @@@ struct nvme_rdma_queue=20
+  	struct rdma_cm_id	*cm_id;
+  	int			cm_error;
+  	struct completion	cm_done;
+ +	int			cq_size;
++ 	bool			pi_support;
+  };
+ =20
+  struct nvme_rdma_ctrl {
+@@@ -262,7 -272,8 +273,9 @@@ static int nvme_rdma_create_qp(struct n
+  	init_attr.qp_type =3D IB_QPT_RC;
+  	init_attr.send_cq =3D queue->ib_cq;
+  	init_attr.recv_cq =3D queue->ib_cq;
+ +	init_attr.qp_context =3D queue;
++ 	if (queue->pi_support)
++ 		init_attr.create_flags |=3D IB_QP_CREATE_INTEGRITY_EN;
+ =20
+  	ret =3D rdma_create_qp(queue->cm_id, dev->pd, &init_attr);
+ =20
+@@@ -426,43 -437,18 +447,49 @@@ static void nvme_rdma_destroy_queue_ib(
+  	nvme_rdma_dev_put(dev);
+  }
+ =20
+- static int nvme_rdma_get_max_fr_pages(struct ib_device *ibdev)
++ static int nvme_rdma_get_max_fr_pages(struct ib_device *ibdev, bool pi_su=
+pport)
+  {
+- 	return min_t(u32, NVME_RDMA_MAX_SEGMENTS,
+- 		     ibdev->attrs.max_fast_reg_page_list_len - 1);
++ 	u32 max_page_list_len;
++=20
++ 	if (pi_support)
++ 		max_page_list_len =3D ibdev->attrs.max_pi_fast_reg_page_list_len;
++ 	else
++ 		max_page_list_len =3D ibdev->attrs.max_fast_reg_page_list_len;
++=20
++ 	return min_t(u32, NVME_RDMA_MAX_SEGMENTS, max_page_list_len - 1);
+  }
+ =20
+ +static int nvme_rdma_create_cq(struct ib_device *ibdev,
+ +				struct nvme_rdma_queue *queue)
+ +{
+ +	int ret, comp_vector, idx =3D nvme_rdma_queue_idx(queue);
+ +	enum ib_poll_context poll_ctx;
+ +
+ +	/*
+ +	 * Spread I/O queues completion vectors according their queue index.
+ +	 * Admin queues can always go on completion vector 0.
+ +	 */
+ +	comp_vector =3D idx =3D=3D 0 ? idx : idx - 1;
+ +
+ +	/* Polling queues need direct cq polling context */
+ +	if (nvme_rdma_poll_queue(queue)) {
+ +		poll_ctx =3D IB_POLL_DIRECT;
+ +		queue->ib_cq =3D ib_alloc_cq(ibdev, queue, queue->cq_size,
+ +					   comp_vector, poll_ctx);
+ +	} else {
+ +		poll_ctx =3D IB_POLL_SOFTIRQ;
+ +		queue->ib_cq =3D ib_cq_pool_get(ibdev, queue->cq_size,
+ +					      comp_vector, poll_ctx);
+ +	}
+ +
+ +	if (IS_ERR(queue->ib_cq)) {
+ +		ret =3D PTR_ERR(queue->ib_cq);
+ +		return ret;
+ +	}
+ +
+ +	return 0;
+ +}
+ +
+  static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
+  {
+  	struct ib_device *ibdev;
+
+--Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iNUEABYKAH0WIQSzlptPDvl9ch5jjr2cglpmBdQLvgUCXtW94l8UgAAAAAAuAChp
-c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjM5
-NjlCNEYwRUY5N0Q3MjFFNjM4RUJEOUM4MjVBNjYwNUQ0MEJCRQAKCRCcglpmBdQL
-vhczAP9lpK9GDG2VnFlPAgh0FMvq3Z750UnH82UUiklN6xZkXwD+Mggvk1WV1XAW
-7S99g69EMvaFojGmQu1H3oXK3IAslg0=
-=8cBu
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7VvfgACgkQAVBC80lX
+0Gxupgf/XeOuArn2aAZlo6Kdw/gUNLYNVTwun0a5HGEPPvCExK81Mc0Ror3OHyUE
+7e7fPVFOIbpI4oWrkPwHl/Z/SOhWnAvS/c6mDnIYquzk7luP7/aVjbLIz7obzAc9
+S9PUv5tALhAALrEHR1QxfKBsG1AmpmLKwV3xmD4XeU0L9S+iCOxL06XjcdKhYw5W
+BH/ydbZIdTHE+mRQ6+9Jsud55qlZFDkqAP3ZY5U2OYpqFw+lNcOjwRP+IVDFhnXS
+eQd/xM4z/HrjoTYfe1kFxNCE4qyPXVh70/xJ0oD7x/P9NVgOIg3lOuQgbv0+T6mo
+Wo3983eiQHgWfr1E+OcvnTgUzqjitA==
+=D8dd
 -----END PGP SIGNATURE-----
 
---NzB8fVQJ5HfG6fxh--
+--Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb--
