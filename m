@@ -2,227 +2,96 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ED5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F514206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FCB206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/rfVYCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgFBEgw (ORCPT
+        id S1726135AbgFBEhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:36:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47120 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgFBEgw (ORCPT
+        Tue, 2 Jun 2020 00:37:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgFBEhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:36:52 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id D61292A2924
-Message-ID: <0aef6cd5cc7019912a973ad8c5ba5e7b6105baf9.camel@collabora.com>
-Subject: Re: [PATCH] media: rkvdec: Fix H264 scaling list order
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Tue, 2 Jun 2020 00:37:17 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB1FC061A0E;
+        Mon,  1 Jun 2020 21:37:17 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k18so9483503ion.0;
+        Mon, 01 Jun 2020 21:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=X6DyC5DaX+qxjNOVZ0Jw9ZwmxJAyCiGEub0Mra97SZc=;
+        b=k/rfVYChDozuTCakYrl/ioNcRakc3AZkjOFmddUZy4oPvxCJQpD14kDWsEEpmhcOfY
+         o8OAKi1MdxO3diVxVYxJL+Pcg7KyEWB1fnszrDDvUljlHgLcNvHq9DBuxtLoS8a8avun
+         RZxKfMPm+gZWW7WUNaLpqhzJ4oshh7ztATOvLdXk+MMx5h1Wurdi8nzHUnjO8RayVxtj
+         2D2OT2dtyJs1dA+doS4ihHH32NHhpIQgMeQ3+VH2E/ZWQQoPOM8TQ7hUPna9CDXXhsHb
+         wUmZ5bHgfa/Az4pJ81MDaGQcipa7PRz0Y/c1fcqjHWagoFPSlPGDwlSdgAJfknu7M10W
+         g5Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=X6DyC5DaX+qxjNOVZ0Jw9ZwmxJAyCiGEub0Mra97SZc=;
+        b=MuDYHTYynwGh3c/4z+wvzMMZg8McM3U0VMy0n/jBYYmiu08hVGdGfGjMrsVpLWKRvT
+         9lXiy1LRhh/KMI2eP2TUcfiow28o+42KYQ582InsP9AUOk0N9cjqpikQvpUWE/Zt4jl4
+         cHcprMkpLPr+y5lDNKC9h3qMbUuvRFbc3fhcRWQt6p7zV3gkvFFS7aq19sGWbIN3ccCr
+         NTtxTP+QVE8RHR6o0eU57a2bv9cgfYcxJOoAdqObndklfcP79s/qkwRpABI4j9bGfZph
+         KTPrAzYUKMUkkGs93jPR0CFOG771nYo7HUQcJK8uILqWA+qTGChdzag7sVrz/epiPMEX
+         J+1g==
+X-Gm-Message-State: AOAM533ZKCUNHFujHlxOMOcGvJlulD7G0DnzT4ZOFhKGoN3mTN56uMvm
+        16Ir7+G8wp96hKvTosstBLQ=
+X-Google-Smtp-Source: ABdhPJwqMtNiFsr5gmVBhnlgsQbaOHC75vORCQ2GLsTvDp7CUO8o1Wx5cGHYhl0JW5X5SNaiZ6CG0Q==
+X-Received: by 2002:a05:6602:2e05:: with SMTP id o5mr21889998iow.28.1591072636458;
+        Mon, 01 Jun 2020 21:37:16 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id z4sm837510ilm.72.2020.06.01.21.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 21:37:15 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Tue, 02 Jun 2020 01:36:37 -0300
-In-Reply-To: <20200522202130.13306-1-jonas@kwiboo.se>
-References: <20200522202130.13306-1-jonas@kwiboo.se>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] spi: spi-ti-qspi: call pm_runtime_put on pm_runtime_get failure
+Date:   Mon,  1 Jun 2020 23:36:37 -0500
+Message-Id: <20200602043637.5317-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
+The counter is incremented via pm_runtime_get even in failure case.
+To correct the counter call pm_runtime_put in case of failure, too.
 
-Thanks a lot for the fix! Indeed it fixes
-a few bitstream that had artifacts :)
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/spi/spi-ti-qspi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, 2020-05-22 at 20:21 +0000, Jonas Karlman wrote:
-> The Rockchip Video Decoder driver is expecting that the values in a
-> scaling list are in zig-zag order and applies the inverse scanning process
-> to get the values in matrix order.
-> 
-> Commit 0b0393d59eb4 ("media: uapi: h264: clarify expected
-> scaling_list_4x4/8x8 order") clarified that the values in the scaling list
-> should already be in matrix order.
-> 
-> Fix this by removing the reordering and change to use two memcpy.
-> 
-> Fixes: cd33c830448b ("media: rkvdec: Add the rkvdec driver")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> ---
->  drivers/staging/media/rkvdec/rkvdec-h264.c | 70 +++++++---------------
->  1 file changed, 22 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> index cd4980d06be7..2719f0c66a4a 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> @@ -18,11 +18,16 @@
->  /* Size with u32 units. */
->  #define RKV_CABAC_INIT_BUFFER_SIZE	(3680 + 128)
->  #define RKV_RPS_SIZE			((128 + 128) / 4)
-> -#define RKV_SCALING_LIST_SIZE		(6 * 16 + 6 * 64 + 128)
->  #define RKV_ERROR_INFO_SIZE		(256 * 144 * 4)
->  
->  #define RKVDEC_NUM_REFLIST		3
->  
-> +struct rkvdec_scaling_matrix {
-
-How about we call this rkvdec_scaling_list
-or even rkvdec_h264_scaling_list?
-
-It'll make code more readable and easier to grep.
-
-> +	u8 scaling_list_4x4[6][16];
-> +	u8 scaling_list_8x8[6][64];
-> +	u8 padding[128];
-
-Oops, something is wrong here, maybe some
-mistake when porting code around.
-
-Rockchip MPP defines the scaling list size as:
-
-#define RKV_SCALING_LIST_SIZE (6*16 + 2*64 + 128)
-
-Consistently with the fact that 4:4:4 sampling
-is not supported (chroma_format_idc == 3),
-only the first two scaling matrices are used.
-
-Moreover, given all these buffers are specified separately
-(see below), I bet not even the 128 padding bytes
-are needed.
+diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
+index 366a3e5cca6b..dfb811c5ef76 100644
+--- a/drivers/spi/spi-ti-qspi.c
++++ b/drivers/spi/spi-ti-qspi.c
+@@ -174,6 +174,7 @@ static int ti_qspi_setup(struct spi_device *spi)
  
-> +};
-> +
->  struct rkvdec_sps_pps_packet {
->  	u32 info[8];
->  };
-> @@ -86,7 +91,7 @@ struct rkvdec_ps_field {
->  /* Data structure describing auxiliary buffer format. */
->  struct rkvdec_h264_priv_tbl {
->  	s8 cabac_table[4][464][2];
-
-As can be seen, all these buffers can be allocated
-independently, which perhaps could reduce the
-pressure on the DMA allocator.
-
-> -	u8 scaling_list[RKV_SCALING_LIST_SIZE];
-> +	struct rkvdec_scaling_matrix scaling_list;
->  	u32 rps[RKV_RPS_SIZE];
->  	struct rkvdec_sps_pps_packet param_set[256];
->  	u8 err_info[RKV_ERROR_INFO_SIZE];
-
-In particular, I wonder if the error info stuff
-is really required.
-
-I guess we'll want to merge a simple fix,
-so no need to address any of these questions
-for now.
-
-With the struct rkvdec_scaling_matrix rename:
-
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-
-Thanks,
-Ezequiel
-
-> @@ -785,56 +790,25 @@ static void assemble_hw_rps(struct rkvdec_ctx *ctx,
->  	}
->  }
->  
-> -/*
-> - * NOTE: The values in a scaling list are in zig-zag order, apply inverse
-> - * scanning process to get the values in matrix order.
-> - */
-> -static const u32 zig_zag_4x4[16] = {
-> -	0, 1, 4, 8, 5, 2, 3, 6, 9, 12, 13, 10, 7, 11, 14, 15
-> -};
-> -
-> -static const u32 zig_zag_8x8[64] = {
-> -	0,  1,  8, 16,  9,  2,  3, 10, 17, 24, 32, 25, 18, 11,  4,  5,
-> -	12, 19, 26, 33, 40, 48, 41, 34, 27, 20, 13,  6,  7, 14, 21, 28,
-> -	35, 42, 49, 56, 57, 50, 43, 36, 29, 22, 15, 23, 30, 37, 44, 51,
-> -	58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61, 54, 47, 55, 62, 63
-> -};
-> -
-> -static void reorder_scaling_list(struct rkvdec_ctx *ctx,
-> -				 struct rkvdec_h264_run *run)
-> +static void assemble_hw_scaling_list(struct rkvdec_ctx *ctx,
-> +				     struct rkvdec_h264_run *run)
->  {
->  	const struct v4l2_ctrl_h264_scaling_matrix *scaling = run->scaling_matrix;
-> -	const size_t num_list_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4);
-> -	const size_t list_len_4x4 = ARRAY_SIZE(scaling->scaling_list_4x4[0]);
-> -	const size_t num_list_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8);
-> -	const size_t list_len_8x8 = ARRAY_SIZE(scaling->scaling_list_8x8[0]);
->  	struct rkvdec_h264_ctx *h264_ctx = ctx->priv;
->  	struct rkvdec_h264_priv_tbl *tbl = h264_ctx->priv_tbl.cpu;
-> -	u8 *dst = tbl->scaling_list;
-> -	const u8 *src;
-> -	int i, j;
-> -
-> -	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_4x4) != list_len_4x4);
-> -	BUILD_BUG_ON(ARRAY_SIZE(zig_zag_8x8) != list_len_8x8);
-> -	BUILD_BUG_ON(ARRAY_SIZE(tbl->scaling_list) <
-> -		     num_list_4x4 * list_len_4x4 +
-> -		     num_list_8x8 * list_len_8x8);
-> -
-> -	src = &scaling->scaling_list_4x4[0][0];
-> -	for (i = 0; i < num_list_4x4; ++i) {
-> -		for (j = 0; j < list_len_4x4; ++j)
-> -			dst[zig_zag_4x4[j]] = src[j];
-> -		src += list_len_4x4;
-> -		dst += list_len_4x4;
-> -	}
->  
-> -	src = &scaling->scaling_list_8x8[0][0];
-> -	for (i = 0; i < num_list_8x8; ++i) {
-> -		for (j = 0; j < list_len_8x8; ++j)
-> -			dst[zig_zag_8x8[j]] = src[j];
-> -		src += list_len_8x8;
-> -		dst += list_len_8x8;
-> -	}
-> +	BUILD_BUG_ON(sizeof(tbl->scaling_list.scaling_list_4x4) !=
-> +		     sizeof(scaling->scaling_list_4x4));
-> +	BUILD_BUG_ON(sizeof(tbl->scaling_list.scaling_list_8x8) !=
-> +		     sizeof(scaling->scaling_list_8x8));
-> +
-> +	memcpy(tbl->scaling_list.scaling_list_4x4,
-> +	       scaling->scaling_list_4x4,
-> +	       sizeof(scaling->scaling_list_4x4));
-> +
-> +	memcpy(tbl->scaling_list.scaling_list_8x8,
-> +	       scaling->scaling_list_8x8,
-> +	       sizeof(scaling->scaling_list_8x8));
->  }
->  
->  /*
-> @@ -1126,7 +1100,7 @@ static int rkvdec_h264_run(struct rkvdec_ctx *ctx)
->  	v4l2_h264_build_b_ref_lists(&reflist_builder, h264_ctx->reflists.b0,
->  				    h264_ctx->reflists.b1);
->  
-> -	reorder_scaling_list(ctx, &run);
-> +	assemble_hw_scaling_list(ctx, &run);
->  	assemble_hw_pps(ctx, &run);
->  	assemble_hw_rps(ctx, &run);
->  	config_registers(ctx, &run);
-
+ 	ret = pm_runtime_get_sync(qspi->dev);
+ 	if (ret < 0) {
++		pm_runtime_put_autosuspend(qspi->dev);
+ 		dev_err(qspi->dev, "pm_runtime_get_sync() failed\n");
+ 		return ret;
+ 	}
+-- 
+2.17.1
 
