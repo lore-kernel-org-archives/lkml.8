@@ -2,181 +2,226 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7BB20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:13:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VnR9flOF"
+	by mail.kernel.org (Postfix) with ESMTP id 4D0C620674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgFBNNa (ORCPT
+        id S1727784AbgFBNN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:13:30 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:52091 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBNN3 (ORCPT
+        Tue, 2 Jun 2020 09:13:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52332 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgFBNN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:13:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591103608; x=1622639608;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=8JGBy8gZAjCRLD5i3p6YmN4Jl57pC+5KaEYiBGwvMNo=;
-  b=VnR9flOFu3zjishZ5hRq91O80l4qhJu+SBjN3PdUC7b3KCkdJKIbNpmj
-   ChHtT3WckiprnF6aKoSIT0vZWbRsj6ZtPtdLA+nbXoC3ADbLifC5O5izX
-   rB1qpsoYx1NisN3ovnTvjvWDaL1K6h9+kLKAtEVadzohBlTO8OeRMEC0Q
-   k=;
-IronPort-SDR: Ouvqh5524HgVpj23Vpn6Kc8yqAW9izadPSzizcDGx/+pzeLsG47GLEtR3CAT7DLTQvd77enBhw
- 5/zLzrvJR/BA==
-X-IronPort-AV: E=Sophos;i="5.73,464,1583193600"; 
-   d="scan'208";a="33962858"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 02 Jun 2020 13:13:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 8588FA1DAF;
-        Tue,  2 Jun 2020 13:13:22 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:13:21 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.48) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:13:05 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 09/15] mm/damon: Add tracepoints
-Date:   Tue, 2 Jun 2020 15:12:49 +0200
-Message-ID: <20200602131249.22765-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200602130125.20467-1-sjpark@amazon.com>
-References: <20200602130125.20467-1-sjpark@amazon.com>
+        Tue, 2 Jun 2020 09:13:56 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 9617A2A34DB
+Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     kieran.bingham@ideasonboard.com,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dafna Hirschfeld <dafna3@gmail.com>
+References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
+ <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
+ <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
+ <273a36d8-fc87-f9d4-0cf2-15beddf1661c@collabora.com>
+ <f927c8e3-73de-598d-130d-97b5380579e5@collabora.com>
+ <3b4c4447-677c-08b9-9366-95a012f8f018@ideasonboard.com>
+ <cdcc42bf-b0dc-41b7-5104-eff8aa42feb2@collabora.com>
+ <20200602124504.GA12043@pendragon.ideasonboard.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <18f26dd2-9b86-9191-3dda-eb4490eb64d0@collabora.com>
+Date:   Tue, 2 Jun 2020 10:13:45 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.48]
-X-ClientProxiedBy: EX13D41UWB002.ant.amazon.com (10.43.161.109) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200602124504.GA12043@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
 
-This commit adds a tracepoint for DAMON.  It traces the monitoring
-results of each region for each aggregation interval.  Using this, DAMON
-will be easily integrated with any tracepoints supporting tools such as
-perf.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
----
- include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
- mm/damon.c                   |  5 +++++
- 2 files changed, 48 insertions(+)
- create mode 100644 include/trace/events/damon.h
+On 6/2/20 9:45 AM, Laurent Pinchart wrote:
+> Hello,
+> 
+> On Tue, Jun 02, 2020 at 08:31:26AM -0300, Helen Koike wrote:
+>> On 6/2/20 8:24 AM, Kieran Bingham wrote:
+>>> On 02/06/2020 11:55, Helen Koike wrote:
+>>>> On 6/2/20 7:52 AM, Dafna Hirschfeld wrote:
+>>>>> On 01.06.20 14:16, Kaaira Gupta wrote:
+>>>>>> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
+>>>>>>> Hi,
+>>>>>>> Thanks for the patch
+>>>>>>>
+>>>>>>> I don't know how real devices handle ARGB formats,
+>>>>>>> I wonder if it should be the part of the debayer.
+>>>>>>
+>>>>>> Hi! qcam tries to support BA24 as it is one of the formats that vimc
+>>>>>> lists as its supported formats wih --list-formats. Shouldn't BA24 be
+>>>>>> possible to capture with vimc?
+>>>>>
+>>>>> Hi,
+>>>>> Just to clarify, when listing the supported formats of a video node, the node lists
+>>>>> the formats that the video node as an independent media entity support.
+>>>>> It does not mean that the 'camera' as a whole (that is, the media topology graph) supports
+>>>>> all the formats that the video node lists. When interacting with a video node or
+>>>>> a subdevice node, one interacts only with that specific entity.
+>>>>> In the case of vimc, the RGB video node as an independent entity supports BA24 so the format
+>>>>> appears in the list of the its supported formats. But since the Debayer does not
+>>>>> support it, the format can not be generated by the entire vimc topology.
+>>>>> This is not a bug.
+> 
+> Is here a valid configuration for the vimc pipeline that produces BA24 ?
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-new file mode 100644
-index 000000000000..22236642d366
---- /dev/null
-+++ b/include/trace/events/damon.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM damon
-+
-+#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_DAMON_H
-+
-+#include <linux/types.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(damon_aggregated,
-+
-+	TP_PROTO(int pid, unsigned int nr_regions,
-+		unsigned long vm_start, unsigned long vm_end,
-+		unsigned int nr_accesses),
-+
-+	TP_ARGS(pid, nr_regions, vm_start, vm_end, nr_accesses),
-+
-+	TP_STRUCT__entry(
-+		__field(int, pid)
-+		__field(unsigned int, nr_regions)
-+		__field(unsigned long, vm_start)
-+		__field(unsigned long, vm_end)
-+		__field(unsigned int, nr_accesses)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pid = pid;
-+		__entry->nr_regions = nr_regions;
-+		__entry->vm_start = vm_start;
-+		__entry->vm_end = vm_end;
-+		__entry->nr_accesses = nr_accesses;
-+	),
-+
-+	TP_printk("pid=%d nr_regions=%u %lu-%lu: %u", __entry->pid,
-+			__entry->nr_regions, __entry->vm_start,
-+			__entry->vm_end, __entry->nr_accesses)
-+);
-+
-+#endif /* _TRACE_DAMON_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/damon.c b/mm/damon.c
-index 6b0b8f21a6c6..af6f395fe06c 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -9,6 +9,8 @@
- 
- #define pr_fmt(fmt) "damon: " fmt
- 
-+#define CREATE_TRACE_POINTS
-+
- #include <linux/damon.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-@@ -20,6 +22,7 @@
- #include <linux/sched/mm.h>
- #include <linux/sched/task.h>
- #include <linux/slab.h>
-+#include <trace/events/damon.h>
- 
- /* Minimal region size.  Every damon_region is aligned by this. */
- #define MIN_REGION PAGE_SIZE
-@@ -650,6 +653,8 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
- 			damon_write_rbuf(c, &r->nr_accesses,
- 					sizeof(r->nr_accesses));
-+			trace_damon_aggregated(t->pid, nr,
-+					r->vm_start, r->vm_end, r->nr_accesses);
- 			r->nr_accesses = 0;
- 		}
- 	}
--- 
-2.17.1
+It should work when using the other capture nodes that doesn't contain the debayer
+in the pipeline.
 
+> I agree that not all pipeline configurations need to support every
+> format, but we shouldn't report a format that can't be produced at all.
+
+ok, this requires major changes in Vimc, unless we implement all the conversions
+in the capture.
+
+> 
+> This being said, and as discussed before, the de-bayering subdev should
+> just produce MEDIA_BUS_FMT_RGB888_1X24, and the video node should then
+> implement the RGB pixel formats. BA24 should likely be one of the
+> supported formats (or maybe BX24 ?).
+
+We can implement the conversion in the capture node, we just need to
+distinguish when the pipeline generates it and when it requires conversion,
+but shouldn't be a problem.
+
+> 
+>>>> This is also my understanding.
+>>>>
+>>>> You should have an -EPIPE error when start streaming though, it
+>>>> shouldn't fail silently.
+>>>
+>>> Yes, we had -EPIPE, and that is what I think we were trying to resolve.
+>>>
+>>> How would userspace be expected to detect what formats to use ? Should
+>>> the available formats on the capture node depend on the current linking
+>>> of the media graph?
+>>
+>> This is a good question, I don't recall v4l2 API defining this.
+> 
+> A recent extension to VIDIOC_ENUMFMT allows enumerating pixel formats
+> for a given media bus code, I think that's the way forward.
+
+Nice, I'm not familiar with this extension, I'll take a look, thanks for
+the pointer.
+
+Thanks
+Helen
+
+> 
+>> It would be a bit hard to implement in Vimc, specially when we have configfs
+>> for custom topology, since the capture would need to query all the pipeline.
+>> But could be implemented.
+>>
+>>> Otherwise, to know what formats are supported - userspace must first
+>>> 'get a list of formats' then try to 'set' the formats to know what is
+>>> possible?
+>>
+>> At the moment yes.
+>>
+>>> Or should (given VIMC is quite specialist anyway) userspace 'just know'
+>>> what is capable all the same?
+>>>
+>>> That's possibly fine, as we can simply remove support for the ARGB
+>>> formats from the libcamera pipeline handler if it is never expected to
+>>> be supported.
+>>
+>> With the configfs feature, you could build a topology with sensor->capture,
+>> and ARGB would be supported.
+>>
+>>> But then as a further question - what formats will we expect VIMC to
+>>> support? VIVID has a (very) wide range of formats.
+>>>
+>>> Would we ever expect VIMC to be as configurable?
+>>> Or is the scope limited to what we have today?
+>>
+>> I know it is very limited atm, but I would like to increase the range,
+>> I'm just with a limited bandwitdh to work on it.
+>>
+>>>>>>
+>>>>>> If yes, which entity should support it, if not debayer? Should there be
+>>>>>> a separate conversion entity, or should we keep the support in debayer
+>>>>>> itself for efficiency issues?
+>>>>>>
+>>>>>>> On 28.05.20 20:57, Kaaira Gupta wrote:
+>>>>>>>> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
+>>>>>>>> not support it. Hence, add the support for Alpha (255).
+>>>>>>>
+>>>>>>> I would change the commit log to:
+>>>>>>>
+>>>>>>> Add support for V4L2_PIX_FMT_RGB24 format in the debayer
+>>>>>>> and set the alpha channel to constant 255.
+>>>>>>>
+>>>>>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+>>>>>>>> ---
+>>>>>>>>    .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
+>>>>>>>>    1 file changed, 18 insertions(+), 9 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+>>>>>>>> index c3f6fef34f68..f34148717a40 100644
+>>>>>>>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
+>>>>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+>>>>>>>> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
+>>>>>>>>        MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+>>>>>>>>        MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+>>>>>>>>        MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+>>>>>>>> +    MEDIA_BUS_FMT_ARGB8888_1X32
+>>>>>>>>    };
+>>>>>>>>    static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+>>>>>>>> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
+>>>>>>>>        unsigned int i, index;
+>>>>>>>>        vpix = vimc_pix_map_by_code(vdeb->src_code);
+>>>>>>>> -    index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+>>>>>>>> -    for (i = 0; i < 3; i++) {
+>>>>>>>> -        switch (vpix->pixelformat) {
+>>>>>>>> -        case V4L2_PIX_FMT_RGB24:
+>>>>>>>> -            vdeb->src_frame[index + i] = rgb[i];
+>>>>>>>> -            break;
+>>>>>>>> -        case V4L2_PIX_FMT_BGR24:
+>>>>>>>> -            vdeb->src_frame[index + i] = rgb[2 - i];
+>>>>>>>> -            break;
+>>>>>>>> +
+>>>>>>>> +    if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
+>>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
+>>>>>>>> +        vdeb->src_frame[index] = 255;
+>>>>>>>> +        for (i = 0; i < 3; i++)
+>>>>>>>> +            vdeb->src_frame[index + i + 1] = rgb[i];
+>>>>>>>> +    } else {
+>>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+>>>>>>>> +        for (i = 0; i < 3; i++) {
+>>>>>>>> +            switch (vpix->pixelformat) {
+>>>>>>>> +            case V4L2_PIX_FMT_RGB24:
+>>>>>>>> +                vdeb->src_frame[index + i] = rgb[i];
+>>>>>>>> +                break;
+>>>>>>>> +            case V4L2_PIX_FMT_BGR24:
+>>>>>>>> +                vdeb->src_frame[index + i] = rgb[2 - i];
+>>>>>>>> +                break;
+>>>>>>>> +            }
+>>>>>>>>            }
+>>>>>>>>        }
+>>>>>>>>    }
+> 
