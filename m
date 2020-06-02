@@ -2,134 +2,197 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2724FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF1342068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1702068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ivHp03Sl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfbxDYzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgFBRdn (ORCPT
+        id S1726962AbgFBReH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:33:43 -0400
-Received: from mail-dm6nam12on2055.outbound.protection.outlook.com ([40.107.243.55]:52704
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725969AbgFBRdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:33:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V8NVKH8Z3iVOetcPJYKctWnB9O9u7YGqpr5QbSL/lnTGnfakXpdCQ2SkF3MxgK2cFuJVhYpznXoKDnn01SUTlTJN3XdjthOTG+XgRq0hlys2mfiNBWlS8ureYemOnfI1xrMq9imd7YyJT29NzwAFxJTBIpYuyhwP0RykctX6FSrcxZhh40OwxARk2fqXj5I2YcsMbUaJ8pX/Vt0cfkXPN7+SXfjFdkPSyxO1cLcH0zzdynRoJhM6y2TQSoXM4In6kq4vu5f5czUyukYpBETukFOECP0MlrO/FbD0B0ii7DO2YQLFyU5vE2bCygwFfrJmJioJNLbFQTuFLO0zr8JVGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j3o6W/RXGdEVxDVVY5ljFcDgU7olAWA0QhMQQXa/edc=;
- b=cPJyYBtTwN/6lxP1Y3FyYyFIHxPFWs4/AMV3ZtYHuf/aFfbzhaEQSPEg5U/3+ZPjcdloBWfYHMAtiwD+VrPThAteODrDvcllzOD/vn7bLzbsC9vQ2ynx4vVN+N/kLJ0/uT+HTdLDZjpRjT2AUwUmSzJfaiRWMAdPnrwt193xQQbaR82UIVlrJGFCFEuFjVsF9fU7lOXprpXeO/WAWD/oXf7tPLX/JphzCmmG1L1ISe5nf5t708OpQQ+QaGHRzQbW6AKNdjKktx1ex2U4qZJEPAsIbcL0ulp1Rzu0Xy+lyAKv5KK1uMUXqeuhcM/YZOVRgdawWdMqhTHo/FbbKbH7og==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 2 Jun 2020 13:34:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgFBReG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 13:34:06 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEB6C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:34:06 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n9so1638328plk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j3o6W/RXGdEVxDVVY5ljFcDgU7olAWA0QhMQQXa/edc=;
- b=ivHp03SlOGcsI8BPs9mFFbyVrhLLDp5Qn3WelYFLdfXfnrfgfNC6P79TQmwRieOj9U6fmUpU6XFP7wmUgoveUblkMngq64DXv/l6kHo+mmUa7FMBDFSBNlu3JeXO9Uc3QEmgK0oFpyQuDJuxucI184khA1NrniWTZ/rHCyvyhok=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1SPR01MB0002.namprd12.prod.outlook.com (2603:10b6:802:23::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Tue, 2 Jun
- 2020 17:33:39 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2%3]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
- 17:33:39 +0000
-Subject: Re: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
-To:     Reinette Chatre <reinette.chatre@intel.com>, fenghua.yu@intel.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org
-References: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
- <63f23edd-39d3-0577-6e00-21066ddfe57f@intel.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <05e11ddd-ca0b-e454-0152-6c83e7b7d719@amd.com>
-Date:   Tue, 2 Jun 2020 12:33:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <63f23edd-39d3-0577-6e00-21066ddfe57f@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0201CA0046.namprd02.prod.outlook.com
- (2603:10b6:803:2e::32) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.79] (165.204.77.1) by SN4PR0201CA0046.namprd02.prod.outlook.com (2603:10b6:803:2e::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Tue, 2 Jun 2020 17:33:39 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4a2bfed5-d2d6-4bde-e5ed-08d8071b1657
-X-MS-TrafficTypeDiagnostic: SN1SPR01MB0002:
-X-Microsoft-Antispam-PRVS: <SN1SPR01MB0002CCF5D86DEEF59DB4211F958B0@SN1SPR01MB0002.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0422860ED4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: D4Gu3bLHls2QBkLA/lgzDxRTJ4LQn4of+Y2olt0OFEuOuS9v7A3D+G1qS6rABKJZIY5pv+HhD6sNVOpYXnyLkbjF1yF0P0VFvRNECEdh5frEGm4ul0FovnFguBxQfM0IIN+oChANXTfN0b/Y07l00ZKBEMn6rNFI1Z4/B1crw1sqlIUS/QlsZ+mRKf6IaDa+yC8Se3Oug0oBxgEkOUZxIM9olmhH9l/F75Y1SDaZy6cngkYTTvxg1PSpJn0j13TT40D1FeuxVhV3Q54vtMNP+gnljha1aD4XEuYApujaVxDDKGjckhCV2Gdfo3RSgbPoubftIFJKERD1aCRkPygX/HgWsaOdbo6JCOhs71gns02CURLRBBs6TS8f6N/2GZ9x
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(346002)(366004)(39860400002)(2616005)(26005)(31696002)(66946007)(36756003)(66556008)(66476007)(86362001)(956004)(5660300002)(8676002)(8936002)(478600001)(16576012)(53546011)(31686004)(52116002)(316002)(2906002)(6486002)(186003)(44832011)(16526019)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: FcqEBElAl4EmrI49QqPxB3cs+I3Wyo9iooD21jNXWmIgxMqEbh4L3CoYMPVUVQlZEnRq1vh2gzAtbEmmDh/Hv8XCEFMHgmHH1/VYLVn2XOHjfVnnCH/FPTsiOvBk/e1RSAF+csab/pKLEg0RfL33lEJw1NZdh6lITCaPxIcOmkDBZLdU3kwzzk+YoW4Omm64X1g8bqmisP7+njQlcKq4Y5pna1qJANNnMQsB4t4dC2ntBirAsP0AhpsKP09xQqHesR+j/VNRL99jYJBK+F6mfR1TYrPqb4G8Wt3haP/973miY4j+2XGUpWvwLus7qdDtiadzgbWjoco0pv4JGrn8N/eCjjdNCEcH5P1pNmElZLrtL8AZ+E9407br0vzPNhu7QEzBqehKCGpObZuV4LAuD4nEaSG63n7omlWz9sd6CJK8BlkM1I1nBubtnzc/GW4wJ43BAC634oCH5tCwkB/IihmKWh8aWO6jC1vGbFouc3A=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a2bfed5-d2d6-4bde-e5ed-08d8071b1657
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 17:33:39.5724
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mXauxj2838VvkpBbcb4SmsNNRJVbxOQTFCqFUpLIliCteNon9Ncz92QD6ytjCWp6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1SPR01MB0002
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UwsIPIMWMLiehtEOnoQZUBkv5nxq2CYgrCZDcyiN6Rk=;
+        b=tfbxDYzYnqH8FM6+juaK+KKXvanynfxpaY2bI4OPgeG0Rhx7bk+kC9IkSuPwDwek+v
+         uxgU0AJ9EXh8OyNITxZDCqKGRY+c6w4FXxdxybQyromzuJ2y9RvDi4Y3Ekoj6sHrvQTr
+         QyzgNC6ZFwxoMvu6c82av0AFD9MPIIb+0c5yC15V+6TZw37zDvshpeKR891t802+AF2M
+         oJVvCCTu8EMcUfLlQYAI8ttsiX2aKhDJ7fyheq+SrYoLDbyJfEfUwPiOq7VGmdn0Lr2B
+         KVmT17Hz3knh/74GN0IC9Io0YjCy1eP9r9UH54iKZyvFpkqxdoZW0/pISF/UBhYC0ETB
+         z/2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UwsIPIMWMLiehtEOnoQZUBkv5nxq2CYgrCZDcyiN6Rk=;
+        b=s77JCbuIfanVvhilwkdg6Xw70y/bu79oUZgHYsCXdyCr15W5TuLbfzB0tI6yMvmOxQ
+         zqtbEYtLxwhcCZRSss9UzxQ5kEu7Bc7ZwYOHcI5/1OMAnDKsZyqFhq4rMbqXzhm1GuDn
+         bczFUvjsBCljk8T1n2/rwJGIZBq3Q+0F2Ci9vh3S8g+wZyhxeJxT9kY9Q1lMIfrXrrsg
+         4qcpzHZb/J5O35O3zg/SxHb/UPS57lag2T9ayUdh4oWBoVCsaelS36DEXHca2ZcQ5gvq
+         xiN7l5wgK8qEdU4SXaqVbey/3QZIiUpNeMQjwM6Eb3g272XHHrRbxiuzW09r9oGTUXMq
+         s0rQ==
+X-Gm-Message-State: AOAM533CXrjg6Q8kxRMAkbf2tGJviQXxgdPPTUyDhwT9dykwZz5MCEHa
+        HGSZb+N9VjhigJroTuEttps=
+X-Google-Smtp-Source: ABdhPJyv3A2oVm7WF3+YrqkvbKK3MPWxiKt+S1GP1lH1X2rod3z6flL5kGwwFkPEl0Zq39nUx1iHKA==
+X-Received: by 2002:a17:902:cb03:: with SMTP id c3mr26949450ply.307.1591119245936;
+        Tue, 02 Jun 2020 10:34:05 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.152.125])
+        by smtp.gmail.com with ESMTPSA id i22sm2864382pfo.92.2020.06.02.10.33.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 10:34:05 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, vkoul@kernel.org,
+        sboyd@kernel.org, robh+dt@kernel.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v3 00/10] Add MMC and DMA support for Actions S700
+Date:   Tue,  2 Jun 2020 23:03:02 +0530
+Message-Id: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This Series(v3) addressed the review comments provide by Rob, and 
+there are changes in patch 5/10 for it.
 
+Also, one of the important change for this series(v3) is about the way we 
+we handle address range conflict between pinctrl and sps node.
 
-On 6/2/20 12:13 PM, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 6/1/2020 4:00 PM, Babu Moger wrote:
->> Memory bandwidth is calculated reading the monitoring counter
->> at two intervals and calculating the delta. It is the software’s
->> responsibility to read the count often enough to avoid having
->> the count roll over _twice_ between reads.
->>
->> The current code hardcodes the bandwidth monitoring counter's width
->> to 24 bits for AMD. This is due to default base counter width which
->> is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
->> to adjust the counter width. But, the AMD hardware supports much
->> wider bandwidth counter with the default width of 44 bits.
->>
->> Kernel reads these monitoring counters every 1 second and adjusts the
->> counter value for overflow. With 24 bits and scale value of 64 for AMD,
->> it can only measure up to 1GB/s without overflowing. For the rates
->> above 1GB/s this will fail to measure the bandwidth.
->>
->> Fix the issue setting the default width to 44 bits by adjusting the
->> offset.
->>
->> AMD future products will implement the CPUID 0xF.[ECX=1]:EAX.
->>
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> 
-> There is no fixes tag but if I understand correctly this issue has been
-> present since AMD support was added to resctrl. This fix builds on top
-> of a recent feature addition and would thus not work for earlier
-> kernels. Are you planning to create a different fix for earlier kernels?
+In the last Series(v2), patch 4/10 was sent as *do not merge* but while
+discussing about some proper solution for it, we have come up with
+idea of limiting pinctrl address range(to 0x100) to avoid this conflict.
+This is safe to do as current pinctrl driver uses address range only
+up to 0x100 (even less than that?), and this would let sps to work properly.
 
-Yes. This was there from day one. I am going to back port to older kernels
-once we arrive on the final patch. Do we need fixes tag here?
+Since sps block is now enabled , we have to provide power-domain bit
+for dma to work properly and patch 6/10 has that change now.
+
+Looking forward have some comments for this series.
+
+---------------------------------------------------------------------------
+
+Series(v2) addressed the review comments provided by Andre, and
+there are changes in patch 1/10, 2/10, 5/10 and 9/10.
+
+* Accessor function (to get the frame lenght) has moved from
+  patch 2/9 to patch 1/9 with inline removed.
+* Removed the unnecessary line break.
+* Added comments about the way DMA descriptor differs between S700
+  and S900.
+* Added a macro to define fcnt value.
+* Updated dma DT bindings.
+* Used SoC secific compatible string for MMC.
+
+Apart from it, a new patch 8/10 is added in this series to
+update mmc DT bindings.
+
+Series is rebased on 5.7.0-rc6.
+
+-----------------------------------------------------------------------------
+
+Series(v1) have following changes from the previous series.
+
+New patch(5/8) has been introduced that converts dma dt-binding
+for Actions OWL SoC from text format to yaml file.
+
+For patch(2/8) new accessor function is added to get the frame
+lenght which is common to both S900 and S700. Apart from it
+SoC check is removed from irq routine as it is not needed.
+
+Patch(4/8) which is an hack to prove our DMA and MMC works
+for S700 is now sent as *do not merge* patch.
+ 
+DMA is tested using dmatest with follwoing result:
+
+root@ubuntu:~# echo dma0chan1 > /sys/module/dmatest/parameters/channel
+root@ubuntu:~# echo 2000 > /sys/module/dmatest/parameters/timeout
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/iterations
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/run
+
+root@ubuntu:~# dmesg | tail
+[  303.362586] dmatest: Added 1 threads using dma0chan1
+[  317.258658] dmatest: Started 1 threads using dma0chan1
+[  317.259397] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 16129.03 iops 32258 KB/s (0)
+
+-------------------------------------------------------------------------------
+
+The intention of RFC series is to enable uSD and DMA support for
+Cubieboard7 based on Actions S700 SoC, and on the way we found that
+it requires changes in dmaengine present on S700 as its different
+from what is present on S900.
+
+Patch(1/8) does provide a new way to describe DMA descriptor, idea is
+to remove the bit-fields as its less maintainable. It is only build
+tested and it would be great if this can be tested on S900 based
+hardware.
+
+Patch(2/8) adds S700 DMA engine support, there is new compatible
+string added for it, which means a changed bindings needed to submitted
+for this. I would plan to send it later the converted "owl-dma.yaml".
+
+Patch(4/8) disables the sps node as its memory range is conflicting
+pinctrl node and results in pinctrl proble failure.
+
+Rest of patches in the series adds DMA/MMC nodes for S700
+alone with binding constants and enables the uSD for Cubieboard7.
+
+This whole series is tested, by building/compiling Kernel on
+Cubieboard7-lite which was *almost* successful (OOM kicked in,
+while Linking due to less RAM present on hardware).
+
+Following is the mmc speed :
+
+ubuntu@ubuntu:~$ sudo hdparm -tT /dev/mmcblk0
+
+/dev/mmcblk0:
+ Timing cached reads:   1310 MB in  2.00 seconds = 655.15 MB/sec
+ Timing buffered disk reads:  62 MB in  3.05 seconds =  20.30 MB/sec
+
+Amit Singh Tomar (10):
+  dmaengine: Actions: get rid of bit fields from dma descriptor
+  dmaengine: Actions: Add support for S700 DMA engine
+  clk: actions: Add MMC clock-register reset bits
+  arm64: dts: actions: limit address range for pinctrl node
+  dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
+  arm64: dts: actions: Add DMA Controller for S700
+  dt-bindings: reset: s700: Add binding constants for mmc
+  dt-bindings: mmc: owl: add compatible string actions,s700-mmc
+  arm64: dts: actions: Add MMC controller support for S700
+  arm64: dts: actions: Add uSD support for Cubieboard7
+
+ Documentation/devicetree/bindings/dma/owl-dma.txt  |  47 --------
+ Documentation/devicetree/bindings/dma/owl-dma.yaml |  79 +++++++++++++
+ Documentation/devicetree/bindings/mmc/owl-mmc.yaml |   6 +-
+ arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  41 +++++++
+ arch/arm64/boot/dts/actions/s700.dtsi              |  51 ++++++++-
+ drivers/clk/actions/owl-s700.c                     |   3 +
+ drivers/dma/owl-dma.c                              | 126 ++++++++++++---------
+ include/dt-bindings/reset/actions,s700-reset.h     |   3 +
+ 8 files changed, 256 insertions(+), 100 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+
+-- 
+2.7.4
+
