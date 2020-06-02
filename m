@@ -2,152 +2,121 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A59BB20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJm+Vu/a"
+	by mail.kernel.org (Postfix) with ESMTP id 623702072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgFBKTN (ORCPT
+        id S1728226AbgFBKTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgFBKSi (ORCPT
+        Tue, 2 Jun 2020 06:19:39 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:51247 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726217AbgFBKTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:18:38 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374F6C061A0E;
-        Tue,  2 Jun 2020 03:18:38 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y18so1173710plr.4;
-        Tue, 02 Jun 2020 03:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PdIpbAszWwqcNgU29oDY/uFem+Fq3TsYDOXZbQ3Tv3w=;
-        b=rJm+Vu/a0+DiZdGgWDW/Cw4bDmxbYBa35aczL+ZkoNXQ0ffqQDyII9fTrhzXaVdb4x
-         HT6W5P8WlSzHArUTJpKB7X7P4wy5h3zpR+nc3AAF0M2UbrtRdJnV9es/J7zuIhZcyE0R
-         jPF2U/+rKHkuZLO9zFPex8OohsRSsrYymopGryq+Vtvnq8oYoTmExfa4fl64WQ+qq6XS
-         k31f3dGUyrcli6YX2eded/Lz+q/p9a7ODbaKvzN+/km+u6MfeiKBNvNR7mu18A4B7uy9
-         ME+skxLD5rueR7xcynJe9RCLZYI3h0rXE1mAE1E5FPyJ0hTzBea3Bjblh8FaojWkDmgk
-         g8VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PdIpbAszWwqcNgU29oDY/uFem+Fq3TsYDOXZbQ3Tv3w=;
-        b=Ktwwu7NLDtPPSAq+EDlfhhSM/7uPCpykT97lp937HZD95/BQm4eCSfkFblnBVr9O5F
-         mn+dHgxcVgUcDVBU5/dbUBh2Ag0bPt6DA7Q6DsMBOOHVWfmGOMAkSxGnoNVigJkghrFb
-         7xEg3gFCcCpx/b1uTdXSNcS/3OBlRzWjTVBl1AnvqDYVSxoyAgb05zDIEttpHJobJHF1
-         su9wrmkr+ZOauYrujZn3QRKXv9UrNGu/4+UXkaQRi98RwVX11DiJEN3HfLnmoEXjaN7t
-         8A8qXlcK8e5t+2h1mYfvt15lOgdMEFq8IJigX52SAIedgbY54k9Ijm4MOgs8b3joAZUg
-         PHJQ==
-X-Gm-Message-State: AOAM532KFpuAmyNFH+oYZV0LKkESXXcM/uxsrbBL2qNDsh5jpTHXidls
-        ZfI6UAdinCTLRKJY1ZiLZ4o=
-X-Google-Smtp-Source: ABdhPJz8oSyfcSRFYN+JWD8lqfloLw69h52Zn84HsM5uJ0sl3yFPvCrw8jxSaUWnJX3OwLhrV8stJw==
-X-Received: by 2002:a17:902:c1cb:: with SMTP id c11mr22638009plc.299.1591093117695;
-        Tue, 02 Jun 2020 03:18:37 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id n19sm1983188pfa.216.2020.06.02.03.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 03:18:36 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Tue, 2 Jun 2020 19:18:34 +0900
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v6 03/14] videobuf2: handle V4L2 buffer cache flags
-Message-ID: <20200602101834.GA617@jagdpanzerIV.localdomain>
-References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
- <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
- <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
+        Tue, 2 Jun 2020 06:19:13 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <mkarcher@zedat.fu-berlin.de>)
+          id 1jg40h-001feJ-SA; Tue, 02 Jun 2020 12:19:07 +0200
+Received: from webmail1.zedat.fu-berlin.de ([130.133.4.91] helo=webmail.zedat.fu-berlin.de)
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <mkarcher@zedat.fu-berlin.de>)
+          id 1jg40h-002YxY-Cn; Tue, 02 Jun 2020 12:19:07 +0200
+Received: from 92.196.166.68
+        (ZEDAT-Webmail authenticated user mkarcher)
+        by webmail.zedat.fu-berlin.de with HTTP;
+        Tue, 2 Jun 2020 12:19:07 +0200
+Message-ID: <52568.92.196.166.68.1591093147.webmail@webmail.zedat.fu-berlin.de>
+In-Reply-To: <20200601205029.GW1079@brightrain.aerifal.cx>
+References: <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
+    <CAMuHMdWG1wudoBP0EK8FiEj1BMEoL3r5oqJMUEbt2rqRU2gQpw@mail.gmail.com>
+    <ba354e30-82ab-68c2-0771-2489463c9279@physik.fu-berlin.de>
+    <2ad089c1-75cf-0986-c40f-c7f3f8fd6ead@physik.fu-berlin.de>
+    <CAMuHMdXzje-qFH=pGoouSuXTZYf4NvnzbaYxTm_boMek-DbWMg@mail.gmail.com>
+    <20200601030300.GT1079@brightrain.aerifal.cx>
+    <CAMuHMdUmpLRyYTPO8LPtOyYtraQ77XZqYy9=8cUiWphmpvczmg@mail.gmail.com>
+    <fbfca28d-217d-4857-a010-8c6e277db67c@physik.fu-berlin.de>
+    <20200601165700.GU1079@brightrain.aerifal.cx>
+    <50235.92.201.26.143.1591043169.webmail@webmail.zedat.fu-berlin.de>
+    <20200601205029.GW1079@brightrain.aerifal.cx>
+Date:   Tue, 2 Jun 2020 12:19:07 +0200
+Subject: Re: [PATCH] sh: Implement __get_user_u64() required for 64-bit
+ get_user()
+From:   "Michael Karcher" <michael.karcher@fu-berlin.de>
+To:     "Rich Felker" <dalias@libc.org>
+Cc:     "Michael Karcher" <michael.karcher@fu-berlin.de>,
+        "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Linux-sh list" <linux-sh@vger.kernel.org>,
+        "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+User-Agent: ZEDAT-Webmail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: 130.133.4.91
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+Rich Felker schrieb:
+>> There is a functional argument agains using get_user_32 twice, which I
+>> overlooked in my private reply to Adrian. If any of the loads fail, we
+>> do not only want err to be set to -EFAULT (which will happen), but we
+>> also want a 64-bit zero as result. If one 32-bit read faults, but the
+>> other one works, we would get -EFAULT together with 32 valid data bits,
+>> and 32 zero bits.
+> Indeed, if you do it that way you want to check the return value and
+> set the value to 0 if either faults.
 
-On (20/06/02 11:51), Hans Verkuil wrote:
-> Hi Sergey,
-> 
-> While doing final testing for this patch series (together with the v4l-utils patch)
-> I found one remaining issue:
+Indeed. And if you do *that*, the performance of the hot path is affected
+by the extra check. The performance discussion below only applied to the
+cold path, so it seems perfectly valid to disregard it in favore of better
+maintainability. On the other hand, checking the return value has a
+possibly more serious performance and size (and if you like at the
+I-Cache, size means performance) impact. When discussing size impact,
+we should keep in mind that put_user for fixed size is supposed to be
+inlined, so it's not a one-time cost, but a cost per call. On the other
+hand, though, put_user for 64-bit values on SH4 seems to be nearly never
+called, so the impact is still most likely negligible.
 
-Thanks for the report.
+> BTW I'm not sure what's supposed to happen on write if half faults
+> after the other half already succeeded... Either a C approach or an
+> asm approach has to consider that.
+That's an interesting question. From a kernel developer's point of view,
+it seems like a valid view to say: "If userspace provides a bad pointer
+where the kernel has to put the data, it's a problem of userspace. The
+kernel only needs to tell userspace that the write is incomplete." This
+is different to the defensive approach used when reading from user space
+into kernel space. Here forcing the whole 64 bit to be zero makes the
+kernel itself more robust by removing strange corner cases.
 
-> > +static void set_buffer_cache_hints(struct vb2_queue *q,
-> > +				   struct vb2_buffer *vb,
-> > +				   struct v4l2_buffer *b)
-> > +{
-> > +	/*
-> > +	 * DMA exporter should take care of cache syncs, so we can avoid
-> > +	 * explicit ->prepare()/->finish() syncs. For other ->memory types
-> > +	 * we always need ->prepare() or/and ->finish() cache sync.
-> > +	 */
-> > +	if (q->memory == VB2_MEMORY_DMABUF) {
-> > +		vb->need_cache_sync_on_finish = 0;
-> > +		vb->need_cache_sync_on_prepare = 0;
-> > +		return;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Cache sync/invalidation flags are set by default in order to
-> > +	 * preserve existing behaviour for old apps/drivers.
-> > +	 */
-> > +	vb->need_cache_sync_on_prepare = 1;
-> > +	vb->need_cache_sync_on_finish = 1;
-> > +
-> > +	if (!vb2_queue_allows_cache_hints(q)) {
-> > +		/*
-> > +		 * Clear buffer cache flags if queue does not support user
-> > +		 * space hints. That's to indicate to userspace that these
-> > +		 * flags won't work.
-> > +		 */
-> > +		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
-> > +		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
-> > +		return;
-> > +	}
-> 
-> These two flags need to be cleared for VB2_MEMORY_DMABUF as well in the test above.
-> This bug is causing v4l2-compliance failures (use the test-media script in contrib/test
-> in v4l-utils: 'sudo test-media vim2m').
+> Indeed. I don't think it's a significant difference but if kernel
+> folks do that's fine. In cases like this my personal preference is to
+> err on the side of less arch-specific asm.
+This is a good idea to reduce maintainance cost. I agree it's up to the
+kernel folks to decide whether:
+ - Half-zeroed reads of partially faulted 64-bit-reads are acceptable
+ - Cold error checks in the hot path to ensure full zeroing is acceptable
+ - maintainance of arch-specific asm on many 32-bit architectures is
+acceptable.
 
-Sorry, Hans, do you suggest to have something like this:
+I don't want to endorse one of these three options, as I am out of the loop
+regarding kernel development priorities and philosophy, I just intend to
+point out the different options the kernel has to pick the one that fits
+best.
 
-	if (q->memory == VB2_MEMORY_DMABUF) {
-		vb->need_cache_sync_on_finish = 0;
-		vb->need_cache_sync_on_prepare = 0;
-		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
-		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
-		return;
-	}
+Regards,
+  Michael Karcher
 
-I didn't clear the ->flags there because we clear the vb flush/sync
-flags: ->need_cache_sync_on_finish/prepare are zeros for DMABUF memory
-type. Which is equivalent to passing V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
-V4L2_BUF_FLAG_NO_CACHE_CLEAN. IOW we would clearing both "vb's do cache
-sync" and request's "do not cache sync".
-
-> It's enough to post a v6.1 for this patch, everything else is fine.
-
-Thanks!
-
-	-ss
