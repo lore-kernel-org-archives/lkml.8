@@ -2,194 +2,140 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4876DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A63C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21FBE20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CCB20772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fZKp17fa"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="W8s81OSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbgFBHeV (ORCPT
+        id S1726243AbgFBHgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
+        Tue, 2 Jun 2020 03:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgFBHeU (ORCPT
+        with ESMTP id S1725900AbgFBHgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:34:20 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF33CC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 00:34:18 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so11345845ljn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RW++pOMwCI1RAUvP2W3CAZyAmDLRUSkgYoW4MV3g1tI=;
-        b=fZKp17fazIZa0p7CjOii2rss4IOhRcKSIy+BhnCKyCpmpo4svBV14OwIfKcKBRtjSj
-         4orYoLt7ffF0jpbrBKIBDwqmq6zhJkU/HTWIsI3anJPKIe1r6klkKUQk9nKyXu1DsAe8
-         40sP+ZRV2LWXr4r6L21jEGzFMI33MmjPZQ+O76M50egIypCRHHt53BPCNMLcJKI6rRdM
-         +8eOGj1gDXh9XUTxEMl9hlLz5Hdu0AiqmRw49QNOWGNscgpCNoyV588H3Ap8Ka6Iu9UG
-         Ie0cDiUQL1n6OSj2jzKM8jcfgOM3fwNVjvjL3YDgKH3bOvTRvv98fr3QQ6wGEuKItF78
-         fdfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RW++pOMwCI1RAUvP2W3CAZyAmDLRUSkgYoW4MV3g1tI=;
-        b=DQ4wrVvZAQOg90EFulsdp4HvgVIHxGSKuIPl4mQOisM0I+TGH8uMawr2H4Iogv4R5Y
-         CoF107Pf4ycGcVSF5o439Sm6mCn5BgqNICy5p3UlinjyZgzvT0n1V0h/0nMg1bA2LLTK
-         L9iJW1zDmOqI5ds6177YO/D4AkOxqo5Ri330ZbRtGgJCC39kwgtlzvpPUOvQdDNYXCY/
-         XF6cqyQFPhiMMlnSA4T1lrV9NbfMn3QYMoNvx4GyWE8r6GWv0TdOL7226oos9w3Sn1MU
-         7pRf00uHmuX0fqkJfPBW5XGNnrnAdX33AGnb1tbD9z+euS3i09kvQymS9wKiUYeudut8
-         2kJQ==
-X-Gm-Message-State: AOAM532LvFrLyys8Z1nN15kpPSQoyNgZKKJcZZ3K1H0Mfpgkfm2q4SK1
-        OoV1DyCO8iYYoTGzipZcs81zRFolWqbg+ioR8pbk8Q==
-X-Google-Smtp-Source: ABdhPJyfCwApzJsdvkbUX69Ms9OAygXh35EEDxMK+BkZf5Ns/uTKmVMhUozwLT5M8q08X14k2b++bbrJ/K5nlRdHPYY=
-X-Received: by 2002:a2e:150f:: with SMTP id s15mr11977399ljd.102.1591083256916;
- Tue, 02 Jun 2020 00:34:16 -0700 (PDT)
+        Tue, 2 Jun 2020 03:36:00 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E25A1C061A0E;
+        Tue,  2 Jun 2020 00:35:59 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bkNs6kccz9sSd;
+        Tue,  2 Jun 2020 17:35:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591083358;
+        bh=zFDmif9p+c0zlYbN9eHIw7rrK7P9YAqGApbV6VPU26I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=W8s81OSJH/5ai9Sq5ElIvSOdUzp53RKl9FI3Y8i1P5m6NJvGqM3eQCDpmAqib/CFL
+         0L/QGUqaIHe2swzXMJikoFP8Syw2GuXmqU1r0wLjw9Nhl9fY+S1gZHxj6WlMoSbKKf
+         5VPFxedbFzsYrR0YeoaU9HfNbYcVPQ5BWj0bCwkkFNXn+B++3upKB3d2zsPjpOAAmz
+         JMCJwqBml3VdhUA2RxageViW3G0zooM1CpitViLzaNCKiBC7dEkh9szrEhhcGweNGO
+         kqWNsJEugFl2v0e3leby+imwYS1dYPWRB8XQqHaIL0nTK2ga777C6FH0rLBEI4DvFS
+         UxZg4v+q21Z8Q==
+Date:   Tue, 2 Jun 2020 17:35:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Wei Liu <wei.liu@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jon Doron <arilou@gmail.com>
+Subject: linux-next: build failure after merge of the hyperv tree
+Message-ID: <20200602173556.17ad06a1@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200601174016.396817032@linuxfoundation.org>
-In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 2 Jun 2020 13:04:05 +0530
-Message-ID: <CA+G9fYuWxDfeskK14Lo1A15qo12DNfpQfN=10=rjaUvBNn9d8A@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/77] 4.14.183-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/ZbijDR41+1JCnTRd+vsxF7e";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jun 2020 at 23:30, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.183 release.
-> There are 77 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.183-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+--Sig_/ZbijDR41+1JCnTRd+vsxF7e
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Summary
-------------------------------------------------------------------------
+Hi all,
 
-kernel: 4.14.183-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 9093a4315f917688b56194625b7ad0e407705072
-git describe: v4.14.182-78-g9093a4315f91
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.182-78-g9093a4315f91
+After merging the hyperv tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-No regressions (compared to build v4.14.182)
+arch/x86/kvm/hyperv.c: In function 'kvm_vcpu_ioctl_get_hv_cpuid':
+arch/x86/kvm/hyperv.c:2020:16: error: 'HV_X64_DEBUGGING' undeclared (first =
+use in this function); did you mean 'HV_DEBUGGING'?
+ 2020 |    ent->ebx |=3D HV_X64_DEBUGGING;
+      |                ^~~~~~~~~~~~~~~~
+      |                HV_DEBUGGING
+arch/x86/kvm/hyperv.c:2020:16: note: each undeclared identifier is reported=
+ only once for each function it appears in
 
-No fixes (compared to build v4.14.182)
+Caused by commit
 
+  c55a844f46f9 ("x86/hyperv: Split hyperv-tlfs.h into arch dependent and in=
+dependent files")
 
-Ran 31002 total tests in the following environments and test suites.
+interacting with commit
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
+  f97f5a56f597 ("x86/kvm/hyper-v: Add support for synthetic debugger interf=
+ace")
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
+from the kvm tree.
+
+I have applied this patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 2 Jun 2020 17:31:06 +1000
+Subject: [PATCH] x86/hyperv: merge fix for HV_X64_DEBUGGING name change
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/x86/kvm/hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index abde638548e0..af9cdb426dd2 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -2017,7 +2017,7 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu=
+, struct kvm_cpuid2 *cpuid,
+ 			ent->edx |=3D HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
+ 			ent->edx |=3D HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+=20
+-			ent->ebx |=3D HV_X64_DEBUGGING;
++			ent->ebx |=3D HV_DEBUGGING;
+ 			ent->edx |=3D HV_X64_GUEST_DEBUGGING_AVAILABLE;
+ 			ent->edx |=3D HV_FEATURE_DEBUG_MSRS_AVAILABLE;
+=20
+--=20
+2.26.2
 
 --=20
-Linaro LKFT
-https://lkft.linaro.org
+Cheers,
+Stephen Rothwell
+
+--Sig_/ZbijDR41+1JCnTRd+vsxF7e
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7WAVwACgkQAVBC80lX
+0GxCggf9En24WCN3nmQmuFLamIsxS87H+KQ6KGMvErhDqyDeyrNsdbB/S2kSVKm1
+DPW6gOhnFpwfRcVnJRg31rNz7FGppwtQQTVmwK2ZrRXy1+pFyVwE8Fvb7dqsOH57
+Q3cBH3O1k1ZBKu/WVZojHuv0sUl0+c+IEZUiR0fvzvG9SXS1WxKuaHqUKdtOPgRu
+FFWUG8B+yEPGCrImwayf1T0CnDZ9PjtShh8EoxGitsWJxyB4Dkv03yc6m3MkvZnG
+cPDIDgt/020dZttZ8Opu6xAeojF5Lzt1GJwUHaT8ltyYj4wac9/RqOy5EIh4FuNX
+iVpDzgG2fOR8Cb5mWjaTGsCzUiCw1g==
+=eTIo
+-----END PGP SIGNATURE-----
+
+--Sig_/ZbijDR41+1JCnTRd+vsxF7e--
