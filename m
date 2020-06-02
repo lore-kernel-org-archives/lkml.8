@@ -2,146 +2,73 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E305FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21411C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6C0D2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jV4XNwn4"
+	by mail.kernel.org (Postfix) with ESMTP id EF78C2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgFBDoH (ORCPT
+        id S1726073AbgFBDsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 23:44:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgFBDoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 23:44:06 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40208C061A0E;
-        Mon,  1 Jun 2020 20:44:06 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bdFG5hnFz9sSd;
-        Tue,  2 Jun 2020 13:44:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591069444;
-        bh=IkHBSWOk4xtC0dkcZ7o1RZslpqdZBMj0Kw2jYCO1qUY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jV4XNwn4hXf7JpW1qLzUOSoj5vr2KfFwGy6Oe3cyz1LJC6NTZ/yR7fbZ/pWZCZQ+7
-         bOCV56ih0dnjkkZt2dueTgHHocPa4k/KrC9ifuWJiHOOJekWuLkNaMcuJDi03RC7Ej
-         t1GU+1T+xmcCxlxRs24N5maYbIRjpBwKvIbcpLZxnPnmNoL177JwaJMYIhJL0kBx0z
-         inaF9GtdQm7SrWp54bH0HTJddnheXB9emXcljRbje2zC2MBx8dG/58oxGbNXtRi5Tv
-         jaZwaQs9K8EIO2MVLuwSNSjIszHOcfyFhkdnQQSupyZgrcvJ9ka3xCs6/a2eTP/1nX
-         hv6zLwGpTpEkg==
-Date:   Tue, 2 Jun 2020 13:44:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: linux-next: build failure after merge of the mmc tree
-Message-ID: <20200602134402.24c19488@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6oBASpyjlxKneHsRjZJ2Yie";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 1 Jun 2020 23:48:14 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:40042 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbgFBDsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 23:48:14 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B4A3200905;
+        Tue,  2 Jun 2020 05:48:12 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 287252005FD;
+        Tue,  2 Jun 2020 05:48:07 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B451640280;
+        Tue,  2 Jun 2020 11:48:00 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        mpa@pengutronix.de, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 0/3] Convert i.MX/MXS mmc binding to json-schema
+Date:   Tue,  2 Jun 2020 11:37:43 +0800
+Message-Id: <1591069066-12727-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6oBASpyjlxKneHsRjZJ2Yie
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch series converts i.MX and MXS mmc binding to json-schema,
+fix some minor issues in original binding doc, such as node name should
+be 'mmc', compatible name for i.MX27, reg/interrupts should be required
+properties etc..
 
-Hi all,
+Anson Huang (3):
+  dt-bindings: mmc: Convert imx esdhc to json-schema
+  dt-bindings: mmc: Convert imx mmc to json-schema
+  dt-bindings: mmc: Convert mxs mmc to json-schema
 
-After merging the mmc tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |  67 -----------
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     | 122 +++++++++++++++++++++
+ .../devicetree/bindings/mmc/fsl-imx-mmc.txt        |  23 ----
+ .../devicetree/bindings/mmc/fsl-imx-mmc.yaml       |  51 +++++++++
+ Documentation/devicetree/bindings/mmc/mxs-mmc.txt  |  27 -----
+ Documentation/devicetree/bindings/mmc/mxs-mmc.yaml |  56 ++++++++++
+ 6 files changed, 229 insertions(+), 117 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
 
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c: In function 'brc=
-mf_sdiod_probe':
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7: error: 'SD=
-IO_DEVICE_ID_CYPRESS_4373' undeclared (first use in this function); did you=
- mean 'SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373'?
-  915 |  case SDIO_DEVICE_ID_CYPRESS_4373:
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |       SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7: note: each=
- undeclared identifier is reported only once for each function it appears in
+-- 
+2.7.4
 
-Caused by commit
-
-  1eb911258805 ("mmc: sdio: Fix Cypress SDIO IDs macros in common include f=
-ile")
-
-interacting with commit
-
-  2a7621ded321 ("brcmfmac: set F2 blocksize for 4373")
-
-from the net-next tree.
-
-I have applied the following merge fix patch.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 2 Jun 2020 13:41:04 +1000
-Subject: [PATCH] mmc: sdio: merge fix for "brcmfmac: set F2 blocksize for
- 4373"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/dr=
-ivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index e718bd466830..46346cb3bc84 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -912,7 +912,7 @@ static int brcmf_sdiod_probe(struct brcmf_sdio_dev *sdi=
-odev)
- 		goto out;
- 	}
- 	switch (sdiodev->func2->device) {
--	case SDIO_DEVICE_ID_CYPRESS_4373:
-+	case SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373:
- 		f2_blksz =3D SDIO_4373_FUNC2_BLOCKSIZE;
- 		break;
- 	case SDIO_DEVICE_ID_BROADCOM_4359:
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6oBASpyjlxKneHsRjZJ2Yie
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7VywIACgkQAVBC80lX
-0Gx1jQf4h3jixfTBJdfoXrWTH62gOFe/BoWtLIWdHCyfMtA7Sf1zbF17/OLvqYVF
-h4bLdXofoSq3oo73r0hX+9H8yTHS/2pv+AtdRsVfEHIA83y90c9LV/5pcwBvKK2P
-pSlogXUr3ci6q6a03PmbPxTalftLoJJsImp+FRIKJWaYS1nBTVfHx0Ncv6T80Fk9
-mMICIPOt7HFMQ+quaQcSul0u/fAh3RF5VQ2hbMO/BRddnOh3dUv9b/sU7bhut+ki
-Pxh0KGjw4Zsfct1VvyOiZtfM2kOTD0cBA8bQXZzNxMIQovKB650m2X9viVu0r26A
-otvqF2cwQf/H4whVvSZe5f+7tV0+
-=C2bh
------END PGP SIGNATURE-----
-
---Sig_/6oBASpyjlxKneHsRjZJ2Yie--
