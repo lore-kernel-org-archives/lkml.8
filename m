@@ -4,75 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D04C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0704920679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA782074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgFBLYu (ORCPT
+        id S1726429AbgFBLZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:24:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5839 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725900AbgFBLYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:24:49 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4377ECEEEE6F8789CF8B;
-        Tue,  2 Jun 2020 19:24:45 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
- 19:24:35 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC:     <richard@nod.at>, <s.hauer@pengutronix.de>, <yi.zhang@huawei.com>
-Subject: [PATCH v2] ubi: fastmap: Don't produce the initial anchor PEB when fastmap is disabled
-Date:   Tue, 2 Jun 2020 19:24:10 +0800
-Message-ID: <20200602112410.660785-1-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.25.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+        Tue, 2 Jun 2020 07:25:40 -0400
+Received: from mga05.intel.com ([192.55.52.43]:1988 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgFBLZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 07:25:40 -0400
+IronPort-SDR: YVTOJA1kWfkHBOY197OibLbIEBrEpGS/0xCl+pS3E8ZbWIjbraMIjmJBjT3MAOKXXH1VnjpuQ/
+ 7t8GcEXqwtag==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 04:25:39 -0700
+IronPort-SDR: Vt5hFo/noc/5O4LBKKynkXP+DEjGzBPWT8SpbjdRMYjojELhXvxAb6S3KA+hom3JsE8PT+cBjo
+ Bpf1o1ru87XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,464,1583222400"; 
+   d="scan'208";a="286622080"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.157])
+  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 04:25:37 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf tools: Fix kernel maps for kcore and eBPF
+Date:   Tue,  2 Jun 2020 14:25:05 +0300
+Message-Id: <20200602112505.1406-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following process triggers a memleak caused by forgetting to release the
-initial anchor PEB (CONFIG_MTD_UBI_FASTMAP is disabled):
-1. attach -> __erase_worker -> produce the initial anchor PEB
-2. detach -> ubi_fastmap_close (Do nothing, it should have released the
-   initial anchor PEB)
+Adjust pgoff also when moving a map's start address.
 
-Don't produce the initial anchor PEB in __erase_worker() when fastmap
-is disabled.
+Example with v5.4.34 based kernel:
 
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
-Fixes: f9c34bb529975fe ("ubi: Fix producing anchor PEBs")
-Reported-by: syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com
+  Before:
+
+    $ sudo tools/perf/perf record -a --kcore -e intel_pt//k sleep 1
+    [ perf record: Woken up 1 times to write data ]
+    [ perf record: Captured and wrote 1.958 MB perf.data ]
+    $ sudo tools/perf/perf script --itrace=e >/dev/null
+    Warning:
+    961 instruction trace errors
+
+  After:
+
+    $ sudo tools/perf/perf script --itrace=e >/dev/null
+    $
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: fb5a88d4131a ("perf tools: Preserve eBPF maps when loading kcore")
+Cc: stable@vger.kernel.org
 ---
- drivers/mtd/ubi/wl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/symbol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mtd/ubi/wl.c b/drivers/mtd/ubi/wl.c
-index 5146cce5fe32..f88486ccf5d5 100644
---- a/drivers/mtd/ubi/wl.c
-+++ b/drivers/mtd/ubi/wl.c
-@@ -1079,7 +1079,8 @@ static int __erase_worker(struct ubi_device *ubi, struct ubi_work *wl_wrk)
- 	if (!err) {
- 		spin_lock(&ubi->wl_lock);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 57cbe7a29868..5ddf84dcbae7 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1224,6 +1224,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
  
--		if (!ubi->fm_anchor && e->pnum < UBI_FM_MAX_START) {
-+		if (!ubi->fm_disabled && !ubi->fm_anchor &&
-+		    e->pnum < UBI_FM_MAX_START) {
- 			ubi->fm_anchor = e;
- 			ubi->fm_do_produce_anchor = 0;
+ 				m->end = old_map->start;
+ 				list_add_tail(&m->node, &merged);
++				new_map->pgoff += old_map->end - new_map->start;
+ 				new_map->start = old_map->end;
+ 			}
  		} else {
+@@ -1244,6 +1245,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 				 *      |new......| ->         |new...|
+ 				 * |old....|        -> |old....|
+ 				 */
++				new_map->pgoff += old_map->end - new_map->start;
+ 				new_map->start = old_map->end;
+ 			}
+ 		}
 -- 
-2.25.4
+2.17.1
 
