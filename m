@@ -2,105 +2,79 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7646CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4BA206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aF3rgGsV"
+	by mail.kernel.org (Postfix) with ESMTP id 81AD220835
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591125172;
+	bh=KytOgv9GEW1W76zTxo2ICGkgqWTsLMSuLcI5HtKPV6k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QF7Ubc5+2K35HVfqtpYRPgg7wP4vJAoT7iU0EG8seTHq+jZtN5FZorLT1ZTP4ViK1
+	 sI5dpHso1+zKk5Emq3kXjd3CD7svYH0zePUPp8+AqsnkreT5MZJ7kZH8xbe10tuxkm
+	 G542S7MWZiSPxyrjpJ3gn1XYRfICL0yJGxgpOs+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgFBTMp (ORCPT
+        id S1728218AbgFBTMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgFBTMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:12:44 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 527EAC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:12:44 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id 64so5532405pfg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dT5kVRE874bAh/32tBP4Sh3AXgtH1D6NYtRpFWupE3o=;
-        b=aF3rgGsVucoqTFL9DBKIHSdjDv/8WvRZSiBIVVf60e6AT0HNk3E+34gBPf9s4PZ4ZO
-         jUKSRhlGtA2DfRJVB7/Lp0WeCbAw/DfAZizLBN17SMTtA0x8AX613w4NiSFtWipDUmVl
-         usHs3I8ToR/vLv32fOqLgnrsirIqfdbXa9An368qUpcnfnjPcU0/ev+ToFECNKqQDWMX
-         alceUJ10GL1iBjP79DClTkishkiMNkOKrdqoGKfxuVoAUpnvtMhq2pFrayuEmKq2g+Z4
-         oVXTkk+orShMRauMZXpxcSZ6MiAxNtBnP+/0hW+yHpuCneheZhAo3N5N8lsiGi93/8FP
-         RiSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dT5kVRE874bAh/32tBP4Sh3AXgtH1D6NYtRpFWupE3o=;
-        b=BiglN1G2jeTIQesN+6tiiICL0gfabK/P/gddYzm20j6pCRkiY8JgnijtSn03PLD4AK
-         GGu0dzJqaXCaXV8wqsIQLc/tlYfkWj3u1+MXOtjnfn3/yajsjsxxvdKbDW+eaoxXTQms
-         3ONx0DsuRDVaK61RQi0im9lY4SvCh3QmIOIE1oXLgDuuUz2LZGHti1jvz5UOqRI4JY4Q
-         +QkHY+EVK4jZtSUj0tq2I/cNz0yEZHZINSRLt2h6IjEjqqAEv9U/jGnKH1qn2Oap3khA
-         pS0B7cGEDVd34l8Xq/mBDsOQi9oGkpLgQ09BYcSDEXcs7Om0aX71nTPBiCeEBJI0gj07
-         ap4w==
-X-Gm-Message-State: AOAM532qkl5UH2aOsiX17gvzNEdPjFqtaSR36tpQlu2+p760fz/zE9L0
-        +1kqNhJE7keOCYToYQ9tlOPtv9ZArNEQ1jEWjEe68g==
-X-Google-Smtp-Source: ABdhPJwT9gTGint0hghkYz14ouqHH7+uFDGL5WMSYOHxNfRVZULf5trJkSa2fKlxjx3BV3GGIhXolLOO6KsBn4QykEI=
-X-Received: by 2002:a63:724a:: with SMTP id c10mr25112669pgn.130.1591125163555;
- Tue, 02 Jun 2020 12:12:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200602184409.22142-1-elver@google.com> <CAAeHK+wh-T4aGDeQM5Z9tTgZM+Y4xkOavjT7QuR+FHQkY-CHuw@mail.gmail.com>
- <CANpmjNPi2AD5jECNf6NBUuFk0+j+0-RA6ceFCOPPvw5PtoQu2g@mail.gmail.com>
-In-Reply-To: <CANpmjNPi2AD5jECNf6NBUuFk0+j+0-RA6ceFCOPPvw5PtoQu2g@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 2 Jun 2020 21:12:32 +0200
-Message-ID: <CAAeHK+y2kfX32TbzcosCLSmr6sMB2BvEfKF8B1_4PrxgjKeLdg@mail.gmail.com>
-Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of KASAN
- and UBSAN
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Jun 2020 15:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbgFBTMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 15:12:50 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 210B4206E2;
+        Tue,  2 Jun 2020 19:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591125169;
+        bh=KytOgv9GEW1W76zTxo2ICGkgqWTsLMSuLcI5HtKPV6k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X5lsBBpbW70dz0E7pzkh/35XmnX90GCyjDcSKef1/YrEBsWABbFkNd3D5kT1Cw/fD
+         VHccLlP201viSu2rZMNy7exbGZ1c87g0zXdJRK8ysvnAYFrE+Ea2wMRovJ7n6qBeQc
+         4xj51ID/wxy3vvJpomUC0S+DjUbeVhzdnoq99W3E=
+Date:   Tue, 2 Jun 2020 12:12:48 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: build failure after merge of the akpm tree
+Message-Id: <20200602121248.155dbdd4f2901f366481bdd1@linux-foundation.org>
+In-Reply-To: <20200602195741.4faaa348@canb.auug.org.au>
+References: <20200602195741.4faaa348@canb.auug.org.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 9:07 PM Marco Elver <elver@google.com> wrote:
->
-> On Tue, 2 Jun 2020 at 20:53, Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
-> > On Tue, Jun 2, 2020 at 8:44 PM Marco Elver <elver@google.com> wrote:
-> > >
-> > > Adds config variable CC_HAS_WORKING_NOSANITIZE, which will be true if we
-> > > have a compiler that does not fail builds due to no_sanitize functions.
-> > > This does not yet mean they work as intended, but for automated
-> > > build-tests, this is the minimum requirement.
-> > >
-> > > For example, we require that __always_inline functions used from
-> > > no_sanitize functions do not generate instrumentation. On GCC <= 7 this
-> > > fails to build entirely, therefore we make the minimum version GCC 8.
-> >
-> > Could you also update KASAN docs to mention this requirement? As a
-> > separate patch or in v2, up to you.
->
-> I can do a v2 tomorrow. But all this is once again tangled up with
-> KCSAN, so I was hoping to keep changes minimal. ;-)
+On Tue, 2 Jun 2020 19:57:41 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-OK, we can do a separate patch after all this is merged.
+> Subject: [PATCH] turns out that probe_user_write is used in modular code
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  mm/maccess.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/mm/maccess.c b/mm/maccess.c
+> index ddfda8e6f4a5..88845eda5047 100644
+> --- a/mm/maccess.c
+> +++ b/mm/maccess.c
+> @@ -246,6 +246,7 @@ long probe_user_write(void __user *dst, const void *src, size_t size)
+>  		return -EFAULT;
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(probe_user_write);
+
+Thanks, I shall squish that in and make the appropriate changelog update.
