@@ -2,144 +2,150 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE83C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DABC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E23520679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70784206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="WQJQdg2I"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Tu1ZpeEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgFBPFk (ORCPT
+        id S1728256AbgFBPFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:05:40 -0400
-Received: from mail-eopbgr80091.outbound.protection.outlook.com ([40.107.8.91]:20737
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726073AbgFBPFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:05:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gau3skRLLVMIC2pATzfIwHfsknwBQ61rq/7BsgpqQTJ3mZn1i+BIT0j3ZDIKwrjw4KX/1gDIyZn0J9Awss3HhDKdVPlHpdsf4r298rvnOZLOnEhQPXrWE6Q8+YMKOsvuXd49t1NTZAQ0buBZ8kzrI8wFjhAn1fcgUoATwaU9kqtOAavgPCrv7pinh2shKl0Q5c6qjGknGxMOgLc682xRN4+MKeANrHtNykfBEgzrZg1qc31AhbNwnO7vBfgLY+vkPFywyLS0M8hq7P1cprnHbIt48NJtI8N4fpjlnr2w9KXbwK9xzKcZZAbFmnbKkrHw8DyLvFignuvb49cWa7vf2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AmpoA4vL7CKSGZUinjwHc/3liT6xHC8viqPCBaAs2V0=;
- b=G73TZ4Z1/sgp36Xb06Dg/L0SB8Mw0dYT8BoAE0viuVE5Thd0OjXADTeDRGj9aQW1rQfIBVFTkra+ebotwUJyEwDDu8DQb4IqQG6UK4ytVasQidsSZfELKWp/BAXzvGxT0KPJWBeJQcWldMK8frthwxBpFrKQE9qotzJ5tzSt84kUec52XRmklbpkeFzOzJh+4FFtSWO9LJyf1LKsA4iFhpVNb4rdPmIMVj7EutU8dm14tK2Rm3XqK+XNl9Q8khXgitQDjyeAhpL0rbrAr3GAPYNTxwBAOYJhwaWI/QJ4Df9pDdBU/sa7PjIM4JG1mUQFtbN+pd641ZMPMKpjwS/FmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AmpoA4vL7CKSGZUinjwHc/3liT6xHC8viqPCBaAs2V0=;
- b=WQJQdg2IHH8nRdBwi3PnJrmDjdsXm58j62v4YUW17L2tw1cnXActd2j0S18sHITijjCF5GreuB10BRP+9pAJdF/vJdxFzO0jBM00S5O0/TtLwxw2BTnr52eCMI0yOS/4WwF3HWhIXfBrmTxz6LfAyOmKqbGcYXrxZpLIzk2XGHw=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
- by DB8PR02MB5884.eurprd02.prod.outlook.com (2603:10a6:10:118::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18; Tue, 2 Jun
- 2020 15:05:35 +0000
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::ccd1:96b3:48dc:c5d1]) by DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::ccd1:96b3:48dc:c5d1%7]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
- 15:05:35 +0000
-Subject: Re: [PATCH 1/2] i2c: mux: pca9541: Change to correct bus control
- commands
-To:     Quentin Strydom <quentin.strydom@bluwireless.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1591099969-30446-1-git-send-email-quentin.strydom@bluwireless.com>
-From:   Peter Rosin <peda@axentia.se>
-Organization: Axentia Technologies AB
-Message-ID: <2e2c3b98-20a6-2671-ad74-a0f171073bd0@axentia.se>
-Date:   Tue, 2 Jun 2020 17:05:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Tue, 2 Jun 2020 11:05:49 -0400
+Received: from mout.web.de ([212.227.17.12]:46521 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbgFBPFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:05:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591110328;
+        bh=bhZEi41r2y1iJ1g/gk1RdYXNv9UKK7ix9XvWCB+cAow=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Tu1ZpeECbW7xsVW53xikmFrrX6DrF2souPzWhWi2nKCrD1qhQZUz4ferTqYikJpZT
+         mbdnmYa7YHnkkVMrvoR/6avO7PFrZGBEGznE2HyD06zjNsEPFruHvFhYiTzst1LsRu
+         H/mt/b1K/7F/cwsYWHHuw+lMwNfVGfiKGy7N97Mg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LmLc6-1j6WTq1wyQ-00a0VX; Tue, 02
+ Jun 2020 17:05:28 +0200
+Subject: Re: spi: spi-ti-qspi: call pm_runtime_put on pm_runtime_get failure
+To:     Mark Brown <broonie@kernel.org>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-spi@vger.kernel.org
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <26028f50-3fb8-eb08-3c9f-08ada018bf9e@web.de>
+ <20200602094947.GA5684@sirena.org.uk>
+ <1c13e0ec-e50f-9eea-5704-052d2d682727@web.de>
+ <20200602141306.GH5684@sirena.org.uk>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <cc8e1397-c605-d73e-363e-9d2ddfb9ae16@web.de>
+Date:   Tue, 2 Jun 2020 17:05:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
-In-Reply-To: <1591099969-30446-1-git-send-email-quentin.strydom@bluwireless.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: sv-SE
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HE1PR0402CA0057.eurprd04.prod.outlook.com
- (2603:10a6:7:7c::46) To DB8PR02MB5482.eurprd02.prod.outlook.com
- (2603:10a6:10:eb::29)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.13.3] (213.112.138.116) by HE1PR0402CA0057.eurprd04.prod.outlook.com (2603:10a6:7:7c::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Tue, 2 Jun 2020 15:05:34 +0000
-X-Originating-IP: [213.112.138.116]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8eb43fc0-34ee-4917-bf05-08d8070666d2
-X-MS-TrafficTypeDiagnostic: DB8PR02MB5884:
-X-Microsoft-Antispam-PRVS: <DB8PR02MB5884E67728082913DE5BDFBEBC8B0@DB8PR02MB5884.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0422860ED4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eVD9cKCsw/+jHy5mwohlaBdcKmJI5oASr+YcrgB1m7mo7v94W/41F9JtboNk7QWxgl6h69B4TbHO7hHXRVSZv+yHpd33KAOxoJOjrmF8Ui2F941ZcXeTOSqmXKpkez7VMPoWQbgHFKSnyqWjzXtibIPbDcuVfAD7xOciepxcuJCTG+WvB8PRye/6w7Y9PA7EYrG/nOk5tpS3jFpUIJ9QnbkOkaQNuQPq8gDy7Wc7PJhxEQmGQ0/kzgvLQmepKUN2SnkajLSSgmW8t6Tgf+LsQmNtcUj2GPLZgdLrvgugsWniMgYIJm8Ke4AlFiWr2xav7TxPGnT/hTbQp8Kq0/0spfKTA7Prr6QpTxcVGJdTrn06iqm6+ZpR1dBsicNPDTx3PaNj4cxwoVpN+tUS25oF0vIZyS4xcxYvdyGAKJ1KyTPHURHm4AQ3tsDKNH5sOAto9eQD8ZbgDLlMxWpE0tgwag==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39830400003)(366004)(396003)(136003)(83380400001)(5660300002)(316002)(36756003)(26005)(86362001)(31696002)(6666004)(186003)(66556008)(66476007)(16576012)(2906002)(16526019)(110136005)(66946007)(53546011)(6486002)(36916002)(52116002)(508600001)(956004)(8936002)(2616005)(966005)(31686004)(8676002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: MGdmsFe6bqEOEbIwbjxW0/PVs+6OgzfpysS55zTcwe+xrduIFDCQ7/tyvpf3TOjqonHBMCvB7+OBy311f6tg7dhx1fd/gCS3IP/rdUy66aQosmoUD9LZcc9Vsa4h1UcrWWw+jp2ZCJ4UckG4MYnTHjfd27BYPUQxEGNMRC2hGOenH7YcybcMtbEtiPE8goH7jCgvQQVcSZSsVzO9XaUoZ40FQ+9MJ+2ZesccNiP2cH20gcq2OuqlHK4S6EjPwoHgInSwizcWxF0SdiOzTmyzyBKzNoxY4dFkrLNhqNP9ZNmaTw8KBntHPaaEco9Vg1hQao6F/0zLk2GhAXwzAQXFGAW+w9Hv195BCjGtR3LI+lP7OSy+6F7/VvQFDMzsop/0GRaUMCDq4I5x5UZbSQHM6v8o5KIQnMQop3/SLehyqB7TzP/Gu5gu8cbkBHrGb9seGTa9Maj35ditOhWUgbhS7st6CPXlX2HXPgyiLO20tMw=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8eb43fc0-34ee-4917-bf05-08d8070666d2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 15:05:35.1449
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vxScoJ950OxqcQGkiBx79i91lft3I48wSKP1wKk7h7HKp2UvD/IFHOeoMqMHmrkp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5884
+In-Reply-To: <20200602141306.GH5684@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yl/nIGA4a6n3EhxK5K/ZywDLKCNXZ5IsFzAdbU3Yqg7s0NH5c7r
+ Ub6DGFnRqrluB6Hi2udFIWWZeV2wxTboiaRCBvdRcbb96Zmn1BE8cBXGyZX49BaMADptujJ
+ FCcOVLIWhIq3O1P1rCKR984oGXNT6VwBjoX5l0ZXZJfjIllAz/+UgEvuSA5GvB9HCBwUjag
+ fL27JPEFOwRo9/PsZPrFQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f8bapepscD8=:fwgwBUbyq4yeYGNkmncv65
+ hcGndfSo6v4wR2trC7M68ILA4EOKNLpZdKsSapy4sBAZmUwtpPPyENxkYZS17XzrwJIV6tBeL
+ s6yfLLMDREZ4ZfTw4D73AJonUuZqrCTxivJZkEhi4WVN6BAXq4fCG6/UqERp/9bTGj7E+/87J
+ f9GD4sj769Nl2DgHbi31m+ihQv2q0GTkK8mVBauebyDYn/L3XoYC8OybC0+m7f/B/aC2jOVgi
+ 6GItorqW+3wz41nwKEbB4/0+ESCE19e4u9v4gzOXD0VLNG45qW/KoPzbU7LOb/X7mH2aChrsz
+ pGJEID/nA1Z6NLeEFT1fWQJepslbzLkk+1I1rby87ZM9DVOsHILm+l6hseuVGxsa8GBa8KWt5
+ vWz5LJS12pEjdUMmbPun3G1R7b1xhN3gqpiSKFOQtsbS49jJ9RpX1XWNJBV40Gs+lpKRXLp6s
+ ZaDAKuF7yaSxDsrayRwbOekGCSo4YsN65yoTpTRCq2AmsEArNfy+TIGZw3BQsdD3sKVIk3B44
+ q0PtYXH+Ijd98SIS89mvCM3G64TdbrNgzYim+nXRrhBB/7Cd5St8NgjltO8+r3qTTodoB/EPe
+ gxrqGBD/pzPY6/AQDRGsEtq57NmpFxdP3AHmyQnR33bu0foqGuRYNVwdgWePknkmACxa5v0M1
+ h/aIi8Os8SP2EIkDUJyxzPqGqvTb7qxIIZ23oUTGHS/4SHd1THOazF5yHD6R7FTN+m+lcueyq
+ ofjgGarGk5o72xdeqCC8Z/z9y+VdBIpYpo5kHHuHNPFgd/EO7nEvfWXxjxvbFXkIWpMV9MZI1
+ x99JPhXPQu5l4nxi7r7gDiEev4jHHIzIUKiw6BmKRKSeFB34OEXSmtAn390dyMZjmUNc4GWsB
+ i+UwYVzoK7FSewS56BgoO7Lx1JlvIfEcYeOyjWkjKdi+hUjan5i9+DSSFZQRzzNnMQ8aFyzk0
+ U9EGONEeVG93OSvwzgYfchl8KOjtG4Vi6KNwz0likiMmytFurVoc2DkNoesaJ/fqlvH4dqDao
+ jv/XAAAUtOwlJsqRlN2SS0yEgExyqCCCvi0vMClb1RZr778fkrh5mL+MDtJkYpiQHIhE177dP
+ svkJb24cEPskJMjhcNwXPYfORbC8V5h+34oGt+wAusHXRKSNOVmeRXT9pY3ynHot8AxrPcvUp
+ QE72HO7FVfAPvGsiSVgWrEIi9aXg2UdvPHNT//jhCHUVDZ0FMlBSkryN57SvCaa9dfOT+iMbm
+ NFF1MK3YMRMmoclNZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-02 14:12, Quentin Strydom wrote:
-> Change current bus commands to match the pca9541a datasheet
-> (see table 12 on page 14 of
-> https://www.nxp.com/docs/en/data-sheet/PCA9541A.pdf). Also
-> where entries are marked as no change the current control
-> command is repeated as the current master reading the
-> control register has control of the bus and bus is on.
-> 
-> Signed-off-by: Quentin Strydom <quentin.strydom@bluwireless.com>
-> ---
->  drivers/i2c/muxes/i2c-mux-pca9541.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
-> index 6a39ada..50808fa 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca9541.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
-> @@ -211,7 +211,7 @@ static void pca9541_release_bus(struct i2c_client *client)
->  
->  /* Control commands per PCA9541 datasheet */
->  static const u8 pca9541_control[16] = {
-> -	4, 0, 1, 5, 4, 4, 5, 5, 0, 0, 1, 1, 0, 4, 5, 1
-> +	4, 4, 5, 5, 4, 4, 5, 7, 8, 0, 1, 11, 0, 0, 1, 1
->  };
->  
->  /*
+>> I find this commit message improvable also according to Linux software
+>> development documentation.
+>
+> Causing people to send out new versions of things for tweaks to the
+> commit log consumes time for them and everyone they're sending changes t=
+o.
 
-I found all your mails from git send-email in my spam folder. They probably
-lack some headers that have become increasingly important... [Don't ask me
-for further details.]
+Improving patches (besides source code adjustments) is an usual software
+development activity, isn't it?
 
-I do not have the HW to test this. I'm only going by the datasheet.
 
-But yes, pca9541_control[1] and [2] indeed seem exchanged with [13] and [14].
+> Pushing people to make trivial rewordings of their commit logs to
+> match your particular taste is not a good use of people's time.
 
-However, pca9541_control[5], [7], [8], and [11] are never used AFAICT.
-Trying to write 7, 8 and 11 also attempts to write various read-only bits
-and makes no sense. So, I'd skip those changes.
+Corresponding tweaks can be combined with recommended tags.
+It can be that only =93trivial=94 items were left over for another bit
+of fine-tuning. Subsequent description variants can reduce
+the probability for additional patch review iterations, can't they?
 
-All that said, I'm a bit skeptic as to why this has worked at all if this
-is incorrect. I would like to see a more detailed failure description that
-could explain why this change is indeed "it".
-
-Cheers,
-Peter
+Regards,
+Markus
