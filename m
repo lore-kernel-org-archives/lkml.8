@@ -2,173 +2,225 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC7C20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CA52077D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IZTwU0Bw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uRIcabU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgFBS51 (ORCPT
+        id S1726977AbgFBTBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
+        Tue, 2 Jun 2020 15:01:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbgFBS51 (ORCPT
+        with ESMTP id S1726174AbgFBTBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:57:27 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A92C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:57:27 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r10so5509812pgv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:57:27 -0700 (PDT)
+        Tue, 2 Jun 2020 15:01:44 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8780C08C5C0;
+        Tue,  2 Jun 2020 12:01:42 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m18so13921523ljo.5;
+        Tue, 02 Jun 2020 12:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NBeXDiXpaNYSmdLg+CEOi/2SkM043Ho1hEbW/kRa2lU=;
-        b=IZTwU0Bw0+6fSqRCv9Rb1hqZukeW0A2CInQU+QYtnhyF1FAVac4O0yQM/pIpj/D/QY
-         Xb0giNjIoUl84sIu2MIZGSYm9j/hXtkTet9KUmat8ZzBCX9UWJCBccVSEQ5qsYyTcrEb
-         VZIrDp0CpLW/RfWYmgTHbQLaUn4Nm2ItOpsejrGP1ApXi1a03KODEgCxoD4PwIPtU2Rt
-         oSYdWzl5vLYs8TqE/SvPHJBZuNHfJv9KtMrToXzBs1HbGBH1bWSdEpieEeWAYl+dkWdD
-         1izyx4zjkDbMKf0J/+mNVTL9AgnrrvwGKVl4dx2pmGF2VK4RGOr02U9jCcUhwaNzV/oV
-         T+qw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YWq/x05MQc6IbPohW5E+6GnnmsE60aX1v6C+jGwg3BE=;
+        b=uRIcabU/K5MiAlHjLpzZpWk66ZOe+VvQI4kjUFAHBKOVKIxn9AWH6DSWv1dQaPRi12
+         r2jrObnxLi9UskXv3H7hhEjUDc2fYVehhLRBl9i+Y8V1kZkWrG8V9QqHNebkkWGQ9gFM
+         0xYS+MqDcTIYxgo5vW96wutF6dWmVzE46pjAJtPxrtgSGXHDHw3WEXQkwnJm8+xxcKyB
+         ILPOksYH4K6DaU9/hACvuoPFrTPDvg9hvj/1ovk4sG3h8s60Q/bUX6xhEt+BD5NN0LVm
+         SJVLI4bOJHH3//TBpJ3psFUIAx1xDOErx++m8BYZmyzVFSvdT/W/F7vmXKpz1xvvuqSx
+         srOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NBeXDiXpaNYSmdLg+CEOi/2SkM043Ho1hEbW/kRa2lU=;
-        b=Y4cHpd2USg78+6joE3QGfr9z7M6eAflssLJBlfwLvfQcnjg27VDUiRCy5FQ3IcWfV4
-         kh3XIhni0Coz125LW7/zM4S/Y+o5YsJ3hKHf5T///En9INFz0MrZb812xBGhStPYp5Et
-         o17atP6hCQwKM9LcY1ToYZry3ooRw90g6K/tVIuhfrPydGSaiepjawxIsIiqJ+kN1Ze7
-         mzmRn1dFJOZ+7EHu1JegTuiy7m21qOzTdS+uHF7KKTbqQFjUhjFFXslLu73CEwvYLCH1
-         rNR8V9f0ny98XmR/+jE4si8jzUXrsfECAvyLv2vTMsULCWtdySeNrqLE8PRccI3H2ZwA
-         TvXw==
-X-Gm-Message-State: AOAM533HhoC3y6eFp2yk2+fY3GZ6QJ96bxG+uLpqoBi0urjIkWx2ZtQt
-        /7oTYlxVFVs6Vow6jtKmnH9eM02T7A1tW+Jx2ISNHg==
-X-Google-Smtp-Source: ABdhPJwGXylQl9yW2rw0tsduvX3osVxH6X59NpC/sYYIFeyfjwWrX0X/KWdU0Kn06TTa7u+MdCvsiQMU181S9JerHio=
-X-Received: by 2002:a63:5644:: with SMTP id g4mr24385954pgm.381.1591124246486;
- Tue, 02 Jun 2020 11:57:26 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YWq/x05MQc6IbPohW5E+6GnnmsE60aX1v6C+jGwg3BE=;
+        b=KLRn6jiAz6b3+RL3EKNFH6rGGLwEnvjvV2mpoeknV+1g5I7PyBs+5bagQ1u7JildCH
+         TOdoQwgca8+jcvFRUblbeGN+LAXoKzeViQbIGUMRuvFbfa/h8c1XweJRUOlT1QdehIAb
+         xEyzZsxw/Bd2i97wGQ0cbZEsQUXjcJXk+vcdH5Np8FT3q62gQOV/5J7rG8jNlbGh0V9T
+         1eS9Oc/zhDHZMhOr6ZLqKjM3emT8TxrfO8EF0QHhEBvOspM0sjXA+c44NHFm2srUFXWG
+         zqJXZ+WQd3Bl9qvzQre10hNWYNM8if/c5ADQqgK+erg4mb0Vb8pw7U9vLBIv4NyDSWTv
+         zCKg==
+X-Gm-Message-State: AOAM530avsVF67yfAggEs2BZWcH7eZbHjCuZFLuRahf8HMJQeajEJ6TK
+        mhv82oqOh3flnII5nEl9jFM=
+X-Google-Smtp-Source: ABdhPJzfJ/PMHA/Pav2ioZ6zdPvYtWclCrUcnwqgz87dVGTuveVsFoKyAJT42aBqV0dn7S10CBmYHg==
+X-Received: by 2002:a2e:9055:: with SMTP id n21mr228737ljg.217.1591124501247;
+        Tue, 02 Jun 2020 12:01:41 -0700 (PDT)
+Received: from rikard (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
+        by smtp.gmail.com with ESMTPSA id w17sm679159ljj.108.2020.06.02.12.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 12:01:40 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
+Date:   Tue, 2 Jun 2020 21:01:36 +0200
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <20200602190136.GA913@rikard>
+References: <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
+ <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
+ <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
+ <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com>
+ <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
+ <CAHp75VfBe-LMiAi=E4Cy8OasmE8NdSqevp+dsZtTEOLwF-TgmA@mail.gmail.com>
+ <CACG_h5p1UpLRoA+ubE4NTFQEvg-oT6TFmsLXXTAtBvzN9z3iPg@mail.gmail.com>
+ <CAHp75Vdxa1_ANBLEOB6g25x3O0V5h3yjZve8qpz-xkisD3KTLg@mail.gmail.com>
+ <20200531223716.GA20752@rikard>
+ <20200601083330.GB1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200602184409.22142-1-elver@google.com>
-In-Reply-To: <20200602184409.22142-1-elver@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 2 Jun 2020 11:57:15 -0700
-Message-ID: <CAKwvOd=5_pgx2+yQt=V_6h7YKiCnVp_L4nsRhz=EzawU1Kf1zg@mail.gmail.com>
-Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of KASAN
- and UBSAN
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601083330.GB1634618@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 11:44 AM 'Marco Elver' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> Adds config variable CC_HAS_WORKING_NOSANITIZE, which will be true if we
-> have a compiler that does not fail builds due to no_sanitize functions.
-> This does not yet mean they work as intended, but for automated
-> build-tests, this is the minimum requirement.
->
-> For example, we require that __always_inline functions used from
-> no_sanitize functions do not generate instrumentation. On GCC <= 7 this
-> fails to build entirely, therefore we make the minimum version GCC 8.
->
-> For KCSAN this is a non-functional change, however, we should add it in
-> case this variable changes in future.
->
-> Link: https://lkml.kernel.org/r/20200602175859.GC2604@hirez.programming.kicks-ass.net
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Marco Elver <elver@google.com>
+On Mon, Jun 01, 2020 at 11:33:30AM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 01, 2020 at 12:37:16AM +0200, Rikard Falkeborn wrote:
+> > + Emil who was working on a patch for this
+> > 
+> > On Sun, May 31, 2020 at 02:00:45PM +0300, Andy Shevchenko wrote:
+> > > On Sun, May 31, 2020 at 4:11 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> > > > On Sat, May 30, 2020 at 2:50 PM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > On Sat, May 30, 2020 at 11:45 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> > > > > > On Sat, May 30, 2020 at 3:49 AM Andy Shevchenko
+> > > > > > <andy.shevchenko@gmail.com> wrote:
+> > > 
+> > > ...
+> > > 
+> > Sorry about that, it seems it's only triggered by gcc-9, that's why I
+> > missed it.
+> 
+> I guess every compiler (more or less recent) will warn here.
+> (Sorry, there is a cut in the thread, the problem is with comparison unsigned
+>  type(s) to 0).
+> 
+> > > > #if (l) == 0
+> > > > #define GENMASK_INPUT_CHECK(h, l)  0
+> > > > #elif
+> > > > #define GENMASK_INPUT_CHECK(h, l) \
+> > > >         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> > > >                 __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> > > > #endif
+> > > >
+> > > > I have verified that this works. Basically this just avoids the sanity
+> > > > check when the 'lower' bound 'l' is zero. Let me know if it looks
+> > > > fine.
+> > 
+> > I don't understand how you mean this? You can't use l before you have
+> > defined GENMASK_INPUT_CHECK to take l as input? Am I missing something?
+> > 
+> > How about the following (with an added comment about why the casts are
+> > necessary):
+> > 
+> > diff --git a/include/linux/bits.h b/include/linux/bits.h
+> > index 4671fbf28842..5fdb9909fbff 100644
+> > --- a/include/linux/bits.h
+> > +++ b/include/linux/bits.h
+> > @@ -23,7 +23,7 @@
+> >  #include <linux/build_bug.h>
+> >  #define GENMASK_INPUT_CHECK(h, l) \
+> >         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> > -               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> > +               __builtin_constant_p((int)(l) > (int)(h)), (int)(l) > (int)(h), 0)))
+> >  #else
+> >  /*
+> >   * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+> > 
+> > I can send a proper patch if this is ok.
+> > > 
+> > > Unfortunately, it's not enough. We need to take care about the following cases
+> > 
+> > The __GENMASK macro is only valid for values of h and l between 0 and 63
+> > (or 31, if unsigned long is 32 bits). Negative values or values >=
+> > sizeof(unsigned long) (or unsigned long long for GENMASK_ULL) result in
+> > compiler warnings (-Wshift-count-negative or -Wshift-count-overflow). So
+> > when I wrote the GENMASK_INPUT_CHECK macro, the intention was to catch
+> > cases where l and h were swapped and let the existing compiler warnings
+> > catch negative or too large values.
+> 
+> GENAMSK sometimes is used with non-constant arguments that's why your check
+> made a regression.
+> 
+> What I described below are the cases to consider w/o what should we do. What
+> you answered is the same what I implied. So, we are on the same page here.
+> 
+> > > 1) h or l negative;
+> > 
+> > Any of these cases will trigger a compiler warning (h negative triggers 
+> > Wshift-count-overflow, l negative triggers Wshift-count-negative).
+> > 
+> > > 2) h == 0, if l == 0, I dunno what is this. it's basically either 0 or warning;
+> > 
+> > h == l == 0 is a complicated way of saying 1 (or BIT(0)). l negative
+> > triggers compiler warning.
+> 
+> Oh, yes GENMASK(h, l), when h==l==0 should be equivalent to BIT(0) with no
+> warning given.
+> 
+> > > 3) l == 0;
+> > 
+> > if h is negative, compiler warning (see 1). If h == 0, see 2. If h is
+> > positive, there is no error in GENMASK_INPUT_CHECK.
+> > 
+> > > 4) h and l > 0.
+> > 
+> > The comparisson works as intended.
+> 
+> > > Now, on top of that (since it's a macro) we have to keep in mind that
+> > > h and l can be signed and / or unsigned types.
+> > > And macro shall work for all 4 cases (by type signedess).
+> > 
+> > If we cast to int, we don't need to worry about the signedness. If
+> > someone enters a value that can't be cast to int, there will still
+> > be a compiler warning about shift out of range.
+> 
+> If the argument unsigned long long will it be the warning (it should not)?
 
-Is this a problem only for x86?  If so, that's quite a jump in minimal
-compiler versions for a feature that I don't think is currently
-problematic for other architectures?  (Based on
-https://lore.kernel.org/lkml/20200529171104.GD706518@hirez.programming.kicks-ass.net/
-)
+No, there should be no warning there.
 
-> ---
-> Apply after:
-> https://lkml.kernel.org/r/20200602173103.931412766@infradead.org
-> ---
->  init/Kconfig      | 3 +++
->  lib/Kconfig.kasan | 1 +
->  lib/Kconfig.kcsan | 1 +
->  lib/Kconfig.ubsan | 1 +
->  4 files changed, 6 insertions(+)
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 0f72eb4ffc87..3e8565bc8376 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -39,6 +39,9 @@ config TOOLS_SUPPORT_RELR
->  config CC_HAS_ASM_INLINE
->         def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
->
-> +config CC_HAS_WORKING_NOSANITIZE
-> +       def_bool !CC_IS_GCC || GCC_VERSION >= 80000
-> +
->  config CONSTRUCTORS
->         bool
->         depends on !UML
-> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> index 81f5464ea9e1..15e6c4b26a40 100644
-> --- a/lib/Kconfig.kasan
-> +++ b/lib/Kconfig.kasan
-> @@ -20,6 +20,7 @@ config KASAN
->         depends on (HAVE_ARCH_KASAN && CC_HAS_KASAN_GENERIC) || \
->                    (HAVE_ARCH_KASAN_SW_TAGS && CC_HAS_KASAN_SW_TAGS)
->         depends on (SLUB && SYSFS) || (SLAB && !DEBUG_SLAB)
-> +       depends on CC_HAS_WORKING_NOSANITIZE
->         help
->           Enables KASAN (KernelAddressSANitizer) - runtime memory debugger,
->           designed to find out-of-bounds accesses and use-after-free bugs.
-> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> index 5ee88e5119c2..2ab4a7f511c9 100644
-> --- a/lib/Kconfig.kcsan
-> +++ b/lib/Kconfig.kcsan
-> @@ -5,6 +5,7 @@ config HAVE_ARCH_KCSAN
->
->  config HAVE_KCSAN_COMPILER
->         def_bool CC_IS_CLANG && $(cc-option,-fsanitize=thread -mllvm -tsan-distinguish-volatile=1)
-> +       depends on CC_HAS_WORKING_NOSANITIZE
->         help
->           For the list of compilers that support KCSAN, please see
->           <file:Documentation/dev-tools/kcsan.rst>.
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index a5ba2fd51823..f725d126af7d 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -4,6 +4,7 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
->
->  menuconfig UBSAN
->         bool "Undefined behaviour sanity checker"
-> +       depends on CC_HAS_WORKING_NOSANITIZE
->         help
->           This option enables the Undefined Behaviour sanity checker.
->           Compile-time instrumentation is used to detect various undefined
-> --
+The inputs to GENMASK() needs to be between 0 and 31 (or 63 depending on the
+size of unsigned long). For any other values, there will be undefined behaviour,
+since the operands to the shifts in __GENMASK will be too large (or negative).
 
--- 
-Thanks,
-~Nick Desaulniers
+Rikard
+
+> 
+> > > > Regarding min, max macro that you suggested I am also looking further into it.
+> > > 
+> > > Since this has been introduced in v5.7 and not only your code is
+> > > affected by this I think we need to ping original author either to fix
+> > > or revert.
+> > > 
+> > > So, I Cc'ed to the author and reviewers, because they probably know
+> > > better why that had been done in the first place and breaking existing
+> > > code.
+> 
+> Please, when you do something there, add a test case to test_bitops.c.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
