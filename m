@@ -2,91 +2,114 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59DFC2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E844206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TCn3525h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgFBWey (ORCPT
+        id S1730319AbgFBWf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:34:54 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:6126 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726373AbgFBWey (ORCPT
+        Tue, 2 Jun 2020 18:35:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59522 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgFBWf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 18:34:54 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 02 Jun 2020 15:34:53 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 02 Jun 2020 15:34:53 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 1888A4D82; Tue,  2 Jun 2020 15:34:53 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 15:34:53 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v16 06/11] pwm: imx27: Use 64-bit division macro
-Message-ID: <20200602223452.GA470@codeaurora.org>
-References: <cover.1591135774.git.gurus@codeaurora.org>
- <fcc92b6499e8200ad6b02ab13b38e4d310afe0ba.1591135774.git.gurus@codeaurora.org>
+        Tue, 2 Jun 2020 18:35:27 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052MW68P016387;
+        Tue, 2 Jun 2020 22:35:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=bD3UacLBwx+YKEs4eG5RaYbAiUcQOKlKnfWL01xaU9A=;
+ b=TCn3525h7WGw7GfyJPHuKzNJtBY7z9gkmJh4JZ7YshPYlLhL/IaPlZaAb8F1Hl071+y3
+ EMN3SZAqEotAzVU+85Pgtzgj0BKp/2acNXwhUmVUc3hVtSxR0B7oW2LRUTvGKBSUzqm9
+ 4yLJab0oVaETP351Tli+0ENjMWmuYiihsncTC1Z+B6yCyKAMJ9XV2eIBjdFLEHhI/CuA
+ RNfDleoMB6dGD+isZ6ytm0FrKOUKS6JSYATv2/qKhyxEXTxqmDjN5nIkCHHiik7ynuwz
+ ocGHmgj/WJXtR11P8rHADuGEkdFeE0TxchrBiFQ+qDETkI1I5wpyvEd6jmvOT/Zj64aH rQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31bewqxe6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 22:35:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052MXwGD050538;
+        Tue, 2 Jun 2020 22:35:15 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31c25q76gq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 22:35:15 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052MZCUo024602;
+        Tue, 2 Jun 2020 22:35:14 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 15:35:12 -0700
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     <axboe@kernel.dk>, <ming.lei@redhat.com>,
+        <martin.petersen@oracle.com>, <wenwen@cs.uga.edu>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yi.zhang@huawei.com>
+Subject: Re: [PATCH] block/bio-integrity: don't free 'buf' if
+ bio_integrity_add_page() failed
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1tuzt9k6w.fsf@ca-mkp.ca.oracle.com>
+References: <20200601123856.3895734-1-yukuai3@huawei.com>
+Date:   Tue, 02 Jun 2020 18:35:10 -0400
+In-Reply-To: <20200601123856.3895734-1-yukuai3@huawei.com> (yu kuai's message
+        of "Mon, 1 Jun 2020 20:38:56 +0800")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcc92b6499e8200ad6b02ab13b38e4d310afe0ba.1591135774.git.gurus@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=5 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=5 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006020157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:31:11PM -0700, Guru Das Srinagesh wrote:
-> Since the PWM framework is switching struct pwm_state.period's
-> datatype to u64, prepare for this transition by using
-> DIV_ROUND_UP_ULL to handle a 64-bit dividend.
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/pwm/pwm-imx27.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-> index 732a6f3..c50d453 100644
-> --- a/drivers/pwm/pwm-imx27.c
-> +++ b/drivers/pwm/pwm-imx27.c
-> @@ -202,7 +202,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
->  	sr = readl(imx->mmio_base + MX3_PWMSR);
->  	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
->  	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
-> -		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-> +		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
->  					 NSEC_PER_MSEC);
->  		msleep(period_ms);
->  
-> -- 
 
-Please disregard this patch, it was sent by mistake. The correct patch
-is [1].
+Hi Yu!
 
-[1]: https://lore.kernel.org/lkml/bb43ff8ad9e0b9884722d85e51c8fdb3ef4154d1.1591136989.git.gurus@codeaurora.org/
+I suggest a few minor wording tweaks to the commit message:
 
-Thank you.
+> commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") add
 
-Guru Das.
+s/add/added/
+
+> a kree() for 'buf' if bio_integrity_add_page() return '0'. However,
+> the
+
+s/kree/kfree/
+s/return/returns/
+
+> object will be freed in bio_integrity_free() since 'bio->bi_opf' and
+> 'bio->bi_integrity' was set previousy in bio_integrity_alloc().
+
+s/was/were/
+
+Otherwise OK.
+
+And like Ming pointed out, you may want to add a comment about the
+assertion that the first vec is valid.
+
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
