@@ -2,157 +2,135 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07659C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BBB20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C0220679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:42:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lJkZ+qas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgFBMlu (ORCPT
+        id S1728138AbgFBMmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:41:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21986 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725940AbgFBMlp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:41:45 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 052CX7tD061173;
-        Tue, 2 Jun 2020 08:41:36 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31dheku6mb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 08:41:35 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 052Ca5gS008002;
-        Tue, 2 Jun 2020 12:41:34 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma01fra.de.ibm.com with ESMTP id 31bf47tf9u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 12:41:33 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 052CfVUN65339640
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jun 2020 12:41:31 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A973642041;
-        Tue,  2 Jun 2020 12:41:31 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 256274203F;
-        Tue,  2 Jun 2020 12:41:30 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.91.137])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Jun 2020 12:41:29 +0000 (GMT)
-Subject: Re: linux-next test error: BUG: using smp_processor_id() in
- preemptible [ADDR] code: syz-fuzzer/6792
-To:     syzbot <syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com>,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-References: <0000000000008ff8ea05a71818b5@google.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Tue, 2 Jun 2020 18:11:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <0000000000008ff8ea05a71818b5@google.com>
-Content-Type: multipart/mixed;
- boundary="------------8CCD057140658DF24F4D91CA"
-Content-Language: en-US
-Message-Id: <20200602124130.256274203F@d06av24.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-02_13:2020-06-02,2020-06-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 bulkscore=0
- adultscore=0 suspectscore=0 cotscore=-2147483648 phishscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020089
+        Tue, 2 Jun 2020 08:42:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57159 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbgFBMmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:42:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591101743; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=5Vd/bdUNGvly/grt98Jx4x27H8iSAXBdUqjZmOyOWf0=; b=lJkZ+qasACzeUN5DUiJLgkZn6GQiL0C1lJvHB2XwveQGOs3hDF/ieKZH9SC8PaYyYg4uIM/7
+ NklFtDNYRas2SRT0e9lA3xZdWpA27QuzxUgncW7XKni8m7Bbo8ARj3+Q2o3CfCX7zSmlIZEz
+ 0O0n+zJEs9d3ejkH0fr0vfGDvnk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5ed64919082f42857f6b8f85 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 12:42:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DFA9DC43395; Tue,  2 Jun 2020 12:42:00 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 62AFCC433C6;
+        Tue,  2 Jun 2020 12:41:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 62AFCC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] f2fs: fix retry logic in f2fs_write_cache_pages()
+Date:   Tue,  2 Jun 2020 18:11:47 +0530
+Message-Id: <1591101707-18802-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------8CCD057140658DF24F4D91CA
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In case a compressed file is getting overwritten, the current retry
+logic doesn't include the current page to be retried now as it sets
+the new start index as 0 and new end index as writeback_index - 1.
+This causes the corresponding cluster to be uncompressed and written
+as normal pages without compression. Fix this by allowing writeback to
+be retried for the current page as well (in case of compressed page
+getting retried due to index mismatch with cluster index). So that
+this cluster can be written compressed in case of overwrite.
 
-#syz test: 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 
-0e21d4620dd047da7952f44a2e1ac777ded2d57e
+Also, align f2fs_write_cache_pages() according to the change -
+<64081362e8ff>("mm/page-writeback.c: fix range_cyclic writeback vs
+writepages deadlock").
 
---------------8CCD057140658DF24F4D91CA
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-ext4-mballoc-Use-raw_cpu_ptr-in-case-if-preemption-i.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-ext4-mballoc-Use-raw_cpu_ptr-in-case-if-preemption-i.pa";
- filename*1="tch"
-
-From cc1cf67d99d5fa61db0651c89c288df31bad6b8e Mon Sep 17 00:00:00 2001
-From: Ritesh Harjani <riteshh@linux.ibm.com>
-Date: Tue, 2 Jun 2020 17:54:12 +0530
-Subject: [PATCH 1/1] ext4: mballoc: Use raw_cpu_ptr in case if preemption is enabled
-
-It doesn't matter really in ext4_mb_new_blocks() about whether the code
-is rescheduled on any other cpu due to preemption. Because we care
-about discard_pa_seq only when the block allocation fails and then too
-we add the seq counter of all the cpus against the initial sampled one
-to check if anyone has freed any blocks while we were doing allocation.
-
-So just use raw_cpu_ptr to not trigger this BUG.
-
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-fuzzer/6927
-caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 1 PID: 6927 Comm: syz-fuzzer Not tainted 5.7.0-next-20200602-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
- ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
- ext4_append+0x153/0x360 fs/ext4/namei.c:67
- ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
- ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
- vfs_mkdir+0x419/0x690 fs/namei.c:3632
- do_mkdirat+0x21e/0x280 fs/namei.c:3655
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reported-by: syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
 ---
- fs/ext4/mballoc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: 
+- Align the code to <64081362e8ff>("mm/page-writeback.c: fix range_cyclic
+  writeback vs writepages deadlock") and adjust the retry logic also as per
+  Chao's suggestion.
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index a9083113a8c0..b79b32dbe3ea 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -4708,7 +4708,7 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
+ fs/f2fs/data.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 4af5fcd..31af29f 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2825,7 +2825,6 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+ 	pgoff_t index;
+ 	pgoff_t end;		/* Inclusive */
+ 	pgoff_t done_index;
+-	int cycled;
+ 	int range_whole = 0;
+ 	xa_mark_t tag;
+ 	int nwritten = 0;
+@@ -2843,17 +2842,12 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+ 	if (wbc->range_cyclic) {
+ 		writeback_index = mapping->writeback_index; /* prev offset */
+ 		index = writeback_index;
+-		if (index == 0)
+-			cycled = 1;
+-		else
+-			cycled = 0;
+ 		end = -1;
+ 	} else {
+ 		index = wbc->range_start >> PAGE_SHIFT;
+ 		end = wbc->range_end >> PAGE_SHIFT;
+ 		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
+ 			range_whole = 1;
+-		cycled = 1; /* ignore range_cyclic tests */
  	}
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+ 		tag = PAGECACHE_TAG_TOWRITE;
+@@ -3021,12 +3015,13 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+ 		}
+ 	}
+ #endif
+-	if ((!cycled && !done) || retry) {
+-		cycled = 1;
++	if (retry) {
+ 		index = 0;
+-		end = writeback_index - 1;
++		end = -1;
+ 		goto retry;
+ 	}
++	if (wbc->range_cyclic && !done)
++		done_index = 0;
+ 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
+ 		mapping->writeback_index = done_index;
  
- 	ac->ac_op = EXT4_MB_HISTORY_PREALLOC;
--	seq = *this_cpu_ptr(&discard_pa_seq);
-+	seq = *raw_cpu_ptr(&discard_pa_seq);
- 	if (!ext4_mb_use_preallocated(ac)) {
- 		ac->ac_op = EXT4_MB_HISTORY_ALLOC;
- 		ext4_mb_normalize_request(ac, ar);
 -- 
-2.21.3
-
-
---------------8CCD057140658DF24F4D91CA--
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
