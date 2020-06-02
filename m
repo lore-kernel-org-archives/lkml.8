@@ -2,122 +2,144 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E34C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C864C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B687E20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1987820734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2MutNN6"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="QoNl73SH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgFBTIZ (ORCPT
+        id S1727946AbgFBTJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:08:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40575 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726174AbgFBTIY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:08:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591124903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8y6oZjj3V4uWtlMv1o25l7nHDbVFUeee47F/Q2Ad1rQ=;
-        b=H2MutNN6Ktm0Jr1tptrKP7g+nL/GBpYug76ujVfE7JNtErQ1YjCzrXuPlxwFTh8Bztu+QT
-        VLqdHnYlhTEALmJH8eMwIYOxZmiFW7Cj5Ryg2w8r8AyLEozQr9IV9sq9Iyi9FdjIL+D45v
-        3wZkp9n2htnyrUaG8Wi1eOt9t/YwvLg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-233-JEPnNF33M0OZSWHYSa9PIw-1; Tue, 02 Jun 2020 15:08:21 -0400
-X-MC-Unique: JEPnNF33M0OZSWHYSa9PIw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A7ED835B8C;
-        Tue,  2 Jun 2020 19:08:19 +0000 (UTC)
-Received: from krava (unknown [10.40.192.62])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 368312B4CC;
-        Tue,  2 Jun 2020 19:08:16 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 21:08:15 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 04/13] perf tests: Add another metric parsing test
-Message-ID: <20200602190815.GH1169993@krava>
-References: <20200602115055.1168446-1-jolsa@kernel.org>
- <20200602115055.1168446-5-jolsa@kernel.org>
- <CAP-5=fXjQ0ZgtrsizH6F7y2VRZ6dnsu54BXRxszyM+mMAvP-cQ@mail.gmail.com>
-MIME-Version: 1.0
+        Tue, 2 Jun 2020 15:09:57 -0400
+Received: from mail-vi1eur05on2044.outbound.protection.outlook.com ([40.107.21.44]:32534
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbgFBTJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 15:09:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MgymGUxT3g5QteheTxveWY7RlQt7rkq2l71kq5PtrBMTqxHwEyQ5u2dMPL7AXyYlB+Y2ozPcUPCIR7Ju1QWFp6o5MHmAAc6Rue/PuC/IAhT1DN+jBa0ylnG+MmM2yk2AUwk0vpNrfwyL8YJltstVaJXTqRjeCBhWSsRxPPAOmUYw2Qs5XnO1XVzz+JYSHJFulUJb4CU9wS8ExtC/qv3jbo5NQx75PLeGrTVWXkqW1dVHOEVR87IoPmNedatHHVUyjEqDJVSP+QFMbdyRroq5mi15nHnW/B/BdRmXSNkb4rzi36HKFvYNV+rKQ94QO5p5Ja3/8uvoQyodDGc9TZiGbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6SzEnlG4144aI5xIPHukyAt4KwOBxTzMnWfoibg6JK4=;
+ b=nwSAhpXwjUKGQQ+eounyEe65VTUyUerXb3sMhCwyIYFtXO+61NYjQltoXZisC2BMeHO9sTgykCAft6bQ9JifQHmXsoy6tOKHpLyzjzzykwKre0dODe4BFgmytiCqjRExv9EhmHBENfY+/WXwWU1RPdB7jcJNE4a3JDwAWnmt/XmljgV54b16UK1J8VPpvbT/GLnT+pM182gmUnGp6yBeOJegv9+TopAgWtAqftB6p+3Mv9ogbajR7sfkx7AtMdhHf3xArPFWAhDIrg9Xoa9NbINAiftumWgpozBlEvJC5JK/mwTeXiwFiLCTnbFjAa62GfoXpbOle6QTHVRIIwgVdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6SzEnlG4144aI5xIPHukyAt4KwOBxTzMnWfoibg6JK4=;
+ b=QoNl73SHVfAIHhFlR2dmwPAs+WGcl7DnPqj99/XnlwYxtVluPrglr6l1mSgMAiBZ+V5XYgf0QpW9w/Zpsgq2tKruFybf+xstMP17/RAl/Nog/qNA/g+0QYRuuTWANoxW62gMoCY0I9x3PGMXET4ERegLiQecpeGq33B7Nds5G2Q=
+Authentication-Results: kernel.dk; dkim=none (message not signed)
+ header.d=none;kernel.dk; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB5342.eurprd05.prod.outlook.com (2603:10a6:803:a2::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Tue, 2 Jun
+ 2020 19:09:52 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3066.018; Tue, 2 Jun 2020
+ 19:09:52 +0000
+Date:   Tue, 2 Jun 2020 16:09:45 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Doug Ledford <dledford@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yamin Friedman <yaminf@mellanox.com>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: manual merge of the block tree with the rdma tree
+Message-ID: <20200602190945.GC65026@mellanox.com>
+References: <20200602125647.5f5ed151@canb.auug.org.au>
+ <3717aca8-9d75-33f1-ea8c-044af767ab5c@mellanox.com>
+ <20200602190153.GA65026@mellanox.com>
+ <8be03d71-9c72-bf88-7fd7-76ec7700474a@kernel.dk>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXjQ0ZgtrsizH6F7y2VRZ6dnsu54BXRxszyM+mMAvP-cQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <8be03d71-9c72-bf88-7fd7-76ec7700474a@kernel.dk>
+X-ClientProxiedBy: MN2PR22CA0023.namprd22.prod.outlook.com
+ (2603:10b6:208:238::28) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (193.47.165.251) by MN2PR22CA0023.namprd22.prod.outlook.com (2603:10b6:208:238::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Tue, 2 Jun 2020 19:09:52 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jgCID-000Ijs-5d; Tue, 02 Jun 2020 16:09:45 -0300
+X-Originating-IP: [193.47.165.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 82130f32-e303-4e5b-2687-08d807288778
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5342:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB53428928F64DEA1B92D82A95CF8B0@VI1PR05MB5342.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 0422860ED4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3dcOWnO1Gc+5ITRwHe8rRDe4mWfLUA00Qu/+UdAfwPz46AqKUrfCexrItNo//QXG14fxoGpdz9Nfuypzo2Q6E2WEVMneydKaVrcK8loQJhu3HaLWeVmmutOpY3vkzXb3xi22CEDJNGVRmv4VTburc5tbwmTY0cox/W2UrE2CLPxzVqyptCrZqhsjQzN+lPJzdlQCXZuVmN1ZIVh2Fhw1PycmLJRbTfnSKcAKAn5AEhom12LbO113x8qFk8xJgPHMr9NIq+zREipiQc/6b/rQ/rogJgoTo6yd1xu+EXO8Ck1hKxZKm0VDipQHf3mHn0qF1qtn0DEjLFg2r2Z7TXJXZA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(39850400004)(136003)(2616005)(53546011)(8676002)(26005)(8936002)(54906003)(36756003)(83380400001)(316002)(6916009)(426003)(2906002)(66476007)(4326008)(66946007)(66556008)(86362001)(186003)(5660300002)(9746002)(9786002)(1076003)(478600001)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: zoG61zCeCgf9WkUxUkivkY2Z7ktjNhEoRPlpLe41OuCIn2Yn7fRRhb3ux2ilmsePZ1k5izhgxSBk6kgSesWEjUdftPEej7MhTJ5zRCpScafGtRGhHO5X/QqkPYC96qa4pGPuTr32SZpWWkzi9WpEN3ftAkLfsr+atRc4eOXHljkeYLTzmaytXe6x9KizBeKmjW0iB8VYTQRF192MUL2vWRQpGng1+8Gch0M5v4bfGntynMQ9QEqwsYOBDccHv8P12BW+kc37udxTUeJKpGmv15EKb3Jyyi8DzXzGYv6NHrRUPAbwcN6zMyntY1EYKAKB5UoelEqcdWsjobj7D+IqV9TMn1VPud0DGbk9ceN921S9kutUN/hDpZcDrJ9z/ZIEc3iROzhkU89Wac9M8UhvOL+KlmaaLWRb3HG360cEdu4asTXv5xKkkSrbNqjG0xpNkeXn10uT3V4gEl5/aZFiv77mRrk5Q9kXB2s4mI6KN2OqISqItjAk0aenIiEvlVZ8
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82130f32-e303-4e5b-2687-08d807288778
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 19:09:52.7199
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zpw3RfS4JlBZjTvzHz1Tuz7xakxu1MvDvObQL34OOqXRfjExsD3LbflTJjbn62k9Da000G9DTNoPOjugKPOd0w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5342
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 10:58:32AM -0700, Ian Rogers wrote:
-
-SNIP
-
-> > +static int check_parse_fake(const char *id)
-> > +{
-> > +       struct parse_events_error error;
+On Tue, Jun 02, 2020 at 01:02:55PM -0600, Jens Axboe wrote:
+> On 6/2/20 1:01 PM, Jason Gunthorpe wrote:
+> > On Tue, Jun 02, 2020 at 11:37:26AM +0300, Max Gurtovoy wrote:
+> >>
+> >> On 6/2/2020 5:56 AM, Stephen Rothwell wrote:
+> >>> Hi all,
+> >>
+> >> Hi,
+> >>
+> >> This looks good to me.
+> >>
+> >> Can you share a pointer to the tree so we'll test it in our labs ?
+> >>
+> >> need to re-test:
+> >>
+> >> 1. srq per core
+> >>
+> >> 2. srq per core + T10-PI
+> >>
+> >> And both will run with shared CQ.
+> > 
+> > Max, this is too much conflict to send to Linus between your own
+> > patches. I am going to drop the nvme part of this from RDMA.
+> > 
+> > Normally I don't like applying partial series, but due to this tree
+> > split, you can send the rebased nvme part through the nvme/block tree
+> > at rc1 in two weeks..
 > 
-> nit: this reads funny as it isn't clear, without looking at
-> check_parse_id, that error is zero initialized.
+> Was going to comment that this is probably how it should have been
+> done to begin with. If we have multiple conflicts like that between
+> two trees, someone is doing something wrong...
 
-right, how about something like below?
+Well, on the other hand having people add APIs in one tree and then
+(promised) consumers in another tree later on has proven problematic
+in the past. It is best to try to avoid that, but in this case I don't
+think Max will have any delay to get the API consumer into nvme in two
+weeks.
 
-thanks,
-jirka
-
-
----
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index d3343827eb4d..c745b6e13cbe 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -403,7 +403,6 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 	evlist = evlist__new();
- 	if (!evlist)
- 		return -ENOMEM;
--	memset(error, 0, sizeof(*error));
- 	ret = parse_events(evlist, id, error, fake_pmu);
- 	evlist__delete(evlist);
- 	return ret;
-@@ -411,7 +410,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 
- static int check_parse_cpu(const char *id, bool same_cpu, struct pmu_event *pe)
- {
--	struct parse_events_error error;
-+	struct parse_events_error error = { 0 };
- 
- 	int ret = check_parse_id(id, &error, false);
- 	if (ret && same_cpu) {
-@@ -433,7 +432,7 @@ static int check_parse_cpu(const char *id, bool same_cpu, struct pmu_event *pe)
- 
- static int check_parse_fake(const char *id)
- {
--	struct parse_events_error error;
-+	struct parse_events_error error = { 0 };
- 	int ret = check_parse_id(id, &error, true);
- 
- 	free(error.str);
-
+Jason
