@@ -2,154 +2,378 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0165C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B42C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09C92054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:18:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="YxsAHw4o"
+	by mail.kernel.org (Postfix) with ESMTP id 7F6772067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgFBXS6 (ORCPT
+        id S1728313AbgFBXWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgFBXSz (ORCPT
+        Tue, 2 Jun 2020 19:22:19 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57740 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgFBXWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:18:55 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28CCC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:18:54 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c21so116712lfb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w339YpBFgV7tqQf8M7YphxkuH2MrbkG2i3IWInNVEFw=;
-        b=YxsAHw4owitymwvHIwpqwWvn9/NXfSmSAaW4XnOP3SsDR0q/tu0Kjtftp1ifdfbfTc
-         db7b0ZQb7XugZtiYeszap76BEZuj9SR7sEGdl+KzdbvXUErm382A/PEE9pQKqw2RCHW+
-         fxt3fniEs00mZZGfE4SRefURbUpvaDWjfMSwtxss/P7Hu5hOCAebKrwvL198wVJLAScc
-         4x1kUwZY1D43yHWgBhNeQakXS1vaWEODvIRwRn+skTC2lMBjsFPh6jtE5RpKnVCGheKI
-         hxnCOSxuHeJWxmzn1wKje/9Ngwo+exug6CDE81AlefvydqUyh2OSPjhGhkcoCl5Hkqrs
-         Ktbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w339YpBFgV7tqQf8M7YphxkuH2MrbkG2i3IWInNVEFw=;
-        b=ZH8hTQRmg/wcC6SWZQ2/dOSwPm8uzxyNQSwCnobabHip1fEzM3x/cwND+JXclQ+pYO
-         q371w9tyUNglyhz3TPx2c1v5LiZkVS1Yjk3FyI7jrVnpCveiZqlDK9ssZTaSvoAmMknG
-         7O8aN4elH8jg4U6/w59iByD4yaEO3oHPt/7uv5epLHwWUsX9oPSbXWPaMGbC89+hskGZ
-         RR6MIttxsby4BubDHqq4sOek9+zbugyLv5r6MGvgInNJ2DzMaiv6dbTDwA/127UyKKZu
-         I3vTVVIa2eAfUwHQ8M+0AOYjTGZMZLSV5qNE30MjxABLKJaYe6tDONWQOnAngI7EE0aR
-         6H7Q==
-X-Gm-Message-State: AOAM5302Ex3Thjozm61L4C4gWI0u55SuCnSi6DlzuNrq4jaLBnpbxIXd
-        VuRoV+EIJxHHQK4pbJ+mMd720w==
-X-Google-Smtp-Source: ABdhPJxwAotMVS+UbqsYp+bbhka8nGqAjJAI+8M3Prj7QP/OP9DS5g/xQ3THv/MFg0EiknvWEapPfQ==
-X-Received: by 2002:ac2:550a:: with SMTP id j10mr860697lfk.46.1591139933189;
-        Tue, 02 Jun 2020 16:18:53 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 15sm63048ljr.104.2020.06.02.16.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 16:18:51 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 87BFB102780; Wed,  3 Jun 2020 02:18:57 +0300 (+03)
-Date:   Wed, 3 Jun 2020 02:18:57 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] x86/mm: Fix boot with some memory above MAXMEM
-Message-ID: <20200602231857.ousba2xiks7myxbt@box>
-References: <20200511191721.1416-1-kirill.shutemov@linux.intel.com>
- <20200525044902.rsb46bxu5hdsqglt@box>
- <20200525145943.GA13247@kernel.org>
- <20200525150820.zljiamptpzi37ohx@box>
- <24b51944-bfba-a937-484a-5d9ec54fdf01@intel.com>
+        Tue, 2 Jun 2020 19:22:17 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8CDE28030808;
+        Tue,  2 Jun 2020 23:22:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eQiNNmjnFCEr; Wed,  3 Jun 2020 02:22:11 +0300 (MSK)
+Date:   Wed, 3 Jun 2020 02:22:10 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 07/10] spi: spi-dw-mchp: Add Sparx5 support
+Message-ID: <20200602232210.hqlbhx3ox3qsxjoa@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-8-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <24b51944-bfba-a937-484a-5d9ec54fdf01@intel.com>
+In-Reply-To: <20200513140031.25633-8-lars.povlsen@microchip.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:27:15AM -0700, Dave Hansen wrote:
-> On 5/25/20 8:08 AM, Kirill A. Shutemov wrote:
-> >>>> +	if (not_addressable) {
-> >>>> +		pr_err("%lldGB of physical memory is not addressable in the paging mode\n",
-> >>>> +		       not_addressable >> 30);
-> >>>> +		if (!pgtable_l5_enabled())
-> >>>> +			pr_err("Consider enabling 5-level paging\n");
-> >> Could this happen at all when l5 is enabled?
-> >> Does it mean we need kmap() for 64-bit?
-> > It's future-profing. Who knows what paging modes we would have in the
-> > future.
+On Wed, May 13, 2020 at 04:00:28PM +0200, Lars Povlsen wrote:
+> This adds support for the Sparx5 SoC in the spi-dw-mchp SPI controller.
 > 
-> Future-proofing and firmware-proofing. :)
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  drivers/spi/spi-dw-mchp.c | 211 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 189 insertions(+), 22 deletions(-)
 > 
-> In any case, are we *really* limited to 52 bits of physical memory with
-> 5-level paging?
+> diff --git a/drivers/spi/spi-dw-mchp.c b/drivers/spi/spi-dw-mchp.c
+> index 0828a7616d9ab..3abdd44a550ea 100644
+> --- a/drivers/spi/spi-dw-mchp.c
+> +++ b/drivers/spi/spi-dw-mchp.c
+> @@ -28,21 +28,22 @@
+> 
+>  #define MAX_CS		4
+> 
+> -#define MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x24
+> -#define OCELOT_IF_SI_OWNER_OFFSET		4
+> -#define JAGUAR2_IF_SI_OWNER_OFFSET		6
+>  #define MSCC_IF_SI_OWNER_MASK			GENMASK(1, 0)
+>  #define MSCC_IF_SI_OWNER_SISL			0
+>  #define MSCC_IF_SI_OWNER_SIBM			1
+>  #define MSCC_IF_SI_OWNER_SIMC			2
+> 
+>  #define MSCC_SPI_MST_SW_MODE			0x14
+> -#define MSCC_SPI_MST_SW_MODE_SW_PIN_CTRL_MODE	BIT(13)
+> -#define MSCC_SPI_MST_SW_MODE_SW_SPI_CS(x)	(x << 5)
+> 
+>  struct dw_spi_mchp_props {
+>  	const char *syscon_name;
+> -	u32 si_owner_bit;
+> +	u32 general_ctrl_off;
+> +	u32 si_owner_bit, si_owner2_bit;
+> +	u32 pinctrl_bit_off;
+> +	u32 cs_bit_off;
+> +	u32 ss_force_ena_off;
+> +	u32 ss_force_val_off;
+> +	u32 bootmaster_cs;
+>  };
+> 
+>  struct dw_spi_mchp {
+> @@ -53,44 +54,176 @@ struct dw_spi_mchp {
+>  	void __iomem			*spi_mst;
+>  	const struct dw_spi_mchp_props	*props;
+>  	u32				gen_owner;
+> +	u32				if2mask;
+>  };
+> 
+>  static const struct dw_spi_mchp_props dw_spi_mchp_props_ocelot = {
+>  	.syscon_name		= "mscc,ocelot-cpu-syscon",
+> +	.general_ctrl_off	= 0x24,
+>  	.si_owner_bit		= 4,
+> +	.pinctrl_bit_off	= 13,
+> +	.cs_bit_off		= 5,
+> +	.bootmaster_cs		= 0,
+>  };
+> 
+>  static const struct dw_spi_mchp_props dw_spi_mchp_props_jaguar2 = {
+>  	.syscon_name		= "mscc,ocelot-cpu-syscon",
+> +	.general_ctrl_off	= 0x24,
+>  	.si_owner_bit		= 6,
+> +	.pinctrl_bit_off	= 13,
+> +	.cs_bit_off		= 5,
+> +	.bootmaster_cs		= 0,
+> +};
+> +
+> +static const struct dw_spi_mchp_props dw_spi_mchp_props_sparx5 = {
+> +	.syscon_name		= "microchip,sparx5-cpu-syscon",
+> +	.general_ctrl_off	= 0x88,
+> +	.si_owner_bit		= 6,
+> +	.si_owner2_bit		= 4,
+> +	.ss_force_ena_off	= 0xa4,
+> +	.ss_force_val_off	= 0xa8,
+> +	.bootmaster_cs		= 0,
+>  };
+> 
+>  /*
+> - * The Designware SPI controller (referred to as master in the documentation)
+> - * automatically deasserts chip select when the tx fifo is empty. The chip
+> - * selects then needs to be either driven as GPIOs or, for the first 4 using the
+> - * the SPI boot controller registers. the final chip select is an OR gate
+> - * between the Designware SPI controller and the SPI boot controller.
+> + * Set the owner of the SPI interface
+>   */
+> -static void dw_spi_mchp_set_cs(struct spi_device *spi, bool enable)
+> +static void dw_spi_mchp_set_owner(struct dw_spi_mchp *dwsmchp,
+> +				  const struct dw_spi_mchp_props *props,
+> +				  u8 owner, u8 owner2)
+> +{
+> +	u32 val, msk;
+> +
+> +	val = (owner << props->si_owner_bit);
+> +	msk = (MSCC_IF_SI_OWNER_MASK << props->si_owner_bit);
+> +	if (props->si_owner2_bit) {
+> +		val |= owner2 << props->si_owner2_bit;
+> +		msk |= (MSCC_IF_SI_OWNER_MASK << props->si_owner2_bit);
+> +	}
+> +	if (dwsmchp->gen_owner != val) {
+> +		regmap_update_bits(dwsmchp->syscon, props->general_ctrl_off,
+> +				   msk, val);
+> +		dwsmchp->gen_owner = val;
+> +	}
+> +}
+> +
+> +static void dw_spi_mchp_set_cs_owner(struct dw_spi_mchp *dwsmchp,
+> +				     const struct dw_spi_mchp_props *props,
+> +				     u8 cs, u8 owner)
+>  {
+> +	u8 dummy = (owner == MSCC_IF_SI_OWNER_SIBM ?
+> +		    MSCC_IF_SI_OWNER_SIMC : MSCC_IF_SI_OWNER_SIBM);
+> +	if (props->si_owner2_bit && (dwsmchp->if2mask & BIT(cs))) {
+> +		/* SPI2 */
+> +		dw_spi_mchp_set_owner(dwsmchp, props, dummy, owner);
+> +	} else {
+> +		/* SPI1 */
+> +		dw_spi_mchp_set_owner(dwsmchp, props, owner, dummy);
+> +	}
+> +}
+> +
+> +/*
+> + * The Designware SPI controller (referred to as master in the
+> + * documentation) automatically deasserts chip select when the tx fifo
+> + * is empty. The chip selects then needs to be either driven as GPIOs
+> + * or, for the first 4 using the the SPI boot controller
+> + * registers. the final chip select is an OR gate between the
+> + * Designware SPI controller and the SPI boot controller.  nselect is
+> + * an active low signal
+> + */
+> +static void dw_spi_mchp_set_cs(struct spi_device *spi, bool nEnable)
+> +{
+> +	bool enable = !nEnable;	/* This keeps changing in the API... */
+>  	struct dw_spi *dws = spi_master_get_devdata(spi->master);
+>  	struct dw_spi_mchp *dwsmchp = container_of(dws, struct dw_spi_mchp,
+>  						   dws);
+> -	u32 cs = spi->chip_select;
+> +	const struct dw_spi_mchp_props *props = dwsmchp->props;
+> +	u8 cs = spi->chip_select;
+> 
+> -	if (cs < 4) {
+> -		u32 sw_mode = MSCC_SPI_MST_SW_MODE_SW_PIN_CTRL_MODE;
+> +	if (enable)
+> +		dw_spi_mchp_set_cs_owner(dwsmchp, props, cs,
+> +					 MSCC_IF_SI_OWNER_SIMC);
+> 
+> -		if (!enable)
+> -			sw_mode |= MSCC_SPI_MST_SW_MODE_SW_SPI_CS(BIT(cs));
+> +	if (dwsmchp->spi_mst && (cs < MAX_CS)) {
+> +		u32 sw_mode;
+> 
+> +		if (enable)
+> +			sw_mode = BIT(props->pinctrl_bit_off) |
+> +				(BIT(cs) << props->cs_bit_off);
+> +		else
+> +			sw_mode = 0;
+>  		writel(sw_mode, dwsmchp->spi_mst + MSCC_SPI_MST_SW_MODE);
+> +	} else if (props->ss_force_ena_off) {
+> +		if (enable) {
+> +			/* Ensure CS toggles, so start off all disabled */
+> +			regmap_write(dwsmchp->syscon, props->ss_force_val_off,
+> +				     ~0);
+> +			/* CS override drive enable */
+> +			regmap_write(dwsmchp->syscon, props->ss_force_ena_off,
+> +				     1);
+> +			/* Allow settle */
+> +			udelay(1);
+> +			/* Now set CSx enabled */
+> +			regmap_write(dwsmchp->syscon, props->ss_force_val_off,
+> +				     ~BIT(cs));
+> +		} else {
+> +			/* CS value */
+> +			regmap_write(dwsmchp->syscon, props->ss_force_val_off,
+> +				     ~0);
+> +			/* CS override drive disable */
+> +			regmap_write(dwsmchp->syscon, props->ss_force_ena_off,
+> +				     0);
+> +		}
+>  	}
+> 
+> -	dw_spi_set_cs(spi, enable);
+> +	dw_spi_set_cs(spi, nEnable);
+> +}
+> +
+> +static int dw_mchp_bootmaster_exec_mem_op(struct spi_mem *mem,
+> +					  const struct spi_mem_op *op)
+> +{
+> +	struct spi_device *spi = mem->spi;
+> +	int ret = -ENOTSUPP;
+> +
 
-Yes. It's architectural. SDM says "MAXPHYADDR is at most 52" (Vol 3A,
-4.1.4).
+> +	/* Only reads, addrsize 1..4 */
+> +	if (!op->data.nbytes || !op->addr.nbytes || op->addr.nbytes > 4 ||
+> +	    op->data.dir != SPI_MEM_DATA_IN)
+> +		return ret;
+> +
+> +	/* Only handle (normal+fast) 3/4 bytes read */
+> +	if (op->cmd.opcode != SPINOR_OP_READ &&
+> +	    op->cmd.opcode != SPINOR_OP_READ_FAST &&
+> +	    op->cmd.opcode != SPINOR_OP_READ_4B &&
+> +	    op->cmd.opcode != SPINOR_OP_READ_FAST_4B)
+> +		return ret;
 
-I guess it can be extended with an opt-in feature and relevant changes to
-page table structure. But as of today there's no such thing.
+Hm, this part most like belongs to supports_op() callback.
 
-> Previously, we said we were limited to 46 bits, and now
-> we're saying that the limit is 52 with 5-level paging:
-> 
-> #define MAX_PHYSMEM_BITS (pgtable_l5_enabled() ? 52 : 46)
-> 
-> The 46 was fine with the 48 bits of address space on 4-level paging
-> systems since we need 1/2 of the address space for userspace, 1/4 for
-> the direct map and 1/4 for the vmalloc-and-friends area.  At 46 bits of
-> address space, we fill up the direct map.
-> 
-> The hardware designers know this and never enumerated a MAXPHYADDR from
-> CPUID which was higher than what we could cover with 46 bits.  It was
-> nice and convenient that these two separate things matched:
-> 1. The amount of physical address space addressable in a direct map
->    consuming 1/4 of the virtual address space.
-> 2. The CPU-enumerated MAXPHYADDR which among other things dictates how
->    much physical address space is addressable in a PTE.
-> 
-> But, with 5-level paging, things are a little different.  The limit in
-> addressable memory because of running out of the direct map actually
-> happens at 55 bits (57-2=55, analogous to the 4-level 48-2=46).
-> 
-> So shouldn't it technically be this:
-> 
-> #define MAX_PHYSMEM_BITS (pgtable_l5_enabled() ? 55 : 46)
-> 
-> ?
+> +
+> +	/* CS0..3, only 16M reach */
+> +	if ((spi->chip_select < MAX_CS) &&
 
-Bits above 52 are ignored in the page table entries and accessible to
-software. Some of them got claimed by HW features (XD-bit, protection
-keys), but such features require explicit opt-in on software side.
+> +	    (op->addr.val + op->data.nbytes) < SZ_16M) {
 
-Kernel could claim bits 53-55 for the physical address, but it doesn't get
-us anything: if future HW would provide such feature it would require
-opt-in. On other hand claiming them now means we cannot use them for other
-purposes as SW bit. I don't see a point.
+The driver shouldn't return a failure if more than available data requested.
+Just return the length the driver managed to read.
 
--- 
- Kirill A. Shutemov
+> +		struct dw_spi *dws = spi_master_get_devdata(spi->master);
+> +		struct dw_spi_mchp *dwsmchp = container_of(dws,
+> +							   struct dw_spi_mchp,
+> +							   dws);
+> +		const struct dw_spi_mchp_props *props = dwsmchp->props;
+> +		u8 __iomem *src = dwsmchp->read_map +
+> +			(spi->chip_select * SZ_16M) + op->addr.val;
+> +
+> +		if (props->bootmaster_cs != spi->chip_select)
+> +			return ret;
+> +
+> +		/* Make boot master owner of SI interface */
+> +		dw_spi_mchp_set_cs_owner(dwsmchp, props, spi->chip_select,
+> +					 MSCC_IF_SI_OWNER_SIBM);
+
+> +		memcpy(op->data.buf.in, src, op->data.nbytes);
+
+So after all it's just memcpy from the directly mapped SPI-flash memory, right?
+Then it's not mem_op, but I supposed it should be implemented by means of the
+dirmap_{create,read,destroy}.
+
+-Sergey
+
+> +		ret = op->data.nbytes;
+> +	}
+> +	return ret;
+>  }
+> 
+> +static const struct spi_controller_mem_ops dw_mchp_bootmaster_mem_ops = {
+> +	.exec_op = dw_mchp_bootmaster_exec_mem_op,
+> +};
+> +
+>  static int dw_spi_mchp_init(struct platform_device *pdev,
+>  			    struct dw_spi *dws,
+>  			    struct dw_spi_mchp *dwsmchp,
+> @@ -107,6 +240,18 @@ static int dw_spi_mchp_init(struct platform_device *pdev,
+>  		}
+>  	}
+> 
+> +	/* See if we have a direct read window */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> +	if (res && resource_size(res) >= (SZ_16M*MAX_CS)) {
+> +		void __iomem *ptr = devm_ioremap_resource(&pdev->dev, res);
+> +
+> +		if (!IS_ERR(ptr)) {
+> +			dwsmchp->read_map = ptr;
+> +			dws->mem_ops = &dw_mchp_bootmaster_mem_ops;
+> +			dev_info(&pdev->dev, "Enabling fast memory operations\n");
+> +		}
+> +	}
+> +
+>  	dwsmchp->syscon =
+>  		syscon_regmap_lookup_by_compatible(props->syscon_name);
+>  	if (IS_ERR(dwsmchp->syscon)) {
+> @@ -119,10 +264,9 @@ static int dw_spi_mchp_init(struct platform_device *pdev,
+>  	if (dwsmchp->spi_mst)
+>  		writel(0, dwsmchp->spi_mst + MSCC_SPI_MST_SW_MODE);
+> 
+> -	/* Select the owner of the SI interface */
+> -	regmap_update_bits(dwsmchp->syscon, MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL,
+> -			   MSCC_IF_SI_OWNER_MASK << props->si_owner_bit,
+> -			   MSCC_IF_SI_OWNER_SIMC << props->si_owner_bit);
+> +	/* SPI2 mapping bitmask */
+> +	device_property_read_u32(&pdev->dev, "interface-mapping-mask",
+> +				 &dwsmchp->if2mask);
+> 
+>  	dwsmchp->dws.set_cs = dw_spi_mchp_set_cs;
+> 
+> @@ -180,6 +324,27 @@ static int dw_spi_mchp_probe(struct platform_device *pdev)
+>  	dws->rx_sample_dly = DIV_ROUND_UP(rx_sample_dly,
+>  					  (dws->max_freq / 1000000));
+> 
+> +	if (pdev->dev.of_node) {
+> +		int i;
+> +
+> +		for (i = 0; i < dws->num_cs; i++) {
+> +			int cs_gpio = of_get_named_gpio(pdev->dev.of_node,
+> +					"cs-gpios", i);
+> +
+> +			if (cs_gpio == -EPROBE_DEFER) {
+> +				ret = cs_gpio;
+> +				goto out;
+> +			}
+> +
+> +			if (gpio_is_valid(cs_gpio)) {
+> +				ret = devm_gpio_request(&pdev->dev, cs_gpio,
+> +						dev_name(&pdev->dev));
+> +				if (ret)
+> +					goto out;
+> +			}
+> +		}
+> +	}
+> +
+>  	props = device_get_match_data(&pdev->dev);
+>  	if (props)
+>  		ret = dw_spi_mchp_init(pdev, dws, dwsmchp, props);
+> @@ -213,6 +378,8 @@ static int dw_spi_mchp_remove(struct platform_device *pdev)
+>  static const struct of_device_id dw_spi_mchp_of_match[] = {
+>  	{ .compatible = "mscc,ocelot-spi", .data = &dw_spi_mchp_props_ocelot},
+>  	{ .compatible = "mscc,jaguar2-spi", .data = &dw_spi_mchp_props_jaguar2},
+> +	{ .compatible = "microchip,sparx5-spi",
+> +	  .data = &dw_spi_mchp_props_sparx5},
+>  	{ /* end of table */}
+>  };
+>  MODULE_DEVICE_TABLE(of, dw_spi_mchp_of_match);
+> --
+> 2.26.2
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
