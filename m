@@ -2,194 +2,129 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC75CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C922077D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oF3yVN69"
+	by mail.kernel.org (Postfix) with ESMTP id 6785420679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgFBJe1 (ORCPT
+        id S1726706AbgFBJiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:34:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgFBJe0 (ORCPT
+        Tue, 2 Jun 2020 05:38:12 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:55208 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbgFBJiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:34:26 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F6BC061A0E;
-        Tue,  2 Jun 2020 02:34:25 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x13so2677291wrv.4;
-        Tue, 02 Jun 2020 02:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=B55oe33tQCkzxWimg+ZfOhRx1c98hkXT02+HAEUdowc=;
-        b=oF3yVN69hVB7BGPvNvSU7+yVWpzxpaa4CaieNUPq1YmlNxu/3+AimQrMmbU1QsYyWE
-         W0PBN/N/QaZHwq1DKx11WvNRKAYv7e9u34Vq01U0Ev4q1Oxo3CLNu4PfsPwMFgljCIFA
-         6UHw1SLSbKQQQVI9pbtk7KSoUAXsCu5nRUeZQ037iLOGP0pmU6BROVCEteRi5avoAdIx
-         Q16WSo2ptgsglK+WJ3u7rognfMvOM1kUQf47G/vTgTBpL2XYC9YguRiw0q+5x4l/yTzQ
-         SKWpanjBR/xh6XZQEHplxVkoCSQk1Bp82K8StTeVhL5qG+7ZCdIPyxdnwI19N4NuDl27
-         syQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=B55oe33tQCkzxWimg+ZfOhRx1c98hkXT02+HAEUdowc=;
-        b=mLdVBPSVT2botBmQWgxNNx1dmHp8lJYgXMb6eiqBmZJ+Mf4Fx3GaLmMa6KxJYiYYPF
-         hMAvGOButmsJyaJ4iteD2+o3m6PL5S9BXYsyQqAKNT/J6B728/VQpkSCcMgwk4dwXxLW
-         DM/bN8qEP+TfTsJp9mGs7j3jTK0ybVlqpHRuGHQ7s9BMGosSJ1Sylz0QHWqQtDbhjlFE
-         Inu3LphL4bdrBZ8nQacM5U57pP7r7MBZvMLUOpCk4/oO7QBaBXSs7QtmwvA59V+6QugB
-         SpCKDe1IlIJM6kpBGQg2iNSYKrbZXOlzFycXIJ9EOLQ4at+5xExiFqyODqi5LmKnlINn
-         oYiw==
-X-Gm-Message-State: AOAM532WKjdbH7hHsq/KcHWEcg3ERMa4OPa0e5G7O7B/hRlIuxCo0etF
-        sKWnzObGZ1BPRtvMZLGn5Xg=
-X-Google-Smtp-Source: ABdhPJx+uDpxkJIQlhn1mTzdEM7d7VbDdagj0oOZlAXJItkakG8tdrIUEM/f8IUaNZuQLAiehyi8/A==
-X-Received: by 2002:a5d:4b47:: with SMTP id w7mr24371728wrs.234.1591090463651;
-        Tue, 02 Jun 2020 02:34:23 -0700 (PDT)
-Received: from AnsuelXPS (host9-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.9])
-        by smtp.gmail.com with ESMTPSA id h15sm2708805wrt.73.2020.06.02.02.34.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jun 2020 02:34:21 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200514200712.12232-1-ansuelsmth@gmail.com> <20200514200712.12232-9-ansuelsmth@gmail.com> <20200601210844.GA1494556@bogus>
-In-Reply-To: <20200601210844.GA1494556@bogus>
-Subject: R: [PATCH v4 08/10] PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
-Date:   Tue, 2 Jun 2020 11:34:17 +0200
-Message-ID: <090401d638c0$fdab0c10$f9012430$@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQH3v0d+k9NO1qBgLdGiwEtxppfOxAJRdC88AVZe6H+oZMSG4A==
+        Tue, 2 Jun 2020 05:38:12 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 0529bUKa025589
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 2 Jun 2020 04:37:34 -0500
+Message-ID: <b159ba4c53fcf04cc4eb747c45e1d4d2d83310a3.camel@kernel.crashing.org>
+Subject: Re: [GIT PULL] x86/mm changes for v5.8
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Ingo Molnar <mingo@kernel.org>, Balbir Singh <sblbir@amazon.com>
+Cc:     torvalds@linux-foundation.org, a.p.zijlstra@chello.nl,
+        akpm@linux-foundation.org, bp@alien8.de,
+        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de
+Date:   Tue, 02 Jun 2020 19:37:29 +1000
+In-Reply-To: <20200602073350.GA481221@gmail.com>
+References: <20200601170102.GA1346815@gmail.com>
+         <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
+         <20200602073350.GA481221@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-06-02 at 09:33 +0200, Ingo Molnar wrote:
+> Or rather, we should ask a higher level question as well, maybe we 
+> should not do this feature at all?
 
+Well, it does solve a real issue in some circumstances and there was a
+reasonable discussion about this on the list that lead to it being
+merged with Kees and Thomas (and others) agreeing :)
 
-> -----Messaggio originale-----
-> Da: Rob Herring <robh@kernel.org>
-> Inviato: luned=EC 1 giugno 2020 23:09
-> A: Ansuel Smith <ansuelsmth@gmail.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>; Sham Muthayyan
-> <smuthayy@codeaurora.org>; Andy Gross <agross@kernel.org>; Bjorn
-> Helgaas <bhelgaas@google.com>; Mark Rutland
-> <mark.rutland@arm.com>; Stanimir Varbanov <svarbanov@mm-sol.com>;
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>; Andrew Murray
-> <amurray@thegoodpenguin.co.uk>; Philipp Zabel
-> <p.zabel@pengutronix.de>; linux-arm-msm@vger.kernel.org; linux-
-> pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Oggetto: Re: [PATCH v4 08/10] PCI: qcom: Add ipq8064 rev2 variant and
-> set tx term offset
->=20
-> On Thu, May 14, 2020 at 10:07:09PM +0200, Ansuel Smith wrote:
-> > Add tx term offset support to pcie qcom driver need in some revision =
-of
-> > the ipq806x SoC. Ipq8064 have tx term offset set to 7. Ipq8064-v2
-> revision
-> > and ipq8065 have the tx term offset set to 0.
->=20
-> Seems like this should be 2 patches or why isn't 'Ipq8064 have tx term
-> offset set to 7' done in the prior patch? One tweak is needed for
-> stable, but this isn't?
->=20
+But yes, it is pointless with SMT and yes maybe we should make it
+explicitly do nothing on SMT, but let's not throw the baby out with the
+bath water shall we ?
 
-Ok i will split this in 2 patch and set for stable the tx term patch.
+> Typically cloud computing systems such as AWS will have SMT enabled, 
+> because cloud computing pricing is essentially per vCPU, and they want 
+> to sell the hyperthreads as vCPUs.
 
-> >
-> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++++++++++--
-> >  1 file changed, 16 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index f5398b0d270c..ab6f1bdd24c3 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -45,6 +45,9 @@
-> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-> >
-> >  #define PCIE20_PARF_PHY_CTRL			0x40
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20,
-> 16)
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
-> > +
-> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> >  #define PHY_REFCLK_SSP_EN			BIT(16)
-> >  #define PHY_REFCLK_USE_PAD			BIT(12)
-> > @@ -363,7 +366,8 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  	val &=3D ~BIT(0);
-> >  	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> >
-> > -	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-> > +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064") |
-> > +	    of_device_is_compatible(node, "qcom,pcie-ipq8064-v2")) {
-> >  		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
-> >  			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
-> >  			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
-> > @@ -374,9 +378,18 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  		writel(PHY_RX0_EQ(4), pcie->parf +
-> PCIE20_PARF_CONFIG_BITS);
-> >  	}
-> >
-> > +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-> > +		/* set TX termination offset */
-> > +		val =3D readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> > +		val &=3D ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
-> > +		val |=3D PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
-> > +		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> > +	}
-> > +
-> >  	/* enable external reference clock */
-> >  	val =3D readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> > -	val |=3D BIT(16);
-> > +	val &=3D ~PHY_REFCLK_USE_PAD;
-> > +	val |=3D PHY_REFCLK_SSP_EN;
-> >  	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> >
-> >  	/* wait for clock acquisition */
-> > @@ -1452,6 +1465,7 @@ static int qcom_pcie_probe(struct
-> platform_device *pdev)
-> >  static const struct of_device_id qcom_pcie_match[] =3D {
-> >  	{ .compatible =3D "qcom,pcie-apq8084", .data =3D &ops_1_0_0 },
-> >  	{ .compatible =3D "qcom,pcie-ipq8064", .data =3D &ops_2_1_0 },
-> > +	{ .compatible =3D "qcom,pcie-ipq8064-v2", .data =3D &ops_2_1_0 },
-> >  	{ .compatible =3D "qcom,pcie-apq8064", .data =3D &ops_2_1_0 },
-> >  	{ .compatible =3D "qcom,pcie-msm8996", .data =3D &ops_2_3_2 },
-> >  	{ .compatible =3D "qcom,pcie-ipq8074", .data =3D &ops_2_3_3 },
-> > --
-> > 2.25.1
-> >
+Not necessarily and not in every circumstances. Yes, VMs will typically
+have SMT enabled. This isn't targeted at them though. One example that
+was given during the discussions was containers pertaining to different
+users. Now maybe we could discuss making the flush on changes of
+cgroups or other similar things rather than individual process, but so
+far that hasn't come up during the disucssion on the mailing list.
+
+Another example would be a process that  handles more critical data
+such as payment information, than the rest of the system and wants to
+protect itself (or the admin wants that process protected) against
+possible data leaks to less trusted processes.
+
+>  So the safest solution, disabling 
+> SMT on affected systems, is not actually done, because it's an 
+> economic non-starter. (I'd like to note the security double standard 
+> there: the most secure option, to disable SMT, is not actually used ...)
+
+This has nothing to do about SMT, though yes maybe we should make the
+patch do nothing on SMT but this isn't what this feature is about.
+
+> BTW., I wonder how Amazon is solving the single-vCPU customer workload 
+> problem on AWS: if the vast majority of AWS computing capacity is 
+> running on a single vCPU, because it's the cheapest tier and because 
+> it's more than enough capacity to run a website. Even core-scheduling 
+> doesn't solve this fundamental SMT security problem: separate customer 
+> workloads *cannot* share the same core - but this means that the 
+> single-vCPU workloads will only be able to utilize 50% of all 
+> available vCPUs if they are properly isolated.
+> 
+> Or if the majority of AWS EC2 etc. customer systems are using 2,4 or 
+> more vCPUs, then both this feature and 'core-scheduling' is 
+> effectively pointless from a security POV, because the cloud computing 
+> systems are de-facto partitioned into cores already, with each core 
+> accounted as 2 vCPUs.
+
+AWS has more than just VMs for rent :-) There are a whole pile of
+higher level "services" that our users can use and not all of them
+necessarily run on VMs charged per vCPU.
+
+> The hour-up-rounded way AWS (and many other cloud providers) account 
+> system runtime costs suggests that they are doing relatively static 
+> partitioning of customer workloads already, i.e. customer workloads 
+> are mapped to actual physical hardware in an exclusive fashion, with 
+> no overcommitting of physical resources and no sharing of cores 
+> between customers.
+> 
+> If I look at the pricing and capabilities table of AWS:
+> 
+>   https://aws.amazon.com/ec2/pricing/on-demand/
+> 
+> Only the 't2' and 't3' On-Demand instances have 'Variable' pricing, 
+> which is only 9% of the offered 228 configurations.
+> 
+> I.e. I strongly suspect that neither L1D flushing nor core-scheduling 
+> is actually required on affected vulnerable CPUs to keep customer 
+> workloads isolated from each other, on the majority of cloud computing 
+> systems, because they are already isolated via semi-static 
+> partitioning, using pricing that reflects static partitioning.
+
+This isn't about that. These patches aren't trying to solve problems
+happening inside of a customer VM running SMT not are they about
+protecting VMs against other VMs on the same system.
+
+Cheers,
+Ben.
 
