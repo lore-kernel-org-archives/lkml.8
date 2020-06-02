@@ -2,226 +2,770 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72361C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C49C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4197B20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2420520757
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:16:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uMhqf4rK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgFBNQS (ORCPT
+        id S1728232AbgFBNQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:16:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52354 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbgFBNQN (ORCPT
+        Tue, 2 Jun 2020 09:16:14 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59673 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbgFBNQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:16:13 -0400
-Received: from [IPv6:2003:cb:871f:5b00:b464:983c:2e91:eb78] (p200300cb871f5b00b464983c2e91eb78.dip0.t-ipconnect.de [IPv6:2003:cb:871f:5b00:b464:983c:2e91:eb78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B46C12A34DB;
-        Tue,  2 Jun 2020 14:16:06 +0100 (BST)
-Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     kieran.bingham@ideasonboard.com,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dafna Hirschfeld <dafna3@gmail.com>
-References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
- <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
- <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
- <273a36d8-fc87-f9d4-0cf2-15beddf1661c@collabora.com>
- <f927c8e3-73de-598d-130d-97b5380579e5@collabora.com>
- <3b4c4447-677c-08b9-9366-95a012f8f018@ideasonboard.com>
- <cdcc42bf-b0dc-41b7-5104-eff8aa42feb2@collabora.com>
- <20200602124504.GA12043@pendragon.ideasonboard.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <3ba24fe9-46e5-0b08-2335-41bd26ef1831@collabora.com>
-Date:   Tue, 2 Jun 2020 15:16:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 09:16:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591103760; x=1622639760;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=9xQxU9YuRSScupwkV31ZgJCx0o+f2ZRVRPg+ixe0f6k=;
+  b=uMhqf4rKEUAz2YyJuz4klJMiCcQnBZ3C0X9w1f9WXkopC5hZtV9cJvqe
+   mCH45KpET2/hC5h18WOPeAAnXHh3UP7mkyrP1BZPuSXdRbpF8zcxgnP3S
+   1ICgLA8bebO3ovKI5ESJnVHsRFco0m0HWgswxbiuPKCH6AMX7PoAPOUn2
+   4=;
+IronPort-SDR: SrANYpFeyKsDNf8AU5+MBNEhmiyvI5Ph69RD7tgHIdm1ycftWQfVwvSqEm+7Z+FE7yBq4FZ48J
+ T8qd36iqXFPw==
+X-IronPort-AV: E=Sophos;i="5.73,464,1583193600"; 
+   d="scan'208";a="35308373"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 02 Jun 2020 13:15:44 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id DFAE4A2354;
+        Tue,  2 Jun 2020 13:15:41 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 13:15:41 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 13:15:24 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v14 12/15] mm/damon: Add kunit tests
+Date:   Tue, 2 Jun 2020 15:15:10 +0200
+Message-ID: <20200602131510.23332-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200602130125.20467-1-sjpark@amazon.com>
+References: <20200602130125.20467-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20200602124504.GA12043@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.65]
+X-ClientProxiedBy: EX13D37UWC001.ant.amazon.com (10.43.162.33) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: SeongJae Park <sjpark@amazon.de>
 
+This commit adds kunit based unit tests for DAMON.
 
-On 02.06.20 14:45, Laurent Pinchart wrote:
-> Hello,
-> 
-> On Tue, Jun 02, 2020 at 08:31:26AM -0300, Helen Koike wrote:
->> On 6/2/20 8:24 AM, Kieran Bingham wrote:
->>> On 02/06/2020 11:55, Helen Koike wrote:
->>>> On 6/2/20 7:52 AM, Dafna Hirschfeld wrote:
->>>>> On 01.06.20 14:16, Kaaira Gupta wrote:
->>>>>> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
->>>>>>> Hi,
->>>>>>> Thanks for the patch
->>>>>>>
->>>>>>> I don't know how real devices handle ARGB formats,
->>>>>>> I wonder if it should be the part of the debayer.
->>>>>>
->>>>>> Hi! qcam tries to support BA24 as it is one of the formats that vimc
->>>>>> lists as its supported formats wih --list-formats. Shouldn't BA24 be
->>>>>> possible to capture with vimc?
->>>>>
->>>>> Hi,
->>>>> Just to clarify, when listing the supported formats of a video node, the node lists
->>>>> the formats that the video node as an independent media entity support.
->>>>> It does not mean that the 'camera' as a whole (that is, the media topology graph) supports
->>>>> all the formats that the video node lists. When interacting with a video node or
->>>>> a subdevice node, one interacts only with that specific entity.
->>>>> In the case of vimc, the RGB video node as an independent entity supports BA24 so the format
->>>>> appears in the list of the its supported formats. But since the Debayer does not
->>>>> support it, the format can not be generated by the entire vimc topology.
->>>>> This is not a bug.
-> 
-> Is here a valid configuration for the vimc pipeline that produces BA24 ?
-I think there isn't
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ mm/Kconfig      |  11 +
+ mm/damon-test.h | 622 ++++++++++++++++++++++++++++++++++++++++++++++++
+ mm/damon.c      |   6 +
+ 3 files changed, 639 insertions(+)
+ create mode 100644 mm/damon-test.h
 
-> I agree that not all pipeline configurations need to support every
-> format, but we shouldn't report a format that can't be produced at all.
-> 
-> This being said, and as discussed before, the de-bayering subdev should
-> just produce MEDIA_BUS_FMT_RGB888_1X24, and the video node should then
-> implement the RGB pixel formats. BA24 should likely be one of the
-> supported formats (or maybe BX24 ?).
-So you mean that the video node should support it so when it receive RGB
-format in the source pad it converts it to BA24 or BX24 ?
-It makes sense. I guess both BA24 and BX24 can be added, I see in the
-pixfmt-rgb.html doc that probably the control  V4L2_CID_ALPHA_COMPONENT
-should then be added.
+diff --git a/mm/Kconfig b/mm/Kconfig
+index ecea0889ea35..91473ed9e7c7 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -879,4 +879,15 @@ config DAMON
+ 	  and 2) sufficiently light-weight so that it can be applied online.
+ 	  If unsure, say N.
+ 
++config DAMON_KUNIT_TEST
++	bool "Test for damon"
++	depends on DAMON=y && KUNIT
++	help
++	  This builds the DAMON Kunit test suite.
++
++	  For more information on KUnit and unit tests in general, please refer
++	  to the KUnit documentation.
++
++	  If unsure, say N.
++
+ endmenu
+diff --git a/mm/damon-test.h b/mm/damon-test.h
+new file mode 100644
+index 000000000000..cf715529ff64
+--- /dev/null
++++ b/mm/damon-test.h
+@@ -0,0 +1,622 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Data Access Monitor Unit Tests
++ *
++ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#ifdef CONFIG_DAMON_KUNIT_TEST
++
++#ifndef _DAMON_TEST_H
++#define _DAMON_TEST_H
++
++#include <kunit/test.h>
++
++static void damon_test_str_to_pids(struct kunit *test)
++{
++	char *question;
++	int *answers;
++	int expected[] = {12, 35, 46};
++	ssize_t nr_integers = 0, i;
++
++	question = "123";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)1, nr_integers);
++	KUNIT_EXPECT_EQ(test, 123, answers[0]);
++	kfree(answers);
++
++	question = "123abc";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)1, nr_integers);
++	KUNIT_EXPECT_EQ(test, 123, answers[0]);
++	kfree(answers);
++
++	question = "a123";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, answers, (int *)NULL);
++
++	question = "12 35";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)2, nr_integers);
++	for (i = 0; i < nr_integers; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "12 35 46";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)3, nr_integers);
++	for (i = 0; i < nr_integers; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "12 35 abc 46";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)2, nr_integers);
++	for (i = 0; i < 2; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, (int *)NULL, answers);
++	kfree(answers);
++
++	question = "\n";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, (int *)NULL, answers);
++	kfree(answers);
++}
++
++static void damon_test_regions(struct kunit *test)
++{
++	struct damon_region *r;
++	struct damon_task *t;
++
++	r = damon_new_region(&damon_user_ctx, 1, 2);
++	KUNIT_EXPECT_EQ(test, 1ul, r->vm_start);
++	KUNIT_EXPECT_EQ(test, 2ul, r->vm_end);
++	KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
++
++	t = damon_new_task(42);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
++
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, 1u, nr_damon_regions(t));
++
++	damon_del_region(r);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
++
++	damon_free_task(t);
++}
++
++static void damon_test_tasks(struct kunit *test)
++{
++	struct damon_ctx *c = &damon_user_ctx;
++	struct damon_task *t;
++
++	t = damon_new_task(42);
++	KUNIT_EXPECT_EQ(test, 42, t->pid);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks(c));
++
++	damon_add_task(&damon_user_ctx, t);
++	KUNIT_EXPECT_EQ(test, 1u, nr_damon_tasks(c));
++
++	damon_destroy_task(t);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks(c));
++}
++
++static void damon_test_set_pids(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	int pids[] = {1, 2, 3};
++	char buf[64];
++
++	damon_set_pids(ctx, pids, 3);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "1 2 3\n");
++
++	damon_set_pids(ctx, NULL, 0);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "\n");
++
++	damon_set_pids(ctx, (int []){1, 2}, 2);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "1 2\n");
++
++	damon_set_pids(ctx, (int []){2}, 1);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "2\n");
++
++	damon_set_pids(ctx, NULL, 0);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "\n");
++}
++
++/*
++ * Test damon_three_regions_in_vmas() function
++ *
++ * DAMON converts the complex and dynamic memory mappings of each target task
++ * to three discontiguous regions which cover every mapped areas.  However, the
++ * three regions should not include the two biggest unmapped areas in the
++ * original mapping, because the two biggest areas are normally the areas
++ * between 1) heap and the mmap()-ed regions, and 2) the mmap()-ed regions and
++ * stack.  Because these two unmapped areas are very huge but obviously never
++ * accessed, covering the region is just a waste.
++ *
++ * 'damon_three_regions_in_vmas() receives an address space of a process.  It
++ * first identifies the start of mappings, end of mappings, and the two biggest
++ * unmapped areas.  After that, based on the information, it constructs the
++ * three regions and returns.  For more detail, refer to the comment of
++ * 'damon_init_regions_of()' function definition in 'mm/damon.c' file.
++ *
++ * For example, suppose virtual address ranges of 10-20, 20-25, 200-210,
++ * 210-220, 300-305, and 307-330 (Other comments represent this mappings in
++ * more short form: 10-20-25, 200-210-220, 300-305, 307-330) of a process are
++ * mapped.  To cover every mappings, the three regions should start with 10,
++ * and end with 305.  The process also has three unmapped areas, 25-200,
++ * 220-300, and 305-307.  Among those, 25-200 and 220-300 are the biggest two
++ * unmapped areas, and thus it should be converted to three regions of 10-25,
++ * 200-220, and 300-330.
++ */
++static void damon_test_three_regions_in_vmas(struct kunit *test)
++{
++	struct region regions[3] = {0,};
++	/* 10-20-25, 200-210-220, 300-305, 307-330 */
++	struct vm_area_struct vmas[] = {
++		(struct vm_area_struct) {.vm_start = 10, .vm_end = 20},
++		(struct vm_area_struct) {.vm_start = 20, .vm_end = 25},
++		(struct vm_area_struct) {.vm_start = 200, .vm_end = 210},
++		(struct vm_area_struct) {.vm_start = 210, .vm_end = 220},
++		(struct vm_area_struct) {.vm_start = 300, .vm_end = 305},
++		(struct vm_area_struct) {.vm_start = 307, .vm_end = 330},
++	};
++	vmas[0].vm_next = &vmas[1];
++	vmas[1].vm_next = &vmas[2];
++	vmas[2].vm_next = &vmas[3];
++	vmas[3].vm_next = &vmas[4];
++	vmas[4].vm_next = &vmas[5];
++	vmas[5].vm_next = NULL;
++
++	damon_three_regions_in_vmas(&vmas[0], regions);
++
++	KUNIT_EXPECT_EQ(test, 10ul, regions[0].start);
++	KUNIT_EXPECT_EQ(test, 25ul, regions[0].end);
++	KUNIT_EXPECT_EQ(test, 200ul, regions[1].start);
++	KUNIT_EXPECT_EQ(test, 220ul, regions[1].end);
++	KUNIT_EXPECT_EQ(test, 300ul, regions[2].start);
++	KUNIT_EXPECT_EQ(test, 330ul, regions[2].end);
++}
++
++/* Clean up global state of damon */
++static void damon_cleanup_global_state(void)
++{
++	struct damon_task *t, *next;
++
++	damon_for_each_task_safe(t, next, &damon_user_ctx)
++		damon_destroy_task(t);
++
++	damon_user_ctx.rbuf_offset = 0;
++}
++
++/*
++ * Test kdamond_reset_aggregated()
++ *
++ * DAMON checks access to each region and aggregates this information as the
++ * access frequency of each region.  In detail, it increases '->nr_accesses' of
++ * regions that an access has confirmed.  'kdamond_reset_aggregated()' flushes
++ * the aggregated information ('->nr_accesses' of each regions) to the result
++ * buffer.  As a result of the flushing, the '->nr_accesses' of regions are
++ * initialized to zero.
++ */
++static void damon_test_aggregate(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	int pids[] = {1, 2, 3};
++	unsigned long saddr[][3] = {{10, 20, 30}, {5, 42, 49}, {13, 33, 55} };
++	unsigned long eaddr[][3] = {{15, 27, 40}, {31, 45, 55}, {23, 44, 66} };
++	unsigned long accesses[][3] = {{42, 95, 84}, {10, 20, 30}, {0, 1, 2} };
++	struct damon_task *t;
++	struct damon_region *r;
++	int it, ir;
++	ssize_t sz, sr, sp;
++
++	damon_set_recording(ctx, 256, "damon.data");
++	damon_set_pids(ctx, pids, 3);
++
++	it = 0;
++	damon_for_each_task(t, ctx) {
++		for (ir = 0; ir < 3; ir++) {
++			r = damon_new_region(ctx,
++					saddr[it][ir], eaddr[it][ir]);
++			r->nr_accesses = accesses[it][ir];
++			damon_add_region(r, t);
++		}
++		it++;
++	}
++	kdamond_reset_aggregated(ctx);
++	it = 0;
++	damon_for_each_task(t, ctx) {
++		ir = 0;
++		/* '->nr_accesses' should be zeroed */
++		damon_for_each_region(r, t) {
++			KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
++			ir++;
++		}
++		/* regions should be preserved */
++		KUNIT_EXPECT_EQ(test, 3, ir);
++		it++;
++	}
++	/* tasks also should be preserved */
++	KUNIT_EXPECT_EQ(test, 3, it);
++
++	/* The aggregated information should be written in the buffer */
++	sr = sizeof(r->vm_start) + sizeof(r->vm_end) + sizeof(r->nr_accesses);
++	sp = sizeof(t->pid) + sizeof(unsigned int) + 3 * sr;
++	sz = sizeof(struct timespec64) + sizeof(unsigned int) + 3 * sp;
++	KUNIT_EXPECT_EQ(test, (unsigned int)sz, ctx->rbuf_offset);
++
++	damon_set_recording(ctx, 0, "damon.data");
++	damon_cleanup_global_state();
++}
++
++static void damon_test_write_rbuf(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *data;
++
++	damon_set_recording(&damon_user_ctx, 256, "damon.data");
++
++	data = "hello";
++	damon_write_rbuf(ctx, data, strnlen(data, 256));
++	KUNIT_EXPECT_EQ(test, ctx->rbuf_offset, 5u);
++
++	damon_write_rbuf(ctx, data, 0);
++	KUNIT_EXPECT_EQ(test, ctx->rbuf_offset, 5u);
++
++	KUNIT_EXPECT_STREQ(test, (char *)ctx->rbuf, data);
++	damon_set_recording(&damon_user_ctx, 0, "damon.data");
++}
++
++static struct damon_region *__nth_region_of(struct damon_task *t, int idx)
++{
++	struct damon_region *r;
++	unsigned int i = 0;
++
++	damon_for_each_region(r, t) {
++		if (i++ == idx)
++			return r;
++	}
++
++	return NULL;
++}
++
++/*
++ * Test 'damon_apply_three_regions()'
++ *
++ * test			kunit object
++ * regions		an array containing start/end addresses of current
++ *			monitoring target regions
++ * nr_regions		the number of the addresses in 'regions'
++ * three_regions	The three regions that need to be applied now
++ * expected		start/end addresses of monitoring target regions that
++ *			'three_regions' are applied
++ * nr_expected		the number of addresses in 'expected'
++ *
++ * The memory mapping of the target processes changes dynamically.  To follow
++ * the change, DAMON periodically reads the mappings, simplifies it to the
++ * three regions, and updates the monitoring target regions to fit in the three
++ * regions.  The update of current target regions is the role of
++ * 'damon_apply_three_regions()'.
++ *
++ * This test passes the given target regions and the new three regions that
++ * need to be applied to the function and check whether it updates the regions
++ * as expected.
++ */
++static void damon_do_test_apply_three_regions(struct kunit *test,
++				unsigned long *regions, int nr_regions,
++				struct region *three_regions,
++				unsigned long *expected, int nr_expected)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	int i;
++
++	t = damon_new_task(42);
++	for (i = 0; i < nr_regions / 2; i++) {
++		r = damon_new_region(&damon_user_ctx,
++				regions[i * 2], regions[i * 2 + 1]);
++		damon_add_region(r, t);
++	}
++	damon_add_task(&damon_user_ctx, t);
++
++	damon_apply_three_regions(&damon_user_ctx, t, three_regions);
++
++	for (i = 0; i < nr_expected / 2; i++) {
++		r = __nth_region_of(t, i);
++		KUNIT_EXPECT_EQ(test, r->vm_start, expected[i * 2]);
++		KUNIT_EXPECT_EQ(test, r->vm_end, expected[i * 2 + 1]);
++	}
++
++	damon_cleanup_global_state();
++}
++
++/*
++ * This function test most common case where the three big regions are only
++ * slightly changed.  Target regions should adjust their boundary (10-20-30,
++ * 50-55, 70-80, 90-100) to fit with the new big regions or remove target
++ * regions (57-79) that now out of the three regions.
++ */
++static void damon_test_apply_three_regions1(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 45-55, 73-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 45, .end = 55},
++		(struct region){.start = 73, .end = 104} };
++	/* 5-20-27, 45-55, 73-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 45, 55,
++				73, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test slightly bigger change.  Similar to above, but the second big region
++ * now require two target regions (50-55, 57-59) to be removed.
++ */
++static void damon_test_apply_three_regions2(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 56-57, 65-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 56, .end = 57},
++		(struct region){.start = 65, .end = 104} };
++	/* 5-20-27, 56-57, 65-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 56, 57,
++				65, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test a big change.  The second big region has totally freed and mapped to
++ * different area (50-59 -> 61-63).  The target regions which were in the old
++ * second big region (50-55-57-59) should be removed and new target region
++ * covering the second big region (61-63) should be created.
++ */
++static void damon_test_apply_three_regions3(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 61-63, 65-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 61, .end = 63},
++		(struct region){.start = 65, .end = 104} };
++	/* 5-20-27, 61-63, 65-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 61, 63,
++				65, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test another big change.  Both of the second and third big regions (50-59
++ * and 70-100) has totally freed and mapped to different area (30-32 and
++ * 65-68).  The target regions which were in the old second and third big
++ * regions should now be removed and new target regions covering the new second
++ * and third big regions should be crated.
++ */
++static void damon_test_apply_three_regions4(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-7, 30-32, 65-68 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 7},
++		(struct region){.start = 30, .end = 32},
++		(struct region){.start = 65, .end = 68} };
++	/* expect 5-7, 30-32, 65-68 */
++	unsigned long expected[] = {5, 7, 30, 32, 65, 68};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++static void damon_test_split_evenly(struct kunit *test)
++{
++	struct damon_ctx *c = &damon_user_ctx;
++	struct damon_task *t;
++	struct damon_region *r;
++	unsigned long i;
++
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, NULL, 5), -EINVAL);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 0), -EINVAL);
++
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 10), 0);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 10u);
++
++	i = 0;
++	damon_for_each_region(r, t) {
++		KUNIT_EXPECT_EQ(test, r->vm_start, i++ * 10);
++		KUNIT_EXPECT_EQ(test, r->vm_end, i * 10);
++	}
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 5, 59);
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 5), 0);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
++
++	i = 0;
++	damon_for_each_region(r, t) {
++		if (i == 4)
++			break;
++		KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i++);
++		KUNIT_EXPECT_EQ(test, r->vm_end, 5 + 10 * i);
++	}
++	KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 59ul);
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 5, 6);
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 2), -EINVAL);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 1u);
++
++	damon_for_each_region(r, t) {
++		KUNIT_EXPECT_EQ(test, r->vm_start, 5ul);
++		KUNIT_EXPECT_EQ(test, r->vm_end, 6ul);
++	}
++	damon_free_task(t);
++}
++
++static void damon_test_split_at(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	damon_add_region(r, t);
++	damon_split_region_at(&damon_user_ctx, r, 25);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 25ul);
++
++	r = damon_next_region(r);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 25ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 100ul);
++
++	damon_free_task(t);
++}
++
++static void damon_test_merge_two(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r, *r2, *r3;
++	int i;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	r->nr_accesses = 10;
++	damon_add_region(r, t);
++	r2 = damon_new_region(&damon_user_ctx, 100, 300);
++	r2->nr_accesses = 20;
++	damon_add_region(r2, t);
++
++	damon_merge_two_regions(r, r2);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 300ul);
++	KUNIT_EXPECT_EQ(test, r->nr_accesses, 16u);
++
++	i = 0;
++	damon_for_each_region(r3, t) {
++		KUNIT_EXPECT_PTR_EQ(test, r, r3);
++		i++;
++	}
++	KUNIT_EXPECT_EQ(test, i, 1);
++
++	damon_free_task(t);
++}
++
++static void damon_test_merge_regions_of(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	unsigned long sa[] = {0, 100, 114, 122, 130, 156, 170, 184};
++	unsigned long ea[] = {100, 112, 122, 130, 156, 170, 184, 230};
++	unsigned int nrs[] = {0, 0, 10, 10, 20, 30, 1, 2};
++
++	unsigned long saddrs[] = {0, 114, 130, 156, 170};
++	unsigned long eaddrs[] = {112, 130, 156, 170, 230};
++	int i;
++
++	t = damon_new_task(42);
++	for (i = 0; i < ARRAY_SIZE(sa); i++) {
++		r = damon_new_region(&damon_user_ctx, sa[i], ea[i]);
++		r->nr_accesses = nrs[i];
++		damon_add_region(r, t);
++	}
++
++	damon_merge_regions_of(t, 9);
++	/* 0-112, 114-130, 130-156, 156-170 */
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
++	for (i = 0; i < 5; i++) {
++		r = __nth_region_of(t, i);
++		KUNIT_EXPECT_EQ(test, r->vm_start, saddrs[i]);
++		KUNIT_EXPECT_EQ(test, r->vm_end, eaddrs[i]);
++	}
++	damon_free_task(t);
++}
++
++static void damon_test_split_regions_of(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 22);
++	damon_add_region(r, t);
++	damon_split_regions_of(&damon_user_ctx, t, 2);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 2u);
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 220);
++	damon_add_region(r, t);
++	damon_split_regions_of(&damon_user_ctx, t, 4);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 4u);
++	damon_free_task(t);
++}
++
++static struct kunit_case damon_test_cases[] = {
++	KUNIT_CASE(damon_test_str_to_pids),
++	KUNIT_CASE(damon_test_tasks),
++	KUNIT_CASE(damon_test_regions),
++	KUNIT_CASE(damon_test_set_pids),
++	KUNIT_CASE(damon_test_three_regions_in_vmas),
++	KUNIT_CASE(damon_test_aggregate),
++	KUNIT_CASE(damon_test_write_rbuf),
++	KUNIT_CASE(damon_test_apply_three_regions1),
++	KUNIT_CASE(damon_test_apply_three_regions2),
++	KUNIT_CASE(damon_test_apply_three_regions3),
++	KUNIT_CASE(damon_test_apply_three_regions4),
++	KUNIT_CASE(damon_test_split_evenly),
++	KUNIT_CASE(damon_test_split_at),
++	KUNIT_CASE(damon_test_merge_two),
++	KUNIT_CASE(damon_test_merge_regions_of),
++	KUNIT_CASE(damon_test_split_regions_of),
++	{},
++};
++
++static struct kunit_suite damon_test_suite = {
++	.name = "damon",
++	.test_cases = damon_test_cases,
++};
++kunit_test_suite(damon_test_suite);
++
++#endif /* _DAMON_TEST_H */
++
++#endif	/* CONFIG_DAMON_KUNIT_TEST */
+diff --git a/mm/damon.c b/mm/damon.c
+index af6f395fe06c..2c44e0860672 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -25,7 +25,11 @@
+ #include <trace/events/damon.h>
+ 
+ /* Minimal region size.  Every damon_region is aligned by this. */
++#ifndef CONFIG_DAMON_KUNIT_TEST
+ #define MIN_REGION PAGE_SIZE
++#else
++#define MIN_REGION 1
++#endif
+ 
+ #define damon_get_task_struct(t) \
+ 	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
+@@ -1508,3 +1512,5 @@ module_exit(damon_exit);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
+ MODULE_DESCRIPTION("DAMON: Data Access MONitor");
++
++#include "damon-test.h"
+-- 
+2.17.1
 
-> 
->>>> This is also my understanding.
->>>>
->>>> You should have an -EPIPE error when start streaming though, it
->>>> shouldn't fail silently.
->>>
->>> Yes, we had -EPIPE, and that is what I think we were trying to resolve.
->>>
->>> How would userspace be expected to detect what formats to use ? Should
->>> the available formats on the capture node depend on the current linking
->>> of the media graph?
->>
->> This is a good question, I don't recall v4l2 API defining this.
-> 
-> A recent extension to VIDIOC_ENUMFMT allows enumerating pixel formats
-> for a given media bus code, I think that's the way forward.
-> 
->> It would be a bit hard to implement in Vimc, specially when we have configfs
->> for custom topology, since the capture would need to query all the pipeline.
->> But could be implemented.
->>
->>> Otherwise, to know what formats are supported - userspace must first
->>> 'get a list of formats' then try to 'set' the formats to know what is
->>> possible?
-Yes, there is a doc file that explains that it should be done in a "bottom-up" way
-,that is,  starting with configuring the sensor, then adjusting the debayer
-to the sensor output, then adjusting the scaler to the debayer outout and then
-adjusting the video node output to the scaler output. One should also use the
-'try' version of the setting at the stage of adjusting the final configuration.
-The detailed explanation is in Documentation/output/userspace-api/media/v4l/dev-subdev.html
-
-Thanks,
-Dafna
-
->>
->> At the moment yes.
->>
->>> Or should (given VIMC is quite specialist anyway) userspace 'just know'
->>> what is capable all the same?
->>>
->>> That's possibly fine, as we can simply remove support for the ARGB
->>> formats from the libcamera pipeline handler if it is never expected to
->>> be supported.
->>
->> With the configfs feature, you could build a topology with sensor->capture,
->> and ARGB would be supported.
->>
->>> But then as a further question - what formats will we expect VIMC to
->>> support? VIVID has a (very) wide range of formats.
->>>
->>> Would we ever expect VIMC to be as configurable?
->>> Or is the scope limited to what we have today?
->>
->> I know it is very limited atm, but I would like to increase the range,
->> I'm just with a limited bandwitdh to work on it.
->>
->>>>>>
->>>>>> If yes, which entity should support it, if not debayer? Should there be
->>>>>> a separate conversion entity, or should we keep the support in debayer
->>>>>> itself for efficiency issues?
->>>>>>
->>>>>>> On 28.05.20 20:57, Kaaira Gupta wrote:
->>>>>>>> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
->>>>>>>> not support it. Hence, add the support for Alpha (255).
->>>>>>>
->>>>>>> I would change the commit log to:
->>>>>>>
->>>>>>> Add support for V4L2_PIX_FMT_RGB24 format in the debayer
->>>>>>> and set the alpha channel to constant 255.
->>>>>>>
->>>>>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
->>>>>>>> ---
->>>>>>>>     .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
->>>>>>>>     1 file changed, 18 insertions(+), 9 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
->>>>>>>> index c3f6fef34f68..f34148717a40 100644
->>>>>>>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
->>>>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
->>>>>>>> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
->>>>>>>>         MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
->>>>>>>>         MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
->>>>>>>>         MEDIA_BUS_FMT_RGB888_1X32_PADHI,
->>>>>>>> +    MEDIA_BUS_FMT_ARGB8888_1X32
->>>>>>>>     };
->>>>>>>>     static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
->>>>>>>> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
->>>>>>>>         unsigned int i, index;
->>>>>>>>         vpix = vimc_pix_map_by_code(vdeb->src_code);
->>>>>>>> -    index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
->>>>>>>> -    for (i = 0; i < 3; i++) {
->>>>>>>> -        switch (vpix->pixelformat) {
->>>>>>>> -        case V4L2_PIX_FMT_RGB24:
->>>>>>>> -            vdeb->src_frame[index + i] = rgb[i];
->>>>>>>> -            break;
->>>>>>>> -        case V4L2_PIX_FMT_BGR24:
->>>>>>>> -            vdeb->src_frame[index + i] = rgb[2 - i];
->>>>>>>> -            break;
->>>>>>>> +
->>>>>>>> +    if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
->>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
->>>>>>>> +        vdeb->src_frame[index] = 255;
->>>>>>>> +        for (i = 0; i < 3; i++)
->>>>>>>> +            vdeb->src_frame[index + i + 1] = rgb[i];
->>>>>>>> +    } else {
->>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
->>>>>>>> +        for (i = 0; i < 3; i++) {
->>>>>>>> +            switch (vpix->pixelformat) {
->>>>>>>> +            case V4L2_PIX_FMT_RGB24:
->>>>>>>> +                vdeb->src_frame[index + i] = rgb[i];
->>>>>>>> +                break;
->>>>>>>> +            case V4L2_PIX_FMT_BGR24:
->>>>>>>> +                vdeb->src_frame[index + i] = rgb[2 - i];
->>>>>>>> +                break;
->>>>>>>> +            }
->>>>>>>>             }
->>>>>>>>         }
->>>>>>>>     }
-> 
