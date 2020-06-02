@@ -2,110 +2,114 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66881C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F55BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43C8C20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20D2206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:01:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yP+4LxNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgFBIBN (ORCPT
+        id S1726241AbgFBIBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:01:13 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:53954 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgFBIBN (ORCPT
+        Tue, 2 Jun 2020 04:01:34 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60000 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBIBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:01:13 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D78A18030835;
-        Tue,  2 Jun 2020 08:01:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cdmgq3OZHxmj; Tue,  2 Jun 2020 11:01:08 +0300 (MSK)
-Date:   Tue, 2 Jun 2020 11:01:04 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Joel Stanley <joel@jms.id.au>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <devicetree-compiler@vger.kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 2/2] checks: Improve i2c reg property checking
-Message-ID: <20200602080104.4vqobktck357j52v@mobilestation>
-References: <20200528085650.1417942-1-joel@jms.id.au>
- <20200528085650.1417942-3-joel@jms.id.au>
+        Tue, 2 Jun 2020 04:01:33 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0527uY1u088522;
+        Tue, 2 Jun 2020 08:01:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=hxfcsqFFJfllZ2M4bcJmu85MukQ2QTy19xfU8ihmlac=;
+ b=yP+4LxNp9BykBqQNCtQkgojOF47zsIzMDQ+taKumcqlXNS21E46lD5cnaMh5J2Og0QCG
+ Aozuu6QuAh8Azen2R2FWmgwtqSG3ZoS49eodK+ErixVOikZgM9J9gcYpaYMG516mkxdT
+ 4fRDsgjElCvL26PVHzOYaYDI/nEuxn+1LgMxXbQoW84S5Ji2kqO9azmGQpoe9yKLrR7k
+ fwhfw3LW+fLpdbTN0PJ3nF50SgGrIXdgEryHYhbXJgquPC9SdAZFGAytpx+c0KUhxQ8m
+ nP+vNedgA40oYrqivZ7z8fdIYEikx9aH6PMjTkO1bT35IEEtE3akcQ/X2yQHTFvHD6BE xA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31bfem2hdb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 08:01:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0527vtAJ126069;
+        Tue, 2 Jun 2020 08:01:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31c25n4ygb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 08:01:23 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05281MLN028195;
+        Tue, 2 Jun 2020 08:01:22 GMT
+Received: from [192.168.0.110] (/183.246.144.78)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 01:01:22 -0700
+Subject: Re: [PATCH] block/bio-integrity: don't free 'buf' if
+ bio_integrity_add_page() failed
+To:     yu kuai <yukuai3@huawei.com>, axboe@kernel.dk, ming.lei@redhat.com,
+        martin.petersen@oracle.com, wenwen@cs.uga.edu
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+References: <20200601123856.3895734-1-yukuai3@huawei.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <28b53354-7012-4559-943e-21526864dd10@oracle.com>
+Date:   Tue, 2 Jun 2020 16:01:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200528085650.1417942-3-joel@jms.id.au>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200601123856.3895734-1-yukuai3@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020051
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:26:50PM +0930, Joel Stanley wrote:
-> The i2c bindings in the kernel tree describe support for 10 bit
-> addressing, which must be indicated with the I2C_TEN_BIT_ADDRESS flag.
-> When this is set the address can be up to 10 bits. When it is not set
-> the address is a maximum of 7 bits.
+On 6/1/20 8:38 PM, yu kuai wrote:
+> commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") add a
+> kree() for 'buf' if bio_integrity_add_page() return '0'. However, the
+> object will be freed in bio_integrity_free() since 'bio->bi_opf' and
+> 'bio->bi_integrity' was set previousy in bio_integrity_alloc().
 > 
-> See Documentation/devicetree/bindings/i2c/i2c.txt.
+> Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
+> Signed-off-by: yu kuai <yukuai3@huawei.com>> ---
+>  block/bio-integrity.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Take into account this flag when checking the address is valid.
-> 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
-> v2: Mask reg when checking the 10-bit size
-> ---
->  checks.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/checks.c b/checks.c
-> index feb1721f2603..3fe979a63290 100644
-> --- a/checks.c
-> +++ b/checks.c
-> @@ -1023,6 +1023,7 @@ static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct no
->  WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
+> diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+> index bf62c25cde8f..ae07dd78e951 100644
+> --- a/block/bio-integrity.c
+> +++ b/block/bio-integrity.c
+> @@ -278,7 +278,6 @@ bool bio_integrity_prep(struct bio *bio)
 >  
->  #define I2C_OWN_SLAVE_ADDRESS	(1 << 30)
-
-> +#define I2C_TEN_BIT_ADDRESS	(1 << 31)
-
-As Andy neatly pointed out here:
-https://lore.kernel.org/lkml/20200527133656.GV1634618@smile.fi.intel.com/
-(1 << 31) is UB.
-
--Sergey
-
->  
->  static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
->  {
-> @@ -1057,10 +1058,13 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
->  		reg = fdt32_to_cpu(*(cells++));
->  		/* Ignore I2C_OWN_SLAVE_ADDRESS */
->  		reg &= ~I2C_OWN_SLAVE_ADDRESS;
-> -		if (reg > 0x3ff)
-> +
-> +		if ((reg & I2C_TEN_BIT_ADDRESS) && ((reg & ~I2C_TEN_BIT_ADDRESS) > 0x3ff))
->  			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
->  				  reg);
-> -
-> +		else if (reg > 0x7f)
-> +			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\". Set I2C_TEN_BIT_ADDRESS for 10 bit addresses or fix the property",
-> +				  reg);
->  	}
->  }
->  WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
-> -- 
-> 2.26.2
+>  		if (ret == 0) {
+>  			printk(KERN_ERR "could not attach integrity payload\n");
+> -			kfree(buf);
+>  			status = BLK_STS_RESOURCE;
+>  			goto err_end_io;
+>  		}
 > 
+
+Looks good to me.
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+
