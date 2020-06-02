@@ -3,186 +3,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B874C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7BEB2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB682072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgFBR7j (ORCPT
+        id S1727818AbgFBSBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:59:39 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:47279 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726019AbgFBR7i (ORCPT
+        Tue, 2 Jun 2020 14:01:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55618 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBSBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:59:38 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.20.232])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 97FD5550CFC6;
-        Tue,  2 Jun 2020 19:59:35 +0200 (CEST)
-Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
- 19:59:35 +0200
-Date:   Tue, 2 Jun 2020 19:57:23 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v3 3/4] iio: chemical: scd30: add serial interface driver
-Message-ID: <20200602175723.GC2668@arch>
-References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
- <20200602164723.28858-4-tomasz.duszynski@octakon.com>
- <CAHp75VfjWG_3XC5FJoaU7XXJc+04JTbEKdjZK=g6ffBPvJNhxA@mail.gmail.com>
+        Tue, 2 Jun 2020 14:01:23 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 8B8B82A313C
+Received: by earth.universe (Postfix, from userid 1000)
+        id B1C343C08C7; Tue,  2 Jun 2020 20:01:19 +0200 (CEST)
+Date:   Tue, 2 Jun 2020 20:01:19 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
+Subject: Re: [PATCHv1 00/19] Improve SBS battery support
+Message-ID: <20200602180119.52izs7kd72u3kmr4@earth.universe>
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+ <CGME20200601104027eucas1p2b076ee860520d709e8178c41550653f7@eucas1p2.samsung.com>
+ <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
+ <20200601170528.r5w3aeijny3v5yx3@earth.universe>
+ <b3fd35de-1dd6-1ddc-7e57-2d9ab2860e81@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qlcnxi6fqxf4bmqp"
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfjWG_3XC5FJoaU7XXJc+04JTbEKdjZK=g6ffBPvJNhxA@mail.gmail.com>
-X-Originating-IP: [34.103.240.103]
-X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 10630465448542035103
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgleduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtheevtefhffduteejfedtkeeuheejgeejvdetfffgveekffefgeffueeghefgjeenucfkpheptddrtddrtddrtddpfeegrddutdefrddvgedtrddutdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
+In-Reply-To: <b3fd35de-1dd6-1ddc-7e57-2d9ab2860e81@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 08:04:16PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
-> <tomasz.duszynski@octakon.com> wrote:
+
+--qlcnxi6fqxf4bmqp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Jun 02, 2020 at 09:17:09AM +0200, Marek Szyprowski wrote:
+> Hi Sebastian,
+>=20
+> On 01.06.2020 19:05, Sebastian Reichel wrote:
+> > On Mon, Jun 01, 2020 at 12:40:27PM +0200, Marek Szyprowski wrote:
+> >> On 13.05.2020 20:55, Sebastian Reichel wrote:
+> >>> This patchset improves support for SBS compliant batteries. Due to
+> >>> the changes, the battery now exposes 32 power supply properties and
+> >>> (un)plugging it generates a backtrace containing the following message
+> >>> without the first patch in this series:
+> >>>
+> >>> ---------------------------
+> >>> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0x=
+d4/0x104
+> >>> add_uevent_var: too many keys
+> >>> ---------------------------
+> >>>
+> >>> For references this is what an SBS battery status looks like after
+> >>> the patch series has been applied:
+> >>>
+> >>> cat /sys/class/power_supply/sbs-0-000b/uevent
+> >>> POWER_SUPPLY_NAME=3Dsbs-0-000b
+> >>> POWER_SUPPLY_TYPE=3DBattery
+> >>> POWER_SUPPLY_STATUS=3DDischarging
+> >>> POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
+> >>> POWER_SUPPLY_HEALTH=3DGood
+> >>> POWER_SUPPLY_PRESENT=3D1
+> >>> POWER_SUPPLY_TECHNOLOGY=3DLi-ion
+> >>> POWER_SUPPLY_CYCLE_COUNT=3D12
+> >>> POWER_SUPPLY_VOLTAGE_NOW=3D11441000
+> >>> POWER_SUPPLY_CURRENT_NOW=3D-26000
+> >>> POWER_SUPPLY_CURRENT_AVG=3D-24000
+> >>> POWER_SUPPLY_CAPACITY=3D76
+> >>> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=3D1
+> >>> POWER_SUPPLY_TEMP=3D198
+> >>> POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D438600
+> >>> POWER_SUPPLY_TIME_TO_FULL_AVG=3D3932100
+> >>> POWER_SUPPLY_SERIAL_NUMBER=3D0000
+> >>> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D10800000
+> >>> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=3D10800000
+> >>> POWER_SUPPLY_ENERGY_NOW=3D31090000
+> >>> POWER_SUPPLY_ENERGY_FULL=3D42450000
+> >>> POWER_SUPPLY_ENERGY_FULL_DESIGN=3D41040000
+> >>> POWER_SUPPLY_CHARGE_NOW=3D2924000
+> >>> POWER_SUPPLY_CHARGE_FULL=3D3898000
+> >>> POWER_SUPPLY_CHARGE_FULL_DESIGN=3D3800000
+> >>> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3D3000000
+> >>> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=3D12300000
+> >>> POWER_SUPPLY_MANUFACTURE_YEAR=3D2017
+> >>> POWER_SUPPLY_MANUFACTURE_MONTH=3D7
+> >>> POWER_SUPPLY_MANUFACTURE_DAY=3D3
+> >>> POWER_SUPPLY_MANUFACTURER=3DUR18650A
+> >>> POWER_SUPPLY_MODEL_NAME=3DGEHC
+> >> This patch landed in linux-next dated 20200529. Sadly it causes a
+> >> regression on Samsung Exynos-based Chromebooks (Exynos5250 Snow,
+> >> Exynos5420 Peach-Pi and Exynos5800 Peach-Pit). System boots to
+> >> userspace, but then, when udev populates /dev, booting hangs:
+> >>
+> >> [=A0=A0=A0 4.435167] VFS: Mounted root (ext4 filesystem) readonly on d=
+evice
+> >> 179:51.
+> >> [=A0=A0=A0 4.457477] devtmpfs: mounted
+> >> [=A0=A0=A0 4.460235] Freeing unused kernel memory: 1024K
+> >> [=A0=A0=A0 4.464022] Run /sbin/init as init process
+> >> INIT: version 2.88 booting
+> >> [info] Using makefile-style concurrent boot in runlevel S.
+> >> [=A0=A0=A0 5.102096] random: crng init done
+> >> [....] Starting the hotplug events dispatcher: systemd-udevdstarting
+> >> version 236
+> >> [ ok .
+> >> [....] Synthesizing the initial hotplug events...[ ok done.
+> >> [....] Waiting for /dev to be fully populated...[=A0=A0 34.409914]
+> >> TPS65090_RAILSDCDC1: disabling
+> >> [=A0=A0 34.412977] TPS65090_RAILSDCDC2: disabling
+> >> [=A0=A0 34.417021] TPS65090_RAILSDCDC3: disabling
+> >> [=A0=A0 34.423848] TPS65090_RAILSLDO1: disabling
+> >> [=A0=A0 34.429068] TPS65090_RAILSLDO2: disabling
+> > :(
 > >
-> > Add serial interface driver for the SCD30 sensor.
->
-> ...
->
-> > +static u16 scd30_serdev_cmd_lookup_tbl[] = {
-> > +       [CMD_START_MEAS] = 0x0036,
-> > +       [CMD_STOP_MEAS] = 0x0037,
-> > +       [CMD_MEAS_INTERVAL] = 0x0025,
-> > +       [CMD_MEAS_READY] = 0x0027,
-> > +       [CMD_READ_MEAS] = 0x0028,
-> > +       [CMD_ASC] = 0x003a,
-> > +       [CMD_FRC] = 0x0039,
-> > +       [CMD_TEMP_OFFSET] = 0x003b,
-> > +       [CMD_FW_VERSION] = 0x0020,
-> > +       [CMD_RESET] = 0x0034,
->
-> Hmm... Can't we keep them ordered by value?
->
-> > +};
->
-> ...
->
-> > +       ret = wait_for_completion_interruptible_timeout(&priv->meas_ready,
-> > +                                                       SCD30_SERDEV_TIMEOUT);
-> > +       if (ret > 0)
-> > +               ret = 0;
-> > +       else if (!ret)
-> > +               ret = -ETIMEDOUT;
-> > +
-> > +       return ret;
->
-> Perhaps
->
->   if (ret < 0)
->     return ret;
->   if (ret == 0)
->     return -ETIMEDOUT;
->   return 0;
->
-> ?
+> > log does not look useful either.
+> >
+> >> Bisect between v5.7-rc1 and next-20200529 pointed me to the first bad
+> >> commit: [c4b12a2f3f3de670f6be5e96092a2cab0b877f1a] power: supply:
+> >> sbs-battery: simplify read_read_string_data.
+> > ok. I tested this on an to-be-upstreamed i.MX6 based system
+> > and arch/arm/boot/dts/imx53-ppd.dts. I think the difference
+> > is, that i2c-exynos5 does not expose I2C_FUNC_SMBUS_READ_BLOCK_DATA.
+> > I hoped all systems using SBS battery support this, but now
+> > I see I2C_FUNC_SMBUS_EMUL only supports writing block data.
+> > Looks like I need to add another patch implementing that
+> > using the old code with added PEC support.
+> >
+> > In any case that should only return -ENODEV for the property
+> > (and uevent), but not break boot. So something fishy is going
+> > on.
+> >
+> >> However reverting it in linux-next doesn't fix the issue, so the
+> >> next commits are also relevant to this issue.
+> > The next patch, which adds PEC support depends on the simplification
+> > of sbs_read_string_data. The old, open coded variant will result in
+> > PEC failure for string properties (which should not stop boot either
+> > of course). Can you try reverting both?
+> Indeed, reverting both (and fixing the conflict) restores proper boot.
 
-Matter of style but since I will be doing other changes I can touch that
-too.
+Ok, I pushed out a revert of those two patches. They should land in
+tomorrows linux-next release. Please test it.
 
->
-> ...
->
-> > +       char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR },
-> > +            rxbuf[SCD30_SERDEV_MAX_BUF_SIZE], *rsp = response;
->
-> Please, apply type to each variable separately.
->
+> > If that helps I will revert those two instead of dropping the whole
+> > series for this merge window.
+> >
+> >> Let me know how can I help debugging it.
+> > I suspect, that this is userspace endlessly retrying reading the
+> > battery uevent when an error is returned. Could you check this?
+> > Should be easy to see by adding some printfs.
+> I've added some debug messages in sbs_get_property() and it read the=20
+> same properties many times. However I've noticed that if I wait long=20
+> enough booting finally continues.
 
-Fine.
+So basically userspace slows down itself massively by trying to
+re-read uevent over and over when an error occurs. Does not seem
+like a sensible thing to do. I will have a look at this when I find
+some time.
 
-> ...
->
-> > +       switch (txbuf[1]) {
-> > +       case SCD30_SERDEV_WRITE:
->
-> > +               if (memcmp(txbuf, txbuf, txsize)) {
->
-> I'm not sure I understand this.
->
+-- Sebastian
 
-Ah, thanks for catching this. tx should be compared to rx.
+--qlcnxi6fqxf4bmqp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > +                       dev_err(state->dev, "wrong message received\n");
-> > +                       return -EIO;
-> > +               }
-> > +               break;
-> > +       case SCD30_SERDEV_READ:
->
-> > +               if (rxbuf[2] != (rxsize -
-> > +                                SCD30_SERDEV_RX_HEADER_SIZE -
-> > +                                SCD30_SERDEV_CRC_SIZE)) {
->
-> Perhaps you can come up with better indentation/ line split?
->
+-----BEGIN PGP SIGNATURE-----
 
-I'd rather leave it as is.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7Wk+gACgkQ2O7X88g7
++pqfvhAAp3vLZAMmY0nQI+gSiUH60RC3gWVLX3NlbuoLZwpCmB+UAacJhEje1Jae
+WxzoJZDMrk79M/LnJTwf2bUxFnOuGPVMh9agUNhpfx1gc6o97nBJhSISc9s46cDn
+AskAmFojgm6G129GmcGG6FE1+H7uHgseGqHevr0Czth04cYsz/z3IrpN/M4cp9AJ
+KqXw2ORkfXxZ8cbujffAsoW/SA0aBWMqRYpluNsukxwOAc4HZqIiaaSBsd9w94m7
+SZgr6NFPEvfg2MsZIlFl5KvadL/zdMu7mM48Bo6KiZ4ALsWlntOQfW+AYX6VDk+C
+Wzbd360Q8OyPVdZLQcUBjYvYRsFaFQh7iamGHHRzPIe2E0QEaJARyn4+db5pNptt
+o0I1FcSE+s3hbBHBAPj6y4u91Safun8m2xMAccqVNR0mQUpdR4+UFMU2gs/dv9U9
+0kzh5wB9c16g1BkQhy0u9aH604qXDRJ6EqDkjftsl8y7+7gxArUoSP+UgFUK3SuA
+C8MfpFmnZNvZt7tAIUvldKbpfogisfTYhbbs8BNUYJosAqJAcIOCYR9GRR/26I7Z
+POpxdn22sBpaKII78+ThvToqjx4A7IZ+P7La52HgUmsu1nWyYqeenAEIes4FJO3H
+KG2hOpN9+SrhIRiE/GZ+Yk9RCgDgK4RTM+bjiMe9lymoFn2ozIQ=
+=GTtY
+-----END PGP SIGNATURE-----
 
-> > +                       dev_err(state->dev,
-> > +                               "received data size does not match header\n");
-> > +                       return -EIO;
-> > +               }
-> > +
-> > +               rxsize -= SCD30_SERDEV_CRC_SIZE;
-> > +               crc = get_unaligned_le16(rxbuf + rxsize);
-> > +               if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
-> > +                       dev_err(state->dev, "data integrity check failed\n");
-> > +                       return -EIO;
-> > +               }
-> > +
-> > +               rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
-> > +               memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
-> > +               break;
-> > +       default:
-> > +               dev_err(state->dev, "received unknown op code\n");
-> > +               return -EIO;
-> > +       }
-> > +
-> > +       return 0;
-> > +}
->
-> ...
->
-> > +static struct serdev_device_driver scd30_serdev_driver = {
-> > +       .driver = {
->
-> > +               .name = KBUILD_MODNAME,
->
-> This is not the best what we can do. The name is an ABI and better if
-> it will be constant (independent on file name).
->
-> > +               .of_match_table = scd30_serdev_of_match,
-> > +               .pm = &scd30_pm_ops,
-> > +       },
-> > +       .probe = scd30_serdev_probe,
-> > +};
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+--qlcnxi6fqxf4bmqp--
