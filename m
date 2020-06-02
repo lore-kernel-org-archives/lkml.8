@@ -3,59 +3,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E25C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F770C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66CE62067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314162072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgFBW13 (ORCPT
+        id S1730328AbgFBW2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48650 "EHLO
+        Tue, 2 Jun 2020 18:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730148AbgFBW11 (ORCPT
+        with ESMTP id S1730310AbgFBW2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 18:27:27 -0400
+        Tue, 2 Jun 2020 18:28:46 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7CFC08C5C0;
-        Tue,  2 Jun 2020 15:27:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E52C08C5C0;
+        Tue,  2 Jun 2020 15:28:46 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477:9e51:a893:b0fe:602a])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3DD4D1277CC73;
-        Tue,  2 Jun 2020 15:27:26 -0700 (PDT)
-Date:   Tue, 02 Jun 2020 15:27:25 -0700 (PDT)
-Message-Id: <20200602.152725.1354529297857870970.davem@davemloft.net>
-To:     piotr.stankiewicz@intel.com
-Cc:     irusskikh@marvell.com, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/15] aquantia: atlantic: use PCI_IRQ_ALL_TYPES where
- appropriate
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D84AE1277CC77;
+        Tue,  2 Jun 2020 15:28:45 -0700 (PDT)
+Date:   Tue, 02 Jun 2020 15:28:45 -0700 (PDT)
+Message-Id: <20200602.152845.987253288774299345.davem@davemloft.net>
+To:     aishwaryarj100@gmail.com
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, kuba@kernel.org, mcoquelin.stm32@gmail.com,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: stmmac: Drop condition with no effect
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200602092111.32235-1-piotr.stankiewicz@intel.com>
-References: <20200602092111.32235-1-piotr.stankiewicz@intel.com>
+In-Reply-To: <20200602104405.28851-1-aishwaryarj100@gmail.com>
+References: <20200602104405.28851-1-aishwaryarj100@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 02 Jun 2020 15:27:26 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 02 Jun 2020 15:28:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Date: Tue,  2 Jun 2020 11:21:11 +0200
+From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Date: Tue,  2 Jun 2020 16:14:04 +0530
 
-> Seeing as there is shorthand available to use when asking for any type
-> of interrupt, or any type of message signalled interrupt, leverage it.
+> As the "else if" and "else" branch body are identical the
+> condition has no effect. So removing "else if" condition.
 > 
-> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 
-Applied.
+I'm not applying these patches, the conditional tests serve as
+documentation.
