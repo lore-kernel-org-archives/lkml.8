@@ -2,174 +2,116 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0605DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41741C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22E12072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C0520738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgFBGp1 (ORCPT
+        id S1726239AbgFBGq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:45:27 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:60845 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgFBGp0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:45:26 -0400
-Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id 0526ikvx091380;
-        Tue, 2 Jun 2020 14:44:46 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id C04D74D93DF9337284FF;
-        Tue,  2 Jun 2020 14:44:46 +0800 (CST)
-In-Reply-To: <20200529094202.7vjs7clhykncivux@yadavpratyush.com>
-References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw> <1590737775-4798-8-git-send-email-masonccyang@mxic.com.tw> <20200529094202.7vjs7clhykncivux@yadavpratyush.com>
-To:     "Pratyush Yadav" <me@yadavpratyush.com>
-Cc:     boris.brezillon@collabora.com, broonie@kernel.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        matthias.bgg@gmail.com, miquel.raynal@bootlin.com, p.yadav@ti.com,
-        richard@nod.at, tudor.ambarus@microchip.com, vigneshr@ti.com
-Subject: Re: [PATCH v4 7/7] mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for
- Macronix mx25uw51245g
+        Tue, 2 Jun 2020 02:46:28 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59228 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725298AbgFBGq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 02:46:27 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 507018198B69DF27ABE0;
+        Tue,  2 Jun 2020 14:46:25 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
+ 14:46:18 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] net: genetlink: Fix memleak in genl_family_rcv_msg_dumpit()
+Date:   Tue, 2 Jun 2020 14:45:45 +0800
+Message-ID: <20200602064545.50288-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-KeepSent: 577383DB:7BF12AA3-4825857B:002468AB;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF577383DB.7BF12AA3-ON4825857B.002468AB-4825857B.00250F16@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Tue, 2 Jun 2020 14:44:47 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/06/02 PM 02:44:46,
-        Serialize complete at 2020/06/02 PM 02:44:46
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com 0526ikvx091380
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+dumpit info is freed by cb->done now (genl_lock_done()/
+genl_parallel_done()), however if any error occurs before
+cb->done is called, info and attrs will leak.
 
-Hi Pratyush,
+unreferenced object 0xffff888119904840 (size 32):
+comm "syz-executor.0", pid 857, jiffies 4295306979 (age 18.692s)
+hex dump (first 32 bytes):
+60 2d 5a af ff ff ff ff c0 d6 a5 ae ff ff ff ff `-Z.............
+00 00 00 00 00 00 00 00 60 b4 25 ac ff ff ff ff ........`.%.....
+backtrace:
+[<0000000048573ee1>] kmalloc include/linux/slab.h:555 [inline]
+[<0000000048573ee1>] genl_dumpit_info_alloc net/netlink/genetlink.c:463 [inline]
+[<0000000048573ee1>] genl_family_rcv_msg_dumpit net/netlink/genetlink.c:598 [inline]
+[<0000000048573ee1>] genl_family_rcv_msg net/netlink/genetlink.c:715 [inline]
+[<0000000048573ee1>] genl_rcv_msg+0x7b7/0xce0 net/netlink/genetlink.c:735
+[<000000006d27610a>] netlink_rcv_skb+0x139/0x390 net/netlink/af_netlink.c:2469
+[<00000000d643c808>] genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+[<00000000fdec3fc5>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+[<00000000fdec3fc5>] netlink_unicast+0x4a0/0x6a0 net/netlink/af_netlink.c:1329
+[<0000000027eb500d>] netlink_sendmsg+0x793/0xc80 net/netlink/af_netlink.c:1918
+[<000000006e6952a8>] sock_sendmsg_nosec net/socket.c:652 [inline]
+[<000000006e6952a8>] sock_sendmsg+0x139/0x170 net/socket.c:672
 
+Fixes: 1927f41a22a0 ("net: genetlink: introduce dump info struct to be available during dumpit op")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/netlink/genetlink.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
+index 9f357aa22b94..cd719aecb0e2 100644
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -548,8 +548,6 @@ static int genl_lock_done(struct netlink_callback *cb)
+ 		rc = ops->done(cb);
+ 		genl_unlock();
+ 	}
+-	genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
+-	genl_dumpit_info_free(info);
+ 	return rc;
+ }
  
-> Subject
-> 
-> Re: [PATCH v4 7/7] mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports 
-for 
-> Macronix mx25uw51245g
-> 
-> On 29/05/20 03:36PM, Mason Yang wrote:
-> > Macronix mx25uw51245g is a SPI NOR that supports 1-1-1/8-8-8 mode.
-> > 
-> > Correct the dummy cycles to device for various frequencies
-> > after xSPI profile 1.0 table parsed.
-> > 
-> > Enable mx25uw51245g to Octal DTR mode by executing the command 
-sequences
-> > to change to octal DTR mode.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >  drivers/mtd/spi-nor/macronix.c | 55 
-++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 55 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/spi-nor/macronix.c 
-b/drivers/mtd/spi-nor/macronix.c
-> > index 96735d8..6c9a24c 100644
-> > --- a/drivers/mtd/spi-nor/macronix.c
-> > +++ b/drivers/mtd/spi-nor/macronix.c
-> > @@ -8,6 +8,57 @@
-> > 
-> >  #include "core.h"
-> > 
-> > +#define MXIC_CR2_DUMMY_SET_ADDR 0x300
-> > +
-> > +/* Fixup the dummy cycles to device and setup octa_dtr_enable() */
-> > +static void mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
-> > +{
-> > +   struct spi_nor_flash_parameter *params = nor->params;
-> > +   int ret;
-> > +   u8 rdc, wdc;
-> > +
-> > +   ret = spi_nor_read_cr2(nor, MXIC_CR2_DUMMY_SET_ADDR, &rdc);
-> > +   if (ret)
-> > +      return;
-> > +
-> > +   /* Refer to dummy cycle and frequency table(MHz) */
-> > +   switch (params->dummy_cycles) {
-> > +   case 10:   /* 10 dummy cycles for 104 MHz */
-> > +      wdc = 5;
-> > +      break;
-> > +   case 12:   /* 12 dummy cycles for 133 MHz */
-> > +      wdc = 4;
-> > +      break;
-> > +   case 16:   /* 16 dummy cycles for 166 MHz */
-> > +      wdc = 2;
-> > +      break;
-> > +   case 18:   /* 18 dummy cycles for 173 MHz */
-> > +      wdc = 1;
-> > +      break;
-> > +   case 20:   /* 20 dummy cycles for 200 MHz */
-> > +   default:
-> > +      wdc = 0;
-> > +   }
-> 
-> I don't get the point of this. You already know the fastest the 
-> mx25uw51245g flash can run at. Why not just use the maximum dummy 
-> cycles? SPI NOR doesn't know the speed the controller is running at so 
-> the best it can do is use the maximum dummy cycles possible so it never 
-> falls short. Sure, it will be _slightly_ less performance, but we will 
-> be sure to read the correct data, which is much much more important.
+@@ -561,8 +559,6 @@ static int genl_parallel_done(struct netlink_callback *cb)
+ 
+ 	if (ops->done)
+ 		rc = ops->done(cb);
+-	genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
+-	genl_dumpit_info_free(info);
+ 	return rc;
+ }
+ 
+@@ -594,7 +590,6 @@ static int genl_family_rcv_msg_dumpit(const struct genl_family *family,
+ 		return PTR_ERR(attrs);
+ 
+ no_attrs:
+-	/* Allocate dumpit info. It is going to be freed by done() callback. */
+ 	info = genl_dumpit_info_alloc();
+ 	if (!info) {
+ 		genl_family_rcv_msg_attrs_free(family, attrs, true);
+@@ -630,6 +625,9 @@ static int genl_family_rcv_msg_dumpit(const struct genl_family *family,
+ 		err = __netlink_dump_start(net->genl_sock, skb, nlh, &c);
+ 	}
+ 
++	genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
++	genl_dumpit_info_free(info);
++
+ 	return err;
+ }
+ 
+-- 
+2.20.1
 
-In general, 200MHz needs 20 dummy cycles but some powerful device may only 
-
-needs 18 dummy cycles or less.
-
-Set a proper dummy cycles for a better performance.
-
-> 
-> Is it possible to have two chips which have _exactly_ the same ID but 
-> one supports say 200MHz frequency but the other doesn't? Without that, 
-> we can just enable the maximum and move on.
-> 
-
-thanks for your time & comments.
-Mason
-
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
 
