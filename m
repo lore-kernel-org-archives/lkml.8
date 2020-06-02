@@ -2,209 +2,501 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E56BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB87C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55DCF20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:53:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gUQhoSQG"
+	by mail.kernel.org (Postfix) with ESMTP id E3D22206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgFBUxx (ORCPT
+        id S1728322AbgFBUx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:53:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgFBUxv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:53:51 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FB2C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:53:51 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u13so4243330wml.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UNdx3Mmpf3DrIzViCGyzis6VE+eW7LcGk/DvPm/aizg=;
-        b=gUQhoSQGFIHa7ZtNQ/mcdet2GnsJdah69f2gfvdvdf3oal9ZbFaY5RBDmch2/JCwpo
-         1ySrRPlo+q1t6qjbKXPFmySFIdIUeoYzuR+SDIhTteakfiGtW0pdZri/mG9znO4mjmE5
-         VpRIxXI+2IPUmFBA+igDQybSrvkqI8sP+60yo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNdx3Mmpf3DrIzViCGyzis6VE+eW7LcGk/DvPm/aizg=;
-        b=Uj0aZ7/II4d67tbHks9Hdoc44NoHnncT3uodJBqP740m1+83rf72NZ1RH6ZDQYwAYY
-         T793MXLJ+oVZ8s6GV9Gol/9HU4E5+MODWAamYTVAiE7t8XAz3fIgqLBADY5Kp971qjJ4
-         WQkOxCBg9eaBxnMe/HSDG/xAroRh9J5f2dyTizSshbKgVrFwYaMAIqe6mfLw91NSk5g3
-         b17bnCZ5WmmuLWQZD2FqUwQlrP500eq+mKy05E/9RJsjQDpYP65BaoKuT5wNPQne0v6t
-         0tSyoRcZylK1UIXloBNWmvNKOiiH4/gz+xuQyP3biv7+DSma1jBbmoPamTa5OhZlE0ep
-         memQ==
-X-Gm-Message-State: AOAM531TLfT+HIg5yn55wsB6DZiwCRfv3AYQDxVahjhyjOBmbKbbkYiI
-        z3YxR+Yv26j/z4nHqcKd+J5yI63VV6dkqzhYOCAadQ==
-X-Google-Smtp-Source: ABdhPJwkj8NL5zp+q4S4GBVPgKweYcMhpEHQU9ScieMb1qOnyIRY9ZULyNPHba9ox1is5xBNjGQKqzly82AVsgTZlQM=
-X-Received: by 2002:a7b:c0cc:: with SMTP id s12mr5862628wmh.111.1591131229682;
- Tue, 02 Jun 2020 13:53:49 -0700 (PDT)
+        Tue, 2 Jun 2020 16:53:57 -0400
+Received: from mga11.intel.com ([192.55.52.93]:2571 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgFBUxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 16:53:52 -0400
+IronPort-SDR: LfekwvzBQZnwbtEVbK7OvZInKRzao+KUWrKMugsfumh90rUcOtM+tZWgm7s/vbq9FhUsVzvi83
+ ppYXdmFie6vA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 13:51:49 -0700
+IronPort-SDR: aSOI5KA/Pq/z2p/4NB4/Oydme6Jclly6VGkwUYIfhaxGbXajYAd86mc0/+0ZUcsEPT4XHiqyxC
+ ykBaaQUpcQQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,465,1583222400"; 
+   d="scan'208";a="257757001"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga007.jf.intel.com with ESMTP; 02 Jun 2020 13:51:49 -0700
+Date:   Tue, 2 Jun 2020 13:51:49 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RESEND PATCH v9 4/5] ndctl/papr_scm,uapi: Add support for PAPR
+ nvdimm specific methods
+Message-ID: <20200602205148.GF1505637@iweiny-DESK2.sc.intel.com>
+References: <20200602101438.73929-1-vaibhav@linux.ibm.com>
+ <20200602101438.73929-5-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
- <20200526191303.1492-4-james.quinlan@broadcom.com> <20200529174634.GA2630216@bogus>
-In-Reply-To: <20200529174634.GA2630216@bogus>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Tue, 2 Jun 2020 16:53:37 -0400
-Message-ID: <CA+-6iNwWBFYHVKiwwJ95DYQ5zmc5uBo1cgZzd6rpD++aQWgGpw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/14] dt-bindings: PCI: Add bindings for more Brcmstb chips
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602101438.73929-5-vaibhav@linux.ibm.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 1:46 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, May 26, 2020 at 03:12:42PM -0400, Jim Quinlan wrote:
-> > From: Jim Quinlan <jquinlan@broadcom.com>
-> >
-> > - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
-> >   7211 (STB version of RPi4).
-> > - add new property 'brcm,scb-sizes'
-> > - add new property 'resets'
-> > - add new property 'reset-names'
-> > - allow 'ranges' and 'dma-ranges' to have more than one item and update
-> >   the example to show this.
-> >
-> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
-> >  1 file changed, 36 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > index 8680a0f86c5a..66a7df45983d 100644
-> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -14,7 +14,13 @@ allOf:
-> >
-> >  properties:
-> >    compatible:
-> > -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +    items:
-> > +      - enum:
->
-> Don't need items here. Just change the const to enum.
->
-> > +          - brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> > +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-> > +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-> > +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
-> >
-> >    reg:
-> >      maxItems: 1
-> > @@ -34,10 +40,12 @@ properties:
-> >        - const: msi
-> >
-> >    ranges:
-> > -    maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 4
-> >
-> >    dma-ranges:
-> > -    maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 6
-> >
-> >    clocks:
-> >      maxItems: 1
-> > @@ -58,8 +66,30 @@ properties:
-> >
-> >    aspm-no-l0s: true
-> >
-> > +  resets:
-> > +    description: for "brcm,bcm7216-pcie", must be a valid reset
-> > +      phandle pointing to the RESCAL reset controller provider node.
-> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: rescal
->
-> These are going to need to be an if/then schema if they only apply to
-> certain compatible(s).
+On Tue, Jun 02, 2020 at 03:44:37PM +0530, Vaibhav Jain wrote:
+> Introduce support for PAPR NVDIMM Specific Methods (PDSM) in papr_scm
+> module and add the command family NVDIMM_FAMILY_PAPR to the white list
+> of NVDIMM command sets. Also advertise support for ND_CMD_CALL for the
+> nvdimm command mask and implement necessary scaffolding in the module
+> to handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+> 
+> The layout of the PDSM request as we expect from libnvdimm/libndctl is
+> described in newly introduced uapi header 'papr_pdsm.h' which
+> defines a new 'struct nd_pdsm_cmd_pkg' header. This header is used
+> to communicate the PDSM request via member
+> 'nd_cmd_pkg.nd_command' and size of payload that need to be
+> sent/received for servicing the PDSM.
+> 
+> A new function is_cmd_valid() is implemented that reads the args to
+> papr_scm_ndctl() and performs sanity tests on them. A new function
+> papr_scm_service_pdsm() is introduced and is called from
+> papr_scm_ndctl() in case of a PDSM request is received via ND_CMD_CALL
+> command from libnvdimm.
+> 
+> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+> ---
+> Changelog:
+> 
+> Resend:
+> * Added ack from Aneesh.
+> 
+> v8..v9:
+> * Reduced the usage of term SCM replacing it with appropriate
+>   replacement [ Dan Williams, Aneesh ]
+> * Renamed 'papr_scm_pdsm.h' to 'papr_pdsm.h'
+> * s/PAPR_SCM_PDSM_*/PAPR_PDSM_*/g
+> * s/NVDIMM_FAMILY_PAPR_SCM/NVDIMM_FAMILY_PAPR/g
+> * Minor updates to 'papr_psdm.h' to replace usage of term 'SCM'.
+> * Minor update to patch description.
+> 
+> v7..v8:
+> * Removed the 'payload_offset' field from 'struct
+>   nd_pdsm_cmd_pkg'. Instead command payload is always assumed to start
+>   at 'nd_pdsm_cmd_pkg.payload'. [ Aneesh ]
+> * To enable introducing new fields to 'struct nd_pdsm_cmd_pkg',
+>   'reserved' field of 10-bytes is introduced. [ Aneesh ]
+> * Fixed a typo in "Backward Compatibility" section of papr_scm_pdsm.h
+>   [ Ira ]
+> 
+> Resend:
+> * None
+> 
+> v6..v7 :
+> * Removed the re-definitions of __packed macro from papr_scm_pdsm.h
+>   [Mpe].
+> * Removed the usage of __KERNEL__ macros in papr_scm_pdsm.h [Mpe].
+> * Removed macros that were unused in papr_scm.c from papr_scm_pdsm.h
+>   [Mpe].
+> * Made functions defined in papr_scm_pdsm.h as static inline. [Mpe]
+> 
+> v5..v6 :
+> * Changed the usage of the term DSM to PDSM to distinguish it from the
+>   ACPI term [ Dan Williams ]
+> * Renamed papr_scm_dsm.h to papr_scm_pdsm.h and updated various struct
+>   to reflect the new terminology.
+> * Updated the patch description and title to reflect the new terminology.
+> * Squashed patch to introduce new command family in 'ndctl.h' with
+>   this patch [ Dan Williams ]
+> * Updated the papr_scm_pdsm method starting index from 0x10000 to 0x0
+>   [ Dan Williams ]
+> * Removed redundant license text from the papr_scm_psdm.h file.
+>   [ Dan Williams ]
+> * s/envelop/envelope/ at various places [ Dan Williams ]
+> * Added '__packed' attribute to command package header to gaurd
+>   against different compiler adding paddings between the fields.
+>   [ Dan Williams]
+> * Converted various pr_debug to dev_debug [ Dan Williams ]
+> 
+> v4..v5 :
+> * None
+> 
+> v3..v4 :
+> * None
+> 
+> v2..v3 :
+> * Updated the patch prefix to 'ndctl/uapi' [Aneesh]
+> 
+> v1..v2 :
+> * None
+> ---
+>  arch/powerpc/include/uapi/asm/papr_pdsm.h | 136 ++++++++++++++++++++++
+>  arch/powerpc/platforms/pseries/papr_scm.c | 101 +++++++++++++++-
+>  include/uapi/linux/ndctl.h                |   1 +
+>  3 files changed, 232 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/powerpc/include/uapi/asm/papr_pdsm.h
+> 
+> diff --git a/arch/powerpc/include/uapi/asm/papr_pdsm.h b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+> new file mode 100644
+> index 000000000000..6407fefcc007
+> --- /dev/null
+> +++ b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+> @@ -0,0 +1,136 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +/*
+> + * PAPR nvDimm Specific Methods (PDSM) and structs for libndctl
+> + *
+> + * (C) Copyright IBM 2020
+> + *
+> + * Author: Vaibhav Jain <vaibhav at linux.ibm.com>
+> + */
+> +
+> +#ifndef _UAPI_ASM_POWERPC_PAPR_PDSM_H_
+> +#define _UAPI_ASM_POWERPC_PAPR_PDSM_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/*
+> + * PDSM Envelope:
+> + *
+> + * The ioctl ND_CMD_CALL transfers data between user-space and kernel via
+> + * envelope which consists of a header and user-defined payload sections.
+> + * The header is described by 'struct nd_pdsm_cmd_pkg' which expects a
+> + * payload following it and accessible via 'nd_pdsm_cmd_pkg.payload' field.
+> + * There is reserved field that can used to introduce new fields to the
+> + * structure in future. It also tries to ensure that 'nd_pdsm_cmd_pkg.payload'
+> + * lies at a 8-byte boundary.
+> + *
+> + *  +-------------+---------------------+---------------------------+
+> + *  |   64-Bytes  |       16-Bytes      |       Max 176-Bytes       |
+> + *  +-------------+---------------------+---------------------------+
+> + *  |               nd_pdsm_cmd_pkg     |                           |
+> + *  |-------------+                     |                           |
+> + *  |  nd_cmd_pkg |                     |                           |
+> + *  +-------------+---------------------+---------------------------+
+> + *  | nd_family   |                     |                           |
+> + *  | nd_size_out | cmd_status          |                           |
+> + *  | nd_size_in  | payload_version     |     payload               |
+> + *  | nd_command  | reserved            |                           |
+> + *  | nd_fw_size  |                     |                           |
+> + *  +-------------+---------------------+---------------------------+
+> + *
+> + * PDSM Header:
+> + *
+> + * The header is defined as 'struct nd_pdsm_cmd_pkg' which embeds a
+> + * 'struct nd_cmd_pkg' instance. The PDSM command is assigned to member
+> + * 'nd_cmd_pkg.nd_command'. Apart from size information of the envelope which is
+> + * contained in 'struct nd_cmd_pkg', the header also has members following 
+                                                             ^^^^^
+                                                        ...  the  ...
 
-Why is that -- the code is general enough to handle its presence or
-not (it is an optional compatibility)>
+> + * members:
+> + *
+> + * 'cmd_status'		: (Out) Errors if any encountered while servicing PDSM.
+> + * 'payload_version'	: (In/Out) Version number associated with the payload.
+> + * 'reserved'		: Not used and reserved for future.
+> + *
+> + * PDSM Payload:
+> + *
+> + * The layout of the PDSM Payload is defined by various structs shared between
+> + * papr_scm and libndctl so that contents of payload can be interpreted. During
+> + * servicing of a PDSM the papr_scm module will read input args from the payload
+> + * field by casting its contents to an appropriate struct pointer based on the
+> + * PDSM command. Similarly the output of servicing the PDSM command will be
+> + * copied to the payload field using the same struct.
+> + *
+> + * 'libnvdimm' enforces a hard limit of 256 bytes on the envelope size, which
+> + * leaves around 176 bytes for the envelope payload (ignoring any padding that
+> + * the compiler may silently introduce).
+> + *
+> + * Payload Version:
+> + *
+> + * A 'payload_version' field is present in PDSM header that indicates a specific
+> + * version of the structure present in PDSM Payload for a given PDSM command.
+> + * This provides backward compatibility in case the PDSM Payload structure
+> + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
+> + *
+> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
+> + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
+> + * module when servicing the PDSM envelope checks the 'payload_version' and then
+> + * uses 'payload struct version' == MIN('payload_version field',
+> + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
+> + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
+> + * struct in returned 'payload_version' field.
+> + *
+> + * Libndctl on receiving the envelope back from papr_scm again checks the
+> + * 'payload_version' field and based on it use the appropriate version dsm
+> + * struct to parse the results.
+> + *
+> + * Backward Compatibility:
+> + *
+> + * Above scheme of exchanging different versioned PDSM struct between libndctl
+> + * and papr_scm should provide backward compatibility until following two
+> + * assumptions/conditions when defining new PDSM structs hold:
+> + *
+> + * Let T(X) = { set of attributes in PDSM struct 'T' versioned X }
+> + *
+> + * 1. T(X) is a proper subset of T(Y) if Y > X.
+> + *    i.e Each new version of PDSM struct should retain existing struct
+> + *    attributes from previous version
+> + *
+> + * 2. If an entity (libndctl or papr_scm) supports a PDSM struct T(X) then
+> + *    it should also support T(1), T(2)...T(X - 1).
+> + *    i.e When adding support for new version of a PDSM struct, libndctl
+> + *    and papr_scm should retain support of the existing PDSM struct
+> + *    version they support.
 
->
->
-> > +
-> > +  brcm,scb-sizes:
-> > +    description: (u32, u32) tuple giving the 64bit PCIe memory
-> > +      viewport size of a memory controller.  There may be up to
-> > +      three controllers, and each size must be a power of two
-> > +      with a size greater or equal to the amount of memory the
-> > +      controller supports.
->
-> This sounds like what dma-ranges should express?
+Please see this thread for an example why versions are a bad idea in UAPIs:
 
-There is some overlap but this contains information that is not in the
-dma-ranges.  Believe me I tried.
+https://lkml.org/lkml/2020/3/26/213
 
->
-> If not, we do have 64-bit size if that what you need.
+While the use of version is different in that thread the fundamental issues are
+the same.  You end up with some weird matrix of supported features and
+structure definitions.  For example, you are opening up the possibility of
+changing structures with a different version for no good reason.
 
-IIRC I tried the 64-bit size but the YAML validator did not like it;
-it wanted numbers like  <0x1122334455667788> while dtc wanted <
-0x11223344 0x55667788>.  I gave up trying and switched to u32.
+Also having the user query with version Z and get back version X (older) is
+odd.  Generally if the kernel does not know about a feature (ie version Z of
+the structure) it should return -EINVAL and let the user figure out what to do.
+The user may just give up or they could try a different query.
 
-Thanks,
-Jim
+> + */
+> +
+> +/* PDSM-header + payload expected with ND_CMD_CALL ioctl from libnvdimm */
+> +struct nd_pdsm_cmd_pkg {
+> +	struct nd_cmd_pkg hdr;	/* Package header containing sub-cmd */
+> +	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
+> +	__u16 reserved[5];	/* Ignored and to be used in future */
 
->
->
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +      - items:
-> > +          minItems: 2
-> > +          maxItems: 6
-> > +
-> >  required:
-> >    - reg
-> > +  - ranges
-> >    - dma-ranges
-> >    - "#interrupt-cells"
-> >    - interrupts
-> > @@ -93,7 +123,9 @@ examples:
-> >                      msi-parent = <&pcie0>;
-> >                      msi-controller;
-> >                      ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> > -                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> > +                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
-> > +                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-> >                      brcm,enable-ssc;
-> > +                    brcm,scb-sizes = <0x0 0x80000000 0x0 0x80000000>;
-> >              };
-> >      };
-> > --
-> > 2.17.1
-> >
+How do you know when reserved is used for something else in the future?  Is
+reserved guaranteed (and checked by the code) to be 0?
+
+> +	__u16 payload_version;	/* In/Out: version of the payload */
+
+Why is payload_version after reserved?
+
+> +	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
+> +} __packed;
+> +
+> +/*
+> + * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
+> + * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
+> + */
+> +enum papr_pdsm {
+> +	PAPR_PDSM_MIN = 0x0,
+> +	PAPR_PDSM_MAX,
+> +};
+> +
+> +/* Convert a libnvdimm nd_cmd_pkg to pdsm specific pkg */
+> +static inline struct nd_pdsm_cmd_pkg *nd_to_pdsm_cmd_pkg(struct nd_cmd_pkg *cmd)
+> +{
+> +	return (struct nd_pdsm_cmd_pkg *) cmd;
+> +}
+> +
+> +/* Return the payload pointer for a given pcmd */
+> +static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
+> +{
+> +	if (pcmd->hdr.nd_size_in == 0 && pcmd->hdr.nd_size_out == 0)
+> +		return NULL;
+> +	else
+> +		return (void *)(pcmd->payload);
+> +}
+> +
+> +#endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
+> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> index 149431594839..5e2237e7ec08 100644
+> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> @@ -15,13 +15,15 @@
+>  #include <linux/seq_buf.h>
+>  
+>  #include <asm/plpar_wrappers.h>
+> +#include <asm/papr_pdsm.h>
+>  
+>  #define BIND_ANY_ADDR (~0ul)
+>  
+>  #define PAPR_SCM_DIMM_CMD_MASK \
+>  	((1ul << ND_CMD_GET_CONFIG_SIZE) | \
+>  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+> -	 (1ul << ND_CMD_SET_CONFIG_DATA))
+> +	 (1ul << ND_CMD_SET_CONFIG_DATA) | \
+> +	 (1ul << ND_CMD_CALL))
+>  
+>  /* DIMM health bitmap bitmap indicators */
+>  /* SCM device is unable to persist memory contents */
+> @@ -350,16 +352,97 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Validate the inputs args to dimm-control function and return '0' if valid.
+> + * This also does initial sanity validation to ND_CMD_CALL sub-command packages.
+> + */
+> +static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+> +		       unsigned int buf_len)
+> +{
+> +	unsigned long cmd_mask = PAPR_SCM_DIMM_CMD_MASK;
+> +	struct nd_pdsm_cmd_pkg *pkg = nd_to_pdsm_cmd_pkg(buf);
+> +	struct papr_scm_priv *p;
+> +
+> +	/* Only dimm-specific calls are supported atm */
+> +	if (!nvdimm)
+> +		return -EINVAL;
+> +
+> +	/* get the provider date from struct nvdimm */
+
+s/date/data
+
+> +	p = nvdimm_provider_data(nvdimm);
+> +
+> +	if (!test_bit(cmd, &cmd_mask)) {
+> +		dev_dbg(&p->pdev->dev, "Unsupported cmd=%u\n", cmd);
+> +		return -EINVAL;
+> +	} else if (cmd == ND_CMD_CALL) {
+> +
+> +		/* Verify the envelope package */
+> +		if (!buf || buf_len < sizeof(struct nd_pdsm_cmd_pkg)) {
+> +			dev_dbg(&p->pdev->dev, "Invalid pkg size=%u\n",
+> +				buf_len);
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* Verify that the PDSM family is valid */
+> +		if (pkg->hdr.nd_family != NVDIMM_FAMILY_PAPR) {
+> +			dev_dbg(&p->pdev->dev, "Invalid pkg family=0x%llx\n",
+> +				pkg->hdr.nd_family);
+> +			return -EINVAL;
+> +
+> +		}
+> +
+> +		/* We except a payload with all PDSM commands */
+> +		if (pdsm_cmd_to_payload(pkg) == NULL) {
+> +			dev_dbg(&p->pdev->dev,
+> +				"Empty payload for sub-command=0x%llx\n",
+> +				pkg->hdr.nd_command);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	/* Command looks valid */
+
+I assume the first command to be implemented also checks the { nd_command,
+payload_version, payload length } for correctness?
+
+> +	return 0;
+> +}
+> +
+> +static int papr_scm_service_pdsm(struct papr_scm_priv *p,
+> +				struct nd_pdsm_cmd_pkg *call_pkg)
+> +{
+> +	/* unknown subcommands return error in packages */
+> +	if (call_pkg->hdr.nd_command <= PAPR_PDSM_MIN ||
+> +	    call_pkg->hdr.nd_command >= PAPR_PDSM_MAX) {
+> +		dev_dbg(&p->pdev->dev, "Invalid PDSM request 0x%llx\n",
+> +			call_pkg->hdr.nd_command);
+> +		call_pkg->cmd_status = -EINVAL;
+> +		return 0;
+> +	}
+> +
+> +	/* Depending on the DSM command call appropriate service routine */
+> +	switch (call_pkg->hdr.nd_command) {
+> +	default:
+> +		dev_dbg(&p->pdev->dev, "Unsupported PDSM request 0x%llx\n",
+> +			call_pkg->hdr.nd_command);
+> +		call_pkg->cmd_status = -ENOENT;
+> +		return 0;
+> +	}
+> +}
+> +
+>  static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>  			  struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>  			  unsigned int buf_len, int *cmd_rc)
+>  {
+>  	struct nd_cmd_get_config_size *get_size_hdr;
+>  	struct papr_scm_priv *p;
+> +	struct nd_pdsm_cmd_pkg *call_pkg = NULL;
+> +	int rc;
+>  
+> -	/* Only dimm-specific calls are supported atm */
+> -	if (!nvdimm)
+> -		return -EINVAL;
+> +	/* Use a local variable in case cmd_rc pointer is NULL */
+> +	if (cmd_rc == NULL)
+> +		cmd_rc = &rc;
+
+Why is this needed?  AFAICT The caller of papr_scm_ndctl does not specify null
+and you did not change it.
+
+> +
+> +	*cmd_rc = is_cmd_valid(nvdimm, cmd, buf, buf_len);
+> +	if (*cmd_rc) {
+> +		pr_debug("Invalid cmd=0x%x. Err=%d\n", cmd, *cmd_rc);
+> +		return *cmd_rc;
+> +	}
+>  
+>  	p = nvdimm_provider_data(nvdimm);
+>  
+> @@ -381,13 +464,19 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>  		*cmd_rc = papr_scm_meta_set(p, buf);
+>  		break;
+>  
+> +	case ND_CMD_CALL:
+> +		call_pkg = nd_to_pdsm_cmd_pkg(buf);
+> +		*cmd_rc = papr_scm_service_pdsm(p, call_pkg);
+> +		break;
+> +
+>  	default:
+> -		return -EINVAL;
+> +		dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
+> +		*cmd_rc = -EINVAL;
+
+Is this change related?  If there is a bug where there is a caller of
+papr_scm_ndctl() with cmd_rc == NULL this should be a separate patch to fix
+that issue.
+
+Ira
+
+>  	}
+>  
+>  	dev_dbg(&p->pdev->dev, "returned with cmd_rc = %d\n", *cmd_rc);
+>  
+> -	return 0;
+> +	return *cmd_rc;
+>  }
+>  
+>  static ssize_t flags_show(struct device *dev,
+> diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
+> index de5d90212409..0e09dc5cec19 100644
+> --- a/include/uapi/linux/ndctl.h
+> +++ b/include/uapi/linux/ndctl.h
+> @@ -244,6 +244,7 @@ struct nd_cmd_pkg {
+>  #define NVDIMM_FAMILY_HPE2 2
+>  #define NVDIMM_FAMILY_MSFT 3
+>  #define NVDIMM_FAMILY_HYPERV 4
+> +#define NVDIMM_FAMILY_PAPR 5
+>  
+>  #define ND_IOCTL_CALL			_IOWR(ND_IOCTL, ND_CMD_CALL,\
+>  					struct nd_cmd_pkg)
+> -- 
+> 2.26.2
+> 
