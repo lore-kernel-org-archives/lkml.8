@@ -2,122 +2,141 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E704C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBCA20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB907207BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ndyJivol"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WaYcfZKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgFBAtJ (ORCPT
+        id S1728263AbgFBAtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 20:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44936 "EHLO
+        Mon, 1 Jun 2020 20:49:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFBAtI (ORCPT
+        with ESMTP id S1725793AbgFBAtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 20:49:08 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7757C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 17:49:07 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w68so3445478pfb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 17:49:07 -0700 (PDT)
+        Mon, 1 Jun 2020 20:49:12 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E723C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 17:49:12 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id z5so11049835ejb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 17:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=6DuNPAr1idaRpwQ6WcJVhQL920mjQAymmj650iV94eU=;
-        b=ndyJivolQhyu2G6jZDIL/3xVQMu7J5dCWIi8tQ/LjVvOwidJUN8YvCAT0/yuqk2SYn
-         R4nZnux60kel9RdDMcg9ElcTdIBIKVsMFEVXLh6Cd8nv1K7YkJAPlZrGIj9VPCGHiqUw
-         dMFHYBHgHuD1VjhfkClysZHfdh/5YndQ0eZ9FmVGMvZJ0qhjbOm8Sixdn5CxrUUh7Pmj
-         FQWkh0mrQY541Kp7+1Szbp7whjwhMeTbVABof07h8P15E6dOJavDM+ozdvQ+v8EhU8eY
-         lCWi/i8QKhQ3gYmlrx19jXmtp/mFfUsTBahzCXKpq1nfwCU3siOU577JZi9f7VTy7e2Z
-         +EYw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=hSYlpejsvywh9sHVQtlT/OLvvib16yqx/0D9m84zGsc=;
+        b=WaYcfZKAy5mbuVKEqBa2mSMpgNmM7HONYl6mI0eeHqewZg2Mt0CaK7wA4GwBZcFuXB
+         weat3O1HTGuVGMgZIGN9Op/lIOqTBRvdSJ6r2BJnnx/ujCvZ5tJctIHxoSlGcD3MDKUd
+         A0LIjfTmeY1fFJBhSNlJj86QeFlSenx7pB6CccgcpqnmS6pMQkIVyQcAhpyyMmtGVR8h
+         j48LO/Tb9DDTiVr85iaYKnP5jCT/Gz8I8oNxHNq0SyNJJl+xbUJV4RJQknGWnuNVoKTS
+         zBhyP8+/JS0i6LgbGypaXbYQ8/DNkJ1Yq0VcuBb5BYm5IPU6AKo5gKqY/aG9N8PWbowy
+         1X9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=6DuNPAr1idaRpwQ6WcJVhQL920mjQAymmj650iV94eU=;
-        b=jUoa0OenbLcnbTQE7gexbdHRz8E8J2ShsB6bJfyz2EvTV0fQ+BWXtO1fGEj7+2O6HC
-         ofep+e93BKSprsWFm8HTLdDhEOe50btIBGwg/maTWjQ3/6UzN4VH7GUsEEKLZXDd87pr
-         6quECqYEnSggLOmNG6iwId+TnioYk0lPWN9NuOsNXFiUsm0qedJ3FaguDc1JbaPv/3Em
-         vfkcBSRPnYTgdWQZNMqCEkYKpNhJQxZL3yHm5NDVqkk75AOshhfSziMzXF+dHFrXsYJd
-         zqFzPk3wjsUwTNrEjSbDOd38cPkUUd1vOYf+2Si8F4Q0apth7Bzpxa2ACfgKOAjU9eK6
-         6x5Q==
-X-Gm-Message-State: AOAM5306HQGurp7YXRtiMFfQcB6gDGAlaDIy+KA8T8SXr5toipJCVuWW
-        I01QwOTFMvPaogEutP0C0fJFcw==
-X-Google-Smtp-Source: ABdhPJwwKAthNUesiDBD7YBKyp9KP/QdlfGLvwvBIEuDXnh4HnLacRhZ80oPYfmXhDu3TQjDiJEjMA==
-X-Received: by 2002:a63:4d5a:: with SMTP id n26mr22321711pgl.85.1591058947202;
-        Mon, 01 Jun 2020 17:49:07 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:d9a3:6ef8:19c1:abf4? ([2601:646:c200:1ef2:d9a3:6ef8:19c1:abf4])
-        by smtp.gmail.com with ESMTPSA id i26sm536576pfo.0.2020.06.01.17.49.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 17:49:06 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [GRUB PATCH RFC 00/18] i386: Intel TXT secure launcher
-Date:   Mon, 1 Jun 2020 17:49:03 -0700
-Message-Id: <C6007C2B-AEFF-4A48-B791-323CDC04266D@amacapital.net>
-References: <f954e9ef-295a-a8ce-0ff8-a88ad81b01a3@apertussolutions.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>,
-        grub-devel@gnu.org, LKML <linux-kernel@vger.kernel.org>,
-        trenchboot-devel@googlegroups.com, X86 ML <x86@kernel.org>,
-        alexander.burmashev@oracle.com,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        eric.snowberg@oracle.com, javierm@redhat.com,
-        kanth.ghatraju@oracle.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
-        Matthew Garrett <mjg59@google.com>, phcoder@gmail.com,
-        piotr.krol@3mdeb.com, Peter Jones <pjones@redhat.com>,
-        Ross Philipson <ross.philipson@oracle.com>
-In-Reply-To: <f954e9ef-295a-a8ce-0ff8-a88ad81b01a3@apertussolutions.com>
-To:     "Daniel P. Smith" <dpsmith@apertussolutions.com>
-X-Mailer: iPhone Mail (17E262)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=hSYlpejsvywh9sHVQtlT/OLvvib16yqx/0D9m84zGsc=;
+        b=Q1H0PrtHzKCBdy/ECb0SY1G7gPnjst2naaaGVrSFfodyV67QwtHURCv/mrWkA+KB74
+         2y4Ywa0J7VpxM2fwxgd/1br0X698giT8JUN2IWoFsrzzArTipOnfEpqRo7ivOBNigMku
+         Bsyn0hmYRvpFl1NEX4pnZ1sY8ZYdyuDNvBTVNiRPEm7drJpUglcKAgSAFenAGPGsQ8Dw
+         gnwPqdpFi9hrWHkj3S1EZ0Wr821Vl/bqnnTTC+CvRZgNXotZlgtPEzUmfZBEg3hHzv4l
+         qcBGb9p/HoR9qKK6ZK4ZFdSs23KEgJdEl6FYb5ZVsyLZoBkHmJ/4htNARwjBjG6OpM1b
+         Jb6Q==
+X-Gm-Message-State: AOAM533qYIyewHw1u0QoP1abcBy7+GTwAMhHjHYfi0Qu7Ltn1FTSNzOn
+        U12vr9Wkg+grpXeFx+G30yILn9LEOxVP8Y1mGYYk951uhQ==
+X-Google-Smtp-Source: ABdhPJy/vttsQNaDUQlDfH83cE90V+Tdpb9iW20QoKXFDwTKaHbuoSov682reY1NrdOcnvvYCUJ7A4DwT7GfbhArnHY=
+X-Received: by 2002:a17:906:e257:: with SMTP id gq23mr2274991ejb.398.1591058950669;
+ Mon, 01 Jun 2020 17:49:10 -0700 (PDT)
+MIME-Version: 1.0
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 1 Jun 2020 20:48:59 -0400
+Message-ID: <CAHC9VhQqnAG5DxvoQKa643d06rDTVtHVFEj5arCsHwyoamCckA@mail.gmail.com>
+Subject: [GIT PULL] Audit patches for v5.8
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+Here is the set of audit patches for the v5.8 merge window, all
+patches pass our test suite and as of a few minutes ago they also
+merge cleanly with the top of your tree.  Unfortunately I just noticed
+that one of the commit subject lines is truncated - sorry about that,
+it's my fault not Richard's - but since the important part is there
+("add subj creds to NETFILTER_CFG") I opted to leave it as-is and not
+disrupt the git log.  If you would rather have the subject line fixed,
+let me know and I'll correct it.
 
-> On Jun 1, 2020, at 5:14 PM, Daniel P. Smith <dpsmith@apertussolutions.com>=
- wrote:
->=20
-> =EF=BB=BFOn 6/1/20 3:39 PM, Andy Lutomirski wrote:
->>>> .
->=20
-> In other words, the log for the relaunch to attest what is currently
-> running is really no less useful than using the first launch log to
-> attest to the what was running in the first launch.
->=20
+A quick summary of the significant patches:
 
-Maybe it would help if you give some examples of what=E2=80=99s actually in t=
-his log and why anyone, Linux or otherwise, cares for any purpose other than=
- debugging.  We=E2=80=99re talking about a log written by something like GRU=
-B, right?  If so, I=E2=80=99m imagining things like:
+- Record information about binds/unbinds to the audit multicast
+socket.  This helps identify which processes have/had access to the
+information in the audit stream.
 
-GRUB: loading such-and-such module
-GRUB: loading the other module
-GRUB: loading Linux at /boot/vmlinuz-whatever
-GRUB: about to do the DRTM launch. Bye-bye.
+- Cleanup and add some additional information to the netfilter
+configuration events collected by audit.
 
-This is surely useful for debugging.  But, if I understand your security mod=
-el correctly, it=E2=80=99s untrustworthy in the sense that this all comes fr=
-om before the DRTM launch and it could have been tampered with by SMM code o=
-r even just a malicious USB stick.  Or even a malicious compromised kernel o=
-n the same machine. So you could hash this log into a PCR, but I don=E2=80=99=
-t see what you=E2=80=99ve accomplished by doing so.
+- Fix some of the audit error handling code so we don't leak network
+namespace references.
 
-Or have I misunderstood what this log is?  Perhaps you=E2=80=99re talking ab=
-out something else entirely.=
+Thanks,
+-Paul
+
+--
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+ Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git
+   tags/audit-pr-20200601
+
+for you to fetch changes up to 9d44a121c5a79bc8a9d67c058456bd52a83c79e7:
+
+ audit: add subj creds to NETFILTER_CFG record to
+   (2020-05-20 18:09:19 -0400)
+
+----------------------------------------------------------------
+audit/stable-5.8 PR 20200601
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+     audit: Replace zero-length array with flexible-array
+
+Paul Moore (2):
+     audit: fix a net reference leak in audit_send_reply()
+     audit: fix a net reference leak in audit_list_rules_send()
+
+Richard Guy Briggs (4):
+     audit: log audit netlink multicast bind and unbind
+     audit: tidy and extend netfilter_cfg x_tables
+     netfilter: add audit table unregister actions
+     audit: add subj creds to NETFILTER_CFG record to
+
+Zheng Bin (1):
+     audit: make symbol 'audit_nfcfgs' static
+
+include/linux/audit.h           |  24 +++++++++-
+include/uapi/linux/audit.h      |   1 +
+kernel/audit.c                  | 100 +++++++++++++++++++++++++++---------
+kernel/audit.h                  |   2 +-
+kernel/auditfilter.c            |  16 +++----
+kernel/auditsc.c                |  31 +++++++++++++
+net/bridge/netfilter/ebtables.c |  14 +++---
+net/netfilter/x_tables.c        |  14 ++----
+8 files changed, 148 insertions(+), 54 deletions(-)
+
+-- 
+paul moore
+www.paul-moore.com
