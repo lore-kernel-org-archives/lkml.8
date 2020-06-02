@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1191DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6F82072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60B92072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgFBTxO (ORCPT
+        id S1727946AbgFBTxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:53:14 -0400
+        Tue, 2 Jun 2020 15:53:12 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29399 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728433AbgFBTxG (ORCPT
+        by vger.kernel.org with ESMTP id S1728758AbgFBTxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:53:06 -0400
+        Tue, 2 Jun 2020 15:53:05 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 2 Jun 2020 12:51:11 -0700
+ 15.0.1156.6; Tue, 2 Jun 2020 12:51:10 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 6E45140BF1;
-        Tue,  2 Jun 2020 12:51:11 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id A408740BEE;
+        Tue,  2 Jun 2020 12:51:10 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v4 32/32] objtool: mcount: Rename
-Date:   Tue, 2 Jun 2020 12:50:25 -0700
-Message-ID: <562751373c9fc71b7173bc5604e0eaa91a4fa106.1591125127.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v4 31/32] objtool: mcount: Remove endian wrappers
+Date:   Tue, 2 Jun 2020 12:50:24 -0700
+Message-ID: <a985a2b1464c0f73469d1befc3f8676f95a7d7c1.1591125127.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1591125127.git.mhelsley@vmware.com>
 References: <cover.1591125127.git.mhelsley@vmware.com>
@@ -51,34 +51,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we've converted recordmcount to a subcommand of objtool
-rename the .c file in order to follow the convention of the other
-objtool subcmds.
+Now that they're no longer used we can remove these endian
+wrappers.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/Build                        | 2 +-
- tools/objtool/{recordmcount.c => mcount.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename tools/objtool/{recordmcount.c => mcount.c} (100%)
+ tools/objtool/recordmcount.c | 63 ------------------------------------
+ 1 file changed, 63 deletions(-)
 
-diff --git a/tools/objtool/Build b/tools/objtool/Build
-index f4f0515d4f91..7815a094c991 100644
---- a/tools/objtool/Build
-+++ b/tools/objtool/Build
-@@ -7,7 +7,7 @@ objtool-$(SUBCMD_CHECK) += special.o
- objtool-$(SUBCMD_ORC) += check.o
- objtool-$(SUBCMD_ORC) += orc_gen.o
- objtool-$(SUBCMD_ORC) += orc_dump.o
--objtool-$(SUBCMD_MCOUNT) += recordmcount.o
-+objtool-$(SUBCMD_MCOUNT) += mcount.o
+diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
+index 6980c0a8bdc3..aa2f6a64bff0 100644
+--- a/tools/objtool/recordmcount.c
++++ b/tools/objtool/recordmcount.c
+@@ -149,53 +149,6 @@ static int make_nop_arm64(struct section *txts, size_t const offset)
+ 	return 0;
+ }
  
- objtool-y += builtin-check.o
- objtool-y += builtin-orc.o
-diff --git a/tools/objtool/recordmcount.c b/tools/objtool/mcount.c
-similarity index 100%
-rename from tools/objtool/recordmcount.c
-rename to tools/objtool/mcount.c
+-/* w8rev, w8nat, ...: Handle endianness. */
+-
+-static uint64_t w8rev(uint64_t const x)
+-{
+-	return   ((0xff & (x >> (0 * 8))) << (7 * 8))
+-	       | ((0xff & (x >> (1 * 8))) << (6 * 8))
+-	       | ((0xff & (x >> (2 * 8))) << (5 * 8))
+-	       | ((0xff & (x >> (3 * 8))) << (4 * 8))
+-	       | ((0xff & (x >> (4 * 8))) << (3 * 8))
+-	       | ((0xff & (x >> (5 * 8))) << (2 * 8))
+-	       | ((0xff & (x >> (6 * 8))) << (1 * 8))
+-	       | ((0xff & (x >> (7 * 8))) << (0 * 8));
+-}
+-
+-static uint32_t w4rev(uint32_t const x)
+-{
+-	return   ((0xff & (x >> (0 * 8))) << (3 * 8))
+-	       | ((0xff & (x >> (1 * 8))) << (2 * 8))
+-	       | ((0xff & (x >> (2 * 8))) << (1 * 8))
+-	       | ((0xff & (x >> (3 * 8))) << (0 * 8));
+-}
+-
+-static uint32_t w2rev(uint16_t const x)
+-{
+-	return   ((0xff & (x >> (0 * 8))) << (1 * 8))
+-	       | ((0xff & (x >> (1 * 8))) << (0 * 8));
+-}
+-
+-static uint64_t w8nat(uint64_t const x)
+-{
+-	return x;
+-}
+-
+-static uint32_t w4nat(uint32_t const x)
+-{
+-	return x;
+-}
+-
+-static uint32_t w2nat(uint16_t const x)
+-{
+-	return x;
+-}
+-
+-static uint64_t (*w8)(uint64_t);
+-static uint32_t (*w)(uint32_t);
+-static uint32_t (*w2)(uint16_t);
+-
+ /* Names of the sections that could contain calls to mcount. */
+ static int is_mcounted_section_name(char const *const txtname)
+ {
+@@ -579,22 +532,12 @@ static int do_file(char const *const fname)
+ 		goto out;
+ 	}
+ 
+-	w = w4nat;
+-	w2 = w2nat;
+-	w8 = w8nat;
+ 	switch (lf->ehdr.e_ident[EI_DATA]) {
+-		static unsigned int const endian = 1;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+ 			lf->ehdr.e_ident[EI_DATA], fname);
+ 		goto out;
+ 	case ELFDATA2LSB:
+-		if (*(unsigned char const *)&endian != 1) {
+-			/* objtool is big endian, file.o is little endian. */
+-			w = w4rev;
+-			w2 = w2rev;
+-			w8 = w8rev;
+-		}
+ 		ideal_nop4_arm = ideal_nop4_arm_le;
+ 		bl_mcount_arm = bl_mcount_arm_le;
+ 		push_arm = push_arm_le;
+@@ -602,12 +545,6 @@ static int do_file(char const *const fname)
+ 		push_bl_mcount_thumb = push_bl_mcount_thumb_le;
+ 		break;
+ 	case ELFDATA2MSB:
+-		if (*(unsigned char const *)&endian != 0) {
+-			/*  objtool is little endian, file.o is big endian. */
+-			w = w4rev;
+-			w2 = w2rev;
+-			w8 = w8rev;
+-		}
+ 		ideal_nop4_arm = ideal_nop4_arm_be;
+ 		bl_mcount_arm = bl_mcount_arm_be;
+ 		push_arm = push_arm_be;
 -- 
 2.20.1
 
