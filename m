@@ -2,139 +2,122 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B24AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B81AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C04E206F1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:25:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M9DVMqvt"
+	by mail.kernel.org (Postfix) with ESMTP id 25ACA2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbgFBDZk (ORCPT
+        id S1726007AbgFBDe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 23:25:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60011 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725841AbgFBDZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 23:25:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bcr12wTkz9sSc;
-        Tue,  2 Jun 2020 13:25:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591068337;
-        bh=nzoTYbaXyfXc47fBDdkURKW1uFAuykUoq+QlJU0prVo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=M9DVMqvtqZEECGRyogmkRx6Jhw6/01uXC2NLUMpiFtLj4BDy1Mn5UEqWwPzOeLRMn
-         jFKY75EIxSxUL3gHSslp18WPLzR/5UrwHV1FSkdg2Lda28isa+kNq4oBq/ncIdiIrW
-         82vaKwkcvWBJGFSOGhxBthFVkW5vsxm4ad46/El1L0m1XfuvuwZAuUWWK8c+gYerol
-         thtLZpSMOoldCbMOzX2Z/6sA9qS+Ig/kGpv6KJVX3r+6XJ+dVXSl4QRmnylN+9dVOS
-         d9D1HY8407dnVsLRrnLImW1Phxgw3CWuRlKorB3zfI67syEfOfZr9Y2wdPQa6StUbJ
-         Az3olXoEBr73A==
-Date:   Tue, 2 Jun 2020 13:25:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yamin Friedman <yaminf@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: build failure after merge of the block tree
-Message-ID: <20200602132536.5b190c52@canb.auug.org.au>
+        Mon, 1 Jun 2020 23:34:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52160 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725850AbgFBDe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 23:34:27 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9F2B0CF6E2AC83EB5307;
+        Tue,  2 Jun 2020 11:34:24 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.101) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
+ 11:34:17 +0800
+To:     <viresh.kumar@linaro.org>, <rjw@rjwysocki.net>
+CC:     <guohanjun@huawei.com>, <Sudeep.Holla@arm.com>,
+        <ionela.voinescu@arm.com>, <wangxiongfeng2@huawei.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Subject: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU is
+ in idle state
+Message-ID: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+Date:   Tue, 2 Jun 2020 11:34:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/As8rJFZ+_i0nEPiIonuf1/d";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.101]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/As8rJFZ+_i0nEPiIonuf1/d
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Viresh,
 
-Hi all,
+Sorry to disturb you about another problem as follows.
 
-After merging the block tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+CPPC use the increment of Desired Performance counter and Reference Performance
+counter to get the CPU frequency and show it in sysfs through
+'cpuinfo_cur_freq'. But ACPI CPPC doesn't specifically define the behavior of
+these two counters when the CPU is in idle state, such as stop incrementing when
+the CPU is in idle state.
 
-In file included from include/linux/device.h:15,
-                 from include/rdma/ib_verbs.h:43,
-                 from include/rdma/mr_pool.h:8,
-                 from drivers/nvme/host/rdma.c:10:
-drivers/nvme/host/rdma.c: In function 'nvme_rdma_create_queue_ib':
-drivers/nvme/host/rdma.c:550:24: error: 'idx' undeclared (first use in this=
- function); did you mean 'ida'?
-  550 |     queue->queue_size, idx);
-      |                        ^~~
-include/linux/dev_printk.h:104:32: note: in definition of macro 'dev_err'
-  104 |  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
-      |                                ^~~~~~~~~~~
+ARMv8.4 Extension inctroduced support for the Activity Monitors Unit (AMU). The
+processor frequency cycles and constant frequency cycles in AMU can be used as
+Delivered Performance counter and Reference Performance counter. These two
+counter in AMU does not increase when the PE is in WFI or WFE. So the increment
+is zero when the PE is in WFI/WFE. This cause no issue because
+'cppc_get_rate_from_fbctrs()' in cppc_cpufreq driver will check the increment
+and return the desired performance if the increment is zero.
 
-Caused by commit
+But when the CPU goes into power down idle state, accessing these two counters
+in AMU by memory-mapped address will return zero. Such as CPU1 went into power
+down idle state and CPU0 try to get the frequency of CPU1. In this situation,
+will display a very big value for 'cpuinfo_cur_freq' in sysfs. Do you have some
+advice about this problem ?
 
-  583f69304b91 ("nvme-rdma: use new shared CQ mechanism")
+I was thinking about an idea as follows. We can run 'cppc_cpufreq_get_rate()' on
+the CPU to be measured, so that we can make sure the CPU is in C0 state when we
+access the two counters. Also we can return the actual frequency rather than
+desired performance when the CPU is in WFI/WFE. But this modification will
+change the existing logical and I am not sure if this will cause some bad effect.
 
-from the rdma tree interacting with commit
 
-  5ec5d3bddc6b ("nvme-rdma: add metadata/T10-PI support")
+diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+index 257d726..ded3bcc 100644
+--- a/drivers/cpufreq/cppc_cpufreq.c
++++ b/drivers/cpufreq/cppc_cpufreq.c
+@@ -396,9 +396,10 @@ static int cppc_get_rate_from_fbctrs(struct cppc_cpudata *cpu,
+        return cppc_cpufreq_perf_to_khz(cpu, delivered_perf);
+ }
 
-from the block tree.
+-static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
++static int cppc_cpufreq_get_rate_cpu(void *info)
+ {
+        struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
++ unsigned int cpunum = *(unsigned int *)info;
+        struct cppc_cpudata *cpu = all_cpu_data[cpunum];
+        int ret;
 
-I applied the following merge fix patch.
+@@ -418,6 +419,22 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+        return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
+ }
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 2 Jun 2020 13:16:30 +1000
-Subject: [PATCH] fix up for merge conflict with rdma tree
++static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
++{
++ unsigned int ret;
++
++ ret = smp_call_on_cpu(cpunum, cppc_cpufreq_get_rate_cpu, &cpunum, true);
++
++ /*
++  * convert negative error code to zero, otherwise we will display
++  * an odd value for 'cpuinfo_cur_freq' in sysfs
++  */
++ if (ret < 0)
++         ret = 0;
++
++ return ret;
++}
++
+ static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
+ {
+        struct cppc_cpudata *cpudata;
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/nvme/host/rdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 6507b06d672d..4f0216e9f43d 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -547,7 +547,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_q=
-ueue *queue)
- 		if (ret) {
- 			dev_err(queue->ctrl->ctrl.device,
- 				"failed to initialize PI MR pool sized %d for QID %d\n",
--				queue->queue_size, idx);
-+				queue->queue_size, nvme_rdma_queue_idx(queue));
- 			goto out_destroy_mr_pool;
- 		}
- 	}
---=20
-2.26.2
+Thanks,
+Xiongfeng
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/As8rJFZ+_i0nEPiIonuf1/d
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7VxrAACgkQAVBC80lX
-0Gz6Hwf+Myjv5fN0xUq4uyKtlsSycukPoxLzBIYizELH6+sMGnm0JmOSZb1AjzN4
-/k59dBgC/FLZawlgFdIvawbAX8HqVrsltcjifVgi9lgMhmNtEgqnLjeJXRxK8N77
-ky4XM981f6y3qqMTjUTBK79xuDUjTptpQ55hcad+LQOZCb0gDE2TM7etpSdMU+Yv
-KyZpcSPsERCvUaAN6XjD9X6db7EEwxB1xXhe+ilE6jb9y9w6UlQ9/WCLH20ZOVKU
-5h/dSksRViSNW5GBLtsAG2cldqkpGPABs9cJvUZoUQxdxjqCmZrXkpwZuk4BGo8R
-1OaspULgfyez2rf1IDWqyE4/czbITw==
-=YRvk
------END PGP SIGNATURE-----
-
---Sig_/As8rJFZ+_i0nEPiIonuf1/d--
