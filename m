@@ -2,227 +2,110 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED679C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7322E207DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE1E2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPzN38p6"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GrIz+z5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgFBDPc (ORCPT
+        id S1726181AbgFBDUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 23:15:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgFBDPc (ORCPT
+        Mon, 1 Jun 2020 23:20:11 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18277 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgFBDUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 23:15:32 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDCB0C061A0E;
-        Mon,  1 Jun 2020 20:15:31 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id n24so11291816ejd.0;
-        Mon, 01 Jun 2020 20:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1zA7vzfVV7uc5rZLCKmjvmtN9YrzTYU7uysspI8RouA=;
-        b=PPzN38p6xS/1rWQfEtCi0O4QOug9WQQjXD1XbMet0iS1e8JQ30GJuGTJXnW5x6FE0H
-         DrpcZpa6Ty1PQw9sS88mbWVxJEgW1X29azUSSaTZ3BPOxI/ZHijKeGUnb5z0ZJw0r+BQ
-         zO3RIZfWe62ImNCqCKm4XbgkqDkq4IMyF8uCfxM/Mg0BqZUCtlLcfycgbtY9dnp6PPIY
-         E0ouKgSPN3+reQ6t9tFW0JLGrh3U7YTEEM5bQ/8wW/AkNmhjG8yg9q9GfB2g2rsZmfa7
-         nP2DC9+Lr4olNjir+hBUf6adj7y8PKYt3VIfQHZ1rTY2zZBhCVsZLi4eL1AQqrTCRZ8q
-         zLRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1zA7vzfVV7uc5rZLCKmjvmtN9YrzTYU7uysspI8RouA=;
-        b=KsTj/ld1Z8ClblwTuUqqDV8760Hg6G1UWIPDRPLJaShFGc2JGofwg6aSBRJbQqV+4j
-         UbZRKSdrGiuwTAyasvWp0CyCQ+lPwD4D2E05vDHeqvJTQrJnqUpLhPGEwAsCPetbqttO
-         j/XzSRSGSNPXjDbbo6rvLImU//x9gqinN7HenqWlRU3zEOvQbEXX8rN39zmVUd6TyIW+
-         VoHpaadrAT18qOqDnx0YlIar88RCicGz/EhWfCinYO2hfynZBj41jtBmPCKfr6m4ZMlh
-         pULTlVMAScmZMY8eXAYQiOmuSseK0wQHtYHpdNwRmHgTZ1lZupiLY3cspDn6ybrYJP+y
-         NEOQ==
-X-Gm-Message-State: AOAM533ID5u5RE1lEIRdTmezZahuymNsAveAKEmnwoWlXJUjJWftHpu4
-        IvrlgpQVb1TmhBwUc1lLosQqWpwBZBJ4k1Zd2hQ=
-X-Google-Smtp-Source: ABdhPJyq02skMdvnbFgxH+Z85m5rZGTGbYhnfGy3YwKQggLUpS4n22iGbzy6okTBJstef/6wnAtmGUglzx2G1145j1s=
-X-Received: by 2002:a17:906:4d04:: with SMTP id r4mr20985523eju.317.1591067730468;
- Mon, 01 Jun 2020 20:15:30 -0700 (PDT)
+        Mon, 1 Jun 2020 23:20:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed5c5130000>; Mon, 01 Jun 2020 20:18:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 01 Jun 2020 20:20:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 01 Jun 2020 20:20:10 -0700
+Received: from [10.2.56.10] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jun
+ 2020 03:20:05 +0000
+Subject: Re: [PATCH] mm/vmstat: Add events for PMD based THP migration without
+ split
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+CC:     <linux-mm@kvack.org>, <hughd@google.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Zi Yan <ziy@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1590118444-21601-1-git-send-email-anshuman.khandual@arm.com>
+ <20200601165736.qw5kwwknxltk7bv6@ca-dmjordan1.us.oracle.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <0a936ec7-f44f-1d72-915f-f5758d25fd72@nvidia.com>
+Date:   Mon, 1 Jun 2020 20:20:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200519150955.1667566a@canb.auug.org.au> <20200526140841.0a1d5c7b@canb.auug.org.au>
- <20200529141056.000f78ba@canb.auug.org.au> <20200602081532.653091c8@canb.auug.org.au>
-In-Reply-To: <20200602081532.653091c8@canb.auug.org.au>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 2 Jun 2020 13:15:19 +1000
-Message-ID: <CAPM=9twHZAs+6QXih8W7FrsRJt+mBQ=9qg9SJ9mR-3udSs9pYQ@mail.gmail.com>
-Subject: Re: inux-next: build failure after merge of the drm-msm tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Dave Airlie <airlied@linux.ie>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200601165736.qw5kwwknxltk7bv6@ca-dmjordan1.us.oracle.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591067923; bh=D8A1hpMTIZ2k2DR5/UwfONmp0VIuvs4qyuES2Sn0xHI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GrIz+z5hstXvn5L/CafsZt24hH1k+QVqhtvYgU/lu9Ljg3nTrKtd77O17KQLDl4vN
+         lmAZr7+feh4qJlTL5hsQbTUhjhWAdVEXovxBrznllPwBYYJ43uaLj2rcovQAIf61Zv
+         JlMuR/pyceVvBuF3Y6GO+SQRZ0ZsYPc1wd7AWbgHkwoEfh7wXO8K0m3wiw+OscXAr7
+         KZRy9shP7jrQkVFCWAtaTR3wi82pXtw2GL4liNVN4JZ3midiN+fNVVydCo0VVq+Fyz
+         /8sMNGI674n0h7BrlFtwLenM+HbDOd3k/5CUr7szqoVRehIdhFCrwH+XWz+UMR6jGf
+         Ge+G+fFQ7q2Og==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 08:15, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Dave,
->
-> On Fri, 29 May 2020 14:10:56 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > On Tue, 26 May 2020 14:08:41 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > On Tue, 19 May 2020 15:09:55 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > >
-> > > > After merging the drm-msm tree, today's linux-next build (arm
-> > > > multi_v7_defconfig) failed like this:
-> > > >
-> > > > ERROR: modpost: "__aeabi_ldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
-> > > > ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
-> > > >
-> > > > Caused by commit
-> > > >
-> > > >   04d9044f6c57 ("drm/msm/dpu: add support for clk and bw scaling for display")
-> > > >
-> > > > I applied the following patch for today (this is mechanical, there may
-> > > > be a better way):
-> > > >
-> > > > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > Date: Tue, 19 May 2020 14:12:39 +1000
-> > > > Subject: [PATCH] drm/msm/dpu: fix up u64/u32 division for 32 bit architectures
-> > > >
-> > > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > ---
-> > > >  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 23 ++++++++++++++-----
-> > > >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     | 15 ++++++++----
-> > > >  2 files changed, 28 insertions(+), 10 deletions(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> > > > index 9697abcbec3f..85c2a4190840 100644
-> > > > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> > > > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> > > > @@ -10,6 +10,7 @@
-> > > >  #include <linux/sort.h>
-> > > >  #include <linux/clk.h>
-> > > >  #include <linux/bitmap.h>
-> > > > +#include <asm/div64.h>
-> > > >
-> > > >  #include "dpu_kms.h"
-> > > >  #include "dpu_trace.h"
-> > > > @@ -53,8 +54,11 @@ static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
-> > > >   }
-> > > >
-> > > >   bw_factor = kms->catalog->perf.bw_inefficiency_factor;
-> > > > - if (bw_factor)
-> > > > -         crtc_plane_bw = mult_frac(crtc_plane_bw, bw_factor, 100);
-> > > > + if (bw_factor) {
-> > > > +         u64 quot = crtc_plane_bw;
-> > > > +         u32 rem = do_div(quot, 100);
-> > > > +         crtc_plane_bw = (quot * bw_factor) + ((rem * bw_factor) / 100);
-> > > > + }
-> > > >
-> > > >   return crtc_plane_bw;
-> > > >  }
-> > > > @@ -89,8 +93,11 @@ static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
-> > > >   }
-> > > >
-> > > >   clk_factor = kms->catalog->perf.clk_inefficiency_factor;
-> > > > - if (clk_factor)
-> > > > -         crtc_clk = mult_frac(crtc_clk, clk_factor, 100);
-> > > > + if (clk_factor) {
-> > > > +         u64 quot = crtc_clk;
-> > > > +         u32 rem = do_div(quot, 100);
-> > > > +         crtc_clk = (quot * clk_factor) + ((rem * clk_factor) / 100);
-> > > > + }
-> > > >
-> > > >   return crtc_clk;
-> > > >  }
-> > > > @@ -234,8 +241,12 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
-> > > >           }
-> > > >   }
-> > > >
-> > > > - avg_bw = kms->num_paths ?
-> > > > -                 perf.bw_ctl / kms->num_paths : 0;
-> > > > + if (kms->num_paths) {
-> > > > +         avg_bw = perf.bw_ctl;
-> > > > +         do_div(avg_bw, kms->num_paths);
-> > > > + } else {
-> > > > +         avg_bw = 0;
-> > > > + }
-> > > >
-> > > >   for (i = 0; i < kms->num_paths; i++)
-> > > >           icc_set_bw(kms->path[i],
-> > > > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > > > index c2a6e3dacd68..ad95f32eac13 100644
-> > > > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > > > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > > > @@ -9,6 +9,7 @@
-> > > >
-> > > >  #include <linux/debugfs.h>
-> > > >  #include <linux/dma-buf.h>
-> > > > +#include <asm/div64.h>
-> > > >
-> > > >  #include <drm/drm_atomic_uapi.h>
-> > > >  #include <drm/drm_damage_helper.h>
-> > > > @@ -174,7 +175,11 @@ static void _dpu_plane_calc_bw(struct drm_plane *plane,
-> > > >   plane_prefill_bw =
-> > > >           src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
-> > > >
-> > > > - plane_prefill_bw = mult_frac(plane_prefill_bw, mode->vtotal, (vbp+vpw));
-> > > > + {
-> > > > +         u64 quot = plane_prefill_bw;
-> > > > +         u32 rem = do_div(plane_prefill_bw, vbp + vpw);
-> > > > +         plane_prefill_bw = quot * mode->vtotal + rem * mode->vtotal / (vbp + vpw);
-> > > > + }
-> > > >
-> > > >   pstate->plane_fetch_bw = max(plane_bw, plane_prefill_bw);
-> > > >  }
-> > > > @@ -204,9 +209,11 @@ static void _dpu_plane_calc_clk(struct drm_plane *plane)
-> > > >   pstate->plane_clk =
-> > > >           dst_width * mode->vtotal * fps;
-> > > >
-> > > > - if (src_height > dst_height)
-> > > > -         pstate->plane_clk = mult_frac(pstate->plane_clk,
-> > > > -                                 src_height, dst_height);
-> > > > + if (src_height > dst_height) {
-> > > > +         u64 quot = pstate->plane_clk;
-> > > > +         u32 rem = do_div(quot, dst_height);
-> > > > +         pstate->plane_clk = quot * src_height + rem * src_height / dst_height;
-> > > > + }
-> > > >  }
-> > > >
-> > > >  /**
-> > > > --
-> > > > 2.26.2
-> > >
-> > > I am still applying the above ...
-> >
-> > Still applying.
-> >
-> > Any comment even?
->
-> I assume that the drm-msm tree is merged via the drm tree, so just
-> letting you know that as far as I can tell the above build failure has
-> not yet been addressed.
->
-> [Another failure in the same commit (that I did not see) has been fixed]
+On 2020-06-01 09:57, Daniel Jordan wrote:
+> Hi Anshuman,
+> 
+> On Fri, May 22, 2020 at 09:04:04AM +0530, Anshuman Khandual wrote:
+>> This adds the following two new VM events which will help in validating PMD
+>> based THP migration without split. Statistics reported through these events
+>> will help in performance debugging.
+>>
+>> 1. THP_PMD_MIGRATION_SUCCESS
+>> 2. THP_PMD_MIGRATION_FAILURE
+> 
+> The names suggest a binary event similar to the existing
+> pgmigrate_success/fail, but FAILURE only tracks one kind of migration error,
+> and then only when the thp is successfully split, so shouldn't it be called
+> SPLIT instead?
+> 
 
-I haven't merged msm-next to my tree yet, it was based on a newer base
-so I held off.
+So the full description of the situation, which we're trying to compress into
+a shorter name, is "THP pmd migration failure, due to successfully splitting
+the THP". From that, the beginning part is the real point here, while the last
+part is less important. In other words, the users of these events are people
+who are trying to quantify THP migrations, and these events are particularly
+relevant for that. The "THP migration failed" is more important here than
+the reason that it failed. Or so I believe so far.
 
-I'm going to sit on it for a few more hours, but I might just leave it
-off this week's menu.
+So I still think that the names are really quite good, but your point is
+also important: maybe this patch should also be tracking other causes
+of THP PMD migration failure, in order to get a truer accounting of the
+situation.
 
-Dave.
+thanks,
+-- 
+John Hubbard
+NVIDIA
