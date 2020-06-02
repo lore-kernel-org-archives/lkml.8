@@ -2,159 +2,101 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E325AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3040C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7FD3206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5901206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591132932;
+	bh=wssekSwupkgcp9xc4v8LjyJGjbMhckCUb3ejRT9Wmn0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ORX+aoGBszdA2GgykV/DYLDvQksv17tHP2+9Og/aP2CjVE2rSZxIjJsnnDil2lETx
+	 qZg7PgSkM1tbwNsw0kWLl5m6swxd+V+fmK3DCl5FvTGkayB/UHJUSSq55uQlCz9Fha
+	 emvICuuPTFgkf1EFE4xWtu5i2vlRf28y9RwkEf/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgFBVVY (ORCPT
+        id S1728059AbgFBVWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 17:21:24 -0400
-Received: from mga18.intel.com ([134.134.136.126]:40557 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFBVVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 17:21:24 -0400
-IronPort-SDR: 6fGXS/pnLWMV21RalINYW+IijYIz9gaCOCZRaPw+N3BgUy5bc6yf87J0jW9WS7bngNxJwxfSVA
- O8E5AG0n/BIA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 14:21:23 -0700
-IronPort-SDR: EEhUn07lmi4P8XEIms+7mISCZo6Hbipu2OAakqiDzCXegZjKU3IFYy+VS8AuKGL1yBiwXGfZhF
- J37NFW7669zA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,465,1583222400"; 
-   d="scan'208";a="257242816"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Jun 2020 14:21:23 -0700
-Date:   Tue, 2 Jun 2020 14:21:23 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RESEND PATCH v9 1/5] powerpc: Document details on H_SCM_HEALTH
- hcall
-Message-ID: <20200602212122.GB1676657@iweiny-DESK2.sc.intel.com>
-References: <20200602101438.73929-1-vaibhav@linux.ibm.com>
- <20200602101438.73929-2-vaibhav@linux.ibm.com>
+        Tue, 2 Jun 2020 17:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgFBVWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 17:22:11 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 185FFC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 14:22:11 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z206so7078486lfc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 14:22:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3SbTnu2Joe/UmPFYZAmB5Tz+5GBec7GBEWVsnaWkdrg=;
+        b=ABcLIDWzz1tu1GxHTVMe7bjHac2QIuX7rTxa1aa3QDOFpZ/9DRCPuAFOILb1zcCXs0
+         7oUcgqs5wDu6bDImq/IzRWVqXPzk1Z2lJmThYxYj/arN3jC60c31M2tmQB5Ue9KM6qt/
+         pb18/JsW9x4nynCcy3hfXBohGrqvWxPqFBFSE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3SbTnu2Joe/UmPFYZAmB5Tz+5GBec7GBEWVsnaWkdrg=;
+        b=O54fjxZuuNb/3GNjaNEvrXjJGXdbRK2bUrrwo9iTTiqQuipPIFugBxVa+ypDknEjsZ
+         Y8c7hbTFcBHeWAwAKzCHRgWxV8dcfTzS9w85MJs9QWcE7h4B8SS15zg9VqysAqHAXeYg
+         uZ5Vzucu7byI4jy8I1M565TXfIzgmpnThJjnvNzfGu7UNQ30R6ab0twWptwSdzcY3B6v
+         yTy8dVOIjW7PUAs66e23D4TqafI6gEvEbEnCQHckAK71PAK1MpCQ4DLzhMBDIQw7EnwF
+         P4mXuM9IngMSlwxlYtL8abtdP9PrF/1OveeseqKyHM2v/qL8/RtD9FUzk++M7lS7M/yQ
+         eNug==
+X-Gm-Message-State: AOAM531sNNIMTrOwvqV3wPcy1SDTN8pz8ofPL/0KTt7LTVrNw8+LycJT
+        c0FTDl+6JMffcL7FD3E0LBx0PePXGxE=
+X-Google-Smtp-Source: ABdhPJx7oUq35kczZuLVU8c8GWbquV4m4BxrSM3loHP9YPPcx5q8FoFBaj39oD1z2AyldwN5BOj73g==
+X-Received: by 2002:a19:150:: with SMTP id 77mr645438lfb.71.1591132929147;
+        Tue, 02 Jun 2020 14:22:09 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id w17sm18736ljj.108.2020.06.02.14.22.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 14:22:08 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id a25so76594ljp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 14:22:07 -0700 (PDT)
+X-Received: by 2002:a2e:b5d9:: with SMTP id g25mr252353ljn.285.1591132927271;
+ Tue, 02 Jun 2020 14:22:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602101438.73929-2-vaibhav@linux.ibm.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+In-Reply-To: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 2 Jun 2020 14:21:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjvVjei5d45D=GQMsFMssD8knSFWqxMbd4bH8qSgXk-Lg@mail.gmail.com>
+Message-ID: <CAHk-=wjvVjei5d45D=GQMsFMssD8knSFWqxMbd4bH8qSgXk-Lg@mail.gmail.com>
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:44:34PM +0530, Vaibhav Jain wrote:
-> Add documentation to 'papr_hcalls.rst' describing the bitmap flags
-> that are returned from H_SCM_HEALTH hcall as per the PAPR-SCM
-> specification.
-> 
-> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Ira Weiny <ira.weiny@intel.com>
+On Mon, Jun 1, 2020 at 11:06 PM Dave Airlie <airlied@gmail.com> wrote:
+>
+> This tree is a bit conflicty, the i915 ones are probably the hairy
+> ones, but amdgpu has a bunch as well, along with smattering of others.
 
-Acked-by: Ira Weiny <ira.weiny@intel.com>
+Hmm. Some of them are due to your previous mis-merges.
 
-> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-> ---
-> Changelog:
-> 
-> Resend:
-> * None
-> 
-> v8..v9:
-> * s/SCM/PMEM device. [ Dan Williams, Aneesh ]
-> 
-> v7..v8:
-> * Added a clarification on bit-ordering of Health Bitmap
-> 
-> Resend:
-> * None
-> 
-> v6..v7:
-> * None
-> 
-> v5..v6:
-> * New patch in the series
-> ---
->  Documentation/powerpc/papr_hcalls.rst | 46 ++++++++++++++++++++++++---
->  1 file changed, 42 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/powerpc/papr_hcalls.rst b/Documentation/powerpc/papr_hcalls.rst
-> index 3493631a60f8..48fcf1255a33 100644
-> --- a/Documentation/powerpc/papr_hcalls.rst
-> +++ b/Documentation/powerpc/papr_hcalls.rst
-> @@ -220,13 +220,51 @@ from the LPAR memory.
->  **H_SCM_HEALTH**
->  
->  | Input: drcIndex
-> -| Out: *health-bitmap, health-bit-valid-bitmap*
-> +| Out: *health-bitmap (r4), health-bit-valid-bitmap (r5)*
->  | Return Value: *H_Success, H_Parameter, H_Hardware*
->  
->  Given a DRC Index return the info on predictive failure and overall health of
-> -the NVDIMM. The asserted bits in the health-bitmap indicate a single predictive
-> -failure and health-bit-valid-bitmap indicate which bits in health-bitmap are
-> -valid.
-> +the PMEM device. The asserted bits in the health-bitmap indicate one or more states
-> +(described in table below) of the PMEM device and health-bit-valid-bitmap indicate
-> +which bits in health-bitmap are valid. The bits are reported in
-> +reverse bit ordering for example a value of 0xC400000000000000
-> +indicates bits 0, 1, and 5 are valid.
-> +
-> +Health Bitmap Flags:
-> +
-> ++------+-----------------------------------------------------------------------+
-> +|  Bit |               Definition                                              |
-> ++======+=======================================================================+
-> +|  00  | PMEM device is unable to persist memory contents.                     |
-> +|      | If the system is powered down, nothing will be saved.                 |
-> ++------+-----------------------------------------------------------------------+
-> +|  01  | PMEM device failed to persist memory contents. Either contents were   |
-> +|      | not saved successfully on power down or were not restored properly on |
-> +|      | power up.                                                             |
-> ++------+-----------------------------------------------------------------------+
-> +|  02  | PMEM device contents are persisted from previous IPL. The data from   |
-> +|      | the last boot were successfully restored.                             |
-> ++------+-----------------------------------------------------------------------+
-> +|  03  | PMEM device contents are not persisted from previous IPL. There was no|
-> +|      | data to restore from the last boot.                                   |
-> ++------+-----------------------------------------------------------------------+
-> +|  04  | PMEM device memory life remaining is critically low                   |
-> ++------+-----------------------------------------------------------------------+
-> +|  05  | PMEM device will be garded off next IPL due to failure                |
-> ++------+-----------------------------------------------------------------------+
-> +|  06  | PMEM device contents cannot persist due to current platform health    |
-> +|      | status. A hardware failure may prevent data from being saved or       |
-> +|      | restored.                                                             |
-> ++------+-----------------------------------------------------------------------+
-> +|  07  | PMEM device is unable to persist memory contents in certain conditions|
-> ++------+-----------------------------------------------------------------------+
-> +|  08  | PMEM device is encrypted                                              |
-> ++------+-----------------------------------------------------------------------+
-> +|  09  | PMEM device has successfully completed a requested erase or secure    |
-> +|      | erase procedure.                                                      |
-> ++------+-----------------------------------------------------------------------+
-> +|10:63 | Reserved / Unused                                                     |
-> ++------+-----------------------------------------------------------------------+
->  
->  **H_SCM_PERFORMANCE_STATS**
->  
-> -- 
-> 2.26.2
-> 
+Your commit 937eea297e26 ("Merge tag 'amd-drm-next-5.8-2020-04-24' of
+git://people.freedesktop.org/~agd5f/linux into drm-next") seems to
+have mis-merged the CONFIG_DEBUG_FS thing in
+drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c.
+
+I'm still working through the rest of the merge, so far that was the
+only one that made me go "Whaa?".
+
+                Linus
