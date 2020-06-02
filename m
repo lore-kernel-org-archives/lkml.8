@@ -2,234 +2,113 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B025EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A311206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F5520872
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OX+NgxMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgFBX5U (ORCPT
+        id S1728404AbgFBX5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:57:20 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18169 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727811AbgFBX5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:57:20 -0400
-IronPort-SDR: gzS6JhhMcZx851637LVXW+OJty791P92rUYVMqouFOqSqfh6r8mxBQENhlnML8rHBwtzADmgXv
- XaDl/Xz1durw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 16:56:49 -0700
-IronPort-SDR: hBdDyEcNNqqHrL2wfr55ofUD2IiCS7QpHdsozN1LXllnfbKjfkRMUYPwYbXma20KEJwo/c4FjW
- eOfroIm7kQvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
-   d="scan'208";a="377921447"
-Received: from lkp-server01.sh.intel.com (HELO e5a7ad696f24) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Jun 2020 16:56:43 -0700
-Received: from kbuild by e5a7ad696f24 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jgGlu-0000Fq-Id; Tue, 02 Jun 2020 23:56:42 +0000
-Date:   Wed, 03 Jun 2020 07:55:50 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.06.01b] BUILD SUCCESS
- 9c814827af953f2e109feef5272154c00a8f4541
-Message-ID: <5ed6e706.ILUFYw6KGqPkZZRL%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jun 2020 19:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgFBX5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 19:57:46 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EACC08C5C0;
+        Tue,  2 Jun 2020 16:57:46 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x207so298448pfc.5;
+        Tue, 02 Jun 2020 16:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LhRRdC8w+lAb0OncPPcS/QlJQRfxazO8sGm5lyED8hA=;
+        b=OX+NgxMFH6HKye9aRqJ+3IK3xmOQDZuLYWfZ0rlo0pL/zSX9CECd/jP2r1qBGQCL+C
+         bX8jR7OP4+F4OutWf/eHB7w3OBIsOmeVcpVkMAUF4xKx0DHDx8jr1xE4yTxJyqs6Sa8e
+         ttvKQbzw66Uq1f92vRaymJRtK8Z+trVPiPbRCsvrUyvIgb56bMaIoqVmOE2OBtJb7iqa
+         qpzjgBtJ+KFXNaCdQgMoq2292STnrtRbwTqt1kBRx8cq1N8XtACr8t+fbSUJcb0hutKl
+         x5YZ47S7HMxhEoJmUiakT4wmHnZUvMuFxqvSGXFNL97Watb/ZvwKAUYHQogj5wf12+yi
+         EtBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LhRRdC8w+lAb0OncPPcS/QlJQRfxazO8sGm5lyED8hA=;
+        b=cCMgIC7hrW+2eb986gzYfJ4SgTN9lW2At+yzxfdzghaK4UiLi/gJo1iUrt2TdbEL2K
+         N0mvt254dcvErARJccLJ2hslxw/cEaJleHs4TTWZozKYDfKrKl+IOoHMDr9T0Y0IezPu
+         8BF0wQCjLTwuDkYBUaVM+K4Amf5YnbtcnJU1ODnPfouSJx5+xG+msGr5UGTlrcHMfBH7
+         lrdLz6ROWcEJcHO2sOH9IVB63tkGKI5bErE4VToR3ElaG6WQ0+2C7cAqHsMeWHu1/15X
+         inFt/Sb736DmSPOddH4TIbhQ9ns1BhNTaAlsF75OKg8HKC8tM1pSFyLXDZg3Cba5WqVA
+         xGgw==
+X-Gm-Message-State: AOAM5332+vCjxIRM0Kol7YWMpb5pOjLS5vJj0fUhJ3ww1vNCboXLKyCg
+        UzCqMP31zD23XYMtmy1z6bvdY3lK
+X-Google-Smtp-Source: ABdhPJxqg4L7MZn6XvklSG2hY4H1xfxiw+5gCrmvl4JKcQd8v5YDGrrkWiHabJbEgaOcqtAvMtx0AQ==
+X-Received: by 2002:a63:4c0b:: with SMTP id z11mr26828518pga.348.1591142265263;
+        Tue, 02 Jun 2020 16:57:45 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id q28sm210308pfg.180.2020.06.02.16.57.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 16:57:44 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, zhuguangqing <zhuguangqing@xiaomi.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE)
+Subject: [PATCH stable 5.4] PM: wakeup: Show statistics for deleted wakeup sources again
+Date:   Tue,  2 Jun 2020 16:57:39 -0700
+Message-Id: <20200602235740.17574-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.06.01b
-branch HEAD: 9c814827af953f2e109feef5272154c00a8f4541  refperf: Add test for RCU Tasks Trace readers.
+From: zhuguangqing <zhuguangqing@xiaomi.com>
 
-i386-tinyconfig vmlinux size:
+commit e976eb4b91e906f20ec25b20c152d53c472fc3fd upstream
 
-========================================================================================================================================
- TOTAL  TEXT  built-in.*  arch/x86/events/zhaoxin/built-in.*                                                                            
-========================================================================================================================================
-  -233  -233                                                  8747b07d1944 Merge branch 'kcsan-dev.2020.04.13c' into HEAD               
-     0     0                                                  03e8e094dad9 Merge branch 'lkmm-dev.2020.05.16a' into HEAD                
-     0     0                                                  17e0ee2a3ec9 torture:  Remove qemu dependency on EFI firmware             
-     0     0                                                  c58148777978 torture: Add script to smoke-test commits in a branch        
-   +38   +38                                                  396a79cc6818 fork: Annotate a data race in vm_area_dup()                  
-     0     0                                                  8035e0fc710a x86/mm/pat: Mark an intentional data race                    
-     0     0                                                  d7a51c24ee4b rculist: Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init 
-     0     0                                                  e5efa2f1b7b6 locktorture: Use true and false to assign to bool variables  
-     0     0                                                  7514d7f181ab srcu: Fix a typo in comment "amoritized"->"amortized"        
-     0     0                                                  9dbd776542e3 rcu: Simplify the calculation of rcu_state.ncpus             
-     0     0                                                  df12d657bcc0 docs: RCU: Convert checklist.txt to ReST                     
-     0     0                                                  fdfeb779e1bd docs: RCU: Convert lockdep-splat.txt to ReST                 
-     0     0                                                  68b5951f7eb2 docs: RCU: Convert lockdep.txt to ReST                       
-     0     0                                                  ce9edc0c8a82 docs: RCU: Convert rculist_nulls.txt to ReST                 
-     0     0                                                  1bee818b03c7 docs: RCU: Convert torture.txt to ReST                       
-     0     0                                                  9100131711bc docs: RCU: Convert rcuref.txt to ReST                        
-     0     0                                                  080f194cfa87 docs: RCU: Convert stallwarn.txt to ReST                     
-     0     0                                                  6999f47d8456 docs: RCU: Don't duplicate chapter names in rculist_nulls.rs 
-     0     0                                                  55ce2e8178f2 rcutorture: Add races with task-exit processing              
-     0     0                                                  1c60a5e52538 torture: Set configfile variable to current scenario         
-     0     0                                                  9969401f1706 rcutorture: Handle non-statistic bang-string error messages  
-     0     0                                                  6f099e1b362b rcutorture: NULL rcu_torture_current earlier in cleanup code 
-     0     0                                                  6816417616c4 kcsan: Add test suite                                        
-     0     0                                                  848d16e04f52 doc: Timer problems can cause RCU CPU stall warnings         
-     0     0                                                  2364a9f967ec rcu: Add callbacks-invoked counters                          
-     0     0                                                  2775724beeef rcu: Add comment documenting rcu_callback_map's purpose      
-     0     0     +138684                                      bfd78bca7bdf Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom o 
-    +1     0     -138684                                      8903088434e7 rcu/tree: Add better tracing for dyntick-idle                
-    -1     0                                                  c0601bb42994 rcu/tree: Clean up dynticks counter usage                    
-     0     0                                                  3f3baaf3ac07 rcu/tree: Remove dynticks_nmi_nesting counter                
-    +1     0                                                  725e4ad9e020 trace: events: rcu: Change description of rcu_dyntick trace  
-     0     0                                                  a9b73fda34ec torture: Remove whitespace from identify_qemu_vcpus output   
-    -1     0     +138684                                      6267bacdff81 torture: Add --allcpus argument to the kvm.sh script         
-    +1     0     -138684                                      5c6aa32472cb rcu: Grace-period-kthread related sleeps to idle priority    
-    -1     0     +138684                                      f334f4fee6e2 rcu: Priority-boost-related sleeps to idle priority          
-     0     0           0                                      d49cb59f19b6 rcu: No-CBs-related sleeps to idle priority                  
-    +1     0     -138684                                      4cc4ce9b67ec rcu: Expedited grace-period sleeps to idle priority          
-    -1     0     +138684                                      cef0575caddb rcu-tasks: Convert sleeps to idle priority                   
-     0     0           0                                      988aef3524e2 fs/btrfs: Add cond_resched() for try_release_extent_mapping( 
-     0     0     -138684                                      70ca490c7ab3 locking/osq_lock: Annotate a data race in osq_lock           
-    +1     0                                                  80fa4f7b355d doc: Tasks RCU must protect instructions before trampoline   
-    -1     0     +138684                                      1b397c884f7a doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq      
-     0     0     -138684                                      dedad0a2118a tick/nohz: Narrow down noise while setting current task's ti 
-     0     0     +138684                                      3055759634b2 rcu: fix some kernel-doc warnings                            
-    +1     0     -138684                                      cf10e7d90417 rcu: Remove initialized but unused rnp from check_slow_task( 
-    -1     0     +138684                                      af17eef88571 rcu: Mark rcu_nmi_enter() call to rcu_cleanup_after_idle() n 
-     0     0     -138684                                      55f712e9bd7b rcuperf: Remove useless while loops around wait_event        
-     0     0                                                  751538451328 refperf: Add a test to measure performance of read-side sync 
-     0     0                                                  8e4ee950aec1 rcuperf: Add comments explaining the high reader overhead    
-     0     0                                                  c040f712e88e torture: Add refperf to the rcutorture scripting             
-     0     0                                                  008a24414803 refperf: Add holdoff parameter to allow CPUs to come online  
-     0     0                                                  dab324f75926 refperf: Hoist function-pointer calls out of the loop        
-     0     0                                            +136  5574336c4be5 refperf: Allow decimal nanoseconds                           
-     0     0                                               0  aeb173765756 refperf: Convert nreaders to a module parameter              
-     0     0                                               0  dae3d17446a5 refperf: Provide module parameter to specify number of exper 
-     0     0                                               0  a9390c56b7ae refperf: Dynamically allocate experiment-summary output buff 
-     0     0                                               0  e927b546c872 refperf: Dynamically allocate thread-summary output buffer   
-     0     0                                               0  95c9ce2c76af srcu: Avoid local_irq_save() before acquiring spinlock_t     
-     0     0                                               0  7632b364c6c4 refperf: Make functions static                               
-     0     0                                               0  42bb09b5dc6f refperf: Tune reader measurement interval                    
-     0     0                                               0  cc8e6d748b0e refperf: Convert reader_task structure's "start" field to in 
-     0     0                                               0  e4826529a741 refperf: More closely synchronize reader start times         
-     0     0                                               0  6cd8f57628a1 rcuperf: Fix kfree_mult to match printk() format             
-     0     0                                               0  3e7ad35e5240 refperf: Add warmup and cooldown processing phases           
-     0     0                                               0  f37e98a2f76a refperf: Label experiment-number column "Runs"               
-     0     0                                               0  1cb4d7f83ea9 refperf: Output per-experiment data points                   
-     0     0                                               0  8762898c1a2f refperf: Simplify initialization-time wakeup protocol        
-     0     0                                               0  34c77200c071 lockdep: Complain only once about RCU in extended quiescent  
-     0     0                                               0  64e6613bef8b refperf: Add read-side delay module parameter                
-     0     0                                               0  b47663597c1b rcu-tasks: Make rcu_tasks_postscan() be static               
-     0     0                                               0  623dcb8f7f70 rcu-tasks: Add #include of rcupdate_trace.h to update.c      
-     0     0                                               0  e5c48d7e7118 rcu-tasks: Conditionally compile show_rcu_tasks_gp_kthreads( 
-     0     0                                               0  9eef91d82769 refperf: Adjust refperf.loop default value                   
-     0     0                                               0  043a9513b559 doc: Document rcuperf's module parameters                    
-    -1     0                                               0  0dd4132157c2 refperf: Work around 64-bit division                         
-     0     0                                            -136  5bc3e1437d21 refperf: Change readdelay module parameter to nanoseconds    
-     0     0                                                  9c814827af95 refperf: Add test for RCU Tasks Trace readers.               
-  -190  -189                                                  b1fcf9b83c41..9c814827af95 (ALL COMMITS)                                  
-========================================================================================================================================
+After commit 00ee22c28915 (PM / wakeup: Use seq_open() to show wakeup
+stats), print_wakeup_source_stats(m, &deleted_ws) is not called from
+wakeup_sources_stats_seq_show() any more.
 
-elapsed time: 485m
+Because deleted_ws is one of the wakeup sources, it should be shown
+too, so add it to the end of all other wakeup sources.
 
-configs tested: 82
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-powerpc                          alldefconfig
-mips                        maltaup_defconfig
-mips                        jmr3927_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
+Signed-off-by: zhuguangqing <zhuguangqing@xiaomi.com>
+[ rjw: Subject & changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/base/power/wakeup.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 0bd9b291bb29..92f0960e9014 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -1073,6 +1073,9 @@ static void *wakeup_sources_stats_seq_next(struct seq_file *m,
+ 		break;
+ 	}
+ 
++	if (!next_ws)
++		print_wakeup_source_stats(m, &deleted_ws);
++
+ 	return next_ws;
+ }
+ 
+-- 
+2.17.1
+
