@@ -2,89 +2,91 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CB9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19C92068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:05:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6SisKMz"
+	by mail.kernel.org (Postfix) with ESMTP id 7394F20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgFBSFI (ORCPT
+        id S1726853AbgFBSG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:05:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgFBSFH (ORCPT
+        Tue, 2 Jun 2020 14:06:58 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:51620 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbgFBSG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:05:07 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAE7C05BD1E;
-        Tue,  2 Jun 2020 11:05:07 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id j8so11769134iog.13;
-        Tue, 02 Jun 2020 11:05:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qi0HjvbuXmvWcbpKL9tqxqxdG7EHQ6ate3lS8JMnsis=;
-        b=n6SisKMzEskMMswvWF8T1MVJaEjU+M2p9WlOTCsTOkAMXSX7jjvFckywiWVsDYs2U+
-         kODUOFnwU53QHETCwHl6+t0CaXWQPRDgdAsmWdmRsjEtGETkyAlwMz13gBQpP3QZLOIv
-         hXMWI1WeQgeZYxAGlNUpnFJ4DHSmfyxhK5GoPELm45lW70eeqtaBUrVhWny4fmNh4gmB
-         tP+mUQwKTPdpw38XlJ4LPbq/dtZksPuqnqcZhDwoqt+kRsKZAfxm5jwzcJ6c9xLsw4Vn
-         nvQ7d+KwBNHfzTG6fnCfsGF0tKbmfWR17/Jv9AnV0z1cLRTDFgTEL0Tnyh1WpCJ0vlO4
-         SkKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qi0HjvbuXmvWcbpKL9tqxqxdG7EHQ6ate3lS8JMnsis=;
-        b=GuqSAdvOV7DlmbuH+ls6ZGPyDaYtCBgQ8Cdt5KYBkTRGrM1SI4cYsuWrtErytUYwH9
-         gXV7PQmSbVx8uvE5wXeohugTA2wyOQma3pFFRGJOz9Xvnl97uxnP/2PTNgRB+gMqi0x6
-         yVFbN4PVvrlVDLQOyE/ICTu94kIhfXNtIskPaJ/OQ0f5DpDTOFs4OEP+HvnuEBiLGByJ
-         qlPICQw3BPJUd+qqN8qU2lX2LCvMbNk4EDoOuRj3sGy6Ivyyc2S7WdKMqBIsMX1axqmh
-         Asy/hxqKY/hZtDzvIPZL6gwGDHTY1Eoa1c0T5T7quw5L/mwpr3iU8PtFMN/68Kd3qxuE
-         hxFw==
-X-Gm-Message-State: AOAM53061Fdp1HSs+o0GCpA4h9WyfVeSVbTt4evQfL1Q5jZF8id4AbXG
-        WsBMs9Jj0GvYEDDF2gkPpv/t1VcabMwr9FIjUbk=
-X-Google-Smtp-Source: ABdhPJyonPyd5t+XvdQnqO2DVdloB9jkKGUp6lcECpSjq4TtuP0PsbQTgx66Mb8Kw6pkFBpx+vmXjKtzILYqu6/rG5Y=
-X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr525321iot.44.1591121106733;
- Tue, 02 Jun 2020 11:05:06 -0700 (PDT)
+        Tue, 2 Jun 2020 14:06:58 -0400
+X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jun 2020 14:06:56 EDT
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 9435E72CCF1;
+        Tue,  2 Jun 2020 21:00:51 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 77BEF7CFE82; Tue,  2 Jun 2020 21:00:51 +0300 (MSK)
+Date:   Tue, 2 Jun 2020 21:00:51 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] s390: fix syscall_get_error for compat processes
+Message-ID: <20200602180051.GA2427@altlinux.org>
 MIME-Version: 1.0
-References: <20200602064545.50288-1-yuehaibing@huawei.com>
-In-Reply-To: <20200602064545.50288-1-yuehaibing@huawei.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 2 Jun 2020 11:04:55 -0700
-Message-ID: <CAM_iQpXtsvewiN3bmfJqwuURN--aCkaR7N6zfYWf82KmFUZnLQ@mail.gmail.com>
-Subject: Re: [PATCH] net: genetlink: Fix memleak in genl_family_rcv_msg_dumpit()
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 11:47 PM YueHaibing <yuehaibing@huawei.com> wrote:
-> @@ -630,6 +625,9 @@ static int genl_family_rcv_msg_dumpit(const struct genl_family *family,
->                 err = __netlink_dump_start(net->genl_sock, skb, nlh, &c);
->         }
->
-> +       genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
-> +       genl_dumpit_info_free(info);
-> +
->         return err;
->  }
+If both the tracer and the tracee are compat processes, and gprs[2]
+is assigned a value by __poke_user_compat, then the higher 32 bits
+of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
+syscall_get_error() always returns 0.
 
-I do not think you can just move it after __netlink_dump_start(),
-because cb->done() can be called, for example, in netlink_sock_destruct()
-too.
+Fix the implementation by sign-extending the value for compat processes
+the same way as x86 implementation does.
+
+The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
+PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
+
+This change fixes strace syscall tampering on s390.
+
+Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
+Cc: Elvira Khabirova <lineprinter@altlinux.org>
+Cc: stable@vger.kernel.org # v2.6.28+
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+---
+ arch/s390/include/asm/syscall.h | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
+index f073292e9fdb..c07633824715 100644
+--- a/arch/s390/include/asm/syscall.h
++++ b/arch/s390/include/asm/syscall.h
+@@ -33,7 +33,17 @@ static inline void syscall_rollback(struct task_struct *task,
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+-	return IS_ERR_VALUE(regs->gprs[2]) ? regs->gprs[2] : 0;
++	unsigned long error = regs->gprs[2];
++#ifdef CONFIG_COMPAT
++	if (test_tsk_thread_flag(task, TIF_31BIT)) {
++		/*
++		 * Sign-extend the value so (int)-EFOO becomes (long)-EFOO
++		 * and will match correctly in comparisons.
++		 */
++		error = (long) (int) error;
++	}
++#endif
++	return IS_ERR_VALUE(error) ? error : 0;
+ }
+ 
+ static inline long syscall_get_return_value(struct task_struct *task,
+-- 
+ldv
