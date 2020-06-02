@@ -2,98 +2,126 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A59C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252E620678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24669206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:57:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="L5EPPNuH"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KJW0LiHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgFBJzj (ORCPT
+        id S1726648AbgFBJ5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44930 "EHLO
+        Tue, 2 Jun 2020 05:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgFBJzi (ORCPT
+        with ESMTP id S1725811AbgFBJ5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:55:38 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C6DC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 02:55:38 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k18so10220596ion.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 02:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+2qftdfGzvqFPSmH85T6+Wlrzo4v4AkH7We72qGJ2eU=;
-        b=L5EPPNuHxm+R/ngrL7D/bDzm3jmI1xC3ugAs/xTro4ziY/ln+VksSDvLj07BXsJlPJ
-         QEPbyHM3n/O7ty52fObri7ykLRUuozKTCN2tl3yO4uZXR/S3OS16z+oO87Ys3UhtbHJv
-         q8X53AR1So3Vcqr+asssBUYXNUWKyMj3vQlW/dK8FVb2LCqkWPeQrz4wO7Ud0OZAM7c/
-         JZm8lcJyKmuc0ju4+p6+XUM6xvs6Vz2GtkJ7LBtrx1O7OHxXvDSR5fHTLswMM1bfOur8
-         a6zCCwTJ5yfY6h6E687BMFRK8iXGpQwVU7m3D+Bc1LG77pfGtHCIr0Z0MCctvPbLng4z
-         jr1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+2qftdfGzvqFPSmH85T6+Wlrzo4v4AkH7We72qGJ2eU=;
-        b=I8UI81kbOwInmQ11A4EVFUommx9AqFITYe3taPy9cdl9YTWg3j5WEjznLJRYEzO03j
-         T4CtxmfUf0Qh1ERq8bqeBhMtXWdRdRLCqI00HuaB9hRPAo9aZ9LNNpEFpUFSddjExGAe
-         ZJIzlgXk4SMG7MATwdALPKO62qYdBn7QIjQgKdi+QV0+xdjIQMY7yUuVHvhsZQHM0SQv
-         lUoyakIo39ov+OhMGZYNoemsvOAllupBjTwqfpil+fq8Bkh6zWZaahaCvEMsgCkI+VpI
-         nSLV1rV3C3x8xxbBdYmlKD090uoklg2PMYa3GVBVLG+PGVsEYVNk/UFvpINJW3EUU0TL
-         70ng==
-X-Gm-Message-State: AOAM531vqOy5aDMECa7+thCrecUq0VtlENKZwMWIUj1QgyRObCW76C+6
-        4FMf8iGZ5qbCw4S589VJ66J/94PwqaDrxIAcAPkzMw==
-X-Google-Smtp-Source: ABdhPJz/sNHTbROYRhioqzwB9NACNHROQYmM/8M/yaBo1Mh6x/rcwCj0ypBt17Yn74Em1cI0O5ED8T3Tr3MtqWgPB44=
-X-Received: by 2002:a05:6638:209:: with SMTP id e9mr25205965jaq.48.1591091737258;
- Tue, 02 Jun 2020 02:55:37 -0700 (PDT)
+        Tue, 2 Jun 2020 05:57:44 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77DAC061A0E;
+        Tue,  2 Jun 2020 02:57:43 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bnXQ1L14z9sSW;
+        Tue,  2 Jun 2020 19:57:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591091862;
+        bh=JPDQGGFP+kA5UYz5ysXHsEATvrHtDzNbEvUwmbhd1Bs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KJW0LiHok5p8SBm+NDsy0dI28T9t0XXL5sWiGP0k5cmerg6oSdeOpi3y38vkNWc6G
+         VqZnDEOyaL6hBUCBz86c24Pi5hOxuwEW1NU6iE+zXvw0Tn+YbSlJ8H2J4N9ZHOq1Q4
+         2v0ocItRkA5bIEsd1uLgmSs8V35yhDFwK4PeAeeDPAtgJzum5gvIvRtwFX9tLrtj12
+         4WvpPicjA+3aQF2OFR7sixbwwfrLdstKuW3uiIZ5m37xAQ27ZKyQUIf7DL4XBb7uYa
+         IoO2XOuj8wai+nTj6DM4/9H8U3YrhnjUBubOGdthREEfjsjNuOEJ//1fdzFLyoVqmk
+         SoIOxobgQJaLA==
+Date:   Tue, 2 Jun 2020 19:57:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build failure after merge of the akpm tree
+Message-ID: <20200602195741.4faaa348@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200525154633.GB22403@atlantis> <20200530123912.GA7476@arkam>
-In-Reply-To: <20200530123912.GA7476@arkam>
-From:   Christophe Gouault <christophe.gouault@6wind.com>
-Date:   Tue, 2 Jun 2020 11:55:26 +0200
-Message-ID: <CADdy8HodW1HLvO-36T0uiXji11km83ZDhYgEAavD9EVz+wCq8Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] xfrm: introduce oseq-may-wrap flag
-To:     =?UTF-8?Q?Petr_Van=C4=9Bk?= <pv@excello.cz>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_//mJSjeXXpXUR9j/EslE6syt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le sam. 30 mai 2020 =C3=A0 14:39, Petr Van=C4=9Bk <pv@excello.cz> a =C3=A9c=
-rit :
->
-> RFC 4303 in section 3.3.3 suggests to disable anti-replay for manually
-> distributed ICVs in which case the sender does not need to monitor or
-> reset the counter. However, the sender still increments the counter and
-> when it reaches the maximum value, the counter rolls over back to zero.
->
-> This patch introduces new extra_flag XFRM_SA_XFLAG_OSEQ_MAY_WRAP which
-> allows sequence number to cycle in outbound packets if set. This flag is
-> used only in legacy and bmp code, because esn should not be negotiated
-> if anti-replay is disabled (see note in 3.3.3 section).
-> (...)
+--Sig_//mJSjeXXpXUR9j/EslE6syt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Petr,
+Hi all,
 
-Thank you for taking my comment into account.
-This new patch looks good to me.
+After merging the akpm tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-Acked-by: Christophe Gouault <christophe.gouault@6wind.com>
+ERROR: modpost: ".probe_user_write" [arch/powerpc/kvm/kvm-hv.ko] undefined!
 
-Regards,
-Christophe
+Caused by patch
+
+  "maccess: unexport probe_kernel_write and probe_user_write"
+
+"These two functions are not used by any modular code." turns out to
+not be true :-(
+
+I have added this patch:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 2 Jun 2020 19:54:05 +1000
+Subject: [PATCH] turns out that probe_user_write is used in modular code
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ mm/maccess.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/maccess.c b/mm/maccess.c
+index ddfda8e6f4a5..88845eda5047 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -246,6 +246,7 @@ long probe_user_write(void __user *dst, const void *src=
+, size_t size)
+ 		return -EFAULT;
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(probe_user_write);
+=20
+ /**
+  * strncpy_from_user_nofault: - Copy a NUL terminated string from unsafe u=
+ser
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_//mJSjeXXpXUR9j/EslE6syt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7WIpUACgkQAVBC80lX
+0Gw94AgAgALxrUEtHxIlcdEpMrgfi4OwhUbpRxMBLPA+9ysB7Vg7RfGHT3TuK1qC
+J0XorDZCYfG7XFP2qr7bpxomNoUaxk66Y/oljETDaHAAhZjX2nKGemtPiG8WYdlE
+jaLIe4n7TZ6lFhvxaw3PXWSayTlhXmQbLRyuUd4evFy0+I5SnY0FO9H1kDeXeDzi
+ydP9v5SDnUifNCBai6vTY//DLpU/XzMchQiahp/KImyuqUkU5Ys76+K8lo0Zwc/u
+cJCB8RS9adIl8Lg+FB+qQZmXVi9qY3GYN42rfpbnaoCI10LvlcVPPhLcPV9SH2Yd
+OjohsvocqrWRIgdtxt+SohNVW5P2UQ==
+=wOFa
+-----END PGP SIGNATURE-----
+
+--Sig_//mJSjeXXpXUR9j/EslE6syt--
