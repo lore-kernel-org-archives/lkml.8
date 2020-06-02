@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E551D205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD0B205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbgFBWbo (ORCPT
+        id S1730363AbgFBWbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:31:44 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:45972 "EHLO
+        Tue, 2 Jun 2020 18:31:51 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46010 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728442AbgFBWba (ORCPT
+        by vger.kernel.org with ESMTP id S1728446AbgFBWba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jun 2020 18:31:30 -0400
 Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 02 Jun 2020 15:31:24 -0700
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 02 Jun 2020 15:31:23 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
   by ironmsg01-sd.qualcomm.com with ESMTP; 02 Jun 2020 15:31:22 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 43A874D82; Tue,  2 Jun 2020 15:31:22 -0700 (PDT)
+        id B3D5C4DF5; Tue,  2 Jun 2020 15:31:22 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -43,9 +43,9 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-arm-kernel@lists.infradead.org,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v16 03/11] ir-rx51: Use 64-bit division macro
-Date:   Tue,  2 Jun 2020 15:31:07 -0700
-Message-Id: <5d7078688787cde0fc38083e30f498dc7b4f5b02.1591136989.git.gurus@codeaurora.org>
+Subject: [PATCH v16 09/11] backlight: pwm_bl: Use 64-bit division function
+Date:   Tue,  2 Jun 2020 15:31:14 -0700
+Message-Id: <0ba6e042fc207c1b0b7dfe3a86d8971240faace1.1591136989.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1591136989.git.gurus@codeaurora.org>
 References: <cover.1591136989.git.gurus@codeaurora.org>
@@ -57,29 +57,30 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using DIV_ROUND_CLOSEST_ULL to
-handle a 64-bit dividend.
+to u64, prepare for this transition by using div_u64 to handle a 64-bit
+dividend instead of a straight division operation.
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Acked-by: Sean Young <sean@mess.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/media/rc/ir-rx51.c | 3 ++-
+ drivers/video/backlight/pwm_bl.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-index 8574eda..9a5dfd7 100644
---- a/drivers/media/rc/ir-rx51.c
-+++ b/drivers/media/rc/ir-rx51.c
-@@ -241,7 +241,8 @@ static int ir_rx51_probe(struct platform_device *dev)
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 82b8d75..464baad 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -606,7 +606,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 		pb->scale = data->max_brightness;
  	}
  
- 	/* Use default, in case userspace does not set the carrier */
--	ir_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
-+	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm),
-+			NSEC_PER_SEC);
- 	pwm_put(pwm);
+-	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
++	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
++				pb->scale));
  
- 	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	props.type = BACKLIGHT_RAW;
+ 	props.max_brightness = data->max_brightness;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
