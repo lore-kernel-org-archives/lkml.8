@@ -2,181 +2,145 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0679C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBFA8206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162EC2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8cd4V5p"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YeZh12ah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgFBLmz (ORCPT
+        id S1726842AbgFBLnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgFBLmy (ORCPT
+        Tue, 2 Jun 2020 07:43:14 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52208 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgFBLnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:42:54 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AEC1C061A0E;
-        Tue,  2 Jun 2020 04:42:54 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l10so3045468wrr.10;
-        Tue, 02 Jun 2020 04:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:in-reply-to:references:mime-version
-         :date:content-transfer-encoding;
-        bh=vjo6dgNKS2yqNivKUHaJ7wo9ZHvF45H5HmuT+8JqEzw=;
-        b=M8cd4V5pvGvXVoqU9lc0ae1R1cCK0GgEg2kx8BruoKZGYkSDZFWQzGuHrPOnTUslJ0
-         +hrNj0+RqdE4w301WuRu5VGtgHMx2x5AUJW1hL0ROIthLPDMgV2Zs5wqdiiYIBLdbhmZ
-         EF/2KPrQ8S1WRiPv2tDl5nItW1QoNt67bWVR8+PTruvlcpnDExF44xGkDmt4mSolFEPh
-         N6pUaSPk492eeFTak3334huxU0Na+2DzaM4W0k2+UVGzevnmZYdJ8noz8M0j5BTERxPv
-         XFswA6DuVPu76sexGVOj4j3n8BnJ8n1VbKyq0jhrJr1jMYphIJxk9+Z9FjsmI121y1F4
-         Cd9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:in-reply-to
-         :references:mime-version:date:content-transfer-encoding;
-        bh=vjo6dgNKS2yqNivKUHaJ7wo9ZHvF45H5HmuT+8JqEzw=;
-        b=ErAAqwb+U9hWtNg5lpAwbuTQ1yL04gWzoXIn/InsNlvxw5bjV4meWDNZ26cC08l38U
-         ZN863HIzvpRn6Xs7xPMWwJob6FAd0YfWnz711QpQUlkTHchqYdaGbTse9B+DZF0WOxxH
-         uHq/u8rk3JnfB63DU1np4lvAestVGw/gz9BG6HyhBQWbL5QSZ6YkFIfRpiXG15j4S9ha
-         TXe5qn0p1QdvALmGVFzUin54ZqSCoWKt6BNGhDpy9t+ZfipSH8LsMHIu8UwcBmmKzIXj
-         HYrw7DjhpR+s7o2SAone6VlHUD2dNKTSzUdGW3lKmumO+ZzaVsut+cnB6GGXe6tbH1PD
-         Rm0A==
-X-Gm-Message-State: AOAM530MhiMpwV0/l1J4Tq9DHnWVXkVyuOPHac93S8Klv5p5vjspaWIM
-        dmeSt/oynJlOYKK+VjP6ITY=
-X-Google-Smtp-Source: ABdhPJxuupL8Nc79xhHSR99Ny8UrOD/NFOxd0/CwQJ6IJ6RvV9wE9gKTXDuy158h+0i7YHNwvgc93g==
-X-Received: by 2002:a5d:49c4:: with SMTP id t4mr25373189wrs.127.1591098172996;
-        Tue, 02 Jun 2020 04:42:52 -0700 (PDT)
-Received: from ubuntu-laptop.micron.com ([165.225.203.62])
-        by smtp.googlemail.com with ESMTPSA id x186sm3434922wmg.8.2020.06.02.04.42.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 04:42:52 -0700 (PDT)
-Message-ID: <43a81bce2159ccd290e5dfe4a69199f56c379ef7.camel@gmail.com>
-Subject: Re: [PATCH v4 3/5] scsi: ufs: fix potential access NULL pointer
- while memcpy
-From:   Bean Huo <huobean@gmail.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <SN6PR04MB4640741E1DC89A927F8A60A5FC8A0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200531150831.9946-1-huobean@gmail.com>
-         <20200531150831.9946-4-huobean@gmail.com>
-         <SN6PR04MB4640741E1DC89A927F8A60A5FC8A0@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Date:   Tue, 02 Jun 2020 13:35:53 +0200
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jun 2020 07:43:14 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052BgP1L091422;
+        Tue, 2 Jun 2020 11:42:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=Kk9wT92u0WcfVRusnM3tWt4dIWc2ZjNaQZcGKV4NkrI=;
+ b=YeZh12ah1IqOhrfvMRf2PDsUY4CY70Y0YvzwBaL2jfNMGJJjxx9KaNYUsKAgCT4tLPCB
+ nslne7JzAKOkOw5KZlIEnhXioGQr7+2FhYrObItXopnJFtuRBEhpyM8np+8VCa5h2t8K
+ 7YIFvpvJmIiZaAIX9bnssgnsLpQ/cUOx24GQTn8s0Kbz68kvvPS9Xh4AivcR+XVfAOkt
+ fC6yXw0CODADgxm3fshtGms2wxoem9SZ3MJjfcFa5n7BLtcKH8TsrwXlgcnVutCUJqQ4
+ DFHmjlMy02alzYf03M0OtPU116D9WnyvNmbuhuzEb1JyeZaFytE93mSZ87ReYx92XQSa tA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31bfem3h07-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 11:42:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052BXPoh143134;
+        Tue, 2 Jun 2020 11:42:22 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31c12p1drp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 11:42:22 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052Bg8xP007135;
+        Tue, 2 Jun 2020 11:42:08 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 04:42:07 -0700
+Date:   Tue, 2 Jun 2020 14:41:58 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Liao Pingfang <liao.pingfang@zte.com.cn>,
+        linuxppc-dev@lists.ozlabs.org, Joe Perches <joe@perches.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colin Cross <ccross@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Wang Liang <wang.liang82@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] powerpc/nvram: Replace kmalloc with kzalloc in the error
+ message
+Message-ID: <20200602114158.GB30374@kadam>
+References: <c3d22d89-9133-30aa-8270-c515df214963@web.de>
+ <87imgai394.fsf@mpe.ellerman.id.au>
+ <a3c158fa-3829-f38a-9202-8984b5ef5f21@web.de>
+ <87a71liucy.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87a71liucy.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ adultscore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020081
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Avri
-thanks review.
-
-
-On Mon, 2020-06-01 at 06:25 +0000, Avri Altman wrote:
-> Hi,
+On Tue, Jun 02, 2020 at 09:23:57PM +1000, Michael Ellerman wrote:
+> Markus Elfring <Markus.Elfring@web.de> writes:
+> >>>> Please just remove the message instead, it's a tiny allocation that's
+> >>>> unlikely to ever fail, and the caller will print an error anyway.
+> >>>
+> >>> How do you think about to take another look at a previous update suggestion
+> >>> like the following?
+> >>>
+> >>> powerpc/nvram: Delete three error messages for a failed memory allocation
+> >>> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/00845261-8528-d011-d3b8-e9355a231d3a@users.sourceforge.net/
+> >>> https://lore.kernel.org/linuxppc-dev/00845261-8528-d011-d3b8-e9355a231d3a@users.sourceforge.net/
+> >>> https://lore.kernel.org/patchwork/patch/752720/
+> >>> https://lkml.org/lkml/2017/1/19/537
+> >>
+> >> That deleted the messages from nvram_scan_partitions(), but neither of
+> >> the callers of nvram_scan_paritions() check its return value or print
+> >> anything if it fails. So removing those messages would make those
+> >> failures silent which is not what we want.
+> >
+> > * How do you think about information like the following?
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=f359287765c04711ff54fbd11645271d8e5ff763#n883
+> > “…
+> > These generic allocation functions all emit a stack dump on failure when used
+> > without __GFP_NOWARN so there is no use in emitting an additional failure
+> > message when NULL is returned.
+> > …”
 > 
-> > If param_offset is not 0, the memcpy length shouldn't be the
-> > true descriptor length.
-> > 
-> > Fixes: a4b0e8a4e92b ("scsi: ufs: Factor out
-> > ufshcd_read_desc_param")
-> > Signed-off-by: Bean Huo <beanhuo@micron.com>
-> > ---
-> >  drivers/scsi/ufs/ufshcd.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> > index f7e8bfefe3d4..bc52a0e89cd3 100644
-> > --- a/drivers/scsi/ufs/ufshcd.c
-> > +++ b/drivers/scsi/ufs/ufshcd.c
-> > @@ -3211,7 +3211,7 @@ int ufshcd_read_desc_param(struct ufs_hba
-> > *hba,
-> > 
-> >         /* Check wherher we will not copy more data, than available
-> > */
-> >         if (is_kmalloc && param_size > buff_len)
-> > -               param_size = buff_len;
-> > +               param_size = buff_len - param_offset;
+> Are you sure that's actually true?
 > 
-> But Is_kmalloc is true if (param_offset != 0 || param_size <
-> buff_len)
-> So  if (is_kmalloc && param_size > buff_len) implies that
-> param_offset is 0,
-> Or did I get it wrong?
-
-If param_offset is 0, This willn't get any wrong, after this patch, it
-is the same since offset is 0. As mentioned in the commit message, this
-patch is only for the case of param_offset is not 0.
-
+> A quick look around in slub.c leads me to:
 > 
-> Still, I think that there is a problem here because nowhere we are
-> checking that  
-> param_offset + param_size < buff_len, which now can happen because of
-> ufs-bsg.
-> Maybe you can add it and get rid of that is_kmalloc which is an
-> awkward way to test for valid values?
+> slab_out_of_memory(struct kmem_cache *s, gfp_t gfpflags, int nid)
+> {
+> #ifdef CONFIG_SLUB_DEBUG
 
-let me explain further:
-we have these conditinos:
+You first have to enable EXPERT mode before you can disable SLUB_DEBUG.
+So that hopefully means you *really* want to save memory.  It doesn't
+make sense to add a bunch of memory wasting printks when the users want
+to go to extra lengths to conserve memory.
 
-1) param_offset == 0, param_size >= buff_len;//no problem, 
-ufshcd_query_descriptor_retry() will read descripor with true
-descriptor length, and no memcpy() called.
-
-
-2) param_offset == 0, param_size < buff_len;// no problem, 
-ufshcd_query_descriptor_retry() will read descripor with true
-descriptor length buff_len, and memcpy() with param_size length.
-
-
-3) param_offset != 0, param_offset + param_size <= buff_len;// no
-problem, ufshcd_query_descriptor_retry() will read descripor with true
-descriptor length, and memcpy() with param_size length.
-
-
-4) param_offset != 0, param_offset + param_size > buff_len;// NULL
-pointer reference problem, since ufshcd_query_descriptor_retry() will
-read descripor with true descriptor length, and memcpy() with buff_len
-length. correct memcpy length should be (buff_len - param_offset)
-
-param_offset + param_size < buff_len doesn't need to add, and
-is_kmalloc is very hard to be removed based on current flow.
-
-so, the correct fixup patch shoulbe be like this:
-
-
--if (is_kmalloc && param_size > buff_len)
--	param_size = buff_len
-+if (is_kmalloc && (param_size + param_offset) > buff_len) 
-+	param_size = buff_len - param_offset;
-
-
-how do you think about it? if no problem, I will update it in next
-version patch.
-
-thanks,
-
-Bean
+regards,
+dan carpenter
 
