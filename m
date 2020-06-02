@@ -2,118 +2,121 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0025CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D158220734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="am7oN9DA"
+	by mail.kernel.org (Postfix) with ESMTP id 7A44D20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgFBHEx (ORCPT
+        id S1726461AbgFBHFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:04:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55412 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725900AbgFBHEw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:04:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591081491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7/iZrp8ajGOLBLXyeyKCmBTwZzJz+NsPsDgLUvIijOo=;
-        b=am7oN9DAkR3ACdhhBlaCcntG+ZGFSz+XotTYe+H2gU8twOm5A6trAbmNOKXy5oXxKziOzQ
-        r+ReA+MprbfqwUjIlu9sn5X4JWjAYP5fEJFpvRr0z4RJ0PiUUG9AQ5A2ltlIguIG/f1s/+
-        do8ldGGMQRwfWUEuDNSoSuqtOVbCTJ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400-g0qtxZAyOOqho9Wf4GolhQ-1; Tue, 02 Jun 2020 03:04:49 -0400
-X-MC-Unique: g0qtxZAyOOqho9Wf4GolhQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACEC3464;
-        Tue,  2 Jun 2020 07:04:47 +0000 (UTC)
-Received: from [10.72.12.102] (ovpn-12-102.pek2.redhat.com [10.72.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F07E5C1D6;
-        Tue,  2 Jun 2020 07:04:19 +0000 (UTC)
-Subject: Re: [PATCH 1/6] vhost: allow device that does not depend on vhost
- worker
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-2-jasowang@redhat.com>
- <20200602005904-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <21e1bfbf-4b0c-5a73-6fdd-a58c43c733ea@redhat.com>
-Date:   Tue, 2 Jun 2020 15:04:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 03:05:21 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59954 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726239AbgFBHFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 03:05:20 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8051E987EABACD40B531;
+        Tue,  2 Jun 2020 15:05:18 +0800 (CST)
+Received: from DESKTOP-27KDQMV.china.huawei.com (10.174.151.115) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 2 Jun 2020 15:05:11 +0800
+From:   "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     <linux-crypto@vger.kernel.org>
+CC:     "Longpeng(Mike)" <longpeng2@huawei.com>,
+        LABBE Corentin <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Gonglei <arei.gonglei@huawei.com>
+Subject: [PATCH v3 1/3] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
+Date:   Tue, 2 Jun 2020 15:04:59 +0800
+Message-ID: <20200602070501.2023-2-longpeng2@huawei.com>
+X-Mailer: git-send-email 2.25.0.windows.1
+In-Reply-To: <20200602070501.2023-1-longpeng2@huawei.com>
+References: <20200602070501.2023-1-longpeng2@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200602005904-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.151.115]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The system will crash when the users insmod crypto/tcrypt.ko with mode=38
+( testing "cts(cbc(aes))" ).
 
-On 2020/6/2 下午1:01, Michael S. Tsirkin wrote:
-> On Fri, May 29, 2020 at 04:02:58PM +0800, Jason Wang wrote:
->> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->> index d450e16c5c25..70105e045768 100644
->> --- a/drivers/vhost/vhost.c
->> +++ b/drivers/vhost/vhost.c
->> @@ -166,11 +166,16 @@ static int vhost_poll_wakeup(wait_queue_entry_t *wait, unsigned mode, int sync,
->>   			     void *key)
->>   {
->>   	struct vhost_poll *poll = container_of(wait, struct vhost_poll, wait);
->> +	struct vhost_work *work = &poll->work;
->>   
->>   	if (!(key_to_poll(key) & poll->mask))
->>   		return 0;
->>   
->> -	vhost_poll_queue(poll);
->> +	if (!poll->dev->use_worker)
->> +		work->fn(work);
->> +	else
->> +		vhost_poll_queue(poll);
->> +
->>   	return 0;
->>   }
->>
-> So a wakeup function wakes up eventfd directly.
->
-> What if user supplies e.g. the same eventfd as ioeventfd?
->
-> Won't this cause infinite loops?
+Usually the next entry of one sg will be @sg@ + 1, but if this sg element
+is part of a chained scatterlist, it could jump to the start of a new
+scatterlist array. Fix it by sg_next() on calculation of src/dst
+scatterlist.
 
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Reported-by: LABBE Corentin <clabbe@baylibre.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Message-Id: <20200123101000.GB24255@Red>
+Signed-off-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+---
+ drivers/crypto/virtio/virtio_crypto_algs.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-I'm not sure I get this.
-
-This basically calls handle_vq directly when eventfd is woken up. The 
-infinite loops can only happen when handle_vq() tries to write to 
-ioeventfd itslef which should be a bug of the device.
-
-Thanks
-
-
->
+diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
+index fd045e64..5f82435 100644
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -350,13 +350,18 @@ static int virtio_crypto_skcipher_setkey(struct crypto_skcipher *tfm,
+ 	int err;
+ 	unsigned long flags;
+ 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
+-	int i;
+ 	u64 dst_len;
+ 	unsigned int num_out = 0, num_in = 0;
+ 	int sg_total;
+ 	uint8_t *iv;
++	struct scatterlist *sg;
+ 
+ 	src_nents = sg_nents_for_len(req->src, req->cryptlen);
++	if (src_nents < 0) {
++		pr_err("Invalid number of src SG.\n");
++		return src_nents;
++	}
++
+ 	dst_nents = sg_nents(req->dst);
+ 
+ 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
+@@ -442,12 +447,12 @@ static int virtio_crypto_skcipher_setkey(struct crypto_skcipher *tfm,
+ 	vc_sym_req->iv = iv;
+ 
+ 	/* Source data */
+-	for (i = 0; i < src_nents; i++)
+-		sgs[num_out++] = &req->src[i];
++	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
++		sgs[num_out++] = sg;
+ 
+ 	/* Destination data */
+-	for (i = 0; i < dst_nents; i++)
+-		sgs[num_out + num_in++] = &req->dst[i];
++	for (sg = req->dst; sg; sg = sg_next(sg))
++		sgs[num_out + num_in++] = sg;
+ 
+ 	/* Status */
+ 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
+-- 
+1.8.3.1
 
