@@ -2,97 +2,154 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD49C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0165C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C41A420757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09C92054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="YxsAHw4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgFBXPM (ORCPT
+        id S1728275AbgFBXS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:15:12 -0400
-Received: from mga03.intel.com ([134.134.136.65]:57326 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgFBXPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:15:11 -0400
-IronPort-SDR: +yXGausVvQonlRJjYFNgJZe4YKcSALxXM9n3JD5uSKZGsHqntXxNZ8u4EGmsMSxpRtDzEJY4IL
- avCFhDf1YEKg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 16:15:10 -0700
-IronPort-SDR: VFcvTWOtbz3dkiPRuW2/npw0KipzrpAkLGxUts2YewEMQROQ4Rd+aVaZH1ioqP86z6ajt4JZpo
- vq36BdR9KjCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
-   d="scan'208";a="312421829"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Jun 2020 16:15:10 -0700
-Date:   Tue, 2 Jun 2020 16:15:10 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Tue, 2 Jun 2020 19:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgFBXSz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 19:18:55 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28CCC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:18:54 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c21so116712lfb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=w339YpBFgV7tqQf8M7YphxkuH2MrbkG2i3IWInNVEFw=;
+        b=YxsAHw4owitymwvHIwpqwWvn9/NXfSmSAaW4XnOP3SsDR0q/tu0Kjtftp1ifdfbfTc
+         db7b0ZQb7XugZtiYeszap76BEZuj9SR7sEGdl+KzdbvXUErm382A/PEE9pQKqw2RCHW+
+         fxt3fniEs00mZZGfE4SRefURbUpvaDWjfMSwtxss/P7Hu5hOCAebKrwvL198wVJLAScc
+         4x1kUwZY1D43yHWgBhNeQakXS1vaWEODvIRwRn+skTC2lMBjsFPh6jtE5RpKnVCGheKI
+         hxnCOSxuHeJWxmzn1wKje/9Ngwo+exug6CDE81AlefvydqUyh2OSPjhGhkcoCl5Hkqrs
+         Ktbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=w339YpBFgV7tqQf8M7YphxkuH2MrbkG2i3IWInNVEFw=;
+        b=ZH8hTQRmg/wcC6SWZQ2/dOSwPm8uzxyNQSwCnobabHip1fEzM3x/cwND+JXclQ+pYO
+         q371w9tyUNglyhz3TPx2c1v5LiZkVS1Yjk3FyI7jrVnpCveiZqlDK9ssZTaSvoAmMknG
+         7O8aN4elH8jg4U6/w59iByD4yaEO3oHPt/7uv5epLHwWUsX9oPSbXWPaMGbC89+hskGZ
+         RR6MIttxsby4BubDHqq4sOek9+zbugyLv5r6MGvgInNJ2DzMaiv6dbTDwA/127UyKKZu
+         I3vTVVIa2eAfUwHQ8M+0AOYjTGZMZLSV5qNE30MjxABLKJaYe6tDONWQOnAngI7EE0aR
+         6H7Q==
+X-Gm-Message-State: AOAM5302Ex3Thjozm61L4C4gWI0u55SuCnSi6DlzuNrq4jaLBnpbxIXd
+        VuRoV+EIJxHHQK4pbJ+mMd720w==
+X-Google-Smtp-Source: ABdhPJxwAotMVS+UbqsYp+bbhka8nGqAjJAI+8M3Prj7QP/OP9DS5g/xQ3THv/MFg0EiknvWEapPfQ==
+X-Received: by 2002:ac2:550a:: with SMTP id j10mr860697lfk.46.1591139933189;
+        Tue, 02 Jun 2020 16:18:53 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 15sm63048ljr.104.2020.06.02.16.18.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 16:18:51 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 87BFB102780; Wed,  3 Jun 2020 02:18:57 +0300 (+03)
+Date:   Wed, 3 Jun 2020 02:18:57 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V11 11/11] fs/xfs: Update
- xfs_ioctl_setattr_dax_invalidate()
-Message-ID: <20200602231510.GH1505637@iweiny-DESK2.sc.intel.com>
-References: <20200428002142.404144-1-ira.weiny@intel.com>
- <20200428002142.404144-12-ira.weiny@intel.com>
- <20200428201138.GD6742@magnolia>
- <20200602172353.GC8230@magnolia>
+        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] x86/mm: Fix boot with some memory above MAXMEM
+Message-ID: <20200602231857.ousba2xiks7myxbt@box>
+References: <20200511191721.1416-1-kirill.shutemov@linux.intel.com>
+ <20200525044902.rsb46bxu5hdsqglt@box>
+ <20200525145943.GA13247@kernel.org>
+ <20200525150820.zljiamptpzi37ohx@box>
+ <24b51944-bfba-a937-484a-5d9ec54fdf01@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602172353.GC8230@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <24b51944-bfba-a937-484a-5d9ec54fdf01@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 10:23:53AM -0700, Darrick J. Wong wrote:
-> On Tue, Apr 28, 2020 at 01:11:38PM -0700, Darrick J. Wong wrote:
-> > On Mon, Apr 27, 2020 at 05:21:42PM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-
-...
-
-> > > -out_unlock:
-> > > -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-> > > -	return error;
-> > > +	if ((mp->m_flags & XFS_MOUNT_DAX_ALWAYS) ||
-> > > +	    (mp->m_flags & XFS_MOUNT_DAX_NEVER))
-> > > +		return;
-> > >  
-> > > +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
-> > > +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
-> > > +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
-> > > +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
-> > > +		d_mark_dontcache(inode);
+On Tue, May 26, 2020 at 07:27:15AM -0700, Dave Hansen wrote:
+> On 5/25/20 8:08 AM, Kirill A. Shutemov wrote:
+> >>>> +	if (not_addressable) {
+> >>>> +		pr_err("%lldGB of physical memory is not addressable in the paging mode\n",
+> >>>> +		       not_addressable >> 30);
+> >>>> +		if (!pgtable_l5_enabled())
+> >>>> +			pr_err("Consider enabling 5-level paging\n");
+> >> Could this happen at all when l5 is enabled?
+> >> Does it mean we need kmap() for 64-bit?
+> > It's future-profing. Who knows what paging modes we would have in the
+> > future.
 > 
-> Now that I think about this further, are we /really/ sure that we want
-> to let unprivileged userspace cause inode evictions?
-
-This code only applies to files they have access to.  And it does not directly
-cause an eviction.  It only hints that those inodes (for which they have access
-to) will not be cached thus causing them to be reloaded sooner than they might
-otherwise be.
-
-So I think we are fine here.
-
-Ira
-
+> Future-proofing and firmware-proofing. :)
 > 
-> --D
+> In any case, are we *really* limited to 52 bits of physical memory with
+> 5-level paging?
+
+Yes. It's architectural. SDM says "MAXPHYADDR is at most 52" (Vol 3A,
+4.1.4).
+
+I guess it can be extended with an opt-in feature and relevant changes to
+page table structure. But as of today there's no such thing.
+
+> Previously, we said we were limited to 46 bits, and now
+> we're saying that the limit is 52 with 5-level paging:
 > 
+> #define MAX_PHYSMEM_BITS (pgtable_l5_enabled() ? 52 : 46)
+> 
+> The 46 was fine with the 48 bits of address space on 4-level paging
+> systems since we need 1/2 of the address space for userspace, 1/4 for
+> the direct map and 1/4 for the vmalloc-and-friends area.  At 46 bits of
+> address space, we fill up the direct map.
+> 
+> The hardware designers know this and never enumerated a MAXPHYADDR from
+> CPUID which was higher than what we could cover with 46 bits.  It was
+> nice and convenient that these two separate things matched:
+> 1. The amount of physical address space addressable in a direct map
+>    consuming 1/4 of the virtual address space.
+> 2. The CPU-enumerated MAXPHYADDR which among other things dictates how
+>    much physical address space is addressable in a PTE.
+> 
+> But, with 5-level paging, things are a little different.  The limit in
+> addressable memory because of running out of the direct map actually
+> happens at 55 bits (57-2=55, analogous to the 4-level 48-2=46).
+> 
+> So shouldn't it technically be this:
+> 
+> #define MAX_PHYSMEM_BITS (pgtable_l5_enabled() ? 55 : 46)
+> 
+> ?
+
+Bits above 52 are ignored in the page table entries and accessible to
+software. Some of them got claimed by HW features (XD-bit, protection
+keys), but such features require explicit opt-in on software side.
+
+Kernel could claim bits 53-55 for the physical address, but it doesn't get
+us anything: if future HW would provide such feature it would require
+opt-in. On other hand claiming them now means we cannot use them for other
+purposes as SW bit. I don't see a point.
+
+-- 
+ Kirill A. Shutemov
