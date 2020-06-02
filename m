@@ -2,134 +2,127 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61807C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5517EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42CAF20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325A720674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G4Mkc+dN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eu0O3jUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgFBNGC (ORCPT
+        id S1726853AbgFBNGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:06:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBNF7 (ORCPT
+        Tue, 2 Jun 2020 09:06:06 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45696 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726875AbgFBNGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:05:59 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C2AC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 06:05:58 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id p123so6997514yba.6
+        Tue, 2 Jun 2020 09:06:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591103160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=vdmj+Tg8SGx2NrYVAizct++/zxOMWuxvcR8U68lSB2Q=;
+        b=eu0O3jUmLKHk3JeifQFqOALalNmL+ETGiPqdwMKGLZsZJSaK9jaIUg53Oqnbb+prKQ4ZWO
+        C1VJyY0HYRM3h1pt0RTVPKlNW0gGg4kOzkqJo4HXYVSsOns8GigxqRU0dEjpkqNXTZQRE5
+        z7MK43887Fa9EwDcpyryr562UHHL86I=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-WCqhx8y2Or6A8DUUnIMblA-1; Tue, 02 Jun 2020 09:05:58 -0400
+X-MC-Unique: WCqhx8y2Or6A8DUUnIMblA-1
+Received: by mail-wm1-f70.google.com with SMTP id k185so805026wme.8
         for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 06:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aFsfcQemjMCArAIh7NlAUzZw5oK+VuGVflBxxbpyMNU=;
-        b=G4Mkc+dNtZ2fipofo7VgIwjo6Ks9tpbC6pTKI3gzplgDni4JSiqB9yPwgmRwdCtu7+
-         1bt4uS4hOVY5WynzAh8i58D7dIGglCDme3P1ciuce5tOW0mQrDhSWDPHIzwa6ghy/sJs
-         PK1lXT4B+R20cEUL3r1zB1SaNHwTIfRosxBFat94kvDohAQKJuYdAUXVcE0KxCa5gMaQ
-         HUi3iYsOlKIHYa2d0Omla2grPzxrYTDh07w/ihOgY0R0iDTHy3i9V5iatmaQJU5KBWE0
-         0RQzW3uST/RJ/oMPznqN37S5lmuD+1lExLqMBwbEadjWNDISGstNiMp5Iigy7VsgZ0Eo
-         /WMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aFsfcQemjMCArAIh7NlAUzZw5oK+VuGVflBxxbpyMNU=;
-        b=DAWU+/AD4IrDJAraBfOvzREaZVltO4C4qHXaFVI/mDZGNiu2UExHzaCZMxmeYaE1/w
-         AmrY7VYggJon2pG8wn9PMDtpKUeBQ7DQfxs61/78BKQ1uxOAmRI2ZCBAQAlG7x8tMp0R
-         oA/UWgWvdhXUwBohVMw/tdsYecnlCsSLmwuQSizoqvqrSlJUtVpbVXgFX+3TNuWaDC+u
-         fzGFiYg8LcHOqgPikdrpHZ5jgpK0LduQsjvR5HICWsiYmCdD0byuak3Y2wRN8MTl6msh
-         uZGVvPar2WLv0b8sMz7pqDlo2p49T1Z9ww6gbSW07P1Nx93L2mNv6eTW7Qk0zLUelTQ/
-         ZMAA==
-X-Gm-Message-State: AOAM530U4apYcvQ6WDwfw4hr2FJLr2RIfG92GyttfpKZsSL1HEOlyuvC
-        FuyjIPyUO+ShRTwXopH7eN0lyIaJNhqWoqDjF7jMCg==
-X-Google-Smtp-Source: ABdhPJxnq83T9uPawX2t1PQAbsAWK2BSFIDF95VJt6uuLTrHGnv4Dsd7tdgkYmLmwexjJ1fZKR+RgjJN5pWQvPcwaVM=
-X-Received: by 2002:a25:1484:: with SMTP id 126mr41221569ybu.380.1591103156614;
- Tue, 02 Jun 2020 06:05:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=vdmj+Tg8SGx2NrYVAizct++/zxOMWuxvcR8U68lSB2Q=;
+        b=BCXE7KwdgenJEgrbWht+WGdkYOqFoShgaxwcAxP+AsyPCrDE6Mmg7X9mwGn9xGMcH/
+         CnTEQCnFc2VVTHzCDYk13cfRP5WfVUBI5HBUq14l9VoEEad+c9ox+HZ7UWaveW/bJDdg
+         xIGulZCs7ptVqFP9lewhQarmusxse5Z7lcL1TFoCQ89xblhcVPI4ZHQ63MJwOYuqu1DA
+         GO3xRqG3ktSpJ73WianCyUnjE00Fepb8hp2a8KHmgRqQDeXa5lD7gKVAg3SkbuVNeFY9
+         v6Mma8ytADZxTqRb+5gQ5PNxdJE/Yr1svyA4gkrbAGVWcOo/vVluVQnOd6g2HV+rGHZp
+         PrUQ==
+X-Gm-Message-State: AOAM531hTYOb4VhFidzAhThT4Uu3LBGnSq/ryoq/K2xvlsNiR0M9m7fO
+        SCbupxQtzu0tXN548+7tWSAd8trdAAMwJYBT6sBVNZvJHjOvsjCPz2aq3yL8xOWruIEGfW+lEiD
+        qAJXKmbWnCIRUv/vOhBAFyXfG
+X-Received: by 2002:a1c:e355:: with SMTP id a82mr3952750wmh.1.1591103156751;
+        Tue, 02 Jun 2020 06:05:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzxhvL+9CoWDlbet28l8cBoDZ1y4Jq12uY4hkhtEZgSR8vXHFkGEgf8rds3ZCLy2cNng3Lahg==
+X-Received: by 2002:a1c:e355:: with SMTP id a82mr3952727wmh.1.1591103156470;
+        Tue, 02 Jun 2020 06:05:56 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id 5sm3408485wmz.16.2020.06.02.06.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 06:05:55 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 09:05:54 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH RFC 00/13] vhost: format independence
+Message-ID: <20200602130543.578420-1-mst@redhat.com>
 MIME-Version: 1.0
-References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
-In-Reply-To: <20200602080425.93712-1-kerneljasonxing@gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 2 Jun 2020 06:05:44 -0700
-Message-ID: <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
-Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
-To:     kerneljasonxing@gmail.com
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
-        lishujin@kuaishou.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 1:05 AM <kerneljasonxing@gmail.com> wrote:
->
-> From: Jason Xing <kerneljasonxing@gmail.com>
->
-> TCP socks cannot be released because of the sock_hold() increasing the
-> sk_refcnt in the manner of tcp_internal_pacing() when RTO happens.
-> Therefore, this situation could increase the slab memory and then trigger
-> the OOM if the machine has beening running for a long time. This issue,
-> however, can happen on some machine only running a few days.
->
-> We add one exception case to avoid unneeded use of sock_hold if the
-> pacing_timer is enqueued.
->
-> Reproduce procedure:
-> 0) cat /proc/slabinfo | grep TCP
-> 1) switch net.ipv4.tcp_congestion_control to bbr
-> 2) using wrk tool something like that to send packages
-> 3) using tc to increase the delay in the dev to simulate the busy case.
-> 4) cat /proc/slabinfo | grep TCP
-> 5) kill the wrk command and observe the number of objects and slabs in TCP.
-> 6) at last, you could notice that the number would not decrease.
->
-> Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
-> Signed-off-by: liweishi <liweishi@kuaishou.com>
-> Signed-off-by: Shujin Li <lishujin@kuaishou.com>
-> ---
->  net/ipv4/tcp_output.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index cc4ba42..5cf63d9 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -969,7 +969,8 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
->         u64 len_ns;
->         u32 rate;
->
-> -       if (!tcp_needs_internal_pacing(sk))
-> +       if (!tcp_needs_internal_pacing(sk) ||
-> +           hrtimer_is_queued(&tcp_sk(sk)->pacing_timer))
->                 return;
->         rate = sk->sk_pacing_rate;
->         if (!rate || rate == ~0U)
-> --
-> 1.8.3.1
->
+We let the specifics of the ring format seep through to vhost API
+callers - mostly because there was only one format so it was
+hard to imagine what an independent API would look like.
+Now that there's an alternative in form of the packed ring,
+it's easier to see the issues, and fixing them is perhaps
+the cleanest way to add support for more formats.
 
-Hi Jason.
+This patchset does this by indtroducing two new structures: vhost_buf to
+represent a buffer and vhost_desc to represent a descriptor.
+Descriptors aren't normally of interest to devices but do occationally
+get exposed e.g. for logging.
 
-Please do not send patches that do not apply to current upstream trees.
+Perhaps surprisingly, the higher level API actually makes things a bit
+easier for callers, as well as allows more freedom for the vhost core.
+The end result is basically unchanged performance (based on preliminary
+testing) even though we are forced to go through a format conversion.
 
-Instead, backport to your kernels the needed fixes.
+The conversion also exposed (more) bugs in vhost scsi - which isn't
+really surprising, that driver needs a lot more love than it's getting.
 
-I suspect that you are not using a pristine linux kernel, but some
-heavily modified one and something went wrong in your backports.
-Do not ask us to spend time finding what went wrong.
+Very lightly tested. Would appreciate feedback and testing.
 
-Thank you.
+Michael S. Tsirkin (13):
+  vhost: option to fetch descriptors through an independent struct
+  vhost: use batched version by default
+  vhost: batching fetches
+  vhost: cleanup fetch_buf return code handling
+  vhost/net: pass net specific struct pointer
+  vhost: reorder functions
+  vhost: format-independent API for used buffers
+  vhost/net: convert to new API: heads->bufs
+  vhost/net: avoid iov length math
+  vhost/test: convert to the buf API
+  vhost/scsi: switch to buf APIs
+  vhost/vsock: switch to the buf API
+  vhost: drop head based APIs
+
+ drivers/vhost/net.c   | 173 +++++++++----------
+ drivers/vhost/scsi.c  |  73 ++++----
+ drivers/vhost/test.c  |  22 +--
+ drivers/vhost/vhost.c | 375 +++++++++++++++++++++++++++---------------
+ drivers/vhost/vhost.h |  46 ++++--
+ drivers/vhost/vsock.c |  30 ++--
+ 6 files changed, 436 insertions(+), 283 deletions(-)
+
+-- 
+MST
+
