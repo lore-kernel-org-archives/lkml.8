@@ -2,206 +2,94 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2E92072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFF82072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgFBIGA (ORCPT
+        id S1726217AbgFBIHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:06:00 -0400
-Received: from static-27.netfusion.at ([83.215.238.27]:56064 "EHLO
-        mail.inliniac.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgFBIF6 (ORCPT
+        Tue, 2 Jun 2020 04:07:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBIHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:05:58 -0400
-Received: by mail.inliniac.net (Postfix, from userid 108)
-        id 5BD4F1A3B; Tue,  2 Jun 2020 10:08:07 +0200 (CEST)
-Received: from z440.inliniac.lan (a80-127-179-75.adsl.xs4all.nl [80.127.179.75])
-        (Authenticated sender: victor)
-        by mail.inliniac.net (Postfix) with ESMTPSA id 1C6E510C;
-        Tue,  2 Jun 2020 10:07:56 +0200 (CEST)
-From:   Victor Julien <victor@inliniac.net>
-To:     netdev@vger.kernel.org
-Cc:     victor@inliniac.net, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
-        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] af-packet: new flag to indicate all csums are good
-Date:   Tue,  2 Jun 2020 10:05:33 +0200
-Message-Id: <20200602080535.1427-1-victor@inliniac.net>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jun 2020 04:07:15 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4E7C061A0E;
+        Tue,  2 Jun 2020 01:07:15 -0700 (PDT)
+Received: from ni.home (unknown [IPv6:2a01:cb19:8092:cf00:aaa1:59ff:fe08:91d5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: myjosserand)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AD7C52A0151;
+        Tue,  2 Jun 2020 09:07:06 +0100 (BST)
+From:   =?UTF-8?q?Myl=C3=A8ne=20Josserand?= 
+        <mylene.josserand@collabora.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, heiko@sntech.de,
+        robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, mylene.josserand@collabora.com,
+        kernel@collabora.com
+Subject: [PATCH v4 0/2] ARM: Add Rockchip rk3288w support
+Date:   Tue,  2 Jun 2020 10:06:42 +0200
+Message-Id: <20200602080644.11333-1-mylene.josserand@collabora.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new flag (TP_STATUS_CSUM_UNNECESSARY) to indicate
-that the driver has completely validated the checksums in the packet.
+Hello everyone,
 
-The TP_STATUS_CSUM_UNNECESSARY flag differs from TP_STATUS_CSUM_VALID
-in that the new flag will only be set if all the layers are valid,
-while TP_STATUS_CSUM_VALID is set as well if only the IP layer is valid.
+Context
+-------
 
-The name is derived from the skb->ip_summed setting CHECKSUM_UNNECESSARY.
+Here is my V4 of my patches that add the support for the Rockchip
+RK3288w which is a revision of the RK3288. It is mostly the same SOC
+except for, at least, one clock tree which is different.
+This difference is only known by looking at the BSP kernel [1].
 
-Security tools such as Suricata, Snort, Zeek/Bro need to know not
-only that a packet has not been corrupted, but also that the
-checksums are correct. Without this an attacker could send a packet,
-for example a TCP RST packet, that would be accepted by the
-security tool, but rejected by the end host creating an impendance
-mismatch.
+Currently, the mainline kernel will not hang on rk3288w but it is
+probably by "chance" because we got an issue on a lower kernel version.
 
-To avoid this scenario tools currently will have to (re)calcultate/validate
-the checksums as well. With this patch this becomes unnecessary for many
-of the packets.
+According to Rockchip's U-Boot [2], the rk3288w can be detected using
+the HDMI revision number (= 0x1A) in this version of the SOC.
 
-This patch has been tested with Suricata with the virtio driver,
-where it reduced the ammount of time spent in the Suricata TCP
-checksum validation to about half.
+Changelog
+---------
 
-Signed-off-by: Victor Julien <victor@inliniac.net>
----
- Documentation/networking/packet_mmap.rst | 80 +++++++++++++-----------
- include/uapi/linux/if_packet.h           |  1 +
- net/packet/af_packet.c                   | 11 ++--
- 3 files changed, 52 insertions(+), 40 deletions(-)
+This V4 is pretty much the same than the V3. Added the dt-bindings
+documentation in clock-controller dt-bindings and fixed some typos
+according to Heiko's reviews.
 
-diff --git a/Documentation/networking/packet_mmap.rst b/Documentation/networking/packet_mmap.rst
-index 6c009ceb1183..1711be47d61d 100644
---- a/Documentation/networking/packet_mmap.rst
-+++ b/Documentation/networking/packet_mmap.rst
-@@ -437,42 +437,50 @@ and the following flags apply:
- Capture process
- ^^^^^^^^^^^^^^^
- 
--     from include/linux/if_packet.h
--
--     #define TP_STATUS_COPY          (1 << 1)
--     #define TP_STATUS_LOSING        (1 << 2)
--     #define TP_STATUS_CSUMNOTREADY  (1 << 3)
--     #define TP_STATUS_CSUM_VALID    (1 << 7)
--
--======================  =======================================================
--TP_STATUS_COPY		This flag indicates that the frame (and associated
--			meta information) has been truncated because it's
--			larger than tp_frame_size. This packet can be
--			read entirely with recvfrom().
--
--			In order to make this work it must to be
--			enabled previously with setsockopt() and
--			the PACKET_COPY_THRESH option.
--
--			The number of frames that can be buffered to
--			be read with recvfrom is limited like a normal socket.
--			See the SO_RCVBUF option in the socket (7) man page.
--
--TP_STATUS_LOSING	indicates there were packet drops from last time
--			statistics where checked with getsockopt() and
--			the PACKET_STATISTICS option.
--
--TP_STATUS_CSUMNOTREADY	currently it's used for outgoing IP packets which
--			its checksum will be done in hardware. So while
--			reading the packet we should not try to check the
--			checksum.
--
--TP_STATUS_CSUM_VALID	This flag indicates that at least the transport
--			header checksum of the packet has been already
--			validated on the kernel side. If the flag is not set
--			then we are free to check the checksum by ourselves
--			provided that TP_STATUS_CSUMNOTREADY is also not set.
--======================  =======================================================
-+from include/linux/if_packet.h::
-+
-+     #define TP_STATUS_COPY		(1 << 1)
-+     #define TP_STATUS_LOSING		(1 << 2)
-+     #define TP_STATUS_CSUMNOTREADY	(1 << 3)
-+     #define TP_STATUS_CSUM_VALID	(1 << 7)
-+     #define TP_STATUS_CSUM_UNNECESSARY	(1 << 8)
-+
-+==========================  =====================================================
-+TP_STATUS_COPY		    This flag indicates that the frame (and associated
-+			    meta information) has been truncated because it's
-+			    larger than tp_frame_size. This packet can be
-+			    read entirely with recvfrom().
-+
-+			    In order to make this work it must to be
-+			    enabled previously with setsockopt() and
-+			    the PACKET_COPY_THRESH option.
-+
-+			    The number of frames that can be buffered to
-+			    be read with recvfrom is limited like a normal socket.
-+			    See the SO_RCVBUF option in the socket (7) man page.
-+
-+TP_STATUS_LOSING	    indicates there were packet drops from last time
-+			    statistics where checked with getsockopt() and
-+			    the PACKET_STATISTICS option.
-+
-+TP_STATUS_CSUMNOTREADY	    currently it's used for outgoing IP packets which
-+			    its checksum will be done in hardware. So while
-+			    reading the packet we should not try to check the
-+			    checksum.
-+
-+TP_STATUS_CSUM_VALID	    This flag indicates that at least the transport
-+			    header checksum of the packet has been already
-+			    validated on the kernel side. If the flag is not set
-+			    then we are free to check the checksum by ourselves
-+			    provided that TP_STATUS_CSUMNOTREADY is also not set.
-+
-+TP_STATUS_CSUM_UNNECESSARY  This flag indicates that the driver validated all
-+			    the packets csums. If it is not set it might be that
-+			    the driver doesn't support this, or that one of the
-+			    layers csums is bad. TP_STATUS_CSUM_VALID may still
-+			    be set if the transport layer csum is correct or
-+			    if the driver supports only this mode.
-+==========================  =====================================================
- 
- for convenience there are also the following defines::
- 
-diff --git a/include/uapi/linux/if_packet.h b/include/uapi/linux/if_packet.h
-index 3d884d68eb30..76a5c762e2e0 100644
---- a/include/uapi/linux/if_packet.h
-+++ b/include/uapi/linux/if_packet.h
-@@ -113,6 +113,7 @@ struct tpacket_auxdata {
- #define TP_STATUS_BLK_TMO		(1 << 5)
- #define TP_STATUS_VLAN_TPID_VALID	(1 << 6) /* auxdata has valid tp_vlan_tpid */
- #define TP_STATUS_CSUM_VALID		(1 << 7)
-+#define TP_STATUS_CSUM_UNNECESSARY	(1 << 8)
- 
- /* Tx ring - header status */
- #define TP_STATUS_AVAILABLE	      0
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 29bd405adbbd..94e213537646 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2215,10 +2215,13 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 
- 	if (skb->ip_summed == CHECKSUM_PARTIAL)
- 		status |= TP_STATUS_CSUMNOTREADY;
--	else if (skb->pkt_type != PACKET_OUTGOING &&
--		 (skb->ip_summed == CHECKSUM_COMPLETE ||
--		  skb_csum_unnecessary(skb)))
--		status |= TP_STATUS_CSUM_VALID;
-+	else if (skb->pkt_type != PACKET_OUTGOING) {
-+		if (skb->ip_summed == CHECKSUM_UNNECESSARY)
-+			status |= TP_STATUS_CSUM_UNNECESSARY | TP_STATUS_CSUM_VALID;
-+		else if (skb->ip_summed == CHECKSUM_COMPLETE ||
-+			 skb_csum_unnecessary(skb))
-+			status |= TP_STATUS_CSUM_VALID;
-+	}
- 
- 	if (snaplen > res)
- 		snaplen = res;
+Changes since v3:
+   - Updated clock-controller's dt-bindings
+   - Fixed indentation
+
+Best regards,
+Mylène Josserand
+
+[1] https://github.com/rockchip-linux/kernel/blob/develop-4.4/drivers/clk/rockchip/clk-rk3288.c#L960..L964
+[2] https://github.com/rockchip-linux/u-boot/blob/next-dev/arch/arm/mach-rockchip/rk3288/rk3288.c#L378..L388
+
+Mylène Josserand (2):
+  clk: rockchip: rk3288: Handle clock tree for rk3288w
+  dt-bindings: clocks: rk3288: add possible rk3288w
+
+ .../bindings/clock/rockchip,rk3288-cru.txt    |  8 +++++++-
+ drivers/clk/rockchip/clk-rk3288.c             | 20 +++++++++++++++++--
+ 2 files changed, 25 insertions(+), 3 deletions(-)
+
 -- 
-2.17.1
+2.26.2
 
