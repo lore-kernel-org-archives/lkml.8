@@ -2,106 +2,192 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA74C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE6F206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X5E0aMFr"
+	by mail.kernel.org (Postfix) with ESMTP id 0A0BE2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgFBTQ0 (ORCPT
+        id S1728031AbgFBTRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:16:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgFBTQZ (ORCPT
+        Tue, 2 Jun 2020 15:17:37 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:33841 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbgFBTRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:16:25 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AFF1C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:16:25 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so12512921ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UywQyHtI8fXpM4VAmwZWYaYfXJnDPZ4DdqMwxQ4d9J4=;
-        b=X5E0aMFrxTSQkPUj2EQgOzd/uLAf5y5ROaR2TC1U4xQeuRP4zZyFaefbtpALQl3g2T
-         o5c5sK1LRGuKV5nMtFan+xBNBC3btdKUlZmOydCPjurotN4pCpVSg0XhDz4Ch3tEZpai
-         oY+VeThPltHttDfod+i4ugG3wBHJf99F7dM50=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UywQyHtI8fXpM4VAmwZWYaYfXJnDPZ4DdqMwxQ4d9J4=;
-        b=b/KAk7f+McmB8b0xSwcgMGDmg534kiqxCxjmieFXOdUhwjAM4ob0XvlR+RjMRKGL3z
-         Z111yQ93m5CoJYfB1/zlshLuWqZaNJ9prp/1dXZ7g5gxvQ0mviOVILLkx70XG0w5Q6kQ
-         4oMCjFG8dYP9lUrXqcsgw8zOzoMTS/4e95z6Nf+JtATjLlIvLUPspCf2gpvelWSvRnVp
-         SJXbgIddxUKylvq90+T2Rd6V5Cu0QBzGe1GoT63zhXx5nskuDt/o70PPaVa9Dx/5Ut65
-         4HrbOXrnBEhgUKBXeEQEE0XMVj9TxiEg6IWcU0T7I3Ru95Q/E9xyobBFdPKXCH3vD2Br
-         3rFg==
-X-Gm-Message-State: AOAM531Lg6t9nPWNV/QM7jh6cFpu1El82MTF7+zJ/FnsUW/6X5drxOjR
-        iJUexbPCCSiJKDmOxp0Mb5h89BtZ6qA=
-X-Google-Smtp-Source: ABdhPJy+nBI6kbg5uD/8CA0AytCHdt7buVf9qlmZCxGX90q/lU9hUq+RSQ9/L1gmgeG/aQvRwhS+fw==
-X-Received: by 2002:a2e:8144:: with SMTP id t4mr272670ljg.412.1591125383026;
-        Tue, 02 Jun 2020 12:16:23 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id k1sm833752lja.27.2020.06.02.12.16.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 12:16:21 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id w15so6838614lfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:16:21 -0700 (PDT)
-X-Received: by 2002:a19:fc15:: with SMTP id a21mr424706lfi.121.1591125380888;
- Tue, 02 Jun 2020 12:16:20 -0700 (PDT)
+        Tue, 2 Jun 2020 15:17:36 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.138.188])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id A77146081342;
+        Tue,  2 Jun 2020 21:17:34 +0200 (CEST)
+Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
+ 21:17:34 +0200
+Date:   Tue, 2 Jun 2020 21:15:17 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v3 3/4] iio: chemical: scd30: add serial interface driver
+Message-ID: <20200602191517.GE2668@arch>
+References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
+ <20200602164723.28858-4-tomasz.duszynski@octakon.com>
+ <CAHp75VfjWG_3XC5FJoaU7XXJc+04JTbEKdjZK=g6ffBPvJNhxA@mail.gmail.com>
+ <20200602175723.GC2668@arch>
 MIME-Version: 1.0
-References: <20200602052533.15048-1-john.stultz@linaro.org>
-In-Reply-To: <20200602052533.15048-1-john.stultz@linaro.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 2 Jun 2020 12:16:09 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com>
-Message-ID: <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com>
-Subject: Re: [PATCH] wireless: ath10k: Return early in ath10k_qmi_event_server_exit()
- to avoid hard crash on reboot
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rakesh Pillai <pillair@qti.qualcomm.com>,
-        Govind Singh <govinds@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        ath10k <ath10k@lists.infradead.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200602175723.GC2668@arch>
+X-Originating-IP: [34.103.240.103]
+X-ClientProxiedBy: DAG2EX1.emp2.local (172.16.2.11) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 11947486865640807583
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedguddtfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnheptdehveethfffudetjeeftdekueehjeegjedvteffgfevkefffeegffeugeehgfejnecukfhppedtrddtrddtrddtpdefgedruddtfedrvdegtddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvght
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Sibi
-
-On Mon, Jun 1, 2020 at 10:25 PM John Stultz <john.stultz@linaro.org> wrote:
+On Tue, Jun 02, 2020 at 07:57:23PM +0200, Tomasz Duszynski wrote:
+> On Tue, Jun 02, 2020 at 08:04:16PM +0300, Andy Shevchenko wrote:
+> > On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
+> > <tomasz.duszynski@octakon.com> wrote:
+> > >
+> > > Add serial interface driver for the SCD30 sensor.
+> >
+> > ...
+> >
+> > > +static u16 scd30_serdev_cmd_lookup_tbl[] = {
+> > > +       [CMD_START_MEAS] = 0x0036,
+> > > +       [CMD_STOP_MEAS] = 0x0037,
+> > > +       [CMD_MEAS_INTERVAL] = 0x0025,
+> > > +       [CMD_MEAS_READY] = 0x0027,
+> > > +       [CMD_READ_MEAS] = 0x0028,
+> > > +       [CMD_ASC] = 0x003a,
+> > > +       [CMD_FRC] = 0x0039,
+> > > +       [CMD_TEMP_OFFSET] = 0x003b,
+> > > +       [CMD_FW_VERSION] = 0x0020,
+> > > +       [CMD_RESET] = 0x0034,
+> >
+> > Hmm... Can't we keep them ordered by value?
+> >
+> > > +};
+> >
+> > ...
+> >
+> > > +       ret = wait_for_completion_interruptible_timeout(&priv->meas_ready,
+> > > +                                                       SCD30_SERDEV_TIMEOUT);
+> > > +       if (ret > 0)
+> > > +               ret = 0;
+> > > +       else if (!ret)
+> > > +               ret = -ETIMEDOUT;
+> > > +
+> > > +       return ret;
+> >
+> > Perhaps
+> >
+> >   if (ret < 0)
+> >     return ret;
+> >   if (ret == 0)
+> >     return -ETIMEDOUT;
+> >   return 0;
+> >
+> > ?
 >
-> Ever since 5.7-rc1, if we call
-> ath10k_qmi_remove_msa_permission(), the db845c hard crashes on
-> reboot, resulting in the device getting stuck in the usb crash
-> debug mode and not coming back up wihthout a hard power off.
+> Matter of style but since I will be doing other changes I can touch that
+> too.
 >
-> This hack avoids the issue by returning early in
-> ath10k_qmi_event_server_exit().
+> >
+> > ...
+> >
+> > > +       char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR },
+> > > +            rxbuf[SCD30_SERDEV_MAX_BUF_SIZE], *rsp = response;
+> >
+> > Please, apply type to each variable separately.
+> >
 >
-> A better solution is very much desired!
+> Fine.
+>
+> > ...
+> >
+> > > +       switch (txbuf[1]) {
+> > > +       case SCD30_SERDEV_WRITE:
+> >
+> > > +               if (memcmp(txbuf, txbuf, txsize)) {
+> >
+> > I'm not sure I understand this.
+> >
+>
+> Ah, thanks for catching this. tx should be compared to rx.
+>
+> > > +                       dev_err(state->dev, "wrong message received\n");
+> > > +                       return -EIO;
+> > > +               }
+> > > +               break;
+> > > +       case SCD30_SERDEV_READ:
+> >
+> > > +               if (rxbuf[2] != (rxsize -
+> > > +                                SCD30_SERDEV_RX_HEADER_SIZE -
+> > > +                                SCD30_SERDEV_CRC_SIZE)) {
+> >
+> > Perhaps you can come up with better indentation/ line split?
+> >
+>
+> I'd rather leave it as is.
+>
 
-Any chance you can bisect what caused this? There are a lot of
-non-ath10k pieces involved in this stuff.
+On the second thought, that would fit 100 column line.
 
-Brian
+> > > +                       dev_err(state->dev,
+> > > +                               "received data size does not match header\n");
+> > > +                       return -EIO;
+> > > +               }
+> > > +
+> > > +               rxsize -= SCD30_SERDEV_CRC_SIZE;
+> > > +               crc = get_unaligned_le16(rxbuf + rxsize);
+> > > +               if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
+> > > +                       dev_err(state->dev, "data integrity check failed\n");
+> > > +                       return -EIO;
+> > > +               }
+> > > +
+> > > +               rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
+> > > +               memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
+> > > +               break;
+> > > +       default:
+> > > +               dev_err(state->dev, "received unknown op code\n");
+> > > +               return -EIO;
+> > > +       }
+> > > +
+> > > +       return 0;
+> > > +}
+> >
+> > ...
+> >
+> > > +static struct serdev_device_driver scd30_serdev_driver = {
+> > > +       .driver = {
+> >
+> > > +               .name = KBUILD_MODNAME,
+> >
+> > This is not the best what we can do. The name is an ABI and better if
+> > it will be constant (independent on file name).
+> >
+> > > +               .of_match_table = scd30_serdev_of_match,
+> > > +               .pm = &scd30_pm_ops,
+> > > +       },
+> > > +       .probe = scd30_serdev_probe,
+> > > +};
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
