@@ -2,111 +2,111 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC41C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD724C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 869382072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dM8oqfer"
+	by mail.kernel.org (Postfix) with ESMTP id 9039420663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgFBT76 (ORCPT
+        id S1727946AbgFBUAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBT76 (ORCPT
+        Tue, 2 Jun 2020 16:00:44 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:51685 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBUAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:59:58 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05900C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:59:57 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b5so2875041pfp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pDJvPNaeJdVNz7jP499BIJ/LDFB76CjtukHr7y52odE=;
-        b=dM8oqfersy2dlF0L5+FKjEh6v+rLzjIIj8tW1+809sREH/F21P2GsVszFVwu3Hk8ua
-         /fo6vDXKZ5TsWCW6GR2iSNws2DAzNYi8w6QxPzeTGqHoDiHo9bW8HoMQUnCqoA4WslzS
-         TyIifApgTKjaWSeN0DDazjEeQbhXrTYOLGC2PoN5FtcNm12knA4+CJdIHdjo2WAutJKB
-         oSZHBqKyUnNLd5q7gACUEgRySk86mWXXiNSUKJ+mfY5IeOx1W39XfHO3NYHB5LGPGfmK
-         hpsAeHHnq/YFDr1PEtgAjYSfXLdRgeIzGda/iSTDGRV6+H291A84dJigCKMG1WTVyyIi
-         pnMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pDJvPNaeJdVNz7jP499BIJ/LDFB76CjtukHr7y52odE=;
-        b=nIXpAhYE5l+chKccCAIAD3PV6Vvio1oJFr0GFdiFlj4g7YBqTDpvEFWZTleRjwvFoF
-         hh4XlLVTPHgA54WyqC5w9se9tp+I41MA6YnaH3CUw9scXMECisaqVPR3Dy5JOVvuz5h1
-         k48bqSjEdkMX8XZhghnoRI6Ddy8xuTQ8LZgEwmSj0oEQXlAGHp86v5jeaJB/tLFrByFX
-         Zc2DcDg9PYPmGWW49Qcd3PK4VdBGVCVJjMmWDfc9zBSTrf27Xocrix+zKde5/odjmkhz
-         2CBhVS6lKpomPAp1jBZ/PY9+3K5sNo8VH6nGH4NYZvMfr5zBCSoikhdWxpS48Sbp8WA5
-         /CPg==
-X-Gm-Message-State: AOAM531RrNz+rZGSKahVZ3u4EI0wuP/431FFzX20WubgwDa8XyXo/2Ju
-        dg8fAqwWbCb+Fk6lxGD+TBaKWdsuzpHrO7KeQsAqsA==
-X-Google-Smtp-Source: ABdhPJxs+5yD7y5OyQNSbnCTKMWKbvypIEf4W4CdR4cIUQ9ykyiUOMXHPFeygMIKGrr6VaBqIy1y1qEQ0GPuqZNTTEk=
-X-Received: by 2002:a17:90a:4e8c:: with SMTP id o12mr856663pjh.25.1591127996304;
- Tue, 02 Jun 2020 12:59:56 -0700 (PDT)
+        Tue, 2 Jun 2020 16:00:43 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MyK9U-1im34I00Bo-00ygd9 for <linux-kernel@vger.kernel.org>; Tue, 02 Jun
+ 2020 22:00:42 +0200
+Received: by mail-qk1-f179.google.com with SMTP id v79so13778407qkb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:00:41 -0700 (PDT)
+X-Gm-Message-State: AOAM530R0sKYhwt8iK+GL5I+ub2ulvT69OVSSe0f5QhFPrS0Qk7zjvSj
+        Kj6gH5BrSiJKNRwO15Bf06gD/DeCJkMOHHQXiV4=
+X-Google-Smtp-Source: ABdhPJyB5+r7g3bHdXBxRdOOYP+7Rw0T2HuVg/Rbf+3oEj8ADNCBgrexKnNOpu+oGkSnzC4SnXDxD46Jw/blC+iUP8E=
+X-Received: by 2002:ae9:c10d:: with SMTP id z13mr24759360qki.3.1591128040882;
+ Tue, 02 Jun 2020 13:00:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200602184409.22142-1-elver@google.com> <CAKwvOd=5_pgx2+yQt=V_6h7YKiCnVp_L4nsRhz=EzawU1Kf1zg@mail.gmail.com>
- <20200602191936.GE2604@hirez.programming.kicks-ass.net> <CANpmjNP3kAZt3kXuABVqJLAJAW0u9-=kzr-QKDLmO6V_S7qXvQ@mail.gmail.com>
- <20200602193853.GF2604@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200602193853.GF2604@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 2 Jun 2020 12:59:44 -0700
-Message-ID: <CAKwvOd=TZsioqoUU+xZSUMooqux6Meu54PBCxP2mbtRb3Yp5pg@mail.gmail.com>
-Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of KASAN
- and UBSAN
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1583603819-9651-1-git-send-email-santosh.shilimkar@oracle.com> <8750635a-37de-f4d0-08b1-16e904be2de7@oracle.com>
+In-Reply-To: <8750635a-37de-f4d0-08b1-16e904be2de7@oracle.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 2 Jun 2020 22:00:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1v7V=980HasrQ8t96mLG3wHWW1SXwbXDL5o=F1oFd-Fg@mail.gmail.com>
+Message-ID: <CAK8P3a1v7V=980HasrQ8t96mLG3wHWW1SXwbXDL5o=F1oFd-Fg@mail.gmail.com>
+Subject: Re: [GIT PULL] ARM: Keystone DTS updates for 5.7
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     arm-soc <arm@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mEoBN5p95MB5V5bZp+wNqn2bN/3zZceietOTAhqGMW9qPJdvVL3
+ MR5/wL9wGso6tSG2I/22LPWGTM3IoPdaBpQyYH+XDVYwD1RxMf0A/KZPLwKKllTIMTW8cyQ
+ lC6E37UL8DpHUl/eNDudwtpZL5HWi6vpFmxogjyqvjunxFpUHLl8k7kxZoIuxOkQwnWOEu6
+ v9YalmmEheAqzvLnlc6xw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VPDAF7SBqC8=:FRxcJDAru4WEcgx0NSJlkK
+ umDi9WI73G+W5y41YlXis+AfaxPWWVoB06iWBC/J4tCOp4frgvaNyIpX6Y/q/x2sqL8s8qQ/+
+ jy0TuGK0xQ9zOZD5GzoY2ajnWenEahLb8OTbTgpEo5OnPWJ4oEJFaSDN1Fji9vVaoirUMjl+M
+ eBrfmLEgoJe3ylVHyCrkeOMSfbK50HXol5cMA5BX775r8iM3F7n3n2vq9476LdY4O9iwICQjE
+ AUY/caQjvku/cqP2duOcWAKW07PrGrQPZMvLeEJlK2bqy57FjN/GHGMqayK6Goav1UJbRlrQo
+ 3EBC5UBdZEpfcIwFM+vhNlY+S5AsB9lBu+feQ2jFdVmSLtjhFcw1JXx9FiKfSycTkHJGpR+/+
+ +KQyqMbDoECinfZ48OpVD/8eaEqwIXMMAYPqlFNFJx2xDTnaRbarXRmpgKbhIIzTJaJgbQdMV
+ PB4EvHY/emTO3ev8YS6B/KHPBEk8jAPWysvBWFwItAyXdsYhTzux9gaTSn/nFMQdAv4Cjpag9
+ XRo4Ihno1bCEHGq5b5mtnXM3v4IVel36I7aAJW1B96ePyj77bmeogq6vcI/5k2xleRqp6CYix
+ AYuTt+l3xgZJ5+Ekyi/Upkm5yk7cJxzpjV7sAkndgn+2j7VA1HEUtgYsMokqJUTu+V50rK4h+
+ FCdTpOB6LuiTThClqXgtSHcw/UWca+2gYnLVGaobgYNWMaoPw5dL0Pm9t5B889sTxypqZWWAL
+ a0cesNw9igKo8b0Yip2L51p7Y4k0LT6JJBWu2esn5Lw/vv2Uz0DfH91fYvl4tmqL2Son5ctWO
+ /WdWECh6N+X47E7wjqVpg+daqqN+UEP+P7yIMv0AcPKRpspJOo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 12:38 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Jun 2, 2020 at 5:14 PM <santosh.shilimkar@oracle.com> wrote:
 >
-> On Tue, Jun 02, 2020 at 09:25:47PM +0200, Marco Elver wrote:
-> > On Tue, 2 Jun 2020 at 21:19, Peter Zijlstra <peterz@infradead.org> wrote:
+> Hi Arnd, Olof,
 >
-> > > Currently x86 only, but I know other arch maintainers are planning to
-> > > have a hard look at their code based on our findings.
+> On 3/7/20 9:56 AM, Santosh Shilimkar wrote:
+> > The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 > >
-> > I've already spotted a bunch of 'noinstr' outside arch/x86 e.g. in
-> > kernel/{locking,rcu}, and a bunch of these functions use atomic_*, all
-> > of which are __always_inline. The noinstr uses outside arch/x86 would
-> > break builds on all architecture with GCC <= 7 when using sanitizers.
-> > At least that's what led me to conclude we need this for all
-> > architectures.
->
-> True; but !x86 could, probably, get away with not fully respecting
-> noinstr at this time. But that'd make a mess of things again, so my
-> preference is as you did, unilaterally raise the min version for *SAN.
+> >    Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+> >
+> > are available in the git repository at:
+> >
+> >    git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/keystone_dts_for_5.7
+> >
+> > for you to fetch changes up to 7856488bd83b0182548a84d05c07326321ae6138:
+> >
+> >    ARM: dts: keystone-k2g-evm: add HDMI video support (2020-03-07 09:47:24 -0800)
+> >
+> > ----------------------------------------------------------------
+> > ARM: Keystone DTS updates for 5.7
+> >
+> > Add display support for K2G EVM Board
+> >
+> > ----------------------------------------------------------------
+> > Jyri Sarha (2):
+> >        ARM: dts: keystone-k2g: Add DSS node
+> >        ARM: dts: keystone-k2g-evm: add HDMI video support
+> >
+> >   arch/arm/boot/dts/keystone-k2g-evm.dts | 101 +++++++++++++++++++++++++++++++++
+> >   arch/arm/boot/dts/keystone-k2g.dtsi    |  22 +++++++
+> >   2 files changed, 123 insertions(+)
+> >
+> Looks like this pull request wasn't picked. Can you please check
+> in case am missing something.
 
-Fair, thought I'd ask.  (I prefer people use newer
-hopefully-less-buggier-but-maybe-not-really-suprise-they're-actually-worse
-tools anyways)
+I pulled it now, thanks for double-checking!
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Thanks,
-~Nick Desaulniers
+The problem here was that the soc@kernel.org address was not on Cc, so
+the pull request did not end up in patchwork. I try to also look for other
+pull requests sent to the arm@kernel.org address, but it's much less reliable.
+
+       Arnd
