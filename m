@@ -2,118 +2,134 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD488C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC143C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5131206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC43F2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:33:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhNf2nuu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgFBIcw (ORCPT
+        id S1726613AbgFBIdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:32:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:46485 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgFBIcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:32:51 -0400
-IronPort-SDR: 3bI2UUee2k86+R5kY+fnWEdfM6e7sGvFig/urilSDE0wBwg3U2qjUrOUEvfWdX2hp+sgC0pENW
- ivl22ijdnTDA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 01:32:51 -0700
-IronPort-SDR: QGLK+NJxmE+S3aUODh9790b2ovJai3DW6vmGTkGlAZlbLpevL6JSbIIBRjkSn/CiuZXt7fUx1I
- uyB71eYdoxyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
-   d="scan'208";a="257554921"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 02 Jun 2020 01:32:50 -0700
-Received: from [10.249.224.186] (abudanko-mobl.ccr.corp.intel.com [10.249.224.186])
-        by linux.intel.com (Postfix) with ESMTP id 72E8258027C;
-        Tue,  2 Jun 2020 01:32:48 -0700 (PDT)
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-To:     Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
- <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
- <20200601233732.GA691017@tassilo.jf.intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
-Date:   Tue, 2 Jun 2020 11:32:47 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 04:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBIdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 04:33:07 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30BFDC061A0E;
+        Tue,  2 Jun 2020 01:33:07 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id fs4so1030728pjb.5;
+        Tue, 02 Jun 2020 01:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/4ExNlqdWV2hoIghGjyaIkzWD98mgAYBeMg/elBA1qo=;
+        b=UhNf2nuuRyPkwzqG4dKTLLo2Wit4J2x13DHLDWuOBlKE0WslqrlfaJSMDrz6jSNF5B
+         3Yejecg4kn6QM9b6r9ikjfFelZi7UVJE2nfQos511Lyi0ackkDMWZeFks5kIl6Fl00+I
+         c6RqlJ6wv/eMDjSDx+DS1fOiSRb9FDIH1XSGWzKA29sctAC99949qA5LtASK6RliJEKm
+         DT1L05dJD0TwWWeQmI6UBoXggNHyHCBk8j027hd0JqHphJkDx9Qkz7KQYXK1dLo37/E/
+         tUv1jPPZqPq+EHCo2NmuZW9JH5kXXvhXc2fTNEP6ZGd7yMTb+5UIvoeg27ZL8kj64kHt
+         N8/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/4ExNlqdWV2hoIghGjyaIkzWD98mgAYBeMg/elBA1qo=;
+        b=LBNlZGjhoOhl8Iegq6YCJ2rvAFR9e7CFylpgmiRc5flZ+NjALvb3QJmKEdPeuKlsEv
+         meTxMTAJPt4cAD6cX9FnqTT4Iy4rRDIOcNT0ftzHOxv118KLsfNRDCki4ZMAjGlrkXIE
+         iJe+pfSzdM3+Wf9f4/ai3dh6A3+fB+6+XpekUpHxIWIzyrFRAQp57EoS+AYpBTb9kGSp
+         cFP2iDkfkW0dneDrp3FL5LXwTNy7QNy1csIagRX2AKcuH3l1GONsF6XHRZrP8EtFNtmg
+         H+pogD6xY8/4YLZWz9tss2Irf0pXvyjlh2Ww/m2eOUShctwfV9DaULTQzFT1dc4X1SEG
+         vnTA==
+X-Gm-Message-State: AOAM532QgREvpDWhkh6dh+FTsgHbAXwqvJYPo89maxt2/LT5emh+8HEU
+        44tAmZGCSHkO09fJh7/OLo8IEsk8UOmxnAb8TEk=
+X-Google-Smtp-Source: ABdhPJx+xMYrQhgIXWpHWyEKUMgBuWLmqvHuJeDFzfURAStttX7BixO5vHVMGcZsWuY1Stp+8rpVFZJjTn0AspYNvrM=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr4248152pjq.228.1591086786656;
+ Tue, 02 Jun 2020 01:33:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200601233732.GA691017@tassilo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200601133950.12420-1-johan@kernel.org> <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
+ <20200601140117.GF19480@localhost> <CAHp75VdSLb7bnd4v52wYD8KfqcDxjkirBgJVEYMWo=cwdeLzsg@mail.gmail.com>
+ <20200601142947.GG19480@localhost> <CAHp75VewzTiHnO0PZ6O47cLs4VyssFsqvrc2CORK6LbW+Gm3bQ@mail.gmail.com>
+ <20200601153104.GH19480@localhost>
+In-Reply-To: <20200601153104.GH19480@localhost>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jun 2020 11:32:55 +0300
+Message-ID: <CAHp75VcnWcCE_BW5JULRss5kLioyOvvCMyFqiqv-NVckGdjC-w@mail.gmail.com>
+Subject: Re: [PATCH 0/6] leds: fix broken devres usage
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 1, 2020 at 6:31 PM Johan Hovold <johan@kernel.org> wrote:
+> On Mon, Jun 01, 2020 at 06:09:23PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 1, 2020 at 5:29 PM Johan Hovold <johan@kernel.org> wrote:
+> > > On Mon, Jun 01, 2020 at 05:08:40PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Jun 1, 2020 at 5:01 PM Johan Hovold <johan@kernel.org> wrote:
+> > > > > On Mon, Jun 01, 2020 at 04:51:01PM +0300, Andy Shevchenko wrote:
 
-On 02.06.2020 2:37, Andi Kleen wrote:
->>> or a pathname, or including also the event default of "disabled".
->>
->> For my cases conversion of pathnames into open fds belongs to external
->> controlling process e.g. like in the examples provided in the patch set.
->> Not sure about "event default of 'disabled'"
-> 
-> It would be nicer for manual use cases if perf supported the path names
-> directly like in Adrian's example, not needing a complex wrapper script.
+...
 
-fds interface is required for VTune integration since VTune wants control
-over files creation aside of Perf tool process. The script demonstrates
-just one possible use case.
+> > > > > That's not the issue here. The child driver is allocating memory for the
+> > > > > class device (for example using devres), and that will end up being
+> > > > > freed on unbind while said device is still registered. The child driver
+> > > > > may then even be unloaded. No extra reference can fix this.
+> > > >
+> > > > Okay, I didn't still get how dropping devres will help here.
+>
+> > > Any driver which frees a resource before making sure it's no longer used
+> > > it is just plain broken. Unfortunately, devres makes this harder to
+> > > reason about and people get it wrong. This is roughly the current
+> > > situation with these drivers:
+> > >
+> > >         drv->probe(dev)
+> > >           foo = devm_kzalloc(dev);
+> >
+> > >           devm_foo_register(dev->parent, foo);  // NOTE: dev->parent
+> >
+> > A-ha! Thanks for this detail.
+> > But why are they doing so?
+>
+> As I mentioned in a commit message, we have quite a few MFD drivers that
+> register class devices under the parent device directly and have been
+> doing so for a very long time.
+>
+> As this is reflected in sysfs and we may have users relying on the
+> current topology, changing this shouldn't be taken too lightly (drivers
+> may also depend on it). And in any case, it wouldn't be stable material
+> to fix the regressions at hand.
 
-Control files could easily be implemented on top of fds making open operations
-for paths and then initializing fds. Interface below is vague and with explicit
-options like below it could be more explicit:
---ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
+I see.
 
-Make either fds and or files provided on the command line. Implement file
-options handling callbacks that would open paths and setting fds. Close fds
-if they were opened by Perf tool process.
+> > >         drv->remove(dev)
+> > >         devres_release_all(dev)
+> > >           kfree(foo);                           // foo still registered
+> >
+> > > but foo remains registered until the parent driver is unbound.
+> >
+> > Since the last fixes against kobject elimination, shouldn't be this
+> > simple fixed by not supplying dev->parent above?
+>
+> No, that's a separate issue as it also changes the device tree.
 
-Adrian, please share your mind and use case.
+Thanks for elaboration.
 
-~Alexey
-
-> 
-> -Andi
->>
->>>
->>> e.g. add "--control" and support all of:
->>>
->>> --control
->>> --control 11
->>> --control 11,15
->>> --control 11,15,disabled
->>> --control 11,,disabled
->>> --control /tmp/my-perf.fifo
->>> --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
->>> --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
->>> --control /tmp/my-perf.fifo,,disabled
->>>
->>> Regards
->>> Adrian
->>>
->>
->> Regards,
->> Alexey
->>
+-- 
+With Best Regards,
+Andy Shevchenko
