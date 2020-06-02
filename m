@@ -2,147 +2,172 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F210C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D5D206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF44D20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KhkZSSBz"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="pBzsdEqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgFBJFe (ORCPT
+        id S1726580AbgFBJHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:05:34 -0400
-Received: from mout.web.de ([212.227.15.3]:53807 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgFBJFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:05:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591088710;
-        bh=XhGeAXDfw9AiiSAdvgQbq6rf/vrbHOyi+DVrpim7IVs=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=KhkZSSBzq4cg1+S1MUCxdW3q+ygMyZKelIIs8+nygoTvJYuJs8IpVCeZNnYdfQ6Fb
-         jV7xUR6cN2hzw4d7WiI78rGl/YiThUr8LGcarJu8C0Rl7cyfbiSnKJlfFB96aWPxUb
-         3fD/OB88W9Q4mGq14X45RN1dB5Zi33RYBTiBb+a8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M7KOE-1ijNjM1KAY-00x06b; Tue, 02
- Jun 2020 11:05:10 +0200
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-spi@vger.kernel.org
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] spi: sprd: call pm_runtime_put if pm_runtime_get_sync
- fails
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <8ea80af8-e964-4488-25c6-837f2ac88493@web.de>
-Date:   Tue, 2 Jun 2020 11:05:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+        Tue, 2 Jun 2020 05:07:22 -0400
+Received: from mail-eopbgr1410137.outbound.protection.outlook.com ([40.107.141.137]:9440
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726311AbgFBJHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:07:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KwoM9x9rYN/Rbzl9hZYP71j6jTOXZHTJV6OefrUbYarSsMUawvygh+8uzT9H0frxYPrzIrivzMOHrQLd0j+swOPAQ//f4RHr/Jul9X13y8SvwPadluhQUNHzyVBSK2nNudkZ//IX6L/KF+vGMkawygDshxFvaV0VkVIBB6v+MTXc+mco1FXbi2AxVfp1M8z+t1gub2gJZlbbv/PWGzvq6t3f8qdtsCnRzrPnlyfmsCarMbVWAF9b2LJ/6f4gwa4VbxdYcYozxHAKwhyL8PYg9BfpK2WHsGSpWSACM8l6SQSjsiG6xAGZXOAP73SYlRhSjYY6+us4rJvB/FVstC3IUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AX6/p9SoNQGtsFzGs/40isfbplQwU4ymyIQZ8X6wDF4=;
+ b=cEJQRrVq/oVhtdSaCZh5t62wDyHlS5nMPRBS0sR1JnuusgzmiFgT3a1vIivsRC3HM0V8KTIaV1ycjaNPlbIuxzVfXX80yjiIOIRMip3fWyjuOljEw5EWG3w9P//B0oooqVKJyPgHl+CQ7oZk2FwQSqOnkfrF34OBc5uubhC+4SbWdHMHct9TFgCCfAPJmPB3HMO1thrftX5JHku+/FHA6aTZCaRxMxhrD5cO+XWjnwT7ebpnnGZoXcUqqYrPf2krgcBsxKp4CBe7Sl5PPqTHClRbzrA1j0rR+H6aQBiJn1FaX3y0RdueRABIBpsR5Hc3PLoD5ZILNIh4cV5lJfyJpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AX6/p9SoNQGtsFzGs/40isfbplQwU4ymyIQZ8X6wDF4=;
+ b=pBzsdEqboNGXHNwFRvNZc88tPQm6RSos6tMzSE7MJKpumr29l1oJrWWdwMBtqN5ShqRM77Fz2I05tAfYsCL0tvxwhhGJHhwBuNQpPcU4mln2w04JzHXTuLAC3kJbtmbrJPoivGQ/rjSmw1YzEO19bm6TUaXWP8jbrTgl/qHGhtA=
+Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com (2603:1096:603:37::20)
+ by OSAPR01MB2177.jpnprd01.prod.outlook.com (2603:1096:603:18::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.25; Tue, 2 Jun
+ 2020 09:07:16 +0000
+Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com
+ ([fe80::c44c:5473:6b95:d9fd]) by OSAPR01MB2385.jpnprd01.prod.outlook.com
+ ([fe80::c44c:5473:6b95:d9fd%6]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
+ 09:07:15 +0000
+From:   Chris Paterson <Chris.Paterson2@renesas.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 4.4 00/48] 4.4.226-rc1 review
+Thread-Topic: [PATCH 4.4 00/48] 4.4.226-rc1 review
+Thread-Index: AQHWOEblTp/wW69zwEmAlBmsCs3iiajEQ4lwgABQ3oCAAHTo4A==
+Date:   Tue, 2 Jun 2020 09:07:15 +0000
+Message-ID: <OSAPR01MB2385A58EDAF34A14A3756230B78B0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
+References: <20200601173952.175939894@linuxfoundation.org>
+ <OSAPR01MB23858265B59669B78394A94CB78A0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
+ <20200602020651.GM1407771@sasha-vm>
+In-Reply-To: <20200602020651.GM1407771@sasha-vm>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 15404bcb-fe4e-4a1b-93de-08d806d45838
+x-ms-traffictypediagnostic: OSAPR01MB2177:
+x-microsoft-antispam-prvs: <OSAPR01MB2177D9D8C63E37696949E2ADB78B0@OSAPR01MB2177.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0422860ED4
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aa2dXi7ddlBBScsueMkKF9uH7hkEFca/sqgwN2Vsv+absf7KDlHZ9+4sRuZPXfPefdAHxD23p6GMdCGO0tpJajtJSgGezRadJIvLXnUwoJ5Pr4KCgyPtXyVhnVhZE1Qav29RCGtNKblN7brz/yFQYqXRokGZEIOcsBAh1tGvt3jYs8WOp0BlTeLmGX1RazocgaHnvEW1RkksjMYMu8j5TAsbO/FEVQBuw2jAHTgVI40NbHOoOuE0oTcHVZrAwZ0vfDlLeKsBgadvWcOSBxBOM7n7+4w+HlllTnGu6aq9Px9uLmIlLZgAIYOosPhLhRn5dCYrbN/irpJOziVJzZxNKc0+qONmYxxbAzX0FrQTnfdNcfLZ7MFxIAEYI+Vrsfjg94OCx19QuUwzS8XYMrVWxg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB2385.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(8676002)(316002)(478600001)(7696005)(966005)(33656002)(54906003)(186003)(26005)(6506007)(9686003)(4326008)(8936002)(55016002)(66946007)(66476007)(66556008)(64756008)(66446008)(86362001)(83380400001)(76116006)(6916009)(2906002)(7416002)(52536014)(71200400001)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: uMwFoNXJ9PbK9Q5VMfgYrIr4rWypzjSMPF1vKFx+5JIGZCHYqV9FHFJD+7j1H1QtCSJpdsbVp1j/sa6Q8ad6NpAtv1+J/el13Vm1LrGNdYq3yjxqX31OlnYQWySEdV/9F8FfiukDMyMr/v1vqqbP+iDAbaZcKXYsOhadLpLRqNt8najcC+xVBfDcqqrJQRD7n0xb9aawQBmeB4fA5WzNobji3qqlWmprCmPFJ5qfV3B/v8CVXXy1jYbY9M6ZhjQFVbZjH4fgqzWvBX4bxjulN+lhAI25NIf8Da3CHUbu0pf5D8ZZbBdNVFtHoLAzPj4Ciop9536XfGualYyE4rkDJOFH/Vj8bkKZyX5g21JeqGqUi6nXGrd1OmFQCo7SvTSN5d+26KwKgZR0GoeQmXZ5LsmrMyd4txj9/Js82DqohpHdpgeZTXxEYX/Jqg1lvAkQk/nueJzfym8e0QKrk5DVDXUqYYJlJhbhkPB1Db7IszmUlX4Mhs2sFoYy/NDdqPWU
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:r0Ml+LxQIhB/V5/UspH+IDLMruxhQLcNn86TeiX5mpWvHOPmUt6
- dhKOevzUl0PCUv6LQ/qbGfW8kgiToEULAjnKLxZXhwVgHcqxTf0Fju6Bfxhe9RlVidu9ebv
- hf/BEG5CbdaCBGIxhXV74/LqpgpLMvq6q+xWfXcApQ9OXAZxzIl5aqtovjSxzoYz3BxUS/G
- exqSPeOKvHJqs0SnGC5Yg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lZgWfSGFN6U=:FdqFp+0W4JZXijtRfp1A42
- Xh+yrYj8w+h/anapy1Z1wO+c+/vpZpLaYN/cq7lUpjH7Zf+aqOaVWaY+Rrmb7/dxFa+xATLGi
- WfXanV/kO0+UNIY7FAHQDSR6M+y2B95ALRdE7hChGj91n0hJEQENeNxIwmoIEvxMdY4Ea+Xvi
- oW6tWQyivByg0YzW+NEFfdL5KOyPlYhpNpkD4sl2bykYTUlB2SUkAGc+kzdwwBzdXWgQETXRQ
- CHwOzdjyuE9dgXi8FxPqwk+vKtOhWqTvVhlFPTzRLLBu9wJEi/0E23zSTyAa9PB1MKdLeUlzb
- 0gJmqTb4LgMbOnFJ/pVMAhCZuvTFsgPUmww+PrteYJDnFmpeAJ6pmGI4Z3AXkRfk2LLRplrUT
- KBSZ79NntY9jaY+5ihZbMmszW0Ck/nfuEvXpepTdT7CzZIdEunUzQVmMMmnu99SfZmyQhSd7a
- z5+e7MUUpe7TUFLFfdZ1f+vTAPd1OxgzoQYkI4Hxvp5v2gX3aSy2KP1Cn2yIpkuNGLIpbvvlw
- 0Ojqdd/Y6lGhUGSKgvgj8mYMNl419udU0SB3FaJz8CZllJDU9JofBrP3o/L2jGE6ZN3mt/IKd
- 8oR9fF+kMu6eJm6klSxLo3y1euFhTn0z6w2CdgAEdEcrLhmSeXZWRRy2Uk0h4IITyRCOB3ioi
- 9XAUuCdN/9w4LwCKUZE1UzenW0IWtY2ljNEtlkOgexwVtpFd049zfoNQOC5Pq41owWJCEY0vl
- bwzr0ODRP527qwrTlGlxmF9R0fYBrYsQut7rgfZTgWPurz94VsclPgl3kL3JO0lJBMZ0pTzuU
- UsXjhIj/AGodVmmwEL1jrcAJQvx+WkBMDlfaNNMd2XgD1eh728ypvwksm7erwcz+WKAn8ZHO0
- Q5qpp0Y5kd05yG/iTnz3HU1WcYfN8mLbfEa+fmdefbk0FTLwccilyaUrEF9xJo67+24JVUpS4
- qmH6uE9iUo7BmZ5QwtFK6UlDFcZUQgpVm4rb+rmRwlVO7NE66wuNcTOgnR45Dp9NtkfDAHS4U
- WKRQE1EiaBNefyqZZ8iBmmXycnmgETrKXCco5JRcpi5Wq9rbmGraQeX1KonW0+qMkm/rjIkHh
- zHaLmn26qM0VWvmRSkGz0uznQDCoPspDaPB1Vg/W6+d12q7n4xubORoe1mXDYWUKUI1455uM1
- PfaB0TGyVMOSEO3t2as6TIlilkmBaB2oNRPewP/yddpxkRg1IxzCbbLCHJFDfwcJ2CQx7iN2K
- 8xo9BB4COS7LkYtkR
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15404bcb-fe4e-4a1b-93de-08d806d45838
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2020 09:07:15.3942
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YuMaozuaZcXfyN7R4WoU90gkIkbUhu1qFSefQ58g1uD2DOYa4dyfc/W8eBKGjMv9ACAaNdGFi5B6LtfMR5D0GX8k5rOlfxxnE9a8txhtILU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2177
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Call to pm_runtime_get_sync increments counter even in case of
-> failure leading to incorrect ref count.
-> Call pm_runtime_put_noidle if pm_runtime_get_sync fails.
+Hello Sasha,
 
-How do you think about a wording variant like the following?
+> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> Behalf Of Sasha Levin
+> Sent: 02 June 2020 03:07
+>=20
+> On Mon, Jun 01, 2020 at 10:14:20PM +0000, Chris Paterson wrote:
+> >Hi Greg,
+> >
+> >> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> >> Behalf Of Greg Kroah-Hartman
+> >> Sent: 01 June 2020 18:53
+> >>
+> >> This is the start of the stable review cycle for the 4.4.226 release.
+> >> There are 48 patches in this series, all will be posted as a response
+> >> to this one.  If anyone has any issues with these being applied, pleas=
+e
+> >> let me know.
+> >
+> >I'm seeing some issues with Linux 4.4.226-rc1 (dc230329b026).
+> >
+> >We have 4 configurations that fail, 2x Armv7 and 2x x86, whilst building=
+ the
+> modules.
+> >
+> >Error message:
+> >  ERROR: "pptp_msg_name" [net/netfilter/nf_conntrack_pptp.ko] undefined!
+> >  ERROR: "pptp_msg_name" [net/ipv4/netfilter/nf_nat_pptp.ko] undefined!
+> >
+> >Relevant patches are:
+> >  69969e0f7e37 ("netfilter: nf_conntrack_pptp: prevent buffer overflows =
+in
+> debug code")
+> >  3441cc75e4d1 ("netfilter: nf_conntrack_pptp: fix compilation warning w=
+ith
+> W=3D1 build")
+> >
+> >I haven't had a chance to dig deeper yet but will do in the morning.
+> >
+> >Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/lin=
+ux-stable-
+> rc-ci/pipelines/151700917
+> >GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip=
+-
+> pipelines/-/blob/master/trees/linux-4.4.y.yml
+> >Relevant LAVA jobs:
+> https://lava.ciplatform.org/scheduler/alljobs?length=3D25&search=3Ddc2303=
+#table
+>=20
+> Thats and interesting one... I've queued fe22cd9b7c98 ("printk: help
+> pr_debug and pr_devel to optimize out arguments") for 4.4 to address
+> this.
 
-   Change description:
-   The PM runtime reference counter is generally incremented by a call of
-   the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D.
-   Thus call the function =E2=80=9Cpm_runtime_put_noidle=E2=80=9D also in =
-one error case
-   to keep the reference counting consistent.
+This patch resolves the issue for me.
 
+Test pipeline: https://gitlab.com/cip-project/cip-kernel/linux-cip/pipeline=
+s/151885545
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
+Thanks, Chris
 
-Regards,
-Markus
+>=20
+> Thanks for the report Chris!
+>=20
+> --
+> Thanks,
+> Sasha
