@@ -2,520 +2,414 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6963C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBF420738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C3620734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:36:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="o7Ir1fzs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jy5AiYo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgFBIgR (ORCPT
+        id S1726267AbgFBIgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:36:17 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:6250 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgFBIgQ (ORCPT
+        Tue, 2 Jun 2020 04:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgFBIgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:36:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591086976; x=1622622976;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uG+7PKwIeu87SHqQoaFEZnNX2t0lm3xjRGLPbL/M+lU=;
-  b=o7Ir1fzs1c783DkHM7qWs3CZwyGkJX+BWa8MuqOjNzteLvHwJ8uYVr33
-   cee4LcrIpVX4QLPpJy22xwwyZKV2MT2nEU/QnR6u7qriE8PKaEE/m0VmF
-   Rp2Z5BUi8D+/TueH943oTixabxY4KZXFYyn8eYbFxS41kUg+jRkv1GnMC
-   By24BtmimDjkHzM1DPqx57W/Y2H5E0UBLay3EfNLhOlX6C4iQIRYtM2h+
-   y+EKOjfser3DS+u0dy0gZ4B6XxBVj1ADIvAEzo2uFSGIwtW6wEnpSqnls
-   zzcX3hdOra+9d3aaD/7GAXtbZLw6qXlYDj4uFh8H4nBMuaF7B22Q69rHc
-   w==;
-IronPort-SDR: HT2Z27STDLnKPYPRhP0/tEg2bNOHAwXaaaXhayf5AEasLuCHpnZgjtJEsQH5WFcoPdZoQIcg2P
- CCOtr1CsFYfGOT4RlU3aDdY0RCpPjLz/vBmmKQzsq9I84+mdiqWuX3bdpsSZenbfsn3QVFuTOG
- 1V9Q2JRQJc5LyNexU1cpqVG5FZwJ56tEUlpx6KJLD9BnOIpwTnm4N5PzundwzoCEG1oUWAAbjz
- IEkA0xe8/TGhCKF+AXD+F+2xn1KKyd+Hau0IutYjn3uklYldDEq0UGbYDVDFmRms5IuwRHpaAM
- H0I=
-X-IronPort-AV: E=Sophos;i="5.73,463,1583218800"; 
-   d="scan'208";a="77879278"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jun 2020 01:36:16 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 2 Jun 2020 01:36:19 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 2 Jun 2020 01:36:14 -0700
-Date:   Tue, 2 Jun 2020 10:36:13 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-CC:     <po.liu@nxp.com>, <claudiu.manoil@nxp.com>,
-        <alexandru.marginean@nxp.com>, <vladimir.oltean@nxp.com>,
-        <leoyang.li@nxp.com>, <mingkai.hu@nxp.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <vivien.didelot@gmail.com>,
-        <davem@davemloft.net>, <jiri@resnulli.us>, <idosch@idosch.org>,
-        <kuba@kernel.org>, <vinicius.gomes@intel.com>,
-        <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <horatiu.vultur@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <joergen.andreasen@microchip.com>, <UNGLinuxDriver@microchip.com>,
-        <linux-devel@linux.nxdi.nxp.com>
-Subject: Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated rules to
- different hardware VCAP TCAMs by chain index
-Message-ID: <20200602083613.ddzjh54zxtbklytw@ws.localdomain>
-References: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
- <20200602051828.5734-4-xiaoliang.yang_1@nxp.com>
+        Tue, 2 Jun 2020 04:36:53 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83EC5C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 01:36:53 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id r9so971503ual.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 01:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=H3Yxpmvf/jSIgS2LxZ4b2NRQSqd0Cs8jFnBdeCalSV4=;
+        b=jy5AiYo21Nj8g9MlweO+Mqsyt6anwUeETomK/CRHigeKq9x61noYUPLRhLPYVLLIxQ
+         Zxi05WXhVs+Ja+kkTFI7lfb9G4CHRLnQ8RcIKu2Jmpw9MNpOFrAHhgwyr07COj2BJfqM
+         iGjQDtcC2tD2hQJZs/j4VoXop25hiy1MbFM0JTZwKuhUUR7ncKxoeW9apvjsxuHX128g
+         UEuZ/sAO9tFKVDTme5woXlyyvVF+nqYazQF2YVAZv7wJV76FgvnkYdd2DyLOGDoXO0pu
+         xdXG7ZUvAJ29hFu9cqU3lcPQuIsrorGBxZd/xt3Onlhocm3hwruxnwIpPNMUxwLv0fW5
+         9+3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=H3Yxpmvf/jSIgS2LxZ4b2NRQSqd0Cs8jFnBdeCalSV4=;
+        b=c8N8DY2HMFPIsbNtYFVzYAh2kb/elqK3alk31n+iDx0vp8ScgaG95sGX3t4rNW2sqg
+         4RgNXooEURzkEVN1Qqfc6Fx9JsL3iM/AFMJtHhFLH30pk8J3ceScDr+xG1/cFXOn2HyB
+         6F+4o4ThTgWLn/xGWhkI07t+vRw+Z8BaxeP/k1CF9P/HSZSt1nXYPS5IQ0te2U0mf4jq
+         ZQvlNcoQIfao2R0o5LZlzAT6FwoYn8VXpsKq2erRZPvW+i+xkVRenmlxu3x2hZ/9jOKT
+         vW97wPX55RsAEze8tAjB0RYiYpVzt6LJCWLhGr+OAaaelLD+DBew6OG2StIM77VkYzvc
+         4R8w==
+X-Gm-Message-State: AOAM533QE8IlvzEOvp/MLwW4dIb/NMQjQXzAKDMGht37iaYE/gedYP65
+        cfy6Yn08GI/00f83EQ8jKSJo0pdHCchW30/UpSFYMvAx8Og=
+X-Google-Smtp-Source: ABdhPJymekmfL7pO0Vtb4MHnGLHYk/wBoElXzxSAvhbj+sCV77rPXmv1viK2rXGHyITSf+G6ilqnfhyb6qV/id1CjgM=
+X-Received: by 2002:a9f:3701:: with SMTP id z1mr17706819uad.100.1591087009888;
+ Tue, 02 Jun 2020 01:36:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200602051828.5734-4-xiaoliang.yang_1@nxp.com>
+References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
+ <20200427061426.GA11270@infradead.org> <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
+ <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
+ <2A308283684ECD4B896628E09AF5361E028BCB4B@RS-MBS01.realsil.com.cn>
+ <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
+ <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
+ <CAPDyKFo9X9ghjCeF_kGE2BhB+3QiMAMbD1Qz53saXshxy9odVg@mail.gmail.com>
+ <2A308283684ECD4B896628E09AF5361E59AD1194@RS-MBS01.realsil.com.cn>
+ <CAPDyKFp0Ahcx=iJSGeG19ekDa4rykvAnDHrn4PF5pOoONuH0RA@mail.gmail.com> <2A308283684ECD4B896628E09AF5361E59AD13F0@RS-MBS01.realsil.com.cn>
+In-Reply-To: <2A308283684ECD4B896628E09AF5361E59AD13F0@RS-MBS01.realsil.com.cn>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 2 Jun 2020 10:36:13 +0200
+Message-ID: <CAPDyKFp8gwQtPXJgdtEYQovGdFmah+kR7apFjUf_oMPZd_uU8Q@mail.gmail.com>
+Subject: Re: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
+To:     =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiaoliang,
+On Tue, 2 Jun 2020 at 04:41, =E5=86=AF=E9=94=90 <rui_feng@realsil.com.cn> w=
+rote:
+>
+> >
+> > +linux-mmc
+> >
+> > On Mon, 1 Jun 2020 at 09:34, =E5=86=AF=E9=94=90 <rui_feng@realsil.com.c=
+n> wrote:
+> > >
+> > > >
+> > > > On Tue, 19 May 2020 at 11:18, =E5=86=AF=E9=94=90 <rui_feng@realsil.=
+com.cn> wrote:
+> > > > >
+> > > > > > On Tue, 28 Apr 2020 at 05:44, =E5=86=AF=E9=94=90 <rui_feng@real=
+sil.com.cn> wrote:
+> > > > > > >
+> > > > > > > >
+> > > > > > > > On Mon, Apr 27, 2020 at 11:41 AM =E5=86=AF=E9=94=90
+> > > > > > > > <rui_feng@realsil.com.cn>
+> > > > > > wrote:
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > On Sun, Apr 26, 2020 at 09:25:46AM +0800,
+> > > > > > > > > > rui_feng@realsil.com.cn
+> > > > > > > > wrote:
+> > > > > > > > > > > From: Rui Feng <rui_feng@realsil.com.cn>
+> > > > > > > > > > >
+> > > > > > > > > > > RTS5261 support legacy SD mode and SD Express mode.
+> > > > > > > > > > > In SD7.x, SD association introduce SD Express as a ne=
+w mode.
+> > > > > > > > > > > SD Express mode is distinguished by CMD8.
+> > > > > > > > > > > Therefore, CMD8 has new bit for SD Express.
+> > > > > > > > > > > SD Express is based on PCIe/NVMe.
+> > > > > > > > > > > RTS5261 uses CMD8 to switch to SD Express mode.
+> > > > > > > > > >
+> > > > > > > > > > So how does this bit work?  They way I imagined SD
+> > > > > > > > > > Express to work is that the actual SD Card just shows u=
+p
+> > > > > > > > > > as a real PCIe device, similar to say Thunderbolt.
+> > > > > > > > >
+> > > > > > > > > New SD Express card has dual mode. One is SD mode and
+> > > > > > > > > another is PCIe
+> > > > > > > > mode.
+> > > > > > > > > In PCIe mode, it act as a PCIe device and use PCIe
+> > > > > > > > > protocol not Thunderbolt
+> > > > > > > > protocol.
+> > > > > > > >
+> > > > > > > > I think what Christoph was asking about is why you need to
+> > > > > > > > issue any commands at all in SD mode when you want to use
+> > > > > > > > PCIe mode
+> > > > instead.
+> > > > > > > > What happens if you load the NVMe dthriver before loading
+> > > > > > > > the
+> > > > > > > > rts5261
+> > > > > > driver?
+> > > > > > > >
+> > > > > > > >        Arnd
+> > > > > > > >
+> > > > > > > > ------Please consider the environment before printing this =
+e-mail.
+> > > > > > >
+> > > > > > > RTS5261 support SD mode and PCIe/NVMe mode. The workflow is a=
+s
+> > > > follows.
+> > > > > > > 1.RTS5261 work in SD mode.
+> > > > > > > 2.If card is plugged in, Host send CMD8 to ask card's PCIe av=
+ailability.
+> > > > > >
+> > > > > > This sounds like the card insert/removal needs to be managed by
+> > > > > > the rtsx_pci_sdmmc driver (mmc).
+> > > > > >
+> > > > > > > 3.If the card has PCIe availability, RTS5261 switch to PCIe/N=
+VMe
+> > mode.
+> > > > > >
+> > > > > > This switch is done by the mmc driver, but how does the
+> > > > > > PCIe/NVMe driver know when to take over? Isn't there a
+> > synchronization point needed?
+> > > > > >
+> > > > > > > 4.Mmc driver exit and NVMe driver start working.
+> > > > > >
+> > > > > > Having the mmc driver to exit seems wrong to me. Else how would
+> > > > > > you handle a card being removed and inserted again?
+> > > > > >
+> > > > > > In principle you want the mmc core to fail to detect the card
+> > > > > > and then do a handover, somehow. No?
+> > > > > >
+> > > > > > Although, to make this work there are a couple of problems you
+> > > > > > need to deal with.
+> > > > > >
+> > > > > > 1. If the mmc core doesn't successfully detect a card, it will
+> > > > > > request the mmc host to power off the card. In this situation,
+> > > > > > you want to keep the power to the card, but leave it to be
+> > > > > > managed by the
+> > > > PCIe/NVMe driver in some way.
+> > > > > >
+> > > > > > 2. During system resume, the mmc core may try to restore power
+> > > > > > for a card, especially if it's a removable slot, as to make sur=
+e
+> > > > > > it gets detected if someone inserted a card while the system wa=
+s
+> > suspended.
+> > > > > > Not sure if this plays well with the PCIe/NVMe driver's behavio=
+ur.
+> > > > > > Again, I think some kind of synchronization is needed.
+> > > > > >
+> > > > > > > 5.If card is unplugged, RTS5261 will switch to SD mode.
+> > > > > >
+> > > > > > Alright, clearly the mmc driver is needed to manage card
+> > insert/removal.
+> > > > > >
+> > > > > > > We should send CMD8 in SD mode to ask card's PCIe
+> > > > > > > availability, and the
+> > > > > > order of NVMe driver and rts5261 driver doesn't matter.
+> > > > > >
+> > > > > > That assumes there's another synchronization mechanism. Maybe
+> > > > > > there is, but I don't understand how.
+> > > > > >
+> > > > > If no card in RTS5261, RTS5261 works in SD mode. If you run
+> > > > > command lspci,
+> > > > you can see the RTS5261 device.
+> > > >
+> > > > Right.
+> > > >
+> > > > The rtsx_pci_driver (drivers/misc/cardreader/rtsx_pcr.c) has
+> > > > registered itself as a pci driver and been probed successfully, I
+> > > > assume. Then during
+> > > > rtsx_pci_probe() an mfd device is added via mfd_add_devices(), whic=
+h
+> > > > corresponds to the rtsx_pci_sdmmc
+> > > > (drivers/mmc/host/rtsx_pci_sdmmc.c) platform driver.
+> > > >
+> > > > > When insert a SD Express card, Mmc driver will send CMD8 to ask
+> > > > > the card's PCIe availability, because it's a SD EXPRESS card,
+> > > >
+> > > > Okay, so this will then be a part of the rtsx_pci_sdmmc driver's pr=
+obe
+> > sequence.
+> > > > Or more exactly, when rtsx_pci_sdmmc_drv_probe() completes
+> > > > successfully, a mmc rescan work becomes scheduled to try to detect
+> > > > an SD/MMC card. Then the CMD8 command is sent...
+> > > >
+> > > > > RTS5261 will switch to NVMe mode, after switch if you run lspci,
+> > > > > you can see
+> > > > RTS5261 disappeared and a NVMe device replaces RTS5261.
+> > > >
+> > > > Can you elaborate more exactly how this managed?
+> > > >
+> > > > It kind of sounds like the original PCI device is being deleted? Ho=
+w
+> > > > is this managed?
+> > > >
+> > > > In any case, the rtsx_pci_driver's ->remove() callback,
+> > > > rtsx_pci_remove(), should be invoked, I assume?
+> > > >
+> > > > That would then lead to that mfd_remove_devices() gets called, whic=
+h
+> > > > makes the ->remove() callback of the rtsx_pci_sdmmc driver,
+> > > > rtsx_pci_sdmmc_drv_remove(), to be invoked. Correct?
+> > > >
+> > > Yes, after RTS5261 switch to NVMe mode, rtsx_pci_remove() and
+> > rtsx_pci_sdmmc_drv_remove() will be invoked.
+> >
+> > So, the ->remove() callbacks are invoked because the PCI device that
+> > corresponds to the rtsx_pci_driver is being deleted. Can you explain wh=
+o
+> > deletes the PCI device and why?
+> >
+> > I am not a PCI expert, so apologize for my ignorance - but I really wan=
+t to
+> > understand how this is supposed to work.
+> >
+> Rtsx host driver sets RTS5261 0xFF54 bit0=3D1 and 0xFF55 bit4=3D0, then R=
+TS5261 will switch MCU and enter SD EXPRESS mode.
+> Because hardware design is involved, sorry I can't explain much more deta=
+ils about that.
 
-Happy to see that you are moving in the directions of multi chain - this
-seems ilke a much better fit to me.
+Okay, so somehow that will trigger the PCI bus to remove the
+corresponding PCI device, I guess.
 
+>
+> > >
+> > > > > In NVMe mode, RTS5261 only provide a bridge between SD Express
+> > > > > card and
+> > > > PCIe. For NVMe driver, just like a new NVMe device is inserted.
+> > > >
+> > > > I don't understand what that means, but I am also not an expert on
+> > PCI/NVMe.
+> > > > Care to explain more?
+> > > >
+> > > In NVMe mode, SD Express card connect the computer via PCIe.
+> > > IN SD mode, card connect computer via reader.
+> >
+> > That didn't make better sense to me, sorry. I do know about the SD spec=
+ and
+> > the SD-express card protocol parts. Anyway, let's leave this for now.
+> >
+> > >
+> > > > > Mmc core doesn't successfully detect the card and handover to NVM=
+e
+> > > > > driver. Because of detect the card failed,
+> > > >
+> > > > How do you make sure that the rtsx_pci_sdmmc driver is leaving the
+> > > > card in the correct state for NVMe?
+> > > >
+> > > > For example, the mmc core has a loop re-trying with a lower
+> > > > initialization frequency for the card (400KHz, 300KHz, 200KHz,
+> > > > 100KHz). This will cause additional requests to the rtsx_pci_sdmmc =
+driver.
+> > > >
+> > > > > Mmc driver will request the RTS5261 to power off the card, but at
+> > > > > that time
+> > > > power off the card will not succeed.
+> > > >
+> > > > Yes, assuming no card was found, the mmc core calls mmc_power_off()=
+.
+> > > > Ths leads to the rtsx_pci_sdmmc driver's ->set_ios() callback being
+> > > > invoked, requesting the card to be powered off. I don't see how you
+> > > > are managing this, what am I missing?
+> > > >
+> > > Before power off card and re-trying initialization, rtsx driver sets =
+RTS5261
+> > 0xFF55 bit4=3D0.
+> > > After set 0xFF55 bit4=3D0, RTS5261 can't receive any CMD from PCIe an=
+d
+> > prepare for device disappear.
+> > > Therefore, MMC driver can't change card status.
+> >
+> > Okay, so beyond that point - any calls to the interface that is provide=
+d from
+> > drivers/misc/cardreader/rtsx_pcr will fail, when invoked by the
+> > rtsx_pci_sdmmc driver?
+> >
+> Yes.
+>
+> > To me, that sounds a bit fragile and it's also relying on a specific be=
+haviour of
+> > the RTS5261 card reader interface. I wonder if this could be considered=
+ as a
+> > common behaviour...??
+> >
+> It's a feature proposal by realtek not common.
 
-On 02.06.2020 13:18, Xiaoliang Yang wrote:
->There are three hardware TCAMs for ocelot chips: IS1, IS2 and ES0. Each
->one supports different actions. The hardware flow order is: IS1->IS2->ES0.
->
->This patch add three blocks to store rules according to chain index.
->chain 0 is offloaded to IS1, chain 1 is offloaded to IS2, and egress chain
->0 is offloaded to ES0.
+Yes, of course.
 
-Using "static" allocation to to say chain-X goes to TCAM Y, also seems
-like the right approach to me. Given the capabilities of the HW, this
-will most likely be the easiest scheme to implement and to explain to
-the end-user.
+>
+> > Perhaps it's better to teach the mmc core *more* about SD express cards=
+.
+> > Maybe add a new host ops for dealing with the specific CMD8 command and
+> > make the mmc core to "bail out", rather than keep retrying the initiali=
+zation. In
+> > principle I think the core should accept that it may have found an SD e=
+xpress
+> > card, then abort further communication with it. At least until the mmc =
+host
+> > indicates that a re-initialization of the card can be done, which could=
+ be through
+> > a remove/re-probe, for example.
+> >
+> In SD7.x spec host should send CMD8 with bit20=3D1 and bit21=3D1 to ask c=
+ard's PCIe availability.
+> So the CMD8 is not specific for RTS5261, it's just newly defined in SD7.x=
+ spec.
 
-But I think we should make some adjustments to this mapping schema.
+Yes, of course.
 
-Here are some important "things" I would like to consider when defining
-this schema:
+So, there are two PCIe modes. 1.8V I/O (mandatory and corresponds to
+bit20) and 1.2V I/O (optional and corresponds to bit21). It's
+important that the mmc host informs the mmc core about it's
+capabilities, so we can set the correct bits when sending CMD8.
 
-- As you explain, we have 3 TCAMs (IS1, IS2 and ES0), but we have 3
-   parallel lookups in IS1 and 2 parallel lookups in IS2 - and also these
-   TCAMs has a wide verity of keys.
+What do your host support?
 
-- We can utilize these multiple parallel lookups such that it seems like
-   they are done in serial (that is if they do not touch the same
-   actions), but as they are done in parallel they can not influence each
-   other.
+> The mmc core will request host to power off card and has a loop re-trying=
+ with different initialization frequency for the card (400KHz, 300KHz, 200K=
+Hz,
+> 100KHz), if I don't modify mmc core, I can't stop the power off and re-tr=
+ying, if I modify mmc core, RTS5261 will become a special case for mmc core=
+.
+> So make the operation fail is the minimum modification in mmc core for me=
+. Do you have any other suggestion?
 
-- We can let IS1 influence the IS2 lookup (like the GOTO actions was
-   intended to be used).
+Along the lines of what I suggested above. I think the mmc core should
+stop sending commands beyond the CMD8, if the card responds to support
+PCIe.
 
-- The chip also has other QoS classification facilities which sits
-   before the TCAM (take a look at 3.7.3 QoS, DP, and DSCP Classification
-   in vsc7514 datasheet). It we at some point in time want to enable
-   this, then I think we need to do that in the same tc-flower framework.
+>
+> > >
+> > > > As stated above, I assume you the corresponding platform device for
+> > > > rtsx_pci_sdmmc being deleted and thus triggering the
+> > > > rtsx_pci_sdmmc_drv_remove() being called. Correct? If not, how does
+> > > > the driver manage this?
+> > > >
+> > > Yes.
+> > >
+> > > > > When the card is unplugged, RTS5261 will switch to SD mode by
+> > > > > itself and don't need mmc driver to do anything,
+> > > >
+> > > > Okay.
+> > > >
+> > > > So that means the rtsx_pci_sdmmc driver is being probed again?
+> > > >
+> > > Yes.
+> > >
+> > > > > If you run lspci, you can see NVMe device disappeared and RTS5261
+> > > > > appeared
+> > > > again.
+> > > >
+> > > > I see.
+> > > >
+> >
+> > If you need some help on the mmc core parts, I am willing to help out.
+> > However, first, I would like to get some better understanding of who an=
+d why
+> > the PCI device is deleted.
+> >
+> Can I stop the re-trying in host driver other than modify mmc core?
 
-Here is my initial suggestion for an alternative chain-schema:
+We need to modify the core, but let me try to help in regards to that.
+I will post some patches within a couple of days and keep you posted.
 
-Chain 0:           The default chain - today this is in IS2. If we proceed
-                    with this as is - then this will change.
-Chain 1-9999:      These are offloaded by "basic" classification.
-Chain 10000-19999: These are offloaded in IS1
-                    Chain 10000: Lookup-0 in IS1, and here we could limit the
-                                 action to do QoS related stuff (priority
-                                 update)
-                    Chain 11000: Lookup-1 in IS1, here we could do VLAN
-                                 stuff
-                    Chain 12000: Lookup-2 in IS1, here we could apply the
-                                 "PAG" which is essentially a GOTO.
+Let's see how this goes.
 
-Chain 20000-29999: These are offloaded in IS2
-                    Chain 20000-20255: Lookup-0 in IS2, where CHAIN-ID -
-                                       20000 is the PAG value.
-                    Chain 21000-21000: Lookup-1 in IS2.
+> As above, I'm sorry I can't explain much more details about hardware desi=
+gn.
 
-All these chains should be optional - users should only need to
-configure the chains they need. To make this work, we need to configure
-both the desired actions (could be priority update) and the goto action.
-Remember in HW, all packets goes through this process, while in SW they
-only follow the "goto" path.
+Sure, it's okay.
 
-An example could be (I have not tested this yet - sorry):
-
-tc qdisc add dev eth0 ingress
-
-# Activate lookup 11000. We can not do any other rules in chain 0, also
-# this implicitly means that we do not want any chains <11000.
-tc filter add dev eth0 parent ffff: chain 0 
-    action
-    matchall goto 11000
-
-tc filter add dev eth0 parent ffff: chain 11000 \
-    flower src_mac 00:01:00:00:00:00/00:ff:00:00:00:00 \
-    action \
-    vlan modify id 1234 \
-    pipe \
-    goto 20001
-
-tc filter add dev eth0 parent ffff: chain 20001 ...
-
-Maybe it would be an idea to create some use-cases, implement them in a
-test which can pass with today's SW, and then once we have a common
-understanding of what we want, we can implement it?
-
-/Allan
-
->Using action goto chain to express flow order as follows:
->        tc filter add dev swp0 chain 0 parent ffff: flower skip_sw \
->        action goto chain 1
->
->Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
->---
-> drivers/net/ethernet/mscc/ocelot_ace.c    | 51 +++++++++++++++--------
-> drivers/net/ethernet/mscc/ocelot_ace.h    |  7 ++--
-> drivers/net/ethernet/mscc/ocelot_flower.c | 46 +++++++++++++++++---
-> include/soc/mscc/ocelot.h                 |  2 +-
-> include/soc/mscc/ocelot_vcap.h            |  4 +-
-> 5 files changed, 81 insertions(+), 29 deletions(-)
->
->diff --git a/drivers/net/ethernet/mscc/ocelot_ace.c b/drivers/net/ethernet/mscc/ocelot_ace.c
->index 748c618db7d8..b76593b40097 100644
->--- a/drivers/net/ethernet/mscc/ocelot_ace.c
->+++ b/drivers/net/ethernet/mscc/ocelot_ace.c
->@@ -341,6 +341,8 @@ static void is2_action_set(struct ocelot *ocelot, struct vcap_data *data,
->                vcap_action_set(vcap, data, VCAP_IS2_ACT_CPU_QU_NUM, 0);
->                vcap_action_set(vcap, data, VCAP_IS2_ACT_CPU_COPY_ENA, 0);
->                break;
->+       default:
->+               break;
->        }
-> }
->
->@@ -644,9 +646,9 @@ static void is2_entry_set(struct ocelot *ocelot, int ix,
-> }
->
-> static void vcap_entry_get(struct ocelot *ocelot, struct ocelot_ace_rule *rule,
->-                          int ix)
->+                          int ix, int block_id)
-> {
->-       const struct vcap_props *vcap = &ocelot->vcap[VCAP_IS2];
->+       const struct vcap_props *vcap = &ocelot->vcap[block_id];
->        struct vcap_data data;
->        int row, count;
->        u32 cnt;
->@@ -663,6 +665,19 @@ static void vcap_entry_get(struct ocelot *ocelot, struct ocelot_ace_rule *rule,
->        rule->stats.pkts = cnt;
-> }
->
->+static void vcap_entry_set(struct ocelot *ocelot, int ix,
->+                          struct ocelot_ace_rule *ace,
->+                          int block_id)
->+{
->+       switch (block_id) {
->+       case VCAP_IS2:
->+               is2_entry_set(ocelot, ix, ace);
->+               break;
->+       default:
->+               break;
->+       }
->+}
->+
-> static void ocelot_ace_rule_add(struct ocelot *ocelot,
->                                struct ocelot_acl_block *block,
->                                struct ocelot_ace_rule *rule)
->@@ -790,7 +805,7 @@ static bool ocelot_ace_is_problematic_non_mac_etype(struct ocelot_ace_rule *ace)
-> static bool ocelot_exclusive_mac_etype_ace_rules(struct ocelot *ocelot,
->                                                 struct ocelot_ace_rule *ace)
-> {
->-       struct ocelot_acl_block *block = &ocelot->acl_block;
->+       struct ocelot_acl_block *block = &ocelot->acl_block[VCAP_IS2];
->        struct ocelot_ace_rule *tmp;
->        unsigned long port;
->        int i;
->@@ -824,15 +839,16 @@ static bool ocelot_exclusive_mac_etype_ace_rules(struct ocelot *ocelot,
->        return true;
-> }
->
->-int ocelot_ace_rule_offload_add(struct ocelot *ocelot,
->+int ocelot_ace_rule_offload_add(struct ocelot *ocelot, int block_id,
->                                struct ocelot_ace_rule *rule,
->                                struct netlink_ext_ack *extack)
-> {
->-       struct ocelot_acl_block *block = &ocelot->acl_block;
->+       struct ocelot_acl_block *block = &ocelot->acl_block[block_id];
->        struct ocelot_ace_rule *ace;
->        int i, index;
->
->-       if (!ocelot_exclusive_mac_etype_ace_rules(ocelot, rule)) {
->+       if (block_id == VCAP_IS2 &&
->+           !ocelot_exclusive_mac_etype_ace_rules(ocelot, rule)) {
->                NL_SET_ERR_MSG_MOD(extack,
->                                   "Cannot mix MAC_ETYPE with non-MAC_ETYPE rules");
->                return -EBUSY;
->@@ -847,11 +863,11 @@ int ocelot_ace_rule_offload_add(struct ocelot *ocelot,
->        /* Move down the rules to make place for the new rule */
->        for (i = block->count - 1; i > index; i--) {
->                ace = ocelot_ace_rule_get_rule_index(block, i);
->-               is2_entry_set(ocelot, i, ace);
->+               vcap_entry_set(ocelot, i, ace, block_id);
->        }
->
->        /* Now insert the new rule */
->-       is2_entry_set(ocelot, index, rule);
->+       vcap_entry_set(ocelot, index, rule, block_id);
->        return 0;
-> }
->
->@@ -902,10 +918,10 @@ static void ocelot_ace_rule_del(struct ocelot *ocelot,
->        block->count--;
-> }
->
->-int ocelot_ace_rule_offload_del(struct ocelot *ocelot,
->+int ocelot_ace_rule_offload_del(struct ocelot *ocelot, int block_id,
->                                struct ocelot_ace_rule *rule)
-> {
->-       struct ocelot_acl_block *block = &ocelot->acl_block;
->+       struct ocelot_acl_block *block = &ocelot->acl_block[block_id];
->        struct ocelot_ace_rule del_ace;
->        struct ocelot_ace_rule *ace;
->        int i, index;
->@@ -921,29 +937,29 @@ int ocelot_ace_rule_offload_del(struct ocelot *ocelot,
->        /* Move up all the blocks over the deleted rule */
->        for (i = index; i < block->count; i++) {
->                ace = ocelot_ace_rule_get_rule_index(block, i);
->-               is2_entry_set(ocelot, i, ace);
->+               vcap_entry_set(ocelot, i, ace, block_id);
->        }
->
->        /* Now delete the last rule, because it is duplicated */
->-       is2_entry_set(ocelot, block->count, &del_ace);
->+       vcap_entry_set(ocelot, block->count, &del_ace, block_id);
->
->        return 0;
-> }
->
->-int ocelot_ace_rule_stats_update(struct ocelot *ocelot,
->+int ocelot_ace_rule_stats_update(struct ocelot *ocelot, int block_id,
->                                 struct ocelot_ace_rule *rule)
-> {
->-       struct ocelot_acl_block *block = &ocelot->acl_block;
->+       struct ocelot_acl_block *block = &ocelot->acl_block[block_id];
->        struct ocelot_ace_rule *tmp;
->        int index;
->
->        index = ocelot_ace_rule_get_index_id(block, rule);
->-       vcap_entry_get(ocelot, rule, index);
->+       vcap_entry_get(ocelot, rule, index, block_id);
->
->        /* After we get the result we need to clear the counters */
->        tmp = ocelot_ace_rule_get_rule_index(block, index);
->        tmp->stats.pkts = 0;
->-       is2_entry_set(ocelot, index, tmp);
->+       vcap_entry_set(ocelot, index, tmp, block_id);
->
->        return 0;
-> }
->@@ -968,7 +984,7 @@ static void vcap_init(struct ocelot *ocelot, const struct vcap_props *vcap)
->
-> int ocelot_ace_init(struct ocelot *ocelot)
-> {
->-       struct ocelot_acl_block *block = &ocelot->acl_block;
->+       struct ocelot_acl_block *block;
->
->        vcap_init(ocelot, &ocelot->vcap[VCAP_IS2]);
->
->@@ -987,6 +1003,7 @@ int ocelot_ace_init(struct ocelot *ocelot)
->        ocelot_write_gix(ocelot, 0x3fffff, ANA_POL_CIR_STATE,
->                         OCELOT_POLICER_DISCARD);
->
->+       block = &ocelot->acl_block[VCAP_IS2];
->        block->pol_lpr = OCELOT_POLICER_DISCARD - 1;
->        INIT_LIST_HEAD(&block->rules);
->
->diff --git a/drivers/net/ethernet/mscc/ocelot_ace.h b/drivers/net/ethernet/mscc/ocelot_ace.h
->index 099e177f2617..a9fd99401a65 100644
->--- a/drivers/net/ethernet/mscc/ocelot_ace.h
->+++ b/drivers/net/ethernet/mscc/ocelot_ace.h
->@@ -175,6 +175,7 @@ struct ocelot_ace_frame_ipv6 {
-> };
->
-> enum ocelot_ace_action {
->+       OCELOT_ACL_ACTION_NULL,
->        OCELOT_ACL_ACTION_DROP,
->        OCELOT_ACL_ACTION_TRAP,
->        OCELOT_ACL_ACTION_POLICE,
->@@ -214,12 +215,12 @@ struct ocelot_ace_rule {
->        u32 pol_ix;
-> };
->
->-int ocelot_ace_rule_offload_add(struct ocelot *ocelot,
->+int ocelot_ace_rule_offload_add(struct ocelot *ocelot, int block_id,
->                                struct ocelot_ace_rule *rule,
->                                struct netlink_ext_ack *extack);
->-int ocelot_ace_rule_offload_del(struct ocelot *ocelot,
->+int ocelot_ace_rule_offload_del(struct ocelot *ocelot, int block_id,
->                                struct ocelot_ace_rule *rule);
->-int ocelot_ace_rule_stats_update(struct ocelot *ocelot,
->+int ocelot_ace_rule_stats_update(struct ocelot *ocelot, int block_id,
->                                 struct ocelot_ace_rule *rule);
->
-> int ocelot_ace_init(struct ocelot *ocelot);
->diff --git a/drivers/net/ethernet/mscc/ocelot_flower.c b/drivers/net/ethernet/mscc/ocelot_flower.c
->index 891925f73cbc..a1f7b6b28170 100644
->--- a/drivers/net/ethernet/mscc/ocelot_flower.c
->+++ b/drivers/net/ethernet/mscc/ocelot_flower.c
->@@ -9,13 +9,26 @@
->
-> #include "ocelot_ace.h"
->
->+static int ocelot_block_id_get(int chain, bool ingress)
->+{
->+       /* Select TCAM blocks by using chain index. Rules in chain 0 are
->+        * implemented on IS1, chain 1 are implemented on IS2, and egress
->+        * chain corresponds to ES0 block.
->+        */
->+       if (ingress)
->+               return chain ? VCAP_IS2 : VCAP_IS1;
->+       else
->+               return VCAP_ES0;
->+}
->+
-> static int ocelot_flower_parse_action(struct flow_cls_offload *f,
->                                      struct ocelot_ace_rule *ace)
-> {
->+       struct netlink_ext_ack *extack = f->common.extack;
->        const struct flow_action_entry *a;
->+       int i, allowed_chain = 0;
->        s64 burst;
->        u64 rate;
->-       int i;
->
->        if (!flow_offload_has_one_action(&f->rule->action))
->                return -EOPNOTSUPP;
->@@ -28,9 +41,11 @@ static int ocelot_flower_parse_action(struct flow_cls_offload *f,
->                switch (a->id) {
->                case FLOW_ACTION_DROP:
->                        ace->action = OCELOT_ACL_ACTION_DROP;
->+                       allowed_chain = 1;
->                        break;
->                case FLOW_ACTION_TRAP:
->                        ace->action = OCELOT_ACL_ACTION_TRAP;
->+                       allowed_chain = 1;
->                        break;
->                case FLOW_ACTION_POLICE:
->                        ace->action = OCELOT_ACL_ACTION_POLICE;
->@@ -38,10 +53,23 @@ static int ocelot_flower_parse_action(struct flow_cls_offload *f,
->                        ace->pol.rate = div_u64(rate, 1000) * 8;
->                        burst = rate * PSCHED_NS2TICKS(a->police.burst);
->                        ace->pol.burst = div_u64(burst, PSCHED_TICKS_PER_SEC);
->+                       allowed_chain = 1;
->+                       break;
->+               case FLOW_ACTION_GOTO:
->+                       if (a->chain_index != f->common.chain_index + 1) {
->+                               NL_SET_ERR_MSG_MOD(extack, "HW only support goto next chain\n");
->+                               return -EOPNOTSUPP;
->+                       }
->+                       ace->action = OCELOT_ACL_ACTION_NULL;
->+                       allowed_chain = f->common.chain_index;
->                        break;
->                default:
->                        return -EOPNOTSUPP;
->                }
->+               if (f->common.chain_index != allowed_chain) {
->+                       NL_SET_ERR_MSG_MOD(extack, "Action is not supported on this chain\n");
->+                       return -EOPNOTSUPP;
->+               }
->        }
->
->        return 0;
->@@ -205,7 +233,7 @@ int ocelot_cls_flower_replace(struct ocelot *ocelot, int port,
->                              struct flow_cls_offload *f, bool ingress)
-> {
->        struct ocelot_ace_rule *ace;
->-       int ret;
->+       int ret, block_id;
->
->        ace = ocelot_ace_rule_create(ocelot, port, f);
->        if (!ace)
->@@ -216,8 +244,10 @@ int ocelot_cls_flower_replace(struct ocelot *ocelot, int port,
->                kfree(ace);
->                return ret;
->        }
->+       block_id = ocelot_block_id_get(f->common.chain_index, ingress);
->
->-       return ocelot_ace_rule_offload_add(ocelot, ace, f->common.extack);
->+       return ocelot_ace_rule_offload_add(ocelot, block_id, ace,
->+                                          f->common.extack);
-> }
-> EXPORT_SYMBOL_GPL(ocelot_cls_flower_replace);
->
->@@ -225,11 +255,13 @@ int ocelot_cls_flower_destroy(struct ocelot *ocelot, int port,
->                              struct flow_cls_offload *f, bool ingress)
-> {
->        struct ocelot_ace_rule ace;
->+       int block_id;
->
->        ace.prio = f->common.prio;
->        ace.id = f->cookie;
->+       block_id = ocelot_block_id_get(f->common.chain_index, ingress);
->
->-       return ocelot_ace_rule_offload_del(ocelot, &ace);
->+       return ocelot_ace_rule_offload_del(ocelot, block_id, &ace);
-> }
-> EXPORT_SYMBOL_GPL(ocelot_cls_flower_destroy);
->
->@@ -237,11 +269,13 @@ int ocelot_cls_flower_stats(struct ocelot *ocelot, int port,
->                            struct flow_cls_offload *f, bool ingress)
-> {
->        struct ocelot_ace_rule ace;
->-       int ret;
->+       int ret, block_id;
->
->        ace.prio = f->common.prio;
->        ace.id = f->cookie;
->-       ret = ocelot_ace_rule_stats_update(ocelot, &ace);
->+       block_id = ocelot_block_id_get(f->common.chain_index, ingress);
->+
->+       ret = ocelot_ace_rule_stats_update(ocelot, block_id, &ace);
->        if (ret)
->                return ret;
->
->diff --git a/include/soc/mscc/ocelot.h b/include/soc/mscc/ocelot.h
->index 91357b1c8f31..4b2320bdc036 100644
->--- a/include/soc/mscc/ocelot.h
->+++ b/include/soc/mscc/ocelot.h
->@@ -540,7 +540,7 @@ struct ocelot {
->
->        struct list_head                multicast;
->
->-       struct ocelot_acl_block         acl_block;
->+       struct ocelot_acl_block         acl_block[3];
->
->        const struct vcap_props         *vcap;
->
->diff --git a/include/soc/mscc/ocelot_vcap.h b/include/soc/mscc/ocelot_vcap.h
->index 26d9384b3657..495847a40490 100644
->--- a/include/soc/mscc/ocelot_vcap.h
->+++ b/include/soc/mscc/ocelot_vcap.h
->@@ -14,9 +14,9 @@
->  */
->
-> enum {
->-       /* VCAP_IS1, */
->+       VCAP_IS1,
->        VCAP_IS2,
->-       /* VCAP_ES0, */
->+       VCAP_ES0,
-> };
->
-> struct vcap_props {
->--
->2.17.1
->
-/Allan
+Kind regards
+Uffe
