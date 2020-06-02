@@ -2,98 +2,107 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB915C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA154C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC2DC20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB00C2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z+tGXNWX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmnQ2xtI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgFBUKs (ORCPT
+        id S1728331AbgFBUMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:10:48 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53716 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728101AbgFBUKr (ORCPT
+        Tue, 2 Jun 2020 16:12:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgFBUMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:10:47 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JvxMj163024;
-        Tue, 2 Jun 2020 20:09:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=Zy+9hIUOD1wHoEjv0iqcOdN6XDgnng/gMIII196nKXk=;
- b=z+tGXNWXcpe4kITTBT32god173s9pokQEK6VzOFsdQ3siX5keWyR1QMHN2W70Ff8C+B+
- rxDToZRd+1zqTyC8u7HAggP6i0MWWS1eFES8BEs89ChlGn/sNu3YsWQNVQEBTjR3B12M
- 42Cd8MmRWKocBTsEMS+W6DVOgSBuLlazO9u2LU9tXUA6uFuUodnU44Z/MNnxnPJJG7IC
- F8Nc/DsSHdVA7XEEGea7sxqM8frdxX6LX63nW5EX5tCDlwm6Sv3WFfVwc/8E5sJevIzi
- lV7fVZAsi9s3tlf7LNo/knOZz3+7H2bV0+pbbyAUJ6+zgfC+Lb9XkwWxVW5OOkteWklk jw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31bewqwyhp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 20:09:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JxIK9135342;
-        Tue, 2 Jun 2020 20:07:41 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 31c1dxtrmr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 20:07:41 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052K7b5o013919;
-        Tue, 2 Jun 2020 20:07:37 GMT
-Received: from ayz-linux.us.oracle.com (/10.154.185.88)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 13:07:36 -0700
-From:   Anthony Yznaga <anthony.yznaga@oracle.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        steven.sistare@oracle.com, anthony.yznaga@oracle.com
-Subject: [PATCH 0/3] avoid unnecessary memslot rmap walks
-Date:   Tue,  2 Jun 2020 13:07:27 -0700
-Message-Id: <1591128450-11977-1-git-send-email-anthony.yznaga@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 suspectscore=0 impostorscore=0 cotscore=-2147483648
- lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006020146
+        Tue, 2 Jun 2020 16:12:36 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 546A7C08C5C0;
+        Tue,  2 Jun 2020 13:12:36 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d128so4435813wmc.1;
+        Tue, 02 Jun 2020 13:12:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YvO7LalvDBKdEIQhWBLkEPXbP+HlcCB2geTzQhd9c2g=;
+        b=FmnQ2xtIXPTSynL3P2/yB1nEvunTdRY+wGUmG4RtqmxfFDWg+t5R22oMD15K8bpkEI
+         lBqjWAlfPSk/VYQJgDzhqNRjQRd4vEbpECr2pmXd4IvEWiY8J1i8mUYIpH47JzSbe+my
+         AcnKivd1apEwTJR294YmOiklAgXPXpLQDYm5DENQ0nmdXrrtI/AG46arhODJpNEB03uE
+         fQ6Uqf+fncZWeRbTalgGrvbpUxy83MPDrBL6RaF9PBbHOp1Vppck/nTNanzQnXdNCPJg
+         qEFqQzfhQhnnBtC8JI+wNs2LYxx6dIWbyFbINoyOJsqlr8kfAixRdOn4ObquSNQu0EDN
+         0lKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YvO7LalvDBKdEIQhWBLkEPXbP+HlcCB2geTzQhd9c2g=;
+        b=JrOpxynL57QMLl3pB1HR/ZFF8GC+osqoYyz9gshivJ4rGtQi42jHTSsKcLc5aZWddT
+         8QTUIUcpbQ1rAsoZaNEbGdPDQkx1+Tfbt0UxPnBrFdqFI8GHQYMGPZSc5d3o2sKCaqLt
+         kh5rtiBU1/QTZi/b2xSfgntnzZNam+B6KrD4rO19E+3T4bAQCG/69OLdlyosN6rx9yYN
+         oeI8cNfbgDFFS3RRG/UJF4NJPQLeeeWu9MK8ByCq3li0F6+JJpf5TxO3oxC5RFEoZ1gl
+         xj9juPd0IzvEf4YsuO9uYaOiscLok6Vd3n+sNAvmH9gmJscBB6F+ywj9a2jDARoCZOoN
+         ObXg==
+X-Gm-Message-State: AOAM531ZPqzYYlk5+FICSKvfA8pyL8e7aToDcermvhD6EaBfmCRsCXwi
+        dr8pKhGrCBsv3Wf9Fr4uQ1k=
+X-Google-Smtp-Source: ABdhPJxsRYNpJL8KzrBdYigguSB9eH6qYay/3TrVc3x55kqpk7OQKMbwzj8t9r6I6H9VNyK++jKA6A==
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr5426008wmk.94.1591128755064;
+        Tue, 02 Jun 2020 13:12:35 -0700 (PDT)
+Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
+        by smtp.googlemail.com with ESMTPSA id 5sm175112wrr.5.2020.06.02.13.12.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 13:12:34 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] soc: qcom: socinfo: Add msm8992/4 and apq8094 SoC IDs
+Date:   Tue,  2 Jun 2020 22:12:29 +0200
+Message-Id: <20200602201229.322578-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While investigating optimizing qemu start time for large memory guests
-I found that kvm_mmu_slot_apply_flags() is walking rmaps to update
-existing sptes when creating or moving a slot but that there won't be
-any existing sptes to update and any sptes inserted once the new memslot
-is visible won't need updating.  I can't find any reason for this not to
-be the case, but I've taken a more cautious approach to fixing this by
-dividing things into three patches.
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ drivers/soc/qcom/socinfo.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Anthony Yznaga (3):
-  KVM: x86: remove unnecessary rmap walk of read-only memslots
-  KVM: x86: avoid unnecessary rmap walks when creating/moving slots
-  KVM: x86: minor code refactor and comments fixup around dirty logging
-
- arch/x86/kvm/x86.c | 106 +++++++++++++++++++++++++----------------------------
- 1 file changed, 49 insertions(+), 57 deletions(-)
-
+diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+index ebb49aee179b..137f62982223 100644
+--- a/drivers/soc/qcom/socinfo.c
++++ b/drivers/soc/qcom/socinfo.c
+@@ -177,6 +177,7 @@ static const struct soc_id soc_id[] = {
+ 	{ 186, "MSM8674" },
+ 	{ 194, "MSM8974PRO" },
+ 	{ 206, "MSM8916" },
++	{ 207, "MSM8994" },
+ 	{ 208, "APQ8074-AA" },
+ 	{ 209, "APQ8074-AB" },
+ 	{ 210, "APQ8074PRO" },
+@@ -193,6 +194,8 @@ static const struct soc_id soc_id[] = {
+ 	{ 248, "MSM8216" },
+ 	{ 249, "MSM8116" },
+ 	{ 250, "MSM8616" },
++	{ 251, "MSM8992" },
++	{ 253, "APQ8094" },
+ 	{ 291, "APQ8096" },
+ 	{ 305, "MSM8996SG" },
+ 	{ 310, "MSM8996AU" },
 -- 
-2.13.3
+2.26.2
 
