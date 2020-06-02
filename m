@@ -2,95 +2,125 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8106DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D179FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB0220659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03BE2081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgFBHFd (ORCPT
+        id S1726814AbgFBHF5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:05:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5330 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726472AbgFBHF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:05:28 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 44A5D1D4FF79B3E0B03A;
-        Tue,  2 Jun 2020 15:05:23 +0800 (CST)
-Received: from DESKTOP-27KDQMV.china.huawei.com (10.174.151.115) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 2 Jun 2020 15:05:13 +0800
-From:   "Longpeng(Mike)" <longpeng2@huawei.com>
-To:     <linux-crypto@vger.kernel.org>
-CC:     "Longpeng(Mike)" <longpeng2@huawei.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <virtualization@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v3 3/3] crypto: virtio: Fix dest length calculation in __virtio_crypto_skcipher_do_req()
-Date:   Tue, 2 Jun 2020 15:05:01 +0800
-Message-ID: <20200602070501.2023-4-longpeng2@huawei.com>
-X-Mailer: git-send-email 2.25.0.windows.1
-In-Reply-To: <20200602070501.2023-1-longpeng2@huawei.com>
-References: <20200602070501.2023-1-longpeng2@huawei.com>
+        Tue, 2 Jun 2020 03:05:57 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:50463 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgFBHF4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 03:05:56 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 39728FF807;
+        Tue,  2 Jun 2020 07:05:52 +0000 (UTC)
+Date:   Tue, 2 Jun 2020 09:05:50 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Bean Huo <huobean@gmail.com>
+Cc:     vigneshr@ti.com, s.hauer@pengutronix.de,
+        boris.brezillon@collabora.com, derosier@gmail.com,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bean Huo <beanhuo@micron.com>
+Subject: Re: [PATCH v6 0/5] Micron SLC NAND filling block
+Message-ID: <20200602090550.2e6403f3@xps13>
+In-Reply-To: <0a4fc94213ca5c2040796a66942f626587483721.camel@gmail.com>
+References: <20200525121814.31934-1-huobean@gmail.com>
+        <829d76189beff5a50ddc56123d22bff3aa6a3378.camel@gmail.com>
+        <0a4fc94213ca5c2040796a66942f626587483721.camel@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.151.115]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The src/dst length is not aligned with AES_BLOCK_SIZE(which is 16) in some
-testcases in tcrypto.ko.
+Hello
 
-For example, the src/dst length of one of cts(cbc(aes))'s testcase is 17, the
-crypto_virtio driver will set @src_data_len=16 but @dst_data_len=17 in this
-case and get a wrong at then end.
+Bean Huo <huobean@gmail.com> wrote on Mon, 01 Jun 2020 23:10:43 +0200:
 
-  SRC: pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp (17 bytes)
-  EXP: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc pp (17 bytes)
-  DST: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 (pollute the last bytes)
-  (pp: plaintext  cc:ciphertext)
+> Hi Richard 
+> would you please help us confirm below question??
+> 
+> Thanks,
+> Bean
+> 
+> On Thu, 2020-05-28 at 16:14 +0200, Bean Huo wrote:
+> > hi, Richard
+> > 
+> > 
+> > On Mon, 2020-05-25 at 14:18 +0200, Bean Huo wrote:  
+> > > After submission of patch V1 [1] and V2 [2], we stopped its update
+> > > since we get
+> > > stuck in the solution on how to avoid the power-loss issue in case
+> > > power-cut
+> > > hits the block filling. In the v1 and v2, to avoid this issue, we
+> > > always damaged
+> > > page0, page1, this's based on the hypothesis that NAND FS is UBIFS.
+> > > This
+> > > FS-specifical code is unacceptable in the MTD layer. Also, it
+> > > cannot
+> > > cover all
+> > > NAND based file system. Based on the current discussion, seems that
+> > > re-write all
+> > > first 15 page from page0 is a satisfactory solution.  
+> >   
+> 
+> > This patch has overwrite page0~page14, damage EC and VID header
+> > boths.
+> > I know this is safe for UBIFS, even fastmap is enabled (you fixed
+> > this in (ubi: fastmap: Correctly handle interrupted erasures in
+> > EBA)).
+> > Now, how about jffs2? 
+> > 
+> > 
+> > Thanks,
+> > Bean
+> >   
+> 
 
-Fix this issue by limit the length of dest buffer.
+FYI, Bean already askes me privately and here was my answer. Feel free
+to comment.
 
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
----
- drivers/crypto/virtio/virtio_crypto_algs.c | 1 +
- 1 file changed, 1 insertion(+)
+---8<---
+I'm not sure we are synced on this issue, because it is clearly
+not addressed in your patchset.
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 52261b6..cb8a6ea 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -407,6 +407,7 @@ static int virtio_crypto_skcipher_setkey(struct crypto_skcipher *tfm,
- 		goto free;
- 	}
- 
-+	dst_len = min_t(unsigned int, req->cryptlen, dst_len);
- 	pr_debug("virtio_crypto: src_len: %u, dst_len: %llu\n",
- 			req->cryptlen, dst_len);
- 
--- 
-1.8.3.1
+Quoting Richard, the ubifs log uses a fixed range of LEBs. It replays
+them upon mount and checks whether they are empty, new or outdated refs
+it assumes that interrupted erase got detecred by UBI and such a LEB
+will just contain 0xFF bytes. Rewriting the page before erase basically
+fails this assumption.
 
+For JFFS2, the problem is the clean marker. You cannot destroy the
+payload while keeping the clean marker which says "this block is fine
+and contain data".
+
+Also, if you destroy the clean marker, you need to take care of not
+turning the block being discovered as "bad" at reboot time if a power
+cut happens before the erasure.
+
+All of this is not impossible but:
+- we need to write specific code for each user
+- we don't want to create more problems that we already have
+
+I cannot give you more details because this is not something that I
+master. Ask Richard directly if you need more details on this.
+--->8---
+
+Cheers,
+Miquèl
