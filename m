@@ -2,109 +2,144 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2045C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24CA206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCAD207D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591098666;
+	bh=60TrRTFGaSjbS2/u77PKyUGC/27h0i9JXkFkU/6j44s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HnzF5Q4n8SlfvYQXk4A+tmIojKLxoKXtBrptP9Om266XPz8yuvjwVE0PRwo9ha912
+	 lk7vbycaIRNsj2oGgWxd8n28FlJiXe+9i0rDjeAXeqng/HoJJ5zTevO6eKMWYZWFZR
+	 TaMDiUm4abU5PG674uPLWoLIjFDai/vkrPJoz2GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgFBLvA (ORCPT
+        id S1727026AbgFBLvF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:51:00 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35532 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbgFBLvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:51:00 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5EF5B15853ECC4BC46B0;
-        Tue,  2 Jun 2020 19:50:57 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
- 19:50:51 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <cl@linux.com>, <penberg@kernel.org>, <rientjes@google.com>,
-        <iamjoonsoo.kim@lge.com>
-CC:     <akpm@linux-foundation.org>, <khlebnikov@yandex-team.ru>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <wanghai38@huawei.com>
-Subject: [PATCH] mm/slub: fix a memory leak in sysfs_slab_add()
-Date:   Tue, 2 Jun 2020 19:50:33 +0800
-Message-ID: <20200602115033.1054-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jun 2020 07:51:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58094 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726894AbgFBLvD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 07:51:03 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-wgooXHlzOjOhdOgqvjiqkQ-1; Tue, 02 Jun 2020 07:51:00 -0400
+X-MC-Unique: wgooXHlzOjOhdOgqvjiqkQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44533BFC0;
+        Tue,  2 Jun 2020 11:50:59 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.195.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D834910013D7;
+        Tue,  2 Jun 2020 11:50:56 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCHv2 00/13] perf tests: Add metrics tests
+Date:   Tue,  2 Jun 2020 13:50:42 +0200
+Message-Id: <20200602115055.1168446-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzkaller reports for memory leak when kobject_init_and_add()
-returns an error in the function sysfs_slab_add() [1]
+hi,
+changes for using metric result in another metric seem
+to change lot of core metric code, so it's better we
+have some more tests before we do that.
 
-When this happened, the function kobject_put() is not called for the
-corresponding kobject, which potentially leads to memory leak.
+v2 changes:
+  - some of the patches got accepted
+  - add missing free to patch 1 [Ian]
+  - factor pmu-events test functions and reuse it in the new test [Ian]
+  - add fake_pmu bool to parse_events interface [Ian]
+  - simplify metric tests
+  - use proper cover letter subject ;-)
 
-This patch fixes the issue by calling kobject_put() even if
-kobject_init_and_add() fails.
+I actually reworked the 2 patches Ian acked so far,
+so I did not add them.
 
-[1]
-BUG: memory leak
-unreferenced object 0xffff8880a6d4be88 (size 8):
-  comm "syz-executor.3", pid 946, jiffies 4295772514 (age 18.396s)
-  hex dump (first 8 bytes):
-    70 69 64 5f 33 00 ff ff                          pid_3...
-  backtrace:
-    [<00000000a0980095>] kstrdup+0x35/0x70 mm/util.c:60
-    [<00000000ef0cff3f>] kstrdup_const+0x3d/0x50 mm/util.c:82
-    [<00000000e2461486>] kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
-    [<000000005d749e93>] kobject_set_name_vargs+0x55/0x130 lib/kobject.c:289
-    [<0000000094e31519>] kobject_add_varg lib/kobject.c:384 [inline]
-    [<0000000094e31519>] kobject_init_and_add+0xd8/0x170 lib/kobject.c:473
-    [<0000000060f13e32>] sysfs_slab_add+0x1d8/0x290 mm/slub.c:5811
-    [<00000000fe1d9a22>] __kmem_cache_create+0x50a/0x570 mm/slub.c:4384
-    [<000000006a71a1b4>] create_cache+0x113/0x1e0 mm/slab_common.c:407
-    [<0000000089491438>] kmem_cache_create_usercopy+0x1a1/0x260 mm/slab_common.c:505
-    [<000000008c992595>] kmem_cache_create+0xd/0x10 mm/slab_common.c:564
-    [<000000005320c4b6>] create_pid_cachep kernel/pid_namespace.c:54 [inline]
-    [<000000005320c4b6>] create_pid_namespace kernel/pid_namespace.c:96 [inline]
-    [<000000005320c4b6>] copy_pid_ns+0x77c/0x8f0 kernel/pid_namespace.c:148
-    [<00000000fc8e1a2b>] create_new_namespaces+0x26b/0xa30 kernel/nsproxy.c:95
-    [<0000000080f0c9a5>] unshare_nsproxy_namespaces+0xa7/0x1e0 kernel/nsproxy.c:229
-    [<0000000007e05aea>] ksys_unshare+0x3d2/0x770 kernel/fork.c:2969
-    [<00000000e04c8e4b>] __do_sys_unshare kernel/fork.c:3037 [inline]
-    [<00000000e04c8e4b>] __se_sys_unshare kernel/fork.c:3035 [inline]
-    [<00000000e04c8e4b>] __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3035
-    [<000000005c4707c7>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
+Also available in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/metric_test
 
-Fixes: 80da026a8e5d ("mm/slub: fix slab double-free in case of duplicate sysfs filename")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+thanks,
+jirka
+
+
 ---
- mm/slub.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Jiri Olsa (13):
+      perf tools: Add fake pmu support
+      perf tools: Add fake_pmu bool to parse_events interface
+      perf tests: Factor check_parse_id function
+      perf tests: Add another metric parsing test
+      perf tools: Factor out parse_groups function
+      perf tools: Add fake_pmu to parse_events function
+      perf tools: Add map to parse_events function
+      perf tools: Add metricgroup__parse_groups_test function
+      perf tools: Factor out prepare_metric function
+      perf tools: Release metric_events rblist
+      perf tools: Add test_generic_metric function
+      perf tests: Add parse metric test for ipc metric
+      perf tests: Add parse metric test for frontend metric
 
-diff --git a/mm/slub.c b/mm/slub.c
-index b762450f..63bd39c 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5809,8 +5809,10 @@ static int sysfs_slab_add(struct kmem_cache *s)
- 
- 	s->kobj.kset = kset;
- 	err = kobject_init_and_add(&s->kobj, &slab_ktype, NULL, "%s", name);
--	if (err)
-+	if (err) {
-+		kobject_put(&s->kobj);
- 		goto out;
-+	}
- 
- 	err = sysfs_create_group(&s->kobj, &slab_attr_group);
- 	if (err)
--- 
-1.8.3.1
+ tools/perf/arch/arm/util/cs-etm.c            |   2 +-
+ tools/perf/arch/arm64/util/arm-spe.c         |   2 +-
+ tools/perf/arch/powerpc/util/kvm-stat.c      |   2 +-
+ tools/perf/arch/x86/tests/intel-cqm.c        |   2 +-
+ tools/perf/arch/x86/tests/perf-time-to-tsc.c |   2 +-
+ tools/perf/arch/x86/util/intel-bts.c         |   2 +-
+ tools/perf/arch/x86/util/intel-pt.c          |   6 ++--
+ tools/perf/builtin-stat.c                    |   9 +++---
+ tools/perf/builtin-trace.c                   |   4 +--
+ tools/perf/tests/Build                       |   1 +
+ tools/perf/tests/backward-ring-buffer.c      |   3 +-
+ tools/perf/tests/builtin-test.c              |   4 +++
+ tools/perf/tests/code-reading.c              |   2 +-
+ tools/perf/tests/event-times.c               |   2 +-
+ tools/perf/tests/evsel-roundtrip-name.c      |   4 +--
+ tools/perf/tests/hists_cumulate.c            |   2 +-
+ tools/perf/tests/hists_filter.c              |   4 +--
+ tools/perf/tests/hists_link.c                |   4 +--
+ tools/perf/tests/hists_output.c              |   2 +-
+ tools/perf/tests/keep-tracking.c             |   4 +--
+ tools/perf/tests/parse-events.c              |   2 +-
+ tools/perf/tests/parse-metric.c              | 170 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/tests/pmu-events.c                | 132 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ tools/perf/tests/switch-tracking.c           |   8 ++---
+ tools/perf/tests/tests.h                     |   1 +
+ tools/perf/util/bpf-loader.c                 |   2 +-
+ tools/perf/util/metricgroup.c                |  74 ++++++++++++++++++++++++++++++++++++----------
+ tools/perf/util/metricgroup.h                |  10 +++++++
+ tools/perf/util/parse-events.c               |  29 +++++++++++-------
+ tools/perf/util/parse-events.h               |   5 ++--
+ tools/perf/util/parse-events.l               |   8 +++--
+ tools/perf/util/parse-events.y               |  41 ++++++++++++++++++++++++--
+ tools/perf/util/perf_api_probe.c             |   2 +-
+ tools/perf/util/record.c                     |   2 +-
+ tools/perf/util/stat-shadow.c                |  67 ++++++++++++++++++++++++++++++------------
+ tools/perf/util/stat.h                       |   3 ++
+ 36 files changed, 527 insertions(+), 92 deletions(-)
+ create mode 100644 tools/perf/tests/parse-metric.c
 
