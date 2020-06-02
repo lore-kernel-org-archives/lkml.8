@@ -2,117 +2,89 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20356C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD58C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C90206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:29:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="BGjm8Ah3"
+	by mail.kernel.org (Postfix) with ESMTP id 6DF602072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591126199;
+	bh=1hBLrZg8X2acETkZYOjT00wEqCW1nenOSI1VbaWk2lI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CqsQz0Hay+04GXHD5IZiYiR8M6FOMhwCM/wGAmgJwzm6c4J0eanCB/y4Magsd0Zo2
+	 BlCl/RdTpNjT8OCSNThohWhM6CP4W/B3sf7eZ1VO57+Z+p7KqpQNUD+M+5YNmCQlB8
+	 MJSjCZ+hqrBrgjP7WHOJ7yVbMwjhIPXwMigBtkY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgFBT3Y (ORCPT
+        id S1727872AbgFBT36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBT3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:29:23 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934E8C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:29:23 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p30so5599018pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jt9wTvbBB9l8BA385ydswer9G/ASNFMgQz2sVTAlGwY=;
-        b=BGjm8Ah3Pr7hHscdoJXTL21nGZPG4PnLKU6jA9IWJJGiA3WnGcbIzvTS7bxWuFIUQw
-         DPDRWnq2PLJmKzmq5Uf8cCKL7sHZKR5bCnU/j65E0birBHYZWTXje41hiOgnXH/qTjow
-         ijI6FUsie6nRXhrLqyHtL+qqUQrZ4bpjgliRZtslnm1Vt4k9hkLunsOH+efJeWr01hLj
-         dz/uqXkmODoVaCaF2mdefg2ay3SvWLgY93xskoihdt1S3hQ3siqSAumw2cYrhovzu4SV
-         u+OwNhe5YYDzQaxC9jimnrgVzhr3cV5o4cYRthNKu3/euNBxL6MW2ywxy4cd4kbCMYMF
-         V4fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jt9wTvbBB9l8BA385ydswer9G/ASNFMgQz2sVTAlGwY=;
-        b=O2EONbgnFOm32O1U0wApYmHngBh3eD+RJ3nTw3VvXo8AQ4seF3B9y5Ysk6UcTXmUew
-         vpcA3BktBNjS1orfek6QOFcsfE5cLRWSsGfvo73UH1D+dLhXFnMKyZyXtqkAVRVI90Gr
-         KgDBLoC4UK4G1kJ2F6sGNFgP+przRnLgTB8gCSZoGtX5KsW3EhbZhN5OuNCX0nc9+5HI
-         pPRqic93VTGFo7n4SwQt75+ch9RhmXOTPJ7JKz/upj7vC+ml9f23jifBJ5U/SZqz39Me
-         CoZDmwMMhrOWzajDIJaA5fk1KAQMzyFrRHTCz/VzUekEKDsdyvIU9YfOlv1WXkFf20az
-         28DA==
-X-Gm-Message-State: AOAM5314nPkZIqrcWDroCNvwANC3uMz4LpFc6yAvhrh2coj9clN5mwhu
-        LMj+mQG7xl7qOfdRD1YpU3JyoA==
-X-Google-Smtp-Source: ABdhPJzONNh6ti+mI0rlAqkmgvqRBA1IcAxfDD8TOiWcba6fmr7wI9/I20P9retKbEDJLLAu40knuQ==
-X-Received: by 2002:a63:565b:: with SMTP id g27mr24394556pgm.166.1591126163012;
-        Tue, 02 Jun 2020 12:29:23 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id s197sm3267932pfc.188.2020.06.02.12.29.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 12:29:21 -0700 (PDT)
-Subject: Re: [PATCH 3/6] arm64/vdso: Add time namespace page
-To:     Andrei Vagin <avagin@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200602180259.76361-1-avagin@gmail.com>
- <20200602180259.76361-4-avagin@gmail.com>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <fd789c85-f08b-3397-d463-501f7ee5c974@arista.com>
-Date:   Tue, 2 Jun 2020 20:29:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 15:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgFBT36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 15:29:58 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12FA2206E2;
+        Tue,  2 Jun 2020 19:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591126197;
+        bh=1hBLrZg8X2acETkZYOjT00wEqCW1nenOSI1VbaWk2lI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VW+O6scbO7flZAH65Wt6O9kqkw7+wNDrxAVj03aQU00mcTXWIoOezC4Sy7nBdO+bE
+         06cerlKExp/cSPfeA2b4AD0kxhNG3oj6zE73X3H2bTnPaoluy+jXmL6ZsqMtWQUUyt
+         qL5VRPkJWaDFxjgFW/hu5v6/btG5z88wuQ8ICttM=
+Date:   Tue, 2 Jun 2020 12:29:54 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Victor Julien <victor@inliniac.net>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Drozdov <al.drozdov@gmail.com>,
+        Tom Herbert <tom@herbertland.com>
+Subject: Re: [PATCH net-next v2] af-packet: new flag to indicate all csums
+ are good
+Message-ID: <20200602122954.0c35072b@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <6a3dcce9-4635-28e9-d78e-1c7f1f7874da@inliniac.net>
+References: <20200602080535.1427-1-victor@inliniac.net>
+        <CA+FuTSfD2-eF0H=Qu09=JXK6WTiWKNtcqRXqv3TfMfB-=0GiMg@mail.gmail.com>
+        <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
+        <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
+        <06479df9-9da4-dbda-5bd1-f6e4d61471d0@inliniac.net>
+        <CA+FuTSci29=W89CLweZcW=RTKwEXpUdPjsLGTB95iSNcnpU_Lw@mail.gmail.com>
+        <6a3dcce9-4635-28e9-d78e-1c7f1f7874da@inliniac.net>
 MIME-Version: 1.0
-In-Reply-To: <20200602180259.76361-4-avagin@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrei,
+On Tue, 2 Jun 2020 21:22:11 +0200 Victor Julien wrote:
+> - receiver uses nfp (netronome) driver: TP_STATUS_CSUM_VALID set for
+> every packet, including the bad TCP ones
+> - receiver uses ixgbe driver: TP_STATUS_CSUM_VALID not set for the bad
+> packets.
+> 
+> Again purely based on 'git grep' it seems nfp does not support
+> UNNECESSARY, while ixgbe does.
+> 
+> (my original testing was with the nfp only, so now I at least understand
+> my original thinking)
 
-On 6/2/20 7:02 PM, Andrei Vagin wrote:
-[..]
-> --- a/arch/arm64/include/asm/vdso.h
-> +++ b/arch/arm64/include/asm/vdso.h
-> @@ -12,6 +12,12 @@
->   */
->  #define VDSO_LBASE	0x0
->  
-> +#ifdef CONFIG_TIME_NS
-> +#define __VVAR_PAGES    2
-> +#else
-> +#define __VVAR_PAGES    1
-> +#endif
-> +
->  #ifndef __ASSEMBLY__
-
-Not an issue as-is, but:
-
-on x86 vdso+vvar is always the same size with/without CONFIG_TIME_NAMESPACE.
-
-Timens page isn't allocated on !CONFIG_TIME_NAMESPACE, but vma is the
-same size. Which simplifies criu/vdso migration between different kernel
-configs.
-
-Not any critical, but just to note..
-
-Thanks,
-          Dima
+FWIW nfp defaults to CHECKSUM_COMPLETE if the device supports it (see
+if you have RXCSUM_COMPLETE in the probe logs). It supports UNNECESSARY
+as well, but IDK if there is a way to choose  the preferred checksum
+types in the stack :( You'd have to edit the driver and remove the
+NFP_NET_CFG_CTRL_CSUM_COMPLETE from the NFP_NET_CFG_CTRL_RXCSUM_ANY
+mask to switch to using UNNECESSARY.
