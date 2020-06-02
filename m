@@ -2,149 +2,328 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4291C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54CA12068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701F920823
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="l6z8ud1K"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AblGUQfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgFBRUs (ORCPT
+        id S1726625AbgFBRYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:20:48 -0400
-Received: from mout.web.de ([212.227.17.11]:43961 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgFBRUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:20:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591118434;
-        bh=vzoyCQAVhDVRG128Qg5VrOsZZSGwD/IaCEQIgguYR/k=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=l6z8ud1KAiU5N+b9C+nmGxSQxBiNBONjivhnkXqiKOx5tqb9AGpHjM6vHhyQNl07r
-         gakM7xUNAQOFSoSodhWBIBKGSvxtB8iFC2xrt/xR8uNy9dItG/d5HJe2vKVNDJiNtf
-         EuA9KCd1NRanbmd+Nwl3ZhB76UhnkvZryBUVxuFA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MWz8l-1jVYeh1GTx-00XUqQ; Tue, 02
- Jun 2020 19:20:34 +0200
-To:     Wang Hai <wanghai38@huawei.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Munsie <imunsie@au1.ibm.com>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] cxl: Fix kobject memory leak in cxl_sysfs_afu_new_cr()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b9791ff3-8397-f6e9-ca88-59c9bbe8c78f@web.de>
-Date:   Tue, 2 Jun 2020 19:20:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 13:24:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47540 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbgFBRYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 13:24:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052HLtG1100291;
+        Tue, 2 Jun 2020 17:23:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=69/JLxXKjizNOV1XvRT1+9SrWey+uOeGWCCeVirdDfs=;
+ b=AblGUQfa4Wz0RtDPdDZBOxr5b5ZOLLeysPtmE7zrYGoqfzvhSrTo446h7Mhs4oOIHWNP
+ LALzkfblEa3UJDirwWtEMRFzLB74tX7fm9eFGoH8mxaH9E6zsIjRNYd9eEtM+k8kSSWy
+ hjWlbzxWJe5zMlyh2mCukN3IlAo46J4akgjFDbxOSi/hpLj7JW6iGyl7BhUIbR1Rlnks
+ 3cgNOiXGVRsni5H4p/Z5xNCfERQ8rCZjjEqVAKrO83rW91cV5Mw1CJpjw1kluqpEyXTi
+ 1KRK6qfmhBj5NWwPSXCswACc4c7NoWaE/A8+a2sv88ubG546E7hHJ4ypAM4F2tWc6tJc Yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31bewqwa12-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 17:23:58 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052HHvrk183806;
+        Tue, 2 Jun 2020 17:23:57 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31c25phktu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 17:23:57 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052HNtW4030839;
+        Tue, 2 Jun 2020 17:23:55 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 10:23:54 -0700
+Date:   Tue, 2 Jun 2020 10:23:53 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V11 11/11] fs/xfs: Update
+ xfs_ioctl_setattr_dax_invalidate()
+Message-ID: <20200602172353.GC8230@magnolia>
+References: <20200428002142.404144-1-ira.weiny@intel.com>
+ <20200428002142.404144-12-ira.weiny@intel.com>
+ <20200428201138.GD6742@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GXgW0Cj5LnEMpxP3UD/IYVpnnIdAdXbfa/5xLeUwq9XKXYBFO1+
- oKcn+E+yM3LDjCr2WbsYIjAAmJ0O+xkEssw9E/5V5X6WQgDqbMVK94WwJL45xusTWjyAsDT
- 99AAZ0Zp3/vkQq7wlVcJF1fY+aDQMO8z//z1ftE9scc5G5HpWkfJE3HzJkgBRPvOXWGn8v5
- 6uirGFn64ctMNa2IAY/YA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Vq9OeyU7w2g=:Fpn5ZTmBdR99Z5AhGWdjGi
- nRdPbvxmV8UODpIcg1QWz2JVLyn7ZdfSrPU8XMwiIW8NL/E46N+rFm4zFbgQd6qspcmJodtJU
- jgZa4VhOcc5CiqMRISNzfwUFd6ELGh/hUSetd6FlCIz6orkGmS6nj50rmA6HWWy5SZAGRts2F
- ZaTMzEsl20ODnSZ4UV3aMEfkIroIXFoHXfRaMkp+LmKqNEH+blt1GPoLgrahnh9V39N3r0OqH
- DVvgmXlwUzruOVq6/+NANn8NK84toF58/KDXJ+e7tIgvpofwlyKjHyNzAyJO7BaKmAQQKt9AL
- i64NJSP6I8l+RAvzGqUgXCvpjriPqaikA7RZbP/lIKCWfpwywJ4sleZp57FAkgkm7HbfxWBzz
- Idip8gtcaFY3yEqrN2GIp1ysHbXLsczAd/bCfJraL4ulkwbXGt+dbJzeq1SWp2sLm250ieqNw
- t3QOkyMAtLE15OjS0z4KUZS97s5GW9C8ZAwbTkzrMBFPUv4DHikTHwUoGaMK2ZmrN5w1KJTyj
- 3bCfKwFpxa6EpkoHM45yR0sE43h2u71O+lRFMoEkJ6/dB8AzlCAQpdsLfgslXbwS0d1FS5ax/
- tQXcQBRAxSe0opWfD4r0404yO3ZOD7mg0YjqYWS2rqq20tl1UQC5uMnz3O3TuZxXyM42m5iT+
- IPJThl2S0RD8SkvFXNdTwPr19rO+k3xocoFi+NGLNo8xBatqKSI2H35q3nEjg3NizFkTjhj7l
- VoVsKILai07odxlf1FUuP0+kmx7myoEwxoG0lW4fRoWoY86MUTa2XBB5aXlmc1LOut2n+gZYx
- TKmdtjCaXP3FSJaa8e7IWcBu/WiLQt8pfdL3CPYii73AeiFt3wNkfIZgFbnRAOlvmqSNeLnlU
- wwzg0C8rRfUZNoIlvawVXtRsTmb4+G/mOUZPi3f5GZHgGKGK8cpZtu2a6AVkbdHY/0J1YVZQI
- 1RLC3cxpYemTW3e/so+YsT2/b+96vvggA78lKKn3dpF85BUmA7MjRNx8aFSfsxP4gkK/mfLQz
- bQErQo2S+hsQg0sdm5iY3IfiYQyw0X9m+VebHjP3jd1DI4xoJQke91MX/dzFKSE70QvkMOmGZ
- lm3XdDo09pXfGz/HwNnMInMBbk9XIVFET6r8DHgXzEN5KmSs1HOnylrvEW3ZMR9egq0b8nlHa
- rR0XQWsRddGQpJWMZMddR9khA3W7Qxe3SdG2OQQIqIBrDZlCIcWzF4GzVPluLCb4NufGlAsa0
- SBggMH+M9YqNBcBi2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428201138.GD6742@magnolia>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=10
+ spamscore=0 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=10 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006020125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fix it by adding a call to kobject_put() in the error path of
-> kobject_init_and_add().
+On Tue, Apr 28, 2020 at 01:11:38PM -0700, Darrick J. Wong wrote:
+> On Mon, Apr 27, 2020 at 05:21:42PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Because of the separation of FS_XFLAG_DAX from S_DAX and the delayed
+> > setting of S_DAX, data invalidation no longer needs to happen when
+> > FS_XFLAG_DAX is changed.
+> > 
+> > Change xfs_ioctl_setattr_dax_invalidate() to be
+> > xfs_ioctl_dax_check_set_cache() and alter the code to reflect the new
+> > functionality.
+> > 
+> > Furthermore, we no longer need the locking so we remove the join_flags
+> > logic.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> Looks ok,
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> --D
+> 
+> > 
+> > ---
+> > Changes from V10:
+> > 	adjust for renamed d_mark_dontcache() function
+> > 
+> > Changes from V9:
+> > 	Change name of function to xfs_ioctl_setattr_prepare_dax()
+> > 
+> > Changes from V8:
+> > 	Change name of function to xfs_ioctl_dax_check_set_cache()
+> > 	Update commit message
+> > 	Fix bit manipulations
+> > 
+> > Changes from V7:
+> > 	Use new flag_inode_dontcache()
+> > 	Skip don't cache if mount over ride is active.
+> > 
+> > Changes from v6:
+> > 	Fix completely broken implementation and update commit message.
+> > 	Use the new VFS layer I_DONTCACHE to facilitate inode eviction
+> > 	and S_DAX changing on drop_caches
+> > 
+> > Changes from v5:
+> > 	New patch
+> > ---
+> >  fs/xfs/xfs_ioctl.c | 108 +++++++++------------------------------------
+> >  1 file changed, 20 insertions(+), 88 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > index 104495ac187c..ff474f2c9acf 100644
+> > --- a/fs/xfs/xfs_ioctl.c
+> > +++ b/fs/xfs/xfs_ioctl.c
+> > @@ -1245,64 +1245,26 @@ xfs_ioctl_setattr_xflags(
+> >  	return 0;
+> >  }
+> >  
+> > -/*
+> > - * If we are changing DAX flags, we have to ensure the file is clean and any
+> > - * cached objects in the address space are invalidated and removed. This
+> > - * requires us to lock out other IO and page faults similar to a truncate
+> > - * operation. The locks need to be held until the transaction has been committed
+> > - * so that the cache invalidation is atomic with respect to the DAX flag
+> > - * manipulation.
+> > - */
+> > -static int
+> > -xfs_ioctl_setattr_dax_invalidate(
+> > +static void
+> > +xfs_ioctl_setattr_prepare_dax(
+> >  	struct xfs_inode	*ip,
+> > -	struct fsxattr		*fa,
+> > -	int			*join_flags)
+> > +	struct fsxattr		*fa)
+> >  {
+> > -	struct inode		*inode = VFS_I(ip);
+> > -	struct super_block	*sb = inode->i_sb;
+> > -	int			error;
+> > -
+> > -	*join_flags = 0;
+> > -
+> > -	/*
+> > -	 * It is only valid to set the DAX flag on regular files and
+> > -	 * directories on filesystems where the block size is equal to the page
+> > -	 * size. On directories it serves as an inherited hint so we don't
+> > -	 * have to check the device for dax support or flush pagecache.
+> > -	 */
+> > -	if (fa->fsx_xflags & FS_XFLAG_DAX) {
+> > -		struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+> > -
+> > -		if (!bdev_dax_supported(target->bt_bdev, sb->s_blocksize))
+> > -			return -EINVAL;
+> > -	}
+> > -
+> > -	/* If the DAX state is not changing, we have nothing to do here. */
+> > -	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
+> > -		return 0;
+> > -	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
+> > -		return 0;
+> > +	struct xfs_mount	*mp = ip->i_mount;
+> > +	struct inode            *inode = VFS_I(ip);
+> >  
+> >  	if (S_ISDIR(inode->i_mode))
+> > -		return 0;
+> > -
+> > -	/* lock, flush and invalidate mapping in preparation for flag change */
+> > -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> > -	error = filemap_write_and_wait(inode->i_mapping);
+> > -	if (error)
+> > -		goto out_unlock;
+> > -	error = invalidate_inode_pages2(inode->i_mapping);
+> > -	if (error)
+> > -		goto out_unlock;
+> > -
+> > -	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
+> > -	return 0;
+> > +		return;
+> >  
+> > -out_unlock:
+> > -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> > -	return error;
+> > +	if ((mp->m_flags & XFS_MOUNT_DAX_ALWAYS) ||
+> > +	    (mp->m_flags & XFS_MOUNT_DAX_NEVER))
+> > +		return;
+> >  
+> > +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
+> > +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
+> > +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
+> > +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
+> > +		d_mark_dontcache(inode);
 
-Thanks for another completion of the exception handling.
+Now that I think about this further, are we /really/ sure that we want
+to let unprivileged userspace cause inode evictions?
 
-Would an other patch subject be a bit nicer?
+--D
 
-
-=E2=80=A6
-> +++ b/drivers/misc/cxl/sysfs.c
-> @@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_c=
-r(struct cxl_afu *afu, int c
->  	rc =3D kobject_init_and_add(&cr->kobj, &afu_config_record_type,
->  				  &afu->dev.kobj, "cr%i", cr->cr);
->  	if (rc)
-> -		goto err;
-> +		goto err1;
-=E2=80=A6
-
-Can an other label be more reasonable here?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3Df359287765c04711ff54fbd11645271d=
-8e5ff763#n465
-
-Regards,
-Markus
+> >  }
+> >  
+> >  /*
+> > @@ -1310,17 +1272,10 @@ xfs_ioctl_setattr_dax_invalidate(
+> >   * have permission to do so. On success, return a clean transaction and the
+> >   * inode locked exclusively ready for further operation specific checks. On
+> >   * failure, return an error without modifying or locking the inode.
+> > - *
+> > - * The inode might already be IO locked on call. If this is the case, it is
+> > - * indicated in @join_flags and we take full responsibility for ensuring they
+> > - * are unlocked from now on. Hence if we have an error here, we still have to
+> > - * unlock them. Otherwise, once they are joined to the transaction, they will
+> > - * be unlocked on commit/cancel.
+> >   */
+> >  static struct xfs_trans *
+> >  xfs_ioctl_setattr_get_trans(
+> > -	struct xfs_inode	*ip,
+> > -	int			join_flags)
+> > +	struct xfs_inode	*ip)
+> >  {
+> >  	struct xfs_mount	*mp = ip->i_mount;
+> >  	struct xfs_trans	*tp;
+> > @@ -1337,8 +1292,7 @@ xfs_ioctl_setattr_get_trans(
+> >  		goto out_unlock;
+> >  
+> >  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> > -	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL | join_flags);
+> > -	join_flags = 0;
+> > +	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+> >  
+> >  	/*
+> >  	 * CAP_FOWNER overrides the following restrictions:
+> > @@ -1359,8 +1313,6 @@ xfs_ioctl_setattr_get_trans(
+> >  out_cancel:
+> >  	xfs_trans_cancel(tp);
+> >  out_unlock:
+> > -	if (join_flags)
+> > -		xfs_iunlock(ip, join_flags);
+> >  	return ERR_PTR(error);
+> >  }
+> >  
+> > @@ -1486,7 +1438,6 @@ xfs_ioctl_setattr(
+> >  	struct xfs_dquot	*pdqp = NULL;
+> >  	struct xfs_dquot	*olddquot = NULL;
+> >  	int			code;
+> > -	int			join_flags = 0;
+> >  
+> >  	trace_xfs_ioctl_setattr(ip);
+> >  
+> > @@ -1510,18 +1461,9 @@ xfs_ioctl_setattr(
+> >  			return code;
+> >  	}
+> >  
+> > -	/*
+> > -	 * Changing DAX config may require inode locking for mapping
+> > -	 * invalidation. These need to be held all the way to transaction commit
+> > -	 * or cancel time, so need to be passed through to
+> > -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> > -	 * appropriately.
+> > -	 */
+> > -	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
+> > -	if (code)
+> > -		goto error_free_dquots;
+> > +	xfs_ioctl_setattr_prepare_dax(ip, fa);
+> >  
+> > -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> > +	tp = xfs_ioctl_setattr_get_trans(ip);
+> >  	if (IS_ERR(tp)) {
+> >  		code = PTR_ERR(tp);
+> >  		goto error_free_dquots;
+> > @@ -1651,7 +1593,6 @@ xfs_ioc_setxflags(
+> >  	struct fsxattr		fa;
+> >  	struct fsxattr		old_fa;
+> >  	unsigned int		flags;
+> > -	int			join_flags = 0;
+> >  	int			error;
+> >  
+> >  	if (copy_from_user(&flags, arg, sizeof(flags)))
+> > @@ -1668,18 +1609,9 @@ xfs_ioc_setxflags(
+> >  	if (error)
+> >  		return error;
+> >  
+> > -	/*
+> > -	 * Changing DAX config may require inode locking for mapping
+> > -	 * invalidation. These need to be held all the way to transaction commit
+> > -	 * or cancel time, so need to be passed through to
+> > -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> > -	 * appropriately.
+> > -	 */
+> > -	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
+> > -	if (error)
+> > -		goto out_drop_write;
+> > +	xfs_ioctl_setattr_prepare_dax(ip, &fa);
+> >  
+> > -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> > +	tp = xfs_ioctl_setattr_get_trans(ip);
+> >  	if (IS_ERR(tp)) {
+> >  		error = PTR_ERR(tp);
+> >  		goto out_drop_write;
+> > -- 
+> > 2.25.1
+> > 
