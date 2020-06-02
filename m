@@ -2,147 +2,241 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1327220674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D2C2077D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgFBHPT (ORCPT
+        id S1726332AbgFBHPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:15:19 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53751 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgFBHPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:15:19 -0400
-IronPort-SDR: PUUCL+eaq9mt53odhXHwGPwUGd8BQF6cDkODy8Z9lHcYv9gCUdUUHAvzxsYun7S/ePqPUDxPGU
- vXqi7oiTpBWg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 00:15:18 -0700
-IronPort-SDR: YBIAVbKL6Ewx0Yi4csv6WAPag/FZJw60XWTNrwPx9dLJoGlLBFbfyACfaPaeNkKAcrK4fOP4o5
- IHzxlehO/Uvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
-   d="scan'208";a="286547216"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.30.17]) ([10.255.30.17])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 00:15:13 -0700
-Cc:     baolu.lu@linux.intel.com, rajatxjain@gmail.com, pmalani@google.com,
-        bleung@google.com, levinale@google.com, zsm@google.com,
-        mnissler@google.com, tbroch@google.com
-Subject: Re: [PATCH] iommu/vt-d: Don't apply gfx quirks to untrusted devices
-To:     Rajat Jain <rajatja@google.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com
-References: <20200602054517.191244-1-rajatja@google.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <ad238863-bef8-99bf-38c7-5839af1647e5@linux.intel.com>
-Date:   Tue, 2 Jun 2020 15:15:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 03:15:45 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:59539 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725835AbgFBHPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 03:15:45 -0400
+Received: from pro2.mail.ovh.net (unknown [10.108.1.149])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 9B4386059ACD;
+        Tue,  2 Jun 2020 09:15:40 +0200 (CEST)
+Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
+ 09:15:41 +0200
+Date:   Tue, 2 Jun 2020 09:13:28 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 1/4] iio: chemical: scd30: add core driver
+Message-ID: <20200602071328.GA2668@arch>
+References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+ <20200530213630.87159-2-tomasz.duszynski@octakon.com>
+ <20200531105840.27e17f3d@archlinux>
+ <20200531192152.GC27246@arch>
+ <20200601113604.00002d70@Huawei.com>
+ <20200601113006.GA28560@arch>
+ <20200601144120.000038ba@Huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200602054517.191244-1-rajatja@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200601144120.000038ba@Huawei.com>
+X-Originating-IP: [34.103.240.103]
+X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 18202423796053400822
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefiedgudduvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnheptdehveethfffudetjeeftdekueehjeegjedvteffgfevkefffeegffeugeehgfejnecukfhppedtrddtrddtrddtpdefgedruddtfedrvdegtddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvght
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/2 13:45, Rajat Jain wrote:
-> Currently, an external malicious PCI device can masquerade the VID:PID
-> of faulty gfx devices, and thus apply iommu quirks to effectively
-> disable the IOMMU restrictions for itself.
-> 
-> Thus we need to ensure that the device we are applying quirks to, is
-> indeed an internal trusted device.
-> 
+On Mon, Jun 01, 2020 at 02:41:20PM +0100, Jonathan Cameron wrote:
+> ...
+>
+> > > > > > +
+> > > > > > +	return ret;
+> > > > > > +}
+> > > > > > +
+> > > > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> > > > > > +		scd30_command_t command)
+> > > > > > +{
+> > > > > > +	static const unsigned long scd30_scan_masks[] = { 0x07, 0x00 };
+> > > > > > +	struct scd30_state *state;
+> > > > > > +	struct iio_dev *indio_dev;
+> > > > > > +	int ret;
+> > > > > > +	u16 val;
+> > > > > > +
+> > > > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
+> > > > > > +	if (!indio_dev)
+> > > > > > +		return -ENOMEM;
+> > > > > > +
+> > > > > > +	state = iio_priv(indio_dev);
+> > > > > > +	state->dev = dev;
+> > > > >
+> > > > > Doesn't seem to be used.
+> > > > >
+> > > > > > +	state->priv = priv;
+> > > > >
+> > > > > What's this for?  At least at first glance I can't find it being used
+> > > > > anywhere.
+> > > > >
+> > > > > > +	state->irq = irq;
+> > > > > > +	state->pressure_comp = SCD30_PRESSURE_COMP_DEFAULT;
+> > > > > > +	state->meas_interval = SCD30_MEAS_INTERVAL_DEFAULT;
+> > > > > > +	state->command = command;
+> > > > > > +	mutex_init(&state->lock);
+> > > > > > +	init_completion(&state->meas_ready);
+> > > > > > +
+> > > > > > +	dev_set_drvdata(dev, indio_dev);
+> > > > > > +
+> > > > > > +	indio_dev->dev.parent = dev;
+> > > > >
+> > > > > Side note that there is a series moving this into the core under revision at
+> > > > > the moment.  Hopefully I'll remember to fix this up when applying your patch
+> > > > > if that one has gone in ahead of it.
+> > > > >
+> > > > > > +	indio_dev->info = &scd30_info;
+> > > > > > +	indio_dev->name = name;
+> > > > > > +	indio_dev->channels = scd30_channels;
+> > > > > > +	indio_dev->num_channels = ARRAY_SIZE(scd30_channels);
+> > > > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > > > > > +	indio_dev->available_scan_masks = scd30_scan_masks;
+> > > > > > +
+> > > > > > +	state->vdd = devm_regulator_get(dev, "vdd");
+> > > > > > +	if (IS_ERR(state->vdd)) {
+> > > > > > +		if (PTR_ERR(state->vdd) == -EPROBE_DEFER)
+> > > > > > +			return -EPROBE_DEFER;
+> > > > > > +
+> > > > > > +		dev_err(dev, "failed to get regulator\n");
+> > > > > > +		return PTR_ERR(state->vdd);
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	ret = regulator_enable(state->vdd);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = devm_add_action_or_reset(dev, scd30_disable_regulator, state);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > >
+> > > > > A comment here on why it makes sense to register this here.  What
+> > > > > started mesurement? It seems that happens well below here so
+> > > > > we should really call this after that start all.
+> > > > >
+> > > >
+> > > > Sensor after being powered up starts in mode it was left in.
+> > > > Chances are it was continuous mode and we want to shut it down.
+> > >
+> > > That's fine.  The question is why 'here' as opposed to after the below where you
+> > > put it into continuous mode.
+> > >
+> >
+> > Let's suppose sensor got energized and started measuring. Then without
+> > registering action which stops measurement we jump to device reset etc.
+> >
+> > Now if reset failed for whatever reason (same applies to everything
+> > below reset) devm will gracefully unwind previous actions but sensor
+> > will continue doing his job. But there's no point. Better to save some
+> > milliaps for later.
+>
+> I'm not convinced. Note that in your example, the sensor was already on.
+> If we never loaded the driver it would stay on.  We should
+> deal with only problems we have potentially created.
+>
 
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Fair enough.
 
-Best regards,
-baolu
-
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
->   drivers/iommu/intel-iommu.c | 28 ++++++++++++++++++++++++++++
->   1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index ef0a5246700e5..f2a480168a02f 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -6214,6 +6214,11 @@ const struct iommu_ops intel_iommu_ops = {
->   
->   static void quirk_iommu_igfx(struct pci_dev *dev)
->   {
-> +	if (dev->untrusted) {
-> +		pci_warn(dev, "skipping iommu quirk for untrusted gfx dev\n");
-> +		return;
-> +	}
-> +
->   	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
->   	dmar_map_gfx = 0;
->   }
-> @@ -6255,6 +6260,11 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
->   
->   static void quirk_iommu_rwbf(struct pci_dev *dev)
->   {
-> +	if (dev->untrusted) {
-> +		pci_warn(dev, "skipping iommu quirk for untrusted dev\n");
-> +		return;
-> +	}
-> +
->   	/*
->   	 * Mobile 4 Series Chipset neglects to set RWBF capability,
->   	 * but needs it. Same seems to hold for the desktop versions.
-> @@ -6285,6 +6295,11 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
->   {
->   	unsigned short ggc;
->   
-> +	if (dev->untrusted) {
-> +		pci_warn(dev, "skipping iommu quirk for untrusted gfx dev\n");
-> +		return;
-> +	}
-> +
->   	if (pci_read_config_word(dev, GGC, &ggc))
->   		return;
->   
-> @@ -6318,6 +6333,13 @@ static void __init check_tylersburg_isoch(void)
->   	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
->   	if (!pdev)
->   		return;
-> +
-> +	if (pdev->untrusted) {
-> +		pci_warn(pdev, "skipping iommu quirk due to untrusted dev\n");
-> +		pci_dev_put(pdev);
-> +		return;
-> +	}
-> +
->   	pci_dev_put(pdev);
->   
->   	/* System Management Registers. Might be hidden, in which case
-> @@ -6327,6 +6349,12 @@ static void __init check_tylersburg_isoch(void)
->   	if (!pdev)
->   		return;
->   
-> +	if (pdev->untrusted) {
-> +		pci_warn(pdev, "skipping iommu quirk due to untrusted dev\n");
-> +		pci_dev_put(pdev);
-> +		return;
-> +	}
-> +
->   	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
->   		pci_dev_put(pdev);
->   		return;
-> 
+> If reset fails, it shouldn't 'enable' the sensor hence we are just in
+> the same state as if the driver hadn't loaded at all.  Also if reset
+> fails the chance of a disable succeeding is very low.
+>
+> The code is much more logical with this being done immediately after
+> the action to enable thing we are disabling.  So please put it down
+> there.
+>
+>
+>
+> >
+> > In case we have real regulator then there's no real issue because
+> > power gets cut off during cleanup.
+> >
+> > Quite often though there's only a dummy one which does nothing useful
+> > except making regulator framework happy.
+> >
+> > So my thinking here is that we're slightly better off registering
+> > scd30_stop_meas() action earlier to prevent such scenario from happening.
+> >
+> > > >
+> > > > > > +	ret = devm_add_action_or_reset(dev, scd30_stop_meas, state);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = scd30_reset(state);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to reset device: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (state->irq > 0) {
+> > > > > > +		ret = scd30_setup_trigger(indio_dev);
+> > > > > > +		if (ret) {
+> > > > > > +			dev_err(dev, "failed to setup trigger: %d\n", ret);
+> > > > > > +			return ret;
+> > > > > > +		}
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > > > > > +					      scd30_trigger_handler, NULL);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = scd30_command_read(state, CMD_FW_VERSION, &val);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to read firmware version: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > > +	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
+> > > > > > +
+> > > > > > +	ret = scd30_command_write(state, CMD_MEAS_INTERVAL,
+> > > > > > +				  state->meas_interval);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to set measurement interval: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
+> > > > > > +	if (ret) {
+> > > > > > +		dev_err(dev, "failed to start measurement: %d\n", ret);
+> > > > > > +		return ret;
+> > > > > > +	}
+> Here is where we should register that cleanup handler.
+>
+> Jonathan
+>
+> > > > > > +
+> > > > > > +	return devm_iio_device_register(dev, indio_dev);
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL(scd30_probe);
+> > > > > > +
+> > > > > > +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> > > > > > +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor core driver");
+> > > > > > +MODULE_LICENSE("GPL v2");
+> > > > > > --
+> > > > > > 2.26.2
+> > > > > >
+> > > > >
+> > >
+> > >
+>
+>
