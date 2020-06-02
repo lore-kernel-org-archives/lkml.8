@@ -2,157 +2,141 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41045C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20AE720674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QbBe2b8D"
+	by mail.kernel.org (Postfix) with ESMTP id 2588220674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgFBNHQ (ORCPT
+        id S1728358AbgFBNHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:07:16 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:64000 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgFBNHI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:07:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591103227; x=1622639227;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=yXcscIx9TszwKz07XL6u8QTZrOQmEAxwAfn/hK3gC7Q=;
-  b=QbBe2b8DUrb8rqOWWqimmXkRgO51MFymAKTPWrM0t3QgGf4gVE8QWZdT
-   z8TPIj9jHci7Jb33rEQfAhSDa7+lBVO3f0vo/OB+JmDJ/AdEHh01ya7wY
-   srrYXTUPJstFuY5dppplAv1ff9D6d+PZCSJ3HSnJuajBc/8aMmxouCEOD
-   E=;
-IronPort-SDR: nC8b8AKKge52pMvpsUJykAc+9zQDcLWR3+//e6ireo+hA5Mc/Wly7o4xepmNyM7G5T4aVjWAny
- RgoBNPGBedtA==
-X-IronPort-AV: E=Sophos;i="5.73,464,1583193600"; 
-   d="scan'208";a="49176524"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 02 Jun 2020 13:06:59 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 5A27FA2019;
-        Tue,  2 Jun 2020 13:06:57 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:06:56 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.175) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:06:41 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 06/15] mm/damon: Implement callbacks
-Date:   Tue, 2 Jun 2020 15:01:16 +0200
-Message-ID: <20200602130125.20467-7-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200602130125.20467-1-sjpark@amazon.com>
-References: <20200602130125.20467-1-sjpark@amazon.com>
+        Tue, 2 Jun 2020 09:07:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:50674 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728584AbgFBNHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:07:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7A811FB;
+        Tue,  2 Jun 2020 06:07:15 -0700 (PDT)
+Received: from [10.57.10.95] (unknown [10.57.10.95])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BE473F305;
+        Tue,  2 Jun 2020 06:07:13 -0700 (PDT)
+Subject: Re: [PATCH] iommu/dma: limit iova free size to unmmaped iova
+To:     guptap@codeaurora.org
+Cc:     mhocko@suse.com, owner-linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200521113004.12438-1-guptap@codeaurora.org>
+ <7aaa8dcc-6a47-f256-431d-2a1b034b4076@arm.com>
+ <90662ef3123dbf2e93f9718ee5cc14a7@codeaurora.org>
+ <2d873ab9-ebb9-3c2d-f129-55a036ab47d0@arm.com>
+ <4ba082d3bb965524157704ea1ffb1ff4@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9b5f8501-6e6e-0cd2-7f98-7cfea13051d7@arm.com>
+Date:   Tue, 2 Jun 2020 14:07:12 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.175]
-X-ClientProxiedBy: EX13D29UWC002.ant.amazon.com (10.43.162.254) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <4ba082d3bb965524157704ea1ffb1ff4@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On 2020-05-26 08:19, guptap@codeaurora.org wrote:
+> On 2020-05-22 14:54, Robin Murphy wrote:
+>> On 2020-05-22 07:25, guptap@codeaurora.org wrote:
+>>> On 2020-05-22 01:46, Robin Murphy wrote:
+>>>> On 2020-05-21 12:30, Prakash Gupta wrote:
+>>> I agree, we shouldn't be freeing the partial iova. Instead just making
+>>> sure if unmap was successful should be sufficient before freeing 
+>>> iova. So change
+>>> can instead be something like this:
+>>>
+>>> -    iommu_dma_free_iova(cookie, dma_addr, size);
+>>> +    if (unmapped)
+>>> +        iommu_dma_free_iova(cookie, dma_addr, size);
+>>>
+>>>> TBH my gut feeling here is that you're really just trying to treat a
+>>>> symptom of another bug elsewhere, namely some driver calling
+>>>> dma_unmap_* or dma_free_* with the wrong address or size in the first
+>>>> place.
+>>>>
+>>> This condition would arise only if driver calling dma_unmap/free_* 
+>>> with 0
+>>> iova_pfn. This will be flagged with a warning during unmap but will 
+>>> trigger
+>>> panic later on while doing unrelated dma_map/unmap_*. If unmapped has 
+>>> already
+>>> failed for invalid iova, there is no reason we should consider this 
+>>> as valid
+>>> iova and free. This part should be fixed.
+>>
+>> I disagree. In general, if drivers call the DMA API incorrectly it is
+>> liable to lead to data loss, memory corruption, and various other
+>> unpleasant misbehaviour - it is not the DMA layer's job to attempt to
+>> paper over driver bugs.
+>>
+>> There *is* an argument for downgrading the BUG_ON() in
+>> iova_magazine_free_pfns() to a WARN_ON(), since frankly it isn't a
+>> sufficiently serious condition to justify killing the whole machine
+>> immediately, but NAK to bodging the iommu-dma mid-layer to "fix" that.
+>> A serious bug already happened elsewhere, so trying to hide the
+>> fallout really doesn't help anyone.
+>>
+> Sorry for delayed response, it was a long weekend.
+> I agree that invalid DMA API call can result in unexpected issues and 
+> client
+> should fix it, but then the present behavior makes it difficult to catch 
+> cases
+> when driver is making wrong DMA API calls. When invalid iova pfn is 
+> passed it
+> doesn't fail then and there, though DMA layer is aware of iova being 
+> invalid. It
+> fails much after that in the context of an valid map/unmap, with BUG_ON().
+> 
+> Downgrading BUG_ON() to WARN_ON() in iova_magazine_free_pfns() will not 
+> help
+> much as invalid iova will cause NULL pointer dereference.
 
-This commit implements callbacks for DAMON.  Using this, DAMON users can
-install their callbacks for each step of the access monitoring so that
-they can do something interesting with the monitored access patterns
-online.  For example, callbacks can report the monitored patterns to
-users or do some access pattern based memory management such as
-proactive reclamations or access pattern based THP promotions/demotions
-decision makings.
+Obviously I didn't mean a literal s/BUG/WARN/ substitution - some 
+additional control flow to actually handle the error case was implied.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
----
- include/linux/damon.h | 13 +++++++++++++
- mm/damon.c            |  4 ++++
- 2 files changed, 17 insertions(+)
+I'll write up the patch myself, since it's easier than further debating.
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 5afcb2bb7f77..12536d9d2f74 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -80,6 +80,15 @@ struct damon_task {
-  * @kdamond_lock.  Accesses to other fields must be protected by themselves.
-  *
-  * @tasks_list:		Head of monitoring target tasks (&damon_task) list.
-+ *
-+ * @sample_cb:			Called for each sampling interval.
-+ * @aggregate_cb:		Called for each aggregation interval.
-+ *
-+ * @sample_cb and @aggregate_cb are called from @kdamond for each of the
-+ * sampling intervals and aggregation intervals, respectively.  Therefore,
-+ * users can safely access to the monitoring results via @tasks_list without
-+ * additional protection of @kdamond_lock.  For the reason, users are
-+ * recommended to use these callback for the accesses to the results.
-  */
- struct damon_ctx {
- 	unsigned long sample_interval;
-@@ -96,6 +105,10 @@ struct damon_ctx {
- 	struct mutex kdamond_lock;
- 
- 	struct list_head tasks_list;	/* 'damon_task' objects */
-+
-+	/* callbacks */
-+	void (*sample_cb)(struct damon_ctx *context);
-+	void (*aggregate_cb)(struct damon_ctx *context);
- };
- 
- int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
-diff --git a/mm/damon.c b/mm/damon.c
-index de5ed38ac05c..42ce9df47f8b 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -850,6 +850,8 @@ static int kdamond_fn(void *data)
- 	kdamond_init_regions(ctx);
- 	while (!kdamond_need_stop(ctx)) {
- 		kdamond_prepare_access_checks(ctx);
-+		if (ctx->sample_cb)
-+			ctx->sample_cb(ctx);
- 
- 		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
- 
-@@ -857,6 +859,8 @@ static int kdamond_fn(void *data)
- 
- 		if (kdamond_aggregate_interval_passed(ctx)) {
- 			kdamond_merge_regions(ctx, max_nr_accesses / 10);
-+			if (ctx->aggregate_cb)
-+				ctx->aggregate_cb(ctx);
- 			kdamond_reset_aggregated(ctx);
- 			kdamond_split_regions(ctx);
- 		}
--- 
-2.17.1
+> I see no reason why DMA layer wants to free an iova for which unmapped 
+> failed.
+> IMHO queuing an invalid iova (which already failed unmap) to rcache which
+> eventually going to crash the system looks like iommu-dma layer issue.
 
+What if the unmap fails because the address range is already entirely 
+unmapped? Freeing the IOVA (or at least attempting to) would be 
+logically appropriate in that case. In fact some IOMMU drivers might not 
+even consider that a failure, so the DMA layer may not even be aware 
+that it's been handed a bogus unallocated address.
+
+The point is that unmapping *doesn't* fail under normal and correct 
+operation, so the DMA layer should not expect to have to handle it. Even 
+if it does happen, that's a highly exceptional case that the DMA layer 
+cannot recover from by itself; at best it can just push the problem 
+elsewhere. It's pretty hard to justify doing extra work to simply move 
+an exceptional problem around without really addressing it.
+
+And in this particular case, personally I would *much* rather see 
+warnings spewing from both the pagetable and IOVA code as early as 
+possible to clearly indicate that the DMA layer itself has been thrown 
+out of sync, than just have warnings that might represent some other 
+source of pagetable corruption (or at worst, depending on the pagetable 
+code, no warnings at all and only have dma_map_*() calls quietly start 
+failing much, much later due to all the IOVA space having been leaked by 
+bad unmaps).
+
+Robin.
