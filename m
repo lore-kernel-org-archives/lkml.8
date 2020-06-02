@@ -2,137 +2,170 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9172C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68125C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799F720772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C30F206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDh9T0Mz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDu5SHMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgFBOUE (ORCPT
+        id S1728087AbgFBOV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
+        Tue, 2 Jun 2020 10:21:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgFBOUD (ORCPT
+        with ESMTP id S1726217AbgFBOV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:20:03 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB4EC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 07:20:03 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id j8so10953038iog.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 07:20:03 -0700 (PDT)
+        Tue, 2 Jun 2020 10:21:26 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCE0C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 07:21:25 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v19so3129407wmj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 07:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gTKrdi+FmTwitSR67MLzUCwXXUWMx4K0w1icK0dDzI4=;
-        b=WDh9T0MzEQbVqOcDSnRU44nLaP+mu+XQvI2hYAlCUAyxVtbNZo/5OQhNcvN65+QOWS
-         bSnMHUUgyLDptNAOss4k4qbRaA3E/XZqKJbcp+AEE8wJCd9TWWA9g+mn3TLBsNIuEYqr
-         Lbzm19NRKORu88a0s7luHo9mCqEsbvBmwwc61no8zWSSjwWhNvxc7GChzWjQdTVGcJ+B
-         xNqbbwHCTEPKDMSb927p2Ap/dfgiIxu07a84tvtf4B1HAazOI9BEq+OtmYpgOr8hC1J5
-         IEy54LIdDbaY5V4XLiMDNfZ9uz8uYutCm3NKRETQQ1jsUroe+xKD2uQSwgGHNxSlwE7G
-         hNIg==
+         :cc:content-transfer-encoding;
+        bh=4GBFKi4AE0Zui6AvlkZAGUYSPOB17V3NVuaNVtHxfg8=;
+        b=iDu5SHMRXV9p8WONfSFl2dlTGUryo+ZFiH/JA8c+BGpC0QU91UUvpFSqaIUDjwglhJ
+         +yHCvrxwjM2SKBwJwKYa1GbRuovooFIfzoTCF1yl2ITib0CXGS1Wo55BhIedjUGxf4vx
+         RG3eMkMSlDO2j3hjTVY5//OWrK6qpsshclWS/Qv5yLsvOaeSolKJbGUB+khoj/r74KkQ
+         I2vw01NGl+huCDwhWUg0CQZssrqjSa/WN+ITveeRJgNZRro0WURSoglT5zeA200cars1
+         PrtMq6YXBy9H/+RDUKJTr9cn+1Nbv3AFR3KzoMoRCs+U2F21+pZUjx6mwCqDr0z0eaar
+         KyUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gTKrdi+FmTwitSR67MLzUCwXXUWMx4K0w1icK0dDzI4=;
-        b=rqhMDVW4Lg8rsFXTVvA3qRw+m1JV/AeisKXA/WfH24cCK/OEdMhDSZhNasM6+TJOrR
-         tY+sfHsQnUkleXyM2WWjdB04RjsTyaMGknD/cYMlycxCcVnWB5Hq3bAwwo50gBIoZp6A
-         mXAcp8unBZMiFV2kJc8GqwUPJFRy4QNiL+OUfA616hp8fXypZfDlurE947z8Dfk1D8od
-         FgNjL3X0GV4uDasteGr81oFyYKsmSI1a8YuZnGf9R4TdrBLlS+gJQ7dcM9z6vN+ppvzk
-         BJzCUikSLN/1F4v21vw2P1uHuZo64MytWSOsMJp0JKyDRbfHL88m2tbLgh9oSLMD/6RK
-         eMWw==
-X-Gm-Message-State: AOAM530O0Xrv45AYiQuEXrTruICEf2px1OtAAntCZjRN7nd97V1/CqHI
-        gvfwWMpjiZHm5DOJkAA3SbSMUFN7wires43OjkzdD14+Vg==
-X-Google-Smtp-Source: ABdhPJzc4bzgbZaVWV+pFHhC1kGcZeS16HuZYexWvBmmcGb9tg+2mls85GGsK29DLByDSm0HmWcMZHheOI0oSGaC1ns=
-X-Received: by 2002:a02:958e:: with SMTP id b14mr26155030jai.126.1591107602546;
- Tue, 02 Jun 2020 07:20:02 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4GBFKi4AE0Zui6AvlkZAGUYSPOB17V3NVuaNVtHxfg8=;
+        b=lYRgLVLbPPz2UK9LkMHOgCnvebB/5hLOgiWExrgzvCbGf87ortuSNmRoMKBMzAS7Du
+         /84xwEKMXtPBmEmkoo245julgSuvEiWb3CAW/USAViJEDw4x2I8HN4YVGiO/kn2PFVbf
+         3ctfNiJSVmsi0UqvM7GdPzF6NAuQLqGpDlUkpAP6JTdL3jmqduo9z5FdHz2scbdwHKAQ
+         KEN5I+DB1A/NRCtGLF+OqXvWlLPE7VF1fsFUCrshQ6/aN4XkaTSQCz6wMNon2XSLg6A5
+         aFmCxcFRzRpwYdIDDd3F9iROBpcaOr1qlwLw/Vv8GvRaeb2xJVZiY+XIysbZQuNFeE36
+         bWnQ==
+X-Gm-Message-State: AOAM532w4LiXQaDGMAgDmRtGQoep4YoRHk6nnI76LTyroon/xzSk7VAZ
+        uJ5f6N7jqVR49kpCTEUQK0gxMbiiapeo1W1/crU=
+X-Google-Smtp-Source: ABdhPJwiSS2Ry+bKR7lnwZokdKyewXO4Wr3aDQ7TiyQVNw6HUV1RVyRn3Wt0zFxfu5fSXC17pT+RIs2BO9uqIhfNByE=
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr4316621wml.70.1591107684025;
+ Tue, 02 Jun 2020 07:21:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200530221127.459704-1-brgerst@gmail.com> <20200530221127.459704-10-brgerst@gmail.com>
- <CAKwvOdmgN7xra26_xBYCJo45OdOUHLNmw16ioLOE171f_HE0eA@mail.gmail.com>
-In-Reply-To: <CAKwvOdmgN7xra26_xBYCJo45OdOUHLNmw16ioLOE171f_HE0eA@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Tue, 2 Jun 2020 10:19:51 -0400
-Message-ID: <CAMzpN2hHSeN9Z3BO_Uo1-yCfh9YdEbkK0wb9E3D8rq6onQDZdg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] x86/percpu: Clean up percpu_stable_op()
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
+References: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
+ <14063C7AD467DE4B82DEDB5C278E8663010E23E538@FMSMSX108.amr.corp.intel.com> <CAHp75Vfe5dQkOiFoAZx5b-NS1afiD-YC_w+5LcX8P1Hm0ASenA@mail.gmail.com>
+In-Reply-To: <CAHp75Vfe5dQkOiFoAZx5b-NS1afiD-YC_w+5LcX8P1Hm0ASenA@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 2 Jun 2020 10:21:12 -0400
+Message-ID: <CADnq5_OO=gyo22ZrXp6pDtz2QZ2=LC429u_kkd0ZvX4=M3mBPw@mail.gmail.com>
+Subject: Re: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where appropriate
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 4:43 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Tue, Jun 2, 2020 at 10:00 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Sat, May 30, 2020 at 3:11 PM Brian Gerst <brgerst@gmail.com> wrote:
-> >
-> > Use __pcpu_size_call_return() to simplify this_cpu_read_stable().
+> On Tue, Jun 2, 2020 at 4:38 PM Ruhl, Michael J <michael.j.ruhl@intel.com>=
+ wrote:
+> > >-----Original Message-----
+> > >From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+> > >Piotr Stankiewicz
+> > >Sent: Tuesday, June 2, 2020 5:21 AM
+> > >To: Alex Deucher <alexander.deucher@amd.com>; Christian K=C3=B6nig
+> > ><christian.koenig@amd.com>; David Zhou <David1.Zhou@amd.com>; David
+> > >Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>
+> > >Cc: Stankiewicz, Piotr <piotr.stankiewicz@intel.com>; dri-
+> > >devel@lists.freedesktop.org; amd-gfx@lists.freedesktop.org; linux-
+> > >kernel@vger.kernel.org
+> > >Subject: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
+> > >appropriate
 >
-> Clever! As in this_cpu_read() in include/linux/percpu-defs.h.  Could
-> be its own patch before this, but it's fine.
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> ...
 >
-> > Also remove __bad_percpu_size() which is now unused.
+> > >               int nvec =3D pci_msix_vec_count(adev->pdev);
+> > >               unsigned int flags;
+> > >
+> > >-              if (nvec <=3D 0) {
+> > >+              if (nvec > 0)
+> > >+                      flags =3D PCI_IRQ_MSI_TYPES;
+> > >+              else
+> > >                       flags =3D PCI_IRQ_MSI;
+> > >-              } else {
+> > >-                      flags =3D PCI_IRQ_MSI | PCI_IRQ_MSIX;
+> > >-              }
 > >
-> > Signed-off-by: Brian Gerst <brgerst@gmail.com>
-> > ---
-> >  arch/x86/include/asm/percpu.h | 41 ++++++++++-------------------------
-> >  1 file changed, 12 insertions(+), 29 deletions(-)
+> > Minor nit:
 > >
-> > diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-> > index 7efc0b5c4ff0..cf2b9c2a241e 100644
-> > --- a/arch/x86/include/asm/percpu.h
-> > +++ b/arch/x86/include/asm/percpu.h
-> > @@ -85,7 +85,6 @@
+> > Is it really necessary to set do this check?  Can flags just
+> > be set?
 > >
-> >  /* For arch-specific code, we can use direct single-insn ops (they
-> >   * don't give an lvalue though). */
-> > -extern void __bad_percpu_size(void);
+> > I.e.:
+> >         flags =3D PCI_IRQ_MSI_TYPES;
 > >
-> >  #define __pcpu_type_1 u8
-> >  #define __pcpu_type_2 u16
-> > @@ -167,33 +166,13 @@ do {                                                                      \
-> >         (typeof(_var))(unsigned long) pfo_val__;                        \
-> >  })
-> >
-> > -#define percpu_stable_op(op, var)                      \
-> > -({                                                     \
-> > -       typeof(var) pfo_ret__;                          \
-> > -       switch (sizeof(var)) {                          \
-> > -       case 1:                                         \
-> > -               asm(op "b "__percpu_arg(P1)",%0"        \
+> > pci_alloc_irq_vector() tries stuff in order.  If MSIX is not available,
+> > it will try MSI.
 >
-> What does the `P` do here?
-> https://gcc.gnu.org/onlinedocs/gcc/Simple-Constraints.html#Simple-Constraints
-> says can be machine dependent integral literal in a certain range.
-> https://gcc.gnu.org/onlinedocs/gcc/Machine-Constraints.html#Machine-Constraints
-> doesn't document `P` for x86 though...
+> That's also what I proposed earlier. But I suggested as well to wait
+> for AMD people to confirm that neither pci_msix_vec_count() nor flags
+> is needed and we can directly supply MSI_TYPES to the below call.
+>
 
-https://gcc.gnu.org/onlinedocs/gcc-10.1.0/gcc/Extended-Asm.html#x86-Operand-Modifiers
+I think it was leftover from debugging and just to be careful.  We had
+some issues when we originally enabled MSI-X on certain boards.  The
+fix was to just allocate a single vector (since that is all we use
+anyway) and we were using the wrong irq (pdev->irq vs
+pci_irq_vector(pdev, 0)).  For reference, the original patch to add
+MSI-X:
 
-Removing the 'P' modifier results in this:
-        movq %gs:$current_task, %rdx    #, pfo_val__
+commit bd660f4f111161f60392dd02424c3a3d2240dc2f
+Author: shaoyunl <shaoyun.liu@amd.com>
+Date:   Tue Oct 1 15:52:31 2019 -0400
 
-This is because the 'p' constraint treats a memory address as a
-constant.  I tried replacing it with __this_cpu_read(), which since
-commit 0b9ccc0a should have similar non-volatile semantics.  But the
-compiler still reloaded it on every use, so I left the asm template
-as-is for now until that can be resolved.
+    drm/amdgpu : enable msix for amdgpu driver
 
---
-Brian Gerst
+    We might used out of the msi resources in some cloud project
+    which have a lot gpu devices(including PF and VF), msix can
+    provide enough resources from system level view
+
+    Signed-off-by: shaoyunl <shaoyun.liu@amd.com>
+    Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+
+And the fix:
+
+commit 8a745c7ff2ddb8511ef760b4d9cb4cf56a15fc8d
+Author: Alex Deucher <alexander.deucher@amd.com>
+Date:   Thu Oct 3 10:34:30 2019 -0500
+
+    drm/amdgpu: improve MSI-X handling (v3)
+
+    Check the number of supported vectors and fall back to MSI if
+    we return or error or 0 MSI-X vectors.
+
+    v2: only allocate one vector.  We can't currently use more than
+    one anyway.
+
+    v3: install the irq on vector 0.
+
+    Tested-by: Tom St Denis <tom.stdenis@amd.com>
+    Reviewed-by: Shaoyun liu  <shaoyun.liu@amd.com>
+    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+
+Alex
