@@ -2,95 +2,136 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D76C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB64207FB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA35206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9pGx50L"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SDLDlNa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgFBVZH (ORCPT
+        id S1726839AbgFBVcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 17:25:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39046 "EHLO
+        Tue, 2 Jun 2020 17:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBVZG (ORCPT
+        with ESMTP id S1726174AbgFBVcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 17:25:06 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9456BC08C5C0;
-        Tue,  2 Jun 2020 14:25:06 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 185so140913pgb.10;
-        Tue, 02 Jun 2020 14:25:06 -0700 (PDT)
+        Tue, 2 Jun 2020 17:32:18 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62EE1C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 14:32:18 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id 1so141007vsl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 14:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Chq/IxyUXGeQg4iFhSJO433W2x2ArreETHP+Ej74rbw=;
-        b=b9pGx50L/5aOGaGI8fRHsl9Y2rskhq+v4N7asuzer9z5hH4KhdUB55DCnXg26W+R9n
-         7nQKroEx3qPSWaL3CBjW/gcw20sStrnFIdnC/9FfKSod47MuCS6a1pLQ4laVPv9Xms0f
-         79uShTemZ/EZtmuLU02gyKG1rTOOCu5WsjKGY8bx2bo74+NNTySC7DmZAqFc5Bu8m7LW
-         N3vgZgOTJEl+63DhSldG8Q4IdvVKOAg1KBreCtUsOaLL15upUur0b12/7ls2JYSe0IWA
-         vdIpJEdKSkJTmfKlBm8qh41+4kOiVYdDsWw0OU6kxuYZJmMwcoLoZbymF2V7zrGiWssP
-         iRqw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m9kn62PqAX47M9GdWLUtWEHWFrrXZP2eF+NQ55cvCow=;
+        b=SDLDlNa2JxAHtTUthkbE/nmVRXVihXNqZOfFZYLWMG5r+lFumi+7JFsdsehrTevXOO
+         sCMLupns01dIukJUzu+RAzsGgJTsGMJ0hdFyNazYDLeWHUCALEfmotGmMzlzrMCgn33I
+         Ur8gkspMU96YkoSIkFWxipJQ6pyHI+/nTKxZ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Chq/IxyUXGeQg4iFhSJO433W2x2ArreETHP+Ej74rbw=;
-        b=fvGPGeYdgBOmEMj8OAKXgzEtVpS2VVXAag0SLceofAn7xctANEvTdUp5dpP1MMBgtj
-         iBjueBmLfKab5KBR8qse0fSzjzsqdpCBZsIiqeu7iZoWafpxQFtc9hlFXcg3lEYuBRWj
-         OO1IIz3m1lTwwWqE5sCaatAUIdpAVicignXZa63KvHpBETlNCuTUgjQocZdsFok1BOq/
-         fb827I+Lb1KAd9zdvd9ejz/UUu2xImNCDWNNmWDd16LT/Ssk0gjrnAQCBXZGK9zM957T
-         0YEttfsV3JhqlLqqi34FjlLWj9kM/9vSXqfSWjmljH2x+y/hkJeod+BmYMCxK8EY9FEL
-         Cx3w==
-X-Gm-Message-State: AOAM531C05KgGHwKIhwKsOQoOHa+B9onPmJq68QN3mRoMep7pIFlbSZ5
-        1V51Lltso4pp/4KbD+O/FXM=
-X-Google-Smtp-Source: ABdhPJz+3JXvyi/JLESD/dHqoG+LPIxBVh/dw/wc8Wbm/qeFHEe9afuk8NFizDHZYbraFxA/VvUkBg==
-X-Received: by 2002:a63:1f0e:: with SMTP id f14mr23025185pgf.405.1591133106158;
-        Tue, 02 Jun 2020 14:25:06 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 77sm66346pfu.139.2020.06.02.14.25.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 14:25:05 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 14:25:04 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/55] 4.9.226-rc3 review
-Message-ID: <20200602212504.GA167487@roeck-us.net>
-References: <20200602181325.420361863@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m9kn62PqAX47M9GdWLUtWEHWFrrXZP2eF+NQ55cvCow=;
+        b=Lc0tztg4CS/vgLLelEp4flNK5QHtbrh2fww1co+S4UIHBtB0K7p8znOVxOdT48OgLx
+         4uOFpod3/cmk+xfg21PYnDMgIzyk7mIQGXX8cLMiDgP0MbXr55dRznUDqfC71C3d83ZH
+         Arc7rX1PQC65eKE490Hmjkm620Z0Z2aLPCeK4kAs+AnM/LSYpFikW9Q9RnELXoTVQmGj
+         K6ki7j+D/5t+a+WGwSYDcd3PLdnhGKzeDMc1gZslLvpSjgsSuJTg8Qenw+JpN+Ycr8bK
+         773buOQyA2HnFtzlb0J7lrdiSamvAiNVlNUX2AVfgKpwjTQEd6YpRnuRjxn6+Dzj59Xy
+         sHNg==
+X-Gm-Message-State: AOAM532Wa2j0LYmi9wZ9CoQOUo0n+irUThPOtre2XIBmISoJ4gm/fciD
+        3c2TZkS/sJZ4ByfT6+MkJ9QQOeMd/8c=
+X-Google-Smtp-Source: ABdhPJw2sglHWXfbXS5FYt9Mv0ePKhuKA8P9y0QwLuQ0Gq49TcY83eXVkw3IYisHwsf5jdXAJj/+cA==
+X-Received: by 2002:a67:db81:: with SMTP id f1mr13470920vsk.81.1591133536883;
+        Tue, 02 Jun 2020 14:32:16 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id k68sm6773vsc.32.2020.06.02.14.32.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 14:32:15 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id 59so121306uam.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 14:32:15 -0700 (PDT)
+X-Received: by 2002:ab0:1684:: with SMTP id e4mr18561066uaf.22.1591133535074;
+ Tue, 02 Jun 2020 14:32:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602181325.420361863@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1590751607-29676-1-git-send-email-sumit.garg@linaro.org> <1590751607-29676-2-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1590751607-29676-2-git-send-email-sumit.garg@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 2 Jun 2020 14:32:03 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WVdRcvfR-O-A2809AqFggqhJmvrTSo9qafxq=DgSbLrw@mail.gmail.com>
+Message-ID: <CAD=FV=WVdRcvfR-O-A2809AqFggqhJmvrTSo9qafxq=DgSbLrw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] kdb: Re-factor kdb_printf() message write code
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 08:13:59PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.226 release.
-> There are 55 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 04 Jun 2020 18:12:28 +0000.
-> Anything received after that time might be too late.
-> 
+Hi,
 
-Build results:
-	total: 171 pass: 171 fail: 0
-Qemu test results:
-	total: 385 pass: 385 fail: 0
+On Fri, May 29, 2020 at 4:27 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Re-factor kdb_printf() message write code in order to avoid duplication
+> of code and thereby increase readability.
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  kernel/debug/kdb/kdb_io.c | 61 +++++++++++++++++++++++++----------------------
+>  1 file changed, 32 insertions(+), 29 deletions(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 924bc92..e46f33e 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -542,6 +542,33 @@ static int kdb_search_string(char *searched, char *searchfor)
+>         return 0;
+>  }
+>
+> +static void kdb_io_write(char *cp, int len)
 
-Guenter
+nit: "const char *" just to make it obvious that we don't modify the string?
+
+
+> +{
+> +       if (len == 0)
+> +               return;
+
+Remove the above check.  It's double-overkill.  Not only did you just
+check in kdb_msg_write() but also the while loop below will do a
+"no-op" just fine even without your check.
+
+
+> +
+> +       while (len--) {
+> +               dbg_io_ops->write_char(*cp);
+> +               cp++;
+> +       }
+> +}
+> +
+> +static void kdb_msg_write(char *msg, int msg_len)
+
+nit: "const char *" just to make it obvious that we don't modify the string?
+
+
+Other than those small things, this looks nice to me.  Feel free to
+add my Reviewed-by tag once small things are fixed.
+
+
+-Doug
