@@ -2,123 +2,117 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20356C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B89920870
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C90206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fi2nlPxf"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="BGjm8Ah3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgFBT0A (ORCPT
+        id S1726817AbgFBT3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48770 "EHLO
+        Tue, 2 Jun 2020 15:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBTZ7 (ORCPT
+        with ESMTP id S1726139AbgFBT3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:25:59 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD364C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:25:59 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id a137so13060827oii.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:25:59 -0700 (PDT)
+        Tue, 2 Jun 2020 15:29:23 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934E8C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:29:23 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p30so5599018pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:29:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zgQoiQ3jaz0VjmfJxEyv0Pkaee0Wtz3ujBDf41O3EoY=;
-        b=Fi2nlPxf/7Sa9yL3oOOWXjSuvQO+/3PiuizVCpbkvABocM3wpiq9rEaww9oCBIn3kJ
-         M9us/HJhWsL6/Bm9mtP3sFn+stJEHu8jLSGBxddXYQWrgNV9l5oq2oekS3VwBZq2lJfP
-         mFNW3S5NASbtdyAQ5rzI0ZyTdf/5X9WhEj99hn03hWzbITdwssWB8ix8bgPvsDFd9Sm6
-         Sk9X62TDOkck6zj1jc1U5ttZWD0h+/aJnRo4yxFPnPWLg5lFu08o7J8QwQa2oZD9JD6x
-         tnwnVL/prvzdasAcsyB7LzT0uxRPs5NjaoD282/aBueMDrBGz8xVMcESgwEDHEgXXsQO
-         nhRw==
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jt9wTvbBB9l8BA385ydswer9G/ASNFMgQz2sVTAlGwY=;
+        b=BGjm8Ah3Pr7hHscdoJXTL21nGZPG4PnLKU6jA9IWJJGiA3WnGcbIzvTS7bxWuFIUQw
+         DPDRWnq2PLJmKzmq5Uf8cCKL7sHZKR5bCnU/j65E0birBHYZWTXje41hiOgnXH/qTjow
+         ijI6FUsie6nRXhrLqyHtL+qqUQrZ4bpjgliRZtslnm1Vt4k9hkLunsOH+efJeWr01hLj
+         dz/uqXkmODoVaCaF2mdefg2ay3SvWLgY93xskoihdt1S3hQ3siqSAumw2cYrhovzu4SV
+         u+OwNhe5YYDzQaxC9jimnrgVzhr3cV5o4cYRthNKu3/euNBxL6MW2ywxy4cd4kbCMYMF
+         V4fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zgQoiQ3jaz0VjmfJxEyv0Pkaee0Wtz3ujBDf41O3EoY=;
-        b=Ql6/Khh8yWSAJkOq8l3zL/lQ+j1BFU+qq+oBXAj9gNb4i/AJIc+eZxptm5sVDLZzaz
-         mEVBuG/olf+p54NIk4hkuTfrjTMurhfS7JFkp7DU93GWSQ2MQ5JMcO3cZzBY13v/RsNT
-         u89Re4TxQ2PEW2T+6jfHAAV/ax3fIs3N+Xzs3HFw+mMYttSdaNvdlX/cTdWL4mB+SQi0
-         1QUAlKML2ji6LtPp/Kt/qeVYNWnqejfLHR9I/qjWm2VBohKVvvCaNeIEIvuS3zCDXgF/
-         tpkKuoRzm5wbZinzaXElohp/LCX4x4QpncBjn5E8GbmwIlQV9BNtlkIyW7+QSeIuwwWv
-         rnCw==
-X-Gm-Message-State: AOAM531Sd2BNoGllwgjseB/B7Ewrec3zZ9561lbgZHvdZ+4b6DctIslD
-        lnK1p+UNnOGZuqIUTYcdjug0Y6g/efYD21TIoOnTyQ==
-X-Google-Smtp-Source: ABdhPJwIVmLeg7KBh+0LIITomvk05gYui9ah5z9tDXNow8PwZDW+dpW2479CpV1tvhdwfob0zfLBFJO38XqtH/awYqE=
-X-Received: by 2002:a05:6808:3ac:: with SMTP id n12mr2388414oie.172.1591125958861;
- Tue, 02 Jun 2020 12:25:58 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jt9wTvbBB9l8BA385ydswer9G/ASNFMgQz2sVTAlGwY=;
+        b=O2EONbgnFOm32O1U0wApYmHngBh3eD+RJ3nTw3VvXo8AQ4seF3B9y5Ysk6UcTXmUew
+         vpcA3BktBNjS1orfek6QOFcsfE5cLRWSsGfvo73UH1D+dLhXFnMKyZyXtqkAVRVI90Gr
+         KgDBLoC4UK4G1kJ2F6sGNFgP+przRnLgTB8gCSZoGtX5KsW3EhbZhN5OuNCX0nc9+5HI
+         pPRqic93VTGFo7n4SwQt75+ch9RhmXOTPJ7JKz/upj7vC+ml9f23jifBJ5U/SZqz39Me
+         CoZDmwMMhrOWzajDIJaA5fk1KAQMzyFrRHTCz/VzUekEKDsdyvIU9YfOlv1WXkFf20az
+         28DA==
+X-Gm-Message-State: AOAM5314nPkZIqrcWDroCNvwANC3uMz4LpFc6yAvhrh2coj9clN5mwhu
+        LMj+mQG7xl7qOfdRD1YpU3JyoA==
+X-Google-Smtp-Source: ABdhPJzONNh6ti+mI0rlAqkmgvqRBA1IcAxfDD8TOiWcba6fmr7wI9/I20P9retKbEDJLLAu40knuQ==
+X-Received: by 2002:a63:565b:: with SMTP id g27mr24394556pgm.166.1591126163012;
+        Tue, 02 Jun 2020 12:29:23 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id s197sm3267932pfc.188.2020.06.02.12.29.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 12:29:21 -0700 (PDT)
+Subject: Re: [PATCH 3/6] arm64/vdso: Add time namespace page
+To:     Andrei Vagin <avagin@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200602180259.76361-1-avagin@gmail.com>
+ <20200602180259.76361-4-avagin@gmail.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <fd789c85-f08b-3397-d463-501f7ee5c974@arista.com>
+Date:   Tue, 2 Jun 2020 20:29:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200602184409.22142-1-elver@google.com> <CAKwvOd=5_pgx2+yQt=V_6h7YKiCnVp_L4nsRhz=EzawU1Kf1zg@mail.gmail.com>
- <20200602191936.GE2604@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200602191936.GE2604@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 2 Jun 2020 21:25:47 +0200
-Message-ID: <CANpmjNP3kAZt3kXuABVqJLAJAW0u9-=kzr-QKDLmO6V_S7qXvQ@mail.gmail.com>
-Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of KASAN
- and UBSAN
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200602180259.76361-4-avagin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 21:19, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Jun 02, 2020 at 11:57:15AM -0700, Nick Desaulniers wrote:
-> > On Tue, Jun 2, 2020 at 11:44 AM 'Marco Elver' via Clang Built Linux
-> > <clang-built-linux@googlegroups.com> wrote:
-> > >
-> > > Adds config variable CC_HAS_WORKING_NOSANITIZE, which will be true if we
-> > > have a compiler that does not fail builds due to no_sanitize functions.
-> > > This does not yet mean they work as intended, but for automated
-> > > build-tests, this is the minimum requirement.
-> > >
-> > > For example, we require that __always_inline functions used from
-> > > no_sanitize functions do not generate instrumentation. On GCC <= 7 this
-> > > fails to build entirely, therefore we make the minimum version GCC 8.
-> > >
-> > > For KCSAN this is a non-functional change, however, we should add it in
-> > > case this variable changes in future.
-> > >
-> > > Link: https://lkml.kernel.org/r/20200602175859.GC2604@hirez.programming.kicks-ass.net
-> > > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > > Signed-off-by: Marco Elver <elver@google.com>
-> >
-> > Is this a problem only for x86?  If so, that's quite a jump in minimal
-> > compiler versions for a feature that I don't think is currently
-> > problematic for other architectures?  (Based on
-> > https://lore.kernel.org/lkml/20200529171104.GD706518@hirez.programming.kicks-ass.net/
-> > )
->
-> Currently x86 only, but I know other arch maintainers are planning to
-> have a hard look at their code based on our findings.
+Hi Andrei,
 
-I've already spotted a bunch of 'noinstr' outside arch/x86 e.g. in
-kernel/{locking,rcu}, and a bunch of these functions use atomic_*, all
-of which are __always_inline. The noinstr uses outside arch/x86 would
-break builds on all architecture with GCC <= 7 when using sanitizers.
-At least that's what led me to conclude we need this for all
-architectures.
+On 6/2/20 7:02 PM, Andrei Vagin wrote:
+[..]
+> --- a/arch/arm64/include/asm/vdso.h
+> +++ b/arch/arm64/include/asm/vdso.h
+> @@ -12,6 +12,12 @@
+>   */
+>  #define VDSO_LBASE	0x0
+>  
+> +#ifdef CONFIG_TIME_NS
+> +#define __VVAR_PAGES    2
+> +#else
+> +#define __VVAR_PAGES    1
+> +#endif
+> +
+>  #ifndef __ASSEMBLY__
+
+Not an issue as-is, but:
+
+on x86 vdso+vvar is always the same size with/without CONFIG_TIME_NAMESPACE.
+
+Timens page isn't allocated on !CONFIG_TIME_NAMESPACE, but vma is the
+same size. Which simplifies criu/vdso migration between different kernel
+configs.
+
+Not any critical, but just to note..
 
 Thanks,
--- Marco
+          Dima
