@@ -2,129 +2,146 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52912C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7658BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31771206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54687206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yviw9z29"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1kKD74N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgFBRhN (ORCPT
+        id S1728234AbgFBRhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
+        Tue, 2 Jun 2020 13:37:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBRhN (ORCPT
+        with ESMTP id S1726937AbgFBRhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:37:13 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5B7C05BD1E;
-        Tue,  2 Jun 2020 10:37:12 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q16so1636114plr.2;
-        Tue, 02 Jun 2020 10:37:12 -0700 (PDT)
+        Tue, 2 Jun 2020 13:37:41 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F39CC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:37:41 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id p15so2171356qvr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:37:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yC3b8DT3Kq2HwvI7o7BNmEUaQSfwkzDaER9EH5kkdq0=;
-        b=Yviw9z295zj5fjLl2vUlLMAJzpUBdI6yODgLo71V+gnRWdy/HAfOku+4RRGF+yzmqK
-         t+au//KmqSyun3jNCn8vCEmKZNdAFWTJftT893d+nbe9PjQ8sJDXaTHzCZ/jv3Wa/7/Y
-         QigrSViYpDIh7VAmvvZTyDug+wYeFeI+s7pGmAbiZpsKOOY1z3i1+6IG3saPoQPuQW8L
-         PRHyMDST7Kx8Ek98ZFeCdl8Ojb5DhgTobkvM0vWcFMfafJCDpPpjqhzsc+N/z6iB08FZ
-         DSJW5bxNzFbXaXqd0LKkWoaLxpbP935w0N9J0lqkRULyFI9st4ghdJYOiCX90M0LelV8
-         k1lQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EXuKs/ZrhAnv+laNRxA/w5a8bqOks5gwI8BCofPUoP4=;
+        b=K1kKD74NXq9TQWEP0sN+piMgV5Qov4NszLh2L4gD2NHoMGAbTTKafgW22Mho7nLrzg
+         uKvxUOq+OPaLhktD9N6CuXEPpx5kAtHiXz4fW5qZpuQPShjxhb8LJ1foAE9oqTFsz5GR
+         ZIlsETRWogZ1GHXT4X8iqVRjmMggoNxpNiew/BUvETXCOR0lUHiHEjJCw72q6OlDXq0G
+         mOaz/TabGjB/zEY2sRVSMN7k/Z5ntlE6anJO2/FIzfE4rq/2lBENct4nUcTuNNUe0j5/
+         X8RG4ovMuJX29Iql1ICFQnxEYfC26V6DFRF2s488ZoxSA9VwOqRLFXF6Xip0/PqH8VWc
+         bNHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yC3b8DT3Kq2HwvI7o7BNmEUaQSfwkzDaER9EH5kkdq0=;
-        b=USIgqTyBh0ZtIVk9pYJfF+BWG2boro1dM0fR1aq1cXWIlSy/Q6hqgvzbuq6/+UICX1
-         eZa2fKWtwCzxtE58lZLgKRznAy+yYfOGcfbkZ/J8iMeRlTAaiTtDeSyD6Vs9e6WNhnY+
-         ncyyGyBTnTar5pelb9m5FuDIlUtkO65BjFcRSl8uTSJG9Mv8IQpmXk3xbe14k90QI+TP
-         7ylrdJ/WT+Qc/Oc1zDuG8cfRSWxj2XMreCNs243TkWLBH+IJmxb6MP0SFb67LynaAQgh
-         1j0TOYUmQoawhse3liiSLq8ZcE7F4U5mM6s9LdK8KQVZyAjJUxzf9LYUuml3QXqO/Xtx
-         7QHw==
-X-Gm-Message-State: AOAM532H8cMTA+QsQrpacOAlWzPzjvwjQbl7Yxcr+IMzx+IXNKUAUfdf
-        6wXOHs94IS26Rx+v3COJ/Wk=
-X-Google-Smtp-Source: ABdhPJz/gwr+d9DNnYFiNawK6YhfZFHEyC8/iMMp5w+Vh1TRDaGaZmArZRTSZkbx1AZrUmItAtFU5g==
-X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr17901684plr.128.1591119432420;
-        Tue, 02 Jun 2020 10:37:12 -0700 (PDT)
-Received: from localhost.localdomain ([223.235.152.125])
-        by smtp.gmail.com with ESMTPSA id i22sm2864382pfo.92.2020.06.02.10.36.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jun 2020 10:37:11 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 04/10] arm64: dts: actions: limit address range for pinctrl node
-Date:   Tue,  2 Jun 2020 23:03:06 +0530
-Message-Id: <1591119192-18538-5-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
-References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EXuKs/ZrhAnv+laNRxA/w5a8bqOks5gwI8BCofPUoP4=;
+        b=eLQzZGcWcr40me1EDTOgFDqPpS8c5oVXsEi2OgJPMS4XQDeBVoKZJT+Y7BChAbr0Ap
+         D1LONpLprRX0DSSC9udW8sR5IvEljBFIllDnIguYtcogN0m24q6TrPzqRIeQkVNEwNFu
+         5aoMTE7Hb/LLU1hXj4fqY98TfPdgsV0KYhU/xlrYjC7POwpxEXx80haOlP9Ixf64simO
+         mHe/HRfM1BqDQKuRq2IYKsPb4uE5FDE9W8h9mLTc1SAWE3La0Q95gunsdlVPhT4DTr1T
+         GlZLbfmT84sayd87EjsZiYJRzOKtY0n/lNIgKxqbPtA818PJXY75Cz6DLVVwiLIc2TgM
+         YM1A==
+X-Gm-Message-State: AOAM533opA/+DPO7OhsVHpwWfs0W3AYP2Kq26ulfYTz7Foc8LZfYnkNq
+        RLYsApgbxd3k0y5Op6+VCKmT2C/f
+X-Google-Smtp-Source: ABdhPJxeUBkVU1bt0GkQezqeoW9EO3j+VcdH4W8n5jRKSlDGAWqyQzgcpF2ImtHedm+wtqRJyQf00A==
+X-Received: by 2002:ad4:54ea:: with SMTP id k10mr2889124qvx.66.1591119460142;
+        Tue, 02 Jun 2020 10:37:40 -0700 (PDT)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id p63sm2959711qkf.50.2020.06.02.10.37.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 10:37:38 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id a80so6682337ybg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:37:38 -0700 (PDT)
+X-Received: by 2002:a25:f413:: with SMTP id q19mr45233147ybd.178.1591119457607;
+ Tue, 02 Jun 2020 10:37:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200602080535.1427-1-victor@inliniac.net> <CA+FuTSfD2-eF0H=Qu09=JXK6WTiWKNtcqRXqv3TfMfB-=0GiMg@mail.gmail.com>
+ <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
+In-Reply-To: <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 2 Jun 2020 13:37:01 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
+Message-ID: <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] af-packet: new flag to indicate all csums are good
+To:     Victor Julien <victor@inliniac.net>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Drozdov <al.drozdov@gmail.com>,
+        Tom Herbert <tom@herbertland.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
-Actions Semi S700") following error has been observed while booting
-Linux on Cubieboard7-lite(based on S700 SoC).
+On Tue, Jun 2, 2020 at 1:03 PM Victor Julien <victor@inliniac.net> wrote:
+>
+> On 02-06-2020 16:29, Willem de Bruijn wrote:
+> > On Tue, Jun 2, 2020 at 4:05 AM Victor Julien <victor@inliniac.net> wrote:
+> >>
+> >> Introduce a new flag (TP_STATUS_CSUM_UNNECESSARY) to indicate
+> >> that the driver has completely validated the checksums in the packet.
+> >>
+> >> The TP_STATUS_CSUM_UNNECESSARY flag differs from TP_STATUS_CSUM_VALID
+> >> in that the new flag will only be set if all the layers are valid,
+> >> while TP_STATUS_CSUM_VALID is set as well if only the IP layer is valid.
+> >
+> > transport, not ip checksum.
+>
+> Allow me a n00b question: what does transport refer to here? Things like
+> ethernet? It isn't clear to me from the doc.
 
-[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
-resource [mem 0xe01b0000-0xe01b0fff]
-[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
+The TCP/UDP/.. transport protocol checksum.
 
-This is due to the fact that memory range for "sps" power domain controller
-clashes with pinctrl.
+> (happy to follow up with a patch to clarify the doc when I understand
+> things better)
+>
+> > But as I understand it drivers set CHECKSUM_COMPLETE if they fill in
+> > skb->csum over the full length of the packet. This does not
+> > necessarily imply that any of the checksum fields in the packet are
+> > valid yet (see also skb->csum_valid). Protocol code later compares
+> > checksum fields against this using __skb_checksum_validate_complete and friends.
+> >
+> > But packet sockets may be called before any of this, however. So I wonder
+> > how valid the checksum really is right now when setting TP_STATUS_CSUM_VALID.
+> > I assume it's correct, but don't fully understand where the validation
+> > has taken place..
+>
+> I guess I'm more confused now about what TP_STATUS_CSUM_VALID actually
+> means. It sounds almost like the opposite of TP_STATUS_CSUMNOTREADY, but
+> I'm not sure I understand what the value would be.
+>
+> It would be great if someone could help clear this up. Everything I
+> thought I knew/understood so far has been proven wrong, so I'm not too
+> confident about my patch anymore...
 
-One way to fix it, is to limit pinctrl address range which is safe
-to do as current pinctrl driver uses address range only up to 0x100.
+Agreed that we should clear this up.
 
-This commit limits the pinctrl address range to 0x100 so that it doesn't
-conflict with sps range.
+> > Similar to commit 682f048bd494 ("af_packet: pass checksum validation
+> > status to the user"), please update tpacket_rcv and packet_rcv.
+>
+> Ah yes, good catch. Will add it there as well.
+>
+> > Note also that net-next is currently closed.
+>
+> Should I hold off on sending a v3 until it reopens?
 
-Fixes: 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for Actions
-Semi S700")
-
-Suggested-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v2:
-	* this is no more don't merge and fixed
-	  the broken S700 boot by limiting pinctrl
-	  address range.
-	* Modified the subject to reflect the changes.
-Changes since v1:
-        * No change.
-Changes since RFC:
-        * kept as do not merge.
----
- arch/arm64/boot/dts/actions/s700.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 2006ad5424fa..f8eb72bb4125 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -231,7 +231,7 @@
- 
- 		pinctrl: pinctrl@e01b0000 {
- 			compatible = "actions,s700-pinctrl";
--			reg = <0x0 0xe01b0000 0x0 0x1000>;
-+			reg = <0x0 0xe01b0000 0x0 0x100>;
- 			clocks = <&cmu CLK_GPIO>;
- 			gpio-controller;
- 			gpio-ranges = <&pinctrl 0 0 136>;
--- 
-2.7.4
-
+Yep, thanks. You can always check
+http://vger.kernel.org/~davem/net-next.html when unsure.
