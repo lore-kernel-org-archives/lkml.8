@@ -2,174 +2,152 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9136C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBABE2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20A02072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h6AqdG8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgFBXHp (ORCPT
+        id S1729058AbgFBXIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:07:45 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57676 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgFBXHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:07:45 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C898F803083B;
-        Tue,  2 Jun 2020 23:07:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 36FlyoStlb5r; Wed,  3 Jun 2020 02:07:40 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 02:07:38 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 06/10] dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
-Message-ID: <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-7-lars.povlsen@microchip.com>
+        Tue, 2 Jun 2020 19:08:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40277 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbgFBXIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 19:08:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49c74f0J6Gz9sPF;
+        Wed,  3 Jun 2020 09:08:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591139300;
+        bh=3X31qWO/1Ul5RhQ1agdJfn/17XFGSliumzUhlLvsTWw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=h6AqdG8KBXbdaHWJrOK9z/qtFoo9CElq3dh+VR7SUxXU1Oma2WWnHcZ/1EDqPv27C
+         N4jxKHzzMFQkvgBDxOgyzoE6uJqgXsbMrSs4qf4PcGuUl6VVZl04yZS5c8t6kYMapE
+         dxfLkN8P14p5bFMTV4JB41g5YIwOwYaQ5D/r2a2CTLgjUW7b21ifzklwFU244ETIZr
+         r8qpC/bdxVdI0jW07MHuMX8vgVATO9UOkY4MBWWDifE2EiewO1ziRjXWSin8Mapdre
+         sCyfwh1qTEQiY9LBKfclN0smKOjf2C0m9TkWwjzej/UTZJTZOJoU4DkadT1KZzPh/J
+         ClziuHdVJEyqQ==
+Date:   Wed, 3 Jun 2020 09:08:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: linux-next: manual merge of the drm-intel-fixes tree with Linus'
+ tree
+Message-ID: <20200603090816.6437acec@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513140031.25633-7-lars.povlsen@microchip.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: multipart/signed; boundary="Sig_/+LWcEw/dTcCMMLWI1+PUaar";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 04:00:27PM +0200, Lars Povlsen wrote:
-> This add DT bindings for the Sparx5 SPI driver.
+--Sig_/+LWcEw/dTcCMMLWI1+PUaar
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This whole file can be easily merged in to the generic DW APB SSI DT
-binding file. Just use "if: properties: compatible: const: ..." construction
-to distinguish ocelot, jaguar, sparx5 and non-sparx5 nodes.
+Hi all,
 
-> 
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  .../bindings/spi/mscc,ocelot-spi.yaml         | 49 +++++++++++++++----
->  1 file changed, 39 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
-> index a3ac0fa576553..8beecde4b0880 100644
-> --- a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
-> @@ -23,15 +23,23 @@ properties:
->      enum:
->        - mscc,ocelot-spi
->        - mscc,jaguar2-spi
-> +      - microchip,sparx5-spi
-> 
->    interrupts:
->      maxItems: 1
-> 
->    reg:
->      minItems: 2
-> -    items:
-> -      - description: Designware SPI registers
-> -      - description: CS override registers
-> +    maxItems: 3
-> +    oneOf:
-> +      - items:
-> +          - description: Designware SPI registers
-> +          - description: CS override registers (Not sparx5).
-> +      - items:
-> +          - description: Designware SPI registers
-> +          - description: CS override registers (Not sparx5).
-> +          - description: Direct mapped SPI read area. If provided, the
-> +              driver will register spi_mem_op's to take advantage of it.
-> 
->    clocks:
->      maxItems: 1
-> @@ -43,6 +51,23 @@ properties:
->         enum: [ 2, 4 ]
->      maxItems: 1
-> 
+Today's linux-next merge of the drm-intel-fixes tree got a conflict in:
 
-> +  spi-rx-delay-us:
-> +    description: |
-> +      The delay (in usec) of the RX signal sample position. This can
-> +      be used to tne the RX timing in order to acheive higher
-> +      speeds. This is used for all devices on the bus.
-> +    default: 0
-> +    maxItems: 1
+  drivers/gpu/drm/i915/gt/intel_lrc.c
 
-spi-rx-delay-us is defined for a particular SPI-slave. Please see the
-DT binding file: Documentation/devicetree/bindings/spi/spi-controller.yaml .
-Although as I suggested before this delay isn't what the Dw APB SSI RX sample
-delay functionality does. Probably a vendor-specific property would be better
-here. But I'd also define it on a SPI-slave basis, not for all devices on the
-bus.
+between commit:
 
-> +
-> +  interface-mapping-mask:
-> +    description: |
-> +      On the Sparx5 variant, two different busses are connected to the
-> +      controller. This property is a mask per chip-select, indicating
-> +      whether the CS should go to one or the other interface.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0
-> +    maxItems: 1
+  f53ae29c0ea1 ("drm/i915/gt: Include a few tracek for timeslicing")
 
-As Mark rightfully suggested this seems like an SPI-slave related property, then
-most likely it should be defined on the SPI-slave basis (probably as a bool
-property). Additionally it's vendor-specific, so the property name should be
-accordingly prefixed.
+from Linus' tree and commit:
 
-> +
->  required:
->    - compatible
->    - reg
-> @@ -50,11 +75,15 @@ required:
-> 
->  examples:
->    - |
-> -    spi0: spi@101000 {
-> -      compatible = "mscc,ocelot-spi";
-> -      #address-cells = <1>;
-> -      #size-cells = <0>;
-> -      reg = <0x101000 0x100>, <0x3c 0x18>;
-> -      interrupts = <9>;
-> -      clocks = <&ahb_clk>;
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    spi0: spi@600104000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "microchip,sparx5-spi";
+  00febf644648 ("drm/i915/gt: Incorporate the virtual engine into timeslici=
+ng")
 
-> +        reg = <0x00104000 0x40>, <0 0>, <0x3000000 0x4000000>;
+from the drm-intel-fixes tree.
 
-I have a doubt that defining an empty reg region is a good idea, since you can
-detect the reg requirements by the node compatible string.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
--Sergey
+--=20
+Cheers,
+Stephen Rothwell
 
-> +        num-cs = <16>;
-> +        reg-io-width = <4>;
-> +        reg-shift = <2>;
-> +        clocks = <&ahb_clk>;
-> +        interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->      };
-> --
-> 2.26.2
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --cc drivers/gpu/drm/i915/gt/intel_lrc.c
+index 87e6c5bdd2dc,e77f89b43e5f..000000000000
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@@ -1971,20 -1853,12 +1990,19 @@@ static void set_timeslice(struct intel_
+  	if (!intel_engine_has_timeslices(engine))
+  		return;
+ =20
+ -	set_timer_ms(&engine->execlists.timer, active_timeslice(engine));
+ +	duration =3D active_timeslice(engine);
+ +	ENGINE_TRACE(engine, "bump timeslicing, interval:%lu", duration);
+ +
+ +	set_timer_ms(&engine->execlists.timer, duration);
+  }
+ =20
+- static void start_timeslice(struct intel_engine_cs *engine)
++ static void start_timeslice(struct intel_engine_cs *engine, int prio)
+  {
+  	struct intel_engine_execlists *execlists =3D &engine->execlists;
+- 	const int prio =3D queue_prio(execlists);
+ +	unsigned long duration;
+ +
+ +	if (!intel_engine_has_timeslices(engine))
+ +		return;
+ =20
+  	WRITE_ONCE(execlists->switch_priority_hint, prio);
+  	if (prio =3D=3D INT_MIN)
+@@@ -2140,13 -1994,8 +2158,13 @@@ static void execlists_dequeue(struct in
+  			__unwind_incomplete_requests(engine);
+ =20
+  			last =3D NULL;
+- 		} else if (need_timeslice(engine, last) &&
++ 		} else if (need_timeslice(engine, last, rb) &&
+  			   timeslice_expired(execlists, last)) {
+ +			if (i915_request_completed(last)) {
+ +				tasklet_hi_schedule(&execlists->tasklet);
+ +				return;
+ +			}
+ +
+  			ENGINE_TRACE(engine,
+  				     "expired last=3D%llx:%lld, prio=3D%d, hint=3D%d, yield?=3D%s\n",
+  				     last->fence.context,
+
+--Sig_/+LWcEw/dTcCMMLWI1+PUaar
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7W2+AACgkQAVBC80lX
+0Gzk6Qf+NgipWpAbO9j938t18ykGpgXDxSrAyqX/47f6+DOhTjaz0Ak7P69ECbR5
+zBYdNjOevpGH96Cn6EQV615b+1ldZe/7A4V4uxdCLtwPCccekbqoS2vEX4uetMsZ
+852YsDvkV/6U0RFgmjHEi2Famrde6hjrfajJ49aP0quHo3RNickZIe5xQj8IbtSC
+lX05WBNlr62yWk3aj5KJhVx7fVsC7ul76Yuxq16oqbHAexbJVjrfRaSZ5+xqEE9A
+qg0PaE/Ezdk/DtCaOlc51WDCvYwI5teLVjze+pXG8MDtTPVsoWyKLoyoTOwCZt+n
++bU80q9HXJ95BOR6e84+vEgB2Y18vw==
+=glNj
+-----END PGP SIGNATURE-----
+
+--Sig_/+LWcEw/dTcCMMLWI1+PUaar--
