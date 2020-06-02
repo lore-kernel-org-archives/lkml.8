@@ -2,162 +2,324 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06458C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9092077D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VbdnBzxK"
+	by mail.kernel.org (Postfix) with ESMTP id DA1BA20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591121643;
+	bh=MrXSZE70Zbx4hxiTKRHGSxKbDAuPhmbRXB6E9TDnFN4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=B557tLukLGbHggXVgnsT5UWGAk6Cj5jkDB9oaOXgkZCIgNoiMU7F5BOvGEbFAPwlQ
+	 7TtWu6VhNhVoiRQKjrciZWxLclAMxnXRJA1QnL0GmTi2/pV0riWXmm+FC+gbseL7Zc
+	 PzKR4rte2boZqhsmz+8k7ft2gy+wUPRDnKd9oXFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgFBSKx (ORCPT
+        id S1726420AbgFBSOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgFBSKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:10:52 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57656C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:10:52 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id a80so6735894ybg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:10:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nGKwTci6YYFj61/UQ8F76TAav6aVCJJ87zLA3Eb57b4=;
-        b=VbdnBzxKAr7bvKSydTVnepPMigJDFe2+HaY08Wbms61W3BnZpc5guWG0/w+7Ff0E4n
-         HvQNb+CytYF3yFLEpiYhSiKERPowk/QLWtLiVZGdE5BsuSuqs/SstlwWX5TjRfs5krnd
-         AP73/0onfP2GIc3TzdDEC8CP6hDbZL9kaKTH8uTZBA1pfrVZ23X5OJcbb7CYzqmotyDR
-         sswMWJF7f4A6mdwqgcnT5F+eqt82c//tOsTbnL0/usYtm26kCLwsMBjZhTZil+/A+qI1
-         PRWRli3ufRd9lUNX1kGrjewJ+XPmJbnUloqARYwWuqs9K/a6wp3Ye5ZVEg5ad4lgeBWp
-         fw8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nGKwTci6YYFj61/UQ8F76TAav6aVCJJ87zLA3Eb57b4=;
-        b=lcKIrNkLLen0heW1+WEbwE/Wk4+eh2CdhfA3dpz6gL8hOsWgD1Kl4cmnwwm+iBRxyo
-         Rpq1dDaMUF8kDGNoTTDXejTaPXhD4ilsWX4UC2MPY6Swvdet+/GvVt3ONKx7ibPO2aOz
-         kfUkLcKTGFAAhNBuyBumWHCJlVqHRKnoRh1TKHwtAnBGcIwe5IjlgDZK3EX5uBser5Zq
-         wxsy56xioSopMbkOUeaUA5VlO34ljQyDMn5YHRYTgrhbNdF//ghtDDwvTOCXg8dlVidw
-         aMM9rhfxEDs9f021+ZBygA8KBi15rw/6YIS8OiXualVt0s585Vrg5MzeeltVNizKGphI
-         dszg==
-X-Gm-Message-State: AOAM532j5kzkJjwvEg8pmNL7GYSEQNGDbJW7nmGAxRindmge+wKmJ8Iw
-        bIOW0epQWn+cBZNOttcqp8KjxuH5chHuf76nGYH3Ew==
-X-Google-Smtp-Source: ABdhPJz1GE0ISa9BaVBawCbwMiatHp1tGtlPlNyTSqa8jP7uIr3gfWiSwardxXZpiebg3qcxgpuhWwJb/jClELpw22s=
-X-Received: by 2002:a5b:ec1:: with SMTP id a1mr19640161ybs.41.1591121451370;
- Tue, 02 Jun 2020 11:10:51 -0700 (PDT)
+        Tue, 2 Jun 2020 14:14:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgFBSOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 14:14:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CBFA2068D;
+        Tue,  2 Jun 2020 18:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591121641;
+        bh=MrXSZE70Zbx4hxiTKRHGSxKbDAuPhmbRXB6E9TDnFN4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Cv00d3gcS29yDXQRyxV3aU+Sbi7l6aFR15i6cPDbsoIdwmOrMID0JYdBHTBXKVG95
+         rupv0O3EYSXjJ702nFSv3zyHeZJgpZ/bcVYmQY476VPjKQZXbdJhM1TZOB/sOZBSac
+         CPerulRdB88pu2MiX3o1RumBLpbOA94fyP17VZXE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/55] 4.9.226-rc3 review
+Date:   Tue,  2 Jun 2020 20:13:59 +0200
+Message-Id: <20200602181325.420361863@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200602115055.1168446-1-jolsa@kernel.org>
-In-Reply-To: <20200602115055.1168446-1-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 Jun 2020 11:10:40 -0700
-Message-ID: <CAP-5=fWF6e38zyMJR_DbRR7yHiYDDwNCMAjUcXz_anxAXSsBrA@mail.gmail.com>
-Subject: Re: [PATCHv2 00/13] perf tests: Add metrics tests
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.226-rc3.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.226-rc3
+X-KernelTest-Deadline: 2020-06-04T18:13+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 4:51 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> hi,
-> changes for using metric result in another metric seem
-> to change lot of core metric code, so it's better we
-> have some more tests before we do that.
->
-> v2 changes:
->   - some of the patches got accepted
->   - add missing free to patch 1 [Ian]
->   - factor pmu-events test functions and reuse it in the new test [Ian]
->   - add fake_pmu bool to parse_events interface [Ian]
->   - simplify metric tests
->   - use proper cover letter subject ;-)
->
-> I actually reworked the 2 patches Ian acked so far,
-> so I did not add them.
->
-> Also available in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/metric_test
->
-> thanks,
-> jirka
->
->
-> ---
-> Jiri Olsa (13):
->       perf tools: Add fake pmu support
->       perf tools: Add fake_pmu bool to parse_events interface
->       perf tests: Factor check_parse_id function
->       perf tests: Add another metric parsing test
->       perf tools: Factor out parse_groups function
->       perf tools: Add fake_pmu to parse_events function
->       perf tools: Add map to parse_events function
->       perf tools: Add metricgroup__parse_groups_test function
->       perf tools: Factor out prepare_metric function
->       perf tools: Release metric_events rblist
->       perf tools: Add test_generic_metric function
->       perf tests: Add parse metric test for ipc metric
->       perf tests: Add parse metric test for frontend metric
->
->  tools/perf/arch/arm/util/cs-etm.c            |   2 +-
->  tools/perf/arch/arm64/util/arm-spe.c         |   2 +-
->  tools/perf/arch/powerpc/util/kvm-stat.c      |   2 +-
->  tools/perf/arch/x86/tests/intel-cqm.c        |   2 +-
->  tools/perf/arch/x86/tests/perf-time-to-tsc.c |   2 +-
->  tools/perf/arch/x86/util/intel-bts.c         |   2 +-
->  tools/perf/arch/x86/util/intel-pt.c          |   6 ++--
->  tools/perf/builtin-stat.c                    |   9 +++---
->  tools/perf/builtin-trace.c                   |   4 +--
->  tools/perf/tests/Build                       |   1 +
->  tools/perf/tests/backward-ring-buffer.c      |   3 +-
->  tools/perf/tests/builtin-test.c              |   4 +++
->  tools/perf/tests/code-reading.c              |   2 +-
->  tools/perf/tests/event-times.c               |   2 +-
->  tools/perf/tests/evsel-roundtrip-name.c      |   4 +--
->  tools/perf/tests/hists_cumulate.c            |   2 +-
->  tools/perf/tests/hists_filter.c              |   4 +--
->  tools/perf/tests/hists_link.c                |   4 +--
->  tools/perf/tests/hists_output.c              |   2 +-
->  tools/perf/tests/keep-tracking.c             |   4 +--
->  tools/perf/tests/parse-events.c              |   2 +-
->  tools/perf/tests/parse-metric.c              | 170 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/tests/pmu-events.c                | 132 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
->  tools/perf/tests/switch-tracking.c           |   8 ++---
->  tools/perf/tests/tests.h                     |   1 +
->  tools/perf/util/bpf-loader.c                 |   2 +-
->  tools/perf/util/metricgroup.c                |  74 ++++++++++++++++++++++++++++++++++++----------
->  tools/perf/util/metricgroup.h                |  10 +++++++
->  tools/perf/util/parse-events.c               |  29 +++++++++++-------
->  tools/perf/util/parse-events.h               |   5 ++--
->  tools/perf/util/parse-events.l               |   8 +++--
->  tools/perf/util/parse-events.y               |  41 ++++++++++++++++++++++++--
->  tools/perf/util/perf_api_probe.c             |   2 +-
->  tools/perf/util/record.c                     |   2 +-
->  tools/perf/util/stat-shadow.c                |  67 ++++++++++++++++++++++++++++++------------
->  tools/perf/util/stat.h                       |   3 ++
->  36 files changed, 527 insertions(+), 92 deletions(-)
->  create mode 100644 tools/perf/tests/parse-metric.c
->
+This is the start of the stable review cycle for the 4.9.226 release.
+There are 55 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Acked-by: Ian Rogers <irogers@google.com>
+Responses should be made by Thu, 04 Jun 2020 18:12:28 +0000.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.226-rc3.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.226-rc3
+
+Benjamin Block <bblock@linux.ibm.com>
+    scsi: zfcp: fix request object use-after-free in send path causing wrong traces
+
+Salil Mehta <salil.mehta@huawei.com>
+    net: hns: Fixes the missing put_device in positive leg for roce reset
+
+Guoqing Jiang <gqjiang@suse.com>
+    sc16is7xx: move label 'err_spi' to correct section
+
+Liviu Dudau <liviu@dudau.co.uk>
+    mm/vmalloc.c: don't dereference possible NULL pointer in __vunmap()
+
+Roopa Prabhu <roopa@cumulusnetworks.com>
+    net: rtnl_configure_link: fix dev flags changes arg to __dev_notify_flags
+
+Thomas Gleixner <tglx@linutronix.de>
+    genirq/generic_pending: Do not lose pending affinity update
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
+
+Qiushi Wu <wu000273@umn.edu>
+    bonding: Fix reference count leak in bond_sysfs_slave_add.
+
+Qiushi Wu <wu000273@umn.edu>
+    qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
+
+Phil Sutter <phil@nwl.cc>
+    netfilter: ipset: Fix subcounter update skip
+
+Michael Braun <michael-dev@fami-braun.de>
+    netfilter: nft_reject_bridge: enable reject with bridge vlan
+
+Xin Long <lucien.xin@gmail.com>
+    ip_vti: receive ipip packet by calling ip_tunnel_rcv
+
+Jeremy Sowden <jeremy@azazel.net>
+    vti4: eliminated some duplicate code.
+
+Xin Long <lucien.xin@gmail.com>
+    xfrm: fix a NULL-ptr deref in xfrm_local_error
+
+Xin Long <lucien.xin@gmail.com>
+    xfrm: fix a warning in xfrm_policy_insert_list
+
+Xin Long <lucien.xin@gmail.com>
+    xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
+
+Alexander Dahl <post@lespocky.de>
+    x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
+
+Linus Lüssing <ll@simonwunderlich.de>
+    mac80211: mesh: fix discovery timer re-arming issue / crash
+
+Helge Deller <deller@gmx.de>
+    parisc: Fix kernel panic in mem_init()
+
+Qiushi Wu <wu000273@umn.edu>
+    iommu: Fix reference count leak in iommu_group_alloc.
+
+Arnd Bergmann <arnd@arndb.de>
+    include/asm-generic/topology.h: guard cpumask_of_node() macro argument
+
+Alexander Potapenko <glider@google.com>
+    fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
+
+Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+    mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
+
+Jerry Lee <leisurelysw24@gmail.com>
+    libceph: ignore pool overlay and cache logic on redirects
+
+Eric W. Biederman <ebiederm@xmission.com>
+    exec: Always set cap_ambient in cap_bprm_set_creds
+
+Chris Chiu <chiu@endlessm.com>
+    ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
+
+Changming Liu <liu.changm@northeastern.edu>
+    ALSA: hwdep: fix a left shifting 1 by 31 UB bug
+
+Robert Beckett <bob.beckett@collabora.com>
+    ARM: dts/imx6q-bx50v3: Set display interface clock parents
+
+Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+    ARM: dts: imx6q-bx50v3: Add internal switch
+
+Martyn Welch <martyn.welch@collabora.co.uk>
+    ARM: dts: imx: Correct B850v3 clock assignment
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/qib: Call kobject_put() when kobject_init_and_add() fails
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
+
+Kevin Locke <kevin@kevinlocke.name>
+    Input: i8042 - add ThinkPad S230u to i8042 reset list
+
+Łukasz Patron <priv.luk@gmail.com>
+    Input: xpad - add custom init packet for Xbox One S controllers
+
+Brendan Shanks <bshanks@codeweavers.com>
+    Input: evdev - call input_flush_device() on release(), not flush()
+
+James Hilliard <james.hilliard1@gmail.com>
+    Input: usbtouchscreen - add support for BonXeon TP
+
+Steve French <stfrench@microsoft.com>
+    cifs: Fix null pointer check in cifs_read
+
+Masahiro Yamada <masahiroy@kernel.org>
+    usb: gadget: legacy: fix redundant initialization warnings
+
+Lei Xue <carmark.dlut@gmail.com>
+    cachefiles: Fix race between read_waiter and read_copier involving op->to_do
+
+Bob Peterson <rpeterso@redhat.com>
+    gfs2: move privileged user check to gfs2_quota_lock_check
+
+Chuhong Yuan <hslester96@gmail.com>
+    net: microchip: encx24j600: add missed kthread_stop
+
+Stephen Warren <swarren@nvidia.com>
+    gpio: tegra: mask GPIO IRQs during IRQ shutdown
+
+Kalderon, Michal <Michal.Kalderon@cavium.com>
+    IB/cma: Fix reference count leak when no ipv4 addresses are set
+
+Dmitry V. Levin <ldv@altlinux.org>
+    uapi: fix linux/if_pppol2tp.h userspace compilation errors
+
+Qiushi Wu <wu000273@umn.edu>
+    net/mlx4_core: fix a memory leak bug.
+
+Qiushi Wu <wu000273@umn.edu>
+    net: sun: fix missing release regions in cas_init_one().
+
+Moshe Shemesh <moshe@mellanox.com>
+    net/mlx5: Add command entry handling completion
+
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+    net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
+
+Moshe Shemesh <moshe@mellanox.com>
+    net/mlx5e: Update netdev txq on completions during closure
+
+Jere Leppänen <jere.leppanen@nokia.com>
+    sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
+
+Roman Mashak <mrv@mojatatu.com>
+    net sched: fix reporting the first-time use timestamp
+
+Yuqi Jin <jinyuqi@huawei.com>
+    net: revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
+
+Vadim Fedorenko <vfedorenko@novek.ru>
+    net: ipip: fix wrong address family in init error path
+
+Eric Dumazet <edumazet@google.com>
+    ax25: fix setsockopt(SO_BINDTODEVICE)
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/arm/boot/dts/imx6q-b450v3.dts                 |  7 --
+ arch/arm/boot/dts/imx6q-b650v3.dts                 |  7 --
+ arch/arm/boot/dts/imx6q-b850v3.dts                 | 11 ----
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi                | 77 ++++++++++++++++++++++
+ arch/parisc/mm/init.c                              |  2 +-
+ arch/x86/include/asm/dma.h                         |  2 +-
+ drivers/gpio/gpio-tegra.c                          |  1 +
+ drivers/infiniband/hw/qib/qib_sysfs.c              |  9 +--
+ drivers/input/evdev.c                              | 19 ++----
+ drivers/input/joystick/xpad.c                      | 12 ++++
+ drivers/input/rmi4/rmi_driver.c                    |  3 +-
+ drivers/input/serio/i8042-x86ia64io.h              |  7 ++
+ drivers/input/touchscreen/usbtouchscreen.c         |  1 +
+ drivers/iommu/iommu.c                              |  2 +-
+ drivers/net/bonding/bond_sysfs_slave.c             |  4 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  3 +
+ drivers/net/ethernet/mellanox/mlx4/fw.c            |  2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c      | 15 +++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c    |  6 +-
+ drivers/net/ethernet/microchip/encx24j600.c        |  5 +-
+ .../net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c    |  4 +-
+ drivers/net/ethernet/sun/cassini.c                 |  3 +-
+ drivers/s390/scsi/zfcp_fsf.c                       | 10 ++-
+ drivers/tty/serial/sc16is7xx.c                     |  2 +
+ drivers/usb/gadget/legacy/inode.c                  |  3 +-
+ fs/binfmt_elf.c                                    |  2 +-
+ fs/cachefiles/rdwr.c                               |  2 +-
+ fs/cifs/file.c                                     |  2 +-
+ fs/gfs2/quota.c                                    |  3 +-
+ fs/gfs2/quota.h                                    |  3 +-
+ include/asm-generic/topology.h                     |  2 +-
+ include/linux/mlx5/driver.h                        |  1 +
+ include/linux/mm.h                                 | 15 ++++-
+ include/linux/netfilter/nf_conntrack_pptp.h        |  2 +-
+ include/net/act_api.h                              |  3 +-
+ include/rdma/ib_addr.h                             |  6 +-
+ include/uapi/linux/l2tp.h                          |  7 +-
+ kernel/irq/migration.c                             | 26 ++++++--
+ mm/vmalloc.c                                       |  2 +-
+ net/ax25/af_ax25.c                                 |  6 +-
+ net/bridge/netfilter/nft_reject_bridge.c           |  6 ++
+ net/ceph/osd_client.c                              |  4 +-
+ net/core/rtnetlink.c                               |  2 +-
+ net/ipv4/ip_vti.c                                  | 75 +++++++++++----------
+ net/ipv4/ipip.c                                    |  2 +-
+ net/ipv4/netfilter/nf_nat_pptp.c                   |  7 +-
+ net/ipv4/route.c                                   | 14 ++--
+ net/mac80211/mesh_hwmp.c                           |  7 ++
+ net/netfilter/ipset/ip_set_list_set.c              |  2 +-
+ net/netfilter/nf_conntrack_pptp.c                  | 62 +++++++++--------
+ net/qrtr/qrtr.c                                    |  2 +-
+ net/sctp/sm_statefuns.c                            |  9 +--
+ net/xfrm/xfrm_input.c                              |  2 +-
+ net/xfrm/xfrm_output.c                             |  3 +-
+ net/xfrm/xfrm_policy.c                             |  7 +-
+ security/commoncap.c                               |  1 +
+ sound/core/hwdep.c                                 |  4 +-
+ sound/usb/mixer.c                                  |  8 +++
+ 59 files changed, 338 insertions(+), 182 deletions(-)
+
+
