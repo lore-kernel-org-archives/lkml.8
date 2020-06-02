@@ -2,105 +2,168 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45B37207D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591106650;
-	bh=5Bxzrru4Pb1u+SpPGmIbHIvhtZs/e62GqDODmBighQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l78CqbBJ1bwWAAsGVH3+kTlpwRVD4l0z8sNif05RREle9eyELhLpDVSMBcW8ZGFxB
-	 rN7ha3IJmYrK4xFq5AZONX/Gmw1PRaCo5EPbD/LOeSqBM+4f3LwwxR56v2IU3+97yn
-	 +w+/5H9YubXcZUd2lRIdpOdpFaLfczHPVvaLzK0A=
+	by mail.kernel.org (Postfix) with ESMTP id AA92520659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:05:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A4ybqWxp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgFBOEJ (ORCPT
+        id S1727788AbgFBOFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:04:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgFBOEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:04:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 2 Jun 2020 10:05:20 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43322 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725841AbgFBOFT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 10:05:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591106718;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1guZkEyTv9QiJnXWlXnMJ1k5OsQdjrJz0ik8FevwGIM=;
+        b=A4ybqWxpS3tzSOE/mftjxuOJuwnnIdW4AESlEgCwpoFi4qLPtRCwdA9fZUHrZR5maapG2g
+        mCRBNtS66JG5re8NHA+KXydzH5oApXySicEV4pFOyi2SlalwECHyzeptVYP4OhYmovX9XS
+        pFGUTWBbWMDfg93xleGWZO7YQDSTgZk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-8FGclkJYP0atDEFa4hhsNw-1; Tue, 02 Jun 2020 10:05:14 -0400
+X-MC-Unique: 8FGclkJYP0atDEFa4hhsNw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E9F22074B;
-        Tue,  2 Jun 2020 14:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591106647;
-        bh=5Bxzrru4Pb1u+SpPGmIbHIvhtZs/e62GqDODmBighQg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=07jfzjuY1I6kgihd31CPlafeKfxtbWqOo28rFCuEXtnbt1gXeldBNx/pvJIGnyD43
-         p1upWaLE0jnZZquRFBN6IwxKr9l32PHeyRZDpISndr7LKUQ9FGFjwgGwRwtJBeUBJX
-         RmiCjViV8am8lLB8oIa3PJ89VexmtLgvCWDc7rns=
-Date:   Tue, 2 Jun 2020 16:04:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wang Hai <wanghai38@huawei.com>, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: kobject_init_and_add is easy to misuse
-Message-ID: <20200602140404.GA3280145@kroah.com>
-References: <20200602115033.1054-1-wanghai38@huawei.com>
- <20200602121035.GL19604@bombadil.infradead.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3867107ACF4;
+        Tue,  2 Jun 2020 14:05:11 +0000 (UTC)
+Received: from krava (unknown [10.40.192.188])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 004245C1D6;
+        Tue,  2 Jun 2020 14:05:08 +0000 (UTC)
+Date:   Tue, 2 Jun 2020 16:05:08 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCHv3] perf stat: Ensure group is defined on top of the same
+ cpu mask
+Message-ID: <20200602140508.GA1169993@krava>
+References: <20200531162206.911168-1-jolsa@kernel.org>
+ <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
+ <20200601082027.GF881900@krava>
+ <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
+ <20200602101736.GE1112120@krava>
+ <20200602134256.GO31795@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602121035.GL19604@bombadil.infradead.org>
+In-Reply-To: <20200602134256.GO31795@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 05:10:35AM -0700, Matthew Wilcox wrote:
-> On Tue, Jun 02, 2020 at 07:50:33PM +0800, Wang Hai wrote:
-> > syzkaller reports for memory leak when kobject_init_and_add()
-> > returns an error in the function sysfs_slab_add() [1]
-> > 
-> > When this happened, the function kobject_put() is not called for the
-> > corresponding kobject, which potentially leads to memory leak.
-> > 
-> > This patch fixes the issue by calling kobject_put() even if
-> > kobject_init_and_add() fails.
+On Tue, Jun 02, 2020 at 10:42:56AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jun 02, 2020 at 12:17:36PM +0200, Jiri Olsa escreveu:
+> > Jin Yao reported the issue (and posted first versions of this change)
+> > with groups being defined over events with different cpu mask.
+>  
+> > This causes assert aborts in get_group_fd, like:
+>  
+> >   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+> >   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
+> >   Aborted
+>  
+> > All the events in the group have to be defined over the same
+> > cpus so the group_fd can be found for every leader/member pair.
+>  
+> > Adding check to ensure this condition is met and removing the
+> > group (with warning) if we detect mixed cpus, like:
+>  
+> >   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+> >   WARNING: event cpu maps do not match, disabling group:
+> >     anon group { power/energy-cores/, cycles }
+> >     anon group { instructions, power/energy-cores/ }
 > 
-> I think this speaks to a deeper problem with kobject_init_and_add()
-> -- the need to call kobject_put() if it fails is not readily apparent
-> to most users.  This same bug appears in the first three users of
-> kobject_init_and_add() that I checked --
-> arch/ia64/kernel/topology.c
-> drivers/firmware/dmi-sysfs.c
-> drivers/firmware/efi/esrt.c
-> drivers/scsi/iscsi_boot_sysfs.c
+> So it doesn't disable the 'group', it disables the 'grouping' of those
+> events, right? I.e. reading the WARNING, I thought that it would count
+> nothing, since it lists both groups as being disabled, but when I tested
+> I noticed that:
 > 
-> Some do get it right --
-> arch/powerpc/kernel/cacheinfo.c
-> drivers/gpu/drm/ttm/ttm_bo.c
-> drivers/gpu/drm/ttm/ttm_memory.c
-> drivers/infiniband/hw/mlx4/sysfs.c
+>   [root@seventh ~]# perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+>   WARNING: grouped events cpus do not match, disabling group:
+>     anon group { power/energy-cores/, cycles }
+>     anon group { instructions, power/energy-cores/ }
+>   ^C
+>    Performance counter stats for 'system wide':
+>   
+>                12.62 Joules power/energy-cores/
+>          106,920,637        cycles
+>           80,228,899        instructions              #    0.75  insn per cycle
+>                12.62 Joules power/energy-cores/
+>   
+>         14.514476987 seconds time elapsed
+>   
+>   
+>   [root@seventh ~]#
+> 
+>   I.e. it counted the events, ungrouped, or am I missing something?
 
-Why are random individual drivers calling kobject* functions?  That
-speaks to a larger problem here...
+right, it disables 'grouping', events are scheduled/counted individualy
 
-Anyway, yes, it's a tricky function, but the issue usually is that the
-kobject is embedded in something else and if you call init_and_add() you
-want to tear things down _before_ the final put happens.
+this way we will not hit the issue when looking for group_fd FD
+and there's not any, because of different cpu maps
 
-The good thing is, that function is really hard to get to fail except if
-you abuse it with syzkaller :)
+> 
+> If I do:
+> 
+>   [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' -a sleep 2
+>   
+>    Performance counter stats for 'system wide':
+>   
+>                 1.73 Joules power/energy-cores/                                         
+>                 0.92 Joules power/energy-ram/                                           
+>           12,191,658        instructions              #    0.67  insn per cycle         
+>           18,275,233        cycles                                                      
+>   
+>          2.001272492 seconds time elapsed
+>   
+>   [root@seventh ~]# 
+> 
+> It works, grouped. One observation, shouldn't we somehow show in the
+> output that the first two were indeed grouped, ditto for the second two?
 
-> I'd argue that the current behaviour is wrong, that kobject_init_and_add()
-> should call kobject_put() if the add fails.  This would need a tree-wide
-> audit.  But somebody needs to do that anyway because based on my random
-> sampling, half of the users currently get it wrong.
+yea, we don't display groups in output.. also there's no number
+for the group, it's still separate events numbers in output
+grouping is only used when creating events
 
-As said above, this is "tricky", and might break things.
+> 
+> Also, this needs improvement:
+> 
+>   [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' sleep 2
+>   Error:
+>   The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (power/energy-cores/).
+>   /bin/dmesg | grep -i perf may provide additional information.
+
+yes, power events don't work with events without cpu being defined,
+which is what we do for 'workload' session.. we should either check
+for that and display some sensible error for power events
+
+or perhaps check if we could monitor like perf record does with creating
+events for task and every cpu in the system
 
 thanks,
+jirka
 
-greg k-h
