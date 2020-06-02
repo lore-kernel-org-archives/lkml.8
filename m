@@ -2,81 +2,103 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4845C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3127206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291CE206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XeGLUQDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgFBUIG (ORCPT
+        id S1728275AbgFBUIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:08:06 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:59845 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgFBUIF (ORCPT
+        Tue, 2 Jun 2020 16:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgFBUIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:08:05 -0400
-Received: from [192.168.42.210] ([93.22.133.243])
-        by mwinf5d52 with ME
-        id mL83220025FEkrh03L83SZ; Tue, 02 Jun 2020 22:08:04 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 02 Jun 2020 22:08:04 +0200
-X-ME-IP: 93.22.133.243
-Subject: Re: [PATCH] pinctrl: freescale: imx: Fix an error handling path in
- 'imx_pinctrl_probe()'
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, linus.walleij@linaro.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stefan@agner.ch, gary.bisson@boundarydevices.com,
-        linux-gpio@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-References: <20200530204955.588962-1-christophe.jaillet@wanadoo.fr>
- <20200602101346.GW30374@kadam>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <9e186840-aece-cfcc-918a-8441db9f6f7b@wanadoo.fr>
-Date:   Tue, 2 Jun 2020 22:08:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 16:08:42 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A9C08C5C0;
+        Tue,  2 Jun 2020 13:08:41 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c71so4117132wmd.5;
+        Tue, 02 Jun 2020 13:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y+jeG0ZqrVfo+FYQhNDp8MJBv+24WC+dS4BIyM6NDKs=;
+        b=XeGLUQDpIvVZAOhGXpLXoZ05/8oUpeyco6yuo7H62Woq7W0xuRq/vW8rR7DVUd5vyK
+         XRT+q0lM/SslslRba+wUrENsCNIc/bbU/bWGc6H/5fqWNY1sK8neHeAu42wFglmugOCb
+         E7Cazu1TF7B5nKz67/cIbG3dc+g12izo+T2DNCw9FkXPAPmK3bdIR+nZqZbklxnHLKbZ
+         bAjse3nKUsi9EJzAQwrwrF5JWpK21x6utpsLFDkNjAPaxX2P2tIKpsUhtKZxH66RSWuW
+         q/fKOpPqXPXsPhhtnWCoRgVG+f1FsZm/otqRWlVC73rJkapyqnSCc0wHolaPMAGjBzn5
+         B+/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y+jeG0ZqrVfo+FYQhNDp8MJBv+24WC+dS4BIyM6NDKs=;
+        b=HKKZjTzvXOpRmjamRB0OpiHYH1etoZtLNWHIUfF5jcfTF0reuUIFspUx2w9CydcAiQ
+         sMLllnX0qZ6oC1ysEoWPbN2KM5WwN2Wlo7AsUUHnKZDQduYB435F7tpL5nuqZEoDSAV4
+         3n6tYvFWmmshXnKV0ZrZSHGKmuOFw642tAYkk6nZoj++UDHySn9dYN3Ip9WRQ9lZ+22U
+         iDQU61h4f385KO7mutYGXa2c/SC8vHtjPK7Rp5QwmAoQmNcUZewawSeHmCiLLXDANWaS
+         MPjN5dSvo1KX+CAHxaXSOrUFg9m7rU4tkn3JOoHV4hH/6PcuU1Puxh861MH+WBvZdxuc
+         VgqQ==
+X-Gm-Message-State: AOAM531rfqkOyxhklZlUsEfKQSuGbBGsKKj3o67GVkuhgWsn4jI/EjFK
+        Y7HKtTd5Q+PL7F7nQ2ccFiE=
+X-Google-Smtp-Source: ABdhPJwYnaOip6Sui7beKMmyEvg77hj+NaVMFX+2mWUkUmTT6nLerN0vv4KB6p1wrJ29FZ26pve46Q==
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr5480279wml.70.1591128520179;
+        Tue, 02 Jun 2020 13:08:40 -0700 (PDT)
+Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
+        by smtp.googlemail.com with ESMTPSA id c140sm1164317wmd.18.2020.06.02.13.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 13:08:39 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] Documentation: Document an existing qcom,rpm-msm8996 compatible
+Date:   Tue,  2 Jun 2020 22:08:36 +0200
+Message-Id: <20200602200837.321712-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200602101346.GW30374@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 02/06/2020 à 12:13, Dan Carpenter a écrit :
-> On Sat, May 30, 2020 at 10:49:55PM +0200, Christophe JAILLET wrote:
->> 'pinctrl_unregister()' should not be called to undo
->> 'devm_pinctrl_register_and_init()', it is already handled by the framework.
->>
->> This simplifies the error handling paths of the probe function.
->> The 'imx_free_resources()' can be removed as well.
->>
->> Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
-> You didn't introduce this but the:
->
-> 	ipctl->input_sel_base = of_iomap(np, 0);
->
-> should be changed to devm_of_iomap().
-Done as a separated patch.
+This compatible has been included in the driver for
+some time, but it has been overlooked in documentation.
 
-Thx for the review and the comment.
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-CJ
-
-> regards,
-> dan carpenter
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+index 25541a475ead..4b916d67064a 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+@@ -24,6 +24,7 @@ resources.
+ 		    "qcom,rpm-msm8974"
+ 		    "qcom,rpm-msm8976"
+ 		    "qcom,rpm-msm8994"
++		    "qcom,rpm-msm8996"
+ 		    "qcom,rpm-msm8998"
+ 		    "qcom,rpm-sdm660"
+ 		    "qcom,rpm-qcs404"
+-- 
+2.26.2
 
