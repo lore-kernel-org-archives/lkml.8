@@ -2,182 +2,134 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B39C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE52C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046F1207D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F13620734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:00:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="qSN37meS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmnR1WvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgFBJ6O (ORCPT
+        id S1726937AbgFBKAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:58:14 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58319 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgFBJ6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:58:11 -0400
-IronPort-SDR: szba3FMjPzXiGOukIza+CbbqYFMNaiN3QlXguT7EkFSaChjxeLYwg4iDn7usbtn/pUjJvFp94u
- mfolMHpV4N6g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:58:10 -0700
-IronPort-SDR: ID2c0HsEqegpM/aJ1OERPfL7PjRvzq1EAObFjMN1fDDp7Kg9fEJ1JvMaQ4mq8+z5SFjA6YXBbW
- QBokDJgY957g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
-   d="scan'208";a="312238346"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Jun 2020 02:58:10 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 2 Jun 2020 02:58:09 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 2 Jun 2020 02:58:09 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 2 Jun 2020 02:58:09 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.104)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 2 Jun 2020 02:58:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UuUNmiCwQHZ6uUFV6NJE9R1+lk3y4w3uvDKpUjRsZLUobDkdMBl/XFAyB3PkqXOfvBl0hasRujzRUlwPGoNDNfHYjVUIb6d6WJF4qfTd2+j62KL9sZ2SriqQ6uGApEXsHMj/yXhseFCG7AFTUDg5JfQzjQ3XyjamYeilN0GR1JZXsyf+jUW/tjRh1dplNreVYIIoR+HYC+9t2DzN1dZelZ2gJA3b3MoFZ4DteLyuj9l13w0rkeTNp93pW9ESvfBY8UADZhKR5Rud/TyRhIdHJlLf0K9LUN9CRML2/H6EWuCLrLgwRi5qYF1waYwrYV5zCVqrIBVsyRcftDOnvLC5xQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A7R7clrboM9+yLrzMF0jsBvfj624LS0Fbh60R2a2NcY=;
- b=jzOhIjNKkicTmKkpFAmTtyWb7d2/7BnK0ewFyRAVNIGxp/EqVNOCiKZEQisfYmMlHSqxmBtKhN0UF/89VbB/2W2TNklZ4xalD0aYcDiwVkbjH4HwV9j6egcYifuQxPe9y97nHhKDKUU8vTVHSUB6o2XcH2G26Wj6EUnlZa/rSEe9SOG42KNdfxZUgmM+1pC/AT+ld/puYng4TJhEulQ+NiPR1vMU9cYlazl3w44MFmt4aMeDggAHB7TD1DyCeKq3dQRjfL5aNXrtesaox057juM3/XbW6JGsiSwc1x61qrzYONyciYeIHGg618aU4bc4jXXI7aJKHCpSeCxuO0tcww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A7R7clrboM9+yLrzMF0jsBvfj624LS0Fbh60R2a2NcY=;
- b=qSN37meSqFxGZ9njOoVSNZZ9Tb8do3n/gzin87c1jWveINI8yTTGLp98clsizbQCStS8XQ2Pr3Rd/SAknbyWyn4823m/dmZPPjOykVCTLAvLojGibQxfHnTjicrGpciI0y2ntr5AV8VSFu6QM217QddPQTpc4aEc53wrw4udpoc=
-Received: from CY4PR11MB1528.namprd11.prod.outlook.com (2603:10b6:910:d::12)
- by CY4PR11MB1319.namprd11.prod.outlook.com (2603:10b6:903:2e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.22; Tue, 2 Jun
- 2020 09:58:07 +0000
-Received: from CY4PR11MB1528.namprd11.prod.outlook.com
- ([fe80::80a:cad3:9a37:28dd]) by CY4PR11MB1528.namprd11.prod.outlook.com
- ([fe80::80a:cad3:9a37:28dd%11]) with mapi id 15.20.3045.022; Tue, 2 Jun 2020
- 09:58:07 +0000
-From:   "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Alex Deucher <alexander.deucher@amd.com>,
-        =?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>,
+        Tue, 2 Jun 2020 06:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBKAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:00:01 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94601C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 03:00:00 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d66so4825036pfd.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 03:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Zp5PU9Twd2i2tzFPrLrjXtcDPzTLivpIOOvbhmocsuo=;
+        b=dmnR1WvZuRPZ/6Vpb+2SuZ+t+QRjmdnWP4ZzKF3uTHDv6g1pEoMDEDg0XZp1RQS4Rc
+         PcdwQZ29rNPnq3l2fjwqhuF7j/2HX+rBmez4tAy8HbfuXFzxbKgiqrjW/bkv/yD58r1Q
+         RIPnaU6YMZn5W47hiL5Cwf7GTc+8XvqW2lhYOl2l6y2WsJw0EDbx5auoVaKZRGYT/MrW
+         65P2sOwN8DsDt4Wk/Hj4ZI7jftv3djCsQ51f81pX/h2RYakYDO5iyWeC2mruTm4m/oAt
+         spMKkoM1c0u9+ks+AAa++E4S2fyAHS2aD1Hvrb5vDAG2sKTV79mdr4NuETxL7Y2knUFA
+         aapg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Zp5PU9Twd2i2tzFPrLrjXtcDPzTLivpIOOvbhmocsuo=;
+        b=qBMSsI1bn7m6/gw0Xqjbg2TKizTFQoaeyfEU7Eaiid0gp6X/J0TXLBt9sYEwXIV9Kd
+         Ox7y63b2MSpNSp8dxMXnYg2gz6NeQWTmTDPQA/8n2PlFBTlKdK/thWbTkSm2noTgiNws
+         pZVG+MrHPR+d5wrlXxSu/nr+cHklB7FBgfQhykZgQKeiYWm+/8llq5ESgaNkl//S5Dt1
+         xoY9wGLuwVSkI6JWNpXj8uixbCgsM/Ja625jjVShHV8fPFSfnAbuXiZVUC6Q9swvtB7c
+         8CJ2bVJTEA2lvFgf2a3FvVczvx9J2cthLuSidg3ZR3kApw6nHmCk9pzFzDmbsI0ebcBn
+         EGNQ==
+X-Gm-Message-State: AOAM532NgoI/Shpw1QtDOTFhdnSIdTmP0pcUNKAF7fSKIIcEtywvaptZ
+        ItXPJgYXqK2914LedqyP9e1BkhT/eoYN1R073Oc=
+X-Google-Smtp-Source: ABdhPJyDp8msT2DNgjzkwwVUe+Cx8nDbX/Gkz2pS3jjzG2aw72oIk/YYF9TBdmXcCF3WA4qheLl5NIP1f08J9GZZI+k=
+X-Received: by 2002:a63:545a:: with SMTP id e26mr22863595pgm.4.1591092000175;
+ Tue, 02 Jun 2020 03:00:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
+ <CAHp75Ve9tdNB7s+gybsg-OUjA3HiZBgzxeOzw=qkx8t1Ybbmsg@mail.gmail.com> <CY4PR11MB1528E8F05A738675B0DC1A59F98B0@CY4PR11MB1528.namprd11.prod.outlook.com>
+In-Reply-To: <CY4PR11MB1528E8F05A738675B0DC1A59F98B0@CY4PR11MB1528.namprd11.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jun 2020 12:59:48 +0300
+Message-ID: <CAHp75VdmaGchzGCQ1ch4-9nj=5EKFAndUCKRZKhhiSRrbTwnnA@mail.gmail.com>
+Subject: Re: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where appropriate
+To:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
         David Zhou <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where appropriate
-Thread-Topic: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
- appropriate
-Thread-Index: AQHWOL8rTXvp8KV8qEOC4rooJYA8A6jFFK4AgAAAs+A=
-Date:   Tue, 2 Jun 2020 09:57:45 +0000
-Deferred-Delivery: Tue, 2 Jun 2020 09:56:44 +0000
-Message-ID: <CY4PR11MB1528E8F05A738675B0DC1A59F98B0@CY4PR11MB1528.namprd11.prod.outlook.com>
-References: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
- <CAHp75Ve9tdNB7s+gybsg-OUjA3HiZBgzxeOzw=qkx8t1Ybbmsg@mail.gmail.com>
-In-Reply-To: <CAHp75Ve9tdNB7s+gybsg-OUjA3HiZBgzxeOzw=qkx8t1Ybbmsg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOTljZGE1MDktNzJkYi00Y2JhLTgyYjMtMzljNGI5OWE5ZjBkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMmhWdHBwdE9qb1NxXC8wbGtYWU9uZU9tWDkreFAwM1o4dml4NGFJOWZFUE1VbVQ2MkE0ekFucytZMUdtMWFOYjEifQ==
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [134.191.221.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4c8dcb14-a91f-477b-c89b-08d806db7304
-x-ms-traffictypediagnostic: CY4PR11MB1319:
-x-microsoft-antispam-prvs: <CY4PR11MB13195436A45DE2BA5B71DFD6F98B0@CY4PR11MB1319.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0422860ED4
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Bi9LzY+olzbzMF1WmmcFzc4sPd/oFaFY6ZBt99GxO1pXrE92jmsYFyqOl/D8sfq9zb6CzFnpnj1HL5EBzVZOzYzyW9gvW3ubHilte4DzVGcryf8ATLSYvSQvzLvQE1v2RhQteYiF+b2CMPTeU0/9/kE+zy8H7N8VdbuCAWM8T//opwh1pjTJbYNmvyZ+03GDXFjo844yrMX9eLH6ueHauLP4IiGEghmH5fLtFLemDqu9g3rgMs+0mg6sG6EgtL42suwWExAZtAJ/9e57getnjwd8QDANMaqHoAzKbHi/bgl6STSZNvqLAk8lwilyfiOb7NKIWGFn+OLkvlbJcH009g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1528.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(346002)(396003)(136003)(366004)(76116006)(86362001)(8676002)(2906002)(6916009)(478600001)(66476007)(8936002)(66556008)(66946007)(64756008)(83380400001)(66446008)(6506007)(316002)(52536014)(33656002)(4326008)(9686003)(5660300002)(54906003)(186003)(6666004)(26005)(53546011)(7696005)(55016002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Q+fEuRYRb0e6TwvC4lREwu/3/H9wZFOltL0o5WmkimSU9ldeJXfN9MkiyAUEOIJ+YoRgniB0eRDcC2IrLHvhfFha9ur2lTtaGmS2BLHhCcmBKdX7+gRrmKmkoC++pPtBBoGAcBP8kp8HIXznGPyoLqb3R4gAIu+Cq3SZDXGYJeEufz2u+q3f9yQ4vbs3yukdMx/rVQdtlHm1OhwWJm+yXhnqX7ZhBzlQGf4+akq6No+gGlqbyMER6EZgvj4YuWwogYsL+XYF+Bq2Y0EcQbGPB2CEsPcS///E9EX7EELVjmXEvngMG50PMwzIzX1mRuUVf3M5cjLFzw+2lxDuiwrp7nFjgix/4NEUn1zbYJMpuHI5HgCOFmXtt4kvNDRuE3CMyj5fAQ790uEMHcF4uEfQJpvhjakdJLErtdoNY32gOHwYEX+JYNPqZJfJZ2e6pYO/I/fDk2xaFyip86R4eRLon6+XFe7+i2iKgszMaXjeQn0Lem6s2fYpDSGbw9JMCxj1
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c8dcb14-a91f-477b-c89b-08d806db7304
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2020 09:58:06.8513
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jrzI26b631Z8lNAC+7NhZjqUI4hI+EoWvgF4rnKGnomz01lMckVr3GVXc0zXUYAC/B+0JkkkI0V6rJOvM7qPnIpD2FAn7NghMp3YDjSWQ50=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1319
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFu
-ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMiwgMjAyMCAx
-MTo0OSBBTQ0KPiBUbzogU3RhbmtpZXdpY3osIFBpb3RyIDxwaW90ci5zdGFua2lld2ljekBpbnRl
-bC5jb20+DQo+IENjOiBBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5jb20+OyBD
-aHJpc3RpYW4gS8O2bmlnDQo+IDxjaHJpc3RpYW4ua29lbmlnQGFtZC5jb20+OyBEYXZpZCBaaG91
-IDxEYXZpZDEuWmhvdUBhbWQuY29tPjsgRGF2aWQNCj4gQWlybGllIDxhaXJsaWVkQGxpbnV4Lmll
-PjsgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPjsgYW1kLQ0KPiBnZnhAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnOyBkcmktZGV2ZWwgPGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+
-OyBMaW51eA0KPiBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDA3LzE1XSBkcm0vYW1kZ3B1OiB1c2UgUENJX0lS
-UV9NU0lfVFlQRVMgd2hlcmUNCj4gYXBwcm9wcmlhdGUNCj4gDQo+IE9uIFR1ZSwgSnVuIDIsIDIw
-MjAgYXQgMTI6MjQgUE0gUGlvdHIgU3RhbmtpZXdpY3oNCj4gPHBpb3RyLnN0YW5raWV3aWN6QGlu
-dGVsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBTZWVpbmcgYXMgdGhlcmUgaXMgc2hvcnRoYW5kIGF2
-YWlsYWJsZSB0byB1c2Ugd2hlbiBhc2tpbmcgZm9yIGFueSB0eXBlDQo+ID4gb2YgaW50ZXJydXB0
-LCBvciBhbnkgdHlwZSBvZiBtZXNzYWdlIHNpZ25hbGxlZCBpbnRlcnJ1cHQsIGxldmVyYWdlIGl0
-Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGlvdHIgU3RhbmtpZXdpY3ogPHBpb3RyLnN0YW5r
-aWV3aWN6QGludGVsLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQW5keSBTaGV2Y2hlbmtvIDxhbmRy
-aXkuc2hldmNoZW5rb0BpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9h
-bWQvYW1kZ3B1L2FtZGdwdV9pcnEuYyB8IDggKysrKy0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfaXJxLmMNCj4gYi9kcml2ZXJzL2dwdS9k
-cm0vYW1kL2FtZGdwdS9hbWRncHVfaXJxLmMNCj4gPiBpbmRleCA1ZWQ0MjI3ZjMwNGIuLjZkYmUx
-NzNhOWZkNCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRn
-cHVfaXJxLmMNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfaXJx
-LmMNCj4gPiBAQCAtMjUxLDExICsyNTEsMTEgQEAgaW50IGFtZGdwdV9pcnFfaW5pdChzdHJ1Y3Qg
-YW1kZ3B1X2RldmljZSAqYWRldikNCj4gPiAgICAgICAgICAgICAgICAgaW50IG52ZWMgPSBwY2lf
-bXNpeF92ZWNfY291bnQoYWRldi0+cGRldik7DQo+ID4gICAgICAgICAgICAgICAgIHVuc2lnbmVk
-IGludCBmbGFnczsNCj4gPg0KPiA+IC0gICAgICAgICAgICAgICBpZiAobnZlYyA8PSAwKSB7DQo+
-ID4gKyAgICAgICAgICAgICAgIGlmIChudmVjID4gMCkNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBmbGFncyA9IFBDSV9JUlFfTVNJX1RZUEVTOw0KPiA+ICsgICAgICAgICAgICAgICBlbHNl
-DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgZmxhZ3MgPSBQQ0lfSVJRX01TSTsNCj4gPiAt
-ICAgICAgICAgICAgICAgfSBlbHNlIHsNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICBmbGFn
-cyA9IFBDSV9JUlFfTVNJIHwgUENJX0lSUV9NU0lYOw0KPiA+IC0gICAgICAgICAgICAgICB9DQo+
-ID4gKw0KPiA+ICAgICAgICAgICAgICAgICAvKiB3ZSBvbmx5IG5lZWQgb25lIHZlY3RvciAqLw0K
-PiA+ICAgICAgICAgICAgICAgICBudmVjID0gcGNpX2FsbG9jX2lycV92ZWN0b3JzKGFkZXYtPnBk
-ZXYsIDEsIDEsIGZsYWdzKTsNCj4gDQo+IEknbSBub3Qgc3VyZSBpZiB5b3UgaGF2ZSBzZWVuIG15
-IGxhc3QgY29tbWVudCBpbnRlcm5hbGx5IGFib3V0IHRoaXMgcGF0Y2guDQo+IA0KPiBJIGRvbid0
-IHVuZGVyc3RhbmQgd2h5IHdlIG5lZWQgdGhlc2UgcGNpX21zaXhfdmVjX2NvdW50KCkgZm9sbG93
-ZWQgYnkNCj4gY29uZGl0aW9uYWwgYXQgYWxsLg0KPiBQZXJoYXBzIHdlIG1heSBzaW1wbGUgZHJv
-cCBhbGwgdGhlc2UgYW5kIHN1cHBseSBmbGFnIGRpcmVjdGx5Pw0KPiANCj4gQnV0IE9UT0gsIEkg
-ZG9uJ3Qga25vdyB0aGUgaW5pdGlhbCBtb3RpdmF0aW9uLCBzbywgdGhlIGFib3ZlIHBhdGNoIGlz
-DQo+IG5vbi1pbnRydXNpdmUgYW5kIGtlZXBzIG9yaWdpbmFsIGxvZ2ljLg0KPiANCg0KU29ycnks
-IEkgbXVzdCBoYXZlIG1pc3VuZGVyc3Rvb2Qgb3IgbWlzc2VkIHRoYXQgY29tbWVudC4gSSBhbSBo
-YXBweQ0KdG8gZG8gYSBWMiBpZiBkcm9wcGluZyB0aGUgY29uZGl0aW9uYWwgaXMgcHJlZmVyYWJs
-ZS4NCg0KPiA+ICAgICAgICAgICAgICAgICBpZiAobnZlYyA+IDApIHsNCj4gPiAtLQ0KPiA+IDIu
-MTcuMg0KPiA+DQo+IA0KPiANCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hl
-dmNoZW5rbw0KDQpCUiwNClBpb3RyIFN0YW5raWV3aWN6DQo=
+On Tue, Jun 2, 2020 at 12:58 PM Stankiewicz, Piotr
+<piotr.stankiewicz@intel.com> wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Sent: Tuesday, June 2, 2020 11:49 AM
+> > To: Stankiewicz, Piotr <piotr.stankiewicz@intel.com>
+> > Cc: Alex Deucher <alexander.deucher@amd.com>; Christian K=C3=B6nig
+> > <christian.koenig@amd.com>; David Zhou <David1.Zhou@amd.com>; David
+> > Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>; amd-
+> > gfx@lists.freedesktop.org; dri-devel <dri-devel@lists.freedesktop.org>;=
+ Linux
+> > Kernel Mailing List <linux-kernel@vger.kernel.org>
+> > Subject: Re: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
+> > appropriate
+> > On Tue, Jun 2, 2020 at 12:24 PM Piotr Stankiewicz
+> > <piotr.stankiewicz@intel.com> wrote:
+
+...
+
+> > >                 int nvec =3D pci_msix_vec_count(adev->pdev);
+> > >                 unsigned int flags;
+> > >
+> > > -               if (nvec <=3D 0) {
+> > > +               if (nvec > 0)
+> > > +                       flags =3D PCI_IRQ_MSI_TYPES;
+> > > +               else
+> > >                         flags =3D PCI_IRQ_MSI;
+> > > -               } else {
+> > > -                       flags =3D PCI_IRQ_MSI | PCI_IRQ_MSIX;
+> > > -               }
+> > > +
+> > >                 /* we only need one vector */
+> > >                 nvec =3D pci_alloc_irq_vectors(adev->pdev, 1, 1, flag=
+s);
+> >
+> > I'm not sure if you have seen my last comment internally about this pat=
+ch.
+> >
+> > I don't understand why we need these pci_msix_vec_count() followed by
+> > conditional at all.
+> > Perhaps we may simple drop all these and supply flag directly?
+> >
+> > But OTOH, I don't know the initial motivation, so, the above patch is
+> > non-intrusive and keeps original logic.
+> >
+>
+> Sorry, I must have misunderstood or missed that comment. I am happy
+> to do a V2 if dropping the conditional is preferable.
+
+Let's wait for AMD people to confirm either.
+
+--=20
+With Best Regards,
+Andy Shevchenko
