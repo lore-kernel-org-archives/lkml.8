@@ -2,136 +2,105 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA49205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591100088;
-	bh=hS7g9g/aSqZzPJBPg66kKL88fBvDX9aRfUs29YzvkBs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mHw3rcW10pf4grWU/D025nfto90rz3Q1oh1UOrqaj8j8uOi3OPYPy6KYxeSGTrUxo
-	 K6qZjzGauRuYjfvW7q6B+Ox9CZEbXB0P6WX0gD7m02QOvYK/TN06WbkWWlT2TacMn9
-	 Ed2kQ00m2hAFxtLpGGdULyKfDquoWEVEVXOiP5nk=
+	by mail.kernel.org (Postfix) with ESMTP id 7267E205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:15:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DCo5Vlfy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgFBMOr (ORCPT
+        id S1726693AbgFBMPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:14:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
+        Tue, 2 Jun 2020 08:15:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:48484 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgFBMOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:14:46 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        id S1725921AbgFBMPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:15:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591100115; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=6aoCLmbhav5CL/lS7P/VV6KjhJoQcYui0Q86IrjJk7c=; b=DCo5VlfyVsI9YhaieDrLs4XyonquAIrbNMrq9HJxZa8xS0jH8Ia/5TOtyffHi1h4v01iuaFB
+ 73UpaLRmFQPzxwzpNZwkqZOkC24linF6C85HAOObcino1sSjyF8P7boxGQDWyQa33qf5qjsI
+ RptEGgmpXfXX30w5SSqW0q7hxjk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5ed642cd76fccbb4c8a4c15b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 12:15:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65AC9C433CA; Tue,  2 Jun 2020 12:15:08 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BE6A2068D;
-        Tue,  2 Jun 2020 12:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591100085;
-        bh=hS7g9g/aSqZzPJBPg66kKL88fBvDX9aRfUs29YzvkBs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yl/i7Qiqq7UoiHmOVqVo+SEn4KgETDEedHdFCdNCuS9f2E2SQng2voWzPfHPcO6YE
-         8CF1FQSd08KxkT7RlTX59097gDyqNuMBxG3McsUgXYZn1n9qp24KE+RNxGUKVpsrLE
-         /QrUIwIAtq/wHHtTJJMYo7XfANI0AplH+lQth1YE=
-Received: by mail-oi1-f169.google.com with SMTP id c194so7020383oig.5;
-        Tue, 02 Jun 2020 05:14:45 -0700 (PDT)
-X-Gm-Message-State: AOAM532rmY1+BQ9CYyDuFLCE6cBO2lFp6FW3CClAI+rFysYQbJT/FXPy
-        M54+9xkJyfwX2roPJdU0xR9VP8/LUClsqFo7BaQ=
-X-Google-Smtp-Source: ABdhPJxW1sEkwPq7K4sRBd1zGPvt9cMm19769d1cEMMvHkLmv/96Zuuq0m9uCjS+3j1U8+rNjcP1B0egOpse0Ai0JB0=
-X-Received: by 2002:aca:b707:: with SMTP id h7mr2899814oif.174.1591100084934;
- Tue, 02 Jun 2020 05:14:44 -0700 (PDT)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBDBDC433C9;
+        Tue,  2 Jun 2020 12:15:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBDBDC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Subject: Re: linux-next: build failure after merge of the mmc tree
+References: <20200602134402.24c19488@canb.auug.org.au>
+Date:   Tue, 02 Jun 2020 15:15:03 +0300
+In-Reply-To: <20200602134402.24c19488@canb.auug.org.au> (Stephen Rothwell's
+        message of "Tue, 2 Jun 2020 13:44:02 +1000")
+Message-ID: <87a71lll4o.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 2 Jun 2020 14:14:33 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
-Message-ID: <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
-Subject: Re: Security Random Number Generator support
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
-        Crystal Guo <Crystal.Guo@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 10:15, Neal Liu <neal.liu@mediatek.com> wrote:
->
-> These patch series introduce a security random number generator
-> which provides a generic interface to get hardware rnd from Secure
-> state. The Secure state can be Arm Trusted Firmware(ATF), Trusted
-> Execution Environment(TEE), or even EL2 hypervisor.
->
-> Patch #1..2 adds sec-rng kernel driver for Trustzone based SoCs.
-> For security awareness SoCs on ARMv8 with TrustZone enabled,
-> peripherals like entropy sources is not accessible from normal world
-> (linux) and rather accessible from secure world (HYP/ATF/TEE) only.
-> This driver aims to provide a generic interface to Arm Trusted
-> Firmware or Hypervisor rng service.
->
->
-> changes since v1:
-> - rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs can reuse
->   this driver.
->   - refine coding style and unnecessary check.
->
->   changes since v2:
->   - remove unused comments.
->   - remove redundant variable.
->
->   changes since v3:
->   - add dt-bindings for MediaTek rng with TrustZone enabled.
->   - revise HWRNG SMC call fid.
->
->   changes since v4:
->   - move bindings to the arm/firmware directory.
->   - revise driver init flow to check more property.
->
->   changes since v5:
->   - refactor to more generic security rng driver which
->     is not platform specific.
->
-> *** BLURB HERE ***
->
-> Neal Liu (2):
->   dt-bindings: rng: add bindings for sec-rng
->   hwrng: add sec-rng driver
->
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
 
-There is no reason to model a SMC call as a driver, and represent it
-via a DT node like this.
-
-It would be much better if this SMC interface is made truly generic,
-and wired into the arch_get_random() interface, which can be used much
-earlier.
-
-
->  .../devicetree/bindings/rng/sec-rng.yaml      |  53 ++++++
->  drivers/char/hw_random/Kconfig                |  13 ++
->  drivers/char/hw_random/Makefile               |   1 +
->  drivers/char/hw_random/sec-rng.c              | 155 ++++++++++++++++++
->  4 files changed, 222 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/sec-rng.yaml
->  create mode 100644 drivers/char/hw_random/sec-rng.c
+> Hi all,
 >
-> --
-> 2.18.0
+> After merging the mmc tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>
+> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c: In function
+> 'brcmf_sdiod_probe':
+> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7:
+> error: 'SDIO_DEVICE_ID_CYPRESS_4373' undeclared (first use in this
+> function); did you mean 'SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373'?
+>   915 |  case SDIO_DEVICE_ID_CYPRESS_4373:
+>       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |       SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373
+> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7: note: each undeclared identifier is reported only once for each function it appears in
+>
+> Caused by commit
+>
+>   1eb911258805 ("mmc: sdio: Fix Cypress SDIO IDs macros in common include file")
+>
+> interacting with commit
+>
+>   2a7621ded321 ("brcmfmac: set F2 blocksize for 4373")
+>
+> from the net-next tree.
+>
+> I have applied the following merge fix patch.
+
+Looks good to me, thanks. Ulf, I guess you will notify Linus about the
+conflict in your pull request?
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
