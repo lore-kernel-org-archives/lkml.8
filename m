@@ -2,51 +2,84 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7EAD206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0289206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyxRObsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFBPak (ORCPT
+        id S1726342AbgFBPeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:30:40 -0400
-Received: from mga12.intel.com ([192.55.52.136]:16053 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFBPaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:30:39 -0400
-IronPort-SDR: /IG68SwVwgXGShQyWxhrFQpbSBnjVN+av9WFZ+RYHP0a6IN3X5lkUS0lTxM8rVUo6hagyilDW3
- cFDTYTOXBd8A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 08:30:26 -0700
-IronPort-SDR: d5EdmYzh9a8PyRQSBpfkNaZ5Zx17bWFjOT8KVeU+Lrb7xj0hvAMCoxRMHpd0lWwK9Zpn3o7iNH
- 4LXThYfTl8Qw==
-X-IronPort-AV: E=Sophos;i="5.73,464,1583222400"; 
-   d="scan'208";a="257661820"
-Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.200.182]) ([10.254.200.182])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 08:30:15 -0700
-Subject: Re: [PATCH -next] IB/hfi1: Use free_netdev() in hfi1_netdev_free()
-To:     YueHaibing <yuehaibing@huawei.com>, mike.marciniszyn@intel.com,
-        dledford@redhat.com, jgg@ziepe.ca, sadanand.warrier@intel.com,
-        grzegorz.andrejczuk@intel.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, kernel-janitors@vger.kernel.org
-References: <20200601135644.GD4872@ziepe.ca>
- <20200602061635.31224-1-yuehaibing@huawei.com>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <75257c20-3cf2-7ecc-0d66-e1f4155ba105@intel.com>
-Date:   Tue, 2 Jun 2020 11:30:13 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 11:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgFBPeX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:34:23 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BB6C08C5C0;
+        Tue,  2 Jun 2020 08:34:22 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y18so1490078plr.4;
+        Tue, 02 Jun 2020 08:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MU0MW0wjNs//zXQKIkp9U2Odwc0Dta290PoaIbMQMd4=;
+        b=XyxRObsgdYuhcaVLT7lAyUBOe15I/7IvPXSLP+eNysdLV+gksXxMClqCXODKHr6Cqp
+         +PMB0OHR3pObnA5STWXoVB3OXfhSl59ZVcUXQ6Xvu70XtiW+x9IGN66+oRoYP7mTdbZI
+         n64MB5GAmhslVfgHXlN4OJE435xozybPgd4du5JXrdjdS0cJZYlHDdrEd/mX7o12xo9/
+         vt0pxCXIY47be6cgXLoKZaqMN1COK0QZ3hQ7as/imeDypmc1CJ4MiADhl2g6LVIXclS8
+         SVo1/y9Qbs8H/obNDcm//PCqLEu1uJBz/GAFigaGnV8q4Y+ovyXPO92jM90wUyXOfdHg
+         f6zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MU0MW0wjNs//zXQKIkp9U2Odwc0Dta290PoaIbMQMd4=;
+        b=mJpzx1RPBkX9gmBaaDGhoEI4xQCqMEXUeHfWZXh/sFoim+Tjjw9Vy9eeAhILRY+bSK
+         nzyR76naaZf+h2fnrHNWeSfPsq+errVfuk77sO+BgoH36a4VJweT/mDYRQmR+sCkFUYQ
+         Aovh1Xv/8uivnVNNUBLyfep3psCto3cXTWyr33ZEUbxlWVEwgxJDPLUVBuT6n3XfW5Il
+         WQK7pd8gsLYeVWMH5kJFabScFQDt0vXhRyDQAQJ/tQINwuw5jZFpOvRrIontULnm0V3o
+         7j4QsRh+428w0zefpDeUz5u24bh+40FWDl4MZUAiA8zfeS9WhADYM218drieFUCItNRI
+         zaPg==
+X-Gm-Message-State: AOAM532w9bFi7CR4sa+UQAkiiDqlpKeRBnetg6r02tjhcGe105x5ZUhi
+        wsYS7mtIwWraoOnKzbWzo+w=
+X-Google-Smtp-Source: ABdhPJzJoeSmatK65R/6VBJSUdG0R+dAnJjPWqT3iIbTmD4TKabyqzbccL5mf9lgGaXTEEMt88sVKQ==
+X-Received: by 2002:a17:90a:df16:: with SMTP id gp22mr6195976pjb.6.1591112061727;
+        Tue, 02 Jun 2020 08:34:21 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id o20sm2654113pjw.19.2020.06.02.08.34.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 08:34:21 -0700 (PDT)
+Subject: Re: [PATCH 2/4] serial: core: fix broken sysrq port unlock
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+References: <20200602140058.3656-1-johan@kernel.org>
+ <20200602140058.3656-3-johan@kernel.org>
+ <CAHp75VeXYn46wQ5EXkk_MOQ49ybtyTeoQS6BS1X9DkC6hbeF-w@mail.gmail.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <b016ad68-124a-5c98-f49b-f7286d995223@gmail.com>
+Date:   Tue, 2 Jun 2020 16:34:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200602061635.31224-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAHp75VeXYn46wQ5EXkk_MOQ49ybtyTeoQS6BS1X9DkC6hbeF-w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,41 +87,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/2/2020 2:16 AM, YueHaibing wrote:
-> dummy_netdev shold be freed by free_netdev() instead of
-> kfree(). Also remove unneeded variable 'priv'
+On 6/2/20 3:48 PM, Andy Shevchenko wrote:
+> On Tue, Jun 2, 2020 at 5:03 PM Johan Hovold <johan@kernel.org> wrote:
+>>
+>> Commit d6e1935819db ("serial: core: Allow processing sysrq at port
+>> unlock time") worked around a circular locking dependency by adding
+>> helpers used to defer sysrq processing to when the port lock was
+>> released.
+>>
+>> A later commit unfortunately converted these inline helpers to exported
+>> functions despite the fact that the unlock helper was restoring irq
+>> flags, something which needs to be done in the same function that saved
+>> them (e.g. on SPARC).
 > 
-> Fixes: 4730f4a6c6b2 ("IB/hfi1: Activate the dummy netdev")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   drivers/infiniband/hw/hfi1/netdev_rx.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/hfi1/netdev_rx.c b/drivers/infiniband/hw/hfi1/netdev_rx.c
-> index 58af6a454761..63688e85e8da 100644
-> --- a/drivers/infiniband/hw/hfi1/netdev_rx.c
-> +++ b/drivers/infiniband/hw/hfi1/netdev_rx.c
-> @@ -371,12 +371,9 @@ int hfi1_netdev_alloc(struct hfi1_devdata *dd)
->   
->   void hfi1_netdev_free(struct hfi1_devdata *dd)
->   {
-> -	struct hfi1_netdev_priv *priv;
-> -
->   	if (dd->dummy_netdev) {
-> -		priv = hfi1_netdev_priv(dd->dummy_netdev);
->   		dd_dev_info(dd, "hfi1 netdev freed\n");
-> -		kfree(dd->dummy_netdev);
-> +		free_netdev(dd->dummy_netdev);
->   		dd->dummy_netdev = NULL;
->   	}
->   }
-> 
+> I'm not familiar with sparc, can you elaborate a bit what is ABI /
+> architecture lock implementation background?
 
-For the kfree->free_netdev, you probably want to add:
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+I remember that was a limitation a while ago to save/restore flags from
+the same function. Though, I vaguely remember the reason.
+I don't see this limitation in Documentation/*
 
-Also can add:
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Google suggests that it's related to storage location:
+https://stackoverflow.com/a/34279032
 
-Thanks
+Which is definitely non-issue with tty drivers: they call
+spin_lock_irqsave() with local flags and pass them to
+uart_unlock_and_check_sysrq().
+
+Looking into arch/sparc I also can't catch if it's still a limitation.
+
+Also, looking around, xa_unlock_irqrestore() is called not from the same
+function. Maybe this issue is in history?
+
+Johan, is it a theoretical problem or something you observe?
+Also, some comments would be nice near functions in the header.
+
+Thanks,
+          Dmitry
