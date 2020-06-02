@@ -2,88 +2,145 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48223C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8D6207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245A0206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="e1DbqIRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbgFBHv2 (ORCPT
+        id S1726217AbgFBHx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:51:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52438 "EHLO mx2.suse.de"
+        Tue, 2 Jun 2020 03:53:57 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:44999 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgFBHv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:51:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B4E5BAB64;
-        Tue,  2 Jun 2020 07:51:28 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 09:51:24 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk, hare@suse.de,
-        ming.lei@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] blk-mq: get ctx in order to handle BLK_MQ_S_INACTIVE
- in blk_mq_get_tag()
-Message-ID: <20200602075124.3igsbsgbzf3varib@beryllium.lan>
-References: <20200602061749.32029-1-dongli.zhang@oracle.com>
+        id S1725835AbgFBHx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 03:53:57 -0400
+Received: from [192.168.1.3] (212-5-158-42.ip.btc-net.bg [212.5.158.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 4D338CFE8;
+        Tue,  2 Jun 2020 10:53:51 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1591084432; bh=RH0hhqTq1DD2tdDYcXx1G756vuN0qC8RxBtuft0KnwY=;
+        h=Subject:To:Cc:From:Date:From;
+        b=e1DbqIRiUaDDhPkmnCuyziP0s5Wi6zNh6pwLPN+M+trFXXaRWUaOOG5S2zr2IAgN+
+         +dk3X/8j8pZsc07I9/6Nrimd2623dIppZETZhKwUM8IiZAguIQ0KL0OOXAR1Uz3f3C
+         cOR6D8ccti6hPOG65EaFECDHW4OZg9mo72BkYPEI+FQqCs5hChJT6NBk4LnsVmmwRk
+         Cjws5XqrnXUscHwlV+0PkCHv7IhTUfkF4sqyuTDh1UvQpZ3T3VTVpS/USCMGDZ7HIs
+         ukf0UdmXDyuRAynd4H6yG0cpCdcw19hZq7aOpqULeleN+/MnGHBuMbpaX6G+yV6DVP
+         nY3AocR6ZoSaA==
+Subject: Re: [PATCH v4 08/10] PCI: qcom: Add ipq8064 rev2 variant and set tx
+ term offset
+To:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200514200712.12232-1-ansuelsmth@gmail.com>
+ <20200514200712.12232-9-ansuelsmth@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <e672c516-29a4-e7d2-ee8b-3bce73bdf4e2@mm-sol.com>
+Date:   Tue, 2 Jun 2020 10:53:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602061749.32029-1-dongli.zhang@oracle.com>
+In-Reply-To: <20200514200712.12232-9-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 11:17:49PM -0700, Dongli Zhang wrote:
-> When scheduler is set, we hit below page fault when we offline cpu.
-> 
-> [ 1061.007725] BUG: kernel NULL pointer dereference, address: 0000000000000040
-> [ 1061.008710] #PF: supervisor read access in kernel mode
-> [ 1061.009492] #PF: error_code(0x0000) - not-present page
-> [ 1061.010241] PGD 0 P4D 0
-> [ 1061.010614] Oops: 0000 [#1] SMP PTI
-> [ 1061.011130] CPU: 0 PID: 122 Comm: kworker/0:1H Not tainted 5.7.0-rc7+ #2'
-> ... ...
-> [ 1061.013760] Workqueue: kblockd blk_mq_run_work_fn
-> [ 1061.014446] RIP: 0010:blk_mq_put_tag+0xf/0x30
-> ... ...
-> [ 1061.017726] RSP: 0018:ffffa5c18037fc70 EFLAGS: 00010287
-> [ 1061.018475] RAX: 0000000000000000 RBX: ffffa5c18037fcf0 RCX: 0000000000000004
-> [ 1061.019507] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff911535dc1180
-> ... ...
-> [ 1061.028454] Call Trace:
-> [ 1061.029307]  blk_mq_get_tag+0x26e/0x280
-> [ 1061.029866]  ? wait_woken+0x80/0x80
-> [ 1061.030378]  blk_mq_get_driver_tag+0x99/0x110
-> [ 1061.031009]  blk_mq_dispatch_rq_list+0x107/0x5e0
-> [ 1061.031672]  ? elv_rb_del+0x1a/0x30
-> [ 1061.032178]  blk_mq_do_dispatch_sched+0xe2/0x130
-> [ 1061.032844]  __blk_mq_sched_dispatch_requests+0xcc/0x150
-> [ 1061.033638]  blk_mq_sched_dispatch_requests+0x2b/0x50
-> [ 1061.034239]  __blk_mq_run_hw_queue+0x75/0x110
-> [ 1061.034867]  process_one_work+0x15c/0x370
-> [ 1061.035450]  worker_thread+0x44/0x3d0
-> [ 1061.035980]  kthread+0xf3/0x130
-> [ 1061.036440]  ? max_active_store+0x80/0x80
-> [ 1061.037018]  ? kthread_bind+0x10/0x10
-> [ 1061.037554]  ret_from_fork+0x35/0x40
-> [ 1061.038073] Modules linked in:
-> [ 1061.038543] CR2: 0000000000000040
-> [ 1061.038962] ---[ end trace d20e1df7d028e69f ]---
-> 
-> This is because blk_mq_get_driver_tag() would be used to allocate tag once
-> scheduler (e.g., mq-deadline) is set. However, in order to handle
-> BLK_MQ_S_INACTIVE in blk_mq_get_tag(), we need to set data->ctx for
-> blk_mq_put_tag().
-> 
-> Fixes: bf0beec0607db3c6 ("blk-mq: drain I/O when all CPUs in a hctx are offline")
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Hi,
 
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
+On 5/14/20 11:07 PM, Ansuel Smith wrote:
+> Add tx term offset support to pcie qcom driver need in some revision of
+> the ipq806x SoC. Ipq8064 have tx term offset set to 7. Ipq8064-v2 revision
+> and ipq8065 have the tx term offset set to 0.
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index f5398b0d270c..ab6f1bdd24c3 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -45,6 +45,9 @@
+>  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+>  
+>  #define PCIE20_PARF_PHY_CTRL			0x40
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
+
+I see you changed the mask, did you found the issue in previous v3 mask
+and shift?
+
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+> +
+>  #define PCIE20_PARF_PHY_REFCLK			0x4C
+>  #define PHY_REFCLK_SSP_EN			BIT(16)
+>  #define PHY_REFCLK_USE_PAD			BIT(12)
+> @@ -363,7 +366,8 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	val &= ~BIT(0);
+>  	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+>  
+> -	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
+> +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064") |
+
+this should be logical OR
+
+> +	    of_device_is_compatible(node, "qcom,pcie-ipq8064-v2")) {
+>  		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
+>  			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
+>  			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
+> @@ -374,9 +378,18 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+>  	}
+>  
+> +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
+> +		/* set TX termination offset */
+> +		val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +		val &= ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
+> +		val |= PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
+> +		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	}
+> +
+>  	/* enable external reference clock */
+>  	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> -	val |= BIT(16);
+> +	val &= ~PHY_REFCLK_USE_PAD;
+> +	val |= PHY_REFCLK_SSP_EN;
+>  	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+>  
+>  	/* wait for clock acquisition */
+> @@ -1452,6 +1465,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
+>  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
+> +	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ops_2_1_0 },
+>  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
+>  	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
+> 
+
+-- 
+regards,
+Stan
