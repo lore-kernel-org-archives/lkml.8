@@ -2,222 +2,133 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C345AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE99C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4922068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4372068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgFBLbf (ORCPT
+        id S1726664AbgFBLbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgFBLbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:31:34 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61181C061A0E;
-        Tue,  2 Jun 2020 04:31:34 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 046472A17E6
-Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
-To:     kieran.bingham@ideasonboard.com,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        laurent.pinchart@ideasonboard.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dafna Hirschfeld <dafna3@gmail.com>
-References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
- <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
- <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
- <273a36d8-fc87-f9d4-0cf2-15beddf1661c@collabora.com>
- <f927c8e3-73de-598d-130d-97b5380579e5@collabora.com>
- <3b4c4447-677c-08b9-9366-95a012f8f018@ideasonboard.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <cdcc42bf-b0dc-41b7-5104-eff8aa42feb2@collabora.com>
-Date:   Tue, 2 Jun 2020 08:31:26 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 07:31:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:49630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgFBLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 07:31:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B08A931B;
+        Tue,  2 Jun 2020 04:31:37 -0700 (PDT)
+Received: from [10.37.12.87] (unknown [10.37.12.87])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54B5E3F52E;
+        Tue,  2 Jun 2020 04:31:27 -0700 (PDT)
+Subject: Re: [PATCH v8 4/8] PM / EM: add support for other devices than CPUs
+ in Energy Model
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200527095854.21714-1-lukasz.luba@arm.com>
+ <20200527095854.21714-5-lukasz.luba@arm.com>
+ <d45e5592-8e11-858b-d3a3-2ec9ce1d1f54@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <7201e161-6952-6e28-4036-bd0f0353ec30@arm.com>
+Date:   Tue, 2 Jun 2020 12:31:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <3b4c4447-677c-08b9-9366-95a012f8f018@ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d45e5592-8e11-858b-d3a3-2ec9ce1d1f54@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Daniel,
 
-On 6/2/20 8:24 AM, Kieran Bingham wrote:
-> Hi Helen, Dafna,
-> 
-> On 02/06/2020 11:55, Helen Koike wrote:
+On 6/1/20 10:44 PM, Daniel Lezcano wrote:
+> On 27/05/2020 11:58, Lukasz Luba wrote:
+>> Add support for other devices than CPUs. The registration function
+>> does not require a valid cpumask pointer and is ready to handle new
+>> devices. Some of the internal structures has been reorganized in order to
+>> keep consistent view (like removing per_cpu pd pointers).
 >>
->> On 6/2/20 7:52 AM, Dafna Hirschfeld wrote:
->>>
->>> On 01.06.20 14:16, Kaaira Gupta wrote:
->>>> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
->>>>> Hi,
->>>>> Thanks for the patch
->>>>>
->>>>> I don't know how real devices handle ARGB formats,
->>>>> I wonder if it should be the part of the debayer.
->>>>
->>>> Hi! qcam tries to support BA24 as it is one of the formats that vimc
->>>> lists as its supported formats wih --list-formats. Shouldn't BA24 be
->>>> possible to capture with vimc?
->>>
->>> Hi,
->>> Just to clarify, when listing the supported formats of a video node, the node lists
->>> the formats that the video node as an independent media entity support.
->>> It does not mean that the 'camera' as a whole (that is, the media topology graph) supports
->>> all the formats that the video node lists. When interacting with a video node or
->>> a subdevice node, one interacts only with that specific entity.
->>> In the case of vimc, the RGB video node as an independent entity supports BA24 so the format
->>> appears in the list of the its supported formats. But since the Debayer does not
->>> support it, the format can not be generated by the entire vimc topology.
->>> This is not a bug.
+>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>> ---
+> 
+> [ ... ]
+> 
+>>   }
+>>   EXPORT_SYMBOL_GPL(em_register_perf_domain);
+>> +
+>> +/**
+>> + * em_dev_unregister_perf_domain() - Unregister Energy Model (EM) for a device
+>> + * @dev		: Device for which the EM is registered
+>> + *
+>> + * Try to unregister the EM for the specified device (but not a CPU).
+>> + */
+>> +void em_dev_unregister_perf_domain(struct device *dev)
+>> +{
+>> +	if (IS_ERR_OR_NULL(dev) || !dev->em_pd)
+>> +		return;
+>> +
+>> +	if (_is_cpu_device(dev))
+>> +		return;
+>> +
+>> +	mutex_lock(&em_pd_mutex);
+> 
+> Is the mutex really needed?
+
+I just wanted to align this unregister code with register. Since there
+is debugfs dir lookup and the device's EM existence checks I thought it
+wouldn't harm just to lock for a while and make sure the registration
+path is not used. These two paths shouldn't affect each other, but with
+modules loading/unloading I wanted to play safe.
+I can change it maybe to just dmb() and the end of the function if it's
+a big performance problem in this unloading path. What do you think?
+
+> 
+> If this function is called that means there is no more user of the
+> em_pd, no?
+
+True, that EM users should already be unregistered i.e. thermal cooling.
+
+> 
+>> +	em_debug_remove_pd(dev);
+>> +
+>> +	kfree(dev->em_pd->table);
+>> +	kfree(dev->em_pd);
+>> +	dev->em_pd = NULL;
+>> +	mutex_unlock(&em_pd_mutex);
+>> +}
+>> +EXPORT_SYMBOL_GPL(em_dev_unregister_perf_domain);
 >>
->> This is also my understanding.
->>
->> You should have an -EPIPE error when start streaming though, it shouldn't fail silently.
 > 
-> Yes, we had -EPIPE, and that is what I think we were trying to resolve.
 > 
-> How would userspace be expected to detect what formats to use ? Should
-> the available formats on the capture node depend on the current linking
-> of the media graph?
 
-This is a good question, I don't recall v4l2 API defining this.
+Thank you for reviewing this.
 
-It would be a bit hard to implement in Vimc, specially when we have configfs
-for custom topology, since the capture would need to query all the pipeline.
-But could be implemented.
-
-> 
-> Otherwise, to know what formats are supported - userspace must first
-> 'get a list of formats' then try to 'set' the formats to know what is
-> possible?
-
-At the moment yes.
-
-> 
-> Or should (given VIMC is quite specialist anyway) userspace 'just know'
-> what is capable all the same?
-> 
-> That's possibly fine, as we can simply remove support for the ARGB
-> formats from the libcamera pipeline handler if it is never expected to
-> be supported.
-
-With the configfs feature, you could build a topology with sensor->capture,
-and ARGB would be supported.
-
-> 
-> But then as a further question - what formats will we expect VIMC to
-> support? VIVID has a (very) wide range of formats.
-> 
-> Would we ever expect VIMC to be as configurable?
-> Or is the scope limited to what we have today?
-
-I know it is very limited atm, but I would like to increase the range, I'm just
-with a limited bandwitdh to work on it.
-
-Thanks,
-Helen
-
-> 
-> --
-> Regards
-> 
-> Kieran
-> 
-> 
-> 
->> Regards,
->> Helen
->>
->>>
->>> Hope t was helpful,
->>> Dafna
->>>  
->>>>
->>>> If yes, which entity should support it, if not debayer? Should there be
->>>> a separate conversion entity, or should we keep the support in debayer
->>>> itself for efficiency issues?
->>>>
->>>>>
->>>>>
->>>>> On 28.05.20 20:57, Kaaira Gupta wrote:
->>>>>> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
->>>>>> not support it. Hence, add the support for Alpha (255).
->>>>>
->>>>> I would change the commit log to:
->>>>>
->>>>> Add support for V4L2_PIX_FMT_RGB24 format in the debayer
->>>>> and set the alpha channel to constant 255.
->>>>>
->>>>> Thanks,
->>>>> Dafna
->>>>>
->>>>>>
->>>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
->>>>>> ---
->>>>>>    .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
->>>>>>    1 file changed, 18 insertions(+), 9 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
->>>>>> index c3f6fef34f68..f34148717a40 100644
->>>>>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
->>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
->>>>>> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
->>>>>>        MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
->>>>>>        MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
->>>>>>        MEDIA_BUS_FMT_RGB888_1X32_PADHI,
->>>>>> +    MEDIA_BUS_FMT_ARGB8888_1X32
->>>>>>    };
->>>>>>    static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
->>>>>> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
->>>>>>        unsigned int i, index;
->>>>>>        vpix = vimc_pix_map_by_code(vdeb->src_code);
->>>>>> -    index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
->>>>>> -    for (i = 0; i < 3; i++) {
->>>>>> -        switch (vpix->pixelformat) {
->>>>>> -        case V4L2_PIX_FMT_RGB24:
->>>>>> -            vdeb->src_frame[index + i] = rgb[i];
->>>>>> -            break;
->>>>>> -        case V4L2_PIX_FMT_BGR24:
->>>>>> -            vdeb->src_frame[index + i] = rgb[2 - i];
->>>>>> -            break;
->>>>>> +
->>>>>> +    if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
->>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
->>>>>> +        vdeb->src_frame[index] = 255;
->>>>>> +        for (i = 0; i < 3; i++)
->>>>>> +            vdeb->src_frame[index + i + 1] = rgb[i];
->>>>>> +    } else {
->>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
->>>>>> +        for (i = 0; i < 3; i++) {
->>>>>> +            switch (vpix->pixelformat) {
->>>>>> +            case V4L2_PIX_FMT_RGB24:
->>>>>> +                vdeb->src_frame[index + i] = rgb[i];
->>>>>> +                break;
->>>>>> +            case V4L2_PIX_FMT_BGR24:
->>>>>> +                vdeb->src_frame[index + i] = rgb[2 - i];
->>>>>> +                break;
->>>>>> +            }
->>>>>>            }
->>>>>>        }
->>>>>>    }
->>>>>>
-> 
+Regards,
+Lukasz
