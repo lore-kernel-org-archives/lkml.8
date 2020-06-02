@@ -2,146 +2,296 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5525AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A6020679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:38:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HTQ6BOEf"
+	by mail.kernel.org (Postfix) with ESMTP id EB28720772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591094341;
+	bh=7akxGeDBAwqDHNPbY466qX2fnjCF1AbecUSRAueZ4ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A35geDYh2O0uDyA/IpV/OI+kphrXAD6I6bRB7nt8lLp9JMHIfxBW3+NLCy0pohGm1
+	 E4oGaVM0Qf0Ays5nRo0A5pxon5GzZL4W8X7+rx0Svxq8gs//5R9GcdGsoGQ1meihuf
+	 tQ89BvSr2oesQSGUqGMLdBopu3B02YKapstIkk1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgFBKiW (ORCPT
+        id S1726959AbgFBKjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:38:22 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58701 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgFBKiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:38:20 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200602103819euoutp01946f793968a21b8c4226f59b78ed9e0a~Us9XrXWDr0290602906euoutp013
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:38:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200602103819euoutp01946f793968a21b8c4226f59b78ed9e0a~Us9XrXWDr0290602906euoutp013
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591094299;
-        bh=srJNMlN35yPx2wBufa1+xyUmNboKPt4b/fJgTaYJwj0=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=HTQ6BOEfhJHzUPwFhSeT4t9bbPokCsqZl9PeMbsDCpRaH0Hp5L6227Uxb9m6wvwOc
-         cVT2Q6IjaXJwpQdKMZgvn9K+aG6ICbrktt1HOicRKed2k56zS6ri1h6ptRbO1F9ZSJ
-         TTG7cxSDiVqkw206eaksVvJeaw/54km0/uI58zdk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200602103819eucas1p1c7c078d397114df8c40cc227b64cf65a~Us9XjvqQt1569715697eucas1p1i;
-        Tue,  2 Jun 2020 10:38:19 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id E3.6D.61286.B1C26DE5; Tue,  2
-        Jun 2020 11:38:19 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200602103819eucas1p1613484842ec2169440d9597557b1c740~Us9XTovJY1306513065eucas1p1l;
-        Tue,  2 Jun 2020 10:38:19 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200602103819eusmtrp29f4bef2776ab5dcdb45cdb0d40edd7a5~Us9XS8WIG1507115071eusmtrp2v;
-        Tue,  2 Jun 2020 10:38:19 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-b5-5ed62c1b625a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C6.49.07950.B1C26DE5; Tue,  2
-        Jun 2020 11:38:19 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200602103818eusmtip1e7b600b92b20ab441ca5277343e72794~Us9W4WQcS2246822468eusmtip1f;
-        Tue,  2 Jun 2020 10:38:18 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 2/2] video: fbdev: amifb: add FIXMEs about {put,get}_user()
- failures
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Message-ID: <a514e3bf-2e1a-ff4d-5529-3e918d067d5e@samsung.com>
-Date:   Tue, 2 Jun 2020 12:38:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 2 Jun 2020 06:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgFBKi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:38:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 018D620679;
+        Tue,  2 Jun 2020 10:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591094337;
+        bh=7akxGeDBAwqDHNPbY466qX2fnjCF1AbecUSRAueZ4ks=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W3/70se8FzD74EQgzLoM4WhS0WIFPuiz7g0/2ciOHh3Xc0FSr/jthKdOtp5PmKmdY
+         QrDCOXwBnqXE/oLAjx/8js9OllASJ22QQ0+ivqnrDbzjBsC24dp0S161dymIlJhoAx
+         6Dnkltsajp8l/b7wPNhTx3EkkUsqk3dGVo0gK43c=
+Date:   Tue, 2 Jun 2020 12:38:55 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Crystal Guo <Crystal.Guo@mediatek.com>
+Subject: Re: [PATCH v6 2/2] hwrng: add sec-rng driver
+Message-ID: <20200602103855.GB2991896@kroah.com>
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+ <1591085678-22764-3-git-send-email-neal.liu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djPc7rSOtfiDA6dU7S48vU9m8WzW3uZ
-        LE70fWC1uLxrDpvF8idrmS3O/z3O6sDmcehwB6PH/e7jTB4nW7+xeHzeJOex6clbpgDWKC6b
-        lNSczLLUIn27BK6Mle+WMBac46w42b6DrYHxCnsXIyeHhICJxI3JUxi7GLk4hARWMEpM3tPA
-        DOF8YZSYP2cWVOYzo8TJL7vYYFrmfW9gArGFBJYzSvzZwwFR9JZR4t7VUywgCTYBK4mJ7asY
-        QWxhgTCJBS/vgDWICDhITLkxAWw3s8ACRokth5xBbF4BO4kZc7rAelkEVCSmrG4BqxcViJD4
-        9OAwK0SNoMTJmU/AajgFPCV29F5mgpgjLnHryXwoW15i+9s5YC9ICKxjl7j9aDYTxNUuEle2
-        r2eBsIUlXh3fAg0AGYn/O0GawRoYJf52vIDq3s4osXzyP6ifrSXunPsFZHMArdCUWL9LHyLs
-        KHHmwksmkLCEAJ/EjbeCEEfwSUzaNp0ZIswr0dEmBFGtJrFh2QY2mLVdO1cyT2BUmoXktVlI
-        3pmF5J1ZCHsXMLKsYhRPLS3OTU8tNsxLLdcrTswtLs1L10vOz93ECEw9p/8d/7SD8eulpEOM
-        AhyMSjy8G+5fiRNiTSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrxIUZpDhYlcV7j
-        RS9jhQTSE0tSs1NTC1KLYLJMHJxSDYyGuaY+040tyquyzDeJmS5KePluXoD382ObuNWiKy8q
-        MP8QfyV27PHV7V/zmzpXeFx2+Xg9Pe34h95zu4y1Fz77Zjzjp6/vkpe3NtrX5j2JkpF+vGb1
-        lAkqhSt8d97aua6Bbb8V168V6i90vQKnFRzdyFC331U7myFp4XO5Y7tOW0afS0y5/T1MiaU4
-        I9FQi7moOBEAuyosQzkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsVy+t/xu7rSOtfiDK7c4bW48vU9m8WzW3uZ
-        LE70fWC1uLxrDpvF8idrmS3O/z3O6sDmcehwB6PH/e7jTB4nW7+xeHzeJOex6clbpgDWKD2b
-        ovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2Mle+WMBac
-        46w42b6DrYHxCnsXIyeHhICJxLzvDUxdjFwcQgJLGSUWPzvJ0sXIAZSQkTi+vgyiRljiz7Uu
-        Noia14wSNx7MYANJsAlYSUxsX8UIYgsLhEkseHmHCcQWEXCQmHJjAjtIA7PAAkaJs20HWSG6
-        5zBK7Hh1A6yDV8BOYsacLhYQm0VARWLK6hawblGBCInDO2ZB1QhKnJz5BKyGU8BTYkfvZbAa
-        ZgF1iT/zLjFD2OISt57Mh4rLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucVG
-        esWJucWleel6yfm5mxiB0bbt2M8tOxi73gUfYhTgYFTi4d1w/0qcEGtiWXFl7iFGCQ5mJRFe
-        p7On44R4UxIrq1KL8uOLSnNSiw8xmgI9N5FZSjQ5H5gI8kriDU0NzS0sDc2NzY3NLJTEeTsE
-        DsYICaQnlqRmp6YWpBbB9DFxcEo1MDY/tS/cLtAV9c3x8PSYtAK9eRVCL2eb/Vnz4WfbgmUz
-        pWz2djyZ8qD59aliXpOkXD8x88Izs4680Vy7VeGHptPPE68zL65a+SOkvyyWdbIvoyy/lWwt
-        j1jRU/Neq/7Q6Ftt16/d1tOaLaRV4hKb6C10ybrL6NEpIRbGTp7ils0WTGcWyX13VGIpzkg0
-        1GIuKk4EAGB0mu3MAgAA
-X-CMS-MailID: 20200602103819eucas1p1613484842ec2169440d9597557b1c740
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200504232908eucas1p296927bc7c736ad924cefaea9a546459d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200504232908eucas1p296927bc7c736ad924cefaea9a546459d
-References: <CGME20200504232908eucas1p296927bc7c736ad924cefaea9a546459d@eucas1p2.samsung.com>
-        <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591085678-22764-3-git-send-email-neal.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we lack the hardware (or proper emulator setup) for
-testing needed changes add FIXMEs to document the issues
-(so at least they are not forgotten).
+On Tue, Jun 02, 2020 at 04:14:38PM +0800, Neal Liu wrote:
+> For security awareness SoCs on ARMv8 with TrustZone enabled,
+> peripherals like entropy sources is not accessible from normal world
+> (linux) and rather accessible from secure world (HYP/ATF/TEE) only.
+> This driver aims to provide a generic interface to Arm Trusted
+> Firmware or Hypervisor rng service.
+> 
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
+>  drivers/char/hw_random/Kconfig   |   13 ++++
+>  drivers/char/hw_random/Makefile  |    1 +
+>  drivers/char/hw_random/sec-rng.c |  155 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 169 insertions(+)
+>  create mode 100644 drivers/char/hw_random/sec-rng.c
+> 
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 9bc46da..cb9c8a9 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -474,6 +474,19 @@ config HW_RANDOM_KEYSTONE
+>  	help
+>  	  This option enables Keystone's hardware random generator.
+>  
+> +config HW_RANDOM_SECURE
+> +	tristate "Arm Security Random Number Generator support"
+> +	depends on HAVE_ARM_SMCCC || COMPILE_TEST
+> +	default HW_RANDOM
+> +	help
+> +	  This driver provides kernel-side support for the Arm Security
+> +	  Random Number Generator.
+> +
+> +	  To compile this driver as a module, choose M here. the
+> +	  module will be called sec-rng.
+> +
+> +	  If unsure, say Y.
 
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/amifb.c |    2 ++
- 1 file changed, 2 insertions(+)
+Why Y?
 
-Index: b/drivers/video/fbdev/amifb.c
-===================================================================
---- a/drivers/video/fbdev/amifb.c
-+++ b/drivers/video/fbdev/amifb.c
-@@ -1866,6 +1866,7 @@ static int ami_get_var_cursorinfo(struct
- 				"clrb %0 ; swap %1 ; lslw #1,%1 ; roxlb #1,%0 ; "
- 				"swap %1 ; lslw #1,%1 ; roxlb #1,%0"
- 				: "=d" (color), "=d" (datawords) : "1" (datawords));
-+			/* FIXME: check the return value + test the change */
- 			put_user(color, data++);
- 		}
- 		if (bits > 0) {
-@@ -1923,6 +1924,7 @@ static int ami_set_var_cursorinfo(struct
- 		bits = 16; words = delta; datawords = 0;
- 		for (width = (short)var->width - 1; width >= 0; width--) {
- 			unsigned long tdata = 0;
-+			/* FIXME: check the return value + test the change */
- 			get_user(tdata, data);
- 			data++;
- 			asm volatile (
+
+
+> +
+>  endif # HW_RANDOM
+>  
+>  config UML_RANDOM
+> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+> index a7801b4..04533d1 100644
+> --- a/drivers/char/hw_random/Makefile
+> +++ b/drivers/char/hw_random/Makefile
+> @@ -41,3 +41,4 @@ obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+>  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+>  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+>  obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
+> +obj-$(CONFIG_HW_RANDOM_SECURE) += sec-rng.o
+> diff --git a/drivers/char/hw_random/sec-rng.c b/drivers/char/hw_random/sec-rng.c
+> new file mode 100644
+> index 0000000..c6d3872
+> --- /dev/null
+> +++ b/drivers/char/hw_random/sec-rng.c
+> @@ -0,0 +1,155 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 MediaTek Inc.
+> + */
+> +
+> +#include <linux/arm-smccc.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define SMC_RET_NUM	4
+> +#define SEC_RND_SIZE	(sizeof(u32) * SMC_RET_NUM)
+> +
+> +#define HWRNG_SMC_FAST_CALL_VAL(func_num) \
+> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_32, \
+> +			   ARM_SMCCC_OWNER_SIP, (func_num))
+> +
+> +#define to_sec_rng(p)	container_of(p, struct sec_rng_priv, rng)
+> +
+> +typedef void (sec_rng_fn)(unsigned long, unsigned long, unsigned long,
+> +			  unsigned long, unsigned long, unsigned long,
+> +			  unsigned long, unsigned long,
+> +			  struct arm_smccc_res *);
+
+Why not throw some more unsigned longs in there?  :)
+
+Seriously, no variable names for these?  Why not?
+
+And given that you only use the first parameter, why have 7 of them that
+are not used at all?  That feels pointless and needlessly complex.
+
+> +
+> +struct sec_rng_priv {
+> +	u16 func_num;
+> +	sec_rng_fn *rng_fn;
+> +	struct hwrng rng;
+> +};
+
+Nit, if you put 'struct hwrng' at the top of the structure, your
+"to_sec_rng()" macro resolves to a simple cast, no math at all.
+
+> +
+> +/* Simple wrapper functions to be able to use a function pointer */
+> +static void sec_rng_smc(unsigned long a0, unsigned long a1,
+> +			unsigned long a2, unsigned long a3,
+> +			unsigned long a4, unsigned long a5,
+> +			unsigned long a6, unsigned long a7,
+> +			struct arm_smccc_res *res)
+> +{
+> +	arm_smccc_smc(a0, a1, a2, a3, a4, a5, a6, a7, res);
+> +}
+> +
+> +static void sec_rng_hvc(unsigned long a0, unsigned long a1,
+> +			unsigned long a2, unsigned long a3,
+> +			unsigned long a4, unsigned long a5,
+> +			unsigned long a6, unsigned long a7,
+> +			struct arm_smccc_res *res)
+> +{
+> +	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
+> +}
+> +
+> +static bool __sec_get_rnd(struct sec_rng_priv *priv, uint32_t *val)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	priv->rng_fn(HWRNG_SMC_FAST_CALL_VAL(priv->func_num),
+> +			0, 0, 0, 0, 0, 0, 0, &res);
+
+See, all 0's :(
+
+You could hard-code them in the functions above instead.
+
+But, all of this pointer indirection is really odd, why is it needed at
+all?  Why not just call one or the other depending on the "type" at
+runtime?  Wouldn't that actually be faster (hint, it is...), if you
+cared about speed here (hint, I doubt it matters).
+
+> +
+> +	if (!res.a0 && !res.a1 && !res.a2 && !res.a3)
+> +		return false;
+> +
+> +	val[0] = res.a0;
+> +	val[1] = res.a1;
+> +	val[2] = res.a2;
+> +	val[3] = res.a3;
+
+So no values out of the random number generator can be 0?  Feels like an
+odd thing for a random number not to be allowed to do, why this
+restriction?
+
+> +
+> +	return true;
+> +}
+> +
+> +static int sec_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+> +{
+> +	struct sec_rng_priv *priv = to_sec_rng(rng);
+> +	u32 val[4] = {0};
+> +	int retval = 0;
+> +	int i;
+> +
+> +	while (max >= SEC_RND_SIZE) {
+> +		if (!__sec_get_rnd(priv, val))
+> +			return retval;
+> +
+> +		for (i = 0; i < SMC_RET_NUM; i++) {
+> +			*(u32 *)buf = val[i];
+> +			buf += sizeof(u32);
+
+Wait, what happens if buf is not a multiple of 4?  Didn't you just
+overwrite some memory above with the previous line?
+
+> +		}
+> +
+> +		retval += SEC_RND_SIZE;
+> +		max -= SEC_RND_SIZE;
+> +	}
+> +
+> +	return retval;
+> +}
+> +
+> +static int sec_rng_probe(struct platform_device *pdev)
+> +{
+> +	struct sec_rng_priv *priv;
+> +	const char *method;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	if (of_property_read_string(pdev->dev.of_node, "method", &method))
+> +		return -ENXIO;
+> +
+> +	if (!strncmp("smc", method, strlen("smc")))
+> +		priv->rng_fn = sec_rng_smc;
+> +	else if (!strncmp("hvc", method, strlen("hvc")))
+> +		priv->rng_fn = sec_rng_hvc;
+> +
+> +	if (IS_ERR(priv->rng_fn)) {
+
+How can this ever be true?
+
+Just put another else on the above list and you should be fine.
+
+> +		dev_err(&pdev->dev, "method %s is not supported\n", method);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u16(pdev->dev.of_node, "method-fid",
+> +				 &priv->func_num))
+> +		return -ENXIO;
+> +
+> +	if (of_property_read_u16(pdev->dev.of_node, "quality",
+> +				 &priv->rng.quality))
+> +		return -ENXIO;
+> +
+> +	priv->rng.name = pdev->name;
+> +	priv->rng.read = sec_rng_read;
+> +	priv->rng.priv = (unsigned long)&pdev->dev;
+> +
+> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register rng device: %d\n", ret);
+
+Doesn't the caller print out something if this fails?
+
+thanks,
+
+greg k-h
