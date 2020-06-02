@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D14EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAA02072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DDB20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgFBTv4 (ORCPT
+        id S1728646AbgFBTwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:51:56 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:28087 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728387AbgFBTvG (ORCPT
+        Tue, 2 Jun 2020 15:52:13 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36862 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728374AbgFBTvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:51:06 -0400
+        Tue, 2 Jun 2020 15:51:03 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 2 Jun 2020 12:51:03 -0700
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 2 Jun 2020 12:51:00 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 8C78740BEB;
-        Tue,  2 Jun 2020 12:51:04 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id A143540BEE;
+        Tue,  2 Jun 2020 12:51:00 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,203 +35,177 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v4 23/32] objtool: mcount: Remove unused file mapping
-Date:   Tue, 2 Jun 2020 12:50:16 -0700
-Message-ID: <b1f40de1b44575d235df42ec9d0c581392c3efe3.1591125127.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v4 18/32] objtool: mcount: Move nop_mcount()
+Date:   Tue, 2 Jun 2020 12:50:11 -0700
+Message-ID: <7109ceb239a88c2901eeb7f52c29f69cdb413cd3.1591125127.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1591125127.git.mhelsley@vmware.com>
 References: <cover.1591125127.git.mhelsley@vmware.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
  designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ELF data is now accessed completely through objtool's
-ELF code. We can remove the mapping of the original ELF
-file and propagate elf_open_read(), elf_close(), and malloc()
-up in place of mmap_file(), mmap_cleanup(), and umalloc()
-respectively. This also eliminates the last use of the
-umalloc() wrapper, reduces the number of global
-variables, and limits the use of globals to:
-
-	The struct elf for the file we're working on. This
-	saves passing it to nearly every function as a parameter.
-
-	Variables set depending on the ELF file endian, wordsize,
-	and arch so that the appropriate relocation structures,
-	offset sizes, architecture quirks, and nop encodings will
-	be used.
-
-	One command-line option
-
-Note that we're still using the recordmcount wrapper to change
-variable sizes and structure definitions we use to build the
-mcount relocation data and call instruction offsets.
+The nop_mcount() function overwrites mcount calls that should be
+ignored with no-ops. This operation varies by architecture and
+wordsize so we retain the function pointers used to implement
+the fundamental operation while nop_mcount() itself is responsible
+for walking the relocations, determining if they should be turned
+into no-ops, then calling the arch-specific code. Since none of
+these use the recordmcount ELF wrappers anymore we can move it out
+of the wrapper.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 99 +++---------------------------------
- tools/objtool/recordmcount.h |  4 +-
- 2 files changed, 9 insertions(+), 94 deletions(-)
+ tools/objtool/recordmcount.c | 47 +++++++++++++++++++++++++++++++++
+ tools/objtool/recordmcount.h | 50 ------------------------------------
+ 2 files changed, 47 insertions(+), 50 deletions(-)
 
 diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index bfed27f53f75..5ec44c9f2884 100644
+index 89762908290e..88998a505859 100644
 --- a/tools/objtool/recordmcount.c
 +++ b/tools/objtool/recordmcount.c
-@@ -41,104 +41,14 @@
- #define R_AARCH64_ABS64	257
- #endif
- 
--#define R_ARM_PC24		1
- #define R_ARM_THM_CALL		10
--#define R_ARM_CALL		28
- 
--static int fd_map;	/* File descriptor for file being modified. */
--static int mmap_failed; /* Boolean flag. */
- static char gpfx;	/* prefix for global symbol name (sometimes '_') */
- static const char *altmcount;	/* alternate mcount symbol name */
- extern int warn_on_notrace_sect; /* warn when section has mcount not being recorded */
--static void *file_map;	/* pointer of the mapped file */
--static size_t file_map_size; /* original ELF file size */
- 
- static struct elf *lf;
- 
--static void mmap_cleanup(void)
--{
--	if (!mmap_failed)
--		munmap(file_map, file_map_size);
--	else
--		free(file_map);
--	file_map = NULL;
--	if (lf)
--		elf_close(lf);
--	lf = NULL;
--}
--
--static void * umalloc(size_t size)
--{
--	void *const addr = malloc(size);
--	if (addr == 0) {
--		fprintf(stderr, "malloc failed: %zu bytes\n", size);
--		mmap_cleanup();
--		return NULL;
--	}
--	return addr;
--}
--
--/*
-- * Get the whole file as a programming convenience in order to avoid
-- * malloc+lseek+read+free of many pieces.  If successful, then mmap
-- * avoids copying unused pieces; else just read the whole file.
-- * Open for both read and write; new info will be appended to the file.
-- * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
-- * do not propagate to the file until an explicit overwrite at the last.
-- * This preserves most aspects of consistency (all except .st_size)
-- * for simultaneous readers of the file while we are appending to it.
-- * However, multiple writers still are bad.  We choose not to use
-- * locking because it is expensive and the use case of kernel build
-- * makes multiple writers unlikely.
-- */
--static void *mmap_file(char const *fname)
--{
--	struct stat sb;
--
--	/* Avoid problems if early cleanup() */
--	fd_map = -1;
--	mmap_failed = 1;
--	file_map = NULL;
--	file_map_size = 0;
--
--	lf = elf_open_read(fname, O_RDWR);
--	if (!lf) {
--		perror(fname);
--		return NULL;
--	}
--	fd_map = lf->fd;
--	if (fstat(fd_map, &sb) < 0) {
--		perror(fname);
--		goto out;
--	}
--	if (!S_ISREG(sb.st_mode)) {
--		fprintf(stderr, "not a regular file: %s\n", fname);
--		goto out;
--	}
--	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
--			fd_map, 0);
--	if (file_map == MAP_FAILED) {
--		mmap_failed = 1;
--		file_map = umalloc(sb.st_size);
--		if (!file_map) {
--			perror(fname);
--			goto out;
--		}
--		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
--			perror(fname);
--			mmap_cleanup();
--			goto out;
--		}
--	} else
--		mmap_failed = 0;
--	file_map_size = sb.st_size;
--out:
--	fd_map = -1;
--
--	return file_map;
--}
--
--
- static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
- static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
- static unsigned char *ideal_nop;
-@@ -525,8 +435,11 @@ static int do_file(char const *const fname)
- 	unsigned int reltype = 0;
- 	int rc = -1;
- 
--	if (!mmap_file(fname))
-+	lf = elf_open_read(fname, O_RDWR);
-+	if (!lf) {
-+		perror(fname);
- 		goto out;
-+	}
- 
- 	w = w4nat;
- 	w2 = w2nat;
-@@ -656,7 +569,9 @@ static int do_file(char const *const fname)
- 	}  /* end switch */
- 
- out:
--	mmap_cleanup();
-+	if (lf)
-+		elf_close(lf);
-+	lf = NULL;
- 	return rc;
+@@ -398,6 +398,53 @@ static int find_section_sym_index(unsigned const txtndx,
+ 	return missing_sym;
  }
  
++/*
++ * Read the relocation table again, but this time its called on sections
++ * that are not going to be traced. The mcount calls here will be converted
++ * into nops.
++ */
++static int nop_mcount(struct section * const rels,
++		      const char *const txtname)
++{
++	struct reloc *reloc;
++	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
++	unsigned mcountsym = 0;
++	int once = 0;
++
++	list_for_each_entry(reloc, &rels->reloc_list, list) {
++		int ret = -1;
++
++		if (!mcountsym)
++			mcountsym = get_mcountsym(reloc);
++
++		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
++			if (make_nop) {
++				ret = make_nop(txts, reloc->offset);
++				if (ret < 0)
++					return -1;
++			}
++			if (warn_on_notrace_sect && !once) {
++				printf("Section %s has mcount callers being ignored\n",
++				       txtname);
++				once = 1;
++				/* just warn? */
++				if (!make_nop)
++					return 0;
++			}
++		}
++
++		/*
++		 * If we successfully removed the mcount, mark the relocation
++		 * as a nop (don't do anything with it).
++		 */
++		if (!ret) {
++			reloc->type = rel_type_nop;
++			rels->changed = true;
++		}
++	}
++	return 0;
++}
++
+ /* 32 bit and 64 bit are very similar */
+ #include "recordmcount.h"
+ #define RECORD_MCOUNT_64
 diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 352d2042be35..e1be7243742b 100644
+index 6754bde0bacc..e033b600bd61 100644
 --- a/tools/objtool/recordmcount.h
 +++ b/tools/objtool/recordmcount.h
-@@ -188,13 +188,13 @@ static int do_func(unsigned const reltype)
- 	totrelsz = tot_relsize(&rel_entsize);
- 	if (totrelsz == 0)
- 		return 0;
--	mrel0 = umalloc(totrelsz);
-+	mrel0 = malloc(totrelsz);
- 	mrelp = mrel0;
- 	if (!mrel0)
- 		return -1;
+@@ -20,7 +20,6 @@
+ #undef append_func
+ #undef mcount_adjust
+ #undef sift_rel_mcount
+-#undef nop_mcount
+ #undef has_rel_mcount
+ #undef tot_relsize
+ #undef do_func
+@@ -37,7 +36,6 @@
+ #ifdef RECORD_MCOUNT_64
+ # define append_func		append64
+ # define sift_rel_mcount	sift64_rel_mcount
+-# define nop_mcount		nop_mcount_64
+ # define has_rel_mcount		has64_rel_mcount
+ # define tot_relsize		tot64_relsize
+ # define do_func		do64
+@@ -53,7 +51,6 @@
+ #else
+ # define append_func		append32
+ # define sift_rel_mcount	sift32_rel_mcount
+-# define nop_mcount		nop_mcount_32
+ # define has_rel_mcount		has32_rel_mcount
+ # define tot_relsize		tot32_relsize
+ # define do_func		do32
+@@ -171,53 +168,6 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
+ 	return mlocp;
+ }
  
- 	/* 2*sizeof(address) <= sizeof(Elf_Rel) */
--	mloc0 = umalloc(totrelsz>>1);
-+	mloc0 = malloc(totrelsz>>1);
- 	mlocp = mloc0;
- 	if (!mloc0) {
- 		free(mrel0);
+-/*
+- * Read the relocation table again, but this time its called on sections
+- * that are not going to be traced. The mcount calls here will be converted
+- * into nops.
+- */
+-static int nop_mcount(struct section * const rels,
+-		      const char *const txtname)
+-{
+-	struct reloc *reloc;
+-	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
+-	unsigned mcountsym = 0;
+-	int once = 0;
+-
+-	list_for_each_entry(reloc, &rels->reloc_list, list) {
+-		int ret = -1;
+-
+-		if (!mcountsym)
+-			mcountsym = get_mcountsym(reloc);
+-
+-		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
+-			if (make_nop) {
+-				ret = make_nop(txts, reloc->offset);
+-				if (ret < 0)
+-					return -1;
+-			}
+-			if (warn_on_notrace_sect && !once) {
+-				printf("Section %s has mcount callers being ignored\n",
+-				       txtname);
+-				once = 1;
+-				/* just warn? */
+-				if (!make_nop)
+-					return 0;
+-			}
+-		}
+-
+-		/*
+-		 * If we successfully removed the mcount, mark the relocation
+-		 * as a nop (don't do anything with it).
+-		 */
+-		if (!ret) {
+-			reloc->type = rel_type_nop;
+-			rels->changed = true;
+-		}
+-	}
+-	return 0;
+-}
+-
+ static char const *has_rel_mcount(const struct section * const rels)
+ {
+ 	const struct section *txts;
 -- 
 2.20.1
 
