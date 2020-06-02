@@ -2,96 +2,107 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4910EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F95206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B81A20679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgFBLLi (ORCPT
+        id S1726007AbgFBLUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:11:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5332 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbgFBLLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:11:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5220A24BEFBA87BEF44D;
-        Tue,  2 Jun 2020 19:11:35 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.18) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
- 19:11:26 +0800
-Subject: Re: [PATCH] ubi: fastmap: Don't produce the initial anchor PEB when
- fastmap is disabled
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <richard@nod.at>, <yi.zhang@huawei.com>
-References: <20200601091134.3794265-1-chengzhihao1@huawei.com>
- <20200602092346.GK11869@pengutronix.de>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <e7a9e993-8878-60c8-49c4-9471421f6e11@huawei.com>
-Date:   Tue, 2 Jun 2020 19:11:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 2 Jun 2020 07:20:20 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:38834 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgFBLUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 07:20:17 -0400
+Received: by mail-il1-f200.google.com with SMTP id c8so4423071ilm.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 04:20:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zMicM0NHbCSTRWS4r82QF2SXzu5Q7H29IEKe/4Smvew=;
+        b=ucFfMbqnsmAqqGHF83FqRhdyk961GH3yCI0ySMXBhC0eJC6zlEJ9Aiep+j536DMfP7
+         CaRWTlfbBRmbRJEdUUgdfGP4ovl/K0XBHgsjN7wPnPkArv4WzvTmnSiR0p7Du5LGfO8W
+         /YKhX2btu/2fBCcbb6V0tCZIrFgMNwhAZ+qzDQ8q4Q/R1qYuPH1rNGliYNQD3+93nVpm
+         jHPFF4vyS1dp/IWAelE4pkREiQRsmYc5m6wDj+yM7oZxYA9KkPWw5NRJShOZjZdHDmKm
+         UrfZo5YKdyDCN8TneuXEXZcqnT6J/kj0fZBZf36nMPCkMp4ui5as+HS8R37MsKRpqxiQ
+         KfVg==
+X-Gm-Message-State: AOAM533b4PACr4qWyxdxR9oScA5qhM056VAQSQ8yMq0fuinhMv4megCf
+        s4iajDQXEzdQanmZRNZDPlhP2DdIFFPKuyCh95eOmx+GZCcd
+X-Google-Smtp-Source: ABdhPJwd5/P+dkeerOSL4vtqpDMgbEz3TJ/gVhSpiVhzNtZKOPYyEBX9SOJi9pOTo8GI4a9Hf94RBj8rRJsT5JMG09Hx74jWrJFC
 MIME-Version: 1.0
-In-Reply-To: <20200602092346.GK11869@pengutronix.de>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.18]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a05:6638:101c:: with SMTP id r28mr26033924jab.84.1591096816692;
+ Tue, 02 Jun 2020 04:20:16 -0700 (PDT)
+Date:   Tue, 02 Jun 2020 04:20:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008ff8ea05a71818b5@google.com>
+Subject: linux-next test error: BUG: using smp_processor_id() in preemptible
+ [ADDR] code: syz-fuzzer/6792
+From:   syzbot <syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ÔÚ 2020/6/2 17:23, Sascha Hauer Ð´µÀ:
-> Hi,
->
-> On Mon, Jun 01, 2020 at 05:11:34PM +0800, Zhihao Cheng wrote:
->> Following process triggers a memleak caused by forgetting to release the
->> initial anchor PEB (CONFIG_MTD_UBI_FASTMAP is disabled):
->> 1. attach -> __erase_worker -> produce the initial anchor PEB
->> 2. detach -> ubi_fastmap_close (Do nothing, it should have released the
->>     initial anchor PEB)
->>
->> Don't produce the initial anchor PEB in __erase_worker() when fastmap
->> is disabled.
->>
->> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
->> Fixes: f9c34bb529975fe ("ubi: Fix producing anchor PEBs")
->> Reported-by: syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com
->> ---
->>   drivers/mtd/ubi/wl.c | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mtd/ubi/wl.c b/drivers/mtd/ubi/wl.c
->> index 5146cce5fe32..5ebe1084a8e7 100644
->> --- a/drivers/mtd/ubi/wl.c
->> +++ b/drivers/mtd/ubi/wl.c
->> @@ -1079,13 +1079,19 @@ static int __erase_worker(struct ubi_device *ubi, struct ubi_work *wl_wrk)
->>   	if (!err) {
->>   		spin_lock(&ubi->wl_lock);
->>   
->> -		if (!ubi->fm_anchor && e->pnum < UBI_FM_MAX_START) {
->> +#ifdef CONFIG_MTD_UBI_FASTMAP
->> +		if (!ubi->fm_disabled && !ubi->fm_anchor &&
->> +		    e->pnum < UBI_FM_MAX_START) {
-> Rather than introducing another #ifdef you could do a
->
-> 		if (IS_ENABLED(CONFIG_MTD_UBI_FASTMAP) &&
-> 		    !ubi->fm_disabled && !ubi->fm_anchor &&
-> 		    e->pnum < UBI_FM_MAX_START)
->
-> And I am not sure if the IS_ENABLED(CONFIG_MTD_UBI_FASTMAP) is necessary
-> at all because we do a ubi->fm_disabled = 1 when fastmap is disabled.
->
-> Regards,
->   Sascha
->
-Agree.
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    0e21d462 Add linux-next specific files for 20200602
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=127233ee100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ecc1aef35f550ee3
+dashboard link: https://syzkaller.appspot.com/bug?extid=82f324bb69744c5f6969
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com
+
+BUG: using smp_processor_id() in preemptible [00000000] code: syz-fuzzer/6792
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 1 PID: 6792 Comm: syz-fuzzer Not tainted 5.7.0-next-20200602-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3632
+ do_mkdirat+0x21e/0x280 fs/namei.c:3655
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4b02a0
+Code: Bad RIP value.
+RSP: 002b:000000c00010d4b8 EFLAGS: 00000212 ORIG_RAX: 0000000000000102
+RAX: ffffffffffffffda RBX: 000000c00002c000 RCX: 00000000004b02a0
+RDX: 00000000000001c0 RSI: 000000c000026b40 RDI: ffffffffffffff9c
+RBP: 000000c00010d510 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000212 R12: ffffffffffffffff
+R13: 000000000000005b R14: 000000000000005a R15: 0000000000000100
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
