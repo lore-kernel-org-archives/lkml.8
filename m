@@ -2,279 +2,252 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C79C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55291C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FF820772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3463020757
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mnyWLEJR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E79yeRNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgFBPOc (ORCPT
+        id S1726842AbgFBPPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
+        Tue, 2 Jun 2020 11:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgFBPOb (ORCPT
+        with ESMTP id S1725989AbgFBPPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:14:31 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E22BC08C5C0;
-        Tue,  2 Jun 2020 08:14:31 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 97DEA2A4;
-        Tue,  2 Jun 2020 17:14:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591110868;
-        bh=rlImFwhfRQxBQb9sdVDuEnAFjCn5jTY5cowyJfQPk5Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mnyWLEJRZ6LHD2Qbk84cwEvASC2j/e8/NJuRNx3TYHH2N1Qb8cHmhpq9c9RQKOgQl
-         jF3ygNK+eJq6aJORhBBaRF4Cfb3xHn38oB17rWUq7xWgiVHo0f0KZMOAOnWMPkRqnv
-         RIfdY3KLSquKEl2g8POvALcBqQzE5VIw8g7wfvjM=
-Date:   Tue, 2 Jun 2020 18:14:13 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        kieran.bingham@ideasonboard.com,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dafna Hirschfeld <dafna3@gmail.com>
-Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
-Message-ID: <20200602151413.GF12043@pendragon.ideasonboard.com>
-References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
- <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
- <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
- <273a36d8-fc87-f9d4-0cf2-15beddf1661c@collabora.com>
- <f927c8e3-73de-598d-130d-97b5380579e5@collabora.com>
- <3b4c4447-677c-08b9-9366-95a012f8f018@ideasonboard.com>
- <cdcc42bf-b0dc-41b7-5104-eff8aa42feb2@collabora.com>
- <20200602124504.GA12043@pendragon.ideasonboard.com>
- <3ba24fe9-46e5-0b08-2335-41bd26ef1831@collabora.com>
+        Tue, 2 Jun 2020 11:15:23 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C95C08C5C0;
+        Tue,  2 Jun 2020 08:15:22 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c21so6402756lfb.3;
+        Tue, 02 Jun 2020 08:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BcTnXTbCcX6TVC2V+ud9EG3G2NgSLu2+NdrhF7WjWME=;
+        b=E79yeRNfB0Bt4TTPXHzh3w4uix3YWLNBB7378EflH/nkEWYrm3a0glI3jA06tnosx8
+         KI6Ihl/wQ6uYLVkhZyP6Ysr1yTbL7u9IRuyrQohyAjVYXFYtkxmUJzFufdvmdGTZx+vU
+         dlt1vpTKa/IzaiQZ/z9XiFYTXAQXxrk/+C7xXNEidLxvyWrfEsL30pq6KjMAYm9hUs2K
+         /eVYFBWbC5/RgJp7/+T70LuRmwkm7zZjTO8WVHpHdouJ5sqHfse8uqfZM3YO+fY+yE2N
+         8fQRZrhcrGuuW5qIXF5nGXVfJDtPVONK2biqviONGg9It+tLc10da/x2c1/68e8n3nEP
+         SgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BcTnXTbCcX6TVC2V+ud9EG3G2NgSLu2+NdrhF7WjWME=;
+        b=BbH8wYFZZ2FbdOsD8B4LPx/yCbbcDQys2gurmCe4ve3KpbXYyTPUJXbVxmWaX7V40l
+         tOUJeCNXGcW26L5+woQ0SaTLcFLI7bptBqU2MrIamtcQpifSGSuWkrtP+0VmrcgdwWP3
+         FQEaaiWEfZx7c2UWGnGBeX4YI7ZGT0s2h7DocAdryBUuRdoZ8xsE6ezKk+hHC01N5QjW
+         e5nuatsbMYlJvl/Pn/11MjI9FAE6b7KjamqRpYHWxgFmwJxA+Hzqj3LAX7zYgm7GdOew
+         wip0ZmphdUrxjJiW17lY+t9oLlx3gbO8BZZw43GmCtSLaDr/jPnGYLOhRVMXRYv2MA8J
+         0DWw==
+X-Gm-Message-State: AOAM531qfrb38mO1rtKGL0qEJji6NXGBIMI4EGy14iXSLfOVzjGM0GKa
+        z8m47dG+VusScaV48cy+3jA=
+X-Google-Smtp-Source: ABdhPJykuRlwiQ25VUHXAwzDtxkHzzVb1KXvZ2OM6BMW50j9EXBsEF2dfbZ9Lxn9Itj3P15Xt6KJEQ==
+X-Received: by 2002:ac2:485a:: with SMTP id 26mr14075155lfy.57.1591110921343;
+        Tue, 02 Jun 2020 08:15:21 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
+        by smtp.googlemail.com with ESMTPSA id p15sm600578ljn.53.2020.06.02.08.15.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 08:15:17 -0700 (PDT)
+Subject: Re: [PATCH v2] soc: samsung: Add simple voltage coupler for
+ Exynos5800
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+References: <57cf3a15-5d9b-7636-4c69-60742e8cfae6@samsung.com>
+ <CGME20200602130931eucas1p1cd784c8f692fa91dc566504543a927de@eucas1p1.samsung.com>
+ <20200602130211.2727-1-m.szyprowski@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4a5874c1-6b4e-2da5-4dd1-dd5537fe6de7@gmail.com>
+Date:   Tue, 2 Jun 2020 18:15:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200602130211.2727-1-m.szyprowski@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3ba24fe9-46e5-0b08-2335-41bd26ef1831@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dafna,
-
-On Tue, Jun 02, 2020 at 03:16:03PM +0200, Dafna Hirschfeld wrote:
-> On 02.06.20 14:45, Laurent Pinchart wrote:
-> > On Tue, Jun 02, 2020 at 08:31:26AM -0300, Helen Koike wrote:
-> >> On 6/2/20 8:24 AM, Kieran Bingham wrote:
-> >>> On 02/06/2020 11:55, Helen Koike wrote:
-> >>>> On 6/2/20 7:52 AM, Dafna Hirschfeld wrote:
-> >>>>> On 01.06.20 14:16, Kaaira Gupta wrote:
-> >>>>>> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
-> >>>>>>> Hi,
-> >>>>>>> Thanks for the patch
-> >>>>>>>
-> >>>>>>> I don't know how real devices handle ARGB formats,
-> >>>>>>> I wonder if it should be the part of the debayer.
-> >>>>>>
-> >>>>>> Hi! qcam tries to support BA24 as it is one of the formats that vimc
-> >>>>>> lists as its supported formats wih --list-formats. Shouldn't BA24 be
-> >>>>>> possible to capture with vimc?
-> >>>>>
-> >>>>> Hi,
-> >>>>> Just to clarify, when listing the supported formats of a video node, the node lists
-> >>>>> the formats that the video node as an independent media entity support.
-> >>>>> It does not mean that the 'camera' as a whole (that is, the media topology graph) supports
-> >>>>> all the formats that the video node lists. When interacting with a video node or
-> >>>>> a subdevice node, one interacts only with that specific entity.
-> >>>>> In the case of vimc, the RGB video node as an independent entity supports BA24 so the format
-> >>>>> appears in the list of the its supported formats. But since the Debayer does not
-> >>>>> support it, the format can not be generated by the entire vimc topology.
-> >>>>> This is not a bug.
-> > 
-> > Is here a valid configuration for the vimc pipeline that produces BA24 ?
->
-> I think there isn't
+02.06.2020 16:02, Marek Szyprowski пишет:
+> Add a simple custom voltage regulator coupler for Exynos5800 SoCs, which
+> require coupling between "vdd_arm" and "vdd_int" regulators. This coupler
+> ensures that the voltage balancing for the coupled regulators is done
+> only when clients for the each regulator apply their constraints, so the
+> voltage values don't go beyond the bootloader-selected operation point
+> during the boot process. This also ensures proper voltage balancing if
+> any of the client driver is missing.
 > 
-> > I agree that not all pipeline configurations need to support every
-> > format, but we shouldn't report a format that can't be produced at all.
-> > 
-> > This being said, and as discussed before, the de-bayering subdev should
-> > just produce MEDIA_BUS_FMT_RGB888_1X24, and the video node should then
-> > implement the RGB pixel formats. BA24 should likely be one of the
-> > supported formats (or maybe BX24 ?).
->
-> So you mean that the video node should support it so when it receive RGB
-> format in the source pad it converts it to BA24 or BX24 ?
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v2:
+> - removed dependency on the regulator names as pointed by krzk, now it
+>   works with all coupled regulators. So far the coupling between the
+>   regulators on Exynos5800 based boards is defined only between
+>   "vdd_arm" and "vdd_int" supplies.
+> ---
+>  arch/arm/mach-exynos/Kconfig                  |  1 +
+>  drivers/soc/samsung/Kconfig                   |  3 +
+>  drivers/soc/samsung/Makefile                  |  1 +
+>  .../soc/samsung/exynos-regulator-coupler.c    | 56 +++++++++++++++++++
+>  4 files changed, 61 insertions(+)
+>  create mode 100644 drivers/soc/samsung/exynos-regulator-coupler.c
+> 
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index 76838255b5fa..f185cd3d4c62 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -118,6 +118,7 @@ config SOC_EXYNOS5800
+>  	bool "Samsung EXYNOS5800"
+>  	default y
+>  	depends on SOC_EXYNOS5420
+> +	select EXYNOS_REGULATOR_COUPLER
+>  
+>  config EXYNOS_MCPM
+>  	bool
+> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
+> index c7a2003687c7..264185664594 100644
+> --- a/drivers/soc/samsung/Kconfig
+> +++ b/drivers/soc/samsung/Kconfig
+> @@ -37,4 +37,7 @@ config EXYNOS_PM_DOMAINS
+>  	bool "Exynos PM domains" if COMPILE_TEST
+>  	depends on PM_GENERIC_DOMAINS || COMPILE_TEST
+>  
+> +config EXYNOS_REGULATOR_COUPLER
+> +	bool "Exynos SoC Regulator Coupler" if COMPILE_TEST
+> +	depends on ARCH_EXYNOS || COMPILE_TEST
+>  endif
+> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+> index edd1d6ea064d..ecc3a32f6406 100644
+> --- a/drivers/soc/samsung/Makefile
+> +++ b/drivers/soc/samsung/Makefile
+> @@ -9,3 +9,4 @@ obj-$(CONFIG_EXYNOS_PMU)	+= exynos-pmu.o
+>  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)	+= exynos3250-pmu.o exynos4-pmu.o \
+>  					exynos5250-pmu.o exynos5420-pmu.o
+>  obj-$(CONFIG_EXYNOS_PM_DOMAINS) += pm_domains.o
+> +obj-$(CONFIG_EXYNOS_REGULATOR_COUPLER) += exynos-regulator-coupler.o
+> diff --git a/drivers/soc/samsung/exynos-regulator-coupler.c b/drivers/soc/samsung/exynos-regulator-coupler.c
+> new file mode 100644
+> index 000000000000..370a0ce4de3a
+> --- /dev/null
+> +++ b/drivers/soc/samsung/exynos-regulator-coupler.c
+> @@ -0,0 +1,56 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020 Samsung Electronics Co., Ltd.
+> + *	      http://www.samsung.com/
+> + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
+> + *
+> + * Simple Samsung Exynos SoC voltage coupler. Ensures that all
+> + * clients set their constraints before balancing the voltages.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/coupler.h>
+> +#include <linux/regulator/driver.h>
+> +
+> +static int exynos_coupler_balance_voltage(struct regulator_coupler *coupler,
+> +					  struct regulator_dev *rdev,
+> +					  suspend_state_t state)
+> +{
+> +	struct coupling_desc *c_desc = &rdev->coupling_desc;
+> +	int ret, cons_uV = 0, cons_max_uV = INT_MAX;
+> +	bool skip_coupled = false;
+> +
+> +	/* get coupled regulator constraints */
+> +	ret = regulator_check_consumers(c_desc->coupled_rdevs[1], &cons_uV,
+> +					&cons_max_uV, state);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* skip adjusting coupled regulator if it has no constraints set yet */
+> +	if (cons_uV == 0)
+> +		skip_coupled = true;
 
-Yes. If you think about an equivalent hardware pipeline, the device
-would carry 24-bit RGB between the processing blocks, and only when the
-data reaches the output formatter (usually bundled with the DMA engine)
-would it be converted to one of the multiple RGB pixel formats. I think
-vimc should mimic that behaviour when it comes to pipeline
-configuration.
+Hello Marek,
 
-When it comes to generating data (or processing it, I believe vimc
-supports, or aims to support, memory-to-memory processing), we have two
-options:
+Does this mean that you're going to allow to violate the coupling
+constraints while coupled regulator has no consumers?
 
-- In the general case, data generated by the TPG would be processed by
-  the individual blocks in the pipeline until it reaches the capture
-  video node. To support processing steps that may generate more, less
-  or an equal amount of data as they consume, we would need to allocate
-  buffers between all the processing blocks. Those buffers don't need to
-  be full frame buffers though, they can be a few lines only, generating
-  the test pattern and processing it a few lines at a time.
+I don't think that you may want to skip the coupled balancing ever.
+Instead you may want to assume that the min-voltage constraint equals to
+the current regulator's voltage while the coupled regulator has no
+consumers.
 
-  This architecture would also support memory-to-memory processing.
+Yours variant of the balancer doesn't prevent the voltage dropping on
+regulator's enabling while coupled regulator doesn't have active
+consumers. This is the problem which we previously had once OPP code was
+changed to enable regulator.
 
-- When using the TPG, we could optimize the implementation by generating
-  data in the capture buffer directly, in the format configured on the
-  video node, without processing the data in every block. The drawback
-  is that processing artifacts (such as the artifacts due to colour
-  interpolation or scaling) wouldn't be generated, the captured image
-  would be cleaner than in a real hardware implementation. Whether that
-  is an issue or not is for us to decide.
+Secondly, yours variant of the balancer also doesn't handle the case
+where set_voltage() is invoked while one of the couples doesn't have
+active consumers because voltage of this couple may drop more than
+allowed on the voltage re-balancing.
 
-  If vimc doesn't need to support memory-to-memory processing, we could
-  implement the optimized behaviour only.
+I'd suggest to simply change the regulator_get_optimal_voltage() to
+limit the desired_min_uV to the current voltage if coupled regulator has
+no consumers.
 
-> It makes sense. I guess both BA24 and BX24 can be added, I see in the
-> pixfmt-rgb.html doc that probably the control  V4L2_CID_ALPHA_COMPONENT
-> should then be added.
+I don't think that any of the today's upstream kernel coupled-regulator
+users really need to support the case where a regulator couple is
+allowed *not* to have active consumers, so for now it should be fine to
+change the core code to accommodate the needs of the Exynos regulators
+(IMO). We may get back to this later on once there will be a real need
+support that case.
 
-Yes, V4L2_CID_ALPHA_COMPONENT would need to be added (on the video node)
-to produce BA24, otherwise the alpha component would have a fixed value.
+Please also note that I'm assuming that each of the coupled regulators
+doesn't have more than one consumer at a time in yours case (correct?),
+because yours solution won't work well in a case of multiple consumers.
+There is no universal solution for this bootstrapping problem yet.
 
-> >>>> This is also my understanding.
-> >>>>
-> >>>> You should have an -EPIPE error when start streaming though, it
-> >>>> shouldn't fail silently.
-> >>>
-> >>> Yes, we had -EPIPE, and that is what I think we were trying to resolve.
-> >>>
-> >>> How would userspace be expected to detect what formats to use ? Should
-> >>> the available formats on the capture node depend on the current linking
-> >>> of the media graph?
-> >>
-> >> This is a good question, I don't recall v4l2 API defining this.
-> > 
-> > A recent extension to VIDIOC_ENUMFMT allows enumerating pixel formats
-> > for a given media bus code, I think that's the way forward.
-> > 
-> >> It would be a bit hard to implement in Vimc, specially when we have configfs
-> >> for custom topology, since the capture would need to query all the pipeline.
-> >> But could be implemented.
-> >>
-> >>> Otherwise, to know what formats are supported - userspace must first
-> >>> 'get a list of formats' then try to 'set' the formats to know what is
-> >>> possible?
->
-> Yes, there is a doc file that explains that it should be done in a "bottom-up" way
-> ,that is,  starting with configuring the sensor, then adjusting the debayer
-> to the sensor output, then adjusting the scaler to the debayer outout and then
-> adjusting the video node output to the scaler output. One should also use the
-> 'try' version of the setting at the stage of adjusting the final configuration.
-> The detailed explanation is in Documentation/output/userspace-api/media/v4l/dev-subdev.html
+> +	return regulator_do_balance_voltage(rdev, state, skip_coupled);
+> +}
+> +
+> +static int exynos_coupler_attach(struct regulator_coupler *coupler,
+> +				 struct regulator_dev *rdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static struct regulator_coupler exynos_coupler = {
+> +	.attach_regulator = exynos_coupler_attach,
+> +	.balance_voltage  = exynos_coupler_balance_voltage,
+> +};
+> +
+> +static int __init exynos_coupler_init(void)
+> +{
+> +	if (!of_machine_is_compatible("samsung,exynos5800"))
+> +		return 0;
+> +
+> +	return regulator_coupler_register(&exynos_coupler);
+> +}
+> +arch_initcall(exynos_coupler_init);
+> 
 
-That won't help though. The video node will happily accept a
-VIDIOC_S_FMT call that sets a pixel format not compatible with the media
-bus format at the input of the video node. The error will only be raised
-at stream on time. The VIDIOC_ENUMFMT extension that allows enumerating
-pixel formats supported for a given media bus code is the only working
-option.
-
-> >> At the moment yes.
-> >>
-> >>> Or should (given VIMC is quite specialist anyway) userspace 'just know'
-> >>> what is capable all the same?
-> >>>
-> >>> That's possibly fine, as we can simply remove support for the ARGB
-> >>> formats from the libcamera pipeline handler if it is never expected to
-> >>> be supported.
-> >>
-> >> With the configfs feature, you could build a topology with sensor->capture,
-> >> and ARGB would be supported.
-> >>
-> >>> But then as a further question - what formats will we expect VIMC to
-> >>> support? VIVID has a (very) wide range of formats.
-> >>>
-> >>> Would we ever expect VIMC to be as configurable?
-> >>> Or is the scope limited to what we have today?
-> >>
-> >> I know it is very limited atm, but I would like to increase the range,
-> >> I'm just with a limited bandwitdh to work on it.
-> >>
-> >>>>>>
-> >>>>>> If yes, which entity should support it, if not debayer? Should there be
-> >>>>>> a separate conversion entity, or should we keep the support in debayer
-> >>>>>> itself for efficiency issues?
-> >>>>>>
-> >>>>>>> On 28.05.20 20:57, Kaaira Gupta wrote:
-> >>>>>>>> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
-> >>>>>>>> not support it. Hence, add the support for Alpha (255).
-> >>>>>>>
-> >>>>>>> I would change the commit log to:
-> >>>>>>>
-> >>>>>>> Add support for V4L2_PIX_FMT_RGB24 format in the debayer
-> >>>>>>> and set the alpha channel to constant 255.
-> >>>>>>>
-> >>>>>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> >>>>>>>> ---
-> >>>>>>>>     .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
-> >>>>>>>>     1 file changed, 18 insertions(+), 9 deletions(-)
-> >>>>>>>>
-> >>>>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
-> >>>>>>>> index c3f6fef34f68..f34148717a40 100644
-> >>>>>>>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
-> >>>>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
-> >>>>>>>> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
-> >>>>>>>>         MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> >>>>>>>>         MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-> >>>>>>>>         MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-> >>>>>>>> +    MEDIA_BUS_FMT_ARGB8888_1X32
-> >>>>>>>>     };
-> >>>>>>>>     static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
-> >>>>>>>> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
-> >>>>>>>>         unsigned int i, index;
-> >>>>>>>>         vpix = vimc_pix_map_by_code(vdeb->src_code);
-> >>>>>>>> -    index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
-> >>>>>>>> -    for (i = 0; i < 3; i++) {
-> >>>>>>>> -        switch (vpix->pixelformat) {
-> >>>>>>>> -        case V4L2_PIX_FMT_RGB24:
-> >>>>>>>> -            vdeb->src_frame[index + i] = rgb[i];
-> >>>>>>>> -            break;
-> >>>>>>>> -        case V4L2_PIX_FMT_BGR24:
-> >>>>>>>> -            vdeb->src_frame[index + i] = rgb[2 - i];
-> >>>>>>>> -            break;
-> >>>>>>>> +
-> >>>>>>>> +    if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
-> >>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
-> >>>>>>>> +        vdeb->src_frame[index] = 255;
-> >>>>>>>> +        for (i = 0; i < 3; i++)
-> >>>>>>>> +            vdeb->src_frame[index + i + 1] = rgb[i];
-> >>>>>>>> +    } else {
-> >>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
-> >>>>>>>> +        for (i = 0; i < 3; i++) {
-> >>>>>>>> +            switch (vpix->pixelformat) {
-> >>>>>>>> +            case V4L2_PIX_FMT_RGB24:
-> >>>>>>>> +                vdeb->src_frame[index + i] = rgb[i];
-> >>>>>>>> +                break;
-> >>>>>>>> +            case V4L2_PIX_FMT_BGR24:
-> >>>>>>>> +                vdeb->src_frame[index + i] = rgb[2 - i];
-> >>>>>>>> +                break;
-> >>>>>>>> +            }
-> >>>>>>>>             }
-> >>>>>>>>         }
-> >>>>>>>>     }
-
--- 
-Regards,
-
-Laurent Pinchart
