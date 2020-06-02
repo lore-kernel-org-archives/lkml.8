@@ -2,137 +2,139 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA7F020663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD82D20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgFBNfk (ORCPT
+        id S1727872AbgFBNg0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:35:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:50978 "EHLO foss.arm.com"
+        Tue, 2 Jun 2020 09:36:26 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11395 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgFBNfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:35:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5F721FB;
-        Tue,  2 Jun 2020 06:35:38 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EA783F305;
-        Tue,  2 Jun 2020 06:35:37 -0700 (PDT)
-References: <20200527151613.16083-1-benjamin.gaignard@st.com> <jhjpnahizkm.mognet@arm.com> <f95ce45f-7a1c-0feb-afa8-203ddb500f2f@st.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab\@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32\@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-media\@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32\@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vincent.guittot\@linaro.org" <vincent.guittot@linaro.org>,
-        "rjw\@rjwysocki.net" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
-In-reply-to: <f95ce45f-7a1c-0feb-afa8-203ddb500f2f@st.com>
-Date:   Tue, 02 Jun 2020 14:35:31 +0100
-Message-ID: <jhjo8q1io9o.mognet@arm.com>
+        id S1725940AbgFBNgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:36:25 -0400
+IronPort-SDR: bvFYyemll5sTkaRpzI1aVTMRam3WvWHb5FVhKT9AvBO3010qUbA3LX4F3A4BXhMiNxFPK+2jsG
+ G+ddehdN+G0A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 06:36:25 -0700
+IronPort-SDR: NBeSQghNBhFX6gfvY+doY0ZyDPw4dDqR5/Hs8LXo5/2uJ8VK42VCv7OXn2DNZoegfHmCvIvTSb
+ beQDtVJARb4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,464,1583222400"; 
+   d="scan'208";a="286653698"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 06:36:24 -0700
+Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 2 Jun 2020 06:36:24 -0700
+Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.97]) by
+ FMSMSX114.amr.corp.intel.com ([169.254.6.185]) with mapi id 14.03.0439.000;
+ Tue, 2 Jun 2020 06:35:20 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
+ appropriate
+Thread-Topic: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
+ appropriate
+Thread-Index: AQHWOL8clbNxZ7bnykCB8ftlNPJ+z6jFUrZg
+Date:   Tue, 2 Jun 2020 13:35:20 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E23E538@FMSMSX108.amr.corp.intel.com>
+References: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
+In-Reply-To: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.107]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 02/06/20 12:37, Benjamin GAIGNARD wrote:
-> On 6/2/20 11:31 AM, Valentin Schneider wrote:
->>> @@ -99,6 +100,8 @@ enum state {
->>>
->>>   #define OVERRUN_ERROR_THRESHOLD	3
->>>
->>> +#define DCMI_MIN_FREQ	650000 /* in KHz */
->>> +
->> This assumes the handling part is guaranteed to always run on the same CPU
->> with the same performance profile (regardless of the platform). If that's
->> not guaranteed, it feels like you'd want this to be configurable in some
->> way.
-> Yes I could add a st,stm32-dcmi-min-frequency (in KHz) parameter the
-> device tree node.
+>-----Original Message-----
+>From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>Piotr Stankiewicz
+>Sent: Tuesday, June 2, 2020 5:21 AM
+>To: Alex Deucher <alexander.deucher@amd.com>; Christian König
+><christian.koenig@amd.com>; David Zhou <David1.Zhou@amd.com>; David
+>Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>
+>Cc: Stankiewicz, Piotr <piotr.stankiewicz@intel.com>; dri-
+>devel@lists.freedesktop.org; amd-gfx@lists.freedesktop.org; linux-
+>kernel@vger.kernel.org
+>Subject: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
+>appropriate
 >
-
-Something like that - I'm not sure how well this fits with the DT
-landscape, as you could argue it isn't really a description of the
-hardware, more of a description of the performance expectations of the
-software. I won't really argue here.
-
->>
->>>   struct dcmi_graph_entity {
->>>        struct v4l2_async_subdev asd;
->>>
->> [...]
->>> @@ -2020,6 +2042,8 @@ static int dcmi_probe(struct platform_device *pdev)
->>>                goto err_cleanup;
->>>        }
->>>
->>> +	dcmi->policy = cpufreq_cpu_get(0);
->>> +
->> Ideally you'd want to fetch the policy of the CPU your IRQ (and handling
->> thread) is affined to; The only compatible DTS I found describes a single
->> A7, which is somewhat limited in the affinity area...
-> If I move this code just before start streaming and use get_cpu(), would
-> it works ?
+>Seeing as there is shorthand available to use when asking for any type
+>of interrupt, or any type of message signalled interrupt, leverage it.
 >
+>Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+>Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>---
+> drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
+>
+>diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+>b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+>index 5ed4227f304b..6dbe173a9fd4 100644
+>--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+>+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+>@@ -251,11 +251,11 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
+> 		int nvec = pci_msix_vec_count(adev->pdev);
+> 		unsigned int flags;
+>
+>-		if (nvec <= 0) {
+>+		if (nvec > 0)
+>+			flags = PCI_IRQ_MSI_TYPES;
+>+		else
+> 			flags = PCI_IRQ_MSI;
+>-		} else {
+>-			flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
+>-		}
 
-AFAIA streaming_start() is not necessarily executing on the same CPU as the
-one that will handle the interrupt. I was thinking you could use the IRQ's
-effective affinity as a hint of which CPU(s) to boost, i.e. something like:
+Minor nit:
 
----
-    struct cpumask_var_t visited;
-    struct irq_data *d = irq_get_irq_data(irq);
+Is it really necessary to set do this check?  Can flags just
+be set?
 
-    err = alloc_cpumask_var(visited, GFP_KERNEL);
-    /* ... */
-    for_each_cpu(cpu, irq_data_get_effective_affinity_mask(d)) {
-            /* check if not already spanned */
-            if (cpumask_test_cpu(cpu, visited))
-                    continue;
+I.e.: 
+	flags = PCI_IRQ_MSI_TYPES;
 
-            policy = cpufreq_cpu_get(cpu);
-            cpumask_or(visited, visited, policy->cpus);
-            /* do the boost for that policy here */
-            /* ... */
-            cpufreq_cpu_put(policy);
-    }
----
+pci_alloc_irq_vector() tries stuff in order.  If MSIX is not available,
+it will try MSI.
 
-That of course falls apart when hotplug gets involved, and the effective
-affinity changes... There's irq_set_affinity_notifier() out there, but it
-seems it's only about the affinity, not the effective_affinity, I'm not
-sure how valid it would be to query the effective_affinity in that
-notifier.
+M
 
-> Benjamin
->>
->>>        dev_info(&pdev->dev, "Probe done\n");
->>>
->>>        platform_set_drvdata(pdev, dcmi);
->>> @@ -2049,6 +2073,9 @@ static int dcmi_remove(struct platform_device *pdev)
->>>
->>>        pm_runtime_disable(&pdev->dev);
->>>
->>> +	if (dcmi->policy)
->>> +		cpufreq_cpu_put(dcmi->policy);
->>> +
->>>        v4l2_async_notifier_unregister(&dcmi->notifier);
->>>        v4l2_async_notifier_cleanup(&dcmi->notifier);
->>>        media_entity_cleanup(&dcmi->vdev->entity);
+>+
+> 		/* we only need one vector */
+> 		nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, flags);
+> 		if (nvec > 0) {
+>--
+>2.17.2
+>
+>_______________________________________________
+>dri-devel mailing list
+>dri-devel@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/dri-devel
