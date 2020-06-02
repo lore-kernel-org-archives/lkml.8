@@ -2,105 +2,135 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A411CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A077206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1043820810
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="k9mn8oVK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpf7C2gd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFBLyQ (ORCPT
+        id S1726959AbgFBLyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:54:16 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62304 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726267AbgFBLyP (ORCPT
+        Tue, 2 Jun 2020 07:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFBLyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:54:15 -0400
-X-UUID: db722be8915d4774a20434feec800d44-20200602
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=L8W+8mcW7tehoLHNruKxathHioAmFWgzPfCM36oBzVI=;
-        b=k9mn8oVKytEFmfU9V9wfE7bOeHl582gKVvTUdOLHqqCH7lSp7cflofcwSgaHQ0ZeaoDugr6BF/FB6eHeRMa4ma2CVUniQg21aktdRPhztGUzRTYCM7UqUwSZOh1PjvKZdklXygr7vZ8rdF/qyB5qTjsL4yEYpKiAmqrxOacpFw0=;
-X-UUID: db722be8915d4774a20434feec800d44-20200602
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 723940935; Tue, 02 Jun 2020 19:54:12 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 2 Jun 2020 19:54:01 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 2 Jun 2020 19:54:01 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        "Johan Hovold" <johan@kernel.org>,
-        Hui Wang <hui.wang@canonical.com>,
-        =?UTF-8?q?Szabolcs=20Sz=C5=91ke?= <szszoke.code@gmail.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        <alsa-devel@alsa-project.org>, <linux-usb@vger.kernel.org>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH] sound: usb: pcm: fix incorrect power state when playing sound after PM_AUTO suspend
-Date:   Tue, 2 Jun 2020 19:53:41 +0800
-Message-ID: <1591098821-17910-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org>
-References: <linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org>
+        Tue, 2 Jun 2020 07:54:21 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B26FEC061A0E;
+        Tue,  2 Jun 2020 04:54:21 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id p5so3079889wrw.9;
+        Tue, 02 Jun 2020 04:54:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A4GhpoBoNLBeUpwllImkgBSNzkFnKg8SBMrnjFl2x3Y=;
+        b=hpf7C2gdMUGyiEN0FclcGEeRKBmhCuoe2NnjOc4f6dRVHvUA/RvISJ9QslZE7MbyYt
+         usf6lr0eit4SO8UKx3508BQ527pvuJf4qNyEdggg6KXbgDz1N3JjjCKO3sSMGs/N99Az
+         cIo9Ld0KNHKHTiAzj1eWcJI27gV6nAWnrGdWaHH94DUVDaTMb6BoE4CMpFrBL0mEj1oX
+         1xn4bjyN9eN6IjZsVtw+nty3UQ7aKoW60x35SuoIo+ta68WGmlUNuATWXoTpk2qdDan6
+         qM6DN3xpmplkVhbScVowcazmVDD+saBuIbnlQLgvbS8PnAt3ZGRff009tzkA8seNBkm1
+         QmhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A4GhpoBoNLBeUpwllImkgBSNzkFnKg8SBMrnjFl2x3Y=;
+        b=ETsa5r0loM4SkquwkzZBOwocEMlJTo/QwhHMHfwgAW+AyKtP0N8hrL/Psdm2pVkwUk
+         lTYRI/KdJ7kIwnRbXYret1IAS7sH/HeDuSJnRGXPrL0VkRbV8rF9ulXlcYpOjqm0RU2b
+         DIFKDKoIV5Wdt3Z+ThTK2qM4PlWkzMeGy0Zv5y+sG5eA2ZFIz433zlYhtKY7+nC4brjW
+         OZUqBGGoMaFOvVb1fawqS/ete59hAVvUxw9yMTsJvhot4S+AqAmxCDXKz8jwhlygHhUd
+         Tb85cvwjgwynEilsP4v7/Fg8muSjvIfQuFsMNfP53e5rA1B3e6XrClKCJ6SuawTNmMcK
+         gG2A==
+X-Gm-Message-State: AOAM530NXuGr3nlnw9RVNlJDhLknJToM4lgNFs0s8oiDNX30d/N4PVLN
+        ucOyJA12NhHTR8MaJG0uFKk=
+X-Google-Smtp-Source: ABdhPJxP3FyWsBI9gIlo4+U5p0EScvJkbflfxGVo/M6RK/qEgDIu7WW8t7/9uHd82v/hoOmjoiMgdA==
+X-Received: by 2002:a5d:4009:: with SMTP id n9mr6711027wrp.97.1591098858162;
+        Tue, 02 Jun 2020 04:54:18 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host9-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.9])
+        by smtp.googlemail.com with ESMTPSA id b18sm3273777wrn.88.2020.06.02.04.54.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 04:54:17 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/11] Multiple fixes in PCIe qcom driver
+Date:   Tue,  2 Jun 2020 13:53:41 +0200
+Message-Id: <20200602115353.20143-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCBmaXggaW5jb3JyZWN0IHBvd2VyIHN0YXRlIGNoYW5nZWQgYnkgdXNiX2F1ZGlv
-X3N1c3BlbmQoKQ0Kd2hlbiBDT05GSUdfUE0gaXMgZW5hYmxlZC4NCg0KQWZ0ZXIgcmVjZWl2aW5n
-IHN1c3BlbmQgUE0gbWVzc2FnZSB3aXRoIGF1dG8gZmxhZywgdXNiX2F1ZGlvX3N1c3BlbmQoKQ0K
-Y2hhbmdlIGNhcmQncyBwb3dlciBzdGF0ZSB0byBTTkRSVl9DVExfUE9XRVJfRDNob3QuIE9ubHkg
-d2hlbiB0aGUgb3RoZXINCnJlc3VtZSBQTSBtZXNzYWdlIHdpdGggYXV0byBmbGFnIGNhbiBjaGFu
-Z2UgcG93ZXIgc3RhdGUgdG8NClNORFJWX0NUTF9QT1dFUl9EMCBpbiBfX3VzYl9hdWRpb19yZXN1
-bWUoKS4NCg0KSG93ZXZlciwgd2hlbiBzeXN0ZW0gaXMgbm90IHVuZGVyIGF1dG8gc3VzcGVuZCwg
-cmVzdW1lIFBNIG1lc3NhZ2Ugd2l0aA0KYXV0byBmbGFnIG1pZ2h0IG5vdCBiZSBhYmxlIHRvIHJl
-Y2VpdmUgb24gdGltZSB3aGljaCBjYXVzZSB0aGUgcG93ZXINCnN0YXRlIHdhcyBpbmNvcnJlY3Qu
-IEF0IHRoaXMgdGltZSwgaWYgYSBwbGF5ZXIgc3RhcnRzIHRvIHBsYXkgc291bmQsDQp3aWxsIGNh
-dXNlIHNuZF91c2JfcGNtX29wZW4oKSB0byBhY2Nlc3MgdGhlIGNhcmQgYW5kIHNldHVwX2h3X2lu
-Zm8oKSB3aWxsDQpyZXN1bWUgdGhlIGNhcmQuDQoNCkJ1dCBldmVuIHRoZSBjYXJkIGlzIGJhY2sg
-dG8gd29yayBhbmQgYWxsIGZ1bmN0aW9uIG5vcm1hbCwgdGhlIHBvd2VyDQpzdGF0ZSBpcyBzdGls
-bCBpbiBTTkRSVl9DVExfUE9XRVJfRDNob3QuIFdoaWNoIGNhdXNlIHRoZSBpbmZpbml0ZSBsb29w
-DQpoYXBwZW5lZCBpbiBzbmRfcG93ZXJfd2FpdCgpIHRvIGNoZWNrIHRoZSBwb3dlciBzdGF0ZS4g
-VGh1cyB0aGUNCnN1Y2Nlc3NpdmUgc2V0dGluZyBpb2N0bCBjYW5ub3QgYmUgcGFzc2VkIHRvIGNh
-cmQuDQoNCkhlbmNlIHdlIHN1Z2dlc3QgdG8gY2hhbmdlIHBvd2VyIHN0YXRlIHRvIFNORFJWX0NU
-TF9QT1dFUl9EMCB3aGVuIGNhcmQNCmhhcyBiZWVuIHJlc3VtZWQgc3VjY2Vzc2Z1bGx5Lg0KDQpT
-aWduZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0KLS0t
-DQogc291bmQvdXNiL3BjbS5jIHwgICAxMSArKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAx
-MSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9zb3VuZC91c2IvcGNtLmMgYi9zb3VuZC91
-c2IvcGNtLmMNCmluZGV4IGE0ZTQwNjQuLmQ2NjdlY2IgMTAwNjQ0DQotLS0gYS9zb3VuZC91c2Iv
-cGNtLmMNCisrKyBiL3NvdW5kL3VzYi9wY20uYw0KQEAgLTEzMjIsNiArMTMyMiwxNyBAQCBzdGF0
-aWMgaW50IHNldHVwX2h3X2luZm8oc3RydWN0IHNuZF9wY21fcnVudGltZSAqcnVudGltZSwgc3Ry
-dWN0IHNuZF91c2Jfc3Vic3RyZQ0KIAlpZiAoZXJyIDwgMCkNCiAJCXJldHVybiBlcnI7DQogDQor
-CS8qIGZpeCBpbmNvcnJlY3QgcG93ZXIgc3RhdGUgd2hlbiByZXN1bWluZyBieSBvcGVuIGFuZCBs
-YXRlciBpb2N0bHMgKi8NCisJaWYgKElTX0VOQUJMRUQoQ09ORklHX1BNKSAmJg0KKwkJc25kX3Bv
-d2VyX2dldF9zdGF0ZShzdWJzLT5zdHJlYW0tPmNoaXAtPmNhcmQpDQorCQkJPT0gU05EUlZfQ1RM
-X1BPV0VSX0QzaG90KSB7DQorCQkvKiBzZXQgdGhlc2UgdmFyaWFibGVzIGZvciBwb3dlciBzdGF0
-ZSBjb3JyZWN0aW9uICovDQorCQlzdWJzLT5zdHJlYW0tPmNoaXAtPmF1dG9zdXNwZW5kZWQgPSAw
-Ow0KKwkJc3Vicy0+c3RyZWFtLT5jaGlwLT5udW1fc3VzcGVuZGVkX2ludGYgPSAxOw0KKwkJZGV2
-X2luZm8oJnN1YnMtPmRldi0+ZGV2LA0KKwkJCSJjaGFuZ2UgcG93ZXIgc3RhdGUgZnJvbSBEM2hv
-dCB0byBEMFxuIik7DQorCX0NCisNCiAJcmV0dXJuIHNuZF91c2JfYXV0b3Jlc3VtZShzdWJzLT5z
-dHJlYW0tPmNoaXApOw0KIH0NCiANCi0tIA0KMS43LjkuNQ0K
+This contains multiple fix for PCIe qcom driver.
+Some optional reset and clocks were missing.
+Fix a problem with no PARF programming that cause kernel lock on load.
+Add support to force gen 1 speed if needed. (due to hardware limitation)
+Add ipq8064 rev 2 support that use a different tx termination offset.
+
+v5:
+* Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
+
+v4:
+* Fix grammar error across all patch subject
+* Use bulk api for clks
+* Program PARF only in ipq8064 SoC
+* Program tx term only in ipq8064 SoC
+* Drop configurable tx-dempth rx-eq
+* Make added clk optional
+
+v3:
+* Fix check reported by checkpatch --strict
+* Rename force_gen1 to gen
+
+v2:
+* Drop iATU programming (already done in pcie init)
+* Use max-link-speed instead of force-gen1 custom definition
+* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+* Introduce a new variant for different revision of ipq8064
+
+Abhishek Sahu (1):
+  PCI: qcom: Change duplicate PCI reset to phy reset
+
+Ansuel Smith (9):
+  PCI: qcom: Add missing ipq806x clocks in PCIe driver
+  dt-bindings: PCI: qcom: Add missing clks
+  PCI: qcom: Add missing reset for ipq806x
+  dt-bindings: PCI: qcom: Add ext reset
+  PCI: qcom: Use bulk clk api and assert on error
+  PCI: qcom: Define some PARF params needed for ipq8064 SoC
+  PCI: qcom: Add support for tx term offset for rev 2.1.0
+  PCI: qcom: Add ipq8064 rev2 variant
+  dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
+
+Sham Muthayyan (1):
+  PCI: qcom: Add Force GEN1 support
+
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 171 ++++++++++++------
+ 2 files changed, 123 insertions(+), 63 deletions(-)
+
+-- 
+2.25.1
 
