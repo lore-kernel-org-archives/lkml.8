@@ -2,128 +2,145 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA24C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4768FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1ED12074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MejNCIwg"
+	by mail.kernel.org (Postfix) with ESMTP id 21B1D206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgFBTqi (ORCPT
+        id S1728024AbgFBTrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBTqh (ORCPT
+        Tue, 2 Jun 2020 15:47:15 -0400
+Received: from static-27.netfusion.at ([83.215.238.27]:56380 "EHLO
+        mail.inliniac.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFBTrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:46:37 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15887C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:46:36 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id k22so11675989qtm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cDCbUswdOzWPBxtVOkNTOR8EXwqtruy6d+xYE1G/nrs=;
-        b=MejNCIwgWGcd8L2XowGwm3NoBogEtmKYfDuWZoqncV+MARHDUvpzuuHI9oIfOFnoN9
-         dxhDF+ZfE6GSaT/0KMRiWYW0kI45FW6Df355Rqa+m5TWa7hDoJm8M7K7wgQBtutzHXiS
-         rBy1T40rd4pXrsT7bnff1tVrYHCu3R9x3xXXeIfJJP/cNsh5yyZdOneP1oF26Xw0qjk3
-         JSkwyNEpo8k5KkuphfemPhDhMRpY4qdF+UyTE4AIh8UMf4pZ3NJ4lX4p9hrqCAgmILmH
-         PTBvt1K9SUIjU9gMAZvkys0PA/VDHMA6wdk/3vtCpQqs14Hs6GbRytOxuG7VtJLq/4CD
-         hMow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cDCbUswdOzWPBxtVOkNTOR8EXwqtruy6d+xYE1G/nrs=;
-        b=ESIbWubp9I17S4ErR4urJg6ympUq5RHnx0D1I3FbXUVc0X54GSU5IGPHJGuhz95r+v
-         J8r1/jGw7KN7I12ZY5dd0OliifwPX/AWTXzTlf1djSKdDJoDGld2rrD08aQma+VhwcK8
-         uttf5krjAugsUUCgUPM8bS5gSpwr+itV8bK9oCSPg90bYw+Z2+9DtQrjH2jpmFoXyuZI
-         nGSD/EQB3NqeIfhEwcyhhmBoYjjfmuKyvDdi5zQr2IGwTISG5cYmWTZfvWBpf7+MAoXw
-         S2mJ0KKKjOM6w0Jq4Qb0EkXQSt8JtNlnT7ZCKvdB6aC3c9uW6+uRrSX/LI5pXdvd1rie
-         bARA==
-X-Gm-Message-State: AOAM532ajV80bkrQ7rLQRkJuvhoV/2Kfglz/fDs8/XKhhebdH47tL/vo
-        JNQ0estNgzeBhK2LTcJS5DW2Kw==
-X-Google-Smtp-Source: ABdhPJw92gFC8+2YBYL/OOKMyCjSItRlsz1/b9Z/IdkcVVcXUTXpgngzFeDgO6+U+XhQjZjf1zq67Q==
-X-Received: by 2002:ac8:6d1b:: with SMTP id o27mr29064704qtt.102.1591127195246;
-        Tue, 02 Jun 2020 12:46:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id a1sm2418465qkn.87.2020.06.02.12.46.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 12:46:34 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jgCrp-000JR5-Qn; Tue, 02 Jun 2020 16:46:33 -0300
-Date:   Tue, 2 Jun 2020 16:46:33 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wang Hai <wanghai38@huawei.com>, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: kobject_init_and_add is easy to misuse
-Message-ID: <20200602194633.GC6578@ziepe.ca>
-References: <20200602115033.1054-1-wanghai38@huawei.com>
- <20200602121035.GL19604@bombadil.infradead.org>
+        Tue, 2 Jun 2020 15:47:14 -0400
+Received: from [192.168.0.36] (a212-238-163-105.adsl.xs4all.nl [212.238.163.105])
+        (Authenticated sender: victor)
+        by mail.inliniac.net (Postfix) with ESMTPSA id 8CD3F10C;
+        Tue,  2 Jun 2020 21:49:22 +0200 (CEST)
+Subject: Re: [PATCH net-next v2] af-packet: new flag to indicate all csums are
+ good
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Drozdov <al.drozdov@gmail.com>,
+        Tom Herbert <tom@herbertland.com>
+References: <20200602080535.1427-1-victor@inliniac.net>
+ <CA+FuTSfD2-eF0H=Qu09=JXK6WTiWKNtcqRXqv3TfMfB-=0GiMg@mail.gmail.com>
+ <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
+ <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
+ <06479df9-9da4-dbda-5bd1-f6e4d61471d0@inliniac.net>
+ <CA+FuTSci29=W89CLweZcW=RTKwEXpUdPjsLGTB95iSNcnpU_Lw@mail.gmail.com>
+ <6a3dcce9-4635-28e9-d78e-1c7f1f7874da@inliniac.net>
+ <20200602122954.0c35072b@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+From:   Victor Julien <victor@inliniac.net>
+Autocrypt: addr=victor@inliniac.net; prefer-encrypt=mutual; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUVOQkZBamQvUUJDQURY
+ S3FvR0xmclhGTDB5R2k3cHozdjU5dG5TN3hsVTl0NHVSUnd6YThrN3piVW9oTFlJCkFNVkp1
+ dFk5Mm9BRDYrOTJtSVNIZDNDZkU0bGZuRlFBNHY1MllXOUUvRHBTaVQzWnFMZ0RHcmdVMHRs
+ Qm1OUG8Kd0tJMjZyUnVCejBER3dVZkdocjlud3dTbVRDM213NU80cFlYR0wyd3ludHA0THZ2
+ Q1lTdFJDVkZIMEhWL0lDVwozT2d6ejQzNGdtelU2N2xOaXpxMDdmL1R2SWtkd3ZHL1ZGVU5u
+ WTZLQXRzUysrRTZZdzl5MEo5SStVYktFUDl4CnkySHl3RFFLRVVqck9FMCtlREtoblRXVGhX
+ YnZEZm5CTGZJUGNla3dYbXVPYjVycGFXblE1MTkwNXVETTFzcm8KUGFZK015NEQ3b3N2ZUFN
+ di9SbmhuN1VuVlg5M3JUS05RRUhaQUJFQkFBRzBJMVpwWTNSdmNpQktkV3hwWlc0ZwpQSFpw
+ WTNSdmNrQnBibXhwYm1saFl5NXVaWFEraVFFN0JCTUJBZ0FsQWhzREJnc0pDQWNEQWdZVkNB
+ SUpDZ3NFCkZnSURBUUllQVFJWGdBVUNVQ045WWdJWkFRQUtDUkRCOUpYamttaFd0SlFOQi85
+ UVhwOXZCbnlwbm1RaDlHb2cKNE0vR2V6TERWbFJoVnQxL2FnYXByWDFhR09kZ29uRHd4WFR1
+ MUs3Wnk5RkcrZysrb3lkRzdaYzFaT3JwSEtjTQp4dWxGams2MUEvODVMLzg1ZktHM0hlTFpX
+ M2szR0p1OUhCRnZqNllrbXdmbHdTRk9KWmdkT3k5SGh0b3hTQnVwCmI4WTlKL0Q5MVB5Vi91
+ YWdaa21ITjRuQmJldGNkSU9PNXdudWV0VnNrNGJsVjdhVk1kU2JEVXNrbU9Nc0hWTDcKRDN2
+ WGFwSG1MbGhWSXZNQjBPTndQQVY5MHV6WUtNRlQ0SWdFbm04VXBFT0hsL0tFNWJyWlAzQkU4
+ SXRJajUrZwpJRkNMNTRrdVphMWY5MUlDMzNocUJaNUZQNitNamt3ZmswOVdyQURsVmt4S3NP
+ RkgyMHQ2NVVLT2EyeTNLM3pyCnhaYll0Q05XYVdOMGIzSWdTblZzYVdWdUlEeDJhV04wYjNK
+ QWRuVjFjbTExZFhJdWIzSm5Qb2tCT0FRVEFRSUEKSWdVQ1VDTjVwZ0liQXdZTENRZ0hBd0lH
+ RlFnQ0NRb0xCQllDQXdFQ0hnRUNGNEFBQ2drUXdmU1Y0NUpvVnJSawpxZ2dBa01pODdnZzNT
+ K3FkQlVjSjVXd3VLTERPL1M0MTNzR09FaEU0SzU3YXpUVTNOVWNPVnVOZW5mNDB1L3F3Ckt4
+ VitEUDJuSzE4Rk9CdDdwcVdyQzRrNThaUWMxTm9SR0VWQjY4elhieVI5L2xIMWNocXB5Mmhv
+ enoyL0xhRG4KT0ptUWgvWUorYUhZbVdETGVuK3BtNWc5NzFJTUE5bUdiK3FrMTQ4aFBBMTBn
+ b0h0ZHIyNzNPeXpQaldzU0JnVwp4bVU2amhNOE1Ld0tSSkFsTmxoMTVSbFpWNEM5Rmhkdi9V
+ b01LZXhpaWltbGZIY1hVR1dtZ2I2RXBnVW5ab2piCklYQlNsYk5FMVZFTk5IcDVaeEhYNUU5
+ dmQxV3BiMFV0Zmd2ZCtqaWo5VEtuMHpSSDlFTHFTYmxtUTFTamF4bEsKVnhhUDd1ejRpUHpJ
+ NFk0RDVxMHJERHhTVmJRcGEyVjVZbUZ6WlM1cGJ5OXBibXhwYm1saFl5QThhVzVzYVc1cApZ
+ V05BYTJWNVltRnpaUzVwYno2SkFTMEVFd0VLQUJjRkFsQWpkL1FDR3dNREN3a0hBeFVLQ0FJ
+ ZUFRSVhnQUFLCkNSREI5Slhqa21oV3RKdndCLzlNdDZCWXkzTlZMUU1WQ05YSjRzZm95eUJJ
+ Q1p2ODNnN3lpQzVEako2dUxXUE0KVFl2M0ZLRDFWa2tUQ2hWOHNXaDhvMkhHUGduUVk5eisx
+ Q1hQM1dSUFdkWG9MNTFha3lPd3pFdEZVRG5JaHBtMApkWFhxQlJ3Qi90WExXN3R0VnkxR3VF
+ eExkaDNaaDkwOHZ3SU1xVU51NC83ODB1VTZiRFpLQW9rZmZKekcxbzZMCm45dVF3bEx1WmNH
+ MnhnTTZiN0RaN2MvNHZ5ejM1ak9jWUozWkREb25xR3BETTNvZFdnWXp4UHN4a0JVRnlKeFkK
+ aDA4MHhzdHR0MFVJMWlmODRyVmdtQXRHblZFQjJ3YklsSktTa3d5ZXI0NGFTQ201WTEyNXNn
+ MUtIZFQwMEREQgpWTTRNZ3k0NTJJYUZJVndpNHcwdVdZR09nblQ1MWx2VTY4NmV3VHh2dVFF
+ TkJGQWpkL1FCQ0FEVkFoU08wR1YwCkxHdnh0a0hWQ1hzaGdSR2srNmdTSFpRVzc4a3F2V0dM
+ OU95UDhzK0ZpUS8vQWFMa1NETzNpSVZTbWVrZVhiZlkKNkcxa2l2aDJLN0NaYlBTMzdDVGVL
+ L0p0L2ZFbzY1bTJvcWtMWStDTnZVeElvYVdhMitQY1Z4UXNLem1aZ0hDRApDRVdzN21rK01Z
+ UUxNZnluanVoVVorWmlaa2Y1U2ZBY1hQTEQ5emRkTFlSdUJtOTgwRDN1UVJsbXlqRTVOZTJa
+ CkRZVEMwU1ZLNDFRMVVDdDFoZFdNOUlWczg2UXEybUU5Y21KWkthUUNRc1ZEMVlMZUdxYTJk
+ UVdLYnIyc2EyRHUKd2pCbEhzWk83NFZjTHR2L2lQV1Nad2FxNkdBZTJGZXB0TFhJQWd2Y3lB
+ WDlxOHczWDBjdWtsa1RTWFUwbU5ISQpuWHFnRHRBRGtOVnRBQkVCQUFHSkFSOEVHQUVDQUFr
+ RkFsQWpkL1FDR3d3QUNna1F3ZlNWNDVKb1ZyU01od2dBCmlicHNMNUtnaEhnK0h2TktocXpV
+ b0JGTDMya2xNS1R5Ums0ekhzbzZDNHBKVDNvbjRqOVF2dnJLU2tsaUJ4a1IKM2ZMdVFOVWE5
+ YlVYeDNmeUFheVF2ekxnV1FycVc3eTU1Z1dCRUZPQTVQQXdFU1pDdTNYKzNGODZPK2w0N1k0
+ dwpOZTRDRDJLYTRLKzlXTHQvR3RlUnBQQU5lVldNUHRRQktqc3BFSFBSeWNidnJGV20xMUJI
+ djV2eC9GYVNXN2tICjdkaHFkRHNxMFlJaWYwUkdjUVNySlBBQm00ZHkva1hrcFJQUEFHSGdN
+ dVMvejZwY3c0RFVsaTZQVE1aTzNyT0oKbVJQQUlFRUNTVngvRlZERjJXeVREQUlWanBuMENN
+ Zjl1dnliVEU4Q25CNEQxcDZLNkgyZ0d0YVRlRlhJUVkraAoxcmNDY0JVNE9zZlQvWFkwZXZO
+ aWpnPT0KPWFWT0YKLS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQo=
+Message-ID: <7ce5ae2a-4bce-99af-4fd7-900e6caa8f89@inliniac.net>
+Date:   Tue, 2 Jun 2020 21:47:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602121035.GL19604@bombadil.infradead.org>
+In-Reply-To: <20200602122954.0c35072b@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 05:10:35AM -0700, Matthew Wilcox wrote:
-> On Tue, Jun 02, 2020 at 07:50:33PM +0800, Wang Hai wrote:
-> > syzkaller reports for memory leak when kobject_init_and_add()
-> > returns an error in the function sysfs_slab_add() [1]
-> > 
-> > When this happened, the function kobject_put() is not called for the
-> > corresponding kobject, which potentially leads to memory leak.
-> > 
-> > This patch fixes the issue by calling kobject_put() even if
-> > kobject_init_and_add() fails.
+On 02-06-2020 21:29, Jakub Kicinski wrote:
+> On Tue, 2 Jun 2020 21:22:11 +0200 Victor Julien wrote:
+>> - receiver uses nfp (netronome) driver: TP_STATUS_CSUM_VALID set for
+>> every packet, including the bad TCP ones
+>> - receiver uses ixgbe driver: TP_STATUS_CSUM_VALID not set for the bad
+>> packets.
+>>
+>> Again purely based on 'git grep' it seems nfp does not support
+>> UNNECESSARY, while ixgbe does.
+>>
+>> (my original testing was with the nfp only, so now I at least understand
+>> my original thinking)
 > 
-> I think this speaks to a deeper problem with kobject_init_and_add()
-> to most users.  This same bug appears in the first three users of
-> kobject_init_and_add() that I checked --
-> arch/ia64/kernel/topology.c
-> drivers/firmware/dmi-sysfs.c
-> drivers/firmware/efi/esrt.c
-> drivers/scsi/iscsi_boot_sysfs.c
+> FWIW nfp defaults to CHECKSUM_COMPLETE if the device supports it (see
+> if you have RXCSUM_COMPLETE in the probe logs). It supports UNNECESSARY
+> as well, but IDK if there is a way to choose  the preferred checksum
+> types in the stack :( You'd have to edit the driver and remove the
+> NFP_NET_CFG_CTRL_CSUM_COMPLETE from the NFP_NET_CFG_CTRL_RXCSUM_ANY
+> mask to switch to using UNNECESSARY.
 > 
-> Some do get it right --
-> arch/powerpc/kernel/cacheinfo.c
-> drivers/gpu/drm/ttm/ttm_bo.c
-> drivers/gpu/drm/ttm/ttm_memory.c
-> drivers/infiniband/hw/mlx4/sysfs.c
-> 
-> I'd argue that the current behaviour is wrong, that kobject_init_and_add()
-> should call kobject_put() if the add fails.  
 
-There are APIs that auto-free their argument on failure and last times
-I checked one, about half the tree had a tricky use-after free bug on
-the error path.
+I indeed have RXCSUM_COMPLETE, so that should mean it uses
+CHECKSUM_COMPLETE indeed.
 
-> This would need a tree-wide audit.  But somebody needs to do that
-> anyway because based on my random sampling, half of the users
-> currently get it wrong.
+nfp 0000:43:00.0 eth0: CAP: 0x78140233 PROMISC RXCSUM TXCSUM GATHER TSO2
+RSS2 AUTOMASK IRQMOD RXCSUM_COMPLETE
 
-IMHO these functions that hide an 'init' inside (eg the switch from
-kfree to refcount in the error unwind) are tricky. The caller must
-switch from some kfree goto error unwind to a put goto error unwind,
-which is very unnatural and strange.
+-- 
+---------------------------------------------
+Victor Julien
+http://www.inliniac.net/
+PGP: http://www.inliniac.net/victorjulien.asc
+---------------------------------------------
 
-I think it is better if the init is near the kalloc and the entire
-error unwind always uses put. No switching.
-
-Jason
