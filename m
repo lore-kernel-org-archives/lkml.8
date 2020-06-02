@@ -2,152 +2,261 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72978C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 632F720678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EB120678
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKMkyn6d"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s8ZN2g2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgFBMfn (ORCPT
+        id S1728101AbgFBMge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgFBMfg (ORCPT
+        Tue, 2 Jun 2020 08:36:34 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54792 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgFBMge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:35:36 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D574C061A0E;
-        Tue,  2 Jun 2020 05:35:35 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g10so2753986wmh.4;
-        Tue, 02 Jun 2020 05:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=FxnUS8ZObVKVCSq2Jz4F/IAJ47190qwak0yst9dgjek=;
-        b=KKMkyn6dSKONhsmKfb/g7H5S06IGP0LiuotpsBG3RZG8j1OH1XW2AiGHS6xvqjobj/
-         F3Yz19uXKE2j1BYDaMl1XThBWBEy3r4NXlJz/4LLJwXg44/HTMtfm6KO2ZCSdC3JyPCZ
-         +P0dagaATwA8Tei6ElsffnwwrlkwmWiXFNvhY9ciYfwYpXMGpoojHItJyPzWn/5Mnlj4
-         6TcLG8IL9rJPFtkDMUP9zBf9jsFsjXn6/bJwp6hS6BSmq7ZxGMsrH5ymlTxHywcqOMfV
-         eUpgDQCxwO5xfBE5uqGWDKYHUAo7HmK9nBEE4ZU3xJLmAqKdHcVnYhvM8zDKVYKmkMkT
-         eKnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FxnUS8ZObVKVCSq2Jz4F/IAJ47190qwak0yst9dgjek=;
-        b=cCYmidSquHMlfNimUdB5T+rjmnIrdC8z4G3WYCPfyvLL3KGBpE9j3T88HBV6+/htFj
-         zm2z1YTOsuEAuePy9J8DUu0tD5QOYRD+01ALgIV3yrJCpKD7dMmQAeJYeY1ELhz8PSaQ
-         OJ8Hk0Zi3/UOWODxfh0dkjTyGrzYXt4pPsFqLR5DePw75mEsKkuYFgjkqIRhqHf9c/aU
-         yo9xZ8Zg4kNuEPpmVy39Rzg1VkQoO08xOWlr8okloW7+YANYQgwkQ8m0wgAoYLrP5xrX
-         gZdEjKO9XJP2KEpIbT6FPumgr6CDgMDMFMyZT7cmz+X5hfqirjpcotzYX8/78aiET1cq
-         YXMQ==
-X-Gm-Message-State: AOAM531IlkKD1yGGKdp5ls8M+0rjDBqyPkwo0Tf0BwV+3inEJZXHfHUd
-        i+CkFuAEcRdZtS3NMiGMGH4s6PJq
-X-Google-Smtp-Source: ABdhPJyHKsheIJ7IJ3//UFjMBmpBibvQKnq4u92O1ULGy2w7YRhhlT0zWlKQ/o+3EMUl8LGh8SB7kg==
-X-Received: by 2002:a1c:3c08:: with SMTP id j8mr3792272wma.23.1591101334323;
-        Tue, 02 Jun 2020 05:35:34 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id z22sm3347711wmf.9.2020.06.02.05.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:35:33 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] io_uring: move send/recv IOPOLL check into prep
-Date:   Tue,  2 Jun 2020 15:34:04 +0300
-Message-Id: <1d888939d1d9ea8fd3022c866b9fe7639b3b94b9.1591100205.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1591100205.git.asml.silence@gmail.com>
-References: <cover.1591100205.git.asml.silence@gmail.com>
+        Tue, 2 Jun 2020 08:36:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052CaW1v086241;
+        Tue, 2 Jun 2020 07:36:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591101392;
+        bh=fFGspWtMZRHNuJijyv/XxS0KUeZmp81UfpxM0oy4uJQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=s8ZN2g2psIwYj7lFc+zqFuWddwZ0akXgtYoFhQV9+EXkhdLl+vA97FP7mP/Pg85Dr
+         MQ+V1zqcTPWGR+iLrB2jxQKiNEiNA6Cz8TLVlI++hYXgcl6aODAibpwRNWrEJpOvgx
+         u07Wvuqwtuyct2jAiB3a8jwH30Kn8GS50dOx3HEE=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052CaWGW026766
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 07:36:32 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 07:36:31 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 07:36:31 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052CaTpA039892;
+        Tue, 2 Jun 2020 07:36:30 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: usb: convert keystone-usb.txt to YAML
+To:     Rob Herring <robh@kernel.org>
+CC:     <balbi@kernel.org>, <vigneshr@ti.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200513130709.10239-1-rogerq@ti.com>
+ <20200513130709.10239-2-rogerq@ti.com> <20200527013715.GA847644@bogus>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <4cb847d1-32b0-419f-a7e5-9945bc32b890@ti.com>
+Date:   Tue, 2 Jun 2020 15:36:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200527013715.GA847644@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fail recv/send in case of IORING_SETUP_IOPOLL earlier during prep,
-so it'd be done only once. Removes duplication as well
+Rob,
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+Thanks for the review. Since this patch was already picked up I will
+address the issues in a follow up patch.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 9fe90a66a31e..d7e9090a6be7 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3541,6 +3541,9 @@ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	struct io_async_ctx *io = req->io;
- 	int ret;
- 
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
-+
- 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
- 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
- 	sr->len = READ_ONCE(sqe->len);
-@@ -3570,9 +3573,6 @@ static int io_sendmsg(struct io_kiocb *req, bool force_nonblock)
- 	struct socket *sock;
- 	int ret;
- 
--	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
--		return -EINVAL;
--
- 	sock = sock_from_file(req->file, &ret);
- 	if (sock) {
- 		struct io_async_ctx io;
-@@ -3626,9 +3626,6 @@ static int io_send(struct io_kiocb *req, bool force_nonblock)
- 	struct socket *sock;
- 	int ret;
- 
--	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
--		return -EINVAL;
--
- 	sock = sock_from_file(req->file, &ret);
- 	if (sock) {
- 		struct io_sr_msg *sr = &req->sr_msg;
-@@ -3781,6 +3778,9 @@ static int io_recvmsg_prep(struct io_kiocb *req,
- 	struct io_async_ctx *io = req->io;
- 	int ret;
- 
-+	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
-+		return -EINVAL;
-+
- 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
- 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
- 	sr->len = READ_ONCE(sqe->len);
-@@ -3809,9 +3809,6 @@ static int io_recvmsg(struct io_kiocb *req, bool force_nonblock)
- 	struct socket *sock;
- 	int ret, cflags = 0;
- 
--	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
--		return -EINVAL;
--
- 	sock = sock_from_file(req->file, &ret);
- 	if (sock) {
- 		struct io_buffer *kbuf;
-@@ -3873,9 +3870,6 @@ static int io_recv(struct io_kiocb *req, bool force_nonblock)
- 	struct socket *sock;
- 	int ret, cflags = 0;
- 
--	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
--		return -EINVAL;
--
- 	sock = sock_from_file(req->file, &ret);
- 	if (sock) {
- 		struct io_sr_msg *sr = &req->sr_msg;
+cheers,
+-roger
+
+On 27/05/2020 04:37, Rob Herring wrote:
+> On Wed, May 13, 2020 at 04:07:07PM +0300, Roger Quadros wrote:
+>> Convert keystone-usb documentation to YAML format.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   .../devicetree/bindings/usb/keystone-usb.txt  | 56 ----------------
+>>   .../bindings/usb/ti,keystone-dwc3.yaml        | 67 +++++++++++++++++++
+>>   2 files changed, 67 insertions(+), 56 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/usb/keystone-usb.txt
+>>   create mode 100644 Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
+>> deleted file mode 100644
+>> index 77df82e36138..000000000000
+>> --- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
+>> +++ /dev/null
+>> @@ -1,56 +0,0 @@
+>> -TI Keystone Soc USB Controller
+>> -
+>> -DWC3 GLUE
+>> -
+>> -Required properties:
+>> - - compatible: should be
+>> -		"ti,keystone-dwc3" for Keystone 2 SoCs
+>> -		"ti,am654-dwc3" for AM654 SoC
+>> - - #address-cells, #size-cells : should be '1' if the device has sub-nodes
+>> -   with 'reg' property.
+>> - - reg : Address and length of the register set for the USB subsystem on
+>> -   the SOC.
+>> - - interrupts : The irq number of this device that is used to interrupt the
+>> -   MPU.
+>> - - ranges: allows valid 1:1 translation between child's address space and
+>> -   parent's address space.
+>> -
+>> -SoC-specific Required Properties:
+>> -The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
+>> -SoCs only:
+>> -
+>> -- clocks:		Clock ID for USB functional clock.
+>> -- clock-names:		Must be "usb".
+>> -
+>> -
+>> -The following are mandatory properties for 66AK2G and AM654:
+>> -
+>> -- power-domains:	Should contain a phandle to a PM domain provider node
+>> -			and an args specifier containing the USB device id
+>> -			value. This property is as per the binding,
+>> -			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>> -
+>> -Sub-nodes:
+>> -The dwc3 core should be added as subnode to Keystone DWC3 glue.
+>> -- dwc3 :
+>> -   The binding details of dwc3 can be found in:
+>> -   Documentation/devicetree/bindings/usb/dwc3.txt
+>> -
+>> -Example:
+>> -	usb: usb@2680000 {
+>> -		compatible = "ti,keystone-dwc3";
+>> -		#address-cells = <1>;
+>> -		#size-cells = <1>;
+>> -		reg = <0x2680000 0x10000>;
+>> -		clocks = <&clkusb>;
+>> -		clock-names = "usb";
+>> -		interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+>> -		ranges;
+>> -
+>> -		dwc3@2690000 {
+>> -			compatible = "synopsys,dwc3";
+>> -			reg = <0x2690000 0x70000>;
+>> -			interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+>> -			usb-phy = <&usb_phy>, <&usb_phy>;
+>> -		};
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+>> new file mode 100644
+>> index 000000000000..14d2fe329b93
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+>> @@ -0,0 +1,67 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/usb/ti,keystone-dwc3.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI Keystone Soc USB Controller
+>> +
+>> +maintainers:
+>> +  - Roger Quadros <rogerq@ti.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - const: "ti,keystone-dwc3"
+>> +      - const: "ti,am654-dwc3"
+> 
+> Use enum rather than oneOf+const.
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +    description: Address and length of the register set for the USB subsystem on
+>> +      the SOC.
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +    description: The irq number of this device that is used to interrupt the MPU.
+> 
+> No need for genericish descriptions when a single item.
+> 
+>> +
+>> +
+>> +  clocks:
+>> +    description: Clock ID for USB functional clock.
+> 
+> How many?
+> 
+>> +
+>> +  power-domains:
+>> +    description: Should contain a phandle to a PM domain provider node
+>> +      and an args specifier containing the USB device id
+>> +      value. This property is as per the binding,
+>> +      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> 
+> How many?
+> 
+>> +
+>> +  dwc3:
+> 
+> This doesn't work because there's a unit address. You need a pattern.
+> 
+>> +    description: This is the node representing the DWC3 controller instance
+>> +      Documentation/devicetree/bindings/usb/dwc3.txt
+> 
+> type: object
+> 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+> 
+> additionalProperties: false
+> 
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +    usb: usb@2680000 {
+>> +      compatible = "ti,keystone-dwc3";
+>> +      #address-cells = <1>;
+>> +      #size-cells = <1>;
+> 
+> These have to be documented.
+> 
+>> +      reg = <0x2680000 0x10000>;
+>> +      clocks = <&clkusb>;
+>> +      clock-names = "usb";
+>> +      interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+>> +      ranges;
+> 
+> This too.
+> 
+>> +
+>> +      dwc3@2690000 {
+>> +        compatible = "synopsys,dwc3";
+>> +        reg = <0x2690000 0x70000>;
+>> +        interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+>> +        usb-phy = <&usb_phy>, <&usb_phy>;
+>> +      };
+>> +    };
+>> -- 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
+
 -- 
-2.24.0
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
