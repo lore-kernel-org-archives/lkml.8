@@ -2,126 +2,107 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBC74206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD27207F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgFBMUC (ORCPT
+        id S1728133AbgFBMUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:20:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33583 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBMUC (ORCPT
+        Tue, 2 Jun 2020 08:20:21 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:42907 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727977AbgFBMUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:20:02 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jg5tg-0003e2-En; Tue, 02 Jun 2020 12:20:00 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] thread changes for v5.8
-Date:   Tue,  2 Jun 2020 14:19:21 +0200
-Message-Id: <20200602121919.33831-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 2 Jun 2020 08:20:18 -0400
+Received: by mail-io1-f72.google.com with SMTP id v16so6807340ios.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:20:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=h3tn7L8YlQ4td3n8uENjqvRX7Z+upsyhDNzdhaP0eBg=;
+        b=mTgaXsCUv1U+BvHrxUYtSNmttbpxdbTFJNlT/1pG38qEGkRiF+KACkTWP/z2w/kMR7
+         DwDHAYmdI9asiRSwvp2cE3E6V8cBaBOFKEC7YxmMH7e4PgaOYH/qz8VpbsHPfX8fa2U6
+         mLuoqV+hN8dtVydK1jxMTy8AAvckiZ1bGgoRqadAZ4heQqUT7CwhmbW6rnN8826W2pk2
+         gLwZtqPmwwyb0vc1mUThbEAnkQFGWJ0F7so7BwgmX1WDu+isGewLFxUSYNTL52WWZOE/
+         P/tESLfepEjG07zhPUne6Y4+NnNE9wQHoMRiKiquza2TnSkXGYizKQyNxRaKDsK2U4NJ
+         rkOA==
+X-Gm-Message-State: AOAM531pehY1KUQ5zL6CpMKM2CUKx0KV2HhkSjWSDomNLESa0cirBAIf
+        z+SumCE9P4R12Dlz4dev5YBZtFOkuwmtcDbUG+lOhNFLqfK0
+X-Google-Smtp-Source: ABdhPJx8n2GPImG5q/AR+WM+SpJU3w/GQcDyxuepA/kjSkWcBk7A0GOZQAckLphBw7yVoXtcwNl16abR2kp+kJtFdo+eakrobM4d
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:1fc7:: with SMTP id f68mr26465899ilf.133.1591100416736;
+ Tue, 02 Jun 2020 05:20:16 -0700 (PDT)
+Date:   Tue, 02 Jun 2020 05:20:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000024436605a718ef99@google.com>
+Subject: linux-next test error: BUG: using smp_processor_id() in preemptible
+ [ADDR] code: systemd-rfkill/6731
+From:   syzbot <syzbot+7f2b4a7d4281e8c2aad0@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hello,
 
-Here are the changes for v5.8:
+syzbot found the following crash on:
 
-/* Summary */
-We have been discussing using pidfds to attach to namespaces for quite a while and the patches have
-in one form or another already existed for about a year. But I wanted to wait to see how the general
-api would be received and adopted.
-This pr contains the changes to make it possible to use pidfds to attach to the namespaces of a
-process, i.e. they can be passed as the first argument to the setns() syscall. When only a single
-namespace type is specified the semantics are equivalent to passing an nsfd. That means
-setns(nsfd, CLONE_NEWNET) equals setns(pidfd, CLONE_NEWNET). However, when a pidfd is passed,
-multiple namespace flags can be specified in the second setns() argument and setns() will attach the
-caller to all the specified namespaces all at once or to none of them.  Specifying 0 is not valid
-together with a pidfd. Here are just two obvious examples:
-setns(pidfd, CLONE_NEWPID | CLONE_NEWNS | CLONE_NEWNET);
-setns(pidfd, CLONE_NEWUSER);
-Allowing to also attach subsets of namespaces supports various use-cases where callers setns to a
-subset of namespaces to retain privilege, perform an action and then re-attach another subset of
-namespaces.
-Apart from significantly reducing the number of syscalls needed to attach to all currently supported
-namespaces (8 * open(/proc/<pid>/ns/<ns>) + 8 * setns(nsfd) vs 1 * setns(pidfd, <ns-flags>) this
-also allows atomic setns to a set of namespaces, i.e. either attaching to all namespaces succeeds or
-we fail without having changed anything. This is centered around a new internal struct nsset which
-holds all information necessary for a task to switch to a new set of namespaces atomically. Fwiw,
-with this change a pidfd becomes the only token needed to interact with a container. I'm expecting
-this to be picked-up by util-linux for nsenter rather soon. Associated with this change is a shiny
-new test-suite dedicated to setns() (for pidfds and nsfds alike).
+HEAD commit:    0e21d462 Add linux-next specific files for 20200602
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=102c59ce100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ecc1aef35f550ee3
+dashboard link: https://syzkaller.appspot.com/bug?extid=7f2b4a7d4281e8c2aad0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7f2b4a7d4281e8c2aad0@syzkaller.appspotmail.com
 
-  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6731
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 6731 Comm: systemd-rfkill Not tainted 5.7.0-next-20200602-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3632
+ do_mkdirat+0x21e/0x280 fs/namei.c:3655
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fe0d32c9687
+Code: Bad RIP value.
+RSP: 002b:00007fffd5e80488 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 000055fab378a985 RCX: 00007fe0d32c9687
+RDX: 00007fffd5e80350 RSI: 00000000000001ed RDI: 000055fab378a985
+RBP: 00007fe0d32c9680 R08: 0000000000000100 R09: 0000000000000000
+R10: 000055fab378a980 R11: 0000000000000246 R12: 00000000000001ed
+R13: 00007fffd5e80610 R14: 0000000000000000 R15: 0000000000000000
 
-are available in the Git repository at:
 
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/threads-v5.8
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-for you to fetch changes up to 2b40c5db73e239531ea54991087f4edc07fbb08e:
-
-  selftests/pidfd: add pidfd setns tests (2020-05-13 11:41:22 +0200)
-
-/* Testing */
-All patches are based on v5.7-rc4 and have been sitting in linux-next. No build failures or
-warnings were observed. All old and new tests are passing.
-
-/* Conflicts */
-At the time of creating this PR no merge conflicts were reported from linux-next and no merge
-conflicts showed up doing a test-merge with current mainline 359287765c04 ("Merge branch
-'from-miklos' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.
-
-Please consider pulling these changes from the signed threads-v5.8 tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-threads-v5.8
-
-----------------------------------------------------------------
-Christian Brauner (3):
-      nsproxy: add struct nsset
-      nsproxy: attach to namespaces via pidfds
-      selftests/pidfd: add pidfd setns tests
-
- fs/namespace.c                                   |  15 +-
- fs/nsfs.c                                        |   5 +
- include/linux/mnt_namespace.h                    |   2 +
- include/linux/nsproxy.h                          |  24 ++
- include/linux/proc_fs.h                          |   2 +
- include/linux/proc_ns.h                          |   4 +-
- ipc/namespace.c                                  |   7 +-
- kernel/cgroup/namespace.c                        |   5 +-
- kernel/nsproxy.c                                 | 305 +++++++++++++--
- kernel/pid_namespace.c                           |   5 +-
- kernel/time/namespace.c                          |   5 +-
- kernel/user_namespace.c                          |   8 +-
- kernel/utsname.c                                 |   5 +-
- net/core/net_namespace.c                         |   5 +-
- tools/testing/selftests/pidfd/.gitignore         |   1 +
- tools/testing/selftests/pidfd/Makefile           |   3 +-
- tools/testing/selftests/pidfd/config             |   6 +
- tools/testing/selftests/pidfd/pidfd_setns_test.c | 473 +++++++++++++++++++++++
- 18 files changed, 833 insertions(+), 47 deletions(-)
- create mode 100644 tools/testing/selftests/pidfd/config
- create mode 100644 tools/testing/selftests/pidfd/pidfd_setns_test.c
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
