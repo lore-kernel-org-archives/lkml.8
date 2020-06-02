@@ -2,140 +2,250 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF55CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81DB20897
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E8C2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMxPxSbb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XypMuqDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgFBEHw (ORCPT
+        id S1725957AbgFBEM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:07:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgFBEHw (ORCPT
+        Tue, 2 Jun 2020 00:12:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38508 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725616AbgFBEM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:07:52 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AB4C061A0E;
-        Mon,  1 Jun 2020 21:07:52 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id k15so6432992otp.8;
-        Mon, 01 Jun 2020 21:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KMSPv9lovPpFYq/LUSFG6QcTM2yJAf6mkVnhkUqAWFE=;
-        b=WMxPxSbb+ih0evnuvt75qFV3j8/ZNo5BoD18gBSZrmuRB4x6eae1MSmhNbPveib8Cb
-         vG9YA93T4cM2T9KxFOrqXQPSCswFTfrBHeDT7K3csLywYfYJnG1bK47kH2B5IkpfFDTv
-         7AclSnVyGL3RM659NhBjQiWSNH6AszZr3hagD+SFuyd8BmUHP9tGbUz9BSOUdZ/CHCrz
-         2oCtAI3pdEMUiiEjNiDZFonC6ESR4R17iOsexI1pf0Fi2tNzAdohkOdFU0pRIkgbwvsv
-         0SF2prYH888MMi3xOuUOIPJjBhTu6bzXuN4Hr1FkGzc9TpENlMzHGozAyZ/90+5ihXpv
-         aQJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KMSPv9lovPpFYq/LUSFG6QcTM2yJAf6mkVnhkUqAWFE=;
-        b=EB6aK9FeAjo2vR6xrTbgun8JicTEpDkdnQmhHpVsdKvUySIuQJl5c3Ahi0YCLDlB6D
-         tOl+3U12mwcYg6egUP3jKwmpgpS+Su8wktK/2yfmO/EVm6lsAKovgRxQEZzNAVzHKoab
-         /KdxFxLgRE/wt5TnJRiED3ERi7EGuC8PX/sVtpg2J4VAT/DV0Z04eXO21RubgDzm9MMF
-         wTNiGKF6tjY0lodyhirmAMq0F/vbdMDsdOtw969k2GSuzhW3DXSqypJnI20padt8OieE
-         AEyqPigDLq9PST3o9N0N3pgnGlPqV22Tx6l2ZHCNqtilTEQ4w3ovkUMSF+bcF8uWbFYx
-         3lxQ==
-X-Gm-Message-State: AOAM531gIxYA9n+J/pJRWxqNPdDh5UW8LcrsqP1DN/mlWR8R6JCUmJip
-        kGYLvoxQQfUhJ0u5WKrGYEc=
-X-Google-Smtp-Source: ABdhPJzXrPxUYjRIUy87NNVlcUO9m5FQh/SjJVEgeC1PytNMgZBHluBrkNXvuWeXy4XPqPBswW9+Jw==
-X-Received: by 2002:a9d:1d43:: with SMTP id m61mr19800887otm.190.1591070871042;
-        Mon, 01 Jun 2020 21:07:51 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id v1sm418926ooi.13.2020.06.01.21.07.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 21:07:50 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 21:07:48 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH net-next] mlx5: Restore err assignment in mlx5_mdev_init
-Message-ID: <20200602040748.GA1435528@ubuntu-n2-xlarge-x86>
-References: <20200530055447.1028004-1-natechancellor@gmail.com>
- <20200531095810.GF66309@unreal>
+        Tue, 2 Jun 2020 00:12:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591071144;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ayiLISqhpukWIeWMrDjPyoahGbwH5C6Y31y3ZuKK5gg=;
+        b=XypMuqDU4zIHecDeVpoOBiuIcCrXK9cPLz5rK20VGBNm4Q9YgcdjGP0wmqIpPDZ5OecNco
+        EExpo6FS/xQBqJrtcOn8UaoeilWdEll0Ju2BaKyQ0APf9837spI6L6GAeYreyGRGxJt/Oj
+        08xjn/gsg9Xzqi6PLYUcwyYxxQLIRGI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-ZTaONuorN-e4dtOkbW-DXg-1; Tue, 02 Jun 2020 00:12:21 -0400
+X-MC-Unique: ZTaONuorN-e4dtOkbW-DXg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A41F7461;
+        Tue,  2 Jun 2020 04:12:19 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 382F7D021C;
+        Tue,  2 Jun 2020 04:12:19 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 22:12:18 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Diana Craciun <diana.craciun@oss.nxp.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        laurentiu.tudor@nxp.com, bharatb.linux@gmail.com,
+        Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Subject: Re: [PATCH v2 2/9] vfio/fsl-mc: Scan DPRC objects on vfio-fsl-mc
+ driver bind
+Message-ID: <20200601221218.5527d3b7@x1.home>
+In-Reply-To: <20200508072039.18146-3-diana.craciun@oss.nxp.com>
+References: <20200508072039.18146-1-diana.craciun@oss.nxp.com>
+        <20200508072039.18146-3-diana.craciun@oss.nxp.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200531095810.GF66309@unreal>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 12:58:10PM +0300, Leon Romanovsky wrote:
-> On Fri, May 29, 2020 at 10:54:48PM -0700, Nathan Chancellor wrote:
-> > Clang warns:
-> >
-> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:6: warning: variable
-> > 'err' is used uninitialized whenever 'if' condition is true
-> > [-Wsometimes-uninitialized]
-> >         if (!priv->dbg_root) {
-> >             ^~~~~~~~~~~~~~~
-> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1303:9: note:
-> > uninitialized use occurs here
-> >         return err;
-> >                ^~~
-> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:2: note: remove the
-> > 'if' if its condition is always false
-> >         if (!priv->dbg_root) {
-> >         ^~~~~~~~~~~~~~~~~~~~~~
-> > drivers/net/ethernet/mellanox/mlx5/core/main.c:1259:9: note: initialize
-> > the variable 'err' to silence this warning
-> >         int err;
-> >                ^
-> >                 = 0
-> > 1 warning generated.
-> >
-> > This path previously returned -ENOMEM, restore that error code so that
-> > it is not uninitialized.
-> >
-> > Fixes: 810cbb25549b ("net/mlx5: Add missing mutex destroy")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1042
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  drivers/net/ethernet/mellanox/mlx5/core/main.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> > index df46b1fce3a7..ac68445fde2d 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> > @@ -1277,6 +1277,7 @@ static int mlx5_mdev_init(struct mlx5_core_dev *dev, int profile_idx)
-> >  					    mlx5_debugfs_root);
-> >  	if (!priv->dbg_root) {
-> >  		dev_err(dev->device, "mlx5_core: error, Cannot create debugfs dir, aborting\n");
-> > +		err = -ENOMEM;
-> >  		goto err_dbg_root;
->                 ^^^^^^^^^^^^^^^^^^ this is wrong.
-> Failure to create debugfs should never fail the driver.
+On Fri,  8 May 2020 10:20:32 +0300
+Diana Craciun <diana.craciun@oss.nxp.com> wrote:
 
-Fair enough, could you guys deal with this then to make sure it gets
-fixed properly? It appears to be introduced in 11f3b84d7068 ("net/mlx5:
-Split mdev init and pci init").
+> The DPRC (Data Path Resource Container) device is a bus device and has
+> child devices attached to it. When the vfio-fsl-mc driver is probed
+> the DPRC is scanned and the child devices discovered and initialized.
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 106 ++++++++++++++++++++++
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |   1 +
+>  2 files changed, 107 insertions(+)
+> 
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> index 8b53c2a25b32..ea301ba81225 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> @@ -15,6 +15,8 @@
+>  
+>  #include "vfio_fsl_mc_private.h"
+>  
+> +static struct fsl_mc_driver vfio_fsl_mc_driver;
+> +
+>  static int vfio_fsl_mc_open(void *device_data)
+>  {
+>  	if (!try_module_get(THIS_MODULE))
+> @@ -84,6 +86,69 @@ static const struct vfio_device_ops vfio_fsl_mc_ops = {
+>  	.mmap		= vfio_fsl_mc_mmap,
+>  };
+>  
+> +static int vfio_fsl_mc_bus_notifier(struct notifier_block *nb,
+> +				    unsigned long action, void *data)
+> +{
+> +	struct vfio_fsl_mc_device *vdev = container_of(nb,
+> +					struct vfio_fsl_mc_device, nb);
+> +	struct device *dev = data;
+> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
+> +	struct fsl_mc_device *mc_cont = to_fsl_mc_device(mc_dev->dev.parent);
+> +
+> +	if (action == BUS_NOTIFY_ADD_DEVICE &&
+> +	    vdev->mc_dev == mc_cont) {
+> +		mc_dev->driver_override = kasprintf(GFP_KERNEL, "%s",
+> +						    vfio_fsl_mc_ops.name);
+> +		dev_info(dev, "Setting driver override for device in dprc %s\n",
+> +			 dev_name(&mc_cont->dev));
+> +	} else if (action == BUS_NOTIFY_BOUND_DRIVER &&
+> +		vdev->mc_dev == mc_cont) {
+> +		struct fsl_mc_driver *mc_drv = to_fsl_mc_driver(dev->driver);
+> +
+> +		if (mc_drv && mc_drv != &vfio_fsl_mc_driver)
+> +			dev_warn(dev, "Object %s bound to driver %s while DPRC bound to vfio-fsl-mc\n",
+> +				 dev_name(dev), mc_drv->driver.name);
+> +		}
+> +
+> +	return 0;
+> +}
+> +
+> +static int vfio_fsl_mc_init_device(struct vfio_fsl_mc_device *vdev)
+> +{
+> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
+> +	int ret = 0;
+> +
+> +	/* Non-dprc devices share mc_io from parent */
+> +	if (!is_fsl_mc_bus_dprc(mc_dev)) {
+> +		struct fsl_mc_device *mc_cont = to_fsl_mc_device(mc_dev->dev.parent);
+> +
+> +		mc_dev->mc_io = mc_cont->mc_io;
+> +		return 0;
+> +	}
+> +
+> +	vdev->nb.notifier_call = vfio_fsl_mc_bus_notifier;
+> +	ret = bus_register_notifier(&fsl_mc_bus_type, &vdev->nb);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* open DPRC, allocate a MC portal */
+> +	ret = dprc_setup(mc_dev);
+> +	if (ret < 0) {
+> +		dev_err(&mc_dev->dev, "Failed to setup DPRC (error = %d)\n", ret);
+> +		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
+> +		return ret;
+> +	}
+> +
+> +	ret = dprc_scan_container(mc_dev, false);
+> +	if (ret < 0) {
+> +		dev_err(&mc_dev->dev, "Container scanning failed: %d\n", ret);
+> +		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
+> +		dprc_cleanup(mc_dev);
+> +	}
+> +
+> +	return 0;
 
-> >  	}
-> >
-> >
-> > base-commit: c0cc73b79123e67b212bd537a7af88e52c9fbeac
-> > --
-> > 2.27.0.rc0
-> >
+
+The last error branch falls through, did you intend to return 'ret'
+here to capture that?  Also, nit, ret doesn't need to be initialized.
+
+
+> +}
+> +
+>  static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
+>  {
+>  	struct iommu_group *group;
+> @@ -112,9 +177,42 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
+>  		return ret;
+>  	}
+>  
+> +	ret = vfio_fsl_mc_init_device(vdev);
+> +	if (ret) {
+> +		vfio_iommu_group_put(group, dev);
+> +		return ret;
+> +	}
+
+
+The error condition value is a bit inconsistent between
+vfio_fs_mc_init_device() and here, <0 vs !0.  Thanks,
+
+Alex
+
+
+> +
+>  	return ret;
+>  }
+>  
+> +static int vfio_fsl_mc_device_remove(struct device *dev, void *data)
+> +{
+> +	struct fsl_mc_device *mc_dev;
+> +
+> +	WARN_ON(!dev);
+> +	mc_dev = to_fsl_mc_device(dev);
+> +	if (WARN_ON(!mc_dev))
+> +		return -ENODEV;
+> +
+> +	kfree(mc_dev->driver_override);
+> +	mc_dev->driver_override = NULL;
+> +
+> +	/*
+> +	 * The device-specific remove callback will get invoked by device_del()
+> +	 */
+> +	device_del(&mc_dev->dev);
+> +	put_device(&mc_dev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void vfio_fsl_mc_cleanup_dprc(struct fsl_mc_device *mc_dev)
+> +{
+> +	device_for_each_child(&mc_dev->dev, NULL, vfio_fsl_mc_device_remove);
+> +	dprc_cleanup(mc_dev);
+> +}
+> +
+>  static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
+>  {
+>  	struct vfio_fsl_mc_device *vdev;
+> @@ -124,6 +222,14 @@ static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
+>  	if (!vdev)
+>  		return -EINVAL;
+>  
+> +	if (vdev->nb.notifier_call)
+> +		bus_unregister_notifier(&fsl_mc_bus_type, &vdev->nb);
+> +
+> +	if (is_fsl_mc_bus_dprc(mc_dev))
+> +		vfio_fsl_mc_cleanup_dprc(vdev->mc_dev);
+> +
+> +	mc_dev->mc_io = NULL;
+> +
+>  	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
+>  
+>  	return 0;
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> index e79cc116f6b8..37d61eaa58c8 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> @@ -9,6 +9,7 @@
+>  
+>  struct vfio_fsl_mc_device {
+>  	struct fsl_mc_device		*mc_dev;
+> +	struct notifier_block        nb;
+>  };
+>  
+>  #endif /* VFIO_FSL_MC_PRIVATE_H */
+
