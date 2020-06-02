@@ -2,183 +2,82 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54055C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D74C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301E32068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VK6ymbgv"
+	by mail.kernel.org (Postfix) with ESMTP id 8027E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591066178;
+	bh=c8rJ66oPk+P+BJheKqWDDI9HoB7rPissm2/CA+EDED4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=t1pX5U+6iugN70euOlmIL6gxLWrJaKlkxd6ysBlCQi7gOAbelZaNQlwHnLsUeQ9Kw
+	 N7rTQT+ha4KBXPS+npll/m8UfwpPXWIMQde0j0z/lO53qgXj/Duy2RCFAOXLkFheWT
+	 PXBErfA+emdrnLO3ED1zYTEgZ0bNPOQ06iBf6PBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgFBCs3 (ORCPT
+        id S1726755AbgFBCth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 22:48:29 -0400
-Received: from ozlabs.org ([203.11.71.1]:56857 "EHLO ozlabs.org"
+        Mon, 1 Jun 2020 22:49:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgFBCs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 22:48:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725801AbgFBCth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 22:49:37 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bc162dMLz9sSc;
-        Tue,  2 Jun 2020 12:48:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591066106;
-        bh=zDFy0h6+y15Uqzi+4IitwLquzt23JMwBoKe9trjj3ow=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VK6ymbgva8Op87k/pw/YqtHCUIkyCiaj2B/vic+RG73S1DDkgDCcl7ks8GEIy6DVW
-         XDhMBXRv3NC+XQ8YSGu//hlvwrE6VUruYfLdC2CKVlLqxkITR9Uf+XQABW8RpBvaOE
-         S+oMG17PWIe+0hLZlUiVjBuvfZAa+HNAxa8azEHhgKumbM/XE3SB1FEUV9YGMMiJOt
-         xxFJFIj4Azi8lesSf0R4DpPrN9nYyC0KKoKefVVIHwcV7aADHMWKoycophNyikUQdu
-         HkdpIex1G7FS0C1tgjLUc34pmyCeebN7UhfBQgmnpmxCCvdNV+u3LMRS/2C44Rc8Mn
-         6mMPq24e4kxzg==
-Date:   Tue, 2 Jun 2020 12:48:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yamin Friedman <yaminf@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the block tree with the rdma tree
-Message-ID: <20200602124824.4293d0dc@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id 847562068D;
+        Tue,  2 Jun 2020 02:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591066176;
+        bh=c8rJ66oPk+P+BJheKqWDDI9HoB7rPissm2/CA+EDED4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sp/xx56iLz4aACaVjIeO1JEGzPKVSovJ8TZMuCXkhzkzezVQGXwKmLKSr3huJpTpK
+         mplUAcl9wif8Tg0qvT7esP1H8hZxx+91z183ltJeI4qSjdsfnC4ihG4WJZ6tii/c4N
+         EKf3q+m2r38rEjIlPvZqdJ7G0i3iDLg+QojyIgkw=
+Date:   Mon, 1 Jun 2020 19:49:36 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Rich Felker <dalias@libc.org>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
+        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] sh: remove sh5 support
+Message-Id: <20200601194936.244303d858d2d0c47fc87821@linux-foundation.org>
+In-Reply-To: <20200602013332.GY1079@brightrain.aerifal.cx>
+References: <20200424221948.1120587-1-arnd@arndb.de>
+        <20200507143552.GA28683@infradead.org>
+        <20200528054600.GA29717@infradead.org>
+        <20200528161416.GY1079@brightrain.aerifal.cx>
+        <20200529143059.GA25475@infradead.org>
+        <20200529175335.GK1079@brightrain.aerifal.cx>
+        <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
+        <20200601181259.GV1079@brightrain.aerifal.cx>
+        <20200602013332.GY1079@brightrain.aerifal.cx>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 1 Jun 2020 21:33:32 -0400 Rich Felker <dalias@libc.org> wrote:
 
-Hi all,
+> Hmm, it looks like Andrew Morton just pulled most of these into -mm,
+> apparently independently of me getting them in my for-next a few hours
+> ago, since his versions lack my signed-off-by. That's ok though, as
+> long as they go up. Some details since further action is needed on a
+> few:
 
-Today's linux-next merge of the block tree got a conflict in:
+It would be better if these were to go via the sh tree.  So please go
+ahead and merge them up - I'll drop my copies when they turn up in
+-next via the sh tree.
 
-  drivers/nvme/host/rdma.c
-
-between commit:
-
-  583f69304b91 ("nvme-rdma: use new shared CQ mechanism")
-
-from the rdma tree and commit:
-
-  5ec5d3bddc6b ("nvme-rdma: add metadata/T10-PI support")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/nvme/host/rdma.c
-index 83d5f292c937,f8f856dc0c67..000000000000
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@@ -85,7 -95,7 +95,8 @@@ struct nvme_rdma_queue=20
-  	struct rdma_cm_id	*cm_id;
-  	int			cm_error;
-  	struct completion	cm_done;
- +	int			cq_size;
-+ 	bool			pi_support;
-  };
- =20
-  struct nvme_rdma_ctrl {
-@@@ -262,7 -272,8 +273,9 @@@ static int nvme_rdma_create_qp(struct n
-  	init_attr.qp_type =3D IB_QPT_RC;
-  	init_attr.send_cq =3D queue->ib_cq;
-  	init_attr.recv_cq =3D queue->ib_cq;
- +	init_attr.qp_context =3D queue;
-+ 	if (queue->pi_support)
-+ 		init_attr.create_flags |=3D IB_QP_CREATE_INTEGRITY_EN;
- =20
-  	ret =3D rdma_create_qp(queue->cm_id, dev->pd, &init_attr);
- =20
-@@@ -426,43 -437,18 +447,49 @@@ static void nvme_rdma_destroy_queue_ib(
-  	nvme_rdma_dev_put(dev);
-  }
- =20
-- static int nvme_rdma_get_max_fr_pages(struct ib_device *ibdev)
-+ static int nvme_rdma_get_max_fr_pages(struct ib_device *ibdev, bool pi_su=
-pport)
-  {
-- 	return min_t(u32, NVME_RDMA_MAX_SEGMENTS,
-- 		     ibdev->attrs.max_fast_reg_page_list_len - 1);
-+ 	u32 max_page_list_len;
-+=20
-+ 	if (pi_support)
-+ 		max_page_list_len =3D ibdev->attrs.max_pi_fast_reg_page_list_len;
-+ 	else
-+ 		max_page_list_len =3D ibdev->attrs.max_fast_reg_page_list_len;
-+=20
-+ 	return min_t(u32, NVME_RDMA_MAX_SEGMENTS, max_page_list_len - 1);
-  }
- =20
- +static int nvme_rdma_create_cq(struct ib_device *ibdev,
- +				struct nvme_rdma_queue *queue)
- +{
- +	int ret, comp_vector, idx =3D nvme_rdma_queue_idx(queue);
- +	enum ib_poll_context poll_ctx;
- +
- +	/*
- +	 * Spread I/O queues completion vectors according their queue index.
- +	 * Admin queues can always go on completion vector 0.
- +	 */
- +	comp_vector =3D idx =3D=3D 0 ? idx : idx - 1;
- +
- +	/* Polling queues need direct cq polling context */
- +	if (nvme_rdma_poll_queue(queue)) {
- +		poll_ctx =3D IB_POLL_DIRECT;
- +		queue->ib_cq =3D ib_alloc_cq(ibdev, queue, queue->cq_size,
- +					   comp_vector, poll_ctx);
- +	} else {
- +		poll_ctx =3D IB_POLL_SOFTIRQ;
- +		queue->ib_cq =3D ib_cq_pool_get(ibdev, queue->cq_size,
- +					      comp_vector, poll_ctx);
- +	}
- +
- +	if (IS_ERR(queue->ib_cq)) {
- +		ret =3D PTR_ERR(queue->ib_cq);
- +		return ret;
- +	}
- +
- +	return 0;
- +}
- +
-  static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
-  {
-  	struct ib_device *ibdev;
-
---Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7VvfgACgkQAVBC80lX
-0Gxupgf/XeOuArn2aAZlo6Kdw/gUNLYNVTwun0a5HGEPPvCExK81Mc0Ror3OHyUE
-7e7fPVFOIbpI4oWrkPwHl/Z/SOhWnAvS/c6mDnIYquzk7luP7/aVjbLIz7obzAc9
-S9PUv5tALhAALrEHR1QxfKBsG1AmpmLKwV3xmD4XeU0L9S+iCOxL06XjcdKhYw5W
-BH/ydbZIdTHE+mRQ6+9Jsud55qlZFDkqAP3ZY5U2OYpqFw+lNcOjwRP+IVDFhnXS
-eQd/xM4z/HrjoTYfe1kFxNCE4qyPXVh70/xJ0oD7x/P9NVgOIg3lOuQgbv0+T6mo
-Wo3983eiQHgWfr1E+OcvnTgUzqjitA==
-=D8dd
------END PGP SIGNATURE-----
-
---Sig_/XZZ1zvS5mB2NTqR0Xfz3Acb--
