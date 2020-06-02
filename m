@@ -2,158 +2,130 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA5B206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="g3P79kjv"
+	by mail.kernel.org (Postfix) with ESMTP id C0BAA206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbgFBBHC (ORCPT
+        id S1728071AbgFBBQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 21:07:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgFBBHB (ORCPT
+        Mon, 1 Jun 2020 21:16:44 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:18273 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725793AbgFBBQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 21:07:01 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF0BC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 18:07:00 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id x1so11035914ejd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 18:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=bacYd6Xj63f6+mhdcMdTVJ2YDOuetS8awQOMSRyd60k=;
-        b=g3P79kjvPSikCAVrOvBjMTJ1MhKHE5VPpEN91wi3kMamR76EyRhCW9QvW8uo4vgVeY
-         4T/e+gLBxH1XD09jzNROz6FxUoHmrP7v9gVAhUpKD/OEEnkjrnz8yAKbp3vQGEGf8IOr
-         r86eaWMmSva9QxMhxNWI7HqZHNI9gy9hAspDJ3MWp8Tj1XQF3/Vdffbuw8+0MOkTBCN+
-         qw0F9UkTrdMj4I1Ao7kICX4j8WOagpY+oE0Y6vhkNXaAo9cahwHcCiwoYPrTxychDbB7
-         aX4VoZrX1I1exEHTXOqkJTuflg7HRJS3lvG7ZwRA6PAAWPkD1BD99DE45/LjxwR012CP
-         t/Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=bacYd6Xj63f6+mhdcMdTVJ2YDOuetS8awQOMSRyd60k=;
-        b=eCn7XklC1newYEm3RKYpIqY+Wnh1bK9lv1yW8odpWY8XppMPySlvoqr09MQVt9qkkA
-         +PO8GaWjLPZHP+ZM0JSC1SF+bn7qLSqFGdUqHjgYT8tJg6tFYR+JF0bjLXi8uLjzihOM
-         cWA61F4+l+mIN8Kpws3Iy3+FJnC0+jT9c4ipzfS7HtNy5BzRVlJ7e15D6w1hTc+NaJuo
-         MRlv8uzM6kBYTlWfh+T3kjO//pigV58e47LGKJ4nQ5X1UPdsUeggk3EFIWt4/L1yodlk
-         kITNVkl/Oqt/EElZm6RQko37JWwpOztbjWNRypXwCFqAoxv2ZpLKIoZOWKpgTHFAy6bj
-         +r8w==
-X-Gm-Message-State: AOAM5321m/sbXEADMHiay0A97NIQ5z8UMrC1H8xsAQBf/ZCwe7AxfrtX
-        UHi69ZJtCVjkYfjq7SB83cWXamTCfhR++R1WBmQh
-X-Google-Smtp-Source: ABdhPJyKsQV/yosAgyJ5ku5AJYZrdaUYTfXNwFDdpTJsLDr6Wwl2VzwIzIBZoKOV8M4cuLJdwpCobc4TVnk8A/FK5xk=
-X-Received: by 2002:a17:906:7395:: with SMTP id f21mr10789073ejl.178.1591060018671;
- Mon, 01 Jun 2020 18:06:58 -0700 (PDT)
+        Mon, 1 Jun 2020 21:16:43 -0400
+X-IronPort-AV: E=Sophos;i="5.73,462,1583164800"; 
+   d="scan'208";a="93611258"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 02 Jun 2020 09:16:38 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 582184CE03C1;
+        Tue,  2 Jun 2020 09:16:36 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 2 Jun 2020 09:16:36 +0800
+Message-ID: <5ED5A871.4070101@cn.fujitsu.com>
+Date:   Tue, 2 Jun 2020 09:16:33 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 1 Jun 2020 21:06:48 -0400
-Message-ID: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
-Subject: [GIT PULL] SELinux patches for v5.8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To:     Jan Kara <jack@suse.cz>
+CC:     Ira Weiny <ira.weiny@intel.com>, <linux-ext4@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V4 6/8] fs/ext4: Make DAX mount option a tri-state
+References: <20200521191313.261929-1-ira.weiny@intel.com> <20200521191313.261929-7-ira.weiny@intel.com> <5ECE00AE.3010802@cn.fujitsu.com> <20200527235002.GA725853@iweiny-DESK2.sc.intel.com> <5ECF7CD3.20409@cn.fujitsu.com> <20200528094144.GD14550@quack2.suse.cz>
+In-Reply-To: <20200528094144.GD14550@quack2.suse.cz>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: 582184CE03C1.AA45D
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2020/5/28 17:41, Jan Kara wrote:
+> On Thu 28-05-20 16:56:51, Xiao Yang wrote:
+>> On 2020/5/28 7:50, Ira Weiny wrote:
+>>> On Wed, May 27, 2020 at 01:54:54PM +0800, Xiao Yang wrote:
+>>>> On 2020/5/22 3:13, ira.weiny@intel.com wrote:
+>>>>> From: Ira Weiny<ira.weiny@intel.com>
+>>>>>
+>>>>> We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
+>>>>> operate the same which is equivalent to 'always'.  This new
+>>>>> functionality is limited to ext4 only.
+>>>>>
+>>>>> Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
+>>>>> it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
+>>>>>
+>>>>> We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
+>>>>>
+>>>>> Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
+>>>>> specified that option for printing.
+>>>> Hi Ira,
+>>>>
+>>>> I have two questions when reviewing this patch:
+>>>> 1) After doing mount with the same dax=inode option, ext4/xfs shows
+>>>> differnt output(i.e. xfs doesn't print 'dax=inode'):
+>>>> ---------------------------------------------------
+>>>> # mount -o dax=inode /dev/pmem0 /mnt/xfstests/test/
+>>>> # mount | grep pmem0
+>>>> /dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode)
+>>>>
+>>>> # mount -odax=inode /dev/pmem1 /mnt/xfstests/scratch/
+>>>> # mount | grep pmem1
+>>>> /dev/pmem1 on /mnt/xfstests/scratch type xfs
+>>>> (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+>>>> ----------------------------------------------------
+>>>> Is this expected output? why don't unify the output?
+>>>
+>>> Correct. dax=inode is the default.  xfs treats that default the same whether
+>>> you specify it on the command line or not.
+>>>
+>>> For ext4 Jan specifically asked that if the user specified dax=inode on the
+>>> command line that it be printed on the mount options.  If you don't specify
+>>> anything then dax=inode is in effect but ext4 will not print anything.
+>>>
+>>> I had the behavior the same as XFS originally but Jan wanted it this way.  The
+>>> XFS behavior is IMO better and is what the new mount infrastructure gives by
+>>> default.
+>>
+>> Could we unify the output?  It is strange for me to use differnt output on
+>> ext4 and xfs.
+>
+> If we'd unify the output with XFS, it would be inconsistent with all the
+> other ext4 mount options. So I disagree with that. I agree it is not ideal
+> to have different behavior between xfs and ext4 but such is the historical
+> behavior. If we want to change that, we need to change the handling for all
+> the ext4 mount options. I'm open for that discussion but it is a problem
+> unrelated to this patch set.
+Hi Jan,
 
-Here are the SELinux patches for v5.8.  All the patches pass our test
-suite and as of about 15 minutes ago they apply cleanly to the top of
-your tree.  Please merge into v5.8.
+Thanks for your quick feedback.
+Of course, this doubt should not block the patch set.
 
-The highlights:
+Best Regards,
+Xiao Yang
+>
+> 								Honza
 
-- A number of improvements to various SELinux internal data structures
-to help improve performance.  We move the role transitions into a hash
-table.  In the content structure we shift from hashing the content
-string (aka SELinux label) to the structure itself, when it is valid.
-This last change not only offers a speedup, but it helps us simplify
-the code some as well.
 
-- Add a new SELinux policy version which allows for a more space
-efficient way of storing the filename transitions in the binary
-policy.  Given the default Fedora SELinux policy with the unconfined
-module enabled, this change drops the policy size from ~7.6MB to
-~3.3MB.  The kernel policy load time dropped as well.
 
-- Some fixes to the error handling code in the policy parser to
-properly return error codes when things go wrong.
-
-Thanks,
--Paul
-
---
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
-
- Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20200601
-
-for you to fetch changes up to fe5a90b8c14914397a3bb0c214d142103c1ba3bf:
-
- selinux: netlabel: Remove unused inline function (2020-05-12 20:16:33 -0400)
-
-----------------------------------------------------------------
-selinux/stable-5.8 PR 20200601
-
-----------------------------------------------------------------
-Ondrej Mosnacek (9):
-     selinux: drop unnecessary smp_load_acquire() call
-     selinux: store role transitions in a hash table
-     selinux: hash context structure directly
-     selinux: move context hashing under sidtab
-     selinux: implement new format of filename transitions
-     selinux: don't produce incorrect filename_trans_count
-     selinux: simplify range_write()
-     selinux: fix return value on error in policydb_read()
-     selinux: do not allocate hashtabs dynamically
-
-Wei Yongjun (1):
-     selinux: fix error return code in policydb_read()
-
-YueHaibing (1):
-     selinux: netlabel: Remove unused inline function
-
-Zou Wei (1):
-     selinux: fix warning Comparison to bool
-
-security/selinux/Makefile           |   2 +-
-security/selinux/include/netlabel.h |   6 -
-security/selinux/include/security.h |   3 +-
-security/selinux/ss/context.c       |  32 +++
-security/selinux/ss/context.h       |  11 +-
-security/selinux/ss/ebitmap.c       |  14 ++
-security/selinux/ss/ebitmap.h       |   1 +
-security/selinux/ss/hashtab.c       |  51 ++--
-security/selinux/ss/hashtab.h       |  13 +-
-security/selinux/ss/mls.c           |  16 +-
-security/selinux/ss/mls.h           |  11 +
-security/selinux/ss/policydb.c      | 451 +++++++++++++++++++++++---------
-security/selinux/ss/policydb.h      |  15 +-
-security/selinux/ss/services.c      | 153 +++++-------
-security/selinux/ss/services.h      |   3 -
-security/selinux/ss/sidtab.c        |  35 +--
-security/selinux/ss/sidtab.h        |   1 +
-security/selinux/ss/symtab.c        |   5 +-
-security/selinux/ss/symtab.h        |   2 +-
-19 files changed, 499 insertions(+), 326 deletions(-)
-create mode 100644 security/selinux/ss/context.c
-
--- 
-paul moore
-www.paul-moore.com
