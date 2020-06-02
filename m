@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F70C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77919C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727942077D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6E92072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgFBTwT (ORCPT
+        id S1728361AbgFBTvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:52:19 -0400
+        Tue, 2 Jun 2020 15:51:02 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36862 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728368AbgFBTvD (ORCPT
+        by vger.kernel.org with ESMTP id S1728123AbgFBTu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:51:03 -0400
+        Tue, 2 Jun 2020 15:50:57 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 2 Jun 2020 12:50:59 -0700
+ 15.0.1156.6; Tue, 2 Jun 2020 12:50:52 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id D5AC540BEE;
-        Tue,  2 Jun 2020 12:50:59 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id D95A240BED;
+        Tue,  2 Jun 2020 12:50:52 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v4 17/32] objtool: mcount: Use objtool ELF to write
-Date:   Tue, 2 Jun 2020 12:50:10 -0700
-Message-ID: <7dd29b0750fd543dbe2b85e88076cdbee164fb6b.1591125127.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v4 08/32] objtool: mcount: Walk objtool Elf structs in find_secsym_ndx
+Date:   Tue, 2 Jun 2020 12:50:01 -0700
+Message-ID: <23497cb675be990627fa76eed26c1385cb0f5826.1591125127.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1591125127.git.mhelsley@vmware.com>
 References: <cover.1591125127.git.mhelsley@vmware.com>
@@ -51,549 +51,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than modify the pseudo-mapping of the ELF file directly,
-which is the recordmcount way of operating, use the objtool
-section list and generic ELF functions to modify the ELF file.
+Rather than using indices into raw ELF32/64 tables mapped for the
+wrapper, use the objtool functions to find the a suitable symbol
+in the given text section.
 
-This eliminates a bunch of code -- the ulseek() and uwrite()
-functions -- because it's used to patch the ELF data. Instead
-we rely on objtool's ELF code to handle updating the ELF file.
-This means a bunch of the odd bits in append_func() also go
-away since they did things like update the ELF header, add
-to the section table, and append the new section names to the
-string table -- all handled by objtool's ELF code.
-
-One unusual part, with respect to objtool is the way we handle
-writing nops. Objtool is not designed to modify the an ELF
-text section directly (or at least I could not find and example
-to base this work on). So we break layering to access the
-"data" of the text section via the section's "data buffer".
-This is still cleaner -- we can now pass in the section struct
-and offset as separate parameters.
-
-Note that this patch does not move the associated parts out
-of the wrapper file. We postpone that cleanup for later so that
-it's easier to see the changes to the functions rather than
-obscuring them with the move.
+Also take advantage of this commit to rename the function to
+something that reads more easily.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 161 ++++-------------------------------
- tools/objtool/recordmcount.h | 132 +++++++++-------------------
- 2 files changed, 55 insertions(+), 238 deletions(-)
+ tools/objtool/recordmcount.c |  2 ++
+ tools/objtool/recordmcount.h | 42 ++++++++++++++++--------------------
+ 2 files changed, 21 insertions(+), 23 deletions(-)
 
 diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index 6150af8d67ce..89762908290e 100644
+index f20582ac99e2..843027a46e1b 100644
 --- a/tools/objtool/recordmcount.c
 +++ b/tools/objtool/recordmcount.c
-@@ -52,24 +52,9 @@ static struct stat sb;	/* Remember .st_size, etc. */
- static const char *altmcount;	/* alternate mcount symbol name */
- extern int warn_on_notrace_sect; /* warn when section has mcount not being recorded */
- static void *file_map;	/* pointer of the mapped file */
--static void *file_end;	/* pointer to the end of the mapped file */
--static int file_updated; /* flag to state file was changed */
--static void *file_ptr;	/* current file pointer location */
--
--static void *file_append; /* added to the end of the file */
--static size_t file_append_size; /* how much is added to end of file */
- 
- static struct elf *lf;
- 
--/* Per-file resource cleanup when multiple files. */
--static void file_append_cleanup(void)
--{
--	free(file_append);
--	file_append = NULL;
--	file_append_size = 0;
--	file_updated = 0;
--}
--
- static void mmap_cleanup(void)
- {
- 	if (!mmap_failed)
-@@ -82,72 +67,11 @@ static void mmap_cleanup(void)
- 	lf = NULL;
+@@ -422,6 +422,8 @@ static int is_mcounted_section_name(char const *const txtname)
+ 		strcmp(".cpuidle.text", txtname) == 0;
  }
  
--/* ulseek, uwrite, ...:  Check return value for errors. */
--
--static off_t ulseek(off_t const offset, int const whence)
--{
--	switch (whence) {
--	case SEEK_SET:
--		file_ptr = file_map + offset;
--		break;
--	case SEEK_CUR:
--		file_ptr += offset;
--		break;
--	case SEEK_END:
--		file_ptr = file_map + (sb.st_size - offset);
--		break;
--	}
--	if (file_ptr < file_map) {
--		fprintf(stderr, "lseek: seek before file\n");
--		return -1;
--	}
--	return file_ptr - file_map;
--}
--
--static ssize_t uwrite(void const *const buf, size_t const count)
--{
--	size_t cnt = count;
--	off_t idx = 0;
--
--	file_updated = 1;
--
--	if (file_ptr + count >= file_end) {
--		off_t aoffset = (file_ptr + count) - file_end;
--
--		if (aoffset > file_append_size) {
--			file_append = realloc(file_append, aoffset);
--			file_append_size = aoffset;
--		}
--		if (!file_append) {
--			perror("write");
--			file_append_cleanup();
--			mmap_cleanup();
--			return -1;
--		}
--		if (file_ptr < file_end) {
--			cnt = file_end - file_ptr;
--		} else {
--			cnt = 0;
--			idx = aoffset - count;
--		}
--	}
--
--	if (cnt)
--		memcpy(file_ptr, buf, cnt);
--
--	if (cnt < count)
--		memcpy(file_append + idx, buf + cnt, count - cnt);
--
--	file_ptr += count;
--	return count;
--}
--
- static void * umalloc(size_t size)
- {
- 	void *const addr = malloc(size);
- 	if (addr == 0) {
- 		fprintf(stderr, "malloc failed: %zu bytes\n", size);
--		file_append_cleanup();
- 		mmap_cleanup();
- 		return NULL;
- 	}
-@@ -173,8 +97,6 @@ static void *mmap_file(char const *fname)
- 	fd_map = -1;
- 	mmap_failed = 1;
- 	file_map = NULL;
--	file_ptr = NULL;
--	file_updated = 0;
- 	sb.st_size = 0;
- 
- 	lf = elf_open_read(fname, O_RDWR);
-@@ -210,8 +132,6 @@ static void *mmap_file(char const *fname)
- out:
- 	fd_map = -1;
- 
--	file_end = file_map + sb.st_size;
--
- 	return file_map;
- }
- 
-@@ -222,12 +142,16 @@ static unsigned char *ideal_nop;
- 
- static char rel_type_nop;
- 
--static int (*make_nop)(void *map, size_t const offset);
-+static int (*make_nop)(struct section *, size_t const offset);
- 
--static int make_nop_x86(void *map, size_t const offset)
-+static int make_nop_x86(struct section *txts, size_t const offset)
- {
- 	uint32_t *ptr;
- 	unsigned char *op;
-+	void *map = txts->data->d_buf;
++static const unsigned int missing_sym = (unsigned int)-1;
 +
-+	if (offset < 1)
-+		return -1;
- 
- 	/* Confirm we have 0xe8 0x0 0x0 0x0 0x0 */
- 	ptr = map + offset;
-@@ -239,10 +163,7 @@ static int make_nop_x86(void *map, size_t const offset)
- 		return -1;
- 
- 	/* convert to nop */
--	if (ulseek(offset - 1, SEEK_SET) < 0)
--		return -1;
--	if (uwrite(ideal_nop, 5) < 0)
--		return -1;
-+	memcpy(op, ideal_nop, 5);
- 	return 0;
- }
- 
-@@ -266,12 +187,13 @@ static unsigned char push_bl_mcount_thumb_le[6] = { 0x00, 0xb5, 0xff, 0xf7, 0xfe
- static unsigned char push_bl_mcount_thumb_be[6] = { 0xb5, 0x00, 0xf7, 0xff, 0xff, 0xfe }; /* push {lr}, bl */
- static unsigned char *push_bl_mcount_thumb;
- 
--static int make_nop_arm(void *map, size_t const offset)
-+static int make_nop_arm(struct section *txts, size_t const offset)
- {
- 	char *ptr;
- 	int cnt = 1;
- 	int nop_size;
- 	size_t off = offset;
-+	void *map = txts->data->d_buf;
- 
- 	ptr = map + offset;
- 	if (memcmp(ptr, bl_mcount_arm, 4) == 0) {
-@@ -290,21 +212,19 @@ static int make_nop_arm(void *map, size_t const offset)
- 		return -1;
- 
- 	/* Convert to nop */
--	if (ulseek(off, SEEK_SET) < 0)
--		return -1;
--
- 	do {
--		if (uwrite(ideal_nop, nop_size) < 0)
--			return -1;
-+		memcpy(map + off, ideal_nop, nop_size);
-+		off += nop_size;
- 	} while (--cnt > 0);
- 
- 	return 0;
- }
- 
- static unsigned char ideal_nop4_arm64[4] = {0x1f, 0x20, 0x03, 0xd5};
--static int make_nop_arm64(void *map, size_t const offset)
-+static int make_nop_arm64(struct section *txts, size_t const offset)
- {
- 	uint32_t *ptr;
-+	void *map = txts->data->d_buf;
- 
- 	ptr = map + offset;
- 	/* bl <_mcount> is 0x94000000 before relocation */
-@@ -312,52 +232,7 @@ static int make_nop_arm64(void *map, size_t const offset)
- 		return -1;
- 
- 	/* Convert to nop */
--	if (ulseek(offset, SEEK_SET) < 0)
--		return -1;
--	if (uwrite(ideal_nop, 4) < 0)
--		return -1;
--	return 0;
--}
--
--static int write_file(const char *fname)
--{
--	char tmp_file[strlen(fname) + 4];
--	size_t n;
--
--	if (!file_updated)
--		return 0;
--
--	sprintf(tmp_file, "%s.rc", fname);
--
--	/*
--	 * After reading the entire file into memory, delete it
--	 * and write it back, to prevent weird side effects of modifying
--	 * an object file in place.
--	 */
--	fd_map = open(tmp_file, O_WRONLY | O_TRUNC | O_CREAT, sb.st_mode);
--	if (fd_map < 0) {
--		perror(fname);
--		return -1;
--	}
--	n = write(fd_map, file_map, sb.st_size);
--	if (n != sb.st_size) {
--		perror("write");
--		close(fd_map);
--		return -1;
--	}
--	if (file_append_size) {
--		n = write(fd_map, file_append, file_append_size);
--		if (n != file_append_size) {
--			perror("write");
--			close(fd_map);
--			return -1;
--		}
--	}
--	close(fd_map);
--	if (rename(tmp_file, fname) < 0) {
--		perror(fname);
--		return -1;
--	}
-+	memcpy(map + offset, ideal_nop, 4);
- 	return 0;
- }
- 
-@@ -682,8 +557,7 @@ static int do_file(char const *const fname)
- 			reltype = R_MIPS_32;
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
--		if (do32(ehdr, reltype) < 0)
--			goto out;
-+		rc = do32(reltype);
- 		break;
- 	case ELFCLASS64: {
- 		Elf64_Ehdr *const ghdr = (Elf64_Ehdr *)ehdr;
-@@ -702,15 +576,12 @@ static int do_file(char const *const fname)
- 			Elf64_r_info = MIPS64_r_info;
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
--		if (do64(ghdr, reltype) < 0)
--			goto out;
-+		rc = do64(reltype);
- 		break;
- 	}
- 	}  /* end switch */
- 
--	rc = write_file(fname);
- out:
--	file_append_cleanup();
- 	mmap_cleanup();
- 	return rc;
- }
+ /* 32 bit and 64 bit are very similar */
+ #include "recordmcount.h"
+ #define RECORD_MCOUNT_64
 diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 7ebc617fb3a6..6754bde0bacc 100644
+index b487308992ce..dba1c385106f 100644
 --- a/tools/objtool/recordmcount.h
 +++ b/tools/objtool/recordmcount.h
-@@ -24,7 +24,6 @@
+@@ -24,7 +24,7 @@
+ #undef mcount_adjust
+ #undef sift_rel_mcount
+ #undef nop_mcount
+-#undef find_secsym_ndx
++#undef find_section_sym_index
  #undef has_rel_mcount
  #undef tot_relsize
- #undef do_func
--#undef Elf_Ehdr
- #undef Elf_Shdr
- #undef Elf_Rel
- #undef Elf_Rela
-@@ -33,7 +32,6 @@
- #undef fn_ELF_R_INFO
- #undef uint_t
- #undef _w
--#undef _align
- #undef _size
- 
- #ifdef RECORD_MCOUNT_64
-@@ -44,8 +42,6 @@
+ #undef get_mcountsym
+@@ -53,7 +53,7 @@
+ # define append_func		append64
+ # define sift_rel_mcount	sift64_rel_mcount
+ # define nop_mcount		nop_mcount_64
+-# define find_secsym_ndx	find64_secsym_ndx
++# define find_section_sym_index	find64_section_sym_index
+ # define has_rel_mcount		has64_rel_mcount
  # define tot_relsize		tot64_relsize
- # define do_func		do64
- # define mcount_adjust		mcount_adjust_64
--# define Elf_Ehdr		Elf64_Ehdr
--# define Elf_Shdr		Elf64_Shdr
- # define Elf_Rel		Elf64_Rel
- # define Elf_Rela		Elf64_Rela
- # define ELF_R_INFO		ELF64_R_INFO
-@@ -53,7 +49,6 @@
- # define fn_ELF_R_INFO		fn_ELF64_R_INFO
- # define uint_t			uint64_t
- # define _w			w8
--# define _align			7u
- # define _size			8
- #else
+ # define get_sym_str_and_relp	get_sym_str_and_relp_64
+@@ -85,7 +85,7 @@
  # define append_func		append32
-@@ -63,8 +58,6 @@
+ # define sift_rel_mcount	sift32_rel_mcount
+ # define nop_mcount		nop_mcount_32
+-# define find_secsym_ndx	find32_secsym_ndx
++# define find_section_sym_index	find32_section_sym_index
+ # define has_rel_mcount		has32_rel_mcount
  # define tot_relsize		tot32_relsize
- # define do_func		do32
- # define mcount_adjust		mcount_adjust_32
--# define Elf_Ehdr		Elf32_Ehdr
--# define Elf_Shdr		Elf32_Shdr
- # define Elf_Rel		Elf32_Rel
- # define Elf_Rela		Elf32_Rela
- # define ELF_R_INFO		ELF32_R_INFO
-@@ -72,7 +65,6 @@
- # define fn_ELF_R_INFO		fn_ELF32_R_INFO
- # define uint_t			uint32_t
- # define _w			w
--# define _align			3u
- # define _size			4
- #endif
- 
-@@ -84,10 +76,8 @@ static void (*Elf_r_info)(Elf_Rel *const rp, unsigned sym, unsigned type) = fn_E
- 
- static int mcount_adjust = 0;
- 
--/* Append the new shstrtab, Elf_Shdr[], __mcount_loc and its relocations. */
--static int append_func(Elf_Ehdr *const ehdr,
--			Elf_Shdr *const shstr,
--			uint_t const *const mloc0,
-+/* Append the new  __mcount_loc and its relocations. */
-+static int append_func(uint_t const *const mloc0,
- 			uint_t const *const mlocp,
- 			Elf_Rel const *const mrel0,
- 			Elf_Rel const *const mrelp,
-@@ -95,83 +85,47 @@ static int append_func(Elf_Ehdr *const ehdr,
- 			unsigned int const symsec_sh_link)
- {
- 	/* Begin constructing output file */
--	Elf_Shdr mcsec;
-+	struct section *sec;
- 	char const *mc_name = (sizeof(Elf_Rela) == rel_entsize)
- 		? ".rela__mcount_loc"
- 		:  ".rel__mcount_loc";
- 	unsigned const old_shnum = lf->ehdr.e_shnum;
--	uint_t const old_shoff = lf->ehdr.e_shoff;
--	uint_t const old_shstr_sh_size   = _w(shstr->sh_size);
--	uint_t const old_shstr_sh_offset = _w(shstr->sh_offset);
--	uint_t t = 1 + strlen(mc_name) + _w(shstr->sh_size);
--	uint_t new_e_shoff;
--
--	shstr->sh_size = _w(t);
--	shstr->sh_offset = _w(sb.st_size);
--
--	t += sb.st_size;
--	t += (_align & -t);  /* word-byte align */
--	new_e_shoff = t;
--
--	/* body for new shstrtab */
--	if (ulseek(sb.st_size, SEEK_SET) < 0)
--		return -1;
--	if (uwrite(old_shstr_sh_offset + (void *)ehdr, old_shstr_sh_size) < 0)
--		return -1;
--	if (uwrite(mc_name, 1 + strlen(mc_name)) < 0)
--		return -1;
--
--	/* old(modified) Elf_Shdr table, word-byte aligned */
--	if (ulseek(t, SEEK_SET) < 0)
--		return -1;
--	t += sizeof(Elf_Shdr) * old_shnum;
--	if (uwrite(old_shoff + (void *)ehdr,
--	       sizeof(Elf_Shdr) * old_shnum) < 0)
--		return -1;
--
--	/* new sections __mcount_loc and .rel__mcount_loc */
--	t += 2*sizeof(mcsec);
--	mcsec.sh_name = w((sizeof(Elf_Rela) == rel_entsize) + strlen(".rel")
--		+ old_shstr_sh_size);
--	mcsec.sh_type = w(SHT_PROGBITS);
--	mcsec.sh_flags = _w(SHF_ALLOC);
--	mcsec.sh_addr = 0;
--	mcsec.sh_offset = _w(t);
--	mcsec.sh_size = _w((void *)mlocp - (void *)mloc0);
--	mcsec.sh_link = 0;
--	mcsec.sh_info = 0;
--	mcsec.sh_addralign = _w(_size);
--	mcsec.sh_entsize = _w(_size);
--	if (uwrite(&mcsec, sizeof(mcsec)) < 0)
--		return -1;
- 
--	mcsec.sh_name = w(old_shstr_sh_size);
--	mcsec.sh_type = (sizeof(Elf_Rela) == rel_entsize)
--		? w(SHT_RELA)
--		: w(SHT_REL);
--	mcsec.sh_flags = 0;
--	mcsec.sh_addr = 0;
--	mcsec.sh_offset = _w((void *)mlocp - (void *)mloc0 + t);
--	mcsec.sh_size   = _w((void *)mrelp - (void *)mrel0);
--	mcsec.sh_link = w(symsec_sh_link);
--	mcsec.sh_info = w(old_shnum);
--	mcsec.sh_addralign = _w(_size);
--	mcsec.sh_entsize = _w(rel_entsize);
--
--	if (uwrite(&mcsec, sizeof(mcsec)) < 0)
-+	/* add section: __mcount_loc */
-+	sec = elf_create_section(lf, mc_name + (sizeof(Elf_Rela) == rel_entsize) + strlen(".rel"), _size, mlocp - mloc0);
-+	if (!sec)
- 		return -1;
- 
--	if (uwrite(mloc0, (void *)mlocp - (void *)mloc0) < 0)
--		return -1;
--	if (uwrite(mrel0, (void *)mrelp - (void *)mrel0) < 0)
-+	// created sec->sh.sh_size = (void *)mlocp - (void *)mloc0;
-+	sec->sh.sh_link = 0;/* TODO objtool uses this? */
-+	sec->sh.sh_info = 0;/* TODO objtool uses this? */
-+	sec->sh.sh_addralign = _size;
-+	// created sec->sh.sh_entsize = _size;
-+
-+	// assert sec->data->d_size == (void *)mlocp - (void *)mloc0
-+	memcpy(sec->data->d_buf, mloc0, sec->data->d_size);
-+	/* HACK link in Pre-assembled buffer ?
-+	sec->data->d_buf = mloc0;
-+	sec->data->d_size = sec->sh.sh_size;*/
-+
-+	/* add section .rel[a]__mcount_loc */
-+	sec = elf_create_section(lf, mc_name, rel_entsize, mrelp - mrel0);
-+	if (!sec)
- 		return -1;
-+	sec->sh.sh_type = (sizeof(Elf_Rela) == rel_entsize)
-+				? SHT_RELA
-+				: SHT_REL;
-+	sec->sh.sh_flags = 0;
-+	sec->sh.sh_link = find_section_by_name(lf, ".symtab")->idx;
-+	sec->sh.sh_info = old_shnum;
-+	sec->sh.sh_addralign = _size;
-+
-+	// assert sec->data->d_size == (void *)mrelp - (void *)mrel0
-+	memcpy(sec->data->d_buf, mrel0, sec->data->d_size);
-+	/* HACK link in Pre-assembled buffer ?
-+	sec->data->d_buf = mrel0;
-+	sec->data->d_size = sec->sh.sh_size;*/
- 
--	ehdr->e_shoff = _w(new_e_shoff);
--	ehdr->e_shnum = w2(2 + lf->ehdr.e_shnum);  /* {.rel,}__mcount_loc */
--	if (ulseek(0, SEEK_SET) < 0)
--		return -1;
--	if (uwrite(ehdr, sizeof(*ehdr)) < 0)
--		return -1;
- 	return elf_write(lf);
- }
- 
-@@ -223,13 +177,10 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
-  * into nops.
+ # define get_sym_str_and_relp	get_sym_str_and_relp_32
+@@ -427,38 +427,36 @@ static int nop_mcount(const struct section * const rels,
+  *    Num:    Value  Size Type    Bind   Vis      Ndx Name
+  *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
   */
- static int nop_mcount(struct section * const rels,
--		      Elf_Ehdr const *const ehdr,
- 		      const char *const txtname)
+-static int find_secsym_ndx(unsigned const txtndx,
++static int find_section_sym_index(unsigned const txtndx,
+ 				char const *const txtname,
+ 				uint_t *const recvalp,
+ 				unsigned int *sym_index,
+-				Elf_Shdr const *const symhdr,
+ 				Elf_Ehdr const *const ehdr)
  {
--	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
+-	Elf_Sym const *const sym0 = (Elf_Sym const *)(_w(symhdr->sh_offset)
 -		+ (void *)ehdr);
- 	struct reloc *reloc;
--	Elf_Shdr const *const shdr = &shdr0[rels->sh.sh_info];
-+	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
- 	unsigned mcountsym = 0;
- 	int once = 0;
+-	unsigned const nsym = _w(symhdr->sh_size) / _w(symhdr->sh_entsize);
+-	Elf_Sym const *symp;
+-	unsigned t;
++	struct symbol *sym;
++	struct section *txts = find_section_by_index(lf, txtndx);
  
-@@ -241,7 +192,7 @@ static int nop_mcount(struct section * const rels,
+-	for (symp = sym0, t = nsym; t; --t, ++symp) {
+-		unsigned int const st_bind = ELF_ST_BIND(symp->st_info);
++	if (!txts) {
++		fprintf(stderr, "Cannot find section %u: %s.\n",
++			txtndx, txtname);
++		return missing_sym;
++	}
  
- 		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
- 			if (make_nop) {
--				ret = make_nop((void *)ehdr, _w(shdr->sh_offset) + reloc->offset);
-+				ret = make_nop(txts, reloc->offset);
- 				if (ret < 0)
- 					return -1;
- 			}
-@@ -296,12 +247,8 @@ static unsigned tot_relsize(void)
+-		if (txtndx == w2(symp->st_shndx)
+-			/* avoid STB_WEAK */
+-		    && (STB_LOCAL == st_bind || STB_GLOBAL == st_bind)) {
++	list_for_each_entry(sym, &txts->symbol_list, list) {
++		if ((sym->bind == STB_LOCAL) || (sym->bind == STB_GLOBAL)) {
+ 			/* function symbols on ARM have quirks, avoid them */
+ 			if (w2(ehdr->e_machine) == EM_ARM
+-			    && ELF_ST_TYPE(symp->st_info) == STT_FUNC)
++			    && sym->type == STT_FUNC)
+ 				continue;
  
- 
- /* Overall supervision for Elf32 ET_REL file. */
--static int do_func(Elf_Ehdr *const ehdr,
--		   unsigned const reltype)
-+static int do_func(unsigned const reltype)
- {
--	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
--		+ (void *)ehdr);
--
- 	/* Upper bound on space: assume all relevant relocs are for mcount. */
- 	unsigned       totrelsz;
- 
-@@ -360,15 +307,14 @@ static int do_func(Elf_Ehdr *const ehdr,
- 			 * This section is ignored by ftrace, but still
- 			 * has mcount calls. Convert them to nops now.
- 			 */
--			if (nop_mcount(sec, ehdr, txtname) < 0) {
-+			if (nop_mcount(sec, txtname) < 0) {
- 				result = -1;
- 				goto out;
- 			}
+-			*recvalp = _w(symp->st_value);
+-			*sym_index = symp - sym0;
++			*recvalp = sym->sym.st_value;
++			*sym_index = sym->idx;
+ 			return 0;
  		}
  	}
- 	if (!result && mloc0 != mlocp)
--		result = append_func(ehdr, &shdr0[w2(ehdr->e_shstrndx)],
--				     mloc0, mlocp, mrel0, mrelp,
-+		result = append_func(mloc0, mlocp, mrel0, mrelp,
- 				     rel_entsize, symsec_sh_link);
- out:
- 	free(mrel0);
+ 	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
+ 		txtndx, txtname);
+-	return -1;
++	return missing_sym;
+ }
+ 
+ static char const *has_rel_mcount(const struct section * const rels)
+@@ -540,10 +538,8 @@ static int do_func(Elf_Ehdr *const ehdr,
+ 			uint_t recval = 0;
+ 
+ 			symsec_sh_link = sec->sh.sh_link;
+-			result = find_secsym_ndx(sec->sh.sh_info, txtname,
+-						&recval, &recsym,
+-						&shdr0[symsec_sh_link],
+-						ehdr);
++			result = find_section_sym_index(sec->sh.sh_info,
++						txtname, &recval, &recsym, ehdr);
+ 			if (result)
+ 				goto out;
+ 
 -- 
 2.20.1
 
