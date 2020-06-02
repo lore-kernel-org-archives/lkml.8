@@ -4,44 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4150BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76543C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A43206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFD9206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgFBJUb (ORCPT
+        id S1727833AbgFBJUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:20:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:23031 "EHLO mga06.intel.com"
+        Tue, 2 Jun 2020 05:20:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1742 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgFBJUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:20:30 -0400
-IronPort-SDR: CmRx5YRDVsSmKsSZ53574tLdBlKLV7BNqWNZMwIx/3zhIUw8bb3/8G1S9kpBupkHSt+vUKrZwI
- WhlWI+HwMaqA==
+        id S1726708AbgFBJUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:20:41 -0400
+IronPort-SDR: vYnsB2sJya5NJzKW4VV9v6AVEKU7mYe9TWjAULT1d7yfrIbs8NF35FaVlL465CV/1Ma9t2wZKg
+ ZnIwZrHncTew==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:20:29 -0700
-IronPort-SDR: ysZWeoS5k5LV4zJonen/rJs3ApZREOrR04yU2RcA0WQTXtuC+kBOBj08T/ecAtF2N1sMIfoR+2
- R1kBN8b4G/5w==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:20:40 -0700
+IronPort-SDR: 2jrTq9czAJgHkfCg8Sfvuvet4XPOvwOSY4Atd02F/9QchcTH81ecRpuWw75snVAW5Anx6j1Jx0
+ 5mzvQcFm0VTw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
-   d="scan'208";a="470606361"
+   d="scan'208";a="312219453"
 Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Jun 2020 02:20:27 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Jun 2020 02:20:38 -0700
 From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
         Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Subject: [PATCH 06/15] dmaengine: dw-edma: use PCI_IRQ_MSI_TYPES  where appropriate
-Date:   Tue,  2 Jun 2020 11:20:25 +0200
-Message-Id: <20200602092025.31922-1-piotr.stankiewicz@intel.com>
+Subject: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where appropriate
+Date:   Tue,  2 Jun 2020 11:20:30 +0200
+Message-Id: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
 X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -54,22 +56,29 @@ of interrupt, or any type of message signalled interrupt, leverage it.
 Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- drivers/dma/dw-edma/dw-edma-pcie.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index dc85f55e1bb8..46defe30ac25 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -117,7 +117,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+index 5ed4227f304b..6dbe173a9fd4 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+@@ -251,11 +251,11 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
+ 		int nvec = pci_msix_vec_count(adev->pdev);
+ 		unsigned int flags;
  
- 	/* IRQs allocation */
- 	nr_irqs = pci_alloc_irq_vectors(pdev, 1, pdata->irqs,
--					PCI_IRQ_MSI | PCI_IRQ_MSIX);
-+					PCI_IRQ_MSI_TYPES);
- 	if (nr_irqs < 1) {
- 		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
- 			nr_irqs);
+-		if (nvec <= 0) {
++		if (nvec > 0)
++			flags = PCI_IRQ_MSI_TYPES;
++		else
+ 			flags = PCI_IRQ_MSI;
+-		} else {
+-			flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
+-		}
++
+ 		/* we only need one vector */
+ 		nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, flags);
+ 		if (nvec > 0) {
 -- 
 2.17.2
 
