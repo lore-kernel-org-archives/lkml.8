@@ -2,133 +2,214 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7FE2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YA7kCI9h"
+	by mail.kernel.org (Postfix) with ESMTP id 55AA8206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFBLef (ORCPT
+        id S1726848AbgFBLfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:34:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24400 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726130AbgFBLef (ORCPT
+        Tue, 2 Jun 2020 07:35:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60507 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgFBLfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:34:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591097673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=APPso8SmvnnOp4Dv0Sfkx5AFaSya8aWECXtjHdRoMxM=;
-        b=YA7kCI9hGHNTAF/ouKGAxb7pZ6Fap8WvgQl6/zGJvThST9yZPt9KvYr0F0y3jL6H2/0MuX
-        2O0fgUCVPShn9HIAzP0KcWnhK3qjzaGvwiCXkFMrpvUh4IaPuqmZaKSOaGf3gC/pXtWhbB
-        OyTc0rMX1serB7Mxhh/9x/tEy3ttD0Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-437-omEDP3A6MjuDFhd3Dccq6A-1; Tue, 02 Jun 2020 07:34:29 -0400
-X-MC-Unique: omEDP3A6MjuDFhd3Dccq6A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20E0518FE864;
-        Tue,  2 Jun 2020 11:34:28 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 402B4579A3;
-        Tue,  2 Jun 2020 11:34:19 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 07:34:17 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        Ondrej Mosnacek <omosnace@redhat.com>, fw@strlen.de,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak124 v2] audit: log nftables configuration change
- events
-Message-ID: <20200602113417.kfrmwm57snkaiv3y@madcap2.tricolour.ca>
-References: <d45d23ba6d58b1513c641dfb24f009cbc1b7aad6.1590716354.git.rgb@redhat.com>
- <CAHC9VhTuUdc565fPU=P1sXEM8hFm5P+ESm3Bv=kyebb19EsQuQ@mail.gmail.com>
- <20200601225833.ut2wayc6xqefwveo@madcap2.tricolour.ca>
- <CAHC9VhRnM78=F7_qd8bi=4cfo=bZj_K9YFe1KM2nYRqJiLbsRQ@mail.gmail.com>
+        Tue, 2 Jun 2020 07:35:16 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jg5CJ-00009m-CA; Tue, 02 Jun 2020 11:35:11 +0000
+Date:   Tue, 2 Jun 2020 13:35:10 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Robert Sesek <rsesek@google.com>, Chris Palmer <palmer@google.com>,
+        Jann Horn <jannh@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 3/4] seccomp: notify about unused filter
+Message-ID: <20200602113510.hhfd5oysofuaq7tk@wittgenstein>
+References: <20200531115031.391515-1-christian.brauner@ubuntu.com>
+ <20200531115031.391515-3-christian.brauner@ubuntu.com>
+ <202006011225.E58FC9CCA@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhRnM78=F7_qd8bi=4cfo=bZj_K9YFe1KM2nYRqJiLbsRQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <202006011225.E58FC9CCA@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-01 20:12, Paul Moore wrote:
-> On Mon, Jun 1, 2020 at 6:58 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-06-01 12:10, Paul Moore wrote:
-> > > On Thu, May 28, 2020 at 9:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+On Mon, Jun 01, 2020 at 12:29:27PM -0700, Kees Cook wrote:
+> On Sun, May 31, 2020 at 01:50:30PM +0200, Christian Brauner wrote:
+> > We've been making heavy use of the seccomp notifier to intercept and
+> > handle certain syscalls for containers. This patch allows a syscall
+> > supervisor listening on a given notifier to be notified when a seccomp
+> > filter has become unused.
+> > 
+> > A container is often managed by a singleton supervisor process the
+> > so-called "monitor". This monitor process has an event loop which has
+> > various event handlers registered. If the user specified a seccomp
+> > profile that included a notifier for various syscalls then we also
+> > register a seccomp notify even handler. For any container using a
+> > separate pid namespace the lifecycle of the seccomp notifier is bound to
+> > the init process of the pid namespace, i.e. when the init process exits
+> > the filter must be unused.
+> > If a new process attaches to a container we force it to assume a seccomp
+> > profile. This can either be the same seccomp profile as the container
+> > was started with or a modified one. If the attaching process makes use
+> > of the seccomp notifier we will register a new seccomp notifier handler
+> > in the monitor's event loop. However, when the attaching process exits
+> > we can't simply delete the handler since other child processes could've
+> > been created (daemons spawned etc.) that have inherited the seccomp
+> > filter and so we need to keep the seccomp notifier fd alive in the event
+> > loop. But this is problematic since we don't get a notification when the
+> > seccomp filter has become unused and so we currently never remove the
+> > seccomp notifier fd from the event loop and just keep accumulating fds
+> > in the event loop. We've had this issue for a while but it has recently
+> > become more pressing as more and larger users make use of this.
+> > 
+> > To fix this, we introduce a new "users" reference counter that tracks
+> > any tasks and dependent filters making use of a filter. When a notifier is
+> > registered waiting tasks will be notified that the filter is now empty by
+> > receiving a (E)POLLHUP event.
+> > The concept in this patch introduces is the same as for signal_struct,
+> > i.e. reference counting for life-cycle management is decoupled from
+> > reference counting taks using the object.
+> > 
+> > There's probably some trickery possible but the second counter is just
+> > the correct way of doing this imho and has precedence. The patch also
+> > lifts the waitqeue from struct notification into sruct seccomp_filter.
+> > This is cleaner overall and let's us avoid having to take the notifier
+> > mutex since we neither need to read nor modify the notifier specific
+> > aspects of the seccomp filter. In the exit path I'd very much like to
+> > avoid having to take the notifier mutex for each filter in the task's
+> > filter hierarchy.
+> > 
+> > Cc: Tycho Andersen <tycho@tycho.ws>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Matt Denton <mpdenton@google.com>
+> > Cc: Sargun Dhillon <sargun@sargun.me>
+> > Cc: Jann Horn <jannh@google.com>
+> > Cc: Chris Palmer <palmer@google.com>
+> > Cc: Aleksa Sarai <cyphar@cyphar.com>
+> > Cc: Robert Sesek <rsesek@google.com>
+> > Cc: Jeffrey Vander Stoep <jeffv@google.com>
+> > Cc: Linux Containers <containers@lists.linux-foundation.org>
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > ---
+> > /* v2 */
+> > - Jann Horn <jannh@google.com>:
+> >   - Use more descriptive instead of seccomp_filter_notify().
+> >     (I went with seccomp_filter_release().)
+> > 
+> > /* v3 */
+> > - Kees Cook <keescook@chromium.org>:
+> >   - Rename counter from "live" to "users".
+> > ---
+> >  kernel/seccomp.c | 68 +++++++++++++++++++++++++++++++++++++-----------
+> >  1 file changed, 53 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > index 55251b1fe03f..45244f1ba148 100644
+> > --- a/kernel/seccomp.c
+> > +++ b/kernel/seccomp.c
+> > @@ -94,13 +94,11 @@ struct seccomp_knotif {
+> >   *           filter->notify_lock.
+> >   * @next_id: The id of the next request.
+> >   * @notifications: A list of struct seccomp_knotif elements.
+> > - * @wqh: A wait queue for poll.
+> >   */
 > 
-> ...
+> I split the wait queue changes into a separate patch...
 > 
-> > > > diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-> > > > index 4471393da6d8..7a386eca6e04 100644
-> > > > --- a/net/netfilter/nf_tables_api.c
-> > > > +++ b/net/netfilter/nf_tables_api.c
-> > > > @@ -12,6 +12,7 @@
-> > > >  #include <linux/netlink.h>
-> > > >  #include <linux/vmalloc.h>
-> > > >  #include <linux/rhashtable.h>
-> > > > +#include <linux/audit.h>
-> > > >  #include <linux/netfilter.h>
-> > > >  #include <linux/netfilter/nfnetlink.h>
-> > > >  #include <linux/netfilter/nf_tables.h>
-> > > > @@ -693,6 +694,14 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
-> > > >  {
-> > > >         struct sk_buff *skb;
-> > > >         int err;
-> > > > +       char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-> > > > +                             ctx->table->name, ctx->table->handle);
-> > > > +
-> > > > +       audit_log_nfcfg(buf,
-> > > > +                       ctx->family,
-> > > > +                       ctx->table->use,
-> > > > +                       audit_nftcfgs[event].op);
-> > >
-> > > As an example, the below would work, yes?
-> > >
-> > > audit_log_nfcfg(...,
-> > >  (event == NFT_MSG_NEWTABLE ?
-> > >   AUDIT_NFT_OP_TABLE_REGISTER :
-> > >   AUDIT_NFT_OP_TABLE_UNREGISTER)
-> >
-> > Ok, I see what you are getting at now...  Yes, it could be done this
-> > way, but it seems noisier to me.
+> >  /**
+> > - * seccomp_filter_release - Detach the task from its filter tree
+> > - *			    and drop its reference count during
+> > - *			    exit.
+> > + * seccomp_filter_release - Detach the task from its filter tree,
+> > + *			    drop its reference count, and notify
+> > + *			    about unused filters
+> >   *
+> >   * This function should only be called when the task is exiting as
+> >   * it detaches it from its filter tree.
+> >   */
+> >  void seccomp_filter_release(struct task_struct *tsk)
+> >  {
+> > -	struct seccomp_filter *cur = tsk->seccomp.filter;
+> > +	struct seccomp_filter *orig = tsk->seccomp.filter;
+> >  
+> > +	/* Detach task from its filter tree. */
+> >  	tsk->seccomp.filter = NULL;
+> > -	__put_seccomp_filter(cur);
+> > +	/* Notify about any unused filters in the task's former filter tree. */
+> > +	__seccomp_filter_orphan(orig);
+> > +	/* Finally drop all references to the task's former tree. */
+> > +	__put_seccomp_filter(orig);
+> >  }
 > 
-> I'll admit it is not as clean, but it doesn't hide the mapping between
-> the netfilter operation and the audit operation which hopefully makes
-> it clear to those modifying the netfilter/nf_tables/etc. code that
-> there is an audit impact.  I'm basically trying to make sure the code
-> is as robust as possible in the face of subsystem changes beyond the
-> audit subsystem.
+> I added __seccomp_filter_release() to do the filter-specific parts (the
+> two functions passing "orig" above, so that it can be reused later...
+> 
+> >  
+> >  /**
+> > @@ -419,18 +441,29 @@ static inline void seccomp_sync_threads(unsigned long flags)
+> >  	/* Synchronize all threads. */
+> >  	caller = current;
+> >  	for_each_thread(caller, thread) {
+> > +		struct seccomp_filter *cur = thread->seccomp.filter;
+> > +
+> >  		/* Skip current, since it needs no changes. */
+> >  		if (thread == caller)
+> >  			continue;
+> >  
+> >  		/* Get a task reference for the new leaf node. */
+> >  		get_seccomp_filter(caller);
+> > +
+> > +		/*
+> > +		 * Notify everyone as we're forcing the thread
+> > +		 * to orphan its current filter tree.
+> > +		 */
+> > +		__seccomp_filter_orphan(cur);
+> > +
+> >  		/*
+> > -		 * Drop the task reference to the shared ancestor since
+> > -		 * current's path will hold a reference.  (This also
+> > -		 * allows a put before the assignment.)
+> > +		 * Drop the task's reference to the shared ancestor
+> > +		 * since current's path will hold a reference.
+> > +		 * (This also allows a put before the assignment.)
+> >  		 */
+> > -		__put_seccomp_filter(thread->seccomp.filter);
+> > +		__put_seccomp_filter(cur);
+> 
+> I switched this around to just call the new __seccomp_release_filter()
+> (there's no need to open-code this and add "cur"). I also removed the
+> comment about the notification, because that's not possible: "thread"
+> shares the same filter hierarchy as "caller", so the counts on "cur"
+> cannot reach 0 (no notifications can ever happen due to TSYNC).
+> 
+> Everything else looks great! I've applied it to for-next/seccomp.
 
-Yup, I agree, a compile time check to make sure they aren't out of sync.
+Excellent, thanks!
 
-> paul moore
+Just in case this isn't obvious to everyone, I want to point out, that
+this patchset means the seccomp notifier can be (ab)used to receive exit
+notifications for a task tree (given some caveats) sharing the same
+filter. In any case, I'd rather have a proper thread management
+implementation of this through pidfds in the future if there's a need
+for this. But one can abuse seccomp to achieve something similar with
+my change here.
+(Technically, we could also expand the notifier to have a "listen" mode
+ whereby it only notifies about e.g. filter installation and filter)
+ orphanage.)
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+Christian
