@@ -2,226 +2,150 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2767C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65F2206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D2320757
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iNvcnNWR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="deVr3fAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgFBOOp (ORCPT
+        id S1728024AbgFBOQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgFBOOo (ORCPT
+        Tue, 2 Jun 2020 10:16:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23632 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726112AbgFBOQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:14:44 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E677BC08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 07:14:43 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y17so1389214plb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 07:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H48Dtjb26Y6aJBKqqk8tf63ll6/f3aU/WJ3tDbC6/4U=;
-        b=iNvcnNWRCBNFFRZ5v4a1+M7Tsf2DG06cC77WBS7lgo52gbT3v9aVafGFL5WMlBqUBi
-         AJyAraqd6Ic4JN0NqHkwleDbcjPMaYmfqUwaI8AIGoE6UxhbIngmOFEblVuLqCcdopKJ
-         RUFi+Jm5yxce/TD4d856GOS+oH+ts8Ma3a8O4sudJ/QS4GgBrTdiM3+812CRT9sZyxR/
-         WxJXEvq0Hmc8crMdu+etNfSQy94OImcaHiZ1JRiDdTiYnOhctzSMla3ih9z9R06PfOQ+
-         ErBzeI55nl83R7ZGMfSnV2NDMxKkHWwYUAv1SrZ/YQxgqHxjQfW7VgFQ41TgkyiL14fv
-         c66Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H48Dtjb26Y6aJBKqqk8tf63ll6/f3aU/WJ3tDbC6/4U=;
-        b=hmpObZqINC343CS0s/HGn0lxQiyBH8G8imTukUE2VURwF90GC2bE/xqg5Pn+Ee+yz/
-         4To7olnfDuEP1feCJPgg6q7YSrr/UNre+ZY15ORijSXTxwKnvpuxJKUtf0ySdIMIghAy
-         qBUkoij/4C+psZK8zoEPk++KWCUTpJeqLSoCe+s3QtMKWtDivL6Rdx+sFYTBM6TSGFlz
-         bLhmlyWZC8gvHSva+CIZu9/qwUqCYk/NQmtfuVAHMNie2eLJogRwJFE4oIsPx3GirKrt
-         YgRoNj6+QjuVt8jT63n6jb+y4CBNFnH9ka5yJIjlhiYWMbgGDy9HHP9hNqGxZ/xTzOKa
-         FL8Q==
-X-Gm-Message-State: AOAM532GatzaLFqjkT7z42L7OdB87F/Osl6jsQWqvQnLV1eEgcP4LUCW
-        AfhXUwsOgWcST0KKvdGq1NO0YDkYc0d7fv+7KanX0w==
-X-Google-Smtp-Source: ABdhPJzbP2WVOcVpP2y5PxqDJtQRHydE30I/yUrHaPl/xtbWFAYkICSxh6iI6aichb24biZL5pzUnTXRkxt5XhhuI0g=
-X-Received: by 2002:a17:90a:2a8e:: with SMTP id j14mr5750844pjd.136.1591107282850;
- Tue, 02 Jun 2020 07:14:42 -0700 (PDT)
+        Tue, 2 Jun 2020 10:16:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591107360;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RGEMiVn12opt/g+WjyzDzTyT6jZrj0pfTX7zXxSALys=;
+        b=deVr3fAWN+fOvpboH1hXXI9H+Dqod65fP/S5jB+d3ogirvWFsyPHuV1mA3fst9lo/4H7CN
+        6GFGB+xjfwyUNPpPTIw0T8hQK4yJ/keJ23jnKeImmghuNaKU6PwWrk+q3IYjojQ8fj6y4+
+        MNS9ZVniey7JDtroWalZk8XR7hHZkuE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-1qZgDf03Pqau7TvT-SLC_A-1; Tue, 02 Jun 2020 10:15:58 -0400
+X-MC-Unique: 1qZgDf03Pqau7TvT-SLC_A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C607480058E;
+        Tue,  2 Jun 2020 14:15:56 +0000 (UTC)
+Received: from krava (unknown [10.40.192.188])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3E61D49F6;
+        Tue,  2 Jun 2020 14:15:52 +0000 (UTC)
+Date:   Tue, 2 Jun 2020 16:15:51 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 1/2] perf tools: check libasan and libubsan in
+ Makefile.config
+Message-ID: <20200602141551.GC1169993@krava>
+References: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-References: <0000000000004afcae05a7041e98@google.com>
-In-Reply-To: <0000000000004afcae05a7041e98@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 2 Jun 2020 16:14:31 +0200
-Message-ID: <CAAeHK+ykPQ8Fmit_3cn17YKzrCWtX010HRKmBCJAQ__OMdwCDA@mail.gmail.com>
-Subject: Re: INFO: task hung in corrupted (2)
-To:     syzbot <syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     amir73il@gmail.com, Felipe Balbi <balbi@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, kuba@kernel.org,
-        linux-fsdevel@vger.kernel.org, mathew.j.martineau@linux.intel.com,
-        matthieu.baerts@tessares.net, mptcp@lists.01.org,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 1:30 PM syzbot
-<syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    b0c3ba31 Merge tag 'fsnotify_for_v5.7-rc8' of git://git.ke..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14089eee100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ce116858301bc2ea
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6921abfb75d6fc79c0eb
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14947d26100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172726d2100000
->
-> The bug was bisected to:
->
-> commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
-> Author: Andrey Konovalov <andreyknvl@google.com>
-> Date:   Mon Feb 24 16:13:03 2020 +0000
->
->     usb: gadget: add raw-gadget interface
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=119e4702100000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=139e4702100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=159e4702100000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com
-> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
->
-> INFO: task syz-executor610:7072 blocked for more than 143 seconds.
->       Not tainted 5.7.0-rc7-syzkaller #0
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> syz-executor610 D24336  7072   7071 0x80004002
-> Call Trace:
->  context_switch kernel/sched/core.c:3367 [inline]
->  __schedule+0x805/0xc90 kernel/sched/core.c:4083
->
-> Showing all locks held in the system:
-> 1 lock held by khungtaskd/1134:
->  #0: ffffffff892e85d0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire+0x0/0x30 net/mptcp/pm_netlink.c:860
-> 1 lock held by in:imklog/6715:
->  #0: ffff8880a441e6b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0x25d/0x2f0 fs/file.c:826
-> 6 locks held by kworker/1:0/7064:
-> 1 lock held by syz-executor610/7072:
->  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:290 [inline]
->  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x1bd/0x5b0 kernel/rcu/tree_exp.h:856
-> 4 locks held by systemd-udevd/7099:
->  #0: ffff8880a7fdcc70 (&p->lock){+.+.}-{3:3}, at: seq_read+0x60/0xce0 fs/seq_file.c:153
->  #1: ffff888096486888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x50/0x3b0 fs/kernfs/file.c:111
->  #2: ffff88809fc0d660 (kn->count#78){.+.+}-{0:0}, at: kernfs_seq_start+0x6f/0x3b0 fs/kernfs/file.c:112
->  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: device_lock_interruptible include/linux/device.h:773 [inline]
->  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: serial_show+0x22/0xa0 drivers/usb/core/sysfs.c:142
->
-> =============================================
->
-> NMI backtrace for cpu 0
-> CPU: 0 PID: 1134 Comm: khungtaskd Not tainted 5.7.0-rc7-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
->  nmi_cpu_backtrace+0x9f/0x180 lib/nmi_backtrace.c:101
->  nmi_trigger_cpumask_backtrace+0x16a/0x280 lib/nmi_backtrace.c:62
->  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
->  watchdog+0xd2a/0xd40 kernel/hung_task.c:289
->  kthread+0x353/0x380 kernel/kthread.c:268
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-> Sending NMI from CPU 0 to CPUs 1:
-> NMI backtrace for cpu 1
-> CPU: 1 PID: 7064 Comm: kworker/1:0 Not tainted 5.7.0-rc7-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x0/0x90 kernel/kcov.c:275
-> Code: 4c f2 08 48 c1 e0 03 48 83 c8 18 49 89 14 02 4d 89 44 f2 18 49 ff c1 4d 89 0a c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <4c> 8b 04 24 65 48 8b 04 25 40 1e 02 00 65 8b 0d 78 96 8e 7e f7 c1
-> RSP: 0018:ffffc90001676cf0 EFLAGS: 00000246
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88809fb9e240
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000ffffffff
-> RBP: ffff888092d24a04 R08: ffffffff86034f3b R09: ffffc900016790cc
-> R10: 0000000000000004 R11: 0000000000000000 R12: ffff888092d24a00
-> R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888092d24a00
-> FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000004c6e68 CR3: 0000000092d41000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  hid_apply_multiplier drivers/hid/hid-core.c:1106 [inline]
-
-Looks like an issue in the HID subsystem, adding HID maintainers.
-
->  hid_setup_resolution_multiplier+0x2ab/0xbe0 drivers/hid/hid-core.c:1163
->  hid_open_report+0xab2/0xdd0 drivers/hid/hid-core.c:1274
->  hid_parse include/linux/hid.h:1017 [inline]
->  ms_probe+0x12f/0x3f0 drivers/hid/hid-microsoft.c:388
->  hid_device_probe+0x26c/0x410 drivers/hid/hid-core.c:2263
->  really_probe+0x704/0xf60 drivers/base/dd.c:520
->  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
->  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
->  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
->  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
->  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
->  hid_add_device+0xa2a/0xef0 drivers/hid/hid-core.c:2419
->  usbhid_probe+0x9bd/0xd10 drivers/hid/usbhid/hid-core.c:1407
->  usb_probe_interface+0x614/0xac0 drivers/usb/core/driver.c:374
->  really_probe+0x761/0xf60 drivers/base/dd.c:524
->  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
->  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
->  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
->  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
->  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
->  usb_set_configuration+0x19d2/0x1f20 drivers/usb/core/message.c:2032
->  usb_generic_driver_probe+0x82/0x140 drivers/usb/core/generic.c:241
->  usb_probe_device+0x12d/0x1d0 drivers/usb/core/driver.c:272
->  really_probe+0x761/0xf60 drivers/base/dd.c:524
->  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
->  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
->  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
->  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
->  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
->  usb_new_device+0xcc3/0x1650 drivers/usb/core/hub.c:2554
->  hub_port_connect drivers/usb/core/hub.c:5208 [inline]
->  hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
->  port_event drivers/usb/core/hub.c:5494 [inline]
->  hub_event+0x2823/0x4cb0 drivers/usb/core/hub.c:5576
->  process_one_work+0x76e/0xfd0 kernel/workqueue.c:2268
->  worker_thread+0xa7f/0x1450 kernel/workqueue.c:2414
->  kthread+0x353/0x380 kernel/kthread.c:268
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
->
->
+On Tue, Jun 02, 2020 at 12:15:03PM +0800, Tiezhu Yang wrote:
+> When build perf with ASan or UBSan, if libasan or libubsan can not find,
+> the feature-glibc is 0 and there exists the following error log which is
+> wrong, because we can find gnu/libc-version.h in /usr/include, glibc-devel
+> is also installed.
+> 
+> [yangtiezhu@linux perf]$ make DEBUG=1 EXTRA_CFLAGS='-fno-omit-frame-pointer -fsanitize=address'
+>   BUILD:   Doing 'make -j4' parallel build
+>   HOSTCC   fixdep.o
+>   HOSTLD   fixdep-in.o
+>   LINK     fixdep
+> <stdin>:1:0: warning: -fsanitize=address and -fsanitize=kernel-address are not supported for this target
+> <stdin>:1:0: warning: -fsanitize=address not supported for this target
+> 
+> Auto-detecting system features:
+> ...                         dwarf: [ OFF ]
+> ...            dwarf_getlocations: [ OFF ]
+> ...                         glibc: [ OFF ]
+> ...                          gtk2: [ OFF ]
+> ...                      libaudit: [ OFF ]
+> ...                        libbfd: [ OFF ]
+> ...                        libcap: [ OFF ]
+> ...                        libelf: [ OFF ]
+> ...                       libnuma: [ OFF ]
+> ...        numa_num_possible_cpus: [ OFF ]
+> ...                       libperl: [ OFF ]
+> ...                     libpython: [ OFF ]
+> ...                     libcrypto: [ OFF ]
+> ...                     libunwind: [ OFF ]
+> ...            libdw-dwarf-unwind: [ OFF ]
+> ...                          zlib: [ OFF ]
+> ...                          lzma: [ OFF ]
+> ...                     get_cpuid: [ OFF ]
+> ...                           bpf: [ OFF ]
+> ...                        libaio: [ OFF ]
+> ...                       libzstd: [ OFF ]
+> ...        disassembler-four-args: [ OFF ]
+> 
+> Makefile.config:393: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
+> Makefile.perf:224: recipe for target 'sub-make' failed
+> make[1]: *** [sub-make] Error 2
+> Makefile:69: recipe for target 'all' failed
+> make: *** [all] Error 2
+> [yangtiezhu@linux perf]$ ls /usr/include/gnu/libc-version.h
+> /usr/include/gnu/libc-version.h
+> 
+> After install libasan and libubsan, the feature-glibc is 1 and the build
+> process is success, so the cause is related with libasan or libubsan, we
+> should check them and print an error log to reflect the reality.
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+>  tools/perf/Makefile.config | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 12a8204..b699d21 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -387,6 +387,12 @@ else
+>        NO_LIBBPF := 1
+>        NO_JVMTI := 1
+>      else
+> +      ifneq ($(shell ldconfig -p | grep libasan >/dev/null 2>&1; echo $$?), 0)
+> +        msg := $(error No libasan found, please install libasan);
+> +      endif
+> +      ifneq ($(shell ldconfig -p | grep libubsan >/dev/null 2>&1; echo $$?), 0)
+> +        msg := $(error No libubsan found, please install libubsan);
+> +      endif
+
+hum, would it be better to have check for this in tools/build/features?
+
+jirka
+
+>        ifneq ($(filter s% -static%,$(LDFLAGS),),)
+>          msg := $(error No static glibc found, please install glibc-static);
+>        else
+> -- 
+> 2.1.0
+> 
+
