@@ -2,109 +2,98 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAF8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE301207D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B0Uz/MpR"
+	by mail.kernel.org (Postfix) with ESMTP id CB6FE207D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591115640;
+	bh=4CjCw80BZTOzb/YKDNCLPm89dR/P4rKyDc/s6NraB/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mZ0OzOeqaBMHZzl51IvSkaayOY1fkrtZ6p0iPGN2t5O0KpeWYOdEZih8u4J81Pt7n
+	 ry7WsKO4h5nCEnqN4f67bvtDH7U9FvrjVFIat3klL6ZpcrgMynQO/Wsj50E9OljdWT
+	 KweQJMJ97eeB/uIwiW4nx5OdTT4O8f3c6ZDc02Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgFBQdq (ORCPT
+        id S1728128AbgFBQeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:33:46 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55276 "EHLO m43-7.mailgun.net"
+        Tue, 2 Jun 2020 12:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgFBQdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:33:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591115624; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=0Wg0j3MT/PP/B4nsIIgBp6QzDb8kDeHUDCr/A+ztDKA=; b=B0Uz/MpRkHwbKMUwz8/9Jla1M2IVhwec+wm3y09zKhNafWbKybyClwmwrmyugeirM77oGIVb
- Gr6YO+dHXr8dOEr0Bf0GrHiFhxm/tto9p8sN5usg3ejiQAJwniXfQ5l2fEZgE9g5rZGAuvL7
- 7pu4MfhVRuLJH1ghOcX6rq+JnUg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5ed67f5009c3530d12e50572 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 16:33:20
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EA83AC433CA; Tue,  2 Jun 2020 16:33:19 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726112AbgFBQd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 12:33:58 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A7C4C43395;
-        Tue,  2 Jun 2020 16:33:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A7C4C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@chromium.org, ohad@wizery.com, rohitkr@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 2/2] remoteproc: qcom_q6v5_mss: Remove redundant running state
-Date:   Tue,  2 Jun 2020 22:02:57 +0530
-Message-Id: <20200602163257.26978-2-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200602163257.26978-1-sibis@codeaurora.org>
-References: <20200602163257.26978-1-sibis@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B4520738;
+        Tue,  2 Jun 2020 16:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591115638;
+        bh=4CjCw80BZTOzb/YKDNCLPm89dR/P4rKyDc/s6NraB/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ko2gTmOzTzIq16CanYF+spsIJTdi34469Yf/sIueI6uV4n+pm5ROy4TVwqlUTUQcl
+         nGjVcOeoLs56PVQpLxv1DQmBPG6MyCs3onXRFyEUGBgOjJs3fHVHuFO2qvQPS3ffvU
+         w91hewpyPhXq94L+UvzFwPF2frRlPM0hHsxKDetI=
+Date:   Tue, 2 Jun 2020 12:33:46 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 00/59] 4.9.226-rc2 review
+Message-ID: <20200602163346.GQ1407771@sasha-vm>
+References: <20200602101841.662517961@linuxfoundation.org>
+ <3c900c0e-b15c-da05-d3d8-e68acf660076@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <3c900c0e-b15c-da05-d3d8-e68acf660076@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the redundant running state, as an equivalent is maintained in
-the common q6v5 resource handling helpers.
+On Tue, Jun 02, 2020 at 08:37:26AM -0700, Guenter Roeck wrote:
+>On 6/2/20 3:23 AM, Greg Kroah-Hartman wrote:
+>> This is the start of the stable review cycle for the 4.9.226 release.
+>> There are 59 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>>
+>> Responses should be made by Thu, 04 Jun 2020 10:16:52 +0000.
+>> Anything received after that time might be too late.
+>>
+>
+>Many arm builds still fail as attached. Is it really only me seeing this problem ?
+>
+>FWIW, if we need/want to use unified assembler in v4.9.y, shouldn't all unified
+>assembler patches be applied ?
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_mss.c | 5 -----
- 1 file changed, 5 deletions(-)
+We don't - I took 71f8af111010 as a dependency rather than on its own
+merit.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index feb70283b6a21..702352cd66188 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -178,8 +178,6 @@ struct q6v5 {
- 	int active_reg_count;
- 	int proxy_reg_count;
- 
--	bool running;
--
- 	bool dump_mba_loaded;
- 	unsigned long dump_segment_mask;
- 	unsigned long dump_complete_mask;
-@@ -1275,7 +1273,6 @@ static int q6v5_start(struct rproc *rproc)
- 
- 	/* Reset Dump Segment Mask */
- 	qproc->dump_segment_mask = 0;
--	qproc->running = true;
- 
- 	return 0;
- 
-@@ -1290,8 +1287,6 @@ static int q6v5_stop(struct rproc *rproc)
- 	struct q6v5 *qproc = (struct q6v5 *)rproc->priv;
- 	int ret;
- 
--	qproc->running = false;
--
- 	ret = qcom_q6v5_request_stop(&qproc->q6v5);
- 	if (ret == -ETIMEDOUT)
- 		dev_err(qproc->dev, "timed out on wait\n");
+>$ git log --oneline v4.9..c001899a5d6 arch/arm | grep unified
+>c001899a5d6c ARM: 8843/1: use unified assembler in headers
+>a216376add73 ARM: 8841/1: use unified assembler in macros
+>eb7ff9023e4f ARM: 8829/1: spinlock: use unified assembler language syntax
+>32fdb046ac43 ARM: 8828/1: uaccess: use unified assembler language syntax
+>1293c2b5d790 ARM: dts: berlin2q: add "cache-unified" to l2 node
+>75fea300d73a ARM: 8723/2: always assume the "unified" syntax for assembly code
+>
+>I am quite concerned especially about missing commit 75fea300d73a,
+>which removes the ARM_ASM_UNIFIED configuration option. That means it is
+>still present in v4.9.y, but the failing builds don't enable it. Given that,
+>the build failures don't seem to be surprising.
+
+I'm just going to drop this series from 4.9 for now, until we can figure
+out how to do it right.
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Thanks,
+Sasha
