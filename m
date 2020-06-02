@@ -2,257 +2,204 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A09EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE43C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E95C206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEC4206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgFBBdL (ORCPT
+        id S1728619AbgFBBde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 21:33:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52934 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgFBBdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 21:33:09 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9001F2008B2;
-        Tue,  2 Jun 2020 03:33:06 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EA2652008A7;
-        Tue,  2 Jun 2020 03:33:02 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5D4AD40280;
-        Tue,  2 Jun 2020 09:32:58 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4] dt-bindings: thermal: Convert qoriq to json-schema
-Date:   Tue,  2 Jun 2020 09:22:43 +0800
-Message-Id: <1591060963-14904-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 1 Jun 2020 21:33:34 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:37982 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgFBBdd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 21:33:33 -0400
+Date:   Mon, 1 Jun 2020 21:33:32 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
+        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] sh: remove sh5 support
+Message-ID: <20200602013332.GY1079@brightrain.aerifal.cx>
+References: <20200424221948.1120587-1-arnd@arndb.de>
+ <20200507143552.GA28683@infradead.org>
+ <20200528054600.GA29717@infradead.org>
+ <20200528161416.GY1079@brightrain.aerifal.cx>
+ <20200529143059.GA25475@infradead.org>
+ <20200529175335.GK1079@brightrain.aerifal.cx>
+ <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
+ <20200601181259.GV1079@brightrain.aerifal.cx>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601181259.GV1079@brightrain.aerifal.cx>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the qoriq thermal binding to DT schema format using json-schema
+On Mon, Jun 01, 2020 at 02:13:00PM -0400, Rich Felker wrote:
+> On Sat, May 30, 2020 at 10:08:09AM +0200, John Paul Adrian Glaubitz wrote:
+> > On 5/29/20 7:53 PM, Rich Felker wrote:
+> > > Frustratingly, I _still_ don't have an official tree on kernel.org for
+> > > the purpose of being the canonical place for linux-next to pull from,
+> > > due to policies around pgp keys and nobody following up on signing
+> > > mine. This is all really silly since there are ridiculously many
+> > > independent channels I could cryptographically validate identity
+> > > through with vanishing probability that they're all compromised. For
+> > > the time being I'll reactivate my repo on git.musl-libc.org.
+> > 
+> > May I suggest to pick up these patches, for example? There might be
+> > more I missed, but getting these merged should already help a lot with
+> > the clean-up of arch/sh.
+> 
+> This was really helpful, but one thing that would make it easier if
+> you have any more to list is including message-ids rather than (or in
+> addition to) marc.info links. I had to go through and reverse them all
+> to message-ids (or at least subjects) to find the patches from my
+> mailbox to git-am.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V3:
-	- Update maintainer since previous maintainer's email is NOT longer available.
----
- .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
- .../devicetree/bindings/thermal/qoriq-thermal.yaml | 112 +++++++++++++++++++++
- 2 files changed, 112 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+Hmm, it looks like Andrew Morton just pulled most of these into -mm,
+apparently independently of me getting them in my for-next a few hours
+ago, since his versions lack my signed-off-by. That's ok though, as
+long as they go up. Some details since further action is needed on a
+few:
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-deleted file mode 100644
-index 28f2cba..0000000
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
--
--Required properties:
--- compatible : Must include "fsl,qoriq-tmu" or "fsl,imx8mq-tmu". The
--	version of the device is determined by the TMU IP Block Revision
--	Register (IPBRR0) at offset 0x0BF8.
--	Table of correspondences between IPBRR0 values and example  chips:
--		Value           Device
--		----------      -----
--		0x01900102      T1040
--- reg : Address range of TMU registers.
--- interrupts : Contains the interrupt for TMU.
--- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
--	the SoC reference manual. The first cell is TTR0CR, the second is
--	TTR1CR, etc.
--- fsl,tmu-calibration : A list of cell pairs containing temperature
--	calibration data, as specified by the SoC reference manual.
--	The first cell of each pair is the value to be written to TTCFGR,
--	and the second is the value to be written to TSCFGR.
--- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
--	site ID, and represents the "n" in TRITSRn and TRATSRn.
--
--Optional property:
--- little-endian : If present, the TMU registers are little endian. If absent,
--	the default is big endian.
--- clocks : the clock for clocking the TMU silicon.
--
--Example:
--
--tmu@f0000 {
--	compatible = "fsl,qoriq-tmu";
--	reg = <0xf0000 0x1000>;
--	interrupts = <18 2 0 0>;
--	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
--	fsl,tmu-calibration = <0x00000000 0x00000025
--			       0x00000001 0x00000028
--			       0x00000002 0x0000002d
--			       0x00000003 0x00000031
--			       0x00000004 0x00000036
--			       0x00000005 0x0000003a
--			       0x00000006 0x00000040
--			       0x00000007 0x00000044
--			       0x00000008 0x0000004a
--			       0x00000009 0x0000004f
--			       0x0000000a 0x00000054
--
--			       0x00010000 0x0000000d
--			       0x00010001 0x00000013
--			       0x00010002 0x00000019
--			       0x00010003 0x0000001f
--			       0x00010004 0x00000025
--			       0x00010005 0x0000002d
--			       0x00010006 0x00000033
--			       0x00010007 0x00000043
--			       0x00010008 0x0000004b
--			       0x00010009 0x00000053
--
--			       0x00020000 0x00000010
--			       0x00020001 0x00000017
--			       0x00020002 0x0000001f
--			       0x00020003 0x00000029
--			       0x00020004 0x00000031
--			       0x00020005 0x0000003c
--			       0x00020006 0x00000042
--			       0x00020007 0x0000004d
--			       0x00020008 0x00000056
--
--			       0x00030000 0x00000012
--			       0x00030001 0x0000001d>;
--	#thermal-sensor-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-new file mode 100644
-index 0000000..ae76208
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/qoriq-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      The version of the device is determined by the TMU IP Block Revision
-+      Register (IPBRR0) at offset 0x0BF8.
-+      Table of correspondences between IPBRR0 values and example chips:
-+            Value           Device
-+            ----------      -----
-+            0x01900102      T1040
-+    enum:
-+      - fsl,qoriq-tmu
-+      - fsl,imx8mq-tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,tmu-range:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      The values to be programmed into TTRnCR, as specified by the SoC
-+      reference manual. The first cell is TTR0CR, the second is TTR1CR, etc.
-+    maxItems: 4
-+
-+  fsl,tmu-calibration:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
-+    description: |
-+      A list of cell pairs containing temperature calibration data, as
-+      specified by the SoC reference manual. The first cell of each pair
-+      is the value to be written to TTCFGR, and the second is the value
-+      to be written to TSCFGR.
-+    items:
-+      items:
-+        - description: value for TTCFGR
-+        - description: value for TSCFGR
-+    minItems: 1
-+    maxItems: 64
-+
-+  little-endian:
-+    description: |
-+      boolean, if present, the TMU registers are little endian. If absent,
-+      the default is big endian.
-+    type: boolean
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,tmu-range
-+  - fsl,tmu-calibration
-+  - '#thermal-sensor-cells'
-+
-+examples:
-+  - |
-+    tmu@f0000 {
-+        compatible = "fsl,qoriq-tmu";
-+        reg = <0xf0000 0x1000>;
-+        interrupts = <18 2 0 0>;
-+        fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
-+        fsl,tmu-calibration = <0x00000000 0x00000025>,
-+                              <0x00000001 0x00000028>,
-+                              <0x00000002 0x0000002d>,
-+                              <0x00000003 0x00000031>,
-+                              <0x00000004 0x00000036>,
-+                              <0x00000005 0x0000003a>,
-+                              <0x00000006 0x00000040>,
-+                              <0x00000007 0x00000044>,
-+                              <0x00000008 0x0000004a>,
-+                              <0x00000009 0x0000004f>,
-+                              <0x0000000a 0x00000054>,
-+                              <0x00010000 0x0000000d>,
-+                              <0x00010001 0x00000013>,
-+                              <0x00010002 0x00000019>,
-+                              <0x00010003 0x0000001f>,
-+                              <0x00010004 0x00000025>,
-+                              <0x00010005 0x0000002d>,
-+                              <0x00010006 0x00000033>,
-+                              <0x00010007 0x00000043>,
-+                              <0x00010008 0x0000004b>,
-+                              <0x00010009 0x00000053>,
-+                              <0x00020000 0x00000010>,
-+                              <0x00020001 0x00000017>,
-+                              <0x00020002 0x0000001f>,
-+                              <0x00020003 0x00000029>,
-+                              <0x00020004 0x00000031>,
-+                              <0x00020005 0x0000003c>,
-+                              <0x00020006 0x00000042>,
-+                              <0x00020007 0x0000004d>,
-+                              <0x00020008 0x00000056>,
-+                              <0x00030000 0x00000012>,
-+                              <0x00030001 0x0000001d>;
-+        #thermal-sensor-cells = <1>;
-+    };
--- 
-2.7.4
+> > > [RESEND PATCH v2] sh: sh4a: Bring back tmu3_device early device
+> > > https://marc.info/?l=linux-sh&m=159061283109675&w=2
+> 
+> OK.
 
+In -mm.
+
+> > > [PATCH] sh: Drop CONFIG_MTD_M25P80 in sh7757lcr_defconfig
+> > > https://marc.info/?l=linux-sh&m=158839364811658&w=2
+> > 
+> > > [PATCH v2] sh: Replace CONFIG_MTD_M25P80 with CONFIG_MTD_SPI_NOR in sh7757lcr_defconfig
+> > > https://marc.info/?l=linux-sh&m=158841749817761&w=2
+> 
+> Doesn't the second one here replace the first?
+
+The first one was pulled and the second wasn't so I think the second
+needs to be rewritten on top of the first now.
+
+> > > [PATCH 1/1] sh: remove sh5 support
+> > > https://marc.info/?l=linux-sh&m=158776683125080&w=2
+> 
+> I'm trying to figure out how to apply this since it was generated with
+> -D and git-am maliciously rejects it for that reason with an arcane
+> error message.
+
+Not included in -mm. I'll keep it in my for-next.
+
+> > > sh/mm: Fix a build failure via adding a missing bracket
+> > > https://marc.info/?l=linux-sh&m=158736532105299&w=2
+> 
+> Already upstream.
+
+No action needed.
+
+> > > [PATCH 1/2] arch/sh: vmlinux.scr
+> > > https://marc.info/?l=linux-sh&m=158429470120959&w=2
+> 
+> OK.
+
+Included in -mm.
+
+> > > [PATCH] sh: configs: Cleanup old Kconfig IO scheduler options
+> > > https://marc.info/?l=linux-sh&m=158195850120215&w=2
+> 
+> OK.
+
+Not included in -mm. I'll keep.
+
+> > > [PATCH resend 0/3] SH: compile fixup patches
+> > > https://marc.info/?l=linux-renesas-soc&m=157948330821790&w=2
+> > > https://marc.info/?l=linux-sh&m=157852970316892&w=2
+> > > https://marc.info/?l=linux-sh&m=157852984016938&w=2
+> 
+> OK.
+> 
+> > > [PATCH][repost] sh: clkfwk: remove r8/r16/r32
+> > > https://marc.info/?l=linux-renesas-soc&m=157852973916903&w=2
+> 
+> This one had objections by Geert that called for a v2, and was
+> teplaced by:
+> 
+> > > [PATCH] sh: clk: Fix discarding const qualifier warning
+> > > https://marc.info/?l=linux-sh&m=157839999010776&w=2
+> 
+> But this still had objections that the definitions on all archs should
+> be fixed for const correctness. It looks like that patch series is
+> still bouncing around; should I apply the SH part of it now?
+
+The first one here is now in -mm, so further cleanup action is needed
+but I think that will happen with the cross-arch patch series.
+
+> > > [PATCH next] sh: remove call to memset after dma_alloc_coherent
+> > > https://marc.info/?l=linux-sh&m=157793031102356&w=2
+> 
+> Can anyone confirm that this is correct/safe?
+
+Arnd confirmed it and it's in -mm now anyway.
+
+> > > [PATCH] sh: use generic strncpy()
+> > > https://marc.info/?l=linux-renesas-soc&m=157664657013309&w=2
+> 
+> Can you fill me in on the status of this? It looks like you were
+> following it. The subject says "use generic strncpy" but it's updating
+> the asm, and I think there are problems with the proposed asm.
+
+Actual generic-strncpy is in -mm now so I think this should be ok. If
+there's a desire to use the asm, it needs fixes. Latest proposed
+version is using named labels (not numbered ones) in an inline asm
+block so the compiler can in theory duplicate it and break assembly.
+
+> > > [PATCH v2] SH: Convert ins[bwl]/outs[bwl] macros to inline functions
+> > > https://marc.info/?l=linux-sh&m=157656907716201&w=2
+> 
+> OK.
+
+In -mm, with followup style fix.
+
+> > > [PATCH v2] SH: Convert iounmap() macros to inline functions
+> > > https://marc.info/?l=linux-sh&m=157656903716172&w=2
+> 
+> OK.
+
+In -mm.
+
+> > > [PATCH v2] sh: add missing DECLARE_EXPORT() for __ashiftrt_r4_xx
+> > > https://marc.info/?l=linux-sh&m=157619891030685&w=2
+> 
+> OK.
+
+Missing from -mm so I'll keep it.
+
+> > > [PATCH] sh: add missing EXPORT_SYMBOL() for __delay
+> > > https://marc.info/?l=linux-kernel&m=157611811927852&w=2
+> 
+> OK.
+
+In -mm.
+
+> > > [PATCH] sh: kgdb: Mark expected switch fall-throughs
+> > > https://marc.info/?l=linux-sh&m=157241987926081&w=2
+> 
+> This is already upstream.
+
+No action needed.
+
+Rich
