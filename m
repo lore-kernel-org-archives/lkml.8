@@ -2,308 +2,277 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3FD206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="lt/T1ShJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0DCCA206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 00:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgFBAOX (ORCPT
+        id S1728596AbgFBAQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 20:14:23 -0400
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21176 "EHLO
-        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgFBAOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 20:14:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1591056819; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=Yzt3hg008Ewiw74Etbe1GbNVXIXlxRtR6+jlS219s6pgNwa06rkdTYH1J4nKuysl8RtykTiN/MxetIgwXcsYHPsVpCV+nJUpb6C60y27uC7qDUMdy1xhEB+Kxf8JiFXlXl7sAil+HkVno/cazHTw1aiVwBol/dO3TzzbDns2iRs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1591056819; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=NVJPpaameDMBHmsIlIvvze+ivRpNSajnYHqCmKWyZNA=; 
-        b=mtW5Ko0uNTFREPywKDPFju4J0YfXH8TXmfaXhCkpWFZ5hZM3LvnMew43XzQsacTaDui4cm9AzRxe3oWKTemZm01eSZ1/U66PSe9DY4OWKvT1Mh5mL4Wy1Psap1DW2zyeqXhZiT89iaq5rBsx0sBif/Cw5HU5D5jp+IWEJwlyVV8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=apertussolutions.com;
-        spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-        dmarc=pass header.from=<dpsmith@apertussolutions.com> header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1591056819;
-        s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=NVJPpaameDMBHmsIlIvvze+ivRpNSajnYHqCmKWyZNA=;
-        b=lt/T1ShJppYVdEPQXUTHgw5z3ZkdXYWjQbDHmasVo9uwrRh3kw60D1jSV6NQffXI
-        xiwf10Y48SPfXwQ3VSIat/ole1eH9bUQQk0IRien0OAvIu8JnPpsp3CBE/rRw6+7Qkj
-        RqVQ3njWvTT5vlcM4xWZ/KoSTqOfInjqDNdVeIFI=
-Received: from [10.10.1.24] (c-73-129-47-101.hsd1.md.comcast.net [73.129.47.101]) by mx.zohomail.com
-        with SMTPS id 15910568151281010.0398280518084; Mon, 1 Jun 2020 17:13:35 -0700 (PDT)
-Subject: Re: [GRUB PATCH RFC 00/18] i386: Intel TXT secure launcher
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>,
-        grub-devel@gnu.org, LKML <linux-kernel@vger.kernel.org>,
-        trenchboot-devel@googlegroups.com, X86 ML <x86@kernel.org>,
-        alexander.burmashev@oracle.com,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        eric.snowberg@oracle.com, javierm@redhat.com,
-        kanth.ghatraju@oracle.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
-        Matthew Garrett <mjg59@google.com>, phcoder@gmail.com,
-        piotr.krol@3mdeb.com, Peter Jones <pjones@redhat.com>,
-        Ross Philipson <ross.philipson@oracle.com>
-References: <8c82e8e4-d6bb-7cba-dd32-378dd1c30f3e@apertussolutions.com>
- <120CC5EB-297D-46C4-91FC-E9D6E5B88C18@amacapital.net>
-From:   "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Message-ID: <f954e9ef-295a-a8ce-0ff8-a88ad81b01a3@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
- mQMuBFYrueARCACPWL3r2bCSI6TrkIE/aRzj4ksFYPzLkJbWLZGBRlv7HQLvs6i/K4y/b4fs
- JDq5eL4e9BdfdnZm/b+K+Gweyc0Px2poDWwKVTFFRgxKWq9R7McwNnvuZ4nyXJBVn7PTEn/Z
- G7D08iZg94ZsnUdeXfgYdJrqmdiWA6iX9u84ARHUtb0K4r5WpLUMcQ8PVmnv1vVrs/3Wy/Rb
- foxebZNWxgUiSx+d02e3Ad0aEIur1SYXXv71mqKwyi/40CBSHq2jk9eF6zmEhaoFi5+MMMgX
- X0i+fcBkvmT0N88W4yCtHhHQds+RDbTPLGm8NBVJb7R5zbJmuQX7ADBVuNYIU8hx3dF3AQCm
- 601w0oZJ0jGOV1vXQgHqZYJGHg5wuImhzhZJCRESIwf+PJxik7TJOgBicko1hUVOxJBZxoe0
- x+/SO6tn+s8wKlR1Yxy8gYN9ZRqV2I83JsWZbBXMG1kLzV0SAfk/wq0PAppA1VzrQ3JqXg7T
- MZ3tFgxvxkYqUP11tO2vrgys+InkZAfjBVMjqXWHokyQPpihUaW0a8mr40w9Qui6DoJj7+Gg
- DtDWDZ7Zcn2hoyrypuht88rUuh1JuGYD434Q6qwQjUDlY+4lgrUxKdMD8R7JJWt38MNlTWvy
- rMVscvZUNc7gxcmnFUn41NPSKqzp4DDRbmf37Iz/fL7i01y7IGFTXaYaF3nEACyIUTr/xxi+
- MD1FVtEtJncZNkRn7WBcVFGKMAf+NEeaeQdGYQ6mGgk++i/vJZxkrC/a9ZXme7BhWRP485U5
- sXpFoGjdpMn4VlC7TFk2qsnJi3yF0pXCKVRy1ukEls8o+4PF2JiKrtkCrWCimB6jxGPIG3lk
- 3SuKVS/din3RHz+7Sr1lXWFcGYDENmPd/jTwr1A1FiHrSj+u21hnJEHi8eTa9029F1KRfocp
- ig+k0zUEKmFPDabpanI323O5Tahsy7hwf2WOQwTDLvQ+eqQu40wbb6NocmCNFjtRhNZWGKJS
- b5GrGDGu/No5U6w73adighEuNcCSNBsLyUe48CE0uTO7eAL6Vd+2k28ezi6XY4Y0mgASJslb
- NwW54LzSSLQuRGFuaWVsIFAuIFNtaXRoIDxkcHNtaXRoQGFwZXJ0dXNzb2x1dGlvbnMuY29t
- Poh6BBMRCAAiBQJWK7ngAhsjBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBTc6WbYpR8
- KrQ9AP94+xjtFfJ8gj5c7PVx06Zv9rcmFUqQspZ5wSEkvxOuQQEAg6qEsPYegI7iByLVzNEg
- 7B7fUG7pqWIfMqFwFghYhQy5Ag0EViu54BAIAL6MXXNlrJ5tRUf+KMBtVz1LJQZRt/uxWrCb
- T06nZjnbp2UcceuYNbISOVHGXTzu38r55YzpkEA8eURQf+5hjtvlrOiHxvpD+Z6WcpV6rrMB
- kcAKWiZTQihW2HoGgVB3gwG9dCh+n0X5OzliAMiGK2a5iqnIZi3o0SeW6aME94bSkTkuj6/7
- OmH9KAzK8UnlhfkoMg3tXW8L6/5CGn2VyrjbB/rcrbIR4mCQ+yCUlocuOjFCJhBd10AG1IcX
- OXUa/ux+/OAV9S5mkr5Fh3kQxYCTcTRt8RY7+of9RGBk10txi94dXiU2SjPbassvagvu/hEi
- twNHms8rpkSJIeeq0/cAAwUH/jV3tXpaYubwcL2tkk5ggL9Do+/Yo2WPzXmbp8vDiJPCvSJW
- rz2NrYkd/RoX+42DGqjfu8Y04F9XehN1zZAFmCDUqBMa4tEJ7kOT1FKJTqzNVcgeKNBGcT7q
- 27+wsqbAerM4A0X/F/ctjYcKwNtXck1Bmd/T8kiw2IgyeOC+cjyTOSwKJr2gCwZXGi5g+2V8
- NhJ8n72ISPnOh5KCMoAJXmCF+SYaJ6hIIFARmnuessCIGw4ylCRIU/TiXK94soilx5aCqb1z
- ke943EIUts9CmFAHt8cNPYOPRd20pPu4VFNBuT4fv9Ys0iv0XGCEP+sos7/pgJ3gV3pCOric
- p15jV4OIYQQYEQgACQUCViu54AIbDAAKCRBTc6WbYpR8Khu7AP9NJrBUn94C/3PeNbtQlEGZ
- NV46Mx5HF0P27lH3sFpNrwD/dVdZ5PCnHQYBZ287ZxVfVr4Zuxjo5yJbRjT93Hl0vMY=
-Date:   Mon, 1 Jun 2020 20:13:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 20:16:57 -0400
+Received: from mga18.intel.com ([134.134.136.126]:10702 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgFBAQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 20:16:56 -0400
+IronPort-SDR: FfDQUOqZlCD3zBfZiQgFSXWxfPEL78XMFFPwtQFk20OS0s2BtOcbzznkPmopiK1KZ1xpMuL7jq
+ LnYg1XNCUl4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 17:16:55 -0700
+IronPort-SDR: fkoxsxREmQzuEroPDiRGi28yrHWHMxQJA0aiSSSlKyyuZbxTjSIyv+eyljWnRhU7AxGCQQ0dNn
+ 0sEaP+CiL5AA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
+   d="scan'208";a="258108158"
+Received: from lkp-server02.sh.intel.com (HELO 3e9a596e5d8c) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Jun 2020 17:16:54 -0700
+Received: from kbuild by 3e9a596e5d8c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jfubt-00000P-Ca; Tue, 02 Jun 2020 00:16:53 +0000
+Date:   Tue, 02 Jun 2020 08:16:44 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.05.31a] BUILD REGRESSION
+ d4a44f7b283b30d89a9d3b68266ecde58fc92aab
+Message-ID: <5ed59a6c.Aw2OqILrhTAC8NiZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <120CC5EB-297D-46C4-91FC-E9D6E5B88C18@amacapital.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/20 3:39 PM, Andy Lutomirski wrote:
->=20
->> On Jun 1, 2020, at 10:56 AM, Daniel P. Smith <dpsmith@apertussolutions.c=
-om> wrote:
->>
->> =EF=BB=BFOn 6/1/20 12:51 PM, Andy Lutomirski wrote:
->>>> On Mon, Jun 1, 2020 at 8:33 AM Daniel P. Smith
->>>> <dpsmith@apertussolutions.com> wrote:
->>>>
->>>> On 5/7/20 7:06 AM, Daniel Kiper wrote:
->>>>> Hi =C5=81ukasz,
->>>>>
->>>>> On Tue, May 05, 2020 at 04:38:02PM +0200, Lukasz Hawrylko wrote:
->>>>>>> On Tue, 2020-05-05 at 01:21 +0200, Daniel Kiper wrote:
->>>>
->>>> ...
->>>>
->>>>>> In OS-MLE table there is a buffer for TPM event log, however I see t=
-hat
->>>>>> you are not using it, but instead allocate space somewhere in the
->>>>>
->>>>> I think that this part requires more discussion. In my opinion we sho=
-uld
->>>>> have this region dynamically allocated because it gives us more flexi=
-bility.
->>>>> Of course there is a question about the size of this buffer too. I am
->>>>> not sure about that because I have not checked yet how many log entri=
-es
->>>>> are created by the SINIT ACM. Though probably it should not be large.=
-..
->>>>>
->>>>>> memory. I am just wondering if, from security perspective, it will b=
-e
->>>>>> better to use memory from TXT heap for event log, like we do in TBOO=
-T.
->>>>>
->>>>> Appendix F, TPM Event Log, has following sentence: There are no
->>>>> requirements for event log to be in DMA protected memory =E2=80=93 SI=
-NIT will
->>>>> not enforce it.
->>>>>
->>>>> I was thinking about it and it seems to me that the TPM event log doe=
-s
->>>>> not require any special protections. Any changes in it can be quickly
->>>>> detected by comparing hashes with the TPM PCRs. Does not it?
->>>>>
->>>>
->>>> I think it would be beneficial to consider the following in deciding
->>>> where the log is placed. There are two areas of attack/manipulation th=
-at
->>>> need to be considered. The first area is the log contents itself, whic=
-h
->>>> as Daniel has pointed out, the log contents do not really need to be
->>>> protected from tampering as that would/should be detected during
->>>> verification by the attestor. The second area that we need to consider
->>>> is the log descriptors themselves. If these are in an area that can be
->>>> manipulated, it is an opportunity for an attacker to attempt to
->>>> influence the ACM's execution. For a little perspective, the ACM
->>>> executes from CRAM to take the most possible precaution to ensure that
->>>> it cannot be tampered with during execution. This is very important
->>>> since it runs a CPU mode (ACM Mode) that I would consider to be higher
->>>> (or lower depending on how you view it) than SMM. As a result, the txt
->>>> heap is also included in what is mapped into CRAM. If the event log is
->>>> place in the heap, this ensures that the ACM is not using memory outsi=
-de
->>>> of CRAM during execution. Now as Daniel has pointed out, the down side
->>>> to this is that it greatly restricts the log size and can only be
->>>> managed by a combination of limiting the number of events and
->>>> restricting what content is carried in the event data field.
->>>
->>> Can you clarify what the actual flow of control is?  If I had to guess,=
- it's:
->>>
->>> GRUB (or other bootloader) writes log.
->>>
->>> GRUB transfers control to the ACM.  At this point, GRUB is done
->>> running and GRUB code will not run again.
->>>
->>> ACM validates system configuration and updates TPM state using magic
->>> privileged TPM access.
->>>
->>> ACM transfers control to the shiny new Linux secure launch entry point
->>>
->>> Maybe this is right, and maybe this is wrong.  But I have some
->>> questions about this whole setup.  Is the ACM code going to inspect
->>> this log at all?  If so, why?  Who supplies the ACM code?  If the ACM
->>> can be attacked by putting its inputs (e.g. this log) in the wrong
->>> place in memory, why should this be considered anything other than a
->>> bug in the ACM?
->>
->> There is a lot behind that, so to get a complete detail of the event
->> sequence I would recommend looking at Section Vol. 2D 6.2.3 (pg Vol. 2D
->> 6-5/ pdf pg 2531), 6.3 GETSEC[ENTERACCS](pg 6-10 Vol. 2D/pdf pg 2546),
->> and 6.3 GETSEC[SENTER](pg Vol. 2D 6-21/pdf pg 2557) in the Intel SDM[1].
->> Section 6.2.3 gives a slightly detailed overview. Section
->> GETSEC[ENTERACCS] details the requirements/procedures for entering AC
->> execution mode and ACRAM (Authenticated CRAM) and section GETSEC[SENTER]
->> will detail requirements/procedures for SENTER.
->>
->> To answer you additional questions I would say if you look at all the
->> work that goes into protecting the ACM execution, why would you want to
->> then turn around and have it use memory outside of the protected region.
->> On the other hand, you are right, if the Developer's Guide says it
->> doesn't need to be protected and someone somehow finds a way to cause a
->> failure in the ACM through the use of a log outside of CRAM, then
->> rightfully that is a bug in the ACM. This is why I asked about making it
->> configurable, paranoid people could set the configuration to use the
->> heap and all others could just use an external location.
->=20
-> And this provides no protection whatsoever to paranoid people AFAICS, unl=
-ess the location gets hashed before any processing occurs.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.05.31a
+branch HEAD: d4a44f7b283b30d89a9d3b68266ecde58fc92aab  refperf: Change readdelay module parameter to nanoseconds
 
-Apologies but that is exactly what it says. From section 6.2.3,
+Error/Warning in current branch:
 
-"After the GETSEC[SENTER] rendezvous handshake is performed between all
-logical processors in the platform, the ILP loads the chipset
-authenticated code module (SINIT) and performs an authentication check.
-If the check passes, the processor hashes the SINIT AC module and stores
-the result into TPM PCR 17. It then switches execution context to the
-SINIT AC module."
+arch/alpha/include/asm/delay.h:9:16: error: called object 'ndelay' is not a function or function pointer
+arch/m68k/include/asm/delay.h:123:19: error: called object 'ndelay' is not a function or function pointer
+arch/riscv/include/asm/delay.h:12:16: error: called object 'udelay' is not a function or function pointer
+arch/riscv/include/asm/delay.h:15:16: error: called object 'ndelay' is not a function or function pointer
+arch/xtensa/include/asm/delay.h:65:19: error: called object 'ndelay' is not a function or function pointer
+include/linux/delay.h:53:19: error: called object 'ndelay' is not a function or function pointer
+kernel/rcu/refperf.c:139:4: error: called object 'udelay' is not a function or function pointer
 
-To get a little into the details, the ACM is signed with an RSA key that
-is deeply embedded into the CPU, thus why there is an ACM per
-architecture as each one gets a new key. The authentication check is
-detailed in the section GETSEC[ENTERACCS], but in the end the ACM has
-had a crypto signature check carried out by the CPU (not firmware) and
-is also cryptographically hashed by the CPU (again not firmware). On top
-of this, both operations are executed after all interrupts have been
-disabled and the ACM has been loaded into ACRAM from memory that was
-protected by the IOMMU. Only after all this succeeds is the ACM allowed
-to execute.
+Error/Warning ids grouped by kconfigs:
 
-> But you haven=E2=80=99t answered the most important question: what is the=
- ACM doing with this log?  I feel like a lot of details are being covered b=
-ut the big picture is missing.
+recent_errors
+|-- alpha-allyesconfig
+|   |-- arch-alpha-include-asm-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|   `-- kernel-rcu-refperf.c:error:called-object-udelay-is-not-a-function-or-function-pointer
+|-- arm-allmodconfig
+|   `-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|-- arm-allyesconfig
+|   `-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|-- ia64-allyesconfig
+|   `-- kernel-rcu-refperf.c:error:called-object-udelay-is-not-a-function-or-function-pointer
+|-- m68k-allmodconfig
+|   `-- arch-m68k-include-asm-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|-- m68k-allyesconfig
+|   `-- arch-m68k-include-asm-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|-- parisc-allmodconfig
+|   |-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|   `-- kernel-rcu-refperf.c:error:called-object-udelay-is-not-a-function-or-function-pointer
+|-- parisc-allyesconfig
+|   |-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|   `-- kernel-rcu-refperf.c:error:called-object-udelay-is-not-a-function-or-function-pointer
+|-- powerpc-allyesconfig
+|   `-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|-- riscv-allyesconfig
+|   |-- arch-riscv-include-asm-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|   `-- arch-riscv-include-asm-delay.h:error:called-object-udelay-is-not-a-function-or-function-pointer
+|-- sparc-allyesconfig
+|   |-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|   `-- kernel-rcu-refperf.c:error:called-object-udelay-is-not-a-function-or-function-pointer
+|-- sparc64-allmodconfig
+|   |-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|   `-- kernel-rcu-refperf.c:error:called-object-udelay-is-not-a-function-or-function-pointer
+|-- sparc64-allyesconfig
+|   |-- include-linux-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
+|   `-- kernel-rcu-refperf.c:error:called-object-udelay-is-not-a-function-or-function-pointer
+`-- xtensa-allyesconfig
+    `-- arch-xtensa-include-asm-delay.h:error:called-object-ndelay-is-not-a-function-or-function-pointer
 
-To the ACM, this is just an allocated buffer for it to record a TPM
-event log for all the measurements it takes. It has been a while since I
- have manually reviewed a TXT event log but I want to say there are
-about five measurements taken before the ACM exits, including recording
-the CRTM taken by the CPU. As such, it initialize the beginning of the
-buffer with a TXT log header and records a UEFI TPM Event for each
-measurement it takes. In theory, it will only ever write to this memory
-but seeing that the ACM is a binary blob, I have never seen
-programmatically if it ever tries reading from the memory.
 
->>
->>> If GRUB is indeed done by the time anyone consumes the log, why does
->>> GRUB care where the log ends up?
->>
->> This is because the log buffer allocation was made the responsibility of
->> the pre-launch environment, in this case GRUB, and is communicated to
->> the ACM via the os_to_mle structure.
->>
->>> And finally, the log presumably has nonzero size, and it would be nice
->>> not to pin some physical memory forever for the log.  Could the kernel
->>> copy it into tmpfs during boot so it's at least swappable and then
->>> allow userspace to delete it when userspace is done with it?
->>>
->>
->> Actually yes we will want to do that because when we move to enabling
->> relaunching, an implementation may want to preserve the log from the
->> last launch before triggering the new launch which will result in a
->> reset of the DRTM PCRs and an overwriting the log.
->=20
-> I=E2=80=99m having a bit of trouble understanding how this log is useful =
-for a relaunch. At the point that you=E2=80=99re relaunching, the log is ev=
-en less trustworthy than on first launch. At least on first launch, if you =
-dial up your secure and verified boot settings tight enough, you can have s=
-ome degree of confidence in the boot environment. But on a relaunch, I don=
-=E2=80=99t see how the log is useful for anything more than any other piece=
- of kernel memory.
->=20
-> What am I missing?
->=20
+i386-tinyconfig vmlinux size:
 
-Before relaunch you can have the TPM do a sign quote of the log to bind
-the contents to the state of the PCRs. The why you would do that is more
-about enterprise use-cases concerned with the lifecycle of enterprise
-devices.When relaunch occurs, the DRTM PCRs will be reset by the CPU
-before the CRTM for the relaunch is taken by the CPU and the ACM will
-overwrite the existing log with new log entries. As highlighted above,
-the CRTM and all measurements take by the ACM will have an extremely low
-risk of external/attacker influence. When the MLE takes control,
-interrupts will still be disabled and any measurements it takes prior to
-enabling them will have a low risk of external/attacker influence. Once
-the MLE enables the interrupts is when you have the situation whereby
-the integrity you just established about the runtime can be compromised
-by hostile firmware (UEFI runtime services, SMI handler, EC firmware,
-PCI devices, etc.), hostile applications, and a hostile network. At this
-point we could devolve into discourse over how long can load time
-integrity measurements be considered trustworthy but I don't think that
-is relevant to the issue at hand.
+========================================================================================================================================
+ TOTAL  TEXT  arch/x86/events/zhaoxin/built-in.*  built-in.*                                                                            
+========================================================================================================================================
+  -233  -233                                                  8747b07d1944 Merge branch 'kcsan-dev.2020.04.13c' into HEAD               
+     0     0                                                  03e8e094dad9 Merge branch 'lkmm-dev.2020.05.16a' into HEAD                
+     0     0                                                  17e0ee2a3ec9 torture:  Remove qemu dependency on EFI firmware             
+     0     0                                                  c58148777978 torture: Add script to smoke-test commits in a branch        
+   +38   +38                                                  396a79cc6818 fork: Annotate a data race in vm_area_dup()                  
+     0     0                                                  8035e0fc710a x86/mm/pat: Mark an intentional data race                    
+     0     0                                                  d7a51c24ee4b rculist: Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init 
+     0     0                                                  e5efa2f1b7b6 locktorture: Use true and false to assign to bool variables  
+     0     0                                                  7514d7f181ab srcu: Fix a typo in comment "amoritized"->"amortized"        
+     0     0                                                  9dbd776542e3 rcu: Simplify the calculation of rcu_state.ncpus             
+     0     0                                                  df12d657bcc0 docs: RCU: Convert checklist.txt to ReST                     
+     0     0                                                  fdfeb779e1bd docs: RCU: Convert lockdep-splat.txt to ReST                 
+     0     0                                                  68b5951f7eb2 docs: RCU: Convert lockdep.txt to ReST                       
+     0     0                                                  ce9edc0c8a82 docs: RCU: Convert rculist_nulls.txt to ReST                 
+     0     0                                                  1bee818b03c7 docs: RCU: Convert torture.txt to ReST                       
+     0     0                                                  9100131711bc docs: RCU: Convert rcuref.txt to ReST                        
+     0     0                                                  080f194cfa87 docs: RCU: Convert stallwarn.txt to ReST                     
+     0     0                                                  6999f47d8456 docs: RCU: Don't duplicate chapter names in rculist_nulls.rs 
+     0     0                                                  55ce2e8178f2 rcutorture: Add races with task-exit processing              
+     0     0                                                  1c60a5e52538 torture: Set configfile variable to current scenario         
+     0     0                                                  9969401f1706 rcutorture: Handle non-statistic bang-string error messages  
+     0     0                                                  6f099e1b362b rcutorture: NULL rcu_torture_current earlier in cleanup code 
+     0     0                                                  6816417616c4 kcsan: Add test suite                                        
+     0     0                                                  848d16e04f52 doc: Timer problems can cause RCU CPU stall warnings         
+     0     0                                                  2364a9f967ec rcu: Add callbacks-invoked counters                          
+     0     0                                                  2775724beeef rcu: Add comment documenting rcu_callback_map's purpose      
+     0     0                                         +138684  bfd78bca7bdf Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom o 
+    +1     0                                         -138684  8903088434e7 rcu/tree: Add better tracing for dyntick-idle                
+    -1     0                                                  c0601bb42994 rcu/tree: Clean up dynticks counter usage                    
+     0     0                                                  3f3baaf3ac07 rcu/tree: Remove dynticks_nmi_nesting counter                
+    +1     0                                                  725e4ad9e020 trace: events: rcu: Change description of rcu_dyntick trace  
+     0     0                                                  a9b73fda34ec torture: Remove whitespace from identify_qemu_vcpus output   
+    -1     0                                         +138684  6267bacdff81 torture: Add --allcpus argument to the kvm.sh script         
+    +1     0                                         -138684  5c6aa32472cb rcu: Grace-period-kthread related sleeps to idle priority    
+    -1     0                                         +138684  f334f4fee6e2 rcu: Priority-boost-related sleeps to idle priority          
+     0     0                                               0  d49cb59f19b6 rcu: No-CBs-related sleeps to idle priority                  
+    +1     0                                         -138684  4cc4ce9b67ec rcu: Expedited grace-period sleeps to idle priority          
+    -1     0                                         +138684  cef0575caddb rcu-tasks: Convert sleeps to idle priority                   
+     0     0                                               0  988aef3524e2 fs/btrfs: Add cond_resched() for try_release_extent_mapping( 
+     0     0                                         -138684  70ca490c7ab3 locking/osq_lock: Annotate a data race in osq_lock           
+    +1     0                                                  80fa4f7b355d doc: Tasks RCU must protect instructions before trampoline   
+    -1     0                                         +138684  1b397c884f7a doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq      
+     0     0                                         -138684  dedad0a2118a tick/nohz: Narrow down noise while setting current task's ti 
+     0     0                                         +138684  3055759634b2 rcu: fix some kernel-doc warnings                            
+    +1     0                                         -138684  cf10e7d90417 rcu: Remove initialized but unused rnp from check_slow_task( 
+    -1     0                                         +138684  af17eef88571 rcu: Mark rcu_nmi_enter() call to rcu_cleanup_after_idle() n 
+     0     0                                         -138684  55f712e9bd7b rcuperf: Remove useless while loops around wait_event        
+     0     0                                                  751538451328 refperf: Add a test to measure performance of read-side sync 
+     0     0                                                  8e4ee950aec1 rcuperf: Add comments explaining the high reader overhead    
+     0     0                                                  c040f712e88e torture: Add refperf to the rcutorture scripting             
+     0     0                                                  008a24414803 refperf: Add holdoff parameter to allow CPUs to come online  
+     0     0                                                  dab324f75926 refperf: Hoist function-pointer calls out of the loop        
+     0     0                                +136              5574336c4be5 refperf: Allow decimal nanoseconds                           
+     0     0                                   0              aeb173765756 refperf: Convert nreaders to a module parameter              
+     0     0                                   0              dae3d17446a5 refperf: Provide module parameter to specify number of exper 
+     0     0                                   0              a9390c56b7ae refperf: Dynamically allocate experiment-summary output buff 
+     0     0                                   0              e927b546c872 refperf: Dynamically allocate thread-summary output buffer   
+     0     0                                   0              95c9ce2c76af srcu: Avoid local_irq_save() before acquiring spinlock_t     
+     0     0                                   0              7632b364c6c4 refperf: Make functions static                               
+     0     0                                   0              42bb09b5dc6f refperf: Tune reader measurement interval                    
+     0     0                                   0              cc8e6d748b0e refperf: Convert reader_task structure's "start" field to in 
+     0     0                                   0              e4826529a741 refperf: More closely synchronize reader start times         
+     0     0                                   0              6cd8f57628a1 rcuperf: Fix kfree_mult to match printk() format             
+     0     0                                   0              3e7ad35e5240 refperf: Add warmup and cooldown processing phases           
+     0     0                                   0              f37e98a2f76a refperf: Label experiment-number column "Runs"               
+     0     0                                   0              1cb4d7f83ea9 refperf: Output per-experiment data points                   
+     0     0                                   0              8762898c1a2f refperf: Simplify initialization-time wakeup protocol        
+     0     0                                   0              34c77200c071 lockdep: Complain only once about RCU in extended quiescent  
+     0     0                                   0              64e6613bef8b refperf: Add read-side delay module parameter                
+     0     0                                   0              b47663597c1b rcu-tasks: Make rcu_tasks_postscan() be static               
+     0     0                                   0              623dcb8f7f70 rcu-tasks: Add #include of rcupdate_trace.h to update.c      
+     0     0                                   0              e5c48d7e7118 rcu-tasks: Conditionally compile show_rcu_tasks_gp_kthreads( 
+     0     0                                   0              9eef91d82769 refperf: Adjust refperf.loop default value                   
+     0     0                                   0              043a9513b559 doc: Document rcuperf's module parameters                    
+    -1     0                                   0              0dd4132157c2 refperf: Work around 64-bit division                         
+     0     0                                   0              d4a44f7b283b refperf: Change readdelay module parameter to nanoseconds    
+  -190  -189                                +136              b1fcf9b83c41..d4a44f7b283b (ALL COMMITS)                                  
+========================================================================================================================================
 
-In other words, the log for the relaunch to attest what is currently
-running is really no less useful than using the first launch log to
-attest to the what was running in the first launch.
+elapsed time: 483m
 
+configs tested: 79
+configs skipped: 1
+
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
