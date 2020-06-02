@@ -2,118 +2,164 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B801C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30E7820679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Z4VUDVFH"
+	by mail.kernel.org (Postfix) with ESMTP id 4672E20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgFBKog (ORCPT
+        id S1726408AbgFBKrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:44:36 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59537 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726267AbgFBKoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:44:34 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id g4P6jXBaDCKzeg4PAjJ3Qt; Tue, 02 Jun 2020 12:44:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1591094672; bh=1WzPUPBIE0Uaz6t74C5WQPm2crJOnZO/Fn4WuxbrM0s=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Z4VUDVFHsqJqWJs8+DlWcTaWPdwdnw8gko60VMLYOilDzsUb3W8+durQUBUvL5+oP
-         Sthoq+4c1YJQUssMAIP8WtDOkOEttFDeVrrD6AZGYw8oYA+2yI2TQnBF2X6kmgWGV4
-         Zk0/NJHVeACTXGcWwimmntqZ3nYTeN+VDhP8Oa1q4nKJBQxh02kYO2Xza7ByPTIxqK
-         rLUZh0fwu14Db/HnVXJhj/fnwO+XXzH/c0reY9pENHv9o0NymHsHrKZSeL5ijvifZS
-         eqGQmISUDPh3UywOeyL0vtdLYH+uo/HdMuJoKr4p6EfTB7byOgX4OUYfl4MiXNISuo
-         6mq+X5GqEFaGg==
-Subject: Re: [PATCH v2 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
- Subsystem driver
-To:     Vishal Sagar <vsagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Joe Perches <joe@perches.com>
-References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
- <20200429141705.18755-3-vishal.sagar@xilinx.com>
- <368b7efb-3faf-bb71-2bd0-826f2ab031e6@xs4all.nl>
- <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <d696e0ed-3e59-f6a6-1f8d-b1725083de84@xs4all.nl>
-Date:   Tue, 2 Jun 2020 12:44:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 2 Jun 2020 06:47:18 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7849 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgFBKrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:47:17 -0400
+IronPort-SDR: XKef0mR+JHOWCsq9V7SYr23MWHVb99EtovCg1HGAaVXZVJOL1dmrCN7Amp8jCYDq7qiI9Eer4D
+ 0PhwLziTs16Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 03:47:17 -0700
+IronPort-SDR: HWmK1wDtGMolRalcvqUC73eHLRZxrHPsk9UsO4or12Gw6pdE/8Cbv5nrx/iZoZJkjsZoSKs/NI
+ 0FPRuGI9lfKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,464,1583222400"; 
+   d="scan'208";a="304194394"
+Received: from lkp-server01.sh.intel.com (HELO 886b752aa57b) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 02 Jun 2020 03:47:15 -0700
+Received: from kbuild by 886b752aa57b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jg4Rv-0000AV-1u; Tue, 02 Jun 2020 10:47:15 +0000
+Date:   Tue, 02 Jun 2020 18:46:31 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/entry] BUILD SUCCESS
+ 4b1f63084d3ebd14c3ef2cd4e8732c25bcd8381d
+Message-ID: <5ed62e07.B1t2R+x6AlO41qTF%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <DM6PR02MB6876F989682935D38AA9BF19A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJcogKHJH5sedMLRm7iDVY5GJFXG6YtbvUoqEh55LOJH4zg6u1HF2mt9uivno374New6GAHucz89E7ee6JkqmobSD9+UdFIcUjJTBhrXxr5AdnMfRE74
- IMdRhfoZKwXJPM8ECuNkEsezBa6X1mvtV4C6MBu0ZomrW+4QlMaMTpqpLWO/6EYrP/2ckZFtKcBLQW5Ddzy88Wa35QCRf/48b9AMvCXQr8TW5ZgAEEJRKM3h
- bwY7Daae8yl4w/g8npNRVCkNpqSPm01e0HLBVkYDFnCWHqaD7LFxubGvdWsFmTpE/72ELPTClNJNNBt6Q5kBdPfNbiivna8seASaVVRG8sfFICbSJU3wqKrq
- pDYUz/72ubcrJrgkEB9hsNIN8Li4IpUqOhIZU44mmxGeX+GKtOz+SkXsD65pKw25YJXttlyij3MnBQoeDn1BNNeZrvieDrRfAlHbxAjyxro5a2xiEuMiQC7Y
- gart/4mzMjX0unDnfGYGtXhZIcbp3CWs+spCpm8pWVMkeTqok8tXkkWltkChM5/1Z3ocRSInar4we11HmjVoZi4S4+puW3Y74ROVUyvtZYeJM7rxIquIDwoK
- 4OBxnALO+J5qqW91BP7C5Bqz3Z13dtgsPoZLco6VYfTcWRIRuxe706YwxEytmsV1lK8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/06/2020 16:59, Vishal Sagar wrote:
-> Hi Hans,
-> 
-> Thanks for reviewing!
-> 
->>> +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
->>> +		if (!xsdirxss->vidlocked) {
->>> +			dev_err(dev, "Can't get values when video not
->> locked!\n");
->>> +			return -EINVAL;
->>> +		}
->>> +		ctrl->val = xsdirxss->ts_is_interlaced;
->>
->> This control makes no sense: the v4l2_dv_timings struct will already tell you
->> if it is an interlaced format or not. Same for v4l2_mbus_framefmt.
->>
-> 
-> The SDI has a concept of supporting progressive, interlaced (both as we know normally) and a progressive segmented frames(psf).
-> The progressive segmented frames have their video content in progressive format but the transport stream is interlaced.
-> This is distinguished using the bit 6 and 7 of Byte 2 in the 4 byte ST352 payload.
-> Refer to sec 5.3 in SMPTE ST 352:2010.
-> 
-> This control can be used by the application to distinguish normal interlaced and progressive segmented frames.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
+branch HEAD: 4b1f63084d3ebd14c3ef2cd4e8732c25bcd8381d  x86/xen: Unbreak hypervisor callback on 32bit
 
-Ah, interesting. So this relies on the receiver to reconstruct the progressive
-frame by combining the top and bottom field, right?
+i386-tinyconfig vmlinux size:
 
-I think this deserves a new v4l2_field value:
++-------+------------------------------------+------------------------------------------------------------+
+| DELTA |               SYMBOL               |                           COMMIT                           |
++-------+------------------------------------+------------------------------------------------------------+
+|  +170 | TOTAL                              | 5a7462b1f9c1..4b1f63084d3e (ALL COMMITS)                   |
+|  +167 | TEXT                               | 5a7462b1f9c1..4b1f63084d3e (ALL COMMITS)                   |
+| +2048 | idt_table                          | 5a7462b1f9c1..4b1f63084d3e (ALL COMMITS)                   |
+|  +154 | init.text                          | 5a7462b1f9c1..4b1f63084d3e (ALL COMMITS)                   |
+|  +136 | arch/x86/events/zhaoxin/built-in.* | 4b1f63084d3e x86/xen: Unbreak hypervisor callback on 32bit |
+|   +85 | idt_setup_apic_and_irq_gates()     | 5a7462b1f9c1..4b1f63084d3e (ALL COMMITS)                   |
+| -2048 | idt_table                          | 5a7462b1f9c1..4b1f63084d3e (ALL COMMITS)                   |
++-------+------------------------------------+------------------------------------------------------------+
 
-V4L2_FIELD_ALTERNATE_PROG
+elapsed time: 792m
 
-Basically this is identical to V4L2_FIELD_ALTERNATE, except that the two fields
-combine to a single progressive frame.
+configs tested: 83
+configs skipped: 2
 
-Regards,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-	Hans
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+xtensa                generic_kc705_defconfig
+openrisc                         alldefconfig
+arm                        neponset_defconfig
+arm                      jornada720_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+microblaze                        allnoconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
 
-PS: I'll look at your other comments separately
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
