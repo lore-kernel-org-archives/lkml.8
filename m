@@ -2,290 +2,147 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E8E2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591093037;
-	bh=/ICJOi2Jk5AGm6n4Em1+cXiPwNbB4uPwZ51SPTTbijU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=d3XpO6pwjk0kDHxs7P28NMHNuNBbTxKx3szlKKiLSWsK4/9N4nuAO/j020KRQotpk
-	 aD+SN/CSbKqkZhGIFzkgIgYC28mbWtbcB5bRCgtdTyxscVNj7FB9J7joKFYaf7/cft
-	 ZrOkIorAFAkKt8q86E+2nXAUugfpehUX2Uf5KbNQ=
+	by mail.kernel.org (Postfix) with ESMTP id A067D2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgFBKQu (ORCPT
+        id S1728083AbgFBKR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbgFBKQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:16:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F48F206A4;
-        Tue,  2 Jun 2020 10:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591092970;
-        bh=/ICJOi2Jk5AGm6n4Em1+cXiPwNbB4uPwZ51SPTTbijU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bCX1jkZ7s7VbGqIvuKUWD7vM3oyuh2NCkQu2KkkFX9H8poEFQ+yM1Y9QkgT01NUg4
-         If3aJZiNnnchibh46iP8Kn2QAqRhSeuK8i7osMOKNUCLHCfm7WUqk3PfjWkF057Fgn
-         Z4V1X8PBtZXV5hZaUb5aXe2amwQ+6BPmCs7C3CkY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 00/47] 4.4.226-rc2 review
-Date:   Tue,  2 Jun 2020 12:16:07 +0200
-Message-Id: <20200602100034.001608787@linuxfoundation.org>
+        Tue, 2 Jun 2020 06:17:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13232 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726377AbgFBKQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:16:43 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 052A39KK042931;
+        Tue, 2 Jun 2020 06:15:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31cw8u3j3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 06:15:05 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 052A5diq061543;
+        Tue, 2 Jun 2020 06:15:04 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31cw8u3j2b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 06:15:04 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 052AA951011983;
+        Tue, 2 Jun 2020 10:15:01 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf47wtwm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 10:15:01 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 052ADiXb56754464
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Jun 2020 10:13:44 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E24C911C04A;
+        Tue,  2 Jun 2020 10:14:58 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F22C11C050;
+        Tue,  2 Jun 2020 10:14:53 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.74.134])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue,  2 Jun 2020 10:14:52 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Tue, 02 Jun 2020 15:44:51 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: [RESEND PATCH v9 2/5] seq_buf: Export seq_buf_printf
+Date:   Tue,  2 Jun 2020 15:44:35 +0530
+Message-Id: <20200602101438.73929-3-vaibhav@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200602101438.73929-1-vaibhav@linux.ibm.com>
+References: <20200602101438.73929-1-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.226-rc2.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.226-rc2
-X-KernelTest-Deadline: 2020-06-04T10:00+00:00
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-02_11:2020-06-01,2020-06-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 mlxlogscore=999 cotscore=-2147483648 priorityscore=1501
+ spamscore=0 mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006020067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.4.226 release.
-There are 47 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+'seq_buf' provides a very useful abstraction for writing to a string
+buffer without needing to worry about it over-flowing. However even
+though the API has been stable for couple of years now its still not
+exported to kernel loadable modules limiting its usage.
 
-Responses should be made by Thu, 04 Jun 2020 09:57:12 +0000.
-Anything received after that time might be too late.
+Hence this patch proposes update to 'seq_buf.c' to mark
+seq_buf_printf() which is part of the seq_buf API to be exported to
+kernel loadable GPL modules. This symbol will be used in later parts
+of this patch-set to simplify content creation for a sysfs attribute.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.226-rc2.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-and the diffstat can be found below.
+Cc: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+---
+Changelog:
 
-thanks,
+Resend:
+* Added ack from Steven Rostedt
 
-greg k-h
+v8..v9:
+* None
 
--------------
-Pseudo-Shortlog of commits:
+v7..v8:
+* Updated the patch title [ Christoph Hellwig ]
+* Updated patch description to replace confusing term 'external kernel
+  modules' to 'kernel lodable modules'.
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.4.226-rc2
+Resend:
+* Added ack from Steven Rostedt
 
-Benjamin Block <bblock@linux.ibm.com>
-    scsi: zfcp: fix request object use-after-free in send path causing wrong traces
+v6..v7:
+* New patch in the series
+---
+ lib/seq_buf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Aaron Conole <aconole@redhat.com>
-    printk: help pr_debug and pr_devel to optimize out arguments
-
-Ben Hutchings <ben.hutchings@codethink.co.uk>
-    drm/msm: Fix possible null dereference on failure of get_pages()
-
-Guoqing Jiang <gqjiang@suse.com>
-    sc16is7xx: move label 'err_spi' to correct section
-
-Michal Marek <mmarek@suse.com>
-    asm-prototypes: Clear any CPP defines before declaring the functions
-
-Liviu Dudau <liviu@dudau.co.uk>
-    mm/vmalloc.c: don't dereference possible NULL pointer in __vunmap()
-
-Roopa Prabhu <roopa@cumulusnetworks.com>
-    net: rtnl_configure_link: fix dev flags changes arg to __dev_notify_flags
-
-Sudip Mukherjee <sudip@vectorindia.org>
-    mac80211: fix memory leak
-
-Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-    usb: renesas_usbhs: gadget: fix spin_lock_init() for &uep->lock
-
-Thomas Gleixner <tglx@linutronix.de>
-    genirq/generic_pending: Do not lose pending affinity update
-
-Matt Roper <matthew.d.roper@intel.com>
-    drm/fb-helper: Use proper plane mask for fb cleanup
-
-Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-    mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
-
-Qiushi Wu <wu000273@umn.edu>
-    bonding: Fix reference count leak in bond_sysfs_slave_add.
-
-Qiushi Wu <wu000273@umn.edu>
-    qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
-
-Phil Sutter <phil@nwl.cc>
-    netfilter: ipset: Fix subcounter update skip
-
-Michael Braun <michael-dev@fami-braun.de>
-    netfilter: nft_reject_bridge: enable reject with bridge vlan
-
-Xin Long <lucien.xin@gmail.com>
-    ip_vti: receive ipip packet by calling ip_tunnel_rcv
-
-Jeremy Sowden <jeremy@azazel.net>
-    vti4: eliminated some duplicate code.
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: fix a NULL-ptr deref in xfrm_local_error
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: fix a warning in xfrm_policy_insert_list
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
-
-Alexander Dahl <post@lespocky.de>
-    x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
-
-Helge Deller <deller@gmx.de>
-    parisc: Fix kernel panic in mem_init()
-
-Qiushi Wu <wu000273@umn.edu>
-    iommu: Fix reference count leak in iommu_group_alloc.
-
-Arnd Bergmann <arnd@arndb.de>
-    include/asm-generic/topology.h: guard cpumask_of_node() macro argument
-
-Alexander Potapenko <glider@google.com>
-    fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
-
-Eric W. Biederman <ebiederm@xmission.com>
-    exec: Always set cap_ambient in cap_bprm_set_creds
-
-Chris Chiu <chiu@endlessm.com>
-    ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
-
-Changming Liu <liu.changm@northeastern.edu>
-    ALSA: hwdep: fix a left shifting 1 by 31 UB bug
-
-Kaike Wan <kaike.wan@intel.com>
-    IB/qib: Call kobject_put() when kobject_init_and_add() fails
-
-Kevin Locke <kevin@kevinlocke.name>
-    Input: i8042 - add ThinkPad S230u to i8042 reset list
-
-Łukasz Patron <priv.luk@gmail.com>
-    Input: xpad - add custom init packet for Xbox One S controllers
-
-Brendan Shanks <bshanks@codeweavers.com>
-    Input: evdev - call input_flush_device() on release(), not flush()
-
-James Hilliard <james.hilliard1@gmail.com>
-    Input: usbtouchscreen - add support for BonXeon TP
-
-Steve French <stfrench@microsoft.com>
-    cifs: Fix null pointer check in cifs_read
-
-Masahiro Yamada <masahiroy@kernel.org>
-    usb: gadget: legacy: fix redundant initialization warnings
-
-Lei Xue <carmark.dlut@gmail.com>
-    cachefiles: Fix race between read_waiter and read_copier involving op->to_do
-
-Kalderon, Michal <Michal.Kalderon@cavium.com>
-    IB/cma: Fix reference count leak when no ipv4 addresses are set
-
-Dmitry V. Levin <ldv@altlinux.org>
-    uapi: fix linux/if_pppol2tp.h userspace compilation errors
-
-Qiushi Wu <wu000273@umn.edu>
-    net/mlx4_core: fix a memory leak bug.
-
-Qiushi Wu <wu000273@umn.edu>
-    net: sun: fix missing release regions in cas_init_one().
-
-Moshe Shemesh <moshe@mellanox.com>
-    net/mlx5: Add command entry handling completion
-
-Jere Leppänen <jere.leppanen@nokia.com>
-    sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
-
-Yuqi Jin <jinyuqi@huawei.com>
-    net: revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
-
-Eric Dumazet <edumazet@google.com>
-    ax25: fix setsockopt(SO_BINDTODEVICE)
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/parisc/mm/init.c                              |  2 +-
- arch/x86/include/asm/dma.h                         |  2 +-
- drivers/gpu/drm/drm_fb_helper.c                    |  2 +-
- drivers/gpu/drm/msm/msm_gem.c                      | 20 +++---
- drivers/infiniband/hw/qib/qib_sysfs.c              |  9 +--
- drivers/input/evdev.c                              | 19 ++----
- drivers/input/joystick/xpad.c                      | 12 ++++
- drivers/input/serio/i8042-x86ia64io.h              |  7 ++
- drivers/input/touchscreen/usbtouchscreen.c         |  1 +
- drivers/iommu/iommu.c                              |  2 +-
- drivers/net/bonding/bond_sysfs_slave.c             |  4 +-
- drivers/net/ethernet/mellanox/mlx4/fw.c            |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c      | 15 +++++
- .../net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c    |  4 +-
- drivers/net/ethernet/sun/cassini.c                 |  3 +-
- drivers/s390/scsi/zfcp_fsf.c                       | 10 ++-
- drivers/tty/serial/sc16is7xx.c                     |  2 +
- drivers/usb/gadget/legacy/inode.c                  |  3 +-
- drivers/usb/renesas_usbhs/mod_gadget.c             |  2 +-
- fs/binfmt_elf.c                                    |  2 +-
- fs/cachefiles/rdwr.c                               |  2 +-
- fs/cifs/file.c                                     |  2 +-
- include/asm-generic/asm-prototypes.h               |  6 ++
- include/asm-generic/topology.h                     |  2 +-
- include/linux/mlx5/driver.h                        |  1 +
- include/linux/mm.h                                 |  1 -
- include/linux/netfilter/nf_conntrack_pptp.h        |  2 +-
- include/linux/printk.h                             | 12 ++--
- include/rdma/ib_addr.h                             |  6 +-
- include/uapi/linux/l2tp.h                          |  7 +-
- kernel/irq/migration.c                             | 26 ++++++--
- mm/vmalloc.c                                       |  2 +-
- net/ax25/af_ax25.c                                 |  6 +-
- net/bridge/netfilter/nft_reject_bridge.c           |  6 ++
- net/core/rtnetlink.c                               |  2 +-
- net/ipv4/ip_vti.c                                  | 75 ++++++++++++----------
- net/ipv4/netfilter/nf_nat_pptp.c                   |  7 +-
- net/ipv4/route.c                                   | 14 ++--
- net/mac80211/sta_info.c                            |  1 +
- net/netfilter/ipset/ip_set_list_set.c              |  2 +-
- net/netfilter/nf_conntrack_pptp.c                  | 62 ++++++++++--------
- net/sctp/sm_statefuns.c                            |  9 +--
- net/xfrm/xfrm_input.c                              |  2 +-
- net/xfrm/xfrm_output.c                             |  3 +-
- net/xfrm/xfrm_policy.c                             |  7 +-
- security/commoncap.c                               |  1 +
- sound/core/hwdep.c                                 |  4 +-
- sound/usb/mixer.c                                  |  8 +++
- 49 files changed, 242 insertions(+), 163 deletions(-)
-
+diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+index 4e865d42ab03..707453f5d58e 100644
+--- a/lib/seq_buf.c
++++ b/lib/seq_buf.c
+@@ -91,6 +91,7 @@ int seq_buf_printf(struct seq_buf *s, const char *fmt, ...)
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(seq_buf_printf);
+ 
+ #ifdef CONFIG_BINARY_PRINTF
+ /**
+-- 
+2.26.2
 
