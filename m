@@ -2,210 +2,147 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8938DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6393C2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D5D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="k+MUEBJ3"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KhkZSSBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgFBJDi (ORCPT
+        id S1726479AbgFBJFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbgFBJDg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:03:36 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938D8C05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 02:03:34 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id k11so11980823ejr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 02:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=OCBiVEb5pjPsb0aqtFO+a+GT5/LuUuNxOzOXSUsfdzw=;
-        b=k+MUEBJ38H86qqXO1xpz00JaM4MyCjl5ZpLlnLrKfafF38w7k79ZrhweLhI/4EcGBm
-         un/YRPmDKPIPzngboPT4ysf6qZT9nL4pXAExQ8XWJWo/5hJqIYzXY092jAXOV2U/COfp
-         RtygS1YMueZgvUNjdCzTRddKlhVB63nycK/c0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=OCBiVEb5pjPsb0aqtFO+a+GT5/LuUuNxOzOXSUsfdzw=;
-        b=PtCG/O7VcL/FLmdY1ZpJ900UQUXz+xzZOhTvgj2s81KWaCpC2Ao8IJE2A/rfMqiJhB
-         tUkDWdEKykWt3gGJqMA8Jt2090e45LfaY3JP0Gqtzs/TnFplAN1s76JHtf/pYI16FKJB
-         jpg70U9F446+aP8OADzdfSUQujAV7hK5wDC0kuBotsGGlw93Xndyqe583OiWjqj3jUsk
-         wiVeiyUU+EaIleIMmeaVzZA3UvToIwYKLOATNU7Xq4Z6ohbYmOQAJPjpZ3XXzraIEIrc
-         B1rwpCn/+E5QVOt9txxtzxFmDE7Shut0bw3z8lCar7C9Hbeni4w6/a1AJ9ykuADFBwCc
-         OAHA==
-X-Gm-Message-State: AOAM5312BicACrwHFqRxTru42kyTIEqVAWf7hkfgT5grktuaDPxaAjSq
-        wQpkpaUGY23NSTR2FvJddLnV0w==
-X-Google-Smtp-Source: ABdhPJwaaivmKs7lDTBVdz8sdAS4W2cZYPPCt5OW1AuFGraUfkWciVLjNUCU1DL65/2wzHswDjT6bQ==
-X-Received: by 2002:a17:906:1b48:: with SMTP id p8mr21204797ejg.399.1591088613068;
-        Tue, 02 Jun 2020 02:03:33 -0700 (PDT)
-Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
-        by smtp.gmail.com with ESMTPSA id b24sm1237354edw.70.2020.06.02.02.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 02:03:32 -0700 (PDT)
-References: <db5393a3-d4b3-45c1-8219-f23b43a8d2ab.anny.hu@linux.alibaba.com> <5ecd85c7a21fd_35792ad4115a05b8a9@john-XPS-13-9370.notmuch> <c2f19152-efd0-530f-8b59-74e2393cee0e@linux.alibaba.com>
-User-agent: mu4e 1.1.0; emacs 26.3
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-To:     dihu <anny.hu@linux.alibaba.com>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bpf/sockmap: fix kernel panic at __tcp_bpf_recvmsg
-In-reply-to: <c2f19152-efd0-530f-8b59-74e2393cee0e@linux.alibaba.com>
-Date:   Tue, 02 Jun 2020 11:03:30 +0200
-Message-ID: <87h7vt3km5.fsf@cloudflare.com>
+        Tue, 2 Jun 2020 05:05:34 -0400
+Received: from mout.web.de ([212.227.15.3]:53807 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgFBJFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:05:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591088710;
+        bh=XhGeAXDfw9AiiSAdvgQbq6rf/vrbHOyi+DVrpim7IVs=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=KhkZSSBzq4cg1+S1MUCxdW3q+ygMyZKelIIs8+nygoTvJYuJs8IpVCeZNnYdfQ6Fb
+         jV7xUR6cN2hzw4d7WiI78rGl/YiThUr8LGcarJu8C0Rl7cyfbiSnKJlfFB96aWPxUb
+         3fD/OB88W9Q4mGq14X45RN1dB5Zi33RYBTiBb+a8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M7KOE-1ijNjM1KAY-00x06b; Tue, 02
+ Jun 2020 11:05:10 +0200
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-spi@vger.kernel.org
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] spi: sprd: call pm_runtime_put if pm_runtime_get_sync
+ fails
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <8ea80af8-e964-4488-25c6-837f2ac88493@web.de>
+Date:   Tue, 2 Jun 2020 11:05:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:r0Ml+LxQIhB/V5/UspH+IDLMruxhQLcNn86TeiX5mpWvHOPmUt6
+ dhKOevzUl0PCUv6LQ/qbGfW8kgiToEULAjnKLxZXhwVgHcqxTf0Fju6Bfxhe9RlVidu9ebv
+ hf/BEG5CbdaCBGIxhXV74/LqpgpLMvq6q+xWfXcApQ9OXAZxzIl5aqtovjSxzoYz3BxUS/G
+ exqSPeOKvHJqs0SnGC5Yg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lZgWfSGFN6U=:FdqFp+0W4JZXijtRfp1A42
+ Xh+yrYj8w+h/anapy1Z1wO+c+/vpZpLaYN/cq7lUpjH7Zf+aqOaVWaY+Rrmb7/dxFa+xATLGi
+ WfXanV/kO0+UNIY7FAHQDSR6M+y2B95ALRdE7hChGj91n0hJEQENeNxIwmoIEvxMdY4Ea+Xvi
+ oW6tWQyivByg0YzW+NEFfdL5KOyPlYhpNpkD4sl2bykYTUlB2SUkAGc+kzdwwBzdXWgQETXRQ
+ CHwOzdjyuE9dgXi8FxPqwk+vKtOhWqTvVhlFPTzRLLBu9wJEi/0E23zSTyAa9PB1MKdLeUlzb
+ 0gJmqTb4LgMbOnFJ/pVMAhCZuvTFsgPUmww+PrteYJDnFmpeAJ6pmGI4Z3AXkRfk2LLRplrUT
+ KBSZ79NntY9jaY+5ihZbMmszW0Ck/nfuEvXpepTdT7CzZIdEunUzQVmMMmnu99SfZmyQhSd7a
+ z5+e7MUUpe7TUFLFfdZ1f+vTAPd1OxgzoQYkI4Hxvp5v2gX3aSy2KP1Cn2yIpkuNGLIpbvvlw
+ 0Ojqdd/Y6lGhUGSKgvgj8mYMNl419udU0SB3FaJz8CZllJDU9JofBrP3o/L2jGE6ZN3mt/IKd
+ 8oR9fF+kMu6eJm6klSxLo3y1euFhTn0z6w2CdgAEdEcrLhmSeXZWRRy2Uk0h4IITyRCOB3ioi
+ 9XAUuCdN/9w4LwCKUZE1UzenW0IWtY2ljNEtlkOgexwVtpFd049zfoNQOC5Pq41owWJCEY0vl
+ bwzr0ODRP527qwrTlGlxmF9R0fYBrYsQut7rgfZTgWPurz94VsclPgl3kL3JO0lJBMZ0pTzuU
+ UsXjhIj/AGodVmmwEL1jrcAJQvx+WkBMDlfaNNMd2XgD1eh728ypvwksm7erwcz+WKAn8ZHO0
+ Q5qpp0Y5kd05yG/iTnz3HU1WcYfN8mLbfEa+fmdefbk0FTLwccilyaUrEF9xJo67+24JVUpS4
+ qmH6uE9iUo7BmZ5QwtFK6UlDFcZUQgpVm4rb+rmRwlVO7NE66wuNcTOgnR45Dp9NtkfDAHS4U
+ WKRQE1EiaBNefyqZZ8iBmmXycnmgETrKXCco5JRcpi5Wq9rbmGraQeX1KonW0+qMkm/rjIkHh
+ zHaLmn26qM0VWvmRSkGz0uznQDCoPspDaPB1Vg/W6+d12q7n4xubORoe1mXDYWUKUI1455uM1
+ PfaB0TGyVMOSEO3t2as6TIlilkmBaB2oNRPewP/yddpxkRg1IxzCbbLCHJFDfwcJ2CQx7iN2K
+ 8xo9BB4COS7LkYtkR
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:05 AM CEST, dihu wrote:
-> On 2020/5/27 5:10, John Fastabend wrote:
->> dihu wrote:
->>>  From 865a45747de6b68fd02a0ff128a69a5c8feb73c3 Mon Sep 17 00:00:00 2001
->>> From: dihu <anny.hu@linux.alibaba.com>
->>> Date: Mon, 25 May 2020 17:23:16 +0800
->>> Subject: [PATCH] bpf/sockmap: fix kernel panic at __tcp_bpf_recvmsg
->>>
->>> When user application calls read() with MSG_PEEK flag to read data
->>> of bpf sockmap socket, kernel panic happens at
->>> __tcp_bpf_recvmsg+0x12c/0x350. sk_msg is not removed from ingress_msg
->>> queue after read out under MSG_PEEK flag is set. Because it's not
->>> judged whether sk_msg is the last msg of ingress_msg queue, the next
->>> sk_msg may be the head of ingress_msg queue, whose memory address of
->>> sg page is invalid. So it's necessary to add check codes to prevent
->>> this problem.
->>>
->>> [20759.125457] BUG: kernel NULL pointer dereference, address:
->>> 0000000000000008
->>> [20759.132118] CPU: 53 PID: 51378 Comm: envoy Tainted: G            E
->>> 5.4.32 #1
->>> [20759.140890] Hardware name: Inspur SA5212M4/YZMB-00370-109, BIOS
->>> 4.1.12 06/18/2017
->>> [20759.149734] RIP: 0010:copy_page_to_iter+0xad/0x300
->>> [20759.270877] __tcp_bpf_recvmsg+0x12c/0x350
->>> [20759.276099] tcp_bpf_recvmsg+0x113/0x370
->>> [20759.281137] inet_recvmsg+0x55/0xc0
->>> [20759.285734] __sys_recvfrom+0xc8/0x130
->>> [20759.290566] ? __audit_syscall_entry+0x103/0x130
->>> [20759.296227] ? syscall_trace_enter+0x1d2/0x2d0
->>> [20759.301700] ? __audit_syscall_exit+0x1e4/0x290
->>> [20759.307235] __x64_sys_recvfrom+0x24/0x30
->>> [20759.312226] do_syscall_64+0x55/0x1b0
->>> [20759.316852] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>
->>> Signed-off-by: dihu <anny.hu@linux.alibaba.com>
->>> ---
->>>   net/ipv4/tcp_bpf.c | 3 +++
->>>   1 file changed, 3 insertions(+)
->>>
->>> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
->>> index 5a05327..c0d4624 100644
->>> --- a/net/ipv4/tcp_bpf.c
->>> +++ b/net/ipv4/tcp_bpf.c
->>> @@ -64,6 +64,9 @@ int __tcp_bpf_recvmsg(struct sock *sk, struct sk_psock *psock,
->>>     } while (i != msg_rx->sg.end);
->>>
->>>     if (unlikely(peek)) {
->>> +   if (msg_rx == list_last_entry(&psock->ingress_msg,
->>> +       struct sk_msg, list))
->>> +    break;
->>
->> Thanks. Change looks good but spacing is a bit off . Can we
->> turn those spaces into tabs? Otherwise adding fixes tag and
->> my ack would be great.
->>
->> Fixes: 02c558b2d5d67 ("bpf: sockmap, support for msg_peek in sk_msg with redirect ingress")
->> Acked-by: John Fastabend <john.fastabend@gmail.com>
->
->
-> From 127a334fa5e5d029353ceb1a0414886c527f4be5 Mon Sep 17 00:00:00 2001
-> From: dihu <anny.hu@linux.alibaba.com>
-> Date: Fri, 29 May 2020 16:38:50 +0800
-> Subject: [PATCH] bpf/sockmap: fix kernel panic at __tcp_bpf_recvmsg
->
-> When user application calls read() with MSG_PEEK flag to read data
-> of bpf sockmap socket, kernel panic happens at
-> __tcp_bpf_recvmsg+0x12c/0x350. sk_msg is not removed from ingress_msg
-> queue after read out under MSG_PEEK flag is set. Because it's not
-> judged whether sk_msg is the last msg of ingress_msg queue, the next
-> sk_msg may be the head of ingress_msg queue, whose memory address of
-> sg page is invalid. So it's necessary to add check codes to prevent
-> this problem.
->
-> [20759.125457] BUG: kernel NULL pointer dereference, address:
-> 0000000000000008
-> [20759.132118] CPU: 53 PID: 51378 Comm: envoy Tainted: G E
-> 5.4.32 #1
-> [20759.140890] Hardware name: Inspur SA5212M4/YZMB-00370-109, BIOS
-> 4.1.12 06/18/2017
-> [20759.149734] RIP: 0010:copy_page_to_iter+0xad/0x300
-> [20759.270877] __tcp_bpf_recvmsg+0x12c/0x350
-> [20759.276099] tcp_bpf_recvmsg+0x113/0x370
-> [20759.281137] inet_recvmsg+0x55/0xc0
-> [20759.285734] __sys_recvfrom+0xc8/0x130
-> [20759.290566] ? __audit_syscall_entry+0x103/0x130
-> [20759.296227] ? syscall_trace_enter+0x1d2/0x2d0
-> [20759.301700] ? __audit_syscall_exit+0x1e4/0x290
-> [20759.307235] __x64_sys_recvfrom+0x24/0x30
-> [20759.312226] do_syscall_64+0x55/0x1b0
-> [20759.316852] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> Signed-off-by: dihu <anny.hu@linux.alibaba.com>
-> ---
-> net/ipv4/tcp_bpf.c | 3 +++
-> 1 file changed, 3 insertions(+)
->
-> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-> index 5a05327..b82e4c3 100644
-> --- a/net/ipv4/tcp_bpf.c
-> +++ b/net/ipv4/tcp_bpf.c
-> @@ -64,6 +64,9 @@ int __tcp_bpf_recvmsg(struct sock *sk, struct sk_psock *psock,
->   } while (i != msg_rx->sg.end);
->
->   if (unlikely(peek)) {
-> +   if (msg_rx == list_last_entry(&psock->ingress_msg,
-> +       struct sk_msg, list))
-> +    break;
->    msg_rx = list_next_entry(msg_rx, list);
->    continue;
->   }
+> Call to pm_runtime_get_sync increments counter even in case of
+> failure leading to incorrect ref count.
+> Call pm_runtime_put_noidle if pm_runtime_get_sync fails.
 
-Looks like the patch is garbled. I suspect due to copy-paste to an
-e-mail client. Context line got wrapped and there are non-breaking
-spaces instead of tabs in the body.
+How do you think about a wording variant like the following?
 
-Crash fix is important so could you resend it with `git send-email`?
+   Change description:
+   The PM runtime reference counter is generally incremented by a call of
+   the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D.
+   Thus call the function =E2=80=9Cpm_runtime_put_noidle=E2=80=9D also in =
+one error case
+   to keep the reference counting consistent.
 
-  git send-email --to bpf@vger.kernel.org --cc netdev@vger.kernel.org file.patch
 
-You might find the documentation below helpful:
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
 
-  https://www.kernel.org/doc/html/latest/process/email-clients.html
+Regards,
+Markus
