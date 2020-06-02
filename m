@@ -2,168 +2,143 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B88C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37834206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95631206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B9IEMppM"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QlA8fN/T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgFBLKx (ORCPT
+        id S1726647AbgFBLLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:10:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725919AbgFBLKx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:10:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591096251;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e1bN6BFwrFb8HaDkHCOaH4+Ma1lbuG7/W6ik/b1HbRs=;
-        b=B9IEMppMxroekJlIZoIy4zVaMvQVnEhSqo2IYoTdq8SkT417pbsjLv09IoQ73nEFKVXpd7
-        9MZgX/hzbd1IqrIhj3r4pL+jasgrYVWdoxspG5FdNbEYlrJDAfWTOmvJNDHBoTDdLufWoZ
-        MHubp9EDaYWMuAQROHqohWOVwIJw8aM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-216-peAYYSG6MtaV1fKxi7DMpw-1; Tue, 02 Jun 2020 07:10:49 -0400
-X-MC-Unique: peAYYSG6MtaV1fKxi7DMpw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EDEAA1883607;
-        Tue,  2 Jun 2020 11:10:46 +0000 (UTC)
-Received: from [10.72.12.83] (ovpn-12-83.pek2.redhat.com [10.72.12.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A75B578EFB;
-        Tue,  2 Jun 2020 11:10:39 +0000 (UTC)
-Subject: Re: [PATCH] vdpa: bypass waking up vhost_woker for vdpa vq kick
-From:   Jason Wang <jasowang@redhat.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org,
-        Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     lkp@intel.com, kbuild-all@lists.01.org, lulu@redhat.com,
-        dan.daly@intel.com, cunming.liang@intel.com
-References: <20200602094203.GU30374@kadam>
- <b8ccbccf-f667-8d15-8de2-b87da5f51ec3@redhat.com>
-Message-ID: <c2f3cd6c-6f75-15db-080e-9895a35a0456@redhat.com>
-Date:   Tue, 2 Jun 2020 19:10:38 +0800
+        Tue, 2 Jun 2020 07:11:09 -0400
+Received: from mout.web.de ([212.227.17.11]:40059 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbgFBLLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 07:11:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591096244;
+        bh=wAC4w7GsX0remXYtsz0+/q5r9dTHAJaLyqVIp9ofCno=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=QlA8fN/T8lLIFAz/KZoHWDcAB8p8C5r2Kin+1LZzw2ZjhgrGAFAKqCcDt+goVxMXD
+         +cOScROdxHL8MnHmZruJlYgLbXmxEl9dUELAC922wASMXdFW5h3SjHkm4PHs8dWIhi
+         WZUy3XaDAwAxoOzTa5PjSIltAh/Q5Af+PrxCZJWI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MODmV-1jMc1K36oz-00OX4F; Tue, 02
+ Jun 2020 13:10:43 +0200
+Subject: Re: [PATCH] drm/nouveau/clk/gm20b: Fix memory leak in gm20b_clk_new()
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>, Kangjie Lu <kjlu@umn.edu>
+References: <dd729c13-fbc8-22e7-7d8e-e3e126f66943@web.de>
+ <40d8fb01.db721.17269d3d620.Coremail.dinghao.liu@zju.edu.cn>
+ <20200602102955.GZ30374@kadam>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <65e3d2b7-b0ad-f387-b8fe-d83ea816a0f6@web.de>
+Date:   Tue, 2 Jun 2020 13:10:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <b8ccbccf-f667-8d15-8de2-b87da5f51ec3@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200602102955.GZ30374@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uazG0p1YzHXmf3z0hs6p+NcCmKHj9lldr8B5DAKIx1PI79krr1D
+ sRZGw9PeHjCaTXI434td5X6q/9dus1PV6nmoSNWA0z3ez5nPyZj8MvySdQSKJu9jb5M1RUo
+ NApQFX05yN04RNeZypU4m1ZNmvM9qOrtxvP3pY3rVP3dIVzlEBe9IJUuUgnRflssNtrmW/e
+ 8zy62sloEXL1/USkG8qNw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DHRVIPzbTBk=:Z3qDqkVgFdZeUH0Nn58AQS
+ cjTa4y8p1p5a4NTrIYeuyAHBpFGrPaxV+4fi61cPJaPotu+sJYrnc9PFaI77tkACSCJTnGK89
+ OBRpagnHJcJYprT7wC/j/Nq+auXrjwwaHiBE18eYmNRaJah5eLwDsMYdrtgth+OSE8YtyrSL7
+ /6x20Cm4YOJb5x8PoxiIJLZu0nROHZF6muaPUSHFslosma1GTAg1alYEAjxe55NPALp0kL1vX
+ zflleM1KtXb4DJFLt0IL3vtr+16g/1DnGFyNlUpd2CGiUl3KPkBHvWfVzJgQQOuDrqHfVtMLu
+ PJWbU+/6iVLPIGWULCWfnDkq0zXJJ5PXVR7go+9JxLZCYqRYQZP5yYFpjhYQPwPWpPeOfRr6Y
+ scpGvNgpe+Z6k7wGER/avMO7VwxbHplTSyvGxwVJJWPixSEVaxnY9SjBspMrREpgqyMk+RKrZ
+ MePbAEdF50LCE80L8FjmvzzqjavmJnD4GlVFQ1BKHiuapjbpdsEEPUDSukQRX+pIc+iZH6TX5
+ Xdz+nwAsnc8EbjxsCr+CwVPFtHw/zx2SPF/apw3XHzjYDNFcIdDuoI5dJCasivnygBYo7NZIx
+ UNoowCt9ARH18aemxL3uCD/ZJbZu4IaTC6pFgtN0X7Lc0la2RyZPj4buCpfP9pNq6oivv5qk4
+ 00ILbg/vXx3MRoBrPVCWFKR/Htr4obBwGZvSPYwpcBMl3voLCIlbvnqwewHw45HVhDRwnxQRY
+ xBqmMYiXh5VPJ4y2I+b7WBHZ6D4TOV1yWDuKiX/OXYOTj9AVnYPRPN9Z+dhjpoUorslLzs/rT
+ UFcgqojZ/akhSHcQxP14seAwwGj+q61niX3xJoY6g7BlA2EaRhv8c8plqFXRW82rqDo4uKCv1
+ kKgSHHneWFGAHGmVG0Yc7Imzp9XxYigjNqhhufZhbtfaUNcaw9ct/1H4sXhSNtWe/dKoayX8+
+ B7g6rJIjnk/0BQUN9WWKncp79iPWj7Ci4WYNkrFy16BNBVaaR0kDvqJK3lebW+rLmegnwh9Dd
+ hfjgMtIdSo+Z5Nu2wbZcSeNyNOcky9pNeZE1OeCVEWUk8BXzbTVqofSTCY64lv7HnFDMTxjNQ
+ ptfzzMjO8qmSPdVdw35qUiFd3uot4HnHGp7hBfAhkOazhGU7ZGXxzb20kPNjdHX0eyE6W0pzF
+ /iG3rlBZop4HGhtSE8merhbpyYjClGI8eFc+B9KTFp7i2CGgU5p7M13UG3M0GQhM5HGRFJfdi
+ 7+BjU1zzL7RLnP8G9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> The original patch was basically fine.
 
-On 2020/6/2 下午6:16, Jason Wang wrote:
->
-> On 2020/6/2 下午5:42, Dan Carpenter wrote:
->> Hi Zhu,
->>
->> url: 
->> https://github.com/0day-ci/linux/commits/Zhu-Lingshan/vdpa-bypass-waking-up-vhost_woker-for-vdpa-vq-kick/20200526-133819 
->>
->> base: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git 
->> linux-next
->> config: x86_64-randconfig-m001-20200529 (attached as .config)
->> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->>
->> smatch warnings:
->> drivers/vhost/vdpa.c:348 vhost_vdpa_set_vring_kick() error: 
->> uninitialized symbol 'r'.
->>
->> # 
->> https://github.com/0day-ci/linux/commit/a84ddbf1ef29f18aafb2bb8a93bcedd4a29a967d 
->>
->> git remote add linux-review https://github.com/0day-ci/linux
->> git remote update linux-review
->> git checkout a84ddbf1ef29f18aafb2bb8a93bcedd4a29a967d
->> vim +/r +348 drivers/vhost/vdpa.c
->>
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  316  static long 
->> vhost_vdpa_set_vring_kick(struct vhost_virtqueue *vq,
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26 317                        
->> void __user *argp)
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  318  {
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  319      bool pollstart = 
->> false, pollstop = false;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  320      struct file 
->> *eventfp, *filep = NULL;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  321      struct 
->> vhost_vring_file f;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  322      long r;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  323
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  324      if 
->> (copy_from_user(&f, argp, sizeof(f)))
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  325          return -EFAULT;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  326
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  327      eventfp = f.fd == -1 
->> ? NULL : eventfd_fget(f.fd);
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  328      if (IS_ERR(eventfp)) {
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  329          r = 
->> PTR_ERR(eventfp);
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  330          return r;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  331      }
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  332
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  333      if (eventfp != 
->> vq->kick) {
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  334          pollstop = 
->> (filep = vq->kick) != NULL;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  335          pollstart = 
->> (vq->kick = eventfp) != NULL;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  336      } else
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  337          filep = eventfp;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  338
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  339      if (pollstop && 
->> vq->handle_kick)
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  340 vhost_vdpa_poll_stop(vq);
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  341
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  342      if (filep)
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  343 fput(filep);
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  344
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  345      if (pollstart && 
->> vq->handle_kick)
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  346          r = 
->> vhost_vdpa_poll_start(vq);
->>
->> "r" not initialized on else path.
->>
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  347
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26 @348      return r;
->> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  349  }
->
->
-> Will fix.
->
-> Thanks 
+I propose to reconsider the interpretation of the software situation once =
+more.
+
+* Should the allocated clock object be kept usable even after
+  a successful return from this function?
+
+* How much do =E2=80=9Cdestructor=E2=80=9D calls matter here for (sub)devi=
+ces?
 
 
-Lingshan reminds me that we've posted V2 which reuses the vhost.c 
-implementation for polling.
+> Just add a Fixes tag and resend.
 
-So there's no need for the fix.
+This tag can help also.
 
-Thanks
-
-
-
+Regards,
+Markus
