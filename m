@@ -2,107 +2,122 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88381C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01B7920674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5B8206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591130621;
-	bh=zzDlU6HYBgONtHjrkZD2Q2njEIQITW5k5gtJU1DpjIU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WX8XjcIocs1cMVOomC8HeCWp49T+a2rFi0zW5QdzUGK/l1ngF45M8KwMIobU4SA2p
-	 wrN7XpQoT5/nIEyJI99zv1WwoBJo1LPHrfWI/NasYM7JdQ36Eaplk4VBQ9+G78J7vT
-	 jxuqkCDik3aXdbKYAc4gaBDhnSFSDFffjcKBQtNY=
+	s=default; t=1591130903;
+	bh=CdMKjWZXehyY4K7bRGCQXjkB0K8fL+v9jQ3qjY5zkYs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Qm4kzCgU+4fyhQMn0o68SNZcT+zb4uoOwx0KvzNda20nn6VKGGjZr8AMEMbdu3nAa
+	 VdsMJDv6OJ/zrHU2r+chMH58rxkRWNXS92nLRyhEiCSGF7WOk0Bxu4PzfOvfdB1QZ2
+	 +neTh7DlAo8daVx1D7CWM9cr5PSB6y1slhIrl3TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgFBUnk (ORCPT
+        id S1727795AbgFBUsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgFBUnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:43:39 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B935C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:43:39 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z9so3625006ljh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:43:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Azl+Ad2Snhfc0xP2HW9Ep94V4yuBccpc/CvQD+kNGgE=;
-        b=bUurhMFsGKldaV/fuSmBFvEu0dq7tRd7XTk2lYRSi7CMt/C6LTxrmwSmxTUVSAUw+R
-         hFe8+ZbhpvMW8p8gN7hIFf7JuzG0jpuk+SD5IcjAuz+qyt7SbCCoAckx1gBtY7EuHg70
-         ph2LYj1CMupe+0MuVxpfesphrjpJYdYSsavyk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Azl+Ad2Snhfc0xP2HW9Ep94V4yuBccpc/CvQD+kNGgE=;
-        b=lr9/YbHa8377h3fc7hsAKqk7ozgUIpW6fSqivT5hBDEyPR+TqGSeQ+WhMVphy3uskS
-         BtuMOACg1v4b4FmHhHACYc4jrreINIOWK9chN3ugiQN6q6nzm0sAs9uOUER1k5nVHVcr
-         zsWaFuv7hYS+H0ww32W3Kog9eC1J2xjybZIUK/VYCFLCJFFtxA+l50FQvpPBnaauYdnJ
-         3VEIbiwZSTN3S5EKgt6R9PTKS4O/XSy2qYKw2pCYLyY4O+MhU9BegJeszxa9OD93p1uL
-         XJh7moxPMq+Pzn5wpnLLzqR3rjebv5KKkbZE3TtTuhhpQun4oVfzL2arsj2ATAwe9gGd
-         vVUw==
-X-Gm-Message-State: AOAM531S5Nwq3qojvgIzmUkBdxwMn/PPdvuXi3fnRNLqOGZS+AqDl3W8
-        upD72mDLGaru3LaUgZe9IGLoeZYdbrk=
-X-Google-Smtp-Source: ABdhPJz0HICOcSq9G2Z6W277iDXe9tpZyAq3fSkGnReUmPKQ+ljfeAwPX24PZ2OGkNMnI6bs6qbHBw==
-X-Received: by 2002:a2e:a16e:: with SMTP id u14mr389254ljl.427.1591130617523;
-        Tue, 02 Jun 2020 13:43:37 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id n8sm37178lfb.20.2020.06.02.13.43.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 13:43:36 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id d7so6988868lfi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:43:36 -0700 (PDT)
-X-Received: by 2002:a19:d52:: with SMTP id 79mr590629lfn.125.1591130616197;
- Tue, 02 Jun 2020 13:43:36 -0700 (PDT)
+        Tue, 2 Jun 2020 16:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgFBUsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 16:48:22 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8794D20674;
+        Tue,  2 Jun 2020 20:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591130901;
+        bh=CdMKjWZXehyY4K7bRGCQXjkB0K8fL+v9jQ3qjY5zkYs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Ah7vSqvm+xeoRajRYcKV6V6ne3nEgYVQGxwEECvLL2CLbgIvuxrJMVi4ZECDn4ALP
+         UIcmVx8l92wOM6Eg8vcSWlwlflzFMb1032LApF+moh80ZENTYczhcZimKF02yuDnjR
+         Ia2Edig6Qs2LfQJ2+2ItFdPZ8CBz+cFUkPfejAx8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6968E3522C92; Tue,  2 Jun 2020 13:48:21 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 13:48:21 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] kcsan: Prefer '__no_kcsan inline' in test
+Message-ID: <20200602204821.GI29598@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200602143633.104439-1-elver@google.com>
 MIME-Version: 1.0
-References: <20200602084257.134555-1-mst@redhat.com> <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
- <20200602163306.GM23230@ZenIV.linux.org.uk> <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
- <20200602162931-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200602162931-mutt-send-email-mst@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 2 Jun 2020 13:43:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgYu+qk15_NpUZXwbetEU5eiWppJ=Z_A6dCSCWKxCfDfw@mail.gmail.com>
-Message-ID: <CAHk-=wgYu+qk15_NpUZXwbetEU5eiWppJ=Z_A6dCSCWKxCfDfw@mail.gmail.com>
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jason Wang <jasowang@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602143633.104439-1-elver@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 1:33 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> Hmm are you sure we can drop it? access_ok is done in the context
-> of the process. Access itself in the context of a kernel thread
-> that borrows the same mm. IIUC if the process can be 32 bit
-> while the kernel is 64 bit, access_ok in the context of the
-> kernel thread will not DTRT.
+On Tue, Jun 02, 2020 at 04:36:33PM +0200, Marco Elver wrote:
+> Instead of __no_kcsan_or_inline, prefer '__no_kcsan inline' in test --
+> this is in case we decide to remove __no_kcsan_or_inline.
+> 
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> 
+> Hi Paul,
+> 
+> This is to prepare eventual removal of __no_kcsan_or_inline, and avoid a
+> series that doesn't apply to anything other than -next (because some
+> bits are in -tip and the test only in -rcu; although this problem might
+> be solved in 2 weeks). This patch is to make sure in case the
+> __kcsan_or_inline series is based on -tip, integration in -next doesn't
+> cause problems.
+> 
+> This came up in
+> https://lkml.kernel.org/r/20200529185923.GO706495@hirez.programming.kicks-ass.net
 
-You're historically expected to just "set_fs()" when you do use_mm().
+Applied and pushed, thank you!
 
-Then we fixed it in commit...
+Please note that unless you would like this pushed into the current
+merge window, it will not be visible in -next until v5.8-rc1 comes out.
+Which sounds like you are aware of already, just want to be sure.  ;-)
 
-Oh, when I look for it, I notice that it still hasn't gotten merged.
-It's still pending, see
+							Thanx, Paul
 
-  https://lore.kernel.org/lkml/20200416053158.586887-4-hch@lst.de/
-
-for the current thing.
-
-              Linus
+> Thanks,
+> -- Marco
+> 
+> ---
+>  kernel/kcsan/kcsan-test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/kcsan/kcsan-test.c b/kernel/kcsan/kcsan-test.c
+> index a8c11506dd2a..3af420ad6ee7 100644
+> --- a/kernel/kcsan/kcsan-test.c
+> +++ b/kernel/kcsan/kcsan-test.c
+> @@ -43,7 +43,7 @@ static struct {
+>  };
+>  
+>  /* Setup test checking loop. */
+> -static __no_kcsan_or_inline void
+> +static __no_kcsan inline void
+>  begin_test_checks(void (*func1)(void), void (*func2)(void))
+>  {
+>  	kcsan_disable_current();
+> @@ -60,7 +60,7 @@ begin_test_checks(void (*func1)(void), void (*func2)(void))
+>  }
+>  
+>  /* End test checking loop. */
+> -static __no_kcsan_or_inline bool
+> +static __no_kcsan inline bool
+>  end_test_checks(bool stop)
+>  {
+>  	if (!stop && time_before(jiffies, end_time)) {
+> -- 
+> 2.27.0.rc2.251.g90737beb825-goog
+> 
