@@ -2,316 +2,201 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96245C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B38F20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5UFb2x7"
+	by mail.kernel.org (Postfix) with ESMTP id 7659420678
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFBMSD (ORCPT
+        id S1726959AbgFBMSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBMSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:18:03 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3630C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:18:01 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id c9so1146403uao.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WQd65JdrIuZXHebA6USGvqPn3CMVEk7jUwm6XZRDHjM=;
-        b=u5UFb2x7dOFvmbn54KARGcHKlOYMT19j0xlf6X5jRYfQNkt6PgwFEMkhjduczOuKUQ
-         3vo73JZvAtJ/lPsZx4DWk7FLqk1+pZ9cjldVGZ7HBkYwt6ClzgC2lFsd9ArRe0HxnTrA
-         1DNlNYhpU3n39O+yz/VtXsguV4j8mR9x0bgUfAWhKUQnKmRyMcOFEgsiQJ0ny0AHT6qs
-         vO95Nz3Ea1CaXvU9MtvuWiHyWkLScHhvP/MVxFys1t3669g3u4wxlikyfLv4hS2S3/3T
-         wNeorMFFKl5nosHbJR5Iw5V6SZ+S+5+RzI95n+aiY76dy2crl5gvZ3aEUQviQJECWM1c
-         36jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WQd65JdrIuZXHebA6USGvqPn3CMVEk7jUwm6XZRDHjM=;
-        b=Wg99y92TV95ZwqXY65y/3qm5a91FS/6PC+zcbyTugoJcg06EhSGGR6dTVFB4wxQVdS
-         z2cm1N6cyKhNDb0ykXn4bSK2QjsjyECip8NdFfEN71ju4lY1wMEiXhLK3nI6FKxwEOkS
-         TVSwA04yZWzZ90l3Jixj9fMtUiGwEfMu15B1IinfVCGr1IINH+Z9qB/WdylcRUPBWzvF
-         ZbQQG39fezwKqikD2C+b7aNIxRAlo2UoPzezbKTHWa9iKtRBjkN5KT2VJ4oDedcWPSWF
-         1yGvr8hO241d/CLbvrqMDEHX0/YKGVnn7Bt0ZMIAl9stsqZk3h0Em9moKYxsJgrWpaB6
-         uhIg==
-X-Gm-Message-State: AOAM5336xEzMF6keT7wrJHgJWQrCDDsL6cfgRECgTcY3v7IQk4kNnMe3
-        VUqbR/QtYHd2ZnDnBeyaYiyyUDT8/JrrY6kB4us=
-X-Google-Smtp-Source: ABdhPJz2cJ7CEK2QU8d4MvwWTRwIYLa89bAXoHcs0pj+zLGRas+wTtW9xsAw0qFtf/blSc+unw0ABlJZ1RchbM6qsiU=
-X-Received: by 2002:ab0:2758:: with SMTP id c24mr4351437uap.64.1591100280930;
- Tue, 02 Jun 2020 05:18:00 -0700 (PDT)
+        Tue, 2 Jun 2020 08:18:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34196 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgFBMSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:18:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 77F39AE72;
+        Tue,  2 Jun 2020 12:18:31 +0000 (UTC)
+Subject: Re: [LKP] Re: 28307d938f ("percpu: make pcpu_alloc() aware of current
+ gfp .."): BUG: kernel reboot-without-warning in boot stage
+To:     Li Zhijian <zhijianx.li@intel.com>,
+        kernel test robot <lkp@intel.com>
+Cc:     LKP <lkp@lists.01.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        "Linus, Torvalds," <torvalds@linux-foundation.org>
+References: <5ed0b6ea.QaEVKYBGHpcVDpW8%lkp@intel.com>
+ <21fb7dbf-1fd2-cfcb-860e-c342ae0c310e@suse.com>
+ <a1e41149-a3b3-4a19-7001-9b47d8b66555@intel.com>
+From:   Filipe Manana <fdmanana@suse.com>
+Message-ID: <0405917f-dc4f-f32c-0aeb-043742fc4d6e@suse.com>
+Date:   Tue, 2 Jun 2020 13:18:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200511115524.22602-1-Rodrigo.Siqueira@amd.com> <20200511115524.22602-4-Rodrigo.Siqueira@amd.com>
-In-Reply-To: <20200511115524.22602-4-Rodrigo.Siqueira@amd.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 2 Jun 2020 13:14:43 +0100
-Message-ID: <CACvgo538kFaXq3jkwHb1DHvgd95Ss6ZcYVwYRQ7CX53PkB411g@mail.gmail.com>
-Subject: Re: [PATCH V4 3/3] drm/vkms: Add support for writeback
-To:     Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Simon Ser <contact@emersion.fr>,
-        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a1e41149-a3b3-4a19-7001-9b47d8b66555@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 at 12:55, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com> wrote:
-
->  # SPDX-License-Identifier: GPL-2.0-only
-> -vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_composer.o
-> +vkms-y := \
-> +       vkms_drv.o \
-> +       vkms_plane.o \
-> +       vkms_output.o \
-> +       vkms_crtc.o \
-> +       vkms_gem.o \
-> +       vkms_composer.o \
-> +       vkms_writeback.o
->
-Nit: sort alphabetically
 
 
-> @@ -191,9 +192,12 @@ void vkms_composer_worker(struct work_struct *work)
->         if (!primary_composer)
->                 return;
->
-> +       if (wb_pending)
-> +               vaddr_out = crtc_state->active_writeback;
-> +
->         ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
-Forgot to mention earlier - with the allocation happening in the
-caller, compose_planes() can take void *vaddr_out.
+On 02/06/20 05:37, Li Zhijian wrote:
+> Hi Filipe,
+> 
+> LKP checked blow dmesg as the indicator in this problem
+> 
+>>> [    0.144174] RAMDISK: [mem 0x7fa2e000-0x7fffffff]
+>>> [    0.144559] ACPI: Early table checksum verification disabled
+>>> [    0.144985] ACPI: RSDP 0x00000000000F5850 000014 (v00 BOCHS )
+>>> [    0.145424] ACPI: RSDT 0x00000000BFFE15C9 000030 (v01 BOCHS 
+>>> BXPCRSDT 00000001 BXPC 00000001)
+>>> [    0.146051] ACPI: FACP 0x00000000BFFE149D 000074 (v01 BOCHS 
+>>> BXPCFACP 00000001 BXPC 00000001)
+>>> BUG: kernel reboot-without-warning in boot stage
+>>>
+> 
+> And i have reproduced it with script in attachment. this issue is gone
+> when i reverted this commit 28307d938f
+> 
+> Please note that
+> - i reproduced it with kernel compiled by gcc-5
+> - i failed to reproduce it in kernel compiled by gcc-7 so far
 
->         if (ret) {
-> -               if (ret == -EINVAL)
-> +               if (ret == -EINVAL && !wb_pending)
->                         kfree(vaddr_out);
->                 return;
->         }
-> @@ -206,6 +210,14 @@ void vkms_composer_worker(struct work_struct *work)
->         while (frame_start <= frame_end)
->                 drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
->
-> +       if (wb_pending) {
-> +               drm_writeback_signal_completion(&out->wb_connector, 0);
-> +               spin_lock_irq(&out->composer_lock);
-> +               crtc_state->wb_pending = false;
-> +               spin_unlock_irq(&out->composer_lock);
-> +               return;
-> +       }
-> +
-Just like the free() move this above the drm_crtc_add_crc_entry()
+Odd.
+Here I tested with:
 
-if (wb_pending) {
-  signal()
-  ...
-} else {
-  free()
-}
+$ gcc --version
+gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+Copyright (C) 2016 Free Software Foundation, Inc.
 
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> index 1e8b2169d834..34dd74dc8eb0 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> @@ -39,6 +39,10 @@ bool enable_cursor = true;
->  module_param_named(enable_cursor, enable_cursor, bool, 0444);
->  MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
->
-> +bool enable_writeback;
-> +module_param_named(enable_writeback, enable_writeback, bool, 0444);
-> +MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback connector");
-> +
-Why is this a module parameter? Let's always enable it and leave it to
-userspace whether to use the wb or not.
-
->  static const struct file_operations vkms_driver_fops = {
->         .owner          = THIS_MODULE,
->         .open           = drm_open,
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> index f4036bb0b9a8..35f0b71413c9 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> @@ -8,6 +8,7 @@
->  #include <drm/drm.h>
->  #include <drm/drm_gem.h>
->  #include <drm/drm_encoder.h>
-> +#include <drm/drm_writeback.h>
->
->  #define XRES_MIN    20
->  #define YRES_MIN    20
-> @@ -19,6 +20,7 @@
->  #define YRES_MAX  8192
->
->  extern bool enable_cursor;
-> +extern bool enable_writeback;
->
->  struct vkms_composer {
->         struct drm_framebuffer fb;
-> @@ -52,9 +54,11 @@ struct vkms_crtc_state {
->         int num_active_planes;
->         /* stack of active planes for crc computation, should be in z order */
->         struct vkms_plane_state **active_planes;
-> +       void *active_writeback;
->
->         /* below three are protected by vkms_output.composer_lock */
-Nit: s/below three/the following four/
-
->         bool crc_pending;
-> +       bool wb_pending;
->         u64 frame_start;
->         u64 frame_end;
->  };
-> @@ -63,6 +67,7 @@ struct vkms_output {
->         struct drm_crtc crtc;
->         struct drm_encoder encoder;
->         struct drm_connector connector;
-> +       struct drm_writeback_connector wb_connector;
->         struct hrtimer vblank_hrtimer;
->         ktime_t period_ns;
->         struct drm_pending_vblank_event *event;
-> @@ -144,4 +149,7 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
->  /* Composer Support */
->  void vkms_composer_worker(struct work_struct *work);
->
-> +/* Writeback */
-> +int enable_writeback_connector(struct vkms_device *vkmsdev);
-
-Don't forget appropriate name spacing - prefix the function with vkms.
-
-> +
->  #endif /* _VKMS_DRV_H_ */
-> diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-> index 85afb77e97f0..19ffc67affec 100644
-> --- a/drivers/gpu/drm/vkms/vkms_output.c
-> +++ b/drivers/gpu/drm/vkms/vkms_output.c
-> @@ -80,6 +80,16 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
->                 goto err_attach;
->         }
->
-> +       if (enable_writeback) {
-> +               ret = enable_writeback_connector(vkmsdev);
-
-With wb connector always enabled, you can kill off the
-vkms_output::composer_enabled all together. Plus the info/error
-warnings (below) can go as well.
-
-> +               if (!ret) {
-> +                       output->composer_enabled = true;
-> +                       DRM_INFO("Writeback connector enabled");
-> +               } else {
-> +                       DRM_ERROR("Failed to init writeback connector\n");
-> +               }
-> +       }
-> +
->         drm_mode_config_reset(dev);
->
->         return 0;
-> diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-> new file mode 100644
-> index 000000000000..868f0d15ca9f
-> --- /dev/null
-> +++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-> @@ -0,0 +1,142 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +#include "vkms_drv.h"
-> +#include <drm/drm_fourcc.h>
-> +#include <drm/drm_writeback.h>
-> +#include <drm/drm_probe_helper.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
-> +
-Nit: sort includes alphabetically.
-
-> +static const u32 vkms_wb_formats[] = {
-> +       DRM_FORMAT_XRGB8888,
-> +};
-> +
-> +static const struct drm_connector_funcs vkms_wb_connector_funcs = {
-> +       .fill_modes = drm_helper_probe_single_connector_modes,
-> +       .destroy = drm_connector_cleanup,
-> +       .reset = drm_atomic_helper_connector_reset,
-> +       .atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> +       .atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> +};
-> +
-> +static int vkms_wb_encoder_atomic_check(struct drm_encoder *encoder,
-> +                                       struct drm_crtc_state *crtc_state,
-> +                                       struct drm_connector_state *conn_state)
-> +{
-> +       struct drm_framebuffer *fb;
-> +       const struct drm_display_mode *mode = &crtc_state->mode;
-> +
-> +       if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-Drop the fb check.
-
-> +               return 0;
-> +
-> +       fb = conn_state->writeback_job->fb;
-> +       if (fb->width != mode->hdisplay || fb->height != mode->vdisplay) {
-> +               DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
-> +                             fb->width, fb->height);
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (fb->format->format != DRM_FORMAT_XRGB8888) {
-Use the vkms_wb_formats[], regardless if it's one entry or not.
-
-> +               struct drm_format_name_buf format_name;
-> +
-> +               DRM_DEBUG_KMS("Invalid pixel format %s\n",
-> +                             drm_get_format_name(fb->format->format,
-> +                                                 &format_name));
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-
-Thinking out loud:
-This function should be a helper that drivers can reuse and build
-upon. The format might be tricky.
-It's already in drm_writeback_connector::pixel_formats_blob_ptr, while
-the function takes drm_writeback::encoder as argument.
-
-But that for another patch series.
-
-
-> +static void vkms_wb_atomic_commit(struct drm_connector *conn,
-> +                                 struct drm_connector_state *state)
-> +{
-> +       struct vkms_device *vkmsdev = drm_device_to_vkms_device(conn->dev);
-> +       struct vkms_output *output = &vkmsdev->output;
-> +       struct drm_writeback_connector *wb_conn = &output->wb_connector;
-> +       struct drm_connector_state *conn_state = wb_conn->base.state;
-> +       struct vkms_crtc_state *crtc_state = output->composer_state;
-> +
-> +       if (!conn_state)
-> +               return;
-> +
-> +       if (!conn_state->writeback_job || !conn_state->writeback_job->fb) {
-Drop the fb check.
-
--Emil
+> 
+> :~/1787$ ./reproduce.sh obj/arch/x86/boot/bzImage
+> qemu-system-x86_64 -enable-kvm -cpu Haswell,+smep,+smap -kernel
+> obj/arch/x86/boot/bzImage -m 8192 -smp 2 -device e1000,netdev=net0
+> -netdev user,id=net0,hostfwd=tcp::32032-:22 -boot order=nc -no-reboot
+> -watchdog i6300esb -watchdog-action debug -rtc base=localtime -serial
+> stdio -display none -monitor null -append root=/dev/ram0
+> hung_task_panic=1 debug apic=debug sysrq_always_enabled
+> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
+> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic load_ramdisk=2
+> prompt_ramdisk=0 drbd.minor_count=8 systemd.log_level=err
+> ignore_loglevel console=tty0 earlyprintk=ttyS0,115200
+> console=ttyS0,115200 vga=normal rw rcuperf.shutdown=0 watchdog_thresh=60
+> early console in setup code
+> Wrong EFI loader signature.
+> early console in extract_kernel
+> input_data: 0x0000000006f752d8
+> input_len: 0x000000000130dd3c
+> output: 0x0000000001000000
+> output_len: 0x0000000007200a48
+> kernel_total_size: 0x0000000006826000
+> needed_size: 0x0000000007400000
+> trampoline_32bit: 0x000000000009d000
+> 
+> Decompressing Linux... Parsing ELF... done.
+> Booting the kernel.
+> [    0.000000] Linux version 5.7.0-rc4-00168-g28307d938fb2
+> (lizhijian@shao2-debian) (gcc version 5.5.0 20171010 (Debian 5.5.0-12),
+> GNU ld (GNU Binutils for Debian) 2.34) #2 SMP PREEMPT Tue Jun 2 11:23:59
+> CST 2020
+> [    0.000000] Command line: root=/dev/ram0 hung_task_panic=1 debug
+> apic=debug sysrq_always_enabled rcupdate.rcu_cpu_stall_timeout=100
+> net.ifnames=0 printk.devkmsg=on panic=-1 softlockup_panic=1
+> nmi_watchdog=panic oops=panic load_ramdisk=2 prompt_ramdisk=0
+> drbd.minor_count=8 systemd.log_level=err ignore_loglevel console=tty0
+> earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw
+> rcuperf.shutdown=0 watchdog_thresh=60
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating
+> point registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+> [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]: 256
+> [    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832
+> bytes, using 'standard' format.
+> [    0.000000] BIOS-provided physical RAM map:
+> [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]
+> usable
+> [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]
+> reserved
+> [    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]
+> reserved
+> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000bffdffff]
+> usable
+> [    0.000000] BIOS-e820: [mem 0x00000000bffe0000-0x00000000bfffffff]
+> reserved
+> [    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]
+> reserved
+> [    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]
+> reserved
+> [    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000023fffffff]
+> usable
+> [    0.000000] printk: debug: ignoring loglevel setting.
+> [    0.000000] printk: bootconsole [earlyser0] enabled
+> [    0.000000] NX (Execute Disable) protection: active
+> [    0.000000] SMBIOS 2.8 present.
+> [    0.000000] DMI: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> 1.12.0-1 04/01/2014
+> [    0.000000] Hypervisor detected: KVM
+> [    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+> [    0.000002] kvm-clock: cpu 0, msr 7601001, primary cpu clock
+> [    0.000002] kvm-clock: using sched offset of 2661499940 cycles
+> [    0.000603] clocksource: kvm-clock: mask: 0xffffffffffffffff
+> max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+> [    0.002261] tsc: Detected 3407.998 MHz processor
+> [    0.005351] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+> [    0.005986] e820: remove [mem 0x000a0000-0x000fffff] usable
+> [    0.006535] last_pfn = 0x240000 max_arch_pfn = 0x400000000
+> [    0.007091] MTRR default type: write-back
+> [    0.007477] MTRR fixed ranges enabled:
+> [    0.007845]   00000-9FFFF write-back
+> [    0.008191]   A0000-BFFFF uncachable
+> [    0.008536]   C0000-FFFFF write-protect
+> [    0.008906] MTRR variable ranges enabled:
+> [    0.009293]   0 base 00C0000000 mask FFC0000000 uncachable
+> [    0.009818]   1 disabled
+> [    0.010064]   2 disabled
+> [    0.010314]   3 disabled
+> [    0.010561]   4 disabled
+> [    0.010822]   5 disabled
+> [    0.011072]   6 disabled
+> [    0.011325]   7 disabled
+> [    0.011602] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP UC- WT
+> [    0.012313] last_pfn = 0xbffe0 max_arch_pfn = 0x400000000
+> [    0.013294] check: Scanning 1 areas for low memory corruption
+> [    0.013898] BRK [0x07801000, 0x07801fff] PGTABLE
+> [    0.014358] BRK [0x07802000, 0x07802fff] PGTABLE
+> [    0.014822] BRK [0x07803000, 0x07803fff] PGTABLE
+> [    0.015626] BRK [0x07804000, 0x07804fff] PGTABLE
+> [    0.016099] BRK [0x07805000, 0x07805fff] PGTABLE
+> [    0.016773] BRK [0x07806000, 0x07806fff] PGTABLE
+> [    0.106782] ACPI: Early table checksum verification disabled
+> [    0.107352] ACPI: RSDP 0x00000000000F5850 000014 (v00 BOCHS )
+> [    0.107949] ACPI: RSDT 0x00000000BFFE15C9 000030 (v01 BOCHS BXPCRSDT
+> 00000001 BXPC 00000001)
+> [    0.108766] ACPI: FACP 0x00000000BFFE149D 000074 (v01 BOCHS BXPCFACP
+> 00000001 BXPC 00000001)
+> [    0.109649] ACPI: DSDT 0x00000000BFFE0040 00145D (v01 BOCHS BXPCDSDT
+> 00000001 BXPC 00000001)
+> lizhijian@shao2-debian:~/1787$
+> 
+> 
+> 
+>> Weird, what you are getting is the following warning from lock torture:
+> 
+> warning from lock torture could be not related to this commit in this case.
+> 
+> 
+> Thanks
+> Zhijian
+> 
+> 
