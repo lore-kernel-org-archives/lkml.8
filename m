@@ -2,201 +2,144 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96245C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B12C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7659420678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5702068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:19:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BB6Bogdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgFBMSb (ORCPT
+        id S1727065AbgFBMTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:18:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34196 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgFBMSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:18:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 77F39AE72;
-        Tue,  2 Jun 2020 12:18:31 +0000 (UTC)
-Subject: Re: [LKP] Re: 28307d938f ("percpu: make pcpu_alloc() aware of current
- gfp .."): BUG: kernel reboot-without-warning in boot stage
-To:     Li Zhijian <zhijianx.li@intel.com>,
-        kernel test robot <lkp@intel.com>
-Cc:     LKP <lkp@lists.01.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        "Linus, Torvalds," <torvalds@linux-foundation.org>
-References: <5ed0b6ea.QaEVKYBGHpcVDpW8%lkp@intel.com>
- <21fb7dbf-1fd2-cfcb-860e-c342ae0c310e@suse.com>
- <a1e41149-a3b3-4a19-7001-9b47d8b66555@intel.com>
-From:   Filipe Manana <fdmanana@suse.com>
-Message-ID: <0405917f-dc4f-f32c-0aeb-043742fc4d6e@suse.com>
-Date:   Tue, 2 Jun 2020 13:18:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 08:19:17 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63135 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725958AbgFBMTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:19:16 -0400
+X-UUID: 737c847b080d486a9aaa17344788bb94-20200602
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID; bh=4h8fafRuCGTyIr/VCDupUiRjNszwNbo9UU/ty3wLFYg=;
+        b=BB6BogdypJebp2/YbfZk+8Pm2yPYmPU/qlQJKVt+/SfUJ1srvKxmfwtE7f7uXs/psdx6V5ThbEQywmEhtk9NoIPq95235ujRejWTgtmH16QQ1vvQn24vKSUNG4WTODUbipnMbSJs1aDCjQs1nxZQKylOrDpc+AMO5fXCmefny+k=;
+X-UUID: 737c847b080d486a9aaa17344788bb94-20200602
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 241703546; Tue, 02 Jun 2020 20:19:10 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 2 Jun 2020 20:19:00 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 2 Jun 2020 20:19:00 +0800
+Message-ID: <1591100342.23525.8.camel@mtkswgap22>
+Subject: Re: [PATCH] sound: usb: pcm: fix incorrect power state when playing
+ sound after PM_AUTO suspend
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Jaroslav Kysela <perex@perex.cz>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Johan Hovold <johan@kernel.org>,
+        Hui Wang <hui.wang@canonical.com>,
+        Szabolcs =?UTF-8?Q?Sz=C5=91ke?= <szszoke.code@gmail.com>,
+        <alsa-devel@alsa-project.org>, <linux-usb@vger.kernel.org>,
+        "Mediatek WSD Upstream" <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>
+Date:   Tue, 2 Jun 2020 20:19:02 +0800
+In-Reply-To: <1591098821-17910-1-git-send-email-macpaul.lin@mediatek.com>
+References: <linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org>
+         <1591098821-17910-1-git-send-email-macpaul.lin@mediatek.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <a1e41149-a3b3-4a19-7001-9b47d8b66555@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 12C71F8E9B7B63D4DF6727041F40092E70F89D4579A111C8EDEBB373FBDFE0332000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gVHVlLCAyMDIwLTA2LTAyIGF0IDE5OjUzICswODAwLCBNYWNwYXVsIExpbiB3cm90ZToNCj4g
+VGhpcyBwYXRjaCBmaXggaW5jb3JyZWN0IHBvd2VyIHN0YXRlIGNoYW5nZWQgYnkgdXNiX2F1ZGlv
+X3N1c3BlbmQoKQ0KPiB3aGVuIENPTkZJR19QTSBpcyBlbmFibGVkLg0KPiANCj4gQWZ0ZXIgcmVj
+ZWl2aW5nIHN1c3BlbmQgUE0gbWVzc2FnZSB3aXRoIGF1dG8gZmxhZywgdXNiX2F1ZGlvX3N1c3Bl
+bmQoKQ0KPiBjaGFuZ2UgY2FyZCdzIHBvd2VyIHN0YXRlIHRvIFNORFJWX0NUTF9QT1dFUl9EM2hv
+dC4gT25seSB3aGVuIHRoZSBvdGhlcg0KPiByZXN1bWUgUE0gbWVzc2FnZSB3aXRoIGF1dG8gZmxh
+ZyBjYW4gY2hhbmdlIHBvd2VyIHN0YXRlIHRvDQo+IFNORFJWX0NUTF9QT1dFUl9EMCBpbiBfX3Vz
+Yl9hdWRpb19yZXN1bWUoKS4NCj4gDQo+IEhvd2V2ZXIsIHdoZW4gc3lzdGVtIGlzIG5vdCB1bmRl
+ciBhdXRvIHN1c3BlbmQsIHJlc3VtZSBQTSBtZXNzYWdlIHdpdGgNCj4gYXV0byBmbGFnIG1pZ2h0
+IG5vdCBiZSBhYmxlIHRvIHJlY2VpdmUgb24gdGltZSB3aGljaCBjYXVzZSB0aGUgcG93ZXINCj4g
+c3RhdGUgd2FzIGluY29ycmVjdC4gQXQgdGhpcyB0aW1lLCBpZiBhIHBsYXllciBzdGFydHMgdG8g
+cGxheSBzb3VuZCwNCj4gd2lsbCBjYXVzZSBzbmRfdXNiX3BjbV9vcGVuKCkgdG8gYWNjZXNzIHRo
+ZSBjYXJkIGFuZCBzZXR1cF9od19pbmZvKCkgd2lsbA0KPiByZXN1bWUgdGhlIGNhcmQuDQo+IA0K
+PiBCdXQgZXZlbiB0aGUgY2FyZCBpcyBiYWNrIHRvIHdvcmsgYW5kIGFsbCBmdW5jdGlvbiBub3Jt
+YWwsIHRoZSBwb3dlcg0KPiBzdGF0ZSBpcyBzdGlsbCBpbiBTTkRSVl9DVExfUE9XRVJfRDNob3Qu
+IFdoaWNoIGNhdXNlIHRoZSBpbmZpbml0ZSBsb29wDQo+IGhhcHBlbmVkIGluIHNuZF9wb3dlcl93
+YWl0KCkgdG8gY2hlY2sgdGhlIHBvd2VyIHN0YXRlLiBUaHVzIHRoZQ0KPiBzdWNjZXNzaXZlIHNl
+dHRpbmcgaW9jdGwgY2Fubm90IGJlIHBhc3NlZCB0byBjYXJkLg0KPiANCj4gSGVuY2Ugd2Ugc3Vn
+Z2VzdCB0byBjaGFuZ2UgcG93ZXIgc3RhdGUgdG8gU05EUlZfQ1RMX1BPV0VSX0QwIHdoZW4gY2Fy
+ZA0KPiBoYXMgYmVlbiByZXN1bWVkIHN1Y2Nlc3NmdWxseS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IE1hY3BhdWwgTGluIDxtYWNwYXVsLmxpbkBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgc291bmQv
+dXNiL3BjbS5jIHwgICAxMSArKysrKysrKysrK2xpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmcsDQo+
+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL3Nv
+dW5kL3VzYi9wY20uYyBiL3NvdW5kL3VzYi9wY20uYw0KPiBpbmRleCBhNGU0MDY0Li5kNjY3ZWNi
+IDEwMDY0NA0KPiAtLS0gYS9zb3VuZC91c2IvcGNtLmMNCj4gKysrIGIvc291bmQvdXNiL3BjbS5j
+DQo+IEBAIC0xMzIyLDYgKzEzMjIsMTcgQEAgc3RhdGljIGludCBzZXR1cF9od19pbmZvKHN0cnVj
+dCBzbmRfcGNtX3J1bnRpbWUgKnJ1bnRpbWUsIHN0cnVjdCBzbmRfdXNiX3N1YnN0cmUNCj4gIAlp
+ZiAoZXJyIDwgMCkNCj4gIAkJcmV0dXJuIGVycjsNCj4gIA0KPiArCS8qIGZpeCBpbmNvcnJlY3Qg
+cG93ZXIgc3RhdGUgd2hlbiByZXN1bWluZyBieSBvcGVuIGFuZCBsYXRlciBpb2N0bHMgKi8NCj4g
+KwlpZiAoSVNfRU5BQkxFRChDT05GSUdfUE0pICYmDQo+ICsJCXNuZF9wb3dlcl9nZXRfc3RhdGUo
+c3Vicy0+c3RyZWFtLT5jaGlwLT5jYXJkKQ0KPiArCQkJPT0gU05EUlZfQ1RMX1BPV0VSX0QzaG90
+KSB7DQo+ICsJCS8qIHNldCB0aGVzZSB2YXJpYWJsZXMgZm9yIHBvd2VyIHN0YXRlIGNvcnJlY3Rp
+b24gKi8NCj4gKwkJc3Vicy0+c3RyZWFtLT5jaGlwLT5hdXRvc3VzcGVuZGVkID0gMDsNCj4gKwkJ
+c3Vicy0+c3RyZWFtLT5jaGlwLT5udW1fc3VzcGVuZGVkX2ludGYgPSAxOw0KPiArCQlkZXZfaW5m
+bygmc3Vicy0+ZGV2LT5kZXYsDQo+ICsJCQkiY2hhbmdlIHBvd2VyIHN0YXRlIGZyb20gRDNob3Qg
+dG8gRDBcbiIpOw0KPiArCX0NCj4gKw0KPiAgCXJldHVybiBzbmRfdXNiX2F1dG9yZXN1bWUoc3Vi
+cy0+c3RyZWFtLT5jaGlwKTsNCj4gIH0NCj4gIA0KDQpUaGUgaXNzdWUgd2FzIGZvdW5kIG9uIGtl
+cm5lbCA0LjE0IChhbmRyb2lkIHRyZWUpLiBUaGUgdGVzdCBpcyB0byBhZGQNCmRlYnVnIGxvZyBp
+biBzb3VuZC9jb3JlL2luaXQuYyB0byBjaGVjayBpZiB0aGUgcG93ZXIgc3RhdGUgaXMNClNORFJW
+X0NUTF9QT1dFUl9EM2hvdC4NCg0KZGlmZiAtLWdpdCBhL3NvdW5kL2NvcmUvaW5pdC5jIGIvc291
+bmQvY29yZS9pbml0LmMNCmluZGV4IGIwMmE5OTcuLmEwYmVlNzYgMTAwNjQ0DQotLS0gYS9zb3Vu
+ZC9jb3JlL2luaXQuYw0KKysrIGIvc291bmQvY29yZS9pbml0LmMNCkBAIC0xMDExLDYgKzEwMTEs
+OCBAQCBpbnQgc25kX3Bvd2VyX3dhaXQoc3RydWN0IHNuZF9jYXJkICpjYXJkLCB1bnNpZ25lZA0K
+aW50IHBvd2VyX3N0YXRlKQ0KIAkJaWYgKHNuZF9wb3dlcl9nZXRfc3RhdGUoY2FyZCkgPT0gcG93
+ZXJfc3RhdGUpDQogCQkJYnJlYWs7DQogCQlzZXRfY3VycmVudF9zdGF0ZShUQVNLX1VOSU5URVJS
+VVBUSUJMRSk7DQorCQlwcl9pbmZvKCIlcyBzbmRfcG93ZXJfZ2V0X3N0YXRlWyV4XVxuIiwgX19m
+dW5jX18sDQorCQkJc25kX3Bvd2VyX2dldF9zdGF0ZShjYXJkKSk7DQogCQlzY2hlZHVsZV90aW1l
+b3V0KDMwICogSFopOw0KIAl9DQogCXJlbW92ZV93YWl0X3F1ZXVlKCZjYXJkLT5wb3dlcl9zbGVl
+cCwgJndhaXQpOw0KDQpBZnRlciBhcHBsaWVkIGEgd29yayBhcm91bmQgYnkgZm9yY2luZyB0aGUg
+cG93ZXIgc3RhdGUsIHBjbSByZWxhdGVkDQppb2N0bCBhbmQgcGFyYW1ldGVyIHNldHRpbmdzIGNh
+biBiZSBzZXQgdG8gdXNiIHNvdW5kIGNhcmQgY29ycmVjdGx5Lg0KT3RoZXJ3aXNlIGEgaW5maW5p
+dGUgbG9vcCB3aWxsIGhhcHBlbmVkIGluIHNuZF9wb3dlcl93YWl0KCkuDQoNCkhlcmUgaXMgdGhl
+IG9yaWdpbiB3b3JrIGFyb3VuZCBmb3IgdmVyaWZ5aW5nIHRoaXMgcG93ZXIgc3RhdGUgaXNzdWUg
+b24NCmtlcm5lbCA0LjE0Lg0KDQpkaWZmIC0tZ2l0IGEvc291bmQvdXNiL3BjbS5jIGIvc291bmQv
+dXNiL3BjbS5jDQppbmRleCA5MzNhZGNkN2FmODEuLjlhY2Q1MGRkNzE1NSAxMDA2NDQNCi0tLSBh
+L3NvdW5kL3VzYi9wY20uYw0KKysrIGIvc291bmQvdXNiL3BjbS5jDQpAQCAtMTI3NCw2ICsxMjc0
+LDE2IEBAIHN0YXRpYyBpbnQgc2V0dXBfaHdfaW5mbyhzdHJ1Y3Qgc25kX3BjbV9ydW50aW1lDQoq
+cnVudGltZSwgc3RydWN0IHNuZF91c2Jfc3Vic3RyZQ0KIAlpZiAoZXJyIDwgMCkNCiAJCXJldHVy
+biBlcnI7DQogDQorCS8qIGF2b2lkIGluY29ycmVjdCBwb3dlciBzdGF0ZSB3aGVuIGV4ZWN1dGlu
+ZyBJT0NUTCAqLw0KKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfUE0pICYmDQorCQlzbmRfcG93ZXJf
+Z2V0X3N0YXRlKHN1YnMtPnN0cmVhbS0+Y2hpcC0+Y2FyZCkNCisJCQk9PSBTTkRSVl9DVExfUE9X
+RVJfRDNob3QpIHsNCisJCWRldl9pbmZvKCZzdWJzLT5kZXYtPmRldiwNCisJCQkiY2hhbmdlIHBv
+d2VyIHN0YXRlIGZyb20gRDNob3QgdG8gRDBcbiIpOw0KKwkJc25kX3Bvd2VyX2NoYW5nZV9zdGF0
+ZShzdWJzLT5zdHJlYW0tPmNoaXAtPmNhcmQsDQorCQkJCQlTTkRSVl9DVExfUE9XRVJfRDApOw0K
+Kwl9DQorDQogCXBhcmFtX3BlcmlvZF90aW1lX2lmX25lZWRlZCA9IFNORFJWX1BDTV9IV19QQVJB
+TV9QRVJJT0RfVElNRTsNCiAJaWYgKHN1YnMtPnNwZWVkID09IFVTQl9TUEVFRF9GVUxMKQ0KIAkJ
+LyogZnVsbCBzcGVlZCBkZXZpY2VzIGhhdmUgZml4ZWQgZGF0YSBwYWNrZXQgaW50ZXJ2YWwgKi8N
+Cg0KSG93ZXZlciwgdGhlIHBhdGNoIEkndmUgc2VuZCBpcyBtZWFudCB0byBtYWtlIHN1cmUgdGhl
+IHBvd2VyIHN0YXRlIHdpbGwNCmJlIGNvcnJlY3RlZCBiZWZvcmUgc25kX3VzYl9hdXRvcmVzdW1l
+KCksIEl0IHNob3VsZCBiZSBhZGFwdCB0byBrZXJuZWwNCjQuMTQgYW5kIGxhdGVyLg0KDQpUaGFu
+a3MuDQpNYWNwYXVsIExpbg0KDQo=
 
-
-On 02/06/20 05:37, Li Zhijian wrote:
-> Hi Filipe,
-> 
-> LKP checked blow dmesg as the indicator in this problem
-> 
->>> [    0.144174] RAMDISK: [mem 0x7fa2e000-0x7fffffff]
->>> [    0.144559] ACPI: Early table checksum verification disabled
->>> [    0.144985] ACPI: RSDP 0x00000000000F5850 000014 (v00 BOCHS )
->>> [    0.145424] ACPI: RSDT 0x00000000BFFE15C9 000030 (v01 BOCHS 
->>> BXPCRSDT 00000001 BXPC 00000001)
->>> [    0.146051] ACPI: FACP 0x00000000BFFE149D 000074 (v01 BOCHS 
->>> BXPCFACP 00000001 BXPC 00000001)
->>> BUG: kernel reboot-without-warning in boot stage
->>>
-> 
-> And i have reproduced it with script in attachment. this issue is gone
-> when i reverted this commit 28307d938f
-> 
-> Please note that
-> - i reproduced it with kernel compiled by gcc-5
-> - i failed to reproduce it in kernel compiled by gcc-7 so far
-
-Odd.
-Here I tested with:
-
-$ gcc --version
-gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
-Copyright (C) 2016 Free Software Foundation, Inc.
-
-> 
-> :~/1787$ ./reproduce.sh obj/arch/x86/boot/bzImage
-> qemu-system-x86_64 -enable-kvm -cpu Haswell,+smep,+smap -kernel
-> obj/arch/x86/boot/bzImage -m 8192 -smp 2 -device e1000,netdev=net0
-> -netdev user,id=net0,hostfwd=tcp::32032-:22 -boot order=nc -no-reboot
-> -watchdog i6300esb -watchdog-action debug -rtc base=localtime -serial
-> stdio -display none -monitor null -append root=/dev/ram0
-> hung_task_panic=1 debug apic=debug sysrq_always_enabled
-> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
-> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic load_ramdisk=2
-> prompt_ramdisk=0 drbd.minor_count=8 systemd.log_level=err
-> ignore_loglevel console=tty0 earlyprintk=ttyS0,115200
-> console=ttyS0,115200 vga=normal rw rcuperf.shutdown=0 watchdog_thresh=60
-> early console in setup code
-> Wrong EFI loader signature.
-> early console in extract_kernel
-> input_data: 0x0000000006f752d8
-> input_len: 0x000000000130dd3c
-> output: 0x0000000001000000
-> output_len: 0x0000000007200a48
-> kernel_total_size: 0x0000000006826000
-> needed_size: 0x0000000007400000
-> trampoline_32bit: 0x000000000009d000
-> 
-> Decompressing Linux... Parsing ELF... done.
-> Booting the kernel.
-> [    0.000000] Linux version 5.7.0-rc4-00168-g28307d938fb2
-> (lizhijian@shao2-debian) (gcc version 5.5.0 20171010 (Debian 5.5.0-12),
-> GNU ld (GNU Binutils for Debian) 2.34) #2 SMP PREEMPT Tue Jun 2 11:23:59
-> CST 2020
-> [    0.000000] Command line: root=/dev/ram0 hung_task_panic=1 debug
-> apic=debug sysrq_always_enabled rcupdate.rcu_cpu_stall_timeout=100
-> net.ifnames=0 printk.devkmsg=on panic=-1 softlockup_panic=1
-> nmi_watchdog=panic oops=panic load_ramdisk=2 prompt_ramdisk=0
-> drbd.minor_count=8 systemd.log_level=err ignore_loglevel console=tty0
-> earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw
-> rcuperf.shutdown=0 watchdog_thresh=60
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating
-> point registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-> [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]: 256
-> [    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832
-> bytes, using 'standard' format.
-> [    0.000000] BIOS-provided physical RAM map:
-> [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]
-> usable
-> [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]
-> reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]
-> reserved
-> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000bffdffff]
-> usable
-> [    0.000000] BIOS-e820: [mem 0x00000000bffe0000-0x00000000bfffffff]
-> reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]
-> reserved
-> [    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]
-> reserved
-> [    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000023fffffff]
-> usable
-> [    0.000000] printk: debug: ignoring loglevel setting.
-> [    0.000000] printk: bootconsole [earlyser0] enabled
-> [    0.000000] NX (Execute Disable) protection: active
-> [    0.000000] SMBIOS 2.8 present.
-> [    0.000000] DMI: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.12.0-1 04/01/2014
-> [    0.000000] Hypervisor detected: KVM
-> [    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
-> [    0.000002] kvm-clock: cpu 0, msr 7601001, primary cpu clock
-> [    0.000002] kvm-clock: using sched offset of 2661499940 cycles
-> [    0.000603] clocksource: kvm-clock: mask: 0xffffffffffffffff
-> max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
-> [    0.002261] tsc: Detected 3407.998 MHz processor
-> [    0.005351] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
-> [    0.005986] e820: remove [mem 0x000a0000-0x000fffff] usable
-> [    0.006535] last_pfn = 0x240000 max_arch_pfn = 0x400000000
-> [    0.007091] MTRR default type: write-back
-> [    0.007477] MTRR fixed ranges enabled:
-> [    0.007845]   00000-9FFFF write-back
-> [    0.008191]   A0000-BFFFF uncachable
-> [    0.008536]   C0000-FFFFF write-protect
-> [    0.008906] MTRR variable ranges enabled:
-> [    0.009293]   0 base 00C0000000 mask FFC0000000 uncachable
-> [    0.009818]   1 disabled
-> [    0.010064]   2 disabled
-> [    0.010314]   3 disabled
-> [    0.010561]   4 disabled
-> [    0.010822]   5 disabled
-> [    0.011072]   6 disabled
-> [    0.011325]   7 disabled
-> [    0.011602] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP UC- WT
-> [    0.012313] last_pfn = 0xbffe0 max_arch_pfn = 0x400000000
-> [    0.013294] check: Scanning 1 areas for low memory corruption
-> [    0.013898] BRK [0x07801000, 0x07801fff] PGTABLE
-> [    0.014358] BRK [0x07802000, 0x07802fff] PGTABLE
-> [    0.014822] BRK [0x07803000, 0x07803fff] PGTABLE
-> [    0.015626] BRK [0x07804000, 0x07804fff] PGTABLE
-> [    0.016099] BRK [0x07805000, 0x07805fff] PGTABLE
-> [    0.016773] BRK [0x07806000, 0x07806fff] PGTABLE
-> [    0.106782] ACPI: Early table checksum verification disabled
-> [    0.107352] ACPI: RSDP 0x00000000000F5850 000014 (v00 BOCHS )
-> [    0.107949] ACPI: RSDT 0x00000000BFFE15C9 000030 (v01 BOCHS BXPCRSDT
-> 00000001 BXPC 00000001)
-> [    0.108766] ACPI: FACP 0x00000000BFFE149D 000074 (v01 BOCHS BXPCFACP
-> 00000001 BXPC 00000001)
-> [    0.109649] ACPI: DSDT 0x00000000BFFE0040 00145D (v01 BOCHS BXPCDSDT
-> 00000001 BXPC 00000001)
-> lizhijian@shao2-debian:~/1787$
-> 
-> 
-> 
->> Weird, what you are getting is the following warning from lock torture:
-> 
-> warning from lock torture could be not related to this commit in this case.
-> 
-> 
-> Thanks
-> Zhijian
-> 
-> 
