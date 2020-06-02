@@ -2,122 +2,177 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44793C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202DF207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76CE207D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9QcqhuJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cp+3JDR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgFBPlx (ORCPT
+        id S1726809AbgFBPmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
+        Tue, 2 Jun 2020 11:42:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBPlw (ORCPT
+        with ESMTP id S1726000AbgFBPml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:41:52 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA73C08C5C0;
-        Tue,  2 Jun 2020 08:41:51 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 5so1652514pjd.0;
-        Tue, 02 Jun 2020 08:41:51 -0700 (PDT)
+        Tue, 2 Jun 2020 11:42:41 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F14C08C5C0;
+        Tue,  2 Jun 2020 08:42:41 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ga6so1559972pjb.1;
+        Tue, 02 Jun 2020 08:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KX3c8fO2lYmMAt3OHtw1oi3ANcKudMTPhDF4G19EAAQ=;
-        b=D9QcqhuJEs2IrQoossyHxDHpRLIgGEuV2VVn3QgJFExUkI9juh3QwN9GWer3diuRDy
-         7siCDZt6f8VBGxRGNJqQYeI8SCDcgDwlZTGrWwKMnN7TFj9Vjy7rr97Was3jcYAYhEG2
-         waP+7kczrlXSed6+WY97dB0u/PE9DfbFI6y2Yuqd1MzzzSMpK4KgSF9U5Y8ajovHGxcw
-         YcKdAngDGAKT3spA6jymicSn4ktlmwzWN+PQttF33jjGpCXXtOB+njSspFX/HDrLsvTL
-         KxPiOcSNAlRY7VewKLMDNfkA2RBt+x+UCAdJNicwgUQjRiqS9e88b1k9CB8mX8EgGfnM
-         Ey5A==
+        h=sender:subject:to:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7bWnrd7umFBH01tkVkxcf5w00Z7S8X+gUXJZqUHju+Y=;
+        b=Cp+3JDR3Mq+WCW4ZtXCOK4rCbpMcTAfSK8CCKbgoXVR3yHtZvPUp8wQBKYG+NTnFAH
+         kIWhCgZPO+tl9gkSgY94x/6+HTH1goMxi6pPQSY5YJurYLNgveEULA2hWqW3IR0AbKWP
+         G0ivb7bVvppLm7DTwL1yMTLMoMkJs42nrCA2+waArTOLHKJFPhz22dgL79YX21G/0cbJ
+         afUx8uvcFWZb+1swujVpWBWRLNPiq++5XulPJsrFPvWJeczo8v0QrwLuEGTf799B20Gu
+         uFWygE2Hg+qIdK9a2SW72IyW4TA31/53Su58WsJ54/uQegpvOxcSKjWHxn46SveQ6eNx
+         Ns5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KX3c8fO2lYmMAt3OHtw1oi3ANcKudMTPhDF4G19EAAQ=;
-        b=idQY6QXQHHtEOIj8dGUUAuQjpp7jPQSAsH6rvTCoSIHFyvHx57tyZk9SLxb5ydlL66
-         ObWgwi9S7aoUKNPwu7Ek76GRVThuLKvhNRV7a64GK+kwC/+dFLNOPbLwehKv3RkcVn3D
-         1vGmpBVUqTRTptJepFTf6WhkMu8fKKifjr1PvwDPCDnBvJC9Df0oAAxUe916cl0dpS4k
-         kiVED601KanoYQbwVFqu7eW5jewq7chiTDG+ne8lmjMzV35Yh/xESwv8ZrXtls5zm4WU
-         Y7tGzdQOboqvEvyVrxaIhtGzhOvhkKzWJt4CS3YZTsotQTwG2E4Y6FvGRCNjrSyB6nSG
-         Qg0Q==
-X-Gm-Message-State: AOAM531D7An0bf8OBcGifemEcoEC2T9VVMoJhQ6rNJHD8pkjr6f6l0cu
-        kuaZ19TLLjBK5eZcOTO38NbRbK6lelTFB7ly1ks=
-X-Google-Smtp-Source: ABdhPJzwm8nE1kIQ/TKnWve0lieKdz/G0UN93sdbs2pWw8NsR1KluU9+qRq6EZWRMM9F/lSx94o0wiPVBNn36jHFkp8=
-X-Received: by 2002:a17:902:bb95:: with SMTP id m21mr13540578pls.262.1591112510781;
- Tue, 02 Jun 2020 08:41:50 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7bWnrd7umFBH01tkVkxcf5w00Z7S8X+gUXJZqUHju+Y=;
+        b=Co7z9pUQu+yxDjfIdRcPSI1LVJBS8/RTujlAFqvoD7YLh0WlTkO1WSYTMqowYflfYl
+         1tw0xZAGnsR+zuXPgzqGdtq6QcoE4Z/ROYNY1Bl+YSx8ACdlWiiBHyR8BaqZB/koSXrt
+         Ki4t/ocj7LxoTVwnTP+rtfxIeBpdh2nvltjv/u4tXs6LS6mQWXtVx/tIVQ2Ym6UTEdU3
+         HvFUI3gc7C2JeMPIe5LNphutsKsNtqqJfgLjna1tGkXEHyXHal0otB0DDs9/KZS9uur0
+         mYg1TzuRTtISo3BpftJoBd+rzQFsW4pV5e/ARq6yh/0c+6b7aNRUAqRbuvFq9LGmUkCh
+         PvKg==
+X-Gm-Message-State: AOAM533oSB+mRnG2oVgEzy1uLg7sm7EnFEIzTJDRYimL/uZws5n6Cqe/
+        WN+XutCLPHoRWMsHUk0RqicREQhN
+X-Google-Smtp-Source: ABdhPJxlP5M+lMbxBj+QsJlbD8gTxN6qqLEWHERxDajWnbAVCH1npZ2X296bqZANf6DnEAyvmSoAyg==
+X-Received: by 2002:a17:902:ea8a:: with SMTP id x10mr25553334plb.61.1591112561148;
+        Tue, 02 Jun 2020 08:42:41 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w65sm2710504pfb.160.2020.06.02.08.42.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 08:42:40 -0700 (PDT)
+Subject: Re: [PATCH 1/2] i2c: mux: pca9541: Change to correct bus control
+ commands
+To:     Peter Rosin <peda@axentia.se>,
+        Quentin Strydom <quentin.strydom@bluwireless.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1591099969-30446-1-git-send-email-quentin.strydom@bluwireless.com>
+ <2e2c3b98-20a6-2671-ad74-a0f171073bd0@axentia.se>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <89e367db-a5f7-6eb0-5437-0ea0646b85d0@roeck-us.net>
+Date:   Tue, 2 Jun 2020 08:42:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200602092126.32327-1-piotr.stankiewicz@intel.com>
-In-Reply-To: <20200602092126.32327-1-piotr.stankiewicz@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Jun 2020 18:41:39 +0300
-Message-ID: <CAHp75Vcw6tJkq72UHuV=YW__J__baSqFv2dy1akr=RrM5itMfg@mail.gmail.com>
-Subject: Re: [PATCH 15/15] scsi: use PCI_IRQ_MSI_TYPES and PCI_IRQ_ALL_TYPES
- where appropriate
-To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Cc:     Brian King <brking@us.ibm.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jim Gill <jgill@vmware.com>,
-        VMware PV-Drivers <pv-drivers@vmware.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2e2c3b98-20a6-2671-ad74-a0f171073bd0@axentia.se>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 12:24 PM Piotr Stankiewicz
-<piotr.stankiewicz@intel.com> wrote:
->
-> Seeing as there is shorthand available to use when asking for any type
-> of interrupt, or any type of message signalled interrupt, leverage it.
+On 6/2/20 8:05 AM, Peter Rosin wrote:
+> On 2020-06-02 14:12, Quentin Strydom wrote:
+>> Change current bus commands to match the pca9541a datasheet
+>> (see table 12 on page 14 of
+>> https://www.nxp.com/docs/en/data-sheet/PCA9541A.pdf). Also
+>> where entries are marked as no change the current control
+>> command is repeated as the current master reading the
+>> control register has control of the bus and bus is on.
+>>
+>> Signed-off-by: Quentin Strydom <quentin.strydom@bluwireless.com>
+>> ---
+>>  drivers/i2c/muxes/i2c-mux-pca9541.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
+>> index 6a39ada..50808fa 100644
+>> --- a/drivers/i2c/muxes/i2c-mux-pca9541.c
+>> +++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
+>> @@ -211,7 +211,7 @@ static void pca9541_release_bus(struct i2c_client *client)
+>>  
+>>  /* Control commands per PCA9541 datasheet */
+>>  static const u8 pca9541_control[16] = {
+>> -	4, 0, 1, 5, 4, 4, 5, 5, 0, 0, 1, 1, 0, 4, 5, 1
+>> +	4, 4, 5, 5, 4, 4, 5, 7, 8, 0, 1, 11, 0, 0, 1, 1
+>>  };
+>>  
+>>  /*
+> 
+> I found all your mails from git send-email in my spam folder. They probably
+> lack some headers that have become increasingly important... [Don't ask me
+> for further details.]
+> 
+> I do not have the HW to test this. I'm only going by the datasheet.
+> 
+> But yes, pca9541_control[1] and [2] indeed seem exchanged with [13] and [14].
+> 
+> However, pca9541_control[5], [7], [8], and [11] are never used AFAICT.
+> Trying to write 7, 8 and 11 also attempts to write various read-only bits
+> and makes no sense. So, I'd skip those changes.
+> 
+> All that said, I'm a bit skeptic as to why this has worked at all if this
+> is incorrect. I would like to see a more detailed failure description that
+> could explain why this change is indeed "it".
+> 
 
->         irq_flag = PCI_IRQ_LEGACY;
->         if (ioa_cfg->ipr_chip->has_msi)
-> -               irq_flag |= PCI_IRQ_MSI | PCI_IRQ_MSIX;
-> +               irq_flag |= PCI_IRQ_MSI_TYPES;
+Good question. I had tested the code quite extensively. Maybe the failing cases
+did not apply to my situation. Too long to recall, unfortunately.
 
-Perhaps
-
-       if (ioa_cfg->ipr_chip->has_msi)
-               irq_flag = PCI_IRQ_ALL_TYPES;
-       else
-               irq_flag = PCI_IRQ_LEGACY;
-
-?
-
->         rc = pci_alloc_irq_vectors(pdev, 1, ipr_number_of_msix, irq_flag);
->         if (rc < 0) {
->                 ipr_wait_for_pci_err_recovery(ioa_cfg);
-> diff --git a/drivers/scsi/vmw_pvscsi.c b/drivers/scsi/vmw_pvscsi.c
-> index c3f010df641e..825b7db9c713 100644
-> --- a/drivers/scsi/vmw_pvscsi.c
-> +++ b/drivers/scsi/vmw_pvscsi.c
-> @@ -1347,7 +1347,7 @@ static u32 pvscsi_get_max_targets(struct pvscsi_adapter *adapter)
->
->  static int pvscsi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
-> -       unsigned int irq_flag = PCI_IRQ_MSIX | PCI_IRQ_MSI | PCI_IRQ_LEGACY;
-> +       unsigned int irq_flag = PCI_IRQ_ALL_TYPES;
->         struct pvscsi_adapter *adapter;
->         struct pvscsi_adapter adapter_temp;
->         struct Scsi_Host *host = NULL;
-> --
-> 2.17.2
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Guenter
