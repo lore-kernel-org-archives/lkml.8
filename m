@@ -2,126 +2,74 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F045720734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:39:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ajoYi9Pb"
+	by mail.kernel.org (Postfix) with ESMTP id 31F202074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgFBSjQ (ORCPT
+        id S1727776AbgFBSlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:39:16 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33058 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgFBSjP (ORCPT
+        Tue, 2 Jun 2020 14:41:16 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:29081 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbgFBSlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:39:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052IWQaw023483;
-        Tue, 2 Jun 2020 18:39:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=xtfXkYTOk8D7WL7U+lHQ9ITr5AwuMgBCV1KLh2eKvPQ=;
- b=ajoYi9Pb635zGxmx5JfLm/UDp3nYiRhRDzWUvYeKfgRoDz2vjc13BnoCNQarr2zn+qIY
- S/jxiz+0DR6JLp6pQznnv54mibGN/TjK3fPm/Bn1ho54HsxEbMQv78THZ5GE5THbeV0A
- J22418WCD2HXW3TkkKe1ufOTIZvnHUlxY0k5dT6L3blh2ouJYWJjgB2WTkcw1WBZtRzX
- C13B2svLq2Cdj9Bd4hJMFIEfqDoAp7n22C78KNER9wn1R4EWhBSEdG98463TbNA7qTj+
- HvRUx9ZU8fqQQaWZ3KmMECLIQqfsEE27pl0/7KGtwT37AWecl1R5cFMGGq3NnmW33A2h sg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31bfem5gk3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 18:39:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052IXwVs106339;
-        Tue, 2 Jun 2020 18:39:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31c25pq0hu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 18:39:05 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052Id4F9006513;
-        Tue, 2 Jun 2020 18:39:04 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 11:39:04 -0700
-Date:   Tue, 2 Jun 2020 21:38:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dennis Dalessandro <dennis.dalessandro@intel.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>, mike.marciniszyn@intel.com,
-        dledford@redhat.com, jgg@ziepe.ca, sadanand.warrier@intel.com,
-        grzegorz.andrejczuk@intel.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] IB/hfi1: Use free_netdev() in hfi1_netdev_free()
-Message-ID: <20200602183856.GY22511@kadam>
-References: <20200601135644.GD4872@ziepe.ca>
- <20200602061635.31224-1-yuehaibing@huawei.com>
- <75257c20-3cf2-7ecc-0d66-e1f4155ba105@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <75257c20-3cf2-7ecc-0d66-e1f4155ba105@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020134
+        Tue, 2 Jun 2020 14:41:16 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jun 2020 00:10:24 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 03 Jun 2020 00:10:01 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 0FA102A8B; Wed,  3 Jun 2020 00:10:00 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>, rafael@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH] driver core:Export the symbol device_is_bound
+Date:   Wed,  3 Jun 2020 00:09:52 +0530
+Message-Id: <1591123192-565-1-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 11:30:13AM -0400, Dennis Dalessandro wrote:
-> On 6/2/2020 2:16 AM, YueHaibing wrote:
-> > dummy_netdev shold be freed by free_netdev() instead of
-> > kfree(). Also remove unneeded variable 'priv'
-> > 
-> > Fixes: 4730f4a6c6b2 ("IB/hfi1: Activate the dummy netdev")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
-> >   drivers/infiniband/hw/hfi1/netdev_rx.c | 5 +----
-> >   1 file changed, 1 insertion(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/infiniband/hw/hfi1/netdev_rx.c b/drivers/infiniband/hw/hfi1/netdev_rx.c
-> > index 58af6a454761..63688e85e8da 100644
-> > --- a/drivers/infiniband/hw/hfi1/netdev_rx.c
-> > +++ b/drivers/infiniband/hw/hfi1/netdev_rx.c
-> > @@ -371,12 +371,9 @@ int hfi1_netdev_alloc(struct hfi1_devdata *dd)
-> >   void hfi1_netdev_free(struct hfi1_devdata *dd)
-> >   {
-> > -	struct hfi1_netdev_priv *priv;
-> > -
-> >   	if (dd->dummy_netdev) {
-> > -		priv = hfi1_netdev_priv(dd->dummy_netdev);
-> >   		dd_dev_info(dd, "hfi1 netdev freed\n");
-> > -		kfree(dd->dummy_netdev);
-> > +		free_netdev(dd->dummy_netdev);
-> >   		dd->dummy_netdev = NULL;
-> >   	}
-> >   }
-> > 
-> 
-> For the kfree->free_netdev, you probably want to add:
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Export the symbol device_is_bound so that it can be used by the modules.
+This change was suggested to solve the allmodconfig build error on adding
+the patch https://lore.kernel.org/patchwork/patch/1218628/
 
-YueHaibing wasn't on the CC list when I sent forwarded that kbuild bot
-email.  Forget about it.  Let's just apply this.
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ drivers/base/dd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-regards,
-dan carpenter
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 9a1d940..65d16ce 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -337,6 +337,7 @@ bool device_is_bound(struct device *dev)
+ {
+ 	return dev->p && klist_node_attached(&dev->p->knode_driver);
+ }
++EXPORT_SYMBOL_GPL(device_is_bound);
+ 
+ static void driver_bound(struct device *dev)
+ {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
