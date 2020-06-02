@@ -2,132 +2,180 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE221C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C806F20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB1720679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uzsmwn7Y"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A/Y2Naud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFBMke (ORCPT
+        id S1727795AbgFBMlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:40:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49210 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMkd (ORCPT
+        Tue, 2 Jun 2020 08:41:06 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44030 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBMlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:40:33 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052CcSIv001774;
-        Tue, 2 Jun 2020 12:39:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=+hHvUJaPYzsi+fcWNIuGDxfwGDP2NYDK2A8UukYwLsg=;
- b=uzsmwn7YqvyQ9EzQ2iEowprkxDu+h0QW+mTPgk/n+d/ws9CfK8jJe+OY/4p6ntObBilj
- Kv7SKNlgcxGB8BeOHAZd2jNNlIqiMWeq7PcQmXHQF2g8q2aeNA5c4dTwRuZVp4C/jPEd
- X1cyqsLoNmwDPfRnKVBIteRPu48AmNrF85QWtYyUXn7yrtPXMy5CnonvcdgjUcTv/TC/
- 2R4LVXu55RXdqwP19B4SBQlT3S36d12TbEkA7ciWxs38ebbE2NiXIWKwYbVJyztFsrgB
- Qs2gdYJdTsALUuy+0NSoRBmnd8Gsn+QhsBfaVTn8Q407dniu+dRSdbGpQkMUbyTEFKr+ 5g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31dkruguax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 12:39:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052CcLPP008707;
-        Tue, 2 Jun 2020 12:39:42 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31dju1bseu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 12:39:42 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052Cdflg021562;
-        Tue, 2 Jun 2020 12:39:41 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 05:39:40 -0700
-Date:   Tue, 2 Jun 2020 15:39:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        devel@driverdev.osuosl.org, alsa-devel@alsa-project.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
-Subject: Re: [RESEND PATCH v1 4/6] staging: greybus: audio: Resolve
- compilation error in topology parser
-Message-ID: <20200602123930.GG30374@kadam>
-References: <cover.1591040859.git.vaibhav.sr@gmail.com>
- <6131fec4cf9e18dbf70fa7f992de9d588299ee18.1591040859.git.vaibhav.sr@gmail.com>
+        Tue, 2 Jun 2020 08:41:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052Cf3RM120100;
+        Tue, 2 Jun 2020 07:41:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591101663;
+        bh=wRmRkSXnt3fLQN56wOzLfHTAJ2PNWfgj+9sS12W0rio=;
+        h=From:To:CC:Subject:Date;
+        b=A/Y2NaudgDJa6Otq13YP9xh08d4OzBgxMQLCjhbboRulPbR0F7pYNXEtUzRmXobVv
+         lHVTrP6+7p8VE58Vr6Cd9EGYU/cWWLbR1K9nuLsZwnMWJfPejNAGDwp0KBntem1gFh
+         ++oH5rF5x1FrxUnhyA0Ezn1mpIpdpj0i4fHuh3tY=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052Cf3H2010020
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 07:41:03 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 07:41:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 07:41:03 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052Cf0v7045240;
+        Tue, 2 Jun 2020 07:41:01 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <balbi@kernel.org>
+CC:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] dt-bindings: usb: ti,keystone-dwc3.yaml: Improve schema
+Date:   Tue, 2 Jun 2020 15:40:55 +0300
+Message-ID: <20200602124055.1680-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6131fec4cf9e18dbf70fa7f992de9d588299ee18.1591040859.git.vaibhav.sr@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020089
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020089
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 10:51:13AM +0530, Vaibhav Agarwal wrote:
-> Fix compilation errors for GB Audio topology parser code with recent
-> kernel versions.
-> 
-> Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
-> ---
->  drivers/staging/greybus/audio_topology.c | 130 +++++++++++------------
->  1 file changed, 61 insertions(+), 69 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/audio_topology.c b/drivers/staging/greybus/audio_topology.c
-> index 4ac30accf226..7d5e87341a5c 100644
-> --- a/drivers/staging/greybus/audio_topology.c
-> +++ b/drivers/staging/greybus/audio_topology.c
-> @@ -5,8 +5,8 @@
->   * Copyright 2015-2016 Linaro Ltd.
->   */
->  
-> +#include <linux/greybus.h>
->  #include "audio_codec.h"
-> -#include "greybus_protocols.h"
->  
->  #define GBAUDIO_INVALID_ID	0xFF
->  
-> @@ -165,15 +165,15 @@ static int gbcodec_mixer_ctl_info(struct snd_kcontrol *kcontrol,
->  	struct gbaudio_ctl_pvt *data;
->  	struct gb_audio_ctl_elem_info *info;
->  	struct gbaudio_module_info *module;
-> -	struct snd_soc_codec *codec = snd_kcontrol_chip(kcontrol);
-> -	struct gbaudio_codec_info *gbcodec = snd_soc_codec_get_drvdata(codec);
-> +	struct snd_soc_component *comp = snd_soc_kcontrol_component(kcontrol);
-> +	struct gbaudio_codec_info *gb = snd_soc_component_get_drvdata(comp);
+There were some review comments after the patch was integrated.
+Address those.
 
-Please rename "gbcodec" in a different patch.  It's not related to
-fixing the compile.
+Fixes: 1883a934e156 ("dt-bindings: usb: convert keystone-usb.txt to YAML")
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ .../bindings/usb/ti,keystone-dwc3.yaml        | 47 ++++++++++++++-----
+ 1 file changed, 35 insertions(+), 12 deletions(-)
 
-Otherwise it seems okay.
-
-regards,
-dan carpenter
+diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+index f127535feb0b..017c5883184b 100644
+--- a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+@@ -11,30 +11,44 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    oneOf:
+-      - const: "ti,keystone-dwc3"
+-      - const: "ti,am654-dwc3"
++    items:
++      - enum:
++        - "ti,keystone-dwc3"
++        - "ti,am654-dwc3"
+ 
+   reg:
+     maxItems: 1
+-    description: Address and length of the register set for the USB subsystem on
+-      the SOC.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
++  ranges: true
+ 
+   interrupts:
+     maxItems: 1
+-    description: The irq number of this device that is used to interrupt the MPU.
+-
+ 
+   clocks:
++    $ref: /schemas/types.yaml#definitions/phandle-array
+     description: Clock ID for USB functional clock.
+ 
++  assigned-clocks:
++    $ref: /schemas/types.yaml#definitions/phandle-array
++
++  assigned-clock-parents:
++    $ref: /schemas/types.yaml#definitions/phandle-array
++
+   power-domains:
++    $ref: /schemas/types.yaml#definitions/phandle-array
+     description: Should contain a phandle to a PM domain provider node
+       and an args specifier containing the USB device id
+       value. This property is as per the binding,
+       Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+ 
+   phys:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
+     description:
+       PHY specifier for the USB3.0 PHY. Some SoCs need the USB3.0 PHY
+       to be turned on before the controller.
+@@ -44,31 +58,40 @@ properties:
+     items:
+       - const: "usb3-phy"
+ 
+-  dwc3:
++  dma-coherent: true
++
++  dma-ranges: true
++
++patternProperties:
++  "usb@[a-f0-9]+$":
++    type: object
+     description: This is the node representing the DWC3 controller instance
+       Documentation/devicetree/bindings/usb/dwc3.txt
+ 
+ required:
+   - compatible
+   - reg
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
+   - interrupts
+-  - clocks
++
++additionalProperties: false
+ 
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+-    usb: usb@2680000 {
++    dwc3@2680000 {
+       compatible = "ti,keystone-dwc3";
+       #address-cells = <1>;
+       #size-cells = <1>;
+       reg = <0x2680000 0x10000>;
+       clocks = <&clkusb>;
+-      clock-names = "usb";
+       interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+       ranges;
+ 
+-      dwc3@2690000 {
++      usb@2690000 {
+         compatible = "synopsys,dwc3";
+         reg = <0x2690000 0x70000>;
+         interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
