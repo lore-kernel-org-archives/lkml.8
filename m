@@ -2,134 +2,194 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA09C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D61C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B562B20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LBvGdoic"
+	by mail.kernel.org (Postfix) with ESMTP id 74E0D206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgFBKCg (ORCPT
+        id S1726664AbgFBKFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:02:36 -0400
-Received: from mout.web.de ([212.227.15.4]:47363 "EHLO mout.web.de"
+        Tue, 2 Jun 2020 06:05:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46340 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgFBKCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:02:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591092134;
-        bh=3IzxUgNdJqDtMT284kywz4PTnxLpR3qj0dP5COJ8p3M=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=LBvGdoiclMqYSbd0iidO/ny+Z1FAASaN8ksjajxIPSYSYzfbOebJ+qdwcbRZEfHwu
-         pj0AKIXivJed8PV8atcWWK8PJR7o9ENjZexizhgaaJXwUayOj9i31rQyPdw1dMnb5Z
-         o8CCpNgXEzVbcJqPUjsoO4xZVsfvNaikxusrWL8s=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LbIyo-1jHQ681PcQ-00kzTE; Tue, 02
- Jun 2020 12:02:14 +0200
-Subject: Re: [PATCH] spi: spi-ti-qspi: call pm_runtime_put on pm_runtime_get
- failure
-To:     Mark Brown <broonie@kernel.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-spi@vger.kernel.org
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <26028f50-3fb8-eb08-3c9f-08ada018bf9e@web.de>
- <20200602094947.GA5684@sirena.org.uk>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1c13e0ec-e50f-9eea-5704-052d2d682727@web.de>
-Date:   Tue, 2 Jun 2020 12:02:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726012AbgFBKFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:05:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8F90EAD12;
+        Tue,  2 Jun 2020 10:05:25 +0000 (UTC)
+Message-ID: <7cbe4da8ba4a1524824473f8c58720f412a00fc2.camel@suse.de>
+Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 02 Jun 2020 12:05:20 +0200
+In-Reply-To: <20200505161318.26200-5-nsaenzjulienne@suse.de>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+         <20200505161318.26200-5-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ePWuOhLXkyI0rM3f0PjZ"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-In-Reply-To: <20200602094947.GA5684@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:HiSDV4/F2kGhz1vIqbnI8nWDfCAGCgsOoUmX5rtXkMFwVVelqEy
- vLpC/T3UEhcUax28+MdhtD9GAzNt56SkLMj2CFR52xaBccuPrA3HuCU1bzFwtTTe2hwTs0q
- YHP6mEICcrA/IVWBtDdaGliXxQsyRsB23kON5PeIvsT9PE54qxmO40wETL9qY8T7g8irPt1
- F3gkQrsn8ubzkCVMp+HfQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MgVfIqHtbaA=:JOgyj7OyHDXORjkVcmfBKO
- xbnLp8Jgjkm2HJyucofL/Wqj7TMiznmxSrofyRePWAXSm6tQ8ifEELOvc+KHfcEl/p+rf68S1
- kVp8QVM30LNQXM1wvhRWH6lMkiN8v33YsZp4TmKY1GLOke3ERFp+fv5qMYuH3KIpIO5ZcMiep
- FjeQDuEKYb9aHUWRDps2S+4l9u/YzZyeOiaXDTCxeKMGGdMvV4/e2zDj66VAxp+D2TEM45RQf
- WYDlFLfgv/9Hr0r6sOTf9gcvzcOpkenr08hsCfWCXQml950y22ehX8azpTBuJaKugr+p1ARl9
- Y+3aDwGZPZffs+bCDytrtGgtYyl1WnMa5Q1Z+E7g4o8tBqgdy0sNcBd9j9OA1eCi2NIR2wy2D
- LQ3bgP54mZxTBk5jm5eexxm06DuQucHa5mFlhh1OptXO5naGNhez2BzdjiFGnqkg+BI056i1Z
- 80kv8rKuYJMKd7hukegVPOI8zdfQH1fj1CIzn3hI35ws5wzzm9D8FbVd+r7qX8y6rntxK3CFd
- vBDZMhSAwJlIFCVZC2X3imZRV9XEYuH8E3x/GXAXfGSwjjqCnL9x83Chv0wGZMzKRTokT3RJ3
- llgEfZhsMlAoEnLTdSvIo4JE85Zum+81782EhyCCi606Zw3E2NJ5hX9Tnryh0O0CxisYkNRNP
- g5ssqNJ8CqGahxfv2FFrCLKneCo17PzxLj/k2bVmUPyTSrdpoj7ggKHXHjC3m3i9QpKEZ1H5O
- MhOFnPf3qk64N8Jb4SYz4psD0WPjXvX3/qUdb/7tldRid6kBNCCGSh1jPTtgZgoUWPOOT6wyT
- vllS58xGOz36kUPDRCaB3KKfbMZ0HAbVW+3OQQwmUErFbxVUsX4DW7Tn3vQO5lXadHx4z0XZe
- KN4EoY5JIIRsBLiQkyoaI0IJhXIk1wHlUtyLCnoHOom3l341HOOXaqid28hd9Hj/YSyQ742Nj
- 4LLzZ3x5Hg55gPFTJHaKzKwfKSCyumwKF2aPrbDJ189zAsNCYRhRaKF/veiyY0ZRzblpjgnup
- 0sqSm+hrDrNviM82pliunIeFp+Vs8t6Og1xdw9jijK11LS7/TTSHcCT4BL65bEn7VcnZwQjS3
- vHsRaK38jCxrKx9QPOyQJffhcoorpwdkEjrKt+A88+3vonyAFphwSmvvEdz214kgrtviwMQZ4
- PEfT0dVwC7RYEF6mqME8BlEOZZLktR8KqlbEEhgRnnw8ti5JLDq2qbqpsTXGyt+6dzK5+o55T
- RxZbGc9ecLGwgeErw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The original changelog is perfectly fine, please stop sending these.
 
-I find this commit message improvable also according to Linux software
-development documentation.
+--=-ePWuOhLXkyI0rM3f0PjZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2020-05-05 at 18:13 +0200, Nicolas Saenz Julienne wrote:
+> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+> loaded directly from an EEPROM or, if not present, by the SoC's
+> VideoCore. Inform VideoCore that VL805 was just reset.
+>=20
+> Also, as this creates a dependency between USB_PCI and VideoCore's
+> firmware interface, and since USB_PCI can't be set as a module neither
+> this can. Reflect that on the firmware interface Kconfg.
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+
+It was pointed out to me on the u-boot mailing lists that all this could be
+implemented trough a reset controller. In other words have xhci get the res=
+et
+controller trough device-tree, assert it, ultamately causing the firmware
+routine to be run.
+
+As much as it pains me to go over stuff that's already 'fixed', it seems to=
+ me
+it's a better solution. On one hand we get over the device-tree dependency =
+mess
+(see patch #3), and on the other we transform a pci-quirk into something le=
+ss
+hacky.
+
+That said, before getting my hands dirty, I was wondering if there is any
+obvious reasons why I shouldn't do this, note that:
+
+- We're talking here of a PCIe XCHI device, maybe there's an issue integrat=
+ing
+  it with DT, given the fact that, as of today, it's not really represented
+  there.
+
+- There is no reset controller support in xhci-pci, maybe there are good
+  reasons why. For instance, it's not something that's reflected in any way=
+ in
+  the spec.
 
 Regards,
-Markus
+Nicolas
+
+>=20
+> Changes since v5:
+>  - Fix Kconfig issue with allmodconfig
+>=20
+> Changes since v4:
+>  - Do not split up error message
+>=20
+> Changes since v3:
+>  - Add more complete error message
+>=20
+> Changes since v1:
+>  - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
+>    gets compiled when needed.
+>=20
+>  drivers/firmware/Kconfig      |  3 ++-
+>  drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
+>  2 files changed, 18 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index 8007d4aa76dc..b42140cff8ac 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -178,8 +178,9 @@ config ISCSI_IBFT
+>  	  Otherwise, say N.
+> =20
+>  config RASPBERRYPI_FIRMWARE
+> -	tristate "Raspberry Pi Firmware Driver"
+> +	bool "Raspberry Pi Firmware Driver"
+>  	depends on BCM2835_MBOX
+> +	default USB_PCI
+>  	help
+>  	  This option enables support for communicating with the firmware on th=
+e
+>  	  Raspberry Pi.
+> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.=
+c
+> index 92150ecdb036..0b949acfa258 100644
+> --- a/drivers/usb/host/pci-quirks.c
+> +++ b/drivers/usb/host/pci-quirks.c
+> @@ -16,6 +16,9 @@
+>  #include <linux/export.h>
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+> +
+> +#include <soc/bcm2835/raspberrypi-firmware.h>
+> +
+>  #include "pci-quirks.h"
+>  #include "xhci-ext-caps.h"
+> =20
+> @@ -1243,11 +1246,24 @@ static void quirk_usb_handoff_xhci(struct pci_dev
+> *pdev)
+> =20
+>  static void quirk_usb_early_handoff(struct pci_dev *pdev)
+>  {
+> +	int ret;
+> +
+>  	/* Skip Netlogic mips SoC's internal PCI USB controller.
+>  	 * This device does not need/support EHCI/OHCI handoff
+>  	 */
+>  	if (pdev->vendor =3D=3D 0x184e)	/* vendor Netlogic */
+>  		return;
+> +
+> +	if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=3D 0x3483=
+) {
+> +		ret =3D rpi_firmware_init_vl805(pdev);
+> +		if (ret) {
+> +			/* Firmware might be outdated, or something failed */
+> +			dev_warn(&pdev->dev,
+> +				 "Failed to load VL805's firmware: %d. Will
+> continue to attempt to work, but bad things might happen. You should fix
+> this...\n",
+> +				 ret);
+> +		}
+> +	}
+> +
+>  	if (pdev->class !=3D PCI_CLASS_SERIAL_USB_UHCI &&
+>  			pdev->class !=3D PCI_CLASS_SERIAL_USB_OHCI &&
+>  			pdev->class !=3D PCI_CLASS_SERIAL_USB_EHCI &&
+
+
+--=-ePWuOhLXkyI0rM3f0PjZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7WJGAACgkQlfZmHno8
+x/6SjQf/Qywc5xMG/WfuS5YbTgjiJzIg9nJVk2umtOVQOaE6cXK6I2HUcLXKSphG
+ZAIxOSd8yG38RZGU/E/XCiWpYe0uEjJYnR4gKLF4/QsTwWKvjXvksXvcZYD/d4/U
+JJeFUPeutvO90Q3WSiUowjt0/uEaH8PDdYSvPfqe/DZt6loaIHXJXhv8M1e/R8a8
+Jatksa8pTD5uVBYYJFgY83Mrwd/SJ8/LthiE5FCHc1z1L3sbaChf+26xKtvn3iHU
+j1taE9o84y6m2IqDVDLZVeU2yuYt/VPOsnA5JarsZX/y1HoFg9OdoJL7GTazUefj
+q6BBn3BmYTUIQvDBgXg/JY1MYyNoEA==
+=5e/e
+-----END PGP SIGNATURE-----
+
+--=-ePWuOhLXkyI0rM3f0PjZ--
+
