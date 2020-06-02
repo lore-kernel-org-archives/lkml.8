@@ -2,144 +2,195 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C076C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C72C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4EA2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B857206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bsFkyKFB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v6HbjXlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgFBGt6 (ORCPT
+        id S1726243AbgFBGuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:49:58 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42307 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725995AbgFBGt4 (ORCPT
+        Tue, 2 Jun 2020 02:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgFBGuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:49:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591080594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bu0T+XX3zpxmrtUQpa6bWw9hSGRZ91a0waCrW1m0YCc=;
-        b=bsFkyKFBFSxbOpAducEx1DO0Ob4weE+BOg+TOShFt0uNu+B2AQ0D1RV+lrNlkZLNlauvxf
-        7fbdDv36Gi5zU/HLktPlVco87/m+WKR2ocQ3xLGW8W1EWxdCld5GdYBkP8PNIXJDHnJeRg
-        Dt1PoYin6k27tylZIzbRFI0o5xY3Xlg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-6RfTK8paN_-AGPhOM4Y3IA-1; Tue, 02 Jun 2020 02:49:51 -0400
-X-MC-Unique: 6RfTK8paN_-AGPhOM4Y3IA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85DC064AD8;
-        Tue,  2 Jun 2020 06:49:49 +0000 (UTC)
-Received: from [10.72.12.102] (ovpn-12-102.pek2.redhat.com [10.72.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 27A4F5C1D6;
-        Tue,  2 Jun 2020 06:49:40 +0000 (UTC)
-Subject: Re: [PATCH 4/6] vhost_vdpa: support doorbell mapping via mmap
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com
-References: <20200529080303.15449-5-jasowang@redhat.com>
- <202006020308.kLXTHt4n%lkp@intel.com>
- <20200602005007-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <bd7dde11-b726-ee08-4e80-71fb784fa549@redhat.com>
-Date:   Tue, 2 Jun 2020 14:49:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 02:50:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08AF5C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 23:50:37 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s1so11221300ljo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 23:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7Wo7fT19tXyFFYyKiTjQy59VceiF2uEuq4cijfOLwUI=;
+        b=v6HbjXlC9ACLtEvChrpt07F5wUIMbtYke18tLj+orBAtNKu8USAaquH/F/6ekNBB2S
+         V26ZHcNrdOHLPESB1/b1jLtutPBKWANurqW6K2seSGzH735tuIswhGyoeyk64h9GEhNA
+         iqOeYj9qNFbwzzTo92DP81rS4uTPJ11WKsL3lr9JPgmfcEztV9G/EC8ICl+oSdPT/GUA
+         4hs8dpSia/CV0d0gUMkCA4ViWUrPXyOIDqcBF9f8Nv+K6ytdXf4kK/pzD1oRHlpU1ye0
+         V/D3YRtlCvUDVShtAzS9GXgX0wQOUZqJceK6BlFkzVXQf0tHFtsX5Bo4FkT1NaKFJA+r
+         KDxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7Wo7fT19tXyFFYyKiTjQy59VceiF2uEuq4cijfOLwUI=;
+        b=jasKQb3ayGeOkpoEETsBspxQRAq6indCo0K57ZPFlV+NVp3gB5nBvewEDaWIwkP1qJ
+         BCY2ruIjqQFUCNCTbAf+B9evrXzinfzpOG0A3jM1Irj+hL8zqJUFlB8aOQbP7BkLIDLN
+         pGTax2BIvp7BWQLQk9jl89ji0DSJNArssIA8NgUtFUCGoqOOQa27UifD/bXeidmJzDT8
+         hDBnJwIkmleHGdhjVG0ogpzzzp/9OXECK1WQ1BHFpvAa5MAmW3oxdGVE/HFjoVfjr/Rw
+         yo6W7ph9tRbAKVf3eVy4m6y9EmL84anqUDLtF7Cx5ZdOf8ZQ5nYpYT+LWWilnIqWf790
+         wGuQ==
+X-Gm-Message-State: AOAM531FpzJQYEQajwr0fqQLJeGQNXwTKTIubvUjjTsCUmHsasDZRjtl
+        /mOPVDmI8QBuYLVYvHG2CExyJ/QoesISK0Gkwztjpg==
+X-Google-Smtp-Source: ABdhPJzUAYGiV7DKMjwbpS0prtxHtSvjG7yx11ItYL2IcE/iv4zlYWKgRA/5cWmCrIemKGgRUq7C8CoH0P5tax8hbvs=
+X-Received: by 2002:a2e:9a4f:: with SMTP id k15mr9093168ljj.55.1591080635263;
+ Mon, 01 Jun 2020 23:50:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200602005007-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200601174037.904070960@linuxfoundation.org>
+In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 2 Jun 2020 12:20:23 +0530
+Message-ID: <CA+G9fYvG6oy-KRj42-EaRK841od=4W8qrVpkoYEpS7fTT5Sh5A@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/142] 5.4.44-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/6/2 下午12:56, Michael S. Tsirkin wrote:
-> On Tue, Jun 02, 2020 at 03:22:49AM +0800, kbuild test robot wrote:
->> Hi Jason,
->>
->> I love your patch! Yet something to improve:
->>
->> [auto build test ERROR on vhost/linux-next]
->> [also build test ERROR on linus/master v5.7 next-20200529]
->> [if your patch is applied to the wrong git tree, please drop us a note to help
->> improve the system. BTW, we also suggest to use '--base' option to specify the
->> base tree in git format-patch, please seehttps://stackoverflow.com/a/37406982]
->>
->> url:https://github.com/0day-ci/linux/commits/Jason-Wang/vDPA-doorbell-mapping/20200531-070834
->> base:https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git  linux-next
->> config: m68k-randconfig-r011-20200601 (attached as .config)
->> compiler: m68k-linux-gcc (GCC) 9.3.0
->> reproduce (this is a W=1 build):
->>          wgethttps://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross  -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # save the attached .config to linux build tree
->>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kbuild test robot<lkp@intel.com>
->>
->> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>
->> drivers/vhost/vdpa.c: In function 'vhost_vdpa_fault':
->>>> drivers/vhost/vdpa.c:754:22: error: implicit declaration of function 'pgprot_noncached' [-Werror=implicit-function-declaration]
->> 754 |  vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
->> |                      ^~~~~~~~~~~~~~~~
->>>> drivers/vhost/vdpa.c:754:22: error: incompatible types when assigning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
->> cc1: some warnings being treated as errors
->>
->> vim +/pgprot_noncached +754 drivers/vhost/vdpa.c
->>
->>     742	
->>     743	static vm_fault_t vhost_vdpa_fault(struct vm_fault *vmf)
->>     744	{
->>     745		struct vhost_vdpa *v = vmf->vma->vm_file->private_data;
->>     746		struct vdpa_device *vdpa = v->vdpa;
->>     747		const struct vdpa_config_ops *ops = vdpa->config;
->>     748		struct vdpa_notification_area notify;
->>     749		struct vm_area_struct *vma = vmf->vma;
->>     750		u16 index = vma->vm_pgoff;
->>     751	
->>     752		notify = ops->get_vq_notification(vdpa, index);
->>     753	
->>   > 754		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
->>     755		if (remap_pfn_range(vma, vmf->address & PAGE_MASK,
->>     756				    notify.addr >> PAGE_SHIFT, PAGE_SIZE,
->>     757				    vma->vm_page_prot))
->>     758			return VM_FAULT_SIGBUS;
->>     759	
->>     760		return VM_FAULT_NOPAGE;
->>     761	}
->>     762	
-> Yes well, all this remapping clearly has no chance to work
-> on systems without CONFIG_MMU.
-
-
-It looks to me mmap can work according to Documentation/nommu-mmap.txt. 
-But I'm not sure it's worth to bother.
-
-Thanks
-
-
+On Mon, 1 Jun 2020 at 23:36, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
+> This is the start of the stable review cycle for the 5.4.44 release.
+> There are 142 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
+> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
+> Anything received after that time might be too late.
 >
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.44-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.44-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 1fd4226c4fe1a358bb8277e25ebb03950180443a
+git describe: v5.4.43-143-g1fd4226c4fe1
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.43-143-g1fd4226c4fe1
+
+No regressions (compared to build v5.4.43)
+
+No fixes (compared to build v5.4.43)
+
+Ran 31360 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* libgpiod
+* linux-log-parser
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* perf
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
