@@ -2,111 +2,148 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8450C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78206C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA7C205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F5C2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:11:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxq8lSQD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QXlPBnFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgFBMKz (ORCPT
+        id S1728103AbgFBMLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37650 "EHLO
+        Tue, 2 Jun 2020 08:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgFBMKw (ORCPT
+        with ESMTP id S1728066AbgFBMK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:10:52 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43F4C061A0E;
-        Tue,  2 Jun 2020 05:10:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id d6so1355402pjs.3;
-        Tue, 02 Jun 2020 05:10:52 -0700 (PDT)
+        Tue, 2 Jun 2020 08:10:58 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620AFC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:10:57 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id o7so6245009oti.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V2uYDYvTpzXxeNKnkNIGug7/bVN4wAJFHdUKLy8MXAI=;
-        b=bxq8lSQDgv9sZxmAbZ7U5hT5hFMuKvlqToqx1TuKlgJlOeIRJw81/iU7O9dKPwZFpy
-         pgiq/pNNUMbLNYh/pil/gjX8cRu7Sj4OiUC2NsqIaXsXlWKywhdVkAF9L9dLBxohZhPr
-         fgAWQhh4vkCqjM/SiS0TULA+PQbNTltv1AsDrRH1PxBlibLGTXImuZEaJ/mWkYPpkJ0y
-         BxZG6LC3bK6RBdrPGTIGDq2jwEa3UuDkR4Xa1KbvB+7WA940FxeLYUZ6kqf+A6mgeun9
-         FKL4gjXWlyXT0dspCK0cI6enUTf2761NoQoIiZkZvqyZbkO15K+ltjJaLsETjT4AI8De
-         fuMw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1qFYBco/WCH7tu9DLPtQEulTnbFYvq9GbR7jnbTNciQ=;
+        b=QXlPBnFIATOuHoCuZffqqkhWQyhwogDi3hK37VEbuIWcZCRkn1jkcLPsX5wXWkNAMg
+         DwsWmWeTpCpsl/wDQajbwiTiTCODFZRP9zUH7Aot6d32b9wZMnfawyid+Kq3orBDe1vD
+         z28Yxt/NZlDIWYp5UJERfW2PXXDaZnD6COOiNSCNDpIQiQ6ZKTgRsKIn+iAc+rux+zbp
+         R+UNGt7nW0q7w9voZl/w7LKVblfC89wUzemupYKOukEZx8hG7v3J+qqFBF4kYanotPRy
+         +FzqZ1eY6ZxoVV8402fU3Vp5Ejc5GNLjinwqYFNS1+zS0JQxPxCHNSF7XZyVJz40N4Jr
+         6EZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V2uYDYvTpzXxeNKnkNIGug7/bVN4wAJFHdUKLy8MXAI=;
-        b=CpH5D9XAZ8HLNOZcH0vfoiFwJdamKrEas7+ziXMw73cMf30YtvJRzHcBv57CfNASW1
-         Mt9rSkzGxPoAqL4QDP5jNrJ1J00swHBzGBnjAwG9UglNyQJdBcRZTXKDtXw9M3AYouE4
-         7eDapfqL1WkrpjwfegIS3bygjesqciXI+OffTVjFL1sRKG0574AF8K6h29R30Wy0DBon
-         Hw6lm6EReXCjcg8Ub+1+wXR7srhkKRThMEwO5lP+WHquFoexWoQxhwsSKWeRrmVKFmug
-         MbwntV7teWeJwS469PR/TqtfwfjBTiwQpCH/c1K+skAj/9Wm0InIrcXzEsFasRXgnTYA
-         +DZA==
-X-Gm-Message-State: AOAM5330s2HNmxA2ntwGfNm6lY6NanZNwzIP6y1dV9rQ3MQ1U3BJeN/U
-        VqL8sdwp+rxkHHHnU/Mf5lI=
-X-Google-Smtp-Source: ABdhPJx46iaVyx2eA6jh47ZPFsD1wXypPfLo23GddEVedhkpkikkHdNx1jPvw5UoAukM2pzSgqHqWw==
-X-Received: by 2002:a17:90b:23c8:: with SMTP id md8mr5464609pjb.72.1591099852280;
-        Tue, 02 Jun 2020 05:10:52 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id x2sm2271776pfj.142.2020.06.02.05.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:10:51 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Tue, 2 Jun 2020 21:10:49 +0900
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v6 03/14] videobuf2: handle V4L2 buffer cache flags
-Message-ID: <20200602121049.GB617@jagdpanzerIV.localdomain>
-References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
- <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
- <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
- <20200602101834.GA617@jagdpanzerIV.localdomain>
- <9ec2618b-0cce-b00e-08cf-b579d9aa1d5d@xs4all.nl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1qFYBco/WCH7tu9DLPtQEulTnbFYvq9GbR7jnbTNciQ=;
+        b=Eodf60l/2exfEh117l22+uneRuV7bBv/kevKcFMBX6W2/T25o36DnNd273u/xAeDgp
+         z2uO7MlAC6kfWqpt+PfRwfJLvSX/N4Eh0HJzpvj1Gcvttl228r55p6wQsBmH1onZ2hMK
+         sKed9COoJIOlpUkyvCIMVW33VRM8aJG3eomcBzYeAQjwXwnBdP33dXAKqKaB8jXJd6X8
+         9F/t6FQTkbJZYbg1A57/FPgFyD6j6i/rND5HvqZ6N0aJjObXIKwWm59HqussNYdBxSfW
+         rm8aHG8tPzmxmq8hkDFc7vJlch9oNqh4bxlbQiVWzXg+hm5FR5sc3Ng11cCWQPS1drBz
+         6pcg==
+X-Gm-Message-State: AOAM5321fbTrAiQkcI01WJRhe1uuh2qORWG/Ei0U8ZgbZ8D87NwZqEug
+        hvR2JB8AMtC0PpxEDOIUBqUHVlonOxxeq4iT0wTo4g==
+X-Google-Smtp-Source: ABdhPJxPcZxNR0aHWKUOKGsJCKpNxHh10At7X7wwT8NO113zyaLP+fcyJUOIRBPYq2s9N2kkF1akJEDuQR/v+5SuaGk=
+X-Received: by 2002:a05:6830:242e:: with SMTP id k14mr4294854ots.36.1591099856686;
+ Tue, 02 Jun 2020 05:10:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ec2618b-0cce-b00e-08cf-b579d9aa1d5d@xs4all.nl>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-5-sumit.semwal@linaro.org> <20200602113241.GE5684@sirena.org.uk>
+In-Reply-To: <20200602113241.GE5684@sirena.org.uk>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Tue, 2 Jun 2020 17:40:45 +0530
+Message-ID: <CAO_48GGgNUGosN2PiL=U5JkR3Bh5wNK3N4xYYML1UwmdfDPRww@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] regulator: qcom: Add labibb driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lgirdwood@gmail.com, robh+dt@kernel.org,
+        Nisha Kumari <nishakumari@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/06/02 12:27), Hans Verkuil wrote:
-[..]
-> > Sorry, Hans, do you suggest to have something like this:
-> > 
-> > 	if (q->memory == VB2_MEMORY_DMABUF) {
-> > 		vb->need_cache_sync_on_finish = 0;
-> > 		vb->need_cache_sync_on_prepare = 0;
-> > 		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
-> > 		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
-> > 		return;
-> > 	}
-> > 
-> > I didn't clear the ->flags there because we clear the vb flush/sync
-> > flags: ->need_cache_sync_on_finish/prepare are zeros for DMABUF memory
-> > type. Which is equivalent to passing V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
-> > V4L2_BUF_FLAG_NO_CACHE_CLEAN. IOW we would clearing both "vb's do cache
-> > sync" and request's "do not cache sync".
-> 
-> Ah, yes. In that case the v4l-utils patch is likely wrong.
-> Can you take a look at that patch?
+Hi Mark,
 
-Hans, are we talking about "v4l2-utils: test cache_hints for MMAP queues"
-patch? I can take a look, yes.
+Thank you very much for reviewing.
 
-	-ss
+
+On Tue, 2 Jun 2020 at 17:02, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jun 02, 2020 at 03:39:23PM +0530, Sumit Semwal wrote:
+>
+> > +static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
+> > +{
+> > +     int ret;
+> > +     unsigned int val;
+> > +     struct labibb_regulator *reg = rdev_get_drvdata(rdev);
+> > +
+> > +     ret = regmap_read(reg->regmap, reg->base + REG_LABIBB_STATUS1, &val);
+> > +     if (ret < 0) {
+> > +             dev_err(reg->dev, "Read register failed ret = %d\n", ret);
+> > +             return ret;
+> > +     }
+> > +     return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
+> > +}
+>
+> This should be a get_status() callback...
+>
+From my (limited) understanding of downstream code, it seemed like for
+this set of regulators, the 'enabled' check is done via the
+'REG_LABIBB_STATUS1 reg; for some reason, not via the same enable_reg
+/ enable_mask ones.  That's why I used it as is_enabled() callback.
+I will try and check with the QC folks to clarify this point about
+their hardware.
+
+> > +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+> > +{
+> > +     return regulator_enable_regmap(rdev);
+> > +}
+> > +
+> > +static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+> > +{
+> > +     return regulator_disable_regmap(rdev);
+> > +}
+>
+> ...is_enabled() should just be regulator_is_enabled_regmap() and these
+> functions should just be removed entirely, you can use the regmap
+> operations directly as the ops without the wrapper.
+
+The 2 wrappers are a precursor to the next patch, where we keep track
+of regulator's enable status to check during SC handling.
+>
+> > +     match = of_match_device(qcom_labibb_match, &pdev->dev);
+> > +     if (!match)
+> > +             return -ENODEV;
+> > +
+> > +     for (reg_data = match->data; reg_data->name; reg_data++) {
+> > +             child = of_get_child_by_name(pdev->dev.of_node, reg_data->name);
+> > +
+> > +             if (WARN_ON(child == NULL))
+> > +                     return -EINVAL;
+>
+> This feels like the DT bindings are confused - why do we need to search
+> like this?
+The WARN_ON? This was suggested by Bjorn to catch the case where the
+DT binding for a PMIC instantiates only one of the regulators.
+>
+> > +             dev_info(dev, "Registering %s regulator\n", child->full_name);
+>
+> This is noise, remove it.  The regulator framework will announce new
+> regulators anyway.
+Agreed. will remove in the next iteration.
+
+Best,
+Sumit.
