@@ -2,210 +2,136 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C35C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4B4205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA49205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591100040;
-	bh=G3shmAvC/JvoxhRooWJ/NoPGmXLDXZL4OwOUhQFMNbY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=dDzJoDHf8tZKcwyAKBMbpcd91h29w3ynx0jH03T6pkW1sOvHNNWYrI3GgBZwB3IfD
-	 pR1o+o3IloRe/xZ1S097gU5nmJqDqQCKvnJSDP4f+jLm7P9qZ6k2l0O/b0Va8AG9M3
-	 hiczFeWzliHFfJwTRIxIERkW7tl8OR6DvVZKIN2Y=
+	s=default; t=1591100088;
+	bh=hS7g9g/aSqZzPJBPg66kKL88fBvDX9aRfUs29YzvkBs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mHw3rcW10pf4grWU/D025nfto90rz3Q1oh1UOrqaj8j8uOi3OPYPy6KYxeSGTrUxo
+	 K6qZjzGauRuYjfvW7q6B+Ox9CZEbXB0P6WX0gD7m02QOvYK/TN06WbkWWlT2TacMn9
+	 Ed2kQ00m2hAFxtLpGGdULyKfDquoWEVEVXOiP5nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgFBMN7 (ORCPT
+        id S1727784AbgFBMOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:13:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMN6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:13:58 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BE6C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:13:58 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id y17so3132975wrn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:13:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=xBI9buERWWZFDqQu66Y6GGKgz5PW2Y7HFNFgr8Aut3A=;
-        b=PPVzWHWevmaffS7eMfTUr1eJgFbd0UlOJOClvlDKCzHFysuTvKrJxkpV8sBok/O2vy
-         30BazPDNyRvO8PzO/GS5g5uTQ0fbx2asG4zpSxj4dZ4yldz8I5Vm5e/xwHvvLZJojys8
-         7XKuzTA3WY+k6DU5sDy971xib2efLSuvKuiWV8bMd0xYGqNChcQj7JbYBXkLhUw7KWbT
-         NBNggVcX2pBzUI7yO+Ewv1+HPIeYiCtK4h7X8ebf53PQIE4csB2nDy1nV7dLDtvpp5Xm
-         zVgPI9uiSSvUq79tiPcjjAHTX79wegMPpfWGfjokZ6QQ7e5r3K62y9r61cID86ResmQx
-         TQ2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=xBI9buERWWZFDqQu66Y6GGKgz5PW2Y7HFNFgr8Aut3A=;
-        b=myfYXTEmq6lB6HywyjyJQqm1HmMmuHGK/AzCTy/br/ydDxxxx9PaeeppnAGKJNK/Ds
-         /3lxp0ymSZ6Vh+ouUuO7Mc4qRyQVx0oB/OFJqNHWhUCc+UK/dMwB9KmidouKBfmI8umh
-         6UA3/fH2iCcs3fK2AWYAY71X/Ih+uvu+U8KRWm4/7wXnuk48YxiMeVcI92+OO1wLB++p
-         SWaTzpJbR9W+LDQbNxz3o76Yc8u0wdvj3EBNrgl0C+z1EDAzyJ67mByZrzFIiKVpCNp3
-         Le+BvgZlsFR1bKaIsMr/DAKW7QtVzewGlrx29c//JtI1naiH2ad9cKu7soxCGmMpuO+3
-         802g==
-X-Gm-Message-State: AOAM532QrBRWw1HzRrypjt5Cm0oj1sFNxhJFcEXl9oSlATEmPc5ZZpXP
-        0txLzJ5vG4vJUS0tMyq746zTEn2T
-X-Google-Smtp-Source: ABdhPJzYq1eZn+zdAEY44HfhIhzu6xrFRUXW/dnkrFGoRtqml/eOy+HeZoe+0EvQSNP3pLdNc1XmJA==
-X-Received: by 2002:a5d:6b85:: with SMTP id n5mr25961771wrx.11.1591100036585;
-        Tue, 02 Jun 2020 05:13:56 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id z6sm3437008wrh.79.2020.06.02.05.13.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:13:55 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 14:13:52 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] scheduler changes for v5.8
-Message-ID: <20200602121352.GA3812351@gmail.com>
+        Tue, 2 Jun 2020 08:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbgFBMOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:14:46 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE6A2068D;
+        Tue,  2 Jun 2020 12:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591100085;
+        bh=hS7g9g/aSqZzPJBPg66kKL88fBvDX9aRfUs29YzvkBs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yl/i7Qiqq7UoiHmOVqVo+SEn4KgETDEedHdFCdNCuS9f2E2SQng2voWzPfHPcO6YE
+         8CF1FQSd08KxkT7RlTX59097gDyqNuMBxG3McsUgXYZn1n9qp24KE+RNxGUKVpsrLE
+         /QrUIwIAtq/wHHtTJJMYo7XfANI0AplH+lQth1YE=
+Received: by mail-oi1-f169.google.com with SMTP id c194so7020383oig.5;
+        Tue, 02 Jun 2020 05:14:45 -0700 (PDT)
+X-Gm-Message-State: AOAM532rmY1+BQ9CYyDuFLCE6cBO2lFp6FW3CClAI+rFysYQbJT/FXPy
+        M54+9xkJyfwX2roPJdU0xR9VP8/LUClsqFo7BaQ=
+X-Google-Smtp-Source: ABdhPJxW1sEkwPq7K4sRBd1zGPvt9cMm19769d1cEMMvHkLmv/96Zuuq0m9uCjS+3j1U8+rNjcP1B0egOpse0Ai0JB0=
+X-Received: by 2002:aca:b707:: with SMTP id h7mr2899814oif.174.1591100084934;
+ Tue, 02 Jun 2020 05:14:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 2 Jun 2020 14:14:33 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+Message-ID: <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+Subject: Re: Security Random Number Generator support
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
+        Crystal Guo <Crystal.Guo@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Tue, 2 Jun 2020 at 10:15, Neal Liu <neal.liu@mediatek.com> wrote:
+>
+> These patch series introduce a security random number generator
+> which provides a generic interface to get hardware rnd from Secure
+> state. The Secure state can be Arm Trusted Firmware(ATF), Trusted
+> Execution Environment(TEE), or even EL2 hypervisor.
+>
+> Patch #1..2 adds sec-rng kernel driver for Trustzone based SoCs.
+> For security awareness SoCs on ARMv8 with TrustZone enabled,
+> peripherals like entropy sources is not accessible from normal world
+> (linux) and rather accessible from secure world (HYP/ATF/TEE) only.
+> This driver aims to provide a generic interface to Arm Trusted
+> Firmware or Hypervisor rng service.
+>
+>
+> changes since v1:
+> - rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs can reuse
+>   this driver.
+>   - refine coding style and unnecessary check.
+>
+>   changes since v2:
+>   - remove unused comments.
+>   - remove redundant variable.
+>
+>   changes since v3:
+>   - add dt-bindings for MediaTek rng with TrustZone enabled.
+>   - revise HWRNG SMC call fid.
+>
+>   changes since v4:
+>   - move bindings to the arm/firmware directory.
+>   - revise driver init flow to check more property.
+>
+>   changes since v5:
+>   - refactor to more generic security rng driver which
+>     is not platform specific.
+>
+> *** BLURB HERE ***
+>
+> Neal Liu (2):
+>   dt-bindings: rng: add bindings for sec-rng
+>   hwrng: add sec-rng driver
+>
 
-Please pull the latest sched/core git tree from:
+There is no reason to model a SMC call as a driver, and represent it
+via a DT node like this.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-2020-06-02
+It would be much better if this SMC interface is made truly generic,
+and wired into the arch_get_random() interface, which can be used much
+earlier.
 
-   # HEAD: 25de110d148666752dc0e0da7a0b69de31cd7098 irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too
 
-The changes in this cycle are:
-
- - Optimize the task wakeup CPU selection logic, to improve scalability and
-   reduce wakeup latency spikes
-
- - PELT enhancements
-
- - CFS bandwidth handling fixes
-
- - Optimize the wakeup path by remove rq->wake_list and replacing it with ->ttwu_pending
-
- - Optimize IPI cross-calls by making flush_smp_call_function_queue()
-   process sync callbacks first.
-
- - Misc fixes and enhancements.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
- Thanks,
-
-	Ingo
-
------------------->
-Chen Yu (2):
-      sched: Make newidle_balance() static again
-      sched: Extract the task putting code from pick_next_task()
-
-Davidlohr Bueso (1):
-      sched/swait: Reword some of the main description
-
-Gustavo A. R. Silva (1):
-      sched/fair: Replace zero-length array with flexible-array
-
-Huaixin Chang (2):
-      sched/fair: Refill bandwidth before scaling
-      sched: Defend cfs and rt bandwidth quota against overflow
-
-Ingo Molnar (4):
-      Merge branch 'sched/urgent' into sched/core, to pick up fix
-      Merge branch 'core/rcu' into sched/core, to pick up dependency
-      sched/headers: Split out open-coded prototypes into kernel/sched/smp.h
-      irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too
-
-Jann Horn (1):
-      exit: Move preemption fixup up, move blocking operations down
-
-Josh Don (1):
-      sched/fair: Remove distribute_running from CFS bandwidth
-
-Mel Gorman (1):
-      sched/core: Offload wakee task activation if it the wakee is descheduling
-
-Muchun Song (4):
-      sched/fair: Mark sched_init_granularity __init
-      sched/fair: Use __this_cpu_read() in wake_wide()
-      sched/cpuacct: Use __this_cpu_add() instead of this_cpu_ptr()
-      sched/cpuacct: Fix charge cpuacct.usage_sys
-
-Paul Turner (1):
-      sched/fair: Eliminate bandwidth race between throttling and distribution
-
-Peng Wang (1):
-      sched/fair: Simplify the code of should_we_balance()
-
-Peter Zijlstra (10):
-      sched/core: Fix illegal RCU from offline CPUs
-      Merge branch 'sched/urgent'
-      sched/core: Optimize ttwu() spinning on p->on_cpu
-      sched: Fix smp_call_function_single_async() usage for ILB
-      smp: Optimize flush_smp_call_function_queue()
-      smp: Move irq_work_run() out of flush_smp_call_function_queue()
-      smp: Optimize send_call_function_single_ipi()
-      irq_work, smp: Allow irq_work on call_single_queue
-      sched: Add rq::ttwu_pending
-      sched: Replace rq::wake_list
-
-Peter Zijlstra (Intel) (1):
-      sched: Clean up scheduler_ipi()
-
-Thomas Gleixner (1):
-      sched: Make scheduler_ipi inline
-
-Valentin Schneider (4):
-      sched/fair: find_idlest_group(): Remove unused sd_flag parameter
-      sched/debug: Make sd->flags sysctl read-only
-      sched: Remove checks against SD_LOAD_BALANCE
-      sched/topology: Kill SD_LOAD_BALANCE
-
-Vincent Guittot (2):
-      sched/fair: Optimize enqueue_task_fair()
-      sched/pelt: Sync util/runnable_sum with PELT window when propagating
-
-Wei Yang (1):
-      sched/core: Simplify sched_init()
-
-Xie XiuQi (1):
-      sched/debug: Fix trival print_task() format
-
- arch/powerpc/platforms/powernv/smp.c |   1 -
- include/linux/irq_work.h             |   9 +++++++-
- include/linux/sched.h                |  11 +++++++++-
- include/linux/sched/mm.h             |   2 ++
- include/linux/sched/topology.h       |  29 +++++++++++++-------------
- include/linux/smp.h                  |  24 +++++++++++++++++++++-
- include/linux/swait.h                |  23 +++++----------------
- kernel/cpu.c                         |  18 +++++++++++++++-
- kernel/exit.c                        |  25 +++++++++++++++--------
- kernel/irq_work.c                    |  53 +++++++++++++++++++++++++----------------------
- kernel/sched/core.c                  | 248 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------------------------------------------
- kernel/sched/cpuacct.c               |   7 ++++---
- kernel/sched/debug.c                 |   9 ++++----
- kernel/sched/fair.c                  | 259 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------------------------------------------------------------------
- kernel/sched/idle.c                  |   6 +++++-
- kernel/sched/pelt.c                  |  24 ++++++++++++++++++++++
- kernel/sched/rt.c                    |  12 ++++++++++-
- kernel/sched/sched.h                 |  36 +++++++++++++++-----------------
- kernel/sched/smp.h                   |   9 ++++++++
- kernel/sched/topology.c              |  31 +++++++++-------------------
- kernel/smp.c                         | 175 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------------------------
- 21 files changed, 603 insertions(+), 408 deletions(-)
- create mode 100644 kernel/sched/smp.h
+>  .../devicetree/bindings/rng/sec-rng.yaml      |  53 ++++++
+>  drivers/char/hw_random/Kconfig                |  13 ++
+>  drivers/char/hw_random/Makefile               |   1 +
+>  drivers/char/hw_random/sec-rng.c              | 155 ++++++++++++++++++
+>  4 files changed, 222 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/sec-rng.yaml
+>  create mode 100644 drivers/char/hw_random/sec-rng.c
+>
+> --
+> 2.18.0
