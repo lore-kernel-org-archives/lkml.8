@@ -2,194 +2,110 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6845AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56AA2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455CD207FB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGNsGc2K"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U+iVADk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgFBKSA (ORCPT
+        id S1726817AbgFBKSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:18:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53494 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726750AbgFBKRw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:17:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591093066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mbhvyHvAfdjX22O9RtYh3iE7nxgLq5dvxgPoQiJxkCA=;
-        b=RGNsGc2KBdOkDhzixV25rgAoiiaMEQIagkP62fTswu7wY6m2BWOW3xMuUeTUYF+po+EC13
-        XDx02bh+g0NPAJgkotEHtsxt9IMHFVjBpTUyjfxW1RO2Sz9pi3Hop0jSPGTjEBGoNOs0NZ
-        ywQd3cUi5PoWJud8dR4aS/ccPc88pe0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-xCt2sCJsPAOXt69go_85Hw-1; Tue, 02 Jun 2020 06:17:42 -0400
-X-MC-Unique: xCt2sCJsPAOXt69go_85Hw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 2 Jun 2020 06:18:54 -0400
+Received: from ozlabs.org ([203.11.71.1]:59541 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726959AbgFBKS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:18:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 583D6107ACF9;
-        Tue,  2 Jun 2020 10:17:40 +0000 (UTC)
-Received: from krava (unknown [10.40.195.39])
-        by smtp.corp.redhat.com (Postfix) with SMTP id CE14610016DA;
-        Tue,  2 Jun 2020 10:17:37 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 12:17:36 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCHv3] perf stat: Ensure group is defined on top of the same cpu
- mask
-Message-ID: <20200602101736.GE1112120@krava>
-References: <20200531162206.911168-1-jolsa@kernel.org>
- <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
- <20200601082027.GF881900@krava>
- <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bp0G5RS3z9sSd;
+        Tue,  2 Jun 2020 20:18:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591093104;
+        bh=ZET4MgvIpPMKIHa0fYOqkkJtKMPEakdjQFvGhLoITrg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=U+iVADk6QZM7Zivp4nDSJkDX1kd/lfZs1UhUyzjntR7YRfzzHdIn1JEW+OxJ7sMo+
+         UCP4jfYoMvWNhq0c2SnL+yTStcLqMhCX2VWSsb3DZrD2QNAi1YwQt6DcNIUh49oWeu
+         4Vq7B6/h7obAOxrA6D8iV7LhHcup25bfmTUlP1UB+pPaPkzRSNnXTfnWMaiW59SJ3X
+         5CO05J0tRD+9zdOl4jwYXD6y60kjl5HXKKxeMSgykEl7887qKVknaHUoSP5WnJdZLU
+         20JLkbVSl/vIDj1hIyL7pHMeYab7YpWLK9spiP/ctHCd3+cJISUlTUOC4sq9T0Y9aE
+         YB1EEdTde9zxw==
+Date:   Tue, 2 Jun 2020 20:18:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ayush Sawal <ayush.sawal@chelsio.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        ayush.sawal@asicdesigners.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the net-next tree
+Message-ID: <20200602201821.615b9b7b@canb.auug.org.au>
+In-Reply-To: <8a8bc5f4-2dc3-5e2c-3013-51954004594c@chelsio.com>
+References: <20200602091249.66601c4c@canb.auug.org.au>
+        <8a8bc5f4-2dc3-5e2c-3013-51954004594c@chelsio.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: multipart/signed; boundary="Sig_/ND+BUl2Q9HOIVP/Ns1F4i71";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jin Yao reported the issue (and posted first versions of this change)
-with groups being defined over events with different cpu mask.
+--Sig_/ND+BUl2Q9HOIVP/Ns1F4i71
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This causes assert aborts in get_group_fd, like:
+Hi Ayush,
 
-  # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
-  perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
-  Aborted
+On Tue, 2 Jun 2020 13:01:09 +0530 Ayush Sawal <ayush.sawal@chelsio.com> wro=
+te:
+>
+> On 6/2/2020 4:42 AM, Stephen Rothwell wrote:
+> >
+> > In commit
+> >
+> >    055be6865dea ("Crypto/chcr: Fixes a coccinile check error")
+> >
+> > Fixes tag
+> >
+> >    Fixes: 567be3a5d227 ("crypto:
+> >
+> > has these problem(s):
+> >
+> >    - Subject has leading but no trailing parentheses
+> >    - Subject has leading but no trailing quotes
+> >
+> > Please do not split Fixes tags over more than one line. =20
+>=20
+> I am so sorry for this mistake.
+> Is there a way to fix this?
 
-All the events in the group have to be defined over the same
-cpus so the group_fd can be found for every leader/member pair.
+No, David does not rebase his tree.  Just remember for next time.
+--=20
+Cheers,
+Stephen Rothwell
 
-Adding check to ensure this condition is met and removing the
-group (with warning) if we detect mixed cpus, like:
+--Sig_/ND+BUl2Q9HOIVP/Ns1F4i71
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-  $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
-  WARNING: event cpu maps do not match, disabling group:
-    anon group { power/energy-cores/, cycles }
-    anon group { instructions, power/energy-cores/ }
+-----BEGIN PGP SIGNATURE-----
 
-Ian asked also for cpu maps details, it's displayed in verbose mode:
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7WJ20ACgkQAVBC80lX
+0GwlaAgAlaLxQRgMK8I1tHCvSBD0Nv3JoVCWDxfHytfAcNDzsuCrqQnD0AoTaOez
+1/LfrGhTRyFjd1lKEF6fK0y0B4L/rvezGKiCNFATj25kyZnlz6B5OxATxj5bnZ7Q
+7Ix6/Ee9HhgEKz2cLg0mxp/MD7Kfa5aSV/FOrji1SiruNLC9k6xVNlrAqSl+6B+H
++nMiv0j4f1hwHHxzTZWd1OxzfXq4qQ96xt7oGzCpOI2v9G85MyOtppf3/kdh7h0S
+ZuN/8tsEnyvF8gbq94QrdjpX502coPeTMBU2/oHNBRL3B4N50bMtIRyu+WTUADAA
+oqMF29Jz/L3SSshpZ7jK2C6I/PjJIg==
+=RuNp
+-----END PGP SIGNATURE-----
 
-  $ sudo perf stat -e '{cycles,power/energy-cores/}' -v
-  WARNING: group events cpu maps do not match, disabling group:
-    anon group { power/energy-cores/, cycles }
-       power/energy-cores/: 0
-       cycles: 0-7
-    anon group { instructions, power/energy-cores/ }
-       instructions: 0-7
-       power/energy-cores/: 0
-
-Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
-Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/builtin-stat.c | 55 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
- v3 changes:
-   - reword the warning with Ian's suggestion
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b2b79aa161dd..9be020e0098a 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -190,6 +190,59 @@ static struct perf_stat_config stat_config = {
- 	.big_num		= true,
- };
- 
-+static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-+{
-+	if (!a->core.cpus && !b->core.cpus)
-+		return true;
-+
-+	if (!a->core.cpus || !b->core.cpus)
-+		return false;
-+
-+	if (a->core.cpus->nr != b->core.cpus->nr)
-+		return false;
-+
-+	for (int i = 0; i < a->core.cpus->nr; i++) {
-+		if (a->core.cpus->map[i] != b->core.cpus->map[i])
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+static void evlist__check_cpu_maps(struct evlist *evlist)
-+{
-+	struct evsel *evsel, *pos, *leader;
-+	char buf[1024];
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		leader = evsel->leader;
-+
-+		/* Check that leader matches cpus with each member. */
-+		if (leader == evsel)
-+			continue;
-+		if (cpus_map_matched(leader, evsel))
-+			continue;
-+
-+		/* If there's mismatch disable the group and warn user. */
-+		WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
-+		evsel__group_desc(leader, buf, sizeof(buf));
-+		pr_warning("  %s\n", buf);
-+
-+		if (verbose) {
-+			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
-+			pr_warning("     %s: %s\n", leader->name, buf);
-+			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
-+			pr_warning("     %s: %s\n", evsel->name, buf);
-+		}
-+
-+		for_each_group_evsel(pos, leader) {
-+			pos->leader = pos;
-+			pos->core.nr_members = 0;
-+		}
-+		evsel->leader->core.nr_members = 0;
-+	}
-+}
-+
- static inline void diff_timespec(struct timespec *r, struct timespec *a,
- 				 struct timespec *b)
- {
-@@ -2113,6 +2166,8 @@ int cmd_stat(int argc, const char **argv)
- 		goto out;
- 	}
- 
-+	evlist__check_cpu_maps(evsel_list);
-+
- 	/*
- 	 * Initialize thread_map with comm names,
- 	 * so we could print it out on output.
--- 
-2.25.4
-
+--Sig_/ND+BUl2Q9HOIVP/Ns1F4i71--
