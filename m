@@ -2,145 +2,182 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4768FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F567C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B1D206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DC22077D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgFBTrP (ORCPT
+        id S1728031AbgFBTtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:47:15 -0400
-Received: from static-27.netfusion.at ([83.215.238.27]:56380 "EHLO
-        mail.inliniac.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFBTrO (ORCPT
+        Tue, 2 Jun 2020 15:49:33 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57198 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBTtc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:47:14 -0400
-Received: from [192.168.0.36] (a212-238-163-105.adsl.xs4all.nl [212.238.163.105])
-        (Authenticated sender: victor)
-        by mail.inliniac.net (Postfix) with ESMTPSA id 8CD3F10C;
-        Tue,  2 Jun 2020 21:49:22 +0200 (CEST)
-Subject: Re: [PATCH net-next v2] af-packet: new flag to indicate all csums are
- good
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Mao Wenan <maowenan@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
-        Neil Horman <nhorman@tuxdriver.com>, linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexander Drozdov <al.drozdov@gmail.com>,
-        Tom Herbert <tom@herbertland.com>
-References: <20200602080535.1427-1-victor@inliniac.net>
- <CA+FuTSfD2-eF0H=Qu09=JXK6WTiWKNtcqRXqv3TfMfB-=0GiMg@mail.gmail.com>
- <b0a9d785-9d5e-9897-b051-6d9a1e8f914e@inliniac.net>
- <CA+FuTSd07inNysGhx088hq_jybrikSQdxw8HYjmP84foXhnXOA@mail.gmail.com>
- <06479df9-9da4-dbda-5bd1-f6e4d61471d0@inliniac.net>
- <CA+FuTSci29=W89CLweZcW=RTKwEXpUdPjsLGTB95iSNcnpU_Lw@mail.gmail.com>
- <6a3dcce9-4635-28e9-d78e-1c7f1f7874da@inliniac.net>
- <20200602122954.0c35072b@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-From:   Victor Julien <victor@inliniac.net>
-Autocrypt: addr=victor@inliniac.net; prefer-encrypt=mutual; keydata=
- LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUVOQkZBamQvUUJDQURY
- S3FvR0xmclhGTDB5R2k3cHozdjU5dG5TN3hsVTl0NHVSUnd6YThrN3piVW9oTFlJCkFNVkp1
- dFk5Mm9BRDYrOTJtSVNIZDNDZkU0bGZuRlFBNHY1MllXOUUvRHBTaVQzWnFMZ0RHcmdVMHRs
- Qm1OUG8Kd0tJMjZyUnVCejBER3dVZkdocjlud3dTbVRDM213NU80cFlYR0wyd3ludHA0THZ2
- Q1lTdFJDVkZIMEhWL0lDVwozT2d6ejQzNGdtelU2N2xOaXpxMDdmL1R2SWtkd3ZHL1ZGVU5u
- WTZLQXRzUysrRTZZdzl5MEo5SStVYktFUDl4CnkySHl3RFFLRVVqck9FMCtlREtoblRXVGhX
- YnZEZm5CTGZJUGNla3dYbXVPYjVycGFXblE1MTkwNXVETTFzcm8KUGFZK015NEQ3b3N2ZUFN
- di9SbmhuN1VuVlg5M3JUS05RRUhaQUJFQkFBRzBJMVpwWTNSdmNpQktkV3hwWlc0ZwpQSFpw
- WTNSdmNrQnBibXhwYm1saFl5NXVaWFEraVFFN0JCTUJBZ0FsQWhzREJnc0pDQWNEQWdZVkNB
- SUpDZ3NFCkZnSURBUUllQVFJWGdBVUNVQ045WWdJWkFRQUtDUkRCOUpYamttaFd0SlFOQi85
- UVhwOXZCbnlwbm1RaDlHb2cKNE0vR2V6TERWbFJoVnQxL2FnYXByWDFhR09kZ29uRHd4WFR1
- MUs3Wnk5RkcrZysrb3lkRzdaYzFaT3JwSEtjTQp4dWxGams2MUEvODVMLzg1ZktHM0hlTFpX
- M2szR0p1OUhCRnZqNllrbXdmbHdTRk9KWmdkT3k5SGh0b3hTQnVwCmI4WTlKL0Q5MVB5Vi91
- YWdaa21ITjRuQmJldGNkSU9PNXdudWV0VnNrNGJsVjdhVk1kU2JEVXNrbU9Nc0hWTDcKRDN2
- WGFwSG1MbGhWSXZNQjBPTndQQVY5MHV6WUtNRlQ0SWdFbm04VXBFT0hsL0tFNWJyWlAzQkU4
- SXRJajUrZwpJRkNMNTRrdVphMWY5MUlDMzNocUJaNUZQNitNamt3ZmswOVdyQURsVmt4S3NP
- RkgyMHQ2NVVLT2EyeTNLM3pyCnhaYll0Q05XYVdOMGIzSWdTblZzYVdWdUlEeDJhV04wYjNK
- QWRuVjFjbTExZFhJdWIzSm5Qb2tCT0FRVEFRSUEKSWdVQ1VDTjVwZ0liQXdZTENRZ0hBd0lH
- RlFnQ0NRb0xCQllDQXdFQ0hnRUNGNEFBQ2drUXdmU1Y0NUpvVnJSawpxZ2dBa01pODdnZzNT
- K3FkQlVjSjVXd3VLTERPL1M0MTNzR09FaEU0SzU3YXpUVTNOVWNPVnVOZW5mNDB1L3F3Ckt4
- VitEUDJuSzE4Rk9CdDdwcVdyQzRrNThaUWMxTm9SR0VWQjY4elhieVI5L2xIMWNocXB5Mmhv
- enoyL0xhRG4KT0ptUWgvWUorYUhZbVdETGVuK3BtNWc5NzFJTUE5bUdiK3FrMTQ4aFBBMTBn
- b0h0ZHIyNzNPeXpQaldzU0JnVwp4bVU2amhNOE1Ld0tSSkFsTmxoMTVSbFpWNEM5Rmhkdi9V
- b01LZXhpaWltbGZIY1hVR1dtZ2I2RXBnVW5ab2piCklYQlNsYk5FMVZFTk5IcDVaeEhYNUU5
- dmQxV3BiMFV0Zmd2ZCtqaWo5VEtuMHpSSDlFTHFTYmxtUTFTamF4bEsKVnhhUDd1ejRpUHpJ
- NFk0RDVxMHJERHhTVmJRcGEyVjVZbUZ6WlM1cGJ5OXBibXhwYm1saFl5QThhVzVzYVc1cApZ
- V05BYTJWNVltRnpaUzVwYno2SkFTMEVFd0VLQUJjRkFsQWpkL1FDR3dNREN3a0hBeFVLQ0FJ
- ZUFRSVhnQUFLCkNSREI5Slhqa21oV3RKdndCLzlNdDZCWXkzTlZMUU1WQ05YSjRzZm95eUJJ
- Q1p2ODNnN3lpQzVEako2dUxXUE0KVFl2M0ZLRDFWa2tUQ2hWOHNXaDhvMkhHUGduUVk5eisx
- Q1hQM1dSUFdkWG9MNTFha3lPd3pFdEZVRG5JaHBtMApkWFhxQlJ3Qi90WExXN3R0VnkxR3VF
- eExkaDNaaDkwOHZ3SU1xVU51NC83ODB1VTZiRFpLQW9rZmZKekcxbzZMCm45dVF3bEx1WmNH
- MnhnTTZiN0RaN2MvNHZ5ejM1ak9jWUozWkREb25xR3BETTNvZFdnWXp4UHN4a0JVRnlKeFkK
- aDA4MHhzdHR0MFVJMWlmODRyVmdtQXRHblZFQjJ3YklsSktTa3d5ZXI0NGFTQ201WTEyNXNn
- MUtIZFQwMEREQgpWTTRNZ3k0NTJJYUZJVndpNHcwdVdZR09nblQ1MWx2VTY4NmV3VHh2dVFF
- TkJGQWpkL1FCQ0FEVkFoU08wR1YwCkxHdnh0a0hWQ1hzaGdSR2srNmdTSFpRVzc4a3F2V0dM
- OU95UDhzK0ZpUS8vQWFMa1NETzNpSVZTbWVrZVhiZlkKNkcxa2l2aDJLN0NaYlBTMzdDVGVL
- L0p0L2ZFbzY1bTJvcWtMWStDTnZVeElvYVdhMitQY1Z4UXNLem1aZ0hDRApDRVdzN21rK01Z
- UUxNZnluanVoVVorWmlaa2Y1U2ZBY1hQTEQ5emRkTFlSdUJtOTgwRDN1UVJsbXlqRTVOZTJa
- CkRZVEMwU1ZLNDFRMVVDdDFoZFdNOUlWczg2UXEybUU5Y21KWkthUUNRc1ZEMVlMZUdxYTJk
- UVdLYnIyc2EyRHUKd2pCbEhzWk83NFZjTHR2L2lQV1Nad2FxNkdBZTJGZXB0TFhJQWd2Y3lB
- WDlxOHczWDBjdWtsa1RTWFUwbU5ISQpuWHFnRHRBRGtOVnRBQkVCQUFHSkFSOEVHQUVDQUFr
- RkFsQWpkL1FDR3d3QUNna1F3ZlNWNDVKb1ZyU01od2dBCmlicHNMNUtnaEhnK0h2TktocXpV
- b0JGTDMya2xNS1R5Ums0ekhzbzZDNHBKVDNvbjRqOVF2dnJLU2tsaUJ4a1IKM2ZMdVFOVWE5
- YlVYeDNmeUFheVF2ekxnV1FycVc3eTU1Z1dCRUZPQTVQQXdFU1pDdTNYKzNGODZPK2w0N1k0
- dwpOZTRDRDJLYTRLKzlXTHQvR3RlUnBQQU5lVldNUHRRQktqc3BFSFBSeWNidnJGV20xMUJI
- djV2eC9GYVNXN2tICjdkaHFkRHNxMFlJaWYwUkdjUVNySlBBQm00ZHkva1hrcFJQUEFHSGdN
- dVMvejZwY3c0RFVsaTZQVE1aTzNyT0oKbVJQQUlFRUNTVngvRlZERjJXeVREQUlWanBuMENN
- Zjl1dnliVEU4Q25CNEQxcDZLNkgyZ0d0YVRlRlhJUVkraAoxcmNDY0JVNE9zZlQvWFkwZXZO
- aWpnPT0KPWFWT0YKLS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQo=
-Message-ID: <7ce5ae2a-4bce-99af-4fd7-900e6caa8f89@inliniac.net>
-Date:   Tue, 2 Jun 2020 21:47:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 15:49:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 966508030838;
+        Tue,  2 Jun 2020 19:49:28 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id H-uqhSvYPpnb; Tue,  2 Jun 2020 22:49:25 +0300 (MSK)
+Date:   Tue, 2 Jun 2020 22:49:25 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
+Message-ID: <20200602194925.qbevttzz3ghvmd2d@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-5-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200602122954.0c35072b@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200513140031.25633-5-lars.povlsen@microchip.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-06-2020 21:29, Jakub Kicinski wrote:
-> On Tue, 2 Jun 2020 21:22:11 +0200 Victor Julien wrote:
->> - receiver uses nfp (netronome) driver: TP_STATUS_CSUM_VALID set for
->> every packet, including the bad TCP ones
->> - receiver uses ixgbe driver: TP_STATUS_CSUM_VALID not set for the bad
->> packets.
->>
->> Again purely based on 'git grep' it seems nfp does not support
->> UNNECESSARY, while ixgbe does.
->>
->> (my original testing was with the nfp only, so now I at least understand
->> my original thinking)
+On Wed, May 13, 2020 at 04:00:25PM +0200, Lars Povlsen wrote:
+> This add DT bindings for the Microsemi/Microchip SPI controller used
+> in various SoC's. It describes the "mscc,ocelot-spi" and
+> "mscc,jaguar2-spi" bindings.
+
+As I see it, there is no need in this patch at all. Current DT binding file
+describes the MSCC version of the DW APB SSI IP pretty well. You can add an
+example to the DT schema though with "mscc,ocelot-spi" or "mscc,jaguar2-spi"
+compatible string and additional registers range. 
+
+-Sergey
+
 > 
-> FWIW nfp defaults to CHECKSUM_COMPLETE if the device supports it (see
-> if you have RXCSUM_COMPLETE in the probe logs). It supports UNNECESSARY
-> as well, but IDK if there is a way to choose  the preferred checksum
-> types in the stack :( You'd have to edit the driver and remove the
-> NFP_NET_CFG_CTRL_CSUM_COMPLETE from the NFP_NET_CFG_CTRL_RXCSUM_ANY
-> mask to switch to using UNNECESSARY.
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  .../bindings/spi/mscc,ocelot-spi.yaml         | 60 +++++++++++++++++++
+>  .../bindings/spi/snps,dw-apb-ssi.txt          |  7 +--
+>  MAINTAINERS                                   |  1 +
+>  3 files changed, 63 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
 > 
-
-I indeed have RXCSUM_COMPLETE, so that should mean it uses
-CHECKSUM_COMPLETE indeed.
-
-nfp 0000:43:00.0 eth0: CAP: 0x78140233 PROMISC RXCSUM TXCSUM GATHER TSO2
-RSS2 AUTOMASK IRQMOD RXCSUM_COMPLETE
-
--- 
----------------------------------------------
-Victor Julien
-http://www.inliniac.net/
-PGP: http://www.inliniac.net/victorjulien.asc
----------------------------------------------
-
+> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+> new file mode 100644
+> index 0000000000000..a3ac0fa576553
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/mscc,ocelot-spi.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Microsemi Vcore-III SPI Communication Controller
+> +
+> +maintainers:
+> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
+> +  - Lars Povlsen <lars.povlsen@microchip.com>
+> +
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
+> +
+> +description: |
+> +  The Microsemi Vcore-III SPI controller is a general purpose SPI
+> +  controller based upon the Designware SPI controller. It uses an 8
+> +  byte rx/tx fifo.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mscc,ocelot-spi
+> +      - mscc,jaguar2-spi
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    minItems: 2
+> +    items:
+> +      - description: Designware SPI registers
+> +      - description: CS override registers
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  reg-io-width:
+> +    description: |
+> +      The I/O register width (in bytes) implemented by this device.
+> +    items:
+> +       enum: [ 2, 4 ]
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    spi0: spi@101000 {
+> +      compatible = "mscc,ocelot-spi";
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      reg = <0x101000 0x100>, <0x3c 0x18>;
+> +      interrupts = <9>;
+> +      clocks = <&ahb_clk>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> index 3ed08ee9feba4..5e1849be7bae5 100644
+> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> @@ -1,10 +1,8 @@
+>  Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
+> 
+>  Required properties:
+> -- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
+> -  "jaguar2", or "amazon,alpine-dw-apb-ssi"
+> -- reg : The register base for the controller. For "mscc,<soc>-spi", a second
+> -  register set is required (named ICPU_CFG:SPI_MST)
+> +- compatible : "snps,dw-apb-ssi" or "amazon,alpine-dw-apb-ssi"
+> +- reg : The register base for the controller.
+>  - interrupts : One interrupt, used by the controller.
+>  - #address-cells : <1>, as required by generic SPI binding.
+>  - #size-cells : <0>, also as required by generic SPI binding.
+> @@ -38,4 +36,3 @@ Example:
+>  		cs-gpios = <&gpio0 13 0>,
+>  			   <&gpio0 14 0>;
+>  	};
+> -
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1db598723a1d8..6472240b8391b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11231,6 +11231,7 @@ L:	linux-mips@vger.kernel.org
+>  S:	Supported
+>  F:	Documentation/devicetree/bindings/mips/mscc.txt
+>  F:	Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> +F:	Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>  F:	arch/mips/boot/dts/mscc/
+>  F:	arch/mips/configs/generic/board-ocelot.config
+>  F:	arch/mips/generic/board-ocelot.c
+> --
+> 2.26.2
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
