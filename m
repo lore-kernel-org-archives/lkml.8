@@ -2,147 +2,140 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A067D2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5589206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GKCmkONL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgFBKR2 (ORCPT
+        id S1728129AbgFBKRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:17:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13232 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726377AbgFBKQn (ORCPT
+        Tue, 2 Jun 2020 06:17:51 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38081 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726377AbgFBKRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:16:43 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 052A39KK042931;
-        Tue, 2 Jun 2020 06:15:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31cw8u3j3s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 06:15:05 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 052A5diq061543;
-        Tue, 2 Jun 2020 06:15:04 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31cw8u3j2b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 06:15:04 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 052AA951011983;
-        Tue, 2 Jun 2020 10:15:01 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf47wtwm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 10:15:01 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 052ADiXb56754464
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jun 2020 10:13:44 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E24C911C04A;
-        Tue,  2 Jun 2020 10:14:58 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F22C11C050;
-        Tue,  2 Jun 2020 10:14:53 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.74.134])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue,  2 Jun 2020 10:14:52 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Tue, 02 Jun 2020 15:44:51 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [RESEND PATCH v9 2/5] seq_buf: Export seq_buf_printf
-Date:   Tue,  2 Jun 2020 15:44:35 +0530
-Message-Id: <20200602101438.73929-3-vaibhav@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200602101438.73929-1-vaibhav@linux.ibm.com>
-References: <20200602101438.73929-1-vaibhav@linux.ibm.com>
+        Tue, 2 Jun 2020 06:17:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591093049;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m8flul9T5/INbLuHOQ1wE5MsczYdkAsRCFisLMaoyM8=;
+        b=GKCmkONLVp8K4AT3fwhcl2dt/DI3MsLgfBjFFYyMOZuHopIZVB+iIYl0+u95gWQyIbbpX8
+        mDTnG/nva4bsrrVpx0KWUddxBum5xXBGtpZFOGIUtk432r8y5fqY59aMlopeRifjDWnLoY
+        SQ8b1I4kX+9mu+oF7jIkoq8iMnKi+7s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-_gVI1e6lPeGjgn2AI4D0lw-1; Tue, 02 Jun 2020 06:17:07 -0400
+X-MC-Unique: _gVI1e6lPeGjgn2AI4D0lw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4AC751030982;
+        Tue,  2 Jun 2020 10:17:05 +0000 (UTC)
+Received: from [10.72.12.83] (ovpn-12-83.pek2.redhat.com [10.72.12.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E9C8100164D;
+        Tue,  2 Jun 2020 10:16:54 +0000 (UTC)
+Subject: Re: [PATCH] vdpa: bypass waking up vhost_woker for vdpa vq kick
+To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org,
+        Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lkp@intel.com, kbuild-all@lists.01.org, lulu@redhat.com,
+        dan.daly@intel.com, cunming.liang@intel.com
+References: <20200602094203.GU30374@kadam>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b8ccbccf-f667-8d15-8de2-b87da5f51ec3@redhat.com>
+Date:   Tue, 2 Jun 2020 18:16:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200602094203.GU30374@kadam>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-02_11:2020-06-01,2020-06-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 impostorscore=0 clxscore=1015 adultscore=0
- suspectscore=0 mlxlogscore=999 cotscore=-2147483648 priorityscore=1501
- spamscore=0 mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006020067
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'seq_buf' provides a very useful abstraction for writing to a string
-buffer without needing to worry about it over-flowing. However even
-though the API has been stable for couple of years now its still not
-exported to kernel loadable modules limiting its usage.
 
-Hence this patch proposes update to 'seq_buf.c' to mark
-seq_buf_printf() which is part of the seq_buf API to be exported to
-kernel loadable GPL modules. This symbol will be used in later parts
-of this patch-set to simplify content creation for a sysfs attribute.
+On 2020/6/2 下午5:42, Dan Carpenter wrote:
+> Hi Zhu,
+>
+> url:    https://github.com/0day-ci/linux/commits/Zhu-Lingshan/vdpa-bypass-waking-up-vhost_woker-for-vdpa-vq-kick/20200526-133819
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git linux-next
+> config: x86_64-randconfig-m001-20200529 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+>
+> smatch warnings:
+> drivers/vhost/vdpa.c:348 vhost_vdpa_set_vring_kick() error: uninitialized symbol 'r'.
+>
+> # https://github.com/0day-ci/linux/commit/a84ddbf1ef29f18aafb2bb8a93bcedd4a29a967d
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout a84ddbf1ef29f18aafb2bb8a93bcedd4a29a967d
+> vim +/r +348 drivers/vhost/vdpa.c
+>
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  316  static long vhost_vdpa_set_vring_kick(struct vhost_virtqueue *vq,
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  317  				      void __user *argp)
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  318  {
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  319  	bool pollstart = false, pollstop = false;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  320  	struct file *eventfp, *filep = NULL;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  321  	struct vhost_vring_file f;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  322  	long r;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  323
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  324  	if (copy_from_user(&f, argp, sizeof(f)))
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  325  		return -EFAULT;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  326
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  327  	eventfp = f.fd == -1 ? NULL : eventfd_fget(f.fd);
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  328  	if (IS_ERR(eventfp)) {
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  329  		r = PTR_ERR(eventfp);
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  330  		return r;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  331  	}
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  332
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  333  	if (eventfp != vq->kick) {
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  334  		pollstop = (filep = vq->kick) != NULL;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  335  		pollstart = (vq->kick = eventfp) != NULL;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  336  	} else
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  337  		filep = eventfp;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  338
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  339  	if (pollstop && vq->handle_kick)
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  340  		vhost_vdpa_poll_stop(vq);
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  341
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  342  	if (filep)
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  343  		fput(filep);
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  344
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  345  	if (pollstart && vq->handle_kick)
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  346  		r = vhost_vdpa_poll_start(vq);
+>
+> "r" not initialized on else path.
+>
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  347
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26 @348  	return r;
+> a84ddbf1ef29f1 Zhu Lingshan 2020-05-26  349  }
 
-Cc: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
----
-Changelog:
 
-Resend:
-* Added ack from Steven Rostedt
+Will fix.
 
-v8..v9:
-* None
+Thanks
 
-v7..v8:
-* Updated the patch title [ Christoph Hellwig ]
-* Updated patch description to replace confusing term 'external kernel
-  modules' to 'kernel lodable modules'.
 
-Resend:
-* Added ack from Steven Rostedt
-
-v6..v7:
-* New patch in the series
----
- lib/seq_buf.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index 4e865d42ab03..707453f5d58e 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -91,6 +91,7 @@ int seq_buf_printf(struct seq_buf *s, const char *fmt, ...)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(seq_buf_printf);
- 
- #ifdef CONFIG_BINARY_PRINTF
- /**
--- 
-2.26.2
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
