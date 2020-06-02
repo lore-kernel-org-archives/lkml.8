@@ -2,141 +2,126 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1222EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7493DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB402074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OnUb0KMt"
+	by mail.kernel.org (Postfix) with ESMTP id 472632074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591071827;
+	bh=KForfwzUUC3Tk8fGSUSDwVHsxPKPlXtsHIFrysGM4iY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K7/9fhuBd+9qEnK6KsJZURjrNn3H+ylI95pbzcw5QRlcyqKHzH60NqbGlIrBnsLsH
+	 ZQPg3mDhNR2a1lCMXCKDxxPTmwytLzeBIoxbqZfzwifM3cYPX8XGT8490uDgqLJzJS
+	 g6Fei9KWLuGDiJFexazEXfUFXf8C1hEu3oxFdk6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbgFBEWh (ORCPT
+        id S1726096AbgFBEXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:22:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23090 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725616AbgFBEWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:22:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591071754;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YDfsRlwfRR1nDcp4wd5hK1KujxFVRibBNSbBOaOrz2Q=;
-        b=OnUb0KMtMOWXEpc3V/j1UCgOhUzNJ9sXxS49N2Vn23J6YYF9oNuq63IeVA6tJAz+Wpz56z
-        wHiCt0tXpG19d8VV3yuYTxKOgZXsO/Hg9EZSuXlaGW21VmbjNXhK1OfMNIVmBmuL6YWw4m
-        2Sk62XWrk/KmzTK33JgxoGzuGHEpBdo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-OW6TFgq9Pza4yilPedRSdQ-1; Tue, 02 Jun 2020 00:22:30 -0400
-X-MC-Unique: OW6TFgq9Pza4yilPedRSdQ-1
-Received: by mail-wm1-f71.google.com with SMTP id p24so466284wmc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 21:22:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YDfsRlwfRR1nDcp4wd5hK1KujxFVRibBNSbBOaOrz2Q=;
-        b=KmYus9MdX8Yy2es4guinUbhsE5uWDyQe+pE+EYi/D8Ba+M4luOhgKfN6bYt0zh9AE9
-         NPftMzN9ZrAjCBGjOiKyzypIGYG13DTRD02EgAEUJt1rN3ONanIzNc30+0R9s057ew4y
-         SBqs8SxRpyG1chOM4dCfafO4Q4xS/2uOtzknC33XcsTnu98vd4ZaBWrUIJHeecWj/NrZ
-         YJna2VVvj174BztEGHV8zs5Zh37SLCZab9XFjuJWwvd3DN5zrE2dh+SxrF3UXtpdtLvw
-         mP8288jn3gphFfW0AVMyCAHHKZ86Mz0Y9GSLUcHLjw2gDEKKn0MHEnfi07ONXSeU35wX
-         GrnA==
-X-Gm-Message-State: AOAM532A9e2AUGFc6Z90NWeNtT/QosYuOo2UZRKBLvC+6A49fFA2RQbX
-        WYZpjT001sEBeGAYYgTdATpSMZHMeqler3/8epvWNK9n2FEJFcqbSvWqITQeJX9j2A4KQjVvCf2
-        736aONbEZAY+yrt8RGG5Z8+HC
-X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr23714182wrw.425.1591071749222;
-        Mon, 01 Jun 2020 21:22:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx2SKrCnIib4b4OHp9esqIfnn8bX4FrOHyf8lEFnkhypfH/4sW2rsrN9doierFMkcN8evfSkA==
-X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr23714174wrw.425.1591071749030;
-        Mon, 01 Jun 2020 21:22:29 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id z2sm1731263wrs.87.2020.06.01.21.22.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 21:22:28 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 00:22:25 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Subject: Re: [PATCH 2/2] vhost: convert get_user_pages() --> pin_user_pages()
-Message-ID: <20200602002212-mutt-send-email-mst@kernel.org>
-References: <20200529234309.484480-1-jhubbard@nvidia.com>
- <20200529234309.484480-3-jhubbard@nvidia.com>
+        Tue, 2 Jun 2020 00:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725841AbgFBEXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 00:23:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99144206C3;
+        Tue,  2 Jun 2020 04:23:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591071825;
+        bh=KForfwzUUC3Tk8fGSUSDwVHsxPKPlXtsHIFrysGM4iY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V45ZYtoL70LH0+jjtU6K2Pm6h5EN5dcw3LAqGkCFEUvGLepwp/RzbDsv1tm9nbE8X
+         IKfw5CNMxoDntLxKInDAvmDaDJ9slDOOgr5WQi4LT/HYwuAb815pAredk+uHwsM3gx
+         Wz/hBz4BIW9vvksL95NAPm/tvL3WM12JokdvE9Lo=
+Date:   Tue, 2 Jun 2020 06:23:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Barry Song <song.bao.hua@hisilicon.com>
+Cc:     rafael@kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, Prime Zeng <prime.zeng@hisilicon.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] driver core: platform: expose numa_node to users in sysfs
+Message-ID: <20200602042340.GA2130884@kroah.com>
+References: <20200602030139.73012-1-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529234309.484480-3-jhubbard@nvidia.com>
+In-Reply-To: <20200602030139.73012-1-song.bao.hua@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:43:09PM -0700, John Hubbard wrote:
-> This code was using get_user_pages*(), in approximately a "Case 5"
-> scenario (accessing the data within a page), using the categorization
-> from [1]. That means that it's time to convert the get_user_pages*() +
-> put_page() calls to pin_user_pages*() + unpin_user_pages() calls.
+On Tue, Jun 02, 2020 at 03:01:39PM +1200, Barry Song wrote:
+> For some platform devices like iommu, particually ARM smmu, users may
+> care about the numa locality. for example, if threads and drivers run
+> near iommu, they may get much better performance on dma_unmap_sg.
+> For other platform devices, users may still want to know the hardware
+> topology.
 > 
-> There is some helpful background in [2]: basically, this is a small
-> part of fixing a long-standing disconnect between pinning pages, and
-> file systems' use of those pages.
-> 
-> [1] Documentation/core-api/pin_user_pages.rst
-> 
-> [2] "Explicit pinning of user-space pages":
->     https://lwn.net/Articles/807108/
-> 
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
+> Cc: Prime Zeng <prime.zeng@hisilicon.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 > ---
->  drivers/vhost/vhost.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  drivers/base/platform.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 21a59b598ed8..596132a96cd5 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -1762,15 +1762,14 @@ static int set_bit_to_user(int nr, void __user *addr)
->  	int bit = nr + (log % PAGE_SIZE) * 8;
->  	int r;
->  
-> -	r = get_user_pages_fast(log, 1, FOLL_WRITE, &page);
-> +	r = pin_user_pages_fast(log, 1, FOLL_WRITE, &page);
->  	if (r < 0)
->  		return r;
->  	BUG_ON(r != 1);
->  	base = kmap_atomic(page);
->  	set_bit(bit, base);
->  	kunmap_atomic(base);
-> -	set_page_dirty_lock(page);
-> -	put_page(page);
-> +	unpin_user_pages_dirty_lock(&page, 1, true);
->  	return 0;
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index b27d0f6c18c9..7794b9a38d82 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -1062,13 +1062,37 @@ static ssize_t driver_override_show(struct device *dev,
 >  }
+>  static DEVICE_ATTR_RW(driver_override);
 >  
-> -- 
-> 2.26.2
+> +static ssize_t numa_node_show(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", dev_to_node(dev));
+> +}
+> +static DEVICE_ATTR_RO(numa_node);
+> +
+> +static umode_t platform_dev_attrs_visible(struct kobject *kobj, struct attribute *a,
+> +		int n)
+> +{
+> +	struct device *dev = container_of(kobj, typeof(*dev), kobj);
+> +
+> +	if (a == &dev_attr_numa_node.attr &&
+> +			dev_to_node(dev) == NUMA_NO_NODE)
+> +		return 0;
+> +
+> +	return a->mode;
+> +}
+>  
+>  static struct attribute *platform_dev_attrs[] = {
+>  	&dev_attr_modalias.attr,
+> +	&dev_attr_numa_node.attr,
+>  	&dev_attr_driver_override.attr,
+>  	NULL,
+>  };
+> -ATTRIBUTE_GROUPS(platform_dev);
+> +
+> +static struct attribute_group platform_dev_group = {
+> +	.attrs = platform_dev_attrs,
+> +	.is_visible = platform_dev_attrs_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(platform_dev);
+>  
+>  static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+>  {
 
+Platform devices are NUMA?  That's crazy, and feels like a total abuse
+of platform devices and drivers that really should belong on a "real"
+bus.
+
+What drivers in the kernel today have this issue?
+
+thanks,
+
+greg k-h
