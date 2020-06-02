@@ -2,137 +2,120 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE07FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62432C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 954E1206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591118311;
-	bh=tb+xyliGtwI1tI3gv1PbxDFbgWXAWbvy+WEHLVNEd4k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WIRrRWNJimkLnlKkHgL6mrJdArt1uu8gr4R0+gsPj70hAXYxcBs3jJMqAQYdq95DV
-	 NCySj2dVNpzrpBcO6KqlPceH6/U/ztVohLDV1adncAAsLVYcMMvOSbGeK8unF4KSBf
-	 qQaHBzwJ2ugLjnLwPZVhm43Fx1sGy0rsSoc3Drr0=
+	by mail.kernel.org (Postfix) with ESMTP id 35A23206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rTwbccbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgFBRSa (ORCPT
+        id S1726853AbgFBRTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:18:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57160 "EHLO
+        Tue, 2 Jun 2020 13:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgFBRSa (ORCPT
+        with ESMTP id S1726162AbgFBRTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:18:30 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD7CDC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:18:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s1so13561332ljo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:18:29 -0700 (PDT)
+        Tue, 2 Jun 2020 13:19:40 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06DAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:19:39 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i12so1678561pju.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:19:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SNRBsgEhndaWfJkwxqUhFkYrHA7Z2jK8v+SKAjBpMrw=;
-        b=cHeKntEgM3HiICfht/pnCtDkCgAraRt+vGaiFUa0rbQQRGNJUmWfN31GQWT3/8Ltqs
-         xGyw9NW6GGE0qRN1zYrj5A1Lp+0See6177U9da0iJoS/+M/e7Y5lNanIyNFQmxAWsbyv
-         Eqfz4HZv3uqTzo08M9Ioc36wztuAz4V5eRnsY=
+        bh=+P/PZHOqotTe6Y+Kk1mMk5Kf+3c1pzP9mwcgdU+JGoA=;
+        b=rTwbccbhNr+Z95ISuuwgkCHDYvEkNQT4Vd9UuTaWTq1lb/O97ewiBNMXcw+qi03VN0
+         Ea8Qh0ZMlLG/xcUkP5pWfsuV6r3JYy83n0OFcchFs9Tg13KqNB/BG73v96741/uSKq1v
+         CliV0gMnWhTCaYQze6RO91VEpMlQoDCcmNy7pBdSmXrIRHk9Sg1uTjuUFokmCys5IPCC
+         /xKDF0u6MbT/D7vb9RVzD7/OxOsRGgA9TsikxTKbFmaERb+Z9f+mY/XrzgX8gVyLQgfW
+         5nWh/E3reTBZa6zU+lKLlzfQByFSvBbuTikUS4QmcV3u2pTRuWJ8VYqN6QzC0t/FZOrb
+         CNIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SNRBsgEhndaWfJkwxqUhFkYrHA7Z2jK8v+SKAjBpMrw=;
-        b=CyQYqm9llH+3WxHf695FZk6apRwXDz7WLPlU2x7L7aAiEjLVW5kUpRreZJScoTfXgw
-         N/9TpHYyumm3EYNL3tH//H6EjYKyK/Qe98ZTamiQAwbtimUEPi8FJRMnowSNyuFyKeQz
-         AJxUeSxM6w/ax7J/I5ql7MC6QIKRu72/p0H/9AcWfcjdQjHkMB6K6iQthXVzjvGlpP4r
-         PM4jHZ4qHZgtuhAP5zvWbCAoDO7Bu5J3wCYzUMxG61cbd5YggeqiX4BITcygyDGVfQQS
-         22i6QR0eQF3WbozYSyqI9MTrqqZbWB/BMfcILCRM/KWRq1JZnC576C3Trwe6IRqbf4gx
-         M+/g==
-X-Gm-Message-State: AOAM533QlJEnNkQH618m0T9ujyIgdo++Qn8/CioJpnWF9v/K2agmtBP9
-        XlWZiMUhAsCJeajDbJ6U7gtI6uDEMMA=
-X-Google-Smtp-Source: ABdhPJwOIduOFZ6kagwqT/yacvlbCvW/gbjhQb1UutOooBbqXIVA1Sr69aQgchkn00CpczqlqlS2WA==
-X-Received: by 2002:a2e:a0cc:: with SMTP id f12mr85216ljm.250.1591118307263;
-        Tue, 02 Jun 2020 10:18:27 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id c5sm661891ljj.37.2020.06.02.10.18.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 10:18:26 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id z206so6647306lfc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:18:25 -0700 (PDT)
-X-Received: by 2002:ac2:504e:: with SMTP id a14mr235578lfm.30.1591118305358;
- Tue, 02 Jun 2020 10:18:25 -0700 (PDT)
+        bh=+P/PZHOqotTe6Y+Kk1mMk5Kf+3c1pzP9mwcgdU+JGoA=;
+        b=aw4ijHC1NI/w1C9pqzVCmBMnG/MnJ9IRvWmnoVht6f6u1H1ZuyQZFjL75sYcFaBHNW
+         sednXtAJpcJ09W0AluSqnI4T+lRR0LamsFCiE5+w0uqENkAItNTZjC+N5eP2bGBc+0ms
+         LJlYOQEHklxhQfDMJ2sNsKW61IeLBrMVzdPE0z/oHesdR8ZDf8s/P2Ey7npFyt9BCJiT
+         bu80hiH1cwU3Kp+9gUHLcadgJECw87A1NZDzppNsmWpiQ5IF7aRueJ1TPhGIc5njrmmR
+         3ZAZgl6VwIhTOpBhh5A5gQLXfottKHb43TndspJzVPxSW2cfy4LuytxunFtr9xoIP8JN
+         Dx4Q==
+X-Gm-Message-State: AOAM533+aZ864AJ7SvJzbXsZL/ZPtHezc8VMW/W6AN63R4sUfijhZkuT
+        504RyUl0nMAFe9KpoOC2RJ8EeLcIFaVQGw2KMVWl9A==
+X-Google-Smtp-Source: ABdhPJyXPIEMsTydqDl9Mujnk4v6UrX7J4Bb9q6ute3YXJmT68apMdBdxTMVpEgt6LwOSYk58JeerQpLjX47mcTjvBw=
+X-Received: by 2002:a17:902:c686:: with SMTP id r6mr27042256plx.147.1591118378852;
+ Tue, 02 Jun 2020 10:19:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200602084257.134555-1-mst@redhat.com> <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
- <20200602163306.GM23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200602163306.GM23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 2 Jun 2020 10:18:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
-Message-ID: <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
+References: <000000000000bbd09005a6fdc6cc@google.com> <000000000000f0261a05a700adf5@google.com>
+ <20200601084335.GA1667318@kroah.com> <CAAeHK+zKLBX62D1MVAkBe7Q__32-K-4FewsfvF3Z_P8SK=oAHQ@mail.gmail.com>
+ <20200601122858.GA390561@kroah.com>
+In-Reply-To: <20200601122858.GA390561@kroah.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 2 Jun 2020 19:19:27 +0200
+Message-ID: <CAAeHK+zcGGZxkpwW050wrOUN_ksVxDJk5hfF1Vt8xZYBKqHMzQ@mail.gmail.com>
+Subject: Re: WARNING in snd_usbmidi_submit_urb/usb_submit_urb
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot <syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com>,
+        Felipe Balbi <balbi@kernel.org>, ingrassia@epigenesys.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 9:33 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Mon, Jun 1, 2020 at 2:29 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
+> On Mon, Jun 01, 2020 at 02:22:40PM +0200, Andrey Konovalov wrote:
+> > On Mon, Jun 1, 2020 at 10:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, Jun 01, 2020 at 12:24:03AM -0700, syzbot wrote:
+> > > > syzbot has bisected this bug to:
+> > > >
+> > > > commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
+> > > > Author: Andrey Konovalov <andreyknvl@google.com>
+> > > > Date:   Mon Feb 24 16:13:03 2020 +0000
+> > > >
+> > > >     usb: gadget: add raw-gadget interface
+> > > >
+> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164afcf2100000
+> > > > start commit:   bdc48fa1 checkpatch/coding-style: deprecate 80-column warn..
+> > > > git tree:       upstream
+> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=154afcf2100000
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=114afcf2100000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=129ea1e5950835e5
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=5f1d24c49c1d2c427497
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d70cf2100000
+> > > >
+> > > > Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
+> > > > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+> > > >
+> > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > >
+> > > So the tool that was used to create the bug has bisected the problem to
+> > > the patch that adds the tool to the kernel to test for the issue?
+> > >
+> > > This feels wrong...
 > >
-> > It's not clear whether we need a new API, I think __uaccess_being() has the
-> > assumption that the address has been validated by access_ok().
+> > That's the expected result of bisection with the way it's intended to
+> > work. We'll be getting more bisection results pointing to that commit
+> > for old USB bugs. For new ones (that are introduced after raw-gadget),
+> > the bisection should point to proper commits.
 >
-> __uaccess_begin() is a stopgap, not a public API.
+> Ok, can you then mute any bisection emails that are about to get sent
+> out that resolve to this commit to save us the effort of just ignoring
+> the thing on our end?
 
-Correct. It's just an x86 implementation detail.
-
-> The problem is real, but "let's add a public API that would do user_access_begin()
-> with access_ok() already done" is no-go.
-
-Yeah, it's completely pointless.
-
-The solution to this is easy: remove the incorrect and useless early
-"access_ok()". Boom, done.
-
-Then use user_access_begin() and the appropriate unsage_get/put_user()
-sequence, and user_access_end().
-
-The range test that user-access-begin does is not just part of the
-ABI, it's just required in general. We have almost thirty years of
-history of trying to avoid it, AND IT WAS ALL BOGUS.
-
-The fact is, the range check is pretty damn cheap, and not doing the
-range check has always been a complete and utter disaster.
-
-You have exactly two cases:
-
- (a) the access_ok() would be right above the code and can't be missed
-
- (b) not
-
-and in (a) the solution is: remove the access_ok() and let
-user_access_begin() do the range check.
-
-In (b), the solution is literally "DON'T DO THAT!"
-
-Because EVERY SINGLE TIME people have eventually noticed (possibly
-after code movement) that "oops, we never did the access_ok at all,
-and now we can be fooled into kernel corruption and a security issue".
-
-And even if that didn't happen, the worry was there.
-
-End result: use user_access_begin() and stop trying to remove the two
-cycles or whatever of the limit checking cost. The "upside" of
-removing that limit check just isn't. It's a downside.
-
-                 Linus
+Sent syzbot change: https://github.com/google/syzkaller/pull/1782
