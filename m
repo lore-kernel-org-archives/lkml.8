@@ -2,126 +2,132 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7493DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60967C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 472632074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591071827;
-	bh=KForfwzUUC3Tk8fGSUSDwVHsxPKPlXtsHIFrysGM4iY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K7/9fhuBd+9qEnK6KsJZURjrNn3H+ylI95pbzcw5QRlcyqKHzH60NqbGlIrBnsLsH
-	 ZQPg3mDhNR2a1lCMXCKDxxPTmwytLzeBIoxbqZfzwifM3cYPX8XGT8490uDgqLJzJS
-	 g6Fei9KWLuGDiJFexazEXfUFXf8C1hEu3oxFdk6g=
+	by mail.kernel.org (Postfix) with ESMTP id 4513A206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFBEXq (ORCPT
+        id S1726118AbgFBEX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725841AbgFBEXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:23:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99144206C3;
-        Tue,  2 Jun 2020 04:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591071825;
-        bh=KForfwzUUC3Tk8fGSUSDwVHsxPKPlXtsHIFrysGM4iY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V45ZYtoL70LH0+jjtU6K2Pm6h5EN5dcw3LAqGkCFEUvGLepwp/RzbDsv1tm9nbE8X
-         IKfw5CNMxoDntLxKInDAvmDaDJ9slDOOgr5WQi4LT/HYwuAb815pAredk+uHwsM3gx
-         Wz/hBz4BIW9vvksL95NAPm/tvL3WM12JokdvE9Lo=
-Date:   Tue, 2 Jun 2020 06:23:40 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Barry Song <song.bao.hua@hisilicon.com>
-Cc:     rafael@kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, Prime Zeng <prime.zeng@hisilicon.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] driver core: platform: expose numa_node to users in sysfs
-Message-ID: <20200602042340.GA2130884@kroah.com>
-References: <20200602030139.73012-1-song.bao.hua@hisilicon.com>
+        Tue, 2 Jun 2020 00:23:59 -0400
+Received: from static-27.netfusion.at ([83.215.238.27]:55956 "EHLO
+        mail.inliniac.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgFBEX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 00:23:58 -0400
+Received: from [192.168.0.36] (a212-238-163-105.adsl.xs4all.nl [212.238.163.105])
+        (Authenticated sender: victor)
+        by mail.inliniac.net (Postfix) with ESMTPSA id C981A10C;
+        Tue,  2 Jun 2020 06:26:05 +0200 (CEST)
+Subject: Re: [PATCH net-next] af-packet: new flag to indicate all csums are
+ good
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, kuba@kernel.org, corbet@lwn.net,
+        edumazet@google.com, willemb@google.com, maowenan@huawei.com,
+        arnd@arndb.de, nhorman@tuxdriver.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200601204938.13302-1-victor@inliniac.net>
+ <20200601.144535.203726078659236025.davem@davemloft.net>
+From:   Victor Julien <victor@inliniac.net>
+Autocrypt: addr=victor@inliniac.net; prefer-encrypt=mutual; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUVOQkZBamQvUUJDQURY
+ S3FvR0xmclhGTDB5R2k3cHozdjU5dG5TN3hsVTl0NHVSUnd6YThrN3piVW9oTFlJCkFNVkp1
+ dFk5Mm9BRDYrOTJtSVNIZDNDZkU0bGZuRlFBNHY1MllXOUUvRHBTaVQzWnFMZ0RHcmdVMHRs
+ Qm1OUG8Kd0tJMjZyUnVCejBER3dVZkdocjlud3dTbVRDM213NU80cFlYR0wyd3ludHA0THZ2
+ Q1lTdFJDVkZIMEhWL0lDVwozT2d6ejQzNGdtelU2N2xOaXpxMDdmL1R2SWtkd3ZHL1ZGVU5u
+ WTZLQXRzUysrRTZZdzl5MEo5SStVYktFUDl4CnkySHl3RFFLRVVqck9FMCtlREtoblRXVGhX
+ YnZEZm5CTGZJUGNla3dYbXVPYjVycGFXblE1MTkwNXVETTFzcm8KUGFZK015NEQ3b3N2ZUFN
+ di9SbmhuN1VuVlg5M3JUS05RRUhaQUJFQkFBRzBJMVpwWTNSdmNpQktkV3hwWlc0ZwpQSFpw
+ WTNSdmNrQnBibXhwYm1saFl5NXVaWFEraVFFN0JCTUJBZ0FsQWhzREJnc0pDQWNEQWdZVkNB
+ SUpDZ3NFCkZnSURBUUllQVFJWGdBVUNVQ045WWdJWkFRQUtDUkRCOUpYamttaFd0SlFOQi85
+ UVhwOXZCbnlwbm1RaDlHb2cKNE0vR2V6TERWbFJoVnQxL2FnYXByWDFhR09kZ29uRHd4WFR1
+ MUs3Wnk5RkcrZysrb3lkRzdaYzFaT3JwSEtjTQp4dWxGams2MUEvODVMLzg1ZktHM0hlTFpX
+ M2szR0p1OUhCRnZqNllrbXdmbHdTRk9KWmdkT3k5SGh0b3hTQnVwCmI4WTlKL0Q5MVB5Vi91
+ YWdaa21ITjRuQmJldGNkSU9PNXdudWV0VnNrNGJsVjdhVk1kU2JEVXNrbU9Nc0hWTDcKRDN2
+ WGFwSG1MbGhWSXZNQjBPTndQQVY5MHV6WUtNRlQ0SWdFbm04VXBFT0hsL0tFNWJyWlAzQkU4
+ SXRJajUrZwpJRkNMNTRrdVphMWY5MUlDMzNocUJaNUZQNitNamt3ZmswOVdyQURsVmt4S3NP
+ RkgyMHQ2NVVLT2EyeTNLM3pyCnhaYll0Q05XYVdOMGIzSWdTblZzYVdWdUlEeDJhV04wYjNK
+ QWRuVjFjbTExZFhJdWIzSm5Qb2tCT0FRVEFRSUEKSWdVQ1VDTjVwZ0liQXdZTENRZ0hBd0lH
+ RlFnQ0NRb0xCQllDQXdFQ0hnRUNGNEFBQ2drUXdmU1Y0NUpvVnJSawpxZ2dBa01pODdnZzNT
+ K3FkQlVjSjVXd3VLTERPL1M0MTNzR09FaEU0SzU3YXpUVTNOVWNPVnVOZW5mNDB1L3F3Ckt4
+ VitEUDJuSzE4Rk9CdDdwcVdyQzRrNThaUWMxTm9SR0VWQjY4elhieVI5L2xIMWNocXB5Mmhv
+ enoyL0xhRG4KT0ptUWgvWUorYUhZbVdETGVuK3BtNWc5NzFJTUE5bUdiK3FrMTQ4aFBBMTBn
+ b0h0ZHIyNzNPeXpQaldzU0JnVwp4bVU2amhNOE1Ld0tSSkFsTmxoMTVSbFpWNEM5Rmhkdi9V
+ b01LZXhpaWltbGZIY1hVR1dtZ2I2RXBnVW5ab2piCklYQlNsYk5FMVZFTk5IcDVaeEhYNUU5
+ dmQxV3BiMFV0Zmd2ZCtqaWo5VEtuMHpSSDlFTHFTYmxtUTFTamF4bEsKVnhhUDd1ejRpUHpJ
+ NFk0RDVxMHJERHhTVmJRcGEyVjVZbUZ6WlM1cGJ5OXBibXhwYm1saFl5QThhVzVzYVc1cApZ
+ V05BYTJWNVltRnpaUzVwYno2SkFTMEVFd0VLQUJjRkFsQWpkL1FDR3dNREN3a0hBeFVLQ0FJ
+ ZUFRSVhnQUFLCkNSREI5Slhqa21oV3RKdndCLzlNdDZCWXkzTlZMUU1WQ05YSjRzZm95eUJJ
+ Q1p2ODNnN3lpQzVEako2dUxXUE0KVFl2M0ZLRDFWa2tUQ2hWOHNXaDhvMkhHUGduUVk5eisx
+ Q1hQM1dSUFdkWG9MNTFha3lPd3pFdEZVRG5JaHBtMApkWFhxQlJ3Qi90WExXN3R0VnkxR3VF
+ eExkaDNaaDkwOHZ3SU1xVU51NC83ODB1VTZiRFpLQW9rZmZKekcxbzZMCm45dVF3bEx1WmNH
+ MnhnTTZiN0RaN2MvNHZ5ejM1ak9jWUozWkREb25xR3BETTNvZFdnWXp4UHN4a0JVRnlKeFkK
+ aDA4MHhzdHR0MFVJMWlmODRyVmdtQXRHblZFQjJ3YklsSktTa3d5ZXI0NGFTQ201WTEyNXNn
+ MUtIZFQwMEREQgpWTTRNZ3k0NTJJYUZJVndpNHcwdVdZR09nblQ1MWx2VTY4NmV3VHh2dVFF
+ TkJGQWpkL1FCQ0FEVkFoU08wR1YwCkxHdnh0a0hWQ1hzaGdSR2srNmdTSFpRVzc4a3F2V0dM
+ OU95UDhzK0ZpUS8vQWFMa1NETzNpSVZTbWVrZVhiZlkKNkcxa2l2aDJLN0NaYlBTMzdDVGVL
+ L0p0L2ZFbzY1bTJvcWtMWStDTnZVeElvYVdhMitQY1Z4UXNLem1aZ0hDRApDRVdzN21rK01Z
+ UUxNZnluanVoVVorWmlaa2Y1U2ZBY1hQTEQ5emRkTFlSdUJtOTgwRDN1UVJsbXlqRTVOZTJa
+ CkRZVEMwU1ZLNDFRMVVDdDFoZFdNOUlWczg2UXEybUU5Y21KWkthUUNRc1ZEMVlMZUdxYTJk
+ UVdLYnIyc2EyRHUKd2pCbEhzWk83NFZjTHR2L2lQV1Nad2FxNkdBZTJGZXB0TFhJQWd2Y3lB
+ WDlxOHczWDBjdWtsa1RTWFUwbU5ISQpuWHFnRHRBRGtOVnRBQkVCQUFHSkFSOEVHQUVDQUFr
+ RkFsQWpkL1FDR3d3QUNna1F3ZlNWNDVKb1ZyU01od2dBCmlicHNMNUtnaEhnK0h2TktocXpV
+ b0JGTDMya2xNS1R5Ums0ekhzbzZDNHBKVDNvbjRqOVF2dnJLU2tsaUJ4a1IKM2ZMdVFOVWE5
+ YlVYeDNmeUFheVF2ekxnV1FycVc3eTU1Z1dCRUZPQTVQQXdFU1pDdTNYKzNGODZPK2w0N1k0
+ dwpOZTRDRDJLYTRLKzlXTHQvR3RlUnBQQU5lVldNUHRRQktqc3BFSFBSeWNidnJGV20xMUJI
+ djV2eC9GYVNXN2tICjdkaHFkRHNxMFlJaWYwUkdjUVNySlBBQm00ZHkva1hrcFJQUEFHSGdN
+ dVMvejZwY3c0RFVsaTZQVE1aTzNyT0oKbVJQQUlFRUNTVngvRlZERjJXeVREQUlWanBuMENN
+ Zjl1dnliVEU4Q25CNEQxcDZLNkgyZ0d0YVRlRlhJUVkraAoxcmNDY0JVNE9zZlQvWFkwZXZO
+ aWpnPT0KPWFWT0YKLS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQo=
+Message-ID: <11986598-9357-dfdd-e187-c9eb0428fd62@inliniac.net>
+Date:   Tue, 2 Jun 2020 06:23:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602030139.73012-1-song.bao.hua@hisilicon.com>
+In-Reply-To: <20200601.144535.203726078659236025.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:01:39PM +1200, Barry Song wrote:
-> For some platform devices like iommu, particually ARM smmu, users may
-> care about the numa locality. for example, if threads and drivers run
-> near iommu, they may get much better performance on dma_unmap_sg.
-> For other platform devices, users may still want to know the hardware
-> topology.
+On 01-06-2020 23:45, David Miller wrote:
+> From: Victor Julien <victor@inliniac.net>
+> Date: Mon,  1 Jun 2020 22:49:37 +0200
 > 
-> Cc: Prime Zeng <prime.zeng@hisilicon.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->  drivers/base/platform.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
+>> @@ -472,6 +472,12 @@ TP_STATUS_CSUM_VALID	This flag indicates that at least the transport
+>>  			validated on the kernel side. If the flag is not set
+>>  			then we are free to check the checksum by ourselves
+>>  			provided that TP_STATUS_CSUMNOTREADY is also not set.
+>> +TP_STATUS_CSUM_UNNECESSARY  This flag indicates that the driver validated all
+>> +                        the packets csums. If it is not set it might be that
+>> +                        the driver doesn't support this, or that one of the
+>> +                        layers csums is bad. TP_STATUS_CSUM_VALID may still
+>> +                        be set if the transport layer csum is correct or
+>> +                        if the driver supports only this mode.
+>>  ======================  =======================================================
+>                         ^^^^^
 > 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index b27d0f6c18c9..7794b9a38d82 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -1062,13 +1062,37 @@ static ssize_t driver_override_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RW(driver_override);
->  
-> +static ssize_t numa_node_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "%d\n", dev_to_node(dev));
-> +}
-> +static DEVICE_ATTR_RO(numa_node);
-> +
-> +static umode_t platform_dev_attrs_visible(struct kobject *kobj, struct attribute *a,
-> +		int n)
-> +{
-> +	struct device *dev = container_of(kobj, typeof(*dev), kobj);
-> +
-> +	if (a == &dev_attr_numa_node.attr &&
-> +			dev_to_node(dev) == NUMA_NO_NODE)
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
->  
->  static struct attribute *platform_dev_attrs[] = {
->  	&dev_attr_modalias.attr,
-> +	&dev_attr_numa_node.attr,
->  	&dev_attr_driver_override.attr,
->  	NULL,
->  };
-> -ATTRIBUTE_GROUPS(platform_dev);
-> +
-> +static struct attribute_group platform_dev_group = {
-> +	.attrs = platform_dev_attrs,
-> +	.is_visible = platform_dev_attrs_visible,
-> +};
-> +__ATTRIBUTE_GROUPS(platform_dev);
->  
->  static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
->  {
+> I think you need to reformat these dividers.
+> 
 
-Platform devices are NUMA?  That's crazy, and feels like a total abuse
-of platform devices and drivers that really should belong on a "real"
-bus.
+Yes of course. Think I'll have to reformat the whole table then, at
+least for `rst2pdf` to accept it.
 
-What drivers in the kernel today have this issue?
+Alternatively I can try to come up with a shorter name for the flag, but
+I'm not really coming up with anything so far.
 
-thanks,
+-- 
+---------------------------------------------
+Victor Julien
+http://www.inliniac.net/
+PGP: http://www.inliniac.net/victorjulien.asc
+---------------------------------------------
 
-greg k-h
