@@ -2,391 +2,131 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC30C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93DF6206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:53:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aFZuHwx5"
+	by mail.kernel.org (Postfix) with ESMTP id 1F71F206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgFBVxQ (ORCPT
+        id S1728174AbgFBVzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 17:53:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBVxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 17:53:16 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F93C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 14:53:16 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d7so12544713ioq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 14:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uKk/50km335wP5vYExKHj8LF75uWPnrWjyE59PhAFDw=;
-        b=aFZuHwx5e1aDmo3x5/6O0f6louCN4buh/3DU6L5G8IPotwB25Tx2wTBsqrcy59mJIM
-         Ok9kuVzwd8gdQIWkxP4hvbjvyQ1G0/msj7GGV1HKUtOLsdvM+jQuXhQR+JMKHiHyZyaL
-         hykzo/edcOqt8KBoTl19bqBu/Tu+aJNa6+ja3Ljcl8GDcr/1CKbAHMcpkFBB7Zi61SSW
-         5FfuZnmmd2hoye7Q5GblXmaBYS3jSDMortOG1y0OpZPoT9fefeHvc4cArsCedMUFzRI+
-         lNcjtw85gcvuuY5qZsPfBBEcR2yNIOo57bBP+r2QWHDqs4kSI6QOE7Ddzz1aUaiYvftp
-         SHKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uKk/50km335wP5vYExKHj8LF75uWPnrWjyE59PhAFDw=;
-        b=mnCT/z8gfabzzcnBeWqwiLcWZ2nUr51W6IsH40Zj9fZi2TITxlK7OIyatBprxYiTSN
-         1lGkGTqRVePqEw1LRO+uajq9F+YdDsV0amIjnMpfgeGvgkphVJsfLqmgqaXOPFynazSe
-         vvRoo6VWvvYETVKhYF4By5vAUoN2iFeYPbT/TG9ueA91hQ6+N0EEKDRW0ZIGDKLs7wvE
-         62eP212hmx0ZoNo4J7ZZm91gBNLiLsUEipRNX367SJz7oaaT4paSBE0j3UeYn8SeQUR6
-         2FOnPPZUicHYrwMt+RPujEULldzwLVDo27cRpOrc7e8lVn6gOn0zJD1RKVjTjbw4xSDE
-         91rg==
-X-Gm-Message-State: AOAM530VBqrN8ACcnX6rRqnXMuyLEvRmRpx8Gt1y1Xk+rPg5f3+qt2Dy
-        NX5+Xyid/f1ariru/bk2y8FXZpqGC5vuDtfk+K5Xjw==
-X-Google-Smtp-Source: ABdhPJwK1gEygjIDHmHj+Z7wt3ksysqmkxnd7ELfYmPc4KxLR8NccueJ6iAkyWhc/DWpqV+goCTP8TPvKnFgeQkUfYc=
-X-Received: by 2002:a6b:6414:: with SMTP id t20mr1205986iog.32.1591134795058;
- Tue, 02 Jun 2020 14:53:15 -0700 (PDT)
+        Tue, 2 Jun 2020 17:55:18 -0400
+Received: from fieldses.org ([173.255.197.46]:34012 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgFBVzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 17:55:17 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 15AB91BE7; Tue,  2 Jun 2020 17:55:17 -0400 (EDT)
+Date:   Tue, 2 Jun 2020 17:55:17 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     syzbot <syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com>
+Cc:     chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: unable to handle kernel paging request in rb_erase
+Message-ID: <20200602215517.GK1769@fieldses.org>
+References: <0000000000005016dd05a5e6b308@google.com>
 MIME-Version: 1.0
-References: <20200429190819.64235-1-irogers@google.com>
-In-Reply-To: <20200429190819.64235-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 Jun 2020 14:53:03 -0700
-Message-ID: <CAP-5=fVRdqvswtyQMg5cB+ntTGda+SAYskjTQednEH-AeZo13g@mail.gmail.com>
-Subject: Re: [PATCH v3] perf test x86: address multiplexing in rdpmc test
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000005016dd05a5e6b308@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 12:08 PM Ian Rogers <irogers@google.com> wrote:
->
-> Counters may be being used for pinned or other events which inhibit the
-> instruction counter in the test from being scheduled - time_enabled > 0
-> but time_running == 0. This causes the test to fail with division by 0.
-> Make time_running and enabled out parameters of mmap_read_self and add a
-> sleep loop to ensure that the counter is running before computing the
-> delta.
+As far as I know, this one's still unresolved.  I can't see the bug from
+code inspection, and we don't have a reproducer.  If anyone else sees
+this or has an idea what might be going wrong, I'd be interested.--b.
 
-Ping. Peter does this address your feedback?
-
-Thanks,
-Ian
-
-> v3. Cleans up the code by adding a single scale_count boolean. It aligns
->     the code with the comments in perf_event.h as suggested by Peter
->     Zijlstra.
-> v2. Address review feedback from Peter Zijlstra.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Sun, May 17, 2020 at 11:59:12PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    9b1f2cbd Merge tag 'clk-fixes-for-linus' of git://git.kern..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15dfdeaa100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0e37e9d19bded16b8ab9
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com
+> 
+> BUG: unable to handle page fault for address: ffff887ffffffff0
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 0 P4D 0 
+> Oops: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 8682 Comm: syz-executor.3 Not tainted 5.7.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
+> RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
+> Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
+> RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
+> RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
+> RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
+> R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
+> R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
+> FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  nfsd_reply_cache_free_locked+0x198/0x380 fs/nfsd/nfscache.c:127
+>  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
+>  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
+>  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
+>  setup_net+0x50c/0x860 net/core/net_namespace.c:364
+>  copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
+>  create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:108
+>  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:229
+>  ksys_unshare+0x43d/0x8e0 kernel/fork.c:2970
+>  __do_sys_unshare kernel/fork.c:3038 [inline]
+>  __se_sys_unshare kernel/fork.c:3036 [inline]
+>  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3036
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45ca29
+> Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fa002d20c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
+> RAX: ffffffffffffffda RBX: 000000000050a1c0 RCX: 000000000045ca29
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000000
+> RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 0000000000000c4e R14: 00000000004ce9bd R15: 00007fa002d216d4
+> Modules linked in:
+> CR2: ffff887ffffffff0
+> ---[ end trace f929dcba0362906a ]---
+> RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
+> RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
+> Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
+> RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
+> RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
+> RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
+> R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
+> R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
+> FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
 > ---
->  include/uapi/linux/perf_event.h       | 34 +++++++-----
->  tools/include/uapi/linux/perf_event.h | 34 +++++++-----
->  tools/perf/arch/x86/tests/rdpmc.c     | 80 +++++++++++++++++++--------
->  3 files changed, 98 insertions(+), 50 deletions(-)
->
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 7b2d6fc9e6ed..4936cce0a6d0 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -488,19 +488,22 @@ struct perf_event_mmap_page {
->         /*
->          * Bits needed to read the hw events in user-space.
->          *
-> -        *   u32 seq, time_mult, time_shift, index, width;
-> -        *   u64 count, enabled, running;
-> -        *   u64 cyc, time_offset;
-> -        *   s64 pmc = 0;
-> +        *   u32 seq, time_mult, time_shift, index;
-> +        *   u64 cyc, time_offset, enabled, running = -1;
-> +        *   s64 count = 0;
-> +        *   bool scale_count = false;
->          *
->          *   do {
->          *     seq = pc->lock;
-> -        *     barrier()
-> +        *     barrier();
->          *
-> -        *     enabled = pc->time_enabled;
-> -        *     running = pc->time_running;
-> +        *     if (pc->cap_user_time) {
-> +        *       enabled = pc->time_enabled;
-> +        *       running = pc->time_running;
-> +        *       scale_count = enabled != running && running != 0;
-> +        *     }
->          *
-> -        *     if (pc->cap_usr_time && enabled != running) {
-> +        *     if (scale_count) {
->          *       cyc = rdtsc();
->          *       time_offset = pc->time_offset;
->          *       time_mult   = pc->time_mult;
-> @@ -509,9 +512,13 @@ struct perf_event_mmap_page {
->          *
->          *     index = pc->index;
->          *     count = pc->offset;
-> -        *     if (pc->cap_user_rdpmc && index) {
-> -        *       width = pc->pmc_width;
-> -        *       pmc = rdpmc(index - 1);
-> +        *     if (pc->cap_user_rdpmc && index && running != 0) {
-> +        *       u16 width = pc->pmc_width;
-> +        *       s64 pmc = rdpmc(index - 1);
-> +        *
-> +        *       pmc <<= 64 - width;
-> +        *       pmc >>= 64 - width;  // signed shift right
-> +        *       count += pmc;
->          *     }
->          *
->          *     barrier();
-> @@ -562,8 +569,9 @@ struct perf_event_mmap_page {
->          *              ((rem * time_mult) >> time_shift);
->          *
->          * Where time_offset,time_mult,time_shift and cyc are read in the
-> -        * seqcount loop described above. This delta can then be added to
-> -        * enabled and possible running (if index), improving the scaling:
-> +        * seqcount loop described above when scale_count is true. This delta
-> +        * can then be added to enabled and possible running (if index),
-> +        * improving the scaling:
->          *
->          *   enabled += delta;
->          *   if (index)
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 7b2d6fc9e6ed..4936cce0a6d0 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -488,19 +488,22 @@ struct perf_event_mmap_page {
->         /*
->          * Bits needed to read the hw events in user-space.
->          *
-> -        *   u32 seq, time_mult, time_shift, index, width;
-> -        *   u64 count, enabled, running;
-> -        *   u64 cyc, time_offset;
-> -        *   s64 pmc = 0;
-> +        *   u32 seq, time_mult, time_shift, index;
-> +        *   u64 cyc, time_offset, enabled, running = -1;
-> +        *   s64 count = 0;
-> +        *   bool scale_count = false;
->          *
->          *   do {
->          *     seq = pc->lock;
-> -        *     barrier()
-> +        *     barrier();
->          *
-> -        *     enabled = pc->time_enabled;
-> -        *     running = pc->time_running;
-> +        *     if (pc->cap_user_time) {
-> +        *       enabled = pc->time_enabled;
-> +        *       running = pc->time_running;
-> +        *       scale_count = enabled != running && running != 0;
-> +        *     }
->          *
-> -        *     if (pc->cap_usr_time && enabled != running) {
-> +        *     if (scale_count) {
->          *       cyc = rdtsc();
->          *       time_offset = pc->time_offset;
->          *       time_mult   = pc->time_mult;
-> @@ -509,9 +512,13 @@ struct perf_event_mmap_page {
->          *
->          *     index = pc->index;
->          *     count = pc->offset;
-> -        *     if (pc->cap_user_rdpmc && index) {
-> -        *       width = pc->pmc_width;
-> -        *       pmc = rdpmc(index - 1);
-> +        *     if (pc->cap_user_rdpmc && index && running != 0) {
-> +        *       u16 width = pc->pmc_width;
-> +        *       s64 pmc = rdpmc(index - 1);
-> +        *
-> +        *       pmc <<= 64 - width;
-> +        *       pmc >>= 64 - width;  // signed shift right
-> +        *       count += pmc;
->          *     }
->          *
->          *     barrier();
-> @@ -562,8 +569,9 @@ struct perf_event_mmap_page {
->          *              ((rem * time_mult) >> time_shift);
->          *
->          * Where time_offset,time_mult,time_shift and cyc are read in the
-> -        * seqcount loop described above. This delta can then be added to
-> -        * enabled and possible running (if index), improving the scaling:
-> +        * seqcount loop described above when scale_count is true. This delta
-> +        * can then be added to enabled and possible running (if index),
-> +        * improving the scaling:
->          *
->          *   enabled += delta;
->          *   if (index)
-> diff --git a/tools/perf/arch/x86/tests/rdpmc.c b/tools/perf/arch/x86/tests/rdpmc.c
-> index 1ea916656a2d..93e1770d03d3 100644
-> --- a/tools/perf/arch/x86/tests/rdpmc.c
-> +++ b/tools/perf/arch/x86/tests/rdpmc.c
-> @@ -16,13 +16,13 @@
->  #include <internal/lib.h> // page_size
->  #include "arch-tests.h"
->
-> -static u64 rdpmc(unsigned int counter)
-> +static s64 rdpmc(unsigned int counter)
->  {
->         unsigned int low, high;
->
->         asm volatile("rdpmc" : "=a" (low), "=d" (high) : "c" (counter));
->
-> -       return low | ((u64)high) << 32;
-> +       return low | ((s64)high) << 32;
->  }
->
->  static u64 rdtsc(void)
-> @@ -34,49 +34,67 @@ static u64 rdtsc(void)
->         return low | ((u64)high) << 32;
->  }
->
-> -static u64 mmap_read_self(void *addr)
-> +/*
-> + * Return a user rdpmc result as well as the time enabled and running. In the
-> + * situation that the counter was ran and the kernel is multiplexing events, the
-> + * counter is scaled.
-> + */
-> +static s64 mmap_read_self(void *addr, u64 *enabled, u64 *running)
->  {
->         struct perf_event_mmap_page *pc = addr;
-> -       u32 seq, idx, time_mult = 0, time_shift = 0;
-> -       u64 count, cyc = 0, time_offset = 0, enabled, running, delta;
-> +       u32 seq, time_mult = 0, time_shift = 0, index;
-> +       u64 cyc = 0, time_offset = 0;
-> +       s64 count = 0;
-> +       bool scale_count = false;
->
-> +       *enabled = -1;
-> +       *running = -1;
->         do {
->                 seq = pc->lock;
->                 barrier();
->
-> -               enabled = pc->time_enabled;
-> -               running = pc->time_running;
-> +               if (pc->cap_user_time) {
-> +                       *enabled = pc->time_enabled;
-> +                       *running = pc->time_running;
-> +                       scale_count = *enabled != *running && *running != 0;
-> +               }
->
-> -               if (enabled != running) {
-> +               if (scale_count) {
->                         cyc = rdtsc();
->                         time_mult = pc->time_mult;
->                         time_shift = pc->time_shift;
->                         time_offset = pc->time_offset;
->                 }
->
-> -               idx = pc->index;
-> +               index = pc->index;
->                 count = pc->offset;
-> -               if (idx)
-> -                       count += rdpmc(idx - 1);
-> +               if (pc->cap_user_rdpmc && index && *running != 0) {
-> +                       u16 width = pc->pmc_width;
-> +                       s64 pmc = rdpmc(index - 1);
-> +
-> +                       pmc <<= 64 - width;
-> +                       pmc >>= 64 - width;  // signed shift right
-> +                       count += pmc;
-> +               }
->
->                 barrier();
->         } while (pc->lock != seq);
->
-> -       if (enabled != running) {
-> -               u64 quot, rem;
-> +       if (scale_count) {
-> +               u64 quot, rem, delta;
->
->                 quot = (cyc >> time_shift);
->                 rem = cyc & (((u64)1 << time_shift) - 1);
->                 delta = time_offset + quot * time_mult +
->                         ((rem * time_mult) >> time_shift);
->
-> -               enabled += delta;
-> -               if (idx)
-> -                       running += delta;
-> +               *enabled += delta;
-> +               if (index)
-> +                       *running += delta;
->
-> -               quot = count / running;
-> -               rem = count % running;
-> -               count = quot * enabled + (rem * enabled) / running;
-> +               quot = count / *running;
-> +               rem = count % *running;
-> +               count = quot * *enabled + (rem * *enabled) / *running;
->         }
->
->         return count;
-> @@ -104,7 +122,7 @@ static int __test__rdpmc(void)
->                 .config = PERF_COUNT_HW_INSTRUCTIONS,
->                 .exclude_kernel = 1,
->         };
-> -       u64 delta_sum = 0;
-> +       u64 delta_sum = 0, sleep_count = 0;
->          struct sigaction sa;
->         char sbuf[STRERR_BUFSIZE];
->
-> @@ -130,14 +148,23 @@ static int __test__rdpmc(void)
->         }
->
->         for (n = 0; n < 6; n++) {
-> -               u64 stamp, now, delta;
-> -
-> -               stamp = mmap_read_self(addr);
-> +               u64 stamp, now, delta, enabled, running;
-> +
-> +               for (;;) {
-> +                       stamp = mmap_read_self(addr, &enabled, &running);
-> +                       if (enabled && running)
-> +                               break;
-> +                       /* Try to wait for event to be running. */
-> +                       sleep_count++;
-> +                       if (sleep_count > 20)
-> +                               goto out_never_run;
-> +                       sleep(1);
-> +               }
->
->                 for (i = 0; i < loops; i++)
->                         tmp++;
->
-> -               now = mmap_read_self(addr);
-> +               now = mmap_read_self(addr, &enabled, &running);
->                 loops *= 10;
->
->                 delta = now - stamp;
-> @@ -155,6 +182,11 @@ static int __test__rdpmc(void)
->                 return -1;
->
->         return 0;
-> +
-> +out_never_run:
-> +       close(fd);
-> +       pr_err("Event counter failed to multiplexed in. Are higher priority counters being sampled by a different process?\n");
-> +       return -1;
->  }
->
->  int test__rdpmc(struct test *test __maybe_unused, int subtest __maybe_unused)
-> --
-> 2.26.2.303.gf8c07b1a785-goog
->
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
