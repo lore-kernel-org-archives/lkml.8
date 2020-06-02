@@ -2,55 +2,55 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB46CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB915C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9129B206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2DC20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:10:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l4FZRHEu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z+tGXNWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgFBUJP (ORCPT
+        id S1728388AbgFBUKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:09:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37928 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbgFBUJO (ORCPT
+        Tue, 2 Jun 2020 16:10:48 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53716 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728101AbgFBUKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:09:14 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JuRSj168397;
-        Tue, 2 Jun 2020 20:07:41 GMT
+        Tue, 2 Jun 2020 16:10:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JvxMj163024;
+        Tue, 2 Jun 2020 20:09:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=ocpI79mplZv5oRbHZuWSY3GLTXVWYIgy/TCx4GYGkDk=;
- b=l4FZRHEuVBz6ABFS8e7MyuVRHvexUYysDsEtiwh+5NZgqFtEKTSeMZmSzHDQgQJEvjXd
- f8XFk9q1+Jdtiw9f9/R734I3X2EVSxqr5Av5wItEY30NwJmQRet9r85b7ZNA4svqeMwP
- cK5I643twktqqMUzTLXTSd2fnVh2bsjojTiBhmUHSN/5czBWENVeA80RzIF5lHf5zwit
- 6Oh3D0yfgpwO+IwC4zo0OzkEjul/zdkadtmCFG1DIZcMEl60spjXodNXcQgBL+XI2cTs
- OcdASU50mtCvvAXxHXh1fCitbkda1XqsdTe88kPjPMicM/NckKGhgLowE0LSWyGjdROd qw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31bfem5ucg-1
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=Zy+9hIUOD1wHoEjv0iqcOdN6XDgnng/gMIII196nKXk=;
+ b=z+tGXNWXcpe4kITTBT32god173s9pokQEK6VzOFsdQ3siX5keWyR1QMHN2W70Ff8C+B+
+ rxDToZRd+1zqTyC8u7HAggP6i0MWWS1eFES8BEs89ChlGn/sNu3YsWQNVQEBTjR3B12M
+ 42Cd8MmRWKocBTsEMS+W6DVOgSBuLlazO9u2LU9tXUA6uFuUodnU44Z/MNnxnPJJG7IC
+ F8Nc/DsSHdVA7XEEGea7sxqM8frdxX6LX63nW5EX5tCDlwm6Sv3WFfVwc/8E5sJevIzi
+ lV7fVZAsi9s3tlf7LNo/knOZz3+7H2bV0+pbbyAUJ6+zgfC+Lb9XkwWxVW5OOkteWklk jw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 31bewqwyhp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 20:07:41 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052Jvvt3065027;
+        Tue, 02 Jun 2020 20:09:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JxIK9135342;
         Tue, 2 Jun 2020 20:07:41 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 31c25pvtqx-1
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31c1dxtrmr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 02 Jun 2020 20:07:41 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052K7dKp005443;
-        Tue, 2 Jun 2020 20:07:39 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052K7b5o013919;
+        Tue, 2 Jun 2020 20:07:37 GMT
 Received: from ayz-linux.us.oracle.com (/10.154.185.88)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 13:07:39 -0700
+        with ESMTP ; Tue, 02 Jun 2020 13:07:36 -0700
 From:   Anthony Yznaga <anthony.yznaga@oracle.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
@@ -58,56 +58,42 @@ Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
         joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, x86@kernel.org, hpa@zytor.com,
         steven.sistare@oracle.com, anthony.yznaga@oracle.com
-Subject: [PATCH 2/3] KVM: x86: avoid unnecessary rmap walks when creating/moving slots
-Date:   Tue,  2 Jun 2020 13:07:29 -0700
-Message-Id: <1591128450-11977-3-git-send-email-anthony.yznaga@oracle.com>
+Subject: [PATCH 0/3] avoid unnecessary memslot rmap walks
+Date:   Tue,  2 Jun 2020 13:07:27 -0700
+Message-Id: <1591128450-11977-1-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1591128450-11977-1-git-send-email-anthony.yznaga@oracle.com>
-References: <1591128450-11977-1-git-send-email-anthony.yznaga@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2004280000 definitions=main-2006020146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006020146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On large memory guests it has been observed that creating a memslot
-for a very large range can take noticeable amount of time.
-Investigation showed that the time is spent walking the rmaps to update
-existing sptes to remove write access or set/clear dirty bits to support
-dirty logging.  These rmap walks are unnecessary when creating or moving
-a memslot.  A newly created memslot will not have any existing mappings,
-and the existing mappings of a moved memslot will have been invalidated
-and flushed.  Any mappings established once the new/moved memslot becomes
-visible will be set using the properties of the new slot.
+While investigating optimizing qemu start time for large memory guests
+I found that kvm_mmu_slot_apply_flags() is walking rmaps to update
+existing sptes when creating or moving a slot but that there won't be
+any existing sptes to update and any sptes inserted once the new memslot
+is visible won't need updating.  I can't find any reason for this not to
+be the case, but I've taken a more cautious approach to fixing this by
+dividing things into three patches.
 
-Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
----
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Anthony Yznaga (3):
+  KVM: x86: remove unnecessary rmap walk of read-only memslots
+  KVM: x86: avoid unnecessary rmap walks when creating/moving slots
+  KVM: x86: minor code refactor and comments fixup around dirty logging
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 23fd888e52ee..d211c8ced6bb 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10138,7 +10138,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	 *
- 	 * FIXME: const-ify all uses of struct kvm_memory_slot.
- 	 */
--	if (change != KVM_MR_DELETE)
-+	if (change == KVM_MR_FLAGS_ONLY)
- 		kvm_mmu_slot_apply_flags(kvm, (struct kvm_memory_slot *) new);
- 
- 	/* Free the arrays associated with the old memslot. */
+ arch/x86/kvm/x86.c | 106 +++++++++++++++++++++++++----------------------------
+ 1 file changed, 49 insertions(+), 57 deletions(-)
+
 -- 
 2.13.3
 
