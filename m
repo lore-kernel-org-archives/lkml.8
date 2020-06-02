@@ -2,109 +2,103 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6344420870
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10CE20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:02:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jRp6tZ1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgFBECX (ORCPT
+        id S1726370AbgFBEC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:02:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56684 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726110AbgFBECX (ORCPT
+        Tue, 2 Jun 2020 00:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgFBECZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:02:23 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05241x51049569;
-        Tue, 2 Jun 2020 00:02:02 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31bhtd6wjy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 00:02:01 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 052421PY049771;
-        Tue, 2 Jun 2020 00:02:01 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31bhtd6wen-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 00:02:00 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 052404Xx030720;
-        Tue, 2 Jun 2020 04:01:42 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf47w8dy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 04:01:42 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05241e2C54067450
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jun 2020 04:01:40 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DEFA25206B;
-        Tue,  2 Jun 2020 04:01:39 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.55.113])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4F2EC52051;
-        Tue,  2 Jun 2020 04:01:36 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     ravi.bangoria@linux.ibm.com, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com, christophe.leroy@c-s.fr,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] powerpc/watchpoint: Remove 512 byte boundary
-Date:   Tue,  2 Jun 2020 09:31:06 +0530
-Message-Id: <20200602040106.127693-8-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200602040106.127693-1-ravi.bangoria@linux.ibm.com>
-References: <20200602040106.127693-1-ravi.bangoria@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-02_04:2020-06-01,2020-06-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0
- cotscore=-2147483648 clxscore=1015 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020020
+        Tue, 2 Jun 2020 00:02:25 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB37C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 21:02:25 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id v79so11275584qkb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 21:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:date:subject:message-id
+         :cc:to;
+        bh=GMRYb8RFRRtwlzEMKi7MT1e7/aWKzB1rdupbFt9KNtw=;
+        b=jRp6tZ1+10Pww1SnEP6YZSCKZrfK4Bb0tu4iuVM86ZsK77NQneS5pHXcnc8qqfJM4z
+         CqtON3na4dFSWJARhtLOlhCx6w/72Gh8GW6rc/fdQf497drxJo7L55uuddB4lV+YZnaJ
+         RUyuIxwhycaJ1fHxSMCSCQtsHeka6H8dpkN1S1opSmV2dLmnKVpvy4uT8hQAfHmqQtKD
+         3fcmTOOwczWMkM6M0jMaw/a8o33ZCPi7ZmfsLXSTLM/+xP7VcD6dnECwnV2WX1vL0G6+
+         NHfZYMz90q7jajQ/rTJDlhR1kLzGINO0pVCp8QGU+naPWdgagXGOM/iXMXmLZNdp6mvD
+         yXhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
+         :subject:message-id:cc:to;
+        bh=GMRYb8RFRRtwlzEMKi7MT1e7/aWKzB1rdupbFt9KNtw=;
+        b=C4WyamebI8BXb1+8lwEGo0F1b30dh0lb/bnlVMBF/09p8/ax0pD9L0dIOelL3EoaBc
+         qUXnyS8LVVw/cA1Fg/QcmAgavS5humgQLCQewE+ofhoUDQzFlLv3vWf71cBBuwEZDafE
+         Q4JteIduNfgYqML57yz0zTZSSQY+P0J4Y6snYv9OmAybwNe10qqyBcdl7KDgl06cv6W6
+         Wv6qzhXqa1a+r74JMhxLF7fW8O91zLN7b055OOzYdKTyBs6fjqlmHdI/2QjLjoWuffD7
+         NFSJ6D+RTx+14Cr0KG6rpzVoW+5Xag3Qzqplj+2As/IHyecWRdb+7c3kNBDstlmy8IsT
+         b8ug==
+X-Gm-Message-State: AOAM531HuD8M7OYv6l6e1eFCmTNxlrJ+ZrfoqhgaMYfappCdA9QMZH/G
+        OV/c/IOxHaEKundz4S6eQGUlPQ==
+X-Google-Smtp-Source: ABdhPJy/MJO7Qoq7doJPnEHbUf6iHSLmfO7PH+CZYb7yDFBioDv+2RchlNaB21JisJNsSLxwHGUMUA==
+X-Received: by 2002:a37:8803:: with SMTP id k3mr16727466qkd.311.1591070543919;
+        Mon, 01 Jun 2020 21:02:23 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y185sm1071027qkd.83.2020.06.01.21.02.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 21:02:23 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Date:   Tue, 2 Jun 2020 00:02:22 -0400
+Subject: Re: [PATCH v4 3/4] mm/util.c: remove the VM_WARN_ONCE for vm_committed_as underflow check
+Message-Id: <E1703973-38C1-4AFB-94D1-E79DDC6853EE@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Konstantin Khlebnikov <koct9i@gmail.com>
+To:     Feng Tang <feng.tang@intel.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Power10 has removed 512 bytes boundary from match criteria. i.e. The match
-range can be 512 bytes unaligned as well.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/kernel/hw_breakpoint.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 0000daf0e1da..270e655108f4 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -418,8 +418,9 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
- 
- 	if (dawr_enabled()) {
- 		max_len = DAWR_MAX_LEN;
--		/* DAWR region can't cross 512 bytes boundary */
--		if (ALIGN(start_addr, SZ_512M) != ALIGN(end_addr - 1, SZ_512M))
-+		/* DAWR region can't cross 512 bytes boundary on p8 and p9 */
-+		if (!cpu_has_feature(CPU_FTR_ARCH_31) &&
-+		    (ALIGN(start_addr, SZ_512M) != ALIGN(end_addr - 1, SZ_512M)))
- 			return -EINVAL;
- 	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
- 		/* 8xx can setup a range without limitation */
--- 
-2.26.2
+> On Jun 1, 2020, at 11:37 PM, Feng Tang <feng.tang@intel.com> wrote:
+>=20
+> I re-run the same benchmark with v5.7 and 5.7+remove_warning kernels,
+> the overall performance change is trivial (which is expected)
+>=20
+>   1330147            +0.1%    1331032        will-it-scale.72.processes
+>=20
+> But the perf stats of "self" shows big change for __vm_enough_memory()=20
+>=20
+>      0.27            -0.3        0.00        pp.self.__vm_enough_memory
+>=20
+> I post the full compare result in the end.
 
+I don=E2=80=99t really see what that means exactly, but I suppose the warnin=
+g is there for so long and no one seems notice much trouble (or benefit) bec=
+ause of it, so I think you will probably need to come up with a proper justi=
+fication to explain why it is a trouble now, and how your patchset suddenly s=
+tart to trigger the warning as well as why it is no better way but to suffer=
+ this debuggability regression (probably tiny but still).=
