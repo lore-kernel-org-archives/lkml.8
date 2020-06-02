@@ -5,324 +5,487 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B660C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1371C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F22C820823
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8072F20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vyfYZcis"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ae6c9cdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgFBNIG (ORCPT
+        id S1728103AbgFBNGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:08:06 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:12625 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgFBNID (ORCPT
+        Tue, 2 Jun 2020 09:06:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49310 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726139AbgFBNGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:08:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591103282; x=1622639282;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=9r8KYnrcusulDTuu4PUZ0utxTKjX9E9H4ARRS8sK/Ak=;
-  b=vyfYZcisANJ4Yxb5D+zbUKTeGnDPBBtF3a2INx6S9vO80Y594rG7UxRB
-   UHpHCW02nqRIH+YdNFGv6CTqGSzaExFHyEANK8VlHl2i3Z4c6PYpO57Wt
-   gQAoD29atq0ZzCcPZP8s/VOF+HUF2J4F2JkJCCc41SZOF3Ge45zM0uyDn
-   k=;
-IronPort-SDR: BGM9BoaSXT4d86sKHbUY2ReEYK73L0zuEP6m5p8hPjO42ov3afVzkj3w/qttteGSyWgwOjuC36
- zmHd3f2Q6beQ==
-X-IronPort-AV: E=Sophos;i="5.73,464,1583193600"; 
-   d="scan'208";a="47840163"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Jun 2020 13:08:01 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 1BDF6A1EC7;
-        Tue,  2 Jun 2020 13:07:59 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:07:58 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.175) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:07:42 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 07/15] mm/damon: Implement access pattern recording
-Date:   Tue, 2 Jun 2020 15:01:17 +0200
-Message-ID: <20200602130125.20467-8-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200602130125.20467-1-sjpark@amazon.com>
-References: <20200602130125.20467-1-sjpark@amazon.com>
+        Tue, 2 Jun 2020 09:06:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591103162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hcgLS8sOOa0jYGy0/GUbI7V052A2CYejMEqoXlLou1w=;
+        b=ae6c9cdp3W4XpaX7jbhTMTJzRt6gT30+MGkuWYXKWwBhDoR64K283Nu0zSjpQut/4KiRUz
+        8KCAphr0UCjP2Zi3ekGWinrn/7cNxAry8n8sbbchzt9zK2F8rUvkdDHgRR4ozODhx3qxQq
+        NiKOVfp2bDCX/sEOPcObj/UDc/b2ReA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-9IugOr5vOdGkRutreVXvWg-1; Tue, 02 Jun 2020 09:06:01 -0400
+X-MC-Unique: 9IugOr5vOdGkRutreVXvWg-1
+Received: by mail-wr1-f70.google.com with SMTP id c14so1370042wrm.15
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 06:06:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hcgLS8sOOa0jYGy0/GUbI7V052A2CYejMEqoXlLou1w=;
+        b=D9kFvfo4DaAJrRbdDo5Cx4A1Qa2CSIek/l6sGNDHXn71bHG/Rj6QPt8WKSnErsuLbh
+         04iADv2V+nijPxrSzkJ0jDBOA/QEWTgT41GgpivGdRBTM7sL3B+IuEx0C2ZMUAcROoDU
+         yHrEHvZDzv/Tqm5dIJM9UIhY4TC6xjQs0vBS6+vhlp13e/qCv7oSncEETW1/eW/D1XJ6
+         n3noRew6C09pBP+K5oWhFAYKmiFnWr+rQ8Hh96SmrsvCHRugtVRfO0XdJY9lDKxS3lD6
+         D1UH1s/hMqO9Yfd5JdUYj8rT0CnpKVOxxrNFV4wFG3lKhDg0I/OCzBMBmsCzI13jCBju
+         ewyQ==
+X-Gm-Message-State: AOAM530rU7dGrBykmJYfys5FzhAELrB0WW8hU72gjkoinNxXe7h2ixm4
+        FQnJEUqoMIV/Zdj+NrbuMx7w9hHZxU08VqB5V9P+9U+AC6EV2It2Ok5UuVVG/FNV6Ml/Sowaz6e
+        7mP1zciHazU5am/IPRq5WyRxt
+X-Received: by 2002:a5d:49cd:: with SMTP id t13mr28797876wrs.292.1591103159337;
+        Tue, 02 Jun 2020 06:05:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxG95U3Hjq7TfVK36tpHBgrirHTNymuvShxx7I3iWEYYOa9vousA3XZILFVeznxGhe2mvUy/A==
+X-Received: by 2002:a5d:49cd:: with SMTP id t13mr28797839wrs.292.1591103158927;
+        Tue, 02 Jun 2020 06:05:58 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id v2sm3783903wrn.21.2020.06.02.06.05.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 06:05:58 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 09:05:56 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH RFC 01/13] vhost: option to fetch descriptors through an
+ independent struct
+Message-ID: <20200602130543.578420-2-mst@redhat.com>
+References: <20200602130543.578420-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.175]
-X-ClientProxiedBy: EX13D29UWC002.ant.amazon.com (10.43.162.254) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200602130543.578420-1-mst@redhat.com>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+The idea is to support multiple ring formats by converting
+to a format-independent array of descriptors.
 
-This commit implements the recording feature of DAMON. If this feature
-is enabled, DAMON writes the monitored access patterns in its binary
-format into a file which specified by the user. This is already able to
-be implemented by each user using the callbacks.  However, as the
-recording is expected to be used widely, this commit implements the
-feature in the DAMON, for more convenience and efficiency.
+This costs extra cycles, but we gain in ability
+to fetch a batch of descriptors in one go, which
+is good for code cache locality.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+When used, this causes a minor performance degradation,
+it's been kept as simple as possible for ease of review.
+A follow-up patch gets us back the performance by adding batching.
+
+To simplify benchmarking, I kept the old code around so one can switch
+back and forth between old and new code. This will go away in the final
+submission.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+Link: https://lore.kernel.org/r/20200401183118.8334-2-eperezma@redhat.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- include/linux/damon.h |  15 +++++
- mm/damon.c            | 131 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 143 insertions(+), 3 deletions(-)
+ drivers/vhost/vhost.c | 297 +++++++++++++++++++++++++++++++++++++++++-
+ drivers/vhost/vhost.h |  16 +++
+ 2 files changed, 312 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 12536d9d2f74..c4796a10cb1a 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -66,6 +66,14 @@ struct damon_task {
-  * in case of virtual memory monitoring) and applies the changes for each
-  * @regions_update_interval.  All time intervals are in micro-seconds.
-  *
-+ * @rbuf: In-memory buffer for monitoring result recording.
-+ * @rbuf_len: The length of @rbuf.
-+ * @rbuf_offset: The offset for next write to @rbuf.
-+ * @rfile_path: Record file path.
-+ *
-+ * If @rbuf, @rbuf_len, and @rfile_path are set, the monitored results are
-+ * automatically stored in @rfile_path file.
-+ *
-  * @kdamond:		Kernel thread who does the monitoring.
-  * @kdamond_stop:	Notifies whether kdamond should stop.
-  * @kdamond_lock:	Mutex for the synchronizations with @kdamond.
-@@ -100,6 +108,11 @@ struct damon_ctx {
- 	struct timespec64 last_aggregation;
- 	struct timespec64 last_regions_update;
- 
-+	unsigned char *rbuf;
-+	unsigned int rbuf_len;
-+	unsigned int rbuf_offset;
-+	char *rfile_path;
-+
- 	struct task_struct *kdamond;
- 	bool kdamond_stop;
- 	struct mutex kdamond_lock;
-@@ -115,6 +128,8 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_recording(struct damon_ctx *ctx,
-+				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctx);
- int damon_stop(struct damon_ctx *ctx);
- 
-diff --git a/mm/damon.c b/mm/damon.c
-index 42ce9df47f8b..768ffd08f7ab 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -44,6 +44,9 @@
- #define damon_for_each_task_safe(t, next, ctx) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
- 
-+#define MAX_RECORD_BUFFER_LEN	(4 * 1024 * 1024)
-+#define MAX_RFILE_PATH_LEN	256
-+
- /* Get a random number in [l, r) */
- #define damon_rand(l, r) (l + prandom_u32() % (r - l))
- 
-@@ -565,16 +568,80 @@ static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
- }
- 
- /*
-- * Reset the aggregated monitoring results
-+ * Flush the content in the result buffer to the result file
-+ */
-+static void damon_flush_rbuffer(struct damon_ctx *ctx)
-+{
-+	ssize_t sz;
-+	loff_t pos = 0;
-+	struct file *rfile;
-+
-+	rfile = filp_open(ctx->rfile_path, O_CREAT | O_RDWR | O_APPEND, 0644);
-+	if (IS_ERR(rfile)) {
-+		pr_err("Cannot open the result file %s\n",
-+				ctx->rfile_path);
-+		return;
-+	}
-+
-+	while (ctx->rbuf_offset) {
-+		sz = kernel_write(rfile, ctx->rbuf, ctx->rbuf_offset, &pos);
-+		if (sz < 0)
-+			break;
-+		ctx->rbuf_offset -= sz;
-+	}
-+	filp_close(rfile, NULL);
-+}
-+
-+/*
-+ * Write a data into the result buffer
-+ */
-+static void damon_write_rbuf(struct damon_ctx *ctx, void *data, ssize_t size)
-+{
-+	if (!ctx->rbuf_len || !ctx->rbuf)
-+		return;
-+	if (ctx->rbuf_offset + size > ctx->rbuf_len)
-+		damon_flush_rbuffer(ctx);
-+
-+	memcpy(&ctx->rbuf[ctx->rbuf_offset], data, size);
-+	ctx->rbuf_offset += size;
-+}
-+
-+/*
-+ * Flush the aggregated monitoring results to the result buffer
-+ *
-+ * Stores current tracking results to the result buffer and reset 'nr_accesses'
-+ * of each region.  The format for the result buffer is as below:
-+ *
-+ *   <time> <number of tasks> <array of task infos>
-+ *
-+ *   task info: <pid> <number of regions> <array of region infos>
-+ *   region info: <start address> <end address> <nr_accesses>
-  */
- static void kdamond_reset_aggregated(struct damon_ctx *c)
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 96d9871fa0cb..105fc97af2c8 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -298,6 +298,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+ 			   struct vhost_virtqueue *vq)
  {
- 	struct damon_task *t;
--	struct damon_region *r;
-+	struct timespec64 now;
-+	unsigned int nr;
-+
-+	ktime_get_coarse_ts64(&now);
-+
-+	damon_write_rbuf(c, &now, sizeof(struct timespec64));
-+	nr = nr_damon_tasks(c);
-+	damon_write_rbuf(c, &nr, sizeof(nr));
+ 	vq->num = 1;
++	vq->ndescs = 0;
+ 	vq->desc = NULL;
+ 	vq->avail = NULL;
+ 	vq->used = NULL;
+@@ -368,6 +369,9 @@ static int vhost_worker(void *data)
  
- 	damon_for_each_task(t, c) {
--		damon_for_each_region(r, t)
-+		struct damon_region *r;
-+
-+		damon_write_rbuf(c, &t->pid, sizeof(t->pid));
-+		nr = nr_damon_regions(t);
-+		damon_write_rbuf(c, &nr, sizeof(nr));
-+		damon_for_each_region(r, t) {
-+			damon_write_rbuf(c, &r->vm_start, sizeof(r->vm_start));
-+			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
-+			damon_write_rbuf(c, &r->nr_accesses,
-+					sizeof(r->nr_accesses));
- 			r->nr_accesses = 0;
-+		}
+ static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+ {
++	kfree(vq->descs);
++	vq->descs = NULL;
++	vq->max_descs = 0;
+ 	kfree(vq->indirect);
+ 	vq->indirect = NULL;
+ 	kfree(vq->log);
+@@ -384,6 +388,10 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+ 
+ 	for (i = 0; i < dev->nvqs; ++i) {
+ 		vq = dev->vqs[i];
++		vq->max_descs = dev->iov_limit;
++		vq->descs = kmalloc_array(vq->max_descs,
++					  sizeof(*vq->descs),
++					  GFP_KERNEL);
+ 		vq->indirect = kmalloc_array(UIO_MAXIOV,
+ 					     sizeof(*vq->indirect),
+ 					     GFP_KERNEL);
+@@ -391,7 +399,7 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+ 					GFP_KERNEL);
+ 		vq->heads = kmalloc_array(dev->iov_limit, sizeof(*vq->heads),
+ 					  GFP_KERNEL);
+-		if (!vq->indirect || !vq->log || !vq->heads)
++		if (!vq->indirect || !vq->log || !vq->heads || !vq->descs)
+ 			goto err_nomem;
  	}
+ 	return 0;
+@@ -2277,6 +2285,293 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
  }
+ EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
  
-@@ -836,6 +903,14 @@ static bool kdamond_need_stop(struct damon_ctx *ctx)
- 	return true;
- }
- 
-+static void kdamond_write_record_header(struct damon_ctx *ctx)
++static struct vhost_desc *peek_split_desc(struct vhost_virtqueue *vq)
 +{
-+	int recfmt_ver = 1;
-+
-+	damon_write_rbuf(ctx, "damon_recfmt_ver", 16);
-+	damon_write_rbuf(ctx, &recfmt_ver, sizeof(recfmt_ver));
++	BUG_ON(!vq->ndescs);
++	return &vq->descs[vq->ndescs - 1];
 +}
 +
- /*
-  * The monitoring daemon that runs as a kernel thread
-  */
-@@ -848,6 +923,9 @@ static int kdamond_fn(void *data)
- 
- 	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
- 	kdamond_init_regions(ctx);
-+
-+	kdamond_write_record_header(ctx);
-+
- 	while (!kdamond_need_stop(ctx)) {
- 		kdamond_prepare_access_checks(ctx);
- 		if (ctx->sample_cb)
-@@ -868,6 +946,7 @@ static int kdamond_fn(void *data)
- 		if (kdamond_need_update_regions(ctx))
- 			kdamond_update_regions(ctx);
- 	}
-+	damon_flush_rbuffer(ctx);
- 	damon_for_each_task(t, ctx) {
- 		damon_for_each_region_safe(r, next, t)
- 			damon_destroy_region(r);
-@@ -970,6 +1049,52 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids)
- 	return 0;
- }
- 
-+/**
-+ * damon_set_recording() - Set attributes for the recording.
-+ * @ctx:	target kdamond context
-+ * @rbuf_len:	length of the result buffer
-+ * @rfile_path:	path to the monitor result files
-+ *
-+ * Setting 'rbuf_len' 0 disables recording.
-+ *
-+ * This function should not be called while the kdamond is running.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_set_recording(struct damon_ctx *ctx,
-+			unsigned int rbuf_len, char *rfile_path)
++static void pop_split_desc(struct vhost_virtqueue *vq)
 +{
-+	size_t rfile_path_len;
++	BUG_ON(!vq->ndescs);
++	--vq->ndescs;
++}
 +
-+	if (rbuf_len > MAX_RECORD_BUFFER_LEN) {
-+		pr_err("too long (>%d) result buffer length\n",
-+				MAX_RECORD_BUFFER_LEN);
++#define VHOST_DESC_FLAGS (VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE | \
++			  VRING_DESC_F_NEXT)
++static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc, u16 id)
++{
++	struct vhost_desc *h;
++
++	if (unlikely(vq->ndescs >= vq->max_descs))
 +		return -EINVAL;
-+	}
-+	rfile_path_len = strnlen(rfile_path, MAX_RFILE_PATH_LEN);
-+	if (rfile_path_len >= MAX_RFILE_PATH_LEN) {
-+		pr_err("too long (>%d) result file path %s\n",
-+				MAX_RFILE_PATH_LEN, rfile_path);
-+		return -EINVAL;
-+	}
-+	ctx->rbuf_len = rbuf_len;
-+	kfree(ctx->rbuf);
-+	kfree(ctx->rfile_path);
-+	ctx->rfile_path = NULL;
-+	if (!rbuf_len) {
-+		ctx->rbuf = NULL;
-+	} else {
-+		ctx->rbuf = kvmalloc(rbuf_len, GFP_KERNEL);
-+		if (!ctx->rbuf)
-+			return -ENOMEM;
-+	}
-+	ctx->rfile_path = kmalloc(rfile_path_len + 1, GFP_KERNEL);
-+	if (!ctx->rfile_path)
-+		return -ENOMEM;
-+	strncpy(ctx->rfile_path, rfile_path, rfile_path_len + 1);
++	h = &vq->descs[vq->ndescs++];
++	h->addr = vhost64_to_cpu(vq, desc->addr);
++	h->len = vhost32_to_cpu(vq, desc->len);
++	h->flags = vhost16_to_cpu(vq, desc->flags) & VHOST_DESC_FLAGS;
++	h->id = id;
++
 +	return 0;
 +}
 +
- /**
-  * damon_set_attrs() - Set attributes for the monitoring.
-  * @ctx:		monitoring context
++static int fetch_indirect_descs(struct vhost_virtqueue *vq,
++				struct vhost_desc *indirect,
++				u16 head)
++{
++	struct vring_desc desc;
++	unsigned int i = 0, count, found = 0;
++	u32 len = indirect->len;
++	struct iov_iter from;
++	int ret;
++
++	/* Sanity check */
++	if (unlikely(len % sizeof desc)) {
++		vq_err(vq, "Invalid length in indirect descriptor: "
++		       "len 0x%llx not multiple of 0x%zx\n",
++		       (unsigned long long)len,
++		       sizeof desc);
++		return -EINVAL;
++	}
++
++	ret = translate_desc(vq, indirect->addr, len, vq->indirect,
++			     UIO_MAXIOV, VHOST_ACCESS_RO);
++	if (unlikely(ret < 0)) {
++		if (ret != -EAGAIN)
++			vq_err(vq, "Translation failure %d in indirect.\n", ret);
++		return ret;
++	}
++	iov_iter_init(&from, READ, vq->indirect, ret, len);
++
++	/* We will use the result as an address to read from, so most
++	 * architectures only need a compiler barrier here. */
++	read_barrier_depends();
++
++	count = len / sizeof desc;
++	/* Buffers are chained via a 16 bit next field, so
++	 * we can have at most 2^16 of these. */
++	if (unlikely(count > USHRT_MAX + 1)) {
++		vq_err(vq, "Indirect buffer length too big: %d\n",
++		       indirect->len);
++		return -E2BIG;
++	}
++	if (unlikely(vq->ndescs + count > vq->max_descs)) {
++		vq_err(vq, "Too many indirect + direct descs: %d + %d\n",
++		       vq->ndescs, indirect->len);
++		return -E2BIG;
++	}
++
++	do {
++		if (unlikely(++found > count)) {
++			vq_err(vq, "Loop detected: last one at %u "
++			       "indirect size %u\n",
++			       i, count);
++			return -EINVAL;
++		}
++		if (unlikely(!copy_from_iter_full(&desc, sizeof(desc), &from))) {
++			vq_err(vq, "Failed indirect descriptor: idx %d, %zx\n",
++			       i, (size_t)indirect->addr + i * sizeof desc);
++			return -EINVAL;
++		}
++		if (unlikely(desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_INDIRECT))) {
++			vq_err(vq, "Nested indirect descriptor: idx %d, %zx\n",
++			       i, (size_t)indirect->addr + i * sizeof desc);
++			return -EINVAL;
++		}
++
++		push_split_desc(vq, &desc, head);
++	} while ((i = next_desc(vq, &desc)) != -1);
++	return 0;
++}
++
++static int fetch_descs(struct vhost_virtqueue *vq)
++{
++	unsigned int i, head, found = 0;
++	struct vhost_desc *last;
++	struct vring_desc desc;
++	__virtio16 avail_idx;
++	__virtio16 ring_head;
++	u16 last_avail_idx;
++	int ret;
++
++	/* Check it isn't doing very strange things with descriptor numbers. */
++	last_avail_idx = vq->last_avail_idx;
++
++	if (vq->avail_idx == vq->last_avail_idx) {
++		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
++			vq_err(vq, "Failed to access avail idx at %p\n",
++				&vq->avail->idx);
++			return -EFAULT;
++		}
++		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
++
++		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
++			vq_err(vq, "Guest moved used index from %u to %u",
++				last_avail_idx, vq->avail_idx);
++			return -EFAULT;
++		}
++
++		/* If there's nothing new since last we looked, return
++		 * invalid.
++		 */
++		if (vq->avail_idx == last_avail_idx)
++			return vq->num;
++
++		/* Only get avail ring entries after they have been
++		 * exposed by guest.
++		 */
++		smp_rmb();
++	}
++
++	/* Grab the next descriptor number they're advertising */
++	if (unlikely(vhost_get_avail_head(vq, &ring_head, last_avail_idx))) {
++		vq_err(vq, "Failed to read head: idx %d address %p\n",
++		       last_avail_idx,
++		       &vq->avail->ring[last_avail_idx % vq->num]);
++		return -EFAULT;
++	}
++
++	head = vhost16_to_cpu(vq, ring_head);
++
++	/* If their number is silly, that's an error. */
++	if (unlikely(head >= vq->num)) {
++		vq_err(vq, "Guest says index %u > %u is available",
++		       head, vq->num);
++		return -EINVAL;
++	}
++
++	i = head;
++	do {
++		if (unlikely(i >= vq->num)) {
++			vq_err(vq, "Desc index is %u > %u, head = %u",
++			       i, vq->num, head);
++			return -EINVAL;
++		}
++		if (unlikely(++found > vq->num)) {
++			vq_err(vq, "Loop detected: last one at %u "
++			       "vq size %u head %u\n",
++			       i, vq->num, head);
++			return -EINVAL;
++		}
++		ret = vhost_get_desc(vq, &desc, i);
++		if (unlikely(ret)) {
++			vq_err(vq, "Failed to get descriptor: idx %d addr %p\n",
++			       i, vq->desc + i);
++			return -EFAULT;
++		}
++		ret = push_split_desc(vq, &desc, head);
++		if (unlikely(ret)) {
++			vq_err(vq, "Failed to save descriptor: idx %d\n", i);
++			return -EINVAL;
++		}
++	} while ((i = next_desc(vq, &desc)) != -1);
++
++	last = peek_split_desc(vq);
++	if (unlikely(last->flags & VRING_DESC_F_INDIRECT)) {
++		pop_split_desc(vq);
++		ret = fetch_indirect_descs(vq, last, head);
++		if (unlikely(ret < 0)) {
++			if (ret != -EAGAIN)
++				vq_err(vq, "Failure detected "
++				       "in indirect descriptor at idx %d\n", head);
++			return ret;
++		}
++	}
++
++	/* Assume notifications from guest are disabled at this point,
++	 * if they aren't we would need to update avail_event index. */
++	BUG_ON(!(vq->used_flags & VRING_USED_F_NO_NOTIFY));
++
++	/* On success, increment avail index. */
++	vq->last_avail_idx++;
++
++	return 0;
++}
++
++/* This looks in the virtqueue and for the first available buffer, and converts
++ * it to an iovec for convenient access.  Since descriptors consist of some
++ * number of output then some number of input descriptors, it's actually two
++ * iovecs, but we pack them into one and note how many of each there were.
++ *
++ * This function returns the descriptor number found, or vq->num (which is
++ * never a valid descriptor number) if none was found.  A negative code is
++ * returned on error. */
++int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
++		      struct iovec iov[], unsigned int iov_size,
++		      unsigned int *out_num, unsigned int *in_num,
++		      struct vhost_log *log, unsigned int *log_num)
++{
++	int ret = fetch_descs(vq);
++	int i;
++
++	if (ret)
++		return ret;
++
++	/* Now convert to IOV */
++	/* When we start there are none of either input nor output. */
++	*out_num = *in_num = 0;
++	if (unlikely(log))
++		*log_num = 0;
++
++	for (i = 0; i < vq->ndescs; ++i) {
++		unsigned iov_count = *in_num + *out_num;
++		struct vhost_desc *desc = &vq->descs[i];
++		int access;
++
++		if (desc->flags & ~VHOST_DESC_FLAGS) {
++			vq_err(vq, "Unexpected flags: 0x%x at descriptor id 0x%x\n",
++			       desc->flags, desc->id);
++			ret = -EINVAL;
++			goto err;
++		}
++		if (desc->flags & VRING_DESC_F_WRITE)
++			access = VHOST_ACCESS_WO;
++		else
++			access = VHOST_ACCESS_RO;
++		ret = translate_desc(vq, desc->addr,
++				     desc->len, iov + iov_count,
++				     iov_size - iov_count, access);
++		if (unlikely(ret < 0)) {
++			if (ret != -EAGAIN)
++				vq_err(vq, "Translation failure %d descriptor idx %d\n",
++					ret, i);
++			goto err;
++		}
++		if (access == VHOST_ACCESS_WO) {
++			/* If this is an input descriptor,
++			 * increment that count. */
++			*in_num += ret;
++			if (unlikely(log && ret)) {
++				log[*log_num].addr = desc->addr;
++				log[*log_num].len = desc->len;
++				++*log_num;
++			}
++		} else {
++			/* If it's an output descriptor, they're all supposed
++			 * to come before any input descriptors. */
++			if (unlikely(*in_num)) {
++				vq_err(vq, "Descriptor has out after in: "
++				       "idx %d\n", i);
++				ret = -EINVAL;
++				goto err;
++			}
++			*out_num += ret;
++		}
++
++		ret = desc->id;
++	}
++
++	vq->ndescs = 0;
++
++	return ret;
++
++err:
++	vhost_discard_vq_desc(vq, 1);
++	vq->ndescs = 0;
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(vhost_get_vq_desc_batch);
++
+ /* Reverse the effect of vhost_get_vq_desc. Useful for error handling. */
+ void vhost_discard_vq_desc(struct vhost_virtqueue *vq, int n)
+ {
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 60cab4c78229..0976a2853935 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -60,6 +60,13 @@ enum vhost_uaddr_type {
+ 	VHOST_NUM_ADDRS = 3,
+ };
+ 
++struct vhost_desc {
++	u64 addr;
++	u32 len;
++	u16 flags; /* VRING_DESC_F_WRITE, VRING_DESC_F_NEXT */
++	u16 id;
++};
++
+ /* The virtqueue structure describes a queue attached to a device. */
+ struct vhost_virtqueue {
+ 	struct vhost_dev *dev;
+@@ -71,6 +78,11 @@ struct vhost_virtqueue {
+ 	vring_avail_t __user *avail;
+ 	vring_used_t __user *used;
+ 	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
++
++	struct vhost_desc *descs;
++	int ndescs;
++	int max_descs;
++
+ 	struct file *kick;
+ 	struct eventfd_ctx *call_ctx;
+ 	struct eventfd_ctx *error_ctx;
+@@ -175,6 +187,10 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+ bool vhost_vq_access_ok(struct vhost_virtqueue *vq);
+ bool vhost_log_access_ok(struct vhost_dev *);
+ 
++int vhost_get_vq_desc_batch(struct vhost_virtqueue *,
++		      struct iovec iov[], unsigned int iov_count,
++		      unsigned int *out_num, unsigned int *in_num,
++		      struct vhost_log *log, unsigned int *log_num);
+ int vhost_get_vq_desc(struct vhost_virtqueue *,
+ 		      struct iovec iov[], unsigned int iov_count,
+ 		      unsigned int *out_num, unsigned int *in_num,
 -- 
-2.17.1
+MST
 
