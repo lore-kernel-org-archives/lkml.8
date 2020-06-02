@@ -2,69 +2,140 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7300FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9219C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5788420678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46EF206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mbzqhjaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgFBCxE (ORCPT
+        id S1726181AbgFBC4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 22:53:04 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:38010 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgFBCxE (ORCPT
+        Mon, 1 Jun 2020 22:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbgFBC4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 22:53:04 -0400
-Date:   Mon, 1 Jun 2020 22:53:02 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
-        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] sh: remove sh5 support
-Message-ID: <20200602025301.GZ1079@brightrain.aerifal.cx>
-References: <20200424221948.1120587-1-arnd@arndb.de>
- <20200507143552.GA28683@infradead.org>
- <20200528054600.GA29717@infradead.org>
- <20200528161416.GY1079@brightrain.aerifal.cx>
- <20200529143059.GA25475@infradead.org>
- <20200529175335.GK1079@brightrain.aerifal.cx>
- <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
- <20200601181259.GV1079@brightrain.aerifal.cx>
- <20200602013332.GY1079@brightrain.aerifal.cx>
- <20200601194936.244303d858d2d0c47fc87821@linux-foundation.org>
+        Mon, 1 Jun 2020 22:56:52 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F81C061A0E;
+        Mon,  1 Jun 2020 19:56:52 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bcBm5d1Qz9sSc;
+        Tue,  2 Jun 2020 12:56:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591066609;
+        bh=C7J3bXfSu1FZozeaELpDPUf9WJWOXLY6YTv7uazDT4g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mbzqhjaFNySnaXDqY5UuyRgfAwhaSp/PkkA8VsB+hDTe5uS8CsM8npsvE8o8q4gGo
+         /BZwT0lR4c9nZ1tD+g0HTkhYqqo/KBPYPVQIrINKXbxA7R8yiReHPaZHsH/iDzpzNb
+         vaww/+eE0YRz1NJ1RythNbIOVaCOkyLfkVuWOy89/BSzdb6nWs5RYuUfnUjdPdsGXG
+         sKSlFxDXpJt+IBCjDNk9aXFZMuDmy7KEgOGd4yPdYh+0e3Gxr35nU33FcAOo9QeYmH
+         2WdD8ZEcR0TtcArF4BbUCTq/56B3zdrlgYzrkLea2Skb9ZGMsp6C4YLVf0UKjvJhid
+         1zbjreBKYxueA==
+Date:   Tue, 2 Jun 2020 12:56:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yamin Friedman <yaminf@mellanox.com>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Max Gurtovoy <maxg@mellanox.com>
+Subject: linux-next: manual merge of the block tree with the rdma tree
+Message-ID: <20200602125647.5f5ed151@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601194936.244303d858d2d0c47fc87821@linux-foundation.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="Sig_/m84WJc3t0rLvH+PJfU8wLzE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 07:49:36PM -0700, Andrew Morton wrote:
-> On Mon, 1 Jun 2020 21:33:32 -0400 Rich Felker <dalias@libc.org> wrote:
-> 
-> > Hmm, it looks like Andrew Morton just pulled most of these into -mm,
-> > apparently independently of me getting them in my for-next a few hours
-> > ago, since his versions lack my signed-off-by. That's ok though, as
-> > long as they go up. Some details since further action is needed on a
-> > few:
-> 
-> It would be better if these were to go via the sh tree.  So please go
-> ahead and merge them up - I'll drop my copies when they turn up in
-> -next via the sh tree.
+--Sig_/m84WJc3t0rLvH+PJfU8wLzE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-OK. That simplifies things a bit. Thanks.
+Hi all,
 
-Rich
+Today's linux-next merge of the block tree got a conflict in:
+
+  drivers/nvme/target/rdma.c
+
+between commit:
+
+  5733111dcd97 ("nvmet-rdma: use new shared CQ mechanism")
+
+from the rdma tree and commits:
+
+  b0012dd39715 ("nvmet-rdma: use SRQ per completion vector")
+  b09160c3996c ("nvmet-rdma: add metadata/T10-PI support")
+
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/nvme/target/rdma.c
+index 2405db8bd855,d5141780592e..000000000000
+--- a/drivers/nvme/target/rdma.c
++++ b/drivers/nvme/target/rdma.c
+@@@ -589,7 -751,8 +752,8 @@@ static void nvmet_rdma_read_data_done(s
+  {
+  	struct nvmet_rdma_rsp *rsp =3D
+  		container_of(wc->wr_cqe, struct nvmet_rdma_rsp, read_cqe);
+ -	struct nvmet_rdma_queue *queue =3D cq->cq_context;
+ +	struct nvmet_rdma_queue *queue =3D wc->qp->qp_context;
++ 	u16 status =3D 0;
+ =20
+  	WARN_ON(rsp->n_rdma <=3D 0);
+  	atomic_add(rsp->n_rdma, &queue->sq_wr_avail);
+@@@ -996,8 -1257,9 +1258,8 @@@ static int nvmet_rdma_create_queue_ib(s
+  	 */
+  	nr_cqe =3D queue->recv_queue_size + 2 * queue->send_queue_size;
+ =20
+- 	queue->cq =3D ib_cq_pool_get(ndev->device, nr_cqe + 1, comp_vector,
+ -	queue->cq =3D ib_alloc_cq(ndev->device, queue,
+ -			nr_cqe + 1, queue->comp_vector,
+ -			IB_POLL_WORKQUEUE);
+++	queue->cq =3D ib_cq_pool_get(ndev->device, nr_cqe + 1, queue->comp_vecto=
+r,
+ +				   IB_POLL_WORKQUEUE);
+  	if (IS_ERR(queue->cq)) {
+  		ret =3D PTR_ERR(queue->cq);
+  		pr_err("failed to create CQ cqe=3D %d ret=3D %d\n",
+
+--Sig_/m84WJc3t0rLvH+PJfU8wLzE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Vv+8ACgkQAVBC80lX
+0Gzu7AgAgn7tSYncLw7QsB+xKm6a8weQ9NCNS5YBnfD5oZQWQWigOhVaqOG82cYk
+SQM7B82MTUbmgTuyhz1SAN8pQeDRKD3IT4AWjMmldsKnGocs9i02BT+d3lO1TqJG
+s1v9K2foL5MIqhDuKYf70IKtF/8b3d7Xr0bZ4ZI6BaCS1GneF3XKx5PNb8Bm1ECf
+JbKiuu4z3wvihl225BLXPT87NxfDyAPs1UppnA5QNORcAsdbObMm2j8TNiqBj4N6
+YleRdQOMXa6wGVm9dDsh+25HYLby+THaNjjKXEHG1QdZvfsc5Nw4AlMgrI9CcXCv
+Pq2x/Awv9iTiMatxKqBKEl5qZuwWuA==
+=64/x
+-----END PGP SIGNATURE-----
+
+--Sig_/m84WJc3t0rLvH+PJfU8wLzE--
