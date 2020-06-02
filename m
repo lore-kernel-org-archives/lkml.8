@@ -2,261 +2,129 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72978C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E27EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47EB120678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3438C206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s8ZN2g2p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYnvAJWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgFBMge (ORCPT
+        id S1726750AbgFBMjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:36:34 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54792 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgFBMge (ORCPT
+        Tue, 2 Jun 2020 08:39:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgFBMjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:36:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052CaW1v086241;
-        Tue, 2 Jun 2020 07:36:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591101392;
-        bh=fFGspWtMZRHNuJijyv/XxS0KUeZmp81UfpxM0oy4uJQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=s8ZN2g2psIwYj7lFc+zqFuWddwZ0akXgtYoFhQV9+EXkhdLl+vA97FP7mP/Pg85Dr
-         MQ+V1zqcTPWGR+iLrB2jxQKiNEiNA6Cz8TLVlI++hYXgcl6aODAibpwRNWrEJpOvgx
-         u07Wvuqwtuyct2jAiB3a8jwH30Kn8GS50dOx3HEE=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052CaWGW026766
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 2 Jun 2020 07:36:32 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
- 2020 07:36:31 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 2 Jun 2020 07:36:31 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052CaTpA039892;
-        Tue, 2 Jun 2020 07:36:30 -0500
-Subject: Re: [PATCH 1/3] dt-bindings: usb: convert keystone-usb.txt to YAML
-To:     Rob Herring <robh@kernel.org>
-CC:     <balbi@kernel.org>, <vigneshr@ti.com>, <linux-usb@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200513130709.10239-1-rogerq@ti.com>
- <20200513130709.10239-2-rogerq@ti.com> <20200527013715.GA847644@bogus>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <4cb847d1-32b0-419f-a7e5-9945bc32b890@ti.com>
-Date:   Tue, 2 Jun 2020 15:36:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 08:39:17 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C07C061A0E;
+        Tue,  2 Jun 2020 05:39:17 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id e2so12565814eje.13;
+        Tue, 02 Jun 2020 05:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F1vjzv7szM2SvYyH6cUhGI5pKgsWnnEULj32MB0yFS4=;
+        b=WYnvAJWjcIH5V3n93yd+hBCgHBYATbMf4IhCsfwQ9Oy1ZM9Z6rPS+WbFRPRAFWV/bF
+         g8NVrkY1eAE3itDiEE0aGbFh82DXnCYGwNCAVEFB9InkZi2h89PET4FN6iEgxXtQf0uv
+         Tx1pit9Jd6xv3AdFKIWO7ZejWVHuRhkC878hAEFOiQFDje52U6ZlKNLeqXVPUoQX4T4e
+         GB7+N4Vxwux1TDzFrN8dajdxWthW3Hz1N2MRMmG9WVU48aO+F4QH0DSedqbufQ+5ESWw
+         ZkycrkFkAvLKMSlCKPX3yzohcyD9cGBxC439RRXOlwZ/WsIsfF6eXyxeDckOKQLJ9FRJ
+         WJtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F1vjzv7szM2SvYyH6cUhGI5pKgsWnnEULj32MB0yFS4=;
+        b=BB14d8SyuMFwGhoajjNKDuiPWim1rAEeDZDpvIgcFSNy9BBXt1gN0KY8BticqwPm5q
+         YS5QmpjD9FvwkaP+YVP5xaM4F8PPLAORGf++kXhmHk2OrUEFySZnpmxtFTySwV0XPpna
+         K2uEKTRK+7kT2cYPsDSqfoRqYpg+nePLspO4LypWyz3s5EVMu0PMo7d6vonH5xueXsrI
+         e+fwR0YV9vSk+g/kHr/+h0aCfCJ4gzzJ1sgO/drawwC1eqJWG2q3yEUN469rtrmyvIc3
+         3wA1m14/qUF1EOZMpSSrcBEHguTLLQ+ZsRveFkMT1KEYs0kPKUmc0lF63DvKOsDvfS7K
+         W6jQ==
+X-Gm-Message-State: AOAM530MRXOy8JEtVMlYmXmdtQws+Pze+iWfC0RLSPAV1cZppN5SIUad
+        ZomhbtDaBwcHEOXnGleicesgGxXZ
+X-Google-Smtp-Source: ABdhPJy0URsgXsVIryc33w0XdDF5+UsNv9pCt38qFg7zKESxBcV+HSUzFeWuuPBLGmUt+XridHj6UQ==
+X-Received: by 2002:a17:906:7ad3:: with SMTP id k19mr22505707ejo.464.1591101556221;
+        Tue, 02 Jun 2020 05:39:16 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id dc8sm1522400edb.10.2020.06.02.05.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 05:39:14 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 14:39:14 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        David Wu <david.wu@rock-chips.com>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: rockchip: simplify rockchip_pwm_get_state()
+Message-ID: <20200602123914.GA3360525@ulmo>
+References: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-In-Reply-To: <20200527013715.GA847644@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Disposition: inline
+In-Reply-To: <20190919091728.24756-1-linux@rasmusvillemoes.dk>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
 
-Thanks for the review. Since this patch was already picked up I will
-address the issues in a follow up patch.
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-cheers,
--roger
+On Thu, Sep 19, 2019 at 11:17:27AM +0200, Rasmus Villemoes wrote:
+> The way state->enabled is computed is rather convoluted and hard to
+> read - both branches of the if() actually do the exact same thing. So
+> remove the if(), and further simplify "<boolean condition> ? true :
+> false" to "<boolean condition>".
+>=20
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+> I stumbled on this while trying to understand how the pwm subsystem
+> works. This patch is a semantic no-op, but it's also possible that,
+> say, the first branch simply contains a "double negative" so either
+> the !=3D should be =3D=3D or the "false : true" should be "true : false".
+>=20
+>  drivers/pwm/pwm-rockchip.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 
-On 27/05/2020 04:37, Rob Herring wrote:
-> On Wed, May 13, 2020 at 04:07:07PM +0300, Roger Quadros wrote:
->> Convert keystone-usb documentation to YAML format.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>   .../devicetree/bindings/usb/keystone-usb.txt  | 56 ----------------
->>   .../bindings/usb/ti,keystone-dwc3.yaml        | 67 +++++++++++++++++++
->>   2 files changed, 67 insertions(+), 56 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/usb/keystone-usb.txt
->>   create mode 100644 Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
->> deleted file mode 100644
->> index 77df82e36138..000000000000
->> --- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
->> +++ /dev/null
->> @@ -1,56 +0,0 @@
->> -TI Keystone Soc USB Controller
->> -
->> -DWC3 GLUE
->> -
->> -Required properties:
->> - - compatible: should be
->> -		"ti,keystone-dwc3" for Keystone 2 SoCs
->> -		"ti,am654-dwc3" for AM654 SoC
->> - - #address-cells, #size-cells : should be '1' if the device has sub-nodes
->> -   with 'reg' property.
->> - - reg : Address and length of the register set for the USB subsystem on
->> -   the SOC.
->> - - interrupts : The irq number of this device that is used to interrupt the
->> -   MPU.
->> - - ranges: allows valid 1:1 translation between child's address space and
->> -   parent's address space.
->> -
->> -SoC-specific Required Properties:
->> -The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
->> -SoCs only:
->> -
->> -- clocks:		Clock ID for USB functional clock.
->> -- clock-names:		Must be "usb".
->> -
->> -
->> -The following are mandatory properties for 66AK2G and AM654:
->> -
->> -- power-domains:	Should contain a phandle to a PM domain provider node
->> -			and an args specifier containing the USB device id
->> -			value. This property is as per the binding,
->> -			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->> -
->> -Sub-nodes:
->> -The dwc3 core should be added as subnode to Keystone DWC3 glue.
->> -- dwc3 :
->> -   The binding details of dwc3 can be found in:
->> -   Documentation/devicetree/bindings/usb/dwc3.txt
->> -
->> -Example:
->> -	usb: usb@2680000 {
->> -		compatible = "ti,keystone-dwc3";
->> -		#address-cells = <1>;
->> -		#size-cells = <1>;
->> -		reg = <0x2680000 0x10000>;
->> -		clocks = <&clkusb>;
->> -		clock-names = "usb";
->> -		interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
->> -		ranges;
->> -
->> -		dwc3@2690000 {
->> -			compatible = "synopsys,dwc3";
->> -			reg = <0x2690000 0x70000>;
->> -			interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
->> -			usb-phy = <&usb_phy>, <&usb_phy>;
->> -		};
->> -	};
->> diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
->> new file mode 100644
->> index 000000000000..14d2fe329b93
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
->> @@ -0,0 +1,67 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/usb/ti,keystone-dwc3.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: TI Keystone Soc USB Controller
->> +
->> +maintainers:
->> +  - Roger Quadros <rogerq@ti.com>
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - const: "ti,keystone-dwc3"
->> +      - const: "ti,am654-dwc3"
-> 
-> Use enum rather than oneOf+const.
-> 
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: Address and length of the register set for the USB subsystem on
->> +      the SOC.
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +    description: The irq number of this device that is used to interrupt the MPU.
-> 
-> No need for genericish descriptions when a single item.
-> 
->> +
->> +
->> +  clocks:
->> +    description: Clock ID for USB functional clock.
-> 
-> How many?
-> 
->> +
->> +  power-domains:
->> +    description: Should contain a phandle to a PM domain provider node
->> +      and an args specifier containing the USB device id
->> +      value. This property is as per the binding,
->> +      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> 
-> How many?
-> 
->> +
->> +  dwc3:
-> 
-> This doesn't work because there's a unit address. You need a pattern.
-> 
->> +    description: This is the node representing the DWC3 controller instance
->> +      Documentation/devicetree/bindings/usb/dwc3.txt
-> 
-> type: object
-> 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
-> 
-> additionalProperties: false
-> 
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    usb: usb@2680000 {
->> +      compatible = "ti,keystone-dwc3";
->> +      #address-cells = <1>;
->> +      #size-cells = <1>;
-> 
-> These have to be documented.
-> 
->> +      reg = <0x2680000 0x10000>;
->> +      clocks = <&clkusb>;
->> +      clock-names = "usb";
->> +      interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
->> +      ranges;
-> 
-> This too.
-> 
->> +
->> +      dwc3@2690000 {
->> +        compatible = "synopsys,dwc3";
->> +        reg = <0x2690000 0x70000>;
->> +        interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
->> +        usb-phy = <&usb_phy>, <&usb_phy>;
->> +      };
->> +    };
->> -- 
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
+I've applied this. Irrespective of any feedback David would have this is
+correct and a nice simplification.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thierry
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSHEACgkQ3SOs138+
+s6EIvA//U+YBcRa/yOWyp3jhnv0UxhIHPIk4tcP1l5N4cNtnj23Y4VCdv7baJM4M
+k2OKqKanjnp0AROTYeu150CEqI+xXuND8W7PKRIcCTLkS2Gy7WBXh1ezlCRupzyH
+uYRPi+PY5ZkX/owSFRy+2Ii5o5ywzPc5aH6hqsLfKGzkUrJA/wFsTH85JfmEwwTu
+8WOYkvO8zGqaA32B5Orx42x4jH020aa/PorZsl1WXjEnqN7zc0Ke5CZxZN/puoE+
+YuTAqG9NDMFiZzkeN2vHbuafUyBk0zSRiz+/1KTkKPnubJ0bLncbCZRonghCCCNV
+3hWEB8Fm5pP9mo5Ht4q6Z4or2JkuWbcu3IwyE9SrerLtcTbkbCqaU3kkvKFm72Gy
+QN2iUJiGHk4i7PYqNEAWfQ9i16U7+2nbb6rroHiHcKR8G1boWJcwyg6dwVto5uUN
+47k4J8HTAZBsDysAH4GVavggIig9WwMMqprGhVRA7CLhMtp5i/g+9fyN6OmxmwAO
+9N4Sxs/ScWdReU63b0DbWRdEQa9OVK0BWz13uoESETZcfeH9ggZpY2EDBQ96KRY5
+cG9Ka88WfHJJ7qth/PcHsu94fFnbcPkZeca16guCWoYIi5SdCJeDuPVfbjV1xn9T
+Fu/bhyvbAecyGACpTbIwZb5DhtT4HYr0IX4Q4mJ8PfM8b0BdR4o=
+=OaiW
+-----END PGP SIGNATURE-----
+
+--IJpNTDwzlM2Ie8A6--
