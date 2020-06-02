@@ -2,116 +2,206 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9322C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F322206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3F32077D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:31:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXp8SF9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgFBJb3 (ORCPT
+        id S1727026AbgFBJbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:31:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:48558 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgFBJb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:31:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45ACC55D;
-        Tue,  2 Jun 2020 02:31:28 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A47393F305;
-        Tue,  2 Jun 2020 02:31:26 -0700 (PDT)
-References: <20200527151613.16083-1-benjamin.gaignard@st.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     hugues.fruchet@st.com, mchehab@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        vincent.guittot@linaro.org, rjw@rjwysocki.net
-Subject: Re: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
-In-reply-to: <20200527151613.16083-1-benjamin.gaignard@st.com>
-Date:   Tue, 02 Jun 2020 10:31:21 +0100
-Message-ID: <jhjpnahizkm.mognet@arm.com>
+        Tue, 2 Jun 2020 05:31:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgFBJbg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:31:36 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 807A9C061A0E;
+        Tue,  2 Jun 2020 02:31:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j10so2634374wrw.8;
+        Tue, 02 Jun 2020 02:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=Vc1kb2bA4hjesNSKldjcTzB184QagN+MorD8GwBPl5o=;
+        b=DXp8SF9V/Mm2dJI/gQqZTW7uJytvoTFvssMpDpFNpT/Lz90uWN0EKWUQ33sMm8I5qu
+         oQlVwYeeuajtBNhHC4DuV0X8ydcWwVo9yJ+gS5LEN4qb3Qbn6LG74My9+fJw44rL+m6l
+         vG9ZgazapVC9QkK9krkpkSEE1ZbppMHSrnuluyLCvgCfZYxG1OFa4m9aBGWSLBww/AiE
+         Z3/vFppMcsVGD6T/BUIuT6ewkfFhSTaL784QDt8BE9F7UY9Vt3WBUIvwlLNwD/N8ieYi
+         ghi0/BvZTBp/3fSOM47mcY43TmK9pCeSsoHTuxqezcaYjVT9gHwVcPoSBQL9FH6fv4To
+         Vd2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=Vc1kb2bA4hjesNSKldjcTzB184QagN+MorD8GwBPl5o=;
+        b=nfVD6ItF1c6hQUKlEgHZB05nvNXjp8tJxmXLhklA1gYmMUFtLwvy4B5uutLM4vVaxW
+         wcB0qsLU2EpHvAsVEYFEnpKDeoNItEyHWd08RfNkkRCuYslx2h/G1NVjg4l81/Jq9wbL
+         q8A3u3dLtSSEZpHhP3ceQcyXyJ8OJWu+UqbbW9EP7dzxzeuqWVBuNIbqmKWI5/vxgt8p
+         4Y6RDbKfOkDd05Ij0AYpv8RvIC6q2YxgtI7XhAtt1hCQDYOg8qPW22JWjyj+pR+ZwVJ/
+         8+z1MCvU076Y/Z6nVmLgIkY+MurHcNCBMPV7jO6voMorMtCwwFkdGlsypMnD8dxOGf2a
+         hUrg==
+X-Gm-Message-State: AOAM530A0Cjfo07ydDQVqS/LRjRMtsAeBRNAvdS2mu5OqcfuC4wi1TlJ
+        v17eRsD9ciVGecTTFABeEqE=
+X-Google-Smtp-Source: ABdhPJwcEfIzn8sBz4FtMqROG1S5X/bgC39xs3ex3TX5CF1MMCPowLZyy9MKUDBTNc16Cb1v7DqJEA==
+X-Received: by 2002:a5d:5006:: with SMTP id e6mr27281079wrt.170.1591090293140;
+        Tue, 02 Jun 2020 02:31:33 -0700 (PDT)
+Received: from AnsuelXPS (host9-254-dynamic.3-87-r.retail.telecomitalia.it. [87.3.254.9])
+        by smtp.gmail.com with ESMTPSA id b136sm3384830wme.1.2020.06.02.02.31.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 02:31:32 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200514200712.12232-1-ansuelsmth@gmail.com> <20200514200712.12232-9-ansuelsmth@gmail.com> <e672c516-29a4-e7d2-ee8b-3bce73bdf4e2@mm-sol.com>
+In-Reply-To: <e672c516-29a4-e7d2-ee8b-3bce73bdf4e2@mm-sol.com>
+Subject: R: [PATCH v4 08/10] PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
+Date:   Tue, 2 Jun 2020 11:31:27 +0200
+Message-ID: <090301d638c0$989b9e20$c9d2da60$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQH3v0d+k9NO1qBgLdGiwEtxppfOxAJRdC88ANwDc5WoaJZTcA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Benjamin,
 
-On 27/05/20 16:16, Benjamin Gaignard wrote:
-> Before start streaming set cpufreq minimum frequency requirement.
-> The cpufreq governor will adapt the frequencies and we will have
-> no latency for handling interrupts.
->
+> -----Messaggio originale-----
+> Da: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Inviato: marted=C3=AC 2 giugno 2020 09:54
+> A: Ansuel Smith <ansuelsmth@gmail.com>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>
+> Cc: Sham Muthayyan <smuthayy@codeaurora.org>; Andy Gross
+> <agross@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; Rob Herring
+> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Lorenzo
+> Pieralisi <lorenzo.pieralisi@arm.com>; Andrew Murray
+> <amurray@thegoodpenguin.co.uk>; Philipp Zabel
+> <p.zabel@pengutronix.de>; linux-arm-msm@vger.kernel.org; linux-
+> pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Oggetto: Re: [PATCH v4 08/10] PCI: qcom: Add ipq8064 rev2 variant and
+> set tx term offset
+>=20
+> Hi,
+>=20
+> On 5/14/20 11:07 PM, Ansuel Smith wrote:
+> > Add tx term offset support to pcie qcom driver need in some revision =
+of
+> > the ipq806x SoC. Ipq8064 have tx term offset set to 7. Ipq8064-v2
+> revision
+> > and ipq8065 have the tx term offset set to 0.
+> >
+> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++++++++++--
+> >  1 file changed, 16 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index f5398b0d270c..ab6f1bdd24c3 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -45,6 +45,9 @@
+> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+> >
+> >  #define PCIE20_PARF_PHY_CTRL			0x40
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20,
+> 16)
+>=20
+> I see you changed the mask, did you found the issue in previous v3 =
+mask
+> and shift?
+>=20
 
-Few comments below from someone oblivious to your platform, they may not
-be all that relevant but I figured I'd pitch in anyway.
+I checked the original code and the old GENMASK declaration was wrong as =
+you
+suggested.
 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/media/platform/stm32/stm32-dcmi.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-> index b8931490b83b..97c342351569 100644
-> --- a/drivers/media/platform/stm32/stm32-dcmi.c
-> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
-> @@ -13,6 +13,7 @@
->
->  #include <linux/clk.h>
->  #include <linux/completion.h>
-> +#include <linux/cpufreq.h>
->  #include <linux/delay.h>
->  #include <linux/dmaengine.h>
->  #include <linux/init.h>
-> @@ -99,6 +100,8 @@ enum state {
->
->  #define OVERRUN_ERROR_THRESHOLD	3
->
-> +#define DCMI_MIN_FREQ	650000 /* in KHz */
-> +
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+> > +
+> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> >  #define PHY_REFCLK_SSP_EN			BIT(16)
+> >  #define PHY_REFCLK_USE_PAD			BIT(12)
+> > @@ -363,7 +366,8 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  	val &=3D ~BIT(0);
+> >  	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> >
+> > -	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
+> > +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064") |
+>=20
+> this should be logical OR
+>=20
 
-This assumes the handling part is guaranteed to always run on the same CPU
-with the same performance profile (regardless of the platform). If that's
-not guaranteed, it feels like you'd want this to be configurable in some
-way.
+Will change in v5 since I will have to split this
 
->  struct dcmi_graph_entity {
->       struct v4l2_async_subdev asd;
->
-[...]
-> @@ -2020,6 +2042,8 @@ static int dcmi_probe(struct platform_device *pdev)
->               goto err_cleanup;
->       }
->
-> +	dcmi->policy = cpufreq_cpu_get(0);
-> +
+> > +	    of_device_is_compatible(node, "qcom,pcie-ipq8064-v2")) {
+> >  		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
+> >  			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
+> >  			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
+> > @@ -374,9 +378,18 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  		writel(PHY_RX0_EQ(4), pcie->parf +
+> PCIE20_PARF_CONFIG_BITS);
+> >  	}
+> >
+> > +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
+> > +		/* set TX termination offset */
+> > +		val =3D readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +		val &=3D ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
+> > +		val |=3D PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
+> > +		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +	}
+> > +
+> >  	/* enable external reference clock */
+> >  	val =3D readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> > -	val |=3D BIT(16);
+> > +	val &=3D ~PHY_REFCLK_USE_PAD;
+> > +	val |=3D PHY_REFCLK_SSP_EN;
+> >  	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> >
+> >  	/* wait for clock acquisition */
+> > @@ -1452,6 +1465,7 @@ static int qcom_pcie_probe(struct
+> platform_device *pdev)
+> >  static const struct of_device_id qcom_pcie_match[] =3D {
+> >  	{ .compatible =3D "qcom,pcie-apq8084", .data =3D &ops_1_0_0 },
+> >  	{ .compatible =3D "qcom,pcie-ipq8064", .data =3D &ops_2_1_0 },
+> > +	{ .compatible =3D "qcom,pcie-ipq8064-v2", .data =3D &ops_2_1_0 },
+> >  	{ .compatible =3D "qcom,pcie-apq8064", .data =3D &ops_2_1_0 },
+> >  	{ .compatible =3D "qcom,pcie-msm8996", .data =3D &ops_2_3_2 },
+> >  	{ .compatible =3D "qcom,pcie-ipq8074", .data =3D &ops_2_3_3 },
+> >
+>=20
+> --
+> regards,
+> Stan
 
-Ideally you'd want to fetch the policy of the CPU your IRQ (and handling
-thread) is affined to; The only compatible DTS I found describes a single
-A7, which is somewhat limited in the affinity area...
-
->       dev_info(&pdev->dev, "Probe done\n");
->
->       platform_set_drvdata(pdev, dcmi);
-> @@ -2049,6 +2073,9 @@ static int dcmi_remove(struct platform_device *pdev)
->
->       pm_runtime_disable(&pdev->dev);
->
-> +	if (dcmi->policy)
-> +		cpufreq_cpu_put(dcmi->policy);
-> +
->       v4l2_async_notifier_unregister(&dcmi->notifier);
->       v4l2_async_notifier_cleanup(&dcmi->notifier);
->       media_entity_cleanup(&dcmi->vdev->entity);
