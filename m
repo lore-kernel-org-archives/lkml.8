@@ -2,90 +2,98 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29EE52077D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6344E20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591115394;
+	bh=VFs8yg/elK3ibF+9cEZitJMFULzRJwLM1UfBHyfKtCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v2GSXdcoQ/oIziHUzHRyIviOaUpOpsYPcagH7on1mjC/Nd1EJvLzQyBird+ZagpmX
+	 r00SryU2J10q8arPgvN8pxUO7WCnywstL0itezvHazLs7ToPLmo6pd/ksUbK0vr3kW
+	 IMr3hUpS8xMR9WbkyJMpHUGwCzqPamW1qSyrxpYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgFBQ2U (ORCPT
+        id S1726580AbgFBQ3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:28:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFBQ2U (ORCPT
+        Tue, 2 Jun 2020 12:29:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37641 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgFBQ3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:28:20 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C35B9C05BD1E;
-        Tue,  2 Jun 2020 09:28:19 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jg9lp-0021Yj-0I; Tue, 02 Jun 2020 16:28:09 +0000
-Date:   Tue, 2 Jun 2020 17:28:08 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     butt3rflyh4ck <butterflyhuangxx@gmail.com>
-Cc:     namjae.jeon@samsung.com, sj1557.seo@samsung.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: memory leak in exfat_parse_param
-Message-ID: <20200602162808.GK23230@ZenIV.linux.org.uk>
-References: <CAFcO6XPVo-u0CkBxy0Ox+FPfqgPUwmo0pnVYrLCP6EM05Sd6-A@mail.gmail.com>
+        Tue, 2 Jun 2020 12:29:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x13so4064903wrv.4;
+        Tue, 02 Jun 2020 09:29:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=grj2CD92FpDw05CnIagvOgvwut5Hrck8wRdVE5tNepE=;
+        b=PjWQZ8GkVvldADP4VqRlvnYLNrMaLRwcJLALh0emcdl/BgspjsHXFFskfPdQ5CbiGp
+         baAg5fW95+6gzl9Ssd3eRo9i3kjIkZA032eV1a3ObBPBxFP83u4tubCPNQlB9dK+4a9G
+         OnUOzTVj3/6zxR10XK4M9ibYdM3hZNC62Q1Nv+ys9D1rOtiOSNIto0cDerdgtNUsrxFo
+         tb+BRrHXfy0WnNHxBCnDbHtlBUGLXbr8FsbGeRC6kaZRCOJzAfsDkJ65csA1yrRblW3s
+         Dk/vkPqIKgIddbK+dmwXRStc3iI1P/kzOcNWPIo6+1AaTw+y43/H3yUgltnfN8fG2isN
+         P2JA==
+X-Gm-Message-State: AOAM531A3s57LSXh9esKhuQ+TD0xROXpRBvLoYbnxEn5Fd8qRONQepik
+        Mms35F+0iRMGALc0hzzHYRc=
+X-Google-Smtp-Source: ABdhPJwj7ACPWeLcVCtJq+ZO6vqa/uLz3Pyy+cGfDn8e9V/X9REn1sHMGM0j8aIQ1mHdwcusNk0AvQ==
+X-Received: by 2002:a05:6000:10c3:: with SMTP id b3mr28987548wrx.53.1591115391146;
+        Tue, 02 Jun 2020 09:29:51 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b132sm423020wmh.3.2020.06.02.09.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 09:29:50 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 16:29:49 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        KVM <kvm@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jon Doron <arilou@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: linux-next: manual merge of the hyperv tree with the kvm tree
+Message-ID: <20200602162949.apy2lzpecyedqtiw@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200602171802.560d07bc@canb.auug.org.au>
+ <20200602135618.5iw6zd2jqzqqcwxm@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+ <feb8e292-8dff-58ad-0bb2-5006bf475e6b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFcO6XPVo-u0CkBxy0Ox+FPfqgPUwmo0pnVYrLCP6EM05Sd6-A@mail.gmail.com>
+In-Reply-To: <feb8e292-8dff-58ad-0bb2-5006bf475e6b@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 01:03:05PM +0800, butt3rflyh4ck wrote:
-> I report a bug (in linux-5.7.0-rc7) found by syzkaller.
+On Tue, Jun 02, 2020 at 06:26:26PM +0200, Paolo Bonzini wrote:
+> On 02/06/20 15:56, Wei Liu wrote:
+> >>
+> >> between commit:
+> >>
+> >>   22ad0026d097 ("x86/hyper-v: Add synthetic debugger definitions")
+> >>
+> > Paolo
+> > 
+> > As far as I can tell you merged that series a few days ago. Do you plan
+> > to submit it to Linus in this merge window? How do you want to proceed
+> > to fix the conflict?
 > 
-> kernel config: https://github.com/butterflyhack/syzkaller-fuzz/blob/master/config-v5.7.0-rc7
+> Hi, Linus can fix this conflict.
+
+OK. I will write down in my pull request what needs to be done to fix
+the conflicts.
+
+Wei.
+
 > 
-> and can reproduce.
+> Paolo
 > 
-> A param->string held by exfat_mount_options.
-
-Humm...
-
-	First of all, exfat_free() ought to call exfat_free_upcase_table().
-What's more, WTF bother with that kstrdup(), anyway?  Just steal the string
-and be done with that...
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index 0565d5539d57..01cd7ed1614d 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -259,9 +259,8 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		break;
- 	case Opt_charset:
- 		exfat_free_iocharset(sbi);
--		opts->iocharset = kstrdup(param->string, GFP_KERNEL);
--		if (!opts->iocharset)
--			return -ENOMEM;
-+		opts->iocharset = param->string;
-+		param->string = NULL;
- 		break;
- 	case Opt_errors:
- 		opts->errors = result.uint_32;
-@@ -611,7 +610,10 @@ static int exfat_get_tree(struct fs_context *fc)
- 
- static void exfat_free(struct fs_context *fc)
- {
--	kfree(fc->s_fs_info);
-+	struct exfat_sb_info *sbi = fc->s_fs_info;
-+
-+	exfat_free_iocharset(sbi);
-+	kfree(sbi);
- }
- 
- static const struct fs_context_operations exfat_context_ops = {
