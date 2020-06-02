@@ -2,91 +2,129 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA87C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52912C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28DDD206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31771206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eosk0M6O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yviw9z29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgFBRgk (ORCPT
+        id S1726977AbgFBRhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59968 "EHLO
+        Tue, 2 Jun 2020 13:37:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgFBRgj (ORCPT
+        with ESMTP id S1726139AbgFBRhN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:36:39 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A15C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=h/a8DJ2EinTq8uzlA9vH8s3fN2Vz7r1F26+b/HdqMQc=; b=Eosk0M6OwjlKxotXET8571OT2S
-        ZikpmaaB6cRhj5EUcC29Ghf/FLmZUXkY8LMLp2zplj77GZEHd1jIb3bhy9rGUZLPos+jleDlDsbNX
-        ufD3C+9eCPZ5YrJ/cwO1TGBan/HzlMxL4DEzavYTL9NfhFX4K98f9iETKXWN6x4LHEWbak+1/Ym8W
-        +dYqRXHjkvHXjptr+k2PuIuXF51djl1XWhR+/Pe6Ejln6yoCZc3aNm42tUlb4YwKNmMNYsRP+aNvP
-        Y/FuppsGrPE0eylgEW4Eg9fKk8p7/ToKIrt9eCdQMDAkNUWpNneXMYk+pILTUAbiKVjtMyy7gkrjZ
-        tyuxkOxA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgApp-0000Tb-1y; Tue, 02 Jun 2020 17:36:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DF384301AC6;
-        Tue,  2 Jun 2020 19:36:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D13D42022DEAB; Tue,  2 Jun 2020 19:36:19 +0200 (CEST)
-Date:   Tue, 2 Jun 2020 19:36:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kcsan: Prefer '__no_kcsan inline' in test
-Message-ID: <20200602173619.GA2604@hirez.programming.kicks-ass.net>
-References: <20200602143633.104439-1-elver@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602143633.104439-1-elver@google.com>
+        Tue, 2 Jun 2020 13:37:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5B7C05BD1E;
+        Tue,  2 Jun 2020 10:37:12 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q16so1636114plr.2;
+        Tue, 02 Jun 2020 10:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yC3b8DT3Kq2HwvI7o7BNmEUaQSfwkzDaER9EH5kkdq0=;
+        b=Yviw9z295zj5fjLl2vUlLMAJzpUBdI6yODgLo71V+gnRWdy/HAfOku+4RRGF+yzmqK
+         t+au//KmqSyun3jNCn8vCEmKZNdAFWTJftT893d+nbe9PjQ8sJDXaTHzCZ/jv3Wa/7/Y
+         QigrSViYpDIh7VAmvvZTyDug+wYeFeI+s7pGmAbiZpsKOOY1z3i1+6IG3saPoQPuQW8L
+         PRHyMDST7Kx8Ek98ZFeCdl8Ojb5DhgTobkvM0vWcFMfafJCDpPpjqhzsc+N/z6iB08FZ
+         DSJW5bxNzFbXaXqd0LKkWoaLxpbP935w0N9J0lqkRULyFI9st4ghdJYOiCX90M0LelV8
+         k1lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yC3b8DT3Kq2HwvI7o7BNmEUaQSfwkzDaER9EH5kkdq0=;
+        b=USIgqTyBh0ZtIVk9pYJfF+BWG2boro1dM0fR1aq1cXWIlSy/Q6hqgvzbuq6/+UICX1
+         eZa2fKWtwCzxtE58lZLgKRznAy+yYfOGcfbkZ/J8iMeRlTAaiTtDeSyD6Vs9e6WNhnY+
+         ncyyGyBTnTar5pelb9m5FuDIlUtkO65BjFcRSl8uTSJG9Mv8IQpmXk3xbe14k90QI+TP
+         7ylrdJ/WT+Qc/Oc1zDuG8cfRSWxj2XMreCNs243TkWLBH+IJmxb6MP0SFb67LynaAQgh
+         1j0TOYUmQoawhse3liiSLq8ZcE7F4U5mM6s9LdK8KQVZyAjJUxzf9LYUuml3QXqO/Xtx
+         7QHw==
+X-Gm-Message-State: AOAM532H8cMTA+QsQrpacOAlWzPzjvwjQbl7Yxcr+IMzx+IXNKUAUfdf
+        6wXOHs94IS26Rx+v3COJ/Wk=
+X-Google-Smtp-Source: ABdhPJz/gwr+d9DNnYFiNawK6YhfZFHEyC8/iMMp5w+Vh1TRDaGaZmArZRTSZkbx1AZrUmItAtFU5g==
+X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr17901684plr.128.1591119432420;
+        Tue, 02 Jun 2020 10:37:12 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.152.125])
+        by smtp.gmail.com with ESMTPSA id i22sm2864382pfo.92.2020.06.02.10.36.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 10:37:11 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 04/10] arm64: dts: actions: limit address range for pinctrl node
+Date:   Tue,  2 Jun 2020 23:03:06 +0530
+Message-Id: <1591119192-18538-5-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:36:33PM +0200, Marco Elver wrote:
-> Instead of __no_kcsan_or_inline, prefer '__no_kcsan inline' in test --
-> this is in case we decide to remove __no_kcsan_or_inline.
-> 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
-> 
-> Hi Paul,
-> 
-> This is to prepare eventual removal of __no_kcsan_or_inline, and avoid a
-> series that doesn't apply to anything other than -next (because some
-> bits are in -tip and the test only in -rcu; although this problem might
-> be solved in 2 weeks). This patch is to make sure in case the
-> __kcsan_or_inline series is based on -tip, integration in -next doesn't
-> cause problems.
-> 
-> This came up in
-> https://lkml.kernel.org/r/20200529185923.GO706495@hirez.programming.kicks-ass.net
+After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
+Actions Semi S700") following error has been observed while booting
+Linux on Cubieboard7-lite(based on S700 SoC).
 
-Thanks Marco!
+[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
+resource [mem 0xe01b0000-0xe01b0fff]
+[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
 
-I just sent the rest of that patch here:
+This is due to the fact that memory range for "sps" power domain controller
+clashes with pinctrl.
 
-  https://lkml.kernel.org/r/20200602173103.931412766@infradead.org
+One way to fix it, is to limit pinctrl address range which is safe
+to do as current pinctrl driver uses address range only up to 0x100.
 
+This commit limits the pinctrl address range to 0x100 so that it doesn't
+conflict with sps range.
 
+Fixes: 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for Actions
+Semi S700")
+
+Suggested-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v2:
+	* this is no more don't merge and fixed
+	  the broken S700 boot by limiting pinctrl
+	  address range.
+	* Modified the subject to reflect the changes.
+Changes since v1:
+        * No change.
+Changes since RFC:
+        * kept as do not merge.
+---
+ arch/arm64/boot/dts/actions/s700.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+index 2006ad5424fa..f8eb72bb4125 100644
+--- a/arch/arm64/boot/dts/actions/s700.dtsi
++++ b/arch/arm64/boot/dts/actions/s700.dtsi
+@@ -231,7 +231,7 @@
+ 
+ 		pinctrl: pinctrl@e01b0000 {
+ 			compatible = "actions,s700-pinctrl";
+-			reg = <0x0 0xe01b0000 0x0 0x1000>;
++			reg = <0x0 0xe01b0000 0x0 0x100>;
+ 			clocks = <&cmu CLK_GPIO>;
+ 			gpio-controller;
+ 			gpio-ranges = <&pinctrl 0 0 136>;
+-- 
+2.7.4
 
