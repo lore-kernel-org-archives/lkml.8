@@ -2,119 +2,279 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0728C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C79C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88A70206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FF820772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="w/Q2lTJ6"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mnyWLEJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgFBPOP (ORCPT
+        id S1726750AbgFBPOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:14:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47068 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgFBPOP (ORCPT
+        Tue, 2 Jun 2020 11:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgFBPOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:14:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052F8RBn067493;
-        Tue, 2 Jun 2020 15:14:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=twSSHzQ0o2SniDDDgsjFjigkpdNI1jvAkB6VRynIq5I=;
- b=w/Q2lTJ6WsVlDYvJ/OSXpdnD2sCZKiktiaiz6dAlQkhXZgGlmjJsrSCes/+cOEaI3tEh
- 6mSgi8hGez4c7nSph7jbzt3ZC6cvZU1m0+3Px3Wro5Qr94TJzQsi5XBuuJMaA2ZMLZM4
- od5O4JFYpHURxF6bTpejNZkwt1G/dX48CtzJvRJvGoHNMFgmCjpHmiUub6aCRU5khOaN
- 0qKdEqRBxmTvqAaaLQ8o7A+YvXuKgzshoTUvMsOqbHIStrer9yY9EGK9gvZuNg4ATwZa
- WFoZAcm6OHRpaGatTspTy2Nxjx2nM4NvUQRPU2z8A+/JSiug89wMhkJHNvDuwg6+J9Oc eg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31bfem4j1w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 15:14:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052FE1Ao009391;
-        Tue, 2 Jun 2020 15:14:04 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31dju1n35e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 15:14:03 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052FDgOZ016066;
-        Tue, 2 Jun 2020 15:13:44 GMT
-Received: from [10.74.110.208] (/10.74.110.208)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 08:13:41 -0700
-Subject: Re: [GIT PULL] ARM: Keystone DTS updates for 5.7
-To:     arm@kernel.org, linux-arm-kernel@lists.infradead.org,
-        arnd@arndb.de, olof@lixom.net
-Cc:     khilman@kernel.org, linux-kernel@vger.kernel.org
-References: <1583603819-9651-1-git-send-email-santosh.shilimkar@oracle.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <8750635a-37de-f4d0-08b1-16e904be2de7@oracle.com>
-Date:   Tue, 2 Jun 2020 08:13:40 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Tue, 2 Jun 2020 11:14:31 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E22BC08C5C0;
+        Tue,  2 Jun 2020 08:14:31 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 97DEA2A4;
+        Tue,  2 Jun 2020 17:14:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591110868;
+        bh=rlImFwhfRQxBQb9sdVDuEnAFjCn5jTY5cowyJfQPk5Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mnyWLEJRZ6LHD2Qbk84cwEvASC2j/e8/NJuRNx3TYHH2N1Qb8cHmhpq9c9RQKOgQl
+         jF3ygNK+eJq6aJORhBBaRF4Cfb3xHn38oB17rWUq7xWgiVHo0f0KZMOAOnWMPkRqnv
+         RIfdY3KLSquKEl2g8POvALcBqQzE5VIw8g7wfvjM=
+Date:   Tue, 2 Jun 2020 18:14:13 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        kieran.bingham@ideasonboard.com,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dafna Hirschfeld <dafna3@gmail.com>
+Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
+Message-ID: <20200602151413.GF12043@pendragon.ideasonboard.com>
+References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
+ <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
+ <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
+ <273a36d8-fc87-f9d4-0cf2-15beddf1661c@collabora.com>
+ <f927c8e3-73de-598d-130d-97b5380579e5@collabora.com>
+ <3b4c4447-677c-08b9-9366-95a012f8f018@ideasonboard.com>
+ <cdcc42bf-b0dc-41b7-5104-eff8aa42feb2@collabora.com>
+ <20200602124504.GA12043@pendragon.ideasonboard.com>
+ <3ba24fe9-46e5-0b08-2335-41bd26ef1831@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <1583603819-9651-1-git-send-email-santosh.shilimkar@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020109
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ba24fe9-46e5-0b08-2335-41bd26ef1831@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd, Olof,
+Hi Dafna,
 
-On 3/7/20 9:56 AM, Santosh Shilimkar wrote:
-> The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+On Tue, Jun 02, 2020 at 03:16:03PM +0200, Dafna Hirschfeld wrote:
+> On 02.06.20 14:45, Laurent Pinchart wrote:
+> > On Tue, Jun 02, 2020 at 08:31:26AM -0300, Helen Koike wrote:
+> >> On 6/2/20 8:24 AM, Kieran Bingham wrote:
+> >>> On 02/06/2020 11:55, Helen Koike wrote:
+> >>>> On 6/2/20 7:52 AM, Dafna Hirschfeld wrote:
+> >>>>> On 01.06.20 14:16, Kaaira Gupta wrote:
+> >>>>>> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
+> >>>>>>> Hi,
+> >>>>>>> Thanks for the patch
+> >>>>>>>
+> >>>>>>> I don't know how real devices handle ARGB formats,
+> >>>>>>> I wonder if it should be the part of the debayer.
+> >>>>>>
+> >>>>>> Hi! qcam tries to support BA24 as it is one of the formats that vimc
+> >>>>>> lists as its supported formats wih --list-formats. Shouldn't BA24 be
+> >>>>>> possible to capture with vimc?
+> >>>>>
+> >>>>> Hi,
+> >>>>> Just to clarify, when listing the supported formats of a video node, the node lists
+> >>>>> the formats that the video node as an independent media entity support.
+> >>>>> It does not mean that the 'camera' as a whole (that is, the media topology graph) supports
+> >>>>> all the formats that the video node lists. When interacting with a video node or
+> >>>>> a subdevice node, one interacts only with that specific entity.
+> >>>>> In the case of vimc, the RGB video node as an independent entity supports BA24 so the format
+> >>>>> appears in the list of the its supported formats. But since the Debayer does not
+> >>>>> support it, the format can not be generated by the entire vimc topology.
+> >>>>> This is not a bug.
+> > 
+> > Is here a valid configuration for the vimc pipeline that produces BA24 ?
+>
+> I think there isn't
 > 
->    Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-> 
-> are available in the git repository at:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/keystone_dts_for_5.7
-> 
-> for you to fetch changes up to 7856488bd83b0182548a84d05c07326321ae6138:
-> 
->    ARM: dts: keystone-k2g-evm: add HDMI video support (2020-03-07 09:47:24 -0800)
-> 
-> ----------------------------------------------------------------
-> ARM: Keystone DTS updates for 5.7
-> 
-> Add display support for K2G EVM Board
-> 
-> ----------------------------------------------------------------
-> Jyri Sarha (2):
->        ARM: dts: keystone-k2g: Add DSS node
->        ARM: dts: keystone-k2g-evm: add HDMI video support
-> 
->   arch/arm/boot/dts/keystone-k2g-evm.dts | 101 +++++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/keystone-k2g.dtsi    |  22 +++++++
->   2 files changed, 123 insertions(+)
-> 
-Looks like this pull request wasn't picked. Can you please check
-in case am missing something.
+> > I agree that not all pipeline configurations need to support every
+> > format, but we shouldn't report a format that can't be produced at all.
+> > 
+> > This being said, and as discussed before, the de-bayering subdev should
+> > just produce MEDIA_BUS_FMT_RGB888_1X24, and the video node should then
+> > implement the RGB pixel formats. BA24 should likely be one of the
+> > supported formats (or maybe BX24 ?).
+>
+> So you mean that the video node should support it so when it receive RGB
+> format in the source pad it converts it to BA24 or BX24 ?
 
+Yes. If you think about an equivalent hardware pipeline, the device
+would carry 24-bit RGB between the processing blocks, and only when the
+data reaches the output formatter (usually bundled with the DMA engine)
+would it be converted to one of the multiple RGB pixel formats. I think
+vimc should mimic that behaviour when it comes to pipeline
+configuration.
+
+When it comes to generating data (or processing it, I believe vimc
+supports, or aims to support, memory-to-memory processing), we have two
+options:
+
+- In the general case, data generated by the TPG would be processed by
+  the individual blocks in the pipeline until it reaches the capture
+  video node. To support processing steps that may generate more, less
+  or an equal amount of data as they consume, we would need to allocate
+  buffers between all the processing blocks. Those buffers don't need to
+  be full frame buffers though, they can be a few lines only, generating
+  the test pattern and processing it a few lines at a time.
+
+  This architecture would also support memory-to-memory processing.
+
+- When using the TPG, we could optimize the implementation by generating
+  data in the capture buffer directly, in the format configured on the
+  video node, without processing the data in every block. The drawback
+  is that processing artifacts (such as the artifacts due to colour
+  interpolation or scaling) wouldn't be generated, the captured image
+  would be cleaner than in a real hardware implementation. Whether that
+  is an issue or not is for us to decide.
+
+  If vimc doesn't need to support memory-to-memory processing, we could
+  implement the optimized behaviour only.
+
+> It makes sense. I guess both BA24 and BX24 can be added, I see in the
+> pixfmt-rgb.html doc that probably the control  V4L2_CID_ALPHA_COMPONENT
+> should then be added.
+
+Yes, V4L2_CID_ALPHA_COMPONENT would need to be added (on the video node)
+to produce BA24, otherwise the alpha component would have a fixed value.
+
+> >>>> This is also my understanding.
+> >>>>
+> >>>> You should have an -EPIPE error when start streaming though, it
+> >>>> shouldn't fail silently.
+> >>>
+> >>> Yes, we had -EPIPE, and that is what I think we were trying to resolve.
+> >>>
+> >>> How would userspace be expected to detect what formats to use ? Should
+> >>> the available formats on the capture node depend on the current linking
+> >>> of the media graph?
+> >>
+> >> This is a good question, I don't recall v4l2 API defining this.
+> > 
+> > A recent extension to VIDIOC_ENUMFMT allows enumerating pixel formats
+> > for a given media bus code, I think that's the way forward.
+> > 
+> >> It would be a bit hard to implement in Vimc, specially when we have configfs
+> >> for custom topology, since the capture would need to query all the pipeline.
+> >> But could be implemented.
+> >>
+> >>> Otherwise, to know what formats are supported - userspace must first
+> >>> 'get a list of formats' then try to 'set' the formats to know what is
+> >>> possible?
+>
+> Yes, there is a doc file that explains that it should be done in a "bottom-up" way
+> ,that is,  starting with configuring the sensor, then adjusting the debayer
+> to the sensor output, then adjusting the scaler to the debayer outout and then
+> adjusting the video node output to the scaler output. One should also use the
+> 'try' version of the setting at the stage of adjusting the final configuration.
+> The detailed explanation is in Documentation/output/userspace-api/media/v4l/dev-subdev.html
+
+That won't help though. The video node will happily accept a
+VIDIOC_S_FMT call that sets a pixel format not compatible with the media
+bus format at the input of the video node. The error will only be raised
+at stream on time. The VIDIOC_ENUMFMT extension that allows enumerating
+pixel formats supported for a given media bus code is the only working
+option.
+
+> >> At the moment yes.
+> >>
+> >>> Or should (given VIMC is quite specialist anyway) userspace 'just know'
+> >>> what is capable all the same?
+> >>>
+> >>> That's possibly fine, as we can simply remove support for the ARGB
+> >>> formats from the libcamera pipeline handler if it is never expected to
+> >>> be supported.
+> >>
+> >> With the configfs feature, you could build a topology with sensor->capture,
+> >> and ARGB would be supported.
+> >>
+> >>> But then as a further question - what formats will we expect VIMC to
+> >>> support? VIVID has a (very) wide range of formats.
+> >>>
+> >>> Would we ever expect VIMC to be as configurable?
+> >>> Or is the scope limited to what we have today?
+> >>
+> >> I know it is very limited atm, but I would like to increase the range,
+> >> I'm just with a limited bandwitdh to work on it.
+> >>
+> >>>>>>
+> >>>>>> If yes, which entity should support it, if not debayer? Should there be
+> >>>>>> a separate conversion entity, or should we keep the support in debayer
+> >>>>>> itself for efficiency issues?
+> >>>>>>
+> >>>>>>> On 28.05.20 20:57, Kaaira Gupta wrote:
+> >>>>>>>> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
+> >>>>>>>> not support it. Hence, add the support for Alpha (255).
+> >>>>>>>
+> >>>>>>> I would change the commit log to:
+> >>>>>>>
+> >>>>>>> Add support for V4L2_PIX_FMT_RGB24 format in the debayer
+> >>>>>>> and set the alpha channel to constant 255.
+> >>>>>>>
+> >>>>>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> >>>>>>>> ---
+> >>>>>>>>     .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
+> >>>>>>>>     1 file changed, 18 insertions(+), 9 deletions(-)
+> >>>>>>>>
+> >>>>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> >>>>>>>> index c3f6fef34f68..f34148717a40 100644
+> >>>>>>>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
+> >>>>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> >>>>>>>> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
+> >>>>>>>>         MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> >>>>>>>>         MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> >>>>>>>>         MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+> >>>>>>>> +    MEDIA_BUS_FMT_ARGB8888_1X32
+> >>>>>>>>     };
+> >>>>>>>>     static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+> >>>>>>>> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
+> >>>>>>>>         unsigned int i, index;
+> >>>>>>>>         vpix = vimc_pix_map_by_code(vdeb->src_code);
+> >>>>>>>> -    index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> >>>>>>>> -    for (i = 0; i < 3; i++) {
+> >>>>>>>> -        switch (vpix->pixelformat) {
+> >>>>>>>> -        case V4L2_PIX_FMT_RGB24:
+> >>>>>>>> -            vdeb->src_frame[index + i] = rgb[i];
+> >>>>>>>> -            break;
+> >>>>>>>> -        case V4L2_PIX_FMT_BGR24:
+> >>>>>>>> -            vdeb->src_frame[index + i] = rgb[2 - i];
+> >>>>>>>> -            break;
+> >>>>>>>> +
+> >>>>>>>> +    if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
+> >>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
+> >>>>>>>> +        vdeb->src_frame[index] = 255;
+> >>>>>>>> +        for (i = 0; i < 3; i++)
+> >>>>>>>> +            vdeb->src_frame[index + i + 1] = rgb[i];
+> >>>>>>>> +    } else {
+> >>>>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> >>>>>>>> +        for (i = 0; i < 3; i++) {
+> >>>>>>>> +            switch (vpix->pixelformat) {
+> >>>>>>>> +            case V4L2_PIX_FMT_RGB24:
+> >>>>>>>> +                vdeb->src_frame[index + i] = rgb[i];
+> >>>>>>>> +                break;
+> >>>>>>>> +            case V4L2_PIX_FMT_BGR24:
+> >>>>>>>> +                vdeb->src_frame[index + i] = rgb[2 - i];
+> >>>>>>>> +                break;
+> >>>>>>>> +            }
+> >>>>>>>>             }
+> >>>>>>>>         }
+> >>>>>>>>     }
+
+-- 
 Regards,
-Santosh
+
+Laurent Pinchart
