@@ -2,139 +2,103 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0911DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD82D20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB90720663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgFBNg0 convert rfc822-to-8bit (ORCPT
+        id S1728247AbgFBNhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:36:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:11395 "EHLO mga01.intel.com"
+        Tue, 2 Jun 2020 09:37:07 -0400
+Received: from muru.com ([72.249.23.125]:56698 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgFBNgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:36:25 -0400
-IronPort-SDR: bvFYyemll5sTkaRpzI1aVTMRam3WvWHb5FVhKT9AvBO3010qUbA3LX4F3A4BXhMiNxFPK+2jsG
- G+ddehdN+G0A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 06:36:25 -0700
-IronPort-SDR: NBeSQghNBhFX6gfvY+doY0ZyDPw4dDqR5/Hs8LXo5/2uJ8VK42VCv7OXn2DNZoegfHmCvIvTSb
- beQDtVJARb4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,464,1583222400"; 
-   d="scan'208";a="286653698"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 06:36:24 -0700
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 2 Jun 2020 06:36:24 -0700
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.97]) by
- FMSMSX114.amr.corp.intel.com ([169.254.6.185]) with mapi id 14.03.0439.000;
- Tue, 2 Jun 2020 06:35:20 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
- appropriate
-Thread-Topic: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
- appropriate
-Thread-Index: AQHWOL8clbNxZ7bnykCB8ftlNPJ+z6jFUrZg
-Date:   Tue, 2 Jun 2020 13:35:20 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E23E538@FMSMSX108.amr.corp.intel.com>
-References: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
-In-Reply-To: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.107]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        id S1726922AbgFBNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:37:04 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 97A0D80C5;
+        Tue,  2 Jun 2020 13:37:53 +0000 (UTC)
+Date:   Tue, 2 Jun 2020 06:36:59 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] serial: 8250_port: Fix imprecise external abort for
+ mctrl if inactive
+Message-ID: <20200602133659.GD37466@atomide.com>
+References: <20200602001813.30459-1-tony@atomide.com>
+ <20200602080811.GI19480@localhost>
+ <CAHp75Vfi5nDgwT10J_EKYn90vGuiL1hyfre+t_w_OFREFY-Tqg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vfi5nDgwT10J_EKYn90vGuiL1hyfre+t_w_OFREFY-Tqg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Piotr Stankiewicz
->Sent: Tuesday, June 2, 2020 5:21 AM
->To: Alex Deucher <alexander.deucher@amd.com>; Christian König
-><christian.koenig@amd.com>; David Zhou <David1.Zhou@amd.com>; David
->Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>
->Cc: Stankiewicz, Piotr <piotr.stankiewicz@intel.com>; dri-
->devel@lists.freedesktop.org; amd-gfx@lists.freedesktop.org; linux-
->kernel@vger.kernel.org
->Subject: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where
->appropriate
->
->Seeing as there is shorthand available to use when asking for any type
->of interrupt, or any type of message signalled interrupt, leverage it.
->
->Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
->Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
->---
-> drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->
->diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
->b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
->index 5ed4227f304b..6dbe173a9fd4 100644
->--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
->+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
->@@ -251,11 +251,11 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
-> 		int nvec = pci_msix_vec_count(adev->pdev);
-> 		unsigned int flags;
->
->-		if (nvec <= 0) {
->+		if (nvec > 0)
->+			flags = PCI_IRQ_MSI_TYPES;
->+		else
-> 			flags = PCI_IRQ_MSI;
->-		} else {
->-			flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
->-		}
+* Andy Shevchenko <andy.shevchenko@gmail.com> [200602 08:33]:
+> On Tue, Jun 2, 2020 at 11:09 AM Johan Hovold <johan@kernel.org> wrote:
+> > On Mon, Jun 01, 2020 at 05:18:13PM -0700, Tony Lindgren wrote:
+> 
+> ...
+> 
+> > There's shouldn't be anything fundamental preventing you from adding the
+> > missing resume calls to the mctrl paths even if it may require reworking
+> > (and fixing) the whole RPM implementation (which would be a good thing
+> > of course).
+> 
+> Yes, for serial core I have long standing patch series to implement
+> RPM (more or less?) properly.
 
-Minor nit:
+Yeah let's try after the merge window.
 
-Is it really necessary to set do this check?  Can flags just
-be set?
+Not sure what else to do with the fix though. We currently have
+8250_port.c not really aware of the hardare state for PM runtime at
+least for the hang-up path.
 
-I.e.: 
-	flags = PCI_IRQ_MSI_TYPES;
+> However, OMAP is a beast which prevents us to go due to a big hack
+> called pm_runtime_irq_safe().
+> Tony is aware of this and I think the above is somehow related to removal of it.
 
-pci_alloc_irq_vector() tries stuff in order.  If MSIX is not available,
-it will try MSI.
+Now that we can detach and reattach the kernel serial console,
+there should not be any need for pm_runtime_irq_safe() anymore :)
 
-M
+And the UART wake-up from deeper idle states can only happen with
+help of external hardware like GPIO controller or pinctrl controller.
 
->+
-> 		/* we only need one vector */
-> 		nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, flags);
-> 		if (nvec > 0) {
->--
->2.17.2
->
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+And for the always-on wake-up interrupt controllers we have the
+Linux generic wakeirqs to wake-up serial device on events.
+
+So I think the way to procedd with pm_runtime_irq_safe() removal
+for serial drivers is to block serial PM runtime unless we have a
+wakeirq configured for omaps in devicetree. In the worst case the
+regression is that PM runtime for serial won't work unless properly
+configured.
+
+And the UART wakeup latency will be a bit longer compared to
+pm_runtime_irq_safe() naturally.
+
+> But I completely agree that the goal is to get better runtime PM
+> implementation over all.
+
+Yes agreed.
+
+Regards,
+
+Tony
