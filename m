@@ -2,218 +2,232 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49A69206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5BC2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:24:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JqAagGFB"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="MZWMXgP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgFBMWq (ORCPT
+        id S1726647AbgFBMYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgFBMWp (ORCPT
+        Tue, 2 Jun 2020 08:24:50 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:51109 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725940AbgFBMYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:22:45 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A4DC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:22:45 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o15so12504065ejm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A08j6fU+RlNfIhwI5UM24mjQznnwSgfTXAFxVissV48=;
-        b=JqAagGFBVhcjxJPeBl5cy+G9GwDLNghzA6eP0eUwsaQW5oBc2sm29vAYyo/systJBA
-         lPocLTxup1vVlzpiDJdk2rLd5+9I4cXxz2Q1OnpETIGsAp69v8XqSvIi7Dxaa6qVLyra
-         1vWzF8dNJE2Qjv6i0Oa3d9mU2+GuB42bt1suc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A08j6fU+RlNfIhwI5UM24mjQznnwSgfTXAFxVissV48=;
-        b=HEkadrqr4XOGvCbA14GdAKXn5bUbU+Iu7Iq8nKhl6bHL/fvRK42brhoZnvFsX31O/R
-         NMSEFKeglvfQ7bIhq+6tv91nYD+afX+wbTTxy/m47Swmwpc7Z2bCjlKF27CJhRosU51f
-         Hg2ppjmi++hxzKIkEHeGu4Jg001iUBITV7m5CFBfac/ZR1kYg4MqGo8k0+psMhRvn9IC
-         qhGLF7wSr03URsIEoAHH8I3NOsonR8vfuOh1F39QkO0OgoOrwpbEQMFzwABez8xWG7VR
-         Y5pMuGVZmJUhFl0u1jx4PoN/tOPwU7jajGczs54YNjxSwCIdCyK+0HTo2JVWVSu4RMbb
-         IZjw==
-X-Gm-Message-State: AOAM5311QFFOMIBxfHdI9/jvKTXLr/IOSJNrQg65A/AJzBdP4rZv1HGw
-        bDdofz9AP8kCCqR6wYsOg4/dAg2GIvJFuw==
-X-Google-Smtp-Source: ABdhPJzcsF7QY9ioRjUCm3b9bX3uN76i/zUlWR4ZevJHDHq7SGUgrGhKJI5nmCHzQyOzKmdPrLlA+g==
-X-Received: by 2002:a17:906:3d69:: with SMTP id r9mr22580442ejf.20.1591100563136;
-        Tue, 02 Jun 2020 05:22:43 -0700 (PDT)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id m21sm1522493edj.74.2020.06.02.05.22.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 05:22:42 -0700 (PDT)
-Received: by mail-wr1-f48.google.com with SMTP id x6so3150517wrm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:22:41 -0700 (PDT)
-X-Received: by 2002:a5d:6750:: with SMTP id l16mr26260746wrw.295.1591100561085;
- Tue, 02 Jun 2020 05:22:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
- <20200514160153.3646-4-sergey.senozhatsky@gmail.com> <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
-In-Reply-To: <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 2 Jun 2020 14:22:28 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5Cu5ex=YcuVfmEC1uNA4DZBSAF04LYtrw3-q22ZMc7_DA@mail.gmail.com>
-Message-ID: <CAAFQd5Cu5ex=YcuVfmEC1uNA4DZBSAF04LYtrw3-q22ZMc7_DA@mail.gmail.com>
+        Tue, 2 Jun 2020 08:24:49 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id g5yFjjTQAnv5ng5yIjpM3S; Tue, 02 Jun 2020 14:24:46 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591100687; bh=QJyBxueTazKFkTqWF58Ggg0h2EATDIQfTVWKCSwHXGQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=MZWMXgP1pYS9MYeGlQn34cZqx2Lpx9MjjE+RaChodLv+m/f+9/HkrlUgJwhFztlkg
+         Q3aOanSfNPt5Ed9BGtvanGR8P53/JlaRgqSAhMK/nZEjSTMZ3E1KoA9hz9/UkuZjf/
+         ggFCzTnJ8HC4LjkhmGrsGB76lugFNWD85CLhI2jLelWLYeVZwlfIst5Fp6vbFSB5qQ
+         sl5IxPJZDkBSDDmYnyP1E48z8U4SEndBx4XLmKWKUbN6RdOZb5IAwBKGM5B2XzwIY2
+         MVjwihqWpujnCZrOB2tXdDSbVRVze+MxboLl/qJF1hA496IGLqaOuX4qrF6qp1VaE6
+         8S3bEQo9Ai27w==
 Subject: Re: [PATCH v6 03/14] videobuf2: handle V4L2 buffer cache flags
-To:     Hans Verkuil <hverkuil@xs4all.nl>
+To:     Tomasz Figa <tfiga@chromium.org>
 Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Hans Verkuil <hans.verkuil@cisco.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Linux Media Mailing List <linux-media@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Sergey Senozhatsky <senozhatsky@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
+ <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
+ <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
+ <CAAFQd5Cu5ex=YcuVfmEC1uNA4DZBSAF04LYtrw3-q22ZMc7_DA@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <cfb54bb3-a7dd-fafd-6b33-5500d6728a8f@xs4all.nl>
+Date:   Tue, 2 Jun 2020 14:24:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CAAFQd5Cu5ex=YcuVfmEC1uNA4DZBSAF04LYtrw3-q22ZMc7_DA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEBfkBJht8YpQj63rNYopBeCmw9rfXwtK/dJdjGpdMJzx5R/vzwrQ+ttN9O5LlW+Na3PFMj+kz+JFK4t1tHjykFrHwc7yTOpFzBUkcdDCzv72VHLofT0
+ 137elGGTAJLAAFV02Q2S6RS1HZg7W61RUevimOA2gX0npzSegrMF8IU7GZPXXTyeT5Mw3XtRxGNJYdupAbvqywJGZv45MO4HywGYRoNQKczbN9igCFh07R4K
+ JThMaFP+FFOCyav32RCK5ZI8VOi9UprfwZWWgckzHeC5Mg62AK8Blqr653V++r8/5qVLj4fF2tpG50CkxiMq0T+KthRBzpEmr6BngFu18/IsJzmQqVtUoZHf
+ UHQKGkllDJxaptxu4xqaAIS8vnOAYgiWtFjZ1Xa2h7gvBrUQgm8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On 02/06/2020 14:22, Tomasz Figa wrote:
+> Hi Hans,
+> 
+> On Tue, Jun 2, 2020 at 11:51 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>> Hi Sergey,
+>>
+>> While doing final testing for this patch series (together with the v4l-utils patch)
+>> I found one remaining issue:
+>>
+>> On 14/05/2020 18:01, Sergey Senozhatsky wrote:
+>>> From: Sergey Senozhatsky <senozhatsky@chromium.org>
+>>>
+>>> Set video buffer cache management flags corresponding to V4L2 cache
+>>> flags.
+>>>
+>>> Both ->prepare() and ->finish() cache management hints should be
+>>> passed during this stage (buffer preparation), because there is
+>>> no other way for user-space to tell V4L2 to avoid ->finish() cache
+>>> flush.
+>>>
+>>> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+>>> ---
+>>>  .../media/common/videobuf2/videobuf2-v4l2.c   | 48 +++++++++++++++++++
+>>>  include/media/videobuf2-core.h                | 11 +++++
+>>>  2 files changed, 59 insertions(+)
+>>>
+>>> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> index eb5d5db96552..f13851212cc8 100644
+>>> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+>>> @@ -337,6 +337,53 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
+>>>       return 0;
+>>>  }
+>>>
+>>> +static void set_buffer_cache_hints(struct vb2_queue *q,
+>>> +                                struct vb2_buffer *vb,
+>>> +                                struct v4l2_buffer *b)
+>>> +{
+>>> +     /*
+>>> +      * DMA exporter should take care of cache syncs, so we can avoid
+>>> +      * explicit ->prepare()/->finish() syncs. For other ->memory types
+>>> +      * we always need ->prepare() or/and ->finish() cache sync.
+>>> +      */
+>>> +     if (q->memory == VB2_MEMORY_DMABUF) {
+>>> +             vb->need_cache_sync_on_finish = 0;
+>>> +             vb->need_cache_sync_on_prepare = 0;
+>>> +             return;
+>>> +     }
+>>> +
+>>> +     /*
+>>> +      * Cache sync/invalidation flags are set by default in order to
+>>> +      * preserve existing behaviour for old apps/drivers.
+>>> +      */
+>>> +     vb->need_cache_sync_on_prepare = 1;
+>>> +     vb->need_cache_sync_on_finish = 1;
+>>> +
+>>> +     if (!vb2_queue_allows_cache_hints(q)) {
+>>> +             /*
+>>> +              * Clear buffer cache flags if queue does not support user
+>>> +              * space hints. That's to indicate to userspace that these
+>>> +              * flags won't work.
+>>> +              */
+>>> +             b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
+>>> +             b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
+>>> +             return;
+>>> +     }
+>>
+>> These two flags need to be cleared for VB2_MEMORY_DMABUF as well in the test above.
+>> This bug is causing v4l2-compliance failures (use the test-media script in contrib/test
+>> in v4l-utils: 'sudo test-media vim2m').
+> 
+> Would you be able to paste the failures, so that we know that we
+> reproduce the same problems? Thanks!
 
-On Tue, Jun 2, 2020 at 11:51 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->
-> Hi Sergey,
->
-> While doing final testing for this patch series (together with the v4l-utils patch)
-> I found one remaining issue:
->
-> On 14/05/2020 18:01, Sergey Senozhatsky wrote:
-> > From: Sergey Senozhatsky <senozhatsky@chromium.org>
-> >
-> > Set video buffer cache management flags corresponding to V4L2 cache
-> > flags.
-> >
-> > Both ->prepare() and ->finish() cache management hints should be
-> > passed during this stage (buffer preparation), because there is
-> > no other way for user-space to tell V4L2 to avoid ->finish() cache
-> > flush.
-> >
-> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > ---
-> >  .../media/common/videobuf2/videobuf2-v4l2.c   | 48 +++++++++++++++++++
-> >  include/media/videobuf2-core.h                | 11 +++++
-> >  2 files changed, 59 insertions(+)
-> >
-> > diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> > index eb5d5db96552..f13851212cc8 100644
-> > --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> > +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> > @@ -337,6 +337,53 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
-> >       return 0;
-> >  }
-> >
-> > +static void set_buffer_cache_hints(struct vb2_queue *q,
-> > +                                struct vb2_buffer *vb,
-> > +                                struct v4l2_buffer *b)
-> > +{
-> > +     /*
-> > +      * DMA exporter should take care of cache syncs, so we can avoid
-> > +      * explicit ->prepare()/->finish() syncs. For other ->memory types
-> > +      * we always need ->prepare() or/and ->finish() cache sync.
-> > +      */
-> > +     if (q->memory == VB2_MEMORY_DMABUF) {
-> > +             vb->need_cache_sync_on_finish = 0;
-> > +             vb->need_cache_sync_on_prepare = 0;
-> > +             return;
-> > +     }
-> > +
-> > +     /*
-> > +      * Cache sync/invalidation flags are set by default in order to
-> > +      * preserve existing behaviour for old apps/drivers.
-> > +      */
-> > +     vb->need_cache_sync_on_prepare = 1;
-> > +     vb->need_cache_sync_on_finish = 1;
-> > +
-> > +     if (!vb2_queue_allows_cache_hints(q)) {
-> > +             /*
-> > +              * Clear buffer cache flags if queue does not support user
-> > +              * space hints. That's to indicate to userspace that these
-> > +              * flags won't work.
-> > +              */
-> > +             b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
-> > +             b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
-> > +             return;
-> > +     }
->
-> These two flags need to be cleared for VB2_MEMORY_DMABUF as well in the test above.
-> This bug is causing v4l2-compliance failures (use the test-media script in contrib/test
-> in v4l-utils: 'sudo test-media vim2m').
+For vim2m (but looks the same for vivid/vimc/vicodec):
 
-Would you be able to paste the failures, so that we know that we
-reproduce the same problems? Thanks!
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+        test blocking wait: OK
+        Video Capture: Captured 8 buffers
+        test MMAP (no poll): OK
+        Video Capture: Captured 8 buffers
+        test MMAP (select): OK
+        Video Capture: Captured 8 buffers
+        test MMAP (epoll): OK
+        Video Capture: Captured 8 buffers
+        test USERPTR (no poll): OK
+        Video Capture: Captured 8 buffers
+        test USERPTR (select): OK
+                fail: v4l2-test-buffers.cpp(1874): flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+                fail: v4l2-test-buffers.cpp(1937): setupDmaBuf(expbuf_node, node, q, exp_q)
+        test DMABUF (no poll): FAIL
+                fail: v4l2-test-buffers.cpp(1874): flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+                fail: v4l2-test-buffers.cpp(1937): setupDmaBuf(expbuf_node, node, q, exp_q)
+        test DMABUF (select): FAIL
 
-Best regards,
-Tomasz
+Regards,
 
->
-> It's enough to post a v6.1 for this patch, everything else is fine.
->
-> Regards,
->
->         Hans
->
-> > +
-> > +     /*
-> > +      * ->finish() cache sync can be avoided when queue direction is
-> > +      * TO_DEVICE.
-> > +      */
-> > +     if (q->dma_dir == DMA_TO_DEVICE)
-> > +             vb->need_cache_sync_on_finish = 0;
-> > +
-> > +     if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
-> > +             vb->need_cache_sync_on_finish = 0;
-> > +
-> > +     if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-> > +             vb->need_cache_sync_on_prepare = 0;
-> > +}
-> > +
-> >  static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *mdev,
-> >                                   struct v4l2_buffer *b, bool is_prepare,
-> >                                   struct media_request **p_req)
-> > @@ -381,6 +428,7 @@ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *md
-> >       }
-> >
-> >       if (!vb->prepared) {
-> > +             set_buffer_cache_hints(q, vb, b);
-> >               /* Copy relevant information provided by the userspace */
-> >               memset(vbuf->planes, 0,
-> >                      sizeof(vbuf->planes[0]) * vb->num_planes);
-> > diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> > index 7f39d9fffc8c..ccc5c498d3e3 100644
-> > --- a/include/media/videobuf2-core.h
-> > +++ b/include/media/videobuf2-core.h
-> > @@ -635,6 +635,17 @@ struct vb2_queue {
-> >  #endif
-> >  };
-> >
-> > +/**
-> > + * vb2_queue_allows_cache_hints() - Return true if the queue allows cache
-> > + * and memory consistency hints.
-> > + *
-> > + * @q:               pointer to &struct vb2_queue with videobuf2 queue
-> > + */
-> > +static inline bool vb2_queue_allows_cache_hints(struct vb2_queue *q)
-> > +{
-> > +     return q->allow_cache_hints && q->memory == VB2_MEMORY_MMAP;
-> > +}
-> > +
-> >  /**
-> >   * vb2_plane_vaddr() - Return a kernel virtual address of a given plane.
-> >   * @vb:              pointer to &struct vb2_buffer to which the plane in
-> >
->
+	Hans
+
+
+> 
+> Best regards,
+> Tomasz
+> 
+>>
+>> It's enough to post a v6.1 for this patch, everything else is fine.
+>>
+>> Regards,
+>>
+>>         Hans
+>>
+>>> +
+>>> +     /*
+>>> +      * ->finish() cache sync can be avoided when queue direction is
+>>> +      * TO_DEVICE.
+>>> +      */
+>>> +     if (q->dma_dir == DMA_TO_DEVICE)
+>>> +             vb->need_cache_sync_on_finish = 0;
+>>> +
+>>> +     if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
+>>> +             vb->need_cache_sync_on_finish = 0;
+>>> +
+>>> +     if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+>>> +             vb->need_cache_sync_on_prepare = 0;
+>>> +}
+>>> +
+>>>  static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *mdev,
+>>>                                   struct v4l2_buffer *b, bool is_prepare,
+>>>                                   struct media_request **p_req)
+>>> @@ -381,6 +428,7 @@ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *md
+>>>       }
+>>>
+>>>       if (!vb->prepared) {
+>>> +             set_buffer_cache_hints(q, vb, b);
+>>>               /* Copy relevant information provided by the userspace */
+>>>               memset(vbuf->planes, 0,
+>>>                      sizeof(vbuf->planes[0]) * vb->num_planes);
+>>> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+>>> index 7f39d9fffc8c..ccc5c498d3e3 100644
+>>> --- a/include/media/videobuf2-core.h
+>>> +++ b/include/media/videobuf2-core.h
+>>> @@ -635,6 +635,17 @@ struct vb2_queue {
+>>>  #endif
+>>>  };
+>>>
+>>> +/**
+>>> + * vb2_queue_allows_cache_hints() - Return true if the queue allows cache
+>>> + * and memory consistency hints.
+>>> + *
+>>> + * @q:               pointer to &struct vb2_queue with videobuf2 queue
+>>> + */
+>>> +static inline bool vb2_queue_allows_cache_hints(struct vb2_queue *q)
+>>> +{
+>>> +     return q->allow_cache_hints && q->memory == VB2_MEMORY_MMAP;
+>>> +}
+>>> +
+>>>  /**
+>>>   * vb2_plane_vaddr() - Return a kernel virtual address of a given plane.
+>>>   * @vb:              pointer to &struct vb2_buffer to which the plane in
+>>>
+>>
+
