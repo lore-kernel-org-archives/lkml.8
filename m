@@ -2,127 +2,98 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD26C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 693D12053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9899C20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CV1fSdhu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbaAXzlc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgFBMbA (ORCPT
+        id S1726636AbgFBMfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:31:00 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42658 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBMbA (ORCPT
+        Tue, 2 Jun 2020 08:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBMfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:31:00 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052CMgWu171643;
-        Tue, 2 Jun 2020 12:30:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=lu3BbalZdQaF6ggOh0dU1HA0oIChyA8n999bSv8rs1I=;
- b=CV1fSdhuZ0iQ3oob4rEqjrNg24OX373xXBOPl1MYMnHZ+u9uHPq2swUHPIQeBLeslUiX
- F+0N4Tgi0js6b9BgLW0nH54Su+lgf64krT/SddzqlAK8t3jKwzgJ3wim7zt9xtrK9yZN
- AAyzcpKLqd4PWVaftAf/MOefzKXmPyIZIyX3lHNYdvIJQRfluRzzWYJuuOSCdlj1rKsk
- HSbfYeH7HxXNc1LxsBkYS/mwjhbiKdgfWsO2g8lzPJRYTU+wh5MrbvV1GFOdB6USgQf5
- 4R0lFB5Vz63JGGC6H14lpzjc1j6BqiAazYj3RKg7MAgXol3sMApfg2VCZkrYnl3DI2xe Gg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31dkrugt0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 12:30:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052CHPkG125784;
-        Tue, 2 Jun 2020 12:30:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 31c12p3dr8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 12:30:00 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052CTo0j015127;
-        Tue, 2 Jun 2020 12:29:54 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 05:29:50 -0700
-Date:   Tue, 2 Jun 2020 15:29:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        devel@driverdev.osuosl.org, alsa-devel@alsa-project.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
-Subject: Re: [RESEND PATCH v1 3/6] staging: greybus: audio: Resolve
- compilation errors for GB codec module
-Message-ID: <20200602122940.GF30374@kadam>
-References: <cover.1591040859.git.vaibhav.sr@gmail.com>
- <cce5aa43533d872d84be1abc514074a7705f9a54.1591040859.git.vaibhav.sr@gmail.com>
+        Tue, 2 Jun 2020 08:35:31 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A4EC061A0E;
+        Tue,  2 Jun 2020 05:35:29 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id k26so2943439wmi.4;
+        Tue, 02 Jun 2020 05:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k5Q568n3WGM5Rw6G3hGSgRG/IVyA9rqbq+xRfmkcbdc=;
+        b=KbaAXzlcqDz0zEECfG9LjimjIO0peoezbtspI4izEw/tXV160dZ4VOH/YKxJU463IJ
+         +PKgvmUhcWeLyukKueQYw1v5/EVE3gs/RVBDyBEGgKAzkbFIuT7f5rnkXi+0S4g3FjIZ
+         ldxSfXoamQ4/Tf4y+kmr8IPbpiu4b3Y1yWEMiBbH1eFdU67LZXpahK76EszXiRu341W3
+         d9iMBBdTZlrx0uj+gbas16ME/j2+/y/x8o2xekDLVHjCwQv8uXn0e/HmL+OqXutQlAeD
+         siW2UfgpHZgYLPrxOdkUoYL/L1U7B43L6tFaPZ7Ggkt5nPm3QncW6C1eisjoNVSdvjD5
+         R2cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k5Q568n3WGM5Rw6G3hGSgRG/IVyA9rqbq+xRfmkcbdc=;
+        b=txOqELCgkpbrtp+9SRLBm8Nvc/tEog4k31vaWMz8RGUvBHOZ+7HTCGdpmEdE1ZZ2rk
+         Foi26Uqnb0cbsQW+6nrqhNN14zSBWsDHVEVTp6qQTwWO0EmUXE5P5TqO3wa8UFuXk0zx
+         KloLTp+XHBqdPW0Ur2xP8mT+1uhOPKAcfF/sQpMQMWJcGQVcw5HdL+dvbOJFr6NrLHld
+         3nUevMZnRZEpzZSzZ18s+RT3Jf/4SAuGFBlN61aqznhuUkW1pcaQm1HK3tCbTgMlKP1t
+         hjkUY2GSa8SOZxZYaTxlH2NRpYP8lWpwFQgzTTgyFQRJYwzRXd1BkypVOBBP8oNH8J7J
+         wd5w==
+X-Gm-Message-State: AOAM531zva5GcVXChbgpoxmgXruB3wwEo0Jvu57SqWu8h0mHdsdiNmYs
+        Z2e3UQgMixv45thONNl85NeYNYfN
+X-Google-Smtp-Source: ABdhPJyhPZgH9xPEGDOxTY7MdxvaWsaZMMuoWTczETtp5FN/4pK1uECPdklzQRynWrqIJqVGlOvbYQ==
+X-Received: by 2002:a1c:6884:: with SMTP id d126mr3920973wmc.121.1591101328090;
+        Tue, 02 Jun 2020 05:35:28 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id z22sm3347711wmf.9.2020.06.02.05.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 05:35:27 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] forbid using open/close/statx with {SQ,IO}POLL
+Date:   Tue,  2 Jun 2020 15:34:00 +0300
+Message-Id: <cover.1591100205.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cce5aa43533d872d84be1abc514074a7705f9a54.1591040859.git.vaibhav.sr@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020088
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020088
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 10:51:12AM +0530, Vaibhav Agarwal wrote:
-> Due to dependencies on ASoC framework changes, GB dummy codec module
-> compilation is currently disabled. This patch updates codec driver as
-> per the latest ASoC APIs.
-> 
-> Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
-> ---
->  drivers/staging/greybus/audio_codec.c | 87 +++++++++++++--------------
->  drivers/staging/greybus/audio_codec.h |  2 +-
->  2 files changed, 44 insertions(+), 45 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
-> index a2ee587e5a79..bbd072acda5c 100644
-> --- a/drivers/staging/greybus/audio_codec.c
-> +++ b/drivers/staging/greybus/audio_codec.c
-> @@ -832,7 +832,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
->  int gbaudio_register_module(struct gbaudio_module_info *module)
->  {
->  	int ret;
-> -	struct snd_soc_codec *codec;
-> +	struct snd_soc_component *component;
+The first one adds checks {SQPOLL,IOPOLL} for open, close, etc.
+And 3 others are just cleanups on top.
 
-I quite like the "component" pointer because it's assigned once at the
-start of the function and used consistently throughout.  The other
-pointers I complained about were just temporary pointers which meant
-different things depending on which line you were on.  They made the
-code harder to read.
+notes:
+- it cures symptoms, but would be great what's with null-deref in [1/4]
 
-My only quible is that in the next patch it's called "comp" and here
-it's called "component".  Let's just use "comp" for all the local
-variables.
+- need to look whether epoll and sfr are affected by {SQ,IO}POLL
 
+- it still allows statx with SQPOLL, because it has a bunchg of rules
+for ignoring dirfd, e.g. when absolute path is specified.
+Let's handle it separately.
 
-regards,
-dan carpenter
+Pavel Begunkov (4):
+  io_uring: fix open/close/statx with {SQ,IO}POLL
+  io_uring: do build_open_how() only once
+  io_uring: deduplicate io_openat{,2}_prep()
+  io_uring: move send/recv IOPOLL check into prep
+
+ fs/io_uring.c | 78 +++++++++++++++++++++------------------------------
+ 1 file changed, 32 insertions(+), 46 deletions(-)
+
+-- 
+2.24.0
+
