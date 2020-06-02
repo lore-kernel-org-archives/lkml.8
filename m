@@ -2,88 +2,89 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 180E62068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="auZuFEQ7"
+	by mail.kernel.org (Postfix) with ESMTP id 7E62E206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591116312;
+	bh=W1y1Vfa/emqsgezcdtT8y57qWVzPW5hHUrUIvUPR1GY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=jDrjPrZgVdTbLvWwjH45HX4n6mHYepIIkk6BzrIT/OIYS2yNxUqH0pAzV7V9OZWlN
+	 gFI41Xyp657WIecd6jJp6qkEEH0TDo+bVgQohs3HTvamp9gieSXECUx9SS+X6soP6i
+	 m8uNzg08JqGNp3lMCz+LheIQYyowXaKstXK60q94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgFBQm2 (ORCPT
+        id S1726485AbgFBQpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:42:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45914 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBQm2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:42:28 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052GgQXv090985;
-        Tue, 2 Jun 2020 11:42:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591116146;
-        bh=isgop+zgmnt9+2x8jJzzOjuiDiGSs1YhFo1LurPj2nM=;
-        h=From:To:CC:Subject:Date;
-        b=auZuFEQ7i9UfZg3vmsc/CPHBk6Tn7zkwM8Dx+Q1RgMNYAb8g7QHVQL2Vazcw6chzO
-         1iBqshB+3yG5y/obPqgpWZHU7VP+0jPWb8eHJ/Ovyx0dc4459DNV9F6BIAgKMwazfS
-         hsnrJNQUYV4teRZs8cRecQ63lgLxRLjTxMdUvzlE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052GgQd8004160
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 2 Jun 2020 11:42:26 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
- 2020 11:42:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 2 Jun 2020 11:42:26 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052GgPHg098890;
-        Tue, 2 Jun 2020 11:42:26 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <robh@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [RESEND PATCH] dt-bindings: property-units: Add picoseconds type
-Date:   Tue, 2 Jun 2020 11:42:19 -0500
-Message-ID: <20200602164219.3159-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 2 Jun 2020 12:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbgFBQpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 12:45:11 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C14B52068D;
+        Tue,  2 Jun 2020 16:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591116310;
+        bh=W1y1Vfa/emqsgezcdtT8y57qWVzPW5hHUrUIvUPR1GY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=gFA+omXe8z+jHZuGk5h9Cxh+HpdblZmuw0646TgqqnHU4X8qwE4/3fvFqUwynsMw9
+         xbLCTxpRSoaIqBrd+A78Tw0QM5xBrDHSJkavYxVgdl+EDdi8TnF0ncvCoMpcm57njS
+         aJrOANrZG1ibzEwfaDl7K4dsM0X0h8iXt+7zLr5Y=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8FAD1352283B; Tue,  2 Jun 2020 09:45:10 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 09:45:10 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        boqun.feng@gmail.com
+Subject: Re: [PATCH 0/5] cleanups
+Message-ID: <20200602164510.GH29598@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200601184552.23128-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601184552.23128-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the '-ps' picosecond unit suffix for property names.
+On Mon, Jun 01, 2020 at 07:45:47PM +0100, Jules Irenge wrote:
+> 
+> Jules Irenge (5):
+>   rcu/rcutorture: replace 0 with false
+>   rcu: replace 1 with true
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/devicetree/bindings/property-units.txt | 1 +
- 1 file changed, 1 insertion(+)
+I queued these two, thank you!
 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index e9b8360b3288..00094070bdac 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -17,6 +17,7 @@ Time/Frequency
- -ms		: millisecond
- -us		: microsecond
- -ns		: nanosecond
-+-ps		: picosecond
- 
- Distance
- ----------------------------------------
--- 
-2.26.2
+>   rcu: replace + with |
 
+This one I am not all that excited about, so I am leaving it off.
+
+							Thanx, Paul
+
+>   x86/ftrace: Add annotations for ftrace_arch_code_modify_prepare() and
+>     ftrace_arch_code_modify_post_process()
+>   sfc: add  missing annotation for efx_ef10_try_update_nic_stats_vf()
+> 
+>  arch/x86/kernel/ftrace.c        |  2 ++
+>  drivers/net/ethernet/sfc/ef10.c |  1 +
+>  kernel/rcu/rcutorture.c         |  2 +-
+>  kernel/rcu/tree_plugin.h        | 22 +++++++++++-----------
+>  kernel/rcu/update.c             |  2 +-
+>  5 files changed, 16 insertions(+), 13 deletions(-)
+> 
+> -- 
+> 2.18.2
+> 
