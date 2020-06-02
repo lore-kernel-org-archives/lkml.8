@@ -2,281 +2,231 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EF8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 197212077D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDAC2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2WVkv58"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PxjxUeYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgFBSD2 (ORCPT
+        id S1728263AbgFBSDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:03:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
+        Tue, 2 Jun 2020 14:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgFBSDJ (ORCPT
+        with ESMTP id S1726977AbgFBSDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:03:09 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594CBC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:03:08 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d10so5445907pgn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:03:08 -0700 (PDT)
+        Tue, 2 Jun 2020 14:03:46 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5190DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:03:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t7so4604343pgt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:03:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wvC2cXU3x8NgQmMPlghjw4hXQanJRRtC1oN/RWCq4y8=;
-        b=j2WVkv58m9zpWyZJMOK3LR7zEyQEK88hzm3wtSJ+wZERVs+ZjUfLtQIR/HJ6RvNkEA
-         dzGvMpNHDeisx7baXn3pR9PZGrH+smeZnm9HrCXm03HsIn5kQ63TC01bItzyvnj7GYqG
-         RSYVI/5LLmUiLSNyBzEW7SdUbbe0Jaz9Wd7/3szQjYy6WYTa7cB1cos5Ka9j+J1Mezsa
-         J83SehNNnj2GDSm8pOJfsF1agRjGOcee/rhhv9bTaHefjWVl5ckEhmWOyfkqbxqIht5a
-         CsoP2PmodukwMsPB0Ezmp2SuouNPV1U4Ro5FhdnwoszVGZXuzv8gI02MqKzIHKG4AEQi
-         BMmg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Y1Y2fkE2q57cl3sVFwSCV2Rlv9H/o7RdqOXAJOzk5BI=;
+        b=PxjxUeYNGDO7nTddPMYiH16uFfFjhvhXlC7DHTn2Gwug8w9r+bMImzNz39NlxB5UPp
+         LgwcLmqrHUTSMexgkNWCMeryIJyQPTKKd2n7s06lhDTBUQJZ7jvQC+VHeC526lAKgHRI
+         Hwyx+1bfTWqtXOoxgkAPqd07kmOEteBXyu/Zg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wvC2cXU3x8NgQmMPlghjw4hXQanJRRtC1oN/RWCq4y8=;
-        b=HhTmq12ldPsaoVFQ8GPCUljt6kidtNt/QvLgvHkr6/1QsmGQXguH5gVKkcZ6RRZg+j
-         oxhFLwS34JmRnvDB+TX4PVx6x2AYbpw7Y4ezjNqCXHPLtPSHsSrbUTA8s1zukW2t39Vq
-         24RHIx6hjuc5Mxvwn3D4JYyirPmjUl1xv2mGJj2MnAktVfrxVQuuFuaMBm5x6ahVzbkQ
-         6aLUpkYMTH1PmszPBWlzDhC0Exb7+Mri81OgBb6EzJXlZPoT6LKu0PCTpWKKnhD6LTb1
-         Vl8FxYRhVmou9bJi2Jd+OVv8ROp/t+8W5hCaP5ms1gEeqPA3IJU8BiQp8vyvBQgnNAgo
-         9YaA==
-X-Gm-Message-State: AOAM5310ioH+5SSNO3twm4pczdY5nEyKMlWU/N2EV4PvkWs1nTJGx7EY
-        cGmA/NVQUlH/9z9rICVW0rk=
-X-Google-Smtp-Source: ABdhPJyDdYPU0DoZ4PPbnuC7G/D+TcLR6xzD9xvDTtmOSog5BajkQT38Myr/BRAjL+H6/fpPpS2SXQ==
-X-Received: by 2002:a65:51c1:: with SMTP id i1mr24806038pgq.272.1591120987722;
-        Tue, 02 Jun 2020 11:03:07 -0700 (PDT)
-Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id p8sm2740053pgs.29.2020.06.02.11.03.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Y1Y2fkE2q57cl3sVFwSCV2Rlv9H/o7RdqOXAJOzk5BI=;
+        b=kVgkFIVoYIHwiMMI4ecC74lBhVWfSu7agsbatdVyYdwzgoDoaU2gLJAKIxxXnnQf+3
+         IdHyI2NWF/vYKBaVDY2/72R7QkOx9JqaVnqSLvp73CkNH+nlsbZZayDhBwaGuPgsV3Ls
+         xxBptEyt4yFhsF3sZjsPLTyL46SKlQRgDPjyryqFKcgKANPSWu8KMzomXUZ1jQ1B6Hzy
+         zm/zXgkrdKMvvR6cb8OBFl38LlOVGThrBI2ZiyQJRi3IUdI7ormi80nKCw1QmB9xDaa+
+         EDmkzHBznmoyhhdlNME3OxwiOt54XFRkpmMpKL6rXJHfzvi6MCRsiokHGwtGVKXDgEFJ
+         MzcA==
+X-Gm-Message-State: AOAM530cUXgYa1TQb1y3oSby+WLRaL26JgzfGHUrMC0UaU0H4pQqVFoS
+        oukGurnQQcMPXsgeav1U2wIt/A==
+X-Google-Smtp-Source: ABdhPJzj7E3Rw5Brt6uT6kfU748sbin8+qytbSZ/kf72ZyhfLBgJc/YaDn8GH05YuWtNdSM8MF7q0Q==
+X-Received: by 2002:aa7:8298:: with SMTP id s24mr27113500pfm.122.1591121025745;
+        Tue, 02 Jun 2020 11:03:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u17sm2726262pgo.90.2020.06.02.11.03.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 11:03:07 -0700 (PDT)
-From:   Andrei Vagin <avagin@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrei Vagin <avagin@gmail.com>
-Subject: [PATCH 3/6] arm64/vdso: Add time namespace page
-Date:   Tue,  2 Jun 2020 11:02:56 -0700
-Message-Id: <20200602180259.76361-4-avagin@gmail.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200602180259.76361-1-avagin@gmail.com>
-References: <20200602180259.76361-1-avagin@gmail.com>
+        Tue, 02 Jun 2020 11:03:44 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 11:03:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matt Turner <mattst88@gmail.com>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org
+Subject: Re: Regression bisected to f2f84b05e02b (bug: consolidate
+ warn_slowpath_fmt() usage)
+Message-ID: <202006021052.E52618F@keescook>
+References: <20200602024804.GA3776630@p50-ethernet.mattst88.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602024804.GA3776630@p50-ethernet.mattst88.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate the time namespace page among VVAR pages.  Provide
-__arch_get_timens_vdso_data() helper for VDSO code to get the
-code-relative position of VVARs on that special page.
+On Mon, Jun 01, 2020 at 07:48:04PM -0700, Matt Turner wrote:
+> I bisected a regression on alpha to f2f84b05e02b (bug: consolidate
+> warn_slowpath_fmt() usage) which looks totally innocuous.
+> 
+> Reverting it on master confirms that it somehow is the trigger. At or a
+> little after starting userspace, I'll see an oops like this:
+> 
+> Unable to handle kernel paging request at virtual address 0000000000000000
+> CPU 0
+> kworker/u2:5(98): Oops -1
+> pc = [<0000000000000000>]  ra = [<0000000000000000>]  ps = 0000    Not tainted
+> pc is at 0x0
 
-If a task belongs to a time namespace then the VVAR page which contains
-the system wide VDSO data is replaced with a namespace specific page
-which has the same layout as the VVAR page. That page has vdso_data->seq
-set to 1 to enforce the slow path and vdso_data->clock_mode set to
-VCLOCK_TIMENS to enforce the time namespace handling path.
+^^^^ so, the instruction pointer is NULL. The only way I can imagine
+that happening would be from this line:
 
-The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-update of the VDSO data is in progress, is not really affecting regular
-tasks which are not part of a time namespace as the task is spin waiting
-for the update to finish and vdso_data->seq to become even again.
+        worker->current_func(work);
 
-If a time namespace task hits that code path, it invokes the corresponding
-time getter function which retrieves the real VVAR page, reads host time
-and then adds the offset for the requested clock which is stored in the
-special VVAR page.
+> ra is at 0x0
+> v0 = 0000000000000007  t0 = 0000000000000001  t1 = 0000000000000001
+> t2 = 0000000000000000  t3 = fffffc00bfe68780  t4 = 0000000000000001
+> t5 = fffffc00bf8cc780  t6 = 00000000026f8000  t7 = fffffc00bfe70000
+> s0 = fffffc000250d310  s1 = fffffc000250d310  s2 = fffffc000250d310
+> s3 = fffffc000250ca40  s4 = fffffc000250caa0  s5 = 0000000000000000
+> s6 = fffffc000250ca40
+> a0 = fffffc00024f0488  a1 = fffffc00bfe73d98  a2 = fffffc00bfe68800
+> a3 = fffffc00bf881400  a4 = 0001000000000000  a5 = 0000000000000002
+> t8 = 0000000000000000  t9 = 0000000000000000  t10= 0000000001321800
+> t11= 000000000000ba4e  pv = fffffc000189ca00  at = 0000000000000000
+> gp = fffffc000253e430  sp = 0000000043a83c2e
+> Disabling lock debugging due to kernel taint
+> Trace:
+> [<fffffc000105c8ac>] process_one_work+0x25c/0x5a0
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
----
- arch/arm64/include/asm/vdso.h                 |  6 +++++
- .../include/asm/vdso/compat_gettimeofday.h    | 12 ++++++++++
- arch/arm64/include/asm/vdso/gettimeofday.h    |  8 +++++++
- arch/arm64/kernel/vdso.c                      | 22 ++++++++++++++++---
- arch/arm64/kernel/vdso/vdso.lds.S             |  5 ++++-
- arch/arm64/kernel/vdso32/vdso.lds.S           |  5 ++++-
- include/vdso/datapage.h                       |  1 +
- 7 files changed, 54 insertions(+), 5 deletions(-)
+Can you verify where this     ^^^^^^^^^^^^^^   is?
 
-diff --git a/arch/arm64/include/asm/vdso.h b/arch/arm64/include/asm/vdso.h
-index 07468428fd29..351c145d3808 100644
---- a/arch/arm64/include/asm/vdso.h
-+++ b/arch/arm64/include/asm/vdso.h
-@@ -12,6 +12,12 @@
-  */
- #define VDSO_LBASE	0x0
- 
-+#ifdef CONFIG_TIME_NS
-+#define __VVAR_PAGES    2
-+#else
-+#define __VVAR_PAGES    1
-+#endif
-+
- #ifndef __ASSEMBLY__
- 
- #include <generated/vdso-offsets.h>
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index b6907ae78e53..b7c549d46d18 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -152,6 +152,18 @@ static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
- 	return ret;
- }
- 
-+#ifdef CONFIG_TIME_NS
-+static __always_inline const struct vdso_data *__arch_get_timens_vdso_data(void)
-+{
-+	const struct vdso_data *ret;
-+
-+	/* See __arch_get_vdso_data(). */
-+	asm volatile("mov %0, %1" : "=r"(ret) : "r"(_timens_data));
-+
-+	return ret;
-+}
-+#endif
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-index afba6ba332f8..cf39eae5eaaf 100644
---- a/arch/arm64/include/asm/vdso/gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-@@ -96,6 +96,14 @@ const struct vdso_data *__arch_get_vdso_data(void)
- 	return _vdso_data;
- }
- 
-+#ifdef CONFIG_TIME_NS
-+static __always_inline
-+const struct vdso_data *__arch_get_timens_vdso_data(void)
-+{
-+	return _timens_data;
-+}
-+#endif
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 33df3cdf7982..1fa6f9362e56 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -46,6 +46,14 @@ enum arch_vdso_type {
- #define VDSO_TYPES		(ARM64_VDSO + 1)
- #endif /* CONFIG_COMPAT_VDSO */
- 
-+enum vvar_pages {
-+	VVAR_DATA_PAGE_OFFSET,
-+#ifdef CONFIG_TIME_NS
-+	VVAR_TIMENS_PAGE_OFFSET,
-+#endif /* CONFIG_TIME_NS */
-+	VVAR_NR_PAGES,
-+};
-+
- struct __vdso_abi {
- 	const char *name;
- 	const char *vdso_code_start;
-@@ -81,6 +89,12 @@ static union {
- } vdso_data_store __page_aligned_data;
- struct vdso_data *vdso_data = vdso_data_store.data;
- 
-+
-+struct vdso_data *arch_get_vdso_data(void *vvar_page)
-+{
-+	return (struct vdso_data *)(vvar_page);
-+}
-+
- static int __vdso_remap(enum arch_vdso_type arch_index,
- 			const struct vm_special_mapping *sm,
- 			struct vm_area_struct *new_vma)
-@@ -180,9 +194,11 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
- 	unsigned long vdso_base, vdso_text_len, vdso_mapping_len;
- 	void *ret;
- 
-+	BUILD_BUG_ON(VVAR_NR_PAGES != __VVAR_PAGES);
-+
- 	vdso_text_len = vdso_lookup[arch_index].vdso_pages << PAGE_SHIFT;
- 	/* Be sure to map the data page */
--	vdso_mapping_len = vdso_text_len + PAGE_SIZE;
-+	vdso_mapping_len = vdso_text_len + VVAR_NR_PAGES * PAGE_SIZE;
- 
- 	vdso_base = get_unmapped_area(NULL, 0, vdso_mapping_len, 0, 0);
- 	if (IS_ERR_VALUE(vdso_base)) {
-@@ -190,13 +206,13 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
- 		goto up_fail;
- 	}
- 
--	ret = _install_special_mapping(mm, vdso_base, PAGE_SIZE,
-+	ret = _install_special_mapping(mm, vdso_base, VVAR_NR_PAGES * PAGE_SIZE,
- 				       VM_READ|VM_MAYREAD|VM_PFNMAP,
- 				       vdso_lookup[arch_index].dm);
- 	if (IS_ERR(ret))
- 		goto up_fail;
- 
--	vdso_base += PAGE_SIZE;
-+	vdso_base += VVAR_NR_PAGES * PAGE_SIZE;
- 	mm->context.vdso = (void *)vdso_base;
- 	ret = _install_special_mapping(mm, vdso_base, vdso_text_len,
- 				       VM_READ|VM_EXEC|
-diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
-index 7ad2d3a0cd48..d808ad31e01f 100644
---- a/arch/arm64/kernel/vdso/vdso.lds.S
-+++ b/arch/arm64/kernel/vdso/vdso.lds.S
-@@ -17,7 +17,10 @@ OUTPUT_ARCH(aarch64)
- 
- SECTIONS
- {
--	PROVIDE(_vdso_data = . - PAGE_SIZE);
-+	PROVIDE(_vdso_data = . - __VVAR_PAGES * PAGE_SIZE);
-+#ifdef CONFIG_TIME_NS
-+	PROVIDE(_timens_data = _vdso_data + PAGE_SIZE);
-+#endif
- 	. = VDSO_LBASE + SIZEOF_HEADERS;
- 
- 	.hash		: { *(.hash) }			:text
-diff --git a/arch/arm64/kernel/vdso32/vdso.lds.S b/arch/arm64/kernel/vdso32/vdso.lds.S
-index a3944927eaeb..06cc60a9630f 100644
---- a/arch/arm64/kernel/vdso32/vdso.lds.S
-+++ b/arch/arm64/kernel/vdso32/vdso.lds.S
-@@ -17,7 +17,10 @@ OUTPUT_ARCH(arm)
- 
- SECTIONS
- {
--	PROVIDE_HIDDEN(_vdso_data = . - PAGE_SIZE);
-+	PROVIDE_HIDDEN(_vdso_data = . - __VVAR_PAGES * PAGE_SIZE);
-+#ifdef CONFIG_TIME_NS
-+	PROVIDE_HIDDEN(_timens_data = _vdso_data + PAGE_SIZE);
-+#endif
- 	. = VDSO_LBASE + SIZEOF_HEADERS;
- 
- 	.hash		: { *(.hash) }			:text
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index 7955c56d6b3c..ee810cae4e1e 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -109,6 +109,7 @@ struct vdso_data {
-  * relocation, and this is what we need.
-  */
- extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidden")));
-+extern struct vdso_data _timens_data[CS_BASES] __attribute__((visibility("hidden")));
- 
- /*
-  * The generic vDSO implementation requires that gettimeofday.h
+> [<fffffc000105cc4c>] worker_thread+0x5c/0x7d0
+> [<fffffc0001066c88>] kthread+0x188/0x1f0
+> [<fffffc0001011b48>] ret_from_kernel_thread+0x18/0x20
+> [<fffffc0001066b00>] kthread+0x0/0x1f0
+> [<fffffc000105cbf0>] worker_thread+0x0/0x7d0
+> 
+> Code:
+>  00000000
+>  00000000
+>  00063301
+>  000012e2
+>  00001111
+>  0005ffde
+> 
+> It seems to cause a hard lock on an SMP system, but not on a system with
+> a single CPU. Similarly, if I boot the SMP system (2 CPUs) with
+> maxcpus=1 the oops doesn't happen. Until I tested on a non-SMP system
+> today I suspected that it was unaffected, but I saw the oops there too.
+> With the revert applied, I don't see a warning or an oops.
+> 
+> Any clues how this patch could have triggered the oops?
+
+I cannot begin to imagine. :P Compared to other things I've seen like
+this in the past maybe it's some kind of effect from the code size
+changing the location/alignment or timing of something else?
+
+Various questions ranging in degrees of sanity:
+
+Does alpha use work queues for WARN?
+
+Which work queue is getting a NULL function? (And then things like "if
+WARN was much slower or much faster, is there a race to something
+setting itself to NULL?")
+
+Was there a WARN before the above Oops?
+
+Does WARN have side-effects on alpha?
+
+Does __WARN_printf() do something bad that warn_slowpath_null() doesn't?
+
+Does making incremental changes narrow anything down? (e.g. instead of
+this revert, remove the __warn() call in warn_slowpath_fmt() that was
+added? (I mean, that'll be quite broken for WARN, but will it not oops?)
+
+Does alpha have hardware breakpoints? When I had to track down a
+corruption in the io scheduler, I ended up setting breakpoints on the
+thing that went crazy (in this case, I assume the work queue function
+pointer) to figure out what touched it.
+
+... I can't think of anything else.
+
+-Kees
+
+> 
+> Here's the revert, with a trivial conflict resolved, that I've used in
+> testing:
+> 
+> From fdbdd0f606f0f412ee06c1152e33a22ca17102bc Mon Sep 17 00:00:00 2001
+> From: Matt Turner <mattst88@gmail.com>
+> Date: Sun, 24 May 2020 20:46:00 -0700
+> Subject: [PATCH] Revert "bug: consolidate warn_slowpath_fmt() usage"
+> 
+> This reverts commit f2f84b05e02b7710a201f0017b3272ad7ef703d1.
+> ---
+>  include/asm-generic/bug.h |  3 ++-
+>  kernel/panic.c            | 15 +++++++--------
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+> index 384b5c835ced..a4a311d4b4b0 100644
+> --- a/include/asm-generic/bug.h
+> +++ b/include/asm-generic/bug.h
+> @@ -82,7 +82,8 @@ struct bug_entry {
+>  extern __printf(4, 5)
+>  void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
+>  		       const char *fmt, ...);
+> -#define __WARN()		__WARN_printf(TAINT_WARN, NULL)
+> +extern void warn_slowpath_null(const char *file, const int line);
+> +#define __WARN()		warn_slowpath_null(__FILE__, __LINE__)
+>  #define __WARN_printf(taint, arg...)					\
+>  	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
+>  #else
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index b69ee9e76cb2..c8ed8046b484 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -603,20 +603,19 @@ void warn_slowpath_fmt(const char *file, int line, unsigned taint,
+>  {
+>  	struct warn_args args;
+> -	pr_warn(CUT_HERE);
+> -
+> -	if (!fmt) {
+> -		__warn(file, line, __builtin_return_address(0), taint,
+> -		       NULL, NULL);
+> -		return;
+> -	}
+> -
+>  	args.fmt = fmt;
+>  	va_start(args.args, fmt);
+>  	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
+>  	va_end(args.args);
+>  }
+>  EXPORT_SYMBOL(warn_slowpath_fmt);
+> +
+> +void warn_slowpath_null(const char *file, int line)
+> +{
+> +	pr_warn(CUT_HERE);
+> +	__warn(file, line, __builtin_return_address(0), TAINT_WARN, NULL, NULL);
+> +}
+> +EXPORT_SYMBOL(warn_slowpath_null);
+>  #else
+>  void __warn_printk(const char *fmt, ...)
+>  {
+> -- 
+> 2.26.2
+
+
+
 -- 
-2.24.1
-
+Kees Cook
