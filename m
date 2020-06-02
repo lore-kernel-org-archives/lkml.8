@@ -2,190 +2,260 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5246CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B51DD2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6252081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:07:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKdJMl8T"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OmiXCK4D";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EwiBnEp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgFBRE3 (ORCPT
+        id S1726373AbgFBRHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgFBRE3 (ORCPT
+        Tue, 2 Jun 2020 13:07:20 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:58034 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725969AbgFBRHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:04:29 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D504BC05BD1E;
-        Tue,  2 Jun 2020 10:04:28 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id u5so5350791pgn.5;
-        Tue, 02 Jun 2020 10:04:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qP1SFtSKI85Od2m/ro+JDsXQO3tioUkpdU+dKmyTlRI=;
-        b=oKdJMl8TzZa9ODZicGnJcIHOSTF432mRcPBazZ/oTtgrH1YkrG0tPbvTQTywX7E82v
-         LznKAjaKPExPwMtJX05Ej3AH1saH0AN4BtFgPqV8V1Y6X4p21PRg1GpxrLArdhxiQ8H0
-         YmIuXFrMUMYLRyztBUc0V3yiM2htahRds38SIt+on1RRdOheHwCCh1WJnSJqlXbhDIMQ
-         zGW4dt7W/JC4DAGz4ZSkjDA/rLd3jRQc5MdtRmeBz0L00VBeD+RNZkSBduKADuyamVN0
-         pNFL0CZsl6CINpv0svITsMuZGqldfK3kC/bntvftYNTN6H4lo2NRC0rzNQWi2MNyTNIa
-         EyyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qP1SFtSKI85Od2m/ro+JDsXQO3tioUkpdU+dKmyTlRI=;
-        b=o7nYeQXgz5mssPo/Aqq5fEhi3T1ROqzAkL+6j1L85RP7sENnqQ4TP5AI3aTQESy1oH
-         i6fAtxckolNso8tGwAZ7tcLNPJo2JJHyp/qHa6Qr3Nmjy5luQ5iyE992DHgp/zM2kqft
-         Yhd2IqCe57yS5MhIB6/zXEmlQmff+0Aj7t1cd2rl5mNYUTbj4Qmxc0F9la45A6867178
-         iVuJ+2+EsGrI4nynaQBungi2JNXmEtp0V7LI047vUxTZomPSteN4ZY/9XoNHSmWtAIKL
-         3FFU0PnbjQOhlKeY/90UkbBWsmK9ZUVM/xXdv06LJ0P8B5u+gbinWoUjR3T7ROusGWEx
-         mphQ==
-X-Gm-Message-State: AOAM533jMn13naivjVlVJjjp1bbYq7eprmHVBaG8FpvXIEPqBcJZYIOL
-        2AXpFLM7TUr6kaL9XYfk2V0UbDmfNy3yDnRpllw=
-X-Google-Smtp-Source: ABdhPJxlrtHHSjUce6iWy8kx5cGdV/gbgQevdhKK2v4Wg33jtRnDrxZu3cO9IRlBrmWXR9y0L8UBAUJdRuX9Kv1FLGk=
-X-Received: by 2002:a63:305:: with SMTP id 5mr24160733pgd.74.1591117468175;
- Tue, 02 Jun 2020 10:04:28 -0700 (PDT)
+        Tue, 2 Jun 2020 13:07:19 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C19CB403BB;
+        Tue,  2 Jun 2020 17:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1591117639; bh=++9dOwBPuNwE08U7KknoLw79l8LM3t7sdlA9mRjkLDg=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=OmiXCK4DuW/KnNmxfxQPqiL53RaZk52yrTD4P28Qn54X+CEHQsTtTFSBwVaksLRDd
+         kh2szq8DsxRIHZAsvb1FCg7QTWBS1c4qodrW+2T1UlyeG3sRGkyxH0/PrMfuXOTXJM
+         UQCQUXehMuv/DxfpEBj+C1FLc5wnfTxfHIJJMvvrBk+Mr9+qJdAifIZLy8TrfAPnOl
+         QsFTgOptezS2ORnr5RrRrr0QHGPX7Z+3BYFHvTRf3inYFB/wKuUgUAPUZkiGl7EloH
+         IpQGAuG9vBX4gs58wYIN5OY1AgBdFaRVal42YQkKF18YKeCioFO4Ks1Hk/4DvrxwUy
+         FT7A0i943LuEA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B4F33A0083;
+        Tue,  2 Jun 2020 17:07:17 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 2 Jun 2020 10:07:18 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Tue, 2 Jun 2020 10:07:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QkEzT2Z0SI5Z5o4A+nVOPLjAg92QbnKVqCmOhFMWazXxUcpzSjuhQmBaoZLI5J3zjwrOGLxvTCu1qmHW2/4U6HGOPPxqYcl/M5gASQDmun3GO9f8gCndMSpble3dqQ7dBC1yaqVaRjgj4dBbHnb3QFAwRskKk5GYOQLOOsBV1M/ENnWIi8rC7xnoWdQ4rn0foL4kT3T69GKgVNkJ5YTAysNfH+96Dn1Wt8deS84zzaQuBK8Tbr8VBfGRWjA6eXQfG03M2htOZHUxXTN5A1ZiVLErP5rfVv0H2KTqOPjJnC/gD3x7fDwt1mI9CmxOOQCqinWMAceZk8VhP8MdjLOqmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qkYZfOCoVYvIv3qV7ADLLByjHhpiUDNkAlJlcQ5eWM0=;
+ b=SghB/SZtaIR7iBuKm80hd8cGbHUK+2Hw76jFIkZCogVQJO78+GlMNi3aEdzmqF/s+4eg/pP4eqbc1eHuTHVcJlZoxBCIQi0AvncMKyxGGdsIte0X27IXkTylwviXRJTAMPT+WRaScCLBDGGb/mkFQ+GAkY8SEq9PO/8sQSrhKlkB38OT9gch4+Kk898Fq6vNEBMvGTmOo0EMrihuwH17NXOrlhEjedsiWLo8AdU+bBCH7sZ1/vsBOBLyGqdZnSH4QUX5B7WfDKEsUMru063o8DEcnaKiZ2O01n7eDFy35E0oezVzb52Lo/k0CpBfNc9cMAxdZyScAb7Ghsm5ibDBSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qkYZfOCoVYvIv3qV7ADLLByjHhpiUDNkAlJlcQ5eWM0=;
+ b=EwiBnEp1YZQKAOWSdz2KH+MIu2eS2SQQvTL4x+GBiQdiRi70JOlQG/rwB9DPjLGbAythYFlSXuTWVG+zPK7WP8KU2S+Rh8DkKKQ9RXOZjzJWp8IZ2ruQOauk9H49G+qqgms555Ra62ZY3423I1jsybdqs1kIhluYdBW98e8bsTo=
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
+ DM5PR12MB2487.namprd12.prod.outlook.com (2603:10b6:4:af::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3066.18; Tue, 2 Jun 2020 17:07:15 +0000
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32]) by DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32%5]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
+ 17:07:15 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: RE: [PATCH 0/2] PCI: dwc: Add support to handle prefetchable memory
+ separately
+Thread-Topic: [PATCH 0/2] PCI: dwc: Add support to handle prefetchable memory
+ separately
+Thread-Index: AQHWOMYE7ODbO2RSVE6Pntnec2wuFqjFjjdg
+Date:   Tue, 2 Jun 2020 17:07:15 +0000
+Message-ID: <DM5PR12MB127675E8C053755CB82A54BCDA8B0@DM5PR12MB1276.namprd12.prod.outlook.com>
+References: <20200602100940.10575-1-vidyas@nvidia.com>
+In-Reply-To: <20200602100940.10575-1-vidyas@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTgwNzhiYzljLWE0ZjMtMTFlYS05OGI4LWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFw4MDc4YmM5ZS1hNGYzLTExZWEtOThiOC1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjE5NTYiIHQ9IjEzMjM1NTkxMjMzNzc2?=
+ =?us-ascii?Q?OTcyNyIgaD0iR3FZWlVvSEJYSWdQY3FoaWNNUTJ0MzY3ZVFvPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?L3hOQkNBRG5XQWM4dDNHNXZCbXE5enkzY2JtOEdhcjBPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFFbU1la3dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0d65408d-3ed0-4e86-3617-08d807176682
+x-ms-traffictypediagnostic: DM5PR12MB2487:
+x-microsoft-antispam-prvs: <DM5PR12MB2487DC520181F684C923F4CBDA8B0@DM5PR12MB2487.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0422860ED4
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xEvhBVk6alzQ19fjeWPtyjsJoahwPxRswikrIcdLDu0+4S3wiqeRkDHJkZaqZr+BXMNw0mCVBlWYEr846xP6iVoDiii4ojofb2Gm16sq+uMfwXy9zSdjHMT/E8U8SZ0Z0xQNwMhjU5iGACL+G/r6IQ9fpui7I5RQvVarowrVg/DPybJqzffU8M2y13SAttecDJYMoUmeQzEN2nOUfSi1vLEZR0Hu7A10kPGWWsIVgcO9jESOKaomFHT6bx3dO+3XQDde+DbzQAd0BeulwDIvZyAkQ83Ss+5XcVh86dL0lt6+C81idzHTaylDhRuF8pUzT1j0eXTsirwyOMAjG1WeGQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(366004)(136003)(396003)(54906003)(478600001)(64756008)(66476007)(66446008)(316002)(110136005)(66556008)(76116006)(66946007)(5660300002)(7696005)(86362001)(52536014)(6506007)(33656002)(53546011)(83380400001)(8936002)(26005)(8676002)(186003)(4326008)(2906002)(55016002)(9686003)(71200400001)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: FA8xPdkI8M06f3jChpYOWSfYa5PgpSECJOoTLm2ZNiYV306OA4kMQL9GqLYISWfc/mfrRmWfDDaI2T0pnqr5vfXR1trTUqbB1D18NGrOWCaQ5nqOp79cCYXJP0h/BVNW11AJ0WgCW2X3vubyA7LipoishtpF8lz3b5Bwn6V3+BC2x/lKRUF7eVSHzPAFEQ1iHNF4FeyjRNHQO0tmR36JPgg/TKVKiHdrQ2/E+J/e/WdjGg4wudML7PLT75TnrZdcElJxSQSAKhw3kmESIaZ+qUaY2qyO8unHMXK70Bb6BXvgcSwh5eVc8aO9xSvbrhwxeGwuaK2S8Xl6guunRXCqQPmV4pFG4n+WsIPaY3WOBVpJDs0E49MOz4EcEKkID+aEl0322ZRRyl0+uWg9IfpUH0uxyu6BD8DVynI3vji9o2QrvgmIfjKP3Q0RXO3/jN4t4HISmNGTu6ZviQWun8wWHuSj2/ldI8tcYmD4qreoVrY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200602164723.28858-1-tomasz.duszynski@octakon.com> <20200602164723.28858-4-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200602164723.28858-4-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Jun 2020 20:04:16 +0300
-Message-ID: <CAHp75VfjWG_3XC5FJoaU7XXJc+04JTbEKdjZK=g6ffBPvJNhxA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] iio: chemical: scd30: add serial interface driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d65408d-3ed0-4e86-3617-08d807176682
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2020 17:07:15.7407
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xlvXf/JNsJ5FkpbiXXwc4zHHCqigdZq7jrZsNabNawQDHGhCikS5KuwCp1AMlJxIWYEB1eTvkLnkOjW2nX+Mpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2487
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
->
-> Add serial interface driver for the SCD30 sensor.
+On Tue, Jun 2, 2020 at 11:9:38, Vidya Sagar <vidyas@nvidia.com> wrote:
 
-...
+> In this patch series,
+> Patch-1
+> adds required infrastructure to deal with prefetchable memory region
+> information coming from 'ranges' property of the respective device-tree n=
+ode
+> separately from non-prefetchable memory region information.
+> Patch-2
+> Adds support to use ATU region-3 for establishing the mapping between CPU
+> addresses and PCIe bus addresses.
+> It also changes the logic to determine whether mapping is required or not=
+ by
+> checking both CPU address and PCIe bus address for both prefetchable and
+> non-prefetchable regions. If the addresses are same, then, it is understo=
+od
+> that 1:1 mapping is in place and there is no need to setup ATU mapping
+> whereas if the addresses are not the same, then, there is a need to setup=
+ ATU
+> mapping. This is certainly true for Tegra194 and what I heard from our HW
+> engineers is that it should generally be true for any DWC based implement=
+ation
+> also.
+> Hence, I request Synopsys folks (Jingoo Han & Gustavo Pimentel ??) to con=
+firm
+> the same so that this particular patch won't cause any regressions for ot=
+her
+> DWC based platforms.
 
-> +static u16 scd30_serdev_cmd_lookup_tbl[] = {
-> +       [CMD_START_MEAS] = 0x0036,
-> +       [CMD_STOP_MEAS] = 0x0037,
-> +       [CMD_MEAS_INTERVAL] = 0x0025,
-> +       [CMD_MEAS_READY] = 0x0027,
-> +       [CMD_READ_MEAS] = 0x0028,
-> +       [CMD_ASC] = 0x003a,
-> +       [CMD_FRC] = 0x0039,
-> +       [CMD_TEMP_OFFSET] = 0x003b,
-> +       [CMD_FW_VERSION] = 0x0020,
-> +       [CMD_RESET] = 0x0034,
+Hi Vidya,
 
-Hmm... Can't we keep them ordered by value?
+Unfortunately due to the COVID-19 lockdown, I can't access my development=20
+prototype setup to test your patch.
+It might take some while until I get the possibility to get access to it=20
+again.
 
-> +};
+-Gustavo
 
-...
+>=20
+> Vidya Sagar (2):
+>   PCI: dwc: Add support to handle prefetchable memory separately
+>   PCI: dwc: Use ATU region to map prefetchable memory region
+>=20
+>  .../pci/controller/dwc/pcie-designware-host.c | 46 ++++++++++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.c  |  6 ++-
+>  drivers/pci/controller/dwc/pcie-designware.h  |  8 +++-
+>  3 files changed, 45 insertions(+), 15 deletions(-)
+>=20
+> --=20
+> 2.17.1
 
-> +       ret = wait_for_completion_interruptible_timeout(&priv->meas_ready,
-> +                                                       SCD30_SERDEV_TIMEOUT);
-> +       if (ret > 0)
-> +               ret = 0;
-> +       else if (!ret)
-> +               ret = -ETIMEDOUT;
-> +
-> +       return ret;
 
-Perhaps
-
-  if (ret < 0)
-    return ret;
-  if (ret == 0)
-    return -ETIMEDOUT;
-  return 0;
-
-?
-
-...
-
-> +       char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR },
-> +            rxbuf[SCD30_SERDEV_MAX_BUF_SIZE], *rsp = response;
-
-Please, apply type to each variable separately.
-
-...
-
-> +       switch (txbuf[1]) {
-> +       case SCD30_SERDEV_WRITE:
-
-> +               if (memcmp(txbuf, txbuf, txsize)) {
-
-I'm not sure I understand this.
-
-> +                       dev_err(state->dev, "wrong message received\n");
-> +                       return -EIO;
-> +               }
-> +               break;
-> +       case SCD30_SERDEV_READ:
-
-> +               if (rxbuf[2] != (rxsize -
-> +                                SCD30_SERDEV_RX_HEADER_SIZE -
-> +                                SCD30_SERDEV_CRC_SIZE)) {
-
-Perhaps you can come up with better indentation/ line split?
-
-> +                       dev_err(state->dev,
-> +                               "received data size does not match header\n");
-> +                       return -EIO;
-> +               }
-> +
-> +               rxsize -= SCD30_SERDEV_CRC_SIZE;
-> +               crc = get_unaligned_le16(rxbuf + rxsize);
-> +               if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
-> +                       dev_err(state->dev, "data integrity check failed\n");
-> +                       return -EIO;
-> +               }
-> +
-> +               rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
-> +               memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
-> +               break;
-> +       default:
-> +               dev_err(state->dev, "received unknown op code\n");
-> +               return -EIO;
-> +       }
-> +
-> +       return 0;
-> +}
-
-...
-
-> +static struct serdev_device_driver scd30_serdev_driver = {
-> +       .driver = {
-
-> +               .name = KBUILD_MODNAME,
-
-This is not the best what we can do. The name is an ABI and better if
-it will be constant (independent on file name).
-
-> +               .of_match_table = scd30_serdev_of_match,
-> +               .pm = &scd30_pm_ops,
-> +       },
-> +       .probe = scd30_serdev_probe,
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
