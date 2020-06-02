@@ -2,154 +2,149 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1803C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D869020738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088FF20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AZIrf0AQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgFBQuQ (ORCPT
+        id S1726420AbgFBQzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:50:16 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:55861 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727011AbgFBQuB (ORCPT
+        Tue, 2 Jun 2020 12:55:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52830 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgFBQzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:50:01 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.4.71])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 1BFE5550B0B6;
-        Tue,  2 Jun 2020 18:49:56 +0200 (CEST)
-Received: from localhost.localdomain (34.103.240.103) by DAG2EX1.emp2.local
- (172.16.2.11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
- 18:49:55 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     <linux-iio@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <jic23@kernel.org>,
-        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH v3 4/4] dt-bindings: iio: scd30: add device binding file
-Date:   Tue, 2 Jun 2020 18:47:23 +0200
-Message-ID: <20200602164723.28858-5-tomasz.duszynski@octakon.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
-References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
+        Tue, 2 Jun 2020 12:55:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052Gq51C058718;
+        Tue, 2 Jun 2020 16:55:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=TgMIK/Li4+PJax3En9DWpNj9nLL9DF0CA9glXTSvvvI=;
+ b=AZIrf0AQfHEfr1bKCmy8cfEsfA0Gq/tqVTMmNPNsASwlg1ITxEcBrf5+WX8ebSeyB+Vk
+ LVkLwRMsB5EhXZwND6Wbrgt2STEor2DAohMnbp2W/AdeuD93wUozZF8JuSAdhx1pXqTN
+ fgBKzD5smbLf5BKJdWfDXoiPtxm0L0Vm2sVKgxPSEnre2L/IJyVeW4Tcmo6QnwX71f1z
+ ELEWygDQB78eiX6DGLBSA2zypg/cijlWz4RgDklwxxVV02fmaeVtAvxqj+iBzZIrhwpN
+ WMZ/dUqwdiTFGtAccByXHHR49v8xhFtABWCdCPMKxP3bBB0kfgxDGc+EHGgejHMlFJ1z 8A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 31dkruj55h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 16:55:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052GrFZc129851;
+        Tue, 2 Jun 2020 16:53:32 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 31c1dxk3qs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 16:53:32 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052GrVDF004497;
+        Tue, 2 Jun 2020 16:53:31 GMT
+Received: from dhcp-10-175-162-197.vpn.oracle.com (/10.175.162.197)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 09:53:30 -0700
+Date:   Tue, 2 Jun 2020 17:53:27 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     David Gow <davidgow@google.com>
+cc:     Brendan Higgins <brendanhiggins@google.com>,
+        alan.maguire@oracle.com, Jonathan Corbet <corbet@lwn.net>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: kunit: Add some troubleshooting tips to
+ the FAQ
+In-Reply-To: <20200602054216.93122-1-davidgow@google.com>
+Message-ID: <alpine.LRH.2.21.2006021743430.17227@localhost>
+References: <20200602054216.93122-1-davidgow@google.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [34.103.240.103]
-X-ClientProxiedBy: DAG1EX1.emp2.local (172.16.2.1) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 9454181519848266775
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvffufffkofgjfhgggfgtihesthekredtredttdenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvffekueetkefhtedufffftdduteehvddvveehhfekffegueefveetjeeitddtleenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppedtrddtrddtrddtpdefgedruddtfedrvdegtddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvght
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SCD30 sensor binding file.
+On Mon, 1 Jun 2020, David Gow wrote:
 
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
----
- .../iio/chemical/sensirion,scd30.yaml         | 68 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> Add an FAQ entry to the KUnit documentation with some tips for
+> troubleshooting KUnit and kunit_tool.
+> 
+> These suggestions largely came from an email thread:
+> https://lore.kernel.org/linux-kselftest/41db8bbd-3ba0-8bde-7352-083bf4b947ff@intel.com/T/#m23213d4e156db6d59b0b460a9014950f5ff6eb03
+> 
+> Signed-off-by: David Gow <davidgow@google.com>
+> ---
+>  Documentation/dev-tools/kunit/faq.rst | 32 +++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
+> index ea55b2467653..40109d425988 100644
+> --- a/Documentation/dev-tools/kunit/faq.rst
+> +++ b/Documentation/dev-tools/kunit/faq.rst
+> @@ -61,3 +61,35 @@ test, or an end-to-end test.
+>    kernel by installing a production configuration of the kernel on production
+>    hardware with a production userspace and then trying to exercise some behavior
+>    that depends on interactions between the hardware, the kernel, and userspace.
+> +
+> +KUnit isn't working, what should I do?
+> +======================================
+> +
+> +Unfortunately, there are a number of things which can break, but here are some
+> +things to try.
+> +
+> +1. Try running ``./tools/testing/kunit/kunit.py run`` with the ``--raw_output``
+> +   parameter. This might show details or error messages hidden by the kunit_tool
+> +   parser.
+> +2. Instead of running ``kunit.py run``, try running ``kunit.py config``,
+> +   ``kunit.py build``, and ``kunit.py exec`` independently. This can help track
+> +   down where an issue is occurring. (If you think the parser is at fault, you
+> +   can run it manually against stdin or a file with ``kunit.py parse``.)
+> +3. Running the UML kernel directly can often reveal issues or error messages
+> +   kunit_tool ignores. This should be as simple as running ``./vmlinux`` after
+> +   building the UML kernel (e.g., by using ``kunit.py build``). Note that UML
+> +   has some unusual requirements (such as the host having a tmpfs filesystem
+> +   mounted), and has had issues in the past when built statically and the host
+> +   has KASLR enabled. (On older host kernels, you may need to run ``setarch
+> +   `uname -m` -R ./vmlinux`` to disable KASLR.)
+> +4. Make sure the kernel .config has ``CONFIG_KUNIT=y`` and at least one test
+> +   (e.g. ``CONFIG_KUNIT_EXAMPLE_TEST=y``). kunit_tool will keep its .config
+> +   around, so you can see what config was used after running ``kunit.py run``.
+> +   It also preserves any config changes you might make, so you can
+> +   enable/disable things with ``make ARCH=um menuconfig`` or similar, and then
+> +   re-run kunit_tool.
+> +5. Finally, running ``make ARCH=um defconfig`` before running ``kunit.py run``
+> +   may help clean up any residual config items which could be causing problems.
+> +
 
-diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-new file mode 100644
-index 000000000000..40d87346ff4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/chemical/sensirion,scd30.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sensirion SCD30 carbon dioxide sensor
-+
-+maintainers:
-+  - Tomasz Duszynski <tomasz.duszynski@octakon.com>
-+
-+description: |
-+  Air quality sensor capable of measuring co2 concentration, temperature
-+  and relative humidity.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sensirion,scd30
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+  sensirion,sel-gpios:
-+    description: GPIO connected to the SEL line
-+    maxItems: 1
-+
-+  sensirion,pwm-gpios:
-+    description: GPIO connected to the PWM line
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    # include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      co2-sensor@61 {
-+        compatible = "sensirion,scd30";
-+        reg = <0x61>;
-+        vdd-supply = <&vdd>;
-+        interrupt-parent = <&gpio0>;
-+        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+      };
-+    };
-+  - |
-+    # include <dt-bindings/interrupt-controller/irq.h>
-+    serial {
-+      co2-sensor {
-+        compatible = "sensirion,scd30";
-+        vdd-supply = <&vdd>;
-+        interrupt-parent = <&gpio0>;
-+        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+      };
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5db4b446c8ba..0ab9cf39e051 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15140,6 +15140,7 @@ F:	include/uapi/linux/phantom.h
- SENSIRION SCD30 CARBON DIOXIDE SENSOR DRIVER
- M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
- F:	drivers/iio/chemical/scd30.h
- F:	drivers/iio/chemical/scd30_core.c
- F:	drivers/iio/chemical/scd30_i2c.c
--- 
-2.26.2
+Looks great! Could we add something like:
 
+6. Try running kunit standalone (without UML).  KUnit and associated 
+tests can be built into a standard kernel or built as a module; doing
+so allows us to verify test behaviour independent of UML so can be
+useful to do if running under UML is failing.  When tests are built-in
+they will execute on boot, and modules will automatically execute
+associated tests when loaded.  Test results can be collected from
+/sys/kernel/debug/kunit/<test-suite>/results. For more details see
+"KUnit on non-UML architectures" in :doc:`usage`. 
+
+Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
