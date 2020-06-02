@@ -2,149 +2,91 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58530C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 088FF20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295F720734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:56:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AZIrf0AQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5jUEF1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgFBQzh (ORCPT
+        id S1726666AbgFBQ4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:55:37 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52830 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgFBQzh (ORCPT
+        Tue, 2 Jun 2020 12:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgFBQ4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:55:37 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052Gq51C058718;
-        Tue, 2 Jun 2020 16:55:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=TgMIK/Li4+PJax3En9DWpNj9nLL9DF0CA9glXTSvvvI=;
- b=AZIrf0AQfHEfr1bKCmy8cfEsfA0Gq/tqVTMmNPNsASwlg1ITxEcBrf5+WX8ebSeyB+Vk
- LVkLwRMsB5EhXZwND6Wbrgt2STEor2DAohMnbp2W/AdeuD93wUozZF8JuSAdhx1pXqTN
- fgBKzD5smbLf5BKJdWfDXoiPtxm0L0Vm2sVKgxPSEnre2L/IJyVeW4Tcmo6QnwX71f1z
- ELEWygDQB78eiX6DGLBSA2zypg/cijlWz4RgDklwxxVV02fmaeVtAvxqj+iBzZIrhwpN
- WMZ/dUqwdiTFGtAccByXHHR49v8xhFtABWCdCPMKxP3bBB0kfgxDGc+EHGgejHMlFJ1z 8A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31dkruj55h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 16:55:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052GrFZc129851;
-        Tue, 2 Jun 2020 16:53:32 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 31c1dxk3qs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 16:53:32 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052GrVDF004497;
-        Tue, 2 Jun 2020 16:53:31 GMT
-Received: from dhcp-10-175-162-197.vpn.oracle.com (/10.175.162.197)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 09:53:30 -0700
-Date:   Tue, 2 Jun 2020 17:53:27 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     David Gow <davidgow@google.com>
-cc:     Brendan Higgins <brendanhiggins@google.com>,
-        alan.maguire@oracle.com, Jonathan Corbet <corbet@lwn.net>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: kunit: Add some troubleshooting tips to
- the FAQ
-In-Reply-To: <20200602054216.93122-1-davidgow@google.com>
-Message-ID: <alpine.LRH.2.21.2006021743430.17227@localhost>
-References: <20200602054216.93122-1-davidgow@google.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Tue, 2 Jun 2020 12:56:08 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7C2C05BD1E;
+        Tue,  2 Jun 2020 09:56:07 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a4so5313592pfo.4;
+        Tue, 02 Jun 2020 09:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4JhKGkoN16KcWdU2zwJaxiaPXbw0nIdbr0m5DGhJhx4=;
+        b=E5jUEF1zOMssQjQjXzCXKr9WKj1tMbo0sJPAVAoZFoBlYmBkd5Y81Qr4GVvq+qiXv+
+         rDUxhMoltnZjaDFkBMg8grVdQg6pRcXDHi1W65aW9wuEFHe++lFs/JUfgJGG6+EPZixo
+         3+No106niW+lMoJNCHFXEHU3R/57AkbQBOebuuhqxdjcyMIHmCUuL5OrT1DSNQdSjRc8
+         aOYP7oS/R55QaaJNum/6teEgiUUUvPzotaYmFp9OLY5SXRR33Wdto6EFOkO8tJbiHE8g
+         tHP+qt2HFMSV2ydthgwpyL/HFGrkEN/ETo93PpcKkyJdWZ8YyLqJaVg6fcAHYmr8XelC
+         0jpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4JhKGkoN16KcWdU2zwJaxiaPXbw0nIdbr0m5DGhJhx4=;
+        b=Txm3k0G8r/vRqLkcbzHOlqGeJI0eBeWCnxWfx1Z+EVzvllj+T1ptrU/uwNPmGZdssI
+         w4NoaW4VxG6h6SaeFcR2Yy7AnVclMosesdsMC+Dmb26PFn5qZV0Ur+8R5vys04P56Jxe
+         hVcTfUfCG5KxWz2EuulmPiwZEa93Uo42iFJw4Xa9zUB3MNrzfpZsa3KwwW5NCya2dpK0
+         4CbagnEgoeOEXt1WgzzwvxIACMe5F5pWQ0Waaa3YGWaZiHdz2AeIQiqMzo7IpclQCh79
+         QbMOvYP5rFzzKWuA0z+9QHzGLCjYgAB9/HqBPKy+oLG3cMz9G2mRKUMh0QvHE9SzRbkM
+         NOcg==
+X-Gm-Message-State: AOAM530HMSePLUAzuIxKDtiIMGGDG6vk+l0yUn3OQN+l7eXIbgKAhDap
+        LZcCeLIHJRJcMvutW82zTs1AjyDNTlHfpX7ltSaK9+JGKrU=
+X-Google-Smtp-Source: ABdhPJyQXCKQk09UHgTiUJHHW83u89d/CQ3bjPEtH7N6A42xbhPdhY3sJZgCk3IGu3pQIHfgLwyO1sm4K+ievPmYDvE=
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr8774259pgk.203.1591116967037;
+ Tue, 02 Jun 2020 09:56:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020121
+References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jun 2020 19:55:55 +0300
+Message-ID: <CAHp75VdPF=LzDn0f_Ljb=S+8L58DS4ofC6fD=Nzu1afR_nD8vQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Add support for SCD30 sensor
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jun 2020, David Gow wrote:
+On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> Following series adds support for Sensirion SCD30 sensor module capable of
+> measuring carbon dioxide, temperature and relative humidity. CO2 measurements
+> base on NDIR principle while temperature and relative humidity are measured by
+> the on board SHT31. As for sensor communication, both I2C and serial interfaces
+> are supported.
 
-> Add an FAQ entry to the KUnit documentation with some tips for
-> troubleshooting KUnit and kunit_tool.
-> 
-> These suggestions largely came from an email thread:
-> https://lore.kernel.org/linux-kselftest/41db8bbd-3ba0-8bde-7352-083bf4b947ff@intel.com/T/#m23213d4e156db6d59b0b460a9014950f5ff6eb03
-> 
-> Signed-off-by: David Gow <davidgow@google.com>
-> ---
->  Documentation/dev-tools/kunit/faq.rst | 32 +++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
-> index ea55b2467653..40109d425988 100644
-> --- a/Documentation/dev-tools/kunit/faq.rst
-> +++ b/Documentation/dev-tools/kunit/faq.rst
-> @@ -61,3 +61,35 @@ test, or an end-to-end test.
->    kernel by installing a production configuration of the kernel on production
->    hardware with a production userspace and then trying to exercise some behavior
->    that depends on interactions between the hardware, the kernel, and userspace.
-> +
-> +KUnit isn't working, what should I do?
-> +======================================
-> +
-> +Unfortunately, there are a number of things which can break, but here are some
-> +things to try.
-> +
-> +1. Try running ``./tools/testing/kunit/kunit.py run`` with the ``--raw_output``
-> +   parameter. This might show details or error messages hidden by the kunit_tool
-> +   parser.
-> +2. Instead of running ``kunit.py run``, try running ``kunit.py config``,
-> +   ``kunit.py build``, and ``kunit.py exec`` independently. This can help track
-> +   down where an issue is occurring. (If you think the parser is at fault, you
-> +   can run it manually against stdin or a file with ``kunit.py parse``.)
-> +3. Running the UML kernel directly can often reveal issues or error messages
-> +   kunit_tool ignores. This should be as simple as running ``./vmlinux`` after
-> +   building the UML kernel (e.g., by using ``kunit.py build``). Note that UML
-> +   has some unusual requirements (such as the host having a tmpfs filesystem
-> +   mounted), and has had issues in the past when built statically and the host
-> +   has KASLR enabled. (On older host kernels, you may need to run ``setarch
-> +   `uname -m` -R ./vmlinux`` to disable KASLR.)
-> +4. Make sure the kernel .config has ``CONFIG_KUNIT=y`` and at least one test
-> +   (e.g. ``CONFIG_KUNIT_EXAMPLE_TEST=y``). kunit_tool will keep its .config
-> +   around, so you can see what config was used after running ``kunit.py run``.
-> +   It also preserves any config changes you might make, so you can
-> +   enable/disable things with ``make ARCH=um menuconfig`` or similar, and then
-> +   re-run kunit_tool.
-> +5. Finally, running ``make ARCH=um defconfig`` before running ``kunit.py run``
-> +   may help clean up any residual config items which could be causing problems.
-> +
+Btw, since we have relaxed 80 limit to 100, I recommend to reconsider
+some lines to be joined.
 
-Looks great! Could we add something like:
-
-6. Try running kunit standalone (without UML).  KUnit and associated 
-tests can be built into a standard kernel or built as a module; doing
-so allows us to verify test behaviour independent of UML so can be
-useful to do if running under UML is failing.  When tests are built-in
-they will execute on boot, and modules will automatically execute
-associated tests when loaded.  Test results can be collected from
-/sys/kernel/debug/kunit/<test-suite>/results. For more details see
-"KUnit on non-UML architectures" in :doc:`usage`. 
-
-Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+-- 
+With Best Regards,
+Andy Shevchenko
