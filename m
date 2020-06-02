@@ -2,170 +2,222 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3447C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6927A20671
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVr9E3h+"
+	by mail.kernel.org (Postfix) with ESMTP id A44432068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591065353;
+	bh=qkZU3Brj/5fem/dHlJ2+v9OVbb5qfguEJj+iftH8kXc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yO6VwstF1Te+Puuj7RyaSeJZfRGsQ0lAvEIMAUU97O857eAMAYcTIxXHneJkg/HTH
+	 RSScm0v8dY3/+/cOqBFBjid1MQoM4ElFxqNzavSstzIMXOPvNR5ySZLmwiXOxhY0u9
+	 N7UWIbGaF06dhg9bb37e/V1qJ9h40EVQPVFyLz6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgFBCe3 (ORCPT
+        id S1726480AbgFBCfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 22:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33214 "EHLO
+        Mon, 1 Jun 2020 22:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgFBCe2 (ORCPT
+        with ESMTP id S1725872AbgFBCfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 22:34:28 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00483C061A0E;
-        Mon,  1 Jun 2020 19:34:26 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p30so4375320pgl.11;
-        Mon, 01 Jun 2020 19:34:26 -0700 (PDT)
+        Mon, 1 Jun 2020 22:35:52 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03448C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 19:35:52 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m18so10694000ljo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 19:35:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s4UEYuJB3XBli5yd0KidgvrjcjkYTAO/sinQI+U9kL0=;
-        b=SVr9E3h+qDW24ehI3GnKXPBVnMq8IOQHh3vUnxsbkgQ/R92qU3yIMfqHv8AE2MTHzU
-         tByJKQrO2K+FRFPiMoDi846/wjV1c8gSzrkKa2XoOeV7jCWOi4G9gd5wRSAMaxJHLcT8
-         hEJpXMFml7Du5yOYVVwJ9I2arHd0PDnbemrOP/46uDIGztreWe5nZOTO7t5cg0khrhwE
-         8tRI3k35w9ISTgsGdVMQeSTLBWsvQXupB2D/t9zCNTYI62XyifwUzqxG+AJ3/FvDkjxx
-         g0qvg+5THyCC4OrABeDSCsz3HYPiYkk8tiCka/lDQG+NOuNGfWnao4R99oWJUorNIjT1
-         ZEAA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uTv3a3ynCKyz8zZO4LnRj5qEXUco16tlu2MClhf7vNM=;
+        b=NbdiMaFUG4ymtVXM6YxhnNENU5R3hbIcTnKRa7PoopIkM/yuZoFHwAKY/feab5Q+Yb
+         QZpOqE2gfixpvsPZ0iCxTkouiCxg7BA6EWFa0LosTUY2a1oILHTYRs0gGx4Cq3caedGw
+         dNy1lFvhiDsH7SQ8x+eg1pTD1ZiNiRDgvYDrA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=s4UEYuJB3XBli5yd0KidgvrjcjkYTAO/sinQI+U9kL0=;
-        b=bb6GRCYCtaL3nlGnHmXF8FIArZ+7dExvVJ9mHCtkjRz6FCt9GROouNpO5uoIIfKufd
-         g7S1OdVkozVprjGdyBP6lPnm2xJ3k6TcXiWo1i19qE8c+H8wXesoJYsrP6pXcm6CPqba
-         y8LQzKU4cDVa3iQled3nOpvncnOznVo9xilL79cOqpsq5p0v1spiikhUhttN6QDHuNqA
-         UfFPwyKgsBEjw1Z5o/KfQ37z+pV9v7WklNZsTVyjzpRPK/TgwTjKIZKMjmm5NiBSxEPf
-         rYKSYcRmKjJn3yrTWg0W2QbrCAJtUpcPJT4vdUBbrvIeembREDNUPbgJZLgbMtKekIqc
-         OMjw==
-X-Gm-Message-State: AOAM532ZQtbCuaflTQWe7WJO9GcY63fm1mCZ+ACLILQtxpMC+UvHaysl
-        9ed4pVwnaglXkDpalWVRLYSQ9To0
-X-Google-Smtp-Source: ABdhPJy1JQHar4xcTo+hi1ELp8K09Nm+ftNlxYIU7PtXLGPkjhqHQu5VLWGu5FDKiAYozqWC7Swlog==
-X-Received: by 2002:a63:5105:: with SMTP id f5mr6587737pgb.261.1591065266227;
-        Mon, 01 Jun 2020 19:34:26 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v129sm660001pfv.18.2020.06.01.19.34.23
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uTv3a3ynCKyz8zZO4LnRj5qEXUco16tlu2MClhf7vNM=;
+        b=iHhVjqt5xY8aVy8llJj131LTDtt5mhaTZemnxdaiOxUkBn1jOryYuKhzpqYSIvF/Dk
+         rHImFbC5G8RItRtmY4CQLPES1UswFt8bDcC70S6UACz1EHRjYEaHM7kLG/+paSZj77mI
+         p9cf+ulOfQ+GvXHhLnOtxFKe9jXb3RGNNW72LNrdgC02B9MjwqznEsFs+Lj92NsXOHAM
+         Mq5cLHRx/SJvWiinwgVaHaxA++MeRG36lj0k66vrK6SN/jOQEX4jleNrXGgPx9yq5WGS
+         ZY5TZaDN9/1cEvBZWOrEP0rjcc91DDK6Wd+9EgnsfGQ6tzIZydxdbI04LQ5+gl1hnEKd
+         VuDA==
+X-Gm-Message-State: AOAM531pw7Z5Y2aNEH1sA3VgOIA2Jgfsoyt+lFX2Bu3tu+yitCZQpFsy
+        MemvZ2lp4ZaYdUkRROirMll2ELaYuRc=
+X-Google-Smtp-Source: ABdhPJz4eqr9CIZVEOkoOKYu3yRpkRbnmW5gadQETDjVOeitO5wEfJC5y8Tpb06VyFdCULr8K9TXCA==
+X-Received: by 2002:a2e:8e22:: with SMTP id r2mr463638ljk.240.1591065349061;
+        Mon, 01 Jun 2020 19:35:49 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id v7sm253751ljv.40.2020.06.01.19.35.47
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 19:34:25 -0700 (PDT)
-Subject: Re: [PATCH 4.9 00/61] 4.9.226-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200601174010.316778377@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <2b4126ce-487e-91ed-e471-1af5b61b2fef@roeck-us.net>
-Date:   Mon, 1 Jun 2020 19:34:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 01 Jun 2020 19:35:48 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id h188so5201534lfd.7
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 19:35:47 -0700 (PDT)
+X-Received: by 2002:ac2:5a0a:: with SMTP id q10mr12869466lfn.142.1591065347463;
+ Mon, 01 Jun 2020 19:35:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200601170102.GA1346815@gmail.com> <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 1 Jun 2020 19:35:31 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjVLSOJ+uyEOhze_AaJi2mpmOAn7QtKahO1DC-Oj5teuA@mail.gmail.com>
+Message-ID: <CAHk-=wjVLSOJ+uyEOhze_AaJi2mpmOAn7QtKahO1DC-Oj5teuA@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/mm changes for v5.8
+To:     Balbir Singh <sblbir@amazon.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/20 10:53 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.226 release.
-> There are 61 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
-> Anything received after that time might be too late.
-> 
+On Mon, Jun 1, 2020 at 6:06 PM Balbir Singh <sblbir@amazon.com> wrote:
+>
+> I think apps can do this independently today as in do the flush
+> via software fallback in the app themselves.
 
-Lots of errors along the line of
+Sure, but they can't force the kernel to do crazy things for every task switch.
 
-arch/arm/lib/clear_user.S: Assembler messages:
-arch/arm/lib/clear_user.S:33: Error: bad instruction `strbtal r2,[r0],#1'
-arch/arm/lib/clear_user.S:34: Error: bad instruction `strbtle r2,[r0],#1'
-arch/arm/lib/clear_user.S:35: Error: bad instruction `strbtlt r2,[r0],#1'
-arch/arm/lib/clear_user.S:39: Error: bad instruction `strtpl r2,[r0],#4'
-arch/arm/lib/clear_user.S:39: Error: bad instruction `strtpl r2,[r0],#4'
-arch/arm/lib/clear_user.S:42: Error: bad instruction `strtpl r2,[r0],#4'
-arch/arm/lib/clear_user.S:44: Error: bad instruction `strbtne r2,[r0],#1'
-arch/arm/lib/clear_user.S:44: Error: bad instruction `strbtne r2,[r0],#1'
+> But I see your concern with
+> respect to an overall admin override, I thought about it, but I stopped
+> because of the reason above.
 
-Bisect log below.
+So my real concern is that I had a hard time following all the logic,
+but it _looked_ to me like it ends up doing the flushes even if SMT is
+enabled, for example.
 
-Guenter
+And that's not an "admin override". That's just a full no-no. If SMT
+is on, then we don't do any L1D$ flushing in the kernel, because it
+would ne entirely pointless.
 
----
-# bad: [f7c3cc559c2e60aedae9799208fc8dd85211b971] Linux 4.9.226-rc1
-# good: [82dddebfe7da9d2670977ab723da2fdac3eff5b0] Linux 4.9.225
-git bisect start 'HEAD' 'v4.9.225'
-# bad: [d1560c566028eb1ce2b446ef1ce8e36cb85f58e5] ARM: dts: imx: Correct B850v3 clock assignment
-git bisect bad d1560c566028eb1ce2b446ef1ce8e36cb85f58e5
-# good: [3a416993574184aefe8abe230bfcfae7464f438e] gfs2: move privileged user check to gfs2_quota_lock_check
-git bisect good 3a416993574184aefe8abe230bfcfae7464f438e
-# good: [1b96153fc668b0ba6fcc8c05729898773c5bf9cf] Input: xpad - add custom init packet for Xbox One S controllers
-git bisect good 1b96153fc668b0ba6fcc8c05729898773c5bf9cf
-# bad: [b6eb3d378d94ebcfd35ebc881310b6dc684ca7a6] ARM: uaccess: consolidate uaccess asm to asm/uaccess-asm.h
-git bisect bad b6eb3d378d94ebcfd35ebc881310b6dc684ca7a6
-# good: [a4174aaf3c0998c50023fabf48f4107286fe30e6] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
-git bisect good a4174aaf3c0998c50023fabf48f4107286fe30e6
-# bad: [db2e66e6d39b037c9538edc5b85094b70fff97ab] ARM: 8843/1: use unified assembler in headers
-git bisect bad db2e66e6d39b037c9538edc5b85094b70fff97ab
-# first bad commit: [db2e66e6d39b037c9538edc5b85094b70fff97ab] ARM: 8843/1: use unified assembler in headers
+But this all quite possibly interacts with all the subtle static
+branches we have in this same area, so ...
+
+> The software fallback was there and is the same algorithm that we use
+> for L1TF. We could potentially remove the software fallback if there
+> is a concern, having the software fallback provides a mechanism
+> independent of the microcode version similar to L1TF.
+
+So the SW fallback raises my hackles, because we had the exact same
+kind of non-architected software fallback for clearing the data
+buffers for MDS.
+
+And that one turned out to be not only incredibly expensive, but it
+didn't work reliably anyway, and was really only written for one
+microarchitecture.
+
+It's not clear that a (generic) SW routine _can_ reliably flush the
+L1D$ simply because of replacement policy issues and possibly D$
+cacheline management settings.
+
+Again, I'm sure that for any particular microarchitecture, writing a
+SW fallback is possible.
+
+And I suspect that for most of them, "fill enough of the cache" ends
+up making things very hard to trigger in practice, but at a very high
+cost.
+
+> >I have a hard time following whether this might all end up being
+> >predicated on the STIBP static branch conditionals and might thus at
+> >least be limited only to CPU's that have the problem in the first
+> >place.
+>
+> No, this is at the moment restricted to just Intel CPUs and it is designed
+> as a generic fallback mechanism for issues involving speculation and L1D
+> flush for example CVE-2020-0550[1]. This mechanism addresses issues beyond
+> what STIBP addresses.
+
+Ok, so that was hard to see.
+
+What is it that disables it exactly? I'm ok with the concept, but it
+needs to be clearly targeted, and the target wasn't clear to me. In
+fact, everything in the docs and changlog implied that the target was
+"
+
+> >Because I don't want a random "I can make the kernel do stupid things"
+> >flag for people to opt into. I think it needs a double opt-in.
+> >
+>
+> Are you happy for this controlled by CAP_SYS_ADMIN or are you suggesting
+> a sysfs override by the administrator to completely disable this?
+
+At a _minimum_, I want to make sure this code never possibly ever
+starts flushing anything if SMT is on.
+
+That may be the case already. The narrow twisty mazes here from
+"enable this" to "do the flush" were too hard to follow for me, which
+is why I'm asking for more clarification.
+
+And yes, I did read the documentation you point to. That did not
+clarify anything at all.
+
+So to put this in very clear terms:
+
+ - what happens if SMT is on, and a process does
+"prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_L1D_FLUSH_OUT, PR_SPEC_ENABLE,
+0, 0);"
+
+Because if the answer is "the kernel starts flushing the L1D at
+context switches" then I refuse to pull this.
+
+Why? Because it's just an incredibly stupid waste of time and effort
+to do that, and I can see some poor hapless ssh developer saying "yes,
+I should enable this thing because ssh is very special", and then ssh
+just starts wasting time on something that doesn't actually help.
+
+See what I'm saying? I want to know this feature isn't doing crazy
+things. And "flush L1D$ on SMT" is crazy, since an attacker would just
+sit on a sibling core and attack the L1 contents *before* the task
+switch happens.
+
+I have some other questions about this approach in the first place. I
+don't see why context switch is even relevant, and why it should be
+the place we flush. The kernel is trustworthy in this situation, both
+before and after the context switch. So context switch makes no
+difference what-so-ever from a security domain transfer angle.
+
+Also, shouldn't we avoid flushing if you just run as the same user all
+the time? IOW, context switch in itself isn't really relevant as a
+security domain transfer, but it *is* relevant in the sense that
+switching from one user to another is a sign of "uhhuh, now maybe I
+should be careful when returning to user mode".
+
+IOW, think of a "pipe ping-pong" test program. Set the flag for "I
+want L1D$ cache flushing". Run the program with nothing else
+happening, and a _good_ implementation should never ever cache-flush,
+because at no point did we ever enter untrusted space: we were either
+in the kernel (not just for the system calls, but for idle threads),
+or we were in user context that had the right to see the data anyway.
+
+So despite asking for a L1D$ flush on context changes, such a
+ping-pong test program that does millions of context switches per
+second shouldn't actually ever cause a cache flush, because there was
+never any point.
+
+IOW, what mitigations are in place for this not doing unnecessary
+cache flushes, either because they are fundamentally pointless (the
+machine has SMT enabled) or because they just aren't necessary (no
+transition to an untrusted security domain has happened)?
+
+And maybe those mitigations are actually there, and I just couldn't
+figure it out. Some of the code scares me ("cond_ibpb()" and friends,
+even if you did rename it to "cond_mitigation()").
+
+                   Linus
