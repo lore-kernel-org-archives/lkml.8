@@ -2,120 +2,163 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77862C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8961C2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4492074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:54:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="wLxGzutP";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="wLxGzutP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgFBTxX (ORCPT
+        id S1728070AbgFBTyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:53:23 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29399 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728087AbgFBTxF (ORCPT
+        Tue, 2 Jun 2020 15:54:19 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:48398 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726589AbgFBTyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:53:05 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 2 Jun 2020 12:51:08 -0700
-Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 20C2C40BEC;
-        Tue,  2 Jun 2020 12:51:09 -0700 (PDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v4 29/32] objtool: mcount: Remove wrapper for ELF relocation type
-Date:   Tue, 2 Jun 2020 12:50:22 -0700
-Message-ID: <f5f77d19b84bc82237dbfdf07c89524353a8fd2c.1591125127.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1591125127.git.mhelsley@vmware.com>
-References: <cover.1591125127.git.mhelsley@vmware.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+        Tue, 2 Jun 2020 15:54:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D6A608EE268;
+        Tue,  2 Jun 2020 12:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591127657;
+        bh=BnRTz0H3of5YQTsobSyKAMRC+EgHR1zd32h9qrh3mL0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=wLxGzutPw6wLP7nAdTeh2H079b6mUpp6Vzs8J/WCwOrzFDGyhr0+0fcmf4q+jbiUh
+         jVFSI0+Z7Mp3J6guDguNNu+UTROi0o5ARRNtqv92L6T+bIJsXpoziPLxAOuxLuNC/N
+         8H17TqLL537SUtgx21SSCRHvDkN+lqBGhBZxBLYA=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9xuGT-2m2fYZ; Tue,  2 Jun 2020 12:54:17 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1CC838EE0F8;
+        Tue,  2 Jun 2020 12:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591127657;
+        bh=BnRTz0H3of5YQTsobSyKAMRC+EgHR1zd32h9qrh3mL0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=wLxGzutPw6wLP7nAdTeh2H079b6mUpp6Vzs8J/WCwOrzFDGyhr0+0fcmf4q+jbiUh
+         jVFSI0+Z7Mp3J6guDguNNu+UTROi0o5ARRNtqv92L6T+bIJsXpoziPLxAOuxLuNC/N
+         8H17TqLL537SUtgx21SSCRHvDkN+lqBGhBZxBLYA=
+Message-ID: <1591127656.16819.7.camel@HansenPartnership.com>
+Subject: Re: kobject_init_and_add is easy to misuse
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Wang Hai <wanghai38@huawei.com>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Tue, 02 Jun 2020 12:54:16 -0700
+In-Reply-To: <20200602173603.GB3579519@kroah.com>
+References: <20200602115033.1054-1-wanghai38@huawei.com>
+         <20200602121035.GL19604@bombadil.infradead.org>
+         <1591111514.4253.32.camel@HansenPartnership.com>
+         <20200602173603.GB3579519@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the last use of the Elf_Rela wrapper by passing the
-size of the relocations we're dealing with as a parameter.
+On Tue, 2020-06-02 at 19:36 +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jun 02, 2020 at 08:25:14AM -0700, James Bottomley wrote:
+> > On Tue, 2020-06-02 at 05:10 -0700, Matthew Wilcox wrote:
+> > > On Tue, Jun 02, 2020 at 07:50:33PM +0800, Wang Hai wrote:
+> > > > syzkaller reports for memory leak when kobject_init_and_add()
+> > > > returns an error in the function sysfs_slab_add() [1]
+> > > > 
+> > > > When this happened, the function kobject_put() is not called
+> > > > for the corresponding kobject, which potentially leads to
+> > > > memory leak.
+> > > > 
+> > > > This patch fixes the issue by calling kobject_put() even if
+> > > > kobject_init_and_add() fails.
+> > > 
+> > > I think this speaks to a deeper problem with
+> > > kobject_init_and_add()
+> > > -- the need to call kobject_put() if it fails is not readily
+> > > apparent
+> > > to most users.  This same bug appears in the first three users of
+> > > kobject_init_and_add() that I checked --
+> > > arch/ia64/kernel/topology.c
+> > > drivers/firmware/dmi-sysfs.c
+> > > drivers/firmware/efi/esrt.c
+> > > drivers/scsi/iscsi_boot_sysfs.c
+> > > 
+> > > Some do get it right --
+> > > arch/powerpc/kernel/cacheinfo.c
+> > > drivers/gpu/drm/ttm/ttm_bo.c
+> > > drivers/gpu/drm/ttm/ttm_memory.c
+> > > drivers/infiniband/hw/mlx4/sysfs.c
+> > > 
+> > > I'd argue that the current behaviour is wrong,
+> > 
+> > Absolutely agree with this.  We have a big meta pattern here where
+> > we introduce functions with tortuous semantics then someone creates
+> > a checker for the semantics and misuses come crawling out of the
+> > woodwork leading to floods of patches, usually for little or never
+> > used error paths, which really don't buy anything apart from
+> > theoretical correctness.  Just insisting on simple semantics would
+> > have avoided this.
+> 
+> I "introduced" this way back at the end of 2007.  It's not exactly a
+> new function.
 
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
----
- tools/objtool/recordmcount.c | 4 ++--
- tools/objtool/recordmcount.h | 7 ++-----
- 2 files changed, 4 insertions(+), 7 deletions(-)
+Heh, well, if it never fails, how you handle the failure become
+unimportant semantics ...
 
-diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index 601be2504666..096507829b0c 100644
---- a/tools/objtool/recordmcount.c
-+++ b/tools/objtool/recordmcount.c
-@@ -574,7 +574,7 @@ static int do_file(char const *const fname)
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
- 		loc_size = 4;
--		rc = do32(reltype);
-+		rc = do32(reltype, sizeof(Elf32_Rela));
- 		break;
- 	case ELFCLASS64: {
- 		if (lf->ehdr.e_ehsize != sizeof(Elf64_Ehdr)
-@@ -592,7 +592,7 @@ static int do_file(char const *const fname)
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
- 		loc_size = 8;
--		rc = do64(reltype);
-+		rc = do64(reltype, sizeof(Elf64_Rela));
- 		break;
- 	}
- 	}  /* end switch */
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index f12189331e27..50104d52d9bf 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -18,19 +18,16 @@
-  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
-  */
- #undef do_func
--#undef Elf_Rela
- 
- #ifdef RECORD_MCOUNT_64
- # define do_func		do64
--# define Elf_Rela		Elf64_Rela
- #else
- # define do_func		do32
--# define Elf_Rela		Elf32_Rela
- #endif
- 
- 
- /* Overall supervision for Elf32 ET_REL file. */
--static int do_func(unsigned const reltype)
-+static int do_func(unsigned const reltype, size_t rela_size)
- {
- 	/* Upper bound on space: assume all relevant relocs are for mcount. */
- 	unsigned       totrelsz;
-@@ -71,7 +68,7 @@ static int do_func(unsigned const reltype)
- 		return -1;
- 	}
- 
--	is_rela = (sizeof(Elf_Rela) == rel_entsize);
-+	is_rela = (rela_size == rel_entsize);
- 	mc_name = is_rela
- 			? ".rela__mcount_loc"
- 			:  ".rel__mcount_loc";
--- 
-2.20.1
+> > >  that kobject_init_and_add() should call kobject_put() if the add
+> > > fails.  This would need a tree-wide audit.  But somebody needs to
+> > > do that anyway because based on my random sampling, half of the
+> > > users currently get it wrong.
+> > 
+> > Well, the semantics of kobject_init() are free on fail, so these
+> > are the ones everyone seems to be using.  The semantics of
+> > kobject_add are put on fail.  The problem is that put on fail isn't
+> > necessarily correct in the kobject_init() case: the release
+> > function may make assumptions about the object hierarchy which
+> > aren't satisfied in the kobject_init() failure case.  This argues
+> > that kobject_init_and_add() can't ever have correct semantics and
+> > we should eliminate it.
+> 
+> At the time, it did reduce common functionality and error handling
+> all into a simpler function.  And, given it's history, it must have
+> somehow worked for the past 12 years or so :)
+
+Well, like I said, as long as it never fails, no problem.
+
+It was just Matthew saying "couldn't we make it do kobject_put()
+itself?" that got me thinking that perhaps that wouldn't work with all
+cases.  So now we're discussing failure handling, we're into the
+esoteric rabbit hole case that never happens.
+
+> Odds are, lots of the callers shouldn't be messing around with
+> kobjects in the first place.  Originally it was only assumed that
+> there would be very few users.  But it has spread to filesystems and
+> firmware subsystems.  Drivers should never use it though, so it's a
+> good hint something is wrong there...
+> 
+> Anyway, patches to fix this up to make a "sane" api for kobjects is
+> always appreciated.  Personally I don't have the time at the moment.
+
+I think the only way we can make the failure semantics consistent is to
+have the kobject_init() ones (so kfree on failure).  That means for the
+add part, the function would have to unwind everything it did from init
+on so kfree() is still an option.  If people agree, then I can produce
+the patch ... it's just the current drive to transform everyone who's
+doing kfree() into kobject_put() would become wrong ...
+
+James
 
