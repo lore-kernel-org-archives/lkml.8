@@ -2,103 +2,116 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2847AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7FB20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591114697;
-	bh=GOxWZFW5p0R4Mb6m/Bo6zAMohTrK5btdVpKdH3RUxMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P3OOzl/eDB7ffxxwwp+z1B+XMyuNJBqn/+GDrzL/2N6dVUL4gGK/3UBFja3mIbTSz
-	 eOTE/ESuOsbZk+1aEFWtsnK+i9vrY4DeLioXbwzT5DpSutMfts8hTOnobTpMp0V5B7
-	 e7JCvUvEITtjJDNIKBiItftkrRL2PRdMGwOUuh8o=
+	by mail.kernel.org (Postfix) with ESMTP id 074892067B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgFBQSR (ORCPT
+        id S1726267AbgFBQVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgFBQSQ (ORCPT
+        Tue, 2 Jun 2020 12:21:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15884 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725940AbgFBQVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:18:16 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CC6C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 09:18:16 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id z9so2026792qvi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 09:18:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QnnRV7rBYpuwTlzjoMcd++pjDHDWrMhQw3hcrAJQ594=;
-        b=WQ4N3HzBq/erSPg6m3Gl82qjtrEH5qF97Lji6xhOP72AObalMv/O288C0sPNfQTocB
-         vNB8wtxVDBaAELiXdol6Yzsyw2XpL0AcHLSP9U23UyX+JeZo9q8Xt+vIcBKwAPR8qN/2
-         pfy2h7CjmAgjQJvo3OlVrObeAJ47qL9z/YBbTB34icAwtzBD+3Rt0j6rFREReFh6VfFx
-         UnMWFWDtMJDUINbmMtTk9lBLa2Jm6OyH0OnlTysovnPKwiroqkZjemCAJoCsZ92MSbZR
-         +uCehcEpTpSLUZ+IuLDBhd/OpMe/hd0oF+p5h2HSw2aK98+54J9C1qZEp/kQKWN4krzP
-         wDJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=QnnRV7rBYpuwTlzjoMcd++pjDHDWrMhQw3hcrAJQ594=;
-        b=HXxQKc/fvDgkVB1kaxQK/z/2JltYDpAO1s6N1Y5DqLH4ItlLqVX2dU8I91v7cD8tfF
-         wgTQRUyMhwLGgX1BSEvwbN7C4FDEPmZlzo1SciHRv3PWAX8yKZetT63d59W3moaD6NFP
-         CpLbHb0ag4DSMdieZ2BJxLszgB9TPm9SaLsUHFm1l1opr/V3oFQukq0J8SovEc6sWC6w
-         W3aySL3aV8lmN+jeFUDQ9FqspG8UYgc/VlRHMGt+whSEaVPogIkt1eQ02j1oBYDpTevx
-         oLyXMF0L7eYqSmyD5+iwY4lQ/CahqIxf7F6hZErHpOwQR2H7n/VBu9xCB6PpyDYt2p2I
-         bQrA==
-X-Gm-Message-State: AOAM532mGRX2kQ+turrtx6YrpirceY1g80l8PUr9gjGCoHvpQDc/QgrI
-        BBDfrnAoatnvXrZUBgriplMl3t6M
-X-Google-Smtp-Source: ABdhPJz1tkuCl3kLGoHvwv/meSx/T7pJg17HVSVIPLSMKQYAO9rdqY9DfiZRNnyxu5br9F64kGrJwg==
-X-Received: by 2002:a05:6214:9ce:: with SMTP id dp14mr25520546qvb.216.1591114695623;
-        Tue, 02 Jun 2020 09:18:15 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id 63sm2726578qkm.82.2020.06.02.09.18.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 09:18:15 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 12:18:14 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Lai Jiangshan <jiangshanlai@gmail.com>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] workqueue: slash half memory usage in 32bit system
-Message-ID: <20200602161814.GI31548@mtj.thefacebook.com>
-References: <20200601084442.8284-1-laijs@linux.alibaba.com>
- <20200601084442.8284-5-laijs@linux.alibaba.com>
- <20200601150723.GA31548@mtj.thefacebook.com>
- <CAJhGHyCn4R-0rv2bDBWuYs1SE0PyJe8GoMEhHo4xwtUy23YpWg@mail.gmail.com>
+        Tue, 2 Jun 2020 12:21:41 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 052G36Q8046679;
+        Tue, 2 Jun 2020 12:21:19 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ds8gsrqu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 12:21:19 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 052GFB5b008229;
+        Tue, 2 Jun 2020 16:21:16 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 31bf47tktw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 16:21:16 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 052GLD0U27721924
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Jun 2020 16:21:13 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD6D911C04C;
+        Tue,  2 Jun 2020 16:21:13 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 656EB11C052;
+        Tue,  2 Jun 2020 16:21:13 +0000 (GMT)
+Received: from pic2.home (unknown [9.145.35.221])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Jun 2020 16:21:13 +0000 (GMT)
+Subject: Re: [PATCH] cxl: Fix kobject memleak
+To:     Wang Hai <wanghai38@huawei.com>, ajd@linux.ibm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     mpe@ellerman.id.au, imunsie@au1.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200602120733.5943-1-wanghai38@huawei.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Message-ID: <9ec43143-91c9-0ff0-aa6a-c9fd013eb63d@linux.ibm.com>
+Date:   Tue, 2 Jun 2020 18:21:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJhGHyCn4R-0rv2bDBWuYs1SE0PyJe8GoMEhHo4xwtUy23YpWg@mail.gmail.com>
+In-Reply-To: <20200602120733.5943-1-wanghai38@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-02_13:2020-06-02,2020-06-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ cotscore=-2147483648 spamscore=0 bulkscore=0 priorityscore=1501
+ impostorscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1011 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Tue, Jun 02, 2020 at 08:08:10AM +0800, Lai Jiangshan wrote:
-> It is not noticable from the "free" command.
-> By counting the number of allocated pwq (mainly percpu pwq),
-> it saves 20k in my simple kvm guest (4cpu).
-> I guess it highly various in different boxes with various
-> kernel modules loaded.
 
-Hmm... I find it difficult to judge in any direction. 32 bit machines are
-smaller and have less of everything - including CPUs and workqueues
-themselves, so while changing configuration for 32bit systems would reduce
-memory usage the impact isn't gonna be that big either and I have no data
-supporting whether the reduction is gonna help or hurt.
+Le 02/06/2020 à 14:07, Wang Hai a écrit :
+> Currently the error return path from kobject_init_and_add() is not
+> followed by a call to kobject_put() - which means we are leaking
+> the kobject.
+> 
+> Fix it by adding a call to kobject_put() in the error path of
+> kobject_init_and_add().
+> 
+> Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wang Hai <wanghai38@huawei.com>
 
-Thanks.
 
--- 
-tejun
+Indeed, a call to kobject_put() is needed when the init fails.
+Thanks!
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+
+
+> ---
+>   drivers/misc/cxl/sysfs.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
+> index f0263d1..d97a243 100644
+> --- a/drivers/misc/cxl/sysfs.c
+> +++ b/drivers/misc/cxl/sysfs.c
+> @@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
+>   	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
+>   				  &afu->dev.kobj, "cr%i", cr->cr);
+>   	if (rc)
+> -		goto err;
+> +		goto err1;
+>   
+>   	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
+>   	if (rc)
+> 
