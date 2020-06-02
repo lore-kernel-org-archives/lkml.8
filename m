@@ -2,395 +2,134 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5385DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61807C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7C82053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CAF20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ib2JslG5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G4Mkc+dN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgFBNFO (ORCPT
+        id S1727798AbgFBNGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:05:14 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:50389 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBNFI (ORCPT
+        Tue, 2 Jun 2020 09:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBNF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:05:08 -0400
+        Tue, 2 Jun 2020 09:05:59 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C2AC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 06:05:58 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id p123so6997514yba.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 06:05:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591103109; x=1622639109;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=ImrdwSV2bKF0GLyduQvOVDPBxmOlXQ/pI8O5VdEh9ls=;
-  b=ib2JslG5xcxktoPfeoV5vKBTbWV+QjPZ36uCXaiFSWyvZ6MTeTz0x3OM
-   Jm4ifgDncbzsVG+Pu3taNdGkfHHj33v2HSQs9Cxz5Kbeizh0FuXRS/tIK
-   8pBjsD81X/WJSKrlP1iFjncREf9dUFx1icZFNtswBzwvBIn2EfwjZnKN+
-   Q=;
-IronPort-SDR: FQPXU5XBJ7K0vxlllz50C/U4FLxiCEt8dmQpdp5gEBEC04rcdDNIwxIZ1j8uXaYYA2uDNNtg3K
- alxB+nSqN/5Q==
-X-IronPort-AV: E=Sophos;i="5.73,464,1583193600"; 
-   d="scan'208";a="33961464"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 02 Jun 2020 13:05:05 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id D5571A21ED;
-        Tue,  2 Jun 2020 13:05:01 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:05:01 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.175) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 2 Jun 2020 13:04:45 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 04/15] mm/damon: Adaptively adjust regions
-Date:   Tue, 2 Jun 2020 15:01:14 +0200
-Message-ID: <20200602130125.20467-5-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200602130125.20467-1-sjpark@amazon.com>
-References: <20200602130125.20467-1-sjpark@amazon.com>
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aFsfcQemjMCArAIh7NlAUzZw5oK+VuGVflBxxbpyMNU=;
+        b=G4Mkc+dNtZ2fipofo7VgIwjo6Ks9tpbC6pTKI3gzplgDni4JSiqB9yPwgmRwdCtu7+
+         1bt4uS4hOVY5WynzAh8i58D7dIGglCDme3P1ciuce5tOW0mQrDhSWDPHIzwa6ghy/sJs
+         PK1lXT4B+R20cEUL3r1zB1SaNHwTIfRosxBFat94kvDohAQKJuYdAUXVcE0KxCa5gMaQ
+         HUi3iYsOlKIHYa2d0Omla2grPzxrYTDh07w/ihOgY0R0iDTHy3i9V5iatmaQJU5KBWE0
+         0RQzW3uST/RJ/oMPznqN37S5lmuD+1lExLqMBwbEadjWNDISGstNiMp5Iigy7VsgZ0Eo
+         /WMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aFsfcQemjMCArAIh7NlAUzZw5oK+VuGVflBxxbpyMNU=;
+        b=DAWU+/AD4IrDJAraBfOvzREaZVltO4C4qHXaFVI/mDZGNiu2UExHzaCZMxmeYaE1/w
+         AmrY7VYggJon2pG8wn9PMDtpKUeBQ7DQfxs61/78BKQ1uxOAmRI2ZCBAQAlG7x8tMp0R
+         oA/UWgWvdhXUwBohVMw/tdsYecnlCsSLmwuQSizoqvqrSlJUtVpbVXgFX+3TNuWaDC+u
+         fzGFiYg8LcHOqgPikdrpHZ5jgpK0LduQsjvR5HICWsiYmCdD0byuak3Y2wRN8MTl6msh
+         uZGVvPar2WLv0b8sMz7pqDlo2p49T1Z9ww6gbSW07P1Nx93L2mNv6eTW7Qk0zLUelTQ/
+         ZMAA==
+X-Gm-Message-State: AOAM530U4apYcvQ6WDwfw4hr2FJLr2RIfG92GyttfpKZsSL1HEOlyuvC
+        FuyjIPyUO+ShRTwXopH7eN0lyIaJNhqWoqDjF7jMCg==
+X-Google-Smtp-Source: ABdhPJxnq83T9uPawX2t1PQAbsAWK2BSFIDF95VJt6uuLTrHGnv4Dsd7tdgkYmLmwexjJ1fZKR+RgjJN5pWQvPcwaVM=
+X-Received: by 2002:a25:1484:: with SMTP id 126mr41221569ybu.380.1591103156614;
+ Tue, 02 Jun 2020 06:05:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.175]
-X-ClientProxiedBy: EX13D29UWC002.ant.amazon.com (10.43.162.254) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+In-Reply-To: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 2 Jun 2020 06:05:44 -0700
+Message-ID: <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     kerneljasonxing@gmail.com
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        lishujin@kuaishou.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Tue, Jun 2, 2020 at 1:05 AM <kerneljasonxing@gmail.com> wrote:
+>
+> From: Jason Xing <kerneljasonxing@gmail.com>
+>
+> TCP socks cannot be released because of the sock_hold() increasing the
+> sk_refcnt in the manner of tcp_internal_pacing() when RTO happens.
+> Therefore, this situation could increase the slab memory and then trigger
+> the OOM if the machine has beening running for a long time. This issue,
+> however, can happen on some machine only running a few days.
+>
+> We add one exception case to avoid unneeded use of sock_hold if the
+> pacing_timer is enqueued.
+>
+> Reproduce procedure:
+> 0) cat /proc/slabinfo | grep TCP
+> 1) switch net.ipv4.tcp_congestion_control to bbr
+> 2) using wrk tool something like that to send packages
+> 3) using tc to increase the delay in the dev to simulate the busy case.
+> 4) cat /proc/slabinfo | grep TCP
+> 5) kill the wrk command and observe the number of objects and slabs in TCP.
+> 6) at last, you could notice that the number would not decrease.
+>
+> Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
+> Signed-off-by: liweishi <liweishi@kuaishou.com>
+> Signed-off-by: Shujin Li <lishujin@kuaishou.com>
+> ---
+>  net/ipv4/tcp_output.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index cc4ba42..5cf63d9 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -969,7 +969,8 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
+>         u64 len_ns;
+>         u32 rate;
+>
+> -       if (!tcp_needs_internal_pacing(sk))
+> +       if (!tcp_needs_internal_pacing(sk) ||
+> +           hrtimer_is_queued(&tcp_sk(sk)->pacing_timer))
+>                 return;
+>         rate = sk->sk_pacing_rate;
+>         if (!rate || rate == ~0U)
+> --
+> 1.8.3.1
+>
 
-At the beginning of the monitoring, DAMON constructs the initial regions
-by evenly splitting the memory mapped address space of the process into
-the user-specified minimal number of regions.  In this initial state,
-the assumption of the regions (pages in same region have similar access
-frequencies) is normally not kept and thus the monitoring quality could
-be low.  To keep the assumption as much as possible, DAMON adaptively
-merges and splits each region.
+Hi Jason.
 
-For each ``aggregation interval``, it compares the access frequencies of
-adjacent regions and merges those if the frequency difference is small.
-Then, after it reports and clears the aggregated access frequency of
-each region, it splits each region into two regions if the total number
-of regions is smaller than the half of the user-specified maximum number
-of regions.
+Please do not send patches that do not apply to current upstream trees.
 
-In this way, DAMON provides its best-effort quality and minimal overhead
-while keeping the bounds users set for their trade-off.
+Instead, backport to your kernels the needed fixes.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |   7 +-
- mm/damon.c            | 174 +++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 169 insertions(+), 12 deletions(-)
+I suspect that you are not using a pristine linux kernel, but some
+heavily modified one and something went wrong in your backports.
+Do not ask us to spend time finding what went wrong.
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index f0fe4520a4e9..babdba6b5c47 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -56,6 +56,7 @@ struct damon_task {
-  * @sample_interval:		The time between access samplings.
-  * @aggr_interval:		The time between monitor results aggregations.
-  * @min_nr_regions:		The number of initial monitoring regions.
-+ * @max_nr_regions:		The maximum number of monitoring regions.
-  *
-  * For each @sample_interval, DAMON checks whether each region is accessed or
-  * not.  It aggregates and keeps the access information (number of accesses to
-@@ -81,6 +82,7 @@ struct damon_ctx {
- 	unsigned long sample_interval;
- 	unsigned long aggr_interval;
- 	unsigned long min_nr_regions;
-+	unsigned long max_nr_regions;
- 
- 	struct timespec64 last_aggregation;
- 
-@@ -92,8 +94,9 @@ struct damon_ctx {
- };
- 
- int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
--int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
--		unsigned long aggr_int, unsigned long min_nr_reg);
-+int damon_set_attrs(struct damon_ctx *ctx,
-+		unsigned long sample_int, unsigned long aggr_int,
-+		unsigned long min_nr_reg, unsigned long max_nr_reg);
- int damon_start(struct damon_ctx *ctx);
- int damon_stop(struct damon_ctx *ctx);
- 
-diff --git a/mm/damon.c b/mm/damon.c
-index b374544cdd78..6b8f038331f5 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -332,9 +332,12 @@ static int damon_three_regions_of(struct damon_task *t,
-  * regions is wasteful.  That said, because we can deal with small noises,
-  * tracking every mapping is not strictly required but could even incur a high
-  * overhead if the mapping frequently changes or the number of mappings is
-- * high.  Nonetheless, this may seems very weird.  DAMON's dynamic regions
-- * adjustment mechanism, which will be implemented with following commit will
-- * make this more sense.
-+ * high.  The adaptive regions adjustment mechanism will further help to deal
-+ * with the noise by simply identifying the unmapped areas as a region that
-+ * has no access.  Moreover, applying the real mappings that would have many
-+ * unmapped areas inside will make the adaptive mechanism quite complex.  That
-+ * said, too huge unmapped areas inside the monitoring target should be removed
-+ * to not take the time for the adaptive mechanism.
-  *
-  * For the reason, we convert the complex mappings to three distinct regions
-  * that cover every mapped area of the address space.  Also the two gaps
-@@ -508,20 +511,25 @@ static void damon_check_access(struct damon_ctx *ctx,
- 	last_addr = r->sampling_addr;
- }
- 
--static void kdamond_check_accesses(struct damon_ctx *ctx)
-+static unsigned int kdamond_check_accesses(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
- 	struct mm_struct *mm;
- 	struct damon_region *r;
-+	unsigned int max_nr_accesses = 0;
- 
- 	damon_for_each_task(t, ctx) {
- 		mm = damon_get_mm(t);
- 		if (!mm)
- 			continue;
--		damon_for_each_region(r, t)
-+		damon_for_each_region(r, t) {
- 			damon_check_access(ctx, mm, r);
-+			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
-+		}
-+
- 		mmput(mm);
- 	}
-+	return max_nr_accesses;
- }
- 
- /*
-@@ -570,6 +578,141 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 	}
- }
- 
-+#define sz_damon_region(r) (r->vm_end - r->vm_start)
-+
-+/*
-+ * Merge two adjacent regions into one region
-+ */
-+static void damon_merge_two_regions(struct damon_region *l,
-+				struct damon_region *r)
-+{
-+	l->nr_accesses = (l->nr_accesses * sz_damon_region(l) +
-+			r->nr_accesses * sz_damon_region(r)) /
-+			(sz_damon_region(l) + sz_damon_region(r));
-+	l->vm_end = r->vm_end;
-+	damon_destroy_region(r);
-+}
-+
-+#define diff_of(a, b) (a > b ? a - b : b - a)
-+
-+/*
-+ * Merge adjacent regions having similar access frequencies
-+ *
-+ * t		task affected by merge operation
-+ * thres	'->nr_accesses' diff threshold for the merge
-+ */
-+static void damon_merge_regions_of(struct damon_task *t, unsigned int thres)
-+{
-+	struct damon_region *r, *prev = NULL, *next;
-+
-+	damon_for_each_region_safe(r, next, t) {
-+		if (!prev || prev->vm_end != r->vm_start ||
-+		    diff_of(prev->nr_accesses, r->nr_accesses) > thres) {
-+			prev = r;
-+			continue;
-+		}
-+		damon_merge_two_regions(prev, r);
-+	}
-+}
-+
-+/*
-+ * Merge adjacent regions having similar access frequencies
-+ *
-+ * threshold	'->nr_accesses' diff threshold for the merge
-+ *
-+ * This function merges monitoring target regions which are adjacent and their
-+ * access frequencies are similar.  This is for minimizing the monitoring
-+ * overhead under the dynamically changeable access pattern.  If a merge was
-+ * unnecessarily made, later 'kdamond_split_regions()' will revert it.
-+ */
-+static void kdamond_merge_regions(struct damon_ctx *c, unsigned int threshold)
-+{
-+	struct damon_task *t;
-+
-+	damon_for_each_task(t, c)
-+		damon_merge_regions_of(t, threshold);
-+}
-+
-+/*
-+ * Split a region in two
-+ *
-+ * r		the region to be split
-+ * sz_r		size of the first sub-region that will be made
-+ */
-+static void damon_split_region_at(struct damon_ctx *ctx,
-+				  struct damon_region *r, unsigned long sz_r)
-+{
-+	struct damon_region *new;
-+
-+	new = damon_new_region(ctx, r->vm_start + sz_r, r->vm_end);
-+	r->vm_end = new->vm_start;
-+
-+	damon_insert_region(new, r, damon_next_region(r));
-+}
-+
-+/* Split every region in the given task into 'nr_subs' regions */
-+static void damon_split_regions_of(struct damon_ctx *ctx,
-+				     struct damon_task *t, int nr_subs)
-+{
-+	struct damon_region *r, *next;
-+	unsigned long sz_region, sz_sub = 0;
-+	int i;
-+
-+	damon_for_each_region_safe(r, next, t) {
-+		sz_region = r->vm_end - r->vm_start;
-+
-+		for (i = 0; i < nr_subs - 1 &&
-+				sz_region > 2 * MIN_REGION; i++) {
-+			/*
-+			 * Randomly select size of left sub-region to be at
-+			 * least 10 percent and at most 90% of original region
-+			 */
-+			sz_sub = ALIGN_DOWN(damon_rand(1, 10) *
-+					sz_region / 10, MIN_REGION);
-+			/* Do not allow blank region */
-+			if (sz_sub == 0 || sz_sub >= sz_region)
-+				continue;
-+
-+			damon_split_region_at(ctx, r, sz_sub);
-+			sz_region = sz_sub;
-+		}
-+	}
-+}
-+
-+/*
-+ * splits every target region into two randomly-sized regions
-+ *
-+ * This function splits every target region into two random-sized regions if
-+ * current total number of the regions is equal or smaller than half of the
-+ * user-specified maximum number of regions.  This is for maximizing the
-+ * monitoring accuracy under the dynamically changeable access patterns.  If a
-+ * split was unnecessarily made, later 'kdamond_merge_regions()' will revert
-+ * it.
-+ */
-+static void kdamond_split_regions(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	unsigned int nr_regions = 0;
-+	static unsigned int last_nr_regions;
-+	int nr_subregions = 2;
-+
-+	damon_for_each_task(t, ctx)
-+		nr_regions += nr_damon_regions(t);
-+
-+	if (nr_regions > ctx->max_nr_regions / 2)
-+		return;
-+
-+	/* If number of regions is not changed, we are maybe in corner case */
-+	if (last_nr_regions == nr_regions &&
-+			nr_regions < ctx->max_nr_regions / 3)
-+		nr_subregions = 3;
-+
-+	damon_for_each_task(t, ctx)
-+		damon_split_regions_of(ctx, t, nr_subregions);
-+
-+	last_nr_regions = nr_regions;
-+}
-+
- /*
-  * Check whether current monitoring should be stopped
-  *
-@@ -609,6 +752,7 @@ static int kdamond_fn(void *data)
- 	struct damon_ctx *ctx = (struct damon_ctx *)data;
- 	struct damon_task *t;
- 	struct damon_region *r, *next;
-+	unsigned int max_nr_accesses = 0;
- 
- 	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
- 	kdamond_init_regions(ctx);
-@@ -617,11 +761,13 @@ static int kdamond_fn(void *data)
- 
- 		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
- 
--		kdamond_check_accesses(ctx);
-+		max_nr_accesses = kdamond_check_accesses(ctx);
- 
--		if (kdamond_aggregate_interval_passed(ctx))
-+		if (kdamond_aggregate_interval_passed(ctx)) {
-+			kdamond_merge_regions(ctx, max_nr_accesses / 10);
- 			kdamond_reset_aggregated(ctx);
--
-+			kdamond_split_regions(ctx);
-+		}
- 	}
- 	damon_for_each_task(t, ctx) {
- 		damon_for_each_region_safe(r, next, t)
-@@ -731,24 +877,32 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids)
-  * @sample_int:		time interval between samplings
-  * @aggr_int:		time interval between aggregations
-  * @min_nr_reg:		minimal number of regions
-+ * @max_nr_reg:		maximum number of regions
-  *
-  * This function should not be called while the kdamond is running.
-  * Every time interval is in micro-seconds.
-  *
-  * Return: 0 on success, negative error code otherwise.
-  */
--int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
--		unsigned long aggr_int, unsigned long min_nr_reg)
-+int damon_set_attrs(struct damon_ctx *ctx,
-+		    unsigned long sample_int, unsigned long aggr_int,
-+		    unsigned long min_nr_reg, unsigned long max_nr_reg)
- {
- 	if (min_nr_reg < 3) {
- 		pr_err("min_nr_regions (%lu) must be at least 3\n",
- 				min_nr_reg);
- 		return -EINVAL;
- 	}
-+	if (min_nr_reg > max_nr_reg) {
-+		pr_err("invalid nr_regions.  min (%lu) > max (%lu)\n",
-+				min_nr_reg, max_nr_reg);
-+		return -EINVAL;
-+	}
- 
- 	ctx->sample_interval = sample_int;
- 	ctx->aggr_interval = aggr_int;
- 	ctx->min_nr_regions = min_nr_reg;
-+	ctx->max_nr_regions = max_nr_reg;
- 
- 	return 0;
- }
--- 
-2.17.1
-
+Thank you.
