@@ -2,206 +2,127 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B874C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D428C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB682072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233C32072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBKF7aNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgFBSBY (ORCPT
+        id S1726842AbgFBSDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:01:24 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55618 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBSBX (ORCPT
+        Tue, 2 Jun 2020 14:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBSDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:01:23 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 8B8B82A313C
-Received: by earth.universe (Postfix, from userid 1000)
-        id B1C343C08C7; Tue,  2 Jun 2020 20:01:19 +0200 (CEST)
-Date:   Tue, 2 Jun 2020 20:01:19 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
-Subject: Re: [PATCHv1 00/19] Improve SBS battery support
-Message-ID: <20200602180119.52izs7kd72u3kmr4@earth.universe>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
- <CGME20200601104027eucas1p2b076ee860520d709e8178c41550653f7@eucas1p2.samsung.com>
- <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
- <20200601170528.r5w3aeijny3v5yx3@earth.universe>
- <b3fd35de-1dd6-1ddc-7e57-2d9ab2860e81@samsung.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qlcnxi6fqxf4bmqp"
-Content-Disposition: inline
-In-Reply-To: <b3fd35de-1dd6-1ddc-7e57-2d9ab2860e81@samsung.com>
+        Tue, 2 Jun 2020 14:03:05 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F462C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:03:05 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id h185so4433977pfg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LqqP+fCBEpc/gpW2bM0qsawU9eAMfAXXBH14Fdira24=;
+        b=bBKF7aNg2fySoOb6ttSQ11xvrTHokXCKtjJz1mu0mC8FjEsrdftUBVb/s/0Q67Rz2w
+         ltPmZirT8vBG7x0Q0SQCuxe+bQNrvLkr/BDYfqT9KJxLYQ/HShqcQ4ONqMy92BpJ6bQC
+         xqDgXsiNDcdA4earA6K1w9Iy40XIL1BHGE4UW/lquDnW8G7AJFYEAMUAd/C+1Go1qNKB
+         83pODOROVBPnjacUFgp2rEXwUNV+TREpLlyLR+Syjj9LKzxeom6X4dYny+NSMHKJXS06
+         Px/N6SQhYYmeQ2QpNNr3mQvhl3UgL4x52Nqq7CxsTXtO75lj+tjQQ1aKsRcG89wia2bC
+         +wSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LqqP+fCBEpc/gpW2bM0qsawU9eAMfAXXBH14Fdira24=;
+        b=hS4b2OTWMoxkRdpdPG0RGYA27IF9VPyuqsc+UtIJwZxU/BKQ/WzqQKBRXziuY7tucg
+         hxBJqATlhU7C+L14poqEJZL0gShM6LjBPVPRh5NRBLp0GWMmXYWXfdMClwL+tNysUvuZ
+         hzSkB3tfG8WloUd1Fq+imj88TrWLRLnpxZ7/7Q5OwHNa4eBFbmS2yf1pPC5Nh5T1jK6U
+         KoTb4gAno+sfVUwROiylWXFIX1a6LU6gT8WdVwWfrZMHR7igRic5E9Swp+U0TJQk5vIf
+         qjTt3bZB8r4tB97SXxeLE+V5fKyEJ0uguqeHiLmzao+tfoh5PpNSd0sAsTrmqfLQ9CEy
+         4XaQ==
+X-Gm-Message-State: AOAM5331dlmRDGv0XAVg+b4O4P+obhbHO7PhUCxJfGC1c1MXZVggzNAj
+        UmmBUhFis4QmRZnUeOmFdjc=
+X-Google-Smtp-Source: ABdhPJwo4mTczar9tEK3KvUezbiNQ8f58zT0h9JcwBT8hfRdPJbuvqIe8wPBBbll4RvPUioempxIaA==
+X-Received: by 2002:a63:34cd:: with SMTP id b196mr23583126pga.2.1591120984192;
+        Tue, 02 Jun 2020 11:03:04 -0700 (PDT)
+Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id p8sm2740053pgs.29.2020.06.02.11.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 11:03:03 -0700 (PDT)
+From:   Andrei Vagin <avagin@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCH RESEND v3 0/6] arm64: add the time namespace support
+Date:   Tue,  2 Jun 2020 11:02:53 -0700
+Message-Id: <20200602180259.76361-1-avagin@gmail.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Allocate the time namespace page among VVAR pages and add the logic
+to handle faults on VVAR properly.
 
---qlcnxi6fqxf4bmqp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If a task belongs to a time namespace then the VVAR page which contains
+the system wide VDSO data is replaced with a namespace specific page
+which has the same layout as the VVAR page. That page has vdso_data->seq
+set to 1 to enforce the slow path and vdso_data->clock_mode set to
+VCLOCK_TIMENS to enforce the time namespace handling path.
 
-Hi,
+The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+update of the VDSO data is in progress, is not really affecting regular
+tasks which are not part of a time namespace as the task is spin waiting
+for the update to finish and vdso_data->seq to become even again.
 
-On Tue, Jun 02, 2020 at 09:17:09AM +0200, Marek Szyprowski wrote:
-> Hi Sebastian,
->=20
-> On 01.06.2020 19:05, Sebastian Reichel wrote:
-> > On Mon, Jun 01, 2020 at 12:40:27PM +0200, Marek Szyprowski wrote:
-> >> On 13.05.2020 20:55, Sebastian Reichel wrote:
-> >>> This patchset improves support for SBS compliant batteries. Due to
-> >>> the changes, the battery now exposes 32 power supply properties and
-> >>> (un)plugging it generates a backtrace containing the following message
-> >>> without the first patch in this series:
-> >>>
-> >>> ---------------------------
-> >>> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0x=
-d4/0x104
-> >>> add_uevent_var: too many keys
-> >>> ---------------------------
-> >>>
-> >>> For references this is what an SBS battery status looks like after
-> >>> the patch series has been applied:
-> >>>
-> >>> cat /sys/class/power_supply/sbs-0-000b/uevent
-> >>> POWER_SUPPLY_NAME=3Dsbs-0-000b
-> >>> POWER_SUPPLY_TYPE=3DBattery
-> >>> POWER_SUPPLY_STATUS=3DDischarging
-> >>> POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-> >>> POWER_SUPPLY_HEALTH=3DGood
-> >>> POWER_SUPPLY_PRESENT=3D1
-> >>> POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-> >>> POWER_SUPPLY_CYCLE_COUNT=3D12
-> >>> POWER_SUPPLY_VOLTAGE_NOW=3D11441000
-> >>> POWER_SUPPLY_CURRENT_NOW=3D-26000
-> >>> POWER_SUPPLY_CURRENT_AVG=3D-24000
-> >>> POWER_SUPPLY_CAPACITY=3D76
-> >>> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=3D1
-> >>> POWER_SUPPLY_TEMP=3D198
-> >>> POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D438600
-> >>> POWER_SUPPLY_TIME_TO_FULL_AVG=3D3932100
-> >>> POWER_SUPPLY_SERIAL_NUMBER=3D0000
-> >>> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D10800000
-> >>> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=3D10800000
-> >>> POWER_SUPPLY_ENERGY_NOW=3D31090000
-> >>> POWER_SUPPLY_ENERGY_FULL=3D42450000
-> >>> POWER_SUPPLY_ENERGY_FULL_DESIGN=3D41040000
-> >>> POWER_SUPPLY_CHARGE_NOW=3D2924000
-> >>> POWER_SUPPLY_CHARGE_FULL=3D3898000
-> >>> POWER_SUPPLY_CHARGE_FULL_DESIGN=3D3800000
-> >>> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3D3000000
-> >>> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=3D12300000
-> >>> POWER_SUPPLY_MANUFACTURE_YEAR=3D2017
-> >>> POWER_SUPPLY_MANUFACTURE_MONTH=3D7
-> >>> POWER_SUPPLY_MANUFACTURE_DAY=3D3
-> >>> POWER_SUPPLY_MANUFACTURER=3DUR18650A
-> >>> POWER_SUPPLY_MODEL_NAME=3DGEHC
-> >> This patch landed in linux-next dated 20200529. Sadly it causes a
-> >> regression on Samsung Exynos-based Chromebooks (Exynos5250 Snow,
-> >> Exynos5420 Peach-Pi and Exynos5800 Peach-Pit). System boots to
-> >> userspace, but then, when udev populates /dev, booting hangs:
-> >>
-> >> [=A0=A0=A0 4.435167] VFS: Mounted root (ext4 filesystem) readonly on d=
-evice
-> >> 179:51.
-> >> [=A0=A0=A0 4.457477] devtmpfs: mounted
-> >> [=A0=A0=A0 4.460235] Freeing unused kernel memory: 1024K
-> >> [=A0=A0=A0 4.464022] Run /sbin/init as init process
-> >> INIT: version 2.88 booting
-> >> [info] Using makefile-style concurrent boot in runlevel S.
-> >> [=A0=A0=A0 5.102096] random: crng init done
-> >> [....] Starting the hotplug events dispatcher: systemd-udevdstarting
-> >> version 236
-> >> [ ok .
-> >> [....] Synthesizing the initial hotplug events...[ ok done.
-> >> [....] Waiting for /dev to be fully populated...[=A0=A0 34.409914]
-> >> TPS65090_RAILSDCDC1: disabling
-> >> [=A0=A0 34.412977] TPS65090_RAILSDCDC2: disabling
-> >> [=A0=A0 34.417021] TPS65090_RAILSDCDC3: disabling
-> >> [=A0=A0 34.423848] TPS65090_RAILSLDO1: disabling
-> >> [=A0=A0 34.429068] TPS65090_RAILSLDO2: disabling
-> > :(
-> >
-> > log does not look useful either.
-> >
-> >> Bisect between v5.7-rc1 and next-20200529 pointed me to the first bad
-> >> commit: [c4b12a2f3f3de670f6be5e96092a2cab0b877f1a] power: supply:
-> >> sbs-battery: simplify read_read_string_data.
-> > ok. I tested this on an to-be-upstreamed i.MX6 based system
-> > and arch/arm/boot/dts/imx53-ppd.dts. I think the difference
-> > is, that i2c-exynos5 does not expose I2C_FUNC_SMBUS_READ_BLOCK_DATA.
-> > I hoped all systems using SBS battery support this, but now
-> > I see I2C_FUNC_SMBUS_EMUL only supports writing block data.
-> > Looks like I need to add another patch implementing that
-> > using the old code with added PEC support.
-> >
-> > In any case that should only return -ENODEV for the property
-> > (and uevent), but not break boot. So something fishy is going
-> > on.
-> >
-> >> However reverting it in linux-next doesn't fix the issue, so the
-> >> next commits are also relevant to this issue.
-> > The next patch, which adds PEC support depends on the simplification
-> > of sbs_read_string_data. The old, open coded variant will result in
-> > PEC failure for string properties (which should not stop boot either
-> > of course). Can you try reverting both?
-> Indeed, reverting both (and fixing the conflict) restores proper boot.
+If a time namespace task hits that code path, it invokes the corresponding
+time getter function which retrieves the real VVAR page, reads host time
+and then adds the offset for the requested clock which is stored in the
+special VVAR page.
 
-Ok, I pushed out a revert of those two patches. They should land in
-tomorrows linux-next release. Please test it.
+v2: Code cleanups suggested by Vincenzo.
+v3: add a comment in __arch_get_timens_vdso_data.
 
-> > If that helps I will revert those two instead of dropping the whole
-> > series for this merge window.
-> >
-> >> Let me know how can I help debugging it.
-> > I suspect, that this is userspace endlessly retrying reading the
-> > battery uevent when an error is returned. Could you check this?
-> > Should be easy to see by adding some printfs.
-> I've added some debug messages in sbs_get_property() and it read the=20
-> same properties many times. However I've noticed that if I wait long=20
-> enough booting finally continues.
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Dmitry Safonov <dima@arista.com>
 
-So basically userspace slows down itself massively by trying to
-re-read uevent over and over when an error occurs. Does not seem
-like a sensible thing to do. I will have a look at this when I find
-some time.
+v3 on github (if someone prefers `git pull` to `git am`):
+https://github.com/avagin/linux-task-diag/tree/arm64/timens-v3
 
--- Sebastian
+Andrei Vagin (6):
+  arm64/vdso: use the fault callback to map vvar pages
+  arm64/vdso: Zap vvar pages when switching to a time namespace
+  arm64/vdso: Add time napespace page
+  arm64/vdso: Handle faults on timens page
+  arm64/vdso: Restrict splitting VVAR VMA
+  arm64: enable time namespace support
 
---qlcnxi6fqxf4bmqp
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/arm64/Kconfig                            |   1 +
+ .../include/asm/vdso/compat_gettimeofday.h    |  11 ++
+ arch/arm64/include/asm/vdso/gettimeofday.h    |   8 ++
+ arch/arm64/kernel/vdso.c                      | 134 ++++++++++++++++--
+ arch/arm64/kernel/vdso/vdso.lds.S             |   3 +-
+ arch/arm64/kernel/vdso32/vdso.lds.S           |   3 +-
+ include/vdso/datapage.h                       |   1 +
+ 7 files changed, 147 insertions(+), 14 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.24.1
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7Wk+gACgkQ2O7X88g7
-+pqfvhAAp3vLZAMmY0nQI+gSiUH60RC3gWVLX3NlbuoLZwpCmB+UAacJhEje1Jae
-WxzoJZDMrk79M/LnJTwf2bUxFnOuGPVMh9agUNhpfx1gc6o97nBJhSISc9s46cDn
-AskAmFojgm6G129GmcGG6FE1+H7uHgseGqHevr0Czth04cYsz/z3IrpN/M4cp9AJ
-KqXw2ORkfXxZ8cbujffAsoW/SA0aBWMqRYpluNsukxwOAc4HZqIiaaSBsd9w94m7
-SZgr6NFPEvfg2MsZIlFl5KvadL/zdMu7mM48Bo6KiZ4ALsWlntOQfW+AYX6VDk+C
-Wzbd360Q8OyPVdZLQcUBjYvYRsFaFQh7iamGHHRzPIe2E0QEaJARyn4+db5pNptt
-o0I1FcSE+s3hbBHBAPj6y4u91Safun8m2xMAccqVNR0mQUpdR4+UFMU2gs/dv9U9
-0kzh5wB9c16g1BkQhy0u9aH604qXDRJ6EqDkjftsl8y7+7gxArUoSP+UgFUK3SuA
-C8MfpFmnZNvZt7tAIUvldKbpfogisfTYhbbs8BNUYJosAqJAcIOCYR9GRR/26I7Z
-POpxdn22sBpaKII78+ThvToqjx4A7IZ+P7La52HgUmsu1nWyYqeenAEIes4FJO3H
-KG2hOpN9+SrhIRiE/GZ+Yk9RCgDgK4RTM+bjiMe9lymoFn2ozIQ=
-=GTtY
------END PGP SIGNATURE-----
-
---qlcnxi6fqxf4bmqp--
