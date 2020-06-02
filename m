@@ -2,130 +2,121 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB22C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECF52086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAEF205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSXSlqHy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9DIcWm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgFBOfW (ORCPT
+        id S1728059AbgFBOgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
+        Tue, 2 Jun 2020 10:36:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBOfV (ORCPT
+        with ESMTP id S1725919AbgFBOgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:35:21 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C247C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 07:35:21 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o6so5162946pgh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 07:35:21 -0700 (PDT)
+        Tue, 2 Jun 2020 10:36:47 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F62C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 07:36:47 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id f187so17467047ybc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 07:36:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mYlS2iciwsHXiaofbZsld8ptg5tb8qfGANhtOourZvI=;
-        b=mSXSlqHydsbU5VJwZsklBYuOKu4DgisHccVnCvpwG7iUPxHWtWHxBjW86nVTGr7ZUH
-         T54oYG/OKUn/YXneO0NPQFRHQwMUAv7mie5yg2mtH6tJvM9m0nhsAM/N0mAPoAUYHDPl
-         bhig6+z0feWmjC+0y1eO/hG48+JaRBp3QZS2G8IcS4CVypUA2mM0HsOPG64Sf0/yX/MZ
-         y8HGSOlPfafdSiyijkDbRiiBBAMRpuUe6/xPYCACNg9LL/6uJwjM3t5eHV2D0FvlqP7A
-         2OSM36Icybzzkw9UXW49MiJw28t+ha37NRdx39sIVnk8u98X6zjr55Q+rdJ/qpm37DH6
-         vjAQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=8vggNqY3GSAouo8x9FrTGZVFgabBzu+O3KL9Xujh+3U=;
+        b=X9DIcWm09UmxmRsz16EpMv8qqmV3DSHtK5fNi9pZkF0pev0FkS6Kw0yXboODbOhcfK
+         2oaVKS0u9n/MBWmZ73GCHGX6zYdb4dqjEDRhRMg5CdsnG4F7SBt190Dn6Km4mfbkI3c3
+         9CcbTRMYKcsvMNM84NHPjaO9xZBdrwaW7iRVw/GVzHLsCztDaU/n27Qe9OWwN1HDesld
+         edMg7FVgKhxKabeKrqWF2Clt7U1jlvur1afMMXtLBVkKoV8BYPPwXArC9DFYdDi9I3NZ
+         +uLz+0q0uf+ghqOILA9biElscHDatT19W4reWQjsUjRLpF1cnCgWpVRDeYz2FZD2naj7
+         kQEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mYlS2iciwsHXiaofbZsld8ptg5tb8qfGANhtOourZvI=;
-        b=rFBBu1Mmh10YGyRnEFEGeS2rUjSRzIM23lRVSj1ktacl4iUbn/Zdk+IR2dI9idKXA4
-         Nru+dQ57Tdjp2Y6wDOE+b18ZZ6o4XH76WfdUJxQZ200ti4J35px1krvRkdUDaVhbcoue
-         iL8Ap5JG+TMlAzZ8Wy1B6AlukJU719qyiw9/TlABEoyDh185Bdn9tcAw982pmGTFVUcu
-         gm/lgnlXG9k4Xtei6So4mQCbphXSEC1byMSqpq17IB8ENJghsE2dYPqBBXEPiyNObUU7
-         scRA8ZWOw9HPCTEI3V2m1Jew+G9W/dE+tOgvRbTQjp2Il31sYZmiyWKwxRTCZxBcisaE
-         rLWw==
-X-Gm-Message-State: AOAM533ZsI542MKKz/WYnuUF0uTig73buS5QWonlKV/oSpN+aBgDjKp6
-        vMn07bieFYcIfL70z2ZwJ0E0tZmUKgr0u79WYgd06noVnNXNng==
-X-Google-Smtp-Source: ABdhPJyCpwadTio0lN2T0Sanps9T+uhOtWpM2pkaVVZ+ZtL107eRbrGhBVpEicozrQekDLdG1bZ231XwC1g/LIyNQqE=
-X-Received: by 2002:a63:305:: with SMTP id 5mr23614425pgd.74.1591108520518;
- Tue, 02 Jun 2020 07:35:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200602092030.31966-1-piotr.stankiewicz@intel.com>
- <14063C7AD467DE4B82DEDB5C278E8663010E23E538@FMSMSX108.amr.corp.intel.com>
- <CAHp75Vfe5dQkOiFoAZx5b-NS1afiD-YC_w+5LcX8P1Hm0ASenA@mail.gmail.com> <CADnq5_OO=gyo22ZrXp6pDtz2QZ2=LC429u_kkd0ZvX4=M3mBPw@mail.gmail.com>
-In-Reply-To: <CADnq5_OO=gyo22ZrXp6pDtz2QZ2=LC429u_kkd0ZvX4=M3mBPw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Jun 2020 17:35:08 +0300
-Message-ID: <CAHp75Vd1zVt7F2+44EFPHOrCOzexe=mLaiZixqJR9NNK9-wNQg@mail.gmail.com>
-Subject: Re: [PATCH 07/15] drm/amdgpu: use PCI_IRQ_MSI_TYPES where appropriate
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=8vggNqY3GSAouo8x9FrTGZVFgabBzu+O3KL9Xujh+3U=;
+        b=BTJA3HKVozXOiNxmGq7LXU1i9scgvIYTrVxn97xFJqz7KEun31t04RvJGDU56SZEcr
+         Hz14RzSvBsiuNo8/e+3MaeV/bjxKBZKbxDcjfoS06F4gBVZePrH/l54booJd0nccLsgk
+         7lBFNKocK4bH4s9Oab50YonPoEPewWw1qajY2IZXM6Goa+gVKOXP3wkHEo5I6G2d9GpV
+         tJtotKupKGJvRUQMWkr7osMoK/PImjx88S5stbuu7kC3pWd+4AsJYkWPNkUPEbdIk1u9
+         7swAzGbiMZkFQ8n5NN4JWtg4I7Op0L4hnmbq6O+gE6hbnT/jC3xUU39WN5FYhVOkBLQu
+         92kg==
+X-Gm-Message-State: AOAM530QSGMbWv5lvAgKtaNyu6dyYYQlVjsg6+RmX9/T4uRN7OfrCyDM
+        EcQ64UfUVBRV2kPCiJy7q19sVlpalQ==
+X-Google-Smtp-Source: ABdhPJw0iDolPXQPDOUxeiAWTlaNAPQf17kOAyUeJkzG9+Hcx/eXIf7QRjtoPOiNipYQO1L0yJx4O90gfA==
+X-Received: by 2002:a25:31c6:: with SMTP id x189mr4868765ybx.402.1591108606409;
+ Tue, 02 Jun 2020 07:36:46 -0700 (PDT)
+Date:   Tue,  2 Jun 2020 16:36:33 +0200
+Message-Id: <20200602143633.104439-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
+Subject: [PATCH] kcsan: Prefer '__no_kcsan inline' in test
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 5:21 PM Alex Deucher <alexdeucher@gmail.com> wrote:
-> On Tue, Jun 2, 2020 at 10:00 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Tue, Jun 2, 2020 at 4:38 PM Ruhl, Michael J <michael.j.ruhl@intel.com> wrote:
-> > > >From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
-> > > >Piotr Stankiewicz
+Instead of __no_kcsan_or_inline, prefer '__no_kcsan inline' in test --
+this is in case we decide to remove __no_kcsan_or_inline.
 
-> > > >               int nvec = pci_msix_vec_count(adev->pdev);
-> > > >               unsigned int flags;
-> > > >
-> > > >-              if (nvec <= 0) {
-> > > >+              if (nvec > 0)
-> > > >+                      flags = PCI_IRQ_MSI_TYPES;
-> > > >+              else
-> > > >                       flags = PCI_IRQ_MSI;
-> > > >-              } else {
-> > > >-                      flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
-> > > >-              }
-> > >
-> > > Minor nit:
-> > >
-> > > Is it really necessary to set do this check?  Can flags just
-> > > be set?
-> > >
-> > > I.e.:
-> > >         flags = PCI_IRQ_MSI_TYPES;
-> > >
-> > > pci_alloc_irq_vector() tries stuff in order.  If MSIX is not available,
-> > > it will try MSI.
-> >
-> > That's also what I proposed earlier. But I suggested as well to wait
-> > for AMD people to confirm that neither pci_msix_vec_count() nor flags
-> > is needed and we can directly supply MSI_TYPES to the below call.
-> >
->
-> I think it was leftover from debugging and just to be careful.  We had
-> some issues when we originally enabled MSI-X on certain boards.  The
-> fix was to just allocate a single vector (since that is all we use
-> anyway) and we were using the wrong irq (pdev->irq vs
-> pci_irq_vector(pdev, 0)).
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Marco Elver <elver@google.com>
+---
 
-Do you agree that simple
+Hi Paul,
 
-  nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, PCI_IRQ_MSI_TYPES);
+This is to prepare eventual removal of __no_kcsan_or_inline, and avoid a
+series that doesn't apply to anything other than -next (because some
+bits are in -tip and the test only in -rcu; although this problem might
+be solved in 2 weeks). This patch is to make sure in case the
+__kcsan_or_inline series is based on -tip, integration in -next doesn't
+cause problems.
 
-will work and we can remove that leftover?
+This came up in
+https://lkml.kernel.org/r/20200529185923.GO706495@hirez.programming.kicks-ass.net
 
+Thanks,
+-- Marco
+
+---
+ kernel/kcsan/kcsan-test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/kcsan/kcsan-test.c b/kernel/kcsan/kcsan-test.c
+index a8c11506dd2a..3af420ad6ee7 100644
+--- a/kernel/kcsan/kcsan-test.c
++++ b/kernel/kcsan/kcsan-test.c
+@@ -43,7 +43,7 @@ static struct {
+ };
+ 
+ /* Setup test checking loop. */
+-static __no_kcsan_or_inline void
++static __no_kcsan inline void
+ begin_test_checks(void (*func1)(void), void (*func2)(void))
+ {
+ 	kcsan_disable_current();
+@@ -60,7 +60,7 @@ begin_test_checks(void (*func1)(void), void (*func2)(void))
+ }
+ 
+ /* End test checking loop. */
+-static __no_kcsan_or_inline bool
++static __no_kcsan inline bool
+ end_test_checks(bool stop)
+ {
+ 	if (!stop && time_before(jiffies, end_time)) {
 -- 
-With Best Regards,
-Andy Shevchenko
+2.27.0.rc2.251.g90737beb825-goog
+
