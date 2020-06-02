@@ -2,178 +2,194 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4157EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4876DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E752D207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591083236;
-	bh=sirDg1xJuxbZggDxmpG6hoGYOo2fRytgIE+Gmort8gw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MQnFJ6Kx3RyZZqWDasRSR1jTYRgrfRWfo7q46ZDGhr/7JzbymoqL9Ghpwvcra+gCp
-	 YpGLG7BQiVjWCadh8c7K+MC4xk/iVX5BrdNOZuJEtVGrNk2MHMn42JrMxTUKvJrU+q
-	 wRv0seqSv57n5VFvqZiDov02l7bPVpjzyfipA/Rs=
+	by mail.kernel.org (Postfix) with ESMTP id 21FBE20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:34:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fZKp17fa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgFBHdz (ORCPT
+        id S1726215AbgFBHeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51226 "EHLO
+        Tue, 2 Jun 2020 03:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgFBHdy (ORCPT
+        with ESMTP id S1726144AbgFBHeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:33:54 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263BAC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 00:33:54 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l11so2298938wru.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:33:54 -0700 (PDT)
+        Tue, 2 Jun 2020 03:34:20 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF33CC05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 00:34:18 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e4so11345845ljn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MNE2ZaZoGCsQab8S1AhA7MsjetryRQlYEryj4Ashfjo=;
-        b=JbdpIHPQLNIKUWIiEIkVyKFCPCv+GqdRpJF2bSjHHiVUpO7JdMEQpH2ZEODHJkmK9E
-         G9EfOIHnWpFkx8+0l0geJ14u21Vc++S17CACfYSctHnR3ud8G3JujnpOArpqJMWrKeCB
-         sgxUeyL3vA/oBNqXX6NoVRXtwjsyFFxwSwa3XJAZPSKiTx22IXx1jGj2q0XNlAefSW5O
-         F8PDXjqMQnkWwvX3+oFSLPC1EpM3DpStW3Ca339TuWtIUEltPXeObp5HvMo0G+mRisiI
-         h/vT20Dd4KzPJ/dECFyszYTzq0WK27Z0U9PwcBnQB8iRrM4Tlo858WKzJGoxoia3YVBi
-         d5hA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RW++pOMwCI1RAUvP2W3CAZyAmDLRUSkgYoW4MV3g1tI=;
+        b=fZKp17fazIZa0p7CjOii2rss4IOhRcKSIy+BhnCKyCpmpo4svBV14OwIfKcKBRtjSj
+         4orYoLt7ffF0jpbrBKIBDwqmq6zhJkU/HTWIsI3anJPKIe1r6klkKUQk9nKyXu1DsAe8
+         40sP+ZRV2LWXr4r6L21jEGzFMI33MmjPZQ+O76M50egIypCRHHt53BPCNMLcJKI6rRdM
+         +8eOGj1gDXh9XUTxEMl9hlLz5Hdu0AiqmRw49QNOWGNscgpCNoyV588H3Ap8Ka6Iu9UG
+         Ie0cDiUQL1n6OSj2jzKM8jcfgOM3fwNVjvjL3YDgKH3bOvTRvv98fr3QQ6wGEuKItF78
+         fdfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=MNE2ZaZoGCsQab8S1AhA7MsjetryRQlYEryj4Ashfjo=;
-        b=OIP0VQ/yNSJ1R4MkBdekQvXTjBEcvKV6sFF9ZpMZTHM7zibB1pX8spkDm/okHNECVk
-         LJ6yWljMmeNFQbxp6s4N8cpXAmyK+Olo0V5d4aEPuPyulSUOAobG8cYELuEX14klJTDg
-         ngjU/dzW8U+l7HN3FzE4V4VyYrfluZ+tZz65CMrVq3AXSkjgNDJyPlLLUC8Ic+Gxk0Ih
-         sc+y1b2Pyo98S+VI9ZBJDEJKgQkkKFFW6vhSHxqP66FnbXPRlZ27Sa8wP6uzjh476M3K
-         vLvhZo3bczsNXAppE6FshsUpERv+nrQK8E8YKRiE/a/cR95fP3SIm9xneL9Mdb4ZdhaZ
-         B2rQ==
-X-Gm-Message-State: AOAM531H9mqkhbPv2k9hG5ij/456OGSkdb4WEjFUstgOS4n52r5sX61v
-        PwjcruyTp/D2PY18JkEN/c3t3Gf4
-X-Google-Smtp-Source: ABdhPJwo7nfA/TWpDdc309CnVGj/liJ4+ZVx+NR+APvIEu3TpCeFlLxQkFPF4YHGb00DLJHiRhxyFw==
-X-Received: by 2002:a05:6000:1292:: with SMTP id f18mr25551203wrx.208.1591083232833;
-        Tue, 02 Jun 2020 00:33:52 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id u13sm2247942wmm.6.2020.06.02.00.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 00:33:52 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 09:33:50 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Balbir Singh <sblbir@amazon.com>
-Cc:     torvalds@linux-foundation.org, a.p.zijlstra@chello.nl,
-        akpm@linux-foundation.org, bp@alien8.de,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        benh@kernel.crashing.org
-Subject: Re: [GIT PULL] x86/mm changes for v5.8
-Message-ID: <20200602073350.GA481221@gmail.com>
-References: <20200601170102.GA1346815@gmail.com>
- <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RW++pOMwCI1RAUvP2W3CAZyAmDLRUSkgYoW4MV3g1tI=;
+        b=DQ4wrVvZAQOg90EFulsdp4HvgVIHxGSKuIPl4mQOisM0I+TGH8uMawr2H4Iogv4R5Y
+         CoF107Pf4ycGcVSF5o439Sm6mCn5BgqNICy5p3UlinjyZgzvT0n1V0h/0nMg1bA2LLTK
+         L9iJW1zDmOqI5ds6177YO/D4AkOxqo5Ri330ZbRtGgJCC39kwgtlzvpPUOvQdDNYXCY/
+         XF6cqyQFPhiMMlnSA4T1lrV9NbfMn3QYMoNvx4GyWE8r6GWv0TdOL7226oos9w3Sn1MU
+         7pRf00uHmuX0fqkJfPBW5XGNnrnAdX33AGnb1tbD9z+euS3i09kvQymS9wKiUYeudut8
+         2kJQ==
+X-Gm-Message-State: AOAM532LvFrLyys8Z1nN15kpPSQoyNgZKKJcZZ3K1H0Mfpgkfm2q4SK1
+        OoV1DyCO8iYYoTGzipZcs81zRFolWqbg+ioR8pbk8Q==
+X-Google-Smtp-Source: ABdhPJyfCwApzJsdvkbUX69Ms9OAygXh35EEDxMK+BkZf5Ns/uTKmVMhUozwLT5M8q08X14k2b++bbrJ/K5nlRdHPYY=
+X-Received: by 2002:a2e:150f:: with SMTP id s15mr11977399ljd.102.1591083256916;
+ Tue, 02 Jun 2020 00:34:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
+References: <20200601174016.396817032@linuxfoundation.org>
+In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 2 Jun 2020 13:04:05 +0530
+Message-ID: <CA+G9fYuWxDfeskK14Lo1A15qo12DNfpQfN=10=rjaUvBNn9d8A@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/77] 4.14.183-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 1 Jun 2020 at 23:30, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.183 release.
+> There are 77 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.183-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-* Balbir Singh <sblbir@amazon.com> wrote:
+Summary
+------------------------------------------------------------------------
 
-> > At a _minimum_, SMT being enabled should disable this kind of crazy
-> > pseudo-security entirely, since it is completely pointless in that
-> > situation. Scheduling simply isn't a synchronization point with SMT
-> > on, so saying "sure, I'll flush the L1 at context switch" is beyond
-> > stupid.
-> >
-> > I do not want the kernel to do things that seem to be "beyond stupid".
-> >
-> > Because I really think this is just PR and pseudo-security, and I
-> > think there's a real cost in making people think "oh, I'm so special
-> > that I should enable this".
-> >
-> > I'm more than happy to be educated on why I'm wrong, but for now I'm
-> > unpulling it for lack of data.
-> >
-> > Maybe it never happens on SMT because of all those subtle static
-> > branch rules, but I'd really like to that to be explained.
-> 
-> The documentation calls out the SMT restrictions.
+kernel: 4.14.183-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 9093a4315f917688b56194625b7ad0e407705072
+git describe: v4.14.182-78-g9093a4315f91
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.182-78-g9093a4315f91
 
-That's not what Linus suggested though, and you didn't answer his 
-concerns AFAICS.
+No regressions (compared to build v4.14.182)
 
-The documentation commit merely mentions that this feature is useless 
-with SMT:
+No fixes (compared to build v4.14.182)
 
-  0fcfdf55db9e: ("Documentation: Add L1D flushing Documentation")
 
-+Limitations
-+-----------
-+
-+The mechanism does not mitigate L1D data leaks between tasks belonging to
-+different processes which are concurrently executing on sibling threads of
-+a physical CPU core when SMT is enabled on the system.
-+
-+This can be addressed by controlled placement of processes on physical CPU
-+cores or by disabling SMT. See the relevant chapter in the L1TF mitigation
-+document: :ref:`Documentation/admin-guide/hw-vuln/l1tf.rst <smt_control>`.
+Ran 31002 total tests in the following environments and test suites.
 
-Linus is right that the proper response is for this feature to do 
-*nothing* if SMT is enabled on affected CPUs - but that's not 
-implemented in the patches ...
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
 
-Or rather, we should ask a higher level question as well, maybe we 
-should not do this feature at all?
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
 
-Typically cloud computing systems such as AWS will have SMT enabled, 
-because cloud computing pricing is essentially per vCPU, and they want 
-to sell the hyperthreads as vCPUs. So the safest solution, disabling 
-SMT on affected systems, is not actually done, because it's an 
-economic non-starter. (I'd like to note the security double standard 
-there: the most secure option, to disable SMT, is not actually used ...)
-
-BTW., I wonder how Amazon is solving the single-vCPU customer workload 
-problem on AWS: if the vast majority of AWS computing capacity is 
-running on a single vCPU, because it's the cheapest tier and because 
-it's more than enough capacity to run a website. Even core-scheduling 
-doesn't solve this fundamental SMT security problem: separate customer 
-workloads *cannot* share the same core - but this means that the 
-single-vCPU workloads will only be able to utilize 50% of all 
-available vCPUs if they are properly isolated.
-
-Or if the majority of AWS EC2 etc. customer systems are using 2,4 or 
-more vCPUs, then both this feature and 'core-scheduling' is 
-effectively pointless from a security POV, because the cloud computing 
-systems are de-facto partitioned into cores already, with each core 
-accounted as 2 vCPUs.
-
-The hour-up-rounded way AWS (and many other cloud providers) account 
-system runtime costs suggests that they are doing relatively static 
-partitioning of customer workloads already, i.e. customer workloads 
-are mapped to actual physical hardware in an exclusive fashion, with 
-no overcommitting of physical resources and no sharing of cores 
-between customers.
-
-If I look at the pricing and capabilities table of AWS:
-
-  https://aws.amazon.com/ec2/pricing/on-demand/
-
-Only the 't2' and 't3' On-Demand instances have 'Variable' pricing, 
-which is only 9% of the offered 228 configurations.
-
-I.e. I strongly suspect that neither L1D flushing nor core-scheduling 
-is actually required on affected vulnerable CPUs to keep customer 
-workloads isolated from each other, on the majority of cloud computing 
-systems, because they are already isolated via semi-static 
-partitioning, using pricing that reflects static partitioning.
-
-Thanks,
-
-	Ingo
+--=20
+Linaro LKFT
+https://lkft.linaro.org
