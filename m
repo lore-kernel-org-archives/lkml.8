@@ -5,841 +5,575 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89293C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494A02073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19D920734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 03:58:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6Zl5QvT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1H0NFeL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgFBDzv (ORCPT
+        id S1726181AbgFBD6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 23:55:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
+        Mon, 1 Jun 2020 23:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFBDzu (ORCPT
+        with ESMTP id S1725793AbgFBD6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 23:55:50 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40FCC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 20:55:50 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d66so4432913pfd.6
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 20:55:50 -0700 (PDT)
+        Mon, 1 Jun 2020 23:58:09 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D59C061A0E;
+        Mon,  1 Jun 2020 20:58:09 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x207so2546378pfc.5;
+        Mon, 01 Jun 2020 20:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YayCD91F+HhYLX+NqH/x2EF7fX7Jl39RMAWSPTYl5E8=;
-        b=X6Zl5QvTS5qcW0o39n7Cqf8ofJZyNN3r7aVNn7vKUiqRadX1FLkOWjazEES5MPVzoo
-         ZFC2eQrobiYbLRM225PqDKtr1IXhb4osScmty9yqToL7X+VfdvfKvYHd8T7OoUeIMN1Q
-         WiaM7F1KFizeVMnX5FXqW3Hyvk9J6cq9GDvcJvzSZEManHlE5NSSAB586WVlG7Nwcib8
-         iC7/fBEy42sjioCmEXv1rARxYi6j9ufEHzFZEuEJF+5jpuue/dSAaYhitFf45z1NaIl/
-         Rl8JS+nbLWiwHZ9OXk0czuixzAAHXMKHcq74uQdQZTinCF3gJBepMP49UpH/xGqYKJly
-         wzUw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nOr5FCHSTEgiVocf45/l3ooSGULR0cJognfb4cEKnPU=;
+        b=R1H0NFeL2eZtM5B8fothsEYgC2PdeAg8xkqZwlbaO3QdOeDx86CGQ9C8PTXNij43IJ
+         6Wz5HVuBjKUQqCyAqHtl3qTvHltl62wLzE29d0iQZAQ59Z+60Uza2D9cuxKQSn10GD76
+         un8DWDfY3UWiyES6VZJw+NgGcwlHp6bOJO4rgMI0KD1n//GTXF6jLfgGFsnJoI56Trja
+         PPRnoXjnlUoCM4Jr1KaKxFAg9HGGXg5h9PwbdWVsPXEFeZJs2owpmF6SKHOAC9iUrf4f
+         FkzgpS1tmTh5XWXLuyBdPo56nTVmL8tsHgnWmZ2wA0hZMKdZ1rP4yizU9U26jMapJBXK
+         m4hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YayCD91F+HhYLX+NqH/x2EF7fX7Jl39RMAWSPTYl5E8=;
-        b=GfWZlOA4n2P8NqK5EzHmM4lqSe31oMdEJlO1QkCKeR7CtFYWDJkqwD2EdVTHmIC+o6
-         KnHyzbm16/ckVyG/2634pmQWc+jV53hAyDaCuStrVWa8rr8PMKls2yr9CJYom+NPrGxv
-         lEVm3yRLVn9Pn/d+OCwBnSwqZ+U7RUTM9zK7VGXw/Wid4c35A/foZo8WlWKBrRVMCzUD
-         zeSYt1KZVenB4sJSdh5ZU40F6AwbUpdNZ1hrBqvX2YIPqqaREb6c5WnNBWU8TVUpKMzU
-         5fQcDSLbZk9a4+bk+5VQ6Cm4Fw/4YnL9amW0iyh8SPpnbK4V6mI8yDhqo2eJqzL0fTN8
-         58+Q==
-X-Gm-Message-State: AOAM530yVcZxaQB6viy7Ub0RvMFDx1VJWovaB4Eq0sKTuFhLFHymyUWm
-        Vm9TLjO5ZKduV5qakG//PMgyHKvx
-X-Google-Smtp-Source: ABdhPJz+eckWYzGN96mT0rSNZFOOg+x/6zGhl8riEAHDFM4y/br8xGGSISGVaI8/WSDsUct57qoDJg==
-X-Received: by 2002:aa7:8ecd:: with SMTP id b13mr7798837pfr.297.1591070149958;
-        Mon, 01 Jun 2020 20:55:49 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:4ce:ffb6:d9d3:d345:d865:7663])
-        by smtp.gmail.com with ESMTPSA id cu9sm811757pjb.28.2020.06.01.20.55.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jun 2020 20:55:49 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     lee.jones@linaro.org, matthias.bgg@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: [PATCH v10] mfd: mt6360: add pmic mt6360 driver
-Date:   Tue,  2 Jun 2020 11:55:42 +0800
-Message-Id: <1591070142-7653-1-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nOr5FCHSTEgiVocf45/l3ooSGULR0cJognfb4cEKnPU=;
+        b=E5rK8L+74+0xOFaJKCp6vwaqheAOdKabpSH8JQWYWX89fV4An+9Z/isJRK4EepTTiX
+         9aTjCwVATWsL3nTddNRBJSg8ib0vh3ebWvJBqIv/DlgCMunaBImYtlXbmjPJn3Fsww8V
+         Py2zg0FY+TbK4IZYvPyoxkz83Np8AfLUZVx2rWhWM05J1Ax+OjMJ4OQPPHonHZ/PVZQH
+         GNNN6kuzY1tVUknBBxn7ozQK95+6qpsoLsBPQZQyCumzq4mK2TQJWm0DeSleqn2ve3Hw
+         cnvCfA2WYyzYiuUm0MYZ6gJG8v2jo/l0gaNteH1ZxCtkG7B3FBeBkBr7Lx/TbHF6IWkv
+         X9nQ==
+X-Gm-Message-State: AOAM533+RK6SciMHqxfLOsf+vHjn9YP8P7mLZVpd2HLzjMKyrkZr/SIW
+        6ZYmufYXaqr3o9ptoDUPINo=
+X-Google-Smtp-Source: ABdhPJyBWuRuoeY2+XSuiE0a82uUHaNhSTrDPFN8pluaxjnX/jArvnLv/xn2K8H7N7UjzM8q8diJ2g==
+X-Received: by 2002:a63:c58:: with SMTP id 24mr22634213pgm.246.1591070288587;
+        Mon, 01 Jun 2020 20:58:08 -0700 (PDT)
+Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
+        by smtp.gmail.com with ESMTPSA id r3sm925826pjb.20.2020.06.01.20.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 20:58:07 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        Shubhashree Dhar <dhar@codeaurora.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        tongtiangen <tongtiangen@huawei.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] Revert "drm/msm/dpu: add support for clk and bw scaling for display"
+Date:   Mon,  1 Jun 2020 20:58:32 -0700
+Message-Id: <20200602035842.199711-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+From: Rob Clark <robdclark@chromium.org>
 
-Add MFD driver for mt6360 pmic chip include Battery Charger/
-USB_PD/Flash, LED/RGB and LED/LDO/Buck
+This is causing multiple armv7 missing do_div() errors, so lets drop it
+for now.
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This reverts commit 04d9044f6c577948609c03b4e33b8fbc8b87c4b1.
+
+Cc: Kalyan Thota <kalyan_t@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/mfd/Kconfig        |  12 ++
- drivers/mfd/Makefile       |   1 +
- drivers/mfd/mt6360-core.c  | 424 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/mt6360.h | 240 +++++++++++++++++++++++++
- 4 files changed, 677 insertions(+)
- create mode 100644 drivers/mfd/mt6360-core.c
- create mode 100644 include/linux/mfd/mt6360.h
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 106 +++---------------
+ .../gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |   5 +-
+ .../gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |   4 -
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  37 +-----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |   4 -
+ drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c      |   9 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     |  82 --------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h     |   4 -
+ 8 files changed, 23 insertions(+), 228 deletions(-)
 
-changelogs between v1 & v2
-- include missing header file
-
-changelogs between v2 & v3
-- add changelogs
-
-changelogs between v3 & v4
-- fix Kconfig description
-- replace mt6360_pmu_info with mt6360_pmu_data
-- replace probe with probe_new
-- remove unnecessary irq_chip variable
-- remove annotation
-- replace MT6360_MFD_CELL with OF_MFD_CELL
-
-changelogs between v4 & v5
-- remove unnecessary parse dt function
-- use devm_i2c_new_dummy_device
-- add base-commit message
-
-changelogs between v5 & v6
-- review return value
-- remove i2c id_table
-- use GPL license v2
-
-changelogs between v6 & v7
-- add author description
-- replace MT6360_REGMAP_IRQ_REG by REGMAP_IRQ_REG_LINE
-- remove mt6360-private.h
-
-changelogs between v7 & v8
-- fix kbuild auto reboot by include interrupt header
-
-changelogs between v8 & v9
-- fix GPL license out of date
-- add commit message about Acked-for-MFD-by
-
-changelogs between v9 & v10
-- fix duplicate define of kbuild test reboot initializer-overrides
-- sync commit message format
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 0a59249..3f8a0a0 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -870,6 +870,18 @@ config MFD_MAX8998
- 	  additional drivers must be enabled in order to use the functionality
- 	  of the device.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 9697abcbec3f..7c230f719ad3 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -29,73 +29,6 @@ enum dpu_perf_mode {
+ 	DPU_PERF_MODE_MAX
+ };
  
-+config MFD_MT6360
-+	tristate "Mediatek MT6360 SubPMIC"
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	depends on I2C
-+	help
-+	  Say Y here to enable MT6360 PMU/PMIC/LDO functional support.
-+	  PMU part includes Charger, Flashlight, RGB LED
-+	  PMIC part includes 2-channel BUCKs and 2-channel LDOs
-+	  LDO part includes 4-channel LDOs
-+
- config MFD_MT6397
- 	tristate "MediaTek MT6397 PMIC Support"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f935d10..01fa149 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -239,6 +239,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
- obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
- obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
- obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
-+obj-$(CONFIG_MFD_MT6360)	+= mt6360-core.o
- mt6397-objs	:= mt6397-core.o mt6397-irq.o
- obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
- obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
-diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-new file mode 100644
-index 0000000..db8cdf5
---- /dev/null
-+++ b/drivers/mfd/mt6360-core.c
-@@ -0,0 +1,424 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020 MediaTek Inc.
-+ *
-+ * Author: Gene Chen <gene_chen@richtek.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/version.h>
-+
-+#include <linux/mfd/mt6360.h>
-+
-+/* reg 0 -> 0 ~ 7 */
-+#define MT6360_CHG_TREG_EVT		(4)
-+#define MT6360_CHG_AICR_EVT		(5)
-+#define MT6360_CHG_MIVR_EVT		(6)
-+#define MT6360_PWR_RDY_EVT		(7)
-+/* REG 1 -> 8 ~ 15 */
-+#define MT6360_CHG_BATSYSUV_EVT		(9)
-+#define MT6360_FLED_CHG_VINOVP_EVT	(11)
-+#define MT6360_CHG_VSYSUV_EVT		(12)
-+#define MT6360_CHG_VSYSOV_EVT		(13)
-+#define MT6360_CHG_VBATOV_EVT		(14)
-+#define MT6360_CHG_VBUSOV_EVT		(15)
-+/* REG 2 -> 16 ~ 23 */
-+/* REG 3 -> 24 ~ 31 */
-+#define MT6360_WD_PMU_DET		(25)
-+#define MT6360_WD_PMU_DONE		(26)
-+#define MT6360_CHG_TMRI			(27)
-+#define MT6360_CHG_ADPBADI		(29)
-+#define MT6360_CHG_RVPI			(30)
-+#define MT6360_OTPI			(31)
-+/* REG 4 -> 32 ~ 39 */
-+#define MT6360_CHG_AICCMEASL		(32)
-+#define MT6360_CHGDET_DONEI		(34)
-+#define MT6360_WDTMRI			(35)
-+#define MT6360_SSFINISHI		(36)
-+#define MT6360_CHG_RECHGI		(37)
-+#define MT6360_CHG_TERMI		(38)
-+#define MT6360_CHG_IEOCI		(39)
-+/* REG 5 -> 40 ~ 47 */
-+#define MT6360_PUMPX_DONEI		(40)
-+#define MT6360_BAT_OVP_ADC_EVT		(41)
-+#define MT6360_TYPEC_OTP_EVT		(42)
-+#define MT6360_ADC_WAKEUP_EVT		(43)
-+#define MT6360_ADC_DONEI		(44)
-+#define MT6360_BST_BATUVI		(45)
-+#define MT6360_BST_VBUSOVI		(46)
-+#define MT6360_BST_OLPI			(47)
-+/* REG 6 -> 48 ~ 55 */
-+#define MT6360_ATTACH_I			(48)
-+#define MT6360_DETACH_I			(49)
-+#define MT6360_QC30_STPDONE		(51)
-+#define MT6360_QC_VBUSDET_DONE		(52)
-+#define MT6360_HVDCP_DET		(53)
-+#define MT6360_CHGDETI			(54)
-+#define MT6360_DCDTI			(55)
-+/* REG 7 -> 56 ~ 63 */
-+#define MT6360_FOD_DONE_EVT		(56)
-+#define MT6360_FOD_OV_EVT		(57)
-+#define MT6360_CHRDET_UVP_EVT		(58)
-+#define MT6360_CHRDET_OVP_EVT		(59)
-+#define MT6360_CHRDET_EXT_EVT		(60)
-+#define MT6360_FOD_LR_EVT		(61)
-+#define MT6360_FOD_HR_EVT		(62)
-+#define MT6360_FOD_DISCHG_FAIL_EVT	(63)
-+/* REG 8 -> 64 ~ 71 */
-+#define MT6360_USBID_EVT		(64)
-+#define MT6360_APWDTRST_EVT		(65)
-+#define MT6360_EN_EVT			(66)
-+#define MT6360_QONB_RST_EVT		(67)
-+#define MT6360_MRSTB_EVT		(68)
-+#define MT6360_OTP_EVT			(69)
-+#define MT6360_VDDAOV_EVT		(70)
-+#define MT6360_SYSUV_EVT		(71)
-+/* REG 9 -> 72 ~ 79 */
-+#define MT6360_FLED_STRBPIN_EVT		(72)
-+#define MT6360_FLED_TORPIN_EVT		(73)
-+#define MT6360_FLED_TX_EVT		(74)
-+#define MT6360_FLED_LVF_EVT		(75)
-+#define MT6360_FLED2_SHORT_EVT		(78)
-+#define MT6360_FLED1_SHORT_EVT		(79)
-+/* REG 10 -> 80 ~ 87 */
-+#define MT6360_FLED2_STRB_EVT		(80)
-+#define MT6360_FLED1_STRB_EVT		(81)
-+#define MT6360_FLED2_STRB_TO_EVT	(82)
-+#define MT6360_FLED1_STRB_TO_EVT	(83)
-+#define MT6360_FLED2_TOR_EVT		(84)
-+#define MT6360_FLED1_TOR_EVT		(85)
-+/* REG 11 -> 88 ~ 95 */
-+/* REG 12 -> 96 ~ 103 */
-+#define MT6360_BUCK1_PGB_EVT		(96)
-+#define MT6360_BUCK1_OC_EVT		(100)
-+#define MT6360_BUCK1_OV_EVT		(101)
-+#define MT6360_BUCK1_UV_EVT		(102)
-+/* REG 13 -> 104 ~ 111 */
-+#define MT6360_BUCK2_PGB_EVT		(104)
-+#define MT6360_BUCK2_OC_EVT		(108)
-+#define MT6360_BUCK2_OV_EVT		(109)
-+#define MT6360_BUCK2_UV_EVT		(110)
-+/* REG 14 -> 112 ~ 119 */
-+#define MT6360_LDO1_OC_EVT		(113)
-+#define MT6360_LDO2_OC_EVT		(114)
-+#define MT6360_LDO3_OC_EVT		(115)
-+#define MT6360_LDO5_OC_EVT		(117)
-+#define MT6360_LDO6_OC_EVT		(118)
-+#define MT6360_LDO7_OC_EVT		(119)
-+/* REG 15 -> 120 ~ 127 */
-+#define MT6360_LDO1_PGB_EVT		(121)
-+#define MT6360_LDO2_PGB_EVT		(122)
-+#define MT6360_LDO3_PGB_EVT		(123)
-+#define MT6360_LDO5_PGB_EVT		(125)
-+#define MT6360_LDO6_PGB_EVT		(126)
-+#define MT6360_LDO7_PGB_EVT		(127)
-+
-+static const struct regmap_irq mt6360_pmu_irqs[] =  {
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_TREG_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_AICR_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_MIVR_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_PWR_RDY_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_BATSYSUV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED_CHG_VINOVP_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_VSYSUV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_VSYSOV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_VBATOV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_VBUSOV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_WD_PMU_DET, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_WD_PMU_DONE, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_TMRI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_ADPBADI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_RVPI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_OTPI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_AICCMEASL, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHGDET_DONEI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_WDTMRI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_SSFINISHI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_RECHGI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_TERMI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHG_IEOCI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_PUMPX_DONEI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BAT_OVP_ADC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_TYPEC_OTP_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_ADC_WAKEUP_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_ADC_DONEI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BST_BATUVI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BST_VBUSOVI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BST_OLPI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_ATTACH_I, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_DETACH_I, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_QC30_STPDONE, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_QC_VBUSDET_DONE, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_HVDCP_DET, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHGDETI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_DCDTI, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FOD_DONE_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FOD_OV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHRDET_UVP_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHRDET_OVP_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_CHRDET_EXT_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FOD_LR_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FOD_HR_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FOD_DISCHG_FAIL_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_USBID_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_APWDTRST_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_EN_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_QONB_RST_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_MRSTB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_OTP_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_VDDAOV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_SYSUV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED_STRBPIN_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED_TORPIN_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED_TX_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED_LVF_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED2_SHORT_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED1_SHORT_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED2_STRB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED1_STRB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED2_STRB_TO_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED1_STRB_TO_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED2_TOR_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_FLED1_TOR_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_PGB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_OV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_UV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_PGB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_OV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_UV_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO1_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO2_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO3_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO5_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO6_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO7_OC_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO1_PGB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO2_PGB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO3_PGB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO5_PGB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO6_PGB_EVT, 8),
-+	REGMAP_IRQ_REG_LINE(MT6360_LDO7_PGB_EVT, 8),
-+};
-+
-+static int mt6360_pmu_handle_post_irq(void *irq_drv_data)
-+{
-+	struct mt6360_pmu_data *mpd = irq_drv_data;
-+
-+	return regmap_update_bits(mpd->regmap,
-+		MT6360_PMU_IRQ_SET, MT6360_IRQ_RETRIG, MT6360_IRQ_RETRIG);
-+}
-+
-+static struct regmap_irq_chip mt6360_pmu_irq_chip = {
-+	.irqs = mt6360_pmu_irqs,
-+	.num_irqs = ARRAY_SIZE(mt6360_pmu_irqs),
-+	.num_regs = MT6360_PMU_IRQ_REGNUM,
-+	.mask_base = MT6360_PMU_CHG_MASK1,
-+	.status_base = MT6360_PMU_CHG_IRQ1,
-+	.ack_base = MT6360_PMU_CHG_IRQ1,
-+	.init_ack_masked = true,
-+	.use_ack = true,
-+	.handle_post_irq = mt6360_pmu_handle_post_irq,
-+};
-+
-+static const struct regmap_config mt6360_pmu_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = MT6360_PMU_MAXREG,
-+};
-+
-+static const struct resource mt6360_adc_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MT6360_ADC_DONEI, "adc_donei"),
-+};
-+
-+static const struct resource mt6360_chg_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TREG_EVT, "chg_treg_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_PWR_RDY_EVT, "pwr_rdy_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_BATSYSUV_EVT, "chg_batsysuv_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSUV_EVT, "chg_vsysuv_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSOV_EVT, "chg_vsysov_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBATOV_EVT, "chg_vbatov_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBUSOV_EVT, "chg_vbusov_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_AICCMEASL, "chg_aiccmeasl"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_WDTMRI, "wdtmri"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_RECHGI, "chg_rechgi"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TERMI, "chg_termi"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHG_IEOCI, "chg_ieoci"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_PUMPX_DONEI, "pumpx_donei"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_ATTACH_I, "attach_i"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_CHRDET_EXT_EVT, "chrdet_ext_evt"),
-+};
-+
-+static const struct resource mt6360_led_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MT6360_FLED_CHG_VINOVP_EVT, "fled_chg_vinovp_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_FLED_LVF_EVT, "fled_lvf_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_SHORT_EVT, "fled2_short_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_SHORT_EVT, "fled1_short_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_STRB_TO_EVT, "fled2_strb_to_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_STRB_TO_EVT, "fled1_strb_to_evt"),
-+};
-+
-+static const struct resource mt6360_pmic_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_PGB_EVT, "buck1_pgb_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OC_EVT, "buck1_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OV_EVT, "buck1_ov_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_UV_EVT, "buck1_uv_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_PGB_EVT, "buck2_pgb_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OC_EVT, "buck2_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OV_EVT, "buck2_ov_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_UV_EVT, "buck2_uv_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_OC_EVT, "ldo6_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_OC_EVT, "ldo7_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_PGB_EVT, "ldo6_pgb_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_PGB_EVT, "ldo7_pgb_evt"),
-+};
-+
-+static const struct resource mt6360_ldo_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_OC_EVT, "ldo1_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_OC_EVT, "ldo2_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_OC_EVT, "ldo3_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_OC_EVT, "ldo5_oc_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_PGB_EVT, "ldo1_pgb_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_PGB_EVT, "ldo2_pgb_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_PGB_EVT, "ldo3_pgb_evt"),
-+	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_PGB_EVT, "ldo5_pgb_evt"),
-+};
-+
-+static const struct mfd_cell mt6360_devs[] = {
-+	OF_MFD_CELL("mt6360_adc", mt6360_adc_resources,
-+		    NULL, 0, 0, "mediatek,mt6360_adc"),
-+	OF_MFD_CELL("mt6360_chg", mt6360_chg_resources,
-+		    NULL, 0, 0, "mediatek,mt6360_chg"),
-+	OF_MFD_CELL("mt6360_led", mt6360_led_resources,
-+		    NULL, 0, 0, "mediatek,mt6360_led"),
-+	OF_MFD_CELL("mt6360_pmic", mt6360_pmic_resources,
-+		    NULL, 0, 0, "mediatek,mt6360_pmic"),
-+	OF_MFD_CELL("mt6360_ldo", mt6360_ldo_resources,
-+		    NULL, 0, 0, "mediatek,mt6360_ldo"),
-+	OF_MFD_CELL("mt6360_tcpc", NULL,
-+		    NULL, 0, 0, "mediatek,mt6360_tcpc"),
-+};
-+
-+static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
-+	MT6360_PMU_SLAVEID,
-+	MT6360_PMIC_SLAVEID,
-+	MT6360_LDO_SLAVEID,
-+	MT6360_TCPC_SLAVEID,
-+};
-+
-+static int mt6360_pmu_probe(struct i2c_client *client)
-+{
-+	struct mt6360_pmu_data *mpd;
-+	unsigned int reg_data;
-+	int i, ret;
-+
-+	mpd = devm_kzalloc(&client->dev, sizeof(*mpd), GFP_KERNEL);
-+	if (!mpd)
-+		return -ENOMEM;
-+
-+	mpd->dev = &client->dev;
-+	i2c_set_clientdata(client, mpd);
-+
-+	mpd->regmap = devm_regmap_init_i2c(client, &mt6360_pmu_regmap_config);
-+	if (IS_ERR(mpd->regmap)) {
-+		dev_err(&client->dev, "Failed to register regmap\n");
-+		return PTR_ERR(mpd->regmap);
-+	}
-+
-+	ret = regmap_read(mpd->regmap, MT6360_PMU_DEV_INFO, &reg_data);
-+	if (ret) {
-+		dev_err(&client->dev, "Device not found\n");
+-/**
+- * @_dpu_core_perf_calc_bw() - to calculate BW per crtc
+- * @kms -  pointer to the dpu_kms
+- * @crtc - pointer to a crtc
+- * Return: returns aggregated BW for all planes in crtc.
+- */
+-static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
+-		struct drm_crtc *crtc)
+-{
+-	struct drm_plane *plane;
+-	struct dpu_plane_state *pstate;
+-	u64 crtc_plane_bw = 0;
+-	u32 bw_factor;
+-
+-	drm_atomic_crtc_for_each_plane(plane, crtc) {
+-		pstate = to_dpu_plane_state(plane->state);
+-
+-		if (!pstate)
+-			continue;
+-
+-		crtc_plane_bw += pstate->plane_fetch_bw;
+-	}
+-
+-	bw_factor = kms->catalog->perf.bw_inefficiency_factor;
+-	if (bw_factor)
+-		crtc_plane_bw = mult_frac(crtc_plane_bw, bw_factor, 100);
+-
+-	return crtc_plane_bw;
+-}
+-
+-/**
+- * _dpu_core_perf_calc_clk() - to calculate clock per crtc
+- * @kms -  pointer to the dpu_kms
+- * @crtc - pointer to a crtc
+- * @state - pointer to a crtc state
+- * Return: returns max clk for all planes in crtc.
+- */
+-static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
+-		struct drm_crtc *crtc, struct drm_crtc_state *state)
+-{
+-	struct drm_plane *plane;
+-	struct dpu_plane_state *pstate;
+-	struct drm_display_mode *mode;
+-	u64 crtc_clk;
+-	u32 clk_factor;
+-
+-	mode = &state->adjusted_mode;
+-
+-	crtc_clk = mode->vtotal * mode->hdisplay * drm_mode_vrefresh(mode);
+-
+-	drm_atomic_crtc_for_each_plane(plane, crtc) {
+-		pstate = to_dpu_plane_state(plane->state);
+-
+-		if (!pstate)
+-			continue;
+-
+-		crtc_clk = max(pstate->plane_clk, crtc_clk);
+-	}
+-
+-	clk_factor = kms->catalog->perf.clk_inefficiency_factor;
+-	if (clk_factor)
+-		crtc_clk = mult_frac(crtc_clk, clk_factor, 100);
+-
+-	return crtc_clk;
+-}
+-
+-
+ static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
+ {
+ 	struct msm_drm_private *priv;
+@@ -118,7 +51,12 @@ static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
+ 	dpu_cstate = to_dpu_crtc_state(state);
+ 	memset(perf, 0, sizeof(struct dpu_core_perf_params));
+ 
+-	if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM) {
++	if (!dpu_cstate->bw_control) {
++		perf->bw_ctl = kms->catalog->perf.max_bw_high *
++					1000ULL;
++		perf->max_per_pipe_ib = perf->bw_ctl;
++		perf->core_clk_rate = kms->perf.max_core_clk_rate;
++	} else if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM) {
+ 		perf->bw_ctl = 0;
+ 		perf->max_per_pipe_ib = 0;
+ 		perf->core_clk_rate = 0;
+@@ -126,10 +64,6 @@ static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
+ 		perf->bw_ctl = kms->perf.fix_core_ab_vote;
+ 		perf->max_per_pipe_ib = kms->perf.fix_core_ib_vote;
+ 		perf->core_clk_rate = kms->perf.fix_core_clk_rate;
+-	} else {
+-		perf->bw_ctl = _dpu_core_perf_calc_bw(kms, crtc);
+-		perf->max_per_pipe_ib = kms->catalog->perf.min_dram_ib;
+-		perf->core_clk_rate = _dpu_core_perf_calc_clk(kms, crtc, state);
+ 	}
+ 
+ 	DPU_DEBUG(
+@@ -181,7 +115,11 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
+ 			DPU_DEBUG("crtc:%d bw:%llu ctrl:%d\n",
+ 				tmp_crtc->base.id, tmp_cstate->new_perf.bw_ctl,
+ 				tmp_cstate->bw_control);
+-
++			/*
++			 * For bw check only use the bw if the
++			 * atomic property has been already set
++			 */
++			if (tmp_cstate->bw_control)
+ 				bw_sum_of_intfs += tmp_cstate->new_perf.bw_ctl;
+ 		}
+ 
+@@ -193,7 +131,9 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
+ 
+ 		DPU_DEBUG("final threshold bw limit = %d\n", threshold);
+ 
+-		if (!threshold) {
++		if (!dpu_cstate->bw_control) {
++			DPU_DEBUG("bypass bandwidth check\n");
++		} else if (!threshold) {
+ 			DPU_ERROR("no bandwidth limits specified\n");
+ 			return -E2BIG;
+ 		} else if (bw > threshold) {
+@@ -214,8 +154,7 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 					= dpu_crtc_get_client_type(crtc);
+ 	struct drm_crtc *tmp_crtc;
+ 	struct dpu_crtc_state *dpu_cstate;
+-	int i, ret = 0;
+-	u64 avg_bw;
++	int ret = 0;
+ 
+ 	drm_for_each_crtc(tmp_crtc, crtc->dev) {
+ 		if (tmp_crtc->enabled &&
+@@ -226,21 +165,10 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 			perf.max_per_pipe_ib = max(perf.max_per_pipe_ib,
+ 					dpu_cstate->new_perf.max_per_pipe_ib);
+ 
+-			perf.bw_ctl += dpu_cstate->new_perf.bw_ctl;
+-
+-			DPU_DEBUG("crtc=%d bw=%llu paths:%d\n",
+-				  tmp_crtc->base.id,
+-				  dpu_cstate->new_perf.bw_ctl, kms->num_paths);
++			DPU_DEBUG("crtc=%d bw=%llu\n", tmp_crtc->base.id,
++					dpu_cstate->new_perf.bw_ctl);
+ 		}
+ 	}
+-
+-	avg_bw = kms->num_paths ?
+-			perf.bw_ctl / kms->num_paths : 0;
+-
+-	for (i = 0; i < kms->num_paths; i++)
+-		icc_set_bw(kms->path[i],
+-			Bps_to_icc(avg_bw), (perf.max_per_pipe_ib));
+-
+ 	return ret;
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 8f2357d9960a..29d4fde3172b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -541,8 +541,7 @@ static const struct dpu_perf_cfg sc7180_perf_data = {
+ 	.max_bw_high = 6800000,
+ 	.min_core_ib = 2400000,
+ 	.min_llcc_ib = 800000,
+-	.min_dram_ib = 1600000,
+-	.min_prefill_lines = 24,
++	.min_dram_ib = 800000,
+ 	.danger_lut_tbl = {0xff, 0xffff, 0x0},
+ 	.qos_lut_tbl = {
+ 		{.nentry = ARRAY_SIZE(sc7180_qos_linear),
+@@ -559,8 +558,6 @@ static const struct dpu_perf_cfg sc7180_perf_data = {
+ 		{.rd_enable = 1, .wr_enable = 1},
+ 		{.rd_enable = 1, .wr_enable = 0}
+ 	},
+-	.clk_inefficiency_factor = 105,
+-	.bw_inefficiency_factor = 120,
+ };
+ 
+ /*************************************************************
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index f2a5fe2d9d62..f7de43838c69 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -651,8 +651,6 @@ struct dpu_perf_cdp_cfg {
+  * @downscaling_prefill_lines  downscaling latency in lines
+  * @amortizable_theshold minimum y position for traffic shaping prefill
+  * @min_prefill_lines  minimum pipeline latency in lines
+- * @clk_inefficiency_factor DPU src clock inefficiency factor
+- * @bw_inefficiency_factor DPU axi bus bw inefficiency factor
+  * @safe_lut_tbl: LUT tables for safe signals
+  * @danger_lut_tbl: LUT tables for danger signals
+  * @qos_lut_tbl: LUT tables for QoS signals
+@@ -677,8 +675,6 @@ struct dpu_perf_cfg {
+ 	u32 downscaling_prefill_lines;
+ 	u32 amortizable_threshold;
+ 	u32 min_prefill_lines;
+-	u32 clk_inefficiency_factor;
+-	u32 bw_inefficiency_factor;
+ 	u32 safe_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
+ 	u32 danger_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
+ 	struct dpu_qos_lut_tbl qos_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index a5da7aacddba..b8615d4fe8a3 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -303,28 +303,6 @@ static int dpu_kms_global_obj_init(struct dpu_kms *dpu_kms)
+ 	return 0;
+ }
+ 
+-static int dpu_kms_parse_data_bus_icc_path(struct dpu_kms *dpu_kms)
+-{
+-	struct icc_path *path0;
+-	struct icc_path *path1;
+-	struct drm_device *dev = dpu_kms->dev;
+-
+-	path0 = of_icc_get(dev->dev, "mdp0-mem");
+-	path1 = of_icc_get(dev->dev, "mdp1-mem");
+-
+-	if (IS_ERR_OR_NULL(path0))
+-		return PTR_ERR_OR_ZERO(path0);
+-
+-	dpu_kms->path[0] = path0;
+-	dpu_kms->num_paths = 1;
+-
+-	if (!IS_ERR_OR_NULL(path1)) {
+-		dpu_kms->path[1] = path1;
+-		dpu_kms->num_paths++;
+-	}
+-	return 0;
+-}
+-
+ static int dpu_kms_enable_vblank(struct msm_kms *kms, struct drm_crtc *crtc)
+ {
+ 	return dpu_crtc_vblank(crtc, true);
+@@ -994,9 +972,6 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
+ 
+ 	dpu_vbif_init_memtypes(dpu_kms);
+ 
+-	if (of_device_is_compatible(dev->dev->of_node, "qcom,sc7180-mdss"))
+-		dpu_kms_parse_data_bus_icc_path(dpu_kms);
+-
+ 	pm_runtime_put_sync(&dpu_kms->pdev->dev);
+ 
+ 	return 0;
+@@ -1102,7 +1077,7 @@ static int dpu_dev_remove(struct platform_device *pdev)
+ 
+ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+ {
+-	int i, rc = -1;
++	int rc = -1;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+ 	struct dss_module_power *mp = &dpu_kms->mp;
+@@ -1111,9 +1086,6 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+ 	if (rc)
+ 		DPU_ERROR("clock disable failed rc:%d\n", rc);
+ 
+-	for (i = 0; i < dpu_kms->num_paths; i++)
+-		icc_set_bw(dpu_kms->path[i], 0, 0);
+-
+ 	return rc;
+ }
+ 
+@@ -1125,15 +1097,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+ 	struct drm_encoder *encoder;
+ 	struct drm_device *ddev;
+ 	struct dss_module_power *mp = &dpu_kms->mp;
+-	int i;
+ 
+ 	ddev = dpu_kms->dev;
+-
+-	/* Min vote of BW is required before turning on AXI clk */
+-	for (i = 0; i < dpu_kms->num_paths; i++)
+-		icc_set_bw(dpu_kms->path[i], 0,
+-			dpu_kms->catalog->perf.min_dram_ib);
+-
+ 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
+ 	if (rc) {
+ 		DPU_ERROR("clock enable failed rc:%d\n", rc);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+index 94410ca9bd70..4e32d040f1e6 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+@@ -8,8 +8,6 @@
+ #ifndef __DPU_KMS_H__
+ #define __DPU_KMS_H__
+ 
+-#include <linux/interconnect.h>
+-
+ #include <drm/drm_drv.h>
+ 
+ #include "msm_drv.h"
+@@ -139,8 +137,6 @@ struct dpu_kms {
+ 	 * when disabled.
+ 	 */
+ 	atomic_t bandwidth_ref;
+-	struct icc_path *path[2];
+-	u32 num_paths;
+ };
+ 
+ struct vsync_info {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+index df0a9835bfb1..80d3cfc14007 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+@@ -8,6 +8,7 @@
+ #include <linux/irqdesc.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include "dpu_kms.h"
++#include <linux/interconnect.h>
+ 
+ #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
+ 
+@@ -314,11 +315,9 @@ int dpu_mdss_init(struct drm_device *dev)
+ 	}
+ 	dpu_mdss->mmio_len = resource_size(res);
+ 
+-	if (!of_device_is_compatible(dev->dev->of_node, "qcom,sc7180-mdss")) {
+-		ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
+-		if (ret)
+-			return ret;
+-	}
++	ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
++	if (ret)
 +		return ret;
-+	}
-+
-+	mpd->chip_rev = reg_data & CHIP_REV_MASK;
-+	if (mpd->chip_rev != CHIP_VEN_MT6360) {
-+		dev_err(&client->dev, "Device not supported\n");
-+		return -ENODEV;
-+	}
-+
-+	mt6360_pmu_irq_chip.irq_drv_data = mpd;
-+	ret = devm_regmap_add_irq_chip(&client->dev, mpd->regmap, client->irq,
-+				       IRQF_TRIGGER_FALLING, 0,
-+				       &mt6360_pmu_irq_chip, &mpd->irq_data);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to add Regmap IRQ Chip\n");
-+		return ret;
-+	}
-+
-+	mpd->i2c[0] = client;
-+	for (i = 1; i < MT6360_SLAVE_MAX; i++) {
-+		mpd->i2c[i] = devm_i2c_new_dummy_device(&client->dev,
-+							client->adapter,
-+							mt6360_slave_addr[i]);
-+		if (IS_ERR(mpd->i2c[i])) {
-+			dev_err(&client->dev,
-+				"Failed to get new dummy I2C device for address 0x%x",
-+				mt6360_slave_addr[i]);
-+			return PTR_ERR(mpd->i2c[i]);
-+		}
-+		i2c_set_clientdata(mpd->i2c[i], mpd);
-+	}
-+
-+	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
-+				   mt6360_devs, ARRAY_SIZE(mt6360_devs), NULL,
-+				   0, regmap_irq_get_domain(mpd->irq_data));
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"Failed to register subordinate devices\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mt6360_pmu_suspend(struct device *dev)
-+{
-+	struct i2c_client *i2c = to_i2c_client(dev);
-+
-+	if (device_may_wakeup(dev))
-+		enable_irq_wake(i2c->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mt6360_pmu_resume(struct device *dev)
-+{
-+
-+	struct i2c_client *i2c = to_i2c_client(dev);
-+
-+	if (device_may_wakeup(dev))
-+		disable_irq_wake(i2c->irq);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(mt6360_pmu_pm_ops,
-+			 mt6360_pmu_suspend, mt6360_pmu_resume);
-+
-+static const struct of_device_id __maybe_unused mt6360_pmu_of_id[] = {
-+	{ .compatible = "mediatek,mt6360_pmu", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
-+
-+static struct i2c_driver mt6360_pmu_driver = {
-+	.driver = {
-+		.pm = &mt6360_pmu_pm_ops,
-+		.of_match_table = of_match_ptr(mt6360_pmu_of_id),
-+	},
-+	.probe_new = mt6360_pmu_probe,
-+};
-+module_i2c_driver(mt6360_pmu_driver);
-+
-+MODULE_AUTHOR("Gene Chen <gene_chen@richtek.com>");
-+MODULE_DESCRIPTION("MT6360 PMU I2C Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
-new file mode 100644
-index 0000000..ea13040
---- /dev/null
-+++ b/include/linux/mfd/mt6360.h
-@@ -0,0 +1,240 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2020 MediaTek Inc.
-+ */
-+
-+#ifndef __MT6360_H__
-+#define __MT6360_H__
-+
-+#include <linux/regmap.h>
-+
-+enum {
-+	MT6360_SLAVE_PMU = 0,
-+	MT6360_SLAVE_PMIC,
-+	MT6360_SLAVE_LDO,
-+	MT6360_SLAVE_TCPC,
-+	MT6360_SLAVE_MAX,
-+};
-+
-+#define MT6360_PMU_SLAVEID	(0x34)
-+#define MT6360_PMIC_SLAVEID	(0x1A)
-+#define MT6360_LDO_SLAVEID	(0x64)
-+#define MT6360_TCPC_SLAVEID	(0x4E)
-+
-+struct mt6360_pmu_data {
-+	struct i2c_client *i2c[MT6360_SLAVE_MAX];
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct regmap_irq_chip_data *irq_data;
-+	unsigned int chip_rev;
-+};
-+
-+/* PMU register defininition */
-+#define MT6360_PMU_DEV_INFO			(0x00)
-+#define MT6360_PMU_CORE_CTRL1			(0x01)
-+#define MT6360_PMU_RST1				(0x02)
-+#define MT6360_PMU_CRCEN			(0x03)
-+#define MT6360_PMU_RST_PAS_CODE1		(0x04)
-+#define MT6360_PMU_RST_PAS_CODE2		(0x05)
-+#define MT6360_PMU_CORE_CTRL2			(0x06)
-+#define MT6360_PMU_TM_PAS_CODE1			(0x07)
-+#define MT6360_PMU_TM_PAS_CODE2			(0x08)
-+#define MT6360_PMU_TM_PAS_CODE3			(0x09)
-+#define MT6360_PMU_TM_PAS_CODE4			(0x0A)
-+#define MT6360_PMU_IRQ_IND			(0x0B)
-+#define MT6360_PMU_IRQ_MASK			(0x0C)
-+#define MT6360_PMU_IRQ_SET			(0x0D)
-+#define MT6360_PMU_SHDN_CTRL			(0x0E)
-+#define MT6360_PMU_TM_INF			(0x0F)
-+#define MT6360_PMU_I2C_CTRL			(0x10)
-+#define MT6360_PMU_CHG_CTRL1			(0x11)
-+#define MT6360_PMU_CHG_CTRL2			(0x12)
-+#define MT6360_PMU_CHG_CTRL3			(0x13)
-+#define MT6360_PMU_CHG_CTRL4			(0x14)
-+#define MT6360_PMU_CHG_CTRL5			(0x15)
-+#define MT6360_PMU_CHG_CTRL6			(0x16)
-+#define MT6360_PMU_CHG_CTRL7			(0x17)
-+#define MT6360_PMU_CHG_CTRL8			(0x18)
-+#define MT6360_PMU_CHG_CTRL9			(0x19)
-+#define MT6360_PMU_CHG_CTRL10			(0x1A)
-+#define MT6360_PMU_CHG_CTRL11			(0x1B)
-+#define MT6360_PMU_CHG_CTRL12			(0x1C)
-+#define MT6360_PMU_CHG_CTRL13			(0x1D)
-+#define MT6360_PMU_CHG_CTRL14			(0x1E)
-+#define MT6360_PMU_CHG_CTRL15			(0x1F)
-+#define MT6360_PMU_CHG_CTRL16			(0x20)
-+#define MT6360_PMU_CHG_AICC_RESULT		(0x21)
-+#define MT6360_PMU_DEVICE_TYPE			(0x22)
-+#define MT6360_PMU_QC_CONTROL1			(0x23)
-+#define MT6360_PMU_QC_CONTROL2			(0x24)
-+#define MT6360_PMU_QC30_CONTROL1		(0x25)
-+#define MT6360_PMU_QC30_CONTROL2		(0x26)
-+#define MT6360_PMU_USB_STATUS1			(0x27)
-+#define MT6360_PMU_QC_STATUS1			(0x28)
-+#define MT6360_PMU_QC_STATUS2			(0x29)
-+#define MT6360_PMU_CHG_PUMP			(0x2A)
-+#define MT6360_PMU_CHG_CTRL17			(0x2B)
-+#define MT6360_PMU_CHG_CTRL18			(0x2C)
-+#define MT6360_PMU_CHRDET_CTRL1			(0x2D)
-+#define MT6360_PMU_CHRDET_CTRL2			(0x2E)
-+#define MT6360_PMU_DPDN_CTRL			(0x2F)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL1		(0x30)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL2		(0x31)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL3		(0x32)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL4		(0x33)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL5		(0x34)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL6		(0x35)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL7		(0x36)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL8		(0x37)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL9		(0x38)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL10		(0x39)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL11		(0x3A)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL12		(0x3B)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL13		(0x3C)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL14		(0x3D)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL15		(0x3E)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL16		(0x3F)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL17		(0x40)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL18		(0x41)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL19		(0x42)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL20		(0x43)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL21		(0x44)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL22		(0x45)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL23		(0x46)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL24		(0x47)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL25		(0x48)
-+#define MT6360_PMU_BC12_CTRL			(0x49)
-+#define MT6360_PMU_CHG_STAT			(0x4A)
-+#define MT6360_PMU_RESV1			(0x4B)
-+#define MT6360_PMU_TYPEC_OTP_TH_SEL_CODEH	(0x4E)
-+#define MT6360_PMU_TYPEC_OTP_TH_SEL_CODEL	(0x4F)
-+#define MT6360_PMU_TYPEC_OTP_HYST_TH		(0x50)
-+#define MT6360_PMU_TYPEC_OTP_CTRL		(0x51)
-+#define MT6360_PMU_ADC_BAT_DATA_H		(0x52)
-+#define MT6360_PMU_ADC_BAT_DATA_L		(0x53)
-+#define MT6360_PMU_IMID_BACKBST_ON		(0x54)
-+#define MT6360_PMU_IMID_BACKBST_OFF		(0x55)
-+#define MT6360_PMU_ADC_CONFIG			(0x56)
-+#define MT6360_PMU_ADC_EN2			(0x57)
-+#define MT6360_PMU_ADC_IDLE_T			(0x58)
-+#define MT6360_PMU_ADC_RPT_1			(0x5A)
-+#define MT6360_PMU_ADC_RPT_2			(0x5B)
-+#define MT6360_PMU_ADC_RPT_3			(0x5C)
-+#define MT6360_PMU_ADC_RPT_ORG1			(0x5D)
-+#define MT6360_PMU_ADC_RPT_ORG2			(0x5E)
-+#define MT6360_PMU_BAT_OVP_TH_SEL_CODEH		(0x5F)
-+#define MT6360_PMU_BAT_OVP_TH_SEL_CODEL		(0x60)
-+#define MT6360_PMU_CHG_CTRL19			(0x61)
-+#define MT6360_PMU_VDDASUPPLY			(0x62)
-+#define MT6360_PMU_BC12_MANUAL			(0x63)
-+#define MT6360_PMU_CHGDET_FUNC			(0x64)
-+#define MT6360_PMU_FOD_CTRL			(0x65)
-+#define MT6360_PMU_CHG_CTRL20			(0x66)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL26		(0x67)
-+#define MT6360_PMU_CHG_HIDDEN_CTRL27		(0x68)
-+#define MT6360_PMU_RESV2			(0x69)
-+#define MT6360_PMU_USBID_CTRL1			(0x6D)
-+#define MT6360_PMU_USBID_CTRL2			(0x6E)
-+#define MT6360_PMU_USBID_CTRL3			(0x6F)
-+#define MT6360_PMU_FLED_CFG			(0x70)
-+#define MT6360_PMU_RESV3			(0x71)
-+#define MT6360_PMU_FLED1_CTRL			(0x72)
-+#define MT6360_PMU_FLED_STRB_CTRL		(0x73)
-+#define MT6360_PMU_FLED1_STRB_CTRL2		(0x74)
-+#define MT6360_PMU_FLED1_TOR_CTRL		(0x75)
-+#define MT6360_PMU_FLED2_CTRL			(0x76)
-+#define MT6360_PMU_RESV4			(0x77)
-+#define MT6360_PMU_FLED2_STRB_CTRL2		(0x78)
-+#define MT6360_PMU_FLED2_TOR_CTRL		(0x79)
-+#define MT6360_PMU_FLED_VMIDTRK_CTRL1		(0x7A)
-+#define MT6360_PMU_FLED_VMID_RTM		(0x7B)
-+#define MT6360_PMU_FLED_VMIDTRK_CTRL2		(0x7C)
-+#define MT6360_PMU_FLED_PWSEL			(0x7D)
-+#define MT6360_PMU_FLED_EN			(0x7E)
-+#define MT6360_PMU_FLED_Hidden1			(0x7F)
-+#define MT6360_PMU_RGB_EN			(0x80)
-+#define MT6360_PMU_RGB1_ISNK			(0x81)
-+#define MT6360_PMU_RGB2_ISNK			(0x82)
-+#define MT6360_PMU_RGB3_ISNK			(0x83)
-+#define MT6360_PMU_RGB_ML_ISNK			(0x84)
-+#define MT6360_PMU_RGB1_DIM			(0x85)
-+#define MT6360_PMU_RGB2_DIM			(0x86)
-+#define MT6360_PMU_RGB3_DIM			(0x87)
-+#define MT6360_PMU_RESV5			(0x88)
-+#define MT6360_PMU_RGB12_Freq			(0x89)
-+#define MT6360_PMU_RGB34_Freq			(0x8A)
-+#define MT6360_PMU_RGB1_Tr			(0x8B)
-+#define MT6360_PMU_RGB1_Tf			(0x8C)
-+#define MT6360_PMU_RGB1_TON_TOFF		(0x8D)
-+#define MT6360_PMU_RGB2_Tr			(0x8E)
-+#define MT6360_PMU_RGB2_Tf			(0x8F)
-+#define MT6360_PMU_RGB2_TON_TOFF		(0x90)
-+#define MT6360_PMU_RGB3_Tr			(0x91)
-+#define MT6360_PMU_RGB3_Tf			(0x92)
-+#define MT6360_PMU_RGB3_TON_TOFF		(0x93)
-+#define MT6360_PMU_RGB_Hidden_CTRL1		(0x94)
-+#define MT6360_PMU_RGB_Hidden_CTRL2		(0x95)
-+#define MT6360_PMU_RESV6			(0x97)
-+#define MT6360_PMU_SPARE1			(0x9A)
-+#define MT6360_PMU_SPARE2			(0xA0)
-+#define MT6360_PMU_SPARE3			(0xB0)
-+#define MT6360_PMU_SPARE4			(0xC0)
-+#define MT6360_PMU_CHG_IRQ1			(0xD0)
-+#define MT6360_PMU_CHG_IRQ2			(0xD1)
-+#define MT6360_PMU_CHG_IRQ3			(0xD2)
-+#define MT6360_PMU_CHG_IRQ4			(0xD3)
-+#define MT6360_PMU_CHG_IRQ5			(0xD4)
-+#define MT6360_PMU_CHG_IRQ6			(0xD5)
-+#define MT6360_PMU_QC_IRQ			(0xD6)
-+#define MT6360_PMU_FOD_IRQ			(0xD7)
-+#define MT6360_PMU_BASE_IRQ			(0xD8)
-+#define MT6360_PMU_FLED_IRQ1			(0xD9)
-+#define MT6360_PMU_FLED_IRQ2			(0xDA)
-+#define MT6360_PMU_RGB_IRQ			(0xDB)
-+#define MT6360_PMU_BUCK1_IRQ			(0xDC)
-+#define MT6360_PMU_BUCK2_IRQ			(0xDD)
-+#define MT6360_PMU_LDO_IRQ1			(0xDE)
-+#define MT6360_PMU_LDO_IRQ2			(0xDF)
-+#define MT6360_PMU_CHG_STAT1			(0xE0)
-+#define MT6360_PMU_CHG_STAT2			(0xE1)
-+#define MT6360_PMU_CHG_STAT3			(0xE2)
-+#define MT6360_PMU_CHG_STAT4			(0xE3)
-+#define MT6360_PMU_CHG_STAT5			(0xE4)
-+#define MT6360_PMU_CHG_STAT6			(0xE5)
-+#define MT6360_PMU_QC_STAT			(0xE6)
-+#define MT6360_PMU_FOD_STAT			(0xE7)
-+#define MT6360_PMU_BASE_STAT			(0xE8)
-+#define MT6360_PMU_FLED_STAT1			(0xE9)
-+#define MT6360_PMU_FLED_STAT2			(0xEA)
-+#define MT6360_PMU_RGB_STAT			(0xEB)
-+#define MT6360_PMU_BUCK1_STAT			(0xEC)
-+#define MT6360_PMU_BUCK2_STAT			(0xED)
-+#define MT6360_PMU_LDO_STAT1			(0xEE)
-+#define MT6360_PMU_LDO_STAT2			(0xEF)
-+#define MT6360_PMU_CHG_MASK1			(0xF0)
-+#define MT6360_PMU_CHG_MASK2			(0xF1)
-+#define MT6360_PMU_CHG_MASK3			(0xF2)
-+#define MT6360_PMU_CHG_MASK4			(0xF3)
-+#define MT6360_PMU_CHG_MASK5			(0xF4)
-+#define MT6360_PMU_CHG_MASK6			(0xF5)
-+#define MT6360_PMU_QC_MASK			(0xF6)
-+#define MT6360_PMU_FOD_MASK			(0xF7)
-+#define MT6360_PMU_BASE_MASK			(0xF8)
-+#define MT6360_PMU_FLED_MASK1			(0xF9)
-+#define MT6360_PMU_FLED_MASK2			(0xFA)
-+#define MT6360_PMU_FAULTB_MASK			(0xFB)
-+#define MT6360_PMU_BUCK1_MASK			(0xFC)
-+#define MT6360_PMU_BUCK2_MASK			(0xFD)
-+#define MT6360_PMU_LDO_MASK1			(0xFE)
-+#define MT6360_PMU_LDO_MASK2			(0xFF)
-+#define MT6360_PMU_MAXREG			(MT6360_PMU_LDO_MASK2)
-+
-+/* MT6360_PMU_IRQ_SET */
-+#define MT6360_PMU_IRQ_REGNUM	(MT6360_PMU_LDO_IRQ2 - MT6360_PMU_CHG_IRQ1 + 1)
-+#define MT6360_IRQ_RETRIG	BIT(2)
-+
-+#define CHIP_VEN_MASK				(0xF0)
-+#define CHIP_VEN_MT6360				(0x50)
-+#define CHIP_REV_MASK				(0x0F)
-+
-+#endif /* __MT6360_H__ */
+ 
+ 	mp = &dpu_mdss->mp;
+ 	ret = msm_dss_parse_clock(pdev, mp);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index c2a6e3dacd68..3b9c33e694bf 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -131,84 +131,6 @@ static struct dpu_kms *_dpu_plane_get_kms(struct drm_plane *plane)
+ 	return to_dpu_kms(priv->kms);
+ }
+ 
+-/**
+- * _dpu_plane_calc_bw - calculate bandwidth required for a plane
+- * @Plane: Pointer to drm plane.
+- * Result: Updates calculated bandwidth in the plane state.
+- * BW Equation: src_w * src_h * bpp * fps * (v_total / v_dest)
+- * Prefill BW Equation: line src bytes * line_time
+- */
+-static void _dpu_plane_calc_bw(struct drm_plane *plane,
+-	struct drm_framebuffer *fb)
+-{
+-	struct dpu_plane *pdpu = to_dpu_plane(plane);
+-	struct dpu_plane_state *pstate;
+-	struct drm_display_mode *mode;
+-	const struct dpu_format *fmt = NULL;
+-	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
+-	int src_width, src_height, dst_height, fps;
+-	u64 plane_prefill_bw;
+-	u64 plane_bw;
+-	u32 hw_latency_lines;
+-	u32 scale_factor;
+-	int vbp, vpw;
+-
+-	pstate = to_dpu_plane_state(plane->state);
+-	mode = &plane->state->crtc->mode;
+-
+-	fmt = dpu_get_dpu_format_ext(fb->format->format, fb->modifier);
+-
+-	src_width = drm_rect_width(&pdpu->pipe_cfg.src_rect);
+-	src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
+-	dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
+-	fps = drm_mode_vrefresh(mode);
+-	vbp = mode->vtotal - mode->vsync_end;
+-	vpw = mode->vsync_end - mode->vsync_start;
+-	hw_latency_lines =  dpu_kms->catalog->perf.min_prefill_lines;
+-	scale_factor = src_height > dst_height ?
+-		mult_frac(src_height, 1, dst_height) : 1;
+-
+-	plane_bw =
+-		src_width * mode->vtotal * fps * fmt->bpp * scale_factor;
+-
+-	plane_prefill_bw =
+-		src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
+-
+-	plane_prefill_bw = mult_frac(plane_prefill_bw, mode->vtotal, (vbp+vpw));
+-
+-	pstate->plane_fetch_bw = max(plane_bw, plane_prefill_bw);
+-}
+-
+-
+-/**
+- * _dpu_plane_calc_clk - calculate clock required for a plane
+- * @Plane: Pointer to drm plane.
+- * Result: Updates calculated clock in the plane state.
+- * Clock equation: dst_w * v_total * fps * (src_h / dst_h)
+- */
+-static void _dpu_plane_calc_clk(struct drm_plane *plane)
+-{
+-	struct dpu_plane *pdpu = to_dpu_plane(plane);
+-	struct dpu_plane_state *pstate;
+-	struct drm_display_mode *mode;
+-	int dst_width, src_height, dst_height, fps;
+-
+-	pstate = to_dpu_plane_state(plane->state);
+-	mode = &plane->state->crtc->mode;
+-
+-	src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
+-	dst_width = drm_rect_width(&pdpu->pipe_cfg.dst_rect);
+-	dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
+-	fps = drm_mode_vrefresh(mode);
+-
+-	pstate->plane_clk =
+-		dst_width * mode->vtotal * fps;
+-
+-	if (src_height > dst_height)
+-		pstate->plane_clk = mult_frac(pstate->plane_clk,
+-					src_height, dst_height);
+-}
+-
+ /**
+  * _dpu_plane_calc_fill_level - calculate fill level of the given source format
+  * @plane:		Pointer to drm plane
+@@ -1180,10 +1102,6 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
+ 	}
+ 
+ 	_dpu_plane_set_qos_remap(plane);
+-
+-	_dpu_plane_calc_bw(plane, fb);
+-
+-	_dpu_plane_calc_clk(plane);
+ }
+ 
+ static void _dpu_plane_atomic_disable(struct drm_plane *plane)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+index ca83b8753d59..456949713e90 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+@@ -25,8 +25,6 @@
+  * @scaler3_cfg: configuration data for scaler3
+  * @pixel_ext: configuration data for pixel extensions
+  * @cdp_cfg:	CDP configuration
+- * @plane_fetch_bw: calculated BW per plane
+- * @plane_clk: calculated clk per plane
+  */
+ struct dpu_plane_state {
+ 	struct drm_plane_state base;
+@@ -41,8 +39,6 @@ struct dpu_plane_state {
+ 	struct dpu_hw_pixel_ext pixel_ext;
+ 
+ 	struct dpu_hw_pipe_cdp_cfg cdp_cfg;
+-	u64 plane_fetch_bw;
+-	u64 plane_clk;
+ };
+ 
+ /**
 -- 
-2.7.4
+2.25.4
 
