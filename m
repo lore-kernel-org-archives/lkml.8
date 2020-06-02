@@ -2,152 +2,95 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC1AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2ED6206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23414206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EM7aPO8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgFBTKk (ORCPT
+        id S1728031AbgFBTMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:10:40 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57056 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgFBTKj (ORCPT
+        Tue, 2 Jun 2020 15:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbgFBTMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:10:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E897C8030835;
-        Tue,  2 Jun 2020 19:10:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IvgS6PU79JwH; Tue,  2 Jun 2020 22:10:27 +0300 (MSK)
-Date:   Tue, 2 Jun 2020 22:10:25 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
- IRQ specified in DT
-Message-ID: <20200602191025.ywo77nslrgswh6sw@mobilestation>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-2-lars.povlsen@microchip.com>
+        Tue, 2 Jun 2020 15:12:08 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD7EC08C5C0;
+        Tue,  2 Jun 2020 12:12:08 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z64so5554244pfb.1;
+        Tue, 02 Jun 2020 12:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fc+POCcccpHuzZ177s1ogPM1HUKCod90SUUzBCyoC0M=;
+        b=EM7aPO8kk/Zwnd7dSem1aSG0/loXoUBW6Bu6ko85Ha88U5qs8uXA37ifjrlTVySpXT
+         gxZ+VuexgwJZgv7A+kz5lTziOKeN3xMgdOataJRQA/uYPMAk2WrKwBruGznNOaJoNHGy
+         F+sCkQdvblWvFf3hIbaBY93lNIi11PjMcN+1CZNQXMOew+3p5YHMZfKXDGZsO385YrZx
+         QmkI6pYUXnBxiiMHebQhVwnE85TROcZO+3Kyg3y4P2TvwR7bjGVnIyrtpVYHgJ3BjORc
+         B9EpMxm+SAP040ksz1BMYNPD90E83m5WQqYH4yXXlY0AWH4BCRfsaxnoEnKldqwBmllR
+         X6PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fc+POCcccpHuzZ177s1ogPM1HUKCod90SUUzBCyoC0M=;
+        b=I01UKFlb/OrI/cE2gAL1yIgHDXoe/R6etX+L58BweP6YD+oJKmEYlIa4iJfyUASw5R
+         w6/gctr2R+ICYUelyOnwFxcmjA3Gg7bAQ/p5+9bVtfHnXQe7OLFjRVUKAw+vLUAHEspf
+         w6nTNcxD7HRE+1uaVSBzfwFCT0TTgCeuK+CfYtnR6q/3qpPRBdsnDZaW58e1Szxj1Dju
+         j6UneSdRgLxs45JYozdifWtQbX99cWf3z9Sr27/xXGGKxrU0uwjZqKAsSpCKiUiy6Txs
+         ngj0UpJqaekvRHtboCe6K7OsxsEHxEKT7YdNkt3744LTwTjlpGMNB7iyXH3+K27PVbwh
+         juBg==
+X-Gm-Message-State: AOAM533A/eaASzQCU0BQVLJB1FUNRqqACBbIOd41PjMBOBP1sym2/FS8
+        25Cd97DjDzha6wfhI7AxHeY=
+X-Google-Smtp-Source: ABdhPJwmoBaniSTK5kA600PXjpl2HqPaVChcGdoXd8QlUKbhs+iYjlTCUJ0sz4MbkV+4qDAS3yjnRQ==
+X-Received: by 2002:a63:7016:: with SMTP id l22mr25024733pgc.284.1591125128091;
+        Tue, 02 Jun 2020 12:12:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o25sm2667682pgn.84.2020.06.02.12.12.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jun 2020 12:12:07 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 12:12:06 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/47] 4.4.226-rc2 review
+Message-ID: <20200602191206.GA203031@roeck-us.net>
+References: <20200602100034.001608787@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513140031.25633-2-lars.povlsen@microchip.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200602100034.001608787@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
-> With this change a SPI controller can be added without having a IRQ
-> associated, and causing all transfers to be polled. For SPI controllers
-> without DMA, this can significantly improve performance by less
-> interrupt handling overhead.
+On Tue, Jun 02, 2020 at 12:16:07PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.226 release.
+> There are 47 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  drivers/spi/spi-dw.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-> index 31e3f866d11a7..e572eb34a3c1a 100644
-> --- a/drivers/spi/spi-dw.c
-> +++ b/drivers/spi/spi-dw.c
-> @@ -19,6 +19,8 @@
->  #include <linux/debugfs.h>
->  #endif
+> Responses should be made by Thu, 04 Jun 2020 09:57:12 +0000.
+> Anything received after that time might be too late.
 > 
 
-> +#define VALID_IRQ(i) (i >= 0)
+Build results:
+	total: 169 pass: 169 fail: 0
+Qemu test results:
+	total: 331 pass: 331 fail: 0
 
-Mark and Andy are right. It is a good candidate to be in a generic IRQ-related
-code as Anyd suggested:
-
-> > drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
-> > Candidate to be in include/linux/irq.h ?
-
-So if you feel like to author additional useful patch integrated into the
-kernel, this one is a good chance for it.
-
-> +
->  /* Slave spi_dev related */
->  struct chip_data {
->  	u8 tmode;		/* TR/TO/RO/EEPROM */
-> @@ -359,7 +361,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
->  			spi_enable_chip(dws, 1);
->  			return ret;
->  		}
-> -	} else if (!chip->poll_mode) {
-> +	} else if (!chip->poll_mode && VALID_IRQ(dws->irq)) {
->  		txlevel = min_t(u16, dws->fifo_len / 2, dws->len / dws->n_bytes);
->  		dw_writel(dws, DW_SPI_TXFLTR, txlevel);
-> 
-> @@ -379,7 +381,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
->  			return ret;
->  	}
-> 
-> -	if (chip->poll_mode)
-> +	if (chip->poll_mode || !VALID_IRQ(dws->irq))
->  		return poll_transfer(dws);
-
-Please note. The chip->poll and the poll_transfer() methods've been discarded
-from the driver, since commit 1ceb09717e98 ("spi: dw: remove cs_control and
-poll_mode members from chip_data"). So you gonna have to get the
-poll_transfer-like method back.
-
--Sergey
-
-> 
->  	return 1;
-> @@ -487,11 +489,13 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
-> 
->  	spi_controller_set_devdata(master, dws);
-> 
-> -	ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED, dev_name(dev),
-> -			  master);
-> -	if (ret < 0) {
-> -		dev_err(dev, "can not get IRQ\n");
-> -		goto err_free_master;
-> +	if (VALID_IRQ(dws->irq)) {
-> +		ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED,
-> +				  dev_name(dev), master);
-> +		if (ret < 0) {
-> +			dev_err(dev, "can not get IRQ\n");
-> +			goto err_free_master;
-> +		}
->  	}
-> 
->  	master->use_gpio_descriptors = true;
-> @@ -539,7 +543,8 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->  	if (dws->dma_ops && dws->dma_ops->dma_exit)
->  		dws->dma_ops->dma_exit(dws);
->  	spi_enable_chip(dws, 0);
-> -	free_irq(dws->irq, master);
-> +	if (VALID_IRQ(dws->irq))
-> +		free_irq(dws->irq, master);
->  err_free_master:
->  	spi_controller_put(master);
->  	return ret;
-> --
-> 2.26.2
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Guenter
