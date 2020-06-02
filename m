@@ -2,78 +2,82 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53024206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A057D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="anQ2chfq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LxYm9HFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgFBHhO (ORCPT
+        id S1726215AbgFBHh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgFBHhM (ORCPT
+        Tue, 2 Jun 2020 03:37:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53632 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725907AbgFBHh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:37:12 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5BDCC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 00:37:11 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r9so1868671wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xqds7VbU+K4A2laqYmDPq+zdOfWX/VjHAo0lo4mVXR0=;
-        b=anQ2chfqCtHiZ4pB5qiENxzfk8kF2TaVNvzhYEztrPanUnTZOwgh9uLDEQQUB0D9Nm
-         epHJcbtRVzaKPvJAQQ6gnjksaOc6SJjLnX4DJq3azYt54ilj0wLyXuKTfuoyLODJbWm0
-         cbky1C0TxwTgECHxolmkjGf913LY89hRXbYtg=
+        Tue, 2 Jun 2020 03:37:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591083444;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EWdIjEOd9/I1E+xgzOUq4yJlQRPtA00peLd2/YfHFQs=;
+        b=LxYm9HFHeHfh3VeFwZCxuYABzNOysVgVLZdYABHnptFj2sVxYIvAu3BMjp8fvDAgOkomiK
+        v68NQupO0nFIOWEo3zJYpwO0602iAyLCsvUjjlk5OaPRLrs2fQwxmNqNWJl0PBNxREnoV9
+        cDg1zduLfq/mw4+L6eqAVyXkIoSWwbE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-m9bOKbgsOMWCjgbwbSdKeQ-1; Tue, 02 Jun 2020 03:37:21 -0400
+X-MC-Unique: m9bOKbgsOMWCjgbwbSdKeQ-1
+Received: by mail-wr1-f72.google.com with SMTP id a4so1021979wrp.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:37:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=xqds7VbU+K4A2laqYmDPq+zdOfWX/VjHAo0lo4mVXR0=;
-        b=m+/0mFeJ3io1OctxBshgLci+sP8fPtqBdRGk8lMGqwvlPP02ZS40S4d40Mj/e8ZiLD
-         CQVVHRJCCLb3N3dbrt8FkK14tuePH4gfnu4mwX5rfP6pfBsRkiwjNyLvN0MuvB9/w4LX
-         rjEhgu5hOHve7uunokC8XvDU63Veul4s3w53a1DNjlx00g4FRSMQZWzWE6yHbp5ZeZ5E
-         +6VAcCShN9knCVO7iFssIRpQCvc6ZFJHH7wsSH3C91gA2Trb59QnNJRvUCojNPOcttpZ
-         GwxL7KjQY8ev3M2HmofDhlpS1pHwdrg0e7hypKcMg0iOcp7AyQBI8SPCzn276A7p0bB0
-         bKDA==
-X-Gm-Message-State: AOAM5319L//rimb+AeGtSXAtF8ERBK2OXaCm6i2ttKSzOiq1mk6SKGit
-        UeZqJJd2ergZ37ZrkAxvlk2dK2mqgA0=
-X-Google-Smtp-Source: ABdhPJxVmq6mSWg/iUiuouLU0cmof6ha99AdKRzM2oufoIVIFhcGa8uQFobYRnwf9lC+PgvBrVralA==
-X-Received: by 2002:a05:600c:2110:: with SMTP id u16mr2832929wml.26.1591083430327;
-        Tue, 02 Jun 2020 00:37:10 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id 23sm2333774wmo.18.2020.06.02.00.37.09
+        bh=EWdIjEOd9/I1E+xgzOUq4yJlQRPtA00peLd2/YfHFQs=;
+        b=Oh95QIYlGuvhJnCe1oBZbNiXocqr1Tg+mURYLHk0c1eb0Q2zqBfmrgLpUClEv04uvS
+         tFrBk/tIcOAaVdxaTSp7AwtlPvX4O2HCqvKPnqaXq6bN81nDE5tG/iAEf2AlbozeoF4x
+         OWi3yxN/SBu1kfmUmtCEv1J4mogzVA//tQUDjh5c7Ajlzt48vlvkqVYOF0AcvM1INh70
+         LHDweSxDI6aff4trwP2DK/w+56qaL5ZC64W+QR7MtmdTEiUMuF4jV3eMViUkO7JEv443
+         k0oqHGbiVy23/yUCi5nA+cdZAP9lYrB3kpni+VG8HFVXCGJh5f4ssC6NmkvQHxv/ZHDt
+         Cjcg==
+X-Gm-Message-State: AOAM531ukcpyzbw2fKiCoAb0YHz/M6WDlfUGMv6mlXRmYoB81SWFZ418
+        Tyhm69GWMwnTq5XDsFoOxOPJj2brkAQqsBKaKBNoXPD+2AeP27OamEefGhEFahrhYuYx5JbW6eE
+        hxa3NJFZpquylsfxKZkif9wOF
+X-Received: by 2002:a7b:c204:: with SMTP id x4mr2850694wmi.22.1591083440122;
+        Tue, 02 Jun 2020 00:37:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxW00SyN3i1y2DE60zidzIbHqpyCIRigSqwfVXBSPi6+8OJ9QWObRrDLiWtsHNYV6O/lEX2WA==
+X-Received: by 2002:a7b:c204:: with SMTP id x4mr2848946wmi.22.1591083409945;
+        Tue, 02 Jun 2020 00:36:49 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id s8sm2584112wrg.50.2020.06.02.00.36.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 00:37:09 -0700 (PDT)
-Subject: Re: [PATCH] ipv4: nexthop: Fix deadcode issue by performing a proper
- NULL check
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-To:     David Miller <davem@davemloft.net>, patrickeigensatz@gmail.com
-Cc:     dsahern@kernel.org, scan-admin@coverity.com, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200601111201.64124-1-patrick.eigensatz@gmail.com>
- <20200601.110654.1178868171436999333.davem@davemloft.net>
- <4e6ba1a8-be3b-fd22-e0b8-485d33bb51eb@cumulusnetworks.com>
-Message-ID: <beb306e9-228f-6810-fc77-972e5acb5863@cumulusnetworks.com>
-Date:   Tue, 2 Jun 2020 10:37:08 +0300
+        Tue, 02 Jun 2020 00:36:49 -0700 (PDT)
+Subject: Re: [PATCH 2/2] objtool: Add support for relocations without addends
+To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1590785960.git.mhelsley@vmware.com>
+ <af8b5d5bffc64af00ad88e0b7bd216e91cbfdb36.1590785960.git.mhelsley@vmware.com>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <a7ce0b8a-557b-01e6-9a0a-d986c3dbd639@redhat.com>
+Date:   Tue, 2 Jun 2020 08:36:48 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <4e6ba1a8-be3b-fd22-e0b8-485d33bb51eb@cumulusnetworks.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <af8b5d5bffc64af00ad88e0b7bd216e91cbfdb36.1590785960.git.mhelsley@vmware.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,40 +85,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06/2020 10:23, Nikolay Aleksandrov wrote:
-> On 01/06/2020 21:06, David Miller wrote:
->> From: patrickeigensatz@gmail.com
->> Date: Mon,  1 Jun 2020 13:12:01 +0200
->>
->>> From: Patrick Eigensatz <patrickeigensatz@gmail.com>
->>>
->>> After allocating the spare nexthop group it should be tested for kzalloc()
->>> returning NULL, instead the already used nexthop group (which cannot be
->>> NULL at this point) had been tested so far.
->>>
->>> Additionally, if kzalloc() fails, return ERR_PTR(-ENOMEM) instead of NULL.
->>>
->>> Coverity-id: 1463885
->>> Reported-by: Coverity <scan-admin@coverity.com>
->>> Signed-off-by: Patrick Eigensatz <patrickeigensatz@gmail.com>
->>
->> Applied, thank you.
->>
-> 
-> Hi Dave,
-> I see this patch in -net-next but it should've been in -net as I wrote in my
-> review[1]. This patch should go along with the recent nexthop set that fixes
-> a few bugs, since it could result in a null ptr deref if the spare group cannot
-> be allocated.
+Hi Matt,
 
-Obviously I forgot to mention in my review that it should go to -stable with the
-nexthop fix set.
+On 5/29/20 10:01 PM, Matt Helsley wrote:
+> Currently objtool only collects information about relocations with
+> addends. In recordmcount, which we are about to merge into objtool,
+> some supported architectures do not use rela relocations.
+> 
+> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> ---
+>   tools/objtool/elf.c     | 146 +++++++++++++++++++++++++++++++++++-----
+>   tools/objtool/elf.h     |   7 +-
+>   tools/objtool/orc_gen.c |   2 +-
+>   3 files changed, 135 insertions(+), 20 deletions(-)
+> 
+> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+> index c21e8417637b..5034918494b6 100644
+> --- a/tools/objtool/elf.c
+> +++ b/tools/objtool/elf.c
+> @@ -490,6 +490,32 @@ void elf_add_reloc(struct elf *elf, struct reloc *reloc)
+>   	elf_hash_add(elf->reloc_hash, &reloc->hash, reloc_hash(reloc));
+>   }
+>   
+> +static int read_rel_reloc(struct section *sec, int i, struct reloc *reloc, unsigned int *symndx)
+> +{
+> +	if (!gelf_getrel(sec->data, i, &reloc->rel)) {
+> +		WARN_ELF("gelf_getrel");
+> +		return -1;
+> +	}
+> +	reloc->type = GELF_R_TYPE(reloc->rel.r_info);
+> +	reloc->addend = 0;
+> +	reloc->offset = reloc->rel.r_offset;
+> +	*symndx = GELF_R_SYM(reloc->rel.r_info);
+> +	return 0;
+> +}
+> +
+> +static int read_rela_reloc(struct section *sec, int i, struct reloc *reloc, unsigned int *symndx)
+> +{
+> +	if (!gelf_getrela(sec->data, i, &reloc->rela)) {
+> +		WARN_ELF("gelf_getrela");
+> +		return -1;
+> +	}
+> +	reloc->type = GELF_R_TYPE(reloc->rela.r_info);
+> +	reloc->addend = reloc->rela.r_addend;
+> +	reloc->offset = reloc->rela.r_offset;
+> +	*symndx = GELF_R_SYM(reloc->rela.r_info);
+> +	return 0;
+> +}
+> +
+>   static int read_relocs(struct elf *elf)
+>   {
+>   	struct section *sec;
+> @@ -499,7 +525,8 @@ static int read_relocs(struct elf *elf)
+>   	unsigned long nr_reloc, max_reloc = 0, tot_reloc = 0;
+>   
+>   	list_for_each_entry(sec, &elf->sections, list) {
+> -		if (sec->sh.sh_type != SHT_RELA)
+> +		if ((sec->sh.sh_type != SHT_RELA) &&
+> +		    (sec->sh.sh_type != SHT_REL))
+>   			continue;
+>   
+>   		sec->base = find_section_by_index(elf, sec->sh.sh_info);
+> @@ -519,16 +546,17 @@ static int read_relocs(struct elf *elf)
+>   				return -1;
+>   			}
+>   			memset(reloc, 0, sizeof(*reloc));
+> -
+> -			if (!gelf_getrela(sec->data, i, &reloc->rela)) {
+> -				WARN_ELF("gelf_getrela");
+> -				return -1;
+> +			switch(sec->sh.sh_type) {
+> +			case SHT_REL:
+> +				if (read_rel_reloc(sec, i, reloc, &symndx))
+> +					return -1;
+> +				break;
+> +			case SHT_RELA:
+> +				if (read_rela_reloc(sec, i, reloc, &symndx))
+> +					return -1;
+> +				break;
+> +			default: return -1;
+>   			}
+> -
+> -			reloc->type = GELF_R_TYPE(reloc->rela.r_info);
+> -			reloc->addend = reloc->rela.r_addend;
+> -			reloc->offset = reloc->rela.r_offset;
+> -			symndx = GELF_R_SYM(reloc->rela.r_info);
+>   			reloc->sym = find_symbol_by_index(elf, symndx);
+>   			reloc->sec = sec;
+>   			if (!reloc->sym) {
+> @@ -716,7 +744,38 @@ struct section *elf_create_section(struct elf *elf, const char *name,
+>   	return sec;
+>   }
+>   
+> -struct section *elf_create_reloc_section(struct elf *elf, struct section *base)
+> +static struct section *elf_create_rel_reloc_section(struct elf *elf, struct section *base)
+> +{
+> +	char *relocname;
+> +	struct section *sec;
+> +
+> +	relocname = malloc(strlen(base->name) + strlen(".rel") + 1);
+> +	if (!relocname) {
+> +		perror("malloc");
+> +		return NULL;
+> +	}
+> +	strcpy(relocname, ".rel");
+> +	strcat(relocname, base->name);
+> +
+> +	sec = elf_create_section(elf, relocname, sizeof(GElf_Rel), 0);
+> +	free(relocname);
+> +	if (!sec)
+> +		return NULL;
+> +
+> +	base->reloc = sec;
+> +	sec->base = base;
+> +
+> +	sec->sh.sh_type = SHT_REL;
+> +	sec->sh.sh_addralign = 8;
+> +	sec->sh.sh_link = find_section_by_name(elf, ".symtab")->idx;
+> +	sec->sh.sh_info = base->idx;
+> +	sec->sh.sh_flags = SHF_INFO_LINK;
+> +
+> +	return sec;
+> +}
+> +
+> +
 
-> How would you like to proceed? Should it be submitted for -net as well?
-> 
-> Thanks,
->  Nik
-> 
-> [1] https://lkml.org/lkml/2020/6/1/391
-> 
+Nit: Extra new line.
+
+Otherwise:
+
+Reviewed-by: Julien Thierry <jthierry@redhat.com>
+
+-- 
+Julien Thierry
 
