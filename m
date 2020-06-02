@@ -6,37 +6,38 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DD02068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C31207F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFBMIz (ORCPT
+        id S1727839AbgFBMI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:08:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37342 "EHLO
+        Tue, 2 Jun 2020 08:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgFBMIy (ORCPT
+        with ESMTP id S1726962AbgFBMIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:08:54 -0400
+        Tue, 2 Jun 2020 08:08:55 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A4DC061A0E
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5D5C08C5C0
         for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:08:54 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jg5it-0004cU-Kj; Tue, 02 Jun 2020 14:08:52 +0200
+        id 1jg5iu-0004cV-EQ; Tue, 02 Jun 2020 14:08:52 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id AF234100D32;
-        Tue,  2 Jun 2020 14:08:50 +0200 (CEST)
-Date:   Tue, 02 Jun 2020 12:08:09 -0000
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id ED681100F18;
+        Tue,  2 Jun 2020 14:08:51 +0200 (CEST)
+Date:   Tue, 02 Jun 2020 12:08:10 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq/core for v5.8
-Message-ID: <159109968973.14228.6780339995273133401.tglx@nanos.tec.linutronix.de>
+Subject: [GIT pull] timers/core for v5.8
+References: <159109968973.14228.6780339995273133401.tglx@nanos.tec.linutronix.de>
+Message-ID: <159109969095.14228.4958990874220284812.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -50,2196 +51,1586 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest irq/core branch from:
+please pull the latest timers/core branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-2020-06-02
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-core-2020-06-02
 
-up to:  d77aeb5d403d: irqchip: Fix "Loongson HyperTransport Vector support" driver build on all non-MIPS platforms
+up to:  809eb4e9bf9d: dt-bindings: timer: Add renesas,em-sti bindings
 
-The generic interrupt departement provides:
 
-  - Cleanup of the irq_domain API
-  - Overhaul of the interrupt chip simulator
-  - The usual pile of new interrupt chip drivers
-  - Cleanups, improvements and fixes all over the place
+The truly boring timer and clocksource updates for 5.8:
+
+ - Not a single new clocksource or clockevent driver!
+ 
+ - Device tree updates for various chips
+ - Fixes and improvements and cleanups all over the place
 
 Thanks,
 
 	tglx
 
 ------------------>
-Andy Shevchenko (3):
-      irqdomain: Make __irq_domain_add() less OF-dependent
-      irqdomain: Get rid of special treatment for ACPI in __irq_domain_add()
-      irqdomain: Allow software nodes for IRQ domain creation
+Anson Huang (1):
+      clocksource/drivers/imx-tpm: Add support for ARM64
 
-Anup Patel (3):
-      irqchip/sifive-plic: Set default irq affinity in plic_irqdomain_map()
-      irqchip/sifive-plic: Setup cpuhp once after boot CPU handler is present
-      irqchip/sifive-plic: Improve boot prints for multiple PLIC instances
+Christophe JAILLET (2):
+      clocksource/drivers/davinci: Avoid trailing '\n' hidden in pr_fmt()
+      clocksource: davinci: axe a pointless __GFP_NOFAIL
 
-Bartosz Golaszewski (2):
-      irqdomain: Make irq_domain_reset_irq_data() available to  non-hierarchical users
-      genirq/irq_sim: Simplify the API
+Colin Ian King (1):
+      clocksource/drivers/timer-ti-dm: Fix spelling mistake "detectt" -> "detect"
 
-Dan Carpenter (1):
-      iio: dummy_evgen: Fix use after free on error in iio_dummy_evgen_create()
+Dejin Zheng (2):
+      clocksource/drivers/arc_timer: Remove duplicate error message
+      drivers/clocksource/arm_arch_timer: Remove duplicate error message
 
-Ingo Molnar (1):
-      irqchip: Fix "Loongson HyperTransport Vector support" driver build on all non-MIPS platforms
+Geert Uytterhoeven (1):
+      dt-bindings: timer: Add renesas,em-sti bindings
 
-Ingo Rohloff (1):
-      irqchip/gic-v3: Fix missing "__init" for gic_smp_init()
+Jason Yan (1):
+      clocksource/drivers/atmel-st: Remove useless 'status'
 
-Jiaxun Yang (6):
-      irqchip: Add Loongson HyperTransport Vector support
-      dt-bindings: interrupt-controller: Add Loongson HTVEC
-      irqchip: Add Loongson PCH PIC controller
-      dt-bindings: interrupt-controller: Add Loongson PCH PIC
-      irqchip: Add Loongson PCH MSI controller
-      dt-bindings: interrupt-controller: Add Loongson PCH MSI
+Johan Hovold (1):
+      clocksource/drivers/rda: drop redundant Kconfig dependency
 
-Marc Zyngier (2):
-      irqchip/gic-v3-its: Track LPI distribution on a per CPU basis
-      irqchip/gic-v3-its: Balance initial LPI affinity across CPUs
+Lokesh Vutla (2):
+      ARM: dts: Add 32KHz clock as default clock source
+      clocksource/drivers/timer-ti-dm: Do one override clock parent in prepare()
 
-Marek Vasut (1):
-      genirq: Check irq_data_get_irq_chip() return value before use
+Michael Ellerman (1):
+      clocksource/drivers/timer-microchip-pit64b: Select CONFIG_TIMER_OF
 
-Shaokun Zhang (1):
-      platform-msi: Fix typos in comment
+Paul Burton (1):
+      clocksource: mips-gic-timer: Register as sched_clock
 
-Valentin Schneider (1):
-      irqchip/gic-v2, v3: Drop extra IRQ_NOAUTOEN setting for (E)PPIs
+Rob Herring (1):
+      clocksource/drivers/versatile: Allow CONFIG_CLKSRC_VERSATILE to be disabled
 
-Wesley W. Terpstra (1):
-      irqchip/sifive-plic: Remove incorrect requirement about number of irq contexts
+Saravana Kannan (1):
+      clocksource/drivers/timer-versatile: Clear OF_POPULATED flag
+
+Serge Semin (6):
+      dt-bindings: rtc: Convert snps,dw-apb-timer to DT schema
+      dt-bindings: timer: Move snps,dw-apb-timer DT schema from rtc
+      clocksource: dw_apb_timer: Make CPU-affiliation being optional
+      clocksource: dw_apb_timer: Affiliate of-based timer with any CPU
+      clocksource: dw_apb_timer_of: Fix missing clockevent timers
+      clocksource: mips-gic-timer: Mark GIC timer as unstable if ref clock changes
+
+Tony Lindgren (6):
+      clocksource/drivers/timer-ti-32k: Add support for initializing directly
+      clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support
+      clocksource/drivers/timer-ti-dm: Fix warning for set but not used
+      clocksource/drivers/timer-ti-32k: Add support for initializing directly
+      clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support
+      clocksource/drivers/timer-ti-dm: Fix warning for set but not used
 
 
- .../interrupt-controller/loongson,htvec.yaml       |  57 +++++
- .../interrupt-controller/loongson,pch-msi.yaml     |  62 +++++
- .../interrupt-controller/loongson,pch-pic.yaml     |  56 +++++
- drivers/base/platform-msi.c                        |   2 +-
- drivers/gpio/gpio-mockup.c                         |  53 +++-
- drivers/iio/dummy/iio_dummy_evgen.c                |  31 ++-
- drivers/irqchip/Kconfig                            |  27 +++
- drivers/irqchip/Makefile                           |   3 +
- drivers/irqchip/irq-gic-v3-its.c                   | 170 ++++++++++---
- drivers/irqchip/irq-gic-v3.c                       |   3 +-
- drivers/irqchip/irq-gic.c                          |   1 -
- drivers/irqchip/irq-loongson-htvec.c               | 214 +++++++++++++++++
- drivers/irqchip/irq-loongson-pch-msi.c             | 255 ++++++++++++++++++++
- drivers/irqchip/irq-loongson-pch-pic.c             | 243 +++++++++++++++++++
- drivers/irqchip/irq-sifive-plic.c                  |  23 +-
- include/linux/irq_sim.h                            |  33 +--
- include/linux/irqdomain.h                          |   2 +-
- kernel/irq/Kconfig                                 |   1 +
- kernel/irq/irq_sim.c                               | 267 +++++++++++++--------
- kernel/irq/irqdomain.c                             |  53 ++--
- kernel/irq/manage.c                                |   4 +
- 21 files changed, 1340 insertions(+), 220 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
- create mode 100644 drivers/irqchip/irq-loongson-htvec.c
- create mode 100644 drivers/irqchip/irq-loongson-pch-msi.c
- create mode 100644 drivers/irqchip/irq-loongson-pch-pic.c
+ Documentation/devicetree/bindings/rtc/dw-apb.txt   |  32 -
+ .../devicetree/bindings/timer/renesas,em-sti.yaml  |  46 ++
+ .../bindings/timer/snps,dw-apb-timer.yaml          |  88 +++
+ arch/arm/boot/dts/am335x-guardian.dts              |   1 +
+ arch/arm/boot/dts/am3517-evm.dts                   |   1 +
+ arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi   |   1 +
+ arch/arm/boot/dts/omap3-gta04.dtsi                 |   1 +
+ drivers/clocksource/Kconfig                        |   8 +-
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/arc_timer.c                    |   4 +-
+ drivers/clocksource/arm_arch_timer.c               |   4 +-
+ drivers/clocksource/dw_apb_timer.c                 |   5 +-
+ drivers/clocksource/dw_apb_timer_of.c              |   8 +-
+ drivers/clocksource/mips-gic-timer.c               |  50 +-
+ drivers/clocksource/timer-atmel-st.c               |   3 +-
+ drivers/clocksource/timer-davinci.c                |  24 +-
+ drivers/clocksource/timer-imx-tpm.c                |   8 +-
+ drivers/clocksource/timer-ti-32k.c                 |  48 +-
+ drivers/clocksource/timer-ti-dm-systimer.c         | 727 +++++++++++++++++++++
+ drivers/clocksource/timer-ti-dm.c                  |   4 +-
+ drivers/clocksource/timer-versatile.c              |   3 +
+ 21 files changed, 992 insertions(+), 75 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/dw-apb.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
+ create mode 100644 Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
+ create mode 100644 drivers/clocksource/timer-ti-dm-systimer.c
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+deleted file mode 100644
+index c703d51abb6c..000000000000
+--- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-* Designware APB timer
+-
+-Required properties:
+-- compatible: One of:
+- 	"snps,dw-apb-timer"
+-	"snps,dw-apb-timer-sp" <DEPRECATED>
+-	"snps,dw-apb-timer-osc" <DEPRECATED>
+-- reg: physical base address of the controller and length of memory mapped
+-  region.
+-- interrupts: IRQ line for the timer.
+-- either clocks+clock-names or clock-frequency properties
+-
+-Optional properties:
+-- clocks	: list of clock specifiers, corresponding to entries in
+-		  the clock-names property;
+-- clock-names	: should contain "timer" and "pclk" entries, matching entries
+-		  in the clocks property.
+-- clock-frequency: The frequency in HZ of the timer.
+-- clock-freq: For backwards compatibility with picoxcell
+-
+-If using the clock specifiers, the pclk clock is optional, as not all
+-systems may use one.
+-
+-
+-Example:
+-	timer@ffe00000 {
+-		compatible = "snps,dw-apb-timer";
+-		interrupts = <0 170 4>;
+-		reg = <0xffe00000 0x1000>;
+-		clocks = <&timer_clk>, <&timer_pclk>;
+-		clock-names = "timer", "pclk";
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml b/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
 new file mode 100644
-index 000000000000..e865cd8f96a9
+index 000000000000..233d74d5402c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
-@@ -0,0 +1,57 @@
++++ b/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
+@@ -0,0 +1,46 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,htvec.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/timer/renesas,em-sti.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Loongson-3 HyperTransport Interrupt Vector Controller
++title: Renesas EMMA Mobile System Timer
 +
 +maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description:
-+  This interrupt controller is found in the Loongson-3 family of chips for
-+  receiving vectorized interrupts from PCH's interrupt controller.
++  - Magnus Damm <magnus.damm@gmail.com>
 +
 +properties:
 +  compatible:
-+    const: loongson,htvec-1.0
++    const: renesas,em-sti
 +
 +  reg:
 +    maxItems: 1
 +
 +  interrupts:
-+    minItems: 1
-+    maxItems: 4
-+    description: Four parent interrupts that receive chained interrupts.
++    maxItems: 1
 +
-+  interrupt-controller: true
++  clocks:
++    maxItems: 1
 +
-+  '#interrupt-cells':
-+    const: 1
++  clock-names:
++    const: sclk
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
++  - clocks
++  - clock-names
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    htvec: interrupt-controller@fb000080 {
-+      compatible = "loongson,htvec-1.0";
-+      reg = <0xfb000080 0x40>;
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
-+
-+      interrupt-parent = <&liointc>;
-+      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-+                    <25 IRQ_TYPE_LEVEL_HIGH>,
-+                    <26 IRQ_TYPE_LEVEL_HIGH>,
-+                    <27 IRQ_TYPE_LEVEL_HIGH>;
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    timer@e0180000 {
++            compatible = "renesas,em-sti";
++            reg = <0xe0180000 0x54>;
++            interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&sti_sclk>;
++            clock-names = "sclk";
 +    };
-+...
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+diff --git a/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
 new file mode 100644
-index 000000000000..1a5ebbdd219a
+index 000000000000..5d300efdf0ca
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: GPL-2.0-only
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,pch-msi.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/timer/snps,dw-apb-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Loongson PCH MSI Controller
++title: Synopsys DesignWare APB Timer
 +
 +maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description:
-+  This interrupt controller is found in the Loongson LS7A family of PCH for
-+  transforming interrupts from PCIe MSI into HyperTransport vectorized
-+  interrupts.
++  - Daniel Lezcano <daniel.lezcano@linaro.org>
 +
 +properties:
 +  compatible:
-+    const: loongson,pch-msi-1.0
++    oneOf:
++      - const: snps,dw-apb-timer
++      - enum:
++          - snps,dw-apb-timer-sp
++          - snps,dw-apb-timer-osc
++        deprecated: true
 +
 +  reg:
 +    maxItems: 1
 +
-+  loongson,msi-base-vec:
-+    description:
-+      u32 value of the base of parent HyperTransport vector allocated
-+      to PCH MSI.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+        maximum: 255
-+
-+  loongson,msi-num-vecs:
-+    description:
-+      u32 value of the number of parent HyperTransport vectors allocated
-+      to PCH MSI.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 1
-+        maximum: 256
-+
-+  msi-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - msi-controller
-+  - loongson,msi-base-vec
-+  - loongson,msi-num-vecs
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    msi: msi-controller@2ff00000 {
-+      compatible = "loongson,pch-msi-1.0";
-+      reg = <0x2ff00000 0x4>;
-+      msi-controller;
-+      loongson,msi-base-vec = <64>;
-+      loongson,msi-num-vecs = <64>;
-+      interrupt-parent = <&htvec>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
-new file mode 100644
-index 000000000000..274adea13f33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,pch-pic.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Loongson PCH PIC Controller
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description:
-+  This interrupt controller is found in the Loongson LS7A family of PCH for
-+  transforming interrupts from on-chip devices into HyperTransport vectorized
-+  interrupts.
-+
-+properties:
-+  compatible:
-+    const: loongson,pch-pic-1.0
-+
-+  reg:
++  interrupts:
 +    maxItems: 1
 +
-+  loongson,pic-base-vec:
-+    description:
-+      u32 value of the base of parent HyperTransport vector allocated
-+      to PCH PIC.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+        maximum: 192
++  clocks:
++    minItems: 1
++    items:
++       - description: Timer ticks reference clock source
++       - description: APB interface clock source
 +
-+  interrupt-controller: true
++  clock-names:
++    minItems: 1
++    items:
++      - const: timer
++      - const: pclk
 +
-+  '#interrupt-cells':
-+    const: 2
++  clock-frequency: true
++
++  clock-freq:
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    description: |
++      Has the same meaning as the 'clock-frequency' property - timer clock
++      frequency in HZ, but is defined only for the backwards compatibility
++      with the picoxcell platform.
++
++unevaluatedProperties: false
 +
 +required:
 +  - compatible
 +  - reg
-+  - loongson,pic-base-vec
-+  - interrupt-controller
-+  - '#interrupt-cells'
++  - interrupts
++
++oneOf:
++  - required:
++      - clocks
++      - clock-names
++  - required:
++      - clock-frequency
++  - required:
++      - clock-freq
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    pic: interrupt-controller@10000000 {
-+      compatible = "loongson,pch-pic-1.0";
-+      reg = <0x10000000 0x400>;
-+      interrupt-controller;
-+      #interrupt-cells = <2>;
-+      loongson,pic-base-vec = <64>;
-+      interrupt-parent = <&htvec>;
++    timer@ffe00000 {
++      compatible = "snps,dw-apb-timer";
++      interrupts = <0 170 4>;
++      reg = <0xffe00000 0x1000>;
++      clocks = <&timer_clk>, <&timer_pclk>;
++      clock-names = "timer", "pclk";
++    };
++  - |
++    timer@ffe00000 {
++      compatible = "snps,dw-apb-timer";
++      interrupts = <0 170 4>;
++      reg = <0xffe00000 0x1000>;
++      clocks = <&timer_clk>;
++      clock-names = "timer";
++    };
++  - |
++    timer@ffe00000 {
++      compatible = "snps,dw-apb-timer";
++      interrupts = <0 170 4>;
++      reg = <0xffe00000 0x1000>;
++      clock-frequency = <25000000>;
 +    };
 +...
-diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-index 8da314b81eab..c4a17e5edf8b 100644
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -387,7 +387,7 @@ void platform_msi_domain_free(struct irq_domain *domain, unsigned int virq,
-  *
-  * @domain:	The platform-msi domain
-  * @virq:	The base irq from which to perform the allocate operation
-- * @nvec:	How many interrupts to free from @virq
-+ * @nr_irqs:	How many interrupts to free from @virq
-  *
-  * Return 0 on success, or an error code on failure. Must be called
-  * with irq_domain_mutex held (which can only be done as part of a
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 3eb94f3740d1..bc345185db26 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -14,6 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irq_sim.h>
-+#include <linux/irqdomain.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-@@ -48,7 +49,7 @@ struct gpio_mockup_line_status {
- struct gpio_mockup_chip {
- 	struct gpio_chip gc;
- 	struct gpio_mockup_line_status *lines;
--	struct irq_sim irqsim;
-+	struct irq_domain *irq_sim_domain;
- 	struct dentry *dbg_dir;
- 	struct mutex lock;
+diff --git a/arch/arm/boot/dts/am335x-guardian.dts b/arch/arm/boot/dts/am335x-guardian.dts
+index 81e0f63e94d3..0ebe9e2c150e 100644
+--- a/arch/arm/boot/dts/am335x-guardian.dts
++++ b/arch/arm/boot/dts/am335x-guardian.dts
+@@ -105,6 +105,7 @@
+ 		ti,timers = <&timer7>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&dmtimer7_pins>;
++		ti,clock-source = <0x01>;
+ 	};
+ 
+ 	vmmcsd_fixed: regulator-3v3 {
+diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
+index a1fd3e63e86e..92466b9eb6ba 100644
+--- a/arch/arm/boot/dts/am3517-evm.dts
++++ b/arch/arm/boot/dts/am3517-evm.dts
+@@ -156,6 +156,7 @@
+ 		pinctrl-0 = <&pwm_pins>;
+ 		ti,timers = <&timer11>;
+ 		#pwm-cells = <3>;
++		ti,clock-source = <0x01>;
+ 	};
+ 
+ 	/* HS USB Host PHY on PORT 1 */
+diff --git a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
+index f7b82ced4080..381f0e82bb70 100644
+--- a/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
++++ b/arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi
+@@ -65,6 +65,7 @@
+ 		pinctrl-0 = <&pwm_pins>;
+ 		ti,timers = <&timer10>;
+ 		#pwm-cells = <3>;
++		ti,clock-source = <0x01>;
+ 	};
+ 
  };
-@@ -144,14 +145,12 @@ static void gpio_mockup_set_multiple(struct gpio_chip *gc,
- static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
- 				  unsigned int offset, int value)
- {
-+	int curr, irq, irq_type, ret = 0;
- 	struct gpio_desc *desc;
- 	struct gpio_chip *gc;
--	struct irq_sim *sim;
--	int curr, irq, irq_type;
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 409a758c99f1..ecc45862b4f3 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -150,6 +150,7 @@
+ 		compatible = "ti,omap-dmtimer-pwm";
+ 		ti,timers = <&timer11>;
+ 		#pwm-cells = <3>;
++		ti,clock-source = <0x01>;
+ 	};
  
- 	gc = &chip->gc;
- 	desc = &gc->gpiodev->descs[offset];
--	sim = &chip->irqsim;
+ 	hsusb2_phy: hsusb2_phy {
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index f2142e6bbea3..91418381fcd4 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -120,7 +120,6 @@ config OWL_TIMER
  
- 	mutex_lock(&chip->lock);
- 
-@@ -161,14 +160,28 @@ static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
- 		if (curr == value)
- 			goto out;
- 
--		irq = irq_sim_irqnum(sim, offset);
-+		irq = irq_find_mapping(chip->irq_sim_domain, offset);
-+		if (!irq)
-+			/*
-+			 * This is fine - it just means, nobody is listening
-+			 * for interrupts on this line, otherwise
-+			 * irq_create_mapping() would have been called from
-+			 * the to_irq() callback.
-+			 */
-+			goto set_value;
-+
- 		irq_type = irq_get_trigger_type(irq);
- 
- 		if ((value == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
--		    (value == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
--			irq_sim_fire(sim, offset);
-+		    (value == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING))) {
-+			ret = irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING,
-+						    true);
-+			if (ret)
-+				goto out;
-+		}
- 	}
- 
-+set_value:
- 	/* Change the value unless we're actively driving the line. */
- 	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
- 	    !test_bit(FLAG_IS_OUT, &desc->flags))
-@@ -177,7 +190,7 @@ static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
- out:
- 	chip->lines[offset].pull = value;
- 	mutex_unlock(&chip->lock);
--	return 0;
-+	return ret;
- }
- 
- static int gpio_mockup_set_config(struct gpio_chip *gc,
-@@ -236,7 +249,7 @@ static int gpio_mockup_to_irq(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct gpio_mockup_chip *chip = gpiochip_get_data(gc);
- 
--	return irq_sim_irqnum(&chip->irqsim, offset);
-+	return irq_create_mapping(chip->irq_sim_domain, offset);
- }
- 
- static void gpio_mockup_free(struct gpio_chip *gc, unsigned int offset)
-@@ -389,6 +402,19 @@ static int gpio_mockup_name_lines(struct device *dev,
- 	return 0;
- }
- 
-+static void gpio_mockup_dispose_mappings(void *data)
-+{
-+	struct gpio_mockup_chip *chip = data;
-+	struct gpio_chip *gc = &chip->gc;
-+	int i, irq;
-+
-+	for (i = 0; i < gc->ngpio; i++) {
-+		irq = irq_find_mapping(chip->irq_sim_domain, i);
-+		if (irq)
-+			irq_dispose_mapping(irq);
-+	}
-+}
-+
- static int gpio_mockup_probe(struct platform_device *pdev)
- {
- 	struct gpio_mockup_chip *chip;
-@@ -456,8 +482,13 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 			return rv;
- 	}
- 
--	rv = devm_irq_sim_init(dev, &chip->irqsim, gc->ngpio);
--	if (rv < 0)
-+	chip->irq_sim_domain = devm_irq_domain_create_sim(dev, NULL,
-+							  gc->ngpio);
-+	if (IS_ERR(chip->irq_sim_domain))
-+		return PTR_ERR(chip->irq_sim_domain);
-+
-+	rv = devm_add_action_or_reset(dev, gpio_mockup_dispose_mappings, chip);
-+	if (rv)
- 		return rv;
- 
- 	rv = devm_gpiochip_add_data(dev, &chip->gc, chip);
-diff --git a/drivers/iio/dummy/iio_dummy_evgen.c b/drivers/iio/dummy/iio_dummy_evgen.c
-index a6edf30567aa..ee85d596e528 100644
---- a/drivers/iio/dummy/iio_dummy_evgen.c
-+++ b/drivers/iio/dummy/iio_dummy_evgen.c
-@@ -37,8 +37,7 @@ struct iio_dummy_eventgen {
- 	struct iio_dummy_regs regs[IIO_EVENTGEN_NO];
- 	struct mutex lock;
- 	bool inuse[IIO_EVENTGEN_NO];
--	struct irq_sim irq_sim;
--	int base;
-+	struct irq_domain *irq_sim_domain;
- };
- 
- /* We can only ever have one instance of this 'device' */
-@@ -52,13 +51,14 @@ static int iio_dummy_evgen_create(void)
- 	if (!iio_evgen)
- 		return -ENOMEM;
- 
--	ret = irq_sim_init(&iio_evgen->irq_sim, IIO_EVENTGEN_NO);
--	if (ret < 0) {
-+	iio_evgen->irq_sim_domain = irq_domain_create_sim(NULL,
-+							  IIO_EVENTGEN_NO);
-+	if (IS_ERR(iio_evgen->irq_sim_domain)) {
-+		ret = PTR_ERR(iio_evgen->irq_sim_domain);
- 		kfree(iio_evgen);
- 		return ret;
- 	}
- 
--	iio_evgen->base = irq_sim_irqnum(&iio_evgen->irq_sim, 0);
- 	mutex_init(&iio_evgen->lock);
- 
- 	return 0;
-@@ -80,7 +80,7 @@ int iio_dummy_evgen_get_irq(void)
- 	mutex_lock(&iio_evgen->lock);
- 	for (i = 0; i < IIO_EVENTGEN_NO; i++) {
- 		if (!iio_evgen->inuse[i]) {
--			ret = irq_sim_irqnum(&iio_evgen->irq_sim, i);
-+			ret = irq_create_mapping(iio_evgen->irq_sim_domain, i);
- 			iio_evgen->inuse[i] = true;
- 			break;
- 		}
-@@ -101,21 +101,27 @@ EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_irq);
-  */
- void iio_dummy_evgen_release_irq(int irq)
- {
-+	struct irq_data *irqd = irq_get_irq_data(irq);
-+
- 	mutex_lock(&iio_evgen->lock);
--	iio_evgen->inuse[irq - iio_evgen->base] = false;
-+	iio_evgen->inuse[irqd_to_hwirq(irqd)] = false;
-+	irq_dispose_mapping(irq);
- 	mutex_unlock(&iio_evgen->lock);
- }
- EXPORT_SYMBOL_GPL(iio_dummy_evgen_release_irq);
- 
- struct iio_dummy_regs *iio_dummy_evgen_get_regs(int irq)
- {
--	return &iio_evgen->regs[irq - iio_evgen->base];
-+	struct irq_data *irqd = irq_get_irq_data(irq);
-+
-+	return &iio_evgen->regs[irqd_to_hwirq(irqd)];
-+
- }
- EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_regs);
- 
- static void iio_dummy_evgen_free(void)
- {
--	irq_sim_fini(&iio_evgen->irq_sim);
-+	irq_domain_remove_sim(iio_evgen->irq_sim_domain);
- 	kfree(iio_evgen);
- }
- 
-@@ -131,7 +137,7 @@ static ssize_t iio_evgen_poke(struct device *dev,
- {
- 	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
- 	unsigned long event;
--	int ret;
-+	int ret, irq;
- 
- 	ret = kstrtoul(buf, 10, &event);
- 	if (ret)
-@@ -140,7 +146,10 @@ static ssize_t iio_evgen_poke(struct device *dev,
- 	iio_evgen->regs[this_attr->address].reg_id   = this_attr->address;
- 	iio_evgen->regs[this_attr->address].reg_data = event;
- 
--	irq_sim_fire(&iio_evgen->irq_sim, this_attr->address);
-+	irq = irq_find_mapping(iio_evgen->irq_sim_domain, this_attr->address);
-+	ret = irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
-+	if (ret)
-+		return ret;
- 
- 	return len;
- }
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index a85aada04a64..66b9a68f5e9f 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -532,4 +532,31 @@ config LOONGSON_HTPIC
+ config RDA_TIMER
+ 	bool "RDA timer driver" if COMPILE_TEST
+-	depends on GENERIC_CLOCKEVENTS
+ 	select CLKSRC_MMIO
+ 	select TIMER_OF
  	help
- 	  Support for the Loongson-3 HyperTransport PIC Controller.
+@@ -562,16 +561,16 @@ config CLKSRC_VERSATILE
+ 	bool "ARM Versatile (Express) reference platforms clock source" if COMPILE_TEST
+ 	depends on GENERIC_SCHED_CLOCK && !ARCH_USES_GETTIMEOFFSET
+ 	select TIMER_OF
+-	default y if MFD_VEXPRESS_SYSREG
++	default y if (ARCH_VEXPRESS || ARCH_VERSATILE) && ARM
+ 	help
+ 	  This option enables clock source based on free running
+ 	  counter available in the "System Registers" block of
+-	  ARM Versatile, RealView and Versatile Express reference
+-	  platforms.
++	  ARM Versatile and Versatile Express reference platforms.
  
-+config LOONGSON_HTVEC
-+	bool "Loongson3 HyperTransport Interrupt Vector Controller"
-+	depends on MACH_LOONGSON64
-+	default MACH_LOONGSON64
-+	select IRQ_DOMAIN_HIERARCHY
-+	help
-+	  Support for the Loongson3 HyperTransport Interrupt Vector Controller.
-+
-+config LOONGSON_PCH_PIC
-+	bool "Loongson PCH PIC Controller"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	default MACH_LOONGSON64
-+	select IRQ_DOMAIN_HIERARCHY
-+	select IRQ_FASTEOI_HIERARCHY_HANDLERS
-+	help
-+	  Support for the Loongson PCH PIC Controller.
-+
-+config LOONGSON_PCH_MSI
-+	bool "Loongson PCH PIC Controller"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	depends on PCI
-+	default MACH_LOONGSON64
-+	select IRQ_DOMAIN_HIERARCHY
-+	select PCI_MSI
-+	help
-+	  Support for the Loongson PCH MSI Controller.
-+
- endmenu
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 37bbe39bf909..3a4ce283189a 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -107,3 +107,6 @@ obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-+obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
-+obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
-+obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 124251b0ccba..cd685f521c77 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -174,6 +174,13 @@ static struct {
- 	int			next_victim;
- } vpe_proxy;
+ config CLKSRC_MIPS_GIC
+ 	bool
+ 	depends on MIPS_GIC
++	select CLOCKSOURCE_WATCHDOG
+ 	select TIMER_OF
  
-+struct cpu_lpi_count {
-+	atomic_t	managed;
-+	atomic_t	unmanaged;
-+};
-+
-+static DEFINE_PER_CPU(struct cpu_lpi_count, cpu_lpi_count);
-+
- static LIST_HEAD(its_nodes);
- static DEFINE_RAW_SPINLOCK(its_lock);
- static struct rdists *gic_rdists;
-@@ -1510,42 +1517,159 @@ static void its_unmask_irq(struct irq_data *d)
- 	lpi_update_config(d, 0, LPI_PROP_ENABLED);
- }
- 
-+static __maybe_unused u32 its_read_lpi_count(struct irq_data *d, int cpu)
-+{
-+	if (irqd_affinity_is_managed(d))
-+		return atomic_read(&per_cpu_ptr(&cpu_lpi_count, cpu)->managed);
-+
-+	return atomic_read(&per_cpu_ptr(&cpu_lpi_count, cpu)->unmanaged);
-+}
-+
-+static void its_inc_lpi_count(struct irq_data *d, int cpu)
-+{
-+	if (irqd_affinity_is_managed(d))
-+		atomic_inc(&per_cpu_ptr(&cpu_lpi_count, cpu)->managed);
-+	else
-+		atomic_inc(&per_cpu_ptr(&cpu_lpi_count, cpu)->unmanaged);
-+}
-+
-+static void its_dec_lpi_count(struct irq_data *d, int cpu)
-+{
-+	if (irqd_affinity_is_managed(d))
-+		atomic_dec(&per_cpu_ptr(&cpu_lpi_count, cpu)->managed);
-+	else
-+		atomic_dec(&per_cpu_ptr(&cpu_lpi_count, cpu)->unmanaged);
-+}
-+
-+static unsigned int cpumask_pick_least_loaded(struct irq_data *d,
-+					      const struct cpumask *cpu_mask)
-+{
-+	unsigned int cpu = nr_cpu_ids, tmp;
-+	int count = S32_MAX;
-+
-+	for_each_cpu(tmp, cpu_mask) {
-+		int this_count = its_read_lpi_count(d, tmp);
-+		if (this_count < count) {
-+			cpu = tmp;
-+		        count = this_count;
-+		}
-+	}
-+
-+	return cpu;
-+}
-+
-+/*
-+ * As suggested by Thomas Gleixner in:
-+ * https://lore.kernel.org/r/87h80q2aoc.fsf@nanos.tec.linutronix.de
-+ */
-+static int its_select_cpu(struct irq_data *d,
-+			  const struct cpumask *aff_mask)
-+{
-+	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-+	cpumask_var_t tmpmask;
-+	int cpu, node;
-+
-+	if (!alloc_cpumask_var(&tmpmask, GFP_ATOMIC))
-+		return -ENOMEM;
-+
-+	node = its_dev->its->numa_node;
-+
-+	if (!irqd_affinity_is_managed(d)) {
-+		/* First try the NUMA node */
-+		if (node != NUMA_NO_NODE) {
-+			/*
-+			 * Try the intersection of the affinity mask and the
-+			 * node mask (and the online mask, just to be safe).
-+			 */
-+			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
-+			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
-+
-+			/*
-+			 * Ideally, we would check if the mask is empty, and
-+			 * try again on the full node here.
-+			 *
-+			 * But it turns out that the way ACPI describes the
-+			 * affinity for ITSs only deals about memory, and
-+			 * not target CPUs, so it cannot describe a single
-+			 * ITS placed next to two NUMA nodes.
-+			 *
-+			 * Instead, just fallback on the online mask. This
-+			 * diverges from Thomas' suggestion above.
-+			 */
-+			cpu = cpumask_pick_least_loaded(d, tmpmask);
-+			if (cpu < nr_cpu_ids)
-+				goto out;
-+
-+			/* If we can't cross sockets, give up */
-+			if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144))
-+				goto out;
-+
-+			/* If the above failed, expand the search */
-+		}
-+
-+		/* Try the intersection of the affinity and online masks */
-+		cpumask_and(tmpmask, aff_mask, cpu_online_mask);
-+
-+		/* If that doesn't fly, the online mask is the last resort */
-+		if (cpumask_empty(tmpmask))
-+			cpumask_copy(tmpmask, cpu_online_mask);
-+
-+		cpu = cpumask_pick_least_loaded(d, tmpmask);
-+	} else {
-+		cpumask_and(tmpmask, irq_data_get_affinity_mask(d), cpu_online_mask);
-+
-+		/* If we cannot cross sockets, limit the search to that node */
-+		if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) &&
-+		    node != NUMA_NO_NODE)
-+			cpumask_and(tmpmask, tmpmask, cpumask_of_node(node));
-+
-+		cpu = cpumask_pick_least_loaded(d, tmpmask);
-+	}
-+out:
-+	free_cpumask_var(tmpmask);
-+
-+	pr_debug("IRQ%d -> %*pbl CPU%d\n", d->irq, cpumask_pr_args(aff_mask), cpu);
-+	return cpu;
-+}
-+
- static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 			    bool force)
- {
--	unsigned int cpu;
--	const struct cpumask *cpu_mask = cpu_online_mask;
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	struct its_collection *target_col;
- 	u32 id = its_get_event_id(d);
-+	int cpu, prev_cpu;
- 
- 	/* A forwarded interrupt should use irq_set_vcpu_affinity */
- 	if (irqd_is_forwarded_to_vcpu(d))
- 		return -EINVAL;
- 
--       /* lpi cannot be routed to a redistributor that is on a foreign node */
--	if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
--		if (its_dev->its->numa_node >= 0) {
--			cpu_mask = cpumask_of_node(its_dev->its->numa_node);
--			if (!cpumask_intersects(mask_val, cpu_mask))
--				return -EINVAL;
--		}
--	}
-+	prev_cpu = its_dev->event_map.col_map[id];
-+	its_dec_lpi_count(d, prev_cpu);
- 
--	cpu = cpumask_any_and(mask_val, cpu_mask);
-+	if (!force)
-+		cpu = its_select_cpu(d, mask_val);
-+	else
-+		cpu = cpumask_pick_least_loaded(d, mask_val);
- 
--	if (cpu >= nr_cpu_ids)
--		return -EINVAL;
-+	if (cpu < 0 || cpu >= nr_cpu_ids)
-+		goto err;
- 
- 	/* don't set the affinity when the target cpu is same as current one */
--	if (cpu != its_dev->event_map.col_map[id]) {
-+	if (cpu != prev_cpu) {
- 		target_col = &its_dev->its->collections[cpu];
- 		its_send_movi(its_dev, target_col, id);
- 		its_dev->event_map.col_map[id] = cpu;
- 		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ config CLKSRC_TANGO_XTAL
+@@ -709,6 +708,7 @@ config MICROCHIP_PIT64B
+ 	bool "Microchip PIT64B support"
+ 	depends on OF || COMPILE_TEST
+ 	select CLKSRC_MMIO
++	select TIMER_OF
+ 	help
+ 	  This option enables Microchip PIT64B timer for Atmel
+ 	  based system. It supports the oneshot, the periodic
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 641ba5383ab5..bdda1a2e4097 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
+ obj-$(CONFIG_DAVINCI_TIMER)	+= timer-davinci.o
+ obj-$(CONFIG_DIGICOLOR_TIMER)	+= timer-digicolor.o
+ obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm.o
++obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm-systimer.o
+ obj-$(CONFIG_DW_APB_TIMER)	+= dw_apb_timer.o
+ obj-$(CONFIG_DW_APB_TIMER_OF)	+= dw_apb_timer_of.o
+ obj-$(CONFIG_FTTMR010_TIMER)	+= timer-fttmr010.o
+diff --git a/drivers/clocksource/arc_timer.c b/drivers/clocksource/arc_timer.c
+index b29b5a75333e..de93dd1a8c7b 100644
+--- a/drivers/clocksource/arc_timer.c
++++ b/drivers/clocksource/arc_timer.c
+@@ -334,10 +334,8 @@ static int __init arc_clockevent_setup(struct device_node *node)
  	}
  
-+	its_inc_lpi_count(d, cpu);
-+
- 	return IRQ_SET_MASK_OK_DONE;
-+
-+err:
-+	its_inc_lpi_count(d, prev_cpu);
-+	return -EINVAL;
- }
- 
- static u64 its_irq_get_msi_base(struct its_device *its_dev)
-@@ -3432,22 +3556,13 @@ static int its_irq_domain_activate(struct irq_domain *domain,
- {
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	u32 event = its_get_event_id(d);
--	const struct cpumask *cpu_mask = cpu_online_mask;
- 	int cpu;
- 
--	/* get the cpu_mask of local node */
--	if (its_dev->its->numa_node >= 0)
--		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
--
--	/* Bind the LPI to the first possible CPU */
--	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
--	if (cpu >= nr_cpu_ids) {
--		if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144)
--			return -EINVAL;
--
--		cpu = cpumask_first(cpu_online_mask);
+ 	ret = arc_get_timer_clk(node);
+-	if (ret) {
+-		pr_err("clockevent: missing clk\n");
++	if (ret)
+ 		return ret;
 -	}
-+	cpu = its_select_cpu(d, cpu_online_mask);
-+	if (cpu < 0 || cpu >= nr_cpu_ids)
-+		return -EINVAL;
  
-+	its_inc_lpi_count(d, cpu);
- 	its_dev->event_map.col_map[event] = cpu;
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 	/* Needs apriori irq_set_percpu_devid() done in intc map function */
+ 	ret = request_percpu_irq(arc_timer_irq, timer_irq_handler,
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 2204a444e801..ecf7b7db2d05 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -1588,10 +1588,8 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+ 	arch_timers_present |= ARCH_TIMER_TYPE_CP15;
  
-@@ -3462,6 +3577,7 @@ static void its_irq_domain_deactivate(struct irq_domain *domain,
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	u32 event = its_get_event_id(d);
+ 	ret = acpi_gtdt_init(table, &platform_timer_count);
+-	if (ret) {
+-		pr_err("Failed to init GTDT table.\n");
++	if (ret)
+ 		return ret;
+-	}
  
-+	its_dec_lpi_count(d, its_dev->event_map.col_map[event]);
- 	/* Stop the delivery of interrupts */
- 	its_send_discard(its_dev, event);
- }
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index d7006ef18a0d..cc46bc2d634b 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1150,7 +1150,7 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	isb();
- }
+ 	arch_timer_ppi[ARCH_TIMER_PHYS_NONSECURE_PPI] =
+ 		acpi_gtdt_map_ppi(ARCH_TIMER_PHYS_NONSECURE_PPI);
+diff --git a/drivers/clocksource/dw_apb_timer.c b/drivers/clocksource/dw_apb_timer.c
+index b207a77b0831..f5f24a95ee82 100644
+--- a/drivers/clocksource/dw_apb_timer.c
++++ b/drivers/clocksource/dw_apb_timer.c
+@@ -222,7 +222,8 @@ static int apbt_next_event(unsigned long delta,
+ /**
+  * dw_apb_clockevent_init() - use an APB timer as a clock_event_device
+  *
+- * @cpu:	The CPU the events will be targeted at.
++ * @cpu:	The CPU the events will be targeted at or -1 if CPU affiliation
++ *		isn't required.
+  * @name:	The name used for the timer and the IRQ for it.
+  * @rating:	The rating to give the timer.
+  * @base:	I/O base for the timer registers.
+@@ -257,7 +258,7 @@ dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
+ 	dw_ced->ced.max_delta_ticks = 0x7fffffff;
+ 	dw_ced->ced.min_delta_ns = clockevent_delta2ns(5000, &dw_ced->ced);
+ 	dw_ced->ced.min_delta_ticks = 5000;
+-	dw_ced->ced.cpumask = cpumask_of(cpu);
++	dw_ced->ced.cpumask = cpu < 0 ? cpu_possible_mask : cpumask_of(cpu);
+ 	dw_ced->ced.features = CLOCK_EVT_FEAT_PERIODIC |
+ 				CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
+ 	dw_ced->ced.set_state_shutdown = apbt_shutdown;
+diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
+index 8c28b127759f..ab3ddebe8344 100644
+--- a/drivers/clocksource/dw_apb_timer_of.c
++++ b/drivers/clocksource/dw_apb_timer_of.c
+@@ -73,7 +73,7 @@ static void __init add_clockevent(struct device_node *event_timer)
  
--static void gic_smp_init(void)
-+static void __init gic_smp_init(void)
+ 	timer_get_base_and_rate(event_timer, &iobase, &rate);
+ 
+-	ced = dw_apb_clockevent_init(0, event_timer->name, 300, iobase, irq,
++	ced = dw_apb_clockevent_init(-1, event_timer->name, 300, iobase, irq,
+ 				     rate);
+ 	if (!ced)
+ 		panic("Unable to initialise clockevent device");
+@@ -147,10 +147,6 @@ static int num_called;
+ static int __init dw_apb_timer_init(struct device_node *timer)
  {
- 	set_smp_cross_call(gic_raise_softirq);
- 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
-@@ -1282,7 +1282,6 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		irq_set_percpu_devid(irq);
- 		irq_domain_set_info(d, irq, hw, chip, d->host_data,
- 				    handle_percpu_devid_irq, NULL, NULL);
--		irq_set_status_flags(irq, IRQ_NOAUTOEN);
+ 	switch (num_called) {
+-	case 0:
+-		pr_debug("%s: found clockevent timer\n", __func__);
+-		add_clockevent(timer);
+-		break;
+ 	case 1:
+ 		pr_debug("%s: found clocksource timer\n", __func__);
+ 		add_clocksource(timer);
+@@ -161,6 +157,8 @@ static int __init dw_apb_timer_init(struct device_node *timer)
+ #endif
  		break;
+ 	default:
++		pr_debug("%s: found clockevent timer\n", __func__);
++		add_clockevent(timer);
+ 		break;
+ 	}
  
- 	case SPI_RANGE:
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 30ab623343d3..00de05abd3c3 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -982,7 +982,6 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		irq_set_percpu_devid(irq);
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_percpu_devid_irq, NULL, NULL);
--		irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 	} else {
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_fasteoi_irq, NULL, NULL);
-diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index 8b5f8ae723cb..be4175f415ba 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -16,6 +16,7 @@
+ #include <linux/notifier.h>
+ #include <linux/of_irq.h>
+ #include <linux/percpu.h>
++#include <linux/sched_clock.h>
+ #include <linux/smp.h>
+ #include <linux/time.h>
+ #include <asm/mips-cps.h>
+@@ -23,14 +24,14 @@
+ static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
+ static int gic_timer_irq;
+ static unsigned int gic_frequency;
++static bool __read_mostly gic_clock_unstable;
+ 
+-static u64 notrace gic_read_count(void)
++static void gic_clocksource_unstable(char *reason);
++
++static u64 notrace gic_read_count_2x32(void)
+ {
+ 	unsigned int hi, hi2, lo;
+ 
+-	if (mips_cm_is64)
+-		return read_gic_counter();
+-
+ 	do {
+ 		hi = read_gic_counter_32h();
+ 		lo = read_gic_counter_32l();
+@@ -40,6 +41,19 @@ static u64 notrace gic_read_count(void)
+ 	return (((u64) hi) << 32) + lo;
+ }
+ 
++static u64 notrace gic_read_count_64(void)
++{
++	return read_gic_counter();
++}
++
++static u64 notrace gic_read_count(void)
++{
++	if (mips_cm_is64)
++		return gic_read_count_64();
++
++	return gic_read_count_2x32();
++}
++
+ static int gic_next_event(unsigned long delta, struct clock_event_device *evt)
+ {
+ 	int cpu = cpumask_first(evt->cpumask);
+@@ -114,8 +128,10 @@ static int gic_clk_notifier(struct notifier_block *nb, unsigned long action,
+ {
+ 	struct clk_notifier_data *cnd = data;
+ 
+-	if (action == POST_RATE_CHANGE)
++	if (action == POST_RATE_CHANGE) {
++		gic_clocksource_unstable("ref clock rate change");
+ 		on_each_cpu(gic_update_frequency, (void *)cnd->new_rate, 1);
++	}
+ 
+ 	return NOTIFY_OK;
+ }
+@@ -161,6 +177,18 @@ static struct clocksource gic_clocksource = {
+ 	.vdso_clock_mode	= VDSO_CLOCKMODE_GIC,
+ };
+ 
++static void gic_clocksource_unstable(char *reason)
++{
++	if (gic_clock_unstable)
++		return;
++
++	gic_clock_unstable = true;
++
++	pr_info("GIC timer is unstable due to %s\n", reason);
++
++	clocksource_mark_unstable(&gic_clocksource);
++}
++
+ static int __init __gic_clocksource_init(void)
+ {
+ 	unsigned int count_width;
+@@ -228,6 +256,18 @@ static int __init gic_clocksource_of_init(struct device_node *node)
+ 	/* And finally start the counter */
+ 	clear_gic_config(GIC_CONFIG_COUNTSTOP);
+ 
++	/*
++	 * It's safe to use the MIPS GIC timer as a sched clock source only if
++	 * its ticks are stable, which is true on either the platforms with
++	 * stable CPU frequency or on the platforms with CM3 and CPU frequency
++	 * change performed by the CPC core clocks divider.
++	 */
++	if (mips_cm_revision() >= CM_REV_CM3 || !IS_ENABLED(CONFIG_CPU_FREQ)) {
++		sched_clock_register(mips_cm_is64 ?
++				     gic_read_count_64 : gic_read_count_2x32,
++				     64, gic_frequency);
++	}
++
+ 	return 0;
+ }
+ TIMER_OF_DECLARE(mips_gic_timer, "mti,gic-timer",
+diff --git a/drivers/clocksource/timer-atmel-st.c b/drivers/clocksource/timer-atmel-st.c
+index ab0aabfae5f0..73e8aee445da 100644
+--- a/drivers/clocksource/timer-atmel-st.c
++++ b/drivers/clocksource/timer-atmel-st.c
+@@ -139,7 +139,6 @@ static int
+ clkevt32k_next_event(unsigned long delta, struct clock_event_device *dev)
+ {
+ 	u32		alm;
+-	int		status = 0;
+ 	unsigned int	val;
+ 
+ 	BUG_ON(delta < 2);
+@@ -163,7 +162,7 @@ clkevt32k_next_event(unsigned long delta, struct clock_event_device *dev)
+ 	alm += delta;
+ 	regmap_write(regmap_st, AT91_ST_RTAR, alm);
+ 
+-	return status;
++	return 0;
+ }
+ 
+ static struct clock_event_device clkevt = {
+diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
+index e421946a91c5..bb4eee31ae08 100644
+--- a/drivers/clocksource/timer-davinci.c
++++ b/drivers/clocksource/timer-davinci.c
+@@ -18,7 +18,7 @@
+ #include <clocksource/timer-davinci.h>
+ 
+ #undef pr_fmt
+-#define pr_fmt(fmt) "%s: " fmt "\n", __func__
++#define pr_fmt(fmt) "%s: " fmt, __func__
+ 
+ #define DAVINCI_TIMER_REG_TIM12			0x10
+ #define DAVINCI_TIMER_REG_TIM34			0x14
+@@ -250,31 +250,29 @@ int __init davinci_timer_register(struct clk *clk,
+ 
+ 	rv = clk_prepare_enable(clk);
+ 	if (rv) {
+-		pr_err("Unable to prepare and enable the timer clock");
++		pr_err("Unable to prepare and enable the timer clock\n");
+ 		return rv;
+ 	}
+ 
+ 	if (!request_mem_region(timer_cfg->reg.start,
+ 				resource_size(&timer_cfg->reg),
+ 				"davinci-timer")) {
+-		pr_err("Unable to request memory region");
++		pr_err("Unable to request memory region\n");
+ 		return -EBUSY;
+ 	}
+ 
+ 	base = ioremap(timer_cfg->reg.start, resource_size(&timer_cfg->reg));
+ 	if (!base) {
+-		pr_err("Unable to map the register range");
++		pr_err("Unable to map the register range\n");
+ 		return -ENOMEM;
+ 	}
+ 
+ 	davinci_timer_init(base);
+ 	tick_rate = clk_get_rate(clk);
+ 
+-	clockevent = kzalloc(sizeof(*clockevent), GFP_KERNEL | __GFP_NOFAIL);
+-	if (!clockevent) {
+-		pr_err("Error allocating memory for clockevent data");
++	clockevent = kzalloc(sizeof(*clockevent), GFP_KERNEL);
++	if (!clockevent)
+ 		return -ENOMEM;
+-	}
+ 
+ 	clockevent->dev.name = "tim12";
+ 	clockevent->dev.features = CLOCK_EVT_FEAT_ONESHOT;
+@@ -298,7 +296,7 @@ int __init davinci_timer_register(struct clk *clk,
+ 			 davinci_timer_irq_timer, IRQF_TIMER,
+ 			 "clockevent/tim12", clockevent);
+ 	if (rv) {
+-		pr_err("Unable to request the clockevent interrupt");
++		pr_err("Unable to request the clockevent interrupt\n");
+ 		return rv;
+ 	}
+ 
+@@ -325,7 +323,7 @@ int __init davinci_timer_register(struct clk *clk,
+ 
+ 	rv = clocksource_register_hz(&davinci_clocksource.dev, tick_rate);
+ 	if (rv) {
+-		pr_err("Unable to register clocksource");
++		pr_err("Unable to register clocksource\n");
+ 		return rv;
+ 	}
+ 
+@@ -343,20 +341,20 @@ static int __init of_davinci_timer_register(struct device_node *np)
+ 
+ 	rv = of_address_to_resource(np, 0, &timer_cfg.reg);
+ 	if (rv) {
+-		pr_err("Unable to get the register range for timer");
++		pr_err("Unable to get the register range for timer\n");
+ 		return rv;
+ 	}
+ 
+ 	rv = of_irq_to_resource_table(np, timer_cfg.irq,
+ 				      DAVINCI_TIMER_NUM_IRQS);
+ 	if (rv != DAVINCI_TIMER_NUM_IRQS) {
+-		pr_err("Unable to get the interrupts for timer");
++		pr_err("Unable to get the interrupts for timer\n");
+ 		return rv;
+ 	}
+ 
+ 	clk = of_clk_get(np, 0);
+ 	if (IS_ERR(clk)) {
+-		pr_err("Unable to get the timer clock");
++		pr_err("Unable to get the timer clock\n");
+ 		return PTR_ERR(clk);
+ 	}
+ 
+diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
+index 6334a35fdc2f..2cdc077a39f5 100644
+--- a/drivers/clocksource/timer-imx-tpm.c
++++ b/drivers/clocksource/timer-imx-tpm.c
+@@ -61,17 +61,19 @@ static inline void tpm_irq_acknowledge(void)
+ 	writel(TPM_STATUS_CH0F, timer_base + TPM_STATUS);
+ }
+ 
+-static struct delay_timer tpm_delay_timer;
+-
+ static inline unsigned long tpm_read_counter(void)
+ {
+ 	return readl(timer_base + TPM_CNT);
+ }
+ 
++#if defined(CONFIG_ARM)
++static struct delay_timer tpm_delay_timer;
++
+ static unsigned long tpm_read_current_timer(void)
+ {
+ 	return tpm_read_counter();
+ }
++#endif
+ 
+ static u64 notrace tpm_read_sched_clock(void)
+ {
+@@ -144,9 +146,11 @@ static struct timer_of to_tpm = {
+ 
+ static int __init tpm_clocksource_init(void)
+ {
++#if defined(CONFIG_ARM)
+ 	tpm_delay_timer.read_current_timer = &tpm_read_current_timer;
+ 	tpm_delay_timer.freq = timer_of_rate(&to_tpm) >> 3;
+ 	register_current_timer_delay(&tpm_delay_timer);
++#endif
+ 
+ 	sched_clock_register(tpm_read_sched_clock, counter_width,
+ 			     timer_of_rate(&to_tpm) >> 3);
+diff --git a/drivers/clocksource/timer-ti-32k.c b/drivers/clocksource/timer-ti-32k.c
+index abd5f158d6e2..ae12bbf3d68c 100644
+--- a/drivers/clocksource/timer-ti-32k.c
++++ b/drivers/clocksource/timer-ti-32k.c
+@@ -24,6 +24,7 @@
+  * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/time.h>
+ #include <linux/sched_clock.h>
+@@ -76,6 +77,49 @@ static u64 notrace omap_32k_read_sched_clock(void)
+ 	return ti_32k_read_cycles(&ti_32k_timer.cs);
+ }
+ 
++static void __init ti_32k_timer_enable_clock(struct device_node *np,
++					     const char *name)
++{
++	struct clk *clock;
++	int error;
++
++	clock = of_clk_get_by_name(np->parent, name);
++	if (IS_ERR(clock)) {
++		/* Only some SoCs have a separate interface clock */
++		if (PTR_ERR(clock) == -EINVAL && !strncmp("ick", name, 3))
++			return;
++
++		pr_warn("%s: could not get clock %s %li\n",
++			__func__, name, PTR_ERR(clock));
++		return;
++	}
++
++	error = clk_prepare_enable(clock);
++	if (error) {
++		pr_warn("%s: could not enable %s: %i\n",
++			__func__, name, error);
++		return;
++	}
++}
++
++static void __init ti_32k_timer_module_init(struct device_node *np,
++					    void __iomem *base)
++{
++	void __iomem *sysc = base + 4;
++
++	if (!of_device_is_compatible(np->parent, "ti,sysc"))
++		return;
++
++	ti_32k_timer_enable_clock(np, "fck");
++	ti_32k_timer_enable_clock(np, "ick");
++
++	/*
++	 * Force idle module as wkup domain is active with MPU.
++	 * No need to tag the module disabled for ti-sysc probe.
++	 */
++	writel_relaxed(0, sysc);
++}
++
+ static int __init ti_32k_timer_init(struct device_node *np)
+ {
+ 	int ret;
+@@ -90,6 +134,7 @@ static int __init ti_32k_timer_init(struct device_node *np)
+ 		ti_32k_timer.cs.flags |= CLOCK_SOURCE_SUSPEND_NONSTOP;
+ 
+ 	ti_32k_timer.counter = ti_32k_timer.base;
++	ti_32k_timer_module_init(np, ti_32k_timer.base);
+ 
+ 	/*
+ 	 * 32k sync Counter IP register offsets vary between the highlander
+@@ -104,6 +149,8 @@ static int __init ti_32k_timer_init(struct device_node *np)
+ 	else
+ 		ti_32k_timer.counter += OMAP2_32KSYNCNT_CR_OFF_LOW;
+ 
++	pr_info("OMAP clocksource: 32k_counter at 32768 Hz\n");
++
+ 	ret = clocksource_register_hz(&ti_32k_timer.cs, 32768);
+ 	if (ret) {
+ 		pr_err("32k_counter: can't register clocksource\n");
+@@ -111,7 +158,6 @@ static int __init ti_32k_timer_init(struct device_node *np)
+ 	}
+ 
+ 	sched_clock_register(omap_32k_read_sched_clock, 32, 32768);
+-	pr_info("OMAP clocksource: 32k_counter at 32768 Hz\n");
+ 
+ 	return 0;
+ }
+diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
 new file mode 100644
-index 000000000000..1ece9337c78d
+index 000000000000..6fd1f219a512
 --- /dev/null
-+++ b/drivers/irqchip/irq-loongson-htvec.c
-@@ -0,0 +1,214 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson HyperTransport Interrupt Vector support
-+ */
-+
-+#define pr_fmt(fmt) "htvec: " fmt
-+
++++ b/drivers/clocksource/timer-ti-dm-systimer.c
+@@ -0,0 +1,727 @@
++// SPDX-License-Identifier: GPL-2.0+
++#include <linux/clk.h>
++#include <linux/clocksource.h>
++#include <linux/clockchips.h>
 +#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+
-+/* Registers */
-+#define HTVEC_EN_OFF		0x20
-+#define HTVEC_MAX_PARENT_IRQ	4
-+
-+#define VEC_COUNT_PER_REG	32
-+#define VEC_REG_COUNT		4
-+#define VEC_COUNT		(VEC_COUNT_PER_REG * VEC_REG_COUNT)
-+#define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
-+#define VEC_REG_BIT(irq_id)	((irq_id) % VEC_COUNT_PER_REG)
-+
-+struct htvec {
-+	void __iomem		*base;
-+	struct irq_domain	*htvec_domain;
-+	raw_spinlock_t		htvec_lock;
-+};
-+
-+static void htvec_irq_dispatch(struct irq_desc *desc)
-+{
-+	int i;
-+	u32 pending;
-+	bool handled = false;
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct htvec *priv = irq_desc_get_handler_data(desc);
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for (i = 0; i < VEC_REG_COUNT; i++) {
-+		pending = readl(priv->base + 4 * i);
-+		while (pending) {
-+			int bit = __ffs(pending);
-+
-+			generic_handle_irq(irq_linear_revmap(priv->htvec_domain, bit +
-+							     VEC_COUNT_PER_REG * i));
-+			pending &= ~BIT(bit);
-+			handled = true;
-+		}
-+	}
-+
-+	if (!handled)
-+		spurious_interrupt();
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void htvec_ack_irq(struct irq_data *d)
-+{
-+	struct htvec *priv = irq_data_get_irq_chip_data(d);
-+
-+	writel(BIT(VEC_REG_BIT(d->hwirq)),
-+	       priv->base + VEC_REG_IDX(d->hwirq) * 4);
-+}
-+
-+static void htvec_mask_irq(struct irq_data *d)
-+{
-+	u32 reg;
-+	void __iomem *addr;
-+	struct htvec *priv = irq_data_get_irq_chip_data(d);
-+
-+	raw_spin_lock(&priv->htvec_lock);
-+	addr = priv->base + HTVEC_EN_OFF;
-+	addr += VEC_REG_IDX(d->hwirq) * 4;
-+	reg = readl(addr);
-+	reg &= ~BIT(VEC_REG_BIT(d->hwirq));
-+	writel(reg, addr);
-+	raw_spin_unlock(&priv->htvec_lock);
-+}
-+
-+static void htvec_unmask_irq(struct irq_data *d)
-+{
-+	u32 reg;
-+	void __iomem *addr;
-+	struct htvec *priv = irq_data_get_irq_chip_data(d);
-+
-+	raw_spin_lock(&priv->htvec_lock);
-+	addr = priv->base + HTVEC_EN_OFF;
-+	addr += VEC_REG_IDX(d->hwirq) * 4;
-+	reg = readl(addr);
-+	reg |= BIT(VEC_REG_BIT(d->hwirq));
-+	writel(reg, addr);
-+	raw_spin_unlock(&priv->htvec_lock);
-+}
-+
-+static struct irq_chip htvec_irq_chip = {
-+	.name			= "LOONGSON_HTVEC",
-+	.irq_mask		= htvec_mask_irq,
-+	.irq_unmask		= htvec_unmask_irq,
-+	.irq_ack		= htvec_ack_irq,
-+};
-+
-+static int htvec_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+			      unsigned int nr_irqs, void *arg)
-+{
-+	unsigned long hwirq;
-+	unsigned int type, i;
-+	struct htvec *priv = domain->host_data;
-+
-+	irq_domain_translate_onecell(domain, arg, &hwirq, &type);
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		irq_domain_set_info(domain, virq + i, hwirq + i, &htvec_irq_chip,
-+				    priv, handle_edge_irq, NULL, NULL);
-+	}
-+
-+	return 0;
-+}
-+
-+static void htvec_domain_free(struct irq_domain *domain, unsigned int virq,
-+				  unsigned int nr_irqs)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct irq_data *d = irq_domain_get_irq_data(domain, virq + i);
-+
-+		irq_set_handler(virq + i, NULL);
-+		irq_domain_reset_irq_data(d);
-+	}
-+}
-+
-+static const struct irq_domain_ops htvec_domain_ops = {
-+	.translate	= irq_domain_translate_onecell,
-+	.alloc		= htvec_domain_alloc,
-+	.free		= htvec_domain_free,
-+};
-+
-+static void htvec_reset(struct htvec *priv)
-+{
-+	u32 idx;
-+
-+	/* Clear IRQ cause registers, mask all interrupts */
-+	for (idx = 0; idx < VEC_REG_COUNT; idx++) {
-+		writel_relaxed(0x0, priv->base + HTVEC_EN_OFF + 4 * idx);
-+		writel_relaxed(0xFFFFFFFF, priv->base);
-+	}
-+}
-+
-+static int htvec_of_init(struct device_node *node,
-+				struct device_node *parent)
-+{
-+	struct htvec *priv;
-+	int err, parent_irq[4], num_parents = 0, i;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	raw_spin_lock_init(&priv->htvec_lock);
-+	priv->base = of_iomap(node, 0);
-+	if (!priv->base) {
-+		err = -ENOMEM;
-+		goto free_priv;
-+	}
-+
-+	/* Interrupt may come from any of the 4 interrupt line */
-+	for (i = 0; i < HTVEC_MAX_PARENT_IRQ; i++) {
-+		parent_irq[i] = irq_of_parse_and_map(node, i);
-+		if (parent_irq[i] <= 0)
-+			break;
-+
-+		num_parents++;
-+	}
-+
-+	if (!num_parents) {
-+		pr_err("Failed to get parent irqs\n");
-+		err = -ENODEV;
-+		goto iounmap_base;
-+	}
-+
-+	priv->htvec_domain = irq_domain_create_linear(of_node_to_fwnode(node),
-+						      VEC_COUNT,
-+						      &htvec_domain_ops,
-+						      priv);
-+	if (!priv->htvec_domain) {
-+		pr_err("Failed to create IRQ domain\n");
-+		err = -ENOMEM;
-+		goto iounmap_base;
-+	}
-+
-+	htvec_reset(priv);
-+
-+	for (i = 0; i < num_parents; i++)
-+		irq_set_chained_handler_and_data(parent_irq[i],
-+						 htvec_irq_dispatch, priv);
-+
-+	return 0;
-+
-+iounmap_base:
-+	iounmap(priv->base);
-+free_priv:
-+	kfree(priv);
-+
-+	return err;
-+}
-+
-+IRQCHIP_DECLARE(htvec, "loongson,htvec-1.0", htvec_of_init);
-diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
-new file mode 100644
-index 000000000000..50becd21008c
---- /dev/null
-+++ b/drivers/irqchip/irq-loongson-pch-msi.c
-@@ -0,0 +1,255 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson PCH MSI support
-+ */
-+
-+#define pr_fmt(fmt) "pch-msi: " fmt
-+
-+#include <linux/irqchip.h>
-+#include <linux/msi.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/err.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
 +#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/slab.h>
++#include <linux/sched_clock.h>
 +
-+struct pch_msi_data {
-+	struct mutex	msi_map_lock;
-+	phys_addr_t	doorbell;
-+	u32		irq_first;	/* The vector number that MSIs starts */
-+	u32		num_irqs;	/* The number of vectors for MSIs */
-+	unsigned long	*msi_map;
-+};
++#include <linux/clk/clk-conf.h>
 +
-+static void pch_msi_mask_msi_irq(struct irq_data *d)
-+{
-+	pci_msi_mask_irq(d);
-+	irq_chip_mask_parent(d);
-+}
++#include <clocksource/timer-ti-dm.h>
++#include <dt-bindings/bus/ti-sysc.h>
 +
-+static void pch_msi_unmask_msi_irq(struct irq_data *d)
-+{
-+	irq_chip_unmask_parent(d);
-+	pci_msi_unmask_irq(d);
-+}
++/* For type1, set SYSC_OMAP2_CLOCKACTIVITY for fck off on idle, l4 clock on */
++#define DMTIMER_TYPE1_ENABLE	((1 << 9) | (SYSC_IDLE_SMART << 3) | \
++				 SYSC_OMAP2_ENAWAKEUP | SYSC_OMAP2_AUTOIDLE)
 +
-+static struct irq_chip pch_msi_irq_chip = {
-+	.name			= "PCH PCI MSI",
-+	.irq_mask		= pch_msi_mask_msi_irq,
-+	.irq_unmask		= pch_msi_unmask_msi_irq,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+};
++#define DMTIMER_TYPE2_ENABLE	(SYSC_IDLE_SMART_WKUP << 2)
++#define DMTIMER_RESET_WAIT	100000
 +
-+static int pch_msi_allocate_hwirq(struct pch_msi_data *priv, int num_req)
-+{
-+	int first;
++#define DMTIMER_INST_DONT_CARE	~0U
 +
-+	mutex_lock(&priv->msi_map_lock);
++static int counter_32k;
++static u32 clocksource;
++static u32 clockevent;
 +
-+	first = bitmap_find_free_region(priv->msi_map, priv->num_irqs,
-+					get_count_order(num_req));
-+	if (first < 0) {
-+		mutex_unlock(&priv->msi_map_lock);
-+		return -ENOSPC;
-+	}
-+
-+	mutex_unlock(&priv->msi_map_lock);
-+
-+	return priv->irq_first + first;
-+}
-+
-+static void pch_msi_free_hwirq(struct pch_msi_data *priv,
-+				int hwirq, int num_req)
-+{
-+	int first = hwirq - priv->irq_first;
-+
-+	mutex_lock(&priv->msi_map_lock);
-+	bitmap_release_region(priv->msi_map, first, get_count_order(num_req));
-+	mutex_unlock(&priv->msi_map_lock);
-+}
-+
-+static void pch_msi_compose_msi_msg(struct irq_data *data,
-+					struct msi_msg *msg)
-+{
-+	struct pch_msi_data *priv = irq_data_get_irq_chip_data(data);
-+
-+	msg->address_hi = upper_32_bits(priv->doorbell);
-+	msg->address_lo = lower_32_bits(priv->doorbell);
-+	msg->data = data->hwirq;
-+}
-+
-+static struct msi_domain_info pch_msi_domain_info = {
-+	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+		  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-+	.chip	= &pch_msi_irq_chip,
-+};
-+
-+static struct irq_chip middle_irq_chip = {
-+	.name			= "PCH MSI",
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_compose_msi_msg	= pch_msi_compose_msi_msg,
-+};
-+
-+static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
-+					unsigned int virq, int hwirq)
-+{
-+	struct irq_fwspec fwspec;
-+	int ret;
-+
-+	fwspec.fwnode = domain->parent->fwnode;
-+	fwspec.param_count = 1;
-+	fwspec.param[0] = hwirq;
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
-+					   unsigned int virq,
-+					   unsigned int nr_irqs, void *args)
-+{
-+	struct pch_msi_data *priv = domain->host_data;
-+	int hwirq, err, i;
-+
-+	hwirq = pch_msi_allocate_hwirq(priv, nr_irqs);
-+	if (hwirq < 0)
-+		return hwirq;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		err = pch_msi_parent_domain_alloc(domain, virq + i, hwirq + i);
-+		if (err)
-+			goto err_hwirq;
-+
-+		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-+					      &middle_irq_chip, priv);
-+	}
-+
-+	return 0;
-+
-+err_hwirq:
-+	pch_msi_free_hwirq(priv, hwirq, nr_irqs);
-+	irq_domain_free_irqs_parent(domain, virq, i - 1);
-+
-+	return err;
-+}
-+
-+static void pch_msi_middle_domain_free(struct irq_domain *domain,
-+					   unsigned int virq,
-+					   unsigned int nr_irqs)
-+{
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+	struct pch_msi_data *priv = irq_data_get_irq_chip_data(d);
-+
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+	pch_msi_free_hwirq(priv, d->hwirq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops pch_msi_middle_domain_ops = {
-+	.alloc	= pch_msi_middle_domain_alloc,
-+	.free	= pch_msi_middle_domain_free,
-+};
-+
-+static int pch_msi_init_domains(struct pch_msi_data *priv,
-+				struct device_node *node,
-+				struct irq_domain *parent)
-+{
-+	struct irq_domain *middle_domain, *msi_domain;
-+
-+	middle_domain = irq_domain_create_linear(of_node_to_fwnode(node),
-+						priv->num_irqs,
-+						&pch_msi_middle_domain_ops,
-+						priv);
-+	if (!middle_domain) {
-+		pr_err("Failed to create the MSI middle domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	middle_domain->parent = parent;
-+	irq_domain_update_bus_token(middle_domain, DOMAIN_BUS_NEXUS);
-+
-+	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
-+					       &pch_msi_domain_info,
-+					       middle_domain);
-+	if (!msi_domain) {
-+		pr_err("Failed to create PCI MSI domain\n");
-+		irq_domain_remove(middle_domain);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pch_msi_init(struct device_node *node,
-+			    struct device_node *parent)
-+{
-+	struct pch_msi_data *priv;
-+	struct irq_domain *parent_domain;
-+	struct resource res;
-+	int ret;
-+
-+	parent_domain = irq_find_host(parent);
-+	if (!parent_domain) {
-+		pr_err("Failed to find the parent domain\n");
-+		return -ENXIO;
-+	}
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->msi_map_lock);
-+
-+	ret = of_address_to_resource(node, 0, &res);
-+	if (ret) {
-+		pr_err("Failed to allocate resource\n");
-+		goto err_priv;
-+	}
-+
-+	priv->doorbell = res.start;
-+
-+	if (of_property_read_u32(node, "loongson,msi-base-vec",
-+				&priv->irq_first)) {
-+		pr_err("Unable to parse MSI vec base\n");
-+		ret = -EINVAL;
-+		goto err_priv;
-+	}
-+
-+	if (of_property_read_u32(node, "loongson,msi-num-vecs",
-+				&priv->num_irqs)) {
-+		pr_err("Unable to parse MSI vec number\n");
-+		ret = -EINVAL;
-+		goto err_priv;
-+	}
-+
-+	priv->msi_map = bitmap_alloc(priv->num_irqs, GFP_KERNEL);
-+	if (!priv->msi_map) {
-+		ret = -ENOMEM;
-+		goto err_priv;
-+	}
-+
-+	pr_debug("Registering %d MSIs, starting at %d\n",
-+		 priv->num_irqs, priv->irq_first);
-+
-+	ret = pch_msi_init_domains(priv, node, parent_domain);
-+	if (ret)
-+		goto err_map;
-+
-+	return 0;
-+
-+err_map:
-+	kfree(priv->msi_map);
-+err_priv:
-+	kfree(priv);
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(pch_msi, "loongson,pch-msi-1.0", pch_msi_init);
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-new file mode 100644
-index 000000000000..2a05b9305012
---- /dev/null
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -0,0 +1,243 @@
-+// SPDX-License-Identifier: GPL-2.0
 +/*
-+ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson PCH PIC support
++ * Subset of the timer registers we use. Note that the register offsets
++ * depend on the timer revision detected.
 + */
-+
-+#define pr_fmt(fmt) "pch-pic: " fmt
-+
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+
-+/* Registers */
-+#define PCH_PIC_MASK		0x20
-+#define PCH_PIC_HTMSI_EN	0x40
-+#define PCH_PIC_EDGE		0x60
-+#define PCH_PIC_CLR		0x80
-+#define PCH_PIC_AUTO0		0xc0
-+#define PCH_PIC_AUTO1		0xe0
-+#define PCH_INT_ROUTE(irq)	(0x100 + irq)
-+#define PCH_INT_HTVEC(irq)	(0x200 + irq)
-+#define PCH_PIC_POL		0x3e0
-+
-+#define PIC_COUNT_PER_REG	32
-+#define PIC_REG_COUNT		2
-+#define PIC_COUNT		(PIC_COUNT_PER_REG * PIC_REG_COUNT)
-+#define PIC_REG_IDX(irq_id)	((irq_id) / PIC_COUNT_PER_REG)
-+#define PIC_REG_BIT(irq_id)	((irq_id) % PIC_COUNT_PER_REG)
-+
-+struct pch_pic {
-+	void __iomem		*base;
-+	struct irq_domain	*pic_domain;
-+	u32			ht_vec_base;
-+	raw_spinlock_t		pic_lock;
++struct dmtimer_systimer {
++	void __iomem *base;
++	u8 sysc;
++	u8 irq_stat;
++	u8 irq_ena;
++	u8 pend;
++	u8 load;
++	u8 counter;
++	u8 ctrl;
++	u8 wakeup;
++	u8 ifctrl;
++	unsigned long rate;
 +};
 +
-+static void pch_pic_bitset(struct pch_pic *priv, int offset, int bit)
-+{
-+	u32 reg;
-+	void __iomem *addr = priv->base + offset + PIC_REG_IDX(bit) * 4;
++struct dmtimer_clockevent {
++	struct clock_event_device dev;
++	struct dmtimer_systimer t;
++	u32 period;
++};
 +
-+	raw_spin_lock(&priv->pic_lock);
-+	reg = readl(addr);
-+	reg |= BIT(PIC_REG_BIT(bit));
-+	writel(reg, addr);
-+	raw_spin_unlock(&priv->pic_lock);
++struct dmtimer_clocksource {
++	struct clocksource dev;
++	struct dmtimer_systimer t;
++	unsigned int loadval;
++};
++
++/* Assumes v1 ip if bits [31:16] are zero */
++static bool dmtimer_systimer_revision1(struct dmtimer_systimer *t)
++{
++	u32 tidr = readl_relaxed(t->base);
++
++	return !(tidr >> 16);
 +}
 +
-+static void pch_pic_bitclr(struct pch_pic *priv, int offset, int bit)
++static int __init dmtimer_systimer_type1_reset(struct dmtimer_systimer *t)
 +{
-+	u32 reg;
-+	void __iomem *addr = priv->base + offset + PIC_REG_IDX(bit) * 4;
++	void __iomem *syss = t->base + OMAP_TIMER_V1_SYS_STAT_OFFSET;
++	int ret;
++	u32 l;
 +
-+	raw_spin_lock(&priv->pic_lock);
-+	reg = readl(addr);
-+	reg &= ~BIT(PIC_REG_BIT(bit));
-+	writel(reg, addr);
-+	raw_spin_unlock(&priv->pic_lock);
-+}
-+
-+static void pch_pic_eoi_irq(struct irq_data *d)
-+{
-+	u32 idx = PIC_REG_IDX(d->hwirq);
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+
-+	writel(BIT(PIC_REG_BIT(d->hwirq)),
-+			priv->base + PCH_PIC_CLR + idx * 4);
-+}
-+
-+static void pch_pic_mask_irq(struct irq_data *d)
-+{
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+
-+	pch_pic_bitset(priv, PCH_PIC_MASK, d->hwirq);
-+	irq_chip_mask_parent(d);
-+}
-+
-+static void pch_pic_unmask_irq(struct irq_data *d)
-+{
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+
-+	irq_chip_unmask_parent(d);
-+	pch_pic_bitclr(priv, PCH_PIC_MASK, d->hwirq);
-+}
-+
-+static int pch_pic_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct pch_pic *priv = irq_data_get_irq_chip_data(d);
-+	int ret = 0;
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		pch_pic_bitset(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitclr(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		pch_pic_bitset(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitset(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		pch_pic_bitclr(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitclr(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		pch_pic_bitclr(priv, PCH_PIC_EDGE, d->hwirq);
-+		pch_pic_bitset(priv, PCH_PIC_POL, d->hwirq);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
++	writel_relaxed(BIT(1) | BIT(2), t->base + t->ifctrl);
++	ret = readl_poll_timeout_atomic(syss, l, l & BIT(0), 100,
++					DMTIMER_RESET_WAIT);
 +
 +	return ret;
 +}
 +
-+static struct irq_chip pch_pic_irq_chip = {
-+	.name			= "PCH PIC",
-+	.irq_mask		= pch_pic_mask_irq,
-+	.irq_unmask		= pch_pic_unmask_irq,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_eoi		= pch_pic_eoi_irq,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_set_type		= pch_pic_set_type,
-+};
-+
-+static int pch_pic_alloc(struct irq_domain *domain, unsigned int virq,
-+			      unsigned int nr_irqs, void *arg)
++/* Note we must use io_base instead of func_base for type2 OCP regs */
++static int __init dmtimer_systimer_type2_reset(struct dmtimer_systimer *t)
 +{
-+	int err;
-+	unsigned int type;
-+	unsigned long hwirq;
-+	struct irq_fwspec fwspec;
-+	struct pch_pic *priv = domain->host_data;
++	void __iomem *sysc = t->base + t->sysc;
++	u32 l;
 +
-+	irq_domain_translate_twocell(domain, arg, &hwirq, &type);
++	l = readl_relaxed(sysc);
++	l |= BIT(0);
++	writel_relaxed(l, sysc);
 +
-+	fwspec.fwnode = domain->parent->fwnode;
-+	fwspec.param_count = 1;
-+	fwspec.param[0] = hwirq + priv->ht_vec_base;
-+
-+	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+	if (err)
-+		return err;
-+
-+	irq_domain_set_info(domain, virq, hwirq,
-+			    &pch_pic_irq_chip, priv,
-+			    handle_fasteoi_ack_irq, NULL, NULL);
-+	irq_set_probe(virq);
-+
-+	return 0;
++	return readl_poll_timeout_atomic(sysc, l, !(l & BIT(0)), 100,
++					 DMTIMER_RESET_WAIT);
 +}
 +
-+static const struct irq_domain_ops pch_pic_domain_ops = {
-+	.translate	= irq_domain_translate_twocell,
-+	.alloc		= pch_pic_alloc,
-+	.free		= irq_domain_free_irqs_parent,
-+};
-+
-+static void pch_pic_reset(struct pch_pic *priv)
++static int __init dmtimer_systimer_reset(struct dmtimer_systimer *t)
 +{
-+	int i;
++	int ret;
 +
-+	for (i = 0; i < PIC_COUNT; i++) {
-+		/* Write vectore ID */
-+		writeb(priv->ht_vec_base + i, priv->base + PCH_INT_HTVEC(i));
-+		/* Hardcode route to HT0 Lo */
-+		writeb(1, priv->base + PCH_INT_ROUTE(i));
-+	}
++	if (dmtimer_systimer_revision1(t))
++		ret = dmtimer_systimer_type1_reset(t);
++	else
++		ret = dmtimer_systimer_type2_reset(t);
++	if (ret < 0) {
++		pr_err("%s failed with %i\n", __func__, ret);
 +
-+	for (i = 0; i < PIC_REG_COUNT; i++) {
-+		/* Clear IRQ cause registers, mask all interrupts */
-+		writel_relaxed(0xFFFFFFFF, priv->base + PCH_PIC_MASK + 4 * i);
-+		writel_relaxed(0xFFFFFFFF, priv->base + PCH_PIC_CLR + 4 * i);
-+		/* Clear auto bounce, we don't need that */
-+		writel_relaxed(0, priv->base + PCH_PIC_AUTO0 + 4 * i);
-+		writel_relaxed(0, priv->base + PCH_PIC_AUTO1 + 4 * i);
-+		/* Enable HTMSI transformer */
-+		writel_relaxed(0xFFFFFFFF, priv->base + PCH_PIC_HTMSI_EN + 4 * i);
-+	}
-+}
-+
-+static int pch_pic_of_init(struct device_node *node,
-+				struct device_node *parent)
-+{
-+	struct pch_pic *priv;
-+	struct irq_domain *parent_domain;
-+	int err;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	raw_spin_lock_init(&priv->pic_lock);
-+	priv->base = of_iomap(node, 0);
-+	if (!priv->base) {
-+		err = -ENOMEM;
-+		goto free_priv;
-+	}
-+
-+	parent_domain = irq_find_host(parent);
-+	if (!parent_domain) {
-+		pr_err("Failed to find the parent domain\n");
-+		err = -ENXIO;
-+		goto iounmap_base;
-+	}
-+
-+	if (of_property_read_u32(node, "loongson,pic-base-vec",
-+				&priv->ht_vec_base)) {
-+		pr_err("Failed to determine pic-base-vec\n");
-+		err = -EINVAL;
-+		goto iounmap_base;
-+	}
-+
-+	priv->pic_domain = irq_domain_create_hierarchy(parent_domain, 0,
-+						       PIC_COUNT,
-+						       of_node_to_fwnode(node),
-+						       &pch_pic_domain_ops,
-+						       priv);
-+	if (!priv->pic_domain) {
-+		pr_err("Failed to create IRQ domain\n");
-+		err = -ENOMEM;
-+		goto iounmap_base;
-+	}
-+
-+	pch_pic_reset(priv);
-+
-+	return 0;
-+
-+iounmap_base:
-+	iounmap(priv->base);
-+free_priv:
-+	kfree(priv);
-+
-+	return err;
-+}
-+
-+IRQCHIP_DECLARE(pch_pic, "loongson,pch-pic-1.0", pch_pic_of_init);
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index d0a71febdadc..d9c53f85a68e 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -76,6 +76,7 @@ struct plic_handler {
- 	void __iomem		*enable_base;
- 	struct plic_priv	*priv;
- };
-+static bool plic_cpuhp_setup_done;
- static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
- 
- static inline void plic_toggle(struct plic_handler *handler,
-@@ -176,9 +177,12 @@ static struct irq_chip plic_chip = {
- static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
- 			      irq_hw_number_t hwirq)
- {
-+	struct plic_priv *priv = d->host_data;
-+
- 	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
- 			    handle_fasteoi_irq, NULL, NULL);
- 	irq_set_noprobe(irq);
-+	irq_set_affinity(irq, &priv->lmask);
- 	return 0;
- }
- 
-@@ -282,6 +286,7 @@ static int __init plic_init(struct device_node *node,
- 	int error = 0, nr_contexts, nr_handlers = 0, i;
- 	u32 nr_irqs;
- 	struct plic_priv *priv;
-+	struct plic_handler *handler;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -301,8 +306,6 @@ static int __init plic_init(struct device_node *node,
- 	nr_contexts = of_irq_count(node);
- 	if (WARN_ON(!nr_contexts))
- 		goto out_iounmap;
--	if (WARN_ON(nr_contexts < num_possible_cpus()))
--		goto out_iounmap;
- 
- 	error = -ENOMEM;
- 	priv->irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
-@@ -312,7 +315,6 @@ static int __init plic_init(struct device_node *node,
- 
- 	for (i = 0; i < nr_contexts; i++) {
- 		struct of_phandle_args parent;
--		struct plic_handler *handler;
- 		irq_hw_number_t hwirq;
- 		int cpu, hartid;
- 
-@@ -366,11 +368,20 @@ static int __init plic_init(struct device_node *node,
- 		nr_handlers++;
- 	}
- 
--	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
-+	/*
-+	 * We can have multiple PLIC instances so setup cpuhp state only
-+	 * when context handler for current/boot CPU is present.
-+	 */
-+	handler = this_cpu_ptr(&plic_handlers);
-+	if (handler->present && !plic_cpuhp_setup_done) {
-+		cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 				  "irqchip/sifive/plic:starting",
- 				  plic_starting_cpu, plic_dying_cpu);
--	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
--		nr_irqs, nr_handlers, nr_contexts);
-+		plic_cpuhp_setup_done = true;
-+	}
-+
-+	pr_info("%pOFP: mapped %d interrupts with %d handlers for"
-+		" %d contexts.\n", node, nr_irqs, nr_handlers, nr_contexts);
- 	set_handle_irq(plic_handle_irq);
- 	return 0;
- 
-diff --git a/include/linux/irq_sim.h b/include/linux/irq_sim.h
-index 4500d453a63e..ab831e5ae748 100644
---- a/include/linux/irq_sim.h
-+++ b/include/linux/irq_sim.h
-@@ -1,41 +1,26 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (C) 2017-2018 Bartosz Golaszewski <brgl@bgdev.pl>
-+ * Copyright (C) 2020 Bartosz Golaszewski <bgolaszewski@baylibre.com>
-  */
- 
- #ifndef _LINUX_IRQ_SIM_H
- #define _LINUX_IRQ_SIM_H
- 
--#include <linux/irq_work.h>
- #include <linux/device.h>
-+#include <linux/fwnode.h>
-+#include <linux/irqdomain.h>
- 
- /*
-  * Provides a framework for allocating simulated interrupts which can be
-  * requested like normal irqs and enqueued from process context.
-  */
- 
--struct irq_sim_work_ctx {
--	struct irq_work		work;
--	unsigned long		*pending;
--};
--
--struct irq_sim_irq_ctx {
--	int			irqnum;
--	bool			enabled;
--};
--
--struct irq_sim {
--	struct irq_sim_work_ctx	work_ctx;
--	int			irq_base;
--	unsigned int		irq_count;
--	struct irq_sim_irq_ctx	*irqs;
--};
--
--int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs);
--int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
--		      unsigned int num_irqs);
--void irq_sim_fini(struct irq_sim *sim);
--void irq_sim_fire(struct irq_sim *sim, unsigned int offset);
--int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset);
-+struct irq_domain *irq_domain_create_sim(struct fwnode_handle *fwnode,
-+					 unsigned int num_irqs);
-+struct irq_domain *devm_irq_domain_create_sim(struct device *dev,
-+					      struct fwnode_handle *fwnode,
-+					      unsigned int num_irqs);
-+void irq_domain_remove_sim(struct irq_domain *domain);
- 
- #endif /* _LINUX_IRQ_SIM_H */
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 8d062e86d954..b37350c4fe37 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -450,6 +450,7 @@ extern void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
- 				irq_hw_number_t hwirq, struct irq_chip *chip,
- 				void *chip_data, irq_flow_handler_t handler,
- 				void *handler_data, const char *handler_name);
-+extern void irq_domain_reset_irq_data(struct irq_data *irq_data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- extern struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
- 			unsigned int flags, unsigned int size,
-@@ -491,7 +492,6 @@ extern int irq_domain_set_hwirq_and_chip(struct irq_domain *domain,
- 					 irq_hw_number_t hwirq,
- 					 struct irq_chip *chip,
- 					 void *chip_data);
--extern void irq_domain_reset_irq_data(struct irq_data *irq_data);
- extern void irq_domain_free_irqs_common(struct irq_domain *domain,
- 					unsigned int virq,
- 					unsigned int nr_irqs);
-diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-index 20d501af4f2e..d63c324895ea 100644
---- a/kernel/irq/Kconfig
-+++ b/kernel/irq/Kconfig
-@@ -72,6 +72,7 @@ config IRQ_DOMAIN
- config IRQ_SIM
- 	bool
- 	select IRQ_WORK
-+	select IRQ_DOMAIN
- 
- # Support for hierarchical irq domains
- config IRQ_DOMAIN_HIERARCHY
-diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
-index b992f88c5613..48006608baf0 100644
---- a/kernel/irq/irq_sim.c
-+++ b/kernel/irq/irq_sim.c
-@@ -1,14 +1,31 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-  * Copyright (C) 2017-2018 Bartosz Golaszewski <brgl@bgdev.pl>
-+ * Copyright (C) 2020 Bartosz Golaszewski <bgolaszewski@baylibre.com>
-  */
- 
--#include <linux/slab.h>
--#include <linux/irq_sim.h>
- #include <linux/irq.h>
-+#include <linux/irq_sim.h>
-+#include <linux/irq_work.h>
-+#include <linux/interrupt.h>
-+#include <linux/slab.h>
-+
-+struct irq_sim_work_ctx {
-+	struct irq_work		work;
-+	int			irq_base;
-+	unsigned int		irq_count;
-+	unsigned long		*pending;
-+	struct irq_domain	*domain;
-+};
-+
-+struct irq_sim_irq_ctx {
-+	int			irqnum;
-+	bool			enabled;
-+	struct irq_sim_work_ctx	*work_ctx;
-+};
- 
- struct irq_sim_devres {
--	struct irq_sim		*sim;
-+	struct irq_domain	*domain;
- };
- 
- static void irq_sim_irqmask(struct irq_data *data)
-@@ -36,159 +53,205 @@ static int irq_sim_set_type(struct irq_data *data, unsigned int type)
- 	return 0;
- }
- 
-+static int irq_sim_get_irqchip_state(struct irq_data *data,
-+				     enum irqchip_irq_state which, bool *state)
-+{
-+	struct irq_sim_irq_ctx *irq_ctx = irq_data_get_irq_chip_data(data);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(data);
-+
-+	switch (which) {
-+	case IRQCHIP_STATE_PENDING:
-+		if (irq_ctx->enabled)
-+			*state = test_bit(hwirq, irq_ctx->work_ctx->pending);
-+		break;
-+	default:
-+		return -EINVAL;
++		return ret;
 +	}
 +
 +	return 0;
 +}
 +
-+static int irq_sim_set_irqchip_state(struct irq_data *data,
-+				     enum irqchip_irq_state which, bool state)
-+{
-+	struct irq_sim_irq_ctx *irq_ctx = irq_data_get_irq_chip_data(data);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(data);
-+
-+	switch (which) {
-+	case IRQCHIP_STATE_PENDING:
-+		if (irq_ctx->enabled) {
-+			assign_bit(hwirq, irq_ctx->work_ctx->pending, state);
-+			if (state)
-+				irq_work_queue(&irq_ctx->work_ctx->work);
-+		}
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static struct irq_chip irq_sim_irqchip = {
--	.name		= "irq_sim",
--	.irq_mask	= irq_sim_irqmask,
--	.irq_unmask	= irq_sim_irqunmask,
--	.irq_set_type	= irq_sim_set_type,
-+	.name			= "irq_sim",
-+	.irq_mask		= irq_sim_irqmask,
-+	.irq_unmask		= irq_sim_irqunmask,
-+	.irq_set_type		= irq_sim_set_type,
-+	.irq_get_irqchip_state	= irq_sim_get_irqchip_state,
-+	.irq_set_irqchip_state	= irq_sim_set_irqchip_state,
- };
- 
- static void irq_sim_handle_irq(struct irq_work *work)
- {
- 	struct irq_sim_work_ctx *work_ctx;
- 	unsigned int offset = 0;
--	struct irq_sim *sim;
- 	int irqnum;
- 
- 	work_ctx = container_of(work, struct irq_sim_work_ctx, work);
--	sim = container_of(work_ctx, struct irq_sim, work_ctx);
- 
--	while (!bitmap_empty(work_ctx->pending, sim->irq_count)) {
-+	while (!bitmap_empty(work_ctx->pending, work_ctx->irq_count)) {
- 		offset = find_next_bit(work_ctx->pending,
--				       sim->irq_count, offset);
-+				       work_ctx->irq_count, offset);
- 		clear_bit(offset, work_ctx->pending);
--		irqnum = irq_sim_irqnum(sim, offset);
-+		irqnum = irq_find_mapping(work_ctx->domain, offset);
- 		handle_simple_irq(irq_to_desc(irqnum));
- 	}
- }
- 
-+static int irq_sim_domain_map(struct irq_domain *domain,
-+			      unsigned int virq, irq_hw_number_t hw)
-+{
-+	struct irq_sim_work_ctx *work_ctx = domain->host_data;
-+	struct irq_sim_irq_ctx *irq_ctx;
-+
-+	irq_ctx = kzalloc(sizeof(*irq_ctx), GFP_KERNEL);
-+	if (!irq_ctx)
-+		return -ENOMEM;
-+
-+	irq_set_chip(virq, &irq_sim_irqchip);
-+	irq_set_chip_data(virq, irq_ctx);
-+	irq_set_handler(virq, handle_simple_irq);
-+	irq_modify_status(virq, IRQ_NOREQUEST | IRQ_NOAUTOEN, IRQ_NOPROBE);
-+	irq_ctx->work_ctx = work_ctx;
-+
-+	return 0;
-+}
-+
-+static void irq_sim_domain_unmap(struct irq_domain *domain, unsigned int virq)
-+{
-+	struct irq_sim_irq_ctx *irq_ctx;
-+	struct irq_data *irqd;
-+
-+	irqd = irq_domain_get_irq_data(domain, virq);
-+	irq_ctx = irq_data_get_irq_chip_data(irqd);
-+
-+	irq_set_handler(virq, NULL);
-+	irq_domain_reset_irq_data(irqd);
-+	kfree(irq_ctx);
-+}
-+
-+static const struct irq_domain_ops irq_sim_domain_ops = {
-+	.map		= irq_sim_domain_map,
-+	.unmap		= irq_sim_domain_unmap,
++static const struct of_device_id counter_match_table[] = {
++	{ .compatible = "ti,omap-counter32k" },
++	{ /* Sentinel */ },
 +};
 +
- /**
-- * irq_sim_init - Initialize the interrupt simulator: allocate a range of
-- *                dummy interrupts.
-+ * irq_domain_create_sim - Create a new interrupt simulator irq_domain and
-+ *                         allocate a range of dummy interrupts.
-  *
-- * @sim:        The interrupt simulator object to initialize.
-- * @num_irqs:   Number of interrupts to allocate
-+ * @fnode:      struct fwnode_handle to be associated with this domain.
-+ * @num_irqs:   Number of interrupts to allocate.
-  *
-- * On success: return the base of the allocated interrupt range.
-- * On failure: a negative errno.
-+ * On success: return a new irq_domain object.
-+ * On failure: a negative errno wrapped with ERR_PTR().
-  */
--int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs)
-+struct irq_domain *irq_domain_create_sim(struct fwnode_handle *fwnode,
-+					 unsigned int num_irqs)
- {
--	int i;
-+	struct irq_sim_work_ctx *work_ctx;
- 
--	sim->irqs = kmalloc_array(num_irqs, sizeof(*sim->irqs), GFP_KERNEL);
--	if (!sim->irqs)
--		return -ENOMEM;
-+	work_ctx = kmalloc(sizeof(*work_ctx), GFP_KERNEL);
-+	if (!work_ctx)
-+		goto err_out;
- 
--	sim->irq_base = irq_alloc_descs(-1, 0, num_irqs, 0);
--	if (sim->irq_base < 0) {
--		kfree(sim->irqs);
--		return sim->irq_base;
--	}
-+	work_ctx->pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
-+	if (!work_ctx->pending)
-+		goto err_free_work_ctx;
- 
--	sim->work_ctx.pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
--	if (!sim->work_ctx.pending) {
--		kfree(sim->irqs);
--		irq_free_descs(sim->irq_base, num_irqs);
--		return -ENOMEM;
--	}
-+	work_ctx->domain = irq_domain_create_linear(fwnode, num_irqs,
-+						    &irq_sim_domain_ops,
-+						    work_ctx);
-+	if (!work_ctx->domain)
-+		goto err_free_bitmap;
- 
--	for (i = 0; i < num_irqs; i++) {
--		sim->irqs[i].irqnum = sim->irq_base + i;
--		sim->irqs[i].enabled = false;
--		irq_set_chip(sim->irq_base + i, &irq_sim_irqchip);
--		irq_set_chip_data(sim->irq_base + i, &sim->irqs[i]);
--		irq_set_handler(sim->irq_base + i, &handle_simple_irq);
--		irq_modify_status(sim->irq_base + i,
--				  IRQ_NOREQUEST | IRQ_NOAUTOEN, IRQ_NOPROBE);
--	}
-+	work_ctx->irq_count = num_irqs;
-+	init_irq_work(&work_ctx->work, irq_sim_handle_irq);
- 
--	init_irq_work(&sim->work_ctx.work, irq_sim_handle_irq);
--	sim->irq_count = num_irqs;
-+	return work_ctx->domain;
- 
--	return sim->irq_base;
-+err_free_bitmap:
-+	bitmap_free(work_ctx->pending);
-+err_free_work_ctx:
-+	kfree(work_ctx);
-+err_out:
-+	return ERR_PTR(-ENOMEM);
- }
--EXPORT_SYMBOL_GPL(irq_sim_init);
-+EXPORT_SYMBOL_GPL(irq_domain_create_sim);
- 
- /**
-- * irq_sim_fini - Deinitialize the interrupt simulator: free the interrupt
-- *                descriptors and allocated memory.
-+ * irq_domain_remove_sim - Deinitialize the interrupt simulator domain: free
-+ *                         the interrupt descriptors and allocated memory.
-  *
-- * @sim:        The interrupt simulator to tear down.
-+ * @domain:     The interrupt simulator domain to tear down.
-  */
--void irq_sim_fini(struct irq_sim *sim)
-+void irq_domain_remove_sim(struct irq_domain *domain)
- {
--	irq_work_sync(&sim->work_ctx.work);
--	bitmap_free(sim->work_ctx.pending);
--	irq_free_descs(sim->irq_base, sim->irq_count);
--	kfree(sim->irqs);
-+	struct irq_sim_work_ctx *work_ctx = domain->host_data;
-+
-+	irq_work_sync(&work_ctx->work);
-+	bitmap_free(work_ctx->pending);
-+	kfree(work_ctx);
-+
-+	irq_domain_remove(domain);
- }
--EXPORT_SYMBOL_GPL(irq_sim_fini);
-+EXPORT_SYMBOL_GPL(irq_domain_remove_sim);
- 
--static void devm_irq_sim_release(struct device *dev, void *res)
-+static void devm_irq_domain_release_sim(struct device *dev, void *res)
- {
- 	struct irq_sim_devres *this = res;
- 
--	irq_sim_fini(this->sim);
-+	irq_domain_remove_sim(this->domain);
- }
- 
- /**
-- * irq_sim_init - Initialize the interrupt simulator for a managed device.
-+ * devm_irq_domain_create_sim - Create a new interrupt simulator for
-+ *                              a managed device.
-  *
-  * @dev:        Device to initialize the simulator object for.
-- * @sim:        The interrupt simulator object to initialize.
-+ * @fnode:      struct fwnode_handle to be associated with this domain.
-  * @num_irqs:   Number of interrupts to allocate
-  *
-- * On success: return the base of the allocated interrupt range.
-- * On failure: a negative errno.
-+ * On success: return a new irq_domain object.
-+ * On failure: a negative errno wrapped with ERR_PTR().
-  */
--int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
--		      unsigned int num_irqs)
-+struct irq_domain *devm_irq_domain_create_sim(struct device *dev,
-+					      struct fwnode_handle *fwnode,
-+					      unsigned int num_irqs)
- {
- 	struct irq_sim_devres *dr;
--	int rv;
- 
--	dr = devres_alloc(devm_irq_sim_release, sizeof(*dr), GFP_KERNEL);
-+	dr = devres_alloc(devm_irq_domain_release_sim,
-+			  sizeof(*dr), GFP_KERNEL);
- 	if (!dr)
--		return -ENOMEM;
-+		return ERR_PTR(-ENOMEM);
- 
--	rv = irq_sim_init(sim, num_irqs);
--	if (rv < 0) {
-+	dr->domain = irq_domain_create_sim(fwnode, num_irqs);
-+	if (IS_ERR(dr->domain)) {
- 		devres_free(dr);
--		return rv;
-+		return dr->domain;
- 	}
- 
--	dr->sim = sim;
- 	devres_add(dev, dr);
--
--	return rv;
--}
--EXPORT_SYMBOL_GPL(devm_irq_sim_init);
--
--/**
-- * irq_sim_fire - Enqueue an interrupt.
-- *
-- * @sim:        The interrupt simulator object.
-- * @offset:     Offset of the simulated interrupt which should be fired.
-- */
--void irq_sim_fire(struct irq_sim *sim, unsigned int offset)
--{
--	if (sim->irqs[offset].enabled) {
--		set_bit(offset, sim->work_ctx.pending);
--		irq_work_queue(&sim->work_ctx.work);
--	}
--}
--EXPORT_SYMBOL_GPL(irq_sim_fire);
--
--/**
-- * irq_sim_irqnum - Get the allocated number of a dummy interrupt.
-- *
-- * @sim:        The interrupt simulator object.
-- * @offset:     Offset of the simulated interrupt for which to retrieve
-- *              the number.
-- */
--int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
--{
--	return sim->irqs[offset].irqnum;
-+	return dr->domain;
- }
--EXPORT_SYMBOL_GPL(irq_sim_irqnum);
-+EXPORT_SYMBOL_GPL(devm_irq_domain_create_sim);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 35b8d97c3a1d..a4c2c915511d 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -132,14 +132,13 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
- 				    const struct irq_domain_ops *ops,
- 				    void *host_data)
- {
--	struct device_node *of_node = to_of_node(fwnode);
- 	struct irqchip_fwid *fwid;
- 	struct irq_domain *domain;
- 
- 	static atomic_t unknown_domains;
- 
- 	domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
--			      GFP_KERNEL, of_node_to_nid(of_node));
-+			      GFP_KERNEL, of_node_to_nid(to_of_node(fwnode)));
- 	if (!domain)
- 		return NULL;
- 
-@@ -162,30 +161,16 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
- 			domain->name = fwid->name;
- 			break;
- 		}
--#ifdef CONFIG_ACPI
--	} else if (is_acpi_device_node(fwnode)) {
--		struct acpi_buffer buf = {
--			.length = ACPI_ALLOCATE_BUFFER,
--		};
--		acpi_handle handle;
--
--		handle = acpi_device_handle(to_acpi_device_node(fwnode));
--		if (acpi_get_name(handle, ACPI_FULL_PATHNAME, &buf) == AE_OK) {
--			domain->name = buf.pointer;
--			domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
--		}
--
--		domain->fwnode = fwnode;
--#endif
--	} else if (of_node) {
-+	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode) ||
-+		   is_software_node(fwnode)) {
- 		char *name;
- 
- 		/*
--		 * DT paths contain '/', which debugfs is legitimately
-+		 * fwnode paths contain '/', which debugfs is legitimately
- 		 * unhappy about. Replace them with ':', which does
- 		 * the trick and is not as offensive as '\'...
- 		 */
--		name = kasprintf(GFP_KERNEL, "%pOF", of_node);
-+		name = kasprintf(GFP_KERNEL, "%pfw", fwnode);
- 		if (!name) {
- 			kfree(domain);
- 			return NULL;
-@@ -210,7 +195,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
- 		domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
- 	}
- 
--	of_node_get(of_node);
-+	fwnode_handle_get(fwnode);
- 
- 	/* Fill structure */
- 	INIT_RADIX_TREE(&domain->revmap_tree, GFP_KERNEL);
-@@ -259,7 +244,7 @@ void irq_domain_remove(struct irq_domain *domain)
- 
- 	pr_debug("Removed domain %s\n", domain->name);
- 
--	of_node_put(irq_domain_get_of_node(domain));
-+	fwnode_handle_put(domain->fwnode);
- 	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
- 		kfree(domain->name);
- 	kfree(domain);
-@@ -1047,6 +1032,18 @@ int irq_domain_alloc_descs(int virq, unsigned int cnt, irq_hw_number_t hwirq,
- 	return virq;
- }
- 
-+/**
-+ * irq_domain_reset_irq_data - Clear hwirq, chip and chip_data in @irq_data
-+ * @irq_data:	The pointer to irq_data
++/*
++ * Check if the SoC als has a usable working 32 KiHz counter. The 32 KiHz
++ * counter is handled by timer-ti-32k, but we need to detect it as it
++ * affects the preferred dmtimer system timer configuration. There is
++ * typically no use for a dmtimer clocksource if the 32 KiHz counter is
++ * present, except on am437x as described below.
 + */
-+void irq_domain_reset_irq_data(struct irq_data *irq_data)
++static void __init dmtimer_systimer_check_counter32k(void)
 +{
-+	irq_data->hwirq = 0;
-+	irq_data->chip = &no_irq_chip;
-+	irq_data->chip_data = NULL;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_reset_irq_data);
++	struct device_node *np;
 +
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- /**
-  * irq_domain_create_hierarchy - Add a irqdomain into the hierarchy
-@@ -1247,18 +1244,6 @@ void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
- }
- EXPORT_SYMBOL(irq_domain_set_info);
++	if (counter_32k)
++		return;
++
++	np = of_find_matching_node(NULL, counter_match_table);
++	if (!np) {
++		counter_32k = -ENODEV;
++
++		return;
++	}
++
++	if (of_device_is_available(np))
++		counter_32k = 1;
++	else
++		counter_32k = -ENODEV;
++
++	of_node_put(np);
++}
++
++static const struct of_device_id dmtimer_match_table[] = {
++	{ .compatible = "ti,omap2420-timer", },
++	{ .compatible = "ti,omap3430-timer", },
++	{ .compatible = "ti,omap4430-timer", },
++	{ .compatible = "ti,omap5430-timer", },
++	{ .compatible = "ti,am335x-timer", },
++	{ .compatible = "ti,am335x-timer-1ms", },
++	{ .compatible = "ti,dm814-timer", },
++	{ .compatible = "ti,dm816-timer", },
++	{ /* Sentinel */ },
++};
++
++/*
++ * Checks that system timers are configured to not reset and idle during
++ * the generic timer-ti-dm device driver probe. And that the system timer
++ * source clocks are properly configured. Also, let's not hog any DSP and
++ * PWM capable timers unnecessarily as system timers.
++ */
++static bool __init dmtimer_is_preferred(struct device_node *np)
++{
++	if (!of_device_is_available(np))
++		return false;
++
++	if (!of_property_read_bool(np->parent,
++				   "ti,no-reset-on-init"))
++		return false;
++
++	if (!of_property_read_bool(np->parent, "ti,no-idle"))
++		return false;
++
++	/* Secure gptimer12 is always clocked with a fixed source */
++	if (!of_property_read_bool(np, "ti,timer-secure")) {
++		if (!of_property_read_bool(np, "assigned-clocks"))
++			return false;
++
++		if (!of_property_read_bool(np, "assigned-clock-parents"))
++			return false;
++	}
++
++	if (of_property_read_bool(np, "ti,timer-dsp"))
++		return false;
++
++	if (of_property_read_bool(np, "ti,timer-pwm"))
++		return false;
++
++	return true;
++}
++
++/*
++ * Finds the first available usable always-on timer, and assigns it to either
++ * clockevent or clocksource depending if the counter_32k is available on the
++ * SoC or not.
++ *
++ * Some omap3 boards with unreliable oscillator must not use the counter_32k
++ * or dmtimer1 with 32 KiHz source. Additionally, the boards with unreliable
++ * oscillator should really set counter_32k as disabled, and delete dmtimer1
++ * ti,always-on property, but let's not count on it. For these quirky cases,
++ * we prefer using the always-on secure dmtimer12 with the internal 32 KiHz
++ * clock as the clocksource, and any available dmtimer as clockevent.
++ *
++ * For am437x, we are using am335x style dmtimer clocksource. It is unclear
++ * if this quirk handling is really needed, but let's change it separately
++ * based on testing as it might cause side effects.
++ */
++static void __init dmtimer_systimer_assign_alwon(void)
++{
++	struct device_node *np;
++	u32 pa = 0;
++	bool quirk_unreliable_oscillator = false;
++
++	/* Quirk unreliable 32 KiHz oscillator with incomplete dts */
++	if (of_machine_is_compatible("ti,omap3-beagle") ||
++	    of_machine_is_compatible("timll,omap3-devkit8000")) {
++		quirk_unreliable_oscillator = true;
++		counter_32k = -ENODEV;
++	}
++
++	/* Quirk am437x using am335x style dmtimer clocksource */
++	if (of_machine_is_compatible("ti,am43"))
++		counter_32k = -ENODEV;
++
++	for_each_matching_node(np, dmtimer_match_table) {
++		if (!dmtimer_is_preferred(np))
++			continue;
++
++		if (of_property_read_bool(np, "ti,timer-alwon")) {
++			const __be32 *addr;
++
++			addr = of_get_address(np, 0, NULL, NULL);
++			pa = of_translate_address(np, addr);
++			if (pa) {
++				/* Quirky omap3 boards must use dmtimer12 */
++				if (quirk_unreliable_oscillator &&
++				    pa == 0x48318000)
++					continue;
++
++				of_node_put(np);
++				break;
++			}
++		}
++	}
++
++	/* Usually no need for dmtimer clocksource if we have counter32 */
++	if (counter_32k >= 0) {
++		clockevent = pa;
++		clocksource = 0;
++	} else {
++		clocksource = pa;
++		clockevent = DMTIMER_INST_DONT_CARE;
++	}
++}
++
++/* Finds the first usable dmtimer, used for the don't care case */
++static u32 __init dmtimer_systimer_find_first_available(void)
++{
++	struct device_node *np;
++	const __be32 *addr;
++	u32 pa = 0;
++
++	for_each_matching_node(np, dmtimer_match_table) {
++		if (!dmtimer_is_preferred(np))
++			continue;
++
++		addr = of_get_address(np, 0, NULL, NULL);
++		pa = of_translate_address(np, addr);
++		if (pa) {
++			if (pa == clocksource || pa == clockevent) {
++				pa = 0;
++				continue;
++			}
++
++			of_node_put(np);
++			break;
++		}
++	}
++
++	return pa;
++}
++
++/* Selects the best clocksource and clockevent to use */
++static void __init dmtimer_systimer_select_best(void)
++{
++	dmtimer_systimer_check_counter32k();
++	dmtimer_systimer_assign_alwon();
++
++	if (clockevent == DMTIMER_INST_DONT_CARE)
++		clockevent = dmtimer_systimer_find_first_available();
++
++	pr_debug("%s: counter_32k: %i clocksource: %08x clockevent: %08x\n",
++		 __func__, counter_32k, clocksource, clockevent);
++}
++
++/* Interface clocks are only available on some SoCs variants */
++static int __init dmtimer_systimer_init_clock(struct device_node *np,
++					      const char *name,
++					      unsigned long *rate)
++{
++	struct clk *clock;
++	unsigned long r;
++	int error;
++
++	clock = of_clk_get_by_name(np, name);
++	if ((PTR_ERR(clock) == -EINVAL) && !strncmp(name, "ick", 3))
++		return 0;
++	else if (IS_ERR(clock))
++		return PTR_ERR(clock);
++
++	error = clk_prepare_enable(clock);
++	if (error)
++		return error;
++
++	r = clk_get_rate(clock);
++	if (!r)
++		return -ENODEV;
++
++	*rate = r;
++
++	return 0;
++}
++
++static void dmtimer_systimer_enable(struct dmtimer_systimer *t)
++{
++	u32 val;
++
++	if (dmtimer_systimer_revision1(t))
++		val = DMTIMER_TYPE1_ENABLE;
++	else
++		val = DMTIMER_TYPE2_ENABLE;
++
++	writel_relaxed(val, t->base + t->sysc);
++}
++
++static void dmtimer_systimer_disable(struct dmtimer_systimer *t)
++{
++	writel_relaxed(0, t->base + t->sysc);
++}
++
++static int __init dmtimer_systimer_setup(struct device_node *np,
++					 struct dmtimer_systimer *t)
++{
++	unsigned long rate;
++	u8 regbase;
++	int error;
++
++	if (!of_device_is_compatible(np->parent, "ti,sysc"))
++		return -EINVAL;
++
++	t->base = of_iomap(np, 0);
++	if (!t->base)
++		return -ENXIO;
++
++	/*
++	 * Enable optional assigned-clock-parents configured at the timer
++	 * node level. For regular device drivers, this is done automatically
++	 * by bus related code such as platform_drv_probe().
++	 */
++	error = of_clk_set_defaults(np, false);
++	if (error < 0)
++		pr_err("%s: clock source init failed: %i\n", __func__, error);
++
++	/* For ti-sysc, we have timer clocks at the parent module level */
++	error = dmtimer_systimer_init_clock(np->parent, "fck", &rate);
++	if (error)
++		goto err_unmap;
++
++	t->rate = rate;
++
++	error = dmtimer_systimer_init_clock(np->parent, "ick", &rate);
++	if (error)
++		goto err_unmap;
++
++	if (dmtimer_systimer_revision1(t)) {
++		t->irq_stat = OMAP_TIMER_V1_STAT_OFFSET;
++		t->irq_ena = OMAP_TIMER_V1_INT_EN_OFFSET;
++		t->pend = _OMAP_TIMER_WRITE_PEND_OFFSET;
++		regbase = 0;
++	} else {
++		t->irq_stat = OMAP_TIMER_V2_IRQSTATUS;
++		t->irq_ena = OMAP_TIMER_V2_IRQENABLE_SET;
++		regbase = OMAP_TIMER_V2_FUNC_OFFSET;
++		t->pend = regbase + _OMAP_TIMER_WRITE_PEND_OFFSET;
++	}
++
++	t->sysc = OMAP_TIMER_OCP_CFG_OFFSET;
++	t->load = regbase + _OMAP_TIMER_LOAD_OFFSET;
++	t->counter = regbase + _OMAP_TIMER_COUNTER_OFFSET;
++	t->ctrl = regbase + _OMAP_TIMER_CTRL_OFFSET;
++	t->wakeup = regbase + _OMAP_TIMER_WAKEUP_EN_OFFSET;
++	t->ifctrl = regbase + _OMAP_TIMER_IF_CTRL_OFFSET;
++
++	dmtimer_systimer_enable(t);
++	dmtimer_systimer_reset(t);
++	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(t->base),
++		 readl_relaxed(t->base + t->sysc));
++
++	return 0;
++
++err_unmap:
++	iounmap(t->base);
++
++	return error;
++}
++
++/* Clockevent */
++static struct dmtimer_clockevent *
++to_dmtimer_clockevent(struct clock_event_device *clockevent)
++{
++	return container_of(clockevent, struct dmtimer_clockevent, dev);
++}
++
++static irqreturn_t dmtimer_clockevent_interrupt(int irq, void *data)
++{
++	struct dmtimer_clockevent *clkevt = data;
++	struct dmtimer_systimer *t = &clkevt->t;
++
++	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->irq_stat);
++	clkevt->dev.event_handler(&clkevt->dev);
++
++	return IRQ_HANDLED;
++}
++
++static int dmtimer_set_next_event(unsigned long cycles,
++				  struct clock_event_device *evt)
++{
++	struct dmtimer_clockevent *clkevt = to_dmtimer_clockevent(evt);
++	struct dmtimer_systimer *t = &clkevt->t;
++	void __iomem *pend = t->base + t->pend;
++
++	writel_relaxed(0xffffffff - cycles, t->base + t->counter);
++	while (readl_relaxed(pend) & WP_TCRR)
++		cpu_relax();
++
++	writel_relaxed(OMAP_TIMER_CTRL_ST, t->base + t->ctrl);
++	while (readl_relaxed(pend) & WP_TCLR)
++		cpu_relax();
++
++	return 0;
++}
++
++static int dmtimer_clockevent_shutdown(struct clock_event_device *evt)
++{
++	struct dmtimer_clockevent *clkevt = to_dmtimer_clockevent(evt);
++	struct dmtimer_systimer *t = &clkevt->t;
++	void __iomem *ctrl = t->base + t->ctrl;
++	u32 l;
++
++	l = readl_relaxed(ctrl);
++	if (l & OMAP_TIMER_CTRL_ST) {
++		l &= ~BIT(0);
++		writel_relaxed(l, ctrl);
++		/* Flush posted write */
++		l = readl_relaxed(ctrl);
++		/*  Wait for functional clock period x 3.5 */
++		udelay(3500000 / t->rate + 1);
++	}
++	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->irq_stat);
++
++	return 0;
++}
++
++static int dmtimer_set_periodic(struct clock_event_device *evt)
++{
++	struct dmtimer_clockevent *clkevt = to_dmtimer_clockevent(evt);
++	struct dmtimer_systimer *t = &clkevt->t;
++	void __iomem *pend = t->base + t->pend;
++
++	dmtimer_clockevent_shutdown(evt);
++
++	/* Looks like we need to first set the load value separately */
++	writel_relaxed(clkevt->period, t->base + t->load);
++	while (readl_relaxed(pend) & WP_TLDR)
++		cpu_relax();
++
++	writel_relaxed(clkevt->period, t->base + t->counter);
++	while (readl_relaxed(pend) & WP_TCRR)
++		cpu_relax();
++
++	writel_relaxed(OMAP_TIMER_CTRL_AR | OMAP_TIMER_CTRL_ST,
++		       t->base + t->ctrl);
++	while (readl_relaxed(pend) & WP_TCLR)
++		cpu_relax();
++
++	return 0;
++}
++
++static void omap_clockevent_idle(struct clock_event_device *evt)
++{
++	struct dmtimer_clockevent *clkevt = to_dmtimer_clockevent(evt);
++	struct dmtimer_systimer *t = &clkevt->t;
++
++	dmtimer_systimer_disable(t);
++}
++
++static void omap_clockevent_unidle(struct clock_event_device *evt)
++{
++	struct dmtimer_clockevent *clkevt = to_dmtimer_clockevent(evt);
++	struct dmtimer_systimer *t = &clkevt->t;
++
++	dmtimer_systimer_enable(t);
++	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->irq_ena);
++	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->wakeup);
++}
++
++static int __init dmtimer_clockevent_init(struct device_node *np)
++{
++	struct dmtimer_clockevent *clkevt;
++	struct clock_event_device *dev;
++	struct dmtimer_systimer *t;
++	int error;
++
++	clkevt = kzalloc(sizeof(*clkevt), GFP_KERNEL);
++	if (!clkevt)
++		return -ENOMEM;
++
++	t = &clkevt->t;
++	dev = &clkevt->dev;
++
++	/*
++	 * We mostly use cpuidle_coupled with ARM local timers for runtime,
++	 * so there's probably no use for CLOCK_EVT_FEAT_DYNIRQ here.
++	 */
++	dev->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
++	dev->rating = 300;
++	dev->set_next_event = dmtimer_set_next_event;
++	dev->set_state_shutdown = dmtimer_clockevent_shutdown;
++	dev->set_state_periodic = dmtimer_set_periodic;
++	dev->set_state_oneshot = dmtimer_clockevent_shutdown;
++	dev->tick_resume = dmtimer_clockevent_shutdown;
++	dev->cpumask = cpu_possible_mask;
++
++	dev->irq = irq_of_parse_and_map(np, 0);
++	if (!dev->irq) {
++		error = -ENXIO;
++		goto err_out_free;
++	}
++
++	error = dmtimer_systimer_setup(np, &clkevt->t);
++	if (error)
++		goto err_out_free;
++
++	clkevt->period = 0xffffffff - DIV_ROUND_CLOSEST(t->rate, HZ);
++
++	/*
++	 * For clock-event timers we never read the timer counter and
++	 * so we are not impacted by errata i103 and i767. Therefore,
++	 * we can safely ignore this errata for clock-event timers.
++	 */
++	writel_relaxed(OMAP_TIMER_CTRL_POSTED, t->base + t->ifctrl);
++
++	error = request_irq(dev->irq, dmtimer_clockevent_interrupt,
++			    IRQF_TIMER, "clockevent", clkevt);
++	if (error)
++		goto err_out_unmap;
++
++	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->irq_ena);
++	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->wakeup);
++
++	pr_info("TI gptimer clockevent: %s%lu Hz at %pOF\n",
++		of_find_property(np, "ti,timer-alwon", NULL) ?
++		"always-on " : "", t->rate, np->parent);
++
++	clockevents_config_and_register(dev, t->rate,
++					3, /* Timer internal resynch latency */
++					0xffffffff);
++
++	if (of_device_is_compatible(np, "ti,am33xx") ||
++	    of_device_is_compatible(np, "ti,am43")) {
++		dev->suspend = omap_clockevent_idle;
++		dev->resume = omap_clockevent_unidle;
++	}
++
++	return 0;
++
++err_out_unmap:
++	iounmap(t->base);
++
++err_out_free:
++	kfree(clkevt);
++
++	return error;
++}
++
++/* Clocksource */
++static struct dmtimer_clocksource *
++to_dmtimer_clocksource(struct clocksource *cs)
++{
++	return container_of(cs, struct dmtimer_clocksource, dev);
++}
++
++static u64 dmtimer_clocksource_read_cycles(struct clocksource *cs)
++{
++	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
++	struct dmtimer_systimer *t = &clksrc->t;
++
++	return (u64)readl_relaxed(t->base + t->counter);
++}
++
++static void __iomem *dmtimer_sched_clock_counter;
++
++static u64 notrace dmtimer_read_sched_clock(void)
++{
++	return readl_relaxed(dmtimer_sched_clock_counter);
++}
++
++static void dmtimer_clocksource_suspend(struct clocksource *cs)
++{
++	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
++	struct dmtimer_systimer *t = &clksrc->t;
++
++	clksrc->loadval = readl_relaxed(t->base + t->counter);
++	dmtimer_systimer_disable(t);
++}
++
++static void dmtimer_clocksource_resume(struct clocksource *cs)
++{
++	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
++	struct dmtimer_systimer *t = &clksrc->t;
++
++	dmtimer_systimer_enable(t);
++	writel_relaxed(clksrc->loadval, t->base + t->counter);
++	writel_relaxed(OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR,
++		       t->base + t->ctrl);
++}
++
++static int __init dmtimer_clocksource_init(struct device_node *np)
++{
++	struct dmtimer_clocksource *clksrc;
++	struct dmtimer_systimer *t;
++	struct clocksource *dev;
++	int error;
++
++	clksrc = kzalloc(sizeof(*clksrc), GFP_KERNEL);
++	if (!clksrc)
++		return -ENOMEM;
++
++	dev = &clksrc->dev;
++	t = &clksrc->t;
++
++	error = dmtimer_systimer_setup(np, t);
++	if (error)
++		goto err_out_free;
++
++	dev->name = "dmtimer";
++	dev->rating = 300;
++	dev->read = dmtimer_clocksource_read_cycles;
++	dev->mask = CLOCKSOURCE_MASK(32);
++	dev->flags = CLOCK_SOURCE_IS_CONTINUOUS;
++
++	if (of_device_is_compatible(np, "ti,am33xx") ||
++	    of_device_is_compatible(np, "ti,am43")) {
++		dev->suspend = dmtimer_clocksource_suspend;
++		dev->resume = dmtimer_clocksource_resume;
++	}
++
++	writel_relaxed(0, t->base + t->counter);
++	writel_relaxed(OMAP_TIMER_CTRL_ST | OMAP_TIMER_CTRL_AR,
++		       t->base + t->ctrl);
++
++	pr_info("TI gptimer clocksource: %s%pOF\n",
++		of_find_property(np, "ti,timer-alwon", NULL) ?
++		"always-on " : "", np->parent);
++
++	if (!dmtimer_sched_clock_counter) {
++		dmtimer_sched_clock_counter = t->base + t->counter;
++		sched_clock_register(dmtimer_read_sched_clock, 32, t->rate);
++	}
++
++	if (clocksource_register_hz(dev, t->rate))
++		pr_err("Could not register clocksource %pOF\n", np);
++
++	return 0;
++
++err_out_free:
++	kfree(clksrc);
++
++	return -ENODEV;
++}
++
++/*
++ * To detect between a clocksource and clockevent, we assume the device tree
++ * has no interrupts configured for a clocksource timer.
++ */
++static int __init dmtimer_systimer_init(struct device_node *np)
++{
++	const __be32 *addr;
++	u32 pa;
++
++	/* One time init for the preferred timer configuration */
++	if (!clocksource && !clockevent)
++		dmtimer_systimer_select_best();
++
++	if (!clocksource && !clockevent) {
++		pr_err("%s: unable to detect system timers, update dtb?\n",
++		       __func__);
++
++		return -EINVAL;
++	}
++
++	addr = of_get_address(np, 0, NULL, NULL);
++	pa = of_translate_address(np, addr);
++	if (!pa)
++		return -EINVAL;
++
++	if (counter_32k <= 0 && clocksource == pa)
++		return dmtimer_clocksource_init(np);
++
++	if (clockevent == pa)
++		return dmtimer_clockevent_init(np);
++
++	return 0;
++}
++
++TIMER_OF_DECLARE(systimer_omap2, "ti,omap2420-timer", dmtimer_systimer_init);
++TIMER_OF_DECLARE(systimer_omap3, "ti,omap3430-timer", dmtimer_systimer_init);
++TIMER_OF_DECLARE(systimer_omap4, "ti,omap4430-timer", dmtimer_systimer_init);
++TIMER_OF_DECLARE(systimer_omap5, "ti,omap5430-timer", dmtimer_systimer_init);
++TIMER_OF_DECLARE(systimer_am33x, "ti,am335x-timer", dmtimer_systimer_init);
++TIMER_OF_DECLARE(systimer_am3ms, "ti,am335x-timer-1ms", dmtimer_systimer_init);
++TIMER_OF_DECLARE(systimer_dm814, "ti,dm814-timer", dmtimer_systimer_init);
++TIMER_OF_DECLARE(systimer_dm816, "ti,dm816-timer", dmtimer_systimer_init);
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index 2531eab3d6d7..60aff087947a 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -258,9 +258,7 @@ static int omap_dm_timer_prepare(struct omap_dm_timer *timer)
+ 	__omap_dm_timer_enable_posted(timer);
+ 	omap_dm_timer_disable(timer);
  
--/**
-- * irq_domain_reset_irq_data - Clear hwirq, chip and chip_data in @irq_data
-- * @irq_data:	The pointer to irq_data
-- */
--void irq_domain_reset_irq_data(struct irq_data *irq_data)
--{
--	irq_data->hwirq = 0;
--	irq_data->chip = &no_irq_chip;
--	irq_data->chip_data = NULL;
--}
--EXPORT_SYMBOL_GPL(irq_domain_reset_irq_data);
+-	rc = omap_dm_timer_set_source(timer, OMAP_TIMER_SRC_32_KHZ);
 -
- /**
-  * irq_domain_free_irqs_common - Clear irq_data and free the parent
-  * @domain:	Interrupt domain to match
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 453a8a0f4804..761911168438 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -2619,6 +2619,8 @@ int __irq_get_irqchip_state(struct irq_data *data, enum irqchip_irq_state which,
+-	return rc;
++	return 0;
+ }
  
- 	do {
- 		chip = irq_data_get_irq_chip(data);
-+		if (WARN_ON_ONCE(!chip))
-+			return -ENODEV;
- 		if (chip->irq_get_irqchip_state)
- 			break;
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-@@ -2696,6 +2698,8 @@ int irq_set_irqchip_state(unsigned int irq, enum irqchip_irq_state which,
+ static inline u32 omap_dm_timer_reserved_systimer(int id)
+diff --git a/drivers/clocksource/timer-versatile.c b/drivers/clocksource/timer-versatile.c
+index e4ebb656d005..f5d017b31afa 100644
+--- a/drivers/clocksource/timer-versatile.c
++++ b/drivers/clocksource/timer-versatile.c
+@@ -6,6 +6,7 @@
  
- 	do {
- 		chip = irq_data_get_irq_chip(data);
-+		if (WARN_ON_ONCE(!chip))
-+			return -ENODEV;
- 		if (chip->irq_set_irqchip_state)
- 			break;
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+ #include <linux/clocksource.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/sched_clock.h>
+ 
+@@ -22,6 +23,8 @@ static int __init versatile_sched_clock_init(struct device_node *node)
+ {
+ 	void __iomem *base = of_iomap(node, 0);
+ 
++	of_node_clear_flag(node, OF_POPULATED);
++
+ 	if (!base)
+ 		return -ENXIO;
+ 
 
