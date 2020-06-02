@@ -2,106 +2,95 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D48C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE162053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE04206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iS1cNpg0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgFBMUT (ORCPT
+        id S1727782AbgFBMWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:20:19 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:49105 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgFBMUR (ORCPT
+        Tue, 2 Jun 2020 08:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgFBMV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:20:17 -0400
-Received: by mail-il1-f197.google.com with SMTP id o4so4659753ilc.15
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:20:16 -0700 (PDT)
+        Tue, 2 Jun 2020 08:21:57 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B77C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:21:57 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id f126so821114vkb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:21:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uhS6wUtL1nQqq687nk7bY+rt6oHfCz/bP20I3cjBhSw=;
+        b=iS1cNpg05xcEK6kyHjMSJ22ATuO9KFDUcoDquBU2iOe8OtEp/aHvoOY+Hc1jbuHZ1j
+         /Zf/spKV28Tbu++/etF4Zjj4sXvh8pAXYEwRxpTd1PNTIZGqQQJMnllTJIXyTvig+rl7
+         ONIP/BDM5lHyDtCrPjr1f21Oc9Ywr8DNAM0/z8teiTSPg84vkpYs7bwL7S0qIB8mmj3v
+         mf9cWjDavFRqvO/HxzSGtzUfqAggg0QxBs0uvP1uv0pRsy+lSebm+Nv0HhZ2FR2wX0HW
+         cXjB8Ebc8hym8wolXa/Elydr/XWJoBacagzzpPtMsoudz8jLUVGbIiOVugOlM5dRixRi
+         NKWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ZnzEZCHryLV8mcyggZorI2Pw7WyGvNuTkNQjiVsjQoU=;
-        b=FdsBl84Qyw/W5ukEniHIurNnQaMm5825kUpKX8i4glOz0W9xehWfP9IUl6I9uR/meK
-         Low7MW1RO4BHhTPTuds3YEgf+ewb30V2yDQa3tEFpGmU658nRCTBNCTPnZWCL3tpnSTF
-         R5gWtUM8yoCwSmfRlF8+FmI+pCt0rHSk1BjQcK/R+8oirgRqoNz7nwBSzQV2xepq5QUU
-         +2YlxBGYPaDewbODxZQRFuYSIk1khf6J5bKgOtZFBesjBji/VpnuP3Vj+fqCQJVSA/OD
-         zpq1XQYVfXTQ4ww/+MrOO8u1839RxOFfD04hPxFas+JPU9QyK+e2S6TsqbDBj9TPhgsM
-         nISQ==
-X-Gm-Message-State: AOAM531RgMpH+Ow3Y0/SA1D7+w22Qvf/APGASCyI4fv83urqtS2jXpA+
-        voxKvJ46IjwivBoYnZ7B/geUzGN2MrABPD3kHuHyLZ1Gm260
-X-Google-Smtp-Source: ABdhPJz+A2UnGb/ByrAkBHUCSaa4hXkbpXZ72LvNlqDKR2a7Ml/YCuiqW9L4PbgcAXUjGaLM/aHRLNoVRDY5jDuWBJ8+1pTQy3Yt
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uhS6wUtL1nQqq687nk7bY+rt6oHfCz/bP20I3cjBhSw=;
+        b=E8MEKPAqWSiMahOR8GQkrMF79zA+ah8APGD3ViUpiXJ7KcLXBqZTQ9WAiPILQXiwXJ
+         meQtdpnutX0DM39OGGuEIspjWeMc7MTu4J3ETRAD/4xkL/IiN6GROJjILiQqsmFNOdVL
+         y20bkiVaKac1RgjYvRLTQn37sJZ4xt/XImoQSAAxI6wcPj2/3FQwyo+viLXFSThhFrT4
+         ksPw2oeV1RQOVS2s0Ihtw3FCH05yBTMKN93ctx+jWLLh7e8QvjQ3jLfugU7l/ugBglrc
+         nHU39uBgbdIRW9sckI20jVpRDzhtEPublPAu0+1JNBmHIP4nKnveQh8CAoxFjIbJrDia
+         pbuw==
+X-Gm-Message-State: AOAM532ieD9DxvmP3p+dGiJdtTeUlKefhAaeBSOO1JD22euVVsQkeG31
+        +OhzppmX3X+fzdejnHi8Hjl1T3XXBzc30KoXs+4Exw==
+X-Google-Smtp-Source: ABdhPJyFkrbYplf5gWUM2GeUq/gzW7pUpT6I7Z+yO1zl/pK104ACL5dbJongfx+Bv5rPOloANFKde8VOkcaaziUl7fU=
+X-Received: by 2002:a1f:2ac6:: with SMTP id q189mr8911630vkq.28.1591100516362;
+ Tue, 02 Jun 2020 05:21:56 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1286:: with SMTP id y6mr3284521ilq.0.1591100416502;
- Tue, 02 Jun 2020 05:20:16 -0700 (PDT)
-Date:   Tue, 02 Jun 2020 05:20:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000020b15e05a718ef22@google.com>
-Subject: linux-next test error: BUG: using smp_processor_id() in preemptible
- [ADDR] code: kworker/u4:LINE/6740
-From:   syzbot <syzbot+8ea916061cc749544c8f@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
+References: <20200531131237.24781-1-realwakka@gmail.com> <CACvgo50SzjUe6usELF33qXW3BWZmH5U4ynPTBorZLDrG-Nx2Pw@mail.gmail.com>
+ <20200601002520.hajvtpefi7yzvmuq@smtp.gmail.com>
+In-Reply-To: <20200601002520.hajvtpefi7yzvmuq@smtp.gmail.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Tue, 2 Jun 2020 13:18:38 +0100
+Message-ID: <CACvgo52Vh92TFwMqgagMsopW9yAZ6FGXgyXHu9Bhe3qqPSPcHg@mail.gmail.com>
+Subject: Re: [PATCH] drm/vkms: Optimize compute_crc(), blend()
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Sidong Yang <realwakka@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 1 Jun 2020 at 01:25, Rodrigo Siqueira
+<rodrigosiqueiramelo@gmail.com> wrote:
+>
+> Hi,
+>
+> First of all, thanks a lot for all your patch. And thanks Emil for your
+> feedback.
+>
+> I have a suggestion here:
+>
+> Emil:
+> Could you give me your Acked-by or maybe Reviewed-by for the writeback
+> series? With that, I can finally apply the series.
+>
+Sure, once the issues highlighted are resolved. Just left you some
+more comprehensive feedback.
 
-syzbot found the following crash on:
-
-HEAD commit:    0e21d462 Add linux-next specific files for 20200602
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f3dcca100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ecc1aef35f550ee3
-dashboard link: https://syzkaller.appspot.com/bug?extid=8ea916061cc749544c8f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8ea916061cc749544c8f@syzkaller.appspotmail.com
-
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:6/6740
-caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 1 PID: 6740 Comm: kworker/u4:6 Not tainted 5.7.0-next-20200602-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2338
- __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1453
- writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1717
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1786
- wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1895
- wb_check_old_data_flush fs/fs-writeback.c:1997 [inline]
- wb_do_writeback fs/fs-writeback.c:2050 [inline]
- wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2079
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-Emil
+P.S. Something something top posting sucks :-P
