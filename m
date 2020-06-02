@@ -2,93 +2,144 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A15C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09937206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399F7206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RN8nRSL4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RlVJzfDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgFBM0m (ORCPT
+        id S1728133AbgFBM1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:26:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28185 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726636AbgFBM0l (ORCPT
+        Tue, 2 Jun 2020 08:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgFBM1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:26:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591100801; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=C4vFOy2XJsfD6EIUJxjhKj637Wme6MC/O/edb1rZV9s=; b=RN8nRSL4mnkz1UpK9pvZ9c9FSg5bNWK3pLCAslqJKnGxOj0RsJzclQG8go3f44bmrWwGGTtK
- SvW23JzMhsSyPy9rNwrthQNXeJ/7o5hF9TxIPX/mSq/HbODPu9w4KMNu3xDdePDp1MDM4v2p
- Xnu2kr0WR6RHsZUfC6j0yEMTWOE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5ed6456eeca06aba7ef97485 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 12:26:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F03CC43387; Tue,  2 Jun 2020 12:26:21 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: groverm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 875C2C433C6;
-        Tue,  2 Jun 2020 12:26:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 875C2C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=groverm@codeaurora.org
-Date:   Tue, 2 Jun 2020 17:56:00 +0530
-From:   Mayank Grover <groverm@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: Re: [PATCH] pinctrl: msm: Add check for pinctrl group is valid
-Message-ID: <20200602122600.GA10584@codeaurora.org>
-References: <1589817025-21886-1-git-send-email-groverm@codeaurora.org>
- <20200519013813.GU2165@builder.lan>
- <CACRpkdbSsVcy=6Bo42SnPqgKoa+jNanmBEXix_yv6aNK8VcreQ@mail.gmail.com>
+        Tue, 2 Jun 2020 08:27:12 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A132C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:27:12 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b6so12376895ljj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:27:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SzkhBbLbmHxP92irZBt7jTabNaEj2bzN89Fv4cbtbow=;
+        b=RlVJzfDPTeQf0cs8V529R1SL0IM9WLu1oq53oOBFnQc8CK7laDj1EXvNHcyNU7V3zL
+         +hXDt9b/b0xTrPHdqxXc5mLcM7EJ5dVO2I6Ug3oXT2mUdocCSC7VVaPksud5NiZ/Ilau
+         NcI7/WOUlhrUOn8q+a1lZth0gnGnO6+uO9LCCqPMKUVPhG1j0feT4IjzQFd61Mz7JMqd
+         nF71TdjlYJsmbzlQ4edArYM9MhueZrxOvwjZSJixgZAfpUBPhI8cbipg3duiOWySK80w
+         FkASaPRR625pL/WUC6R1Kj6Aos86ohAjKZvRtqfOwppDQLRNljFWYBEx0ESYjA4CC/44
+         Tuog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SzkhBbLbmHxP92irZBt7jTabNaEj2bzN89Fv4cbtbow=;
+        b=SgGxriIOxlXwVDmwMAr3KGZQ9GVu8yDhpILiC9JcR5kdxVnLX2Yv7QFibafkR/+FVw
+         0AI/7QoRqbrxQ3Ug7PR6XYuJTjvio33NNTTrS1WMPzl1V5iEcre73L9ReYtKREbKmKCk
+         AGFLuB827anOY61tFeR81xUIy+kj0zu/+RSaLIG0YvuI6sJ58YhhmMMsZHwGzfu8jjPC
+         O9yOLQiFO+OEXcgMBDSAIq1ZnkM2Kci//Us9oDCQqCAEbU83J0m4jYGUEXhRiJrApmfq
+         tJpVtVhcx06lJctubWOqvEw0xpKl4TnugO3LrjMgsIrGPKg6mUFIDKD+d2seaPX/T8ez
+         FcHQ==
+X-Gm-Message-State: AOAM531/SLjgaAME9awK0NGeFIADFwvb3fr9S5jna17N8GIMYgtcZRdP
+        /AKoJgAIky3QiHEd1h/y3JbpyhwPdIVQH95LFdar6w==
+X-Google-Smtp-Source: ABdhPJz5gVZkHpLqefodvt73dt1ctZHG9Ln62jnSZBf/xAjF6zl95qgtHq8WB33aWNsSv7HXwC+Z52otFsPcw/1BNnw=
+X-Received: by 2002:a2e:9ad6:: with SMTP id p22mr7949105ljj.3.1591100830499;
+ Tue, 02 Jun 2020 05:27:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbSsVcy=6Bo42SnPqgKoa+jNanmBEXix_yv6aNK8VcreQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200601184223.1.I281c81384150e8fefbebf32fa79cb091d0311208@changeid>
+ <CANFp7mXDvdicvyEpU-oDu4fBj92nQ7SENVdd_rG9TFQkqDevZg@mail.gmail.com>
+In-Reply-To: <CANFp7mXDvdicvyEpU-oDu4fBj92nQ7SENVdd_rG9TFQkqDevZg@mail.gmail.com>
+From:   Alain Michaud <alainmichaud@google.com>
+Date:   Tue, 2 Jun 2020 08:26:59 -0400
+Message-ID: <CALWDO_VetmqNFf1TT0zk2ijURy004hsipGwgtX6arS-TKqFbpw@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: Check scan state before disabling during suspend
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Manish Mandlik <mmandlik@google.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:02:14AM +0200, Linus Walleij wrote:
-> On Tue, May 19, 2020 at 3:39 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> 
-> > @Linus, we started off with something similar for GPIOs and ended up
-> > with the logic in the core code. Should we somehow try to do the same
-> > for pinctrl?
-> 
-> msm_pingroup_is_valid() looks very reusable but I'm afraid I do not
-> understand the implicit assumptions around it, but I guess yes,
-> if it can be properly documented etc.
-> 
-> Yours,
-> Linus Walleij
-
-Hi Bjorn,
-
-Can you please help guide further on this ?
-we can validate group using request calls similar to pinmux_ops here.
-
--Mayank
+On Mon, Jun 1, 2020 at 9:49 PM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> Hey linux-bluetooth,
+>
+> We found this bug when reverting some Chromium maintained patches in
+> our repository that was conditionally dropping LE scan enable commands
+> if it wasn't toggling between true/false. On some Intel controllers,
+> disabling LE scan when it's already disabled resulted in a "Command
+> Disallowed" and this was causing suspend to fail.
+>
+> On Mon, Jun 1, 2020 at 6:43 PM Manish Mandlik <mmandlik@google.com> wrote:
+> >
+> > Check current scan state by checking HCI_LE_SCAN flag and send scan
+> > disable command only if scan is already enabled.
+> >
+> > Signed-off-by: Manish Mandlik <mmandlik@google.com>
+> > ---
+> >
+> >  net/bluetooth/hci_request.c | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+> > index 1fc55685da62d..1acf5b8e0910c 100644
+> > --- a/net/bluetooth/hci_request.c
+> > +++ b/net/bluetooth/hci_request.c
+> > @@ -998,8 +998,9 @@ static void hci_req_set_event_filter(struct hci_request *req)
+> >
+> >  static void hci_req_config_le_suspend_scan(struct hci_request *req)
+> >  {
+> > -       /* Can't change params without disabling first */
+> > -       hci_req_add_le_scan_disable(req);
+> > +       /* Before changing params disable scan if enabled */
+> > +       if (hci_dev_test_flag(req->hdev, HCI_LE_SCAN))
+> > +               hci_req_add_le_scan_disable(req);
+> >
+> >         /* Configure params and enable scanning */
+> >         hci_req_add_le_passive_scan(req);
+> > @@ -1065,8 +1066,9 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
+> >                 page_scan = SCAN_DISABLED;
+> >                 hci_req_add(&req, HCI_OP_WRITE_SCAN_ENABLE, 1, &page_scan);
+> >
+> > -               /* Disable LE passive scan */
+> > -               hci_req_add_le_scan_disable(&req);
+> > +               /* Disable LE passive scan if enabled */
+> > +               if (hci_dev_test_flag(hdev, HCI_LE_SCAN))
+> > +                       hci_req_add_le_scan_disable(&req);
+> >
+> >                 /* Mark task needing completion */
+> >                 set_bit(SUSPEND_SCAN_DISABLE, hdev->suspend_tasks);
+> > --
+> > 2.27.0.rc2.251.g90737beb825-goog
+> >
+>
+> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reviewed-by: Alain Michaud <alainm@chromium.org>
+>
+> --
+> You received this message because you are subscribed to the Google Groups "ChromeOS Bluetooth Upstreaming" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to chromeos-bluetooth-upstreaming+unsubscribe@chromium.org.
+> To post to this group, send email to chromeos-bluetooth-upstreaming@chromium.org.
+> To view this discussion on the web visit https://groups.google.com/a/chromium.org/d/msgid/chromeos-bluetooth-upstreaming/CANFp7mXDvdicvyEpU-oDu4fBj92nQ7SENVdd_rG9TFQkqDevZg%40mail.gmail.com.
