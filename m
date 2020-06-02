@@ -2,174 +2,116 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8623DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4834B205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C182072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iWF16kqp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZmxnaFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgFBWr6 (ORCPT
+        id S1730462AbgFBWuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:47:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
+        Tue, 2 Jun 2020 18:50:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728259AbgFBWr6 (ORCPT
+        with ESMTP id S1730446AbgFBWuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 18:47:58 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39DCC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 15:47:57 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id g5so164492pfm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 15:47:57 -0700 (PDT)
+        Tue, 2 Jun 2020 18:50:02 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4144C08C5C0;
+        Tue,  2 Jun 2020 15:50:01 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id z206so70602lfc.6;
+        Tue, 02 Jun 2020 15:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x1KXljua1G5hAoel7DwUEO0U9O2u7J2/xCv2Bo1SECA=;
-        b=iWF16kqpdpIGtjp4xjBjKqaVpGDpxlLCroVAwhliDtYhWFf8MY/3vyqEG5n6Il9+Fo
-         DerUOVLmdU+EKOQVPAeoRrJ1q1Pl0K+eS/qIqC/KUhRbmQXRl9nk4Ug9huZC/rpqTPr2
-         9ZCZ+7Go9nue5fKbjPKA8SLvQO9EfzUOER4NY=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K9/SgI9YdO/9LT3+Izi8n6c8S/w+ByCB2jxpSWaCAkY=;
+        b=QZmxnaFyacmIQbFLMQ/PnU4x0JCALc+F7ifH8M1UhOriKjuHPMoB6ZgyyJu+jNK/Ra
+         IFN4bfvWvQPI3nPohkNHPVWlseiPNu4TFNaoDpGXKyxc95gSsaxO3gxRW7LVawYPx+A6
+         NvuARXBHOc4Qw7clC8MfW/EkJkcJMBEltK22ceI0A/wxCXfoJYqgiBz0N2K9ZLy6Gx8P
+         P9l6D119uApNn4vQR/HeBuZVQTBXmsiatc4N8y+MBomPTZm0Ej61aExGlzbh/Us2DW9r
+         vPBe1Sfgu3iKt0HEKyhR3u4Id0kn80SPbn2kAnKrNVrQl+4rhDG8ZGLucePRJyGTy3yT
+         ez7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=x1KXljua1G5hAoel7DwUEO0U9O2u7J2/xCv2Bo1SECA=;
-        b=iaJ3M+hH89cPM12Age/eDiMIQ7FO9IAC78RRh2+uhYPq6nY164Yxo2wDO50tsZd5N7
-         23PYdCkTWDU3HCe5cF3C6v1uQPqbJ9lBpU3KhsQbMaaUznnKSaF5TzdHcXHEk4g3hQDp
-         tl08RvF+QiVQVHmeST0K7x0f320NvwOGfkQoRDnQdyjCTn0ocMFQNUDJndhjVqcJqqNx
-         UAyxLuZKfDmf3L/UUiQmqKtMy3rnsICT8U5iEZdaXncHLJ9Ftn2YXhzF/KcjTrGEaFU+
-         gzbQqQWXOYJImaZlO/F9Cagr0tF9r5iEeeMr7GPdKliks2xXRFI3HNDyjl40D6G3Sb+O
-         UeVA==
-X-Gm-Message-State: AOAM531yg07vOcfD0AXjrmoB60FuZn/nYIfGyhL1r7tHQKCE4TAqO0nJ
-        BACi+Q0yej2oiQqIOaUc6nRFU6/EfFrGug==
-X-Google-Smtp-Source: ABdhPJyunawwPk6QVYIip344J3GUrogqxyNoIrIxPW+q87l4LTgEH9YrcHGEx+smIuSrHsQ69HWQ6g==
-X-Received: by 2002:a17:90a:ce05:: with SMTP id f5mr1707468pju.32.1591138077291;
-        Tue, 02 Jun 2020 15:47:57 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id j10sm88789pjf.9.2020.06.02.15.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 15:47:56 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     sumit.garg@linaro.org, Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] kgdb: Avoid suspicious RCU usage warning
-Date:   Tue,  2 Jun 2020 15:47:39 -0700
-Message-Id: <20200602154729.v2.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid>
-X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
+        bh=K9/SgI9YdO/9LT3+Izi8n6c8S/w+ByCB2jxpSWaCAkY=;
+        b=OYpRa1LqXorPhTKqWQiAmTC2D4qVDEa3DzjPUc77z17JpGHWVix5a2ilxtAJwD4eMO
+         p970ucdILzdpuYtYYAkwJAeU7R56EItBgP1c7XJcM0ElSgcAO+/ew3pHG3Ad9gcrzGGM
+         mV9erYBkhcR+PWNLQ23ASC+RUAtvIB6TdXqlgtDlXr/AZ+Wb7DO3rZvnz13hckXnm0ox
+         v553Fzw4JrjuvzGSBk3N5Wreg2YXh5qtDsZOs5akcjhZ3XHox64kA17j2+mc6oBYBVDK
+         du74LHCzlxd0kyBYYOEWXMue14zBWmFJjK4oJZ2xOUPlDM8tnHJGmhjZNnp+3SVF7rMI
+         jNuQ==
+X-Gm-Message-State: AOAM5314hwFwHX5gJB7gs6m0OxFC1iUqYqKYy+HZ5qJDWUzxABmgvYic
+        45hJBQjWhrmtV/ClmKwmtzIGJ32b
+X-Google-Smtp-Source: ABdhPJxaG2sb/6jK3MGpf0asba7yX6FRD8JQxmwB7Mz7pBlOjg99gaFWaTIFle1G7zsW7o9E1zV55w==
+X-Received: by 2002:a19:6e0e:: with SMTP id j14mr796240lfc.155.1591138199679;
+        Tue, 02 Jun 2020 15:49:59 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
+        by smtp.googlemail.com with ESMTPSA id m11sm101077lfl.70.2020.06.02.15.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 15:49:58 -0700 (PDT)
+Subject: Re: tegra124-jetson-tk1: sata doesnt work since 5.2
+To:     LABBE Corentin <clabbe@baylibre.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        pgaikwad@nvidia.com, pdeschrijver@nvidia.com,
+        mturquette@baylibre.com, sboyd@kernel.org, axboe@kernel.dk,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-ide@vger.kernel.org
+References: <20200319074401.GA4116@Red> <20200531193111.GA15331@Red>
+ <ff9923ca-1d02-ab5e-c335-83ee2e993061@gmail.com> <20200602081958.GA21773@Red>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <56700c1d-ffb0-e44e-ea8e-48a848ccf3bf@gmail.com>
+Date:   Wed, 3 Jun 2020 01:49:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200602081958.GA21773@Red>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At times when I'm using kgdb I see a splat on my console about
-suspicious RCU usage.  I managed to come up with a case that could
-reproduce this that looked like this:
+02.06.2020 11:19, LABBE Corentin пишет:
+...
+>> Sounds like PLLE needs to be enabled for SATA, but ahci-tegra driver
+>> doesn't do that.
+>>
+>> Could you please try this change:
+>>
+>> --- >8 ---
+>> diff --git a/drivers/clk/tegra/clk-tegra124.c
+>> b/drivers/clk/tegra/clk-tegra124.c
+>> index e931319dcc9d..7dbc14652830 100644
+>> --- a/drivers/clk/tegra/clk-tegra124.c
+>> +++ b/drivers/clk/tegra/clk-tegra124.c
+>> @@ -1330,6 +1330,7 @@ static struct tegra_clk_init_table
+>> common_init_table[] __initdata = {
+>>  	{ TEGRA124_CLK_I2S3_SYNC, TEGRA124_CLK_CLK_MAX, 24576000, 0 },
+>>  	{ TEGRA124_CLK_I2S4_SYNC, TEGRA124_CLK_CLK_MAX, 24576000, 0 },
+>>  	{ TEGRA124_CLK_VIMCLK_SYNC, TEGRA124_CLK_CLK_MAX, 24576000, 0 },
+>> +	{ TEGRA124_CLK_PLL_E, TEGRA124_CLK_CLK_MAX, 0, 1 },
+>>  	/* must be the last entry */
+>>  	{ TEGRA124_CLK_CLK_MAX, TEGRA124_CLK_CLK_MAX, 0, 0 },
+>>  };
+>> --- >8 ---
+> 
+> This patch alone does not fix the issue.
 
-  WARNING: suspicious RCU usage
-  5.7.0-rc4+ #609 Not tainted
-  -----------------------------
-  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
-
-  other info that might help us debug this:
-
-    rcu_scheduler_active = 2, debug_locks = 1
-  3 locks held by swapper/0/1:
-   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
-   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
-   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-
-  stack backtrace:
-  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
-  Hardware name: Google Cheza (rev3+) (DT)
-  Call trace:
-   dump_backtrace+0x0/0x1b8
-   show_stack+0x1c/0x24
-   dump_stack+0xd4/0x134
-   lockdep_rcu_suspicious+0xf0/0x100
-   find_task_by_pid_ns+0x5c/0x80
-   getthread+0x8c/0xb0
-   gdb_serial_stub+0x9d4/0xd04
-   kgdb_cpu_enter+0x284/0x7ac
-   kgdb_handle_exception+0x174/0x20c
-   kgdb_brk_fn+0x24/0x30
-   call_break_hook+0x6c/0x7c
-   brk_handler+0x20/0x5c
-   do_debug_exception+0x1c8/0x22c
-   el1_sync_handler+0x3c/0xe4
-   el1_sync+0x7c/0x100
-   rpmh_rsc_probe+0x38/0x420
-   platform_drv_probe+0x94/0xb4
-   really_probe+0x134/0x300
-   driver_probe_device+0x68/0x100
-   __device_attach_driver+0x90/0xa8
-   bus_for_each_drv+0x84/0xcc
-   __device_attach+0xb4/0x13c
-   device_initial_probe+0x18/0x20
-   bus_probe_device+0x38/0x98
-   device_add+0x38c/0x420
-
-If I understand properly we should just be able to blanket kgdb under
-one big RCU read lock and the problem should go away.  We'll add it to
-the beast-of-a-function known as kgdb_cpu_enter().
-
-With this I no longer get any splats and things seem to work fine.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- Cuddle up to the local interrupt locking code.
-
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index ef94e906f05a..c9748f454fb7 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -575,6 +575,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 		arch_kgdb_ops.disable_hw_break(regs);
- 
- acquirelock:
-+	rcu_read_lock();
- 	/*
- 	 * Interrupts will be restored by the 'trap return' code, except when
- 	 * single stepping.
-@@ -634,6 +635,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 			atomic_dec(&slaves_in_kgdb);
- 			dbg_touch_watchdogs();
- 			local_irq_restore(flags);
-+			rcu_read_unlock();
- 			return 0;
- 		}
- 		cpu_relax();
-@@ -652,6 +654,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 		raw_spin_unlock(&dbg_master_lock);
- 		dbg_touch_watchdogs();
- 		local_irq_restore(flags);
-+		rcu_read_unlock();
- 
- 		goto acquirelock;
- 	}
-@@ -775,6 +778,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	raw_spin_unlock(&dbg_master_lock);
- 	dbg_touch_watchdogs();
- 	local_irq_restore(flags);
-+	rcu_read_unlock();
- 
- 	return kgdb_info[cpu].ret_state;
- }
--- 
-2.27.0.rc2.251.g90737beb825-goog
-
+I'd try to enable all the clocks and voltage regulators that are enabled
+by the USB driver. Also won't hurt to check the clock rate
+configurations with the enabled / disabled USB, try to replicate the
+working configuration.
