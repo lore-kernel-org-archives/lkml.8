@@ -2,97 +2,199 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71303C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF5A20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591126888;
-	bh=+ncjK4e/vZsz73FIDj/hi61RsM4Ps1F1/O0723aUlLU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HHHLn6vqQO2V62lU8RhOOwmt1iypxqkcp+74K5/YxXdZzuIv+aRyIS42AQiFWWfT8
-	 JMr2rVPvixbCf6SN7McGeyn5GPPUZzjaGkAL6j3wwhuQ1BVTh1YG5wbVhtKhZnBWC/
-	 XMZ780s4q4DT4sUWZ4nZtKcr61X12b1UxZm3otuI=
+	by mail.kernel.org (Postfix) with ESMTP id 015622074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgFBTl1 (ORCPT
+        id S1726842AbgFBTo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbgFBTl0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:41:26 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72600C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:41:26 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id d67so8086458oig.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dxHzvSblnkcYW/wmcNUppzoyDk3DR31hUrJu+JXhQLU=;
-        b=F0jV6T5QCA+YNsQ3LVDb7Lhr7qtUYZ1w1DRaaWfX7iZwINO63+RGeKTe37zJTuzSyJ
-         BLWv+LXkPOf1uxy+byvaFBimaXmUmdiWF0GEHglgAIF6MgZbNHnUEpyz1s8GwQ2u7juy
-         /Wv8a/kVxDHaVoy8WM/OensLNkYsfmYPibmCw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dxHzvSblnkcYW/wmcNUppzoyDk3DR31hUrJu+JXhQLU=;
-        b=QDs99QZGtDakClc8K8G5uhCaSvJGEMbCftXIRkM0YJ5GKcdqOVFVsK6mTlTFstzNZQ
-         jThcOMKrAsfl+Kp9yrv/6dl6GVUS2jTcKUB/RkbW2s646aArCGU9cq6xCUjoNTzie4IC
-         0UKNaf9fT7JpWz288Z4+/EU1tjz9VrBWyfyVWkeL4s2B8VGwN2ysB1WnIpAjHZb0XTZy
-         C3axmWBobNOejAa2bD8f5cRCVVEdRZE/6ia2F2vCDeDmXzjwfzum6SQkzq7RFyxDUWWX
-         cm8yVAUprHZhouH8FbwU0mjbJqudYaDxbEN2Xg5n6HSHbrqY35fMyfQozxpGgjZCbE65
-         YYpQ==
-X-Gm-Message-State: AOAM531kefTpkgRSVM95Yem5DvvjoHdkZfwVlkpoHUWmArbFp0cU2niR
-        pTsSCgPvm5dedVb9zeVBcn+few==
-X-Google-Smtp-Source: ABdhPJwoiUfhmrhw3gvKvLm0/TnJeYPXJ2a6WEYTX85rqgL8nQDXSlQ9L0nFByJnJ/KgagaHyQmsmA==
-X-Received: by 2002:aca:c704:: with SMTP id x4mr3919833oif.92.1591126885918;
-        Tue, 02 Jun 2020 12:41:25 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 10sm848509otq.52.2020.06.02.12.41.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 12:41:25 -0700 (PDT)
-Subject: Re: [PATCH] kunit: Fix TabError, remove defconfig code and handle
- when there is no kunitconfig
-To:     Vitor Massaru Iha <vitor@massaru.org>, kunit-dev@googlegroups.com
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200529192845.60468-1-vitor@massaru.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <ce991545-b849-1afb-8e20-839ce7a38eb9@linuxfoundation.org>
-Date:   Tue, 2 Jun 2020 13:41:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 15:44:59 -0400
+Received: from mga03.intel.com ([134.134.136.65]:42183 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgFBTo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 15:44:59 -0400
+IronPort-SDR: UhP3lZKCBwkY9ujZZYJYRfl2o/5D12z9128TipV7AfOflo6oQeEtObC4lGaRBFaxBvZ+BQVu/c
+ pbpaniHa4dDQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 12:44:58 -0700
+IronPort-SDR: pdINC7VjCKeru4Mi5GPAm8QJDcypPjUR8XkyYL4wSp1jyIFGiAFSnHee1M/bQ0ZIVZKT9jVNzD
+ cs2vZOb+Pxfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,465,1583222400"; 
+   d="scan'208";a="416293574"
+Received: from lkp-server01.sh.intel.com (HELO e5a7ad696f24) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jun 2020 12:44:57 -0700
+Received: from kbuild by e5a7ad696f24 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jgCqG-00009e-BH; Tue, 02 Jun 2020 19:44:56 +0000
+Date:   Wed, 03 Jun 2020 03:43:58 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:sched/core] BUILD SUCCESS
+ 25de110d148666752dc0e0da7a0b69de31cd7098
+Message-ID: <5ed6abfe.BSTtJb/dEuvZ7sfb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200529192845.60468-1-vitor@massaru.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/20 1:28 PM, Vitor Massaru Iha wrote:
-> The identation before this code (`if not os.path.exists(cli_args.build_dir):``)
-> was with spaces instead of tabs after fixed up merge conflits,
-> this commit revert spaces to tabs:
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
+branch HEAD: 25de110d148666752dc0e0da7a0b69de31cd7098  irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too
 
+i386-tinyconfig vmlinux size:
 
-Applied to linux-kselftest kunit branch for Linux 5.8-rc1
+==============================================================================================================================================================
+ TOTAL  TEXT  try_invoke_on_locked_down_task()  arch/x86/events/zhaoxin/built-in.*                                                                            
+==============================================================================================================================================================
+    -1     0                                                                  -136  c6e7bd7afaeb sched/core: Optimize ttwu() spinning on p->on_cpu            
+     0     0                                                                  +136  2ebb17717550 sched/core: Offload wakee task activation if it the wakee is 
+     0     0                                                                  -136  498bdcdb949e Merge branch 'sched/urgent' into sched/core, to pick up fix  
+  +172  +172                               +76                                      58ef57b16d9e Merge branch 'core/rcu' into sched/core, to pick up dependen 
+     0     0                                 0                                      19a1f5ec6999 sched: Fix smp_call_function_single_async() usage for ILB    
+     0     0                                 0                                      52103be07d8b smp: Optimize flush_smp_call_function_queue()                
+     0     0                                 0                                      afaa653c564d smp: Move irq_work_run() out of flush_smp_call_function_queu 
+     0     0                                 0                                      b2a02fc43a1f smp: Optimize send_call_function_single_ipi()                
+    +1    +1                                 0                                      4b44a21dd640 irq_work, smp: Allow irq_work on call_single_queue           
+   -31     0                                 0                                      126c2092e5c8 sched: Add rq::ttwu_pending                                  
+     0     0                                 0                                      a148866489fb sched: Replace rq::wake_list                                 
+     0     0                                 0                                +136  1f8db4150536 sched/headers: Split out open-coded prototypes into kernel/s 
+    -1     0                                 0                                   0  25de110d1486 irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too   
+  +140  +173                               +76                                   0  d505b8af5891..25de110d1486 (ALL COMMITS)                                  
+==============================================================================================================================================================
 
-thanks,
--- Shuah
+elapsed time: 485m
+
+configs tested: 111
+configs skipped: 10
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arc                         haps_hs_defconfig
+sparc64                             defconfig
+arm                      pxa255-idp_defconfig
+sh                             shx3_defconfig
+arm                              alldefconfig
+mips                           ip28_defconfig
+xtensa                generic_kc705_defconfig
+arc                             nps_defconfig
+arm                        keystone_defconfig
+arm                        multi_v5_defconfig
+nios2                               defconfig
+arm                        shmobile_defconfig
+mips                           xway_defconfig
+arm                          ixp4xx_defconfig
+sh                           se7780_defconfig
+arm                          moxart_defconfig
+sh                               j2_defconfig
+sparc64                          allyesconfig
+arm                            mps2_defconfig
+powerpc                     pseries_defconfig
+arm                       netwinder_defconfig
+xtensa                       common_defconfig
+mips                          ath79_defconfig
+arm                    vt8500_v6_v7_defconfig
+arm                         hackkit_defconfig
+mips                     cu1000-neo_defconfig
+x86_64                              defconfig
+ia64                             allmodconfig
+powerpc                  storcenter_defconfig
+mips                  decstation_64_defconfig
+sh                   rts7751r2dplus_defconfig
+sh                     magicpanelr2_defconfig
+parisc                            allnoconfig
+mips                           ci20_defconfig
+mips                           ip22_defconfig
+s390                             alldefconfig
+c6x                        evmc6472_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allyesconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
