@@ -2,133 +2,196 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2620C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05155C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED8D2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B442072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dPHf2+o8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OUcjZ789"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgFBGq4 (ORCPT
+        id S1726420AbgFBGr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:46:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41300 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726241AbgFBGqz (ORCPT
+        Tue, 2 Jun 2020 02:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgFBGrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:46:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591080414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5U94FJdYK9plgkjd/rs2xCbqvAEoMXUciGGTL+Z60/U=;
-        b=dPHf2+o8pTrTSn4yHseOMG/dRl5U1pIr0ap6hwWbqs5Qbosw7RCYjuqdf5N9vBk0xkYEAv
-        yhtiyxhoVBcDYKwpUnTrGtAOZF0Q7sTOS4vTTE16c6mZHXo/eFUhHFlfoCUoZzUUm3rLuc
-        Pt3Y9DJ8XsTylPR47aVf6Z8ILL6Nmzw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-Fhw00SVqOWmZSw2KpdQ23w-1; Tue, 02 Jun 2020 02:46:50 -0400
-X-MC-Unique: Fhw00SVqOWmZSw2KpdQ23w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCAB61800D42;
-        Tue,  2 Jun 2020 06:46:48 +0000 (UTC)
-Received: from T590 (ovpn-12-167.pek2.redhat.com [10.72.12.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7FF331002390;
-        Tue,  2 Jun 2020 06:46:42 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 14:46:38 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk, hare@suse.de,
-        dwagner@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] blk-mq: get ctx in order to handle BLK_MQ_S_INACTIVE
- in blk_mq_get_tag()
-Message-ID: <20200602064638.GA1384911@T590>
-References: <20200602061749.32029-1-dongli.zhang@oracle.com>
+        Tue, 2 Jun 2020 02:47:25 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DF1C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 23:47:25 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c17so5438650lji.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 23:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PZ8MhVicGRsxzC9BimTXZzesSszOqn+avAqT4sSAbOo=;
+        b=OUcjZ789QS0RrQPt9rXejvQQkGj+FXXb95hS5D2DQMKb8qjFYC1Gj84fh5hmZ/TMP2
+         R90wsAJ2PV2KNwrCgJlQJNnnGKjcT2ttcEcqfgt7qtGnQ8/EbP8wP7qdbNWy7fiC77F/
+         UWQ/AYRTB8/YsogumFGLqx2eOfR9gKsayAZ6nM1xamDuVBS844PXn2aB2pzADG51sR8z
+         3khNWCSTcP54TYnMm8uteCRvLcSAJ9TifaN1+Ajxl0VIGuj7HM9+5w5tpdbhgn3pme6g
+         oAJBJdezG3sD82L92aZvmTXdN3yMsBHBpmBElAUMAk1kTlQDI1KkAKPcwDoA8jsIvCg8
+         4r/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PZ8MhVicGRsxzC9BimTXZzesSszOqn+avAqT4sSAbOo=;
+        b=VZ7uO8KyOqp/y6xshZa1hyf1P3Rc2qsFhJ6P8MEEZQvIkiYnBr7POGzYSjxXI8T5BG
+         HzCOv73EGok7Mrr/tAnNaKWOEiD6L9L+WUEpPWYHY1ex0uy5tXSN2fb5CvIVrU2mvOlS
+         rDkQmwPnyN9kHfU0ZZpFgABm9GCE5FqSXSOUhtxPfs8PlpQ7Jyk1auo1WtaLyWaFDjVC
+         wdy/FO8gYBjoREpAjgSrtJCC2H19NiDD5dJ3/0zvurJE73YeIJaR7xfyTYsK1heHQ3dW
+         gHG8S9K/5XuMommk2W17CBKmiSyalR6iQOtyPtUZy1rLkxuMLdcFoA1aWsjqiQt/5kNq
+         Iv3Q==
+X-Gm-Message-State: AOAM530AcXXV0jaYH96IYijz50dKiZ3/IKttAcqfTdDgNJKcFAP+Ogu8
+        TAGNN2Fkus74+F7tqACsW5e73M+bKjcvX264JY9nIQ==
+X-Google-Smtp-Source: ABdhPJyhCZrx4BBmx0/0ZetQbArk3BnkRJZ5ox0YM1+bxijpfOdKIZZyn7UMtzo2Up4wYGLkoDk+m3Q3oBGdO+xsozs=
+X-Received: by 2002:a2e:911:: with SMTP id 17mr260510ljj.411.1591080443350;
+ Mon, 01 Jun 2020 23:47:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602061749.32029-1-dongli.zhang@oracle.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200601174048.468952319@linuxfoundation.org>
+In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 2 Jun 2020 12:17:11 +0530
+Message-ID: <CA+G9fYv3EaXtER=C6nuQjq9WCv_f39vsgHkc5USU348gyRw=2g@mail.gmail.com>
+Subject: Re: [PATCH 5.6 000/177] 5.6.16-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 11:17:49PM -0700, Dongli Zhang wrote:
-> When scheduler is set, we hit below page fault when we offline cpu.
-> 
-> [ 1061.007725] BUG: kernel NULL pointer dereference, address: 0000000000000040
-> [ 1061.008710] #PF: supervisor read access in kernel mode
-> [ 1061.009492] #PF: error_code(0x0000) - not-present page
-> [ 1061.010241] PGD 0 P4D 0
-> [ 1061.010614] Oops: 0000 [#1] SMP PTI
-> [ 1061.011130] CPU: 0 PID: 122 Comm: kworker/0:1H Not tainted 5.7.0-rc7+ #2'
-> ... ...
-> [ 1061.013760] Workqueue: kblockd blk_mq_run_work_fn
-> [ 1061.014446] RIP: 0010:blk_mq_put_tag+0xf/0x30
-> ... ...
-> [ 1061.017726] RSP: 0018:ffffa5c18037fc70 EFLAGS: 00010287
-> [ 1061.018475] RAX: 0000000000000000 RBX: ffffa5c18037fcf0 RCX: 0000000000000004
-> [ 1061.019507] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff911535dc1180
-> ... ...
-> [ 1061.028454] Call Trace:
-> [ 1061.029307]  blk_mq_get_tag+0x26e/0x280
-> [ 1061.029866]  ? wait_woken+0x80/0x80
-> [ 1061.030378]  blk_mq_get_driver_tag+0x99/0x110
-> [ 1061.031009]  blk_mq_dispatch_rq_list+0x107/0x5e0
-> [ 1061.031672]  ? elv_rb_del+0x1a/0x30
-> [ 1061.032178]  blk_mq_do_dispatch_sched+0xe2/0x130
-> [ 1061.032844]  __blk_mq_sched_dispatch_requests+0xcc/0x150
-> [ 1061.033638]  blk_mq_sched_dispatch_requests+0x2b/0x50
-> [ 1061.034239]  __blk_mq_run_hw_queue+0x75/0x110
-> [ 1061.034867]  process_one_work+0x15c/0x370
-> [ 1061.035450]  worker_thread+0x44/0x3d0
-> [ 1061.035980]  kthread+0xf3/0x130
-> [ 1061.036440]  ? max_active_store+0x80/0x80
-> [ 1061.037018]  ? kthread_bind+0x10/0x10
-> [ 1061.037554]  ret_from_fork+0x35/0x40
-> [ 1061.038073] Modules linked in:
-> [ 1061.038543] CR2: 0000000000000040
-> [ 1061.038962] ---[ end trace d20e1df7d028e69f ]---
-> 
-> This is because blk_mq_get_driver_tag() would be used to allocate tag once
-> scheduler (e.g., mq-deadline) is set. However, in order to handle
-> BLK_MQ_S_INACTIVE in blk_mq_get_tag(), we need to set data->ctx for
-> blk_mq_put_tag().
-> 
-> Fixes: bf0beec0607db3c6 ("blk-mq: drain I/O when all CPUs in a hctx are offline")
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-> ---
-> This is based on for-next because currently the pull request for v5.8 is
-> not picked by mainline.
-> 
->  block/blk-mq.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 9a36ac1c1fa1..8bf6c06a86c1 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -1056,6 +1056,7 @@ bool blk_mq_get_driver_tag(struct request *rq)
->  {
->  	struct blk_mq_alloc_data data = {
->  		.q = rq->q,
-> +		.ctx = rq->mq_ctx,
->  		.hctx = rq->mq_hctx,
->  		.flags = BLK_MQ_REQ_NOWAIT,
->  		.cmd_flags = rq->cmd_flags,
+On Mon, 1 Jun 2020 at 23:43, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.6.16 release.
+> There are 177 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.6.16-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
--- 
-Ming
+Summary
+------------------------------------------------------------------------
 
+kernel: 5.6.16-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.6.y
+git commit: c72fcbc7d224903b8241afc1202a414575c1e557
+git describe: v5.6.15-178-gc72fcbc7d224
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
+ld/v5.6.15-178-gc72fcbc7d224
+
+No regressions (compared to build v5.6.15)
+
+No fixes (compared to build v5.6.15)
+
+Ran 31253 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* ltp-cve-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* kselftest/net
+* kselftest/networking
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-open-posix-tests
+* network-basic-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
