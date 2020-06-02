@@ -2,225 +2,180 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2951C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E984FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEF6206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591086085;
-	bh=JDWjXKU3EpHzZx1Tu9HxV6CBJiWZdmfZjOq6H7wg38M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y6rrzQc0NFWdZFXB14V73lmrrgKHk3q6I1VGtoRtKAyhG8e1b3OHBcnQ9zlBaKUFr
-	 nxL9KYXPdyXKaq4Hv9BVI7zMNJM5on6Rlvf4RzG9hG3NQSoQIz7JE2lzL6JmGPQb1Z
-	 mbwizaNIWlUbSgeJAm+eOIrsjoPieUTdRBd4OD7c=
+	by mail.kernel.org (Postfix) with ESMTP id C3FAE206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:21:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="trqAUZ5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgFBIVY convert rfc822-to-8bit (ORCPT
+        id S1726260AbgFBIVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:21:24 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44611 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgFBIVY (ORCPT
+        Tue, 2 Jun 2020 04:21:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgFBIVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:21:24 -0400
-Received: by mail-ed1-f65.google.com with SMTP id l1so8515072ede.11;
-        Tue, 02 Jun 2020 01:21:21 -0700 (PDT)
+        Tue, 2 Jun 2020 04:21:49 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B1FC061A0E;
+        Tue,  2 Jun 2020 01:21:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id m18so11488085ljo.5;
+        Tue, 02 Jun 2020 01:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FjBag7M9X3aH/ZEGPq07O51zdgo35JEFdqZ5HJOkkrY=;
+        b=trqAUZ5/3aI8+fzxUeXYg9HQQREJNPKZygkPMG8OxgCxlHjocPZQUltnETkIeH93+x
+         GlvbKY7vPkmozFCHoqeUJZt/LA4ILlc7q4q8w8RaZgwrHLs981qT/DOlGWbtbSuGsd6W
+         GzipgCj7YaEfl0q5vDgePniFVNOi7X2IMK+FTlrMBvD/SQxvL5vlMyE6URYW5Rw8+LRB
+         84edeF780OHnDzvL6K0FackZAXac+L+jbj+3PLOMs4RA6KhctEzjbQGpsnah12f5RHPj
+         ZiQuO6IvA1ojr8tFR2/x08q35acbauyctmRta6izQdslhJvvVMzeBKkyFKdsdCq/Sjar
+         HMgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=bMqx/K8qt6ZuFGVbxPaYyyZ1KHtt21Gc7xSEXh3TFqc=;
-        b=O9G5ZLFuDdvQSTa7n8opXyKzFW3mNKGWhkRR2z4WWDayhKOUunT2bWgTNScBSwlg59
-         hDECMWxJ/RyssG35Urv4P5ggcvPH6Dga9RX5Rro2C45vZhfeCJQP5VUKJc0h+J8xa1vn
-         VxYW/VR1LyBGbgh9b1xWWf87B3iXUahgC4UGFsRvTOFFOJbHJ3OLxXPa7xSpUiRC1KFA
-         /3QacDI+fltcU1yaxCSFnat0MWARv0EtfZ1SEbuPhds6R/4fS/tKtBqf1tSKj6ABYFzs
-         MkAjX+1p+Eb4d/+LQBBDEE7fvVzTeJv5E+zJ0sra76PSurtc/uYqw+smddUPghxl9n2i
-         iS+A==
-X-Gm-Message-State: AOAM530cNkWr50N7XTUmXULQiqi+KU2/rk0HYF6WBu9LtJ1KnlWzLX3u
-        oByl1kXBnhumSOMXBf8ZXY8=
-X-Google-Smtp-Source: ABdhPJz0s1Yv0craKTmc1+MBA9Wpl8/dfLu81EyEQULFcLKG2SD43M0HslPqhrDnEtV41wdc2KCt7w==
-X-Received: by 2002:aa7:d283:: with SMTP id w3mr13300946edq.262.1591086081042;
-        Tue, 02 Jun 2020 01:21:21 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.118])
-        by smtp.googlemail.com with ESMTPSA id h10sm1340569ejb.2.2020.06.02.01.21.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 01:21:20 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 10:21:18 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     georgi.djakov@linaro.org, cw00.choi@samsung.com,
-        a.swigon@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
+         :mime-version:content-disposition:in-reply-to;
+        bh=FjBag7M9X3aH/ZEGPq07O51zdgo35JEFdqZ5HJOkkrY=;
+        b=rcTnYSP+GCnhfwta9SyK0Rfne3U6xPbdKdeQMT7uoK4T7qEkoEO0EjU7p2rg+r8DmX
+         KfhvWNyh/VwQsiu4sDJuFM1Gci4h4R8UHRFg3YmyE6aUuG02BXbA+ijug+ECx2WoBook
+         n9vGV8TV7zcLCxhOhIkx2D3NkPAD5SFn+YmrzhZ1FqXb85vTS4fLiSkx+C0VrlCa+1XM
+         xOppm+HFn4rp6R8lwNLmBHjJJSLoYKOAXC+5t4Eu2qW+c/+CoZ3yOiwHdgjVSJyBryws
+         uZyPMY6QDvIEUoqhf3KVakyZmGGObfTms2nLN/YdvWZ8FbZkeEHFNYgPtRXISPDzzzpV
+         tXYQ==
+X-Gm-Message-State: AOAM531J6SxxjdpSyvQ9NPZEMd7OPs9akllNc7xN2qgG2rxeY8S+AJ/V
+        Mhc1esVbKyh4SNgM4tA4+Mk=
+X-Google-Smtp-Source: ABdhPJzDOQi6hmzqge53Xl5Zq7aD1IUTng25DanPHl/+hcvMgGV5LOyybYU5LKq4k+WpCS9xK0BI4w==
+X-Received: by 2002:a2e:5c45:: with SMTP id q66mr7580829ljb.147.1591086107518;
+        Tue, 02 Jun 2020 01:21:47 -0700 (PDT)
+Received: from mobilestation ([95.79.222.123])
+        by smtp.gmail.com with ESMTPSA id d22sm516778lfn.84.2020.06.02.01.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 01:21:46 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 11:21:44 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v5 2/6] interconnect: Add generic interconnect driver
- for Exynos SoCs
-Message-ID: <20200602082118.GB8216@kozik-lap>
-References: <20200529163200.18031-1-s.nawrocki@samsung.com>
- <CGME20200529163223eucas1p2f663280abb499b4114b2f2930b43a4e5@eucas1p2.samsung.com>
- <20200529163200.18031-3-s.nawrocki@samsung.com>
+Subject: Re: [PATCH 00/10] spi: Adding support for Microchip Sparx5 SoC
+Message-ID: <20200602082144.z2crru6uqoiyfj5k@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200529162130.hsjcde27xhohl6jl@mobilestation>
+ <87img9q3sb.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200529163200.18031-3-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87img9q3sb.fsf@soft-dev15.microsemi.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:31:56PM +0200, Sylwester Nawrocki wrote:
-> This patch adds a generic interconnect driver for Exynos SoCs in order
-> to provide interconnect functionality for each "samsung,exynos-bus"
-> compatible device.
+On Tue, Jun 02, 2020 at 10:18:28AM +0200, Lars Povlsen wrote:
 > 
-> The SoC topology is a graph (or more specifically, a tree) and its
-> edges are specified using the 'samsung,interconnect-parent' in the
-> DT. Due to unspecified relative probing order, -EPROBE_DEFER may be
-> propagated to ensure that the parent is probed before its children.
+> Serge Semin writes:
 > 
-> Each bus is now an interconnect provider and an interconnect node as
-> well (cf. Documentation/interconnect/interconnect.rst), i.e. every bus
-> registers itself as a node. Node IDs are not hardcoded but rather
-> assigned dynamically at runtime. This approach allows for using this
-> driver with various Exynos SoCs.
+> > Hello Lars,
+> >
+> > On Wed, May 13, 2020 at 04:00:21PM +0200, Lars Povlsen wrote:
+> >> This is an add-on series to the main SoC Sparx5 series
+> >> (Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
+> >>
+> >> The series add support for Sparx5 on top of the existing
+> >> ocelot/jaguar2 spi driver.
+> >>
+> >> It spins off the existing support for the MSCC platforms into a
+> >> separate driver, as adding new platforms from the MSCC/Microchip
+> >> product lines will further complicate (clutter) the original driver.
+> >>
+> >> New YAML dt-bindings are provided for the resulting driver.
+> >>
+> >> It is expected that the DT patches are to be taken directly by the arm-soc
+> >> maintainers.
+> >
+> > Regarding our cooperation. It can be implemented as follows. Since your patchset
+> > is less cumbersome than mine and is more ready to be integrated into the generic DW
+> > APB SSI code, it would be better to first make it through Mark', Andy' and my reviews
+> > to be further merged into the kernel version of the driver. After that I'll have
+> > my code altered so it could be applied on top of your patches. When everything
+> > is done we'll have a more comprehensive DW APB SSI driver with poll-based
+> > PIO operations support, new features like rx-delay, etc.
+> >
 > 
-> Frequencies requested via the interconnect API for a given node are
-> propagated to devfreq using dev_pm_qos_update_request(). Please note
-> that it is not an error when CONFIG_INTERCONNECT is 'n', in which
-> case all interconnect API functions are no-op.
+> Hi Serge!
 > 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> I think I would be able to work on the SPI patches this week. Should I
+> base it on the current spi-next or 5.7? Then address the comments and
+> send out a new revision?
 > 
-> Changes for v5:
->  - adjust to renamed exynos,interconnect-parent-node property,
->  - use automatically generated platform device id as the interconect
->    node id instead of a now unavailable devfreq->id field,
->  - add icc_ prefix to some variables to make the code more self-commenting,
->  - use icc_nodes_remove() instead of icc_node_del() + icc_node_destroy(),
->  - adjust to exynos,interconnect-parent-node property rename to
->    samsung,interconnect-parent,
->  - converted to a separate platform driver in drivers/interconnect.
-> ---
->  drivers/interconnect/Kconfig         |   1 +
->  drivers/interconnect/Makefile        |   1 +
->  drivers/interconnect/exynos/Kconfig  |   6 ++
->  drivers/interconnect/exynos/Makefile |   4 +
->  drivers/interconnect/exynos/exynos.c | 185 +++++++++++++++++++++++++++++++++++
->  5 files changed, 197 insertions(+)
->  create mode 100644 drivers/interconnect/exynos/Kconfig
->  create mode 100644 drivers/interconnect/exynos/Makefile
->  create mode 100644 drivers/interconnect/exynos/exynos.c
-> 
-> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
-> index 5b7204e..eca6eda 100644
-> --- a/drivers/interconnect/Kconfig
-> +++ b/drivers/interconnect/Kconfig
-> @@ -11,6 +11,7 @@ menuconfig INTERCONNECT
->  
->  if INTERCONNECT
->  
-> +source "drivers/interconnect/exynos/Kconfig"
->  source "drivers/interconnect/imx/Kconfig"
->  source "drivers/interconnect/qcom/Kconfig"
->  
-> diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
-> index 4825c28..2ba1de6 100644
-> --- a/drivers/interconnect/Makefile
-> +++ b/drivers/interconnect/Makefile
-> @@ -4,5 +4,6 @@ CFLAGS_core.o				:= -I$(src)
->  icc-core-objs				:= core.o
->  
->  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
-> +obj-$(CONFIG_INTERCONNECT_EXYNOS)	+= exynos/
->  obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
->  obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
-> diff --git a/drivers/interconnect/exynos/Kconfig b/drivers/interconnect/exynos/Kconfig
-> new file mode 100644
-> index 0000000..e51e52e
-> --- /dev/null
-> +++ b/drivers/interconnect/exynos/Kconfig
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config INTERCONNECT_EXYNOS
-> +	tristate "Exynos generic interconnect driver"
-> +	depends on ARCH_EXYNOS || COMPILE_TEST
-> +	help
-> +	  Generic interconnect driver for Exynos SoCs.
-> diff --git a/drivers/interconnect/exynos/Makefile b/drivers/interconnect/exynos/Makefile
-> new file mode 100644
-> index 0000000..e19d1df
-> --- /dev/null
-> +++ b/drivers/interconnect/exynos/Makefile
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +exynos-interconnect-objs		:= exynos.o
-> +
-> +obj-$(CONFIG_INTERCONNECT_EXYNOS)	+= exynos-interconnect.o
-> diff --git a/drivers/interconnect/exynos/exynos.c b/drivers/interconnect/exynos/exynos.c
-> new file mode 100644
-> index 0000000..8278194
-> --- /dev/null
-> +++ b/drivers/interconnect/exynos/exynos.c
-> @@ -0,0 +1,185 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Exynos generic interconnect provider driver
-> + *
-> + * Copyright (c) 2020 Samsung Electronics Co., Ltd.
-> + *
-> + * Authors: Artur Świgoń <a.swigon@samsung.com>
-> + *          Sylwester Nawrocki <s.nawrocki@samsung.com>
-> + */
-> +#include <linux/device.h>
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_qos.h>
-> +
-> +#define kbps_to_khz(x) ((x) / 8)
-> +
-> +struct exynos_icc_priv {
-> +	struct device *dev;
-> +
-> +	/* One interconnect node per provider */
-> +	struct icc_provider provider;
-> +	struct icc_node *node;
-> +
-> +	struct dev_pm_qos_request qos_req;
-> +};
-> +
-> +static struct icc_node *exynos_icc_get_parent(struct device_node *np)
-> +{
-> +	struct of_phandle_args args;
-> +	int num, ret;
-> +
-> +	num = of_count_phandle_with_args(np, "samsung,interconnect-parent",
-> +					"#interconnect-cells");
-> +	if (num != 1)
-> +		return NULL; /* parent nodes are optional */
-> +
-> +	ret = of_parse_phandle_with_args(np, "samsung,interconnect-parent",
-> +					"#interconnect-cells", 0, &args);
-> +	if (ret < 0)
-> +		return ERR_PTR(ret);
-> +
-> +	of_node_put(args.np);
-> +
-> +	return of_icc_get_from_provider(&args);
+> Thanks for reaching out.
 
-I think of_node_put() should happen after of_icc_get_from_provider().
+Sorry for a delay. I had to finish urgent tasks first. I'll give my review comments
+shortly today.
 
-Best regards,
-Krzysztof
+-Sergey
+
+> 
+> ---Lars
+> 
+> > Thank you one more time for the series you've shared with us. Let's see what can
+> > be done to improve it...
+> >
+> > -Sergey
+> >
+> >>
+> >> Lars Povlsen (10):
+> >>   spi: dw: Add support for polled operation via no IRQ specified in DT
+> >>   spi: dw: Add support for RX sample delay register
+> >>   spi: dw: Add support for client driver memory operations
+> >>   dt-bindings: spi: Add bindings for spi-dw-mchp
+> >>   spi: spi-dw-mmio: Spin off MSCC platforms into spi-dw-mchp
+> >>   dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
+> >>   spi: spi-dw-mchp: Add Sparx5 support
+> >>   arm64: dts: sparx5: Add SPI controller
+> >>   arm64: dts: sparx5: Add spi-nor support
+> >>   arm64: dts: sparx5: Add spi-nand devices
+> >>
+> >>  .../bindings/spi/mscc,ocelot-spi.yaml         |  89 ++++
+> >>  .../bindings/spi/snps,dw-apb-ssi.txt          |   7 +-
+> >>  MAINTAINERS                                   |   2 +
+> >>  arch/arm64/boot/dts/microchip/sparx5.dtsi     |  37 ++
+> >>  .../boot/dts/microchip/sparx5_pcb125.dts      |  16 +
+> >>  .../boot/dts/microchip/sparx5_pcb134.dts      |  22 +
+> >>  .../dts/microchip/sparx5_pcb134_board.dtsi    |   9 +
+> >>  .../boot/dts/microchip/sparx5_pcb135.dts      |  23 +
+> >>  .../dts/microchip/sparx5_pcb135_board.dtsi    |   9 +
+> >>  arch/mips/configs/generic/board-ocelot.config |   2 +-
+> >>  drivers/spi/Kconfig                           |   7 +
+> >>  drivers/spi/Makefile                          |   1 +
+> >>  drivers/spi/spi-dw-mchp.c                     | 399 ++++++++++++++++++
+> >>  drivers/spi/spi-dw-mmio.c                     |  93 ----
+> >>  drivers/spi/spi-dw.c                          |  31 +-
+> >>  drivers/spi/spi-dw.h                          |   4 +
+> >>  16 files changed, 644 insertions(+), 107 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+> >>  create mode 100644 drivers/spi/spi-dw-mchp.c
+> >>
+> >> --
+> >> 2.26.2
+> >>
+> >> _______________________________________________
+> >> linux-arm-kernel mailing list
+> >> linux-arm-kernel@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> --
+> Lars Povlsen,
+> Microchip
