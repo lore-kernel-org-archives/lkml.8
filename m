@@ -2,105 +2,85 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE11C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5759320678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF6E20679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgFBUyW (ORCPT
+        id S1728012AbgFBVBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:54:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
+        Tue, 2 Jun 2020 17:01:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBUyW (ORCPT
+        with ESMTP id S1726174AbgFBVBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:54:22 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10476C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:54:22 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jgDvL-0003XN-0L; Tue, 02 Jun 2020 22:54:15 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 4DB14100F18; Tue,  2 Jun 2020 22:54:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Herrenschmidt\, Benjamin" <benh@amazon.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "Saidi\, Ali" <alisaidi@amazon.com>
-Cc:     "jason\@lakedaemon.net" <jason@lakedaemon.net>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Woodhouse\, David" <dwmw@amazon.co.uk>,
-        "Zilberman\, Zeev" <zeev@amazon.com>,
-        "Machulsky\, Zorik" <zorik@amazon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-In-Reply-To: <37e55e71faf76dc3db76d89c20c1bdfff942e380.camel@amazon.com>
-References: <20200529015501.15771-1-alisaidi@amazon.com> <8c3be990888ecfb7cca9503853dc4aac@kernel.org> <2C4F431F-8140-4C82-B4BD-E51DE618FC08@amazon.com> <20200530174929.7bf6d5d7@why> <eed907d48de84c96e3ceb27c1ed6f622@kernel.org> <37e55e71faf76dc3db76d89c20c1bdfff942e380.camel@amazon.com>
-Date:   Tue, 02 Jun 2020 22:54:14 +0200
-Message-ID: <87y2p5fatl.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 2 Jun 2020 17:01:15 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD58C08C5C0;
+        Tue,  2 Jun 2020 14:01:14 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B9DB51276B16B;
+        Tue,  2 Jun 2020 14:01:11 -0700 (PDT)
+Date:   Tue, 02 Jun 2020 14:01:08 -0700 (PDT)
+Message-Id: <20200602.140108.2199333313862275860.davem@davemloft.net>
+To:     nikolay@cumulusnetworks.com
+Cc:     patrickeigensatz@gmail.com, dsahern@kernel.org,
+        scan-admin@coverity.com, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipv4: nexthop: Fix deadcode issue by performing a
+ proper NULL check
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <4e6ba1a8-be3b-fd22-e0b8-485d33bb51eb@cumulusnetworks.com>
+References: <20200601111201.64124-1-patrick.eigensatz@gmail.com>
+        <20200601.110654.1178868171436999333.davem@davemloft.net>
+        <4e6ba1a8-be3b-fd22-e0b8-485d33bb51eb@cumulusnetworks.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 02 Jun 2020 14:01:12 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Herrenschmidt, Benjamin" <benh@amazon.com> writes:
-> On Sun, 2020-05-31 at 12:09 +0100, Marc Zyngier wrote:
->> > The semantic of activate/deactivate (which maps to started/shutdown
->> > in the IRQ code) is that the HW resources for a given interrupt are
->> > only committed when the interrupt is activated. Trying to perform
->> > actions involving the HW on an interrupt that isn't active cannot be
->> > guaranteed to take effect.
->> > 
->> > I'd rather address it in the core code, by preventing set_affinity (and
->> > potentially others) to take place when the interrupt is not in the
->> > STARTED state. Userspace would get an error, which is perfectly
->> > legitimate, and which it already has to deal with it for plenty of
->> > other
->> > reasons.
->
-> So I finally found time to dig a bit in there :) Code has changed a bit
-> since last I looked. But I have memories of the startup code messing
-> around with the affinity, and here it is. In irq_startup() :
->
->
-> 		switch (__irq_startup_managed(desc, aff, force)) {
-> 		case IRQ_STARTUP_NORMAL:
-> 			ret = __irq_startup(desc);
-> 			irq_setup_affinity(desc);
-> 			break;
-> 		case IRQ_STARTUP_MANAGED:
-> 			irq_do_set_affinity(d, aff, false);
-> 			ret = __irq_startup(desc);
-> 			break;
-> 		case IRQ_STARTUP_ABORT:
-> 			irqd_set_managed_shutdown(d);
-> 			return 0;
->
-> So we have two cases here. Normal and managed.
->
-> In the managed case, we set the affinity before startup. I feel like your
-> patch might break that or am I missing something ?
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Date: Tue, 2 Jun 2020 10:23:09 +0300
 
-It will break stuff because the affinity is not stored in case that the
-interrupt is not started.
+> On 01/06/2020 21:06, David Miller wrote:
+>> From: patrickeigensatz@gmail.com
+>> Date: Mon,  1 Jun 2020 13:12:01 +0200
+>> 
+>>> From: Patrick Eigensatz <patrickeigensatz@gmail.com>
+>>>
+>>> After allocating the spare nexthop group it should be tested for kzalloc()
+>>> returning NULL, instead the already used nexthop group (which cannot be
+>>> NULL at this point) had been tested so far.
+>>>
+>>> Additionally, if kzalloc() fails, return ERR_PTR(-ENOMEM) instead of NULL.
+>>>
+>>> Coverity-id: 1463885
+>>> Reported-by: Coverity <scan-admin@coverity.com>
+>>> Signed-off-by: Patrick Eigensatz <patrickeigensatz@gmail.com>
+>> 
+>> Applied, thank you.
+>> 
+> 
+> Hi Dave,
+> I see this patch in -net-next but it should've been in -net as I wrote in my
+> review[1]. This patch should go along with the recent nexthop set that fixes
+> a few bugs, since it could result in a null ptr deref if the spare group cannot
+> be allocated.
+> How would you like to proceed? Should it be submitted for -net as well?
 
-I think we can fix this in the core code but that needs more thought.
-__irq_can_set_affinity() is definitely the wrong place.
-
-Thanks,
-
-        tglx
-
+When I'm leading up to the merge window I just toss everything into net-next
+and still queue things to -stable as needed.
