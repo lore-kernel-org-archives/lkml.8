@@ -2,131 +2,105 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B519BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B462072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ErEmBwVZ"
+	by mail.kernel.org (Postfix) with ESMTP id 69B7220734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591123008;
+	bh=OvQjdPoM0pJTu54sJl+ffqQUAsF4t+qMSrZonGhfXr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qvfRpOHnZkCrtbthBwcDPLnXT1t57M3IP21se+bItffY4lwUtdEtFKYbOPl5soJLh
+	 YdnIngoDJF45es7YZYMjTCajJ2+ZZLUggkesgp/YQaww31Lueuy8wkXZDQ8D5u2lIi
+	 POPr7Q7KD8Sc4ShRaJAIsNC0k6yx8ktyVZjIBImk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgFBSgA (ORCPT
+        id S1727946AbgFBSgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFBSgA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:36:00 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94BB0C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:35:59 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h188so6795972lfd.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ijFpZRjwoX99ihI6aAs0JBxKZ+/9IGA5AcjqDRRxjVE=;
-        b=ErEmBwVZMzkC+6G17Sf/f4on+HIvZSZ8AKzHtw2WN/e8HA2YTsmF9nWW8KKw3DJLKe
-         me5TqmdmNjfI5P78MUGsnW7a7Dii5HwIzqYhuYskjDyatp9sbSa71pmV8MU+CKmoKMWS
-         kqSzc5ZAe9uDm/UNtKVFJjB4LyNBB/Ms7PbzE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ijFpZRjwoX99ihI6aAs0JBxKZ+/9IGA5AcjqDRRxjVE=;
-        b=mfduqDD/GDaF6RiKBVUWTCzajIE+gaYCwMJ2LAlO+JiqK2SyBx9gCG5Q11YZrCvJSO
-         ti58uO7IgkAniyHrn9Eh6sC8NqmsQ+OzAGYK5czZXp3nTwFuQU+l41C3YXOfRum8+5XJ
-         7heIMJ5nv5wu0zT3FZgJJwo1ACuzTRMopW344h8j2sGbvyIWsO5e3kF0RnEg1gyJfF4e
-         bTJRJZcYGh54tnOm0NhKPaAiU3dN3v82tn7q9T0ObYs1Snzs0i86fkpPZIhRp+wDhoAD
-         8rVILWjES+MwBZW8r18WyvHVC53g5go2iVmptV9WOzPkOI+u7xbakXyS1nakxwETgndo
-         JyTA==
-X-Gm-Message-State: AOAM533Vj43hagG/hrPvnrpOApYx8bOO7lAeJI2f94CgOPg9r9E5/y5x
-        f8nV2inAqhIoaOSvxATo5PIf4LIBdFA=
-X-Google-Smtp-Source: ABdhPJzNArPaYmcxaafaQIHDLTW65fx0qFVb+l3+QIMAdIn0VO0uCZ+5iTTGO8X0eXDL2QTb0WgstA==
-X-Received: by 2002:a05:6512:3208:: with SMTP id d8mr376495lfe.38.1591122957713;
-        Tue, 02 Jun 2020 11:35:57 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id z2sm803273ljh.72.2020.06.02.11.35.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 11:35:56 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id u16so6794508lfl.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:35:56 -0700 (PDT)
-X-Received: by 2002:a19:4acf:: with SMTP id x198mr353040lfa.129.1591122955826;
- Tue, 02 Jun 2020 11:35:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200527165718.129307-1-briannorris@chromium.org>
- <CAGRGNgX5n=0OEi7hMrmgVZGD=orGpgvkyLrhmXVKSFYdBJ+eUw@mail.gmail.com> <CAJ-Vmomx0UFEa1w2HsGMQsZb+K8hyK=Zz9cKSo7tHv5GiMc1yw@mail.gmail.com>
-In-Reply-To: <CAJ-Vmomx0UFEa1w2HsGMQsZb+K8hyK=Zz9cKSo7tHv5GiMc1yw@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 2 Jun 2020 11:35:43 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXNicJmAKvkjD5mGFVQ+bmz8nHT_A1oqtjoS=spRSFP70A@mail.gmail.com>
-Message-ID: <CA+ASDXNicJmAKvkjD5mGFVQ+bmz8nHT_A1oqtjoS=spRSFP70A@mail.gmail.com>
-Subject: Re: [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-To:     Adrian Chadd <adrian@freebsd.org>
-Cc:     Julian Calaby <julian.calaby@gmail.com>,
-        ath10k <ath10k@lists.infradead.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
+        Tue, 2 Jun 2020 14:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726728AbgFBSgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 14:36:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C6442072F;
+        Tue,  2 Jun 2020 18:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591123006;
+        bh=OvQjdPoM0pJTu54sJl+ffqQUAsF4t+qMSrZonGhfXr4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UWuBRQkdY99dlKdSFTzfrSniB90bkr6VieoRYdv07lD+xXNP5vH7xP+znRdvLtssc
+         uMUJrCLfVqLgFEtdsG7glA6raTtaA3V0uJPcsZPHI8i+cu5RBw8I4p2mpnTsTlPFvF
+         6fokw5AX6dpDFXEYJxF79iaFpQ6VG1N82Qoz99/k=
+Date:   Tue, 2 Jun 2020 19:36:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-spi@vger.kernel.org, Navid Emamdoost <emamd001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
         LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Wen Gong <wgong@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        kernel-janitors@vger.kernel.org
+Subject: Re: spi: spi-ti-qspi: call pm_runtime_put on pm_runtime_get failure
+Message-ID: <20200602183644.GI5684@sirena.org.uk>
+References: <26028f50-3fb8-eb08-3c9f-08ada018bf9e@web.de>
+ <20200602094947.GA5684@sirena.org.uk>
+ <1c13e0ec-e50f-9eea-5704-052d2d682727@web.de>
+ <20200602141306.GH5684@sirena.org.uk>
+ <cc8e1397-c605-d73e-363e-9d2ddfb9ae16@web.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="N8NGGaQn1mzfvaPg"
+Content-Disposition: inline
+In-Reply-To: <cc8e1397-c605-d73e-363e-9d2ddfb9ae16@web.de>
+X-Cookie: We are not a clone.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 8:42 AM Adrian Chadd <adrian@freebsd.org> wrote:
-> On Thu, 28 May 2020 at 05:02, Julian Calaby <julian.calaby@gmail.com> wrote:
-> > On Thu, May 28, 2020 at 5:18 AM Brian Norris <briannorris@chromium.org> wrote:
-> > >
-> > > This reverts commit 2dc016599cfa9672a147528ca26d70c3654a5423.
-> > >
-> > > Users are reporting regressions in regulatory domain detection and
-> > > channel availability.
-> > >
-> > > The problem this was trying to resolve was fixed in firmware anyway:
-> >
-> > Should we tell the user their firmware needs to be upgraded if it
-> > reports this regulatory domain instead of completely dropping support
-> > for it?
 
-I'm not really sure how to do that properly in general, and I don't
-plan to do so. I'm simply reverting a change that caused people
-problems, and noting at the same time that the original problem was
-resolved differently.
+--N8NGGaQn1mzfvaPg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I don't really have a stake in this patch, because everything I care
-about works correctly either way. (And AFAICT, any hardware that is
-affected by this patch is somewhat broken.) I'm only posting the
-revert as a community service, because Wen couldn't be bothered to do
-it himself.
+On Tue, Jun 02, 2020 at 05:05:18PM +0200, Markus Elfring wrote:
+> >> I find this commit message improvable also according to Linux software
+> >> development documentation.
 
-> Also that commit mentioned a 6174 firmware, but what about all the other older chips with a regulatory domain of 0x0 ?
+> > Causing people to send out new versions of things for tweaks to the
+> > commit log consumes time for them and everyone they're sending changes to.
 
-My understanding was that no QCA modules *should* be shipped with a
-value of 0 in this field. The instance I'm aware of was more or less a
-manufacturing error I think, and we got Qualcomm to patch it over in
-software. I don't think people expected anybody else to have shipped
-modules with a 0 value, but apparently they did. I don't know what to
-do with those, other than just leave well enough alone (i.e., $subject
-revert).
+> Improving patches (besides source code adjustments) is an usual software
+> development activity, isn't it?
 
-> As a side note, I'd /really appreciate/ if ath10k changes were tested on a variety of ath10k hardware and firmware revisions, rather than just either the Rome or embedded radios, rather than also including peregrine, cascade, besra, etc.
+Your updates were not improvements.  The formatting was worse and to my
+native speaker eyes the grammar was worse.  With this sort of stylistic
+thing it's especially important that any review aligns with the needs
+and practices of the subsystem, there is opinion in there and multiple
+opinions just makes things harder for submitters.
 
-Wouldn't we all love it if everybody else tested appropriately. But
-Qualcomm folks can't be coordinated (trust me, I've tried), and apart
-from things like KernelCI (which so far has no WiFi tests, IIUC),
-there's no community testing efforts that don't involve
-"${RANDOM_PERSON} boots ${PERSONAL_BOX} and see if it blows up."
+--N8NGGaQn1mzfvaPg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This also might not be the best place to admit it, but I'll be up
-front: I have no idea what peregrine, cascade, or besra are.
+-----BEGIN PGP SIGNATURE-----
 
-Brian
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7WnDsACgkQJNaLcl1U
+h9DGkAf+PjSEqHTfl5f2iz9hfmR2SynpiykJ1XkuI/QQI+g5b8po5GEO+Ex48irJ
+eZapYj6s73KBN1FcvTkmGNrCqO1sGQwMXvsf0cIQ1gFltQt01hopOWwqGvt1MtDm
+nwCi6sU1jOjGzkQ/sgxvvIPIz8YAQ+YD177k4v6XKma565eJGukVTpQZfwWi52Xq
+MHT93raV0bDM1nZz2/xe/P1GsKd4iO/+nGbI2qA9ZmueqGzbsqphOlgf1Z/M4em2
+qIA7qVs5WkjL01yyBjwoKkZo1Q7XVp20NtZvytXut/iFx0X4XUV2E/ehB/EqAcKt
+REEO3WfKi8oLPVWCRSzau202uix/yQ==
+=NOcb
+-----END PGP SIGNATURE-----
+
+--N8NGGaQn1mzfvaPg--
