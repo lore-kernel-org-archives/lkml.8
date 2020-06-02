@@ -2,175 +2,255 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00760C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5501BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8B6520663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENqSuUoq"
+	by mail.kernel.org (Postfix) with ESMTP id 276992086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591105382;
+	bh=hhMZhOjYa1IjqTSmpKsYB/QGeIboewsrBhSzT+3FAws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=laC0auG2NnCylA1WEj+eVSiYuMTDb8Gv4Q8TMlUn9MpahvdGMwzE+Rj22og0yDhqc
+	 NvkH63m3iH6yoia7Mp/eQxJ+9AV/AXIyMK1CwZJVZXh/AnwK3BMFWdhTOa1AcdouTp
+	 RinOw/wHvUBWRQNCFLtha7Sx4O5QPdNaa8hCP3Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFBNkQ (ORCPT
+        id S1726922AbgFBNnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgFBNkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:40:15 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B8B8C05BD43;
-        Tue,  2 Jun 2020 06:40:14 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so1344237plb.11;
-        Tue, 02 Jun 2020 06:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vmXfRiCKH+tGXZLBFkH/zfVXN3PStwPuguoHM/Th2As=;
-        b=ENqSuUoq1zDtEf96m74n5Gsuj7WbjCCK8ilJdVVJJLPH8QCKTdq5gQEsccWTXTkH92
-         5FJEMXmgQKULTomIf/Mte2aAED+t1GCRPltjiGhNfP9Cc5AJt84eERFWCDy79YSN31FI
-         GYuDeOHhxu4mdo2UgxB3Ahquc7b/kBMSOFd+zxT2GGQdj7uixbeygfb9lvUoZNR0rYj0
-         HPQyfpMFPkqWmgCJQRyf2RDu4Il3z/s6N0ZHCUr9bDoZq5a53pzEccJ5NDJiLHEH8Nz5
-         AKI+nOKkYe9IUOQF9G7h1kXMnAfEoVio08xiuWbj1E0n490MAui6iOdKkmYazeNMMnQA
-         UDuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vmXfRiCKH+tGXZLBFkH/zfVXN3PStwPuguoHM/Th2As=;
-        b=dMLJIFxzHD1XRynkbI5FKeuS0E6fq9V0BOOpV8J7VZh/J179fSw2+vcHhZMT4tKHly
-         l+ZoJEoVeU2l4VTZA0nCVT4Sr0YZ9bXE/yjpwvzbnm/CAxkqHfwjmGCqZAe5+of0DVXb
-         Zf9fXMa6pDI0NSmuh+AGfLLWhAlKVhbNjckjUzfnguiHIlINrWf0oWxkVPhPjEY5PkSV
-         P23UEPxuwtJkBxAJ0SfCgchrlhQiY1Sv0zCQOcGxEh0OZhHl1+dchO5tZgvhaLHdmJ50
-         Y+Uz4sQC0ywu690aE9rGHImhPcRj9lJvXuJ8lFEmYaNfns4YpwAI/DzkdxE8lNEuxoec
-         9SmQ==
-X-Gm-Message-State: AOAM5316OU4e4EFgzzOQrj5QMD772uQZdM9XC1owfnJqIzLY2sa1IXDg
-        ZeYJk2gbd0FfN8WF2I9gehFm7XZn
-X-Google-Smtp-Source: ABdhPJzXCEGqPEjPxGL7vxZ2EieUbQHHP/FY/S5el0iXcTubipyjOwpgxSV8rsi6bqJKORggqXlL4w==
-X-Received: by 2002:a17:902:9885:: with SMTP id s5mr24303680plp.204.1591105213457;
-        Tue, 02 Jun 2020 06:40:13 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a12sm2184382pjw.35.2020.06.02.06.40.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 06:40:12 -0700 (PDT)
-Subject: Re: [PATCH 1/2] i2c: mux: pca9541: Change to correct bus control
- commands
-To:     Quentin Strydom <quentin.strydom@bluwireless.com>,
-        Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1591099969-30446-1-git-send-email-quentin.strydom@bluwireless.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <1654dd95-bc94-972c-f8a0-6cf9d910189e@roeck-us.net>
-Date:   Tue, 2 Jun 2020 06:40:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 09:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbgFBNnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:43:00 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B19F206A2;
+        Tue,  2 Jun 2020 13:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591105379;
+        bh=hhMZhOjYa1IjqTSmpKsYB/QGeIboewsrBhSzT+3FAws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I3/Mt5Y61hT5cCT5fdWBA031S28fIwyYFeStyEGKG01bMQhMVBzcXNB0bNqLvRv/n
+         XgvAQk/V/1X9na3Cj6Bu0TGXw9qLGp67cRV0yfdP+00mjefSYZUcTHcKkEwgAeDiRI
+         hCfj6HK9dDCXcV9jZkMU5xOawcJx3Tw727jP2nyI=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AD97E40AFD; Tue,  2 Jun 2020 10:42:56 -0300 (-03)
+Date:   Tue, 2 Jun 2020 10:42:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCHv3] perf stat: Ensure group is defined on top of the same
+ cpu mask
+Message-ID: <20200602134256.GO31795@kernel.org>
+References: <20200531162206.911168-1-jolsa@kernel.org>
+ <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
+ <20200601082027.GF881900@krava>
+ <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
+ <20200602101736.GE1112120@krava>
 MIME-Version: 1.0
-In-Reply-To: <1591099969-30446-1-git-send-email-quentin.strydom@bluwireless.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602101736.GE1112120@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/2/20 5:12 AM, Quentin Strydom wrote:
-> Change current bus commands to match the pca9541a datasheet
-> (see table 12 on page 14 of
-> https://www.nxp.com/docs/en/data-sheet/PCA9541A.pdf). Also
-> where entries are marked as no change the current control
-> command is repeated as the current master reading the
-> control register has control of the bus and bus is on.
+Em Tue, Jun 02, 2020 at 12:17:36PM +0200, Jiri Olsa escreveu:
+> Jin Yao reported the issue (and posted first versions of this change)
+> with groups being defined over events with different cpu mask.
+ 
+> This causes assert aborts in get_group_fd, like:
+ 
+>   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+>   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
+>   Aborted
+ 
+> All the events in the group have to be defined over the same
+> cpus so the group_fd can be found for every leader/member pair.
+ 
+> Adding check to ensure this condition is met and removing the
+> group (with warning) if we detect mixed cpus, like:
+ 
+>   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+>   WARNING: event cpu maps do not match, disabling group:
+>     anon group { power/energy-cores/, cycles }
+>     anon group { instructions, power/energy-cores/ }
+
+So it doesn't disable the 'group', it disables the 'grouping' of those
+events, right? I.e. reading the WARNING, I thought that it would count
+nothing, since it lists both groups as being disabled, but when I tested
+I noticed that:
+
+  [root@seventh ~]# perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+  WARNING: grouped events cpus do not match, disabling group:
+    anon group { power/energy-cores/, cycles }
+    anon group { instructions, power/energy-cores/ }
+  ^C
+   Performance counter stats for 'system wide':
+  
+               12.62 Joules power/energy-cores/
+         106,920,637        cycles
+          80,228,899        instructions              #    0.75  insn per cycle
+               12.62 Joules power/energy-cores/
+  
+        14.514476987 seconds time elapsed
+  
+  
+  [root@seventh ~]#
+
+  I.e. it counted the events, ungrouped, or am I missing something?
+
+If I do:
+
+  [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' -a sleep 2
+  
+   Performance counter stats for 'system wide':
+  
+                1.73 Joules power/energy-cores/                                         
+                0.92 Joules power/energy-ram/                                           
+          12,191,658        instructions              #    0.67  insn per cycle         
+          18,275,233        cycles                                                      
+  
+         2.001272492 seconds time elapsed
+  
+  [root@seventh ~]# 
+
+It works, grouped. One observation, shouldn't we somehow show in the
+output that the first two were indeed grouped, ditto for the second two?
+
+Also, this needs improvement:
+
+  [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' sleep 2
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (power/energy-cores/).
+  /bin/dmesg | grep -i perf may provide additional information.
+  
+  [root@seventh ~]#
+
+Probably stating that the power/ events can only be done on a system
+wide mode or per-cpu?
+
+I'm applying the patch now, with the above observations as committer
+notes, we can improve this in follow on patch,
+
+- Arnaldo
+ 
+> Ian asked also for cpu maps details, it's displayed in verbose mode:
 > 
-> Signed-off-by: Quentin Strydom <quentin.strydom@bluwireless.com>
-
-I am not going to reply to your other e-mail. After all, it is marked
-confidential with a lot of legalese around it.
-
-- Split long lines in your e-mails.
-- Do not just send the patch again, reply to the original patch
-  with a comment such as "ping"
-- If you resend (for example because still no one replied after
-  more time, or you missed some mailing lists/reviewers), mark the
-  patch subject with "PATCH RESEND"
-- Never under any circumstances send an e-mail to a public list that
-  states that "This email and any files transmitted with it are
-  confidential ...".
-
-For my part I did not reply because I have no access to the hardware
-anymore, and thus can not validate if the code still works after this
-change (or why I didn't notice the problem when I wrote the code initially).
-
-Guenter
-
+>   $ sudo perf stat -e '{cycles,power/energy-cores/}' -v
+>   WARNING: group events cpu maps do not match, disabling group:
+>     anon group { power/energy-cores/, cycles }
+>        power/energy-cores/: 0
+>        cycles: 0-7
+>     anon group { instructions, power/energy-cores/ }
+>        instructions: 0-7
+>        power/energy-cores/: 0
+> 
+> Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
+> Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  drivers/i2c/muxes/i2c-mux-pca9541.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/builtin-stat.c | 55 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
-> index 6a39ada..50808fa 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca9541.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
-> @@ -211,7 +211,7 @@ static void pca9541_release_bus(struct i2c_client *client)
->  
->  /* Control commands per PCA9541 datasheet */
->  static const u8 pca9541_control[16] = {
-> -	4, 0, 1, 5, 4, 4, 5, 5, 0, 0, 1, 1, 0, 4, 5, 1
-> +	4, 4, 5, 5, 4, 4, 5, 7, 8, 0, 1, 11, 0, 0, 1, 1
+>  v3 changes:
+>    - reword the warning with Ian's suggestion
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index b2b79aa161dd..9be020e0098a 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -190,6 +190,59 @@ static struct perf_stat_config stat_config = {
+>  	.big_num		= true,
 >  };
 >  
->  /*
+> +static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+> +{
+> +	if (!a->core.cpus && !b->core.cpus)
+> +		return true;
+> +
+> +	if (!a->core.cpus || !b->core.cpus)
+> +		return false;
+> +
+> +	if (a->core.cpus->nr != b->core.cpus->nr)
+> +		return false;
+> +
+> +	for (int i = 0; i < a->core.cpus->nr; i++) {
+> +		if (a->core.cpus->map[i] != b->core.cpus->map[i])
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static void evlist__check_cpu_maps(struct evlist *evlist)
+> +{
+> +	struct evsel *evsel, *pos, *leader;
+> +	char buf[1024];
+> +
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		leader = evsel->leader;
+> +
+> +		/* Check that leader matches cpus with each member. */
+> +		if (leader == evsel)
+> +			continue;
+> +		if (cpus_map_matched(leader, evsel))
+> +			continue;
+> +
+> +		/* If there's mismatch disable the group and warn user. */
+> +		WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
+> +		evsel__group_desc(leader, buf, sizeof(buf));
+> +		pr_warning("  %s\n", buf);
+> +
+> +		if (verbose) {
+> +			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
+> +			pr_warning("     %s: %s\n", leader->name, buf);
+> +			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
+> +			pr_warning("     %s: %s\n", evsel->name, buf);
+> +		}
+> +
+> +		for_each_group_evsel(pos, leader) {
+> +			pos->leader = pos;
+> +			pos->core.nr_members = 0;
+> +		}
+> +		evsel->leader->core.nr_members = 0;
+> +	}
+> +}
+> +
+>  static inline void diff_timespec(struct timespec *r, struct timespec *a,
+>  				 struct timespec *b)
+>  {
+> @@ -2113,6 +2166,8 @@ int cmd_stat(int argc, const char **argv)
+>  		goto out;
+>  	}
+>  
+> +	evlist__check_cpu_maps(evsel_list);
+> +
+>  	/*
+>  	 * Initialize thread_map with comm names,
+>  	 * so we could print it out on output.
+> -- 
+> 2.25.4
 > 
 
+-- 
+
+- Arnaldo
