@@ -2,161 +2,162 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BTC_ID,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D15C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25DE0206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHuHJ+gt"
+	by mail.kernel.org (Postfix) with ESMTP id E439B206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFBMsC (ORCPT
+        id S1726817AbgFBMtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMsC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:48:02 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E68C061A0E;
-        Tue,  2 Jun 2020 05:48:01 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id w7so6294595edt.1;
-        Tue, 02 Jun 2020 05:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Yf4GXAhEWn+sWFUgRmxvX5UkbgRsnK6CDYcGHL39uUU=;
-        b=tHuHJ+gtmpVUv5nKezqAI3B3fgx2P1v6opMTGb6Z6CQHHePqzNFdea0SIogb6aPN3Y
-         ZWqRLmLKpsbGDCXY/SIxVtcU0BZjdOMGT8u5VLnQBkoO04uCozfZGlJLrVkqWyxUW5W3
-         xKdKeOQQxJtiL033ZG8U0xrq2d7QE4gdvTB6vBo89nJ8U3yMjTJnMPFvKBFjlXvRqny6
-         8b3TiYI7PLAsPUPayF4Qe/4gGbFMu36q5YPnl7EvEX9J3SSS9Mau7HqWZBk7fZ9VWjxy
-         KM7anBc/SXUEc28F1/I/eF1YKEBrvqIZsE/AzEBFn4En6922ts9t4WM+VGjAIVwLfLGl
-         425g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yf4GXAhEWn+sWFUgRmxvX5UkbgRsnK6CDYcGHL39uUU=;
-        b=RJP3H2hiKzmqjOt/5qdCYi+INISmvq2tt7SVPQsvtJKuhXdJONIa4PsBZlJcGYqejj
-         fix0s5IynL3Ea5B7vGA5KLQu7WAG+F5bHDq8iQ/FplIcKp3v/hB1pKOTtWDZL1vfpG5N
-         P/NIZHrVTg2WmQqmC2+KuXV1zP7b7PSFuPR4AHhRmhcse2YvDMyhnX/okMkfQEOkuz87
-         ESDiNEZ5T+yKcdk0sZymWzg802psNEttuVCoxBxBklLlBfff3Q14ioxRmF2d7GM0dFQH
-         TvbX8/223J/TZ2ehXc5IwAqynB74lN1oEnkYzdMXN0Oxy5dmB/eMwTulrOt15XblT93y
-         24ww==
-X-Gm-Message-State: AOAM533lXjFM4A7OMUhYxrbyYN4t6JI/Io7TTOLan4HeJP9/QOgjogQX
-        qQdq0Suh4MXpo6CbKKYUs3k=
-X-Google-Smtp-Source: ABdhPJzLNH6sjpsVM2MZNCAKxy0ZLIgGrIFfO3a5ZPLwC/X1e/HaDzhllSyC6liBrnFy340xlskkuQ==
-X-Received: by 2002:a50:af85:: with SMTP id h5mr18954583edd.86.1591102080350;
-        Tue, 02 Jun 2020 05:48:00 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id u23sm1498694eds.73.2020.06.02.05.47.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:47:58 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 14:47:58 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     treding@nvidia.com, jonathanh@nvidia.com,
-        u.kleine-koenig@pengutronix.de, bbasu@nvidia.com,
-        ldewangan@nvidia.com, kyarlagadda@nvidia.com,
-        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4] pwm: tegra: dynamic clk freq configuration by PWM
- driver
-Message-ID: <20200602124758.GE3360525@ulmo>
-References: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k3qmt+ucFURmlhDS"
-Content-Disposition: inline
-In-Reply-To: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+        Tue, 2 Jun 2020 08:49:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52482 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbgFBMto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:49:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5067AACF1;
+        Tue,  2 Jun 2020 12:49:45 +0000 (UTC)
+Date:   Tue, 02 Jun 2020 14:49:42 +0200
+Message-ID: <s5ho8q1hbtl.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     =?UTF-8?B?5pyx54G/54G/?= <zhucancan@vivo.com>
+Cc:     <tiwai@suse.com>, <perex@perex.cz>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, kernel <kernel@vivo.com>,
+        "wenhu wang" <wenhu.wang@vivo.com>
+Subject: Re: [PATCH] ALSA: core: Fix control device release issue
+In-Reply-To: <AL2AMwDwCA5eGEO341Qckarq.1.1591091284601.Hmail.zhucancan@vivo.com>
+References: <AL2AMwDwCA5eGEO341Qckarq.1.1591091284601.Hmail.zhucancan@vivo.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 02 Jun 2020 11:48:04 +0200,
+朱灿灿 wrote:
+> 
+> From: zhucancan <zhucancan@vivo.com>
+> Date: Tue, 2 Jun 2020 16:22:57 +0800
+> Subject: [PATCH] ALSA: core: Fix control device release issue
+> 
+> We use snd_pcm_add_usr_ctls() in component's .pcm_new(),
+> unfortunately snd_soc_dapm_add_routes() meets error during
+> adding card->dapm_routes/of_dapm_routes, it will goto probe_end
+> to call soc_cleanup_card_resources().
+> 
+> The commit dc82e52492f6 ("ALSA: core: Assure control device
+> to be registered at last") will make pcm device release is
+> prior to control device release, but the control device needs
+> to use pcm pointor, which is already freed by pcm device release.
+> 
+> [   70.056000] Unable to handle kernel paging request at virtual address ffffff80f2d2c480
+> [   70.066139] init: processing action (init.svc.media=*) from (/system/etc/init/mediaserver.rc:1)
+> [   70.076311] Mem abort info:
+> [   70.126679]   ESR = 0x96000047
+> [   70.126685]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   70.126689]   SET = 0, FnV = 0
+> [   70.126693]   EA = 0, S1PTW = 0
+> [   70.126696] Data abort info:
+> [   70.126700]   ISV = 0, ISS = 0x00000047
+> [   70.126704]   CM = 0, WnR = 1
+> [   70.126710] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000a216b000
+> [   70.126715] [ffffff80f2d2c480] pgd=00000001ffb7f003, pud=00000001ffb7f003, pmd=00000001ff9e8003, pte=0068000172d2cf12
+> [   70.126731] Internal error: Oops: 96000047 [#1] PREEMPT SMP
+> [   70.126821] CPU: 0 PID: 5 Comm: kworker/0:0 Tainted: G        W  O      5.4.12-qgki-debug-g4c7ca9f20 #10
+> [   70.126840] Workqueue: events deferred_probe_work_func$2b500e852cead69fde05a2b98ceb2fa6.cfi_jt
+> [   70.126845] pstate: 80c00005 (Nzcv daif +PAN +UAO)
+> [   70.126854] pc : pcm_usr_ctl_private_free$165f4400ee6732c7c8c8157be0f72518+0x20/0x34
+> [   70.126861] lr : snd_ctl_remove+0xf4/0x154
+> [   70.126862] sp : ffffffc01007b750
+> [   70.126865] x29: ffffffc01007b750 x28: ffffffd973c2bb2c
+> [   70.126868] x27: ffffff8107b741a0 x26: dead000000000100
+> [   70.126874] x25: 0000000000000002 x24: ffffffd973c2bb8c
+> [   70.126877] x23: ffffffd975027c80 x22: ffffffd97415437f
+> [   70.126880] x21: 0000000000000001 x20: ffffffd973c37e10
+> [   70.126883] x19: ffffff80f2d55d00 x18: ffffff80451de4d0
+> [   70.126886] x17: ffffff80f2d58000 x16: 0000000000000400
+> [   70.126889] x15: a6fe4e9bdc5a6b05 x14: 0000000000000000
+> [   70.126892] x13: ffffffff03ab5408 x12: 0000000000000001
+> [   70.126896] x11: 7079542070704120 x10: 0000000000000398
+> [   70.126899] x9 : 0000000000000001 x8 : ffffff80f2d2c398
+> [   70.126902] x7 : 0000000000000000 x6 : ffffff80f6b4d178
+> [   70.126905] x5 : ffffffd97335fe8c x4 : 0000000000000000
+> [   70.126908] x3 : ffffffc01007b650 x2 : ffffffc01007b768
+> [   70.126911] x1 : 00000000ffffffff x0 : ffffff811ff41480
+> [   70.126916] Call trace:
+> [   70.126920]  pcm_usr_ctl_private_free$165f4400ee6732c7c8c8157be0f72518+0x20/0x34
 
---k3qmt+ucFURmlhDS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Which driver or core contains this function?  I can't find it in the
+latest upstream code.
 
-On Mon, Jun 01, 2020 at 10:50:36AM +0530, Sandipan Patra wrote:
-> Added support for dynamic clock freq configuration in pwm kernel driver.
-> Earlier the pwm driver used to cache boot time clock rate by pwm clock
-> parent during probe. Hence dynamically changing pwm frequency was not
-> possible for all the possible ranges. With this change, dynamic calculati=
-on
-> is enabled and it is able to set the requested period from sysfs knob
-> provided the value is supported by clock source.
->=20
-> Changes mainly have 2 parts:
->   - T186 and later chips [1]
->   - T210 and prior chips [2]
->=20
-> For [1] - Changes implemented to set pwm period dynamically and
->           also checks added to allow only if requested period(ns) is
->           below or equals to higher range.
->=20
-> For [2] - Only checks if the requested period(ns) is below or equals
->           to higher range defined by max clock limit. The limitation
->           in T210 or prior chips are due to the reason of having only
->           one pwm-controller supporting multiple channels. But later
->           chips have multiple pwm controller instances each having
-> 	  single channel support.
->=20
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+Overall, it looks rather like an issue of the driver side, not the
+ALSA core.  If the relevant control is tied with a PCM stream, it has
+to be freed individually beforehand at the time when the stream gets
+freed.
+
+
+thanks,
+
+Takashi
+
+> [   70.126923]  snd_ctl_remove+0xf4/0x154
+> [   70.126927]  snd_ctl_dev_free$1b8efea49186b79e6e4a39cac5748f1c+0x3c/0x70
+> [   70.126930]  snd_device_free_all+0x234/0x2c8
+> [   70.126934]  release_card_device$fb7328386cac0bdf1b3f2f88da79521f+0x24/0xcc
+> [   70.126941]  device_release$d2fdd8912beb71f9ccc7ca72fceb0522+0x48/0x118
+> [   70.126949]  kobject_cleanup+0x138/0x25c
+> [   70.126952]  kobject_put+0x50/0x60
+> [   70.126955]  put_device+0x14/0x20
+> [   70.126957]  snd_card_free+0x60/0x98
+> [   70.126963]  soc_cleanup_card_resources+0x2c/0x420
+> [   70.126966]  snd_soc_bind_card+0xcc0/0xfa8
+> [   70.126968]  snd_soc_register_card+0x110/0x128
+> [   70.126974]  devm_snd_soc_register_card+0x4c/0x90
+> 
+> Fixes: dc82e52492f6 ("ALSA: core: Assure control device to be registered at last")
+> Signed-off-by: zhucancan <zhucancan@vivo.com>
 > ---
-> PATCH V4:
-> 1. Code comments fixes
->=20
-> PATCH V3:
-> 1. Return -EINVAL if requested period does not fall inside limit.
-> 2. Store the new clock rate for further references.
-> 3. Variable name change reverted.
-> 4. Comments corrected and new comments are added.
->=20
-> PATCH V2:
-> 1. Maximum frequency calculation is moved to probe.
-> 2. Added descriptions for PWM register bits and functional behavior
->    of the controller when new configuration is applied.
-> 3. Setting period with possible value when supplied period is below limit.
-> 4. Corrected the earlier code comment:
->    plus 1 instead of minus 1 during pwm calculation
->=20
->  drivers/pwm/pwm-tegra.c | 80 +++++++++++++++++++++++++++++++++++++++++++=
-+++---
->  1 file changed, 76 insertions(+), 4 deletions(-)
-
-Applied, thanks.
-
-Thierry
-
---k3qmt+ucFURmlhDS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSn0ACgkQ3SOs138+
-s6Gs2hAAuKnY8XRGX2cCIMv6LUK/mMn655EzVcw8MBN6IjTjqWgPbkQf590CXT0E
-/YdjXLEMaijZhzvsffpkUZpRfQJkbmUqQ1fTLM1ag+6Y6NKWZrrz2XRE8HAmwjef
-2Vz7qxFXPofe6KblDH6hdpMt0GiYgGKNr2SMPd/Mr8nGIcTFHjSz1J2jdXjHKi7d
-3yrKgXH1/3YjjiYLuVqoritQlnwFVWELGargD4o7pDgu/9untwWLrCAVs7QH1ST2
-6vZwChEsC9lHvg0GbA9Lz0QLXuFG89FDlpYGOnik96R3/8Lpq8hvXDlmn0ttJn6H
-9SBzAWQpyMdz4GW0/a09o79YmzOLB4hH20du8s0nzB0i6QphMkZGjOeXNPkxHGU2
-e2ga6dbvDFLHvN61xii91hMEwH1DvhL0uWgwwXmNq4Bsz205fjhubE6SptVQ6c6q
-lNPh5JJuhKYyuWjRTWZyW8hx0VImqE89IAFkmLrEzeiasAPc/frvo3uCqrn46s+B
-YouYpYk2STWRs9NiFTh5FRso86BSOovFqWS35DagLFcTHw7gGcbuzQMl3ZTfJKdQ
-+29iq/Dx1U43IEA4YQj0zoGfnTglk+c/W91D69AicdbLVT5yScRpefmu9on654Lh
-cjvAU1Yx5zgM5dXhdLw1dN5IVbcNIoR/rs4SmGORb4XpS0XKqyw=
-=ZV5c
------END PGP SIGNATURE-----
-
---k3qmt+ucFURmlhDS--
+>  sound/core/device.c | 8 --------
+>  1 file changed, 8 deletions(-)
+> 
+> diff --git a/sound/core/device.c b/sound/core/device.c
+> index bf0b04a7ee79..1aee0f5623a2 100644
+> --- a/sound/core/device.c
+> +++ b/sound/core/device.c
+> @@ -225,14 +225,6 @@ void snd_device_free_all(struct snd_card *card)
+>  
+>  	if (snd_BUG_ON(!card))
+>  		return;
+> -	list_for_each_entry_safe_reverse(dev, next, &card->devices, list) {
+> -		/* exception: free ctl and lowlevel stuff later */
+> -		if (dev->type == SNDRV_DEV_CONTROL ||
+> -		    dev->type == SNDRV_DEV_LOWLEVEL)
+> -			continue;
+> -		__snd_device_free(dev);
+> -	}
+> -
+>  	/* free all */
+>  	list_for_each_entry_safe_reverse(dev, next, &card->devices, list)
+>  		__snd_device_free(dev);
+> -- 
+> 2.21.0
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
