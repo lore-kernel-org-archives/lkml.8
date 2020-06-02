@@ -2,133 +2,105 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8241BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526CC2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:03:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SQy7D7fN"
+	by mail.kernel.org (Postfix) with ESMTP id 45B37207D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:04:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591106650;
+	bh=5Bxzrru4Pb1u+SpPGmIbHIvhtZs/e62GqDODmBighQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l78CqbBJ1bwWAAsGVH3+kTlpwRVD4l0z8sNif05RREle9eyELhLpDVSMBcW8ZGFxB
+	 rN7ha3IJmYrK4xFq5AZONX/Gmw1PRaCo5EPbD/LOeSqBM+4f3LwwxR56v2IU3+97yn
+	 +w+/5H9YubXcZUd2lRIdpOdpFaLfczHPVvaLzK0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgFBOC7 (ORCPT
+        id S1727785AbgFBOEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:02:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBOC7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:02:59 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712B5C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 07:02:58 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id k15so7533729otp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 07:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ggOR0Cl510IRTxzlmGLn42zz2g74i90VX9kjLvEOxG4=;
-        b=SQy7D7fNQ3uB48bFB7C6078JBK3f2uXs9BQtMYI0Gu8eUcIq0o8jucbp0fmtfAR9wx
-         XlIYQlW/J2Q+RqepPopExAwHAYiSSyrLZWXO4/By8juZgrE5WNzzHifzgqtv5p8dT0hU
-         TsqdzKB7xJpi/e2byOH4RGCZvpC8+aaIuPK7tai5OnfW2r3FDoLvFZ+2HMlBpG7WTfYp
-         /SBnza9WHkUW0IMuLqJqWb25LFQ8e7ZlHaA+mXGufx9OXNNhk8jG0dyGxZVZe3tL9QSp
-         cDrPeRzozgk8kiS4KhVCKRFobBBHSoMxxr5eI8JvyeV4uC+lMD7+7b2V8A+JXYfkJRXW
-         Nzeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ggOR0Cl510IRTxzlmGLn42zz2g74i90VX9kjLvEOxG4=;
-        b=dM0dlRolC/32gA55yyEMhDnP0j2nIjVXiyq0RIH4Q+8ee/uhJ5Ikf8P0DUJ0Rs15E4
-         qIm2T/K7Fm89SLfNu5ULuY2frYyjZ4CY8Tm8/5yEMNxQ/M1u3cnB9xH5rSLJ4Qrygx1Y
-         4kJEvyZVqhcKERgsa0fcD+ujkmFla7ZuWmM6u47RfFOFrjU104JbhoovNAD8wJvGPRfI
-         h0QPovU8NwS9h/ukqLjqtD9ACHjcaW1HcrkDio8ljDeZhIsfPgAyHNB6wnwN/XCvAzCK
-         K3M495o2wkAsjRU08eOtfhHCXUQOG8SC6kKWwzuit4gdvMwE6ykOqWN/td0akMlUqPcX
-         6vug==
-X-Gm-Message-State: AOAM532MxXkwKcsGZqkPSsRNi7cvl62PJYctIMeliBhzmW0SMEaIlrou
-        zApse+jLtByCSi/oPFIIY5YcLCpJ9x5NqE+vJ+lrYA==
-X-Google-Smtp-Source: ABdhPJytCbEQYf19zfmhcnF1C67ZEQmnyKMQzhw8ciOZ3Sp9IJlUwT3j1I6XVDW5aslGKqF0+wcRiwP/2RlvTqRyRTA=
-X-Received: by 2002:a9d:7651:: with SMTP id o17mr4779813otl.21.1591106577587;
- Tue, 02 Jun 2020 07:02:57 -0700 (PDT)
+        Tue, 2 Jun 2020 10:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbgFBOEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 10:04:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E9F22074B;
+        Tue,  2 Jun 2020 14:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591106647;
+        bh=5Bxzrru4Pb1u+SpPGmIbHIvhtZs/e62GqDODmBighQg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=07jfzjuY1I6kgihd31CPlafeKfxtbWqOo28rFCuEXtnbt1gXeldBNx/pvJIGnyD43
+         p1upWaLE0jnZZquRFBN6IwxKr9l32PHeyRZDpISndr7LKUQ9FGFjwgGwRwtJBeUBJX
+         RmiCjViV8am8lLB8oIa3PJ89VexmtLgvCWDc7rns=
+Date:   Tue, 2 Jun 2020 16:04:04 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wang Hai <wanghai38@huawei.com>, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: kobject_init_and_add is easy to misuse
+Message-ID: <20200602140404.GA3280145@kroah.com>
+References: <20200602115033.1054-1-wanghai38@huawei.com>
+ <20200602121035.GL19604@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <1590751607-29676-1-git-send-email-sumit.garg@linaro.org>
- <1590751607-29676-5-git-send-email-sumit.garg@linaro.org> <20200602134650.mdovxoa6cj2hgvei@holly.lan>
-In-Reply-To: <20200602134650.mdovxoa6cj2hgvei@holly.lan>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 2 Jun 2020 19:32:46 +0530
-Message-ID: <CAFA6WYNSDbh6uuD03oNWDL2a3x2g5XCeYRWg1toZ8DstvJgWYw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] kdb: Switch to use safer dbg_io_ops over console APIs
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jslaby@suse.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602121035.GL19604@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 19:16, Daniel Thompson <daniel.thompson@linaro.org> wrote:
->
-> On Fri, May 29, 2020 at 04:56:47PM +0530, Sumit Garg wrote:
-> > In kgdb context, calling console handlers aren't safe due to locks used
-> > in those handlers which could in turn lead to a deadlock. Although, using
-> > oops_in_progress increases the chance to bypass locks in most console
-> > handlers but it might not be sufficient enough in case a console uses
-> > more locks (VT/TTY is good example).
-> >
-> > Currently when a driver provides both polling I/O and a console then kdb
-> > will output using the console. We can increase robustness by using the
-> > currently active polling I/O driver (which should be lockless) instead
-> > of the corresponding console. For several common cases (e.g. an
-> > embedded system with a single serial port that is used both for console
-> > output and debugger I/O) this will result in no console handler being
-> > used.
-> >
-> > In order to achieve this we need to reverse the order of preference to
-> > use dbg_io_ops (uses polling I/O mode) over console APIs. So we just
-> > store "struct console" that represents debugger I/O in dbg_io_ops and
-> > while emitting kdb messages, skip console that matches dbg_io_ops
-> > console in order to avoid duplicate messages. After this change,
-> > "is_console" param becomes redundant and hence removed.
-> >
-> > Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->
-> Looking good, only one minor comment left on my side (including the
-> three patches prior).
->
-> > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> > index 9e5a40d..5e00bc8 100644
-> > --- a/kernel/debug/kdb/kdb_io.c
-> > +++ b/kernel/debug/kdb/kdb_io.c
-> > @@ -560,12 +560,14 @@ static void kdb_msg_write(char *msg, int msg_len)
-> >       if (msg_len == 0)
-> >               return;
-> >
-> > -     if (dbg_io_ops && !dbg_io_ops->is_console)
-> > +     if (dbg_io_ops)
-> >               kdb_io_write(msg, msg_len);
->
-> Since this now slots on so cleanly and there are not multiple calls
-> to kdb_io_write() then I think perhaps factoring this out into its
-> own function (in patch 1) is no long necessary. The character write
-> loop can go directly into this function.
->
+On Tue, Jun 02, 2020 at 05:10:35AM -0700, Matthew Wilcox wrote:
+> On Tue, Jun 02, 2020 at 07:50:33PM +0800, Wang Hai wrote:
+> > syzkaller reports for memory leak when kobject_init_and_add()
+> > returns an error in the function sysfs_slab_add() [1]
+> > 
+> > When this happened, the function kobject_put() is not called for the
+> > corresponding kobject, which potentially leads to memory leak.
+> > 
+> > This patch fixes the issue by calling kobject_put() even if
+> > kobject_init_and_add() fails.
+> 
+> I think this speaks to a deeper problem with kobject_init_and_add()
+> -- the need to call kobject_put() if it fails is not readily apparent
+> to most users.  This same bug appears in the first three users of
+> kobject_init_and_add() that I checked --
+> arch/ia64/kernel/topology.c
+> drivers/firmware/dmi-sysfs.c
+> drivers/firmware/efi/esrt.c
+> drivers/scsi/iscsi_boot_sysfs.c
+> 
+> Some do get it right --
+> arch/powerpc/kernel/cacheinfo.c
+> drivers/gpu/drm/ttm/ttm_bo.c
+> drivers/gpu/drm/ttm/ttm_memory.c
+> drivers/infiniband/hw/mlx4/sysfs.c
 
-Okay, will update it in the next version.
+Why are random individual drivers calling kobject* functions?  That
+speaks to a larger problem here...
 
--Sumit
+Anyway, yes, it's a tricky function, but the issue usually is that the
+kobject is embedded in something else and if you call init_and_add() you
+want to tear things down _before_ the final put happens.
 
->
-> Daniel.
+The good thing is, that function is really hard to get to fail except if
+you abuse it with syzkaller :)
+
+> I'd argue that the current behaviour is wrong, that kobject_init_and_add()
+> should call kobject_put() if the add fails.  This would need a tree-wide
+> audit.  But somebody needs to do that anyway because based on my random
+> sampling, half of the users currently get it wrong.
+
+As said above, this is "tricky", and might break things.
+
+thanks,
+
+greg k-h
