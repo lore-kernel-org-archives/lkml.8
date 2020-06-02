@@ -2,120 +2,149 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62432C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A23206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CA12068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rTwbccbh"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="l6z8ud1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFBRTl (ORCPT
+        id S1726937AbgFBRUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgFBRTk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:19:40 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06DAC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:19:39 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id i12so1678561pju.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+P/PZHOqotTe6Y+Kk1mMk5Kf+3c1pzP9mwcgdU+JGoA=;
-        b=rTwbccbhNr+Z95ISuuwgkCHDYvEkNQT4Vd9UuTaWTq1lb/O97ewiBNMXcw+qi03VN0
-         Ea8Qh0ZMlLG/xcUkP5pWfsuV6r3JYy83n0OFcchFs9Tg13KqNB/BG73v96741/uSKq1v
-         CliV0gMnWhTCaYQze6RO91VEpMlQoDCcmNy7pBdSmXrIRHk9Sg1uTjuUFokmCys5IPCC
-         /xKDF0u6MbT/D7vb9RVzD7/OxOsRGgA9TsikxTKbFmaERb+Z9f+mY/XrzgX8gVyLQgfW
-         5nWh/E3reTBZa6zU+lKLlzfQByFSvBbuTikUS4QmcV3u2pTRuWJ8VYqN6QzC0t/FZOrb
-         CNIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+P/PZHOqotTe6Y+Kk1mMk5Kf+3c1pzP9mwcgdU+JGoA=;
-        b=aw4ijHC1NI/w1C9pqzVCmBMnG/MnJ9IRvWmnoVht6f6u1H1ZuyQZFjL75sYcFaBHNW
-         sednXtAJpcJ09W0AluSqnI4T+lRR0LamsFCiE5+w0uqENkAItNTZjC+N5eP2bGBc+0ms
-         LJlYOQEHklxhQfDMJ2sNsKW61IeLBrMVzdPE0z/oHesdR8ZDf8s/P2Ey7npFyt9BCJiT
-         bu80hiH1cwU3Kp+9gUHLcadgJECw87A1NZDzppNsmWpiQ5IF7aRueJ1TPhGIc5njrmmR
-         3ZAZgl6VwIhTOpBhh5A5gQLXfottKHb43TndspJzVPxSW2cfy4LuytxunFtr9xoIP8JN
-         Dx4Q==
-X-Gm-Message-State: AOAM533+aZ864AJ7SvJzbXsZL/ZPtHezc8VMW/W6AN63R4sUfijhZkuT
-        504RyUl0nMAFe9KpoOC2RJ8EeLcIFaVQGw2KMVWl9A==
-X-Google-Smtp-Source: ABdhPJyXPIEMsTydqDl9Mujnk4v6UrX7J4Bb9q6ute3YXJmT68apMdBdxTMVpEgt6LwOSYk58JeerQpLjX47mcTjvBw=
-X-Received: by 2002:a17:902:c686:: with SMTP id r6mr27042256plx.147.1591118378852;
- Tue, 02 Jun 2020 10:19:38 -0700 (PDT)
+        Tue, 2 Jun 2020 13:20:48 -0400
+Received: from mout.web.de ([212.227.17.11]:43961 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbgFBRUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 13:20:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591118434;
+        bh=vzoyCQAVhDVRG128Qg5VrOsZZSGwD/IaCEQIgguYR/k=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=l6z8ud1KAiU5N+b9C+nmGxSQxBiNBONjivhnkXqiKOx5tqb9AGpHjM6vHhyQNl07r
+         gakM7xUNAQOFSoSodhWBIBKGSvxtB8iFC2xrt/xR8uNy9dItG/d5HJe2vKVNDJiNtf
+         EuA9KCd1NRanbmd+Nwl3ZhB76UhnkvZryBUVxuFA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MWz8l-1jVYeh1GTx-00XUqQ; Tue, 02
+ Jun 2020 19:20:34 +0200
+To:     Wang Hai <wanghai38@huawei.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Munsie <imunsie@au1.ibm.com>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] cxl: Fix kobject memory leak in cxl_sysfs_afu_new_cr()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <b9791ff3-8397-f6e9-ca88-59c9bbe8c78f@web.de>
+Date:   Tue, 2 Jun 2020 19:20:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <000000000000bbd09005a6fdc6cc@google.com> <000000000000f0261a05a700adf5@google.com>
- <20200601084335.GA1667318@kroah.com> <CAAeHK+zKLBX62D1MVAkBe7Q__32-K-4FewsfvF3Z_P8SK=oAHQ@mail.gmail.com>
- <20200601122858.GA390561@kroah.com>
-In-Reply-To: <20200601122858.GA390561@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 2 Jun 2020 19:19:27 +0200
-Message-ID: <CAAeHK+zcGGZxkpwW050wrOUN_ksVxDJk5hfF1Vt8xZYBKqHMzQ@mail.gmail.com>
-Subject: Re: WARNING in snd_usbmidi_submit_urb/usb_submit_urb
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     syzbot <syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com>,
-        Felipe Balbi <balbi@kernel.org>, ingrassia@epigenesys.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GXgW0Cj5LnEMpxP3UD/IYVpnnIdAdXbfa/5xLeUwq9XKXYBFO1+
+ oKcn+E+yM3LDjCr2WbsYIjAAmJ0O+xkEssw9E/5V5X6WQgDqbMVK94WwJL45xusTWjyAsDT
+ 99AAZ0Zp3/vkQq7wlVcJF1fY+aDQMO8z//z1ftE9scc5G5HpWkfJE3HzJkgBRPvOXWGn8v5
+ 6uirGFn64ctMNa2IAY/YA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Vq9OeyU7w2g=:Fpn5ZTmBdR99Z5AhGWdjGi
+ nRdPbvxmV8UODpIcg1QWz2JVLyn7ZdfSrPU8XMwiIW8NL/E46N+rFm4zFbgQd6qspcmJodtJU
+ jgZa4VhOcc5CiqMRISNzfwUFd6ELGh/hUSetd6FlCIz6orkGmS6nj50rmA6HWWy5SZAGRts2F
+ ZaTMzEsl20ODnSZ4UV3aMEfkIroIXFoHXfRaMkp+LmKqNEH+blt1GPoLgrahnh9V39N3r0OqH
+ DVvgmXlwUzruOVq6/+NANn8NK84toF58/KDXJ+e7tIgvpofwlyKjHyNzAyJO7BaKmAQQKt9AL
+ i64NJSP6I8l+RAvzGqUgXCvpjriPqaikA7RZbP/lIKCWfpwywJ4sleZp57FAkgkm7HbfxWBzz
+ Idip8gtcaFY3yEqrN2GIp1ysHbXLsczAd/bCfJraL4ulkwbXGt+dbJzeq1SWp2sLm250ieqNw
+ t3QOkyMAtLE15OjS0z4KUZS97s5GW9C8ZAwbTkzrMBFPUv4DHikTHwUoGaMK2ZmrN5w1KJTyj
+ 3bCfKwFpxa6EpkoHM45yR0sE43h2u71O+lRFMoEkJ6/dB8AzlCAQpdsLfgslXbwS0d1FS5ax/
+ tQXcQBRAxSe0opWfD4r0404yO3ZOD7mg0YjqYWS2rqq20tl1UQC5uMnz3O3TuZxXyM42m5iT+
+ IPJThl2S0RD8SkvFXNdTwPr19rO+k3xocoFi+NGLNo8xBatqKSI2H35q3nEjg3NizFkTjhj7l
+ VoVsKILai07odxlf1FUuP0+kmx7myoEwxoG0lW4fRoWoY86MUTa2XBB5aXlmc1LOut2n+gZYx
+ TKmdtjCaXP3FSJaa8e7IWcBu/WiLQt8pfdL3CPYii73AeiFt3wNkfIZgFbnRAOlvmqSNeLnlU
+ wwzg0C8rRfUZNoIlvawVXtRsTmb4+G/mOUZPi3f5GZHgGKGK8cpZtu2a6AVkbdHY/0J1YVZQI
+ 1RLC3cxpYemTW3e/so+YsT2/b+96vvggA78lKKn3dpF85BUmA7MjRNx8aFSfsxP4gkK/mfLQz
+ bQErQo2S+hsQg0sdm5iY3IfiYQyw0X9m+VebHjP3jd1DI4xoJQke91MX/dzFKSE70QvkMOmGZ
+ lm3XdDo09pXfGz/HwNnMInMBbk9XIVFET6r8DHgXzEN5KmSs1HOnylrvEW3ZMR9egq0b8nlHa
+ rR0XQWsRddGQpJWMZMddR9khA3W7Qxe3SdG2OQQIqIBrDZlCIcWzF4GzVPluLCb4NufGlAsa0
+ SBggMH+M9YqNBcBi2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 2:29 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jun 01, 2020 at 02:22:40PM +0200, Andrey Konovalov wrote:
-> > On Mon, Jun 1, 2020 at 10:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, Jun 01, 2020 at 12:24:03AM -0700, syzbot wrote:
-> > > > syzbot has bisected this bug to:
-> > > >
-> > > > commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
-> > > > Author: Andrey Konovalov <andreyknvl@google.com>
-> > > > Date:   Mon Feb 24 16:13:03 2020 +0000
-> > > >
-> > > >     usb: gadget: add raw-gadget interface
-> > > >
-> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164afcf2100000
-> > > > start commit:   bdc48fa1 checkpatch/coding-style: deprecate 80-column warn..
-> > > > git tree:       upstream
-> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=154afcf2100000
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=114afcf2100000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=129ea1e5950835e5
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=5f1d24c49c1d2c427497
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d70cf2100000
-> > > >
-> > > > Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
-> > > > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
-> > > >
-> > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > >
-> > > So the tool that was used to create the bug has bisected the problem to
-> > > the patch that adds the tool to the kernel to test for the issue?
-> > >
-> > > This feels wrong...
-> >
-> > That's the expected result of bisection with the way it's intended to
-> > work. We'll be getting more bisection results pointing to that commit
-> > for old USB bugs. For new ones (that are introduced after raw-gadget),
-> > the bisection should point to proper commits.
->
-> Ok, can you then mute any bisection emails that are about to get sent
-> out that resolve to this commit to save us the effort of just ignoring
-> the thing on our end?
+> Fix it by adding a call to kobject_put() in the error path of
+> kobject_init_and_add().
 
-Sent syzbot change: https://github.com/google/syzkaller/pull/1782
+Thanks for another completion of the exception handling.
+
+Would an other patch subject be a bit nicer?
+
+
+=E2=80=A6
+> +++ b/drivers/misc/cxl/sysfs.c
+> @@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_c=
+r(struct cxl_afu *afu, int c
+>  	rc =3D kobject_init_and_add(&cr->kobj, &afu_config_record_type,
+>  				  &afu->dev.kobj, "cr%i", cr->cr);
+>  	if (rc)
+> -		goto err;
+> +		goto err1;
+=E2=80=A6
+
+Can an other label be more reasonable here?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/coding-style.rst?id=3Df359287765c04711ff54fbd11645271d=
+8e5ff763#n465
+
+Regards,
+Markus
