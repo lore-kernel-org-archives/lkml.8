@@ -2,183 +2,145 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5202072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591140543;
-	bh=50m9ED15fKYEF85+bncX8Hs4OfHZcurbbNPFCWyRsbg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nRNAl5V9bmHgxHBq1HcoJzkKlgDuUjPgaffqOtm7SAgvV0lz/sUb+/txMJWSNmh4T
-	 0K/b+Q/I17W07aUvUH0VaMnPGF4Dkedey8a94CfMFAhLel7FFzR9IEGyQRrmKHo9Nk
-	 BkwqBaqaAgvckfr5uAfVIf+/KhGc8XswG5shXkK0=
+	by mail.kernel.org (Postfix) with ESMTP id 45E292072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:30:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JtxlATgt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgFBX3C (ORCPT
+        id S1728390AbgFBXaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728426AbgFBX27 (ORCPT
+        Tue, 2 Jun 2020 19:30:23 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgFBXaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:28:59 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1CDC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:28:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id z18so331561lji.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:28:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qjaU90Aqma95VsfOo2nizNA7PtUJ8ixbSgrVzYoKVZg=;
-        b=O70cWbESKcocnY6Rm2LHbtj+/wDRLhMaZyD0QUV1oRWgIVbLODxahUb5+xk9qw9vrp
-         L3AxrnpvUnYdzly11Nujw9UYnH2Pgc71UC26t8WvoMXs5dM1rKr/0chn4rmhHjEl+Uzm
-         Mv+OfIfXSwr2nCko/k/DnMkWNZM/z4+dEjImk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qjaU90Aqma95VsfOo2nizNA7PtUJ8ixbSgrVzYoKVZg=;
-        b=U7djAmzG6wyFMTw/dyQQdhSonIOTZUdl3P6xJYJ1dl9W+uXeQvsnXTxy8/w9e+uUVW
-         6t1S7CjIFH0xXb4yDNOXtbAydtJ5M9KrXZ/5Y1u8X7x9xo4c6ojaZc4ywLQPcBOkTku9
-         aK+HnH0d6mUVayeLO6/k7OiqdnVbiiVBORPU29cKoCSpHYGevhzI8XADKqPG6yjj99VT
-         PY5vumjSjUp5ZX63cpqCeLncKIngGxDMfllr9IivslcJHQpDNZSIf9tGbZm+xYIcGLJ2
-         OervlWAclrnjg3ddBzi5THwlJoHdVvYcnU+qegJpYfgO+GE0B7bX9pginFyIKce1QgvE
-         FNQA==
-X-Gm-Message-State: AOAM53092FsHzbKuaDVIdXpBPtBb1ti95YyQVFpC+OzZRrzFZqWS1xnD
-        T8Q5itA9B5L5UuMn43DZMmFsCU7Q2P8=
-X-Google-Smtp-Source: ABdhPJxw0k/0KPLGOhuMi25pXJLqvysSPmibTJFN0rgXqGMlvl1iE31QkKwnCocQ11FDGGonpOy/Ng==
-X-Received: by 2002:a2e:8953:: with SMTP id b19mr698262ljk.187.1591140536577;
-        Tue, 02 Jun 2020 16:28:56 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id k29sm64949ljc.136.2020.06.02.16.28.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 16:28:55 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id a25so388265ljp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:28:55 -0700 (PDT)
-X-Received: by 2002:a2e:7e0a:: with SMTP id z10mr662056ljc.314.1591140534778;
- Tue, 02 Jun 2020 16:28:54 -0700 (PDT)
+        Tue, 2 Jun 2020 19:30:23 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052NIAut035519;
+        Tue, 2 Jun 2020 18:18:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591139890;
+        bh=B/WbR0ieFR+upVOAWaKc+gb7oNaJlchuQLeU7X+5h8Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JtxlATgtWTz/2V6BwAKkhWz0uSMCAHH7hu8j/dHaq5mLzrhR57DeBrcKmdJNLcN6A
+         C/3ifPvg/Kit9blAb2WUUT9luHQ0ddZsKFXSSRWgT+v17PVqHDUv9JF5vif0f6+t/E
+         ijB233L/yeGGRCJ+Y8/jTKoLLwNsIg5nH9M2opNQ=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052NIA0t032906
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 18:18:10 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 18:18:10 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 18:18:10 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052NI9Kh009536;
+        Tue, 2 Jun 2020 18:18:09 -0500
+Subject: Re: [PATCH net-next v5 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200602164522.3276-1-dmurphy@ti.com>
+ <20200602164522.3276-5-dmurphy@ti.com>
+ <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
+ <61888788-041f-7b93-9d99-7dad4c148021@ti.com>
+ <6981527b-f155-a46b-574a-2e6621589ca4@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f92f70b2-6e42-5bdb-187d-ecd8533b06a6@ti.com>
+Date:   Tue, 2 Jun 2020 18:18:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200601170102.GA1346815@gmail.com> <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
- <20200602073350.GA481221@gmail.com> <b159ba4c53fcf04cc4eb747c45e1d4d2d83310a3.camel@kernel.crashing.org>
- <871rmxgw4d.fsf@nanos.tec.linutronix.de> <CAHk-=wgOFnMW-EgymmrTyqTPLrpGJrUJ_wBzehMpyT=SO4-JRQ@mail.gmail.com>
- <105f5a87b689eab38baf4d51d03e9f9707e74c66.camel@amazon.com>
-In-Reply-To: <105f5a87b689eab38baf4d51d03e9f9707e74c66.camel@amazon.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 2 Jun 2020 16:28:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whC4PUhErcoDhCbTOdmPPy-Pj8j9ytsdcyz9TorOb4KUw@mail.gmail.com>
-Message-ID: <CAHk-=whC4PUhErcoDhCbTOdmPPy-Pj8j9ytsdcyz9TorOb4KUw@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/mm changes for v5.8
-To:     "Singh, Balbir" <sblbir@amazon.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6981527b-f155-a46b-574a-2e6621589ca4@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 4:01 PM Singh, Balbir <sblbir@amazon.com> wrote:
+Florian
+
+On 6/2/20 6:13 PM, Florian Fainelli wrote:
 >
-> >      (c) and if I read the code correctly, trying to flush the L1D$ on
-> > non-intel without the HW support, it causes a WARN_ON_ONCE()! WTF?
+> On 6/2/2020 4:10 PM, Dan Murphy wrote:
+>> Florian
+>>
+>> On 6/2/20 5:33 PM, Florian Fainelli wrote:
+>>> On 6/2/2020 9:45 AM, Dan Murphy wrote:
+>>>> Add RGMII internal delay configuration for Rx and Tx.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> ---
+>>> [snip]
+>>>
+>>>> +
+>>>>    enum {
+>>>>        DP83869_PORT_MIRRORING_KEEP,
+>>>>        DP83869_PORT_MIRRORING_EN,
+>>>> @@ -108,6 +113,8 @@ enum {
+>>>>    struct dp83869_private {
+>>>>        int tx_fifo_depth;
+>>>>        int rx_fifo_depth;
+>>>> +    s32 rx_id_delay;
+>>>> +    s32 tx_id_delay;
+>>>>        int io_impedance;
+>>>>        int port_mirroring;
+>>>>        bool rxctrl_strap_quirk;
+>>>> @@ -232,6 +239,22 @@ static int dp83869_of_init(struct phy_device
+>>>> *phydev)
+>>>>                     &dp83869->tx_fifo_depth))
+>>>>            dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
+>>>>    +    ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
+>>>> +                   &dp83869->rx_id_delay);
+>>>> +    if (ret) {
+>>>> +        dp83869->rx_id_delay =
+>>>> +                dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>>>> +        ret = 0;
+>>>> +    }
+>>>> +
+>>>> +    ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>>>> +                   &dp83869->tx_id_delay);
+>>>> +    if (ret) {
+>>>> +        dp83869->tx_id_delay =
+>>>> +                dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>>>> +        ret = 0;
+>>>> +    }
+>>> It is still not clear to me why is not the parsing being done by the PHY
+>>> library helper directly?
+>> Why would we do that for these properties and not any other?
+> Those properties have a standard name, which makes them suitable for
+> parsing by the core PHY library.
+>> Unless there is a new precedence being set here by having the PHY
+>> framework do all the dt node parsing for common properties.
+> You could parse the vendor properties through the driver, let the PHY
+> library parse the standard properties, and resolve any ordering
+> precedence within the driver. In general, I would favor standard
+> properties over vendor properties.
 >
-> That is not correct, the function only complains if we do a software fallback
-> flush without allocating the flush pages.
+> Does this help?
 
-Right.
+Ok so new precedence then.
 
-And if you're not on Intel, then that allocation would never have been
-done, since the allocation function returns an error for non-intel
-systems.
+Because there are common properties like tx-fifo-depth, rx-fifo-depth, 
+enet-phy-lane-swap and max_speed that the PHY framework should parse as 
+well.
 
-> That function is not exposed without
-> the user using the prctl() API, which allocates those flush pages.
+Dan
 
-See above: it doesn't actually allocate those pages on anything but intel CPU's.
-
-That said, looking deeper, it then does look like a
-l1d_flush_init_once() failure will also cause the code to avoid
-setting the TIF_SPEC_L1D_FLUSH bit, so non-intel CPU's will never call
-the actual flushing routines, and thus never hit the WARN_ON. Ok.
-
-> >  (2) the HW case is done for any vendor, if it reports the "I have the MSR"
->
-> No l1d_flush_init_once() fails for users opting in via the prctl(), it
-> succeeds for users of L1TF.
-
-Yeah, again it looks like this all is basically just a hack for Intel CPU's.
-
-It should never have been conditional on "do this on Intel".
-
-It should have been conditional on the L1TF bug.
-
-Yes, there's certainly overlap there, but it's not complete.
-
-> >  (3) the VMX support certainly has various sanity checks like "oh, CPU
-> > doesn't have X86_BUG_L1TF, then I won't do this even if there was some
-> > kernel command line to say I should". But the new prctrl doesn't have
-> > anything like that. It just enables that L1D$ thing mindlessly,
-> > thinking that user-land software somehow knows what it's doing. BS.
->
-> So you'd like to see a double opt-in?
-
-I'd like it to be gated on being sane by default, together with some
-system option like we have for pretty much all the mitigations.
-
->     Unforunately there is no gating
-> of the bug and I tried to make it generic - clearly calling it opt-in
-> flushing for the paranoid, for those who really care about CVE-2020-0550.
-
-No, you didn't make it generic at all - you made it depend on
-X86_VENDOR_INTEL instead.
-
-So now the logic is "on Intel, do this thing whether it makes sense or
-not, on other vendors, never do it whether it _would_ make sense or
-not".
-
-That to me is not sensible. I just don't see the logic.
-
-This feature should never be enabled unless X86_BUG_L1TF is on, as far
-as I can tell.
-
-And it should never be enabled if SMT is on.
-
-At that point, it at least starts making sense. Maybe we don't need
-any further admin options at that point.
-
-> Would this make you happier?
->
-> 1. Remove SW fallback flush
-> 2. Implement a double opt-in (CAP_SYS_ADMIN for the prctl or a
->    system wide disable)?
-> 3. Ensure the flush happens only when the current core has
->    SMT disabled
-
-I think that (3) case should basically be "X86_BUG_L1TF && !SMT". That
-should basically be the default setting for this.
-
-The (2) thing I would prefer to just be the same kind of thing we do
-for all the other mitigations: have a kernel command line to override
-the defaults.
-
-The SW fallback right now feels wrong to me. It does seem to be very
-microarchitecture-specific and I'd really like to understand the
-reason for the magic TLB filling. At the same time, if the feature is
-at least enabled under sane and understandable circumstances, and
-people have a way to turn it off, maybe I don't care too much.
-
-                  Linus
