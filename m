@@ -7,165 +7,161 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A08C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0028120734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2935920734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cmj2yrH3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iY81CrGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgFBStX (ORCPT
+        id S1726817AbgFBSxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:49:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43062 "EHLO
+        Tue, 2 Jun 2020 14:53:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBStW (ORCPT
+        with ESMTP id S1726139AbgFBSxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:49:22 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B68C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:49:22 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id d6so1972279pjs.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:49:22 -0700 (PDT)
+        Tue, 2 Jun 2020 14:53:32 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11B7C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:53:31 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k2so1873281pjs.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:53:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5xlo4rK4g8fnalu7U0lbya/uKNvvM9T5qVFKFRMeKAc=;
-        b=Cmj2yrH3qEvNmtyfHon2kKl7S72MckaUFizNRpDYa2PKNa4QFR1gb7MnhKguJRH84w
-         hTS1vzbKiXdRyx0i4bWrJYJyRj7ry4Soppmro6CW+RvUpSWXKSJ3sH810c1zkOhsrukA
-         162KUUhbHn3rYn2vlmxII6COL2ffUg2ruVQH5TAUuyYhZIzv2hFNo64oX8grE+oKOe8O
-         zAVw2A8hmOOVlhAsruoYkmT5gR5n+4jQM9qCHdR1qQdhkP96TV8MPM5JAHFbYmfD6UmS
-         bu7cdQen0hfX6Lqm6cbTmYQDx2B6Bczq/4jNmwvLjmE7OV5i3qcNCfi/CjSoC0YF48mb
-         X3fg==
+        bh=lcbY1VrV57GqPoFo7ptDB2znFdFUv0Mj9KOWNzaUW2E=;
+        b=iY81CrGfmojXqpZOwyWc5FJulkMA+MB1PD+DNvpbGMwLjk7EYSts9ax8jyweSuxnOg
+         L1+M2+C3ihJ82bHBfyap8X7f3NG70bmLnsr8DMinGcXbaH0O5E9eF/m3NsmINlBfIdTX
+         AGWgLaj3tjCGuDPCnVzA0fSIvFfH/n/9TFFtMaJAPlTkWQJySbKn6dJ+ejCxuClfTIhf
+         04dpsphQqr8AXP2CIoyfADPkQvuHgQBIvZDx6WWLohI8DG5Q8xx+oh18PBRXNHspMMhB
+         5E49XHTWn7hBb/IFXbQzOASEnpD2TMwhBzXf7Rkdp1KgmtTfH6Haq0y+J3dO0L0Ngj5U
+         tzhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5xlo4rK4g8fnalu7U0lbya/uKNvvM9T5qVFKFRMeKAc=;
-        b=A0KIRtgKSTHLu7ubxHTCr7YNkDvlbLPYoDOV78AXQOkVM5XQs3RsLmUSeAgHCcXp25
-         Ph5RjyD0X6smLxMEa0zN8fM2Z4zPDbr1t5RIpyrw7rBg6O9K6xi/DMf8nNXPKUP/P8Tp
-         Fnk81IyYruooATFwgUKjiFz++ZvkbDBEdD3o3lqWBECdaXnplUGRIijmqMCwOwTxJYsR
-         HQ7xqjeZf6oY3zCh1JuC31Zwy/4thQ9JtG1CNlA7Ib0oQddrcIUSqGbahLZm+0oe3kVg
-         mGuloI6AF1Mkp/9srL95SGqOnoUiEdyPRXtRaaU/Co5+LVY/sijFr3C4CCQK6DMYROk/
-         v0CQ==
-X-Gm-Message-State: AOAM531/jR0S2XStxvYz+obCx9EnR6OGhe29X6HhmGO8iK1N2yz274qh
-        TPIOcRpUoShoEgVPpr6WQ3ve7AYE/PMaZbjpVctM8A==
-X-Google-Smtp-Source: ABdhPJyrThF1j+tAlirsbtuBW4BMmc23K4JZ0qfLQQN7aP4qY3TfzZdJdINqE30HlIZvqQtlkhao6mys0kzCfXt7uxw=
-X-Received: by 2002:a17:90b:4c47:: with SMTP id np7mr601098pjb.101.1591123761720;
- Tue, 02 Jun 2020 11:49:21 -0700 (PDT)
+        bh=lcbY1VrV57GqPoFo7ptDB2znFdFUv0Mj9KOWNzaUW2E=;
+        b=XuphZP3/Tmy7YCiCF3npuM7Tbu00KySM51Vwgycyhes9kYzvlCSpMbOyTp4IVInRy9
+         k0DR/MKP6l6xfEmbc69csboxybBf7Hx0lfQ7JsQ2R0Vfnve8h/vkkkfjc7B/a15Ws4Hq
+         JoKd3dRHEsiTopXvDDOcW8UA82LHq/4s2YSrK30L8QtJxf8y4rBG3dHP8gFZzwiIY46E
+         OAByNIoIHJEOkXTRKhhEI2I7mY7avUNd5NSHxp7rKUvdljpsafISQazQYAUzTZ58AsLU
+         VsJvR7hrIWQekwQObMfPMxAw6KZFMHm7bZGLEJc4oM2bR0hRstMHMgVmPDFUXGm+34qu
+         ko/w==
+X-Gm-Message-State: AOAM533XOSSJtELIgSGnROA6TFTKKQDuUBAPoHT/oHqAFR6VG/zZL7Ii
+        8aYo4PaqJaE1V38GVbggrLbtBFkHqyQp3kPww9EGqw==
+X-Google-Smtp-Source: ABdhPJycuMM6aHGbe0O2CrOSJTyrPXJsQw8afAcdxwgAWCtimO+5JAU8UDgC7cj//wqbciDlzyiy8kZXnyMtEmSbJlo=
+X-Received: by 2002:a17:90a:2a8e:: with SMTP id j14mr627704pjd.136.1591124010835;
+ Tue, 02 Jun 2020 11:53:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200602184409.22142-1-elver@google.com> <20200602184409.22142-2-elver@google.com>
-In-Reply-To: <20200602184409.22142-2-elver@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 2 Jun 2020 11:49:10 -0700
-Message-ID: <CAKwvOdkXVcZa5UwnoZqX7_FytabYn2ZRi=zQy_DyzduVmyQNMA@mail.gmail.com>
-Subject: Re: [PATCH -tip 2/2] compiler_types.h: Add __no_sanitize_{address,undefined}
- to noinstr
-To:     Marco Elver <elver@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+References: <20200602184409.22142-1-elver@google.com>
+In-Reply-To: <20200602184409.22142-1-elver@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 2 Jun 2020 20:53:19 +0200
+Message-ID: <CAAeHK+wh-T4aGDeQM5Z9tTgZM+Y4xkOavjT7QuR+FHQkY-CHuw@mail.gmail.com>
+Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of KASAN
+ and UBSAN
+To:     Marco Elver <elver@google.com>
 Cc:     Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
         Dmitry Vyukov <dvyukov@google.com>,
         Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
         kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 11:44 AM 'Marco Elver' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
+On Tue, Jun 2, 2020 at 8:44 PM Marco Elver <elver@google.com> wrote:
 >
-> Adds the portable definitions for __no_sanitize_address, and
-> __no_sanitize_undefined, and subsequently changes noinstr to use the
-> attributes to disable instrumentation via KASAN or UBSAN.
+> Adds config variable CC_HAS_WORKING_NOSANITIZE, which will be true if we
+> have a compiler that does not fail builds due to no_sanitize functions.
+> This does not yet mean they work as intended, but for automated
+> build-tests, this is the minimum requirement.
 >
-> Link: https://lore.kernel.org/lkml/000000000000d2474c05a6c938fe@google.com/
-> Reported-by: syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com
+> For example, we require that __always_inline functions used from
+> no_sanitize functions do not generate instrumentation. On GCC <= 7 this
+> fails to build entirely, therefore we make the minimum version GCC 8.
+
+Could you also update KASAN docs to mention this requirement? As a
+separate patch or in v2, up to you.
+
+>
+> For KCSAN this is a non-functional change, however, we should add it in
+> case this variable changes in future.
+>
+> Link: https://lkml.kernel.org/r/20200602175859.GC2604@hirez.programming.kicks-ass.net
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
 > Signed-off-by: Marco Elver <elver@google.com>
-
-Currently most of our compiler attribute detection is done in
-include/linux/compiler_attributes.h; I think this should be handled
-there. +Miguel Ojeda
-
 > ---
->
-> Note: __no_sanitize_coverage (for KCOV) isn't possible right now,
-> because neither GCC nor Clang support such an attribute. This means
-> going and changing the compilers again (for Clang it's fine, for GCC,
-> it'll take a while).
->
-> However, it looks like that KCOV_INSTRUMENT := n is currently in all the
-> right places. Short-term, this should be reasonable.
+> Apply after:
+> https://lkml.kernel.org/r/20200602173103.931412766@infradead.org
 > ---
->  include/linux/compiler-clang.h | 8 ++++++++
->  include/linux/compiler-gcc.h   | 6 ++++++
->  include/linux/compiler_types.h | 3 ++-
->  3 files changed, 16 insertions(+), 1 deletion(-)
+>  init/Kconfig      | 3 +++
+>  lib/Kconfig.kasan | 1 +
+>  lib/Kconfig.kcsan | 1 +
+>  lib/Kconfig.ubsan | 1 +
+>  4 files changed, 6 insertions(+)
 >
-> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-> index 2cb42d8bdedc..c0e4b193b311 100644
-> --- a/include/linux/compiler-clang.h
-> +++ b/include/linux/compiler-clang.h
-> @@ -33,6 +33,14 @@
->  #define __no_sanitize_thread
->  #endif
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 0f72eb4ffc87..3e8565bc8376 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -39,6 +39,9 @@ config TOOLS_SUPPORT_RELR
+>  config CC_HAS_ASM_INLINE
+>         def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
 >
-> +#if __has_feature(undefined_behavior_sanitizer)
-> +/* GCC does not have __SANITIZE_UNDEFINED__ */
-> +#define __no_sanitize_undefined \
-> +               __attribute__((no_sanitize("undefined")))
-> +#else
-> +#define __no_sanitize_undefined
-> +#endif
+> +config CC_HAS_WORKING_NOSANITIZE
+> +       def_bool !CC_IS_GCC || GCC_VERSION >= 80000
 > +
->  /*
->   * Not all versions of clang implement the the type-generic versions
->   * of the builtin overflow checkers. Fortunately, clang implements
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index 7dd4e0349ef3..1c74464c80c6 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -150,6 +150,12 @@
->  #define __no_sanitize_thread
->  #endif
+>  config CONSTRUCTORS
+>         bool
+>         depends on !UML
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 81f5464ea9e1..15e6c4b26a40 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -20,6 +20,7 @@ config KASAN
+>         depends on (HAVE_ARCH_KASAN && CC_HAS_KASAN_GENERIC) || \
+>                    (HAVE_ARCH_KASAN_SW_TAGS && CC_HAS_KASAN_SW_TAGS)
+>         depends on (SLUB && SYSFS) || (SLAB && !DEBUG_SLAB)
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           Enables KASAN (KernelAddressSANitizer) - runtime memory debugger,
+>           designed to find out-of-bounds accesses and use-after-free bugs.
+> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> index 5ee88e5119c2..2ab4a7f511c9 100644
+> --- a/lib/Kconfig.kcsan
+> +++ b/lib/Kconfig.kcsan
+> @@ -5,6 +5,7 @@ config HAVE_ARCH_KCSAN
 >
-> +#if __has_attribute(__no_sanitize_undefined__)
-> +#define __no_sanitize_undefined __attribute__((no_sanitize_undefined))
-> +#else
-> +#define __no_sanitize_undefined
-> +#endif
-> +
->  #if GCC_VERSION >= 50100
->  #define COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW 1
->  #endif
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 02becd21d456..89b8c1ae18a1 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -198,7 +198,8 @@ struct ftrace_likely_data {
+>  config HAVE_KCSAN_COMPILER
+>         def_bool CC_IS_CLANG && $(cc-option,-fsanitize=thread -mllvm -tsan-distinguish-volatile=1)
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           For the list of compilers that support KCSAN, please see
+>           <file:Documentation/dev-tools/kcsan.rst>.
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index a5ba2fd51823..f725d126af7d 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -4,6 +4,7 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
 >
->  /* Section for code which can't be instrumented at all */
->  #define noinstr                                                                \
-> -       noinline notrace __attribute((__section__(".noinstr.text"))) __no_kcsan
-> +       noinline notrace __attribute((__section__(".noinstr.text")))    \
-> +       __no_kcsan __no_sanitize_address __no_sanitize_undefined
->
->  #endif /* __KERNEL__ */
->
+>  menuconfig UBSAN
+>         bool "Undefined behaviour sanity checker"
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           This option enables the Undefined Behaviour sanity checker.
+>           Compile-time instrumentation is used to detect various undefined
 > --
-
--- 
-Thanks,
-~Nick Desaulniers
+> 2.27.0.rc2.251.g90737beb825-goog
+>
