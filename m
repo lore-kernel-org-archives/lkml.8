@@ -2,296 +2,138 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB28720772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591094341;
-	bh=7akxGeDBAwqDHNPbY466qX2fnjCF1AbecUSRAueZ4ks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A35geDYh2O0uDyA/IpV/OI+kphrXAD6I6bRB7nt8lLp9JMHIfxBW3+NLCy0pohGm1
-	 E4oGaVM0Qf0Ays5nRo0A5pxon5GzZL4W8X7+rx0Svxq8gs//5R9GcdGsoGQ1meihuf
-	 tQ89BvSr2oesQSGUqGMLdBopu3B02YKapstIkk1o=
+	by mail.kernel.org (Postfix) with ESMTP id 6C3E320679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgFBKjA (ORCPT
+        id S1726461AbgFBKlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:39:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgFBKi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:38:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 018D620679;
-        Tue,  2 Jun 2020 10:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591094337;
-        bh=7akxGeDBAwqDHNPbY466qX2fnjCF1AbecUSRAueZ4ks=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W3/70se8FzD74EQgzLoM4WhS0WIFPuiz7g0/2ciOHh3Xc0FSr/jthKdOtp5PmKmdY
-         QrDCOXwBnqXE/oLAjx/8js9OllASJ22QQ0+ivqnrDbzjBsC24dp0S161dymIlJhoAx
-         6Dnkltsajp8l/b7wPNhTx3EkkUsqk3dGVo0gK43c=
-Date:   Tue, 2 Jun 2020 12:38:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
-        Crystal Guo <Crystal.Guo@mediatek.com>
-Subject: Re: [PATCH v6 2/2] hwrng: add sec-rng driver
-Message-ID: <20200602103855.GB2991896@kroah.com>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
- <1591085678-22764-3-git-send-email-neal.liu@mediatek.com>
+        Tue, 2 Jun 2020 06:41:46 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:52425 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725958AbgFBKlp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 06:41:45 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jg4MW-001rc5-5b; Tue, 02 Jun 2020 12:41:40 +0200
+Received: from p57bd9b57.dip0.t-ipconnect.de ([87.189.155.87] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jg4MV-002cRG-UC; Tue, 02 Jun 2020 12:41:40 +0200
+Subject: Re: [PATCH 1/2] video: fbdev: amifb: remove dead APUS support
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <CGME20200504232908eucas1p296927bc7c736ad924cefaea9a546459d@eucas1p2.samsung.com>
+ <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
+ <839133dd-8ed4-5fec-c311-ce9f8abf3d5f@samsung.com>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <72e0871c-d4bb-4887-4d6f-a60fd905bec1@physik.fu-berlin.de>
+Date:   Tue, 2 Jun 2020 12:41:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591085678-22764-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <839133dd-8ed4-5fec-c311-ce9f8abf3d5f@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.155.87
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:14:38PM +0800, Neal Liu wrote:
-> For security awareness SoCs on ARMv8 with TrustZone enabled,
-> peripherals like entropy sources is not accessible from normal world
-> (linux) and rather accessible from secure world (HYP/ATF/TEE) only.
-> This driver aims to provide a generic interface to Arm Trusted
-> Firmware or Hypervisor rng service.
+Hi Geert!
+
+On 6/2/20 12:37 PM, Bartlomiej Zolnierkiewicz wrote:
 > 
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> On 5/14/20 10:21 PM, Geert Uytterhoeven wrote:
+> 
+>> These #ifdefs are relics from APUS (Amiga Power-Up System), which
+>> added a PPC board.  APUS support was killed off a long time ago,
+>> when arch/ppc/ was still king, but these #ifdefs were missed, because
+>> they didn't test for CONFIG_APUS.
+> 
+> Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 > ---
->  drivers/char/hw_random/Kconfig   |   13 ++++
->  drivers/char/hw_random/Makefile  |    1 +
->  drivers/char/hw_random/sec-rng.c |  155 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 169 insertions(+)
->  create mode 100644 drivers/char/hw_random/sec-rng.c
-> 
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 9bc46da..cb9c8a9 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -474,6 +474,19 @@ config HW_RANDOM_KEYSTONE
->  	help
->  	  This option enables Keystone's hardware random generator.
->  
-> +config HW_RANDOM_SECURE
-> +	tristate "Arm Security Random Number Generator support"
-> +	depends on HAVE_ARM_SMCCC || COMPILE_TEST
-> +	default HW_RANDOM
-> +	help
-> +	  This driver provides kernel-side support for the Arm Security
-> +	  Random Number Generator.
-> +
-> +	  To compile this driver as a module, choose M here. the
-> +	  module will be called sec-rng.
-> +
-> +	  If unsure, say Y.
+>  drivers/video/fbdev/amifb.c |   63 --------------------------------------------
+>  1 file changed, 63 deletions(-)
 
-Why Y?
+What do you mean with the sentence "when arch/ppc/ was still king"?
 
+Does that mean - in the case we would re-add APUS support in the future, that
+these particular changes would not be necessary?
 
+I assume there could be new affordable PowerPC upgrade cards for the Amiga
+in the future as the PowerPC cards are still sought after by the Amiga
+community, so there is still demand for those on the market.
 
-> +
->  endif # HW_RANDOM
->  
->  config UML_RANDOM
-> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-> index a7801b4..04533d1 100644
-> --- a/drivers/char/hw_random/Makefile
-> +++ b/drivers/char/hw_random/Makefile
-> @@ -41,3 +41,4 @@ obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
->  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
->  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
->  obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
-> +obj-$(CONFIG_HW_RANDOM_SECURE) += sec-rng.o
-> diff --git a/drivers/char/hw_random/sec-rng.c b/drivers/char/hw_random/sec-rng.c
-> new file mode 100644
-> index 0000000..c6d3872
-> --- /dev/null
-> +++ b/drivers/char/hw_random/sec-rng.c
-> @@ -0,0 +1,155 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 MediaTek Inc.
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define SMC_RET_NUM	4
-> +#define SEC_RND_SIZE	(sizeof(u32) * SMC_RET_NUM)
-> +
-> +#define HWRNG_SMC_FAST_CALL_VAL(func_num) \
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_32, \
-> +			   ARM_SMCCC_OWNER_SIP, (func_num))
-> +
-> +#define to_sec_rng(p)	container_of(p, struct sec_rng_priv, rng)
-> +
-> +typedef void (sec_rng_fn)(unsigned long, unsigned long, unsigned long,
-> +			  unsigned long, unsigned long, unsigned long,
-> +			  unsigned long, unsigned long,
-> +			  struct arm_smccc_res *);
+Adrian
 
-Why not throw some more unsigned longs in there?  :)
-
-Seriously, no variable names for these?  Why not?
-
-And given that you only use the first parameter, why have 7 of them that
-are not used at all?  That feels pointless and needlessly complex.
-
-> +
-> +struct sec_rng_priv {
-> +	u16 func_num;
-> +	sec_rng_fn *rng_fn;
-> +	struct hwrng rng;
-> +};
-
-Nit, if you put 'struct hwrng' at the top of the structure, your
-"to_sec_rng()" macro resolves to a simple cast, no math at all.
-
-> +
-> +/* Simple wrapper functions to be able to use a function pointer */
-> +static void sec_rng_smc(unsigned long a0, unsigned long a1,
-> +			unsigned long a2, unsigned long a3,
-> +			unsigned long a4, unsigned long a5,
-> +			unsigned long a6, unsigned long a7,
-> +			struct arm_smccc_res *res)
-> +{
-> +	arm_smccc_smc(a0, a1, a2, a3, a4, a5, a6, a7, res);
-> +}
-> +
-> +static void sec_rng_hvc(unsigned long a0, unsigned long a1,
-> +			unsigned long a2, unsigned long a3,
-> +			unsigned long a4, unsigned long a5,
-> +			unsigned long a6, unsigned long a7,
-> +			struct arm_smccc_res *res)
-> +{
-> +	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
-> +}
-> +
-> +static bool __sec_get_rnd(struct sec_rng_priv *priv, uint32_t *val)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	priv->rng_fn(HWRNG_SMC_FAST_CALL_VAL(priv->func_num),
-> +			0, 0, 0, 0, 0, 0, 0, &res);
-
-See, all 0's :(
-
-You could hard-code them in the functions above instead.
-
-But, all of this pointer indirection is really odd, why is it needed at
-all?  Why not just call one or the other depending on the "type" at
-runtime?  Wouldn't that actually be faster (hint, it is...), if you
-cared about speed here (hint, I doubt it matters).
-
-> +
-> +	if (!res.a0 && !res.a1 && !res.a2 && !res.a3)
-> +		return false;
-> +
-> +	val[0] = res.a0;
-> +	val[1] = res.a1;
-> +	val[2] = res.a2;
-> +	val[3] = res.a3;
-
-So no values out of the random number generator can be 0?  Feels like an
-odd thing for a random number not to be allowed to do, why this
-restriction?
-
-> +
-> +	return true;
-> +}
-> +
-> +static int sec_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> +{
-> +	struct sec_rng_priv *priv = to_sec_rng(rng);
-> +	u32 val[4] = {0};
-> +	int retval = 0;
-> +	int i;
-> +
-> +	while (max >= SEC_RND_SIZE) {
-> +		if (!__sec_get_rnd(priv, val))
-> +			return retval;
-> +
-> +		for (i = 0; i < SMC_RET_NUM; i++) {
-> +			*(u32 *)buf = val[i];
-> +			buf += sizeof(u32);
-
-Wait, what happens if buf is not a multiple of 4?  Didn't you just
-overwrite some memory above with the previous line?
-
-> +		}
-> +
-> +		retval += SEC_RND_SIZE;
-> +		max -= SEC_RND_SIZE;
-> +	}
-> +
-> +	return retval;
-> +}
-> +
-> +static int sec_rng_probe(struct platform_device *pdev)
-> +{
-> +	struct sec_rng_priv *priv;
-> +	const char *method;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	if (of_property_read_string(pdev->dev.of_node, "method", &method))
-> +		return -ENXIO;
-> +
-> +	if (!strncmp("smc", method, strlen("smc")))
-> +		priv->rng_fn = sec_rng_smc;
-> +	else if (!strncmp("hvc", method, strlen("hvc")))
-> +		priv->rng_fn = sec_rng_hvc;
-> +
-> +	if (IS_ERR(priv->rng_fn)) {
-
-How can this ever be true?
-
-Just put another else on the above list and you should be fine.
-
-> +		dev_err(&pdev->dev, "method %s is not supported\n", method);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (of_property_read_u16(pdev->dev.of_node, "method-fid",
-> +				 &priv->func_num))
-> +		return -ENXIO;
-> +
-> +	if (of_property_read_u16(pdev->dev.of_node, "quality",
-> +				 &priv->rng.quality))
-> +		return -ENXIO;
-> +
-> +	priv->rng.name = pdev->name;
-> +	priv->rng.read = sec_rng_read;
-> +	priv->rng.priv = (unsigned long)&pdev->dev;
-> +
-> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register rng device: %d\n", ret);
-
-Doesn't the caller print out something if this fails?
-
-thanks,
-
-greg k-h
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
