@@ -2,202 +2,153 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19602C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A9D206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103642074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YoqpL1g4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgFBRvH (ORCPT
+        id S1726922AbgFBRvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:51:07 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:53673 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726019AbgFBRvH (ORCPT
+        Tue, 2 Jun 2020 13:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbgFBRvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:51:07 -0400
-Received: from pro2.mail.ovh.net (unknown [10.109.143.250])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 7A652550CCA6;
-        Tue,  2 Jun 2020 19:51:04 +0200 (CEST)
-Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
- 19:51:03 +0200
-Date:   Tue, 2 Jun 2020 19:48:46 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v3 2/4] iio: chemical: scd30: add I2C interface driver
-Message-ID: <20200602174846.GB2668@arch>
-References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
- <20200602164723.28858-3-tomasz.duszynski@octakon.com>
- <CAHp75Vc60q1PC9j6KR1-OJHxw=nBAHt9zJK=h9f27yJxMHpb8A@mail.gmail.com>
+        Tue, 2 Jun 2020 13:51:54 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F402C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 10:51:54 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id k15so8161838otp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 10:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2z7vnRyBy5ncoXlkW8cnatBQyrXfqejt94sDIEUP2j4=;
+        b=YoqpL1g4uSpW54raEZFP7I5fg43ub0VRMXONqJe6PWBdBfZTspk0CdPFnw57k8Z9Ir
+         hTj8iR+QeasPEgK+GKUcHpXzxbNfRF9Vq6xIXiK7KV778JVQK+CmAsjTdNG3PUAsz3ph
+         sPkjnRGu6INh8W9wgVIyRwUyN33+dHs9YEKbMt+eHFOBDMKja8gsv44X/Angdgd26Lnx
+         IzP6ldkFky1kEhl61JkdHXNThGyNGBwlYUZjaXfifAGqD76aECwb7V+JjmdzjQeCozMF
+         NzR76A2GFTaSyHSoSg3NRB4QS4loLkcV4sroaw/2YYtd4JtTDy1mlKfJbq46HubDmaY8
+         9oMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2z7vnRyBy5ncoXlkW8cnatBQyrXfqejt94sDIEUP2j4=;
+        b=jcQDs+G1sRP5lys9VrwM+Sc1fEuO+gWVCuu5u4WsgTeswrRyzSTbKO0OCcsHEGTO5v
+         gHZnKZEJ+hhfXxXVtzN/BY7k3gfSMxX994nlmUhc/BggxuI9AN3T/qHgS/0TI3xUZfIC
+         d2heXFcUXJ5nc5GElh8wEgYt7jaQxTJlFYXXWCJjVVLLxCdk9ANnXjO4/UtrZmMPbxYL
+         471kbGap7GpZ0UQFuCSnIXx3108jrFvk5ObSJlWnHjIFarrndRxmqSIgwMJzI+Txv3u2
+         KE55kASyzbidEC8CwHqP/+y3xAsZnqZlD7LDDeGgSHNMacukQmoSY6ZYQkr6dobHVoQH
+         3NDA==
+X-Gm-Message-State: AOAM532+GU3k46N4dtl6ORM5u5kZVsq//pWAtXnVnseMPo17kKRUn/sL
+        KSLUZrlRRzQTLqYgPjgWWEKTagSEeM5UDFz4TubdEw==
+X-Google-Smtp-Source: ABdhPJzzSVx3Frnbh0Gmg5ImQUlqTVPQN5MFalLoeJD/gp7lyfBrkdwYsks1G8P7kajZTYyLJRZiISO6lqkq6mCcWWU=
+X-Received: by 2002:a9d:27a3:: with SMTP id c32mr330184otb.233.1591120313403;
+ Tue, 02 Jun 2020 10:51:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vc60q1PC9j6KR1-OJHxw=nBAHt9zJK=h9f27yJxMHpb8A@mail.gmail.com>
-X-Originating-IP: [34.103.240.103]
-X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 10486631732823481503
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtheevtefhffduteejfedtkeeuheejgeejvdetfffgveekffefgeffueeghefgjeenucfkpheptddrtddrtddrtddpfeegrddutdefrddvgedtrddutdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
+References: <000000000000d2474c05a6c938fe@google.com> <CACT4Y+ajjB8RmG3_H_9r-kaRAZ05ejW02-Py47o7wkkBjwup3Q@mail.gmail.com>
+ <87o8q6n38p.fsf@nanos.tec.linutronix.de> <20200529160711.GC706460@hirez.programming.kicks-ass.net>
+ <20200529171104.GD706518@hirez.programming.kicks-ass.net> <CACT4Y+YB=J0+w7+SHBC3KpKOzxh1Xaarj1cXOPOLKPKQwAW6nQ@mail.gmail.com>
+ <CANpmjNP7mKDaXE1=5k+uPK15TDAX+PsV03F=iOR77Pnczkueyg@mail.gmail.com> <20200602094141.GR706495@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200602094141.GR706495@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 2 Jun 2020 19:51:40 +0200
+Message-ID: <CANpmjNOqSQ38DZxunagMLdBi8gjRN=14+FFXPhc+9SsUk+FiXQ@mail.gmail.com>
+Subject: Re: PANIC: double fault in fixup_bad_iret
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        syzbot <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andy,
+You were a bit faster with the other patches ;-) I was still
+experimenting the the patches, but let me briefly respond here.
 
-On Tue, Jun 02, 2020 at 08:14:13PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
-> <tomasz.duszynski@octakon.com> wrote:
+On Tue, 2 Jun 2020 at 11:41, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, Jun 01, 2020 at 02:40:31PM +0200, Marco Elver wrote:
+> > I think Peter wanted to send a patch to add __no_kcsan to noinstr:
+> > https://lkml.kernel.org/r/20200529170755.GN706495@hirez.programming.kicks-ass.net
 > >
-> > Add I2C interface driver for the SCD30 sensor.
+> > In the same patch we can add __no_sanitize_address to noinstr. But:
+> >
+> > - We're missing a definition for __no_sanitize_undefined and
+> > __no_sanitize_coverage.
 >
-> ...
->
-> > +static u16 scd30_i2c_cmd_lookup_tbl[] = {
-> > +       [CMD_START_MEAS] = 0x0010,
-> > +       [CMD_STOP_MEAS] = 0x0104,
-> > +       [CMD_MEAS_INTERVAL] = 0x4600,
-> > +       [CMD_MEAS_READY] = 0x0202,
-> > +       [CMD_READ_MEAS] = 0x0300,
-> > +       [CMD_ASC] = 0x5306,
-> > +       [CMD_FRC] = 0x5204,
-> > +       [CMD_TEMP_OFFSET] = 0x5403,
-> > +       [CMD_FW_VERSION] = 0xd100,
-> > +       [CMD_RESET] = 0xd304,
->
-> Keep sorted by value?
->
+> Do those function attributes actually work? Because the last time I
+> played with some of that I didn't.
 
-I'd rather leave it as is simply because order here matches order in
-sensor datasheet.
+__no_sanitize_coverage won't work, because neither compiler has an
+attribute to disable coverage instrumentation. I'll try and add this
+to compilers, but KCOV_INSTRUMENT := n is in the right places right
+now it seems. More on that in the patch adding this.
 
-> > +};
+> Specifically: unmarked __always_inline functions must not generate
+> instrumentation when they're inlined into a __no_*san function.
 >
-> ...
->
-> > +       ret = i2c_master_send(client, txbuf, txsize);
->
-> > +       if (ret != txsize)
-> > +               return ret < 0 ? ret : -EIO;
->
-> Wouldn't be better
->
->   if (ret < 0)
->     return ret;
->   if (ret != txsize)
->     return -EIO;
->
-> ?
->
+> (and that fails to build on some GCC versions, and I think fails to
+> actually work on the rest of them, but I'd have to double check)
 
-Hmm, okay. Perhaps slightly easier to read.
+We'll probably need to bump the required compiler version if anybody
+still attempts to use these old compilers with sanitizers. The precise
+versions of compilers and what mixes with what is a bit of a
+nightmare. For now I'd just say, let's add the attributes, and see
+where that gets us. Surely it won't be more broken than before. ;-)
 
-> > +       if (!rxbuf)
-> > +               return 0;
-> > +
-> > +       ret = i2c_master_recv(client, rxbuf, rxsize);
+> > - We still need the above blanket no-instrument for x86 because of
+> > GCC. We could guard it with "ifdef CONFIG_CC_IS_GCC".
 >
-> > +       if (ret != rxsize)
-> > +               return ret < 0 ? ret : -EIO;
+> Right; so all of GCC is broken vs that function attribute stuff? Any
+> plans of getting that fixed? Do we have GCC that care?
 >
-> Ditto.
->
-> ...
->
-> > +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd,
-> > +                            u16 arg, void *response, int size)
-> > +{
-> > +       char crc, buf[SCD30_I2C_MAX_BUF_SIZE], *rsp = response;
-> > +       int i, ret;
->
-> i -> offset ?
->
+> Does the GCC plugin approach sound like a viable alternative
+> implementation of all this?
 
-'i' is shorter and I am lazy :).
+I don't think it's realistic to maintain a GCC plugin like that
+indefinitely. We can investigate, but it's not a quick fix.
 
-> > +       put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
-> > +       i = 2;
-> > +
-> > +       if (rsp) {
-> > +               /* each two bytes are followed by a crc8 */
-> > +               size += size / 2;
-> > +       } else {
-> > +               put_unaligned_be16(arg, buf + i);
-> > +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> > +               i += 2;
+> Anyway, we can make it:
 >
-> > +               buf[i] = crc;
-> > +               i += 1;
+> KASAN := SANITIZER_HAS_FUNCTION_ATTRIBUTES
 >
-> buf[offset++] = crc; ?
->
+> or something, and only make that 'y' when the compiler is sane.
 
-I'd rather stick to what I have now. It looks more consistent.
+We have all attributes except __no_sanitize_coverage. GCC <= 7 has
+problems with __always_inline, so we may just have to bump the
+required compiler or emit a warning.
 
-> > +               /* commands below don't take an argument */
-> > +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
-> > +                       i -= 3;
-> > +       }
-> > +
-> > +       ret = scd30_i2c_xfer(state, buf, i, buf, size);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       /* validate received data and strip off crc bytes */
-> > +       for (i = 0; i < size; i += 3) {
-> > +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> > +               if (crc != buf[i + 2]) {
-> > +                       dev_err(state->dev, "data integrity check failed\n");
-> > +                       return -EIO;
-> > +               }
-> > +
+> > Not sure what the best strategy is to minimize patch conflicts. For
+> > now I could send just the patches to add missing definitions. If you'd
+> > like me to send all patches (including modifying 'noinstr'), let me
+> > know.
 >
-> > +               *rsp++ = buf[i];
->
-> + 0 (for the sake of consistency?
->
+> If you're going to do patches anyway, might as well do that :-)
 
-Adding 0 is a little bit odd.
+I was stuck on trying to find ways to emulate __no_sanitize_coverage
+(with no success), and then agonizing which patches to send in which
+sequence. ;-) You made that decision by sending the KCSAN noinstr
+series first, so let me respond to that with what I think we can add
+for KASAN and UBSAN at least.
 
-> > +               *rsp++ = buf[i + 1];
-> > +       }
-> > +
-> > +       return 0;
-> > +}
->
-> ...
->
-> > +static struct i2c_driver scd30_i2c_driver = {
-> > +       .driver = {
->
-> > +               .name = KBUILD_MODNAME,
->
-> Better to hard code.
->
-
-I seriously doubt anyone will ever want to change module name. What for?
-
-> > +               .of_match_table = scd30_i2c_of_match,
-> > +               .pm = &scd30_pm_ops,
-> > +       },
-> > +       .probe_new = scd30_i2c_probe,
-> > +};
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Thanks,
+-- Marco
