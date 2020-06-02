@@ -2,101 +2,83 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB133C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4591CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A79D0206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:28:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WzENPptp"
+	by mail.kernel.org (Postfix) with ESMTP id 1FE4E206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgFBU2Q (ORCPT
+        id S1727898AbgFBU2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:28:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFBU2P (ORCPT
+        Tue, 2 Jun 2020 16:28:35 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:38216 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgFBU2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:28:15 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8708C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:28:14 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r10so47341pgv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L4s8ELkDI44C3t1msJoEfHdf1WqgoBLz+UoYOg97UZw=;
-        b=WzENPptpkYq02HZSRlZAcNZXcu5Qn9AmIlB8wIVNgRHDFlGlrJu3S5Xh9l2aPtmvGD
-         ZAvm6PSICZsDx1Fpdqwh2gJhlTKWtn9ZYiOCwAtlcHiUBuG8OQbwheTw3zApkEcA6rG2
-         PxdC9fCRnPi83/Pkl5iqN9QT/QZ8Levr1SxCdULavUJqWpK927pkRpOjV9f8iF+qAXVD
-         c/iZxDSrvRO0wCuzhZASKnCbwEjrRNvASdOShB7/dJtSE32qq+yflkPF047mcnqyUkqV
-         +l50HgySnppbzMy2+Ue85UODRiJ6AdNKHAC1bl/nIq3X/plkl9HII7YDjhh+JPJ6wvm9
-         SVfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L4s8ELkDI44C3t1msJoEfHdf1WqgoBLz+UoYOg97UZw=;
-        b=ZSAyrRhuEvkFe2gVObntsSYCdUR4fhHIp16I10KAjPbp/f57n+3xbynY88SqbkUXly
-         gJrN/pQ2W/L/WcYNIrlxNFBcf51KLuYTaaVPJF0rVuGttPGphZ4p+owxyVMwUr02FZCr
-         TAz41sf8cYvu7oUYF1KqTU/ICAiB6KNnILXg+QjLM9Pg4bKI+m1yiMc2XNOaaH8HPgng
-         9IlA0gL+7BbWm/+bWQF38JoTUHpDiQnPmwxmAnyWC8Z46lNmmMejSQePXTH0FN0lXHd1
-         MuyFvLC0gUZm32MwK/vEV7aL/QgxyS2vOVqDoA3kQLbF3GLWIf6PJ9SrclFjfOSdgKlm
-         6nNA==
-X-Gm-Message-State: AOAM53207KhMnpNnCOqMy5YpQ/aI9V4/u71QSfw+Jy5tJ0I3WbVvvnAv
-        vCt/RA3+6JzrcNKdPOiWtkikfeEt8C/BvYtzGXxyKw==
-X-Google-Smtp-Source: ABdhPJz2NSXepY/bxd9qMnQmNxaRNsuzQ7rmW7BzRrqROrvVq8b7ZKziCEBrT8C2w3f9uBmP1qrwHCnLNi+VE274Ipk=
-X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr1094446pjb.20.1591129693958;
- Tue, 02 Jun 2020 13:28:13 -0700 (PDT)
+        Tue, 2 Jun 2020 16:28:34 -0400
+Date:   Tue, 2 Jun 2020 16:28:33 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: Re: linux-sh for-next reactivation
+Message-ID: <20200602202832.GA3776@brightrain.aerifal.cx>
+References: <20200602031123.GA1079@brightrain.aerifal.cx>
+ <20200602150039.780a0ac0@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200602130125.20467-1-sjpark@amazon.com> <20200602131549.23617-1-sjpark@amazon.com>
-In-Reply-To: <20200602131549.23617-1-sjpark@amazon.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 2 Jun 2020 13:28:03 -0700
-Message-ID: <CAFd5g447MLhQ5F2MeizMEM+V1kSUY7Cqjp-1XxrfdLvEzxXFEg@mail.gmail.com>
-Subject: Re: [PATCH v14 13/15] mm/damon-test: Add a kunit test for recording setup
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>, Jonathan.Cameron@huawei.com,
-        aarcange@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        brendan.d.gregg@gmail.com, cai@lca.pw,
-        Colin King <colin.king@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>, dwmw@amazon.com,
-        foersleo@amazon.de, Ian Rogers <irogers@google.com>,
-        jolsa@redhat.com, kirill@shutemov.name,
-        Mark Rutland <mark.rutland@arm.com>, mgorman@suse.de,
-        minchan@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        namhyung@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>, riel@surriel.com,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, sblbir@amazon.com,
-        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
-        SeongJae Park <sj38.park@gmail.com>, snu@amazon.de,
-        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
-        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602150039.780a0ac0@canb.auug.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 6:16 AM SeongJae Park <sjpark@amazon.com> wrote:
->
-> From: SeongJae Park <sjpark@amazon.de>
->
-> This commit adds another unit test case for the recording setup.
->
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+On Tue, Jun 02, 2020 at 03:00:39PM +1000, Stephen Rothwell wrote:
+> Hi Rich,
+> 
+> On Mon, 1 Jun 2020 23:11:39 -0400 Rich Felker <dalias@libc.org> wrote:
+> >
+> > Could you reactivate linux-next pull from my arch/sh for-next branch?
+> > It's where it was before, at:
+> > 
+> >     git://git.libc.org/linux-sh for-next
+> > 
+> > and has newly accepted patches ready.
+> 
+> I already have an SH tree from
+> git://git.sourceforge.jp/gitroot/uclinux-h8/linux.git#sh-next .  Should
+> I do anything with that one?
+> 
+> It currently contains:
+> 
+> $ git log --oneline origin/master..sh/sh-next 
+> a193018e5290 (sh/sh-next) sh: add missing EXPORT_SYMBOL() for __delay
+> 1d5fd6c33b04 sh: add missing DECLARE_EXPORT() for __ashiftrt_r4_xx
+> d70f1e3d5dbd Merge remote-tracking branch 'origin/master' into sh-next
+> baf58858e8b6 sh: prefer __section from compiler_attributes.h
+> 8619b5a9035a sh: Drop -Werror from kernel Makefile
+> 3a3a78124693 sh: kernel: disassemble: Mark expected switch fall-throughs
+> fb8f77490f55 sh: kernel: hw_breakpoint: Fix missing break in switch statement
+> cd10afbc932d sh: remove unneeded uapi asm-generic wrappers
+> cbfc6edb6a4a sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Hi Stephen,
+
+I completely forgot that you had the tree from our other co-maintainer
+Yoshinori Sato on the list linux-next is pulling from. Would it be
+okay to keep both? That would help with quickly identifying and
+resolving any conflicting commits and make things go more smoothly
+with two maintainers trying to be active.
+
+Let me know if this doesn't work for you and we'll figure out
+alternative arrangements.
+
+Rich
