@@ -4,138 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9219C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C920DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B46EF206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9951920823
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mbzqhjaF"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="hbBdgWq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgFBC4x (ORCPT
+        id S1726666AbgFBC44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 22:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36692 "EHLO
+        Mon, 1 Jun 2020 22:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgFBC4w (ORCPT
+        with ESMTP id S1726232AbgFBC4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 22:56:52 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F81C061A0E;
-        Mon,  1 Jun 2020 19:56:52 -0700 (PDT)
+        Mon, 1 Jun 2020 22:56:54 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 848BCC061A0E;
+        Mon,  1 Jun 2020 19:56:53 -0700 (PDT)
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bcBm5d1Qz9sSc;
-        Tue,  2 Jun 2020 12:56:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591066609;
-        bh=C7J3bXfSu1FZozeaELpDPUf9WJWOXLY6YTv7uazDT4g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mbzqhjaFNySnaXDqY5UuyRgfAwhaSp/PkkA8VsB+hDTe5uS8CsM8npsvE8o8q4gGo
-         /BZwT0lR4c9nZ1tD+g0HTkhYqqo/KBPYPVQIrINKXbxA7R8yiReHPaZHsH/iDzpzNb
-         vaww/+eE0YRz1NJ1RythNbIOVaCOkyLfkVuWOy89/BSzdb6nWs5RYuUfnUjdPdsGXG
-         sKSlFxDXpJt+IBCjDNk9aXFZMuDmy7KEgOGd4yPdYh+0e3Gxr35nU33FcAOo9QeYmH
-         2WdD8ZEcR0TtcArF4BbUCTq/56B3zdrlgYzrkLea2Skb9ZGMsp6C4YLVf0UKjvJhid
-         1zbjreBKYxueA==
-Date:   Tue, 2 Jun 2020 12:56:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yamin Friedman <yaminf@mellanox.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Max Gurtovoy <maxg@mellanox.com>
-Subject: linux-next: manual merge of the block tree with the rdma tree
-Message-ID: <20200602125647.5f5ed151@canb.auug.org.au>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bcBn3GWMz9sSg;
+        Tue,  2 Jun 2020 12:56:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1591066611;
+        bh=YCwgkBAIWR9lwcZTT3gJGRHrETSDKFKv9oHQKKerD1g=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=hbBdgWq/e1Emt3gRHmqD91+k4UdRYjXCpeFqENlHwoArQaV+KU7uWGLPbrf5+6Trr
+         Fqj/ynRGm/Lfi0OnBPtSJmw41FmwJq9Imu80idpvhtdRhtX7lStU/LJAP5M5khPQm+
+         8+MwVX42mFeaetY8yuod+gPeLHl9z0gsE04oJor+DF3BIskjXraOCLxzzxpLOfLNPz
+         gK6Rxx4IzvN8CZnX4iVw2uflA+suvEVTUjyGExPXzSPZ5/WPxVL7RMquIsh75zaXsl
+         CoF+zwYUD2yso3mE3N7oW9Yb61Shiw7rcqu1KRC4WQfh4f7qyw5k4uPG1PNvvl3tzt
+         jmTVNMdNqKBag==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Liao Pingfang <liao.pingfang@zte.com.cn>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Allison Randal <allison@lohutok.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colin Cross <ccross@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Wang Liang <wang.liang82@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] powerpc/nvram: Replace kmalloc with kzalloc in the error message
+In-Reply-To: <c3d22d89-9133-30aa-8270-c515df214963@web.de>
+References: <c3d22d89-9133-30aa-8270-c515df214963@web.de>
+Date:   Tue, 02 Jun 2020 12:57:11 +1000
+Message-ID: <87imgai394.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/m84WJc3t0rLvH+PJfU8wLzE";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/m84WJc3t0rLvH+PJfU8wLzE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Markus Elfring <Markus.Elfring@web.de> writes:
+>> Please just remove the message instead, it's a tiny allocation that's
+>> unlikely to ever fail, and the caller will print an error anyway.
+>
+> How do you think about to take another look at a previous update suggestion
+> like the following?
+>
+> powerpc/nvram: Delete three error messages for a failed memory allocation
+> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/00845261-8528-d011-d3b8-e9355a231d3a@users.sourceforge.net/
+> https://lore.kernel.org/linuxppc-dev/00845261-8528-d011-d3b8-e9355a231d3a@users.sourceforge.net/
+> https://lore.kernel.org/patchwork/patch/752720/
+> https://lkml.org/lkml/2017/1/19/537
 
-Hi all,
+That deleted the messages from nvram_scan_partitions(), but neither of
+the callers of nvram_scan_paritions() check its return value or print
+anything if it fails. So removing those messages would make those
+failures silent which is not what we want.
 
-Today's linux-next merge of the block tree got a conflict in:
-
-  drivers/nvme/target/rdma.c
-
-between commit:
-
-  5733111dcd97 ("nvmet-rdma: use new shared CQ mechanism")
-
-from the rdma tree and commits:
-
-  b0012dd39715 ("nvmet-rdma: use SRQ per completion vector")
-  b09160c3996c ("nvmet-rdma: add metadata/T10-PI support")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/nvme/target/rdma.c
-index 2405db8bd855,d5141780592e..000000000000
---- a/drivers/nvme/target/rdma.c
-+++ b/drivers/nvme/target/rdma.c
-@@@ -589,7 -751,8 +752,8 @@@ static void nvmet_rdma_read_data_done(s
-  {
-  	struct nvmet_rdma_rsp *rsp =3D
-  		container_of(wc->wr_cqe, struct nvmet_rdma_rsp, read_cqe);
- -	struct nvmet_rdma_queue *queue =3D cq->cq_context;
- +	struct nvmet_rdma_queue *queue =3D wc->qp->qp_context;
-+ 	u16 status =3D 0;
- =20
-  	WARN_ON(rsp->n_rdma <=3D 0);
-  	atomic_add(rsp->n_rdma, &queue->sq_wr_avail);
-@@@ -996,8 -1257,9 +1258,8 @@@ static int nvmet_rdma_create_queue_ib(s
-  	 */
-  	nr_cqe =3D queue->recv_queue_size + 2 * queue->send_queue_size;
- =20
-- 	queue->cq =3D ib_cq_pool_get(ndev->device, nr_cqe + 1, comp_vector,
- -	queue->cq =3D ib_alloc_cq(ndev->device, queue,
- -			nr_cqe + 1, queue->comp_vector,
- -			IB_POLL_WORKQUEUE);
-++	queue->cq =3D ib_cq_pool_get(ndev->device, nr_cqe + 1, queue->comp_vecto=
-r,
- +				   IB_POLL_WORKQUEUE);
-  	if (IS_ERR(queue->cq)) {
-  		ret =3D PTR_ERR(queue->cq);
-  		pr_err("failed to create CQ cqe=3D %d ret=3D %d\n",
-
---Sig_/m84WJc3t0rLvH+PJfU8wLzE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Vv+8ACgkQAVBC80lX
-0Gzu7AgAgn7tSYncLw7QsB+xKm6a8weQ9NCNS5YBnfD5oZQWQWigOhVaqOG82cYk
-SQM7B82MTUbmgTuyhz1SAN8pQeDRKD3IT4AWjMmldsKnGocs9i02BT+d3lO1TqJG
-s1v9K2foL5MIqhDuKYf70IKtF/8b3d7Xr0bZ4ZI6BaCS1GneF3XKx5PNb8Bm1ECf
-JbKiuu4z3wvihl225BLXPT87NxfDyAPs1UppnA5QNORcAsdbObMm2j8TNiqBj4N6
-YleRdQOMXa6wGVm9dDsh+25HYLby+THaNjjKXEHG1QdZvfsc5Nw4AlMgrI9CcXCv
-Pq2x/Awv9iTiMatxKqBKEl5qZuwWuA==
-=64/x
------END PGP SIGNATURE-----
-
---Sig_/m84WJc3t0rLvH+PJfU8wLzE--
+cheers
