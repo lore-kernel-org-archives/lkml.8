@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E257BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C168C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8425205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CD72074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591134516;
-	bh=06LRwAvnxhnjOgG3yrRIuxf4c++XLJp34tSrbOKKPiE=;
+	s=default; t=1591134521;
+	bh=0cNLqOdsNJVUC2HMwWkHWd75VvTZo055yqqSsHAjaYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0B4x1ZdLh3svtEUU+Kq6sdXP0O/wC3UIr0rW1HtkGEic/6TfFavhR2o9L2Pj8Loa
-	 /lFdXnnhZRnq3iLDXmrqrVvQ3ELqOO8pI8/xhn2QiMVdPvRL8cUwtqrn+P02yn/v/f
-	 ecuc1aKEOc1XnktQdMG0RvvqeWwegyQEXEEdPmUU=
+	b=VHewShIt46ASn6axNriYdMzdF1XJrp4iBuE41vef8ABgA7QpjxwwiJMN8UtEjZoSY
+	 m7Ce62thymWzk5iqz5YJepPql5rwE3c4kIidxivFhWNkwx98ZVbgrBc67KbtNuX9hg
+	 GmRSsW6C+HxntVKqN+EXRFyM28J5PYlN7ov33Ogw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgFBVsf convert rfc822-to-8bit (ORCPT
+        id S1728506AbgFBVsk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 17:48:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23842 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728440AbgFBVsb (ORCPT
+        Tue, 2 Jun 2020 17:48:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34401 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728504AbgFBVsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 17:48:31 -0400
+        Tue, 2 Jun 2020 17:48:36 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-57HBCWq8Ms-KhOhTFRkbgQ-1; Tue, 02 Jun 2020 17:48:26 -0400
-X-MC-Unique: 57HBCWq8Ms-KhOhTFRkbgQ-1
+ us-mta-183--VZqDzCeMaW9Fx5mvp9ckQ-1; Tue, 02 Jun 2020 17:48:29 -0400
+X-MC-Unique: -VZqDzCeMaW9Fx5mvp9ckQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F38EEA0BD7;
-        Tue,  2 Jun 2020 21:48:24 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 178DB1856955;
+        Tue,  2 Jun 2020 21:48:28 +0000 (UTC)
 Received: from krava.redhat.com (unknown [10.40.192.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5374F78921;
-        Tue,  2 Jun 2020 21:48:22 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 67BA21BCBE;
+        Tue,  2 Jun 2020 21:48:25 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -50,9 +50,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Michael Petlan <mpetlan@redhat.com>,
         Stephane Eranian <eranian@google.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 10/13] perf tools: Release metric_events rblist
-Date:   Tue,  2 Jun 2020 23:47:38 +0200
-Message-Id: <20200602214741.1218986-11-jolsa@kernel.org>
+Subject: [PATCH 11/13] perf tools: Add test_generic_metric function
+Date:   Tue,  2 Jun 2020 23:47:39 +0200
+Message-Id: <20200602214741.1218986-12-jolsa@kernel.org>
 In-Reply-To: <20200602214741.1218986-1-jolsa@kernel.org>
 References: <20200602214741.1218986-1-jolsa@kernel.org>
 MIME-Version: 1.0
@@ -66,73 +66,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't release metric_events rblist, add the missing
-delete hook and call the release before leaving cmd_stat.
+Adding test_generic_metric that prepares and runs given metric
+over the data from struct runtime_stat object.
 
 Acked-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/builtin-stat.c     |  1 +
- tools/perf/util/metricgroup.c | 19 +++++++++++++++++++
- tools/perf/util/metricgroup.h |  1 +
- 3 files changed, 21 insertions(+)
+ tools/perf/util/stat-shadow.c | 14 ++++++++++++++
+ tools/perf/util/stat.h        |  3 +++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 01f8aed735be..8a01595a3f4c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2307,6 +2307,7 @@ int cmd_stat(int argc, const char **argv)
- 
- 	evlist__delete(evsel_list);
- 
-+	metricgroup__rblist_exit(&stat_config.metric_events);
- 	runtime_stat_delete(&stat_config);
- 
- 	return status;
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index fe33fee7f6ad..1b80a7901388 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -76,11 +76,30 @@ static struct rb_node *metric_event_new(struct rblist *rblist __maybe_unused,
- 	return &me->nd;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 27be7ce2fff4..8fdef47005e6 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -842,6 +842,20 @@ static void generic_metric(struct perf_stat_config *config,
+ 	expr__ctx_clear(&pctx);
  }
  
-+static void metric_event_delete(struct rblist *rblist __maybe_unused,
-+				struct rb_node *rb_node)
++double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_stat *st)
 +{
-+	struct metric_event *me = container_of(rb_node, struct metric_event, nd);
-+	struct metric_expr *expr, *tmp;
++	struct expr_parse_ctx pctx;
++	double ratio;
 +
-+	list_for_each_entry_safe(expr, tmp, &me->head, nd) {
-+		free(expr);
-+	}
++	if (prepare_metric(mexp->metric_events, &pctx, cpu, st) < 0)
++		return 0.;
 +
-+	free(me);
++	if (expr__parse(&ratio, &pctx, mexp->metric_expr, 1))
++		return 0.;
++
++	return ratio;
 +}
 +
- static void metricgroup__rblist_init(struct rblist *metric_events)
- {
- 	rblist__init(metric_events);
- 	metric_events->node_cmp = metric_event_cmp;
- 	metric_events->node_new = metric_event_new;
-+	metric_events->node_delete = metric_event_delete;
-+}
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				   struct evsel *evsel,
+ 				   double avg, int cpu,
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index f75ae679eb28..6911c7249199 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -230,4 +230,7 @@ perf_evlist__print_counters(struct evlist *evlist,
+ 			    struct target *_target,
+ 			    struct timespec *ts,
+ 			    int argc, const char **argv);
 +
-+void metricgroup__rblist_exit(struct rblist *metric_events)
-+{
-+	rblist__exit(metric_events);
- }
- 
- struct egroup {
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 426c824e20bf..8315bd1a7da4 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -47,4 +47,5 @@ void metricgroup__print(bool metrics, bool groups, char *filter,
- 			bool raw, bool details);
- bool metricgroup__has_metric(const char *metric);
- int arch_get_runtimeparam(void);
-+void metricgroup__rblist_exit(struct rblist *metric_events);
++struct metric_expr;
++double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_stat *st);
  #endif
 -- 
 2.25.4
