@@ -2,130 +2,99 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA23C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04CA820738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhgsM9iU"
+	by mail.kernel.org (Postfix) with ESMTP id 1EBA42081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591088544;
+	bh=ucs42Iz/kbBKflFW6zvQpMzG7SBqBXdVeSGNEUXuRjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fvx6NiRdMGEnIshuyF6Xzoev+yVrE7M0+jhTcb5RL+dvF2yP5YC8h20hN2rjInuYu
+	 yPphDh0DKKXKO/d9MoUHZ4R4L8+XIl3l/iF+2FD53vlNEdDonEcK1oBoRJlcMDCZh9
+	 C6QkHskSfoL+gUPJrqP/mVjCzMsExKt4iafNCQ1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgFBI7x (ORCPT
+        id S1726380AbgFBJCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgFBI7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:59:52 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B3B9C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 01:59:52 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id m21so9409439eds.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 01:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3H7xUAxDIV492pf+xpLGSX23/17GnpDs0cq3NBGktLM=;
-        b=rhgsM9iUAuh9JU1+ADlPV/IhOgbmy1ylfxitvFBlq987YnbyFO+CC98BD5g+fMxeTJ
-         rr1zQT0K5MxkqbWNtDSydlH3xQyJWWJq9qJ75KesZxnCdP6HKvi5e3XCYR3xrV3mKI0M
-         bnOP43YOoOYMEWh1AzhASUolMDLPyYjvRKLcu8oWo1UrU1j10OQEghsHI6PzVkYJcbev
-         w4fV+1OpIhp+PdbBg06Qh9jE3/keJn2djpt8D6ujIIX2Ez0b53YD6yuH49sf24w+6Lk7
-         yee1ADJCQlN+1ra6cvLzrVZ0imASeuY7bVn6H7jVkzS+Hq5CAsWtMgPXwh2JAoniZO+s
-         2YWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3H7xUAxDIV492pf+xpLGSX23/17GnpDs0cq3NBGktLM=;
-        b=oWefjEFpODj1FxO6ALXwbfXUgdzddOKaKvuDEb10aiTvdet6tx8znZMh7x4JwL/5WW
-         5Oj5rWenE0HBnn+3iINE/gj0+t4mlWCq5T1T0hKZzlql5zT12yK9AN2vnuaI6Y8r7vGn
-         tZ+I6JXXfm1oWWsj8RSg29jo47bkKf2MWBUlFveVSB8R/I7Vkr+TKK8NHUsTDxg3xbDD
-         jpKJESYW0Bv1oh15FO6TW/TO5oFNVz01xcaJGsUtJiYPCSMkgYNPOwJNbQS5brzFG9ux
-         UUgVVA6TOTxyHGzohI4r2Wok15QvMjgDVPVRwyQLS1bjhwuIRIOT+m2As0ZWh9YMSdjC
-         c8bg==
-X-Gm-Message-State: AOAM532MjLYEAwL3d+XZ0Wy5IWknv3bN6vHcfGYUQX5Sq2aRiysD6O02
-        eQFBoXyoo5LjrxOxtE8xsRQ=
-X-Google-Smtp-Source: ABdhPJx2NTksfyGytSlAr7jnghHLiOJQmPA8RgLMrtA2/H0poqMIJPzAz7P+wn+rfYKXR8h+wyT0YA==
-X-Received: by 2002:aa7:cb8d:: with SMTP id r13mr24946658edt.12.1591088390713;
-        Tue, 02 Jun 2020 01:59:50 -0700 (PDT)
-Received: from ubuntu-laptop.micron.com ([165.225.203.62])
-        by smtp.googlemail.com with ESMTPSA id b16sm1222984edu.89.2020.06.02.01.59.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 01:59:50 -0700 (PDT)
-Message-ID: <aabedbd547708a52b8bf8e0d10ba10e994acb54f.camel@gmail.com>
-Subject: Re: [PATCH v6 0/5] Micron SLC NAND filling block
-From:   Bean Huo <huobean@gmail.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     miquel.raynal@bootlin.com, vigneshr@ti.com, s.hauer@pengutronix.de,
-        derosier@gmail.com, Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bean Huo <beanhuo@micron.com>
-Date:   Tue, 02 Jun 2020 10:59:46 +0200
-In-Reply-To: <20200602094825.26396b06@collabora.com>
-References: <20200525121814.31934-1-huobean@gmail.com>
-         <829d76189beff5a50ddc56123d22bff3aa6a3378.camel@gmail.com>
-         <0a4fc94213ca5c2040796a66942f626587483721.camel@gmail.com>
-         <20200602094825.26396b06@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jun 2020 05:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgFBJCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:02:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7127420679;
+        Tue,  2 Jun 2020 09:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591088540;
+        bh=ucs42Iz/kbBKflFW6zvQpMzG7SBqBXdVeSGNEUXuRjA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YAhc4Vyah8ojoJC/K/dVBlgtd+tylzqZgMP2YfVjSv703EoXR6n22eBNdP1ZBrX0L
+         eE+GlAf6OnOM2oGHfv0/3+sCTgf/hI8pYhr6Bmcs2du4Jh2//d1GrKfhT6nQ46TTPc
+         HLt5of1DzQOFQCljjHP0qNHK9lVwe32MosM+n3+o=
+Date:   Tue, 2 Jun 2020 11:02:19 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, vinod.koul@linaro.org, tiwai@suse.de,
+        mengdong.lin@intel.com, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+Subject: Re: [PATCH] soundwire: clarify SPDX use of GPL-2.0
+Message-ID: <20200602090219.GB2735864@kroah.com>
+References: <20200531172807.27042-1-yung-chuan.liao@linux.intel.com>
+ <20200601053809.GA1420218@kroah.com>
+ <686345af-4fda-4bc1-c3bf-da31406e806b@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <686345af-4fda-4bc1-c3bf-da31406e806b@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-02 at 09:48 +0200, Boris Brezillon wrote:
-> Hi Bean,
+On Mon, Jun 01, 2020 at 03:50:13PM -0500, Pierre-Louis Bossart wrote:
 > 
-> On Mon, 01 Jun 2020 23:10:43 +0200
-> Bean Huo <huobean@gmail.com> wrote:
 > 
-> > Hi Richard 
-> > would you please help us confirm below question??
+> On 6/1/20 12:38 AM, Greg KH wrote:
+> > On Mon, Jun 01, 2020 at 01:28:07AM +0800, Bard Liao wrote:
+> > > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > > 
+> > > Change SPDX from GPL-2.0 to GPL-2.0-only for Intel-contributed
+> > > code. This was explicit before the transition to SPDX and lost in
+> > > translation.
+> > 
+> > It is also explicit in the "GPL-2.0" lines as well, did you read the
+> > LICENSES/preferred/GPL-2.0 file for the allowed tags to be used for this
+> > license?
+> > 
+> > So this doesn't change anything, and we are trying to cut down on this
+> > type of churn until, maybe, after the whole kernel has proper SPDX
+> > lines.
 > 
-> Miquel suggested an approach that would allow us to deal with both
-> JFFS2
-> and UBI/UBIFS without having any FS/wear-leveling specific code at
-> the
-> NAND level, but you decided to ignore his comments. Sorry but there's
-> nothing we can do to help you if you don't listen to our
-> recommendations.
+> My commit message was misleading, sorry. For SoundWire, we recently added
+> new files with GPL-2.0-only (master + sysfs), as recommended since the short
+> GPL-2.0 identifier is deprecated (https://spdx.org/licenses/GPL-2.0.html
+> https://spdx.org/licenses/).
 
-Expose this issue to FS layer, it is not good idea. that will impact
-more code, and involve duplicated code.
-> 
-> I've been quite disappointed by your behavior in the past, and it
+Again, that is the SPDX new list, of course they want to depreciate
+older versions.  But we started the kernel conversion _before_ the newer
+version was there, let's not worry about changing anything at this point
+in time as that is unneeded churn.
 
-> continues. Recently you've taken Miquel's patches and claimed
-> ownership
-did you seem my recent patch? you can ignore that see this.
+For new files, fine, pick which ever tag you want to use as documented
+in the LICENSES/* files, but do not change existing ones please.
 
+thanks,
 
-> on them (probably not intentionally, but still) while you were
-> clearly
-> unable to rework your original series the way I suggested (which
-> Miquel
-> did after seeing you would never send new versions). 
-
-seriously?
-
-> And when Miquel
-> suggested a change to the implementation he had done based on the
-> discussion we had with Richard, you decided to ignore it and pursue
-> in
-> the original direction. So, quite frankly, I'm really not convinced
-> you
-> can conduct such a change.
-> 
-
-As Miquel mentioned, we need richard's final comfirmation,
-If he agrees with this proposal, I give up my current patch.
-
+greg k-h
