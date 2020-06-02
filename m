@@ -2,264 +2,174 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A54E2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42552072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cXB+4FqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgFBTwp (ORCPT
+        id S1728729AbgFBTwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:52:45 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36862 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728259AbgFBTu4 (ORCPT
+        Tue, 2 Jun 2020 15:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728322AbgFBTwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:50:56 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 2 Jun 2020 12:50:50 -0700
-Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 6FA5440BF1;
-        Tue,  2 Jun 2020 12:50:50 -0700 (PDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v4 05/32] objtool: recordmcount: Convert do_func() relhdrs
-Date:   Tue, 2 Jun 2020 12:49:58 -0700
-Message-ID: <c4bff7ea22c0cf9c9c0fbe7f253ae5efa95fc969.1591125127.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1591125127.git.mhelsley@vmware.com>
-References: <cover.1591125127.git.mhelsley@vmware.com>
+        Tue, 2 Jun 2020 15:52:40 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFE7C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:52:39 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o8so238932pgm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:52:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jBlQ0H5npGZVX47FUALQU/dmYxL2gnelxfg7MyVgbp0=;
+        b=cXB+4FqNR7A1+uDCNrWesXMiMm7U/wLiP8fD+W0cE1gzqO2K8wf1c21vHDI37WBEFD
+         9QnRF0kehrlIrI4U5xggqGOcyDyyRFq52mX3/BZ6GEbc6RWuraI8bw8RmIasX7ASzrZD
+         UkWZIIoMb/sYmEfPDYKHrqLXoXLaFuawhh57qCuX/QfXyCVfUGTfD5cbpnH188RnBSw5
+         z+8NzdfxXFDbnqNzil6f1tVct+EwLHuEpN1HGG+ct9ECKFR4gtfKFT2vzyFj7ihbOSaf
+         8C5RQ+5WMawNzeL5+Q0UOrDdCTXXgugtJNndzY/Digyp6kFV5SCf/bycj0bm7qKk/JdL
+         0Flg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jBlQ0H5npGZVX47FUALQU/dmYxL2gnelxfg7MyVgbp0=;
+        b=dU/mk+1y5Uac2+MHYihg0xolaSXS4Uh4PN/UuvaH4MucicnG1VgihN09XyKqC4wtmu
+         ABFadkpzYMjuPkeRvBEWVMDRCXb1CmVGVnHs+QRNZU1vdOcrZcKSXHZTJMmDO1PGg5bm
+         Fiaj0rqBMVyVxBQT0yAiM9HsGvWOrhNFpgPj+WnOCz2nHvur0Nr8pyZ1NAsE0esp9aZE
+         sg2ThqhbJXpECrnGpOdYJNz2m9n/78orlAeJPv+pJVv+9bonLGEjQOxIGsVEB12Ihmxi
+         Pnr/1OZAP7QhThp2DpY9kJoqE9TPIl+7mWVgpn5k3lFgTbtMAZS2zHi3ZrK+SBIydTPA
+         PpOA==
+X-Gm-Message-State: AOAM533Kzb3h2c4tC/yF/KafJbs5ZMIuE9TGUwIZGaNDThOSbIOBbkY5
+        E+93/iJgcBmZw2+NTvINxd8O7XJ0nbyHHxYC6lvRaA==
+X-Google-Smtp-Source: ABdhPJwCuiEf76Zc629eMOZpmu8/WaCfFuZD4eftG+RCE1u8qTjG8vY+SrXS/9ahOtF+G23ZHcYgVcLUMB2hz29+5jI=
+X-Received: by 2002:a17:90b:4c47:: with SMTP id np7mr893785pjb.101.1591127558983;
+ Tue, 02 Jun 2020 12:52:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+References: <CAKwvOdmCrM0eUZHR12OBgyRhNPFDzZKjrpZ0DW8Cg=wqTfzDFw@mail.gmail.com>
+ <20200602192523.32758-1-natechancellor@gmail.com>
+In-Reply-To: <20200602192523.32758-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 2 Jun 2020 12:52:26 -0700
+Message-ID: <CAKwvOdnH8rxT7y1U0d=pyD19K38KwarrwA2s+Ji7ctgg+ks_kg@mail.gmail.com>
+Subject: Re: [PATCH v2] s390: vdso: Use $(LD) instead of $(CC) to link vDSO
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use objtool's ELF data structures to visit the relocation
-sections in the top-level ELF file walking function, do_func().
-This means we can pass pointers to the relocation header structures
-into nested functions and avoid the indexing patterns for them.
+On Tue, Jun 2, 2020 at 12:25 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Currently, the VDSO is being linked through $(CC). This does not match
+> how the rest of the kernel links objects, which is through the $(LD)
+> variable.
+>
+> When clang is built in a default configuration, it first attempts to use
+> the target triple's default linker, which is just ld. However, the user
+> can override this through the CLANG_DEFAULT_LINKER cmake define so that
+> clang uses another linker by default, such as LLVM's own linker, ld.lld.
+> This can be useful to get more optimized links across various different
+> projects.
+>
+> However, this is problematic for the s390 vDSO because ld.lld does not
+> have any s390 emulatiom support:
+>
+> https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
+>
+> Thus, if a user is using a toolchain with ld.lld as the default, they
+> will see an error, even if they have specified ld.bfd through the LD
+> make variable:
+>
+> $ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
+>                        LD=s390x-linux-gnu-ld \
+>                        defconfig arch/s390/kernel/vdso64/
+> ld.lld: error: unknown emulation: elf64_s390
+> clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
+>
+> Normally, '-fuse-ld=bfd' could be used to get around this; however, this
+> can be fragile, depending on paths and variable naming. The cleaner
+> solution for the kernel is to take advantage of the fact that $(LD) can
+> be invoked directly, which bypasses the heuristics of $(CC) and respects
+> the user's choice. Similar changes have been done for ARM, ARM64, and
+> MIPS.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1041
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-These conversions don't use libelf/objtool to modify the ELF
-file -- it only changes the way we walk the ELF sections and do
-lookups to find the relocations.
+Thanks, with this, I'm more confident that the linker flags don't change.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
----
- tools/objtool/recordmcount.h | 62 +++++++++++++++++++-----------------
- 1 file changed, 32 insertions(+), 30 deletions(-)
+> ---
+>
+> v1 -> v2:
+>
+> * Add -fPIC per GCC's documentation, as pointed out by Nick.
+>
+>  arch/s390/kernel/vdso64/Makefile | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+> index bec19e7e6e1c..67c14732c304 100644
+> --- a/arch/s390/kernel/vdso64/Makefile
+> +++ b/arch/s390/kernel/vdso64/Makefile
+> @@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
+>
+>  KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+>  KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
+> -KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+> -                   -Wl,--hash-style=both
+> +ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
+> +            --hash-style=both -T
+>
+>  $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+>  $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
+> @@ -37,8 +37,8 @@ KASAN_SANITIZE := n
+>  $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+>
+>  # link rule for the .so file, .lds has to be first
+> -$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
+> -       $(call if_changed,vdso64ld)
+> +$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
+> +       $(call if_changed,ld)
+>
+>  # strip rule for the .so file
+>  $(obj)/%.so: OBJCOPYFLAGS := -S
+> @@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
+>         $(call if_changed_dep,vdso64as)
+>
+>  # actual build commands
+> -quiet_cmd_vdso64ld = VDSO64L $@
+> -      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
+>  quiet_cmd_vdso64as = VDSO64A $@
+>        cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
+>
+>
+> base-commit: e1750a3d9abbea2ece29cac8dc5a6f5bc19c1492
+> --
+> 2.27.0.rc2
+>
 
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 1a848b8104c8..3c4807dca3d0 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -285,7 +285,7 @@ static unsigned get_mcountsym(Elf_Sym const *const sym0,
- 	return mcountsym;
- }
- 
--static void get_sym_str_and_relp(Elf_Shdr const *const relhdr,
-+static void get_sym_str_and_relp(GElf_Shdr const *const relhdr,
- 				 Elf_Ehdr const *const ehdr,
- 				 Elf_Sym const **sym0,
- 				 char const **str0,
-@@ -293,10 +293,10 @@ static void get_sym_str_and_relp(Elf_Shdr const *const relhdr,
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
--	unsigned const symsec_sh_link = w(relhdr->sh_link);
-+	unsigned const symsec_sh_link = relhdr->sh_link;
- 	Elf_Shdr const *const symsec = &shdr0[symsec_sh_link];
- 	Elf_Shdr const *const strsec = &shdr0[w(symsec->sh_link)];
--	Elf_Rel const *const rel0 = (Elf_Rel const *)(_w(relhdr->sh_offset)
-+	Elf_Rel const *const rel0 = (Elf_Rel const *)(relhdr->sh_offset
- 		+ (void *)ehdr);
- 
- 	*sym0 = (Elf_Sym const *)(_w(symsec->sh_offset)
-@@ -316,9 +316,9 @@ static void get_sym_str_and_relp(Elf_Shdr const *const relhdr,
- static uint_t *sift_rel_mcount(uint_t *mlocp,
- 			       unsigned const offbase,
- 			       Elf_Rel **const mrelpp,
--			       Elf_Shdr const *const relhdr,
-+			       GElf_Shdr const *const relhdr,
- 			       Elf_Ehdr const *const ehdr,
--			       unsigned const recsym,
-+			       unsigned const recsym_index,
- 			       uint_t const recval,
- 			       unsigned const reltype)
- {
-@@ -327,8 +327,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 	Elf_Sym const *sym0;
- 	char const *str0;
- 	Elf_Rel const *relp;
--	unsigned rel_entsize = _w(relhdr->sh_entsize);
--	unsigned const nrel = _w(relhdr->sh_size) / rel_entsize;
-+	unsigned int rel_entsize = relhdr->sh_entsize;
-+	unsigned const nrel = relhdr->sh_size / rel_entsize;
- 	unsigned mcountsym = 0;
- 	unsigned t;
- 
-@@ -344,7 +344,7 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 				_w(_w(relp->r_offset) - recval + mcount_adjust);
- 			mrelp->r_offset = _w(offbase
- 				+ ((void *)mlocp - (void *)mloc0));
--			Elf_r_info(mrelp, recsym, reltype);
-+			Elf_r_info(mrelp, recsym_index, reltype);
- 			if (rel_entsize == sizeof(Elf_Rela)) {
- 				((Elf_Rela *)mrelp)->r_addend = addend;
- 				*mlocp++ = 0;
-@@ -364,7 +364,7 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
-  * that are not going to be traced. The mcount calls here will be converted
-  * into nops.
-  */
--static int nop_mcount(Elf_Shdr const *const relhdr,
-+static int nop_mcount(GElf_Shdr const *const relhdr,
- 		      Elf_Ehdr const *const ehdr,
- 		      const char *const txtname)
- {
-@@ -373,9 +373,9 @@ static int nop_mcount(Elf_Shdr const *const relhdr,
- 	Elf_Sym const *sym0;
- 	char const *str0;
- 	Elf_Rel const *relp;
--	Elf_Shdr const *const shdr = &shdr0[w(relhdr->sh_info)];
--	unsigned rel_entsize = _w(relhdr->sh_entsize);
--	unsigned const nrel = _w(relhdr->sh_size) / rel_entsize;
-+	Elf_Shdr const *const shdr = &shdr0[relhdr->sh_info];
-+	unsigned int rel_entsize = relhdr->sh_entsize;
-+	unsigned const nrel = relhdr->sh_size / rel_entsize;
- 	unsigned mcountsym = 0;
- 	unsigned t;
- 	int once = 0;
-@@ -464,13 +464,13 @@ static int find_secsym_ndx(unsigned const txtndx,
- }
- 
- /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
--static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
-+static char const * __has_rel_mcount(GElf_Shdr const *const relhdr, /* reltype */
- 				     Elf_Shdr const *const shdr0,
- 				     char const *const shstrtab,
- 				     char const *const fname)
- {
- 	/* .sh_info depends on .sh_type == SHT_REL[,A] */
--	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
-+	Elf_Shdr const *const txthdr = &shdr0[relhdr->sh_info];
- 	char const *const txtname = &shstrtab[w(txthdr->sh_name)];
- 
- 	if (w(txthdr->sh_type) != SHT_PROGBITS ||
-@@ -479,30 +479,29 @@ static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
- 	return txtname;
- }
- 
--static char const *has_rel_mcount(Elf_Shdr const *const relhdr,
-+static char const *has_rel_mcount(GElf_Shdr const *const relhdr,
- 				  Elf_Shdr const *const shdr0,
- 				  char const *const shstrtab,
- 				  char const *const fname)
- {
--	if (w(relhdr->sh_type) != SHT_REL && w(relhdr->sh_type) != SHT_RELA)
-+	if (relhdr->sh_type != SHT_REL && relhdr->sh_type != SHT_RELA)
- 		return NULL;
- 	return __has_rel_mcount(relhdr, shdr0, shstrtab, fname);
- }
- 
- 
- static unsigned tot_relsize(Elf_Shdr const *const shdr0,
--			    unsigned nhdr,
- 			    const char *const shstrtab,
- 			    const char *const fname)
- {
-+	struct section *sec;
- 	unsigned totrelsz = 0;
--	Elf_Shdr const *shdrp = shdr0;
- 	char const *txtname;
- 
--	for (; nhdr; --nhdr, ++shdrp) {
--		txtname = has_rel_mcount(shdrp, shdr0, shstrtab, fname);
-+	list_for_each_entry(sec, &lf->sections, list) {
-+		txtname = has_rel_mcount(&sec->sh, shdr0, shstrtab, fname);
- 		if (txtname && is_mcounted_section_name(txtname))
--			totrelsz += _w(shdrp->sh_size);
-+			totrelsz += sec->sh.sh_size;
- 	}
- 	return totrelsz;
- }
-@@ -514,13 +513,11 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
--	unsigned const nhdr = w2(ehdr->e_shnum);
- 	Elf_Shdr *const shstr = &shdr0[w2(ehdr->e_shstrndx)];
- 	char const *const shstrtab = (char const *)(_w(shstr->sh_offset)
- 		+ (void *)ehdr);
- 
--	Elf_Shdr const *relhdr;
--	unsigned k;
-+	GElf_Shdr const *relhdr;
- 
- 	/* Upper bound on space: assume all relevant relocs are for mcount. */
- 	unsigned       totrelsz;
-@@ -534,12 +531,14 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 	unsigned rel_entsize = 0;
- 	unsigned symsec_sh_link = 0;
- 
-+	struct section *sec;
-+
- 	int result = 0;
- 
- 	if (find_section_by_name(lf, "__mcount_loc") != NULL)
- 		return 0;
- 
--	totrelsz = tot_relsize(shdr0, nhdr, shstrtab, fname);
-+	totrelsz = tot_relsize(shdr0, shstrtab, fname);
- 	if (totrelsz == 0)
- 		return 0;
- 	mrel0 = umalloc(totrelsz);
-@@ -555,22 +554,25 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 		return -1;
- 	}
- 
--	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
--		char const *const txtname = has_rel_mcount(relhdr, shdr0,
-+	list_for_each_entry(sec, &lf->sections, list) {
-+		char const *txtname;
-+
-+		relhdr = &sec->sh;
-+		txtname = has_rel_mcount(relhdr, shdr0,
- 			shstrtab, fname);
- 		if (txtname && is_mcounted_section_name(txtname)) {
- 			unsigned int recsym;
- 			uint_t recval = 0;
- 
--			symsec_sh_link = w(relhdr->sh_link);
--			result = find_secsym_ndx(w(relhdr->sh_info), txtname,
-+			symsec_sh_link = relhdr->sh_link;
-+			result = find_secsym_ndx(relhdr->sh_info, txtname,
- 						&recval, &recsym,
- 						&shdr0[symsec_sh_link],
- 						ehdr);
- 			if (result)
- 				goto out;
- 
--			rel_entsize = _w(relhdr->sh_entsize);
-+			rel_entsize = relhdr->sh_entsize;
- 			mlocp = sift_rel_mcount(mlocp,
- 				(void *)mlocp - (void *)mloc0, &mrelp,
- 				relhdr, ehdr, recsym, recval, reltype);
+
 -- 
-2.20.1
-
+Thanks,
+~Nick Desaulniers
