@@ -4,124 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1513DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6196CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF126207F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4282620870
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgFBNtB (ORCPT
+        id S1728059AbgFBNtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:49:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49594 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725940AbgFBNtA (ORCPT
+        Tue, 2 Jun 2020 09:49:25 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:35801 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725940AbgFBNtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:49:00 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 052Dc8MC061313;
-        Tue, 2 Jun 2020 09:48:47 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31d2u231f2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 09:48:47 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 052DRaS3022513;
-        Tue, 2 Jun 2020 13:47:34 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 31bf47x4rc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 13:47:34 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 052DlWCT3342728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jun 2020 13:47:32 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CFD54C04A;
-        Tue,  2 Jun 2020 13:47:32 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9945E4C04E;
-        Tue,  2 Jun 2020 13:47:28 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.91.137])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Jun 2020 13:47:28 +0000 (GMT)
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-To:     linux-ext4@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.com>,
-        tytso@mit.edu, linux-kernel@vger.kernel.org,
-        adilger.kernel@dilger.ca, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com,
-        Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: [PATCHv5 1/1] ext4: mballoc: Use raw_cpu_ptr instead of this_cpu_ptr
-Date:   Tue,  2 Jun 2020 19:17:21 +0530
-Message-Id: <20200602134721.18211-1-riteshh@linux.ibm.com>
-X-Mailer: git-send-email 2.21.3
+        Tue, 2 Jun 2020 09:49:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U-O.QTj_1591105757;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0U-O.QTj_1591105757)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 02 Jun 2020 21:49:17 +0800
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>, Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH] workqueue: ensure all flush_work() completed when being destoryed
+Date:   Tue,  2 Jun 2020 13:49:14 +0000
+Message-Id: <20200602134915.2644-1-laijs@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200601060802.3260-1-laijs@linux.alibaba.com>
+References: <20200601060802.3260-1-laijs@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-02_13:2020-06-02,2020-06-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- cotscore=-2147483648 malwarescore=0 phishscore=0 clxscore=1015 bulkscore=0
- adultscore=0 lowpriorityscore=0 suspectscore=1 spamscore=0 mlxscore=0
- mlxlogscore=993 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006020093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It doesn't really matter in ext4_mb_new_blocks() about whether the code
-is rescheduled on any other cpu due to preemption. Because we care
-about discard_pa_seq only when the block allocation fails and then too
-we add the seq counter of all the cpus against the initial sampled one
-to check if anyone has freed any blocks while we were doing allocation.
+In old days, worker threads are not shared among different
+workqueues and destroy_workqueue() used kthread_stop() to destroy
+all workers before going to destroy workqueue structures.
+And kthread_stop() can ensure the scheduled (worker->scheduled)
+work items and the linked work items queued by flush_work()
+to be completed.
 
-So just use raw_cpu_ptr instead of this_cpu_ptr to avoid this BUG.
+For a workqueue to be completed/unused for wq users means that all
+queued works have completed and all flush_work() have return,
+and the workqueue is legitimate to passed to destroy_workqueue().
 
-BUG: using smp_processor_id() in preemptible [00000000] code: syz-fuzzer/6927
-caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 1 PID: 6927 Comm: syz-fuzzer Not tainted 5.7.0-next-20200602-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
- ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
- ext4_append+0x153/0x360 fs/ext4/namei.c:67
- ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
- ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
- vfs_mkdir+0x419/0x690 fs/namei.c:3632
- do_mkdirat+0x21e/0x280 fs/namei.c:3655
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+But
+e22bee782b3b("workqueue: implement concurrency managed dynamic worker pool")
+made worker pools and workers shared among different
+workqueues and kthread_stop() is not used to sync the completion
+of the work items. destroy_workqueue() uses drain_workqueue()
+to drain user work items, but internal work items queued by
+flush_work() is not drained due to they don't have colors.
 
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reported-by: syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com
+So problems may occur when wq_barrier_func() does complete(&barr->done)
+and the wokenup wq-user code does destroy_workqueue(). destroy_workqueue()
+can be scheduled eariler than the proccess_one_work() to do
+the put_pwq(), so that the sanity check in destroy_workqueue()
+can see the no yet put pwq->refcnt and blame false positively.
+
+The problem can be easily fixed by removing the WORK_NO_COLOR
+and making the internal work item queued by flush_work() inherit
+the color of the work items to be flushed. It would definitely
+revert the design and the benefits of the WORK_NO_COLOR.
+
+The patch simply adds an atomic counter for in-flight flush_work()
+and a completion for destroy_workqueue() waiting for them.
+
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 ---
- fs/ext4/mballoc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changed from V1:
+	Change from flush_no_color based mechanism to atomic+completion
+	based as TJ suggested.
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index a9083113a8c0..b79b32dbe3ea 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -4708,7 +4708,7 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
+ kernel/workqueue.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 1921c982f920..71272beb8e01 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -253,6 +253,9 @@ struct workqueue_struct {
+ 	int			nr_drainers;	/* WQ: drain in progress */
+ 	int			saved_max_active; /* WQ: saved pwq max_active */
+ 
++	atomic_t		nr_flush_work;	/* flush work in progress */
++	struct completion	flush_work_done; /* sync flush_work() */
++
+ 	struct workqueue_attrs	*unbound_attrs;	/* PW: only for unbound wqs */
+ 	struct pool_workqueue	*dfl_pwq;	/* PW: only for unbound wqs */
+ 
+@@ -1154,6 +1157,12 @@ static void pwq_activate_first_delayed(struct pool_workqueue *pwq)
+ 	pwq_activate_delayed_work(work);
+ }
+ 
++static void dec_nr_in_flight_flush_work(struct workqueue_struct *wq)
++{
++	if (atomic_dec_and_test(&wq->nr_flush_work))
++		complete(&wq->flush_work_done);
++}
++
+ /**
+  * pwq_dec_nr_in_flight - decrement pwq's nr_in_flight
+  * @pwq: pwq of interest
+@@ -1168,8 +1177,10 @@ static void pwq_activate_first_delayed(struct pool_workqueue *pwq)
+ static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, int color)
+ {
+ 	/* uncolored work items don't participate in flushing or nr_active */
+-	if (color == WORK_NO_COLOR)
++	if (color == WORK_NO_COLOR) {
++		dec_nr_in_flight_flush_work(pwq->wq);
+ 		goto out_put;
++	}
+ 
+ 	pwq->nr_in_flight[color]--;
+ 
+@@ -2682,6 +2693,7 @@ static void insert_wq_barrier(struct pool_workqueue *pwq,
  	}
  
- 	ac->ac_op = EXT4_MB_HISTORY_PREALLOC;
--	seq = *this_cpu_ptr(&discard_pa_seq);
-+	seq = *raw_cpu_ptr(&discard_pa_seq);
- 	if (!ext4_mb_use_preallocated(ac)) {
- 		ac->ac_op = EXT4_MB_HISTORY_ALLOC;
- 		ext4_mb_normalize_request(ac, ar);
+ 	debug_work_activate(&barr->work);
++	atomic_inc(&pwq->wq->nr_flush_work);
+ 	insert_work(pwq, &barr->work, head,
+ 		    work_color_to_flags(WORK_NO_COLOR) | linked);
+ }
+@@ -4278,6 +4290,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+ 	wq_init_lockdep(wq);
+ 	INIT_LIST_HEAD(&wq->list);
+ 
++	atomic_set(&wq->nr_flush_work, 1);
++	init_completion(&wq->flush_work_done);
++
+ 	if (alloc_and_link_pwqs(wq) < 0)
+ 		goto err_unreg_lockdep;
+ 
+@@ -4354,6 +4369,10 @@ void destroy_workqueue(struct workqueue_struct *wq)
+ 	/* drain it before proceeding with destruction */
+ 	drain_workqueue(wq);
+ 
++	/* flush all uncompleted internal work items queued by flush_work() */
++	dec_nr_in_flight_flush_work(wq);
++	wait_for_completion(&wq->flush_work_done);
++
+ 	/* kill rescuer, if sanity checks fail, leave it w/o rescuer */
+ 	if (wq->rescuer) {
+ 		struct worker *rescuer = wq->rescuer;
 -- 
-2.21.3
+2.20.1
 
