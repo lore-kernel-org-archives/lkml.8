@@ -2,139 +2,96 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B62BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 575552053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591100530;
-	bh=zoYzZzP112/newTQzfSumttw9583gdScBlj4fN9D0gQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HwrsPmPJIiftrIcVp9jvZYEaB4Rjnm2LR8bSzpu4wPsB90s+7ybthlXIhAUoowLjO
-	 ItMESNDw0FQ6jsI/ekwCbTJDiSz5prLV7OuYpo1mgpZBsvQ5imHAYfUUGmu7HzlUbP
-	 nvCabgzrLXlu8AmWplay4iA3HR56GRTQOMVugLlE=
+	by mail.kernel.org (Postfix) with ESMTP id B607A2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:22:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mnj2X7Bt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgFBMWJ (ORCPT
+        id S1728071AbgFBMW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbgFBMWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:22:09 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1D5B2053B;
-        Tue,  2 Jun 2020 12:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591100528;
-        bh=zoYzZzP112/newTQzfSumttw9583gdScBlj4fN9D0gQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0+7Z0cr/oGYllCuEhye3XCHQXlI/VQ0JGybEDtdLdxtR2FzpV4I4z38sODGWRWmo1
-         GrfH/N1d4ttjvEsE/TA/lao9K21uOYKA8lDqftrCR5FfViPifMs9UPp0w85v+1wTMa
-         jQCcEhdZQCBkE2ylbd974aI+Ds/GVCfVcDTNiCb0=
-Date:   Tue, 2 Jun 2020 13:22:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH v4 5/5] regulator: qcom: labibb: Add SC interrupt handling
-Message-ID: <20200602122205.GF5684@sirena.org.uk>
-References: <20200602100924.26256-1-sumit.semwal@linaro.org>
- <20200602100924.26256-6-sumit.semwal@linaro.org>
+        Tue, 2 Jun 2020 08:22:27 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:45571 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728091AbgFBMV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:21:28 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id g5uyjjRB3nv5ng5v2jpLOD; Tue, 02 Jun 2020 14:21:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591100486; bh=wnxhpBOR8cxLlCxEru5iXAFOeqCtZF0eI6TnTRpTQ4k=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=mnj2X7BtqgiwxsqKNO/Gme6ym8NfylrxRhcToLZ2Jvv3pXnELWguDd0MQ9SrPJeic
+         vBE6fp1/oDqTDT7zfU1aJIr6L05uNZZsm9ctGubcWavmUJSJoVeCm/BfHyfUkQKDfG
+         M6UOwKF68yUJWQ1KuAyMkME94sS4Mta/H0wBl4FwJPDnK0H2oY7K6ertG+WQDjqRvX
+         r+SrtwlqUBAl/omOC0/PeSNBQebgliirOc9ujm2zrJtrdRXA/SEP5ril8AAEPGKoCZ
+         udHUGJm/1/hjH8ahdoBAn0JXxrFwvZolOBk+KY6KtHLWruzIkBiLCV1pIfOyplId4J
+         EZRKDh9MFG0Bw==
+Subject: Re: [PATCH v6 03/14] videobuf2: handle V4L2 buffer cache flags
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
+ <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
+ <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
+ <20200602101834.GA617@jagdpanzerIV.localdomain>
+ <9ec2618b-0cce-b00e-08cf-b579d9aa1d5d@xs4all.nl>
+ <20200602121049.GB617@jagdpanzerIV.localdomain>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <9c6a347e-1cbf-3486-896a-124375fd225c@xs4all.nl>
+Date:   Tue, 2 Jun 2020 14:21:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gdTfX7fkYsEEjebm"
-Content-Disposition: inline
-In-Reply-To: <20200602100924.26256-6-sumit.semwal@linaro.org>
-X-Cookie: We are not a clone.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200602121049.GB617@jagdpanzerIV.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfB8xLrDohS5YChC2UdUEKUAgITcrA2xd5BVFjYQiOblLsFTmwikPFUXRvD8jTyG5ep3cDCjG/Sv7pz4guYWvnkNJzSSsVCsnsguovEkVK1jP6L7uNMQP
+ b+dT3G6UJ8Ihk2lGIa6OeA727A4s97n5qF+bN9c2DrNvROnxRG8sOkO/wZxl2Jk8Ajtn+Er1SyiVHVNzbXyLJKPunFQ9g5psaAP2AjWAR63W6n+Lw5H9Cnnt
+ s2wo1Uc2dfybHIUk6O7jw/xoCMctsfNNeJtz+DLSOkhwBLu7a72V1Ay2P9FoHi1bCOFPD7oaOZIVuub73834fNhQ1QuMTB17gnYIuWzo7AG/fDXO8XZMWiAw
+ C2ZpRGCs4QpOBWib4oQzgf7osEyUNSfhT1MTDEUCpVU9D1XcdFI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02/06/2020 14:10, Sergey Senozhatsky wrote:
+> On (20/06/02 12:27), Hans Verkuil wrote:
+> [..]
+>>> Sorry, Hans, do you suggest to have something like this:
+>>>
+>>> 	if (q->memory == VB2_MEMORY_DMABUF) {
+>>> 		vb->need_cache_sync_on_finish = 0;
+>>> 		vb->need_cache_sync_on_prepare = 0;
+>>> 		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
+>>> 		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
+>>> 		return;
+>>> 	}
+>>>
+>>> I didn't clear the ->flags there because we clear the vb flush/sync
+>>> flags: ->need_cache_sync_on_finish/prepare are zeros for DMABUF memory
+>>> type. Which is equivalent to passing V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+>>> V4L2_BUF_FLAG_NO_CACHE_CLEAN. IOW we would clearing both "vb's do cache
+>>> sync" and request's "do not cache sync".
+>>
+>> Ah, yes. In that case the v4l-utils patch is likely wrong.
+>> Can you take a look at that patch?
+> 
+> Hans, are we talking about "v4l2-utils: test cache_hints for MMAP queues"
+> patch? I can take a look, yes.
 
---gdTfX7fkYsEEjebm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, that's the one.
 
-On Tue, Jun 02, 2020 at 03:39:24PM +0530, Sumit Semwal wrote:
-
->  static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
->  {
-> -	return regulator_enable_regmap(rdev);
-> +	int ret;
-> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> +
-> +	ret = regulator_enable_regmap(rdev);
-> +	if (ret >= 0)
-> +		reg->enabled = true;
-
-Can we not read the register we just wrote to here?
-
-> +	/*
-> +	 * The SC(short circuit) fault would trigger PBS(Portable Batch
-> +	 * System) to disable regulators for protection. This would
-> +	 * cause the SC_DETECT status being cleared so that it's not
-> +	 * able to get the SC fault status.
-> +	 * Check if the regulator is enabled in the driver but
-> +	 * disabled in hardware, this means a SC fault had happened
-> +	 * and SCP handling is completed by PBS.
-> +	 */
-> +	if (!in_sc_err) {
-> +
-> +		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
-> +
-> +		ret = regmap_read_poll_timeout(labibb_reg->regmap,
-> +					reg, val,
-> +					!(val & LABIBB_CONTROL_ENABLE),
-> +					POLLING_SCP_DONE_INTERVAL_US,
-> +					POLLING_SCP_TIMEOUT);
-
-Why do we need a timeout here?
-
-> +						NULL);
-> +		regulator_unlock(labibb_reg->rdev);
-> +	}
-> +	return IRQ_HANDLED;
-
-This returns IRQ_HANDLED even if we didn't detect an interrupt source...
-Especially given the need to check to see if the regulator was turned
-off by the hardware it seems like there must be some false positives.
-
-> +	} else {
-> +		ret = devm_request_threaded_irq(reg->dev,
-> +						sc_irq,
-> +						NULL, labibb_sc_err_handler,
-> +						IRQF_ONESHOT,
-> +						"sc-err", reg);
-
-This looks like we're requesting the interrupt before we register the
-regulator which means the interrupt might fire without the regulator
-being there.  The order of registration should be reversed.
-
---gdTfX7fkYsEEjebm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7WRGwACgkQJNaLcl1U
-h9AQxAf8DfQwS+lpjrOoHgyYMGAdrelohDwZkiQnvYkAj/OfYQd3p5mkrBwbDamD
-yShU2qO7B/HwJ7aTdKuvkh4C7I6+j2i2aLCKjaiaej3mkPuk+0UExjH6lApQNS0c
-M7ENfxK05L3iAqKFvGx8DBNtr7BwJ12BV0jD/TZNxu9rXXEEXhRbnKNRx8pySXBz
-Qw8dP84h7WQARO089CaJf1JrbQES4TAxd0n0nCeTkqT6ynF7UHYrnbwN78s0f4Ef
-1ntUPHeyyFnmQjFlx3a+zAaOanSGIMbn25B0J+1msieGqjeXruhkf8n6YjNRHUDq
-uLCyTwC1rkX4ricMwVqRGfjA03eE0Q==
-=9Ynm
------END PGP SIGNATURE-----
-
---gdTfX7fkYsEEjebm--
+	Hans
