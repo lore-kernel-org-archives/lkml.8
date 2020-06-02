@@ -2,111 +2,94 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF31C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFABFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1EB2067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:00:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4PFWgMM"
+	by mail.kernel.org (Postfix) with ESMTP id 964312074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591106489;
+	bh=QuaLTejg1IfE7nDnsO56NeBDKKncmnpeRkbGrce8NqI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hUWW/2opBJRHboeCAksiIvGI73m7s23AZ2YFDSMqQ25h/0lCBM8S9sSlsu/1Ss6mH
+	 Xu4ebWBYwgsoyyW6eBGJ05BJk2i/FrJ3uHkHGKy/rm8B/OW+Pkpct7gD99/qkmbbw4
+	 F+iMCsU5FFciPQY/xv/5v5ffsI6S4TBTOY1V/nyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgFBOAh (ORCPT
+        id S1727065AbgFBOB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBOAe (ORCPT
+        Tue, 2 Jun 2020 10:01:29 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45320 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbgFBOB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:00:34 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE05EC08C5C0;
-        Tue,  2 Jun 2020 07:00:33 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id e125so6253185lfd.1;
-        Tue, 02 Jun 2020 07:00:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JQjaC1xCI2dfpZan+5KWwPWqlT4N6CVI5CYUzC/YfCk=;
-        b=C4PFWgMMsPkeuD0aU2b1PhywPv60JLQj6vwv2tCKyeUIY1tZXTw5OMfEkd/LCH96I+
-         OGE8g+akc8c2SMW0b7t/4Xy6dcLfnuyQHMv8ewbaIFtgRPdBPCOUmH9npw4923JqnvTx
-         0U0P2+kEIdVecEJWWDhcEaBSCRdx5FmlmeRzbiy8il1T7SneHE7luSm/y7xeWAdOPNKr
-         R0cJYZOAtv8N6dVpJjKaPa9ksqb1AYKzCrbaMe6KIa/QlHihqTR74M1PALGo6BItp2Jn
-         69FMfSMaYYZ4NMkRNbGPNedjrYQpzMtNZqRIWFX7cDiV/3NAfbR14DsVyFOxAWLZfqkI
-         pLiA==
+        Tue, 2 Jun 2020 10:01:28 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z18so12674895lji.12;
+        Tue, 02 Jun 2020 07:01:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JQjaC1xCI2dfpZan+5KWwPWqlT4N6CVI5CYUzC/YfCk=;
-        b=rKUvHjn+o3mIUDFm9SX83H7G1ZQcIjOWCXtvR286tQlt+qf6w4ERJQcm3+mKvi3BMd
-         f8+pGtmVWn+2cE13fQeOPULKZQUtBPGvqnzHJnjEmIaOo20jDxVfg2sdHtEnnLJIoqjH
-         I/GyxNeNhzQ5m6daLXjE4S+rzKF1ScQEkFeHVXxvMaVzP+7aTVtGTVcCCvLaGheVAuvp
-         sqhcopSZDnCm4kGLMNLWn1p7CDSCpmwy8IZ9bvp1K9NVP6lfpgJ4BoIaJdwKocvU3e+B
-         MMdH7M/zBHJKlm//jKpPuxXklPTgJOMvorbHsx5fPGr4SfFX+nuasHHfbcL0LRcanK/D
-         866A==
-X-Gm-Message-State: AOAM531GXOSt/3ekwyru2kB7AQZP3Nwr/r4JlHATb/Wwuta3bFWRgeY3
-        OhC6vhNUIXD6AUN7bkd/xgPipPilqGyIP+I8uvBqcgAq
-X-Google-Smtp-Source: ABdhPJxSqQO5b8QV8MPWeXmo9RJ1BHb/flfWWjvc5KOiPlHrSepjUdchcC0obnTB3fTVcZDYojmtbijtE0dDR07TdJo=
-X-Received: by 2002:ac2:5b9e:: with SMTP id o30mr14041813lfn.153.1591106431562;
- Tue, 02 Jun 2020 07:00:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2GWIfNtzCugpdmUqQsZRd/8mo4Bw27Ep9qZG/S6V/g8=;
+        b=fdViPSblwRo3UhJL0C2d5x+BwIMt04XqTSU4EKCjbRcvCJXGEzyXgcjdJBi7s9rOcg
+         f0iIiWkkaxIKL+M6yPFZ4lTVBKHBfprM4jNyE4I9hxMAYCnHFoFWj7UW3+LOat3T4ejM
+         OQCw6CuzZkFKZVI156itfwJL6crrIDrZM03ekgBgEtjBqbOCS5RzR3QxzT7XtK1BaEJp
+         HynU9/XAORVCFl5nqYVe7r/zUkwAWdnx5gOID1YKK22WCNsUAIyIsyORV486SDHk6hik
+         YAzhCw5OvneeMlVGHVtVPKnqqtmasNGR2qx4e42Lvr4e+MB3Wq6dodgZo6lhGqKPrY0R
+         oaAw==
+X-Gm-Message-State: AOAM531xZbCkDVuI2RSit5ERxgmaGIUtAsLi3wCI2BrjG6xM2U9B7WFQ
+        UAhBNOoCaKCrRR4Pq3Qird0=
+X-Google-Smtp-Source: ABdhPJymTQM9Ny8rhRuuLH44YpMh03Mgg2hLv4ixzkGnxZxqRZqkzo7nc8Hdq3RuC9Y+E8yN45TrGg==
+X-Received: by 2002:a2e:1453:: with SMTP id 19mr4084338lju.155.1591106486007;
+        Tue, 02 Jun 2020 07:01:26 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id x23sm720423lfe.32.2020.06.02.07.01.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 07:01:25 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1jg7Ti-0000xq-LH; Tue, 02 Jun 2020 16:01:18 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/4] serial: core: fix up sysrq regressions
+Date:   Tue,  2 Jun 2020 16:00:54 +0200
+Message-Id: <20200602140058.3656-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200602051959.60440-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20200602051959.60440-1-navid.emamdoost@gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 2 Jun 2020 21:59:45 +0800
-Message-ID: <CADBw62qrEutxcaEHg=C-tjVe7vQGwW_7kTVwN-fyohoGnQ903w@mail.gmail.com>
-Subject: Re: [PATCH] spi: sprd: call pm_runtime_put if pm_runtime_get_sync fails
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-spi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This series fixes a few regressions introduced by the recent sysrq
+rework that went into 5.6.
 
-On Tue, Jun 2, 2020 at 1:20 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
->
-> Call to pm_runtime_get_sync increments counter even in case of
-> failure leading to incorrect ref count.
-> Call pm_runtime_put_noidle if pm_runtime_get_sync fails.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+The port unlock fix is tagged for stable, and the fix for the
+unnecessary per-character overhead probably could be as well although
+it is a bit more intrusive.
 
-Looks good to me. Thanks
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
+Johan
 
-> ---
->  drivers/spi/spi-sprd.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/spi/spi-sprd.c b/drivers/spi/spi-sprd.c
-> index 6678f1cbc566..860032af4b98 100644
-> --- a/drivers/spi/spi-sprd.c
-> +++ b/drivers/spi/spi-sprd.c
-> @@ -1018,6 +1018,7 @@ static int sprd_spi_remove(struct platform_device *pdev)
->         ret = pm_runtime_get_sync(ss->dev);
->         if (ret < 0) {
->                 dev_err(ss->dev, "failed to resume SPI controller\n");
-> +               pm_runtime_put_noidle(&pdev->dev);
->                 return ret;
->         }
->
-> --
-> 2.17.1
->
 
+Johan Hovold (4):
+  Revert "serial: core: Refactor uart_unlock_and_check_sysrq()"
+  serial: core: fix broken sysrq port unlock
+  serial: core: fix sysrq overhead regression
+  serial: core: drop redundant sysrq checks
+
+ drivers/tty/serial/serial_core.c |  96 +---------------------------
+ include/linux/serial_core.h      | 105 +++++++++++++++++++++++++++++--
+ 2 files changed, 103 insertions(+), 98 deletions(-)
 
 -- 
-Baolin Wang
+2.26.2
+
