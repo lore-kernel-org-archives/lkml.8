@@ -2,130 +2,167 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0BAA206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C93B20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:22:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbtUWdUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgFBBQo (ORCPT
+        id S1726580AbgFBBWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 21:16:44 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:18273 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725793AbgFBBQn (ORCPT
+        Mon, 1 Jun 2020 21:22:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgFBBWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 21:16:43 -0400
-X-IronPort-AV: E=Sophos;i="5.73,462,1583164800"; 
-   d="scan'208";a="93611258"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 02 Jun 2020 09:16:38 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 582184CE03C1;
-        Tue,  2 Jun 2020 09:16:36 +0800 (CST)
-Received: from [10.167.220.69] (10.167.220.69) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 2 Jun 2020 09:16:36 +0800
-Message-ID: <5ED5A871.4070101@cn.fujitsu.com>
-Date:   Tue, 2 Jun 2020 09:16:33 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        Mon, 1 Jun 2020 21:22:22 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700B1C061A0E;
+        Mon,  1 Jun 2020 18:22:20 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id w15so5089713lfe.11;
+        Mon, 01 Jun 2020 18:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gTCLA4fS7iJOhl+Ggn935t2jp1dm3H6JOFPXN9B0GZM=;
+        b=BbtUWdUHFzYulXhLoOD83xJ2A1QcaLApa5z/emiUXPxUDIamNtJ1vO0WzEMnkc/rja
+         xBaT0ibZnlQ6jMLC+J9vmDF7/uhziW3Q8UNMML9+1W5bjMJEv7XTJ133scJEExCdGufw
+         VftclsfuELbpb7/Pm6EHwFwG8rL0N6/GydJ5WjwBg0qQLcK3UmSklwynKDbeEBiFQbIS
+         8LlJ449+cJffz53qWiSFCHpld0KoF5AzCDDUZfjO7bmnYQudDzUf49OnUHKnz3nC1I7p
+         VcSB4HPdTV9P4qID3n+QYV6aYL/U1chZwyHyL34oLYz+gSGOYFtSB2OMfcBi87oaTMfr
+         pNoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gTCLA4fS7iJOhl+Ggn935t2jp1dm3H6JOFPXN9B0GZM=;
+        b=U4lzdirqUStiIcsXmP9b+yHy81/PIo+FcD9XhlvwJC7TREJqyFcUJR0mHfbtdPqfaS
+         xY1NeTSOG6Sg3lEOQLJ2qyIFhI3o+2/9Mf3FAWd+kx5cx8n6PDo4JDqSbTGi1yQ6NqAN
+         RdANgIdFVpYdOcgi9RMYWwcFDfVyjNYLdGl6Mde4BW5pMBp/rHy43Hci90x91tonCgHf
+         9eY3lhPrnE6/iuk8kl2JTzto4VhSELX8F0VjIUau5UQp7cPNMz+HrZd0b/6kfvbKyhYN
+         pOwJSBCIl/HhHv2kiXxpz1xuqYC8x2VL7u2HXb+8WmRUmqgm/lWUQX+kGxlOKkR6rmVg
+         J8VQ==
+X-Gm-Message-State: AOAM530ExMjg6GxvjnfxZG5Jjrw41YcfnDiXAkUjtbUgp0yPUukrLxCK
+        hf+AtaiQILMHbnsT6QK5deCVcVCygMHBcT3f3dc=
+X-Google-Smtp-Source: ABdhPJwys0RWbrTiHu+ZdfmiMVQ55D1OmJgF4gAe1aU/NFCo7LujLE/8n9dcANOOP+dle4oss1iOzJ7LdrNeGY1hm5I=
+X-Received: by 2002:a19:6105:: with SMTP id v5mr10253806lfb.202.1591060938398;
+ Mon, 01 Jun 2020 18:22:18 -0700 (PDT)
 MIME-Version: 1.0
-To:     Jan Kara <jack@suse.cz>
-CC:     Ira Weiny <ira.weiny@intel.com>, <linux-ext4@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4 6/8] fs/ext4: Make DAX mount option a tri-state
-References: <20200521191313.261929-1-ira.weiny@intel.com> <20200521191313.261929-7-ira.weiny@intel.com> <5ECE00AE.3010802@cn.fujitsu.com> <20200527235002.GA725853@iweiny-DESK2.sc.intel.com> <5ECF7CD3.20409@cn.fujitsu.com> <20200528094144.GD14550@quack2.suse.cz>
-In-Reply-To: <20200528094144.GD14550@quack2.suse.cz>
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.220.69]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: 582184CE03C1.AA45D
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+References: <20200601174037.904070960@linuxfoundation.org> <20200601174039.942780034@linuxfoundation.org>
+In-Reply-To: <20200601174039.942780034@linuxfoundation.org>
+From:   Bo YU <tsu.yubo@gmail.com>
+Date:   Tue, 2 Jun 2020 09:20:43 +0800
+Message-ID: <CAKq8=3LkCVQb9Jt6LF2m3OPEjr6EP8CxNL2jXdn0zWAH_g9NPg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 020/142] tipc: block BH before using dst_cache
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Xin Long <lucien.xin@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/28 17:41, Jan Kara wrote:
-> On Thu 28-05-20 16:56:51, Xiao Yang wrote:
->> On 2020/5/28 7:50, Ira Weiny wrote:
->>> On Wed, May 27, 2020 at 01:54:54PM +0800, Xiao Yang wrote:
->>>> On 2020/5/22 3:13, ira.weiny@intel.com wrote:
->>>>> From: Ira Weiny<ira.weiny@intel.com>
->>>>>
->>>>> We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
->>>>> operate the same which is equivalent to 'always'.  This new
->>>>> functionality is limited to ext4 only.
->>>>>
->>>>> Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
->>>>> it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
->>>>>
->>>>> We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
->>>>>
->>>>> Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
->>>>> specified that option for printing.
->>>> Hi Ira,
->>>>
->>>> I have two questions when reviewing this patch:
->>>> 1) After doing mount with the same dax=inode option, ext4/xfs shows
->>>> differnt output(i.e. xfs doesn't print 'dax=inode'):
->>>> ---------------------------------------------------
->>>> # mount -o dax=inode /dev/pmem0 /mnt/xfstests/test/
->>>> # mount | grep pmem0
->>>> /dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode)
->>>>
->>>> # mount -odax=inode /dev/pmem1 /mnt/xfstests/scratch/
->>>> # mount | grep pmem1
->>>> /dev/pmem1 on /mnt/xfstests/scratch type xfs
->>>> (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
->>>> ----------------------------------------------------
->>>> Is this expected output? why don't unify the output?
->>>
->>> Correct. dax=inode is the default.  xfs treats that default the same whether
->>> you specify it on the command line or not.
->>>
->>> For ext4 Jan specifically asked that if the user specified dax=inode on the
->>> command line that it be printed on the mount options.  If you don't specify
->>> anything then dax=inode is in effect but ext4 will not print anything.
->>>
->>> I had the behavior the same as XFS originally but Jan wanted it this way.  The
->>> XFS behavior is IMO better and is what the new mount infrastructure gives by
->>> default.
->>
->> Could we unify the output?  It is strange for me to use differnt output on
->> ext4 and xfs.
+On Tue, Jun 2, 2020 at 2:08 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> If we'd unify the output with XFS, it would be inconsistent with all the
-> other ext4 mount options. So I disagree with that. I agree it is not ideal
-> to have different behavior between xfs and ext4 but such is the historical
-> behavior. If we want to change that, we need to change the handling for all
-> the ext4 mount options. I'm open for that discussion but it is a problem
-> unrelated to this patch set.
-Hi Jan,
-
-Thanks for your quick feedback.
-Of course, this doubt should not block the patch set.
-
-Best Regards,
-Xiao Yang
+> From: Eric Dumazet <edumazet@google.com>
 >
-> 								Honza
+> [ Upstream commit 1378817486d6860f6a927f573491afe65287abf1 ]
+>
+> dst_cache_get() documents it must be used with BH disabled.
+>
+> sysbot reported :
 
+syzbot?
 
-
+>
+> BUG: using smp_processor_id() in preemptible [00000000] code: /21697
+> caller is dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
+> CPU: 0 PID: 21697 Comm:  Not tainted 5.7.0-rc6-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+>  debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+>  dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
+>  tipc_udp_xmit.isra.0+0xb9/0xad0 net/tipc/udp_media.c:164
+>  tipc_udp_send_msg+0x3e6/0x490 net/tipc/udp_media.c:244
+>  tipc_bearer_xmit_skb+0x1de/0x3f0 net/tipc/bearer.c:526
+>  tipc_enable_bearer+0xb2f/0xd60 net/tipc/bearer.c:331
+>  __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
+>  tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
+>  genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
+>  genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
+>  genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
+>  netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+>  genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+>  netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+>  netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg+0xcf/0x120 net/socket.c:672
+>  ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+>  ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+>  __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45ca29
+>
+> Fixes: e9c1a793210f ("tipc: add dst_cache support for udp media")
+> Cc: Xin Long <lucien.xin@gmail.com>
+> Cc: Jon Maloy <jon.maloy@ericsson.com>
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Reported-by: syzbot <syzkaller@googlegroups.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  net/tipc/udp_media.c |    6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> --- a/net/tipc/udp_media.c
+> +++ b/net/tipc/udp_media.c
+> @@ -161,9 +161,11 @@ static int tipc_udp_xmit(struct net *net
+>                          struct udp_bearer *ub, struct udp_media_addr *src,
+>                          struct udp_media_addr *dst, struct dst_cache *cache)
+>  {
+> -       struct dst_entry *ndst = dst_cache_get(cache);
+> +       struct dst_entry *ndst;
+>         int ttl, err = 0;
+>
+> +       local_bh_disable();
+> +       ndst = dst_cache_get(cache);
+>         if (dst->proto == htons(ETH_P_IP)) {
+>                 struct rtable *rt = (struct rtable *)ndst;
+>
+> @@ -210,9 +212,11 @@ static int tipc_udp_xmit(struct net *net
+>                                            src->port, dst->port, false);
+>  #endif
+>         }
+> +       local_bh_enable();
+>         return err;
+>
+>  tx_error:
+> +       local_bh_enable();
+>         kfree_skb(skb);
+>         return err;
+>  }
+>
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller/20200601174039.942780034%40linuxfoundation.org.
