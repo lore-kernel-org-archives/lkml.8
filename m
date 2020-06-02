@@ -2,125 +2,205 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA14DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 948F520870
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9466207D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rih8KGyB"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VrC6MuQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgFBPnS (ORCPT
+        id S1727813AbgFBPn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBPnR (ORCPT
+        Tue, 2 Jun 2020 11:43:29 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:53681 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgFBPn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:43:17 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B252C08C5C0;
-        Tue,  2 Jun 2020 08:43:17 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id r10so2270353vsa.12;
-        Tue, 02 Jun 2020 08:43:17 -0700 (PDT)
+        Tue, 2 Jun 2020 11:43:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DYngnraAO9v6DgzTxyaGpMxNWkQ9LAzLsVZUZnOMctU=;
-        b=Rih8KGyBH40LBX8n/poZKv9x/eVmj1SMH3+mvtzB7ahZBXpM5zgOl/2ZZZrpYuDWWp
-         VrJEejMmZIzUOLmIWwoivs3brFbI2xHxVTdrDsbBlbr5G7rSN5pv/CU5K0PJS8Kzh8uk
-         rry00PFj7iBcTa7YWVz4K5PqexXAPP6EDn7ekuYRbDjC1O8XAq0CD66pG29XOMU+Q1bM
-         Z02BfsJWl5GocDb3k8jII1nKOTf+9vdgXXPLSeXNPgHysUxG0R6LQwywuPpauFCeB9sc
-         QZ4soiAEvByi7k97gMxFnAM6Vnde9bkAzowzbsaTr2NORJ3UOZteslq/IzFns5zsIZY0
-         BCWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DYngnraAO9v6DgzTxyaGpMxNWkQ9LAzLsVZUZnOMctU=;
-        b=JomhvyBId5jbtZNjLoF5RDP1XLdZdK4YtBa5u4Oxj+3yUNVhF4m6m6OhToXeMmVb0z
-         +LW9IDOwaqMhoVHUcVdgEwY52gFhuo4qgBMIxvANq9hTXc9RirSa5RgSG07hVRyzAoKp
-         Qt6XMeAWwl9xFnkGP5R8Ffq9zl9qLkZtEaLgI6+dRVhx5eKDAQrBPpYDaAV+MSNSflwJ
-         E3ksEQK0SjrwKu3lhEsoxrHWEZH2O9G2M4YrpW4iNg81sq3M4UFq0Z0LJL3ow+UTlG05
-         KMF8EJ2F7GzOEPrWyBcKpg7nGuz5MxZxZQ7ArjPFY+MXYcUepjMoxo/xgwa8nPaRqbXp
-         oH/A==
-X-Gm-Message-State: AOAM533xdUpXtT9oPV3rktRe0yLKfOQNghft9eJ3jhABMq6Bt29VbvmM
-        yAVF/9cUf1sALfCdjAO8rtPcl7+kgf0CdV46eFZ/Fg==
-X-Google-Smtp-Source: ABdhPJzkda1ykteQq6BwLnY+Dxu+T8WkWOO2Mx3/6MCrDeWYhdFyjxNXaMlq4pyJjgaKfSkcyDdktLKjZsXYe1+o4Pg=
-X-Received: by 2002:a67:b149:: with SMTP id z9mr17431445vsl.85.1591112596522;
- Tue, 02 Jun 2020 08:43:16 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591112607; x=1622648607;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=xo5iQNh2u9O4I7ZyRk3wLunxD/gOFcQ/CX+VsNZiQws=;
+  b=VrC6MuQAPd0vEY93v9lGPqFcpWi29adR1d+8WV/4he+o3zJxXgDGBxu8
+   FfFsl2vYunIIdCLWScA40Bb33bLG3QVsekGWVnDQODeYwc1Fb1UDktFj5
+   wxHZMc0bgIdMk+Jm4/miPOXKrBm+1ozJFWxcF8BwL14xI1H3py4YlKDis
+   Y=;
+IronPort-SDR: 2XGqGmkKWyxqG6NkZJ8CgeI5Dq3JIkhit5hVVFb0kIskPSovnTNXNe/s+8uaOszlPilgH3s4v3
+ +BcfWsBqjocg==
+X-IronPort-AV: E=Sophos;i="5.73,465,1583193600"; 
+   d="scan'208";a="47881129"
+Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Jun 2020 15:43:10 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 01269A2242;
+        Tue,  2 Jun 2020 15:43:07 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 15:43:07 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.82) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 15:42:51 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <sblbir@amazon.com>,
+        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH v14 09/15] mm/damon: Add tracepoints
+Date:   Tue, 2 Jun 2020 17:42:34 +0200
+Message-ID: <20200602154234.26962-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200602113536.16e8e767@gandalf.local.home> (raw)
 MIME-Version: 1.0
-References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
- <CACvgo50eb5_jp_6B5tkV9cX_X2_y2Xnavu+wvUUhHN5FsV9hiw@mail.gmail.com> <cd61dd742e73b89794fc1b812d9fdcd9@codeaurora.org>
-In-Reply-To: <cd61dd742e73b89794fc1b812d9fdcd9@codeaurora.org>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 2 Jun 2020 16:39:58 +0100
-Message-ID: <CACvgo50b+m2+onak=AZfgihkBXEP9POjMR52087v==-puLdkQQ@mail.gmail.com>
-Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
-        "Kristian H . Kristensen" <hoegsberg@chromium.org>,
-        mka@chromium.org, devicetree-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.82]
+X-ClientProxiedBy: EX13D24UWA004.ant.amazon.com (10.43.160.233) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 15:49, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Emil,
->
-> On 2020-06-02 19:43, Emil Velikov wrote:
-> > Hi Krishna,
-> >
-> > On Tue, 2 Jun 2020 at 08:17, Krishna Manikandan
-> > <mkrishn@codeaurora.org> wrote:
-> >>
-> >> Define shutdown callback for display drm driver,
-> >> so as to disable all the CRTCS when shutdown
-> >> notification is received by the driver.
-> >>
-> >> This change will turn off the timing engine so
-> >> that no display transactions are requested
-> >> while mmu translations are getting disabled
-> >> during reboot sequence.
-> >>
-> >> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-> >>
-> > AFAICT atomics is setup in msm_drm_ops::bind and shutdown in
-> > msm_drm_ops::unbind.
-> >
-> > Are you saying that unbind never triggers? If so, then we should
-> > really fix that instead, since this patch seems more like a
-> > workaround.
-> >
->
-> Which path do you suppose that the unbind should be called from, remove
-> callback? Here we are talking about the drivers which are builtin, where
-> remove callbacks are not called from the driver core during
-> reboot/shutdown,
-> instead shutdown callbacks are called which needs to be defined in order
-> to
-> trigger unbind. So AFAICS there is nothing to be fixed.
->
-Interesting - in drm effectively only drm panels implement .shutdown.
-So my naive assumption was that .remove was used implicitly by core,
-as part of the shutdown process. Yet that's not the case, so it seems
-that many drivers could use some fixes.
+On Tue, 2 Jun 2020 11:35:36 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Then again, that's an existing problem which is irrelevant for msm.
--Emil
+> On Tue, 2 Jun 2020 15:12:49 +0200
+> SeongJae Park <sjpark@amazon.com> wrote:
+> 
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > This commit adds a tracepoint for DAMON.  It traces the monitoring
+> > results of each region for each aggregation interval.  Using this, DAMON
+> > will be easily integrated with any tracepoints supporting tools such as
+> > perf.
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+> > ---
+> >  include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
+> >  mm/damon.c                   |  5 +++++
+> >  2 files changed, 48 insertions(+)
+> >  create mode 100644 include/trace/events/damon.h
+> > 
+> > diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+> > new file mode 100644
+> > index 000000000000..22236642d366
+> > --- /dev/null
+> > +++ b/include/trace/events/damon.h
+> > @@ -0,0 +1,43 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#undef TRACE_SYSTEM
+> > +#define TRACE_SYSTEM damon
+> > +
+> > +#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
+> > +#define _TRACE_DAMON_H
+> > +
+> > +#include <linux/types.h>
+> > +#include <linux/tracepoint.h>
+> > +
+> > +TRACE_EVENT(damon_aggregated,
+> > +
+> > +	TP_PROTO(int pid, unsigned int nr_regions,
+> > +		unsigned long vm_start, unsigned long vm_end,
+> > +		unsigned int nr_accesses),
+> > +
+> > +	TP_ARGS(pid, nr_regions, vm_start, vm_end, nr_accesses),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__field(int, pid)
+> > +		__field(unsigned int, nr_regions)
+> > +		__field(unsigned long, vm_start)
+> > +		__field(unsigned long, vm_end)
+> > +		__field(unsigned int, nr_accesses)
+> > +	),
+> > +
+> > +	TP_fast_assign(
+> > +		__entry->pid = pid;
+> > +		__entry->nr_regions = nr_regions;
+> > +		__entry->vm_start = vm_start;
+> > +		__entry->vm_end = vm_end;
+> > +		__entry->nr_accesses = nr_accesses;
+> > +	),
+> > +
+> > +	TP_printk("pid=%d nr_regions=%u %lu-%lu: %u", __entry->pid,
+> > +			__entry->nr_regions, __entry->vm_start,
+> > +			__entry->vm_end, __entry->nr_accesses)
+> > +);
+> > +
+> > +#endif /* _TRACE_DAMON_H */
+> > +
+> > +/* This part must be outside protection */
+> > +#include <trace/define_trace.h>
+> > diff --git a/mm/damon.c b/mm/damon.c
+> > index 6b0b8f21a6c6..af6f395fe06c 100644
+> > --- a/mm/damon.c
+> > +++ b/mm/damon.c
+> > @@ -9,6 +9,8 @@
+> >  
+> >  #define pr_fmt(fmt) "damon: " fmt
+> >  
+> > +#define CREATE_TRACE_POINTS
+> > +
+> >  #include <linux/damon.h>
+> >  #include <linux/debugfs.h>
+> >  #include <linux/delay.h>
+> > @@ -20,6 +22,7 @@
+> >  #include <linux/sched/mm.h>
+> >  #include <linux/sched/task.h>
+> >  #include <linux/slab.h>
+> > +#include <trace/events/damon.h>
+> >  
+> >  /* Minimal region size.  Every damon_region is aligned by this. */
+> >  #define MIN_REGION PAGE_SIZE
+> > @@ -650,6 +653,8 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
+> >  			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
+> >  			damon_write_rbuf(c, &r->nr_accesses,
+> >  					sizeof(r->nr_accesses));
+> > +			trace_damon_aggregated(t->pid, nr,
+> > +					r->vm_start, r->vm_end, r->nr_accesses);
+> 
+> For a little better code, what about passing in t and r directly, and then
+> having the TP_fast_assign just do the dereferencing there?
+> 
+> 	__entry->pid = t->pid;
+> 	__entry->vm_start = r->vm_start;
+> 	__entry->vm_end = r->vm_end;
+> 	__entry->nr_accesses = r->nr_accesses;
+> 
+> It will produce better code at the trace point call (which is the important
+> part) and make the trace event a bit more flexible in the future, without
+> having to modify the call site.
+
+Good point, I will do so in the next spin!
+
+
+Thanks,
+SeongJae Park
+
+> 
+> -- Steve
+> 
+> 
+> >  			r->nr_accesses = 0;
+> >  		}
+> >  	}
