@@ -6,83 +6,75 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8298206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D68206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgFBJTr (ORCPT
+        id S1726885AbgFBJUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:19:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:47613 "EHLO mga09.intel.com"
+        Tue, 2 Jun 2020 05:20:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34988 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgFBJTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:19:46 -0400
-IronPort-SDR: 95fyIx2KNj689JuMzlhSRlZNVP9QMtfkXD00v5Y/qRIiVcRvqZdJjmCFjKS//stLPdWZIAQ1YQ
- Bvhq+Wf2xscQ==
+        id S1726160AbgFBJUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:20:02 -0400
+IronPort-SDR: LU65sjY1zrrAKe4e9GVNwDC47gp7axev/y7DCAmDU1ZkKEp9SNsd0mWso/tL6PQ3+D1ZoPQjEk
+ hP9ltlCH86Ew==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:19:46 -0700
-IronPort-SDR: WAEaAvStENFfwLuhi6fndlAnkI991u1eUROelkM/wuQfncBweY8CD/sV16WBK/HlpHGXvH1DVI
- g+N8Dr7GVLkA==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:20:01 -0700
+IronPort-SDR: e1SbGkgK+kGnsjzv+eGCt8BQta7T17JsxI52CeVfzmD+fk3/K589DR1wzAMhM/IqkbiJoHT5Kx
+ 5BGbpsXxIMkQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
-   d="scan'208";a="304175393"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 02 Jun 2020 02:19:43 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8D5882D2; Tue,  2 Jun 2020 12:19:42 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v1] x86/gdt: Replace u16 castings by bitwise & in GDT_ENTRY_INIT()
-Date:   Tue,  2 Jun 2020 12:19:41 +0300
-Message-Id: <20200602091941.29449-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.27.0.rc2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="258263713"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Jun 2020 02:19:59 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Subject: [PATCH 02/15] PCI/MSI: forward MSIx vector enable error code in pci_alloc_irq_vectors_affinity
+Date:   Tue,  2 Jun 2020 11:19:53 +0200
+Message-Id: <20200602091953.31739-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears that the original commit 1e5de18278e6
-("x86: Introduce GDT_ENTRY_INIT()") used bitwise operations on the parameters
-when the commit 38e9e81f4c81 ("x86/gdt: Use bitfields for initialization")
-changed them to simple castings. The latter change recently made sparse not
-happy about. To satisfy it return to bitwise operations in GDT_ENTRY_INIT().
+When debugging an issue where I was asking the PCI machinery to enable a
+set of MSIx vectors, without falling back on MSI, I ran across a
+behaviour which seems odd. The pci_alloc_irq_vectors_affinity will
+always return -ENOSPC on failure, when allocating MSIx vectors only,
+whereas with MSI fallback it will forward any error returned by
+__pci_enable_msi_range. This is a confusing behaviour, so have the
+pci_alloc_irq_vectors_affinity forward the error code from
+__pci_enable_msix_range when appropriate.
 
-Fixes: 38e9e81f4c81 ("x86/gdt: Use bitfields for initialization")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- arch/x86/include/asm/desc_defs.h | 4 ++--
+ drivers/pci/msi.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
-index a91f3b6e4f2a..0d17a86fc1df 100644
---- a/arch/x86/include/asm/desc_defs.h
-+++ b/arch/x86/include/asm/desc_defs.h
-@@ -22,9 +22,9 @@ struct desc_struct {
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 6b43a5455c7a..9db9ce5dddb3 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -1231,8 +1231,8 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 		}
+ 	}
  
- #define GDT_ENTRY_INIT(flags, base, limit)			\
- 	{							\
--		.limit0		= (u16) (limit),		\
-+		.limit0		= ((limit) >> 0) & 0xFFFF,	\
- 		.limit1		= ((limit) >> 16) & 0x0F,	\
--		.base0		= (u16) (base),			\
-+		.base0		= ((base) >> 0) & 0xFFFF,	\
- 		.base1		= ((base) >> 16) & 0xFF,	\
- 		.base2		= ((base) >> 24) & 0xFF,	\
- 		.type		= (flags & 0x0f),		\
+-	if (msix_vecs == -ENOSPC)
+-		return -ENOSPC;
++	if (msix_vecs == -ENOSPC || (flags & PCI_IRQ_MSI_TYPES) == PCI_IRQ_MSIX)
++		return msix_vecs;
+ 	return msi_vecs;
+ }
+ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
 -- 
-2.27.0.rc2
+2.17.2
 
