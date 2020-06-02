@@ -3,228 +3,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D910CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5AC1206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B133F20772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Oz9Xqz55";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bJM6OPVo"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="ObqB132W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFBPIi (ORCPT
+        id S1726598AbgFBPJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:08:38 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:46411 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725958AbgFBPIh (ORCPT
+        Tue, 2 Jun 2020 11:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgFBPJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:08:37 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 52D3558029D;
-        Tue,  2 Jun 2020 11:08:36 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 02 Jun 2020 11:08:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=gy1oFJKqpBP4SByoQQwaUJAvM+9
-        w8yd8uHa/7cqBJYw=; b=Oz9Xqz55njCGiEvASU5op28H1HwHkjvsX30FAklJvnC
-        9SRwNgp+FAsmWDWl2eGPl/wwn2wX8iyHIIDpUhDjbxB7ek8aBGBEgqPApx01cJee
-        ow72sBBRgkWLGsHHvtuUDxH3cgPp6vZ2IhNqhLL/RB3IOIzbyV8SRrB7FgtHxmux
-        mm8q7dyytgf0taBIKSlN4wXh7c9VEwqrVND5Rb52ANfnDzAPAmnWONIEcR1OaMfs
-        bnND44Y8qXvtXYaTllhuRgGaRpRw374gEZ1kilfWmxUfh4oxYDidSUTI3aSeDI5y
-        Yk/rNyvw7halECPY0JtZEUNQBHLZCoI2suQFBvap7Uw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=gy1oFJ
-        KqpBP4SByoQQwaUJAvM+9w8yd8uHa/7cqBJYw=; b=bJM6OPVoNRNPTageBFCxr/
-        IN/eDOTiB/u5xeOBUfJZ7dPocqBHKKQmsp7LkdPM4o027HNQoJNFV8UzNnHkhimN
-        hwAAwp9IxdEKn5yUNVDVqqEbXV9qo3w8/pCScjiyZmSQIH9N1IpBRoP8ZNuLifP2
-        z78jC9+XbmPYa87Ae5US+movKmAI8Pir0IYmv9XPaMdWcg6pm+5SFud3raTOhv/2
-        JI2A8GQ+hQQceElacAMzKPp6ZEVUvdgLQfqSf9TjG2O2Lgmw6dKfhZ9sZo683m2p
-        y1Mc+GDYcbkqivtCnyEXJs1qHBUwCuobPgB4wcBf1l3zcz7UhsAka2b3+PNwNYFg
-        ==
-X-ME-Sender: <xms:c2vWXkhdVEW6ST4sMVFQgmKUTFTvuPer01RwFoKyAodm4pEC_tk76A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepffetteevieejteeuhfffgeektefghfeileehhedtuddutefhhfejtddvtddu
-    ledvnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekle
-    drieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:c2vWXtCDEAcKfSgqwYDZX7tjB7rLCyk7f6fK6F2QNuL4qtIuAbF7TQ>
-    <xmx:c2vWXsFXlbOKzrCYCsFvwq4O5GZ-ck9CYfRuifQYUyM_3Hm0ZbjU3A>
-    <xmx:c2vWXlQvPSwwrNNBVCFjU57a4PX_szp_kzAzcH61aCULz3_pjaSXHw>
-    <xmx:dGvWXomyvR5ShMrCKL5WanwF1A69eGDNVxpMFlapZCgrDvWRLw219Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 119FE30614FA;
-        Tue,  2 Jun 2020 11:08:34 -0400 (EDT)
-Date:   Tue, 2 Jun 2020 17:08:34 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 104/105] dt-bindings: display: vc4: hdmi: Add BCM2711
- HDMI controllers bindings
-Message-ID: <20200602150834.6xovwdxpgncq3ybh@gilmour>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <e85e24a494a3ff41177c94673ced0f4280b6a0ee.1590594512.git-series.maxime@cerno.tech>
- <20200529181833.GA2685451@bogus>
+        Tue, 2 Jun 2020 11:09:37 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC15DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 08:09:37 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id g7so1899202qvx.11
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 08:09:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=j1hs0sbBhFcDQ7MR3XFZ4Ba55z2Q7IxLUQ5YveNBojk=;
+        b=ObqB132WsPXJQaYMlGIcR0AVfl9JSbInH4CY0PmjmgmBn/u/f07H1aWiAeXK+tqPwK
+         dsi2xIus1EfNIFc8TnKO12+MaLjeALY5mTkCc5jTuZWl2xxCvcIFOQtCaYTUUSSr5lFS
+         irXV1vv7pUCClzlnyIvArLtNRtxquZeHjdA6yuYkQ/sOqdiyKEqcLJv7MP6Q+Ru1DIxB
+         NDg/hPpNABJmZkiuJeiUcc3n/dq5qhmzBxCuETJkfQixY+1PkSml2NBXExJqUtaq0Q13
+         NnEL7udrGjSMXHjfO0aAX4GwThwsArSj4m0rRa161hcPO0kqhqJKMKUh51pZA1Idf6f9
+         Y+Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=j1hs0sbBhFcDQ7MR3XFZ4Ba55z2Q7IxLUQ5YveNBojk=;
+        b=O9EjdwFm41D7KsMiU3D4RFNRe97+ne293cIxNjAqtOY7q6ttV9TLW0lsmRzGxN0AsP
+         /f3wvvuz+16DEpXxtwpOukJlbo3UdvX45AAS0J/h+b4/IvEFFj9jk9WRfGVuTaIFYzBU
+         sUiLpf3pe+w6iK+Pr0GEKgs6jFyTFxtBWUz8vw+5AugKPamFWY6y17QX8AHyN9ikQw+8
+         IsCfuFKn3Y7NubUJex7YtMdZkNijlA9YU9l9+DqZsVDLR9eDzcd205yOh96jhxFz51Ge
+         sdJSxEiOveNZCRREZU+MGJ5Xbuv7kTFU3ZKE+O9hutsccLUwyrWlSJt6/3bfZc/edyuu
+         brow==
+X-Gm-Message-State: AOAM530UG+yjgSuL0udlEttE1AVHKtYsGnA9u/a/6sgxrXOIP/xwsIA7
+        fptjpdJmkyKLpSy+zIBPDom/ag==
+X-Google-Smtp-Source: ABdhPJz40ktC4+yWqh4CbuxGehjGDMZQSaC+ZGAuKWO/SoimNA3jsxKP6JWqviN4fsFr2AA2mux8bw==
+X-Received: by 2002:a0c:9021:: with SMTP id o30mr23107357qvo.177.1591110576105;
+        Tue, 02 Jun 2020 08:09:36 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id i94sm2871202qtd.2.2020.06.02.08.09.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 08:09:34 -0700 (PDT)
+Message-ID: <21733d1ad3c2f79a5646b4f1c541dfabda0978be.camel@ndufresne.ca>
+Subject: Re: [PATCH] media: s5p-mfc: set V4L2_BUF_FLAG_LAST flag on final
+ buffer
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Andriy Gelman <andriy.gelman@gmail.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 02 Jun 2020 11:09:33 -0400
+In-Reply-To: <20200502194052.485-1-andriy.gelman@gmail.com>
+References: <20200502194052.485-1-andriy.gelman@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="idttynnu6hrdagv3"
-Content-Disposition: inline
-In-Reply-To: <20200529181833.GA2685451@bogus>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andriy,
 
---idttynnu6hrdagv3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thanks for you patch.
 
-Hi Rob,
+Le samedi 02 mai 2020 à 15:40 -0400, Andriy Gelman a écrit :
+> From: Andriy Gelman <andriy.gelman@gmail.com>
+> 
+> As per V4L2 api, the final buffer should set V4L2_BUF_FLAG_LAST flag.
+> 
+> Signed-off-by: Andriy Gelman <andriy.gelman@gmail.com>
+> ---
+>  drivers/media/platform/s5p-mfc/s5p_mfc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+> index 5c2a23b953a4..b3d9b3a523fe 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+> @@ -614,6 +614,7 @@ static void s5p_mfc_handle_stream_complete(struct s5p_mfc_ctx *ctx)
+>  		list_del(&mb_entry->list);
+>  		ctx->dst_queue_cnt--;
+>  		vb2_set_plane_payload(&mb_entry->b->vb2_buf, 0, 0);
+> +		mb_entry->b->flags |= V4L2_BUF_FLAG_LAST;
+>  		vb2_buffer_done(&mb_entry->b->vb2_buf, VB2_BUF_STATE_DONE);
 
-On Fri, May 29, 2020 at 12:18:33PM -0600, Rob Herring wrote:
-> On Wed, May 27, 2020 at 05:49:14PM +0200, Maxime Ripard wrote:
-> > The HDMI controllers found in the BCM2711 SoC need some adjustments to =
-the
-> > bindings, especially since the registers have been shuffled around in m=
-ore
-> > register ranges.
-> >=20
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > ---
-> >  Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml | 109=
- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 109 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2=
-711-hdmi.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdm=
-i.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> > new file mode 100644
-> > index 000000000000..6091fe3d315b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> > @@ -0,0 +1,109 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->=20
-> Dual license...
->=20
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/brcm,bcm2711-hdmi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Broadcom BCM2711 HDMI Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Eric Anholt <eric@anholt.net>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - brcm,bcm2711-hdmi0
-> > +      - brcm,bcm2711-hdmi1
->=20
-> What's the difference between the 2 blocks?=20
+The empty buffer is only there for backward compatibility. As the spec
+says, userspace should completely ignore this buffer. I bet it will
+still have the effect to set last_buffer_dequeued = true in vb2,
+unblocking poll() operations and allowing for the queue to unblock and
+return EPIPE on further DQBUF.
 
-The register layout and the lane mapping in the PHY change a bit.
+Perhaps you should make sure the if both the src and dst queues are
+empty/done by the time cmd_stop is called it will still work. Other
+drivers seems to handle this, but this one does not seems to have a
+special case for that, which may hang userspace in a different way.
 
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: HDMI controller register range
-> > +      - description: DVP register range
-> > +      - description: HDMI PHY register range
-> > +      - description: Rate Manager register range
-> > +      - description: Packet RAM register range
-> > +      - description: Metadata RAM register range
-> > +      - description: CSC register range
-> > +      - description: CEC register range
-> > +      - description: HD register range
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: hdmi
-> > +      - const: dvp
-> > +      - const: phy
-> > +      - const: rm
-> > +      - const: packet
-> > +      - const: metadata
-> > +      - const: csc
-> > +      - const: cec
-> > +      - const: hd
-> > +
-> > +  clocks:
-> > +    description: The HDMI state machine clock
-> > +
-> > +  clock-names:
-> > +    const: hdmi
-> > +
-> > +  ddc:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: >
-> > +      Phandle of the I2C controller used for DDC EDID probing
->=20
-> Goes in the connector.
->=20
-> And isn't the standard name ddc-i2c-bus?
->=20
-> > +
-> > +  hpd-gpios:
-> > +    description: >
-> > +      The GPIO pin for the HDMI hotplug detect (if it doesn't appear
-> > +      as an interrupt/status bit in the HDMI controller itself)
->=20
-> Goes in the connector.
+What you should do to verify this patch is correct, and that your
+userpace does not rely on legacy path is that it should always be able
+to detect the end of the drain with a EPIPE on DQBUF. LAST_BUF is just
+an early signalling, but may not occur if there was nothing left to
+produce (except for MFC which maybe be crafting a buffer in all cases,
+but that's going a roundtrip through the HW, which is not clear will
+work if the dst queue was empty).
 
-If this was an entirely new binding, I would agree, but this is not
-really the case here.
+As shared on IRC, you have sent these patch to FFMPEG:
 
-We discussed it already for the v2, and this binding is essentially the
-same one than the bcm2835 HDMI controller.
+https://patchwork.ffmpeg.org/project/ffmpeg/patch/20200429212942.28797-2-andriy.gelman@gmail.com/
 
-I initially sent a patch adding conditionnals for the clocks and regs
-differences too, and you asked to split the binding into a separate file
-to simplify it a bit.
+This should have been clarified as supporting legacy drivers / older
+kernel with Samsung driver. Seems like a fair patch. And you added:
 
-Supporting both the old binding, and the new one based on the connector
-is going to make the code significantly more complicated, and I'm not
-really sure why we would here.
+https://patchwork.ffmpeg.org/project/ffmpeg/patch/20200429212942.28797-1-andriy.gelman@gmail.com/
 
-Thanks!
-Maxime
+This one should maybe add the clarification that this is an
+optimization to skip an extra poll/dqbuf dance, but that end of
+draining will ultimately be catched by EPIPE on dqbuf for the described
+cases. Remains valid enhancement to ffmpeg imho.
 
---idttynnu6hrdagv3
-Content-Type: application/pgp-signature; name="signature.asc"
+>  	}
+>  
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXtZrcQAKCRDj7w1vZxhR
-xS63AQChWBDf5sP/ABh3lPAf9fleWlDwl1ELjIJJmVcgvpMHdwEA7OiJMvxjuIzW
-wGuu/pUZM36aV5U9/r21kOAWpvo1Rgs=
-=4keu
------END PGP SIGNATURE-----
-
---idttynnu6hrdagv3--
