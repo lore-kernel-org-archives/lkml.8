@@ -2,255 +2,209 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5501BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9784C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 276992086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:43:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591105382;
-	bh=hhMZhOjYa1IjqTSmpKsYB/QGeIboewsrBhSzT+3FAws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=laC0auG2NnCylA1WEj+eVSiYuMTDb8Gv4Q8TMlUn9MpahvdGMwzE+Rj22og0yDhqc
-	 NvkH63m3iH6yoia7Mp/eQxJ+9AV/AXIyMK1CwZJVZXh/AnwK3BMFWdhTOa1AcdouTp
-	 RinOw/wHvUBWRQNCFLtha7Sx4O5QPdNaa8hCP3Y4=
+	by mail.kernel.org (Postfix) with ESMTP id B20E1206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:43:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vMnwh9os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgFBNnB (ORCPT
+        id S1727065AbgFBNns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgFBNnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:43:00 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B19F206A2;
-        Tue,  2 Jun 2020 13:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591105379;
-        bh=hhMZhOjYa1IjqTSmpKsYB/QGeIboewsrBhSzT+3FAws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I3/Mt5Y61hT5cCT5fdWBA031S28fIwyYFeStyEGKG01bMQhMVBzcXNB0bNqLvRv/n
-         XgvAQk/V/1X9na3Cj6Bu0TGXw9qLGp67cRV0yfdP+00mjefSYZUcTHcKkEwgAeDiRI
-         hCfj6HK9dDCXcV9jZkMU5xOawcJx3Tw727jP2nyI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AD97E40AFD; Tue,  2 Jun 2020 10:42:56 -0300 (-03)
-Date:   Tue, 2 Jun 2020 10:42:56 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCHv3] perf stat: Ensure group is defined on top of the same
- cpu mask
-Message-ID: <20200602134256.GO31795@kernel.org>
-References: <20200531162206.911168-1-jolsa@kernel.org>
- <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
- <20200601082027.GF881900@krava>
- <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
- <20200602101736.GE1112120@krava>
+        Tue, 2 Jun 2020 09:43:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37742 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgFBNnr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:43:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052Dheqp020813;
+        Tue, 2 Jun 2020 08:43:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591105420;
+        bh=065I5Q+YC+eqm5MUdzZUCPVbrqG+ejrqSWg2p4bVKMg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vMnwh9os7JRoZ5/GwBtiL4UyzI504++HJqFIf7d7Yn4Xq2GN118+MbEyfggQEiCe+
+         afL9e1N6CuZH7AuqZtQodZYgEhcee2mRiIoqzdBiFaiaKm2hlzVQXdKO04NI4tJFC4
+         /Gl1vGi6EvHnsogW0WG02rhmuGmIHjcYimb+00Sc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052DheKO083413
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 08:43:40 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
+ 2020 08:43:40 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 2 Jun 2020 08:43:40 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052DhbgE070165;
+        Tue, 2 Jun 2020 08:43:38 -0500
+Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
+To:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+CC:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+References: <20200602131428.GA496390@x1>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+Date:   Tue, 2 Jun 2020 16:44:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602101736.GE1112120@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200602131428.GA496390@x1>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 02, 2020 at 12:17:36PM +0200, Jiri Olsa escreveu:
-> Jin Yao reported the issue (and posted first versions of this change)
-> with groups being defined over events with different cpu mask.
- 
-> This causes assert aborts in get_group_fd, like:
- 
->   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
->   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
->   Aborted
- 
-> All the events in the group have to be defined over the same
-> cpus so the group_fd can be found for every leader/member pair.
- 
-> Adding check to ensure this condition is met and removing the
-> group (with warning) if we detect mixed cpus, like:
- 
->   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
->   WARNING: event cpu maps do not match, disabling group:
->     anon group { power/energy-cores/, cycles }
->     anon group { instructions, power/energy-cores/ }
 
-So it doesn't disable the 'group', it disables the 'grouping' of those
-events, right? I.e. reading the WARNING, I thought that it would count
-nothing, since it lists both groups as being disabled, but when I tested
-I noticed that:
 
-  [root@seventh ~]# perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
-  WARNING: grouped events cpus do not match, disabling group:
-    anon group { power/energy-cores/, cycles }
-    anon group { instructions, power/energy-cores/ }
-  ^C
-   Performance counter stats for 'system wide':
-  
-               12.62 Joules power/energy-cores/
-         106,920,637        cycles
-          80,228,899        instructions              #    0.75  insn per cycle
-               12.62 Joules power/energy-cores/
-  
-        14.514476987 seconds time elapsed
-  
-  
-  [root@seventh ~]#
-
-  I.e. it counted the events, ungrouped, or am I missing something?
-
-If I do:
-
-  [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' -a sleep 2
-  
-   Performance counter stats for 'system wide':
-  
-                1.73 Joules power/energy-cores/                                         
-                0.92 Joules power/energy-ram/                                           
-          12,191,658        instructions              #    0.67  insn per cycle         
-          18,275,233        cycles                                                      
-  
-         2.001272492 seconds time elapsed
-  
-  [root@seventh ~]# 
-
-It works, grouped. One observation, shouldn't we somehow show in the
-output that the first two were indeed grouped, ditto for the second two?
-
-Also, this needs improvement:
-
-  [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' sleep 2
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (power/energy-cores/).
-  /bin/dmesg | grep -i perf may provide additional information.
-  
-  [root@seventh ~]#
-
-Probably stating that the power/ events can only be done on a system
-wide mode or per-cpu?
-
-I'm applying the patch now, with the above observations as committer
-notes, we can improve this in follow on patch,
-
-- Arnaldo
- 
-> Ian asked also for cpu maps details, it's displayed in verbose mode:
+On 02/06/2020 16:14, Drew Fustini wrote:
+> Add gpio-ranges properties to the gpio controller nodes.
 > 
->   $ sudo perf stat -e '{cycles,power/energy-cores/}' -v
->   WARNING: group events cpu maps do not match, disabling group:
->     anon group { power/energy-cores/, cycles }
->        power/energy-cores/: 0
->        cycles: 0-7
->     anon group { instructions, power/energy-cores/ }
->        instructions: 0-7
->        power/energy-cores/: 0
+> These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
+> REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
+> 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
+> A csv file with this data is available for reference [2].
+
+It will be good if you can explain not only "what" is changed, but
+also "why" it's needed in commit message.
+
 > 
-> Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
-> Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> [0] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+> [1] http://www.ti.com/lit/ds/symlink/am3358.pdf
+> [2] https://gist.github.com/pdp7/6ffaddc8867973c1c3e8612cfaf72020
+> 
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
 > ---
->  tools/perf/builtin-stat.c | 55 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
+> Notes:
+> There was previous dicussion relevant to this patch:
+> https://lore.kernel.org/linux-gpio/20200525131731.GA948395@x1/
 > 
->  v3 changes:
->    - reword the warning with Ian's suggestion
+> Here is the list I compiled which shows the mapping between a gpioline
+> and the pin number including the memory address for the pin control
+> register
 > 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index b2b79aa161dd..9be020e0098a 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -190,6 +190,59 @@ static struct perf_stat_config stat_config = {
->  	.big_num		= true,
->  };
->  
-> +static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-> +{
-> +	if (!a->core.cpus && !b->core.cpus)
-> +		return true;
-> +
-> +	if (!a->core.cpus || !b->core.cpus)
-> +		return false;
-> +
-> +	if (a->core.cpus->nr != b->core.cpus->nr)
-> +		return false;
-> +
-> +	for (int i = 0; i < a->core.cpus->nr; i++) {
-> +		if (a->core.cpus->map[i] != b->core.cpus->map[i])
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static void evlist__check_cpu_maps(struct evlist *evlist)
-> +{
-> +	struct evsel *evsel, *pos, *leader;
-> +	char buf[1024];
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		leader = evsel->leader;
-> +
-> +		/* Check that leader matches cpus with each member. */
-> +		if (leader == evsel)
-> +			continue;
-> +		if (cpus_map_matched(leader, evsel))
-> +			continue;
-> +
-> +		/* If there's mismatch disable the group and warn user. */
-> +		WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
-> +		evsel__group_desc(leader, buf, sizeof(buf));
-> +		pr_warning("  %s\n", buf);
-> +
-> +		if (verbose) {
-> +			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
-> +			pr_warning("     %s: %s\n", leader->name, buf);
-> +			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
-> +			pr_warning("     %s: %s\n", evsel->name, buf);
-> +		}
-> +
-> +		for_each_group_evsel(pos, leader) {
-> +			pos->leader = pos;
-> +			pos->core.nr_members = 0;
-> +		}
-> +		evsel->leader->core.nr_members = 0;
-> +	}
-> +}
-> +
->  static inline void diff_timespec(struct timespec *r, struct timespec *a,
->  				 struct timespec *b)
->  {
-> @@ -2113,6 +2166,8 @@ int cmd_stat(int argc, const char **argv)
->  		goto out;
->  	}
->  
-> +	evlist__check_cpu_maps(evsel_list);
-> +
->  	/*
->  	 * Initialize thread_map with comm names,
->  	 * so we could print it out on output.
-> -- 
-> 2.25.4
+> gpiochip,gpio-line,pinctrl-PIN,pinctrl-address
+> 0,0,82,44e10948
+> 0,1,83,44e1094c
+> 0,2,84,44e10950
+> 0,3,85,44e10954
+> 0,4,86,44e10958
+> 0,5,87,44e1095c
+
+...
+
+> On a BeagleBlack Black board (AM3358) with this patch:
+> cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/gpio-ranges
+> 
+> GPIO ranges handled:
+> 0: gpio-0-31 GPIOS [0 - 7] PINS [82 - 89]
+> 8: gpio-0-31 GPIOS [8 - 11] PINS [52 - 55]
+> 12: gpio-0-31 GPIOS [12 - 15] PINS [94 - 97]
+> 16: gpio-0-31 GPIOS [16 - 17] PINS [71 - 72]
+> 18: gpio-0-31 GPIOS [18 - 18] PINS [135 - 135]
+> 19: gpio-0-31 GPIOS [19 - 20] PINS [108 - 109]
+> 21: gpio-0-31 GPIOS [21 - 21] PINS [73 - 73]
+> 22: gpio-0-31 GPIOS [22 - 23] PINS [8 - 9]
+> 26: gpio-0-31 GPIOS [26 - 27] PINS [10 - 11]
+> 28: gpio-0-31 GPIOS [28 - 28] PINS [74 - 74]
+> 29: gpio-0-31 GPIOS [29 - 29] PINS [81 - 81]
+> 30: gpio-0-31 GPIOS [30 - 31] PINS [28 - 29]
+> 0: gpio-32-63 GPIOS [32 - 39] PINS [0 - 7]
+> 8: gpio-32-63 GPIOS [40 - 43] PINS [90 - 93]
+> 12: gpio-32-63 GPIOS [44 - 59] PINS [12 - 27]
+> 28: gpio-32-63 GPIOS [60 - 63] PINS [30 - 33]
+> 0: gpio-64-95 GPIOS [64 - 81] PINS [34 - 51]
+> 18: gpio-64-95 GPIOS [82 - 85] PINS [77 - 80]
+> 22: gpio-64-95 GPIOS [86 - 95] PINS [56 - 65]
+> 0: gpio-96-127 GPIOS [96 - 100] PINS [66 - 70]
+> 5: gpio-96-127 GPIOS [101 - 102] PINS [98 - 99]
+> 7: gpio-96-127 GPIOS [103 - 104] PINS [75 - 76]
+> 13: gpio-96-127 GPIOS [109 - 109] PINS [141 - 141]
+> 14: gpio-96-127 GPIOS [110 - 117] PINS [100 - 107]
+> 
+>   arch/arm/boot/dts/am33xx-l4.dtsi | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+> index 5ed7f3c58c0f..340ea331e54d 100644
+> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> @@ -151,6 +151,18 @@ SYSC_OMAP2_SOFTRESET |
+>   
+>   			gpio0: gpio@0 {
+>   				compatible = "ti,omap4-gpio";
+> +				gpio-ranges =	<&am33xx_pinmux  0  82 8>,
+> +						<&am33xx_pinmux  8  52 4>,
+> +						<&am33xx_pinmux 12  94 4>,
+> +						<&am33xx_pinmux 16  71 2>,
+> +						<&am33xx_pinmux 18 135 1>,
+> +						<&am33xx_pinmux 19 108 2>,
+> +						<&am33xx_pinmux 21  73 1>,
+> +						<&am33xx_pinmux 22   8 2>,
+> +						<&am33xx_pinmux 26  10 2>,
+> +						<&am33xx_pinmux 28  74 1>,
+> +						<&am33xx_pinmux 29  81 1>,
+> +						<&am33xx_pinmux 30  28 2>;
+>   				gpio-controller;
+>   				#gpio-cells = <2>;
+>   				interrupt-controller;
+> @@ -1298,6 +1310,10 @@ SYSC_OMAP2_SOFTRESET |
+>   
+>   			gpio1: gpio@0 {
+>   				compatible = "ti,omap4-gpio";
+> +				gpio-ranges =   <&am33xx_pinmux  0  0  8>,
+> +						<&am33xx_pinmux  8 90  4>,
+> +						<&am33xx_pinmux 12 12 16>,
+> +						<&am33xx_pinmux 28 30  4>;
+>   				gpio-controller;
+>   				#gpio-cells = <2>;
+>   				interrupt-controller;
+> @@ -1700,6 +1716,9 @@ SYSC_OMAP2_SOFTRESET |
+>   
+>   			gpio2: gpio@0 {
+>   				compatible = "ti,omap4-gpio";
+> +                                gpio-ranges =	<&am33xx_pinmux  0 34 18>,
+> +						<&am33xx_pinmux 18 77  4>,
+> +						<&am33xx_pinmux 22 56 10>;
+>   				gpio-controller;
+>   				#gpio-cells = <2>;
+>   				interrupt-controller;
+> @@ -1733,6 +1752,11 @@ SYSC_OMAP2_SOFTRESET |
+>   
+>   			gpio3: gpio@0 {
+>   				compatible = "ti,omap4-gpio";
+> +				gpio-ranges =	<&am33xx_pinmux  0  66 5>,
+> +						<&am33xx_pinmux  5  98 2>,
+> +						<&am33xx_pinmux  7  75 2>,
+> +						<&am33xx_pinmux 13 141 1>,
+> +						<&am33xx_pinmux 14 100 8>;
+>   				gpio-controller;
+>   				#gpio-cells = <2>;
+>   				interrupt-controller;
 > 
 
 -- 
-
-- Arnaldo
+Best regards,
+grygorii
