@@ -2,197 +2,255 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A578C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E13CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6D8E206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35753206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QX2NqYaK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6akTEGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgFBRO1 (ORCPT
+        id S1726625AbgFBRQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56524 "EHLO
+        Tue, 2 Jun 2020 13:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgFBRO0 (ORCPT
+        with ESMTP id S1725969AbgFBRQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:14:26 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E540C05BD1E;
-        Tue,  2 Jun 2020 10:14:26 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f3so5322103pfd.11;
-        Tue, 02 Jun 2020 10:14:26 -0700 (PDT)
+        Tue, 2 Jun 2020 13:16:10 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC726C05BD1E;
+        Tue,  2 Jun 2020 10:16:10 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m1so5371020pgk.1;
+        Tue, 02 Jun 2020 10:16:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yDKEOQW3zzKg27PHbCCQiuGUgsLSAgNyAkY4CZ592P8=;
-        b=QX2NqYaKI02lh99tfRoYpKssbJuXJc/viEZOCaPdRM99I9ujjBp6i7QH/PeX/tZycn
-         WHBIWtyV1hP5huS546uhTOS+LThr94j5tz6Ytm7yuUDzP2Ntot5OEccGlPDIQcSd3Vza
-         T6nqJAtB+XUcaulomzKKodYKIKUqrmvs/z6fwSZt3tlF4ppjuV1+UdpNxDp7fedu6Trm
-         nyH6xrjmVUrdc5dfTAoe3+DXAoH2LaOxhP4E1+pcwa5lEKXB75YVOskFvj2+TKK2Kj+z
-         sV28XsrrAossb/smm1uc9+CHSs2wJUHOM2G4mtFcNetg+Mum+uyipAAlRzjYDaGn8UsF
-         DtYw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ECV7MViJhNn0RuU05iBSnmEkE8SIp1DMaGZTHaxcfhs=;
+        b=H6akTEGthQUBZkxTA30TH1mgMVAVssTUsIXHwzsxW6qKXv15WI3V+FsesjHjzSEuXm
+         kBt8z7Rc+6yQacyrwBzUFtuVQwThAm7cbin0OGc+CWA0AnogUcD5McDP2IJhSHQeYO7J
+         ++NKJIr5hK+r8zq4eVl9Oc6hMYEdU9zWo3o7nDebGmLujsdTSWijCdAvCG+AGLfWNeCj
+         KGlvSA29WNCmrTJF09fAu+oicpfTAXw5TzrGTsJAruTRe0C/rF1KZFoUOgdgv87GfkAs
+         1493EsxTeE6SAcYTN5mdfiHoOyP/irjxEjExpS9rGP+l9OXyeY6sCOI8Lwq+r3ceaGSm
+         IgSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yDKEOQW3zzKg27PHbCCQiuGUgsLSAgNyAkY4CZ592P8=;
-        b=KG/9NOJb0egoZDv9CI1zHoKprhCqSsr8vX6oLpbgsay8Oivvot2MA2+GepVtQdYs67
-         UHEhA9piFGTGTXx29TK0BKSsTyfhUlCEIw7ZczbIgUedGPzlkJaICseSax7gOlWn7zXA
-         rFdO5w3k6doUpmnClQ6pcLQ/f2M2xJecyD1aMlMsTCTotkcY5BP+tPA9hB+hdKNn2rKF
-         QzGCdti+qtD7rDZ7n/NHnjTim+JBzYyd2G/AR4aGx0kx4Hds30WzY/TE16UUyTgRplVJ
-         wiVXFtLXDBkIWpU3j7l//bpTWwNo7TvTRP34VW5OxIDRWJO1tCvXq64sCDWCE1SL1y4/
-         ZOPQ==
-X-Gm-Message-State: AOAM533sByq5Phfliyv/omYYQ0bbvTdVgrUkAitBzpKVtMm7ygbnnexf
-        H8wW14Ti7pSzeeBQ6iP05LNoU7qEDu3BF2HiGPU=
-X-Google-Smtp-Source: ABdhPJy3SFp0xIUMraAbk46rfGFxgJiu2JNz+q3JZrwYxxiOHdwNt/JtImJZKe7Hak4dhv1iLWMNHf7biOdORb/ORPc=
-X-Received: by 2002:a63:305:: with SMTP id 5mr24196734pgd.74.1591118065723;
- Tue, 02 Jun 2020 10:14:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ECV7MViJhNn0RuU05iBSnmEkE8SIp1DMaGZTHaxcfhs=;
+        b=OYeejursMN8bmGUn44VvErG/shRnCCKpuHGNkly/ZSKPGF5Nyj5dUGt1ZlahmdiOeL
+         iju+ZhcOyDI0p8Tw5vQWjkTMPqqVk65DzmdgUyPVz7uwqqzH1mX5QKWoTmPt9HiGeBbG
+         zUssKGE3P+rqOWVGJPCkzvQQlQZmp+PyMgg4PP1AaEJaQM2TLz/3sIJulzLMq4qUIJoW
+         pKdYuyyhcmUgr5KivKLYTJK8D+MOKj6K0DdeUWQwdlJ+fkB0Au0tY8+nugTK6/JnL1ER
+         7n+tC4HSW3Mmn7fCZq+bYylutf6VHenDLXmoxBuYG4QN63otKL8xqZGgmuh9hjuMRQ2p
+         n07w==
+X-Gm-Message-State: AOAM530hR3AXBj4iVrX4WYhxTHDqlQQmqZb0Mg5c+jZKUymRDK5h3gOa
+        jVGYR6B026xjmEMajbArEx8=
+X-Google-Smtp-Source: ABdhPJyz5H4CSDJqPBN56joAUkb39gMu1+xqLMlY6U73yl4NplLy3v4TiJqoecRPU8wq28Dp6cOAEg==
+X-Received: by 2002:a62:7c15:: with SMTP id x21mr15120749pfc.189.1591118170331;
+        Tue, 02 Jun 2020 10:16:10 -0700 (PDT)
+Received: from localhost ([162.211.223.96])
+        by smtp.gmail.com with ESMTPSA id y9sm2926598pjy.56.2020.06.02.10.16.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jun 2020 10:16:09 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     tjoseph@cadence.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        toan@os.amperecomputing.com, ley.foon.tan@intel.com,
+        shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2] PCI: controller: convert to devm_platform_ioremap_resource_byname()
+Date:   Wed,  3 Jun 2020 01:16:01 +0800
+Message-Id: <20200602171601.17630-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200602164723.28858-1-tomasz.duszynski@octakon.com> <20200602164723.28858-3-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200602164723.28858-3-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Jun 2020 20:14:13 +0300
-Message-ID: <CAHp75Vc60q1PC9j6KR1-OJHxw=nBAHt9zJK=h9f27yJxMHpb8A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] iio: chemical: scd30: add I2C interface driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
->
-> Add I2C interface driver for the SCD30 sensor.
+Use devm_platform_ioremap_resource_byname() to simplify codes.
+it contains platform_get_resource_byname() and devm_ioremap_resource().
 
-...
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+v1 -> v2:
+	- Discard changes to the file drivers/pci/controller/pcie-xilinx-nwl.c
+	  Due to my mistakes, my patch will modify pcie-xilinx-nwl.c,
+	  but it still need to use the res variable, but
+	  devm_platform_ioremap_resource_byname() funtion can't assign a
+	  value to the variable res. kbuild test robot report it. Thanks
+	  very much for kbuild test robot <lkp@intel.com>.
 
-> +static u16 scd30_i2c_cmd_lookup_tbl[] = {
-> +       [CMD_START_MEAS] = 0x0010,
-> +       [CMD_STOP_MEAS] = 0x0104,
-> +       [CMD_MEAS_INTERVAL] = 0x4600,
-> +       [CMD_MEAS_READY] = 0x0202,
-> +       [CMD_READ_MEAS] = 0x0300,
-> +       [CMD_ASC] = 0x5306,
-> +       [CMD_FRC] = 0x5204,
-> +       [CMD_TEMP_OFFSET] = 0x5403,
-> +       [CMD_FW_VERSION] = 0xd100,
-> +       [CMD_RESET] = 0xd304,
+ drivers/pci/controller/cadence/pcie-cadence-ep.c   | 3 +--
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 3 +--
+ drivers/pci/controller/pci-tegra.c                 | 8 +++-----
+ drivers/pci/controller/pci-xgene.c                 | 3 +--
+ drivers/pci/controller/pcie-altera-msi.c           | 3 +--
+ drivers/pci/controller/pcie-altera.c               | 9 +++------
+ drivers/pci/controller/pcie-mediatek.c             | 4 +---
+ drivers/pci/controller/pcie-rockchip.c             | 5 ++---
+ 8 files changed, 13 insertions(+), 25 deletions(-)
 
-Keep sorted by value?
-
-> +};
-
-...
-
-> +       ret = i2c_master_send(client, txbuf, txsize);
-
-> +       if (ret != txsize)
-> +               return ret < 0 ? ret : -EIO;
-
-Wouldn't be better
-
-  if (ret < 0)
-    return ret;
-  if (ret != txsize)
-    return -EIO;
-
-?
-
-> +       if (!rxbuf)
-> +               return 0;
-> +
-> +       ret = i2c_master_recv(client, rxbuf, rxsize);
-
-> +       if (ret != rxsize)
-> +               return ret < 0 ? ret : -EIO;
-
-Ditto.
-
-...
-
-> +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd,
-> +                            u16 arg, void *response, int size)
-> +{
-> +       char crc, buf[SCD30_I2C_MAX_BUF_SIZE], *rsp = response;
-> +       int i, ret;
-
-i -> offset ?
-
-> +       put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
-> +       i = 2;
-> +
-> +       if (rsp) {
-> +               /* each two bytes are followed by a crc8 */
-> +               size += size / 2;
-> +       } else {
-> +               put_unaligned_be16(arg, buf + i);
-> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> +               i += 2;
-
-> +               buf[i] = crc;
-> +               i += 1;
-
-buf[offset++] = crc; ?
-
-> +               /* commands below don't take an argument */
-> +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
-> +                       i -= 3;
-> +       }
-> +
-> +       ret = scd30_i2c_xfer(state, buf, i, buf, size);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* validate received data and strip off crc bytes */
-> +       for (i = 0; i < size; i += 3) {
-> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> +               if (crc != buf[i + 2]) {
-> +                       dev_err(state->dev, "data integrity check failed\n");
-> +                       return -EIO;
-> +               }
-> +
-
-> +               *rsp++ = buf[i];
-
-+ 0 (for the sake of consistency?
-
-> +               *rsp++ = buf[i + 1];
-> +       }
-> +
-> +       return 0;
-> +}
-
-...
-
-> +static struct i2c_driver scd30_i2c_driver = {
-> +       .driver = {
-
-> +               .name = KBUILD_MODNAME,
-
-Better to hard code.
-
-> +               .of_match_table = scd30_i2c_of_match,
-> +               .pm = &scd30_pm_ops,
-> +       },
-> +       .probe_new = scd30_i2c_probe,
-> +};
-
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 1c15c8352125..74ffa03fde5f 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -408,8 +408,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+ 
+ 	pcie->is_rc = false;
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+-	pcie->reg_base = devm_ioremap_resource(dev, res);
++	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
+ 	if (IS_ERR(pcie->reg_base)) {
+ 		dev_err(dev, "missing \"reg\"\n");
+ 		return PTR_ERR(pcie->reg_base);
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 8c2543f28ba0..dcc460a54875 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -225,8 +225,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	rc->device_id = 0xffff;
+ 	of_property_read_u32(np, "device-id", &rc->device_id);
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+-	pcie->reg_base = devm_ioremap_resource(dev, res);
++	pcie->reg_base = devm_platform_ioremap_resource_byname(pdev, "reg");
+ 	if (IS_ERR(pcie->reg_base)) {
+ 		dev_err(dev, "missing \"reg\"\n");
+ 		return PTR_ERR(pcie->reg_base);
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index e3e917243e10..3e608383df66 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -1462,7 +1462,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+ 	struct platform_device *pdev = to_platform_device(dev);
+-	struct resource *pads, *afi, *res;
++	struct resource *res;
+ 	const struct tegra_pcie_soc *soc = pcie->soc;
+ 	int err;
+ 
+@@ -1486,15 +1486,13 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+ 		}
+ 	}
+ 
+-	pads = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pads");
+-	pcie->pads = devm_ioremap_resource(dev, pads);
++	pcie->pads = devm_platform_ioremap_resource_byname(pdev, "pads");
+ 	if (IS_ERR(pcie->pads)) {
+ 		err = PTR_ERR(pcie->pads);
+ 		goto phys_put;
+ 	}
+ 
+-	afi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "afi");
+-	pcie->afi = devm_ioremap_resource(dev, afi);
++	pcie->afi = devm_platform_ioremap_resource_byname(pdev, "afi");
+ 	if (IS_ERR(pcie->afi)) {
+ 		err = PTR_ERR(pcie->afi);
+ 		goto phys_put;
+diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+index d1efa8ffbae1..1431a18eb02c 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -355,8 +355,7 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
+ 	if (IS_ERR(port->csr_base))
+ 		return PTR_ERR(port->csr_base);
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+-	port->cfg_base = devm_ioremap_resource(dev, res);
++	port->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
+ 	if (IS_ERR(port->cfg_base))
+ 		return PTR_ERR(port->cfg_base);
+ 	port->cfg_addr = res->start;
+diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
+index 16d938920ca5..613e19af71bd 100644
+--- a/drivers/pci/controller/pcie-altera-msi.c
++++ b/drivers/pci/controller/pcie-altera-msi.c
+@@ -228,8 +228,7 @@ static int altera_msi_probe(struct platform_device *pdev)
+ 	mutex_init(&msi->lock);
+ 	msi->pdev = pdev;
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
+-	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
++	msi->csr_base = devm_platform_ioremap_resource_byname(pdev, "csr");
+ 	if (IS_ERR(msi->csr_base)) {
+ 		dev_err(&pdev->dev, "failed to map csr memory\n");
+ 		return PTR_ERR(msi->csr_base);
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 24cb1c331058..7200e40ffa26 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -696,17 +696,14 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+ {
+ 	struct device *dev = &pcie->pdev->dev;
+ 	struct platform_device *pdev = pcie->pdev;
+-	struct resource *cra;
+-	struct resource *hip;
+ 
+-	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
+-	pcie->cra_base = devm_ioremap_resource(dev, cra);
++	pcie->cra_base = devm_platform_ioremap_resource_byname(pdev, "Cra");
+ 	if (IS_ERR(pcie->cra_base))
+ 		return PTR_ERR(pcie->cra_base);
+ 
+ 	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
+-		hip = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Hip");
+-		pcie->hip_base = devm_ioremap_resource(&pdev->dev, hip);
++		pcie->hip_base =
++			devm_platform_ioremap_resource_byname(pdev, "Hip");
+ 		if (IS_ERR(pcie->hip_base))
+ 			return PTR_ERR(pcie->hip_base);
+ 	}
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index ebfa7d5a4e2d..d8e38276dbe3 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -905,7 +905,6 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+ 			       int slot)
+ {
+ 	struct mtk_pcie_port *port;
+-	struct resource *regs;
+ 	struct device *dev = pcie->dev;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	char name[10];
+@@ -916,8 +915,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+ 		return -ENOMEM;
+ 
+ 	snprintf(name, sizeof(name), "port%d", slot);
+-	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+-	port->base = devm_ioremap_resource(dev, regs);
++	port->base = devm_platform_ioremap_resource_byname(pdev, name);
+ 	if (IS_ERR(port->base)) {
+ 		dev_err(dev, "failed to map port%d base\n", slot);
+ 		return PTR_ERR(port->base);
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+index c53d1322a3d6..904dec0d3a88 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/pcie-rockchip.c
+@@ -45,9 +45,8 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+ 			return -EINVAL;
+ 	}
+ 
+-	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-					    "apb-base");
+-	rockchip->apb_base = devm_ioremap_resource(dev, regs);
++	rockchip->apb_base =
++		devm_platform_ioremap_resource_byname(pdev, "apb-base");
+ 	if (IS_ERR(rockchip->apb_base))
+ 		return PTR_ERR(rockchip->apb_base);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.0
+
