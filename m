@@ -2,126 +2,118 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD50C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B236C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6652072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664842072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgFBJM3 (ORCPT
+        id S1726750AbgFBJMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:12:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4256 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgFBJM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:12:29 -0400
-IronPort-SDR: 9272hOyBVIKQKnhaUvpbcO92uJ27rfoHWw078CkkPb1QMrOXdLdHs9CnbuQ4X2usF3avZj+Waw
- ZgC8Kou/N3Kw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:12:28 -0700
-IronPort-SDR: mt9SSOUWPxTwTSF/pJO9iY+NFm/SjMVMowH2YeaFeDWsfCeU/VMAaJAOhjAyQBNnR2v7WTOLGG
- 0m+OmG+X2yvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
-   d="scan'208";a="286589056"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 02:12:28 -0700
-Received: from [10.249.224.186] (abudanko-mobl.ccr.corp.intel.com [10.249.224.186])
-        by linux.intel.com (Postfix) with ESMTP id 0A06758027C;
-        Tue,  2 Jun 2020 02:12:25 -0700 (PDT)
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
- <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
- <20200601233732.GA691017@tassilo.jf.intel.com>
- <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
-Date:   Tue, 2 Jun 2020 12:12:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 05:12:33 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:54472 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBJMa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:12:30 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 01DF08030808;
+        Tue,  2 Jun 2020 09:12:28 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bd7-JbQHWhoR; Tue,  2 Jun 2020 12:12:27 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] hwmon: bt1-pvt: Declare Temp- and Volt-to-N poly when alarms are enabled
+Date:   Tue, 2 Jun 2020 12:12:19 +0300
+Message-ID: <20200602091219.24404-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Clang-based kernel building with W=1 warns that some static const
+variables are unused:
 
-On 02.06.2020 11:32, Alexey Budankov wrote:
-> 
-> On 02.06.2020 2:37, Andi Kleen wrote:
->>>> or a pathname, or including also the event default of "disabled".
->>>
->>> For my cases conversion of pathnames into open fds belongs to external
->>> controlling process e.g. like in the examples provided in the patch set.
->>> Not sure about "event default of 'disabled'"
->>
->> It would be nicer for manual use cases if perf supported the path names
->> directly like in Adrian's example, not needing a complex wrapper script.
-> 
-> fds interface is required for VTune integration since VTune wants control
-> over files creation aside of Perf tool process. The script demonstrates
-> just one possible use case.
-> 
-> Control files could easily be implemented on top of fds making open operations
-> for paths and then initializing fds. Interface below is vague and with explicit
-> options like below it could be more explicit:
-> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
+drivers/hwmon/bt1-pvt.c:67:30: warning: unused variable 'poly_temp_to_N' [-Wunused-const-variable]
+static const struct pvt_poly poly_temp_to_N = {
+                             ^
+drivers/hwmon/bt1-pvt.c:99:30: warning: unused variable 'poly_volt_to_N' [-Wunused-const-variable]
+static const struct pvt_poly poly_volt_to_N = {
+                             ^
 
-Or even clearer:
+Indeed these polynomials are utilized only when the PVT sensor alarms are
+enabled. In that case they are used to convert the temperature and
+voltage alarm limits from normal quantities (Volts and degree Celsius) to
+the sensor data representation N = [0, 1023]. Otherwise when alarms are
+disabled the driver only does the detected data conversion to the human
+readable form and doesn't need that polynomials defined. So let's declare
+the Temp-to-N and Volt-to-N polynomials only if the PVT alarms are
+switched on at compile-time.
 
---ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
+Note gcc with W=1 doesn't notice the problem.
 
-> 
-> Make either fds and or files provided on the command line. Implement file
-> options handling callbacks that would open paths and setting fds. Close fds
-> if they were opened by Perf tool process.
-> 
-> Adrian, please share your mind and use case.
-> 
-> ~Alexey
-> 
->>
->> -Andi
->>>
->>>>
->>>> e.g. add "--control" and support all of:
->>>>
->>>> --control
->>>> --control 11
->>>> --control 11,15
->>>> --control 11,15,disabled
->>>> --control 11,,disabled
->>>> --control /tmp/my-perf.fifo
->>>> --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
->>>> --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
->>>> --control /tmp/my-perf.fifo,,disabled
->>>>
->>>> Regards
->>>> Adrian
->>>>
->>>
->>> Regards,
->>> Alexey
->>>
+Fixes: 87976ce2825d ("hwmon: Add Baikal-T1 PVT sensor driver")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+---
+ drivers/hwmon/bt1-pvt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/hwmon/bt1-pvt.c b/drivers/hwmon/bt1-pvt.c
+index 1a9772fb1f73..1a5212c04549 100644
+--- a/drivers/hwmon/bt1-pvt.c
++++ b/drivers/hwmon/bt1-pvt.c
+@@ -64,6 +64,7 @@ static const struct pvt_sensor_info pvt_info[] = {
+  *     48380,
+  * where T = [-48380, 147438] mC and N = [0, 1023].
+  */
++#if defined(CONFIG_SENSORS_BT1_PVT_ALARMS)
+ static const struct pvt_poly poly_temp_to_N = {
+ 	.total_divider = 10000,
+ 	.terms = {
+@@ -74,6 +75,7 @@ static const struct pvt_poly poly_temp_to_N = {
+ 		{0, 1720400, 1, 1}
+ 	}
+ };
++#endif /* CONFIG_SENSORS_BT1_PVT_ALARMS */
+ 
+ static const struct pvt_poly poly_N_to_temp = {
+ 	.total_divider = 1,
+@@ -96,6 +98,7 @@ static const struct pvt_poly poly_N_to_temp = {
+  * N = (18658e-3*V - 11572) / 10,
+  * V = N * 10^5 / 18658 + 11572 * 10^4 / 18658.
+  */
++#if defined(CONFIG_SENSORS_BT1_PVT_ALARMS)
+ static const struct pvt_poly poly_volt_to_N = {
+ 	.total_divider = 10,
+ 	.terms = {
+@@ -103,6 +106,7 @@ static const struct pvt_poly poly_volt_to_N = {
+ 		{0, -11572, 1, 1}
+ 	}
+ };
++#endif /* CONFIG_SENSORS_BT1_PVT_ALARMS */
+ 
+ static const struct pvt_poly poly_N_to_volt = {
+ 	.total_divider = 10,
+-- 
+2.26.2
+
