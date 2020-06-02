@@ -2,194 +2,225 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE94C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2951C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB75C206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FdZyRvUS"
+	by mail.kernel.org (Postfix) with ESMTP id 8BEF6206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591086085;
+	bh=JDWjXKU3EpHzZx1Tu9HxV6CBJiWZdmfZjOq6H7wg38M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y6rrzQc0NFWdZFXB14V73lmrrgKHk3q6I1VGtoRtKAyhG8e1b3OHBcnQ9zlBaKUFr
+	 nxL9KYXPdyXKaq4Hv9BVI7zMNJM5on6Rlvf4RzG9hG3NQSoQIz7JE2lzL6JmGPQb1Z
+	 mbwizaNIWlUbSgeJAm+eOIrsjoPieUTdRBd4OD7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726223AbgFBIUD (ORCPT
+        id S1726216AbgFBIVY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:20:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgFBIUC (ORCPT
+        Tue, 2 Jun 2020 04:21:24 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44611 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgFBIVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:20:02 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8339CC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 01:20:02 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x6so2361304wrm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 01:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ucrKANAavc1NtdTnXRC9YmP/hh/YfnXjx8eiS0Iol/Q=;
-        b=FdZyRvUSL0wlJKAQLjX0RYOmaRlwJyOk9yFO3Oj3DuhLsONvhCZMZhZmgfWfkDNdPr
-         7ww5coZ4a9/fvqiXRA+HEk+RzYDBJfPSVHzZ/0q/S1HUbZsW2XRMz4ZucaF3OlJP7ozC
-         62sFDvx+ak+W1cfo1UyseCBnmQ/Tvj3gddBViTbO4PA8gDcity8HtsGNjpiMTIPxgqAy
-         ObsSCga5PAIOjZwwIASDczGbpG54ciygDdrRDJiv9jQL2EV4dEbnnZM9M4mxVflaUa7O
-         ZXgbRyp0bfb+67lZs9WhO0x6ZiNF5PS7DeYvYHLZJb/ZJWugDR1r/vAll/JKw9+UOAHw
-         UL5Q==
+        Tue, 2 Jun 2020 04:21:24 -0400
+Received: by mail-ed1-f65.google.com with SMTP id l1so8515072ede.11;
+        Tue, 02 Jun 2020 01:21:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ucrKANAavc1NtdTnXRC9YmP/hh/YfnXjx8eiS0Iol/Q=;
-        b=rkNjG5SeJyjX52ucBkzDEdHxKjZz7a5GGw4lUjExZeX+nIk6xUQIrEw+4ouH62eqqn
-         PaW7Js5BixyMwBAT8PLSDWYAsfYca1thiIWs/3+lu7C7rgAEzCLwatYue1UChPF8g0PP
-         hKYvfTuhYD8CQoy3auJbuenbZYUyqV/0ZzQh7Sve7KjrlX2X/O6M++e9efnxUUxJftGn
-         F8oTf790rGVwkF3HeIcdn+HRuj64xHUE3bXkmgsU5mYM8RJF5x7hiGdgDOQzhOTk+KTC
-         1w0sGNTnMg3V+fs0DiTVu4hq2sZzAAdecpwHwo7XePnkjiSYHOj+oXLGMJGF7dZWK+ed
-         ycuQ==
-X-Gm-Message-State: AOAM531bxLjbjnVfEKwpUiJbvD/VHP4G3ZB5nXRAocWbYgyLyXqyNPEa
-        GRK/Tq01sc9hkkSrA3WaxaTtyw==
-X-Google-Smtp-Source: ABdhPJziqtJ8towpdAmhrxob1OLK+VXu4+yoez2i5EtTZF4PeeAOc3/k3KaHbihgaipMRXQMQ/YIBQ==
-X-Received: by 2002:adf:97cb:: with SMTP id t11mr15492995wrb.314.1591086001045;
-        Tue, 02 Jun 2020 01:20:01 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id h5sm2746408wrw.85.2020.06.02.01.19.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 01:20:00 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 10:19:58 +0200
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        pgaikwad@nvidia.com, pdeschrijver@nvidia.com,
-        mturquette@baylibre.com, sboyd@kernel.org, axboe@kernel.dk,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-ide@vger.kernel.org
-Subject: Re: tegra124-jetson-tk1: sata doesnt work since 5.2
-Message-ID: <20200602081958.GA21773@Red>
-References: <20200319074401.GA4116@Red>
- <20200531193111.GA15331@Red>
- <ff9923ca-1d02-ab5e-c335-83ee2e993061@gmail.com>
+         :in-reply-to:user-agent;
+        bh=bMqx/K8qt6ZuFGVbxPaYyyZ1KHtt21Gc7xSEXh3TFqc=;
+        b=O9G5ZLFuDdvQSTa7n8opXyKzFW3mNKGWhkRR2z4WWDayhKOUunT2bWgTNScBSwlg59
+         hDECMWxJ/RyssG35Urv4P5ggcvPH6Dga9RX5Rro2C45vZhfeCJQP5VUKJc0h+J8xa1vn
+         VxYW/VR1LyBGbgh9b1xWWf87B3iXUahgC4UGFsRvTOFFOJbHJ3OLxXPa7xSpUiRC1KFA
+         /3QacDI+fltcU1yaxCSFnat0MWARv0EtfZ1SEbuPhds6R/4fS/tKtBqf1tSKj6ABYFzs
+         MkAjX+1p+Eb4d/+LQBBDEE7fvVzTeJv5E+zJ0sra76PSurtc/uYqw+smddUPghxl9n2i
+         iS+A==
+X-Gm-Message-State: AOAM530cNkWr50N7XTUmXULQiqi+KU2/rk0HYF6WBu9LtJ1KnlWzLX3u
+        oByl1kXBnhumSOMXBf8ZXY8=
+X-Google-Smtp-Source: ABdhPJz0s1Yv0craKTmc1+MBA9Wpl8/dfLu81EyEQULFcLKG2SD43M0HslPqhrDnEtV41wdc2KCt7w==
+X-Received: by 2002:aa7:d283:: with SMTP id w3mr13300946edq.262.1591086081042;
+        Tue, 02 Jun 2020 01:21:21 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.118])
+        by smtp.googlemail.com with ESMTPSA id h10sm1340569ejb.2.2020.06.02.01.21.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jun 2020 01:21:20 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 10:21:18 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     georgi.djakov@linaro.org, cw00.choi@samsung.com,
+        a.swigon@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v5 2/6] interconnect: Add generic interconnect driver
+ for Exynos SoCs
+Message-ID: <20200602082118.GB8216@kozik-lap>
+References: <20200529163200.18031-1-s.nawrocki@samsung.com>
+ <CGME20200529163223eucas1p2f663280abb499b4114b2f2930b43a4e5@eucas1p2.samsung.com>
+ <20200529163200.18031-3-s.nawrocki@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff9923ca-1d02-ab5e-c335-83ee2e993061@gmail.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200529163200.18031-3-s.nawrocki@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 05:30:37PM +0300, Dmitry Osipenko wrote:
-> 31.05.2020 22:31, LABBE Corentin пишет:
-> > On Thu, Mar 19, 2020 at 08:44:01AM +0100, LABBE Corentin wrote:
-> >> Hello
-> >>
-> >> sata doesnt work on tegra124-jetson-tk1 on next and master and at least since 5.2 (but 5.1 works).
-> >> [    0.492810] +5V_SATA: supplied by +5V_SYS
-> >> [    0.493230] +12V_SATA: supplied by +VDD_MUX
-> >> [    2.088675] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-> >> [    2.097643] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-> >> [    3.314776] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-> >> [    3.323658] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-> >> [    5.236964] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-> >> [    5.245867] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-> >> [    5.254706] tegra-ahci 70027000.sata: 70027000.sata supply target not found, using dummy regulator
-> >> [    5.310270] phy phy-sata.6: phy poweron failed --> -110
-> >> [    5.315604] tegra-ahci 70027000.sata: failed to power on AHCI controller: -110
-> >> [    5.323022] tegra-ahci: probe of 70027000.sata failed with error -110
-> >> [   35.694269] +5V_SATA: disabling
-> >> [   35.697438] +12V_SATA: disabling
-> >>
-> >> I have bisected this problem:
-> >> git bisect start
-> >> # bad: [22c58fd70ca48a29505922b1563826593b08cc00] Merge tag 'armsoc-soc' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> >> git bisect bad 22c58fd70ca48a29505922b1563826593b08cc00
-> >> # good: [67e38f578aaebf34fc1278bbe45a78ee8c73dd33] ARM: ep93xx: move pinctrl interfaces into include/linux/soc
-> >> git bisect good 67e38f578aaebf34fc1278bbe45a78ee8c73dd33
-> >> # good: [80f232121b69cc69a31ccb2b38c1665d770b0710] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
-> >> git bisect good 80f232121b69cc69a31ccb2b38c1665d770b0710
-> >> # good: [e57ccca1ba33e1d92cc3bbf8b6304a46948844b0] Merge tag 'sound-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
-> >> git bisect good e57ccca1ba33e1d92cc3bbf8b6304a46948844b0
-> >> # bad: [983dfa4b6ee556563f7963348e4e2f97fc8a15b8] Merge tag 'for-linus-5.2-rc1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/rw/uml
-> >> git bisect bad 983dfa4b6ee556563f7963348e4e2f97fc8a15b8
-> >> # good: [8e4ff713ce313dcabbb60e6ede1ffc193e67631f] Merge tag 'rtc-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
-> >> git bisect good 8e4ff713ce313dcabbb60e6ede1ffc193e67631f
-> >> # bad: [b970afcfcabd63cd3832e95db096439c177c3592] Merge tag 'powerpc-5.2-1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
-> >> git bisect bad b970afcfcabd63cd3832e95db096439c177c3592
-> >> # bad: [601e6bcc4ef02bda2831d5ac8133947b5edf597b] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
-> >> git bisect bad 601e6bcc4ef02bda2831d5ac8133947b5edf597b
-> >> # good: [7e9c62bdb41af76974d594da89854a6aba645e58] Merge branches 'clk-sa', 'clk-aspeed', 'clk-samsung', 'clk-ingenic' and 'clk-zynq' into clk-next
-> >> git bisect good 7e9c62bdb41af76974d594da89854a6aba645e58
-> >> # bad: [0caf000817353cfc5db22363ecdac63b83d3a3f9] Merge branch 'clk-ti' into clk-next
-> >> git bisect bad 0caf000817353cfc5db22363ecdac63b83d3a3f9
-> >> # good: [5816b74581b45cf086a84ab14e13354a65e8e22c] Merge branches 'clk-hisi', 'clk-lochnagar', 'clk-allwinner', 'clk-rockchip' and 'clk-qoriq' into clk-next
-> >> git bisect good 5816b74581b45cf086a84ab14e13354a65e8e22c
-> >> # good: [7b4c162e03d47e037f8ee773c3e300eefb599a83] clk: at91: Mark struct clk_range as const
-> >> git bisect good 7b4c162e03d47e037f8ee773c3e300eefb599a83
-> >> # bad: [e71f4d385878671991e200083c7d30eb4ca8e99a] clk: tegra: divider: Mark Memory Controller clock as read-only
-> >> git bisect bad e71f4d385878671991e200083c7d30eb4ca8e99a
-> >> # bad: [924ee3d551c9deb16090230b824988bd37e72aa8] clk: tegra: emc: Don't enable EMC clock manually
-> >> git bisect bad 924ee3d551c9deb16090230b824988bd37e72aa8
-> >> # bad: [40db569d6769ffa3864fd1b89616b1a7323568a8] clk: tegra: Fix PLLM programming on Tegra124+ when PMC overrides divider
-> >> git bisect bad 40db569d6769ffa3864fd1b89616b1a7323568a8
-> >> # bad: [bff1cef5f23afbe49f5ebd766980dc612f5e9d0a] clk: tegra: Don't enable already enabled PLLs
-> >> git bisect bad bff1cef5f23afbe49f5ebd766980dc612f5e9d0a
-> >> # first bad commit: [bff1cef5f23afbe49f5ebd766980dc612f5e9d0a] clk: tegra: Don't enable already enabled PLLs
-> >>
-> > 
-> > Hello
-> > 
-> > I have digged a bit more and with the following "patch" I have now access to sata again
-> > diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-> > index 0b212cf2e794..b4e2020051d5 100644
-> > --- a/drivers/clk/tegra/clk-pll.c
-> > +++ b/drivers/clk/tegra/clk-pll.c
-> > @@ -1602,7 +1603,7 @@ static int clk_plle_tegra114_enable(struct clk_hw *hw)
-> >         unsigned long input_rate;
-> >  
-> >         if (clk_pll_is_enabled(hw))
-> > -               return 0;
-> > +               pr_info("%s %s\n", __func__, clk_hw_get_name(&pll->hw));
-> >  
-> >         input_rate = clk_hw_get_rate(clk_hw_get_parent(hw));
-> > 
-> > This patch lead to a probed ahci, and I can see "clk_plle_tegra114_enable pll_e" in messages.
-> > 
-> > So the bad part of bff1cef5f23afbe49f5ebd766980dc612f5e9d0a is found.
+On Fri, May 29, 2020 at 06:31:56PM +0200, Sylwester Nawrocki wrote:
+> This patch adds a generic interconnect driver for Exynos SoCs in order
+> to provide interconnect functionality for each "samsung,exynos-bus"
+> compatible device.
 > 
-> Hello Labbe,
+> The SoC topology is a graph (or more specifically, a tree) and its
+> edges are specified using the 'samsung,interconnect-parent' in the
+> DT. Due to unspecified relative probing order, -EPROBE_DEFER may be
+> propagated to ensure that the parent is probed before its children.
 > 
-> Looks like indeed this PLLE change should be reverted. I see that the
-> code disables PLLE before changing its configuration, so apparently the
-> enable-check shouldn't be needed.
+> Each bus is now an interconnect provider and an interconnect node as
+> well (cf. Documentation/interconnect/interconnect.rst), i.e. every bus
+> registers itself as a node. Node IDs are not hardcoded but rather
+> assigned dynamically at runtime. This approach allows for using this
+> driver with various Exynos SoCs.
 > 
-> > As additional information, my previous kernel has CONFIG_PHY_TEGRA_XUSB=m (since firmware is on rootfs which is on sata)
-> > but with this sata fail the same, having CONFIG_PHY_TEGRA_XUSB=y (and so xusb firmware in kernel) seems "necessary" for having SATA working.
+> Frequencies requested via the interconnect API for a given node are
+> propagated to devfreq using dev_pm_qos_update_request(). Please note
+> that it is not an error when CONFIG_INTERCONNECT is 'n', in which
+> case all interconnect API functions are no-op.
 > 
-> Sounds like PLLE needs to be enabled for SATA, but ahci-tegra driver
-> doesn't do that.
+> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > 
-> Could you please try this change:
+> Changes for v5:
+>  - adjust to renamed exynos,interconnect-parent-node property,
+>  - use automatically generated platform device id as the interconect
+>    node id instead of a now unavailable devfreq->id field,
+>  - add icc_ prefix to some variables to make the code more self-commenting,
+>  - use icc_nodes_remove() instead of icc_node_del() + icc_node_destroy(),
+>  - adjust to exynos,interconnect-parent-node property rename to
+>    samsung,interconnect-parent,
+>  - converted to a separate platform driver in drivers/interconnect.
+> ---
+>  drivers/interconnect/Kconfig         |   1 +
+>  drivers/interconnect/Makefile        |   1 +
+>  drivers/interconnect/exynos/Kconfig  |   6 ++
+>  drivers/interconnect/exynos/Makefile |   4 +
+>  drivers/interconnect/exynos/exynos.c | 185 +++++++++++++++++++++++++++++++++++
+>  5 files changed, 197 insertions(+)
+>  create mode 100644 drivers/interconnect/exynos/Kconfig
+>  create mode 100644 drivers/interconnect/exynos/Makefile
+>  create mode 100644 drivers/interconnect/exynos/exynos.c
 > 
-> --- >8 ---
-> diff --git a/drivers/clk/tegra/clk-tegra124.c
-> b/drivers/clk/tegra/clk-tegra124.c
-> index e931319dcc9d..7dbc14652830 100644
-> --- a/drivers/clk/tegra/clk-tegra124.c
-> +++ b/drivers/clk/tegra/clk-tegra124.c
-> @@ -1330,6 +1330,7 @@ static struct tegra_clk_init_table
-> common_init_table[] __initdata = {
->  	{ TEGRA124_CLK_I2S3_SYNC, TEGRA124_CLK_CLK_MAX, 24576000, 0 },
->  	{ TEGRA124_CLK_I2S4_SYNC, TEGRA124_CLK_CLK_MAX, 24576000, 0 },
->  	{ TEGRA124_CLK_VIMCLK_SYNC, TEGRA124_CLK_CLK_MAX, 24576000, 0 },
-> +	{ TEGRA124_CLK_PLL_E, TEGRA124_CLK_CLK_MAX, 0, 1 },
->  	/* must be the last entry */
->  	{ TEGRA124_CLK_CLK_MAX, TEGRA124_CLK_CLK_MAX, 0, 0 },
->  };
-> --- >8 ---
+> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
+> index 5b7204e..eca6eda 100644
+> --- a/drivers/interconnect/Kconfig
+> +++ b/drivers/interconnect/Kconfig
+> @@ -11,6 +11,7 @@ menuconfig INTERCONNECT
+>  
+>  if INTERCONNECT
+>  
+> +source "drivers/interconnect/exynos/Kconfig"
+>  source "drivers/interconnect/imx/Kconfig"
+>  source "drivers/interconnect/qcom/Kconfig"
+>  
+> diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+> index 4825c28..2ba1de6 100644
+> --- a/drivers/interconnect/Makefile
+> +++ b/drivers/interconnect/Makefile
+> @@ -4,5 +4,6 @@ CFLAGS_core.o				:= -I$(src)
+>  icc-core-objs				:= core.o
+>  
+>  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+> +obj-$(CONFIG_INTERCONNECT_EXYNOS)	+= exynos/
+>  obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
+>  obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
+> diff --git a/drivers/interconnect/exynos/Kconfig b/drivers/interconnect/exynos/Kconfig
+> new file mode 100644
+> index 0000000..e51e52e
+> --- /dev/null
+> +++ b/drivers/interconnect/exynos/Kconfig
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config INTERCONNECT_EXYNOS
+> +	tristate "Exynos generic interconnect driver"
+> +	depends on ARCH_EXYNOS || COMPILE_TEST
+> +	help
+> +	  Generic interconnect driver for Exynos SoCs.
+> diff --git a/drivers/interconnect/exynos/Makefile b/drivers/interconnect/exynos/Makefile
+> new file mode 100644
+> index 0000000..e19d1df
+> --- /dev/null
+> +++ b/drivers/interconnect/exynos/Makefile
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +exynos-interconnect-objs		:= exynos.o
+> +
+> +obj-$(CONFIG_INTERCONNECT_EXYNOS)	+= exynos-interconnect.o
+> diff --git a/drivers/interconnect/exynos/exynos.c b/drivers/interconnect/exynos/exynos.c
+> new file mode 100644
+> index 0000000..8278194
+> --- /dev/null
+> +++ b/drivers/interconnect/exynos/exynos.c
+> @@ -0,0 +1,185 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Exynos generic interconnect provider driver
+> + *
+> + * Copyright (c) 2020 Samsung Electronics Co., Ltd.
+> + *
+> + * Authors: Artur Świgoń <a.swigon@samsung.com>
+> + *          Sylwester Nawrocki <s.nawrocki@samsung.com>
+> + */
+> +#include <linux/device.h>
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_qos.h>
+> +
+> +#define kbps_to_khz(x) ((x) / 8)
+> +
+> +struct exynos_icc_priv {
+> +	struct device *dev;
+> +
+> +	/* One interconnect node per provider */
+> +	struct icc_provider provider;
+> +	struct icc_node *node;
+> +
+> +	struct dev_pm_qos_request qos_req;
+> +};
+> +
+> +static struct icc_node *exynos_icc_get_parent(struct device_node *np)
+> +{
+> +	struct of_phandle_args args;
+> +	int num, ret;
+> +
+> +	num = of_count_phandle_with_args(np, "samsung,interconnect-parent",
+> +					"#interconnect-cells");
+> +	if (num != 1)
+> +		return NULL; /* parent nodes are optional */
+> +
+> +	ret = of_parse_phandle_with_args(np, "samsung,interconnect-parent",
+> +					"#interconnect-cells", 0, &args);
+> +	if (ret < 0)
+> +		return ERR_PTR(ret);
+> +
+> +	of_node_put(args.np);
+> +
+> +	return of_icc_get_from_provider(&args);
 
-This patch alone does not fix the issue.
+I think of_node_put() should happen after of_icc_get_from_provider().
+
+Best regards,
+Krzysztof
