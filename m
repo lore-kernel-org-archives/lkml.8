@@ -2,100 +2,112 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA95C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE044C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958082085B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A9C20772
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 04:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzfmUpAa"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DrfY3qkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbgFBEk6 (ORCPT
+        id S1726087AbgFBEmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 00:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
+        Tue, 2 Jun 2020 00:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgFBEk6 (ORCPT
+        with ESMTP id S1725616AbgFBEmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 00:40:58 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CB2C061A0E;
-        Mon,  1 Jun 2020 21:40:56 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id d7so9467584ioq.5;
-        Mon, 01 Jun 2020 21:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lgXeopS4rXAhOaW6ojxV14zwgm7+wVhyDRRur+u16mo=;
-        b=LzfmUpAa5RQLblGpcefo25+/lbne+hqvfzKmVMT0MxkkTzzhaJh3sn5qn2XQ2/y9DP
-         L77swLDMc3wtpHmmXNbO3xrfLP526qBENk8p5XbTpSf0hOvSgdcsrxZDiI4C/3faRyPy
-         t/Y7zA8je7JLHbPra/M/dL0cWlBCiQIOMVUlJPaARDJ1T6kh5WjiORLaCIYk203sV/YM
-         E9kbNzNiiz9wUHS/uEn0neecuwFXhTtEwZUOOHgQehJakeIc7ARGK6IYG2+kiqUky3Rv
-         53cPkqUo3JZzVCNVwAY8L+naiB9rDXw+SOlb3CuaqWIFH78M76JUpgDfA4XN9ap5kQKt
-         JHPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lgXeopS4rXAhOaW6ojxV14zwgm7+wVhyDRRur+u16mo=;
-        b=sMPxwL8QEZhoeqzASQN2kIdOAqvjILVAxoJ8Hq4kn3Vhex4xMAcwxSlHs/gLJ3GNaJ
-         1m/OEMaoa2gntAhn3zjFucc33HjzYP2o9dndi2Sq46SbcHH/20/KNphj93W7NEnEGCKb
-         EhpU4lrkzfcyO6VtzwJ2G4X0gRCQ1rYyg5Z/U4l4zpZjWd6XFOUMbPwO2PZkPcNB4/hM
-         26sKqSKQNv6KthSC7BSdI2al1ps2CKpEwnd9ojJkS1wp/n5EewDpTzxYBsjPCxytWXzI
-         uT52MC0njPGrOx+ba7eigZLP2R/uC/TH5SPyR64b/2Y+eno9ieGOZF/WOLyYKa/1oIRO
-         i4NQ==
-X-Gm-Message-State: AOAM5337F5xESJ9I2gYFiCABB+/KJQUjDIyX46ztUpQs8ToARTcdZte0
-        3vCXXoISUQ34YZwpsWNP3h5WIQi4flWe1A==
-X-Google-Smtp-Source: ABdhPJx9gqtedMNOQIz2FZKyCCeg/Z12Y42fQViRruIdOa6l1yDiABgPGmf59KzIikWDf+ZLfQW81g==
-X-Received: by 2002:a02:23c1:: with SMTP id u184mr22804511jau.11.1591072855938;
-        Mon, 01 Jun 2020 21:40:55 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id t18sm887267ili.24.2020.06.01.21.40.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 21:40:55 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] spi: tegra20-sflash: call pm_runtime_put in case of pm_runtime_get failure
-Date:   Mon,  1 Jun 2020 23:40:49 -0500
-Message-Id: <20200602044049.17378-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jun 2020 00:42:39 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8392EC061A0E;
+        Mon,  1 Jun 2020 21:42:39 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bfXq52Ldz9sSf;
+        Tue,  2 Jun 2020 14:42:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591072956;
+        bh=fKtvbAaS+Iil51RJnv0uiF7U53xY3VQx/jibttG+xiE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DrfY3qkpRL7ZcxRWrybul3SbgCW3aXgKF4d7nZ5EEqOxF9P8nZe6JJguOB6KS7UsP
+         QZgyPYp2x3qK4YCtlxzNT5xmQvqd1tZLuMuVAPZArEPS2Pf2vPFWWsPQu6vVZRhaZT
+         kDIl8HhZJFZPrFXWS/UT7Dz34vazxGCfDqaSrLzPMboJqUQKjnUVDNULccXY8MP3Y/
+         V8rlq/FtbXaAeszhhUPLzyEFwIX6SUuSeEoj7RyXjgYkZa6iI4urYBCE84VdWITuo5
+         jiZvH9oRi2R1o1e2ZHAqrCc0xLeDq/qf/vCqniEBjVRK+DSWM7B7hq5IOllVrYcxO5
+         FaYdJ607s1Fpg==
+Date:   Tue, 2 Jun 2020 14:42:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the irqchip tree with the tip tree
+Message-ID: <20200602144234.70ffb673@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/StZ/XqOp4++UmMl0345z/yL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The counter is incremented via pm_runtime_get even in failure case.
-To correct the counter call pm_runtime_put in case of failure, too.
+--Sig_/StZ/XqOp4++UmMl0345z/yL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/spi/spi-tegra20-sflash.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi all,
 
-diff --git a/drivers/spi/spi-tegra20-sflash.c b/drivers/spi/spi-tegra20-sflash.c
-index 514429379206..33c34f9c2021 100644
---- a/drivers/spi/spi-tegra20-sflash.c
-+++ b/drivers/spi/spi-tegra20-sflash.c
-@@ -552,6 +552,7 @@ static int tegra_sflash_resume(struct device *dev)
- 
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		dev_err(dev, "pm runtime failed, e = %d\n", ret);
- 		return ret;
- 	}
--- 
-2.17.1
+Today's linux-next merge of the irqchip tree got a conflict in:
 
+  drivers/irqchip/Kconfig
+
+between commit:
+
+  d77aeb5d403d ("irqchip: Fix "Loongson HyperTransport Vector support" driv=
+er build on all non-MIPS platforms")
+
+from the tip tree and commit:
+
+  4a786cc36028 ("irqchip/loongson-htvec: Don't compile when COMPILE_TEST is=
+ selected")
+
+from the irqchip tree.
+
+I fixed it up (I just used the latter) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/StZ/XqOp4++UmMl0345z/yL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7V2LoACgkQAVBC80lX
+0Gw2+ggAiZf7uKyfH8F1E/K5adbXhqSMaqTtpP0B6qRVd5HaFLxyDE5AfPOSEMit
+R9SYV8pIgSTAEU+Jt1+ZaZkGp2Ho788ibDHlD+P77l/JQNPVc3eqk0fha/b1+oJV
+DeA6Qd4E1acQPVjVy3YHpit7DMGeCXLVWPTGn5nxtN/C8XDCSHVgZ2CqifQ1sUFl
+ZvTcrD6mNQheAxQNeZVXZ34mvMcAneXepzaLZTTmKi3U+ZfKVBwJJrofrHqKlf4v
+dfgFOIPSVYAv0qAI/uXrWRQdMeC+N/ZYDhMAo3qrJHCKB6rtKsxN2dWhkNLYEcu5
+RBO1QFzLMAGaH8B6VXCclNrH8kvvtg==
+=WNWp
+-----END PGP SIGNATURE-----
+
+--Sig_/StZ/XqOp4++UmMl0345z/yL--
