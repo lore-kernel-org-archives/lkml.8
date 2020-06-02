@@ -2,122 +2,157 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88381C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6170C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5B8206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591130903;
-	bh=CdMKjWZXehyY4K7bRGCQXjkB0K8fL+v9jQ3qjY5zkYs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Qm4kzCgU+4fyhQMn0o68SNZcT+zb4uoOwx0KvzNda20nn6VKGGjZr8AMEMbdu3nAa
-	 VdsMJDv6OJ/zrHU2r+chMH58rxkRWNXS92nLRyhEiCSGF7WOk0Bxu4PzfOvfdB1QZ2
-	 +neTh7DlAo8daVx1D7CWM9cr5PSB6y1slhIrl3TQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9FB1D20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFBUsW (ORCPT
+        id S1728202AbgFBUuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:48:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgFBUsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:48:22 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Tue, 2 Jun 2020 16:50:40 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51324 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgFBUuk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 16:50:40 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8794D20674;
-        Tue,  2 Jun 2020 20:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591130901;
-        bh=CdMKjWZXehyY4K7bRGCQXjkB0K8fL+v9jQ3qjY5zkYs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Ah7vSqvm+xeoRajRYcKV6V6ne3nEgYVQGxwEECvLL2CLbgIvuxrJMVi4ZECDn4ALP
-         UIcmVx8l92wOM6Eg8vcSWlwlflzFMb1032LApF+moh80ZENTYczhcZimKF02yuDnjR
-         Ia2Edig6Qs2LfQJ2+2ItFdPZ8CBz+cFUkPfejAx8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6968E3522C92; Tue,  2 Jun 2020 13:48:21 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 13:48:21 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] kcsan: Prefer '__no_kcsan inline' in test
-Message-ID: <20200602204821.GI29598@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200602143633.104439-1-elver@google.com>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 139228050E;
+        Tue,  2 Jun 2020 22:50:34 +0200 (CEST)
+Date:   Tue, 2 Jun 2020 22:50:33 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Jason Yan <yanaijie@huawei.com>, spock@gentoo.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] video: uvesafb: use true,false for bool variables
+Message-ID: <20200602205033.GA56418@ravnborg.org>
+References: <CGME20200422071952eucas1p219bc9ef0a74220149966ecb03688681c@eucas1p2.samsung.com>
+ <20200422071845.403-1-yanaijie@huawei.com>
+ <4b460d82-b23c-f6ce-6593-735a726e4d8a@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602143633.104439-1-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4b460d82-b23c-f6ce-6593-735a726e4d8a@samsung.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=i0EeH86SAAAA:8 a=hD80L64hAAAA:8 a=7gkXJVJtAAAA:8
+        a=7mOBRU54AAAA:8 a=pQOkFE01E-EqrLGc8Q0A:9 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=wa9RWnbW_A1YIeRBVszw:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:36:33PM +0200, Marco Elver wrote:
-> Instead of __no_kcsan_or_inline, prefer '__no_kcsan inline' in test --
-> this is in case we decide to remove __no_kcsan_or_inline.
+Hi Bartlomiej
+
+On Mon, Jun 01, 2020 at 12:37:00PM +0200, Bartlomiej Zolnierkiewicz wrote:
 > 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Marco Elver <elver@google.com>
+> Hi,
+> 
+> On 4/22/20 9:18 AM, Jason Yan wrote:
+> > Fix the following coccicheck warning:
+> > 
+> > drivers/video/fbdev/uvesafb.c:48:12-17: WARNING: Assignment of 0/1 to
+> > bool variable
+> > drivers/video/fbdev/uvesafb.c:1827:3-13: WARNING: Assignment of 0/1 to
+> > bool variable
+> > drivers/video/fbdev/uvesafb.c:1829:3-13: WARNING: Assignment of 0/1 to
+> > bool variable
+> > drivers/video/fbdev/uvesafb.c:1835:3-9: WARNING: Assignment of 0/1 to
+> > bool variable
+> > drivers/video/fbdev/uvesafb.c:1837:3-9: WARNING: Assignment of 0/1 to
+> > bool variable
+> > drivers/video/fbdev/uvesafb.c:1839:3-8: WARNING: Assignment of 0/1 to
+> > bool variable
+> > 
+> > Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> > ---
+> >  drivers/video/fbdev/uvesafb.c | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/video/fbdev/uvesafb.c b/drivers/video/fbdev/uvesafb.c
+> > index 1b385cf76110..bee29aadc646 100644
+> > --- a/drivers/video/fbdev/uvesafb.c
+> > +++ b/drivers/video/fbdev/uvesafb.c
+> > @@ -45,7 +45,7 @@ static const struct fb_fix_screeninfo uvesafb_fix = {
+> >  };
+> >  
+> >  static int mtrr		= 3;	/* enable mtrr by default */
+> > -static bool blank	= 1;	/* enable blanking by default */
+> > +static bool blank	= true;	/* enable blanking by default */
+> >  static int ypan		= 1;	/* 0: scroll, 1: ypan, 2: ywrap */
+> >  static bool pmi_setpal	= true; /* use PMI for palette changes */
+> >  static bool nocrtc;		/* ignore CRTC settings */
+> > @@ -1824,19 +1824,19 @@ static int uvesafb_setup(char *options)
+> >  		else if (!strcmp(this_opt, "ywrap"))
+> >  			ypan = 2;
+> >  		else if (!strcmp(this_opt, "vgapal"))
+> > -			pmi_setpal = 0;
+> > +			pmi_setpal = false;
+> >  		else if (!strcmp(this_opt, "pmipal"))
+> > -			pmi_setpal = 1;
+> > +			pmi_setpal = true;
+> >  		else if (!strncmp(this_opt, "mtrr:", 5))
+> >  			mtrr = simple_strtoul(this_opt+5, NULL, 0);
+> >  		else if (!strcmp(this_opt, "nomtrr"))
+> >  			mtrr = 0;
+> >  		else if (!strcmp(this_opt, "nocrtc"))
+> > -			nocrtc = 1;
+> > +			nocrtc = true;
+> >  		else if (!strcmp(this_opt, "noedid"))
+> > -			noedid = 1;
+> > +			noedid = true;
+> >  		else if (!strcmp(this_opt, "noblank"))
+> > -			blank = 0;
+> > +			blank = true;
+> 
+> The above conversion is incorrect.
+> 
+> The follow-up fix is included below (the original patch has been
+> already applied).
+Good spot, sorry for missing this when I applied the original patch.
+
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+> 
+> From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Subject: [PATCH] video: fbdev: uvesafb: fix "noblank" option handling
+> 
+> Fix the recent regression.
+> 
+> Fixes: dbc7ece12a38 ("video: uvesafb: use true,false for bool variables")
+> Cc: Jason Yan <yanaijie@huawei.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Michal Januszewski <spock@gentoo.org>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
+>  drivers/video/fbdev/uvesafb.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Hi Paul,
-> 
-> This is to prepare eventual removal of __no_kcsan_or_inline, and avoid a
-> series that doesn't apply to anything other than -next (because some
-> bits are in -tip and the test only in -rcu; although this problem might
-> be solved in 2 weeks). This patch is to make sure in case the
-> __kcsan_or_inline series is based on -tip, integration in -next doesn't
-> cause problems.
-> 
-> This came up in
-> https://lkml.kernel.org/r/20200529185923.GO706495@hirez.programming.kicks-ass.net
-
-Applied and pushed, thank you!
-
-Please note that unless you would like this pushed into the current
-merge window, it will not be visible in -next until v5.8-rc1 comes out.
-Which sounds like you are aware of already, just want to be sure.  ;-)
-
-							Thanx, Paul
-
-> Thanks,
-> -- Marco
-> 
-> ---
->  kernel/kcsan/kcsan-test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/kcsan/kcsan-test.c b/kernel/kcsan/kcsan-test.c
-> index a8c11506dd2a..3af420ad6ee7 100644
-> --- a/kernel/kcsan/kcsan-test.c
-> +++ b/kernel/kcsan/kcsan-test.c
-> @@ -43,7 +43,7 @@ static struct {
->  };
->  
->  /* Setup test checking loop. */
-> -static __no_kcsan_or_inline void
-> +static __no_kcsan inline void
->  begin_test_checks(void (*func1)(void), void (*func2)(void))
->  {
->  	kcsan_disable_current();
-> @@ -60,7 +60,7 @@ begin_test_checks(void (*func1)(void), void (*func2)(void))
->  }
->  
->  /* End test checking loop. */
-> -static __no_kcsan_or_inline bool
-> +static __no_kcsan inline bool
->  end_test_checks(bool stop)
->  {
->  	if (!stop && time_before(jiffies, end_time)) {
-> -- 
-> 2.27.0.rc2.251.g90737beb825-goog
-> 
+> Index: b/drivers/video/fbdev/uvesafb.c
+> ===================================================================
+> --- a/drivers/video/fbdev/uvesafb.c
+> +++ b/drivers/video/fbdev/uvesafb.c
+> @@ -1836,7 +1836,7 @@ static int uvesafb_setup(char *options)
+>  		else if (!strcmp(this_opt, "noedid"))
+>  			noedid = true;
+>  		else if (!strcmp(this_opt, "noblank"))
+> -			blank = true;
+> +			blank = false;
+>  		else if (!strncmp(this_opt, "vtotal:", 7))
+>  			vram_total = simple_strtoul(this_opt + 7, NULL, 0);
+>  		else if (!strncmp(this_opt, "vremap:", 7))
