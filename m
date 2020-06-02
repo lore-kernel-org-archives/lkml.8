@@ -2,93 +2,130 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8C2C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652312085B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654FB206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:08:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7YovVxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgFBGHB (ORCPT
+        id S1726205AbgFBGI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgFBGG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:06:56 -0400
-Received: from sekiro (lfbn-mar-1-685-55.w109-208.abo.wanadoo.fr [109.208.210.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49EA120734;
-        Tue,  2 Jun 2020 06:06:54 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 08:06:50 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com
-Subject: Re: [PATCH] iio: Kconfig: at91_adc: add COMPILE_TEST dependency to
- driver
-Message-ID: <20200602060650.vlfx26qb57sewcjw@sekiro>
-References: <20200525102744.131672-1-alexandru.ardelean@analog.com>
- <20200531154017.04fc727f@archlinux>
+        Tue, 2 Jun 2020 02:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgFBGI6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 02:08:58 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D220C061A0E;
+        Mon,  1 Jun 2020 23:08:56 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f5so1805639wmh.2;
+        Mon, 01 Jun 2020 23:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NDGYSbP7uksg9+a4r1iJamlh67Acsz3aGJVeqfoyDV0=;
+        b=o7YovVxEvNBhAdPPNBFaK+JmkxuBB4/xKKIT1qcpOELnjJ/YTf7DUjI3RFuu+qY2+X
+         NITAv3fgVQXIKRMRHSMVeyO6ajyBkf2OOQLpHCRN9pQGs8X+gqhCjaZSxu29v1Tami3u
+         MM7CY2e2hyRLnvqiV6gBifOfQAhqlSALfor+ITJr3qIPIcAJ7na+qMogYTp3rg4fgxwB
+         lfte6gUwulmhd+4FLeZy0Oj1mKnQK73EdD8hRAsDdjg9EDhwHmAt8CLUoiuJ8XJ3SFQl
+         f9D2jZX7IXB5zKvIj9CViLa3mJt4xvarJOhKrnqWawXJzMKY6rFXl91VnuA7v7ongqf9
+         SYYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NDGYSbP7uksg9+a4r1iJamlh67Acsz3aGJVeqfoyDV0=;
+        b=krwVROoxwCV9DpKHbzpHOGVHULNHRF8xnS7Qp9A4InnAZPYFRABLx2qCCsLwYNgyoc
+         FndfbL1L5IR/0Ruz6WydnG40JoVDE3Rj2IT4SNvq6cOSz4awGA1968bZMDHdO8mZooPR
+         pizBs56aCzfq6CbEOq/K+b0nme4HAqsHGX0KjQcpvYnUmnJlOVnSEObNMF2oJUJZ/oPj
+         9E+5ziNxILhJaCBhqsHE8EpIGO9+ekv10KReCMazfRPC8FaCERbSO4soE43z+h2QrRo0
+         0I9N2J+EtgKNOMGrZf2MJUxrqXtJeFlJFW1qVpQGhgSqEEdOa1UWEaEoQWm02IuWwWgE
+         S9fw==
+X-Gm-Message-State: AOAM533LMwqWBoDWlBLgyAnGKqpDxp8wflOA/zEkGLe5b45ARMoTc54o
+        2s7LtbTK4qK3cNyoSghwnZHUPZV4KODjgc7QAP8=
+X-Google-Smtp-Source: ABdhPJxbMW9gOsV6GMtEx1bIdBTWOTc6p9HlxeOtGMzSdOLfpQydLKKu4tsXYDL8918ULpDLfXZBeSLCzLSyoGzPpk8=
+X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr2533226wmi.30.1591078135229;
+ Mon, 01 Jun 2020 23:08:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200531154017.04fc727f@archlinux>
+References: <20200601052633.853874-1-jhubbard@nvidia.com> <20200601052633.853874-3-jhubbard@nvidia.com>
+In-Reply-To: <20200601052633.853874-3-jhubbard@nvidia.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Tue, 2 Jun 2020 08:08:44 +0200
+Message-ID: <CAM9Jb+hNSWp-TaQQFg4bs5uR8rYk_POZPT23RYy5V_B9-aOcYg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] vhost: convert get_user_pages() --> pin_user_pages()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 03:40:17PM +0100, Jonathan Cameron wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Mon, 25 May 2020 13:27:44 +0300
-> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> 
-> > Since changes can come from all sort of places, it may make sense to have
-> > this symbol as a dependency to make sure that the 'make allmodconfig' &&
-> > 'make allyesconfig' build rules cover this driver as well for a
-> > compile-build/test.
-> >
-> > It seemed useful [recently] when trying to apply a change for this.
-> >
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Makes sense.   Given this sort of change can expose weird an wonderful
-> dependencies that were previously hidden, I'll be wanting an
-> ack from at91 people.
+> This code was using get_user_pages*(), in approximately a "Case 5"
+> scenario (accessing the data within a page), using the categorization
+> from [1]. That means that it's time to convert the get_user_pages*() +
+> put_page() calls to pin_user_pages*() + unpin_user_pages() calls.
+>
+> There is some helpful background in [2]: basically, this is a small
+> part of fixing a long-standing disconnect between pinning pages, and
+> file systems' use of those pages.
+>
+> [1] Documentation/core-api/pin_user_pages.rst
+>
+> [2] "Explicit pinning of user-space pages":
+>     https://lwn.net/Articles/807108/
+>
+> Cc: Michael S. Tsirkin <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: kvm@vger.kernel.org
+> Cc: virtualization@lists.linux-foundation.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  drivers/vhost/vhost.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 21a59b598ed8..596132a96cd5 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -1762,15 +1762,14 @@ static int set_bit_to_user(int nr, void __user *addr)
+>         int bit = nr + (log % PAGE_SIZE) * 8;
+>         int r;
+>
+> -       r = get_user_pages_fast(log, 1, FOLL_WRITE, &page);
+> +       r = pin_user_pages_fast(log, 1, FOLL_WRITE, &page);
+>         if (r < 0)
+>                 return r;
+>         BUG_ON(r != 1);
+>         base = kmap_atomic(page);
+>         set_bit(bit, base);
+>         kunmap_atomic(base);
+> -       set_page_dirty_lock(page);
+> -       put_page(page);
+> +       unpin_user_pages_dirty_lock(&page, 1, true);
+>         return 0;
+>  }
 
-Agree.
-
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
-Regards
-
-Ludovic
-
-> 
-> Jonathan
-> 
-> > ---
-> >  drivers/iio/adc/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > index c48c00077775..c1f4c0aec265 100644
-> > --- a/drivers/iio/adc/Kconfig
-> > +++ b/drivers/iio/adc/Kconfig
-> > @@ -294,7 +294,7 @@ config ASPEED_ADC
-> >
-> >  config AT91_ADC
-> >       tristate "Atmel AT91 ADC"
-> > -     depends on ARCH_AT91
-> > +     depends on ARCH_AT91 || COMPILE_TEST
-> >       depends on INPUT && SYSFS
-> >       select IIO_BUFFER
-> >       select IIO_TRIGGERED_BUFFER
-> 
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
