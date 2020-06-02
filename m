@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B42EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B71C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7493020823
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C116205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgFBWbX (ORCPT
+        id S1728421AbgFBWbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:31:23 -0400
+        Tue, 2 Jun 2020 18:31:25 -0400
 Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:65069 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726589AbgFBWbX (ORCPT
+        by vger.kernel.org with ESMTP id S1727795AbgFBWbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jun 2020 18:31:23 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 02 Jun 2020 15:31:22 -0700
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 02 Jun 2020 15:31:23 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 02 Jun 2020 15:31:22 -0700
+  by ironmsg02-sd.qualcomm.com with ESMTP; 02 Jun 2020 15:31:22 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 4C13E4BDA; Tue,  2 Jun 2020 15:31:22 -0700 (PDT)
+        id 8C3A44DF1; Tue,  2 Jun 2020 15:31:22 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -43,42 +43,41 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-arm-kernel@lists.infradead.org,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v16 04/11] pwm: clps711x: Use 64-bit division macro
-Date:   Tue,  2 Jun 2020 15:31:08 -0700
-Message-Id: <a3a7c5500c651b103cb2d1c4a48dd18ce72d9a45.1591136989.git.gurus@codeaurora.org>
+Subject: [PATCH v16 06/11] pwm: imx27: Use 64-bit division macro
+Date:   Tue,  2 Jun 2020 15:31:11 -0700
+Message-Id: <fcc92b6499e8200ad6b02ab13b38e4d310afe0ba.1591135774.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1591136989.git.gurus@codeaurora.org>
 References: <cover.1591136989.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1591136989.git.gurus@codeaurora.org>
-References: <cover.1591136989.git.gurus@codeaurora.org>
+In-Reply-To: <cover.1591135774.git.gurus@codeaurora.org>
+References: <cover.1591135774.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
-handle a 64-bit divisor.
+Since the PWM framework is switching struct pwm_state.period's
+datatype to u64, prepare for this transition by using
+DIV_ROUND_UP_ULL to handle a 64-bit dividend.
 
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-clps711x.c | 2 +-
+ drivers/pwm/pwm-imx27.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 924d39a..ba9500a 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-+	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
- }
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 732a6f3..c50d453 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -202,7 +202,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ 	sr = readl(imx->mmio_base + MX3_PWMSR);
+ 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+ 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
+-		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
++		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
+ 					 NSEC_PER_MSEC);
+ 		msleep(period_ms);
  
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
