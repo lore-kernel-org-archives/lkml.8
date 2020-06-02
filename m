@@ -2,154 +2,100 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9684EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D546BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 720852074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="N2K4AQ+L"
+	by mail.kernel.org (Postfix) with ESMTP id A7CD52074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591097059;
+	bh=cT9jBHVPrWMrMhELAyl4RpjRekYb1zN8PMcuA/XN8LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0jcafYYaGkyw2Y5L0eJ4MGpEfdDNTHdiUmu87wrPqNqJuDdzLnuXrkcnaZ8HnYrga
+	 Axg0cFlVPw6nQaZo9EEPoKDcYiKFlzBT4/qR3TgnVnN40oSBL+Vagj4uvFSCNnJ+LM
+	 k9xC+iMIzr8NlqfB7WWVZLReiD0I8ulI2oADFOdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgFBLXg (ORCPT
+        id S1726728AbgFBLYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgFBLXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:23:36 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D395C061A0E;
-        Tue,  2 Jun 2020 04:23:36 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 2 Jun 2020 07:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgFBLYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 07:24:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bqRS1wsTz9sSc;
-        Tue,  2 Jun 2020 21:23:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1591097014;
-        bh=eGpanG34MNWJ0lGXSXJ8lLK/A/KPEElEzRA3x3jmVFM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=N2K4AQ+LzyA+NQ1tcvIIBzcYyQk6q7HG9wiJD1nFeLk9Bz7yHoa7/vaJ4E79qOTFm
-         RsEL3gv0RPO8SDVE8iM2v4v7+B1vZIpQ5rAeXb0nFUPY+7dgtdOzxac5dZebLcdKYM
-         aKDEy+NazXauBzYTpvnyZk6/Sy0k370x5nNft6RW2OdttceHz0G6UccjyAR8r7psP+
-         C4mBo1nJ/da6D/peOhGQFt+1OpVRWhtaGl+xhLv9WNcn7ELB6mRs9BSIKuAqwpiOb/
-         iM6GwAXGnfV808ulP+ifov4Iaz2DJroUPZqSgmBNz4fFQXv+9acYRyaFNtZDWipf5O
-         1sZGPMQYlOYBw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Liao Pingfang <liao.pingfang@zte.com.cn>,
-        linuxppc-dev@lists.ozlabs.org, Joe Perches <joe@perches.com>
-Cc:     Allison Randal <allison@lohutok.net>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colin Cross <ccross@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Wang Liang <wang.liang82@zte.com.cn>,
-        Xue Zhihong <xue.zhihong@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] powerpc/nvram: Replace kmalloc with kzalloc in the error message
-In-Reply-To: <a3c158fa-3829-f38a-9202-8984b5ef5f21@web.de>
-References: <c3d22d89-9133-30aa-8270-c515df214963@web.de> <87imgai394.fsf@mpe.ellerman.id.au> <a3c158fa-3829-f38a-9202-8984b5ef5f21@web.de>
-Date:   Tue, 02 Jun 2020 21:23:57 +1000
-Message-ID: <87a71liucy.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id CC1E420679;
+        Tue,  2 Jun 2020 11:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591097057;
+        bh=cT9jBHVPrWMrMhELAyl4RpjRekYb1zN8PMcuA/XN8LQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BVC09q5hW7vcrzboHRjSO9Gf/RhExlMs5DpXWTf317PpNiP7CE1z0YKs3Cz1bie8w
+         G+brqj8LBKrIczOjg9mFXIT+EACM4g0skbUsyb3q+qQZudIYlCjXDLrJKg1S6KR/db
+         rtgiw1i7RRzpRro5d88QhJvKZJPSv6lFx0fAqGjA=
+Date:   Tue, 2 Jun 2020 12:24:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH v4 1/5] regulator: Allow regulators to verify enabled
+ during enable()
+Message-ID: <20200602112415.GD5684@sirena.org.uk>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="u65IjBhB3TIa72Vp"
+Content-Disposition: inline
+In-Reply-To: <20200602100924.26256-2-sumit.semwal@linaro.org>
+X-Cookie: We are not a clone.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Markus Elfring <Markus.Elfring@web.de> writes:
->>>> Please just remove the message instead, it's a tiny allocation that's
->>>> unlikely to ever fail, and the caller will print an error anyway.
->>>
->>> How do you think about to take another look at a previous update sugges=
-tion
->>> like the following?
->>>
->>> powerpc/nvram: Delete three error messages for a failed memory allocati=
-on
->>> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/00845261-8528-d=
-011-d3b8-e9355a231d3a@users.sourceforge.net/
->>> https://lore.kernel.org/linuxppc-dev/00845261-8528-d011-d3b8-e9355a231d=
-3a@users.sourceforge.net/
->>> https://lore.kernel.org/patchwork/patch/752720/
->>> https://lkml.org/lkml/2017/1/19/537
->>
->> That deleted the messages from nvram_scan_partitions(), but neither of
->> the callers of nvram_scan_paritions() check its return value or print
->> anything if it fails. So removing those messages would make those
->> failures silent which is not what we want.
->
-> * How do you think about information like the following?
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/coding-style.rst?id=3Df359287765c04711ff54fbd1164527=
-1d8e5ff763#n883
-> =E2=80=9C=E2=80=A6
-> These generic allocation functions all emit a stack dump on failure when =
-used
-> without __GFP_NOWARN so there is no use in emitting an additional failure
-> message when NULL is returned.
-> =E2=80=A6=E2=80=9D
 
-Are you sure that's actually true?
+--u65IjBhB3TIa72Vp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-A quick look around in slub.c leads me to:
+On Tue, Jun 02, 2020 at 03:39:20PM +0530, Sumit Semwal wrote:
 
-slab_out_of_memory(struct kmem_cache *s, gfp_t gfpflags, int nid)
-{
-#ifdef CONFIG_SLUB_DEBUG
-	static DEFINE_RATELIMIT_STATE(slub_oom_rs, DEFAULT_RATELIMIT_INTERVAL,
-				      DEFAULT_RATELIMIT_BURST);
-	int node;
-	struct kmem_cache_node *n;
+> +
+> +		if (time_remaining <= 0) {
+> +			rdev_err(rdev, "Enabled check failed.\n");
+> +			return -ETIMEDOUT;
 
-	if ((gfpflags & __GFP_NOWARN) || !__ratelimit(&slub_oom_rs))
-		return;
+s/failed/timed out/
 
-	pr_warn("SLUB: Unable to allocate memory on node %d, gfp=3D%#x(%pGg)\n",
-		nid, gfpflags, &gfpflags);
-	pr_warn("  cache: %s, object size: %u, buffer size: %u, default order: %u,=
- min order: %u\n",
-		s->name, s->object_size, s->size, oo_order(s->oo),
-		oo_order(s->min));
+> + * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
+> + *                          actually enabled, after enable() call
+> + *
 
-	if (oo_order(s->min) > get_order(s->object_size))
-		pr_warn("  %s debugging increased min order, use slub_debug=3DO to disabl=
-e.\n",
-			s->name);
+This comment needs updating to reflect the new implementation.
 
-	for_each_kmem_cache_node(s, node, n) {
-		unsigned long nr_slabs;
-		unsigned long nr_objs;
-		unsigned long nr_free;
+--u65IjBhB3TIa72Vp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-		nr_free  =3D count_partial(n, count_free);
-		nr_slabs =3D node_nr_slabs(n);
-		nr_objs  =3D node_nr_objs(n);
+-----BEGIN PGP SIGNATURE-----
 
-		pr_warn("  node %d: slabs: %ld, objs: %ld, free: %ld\n",
-			node, nr_slabs, nr_objs, nr_free);
-	}
-#endif
-}
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7WNt4ACgkQJNaLcl1U
+h9DiUQf/U/9+5zRl543DKtlEGwWv5y2SJPMULJc6Fx4l4UJyMi2WV76AIJ3kpvhV
+3BK+XKeRUSM/EoHHrf7VTxN4pDu5GRqtKCXVmzN5jfl1LVgKNBNSapHtXt4rETbY
+sBqecGsBHjZIcMFvIMJG1I+ljMFCVBdSZus3/gJO6qnCW4y88HPQU9TEsu5HoO/X
+5PLcUd20oc1xFKeb/NDy3XZyx0KuBmV+8Ws66OspiXl24FaFaQAI+iFcsk+OTcir
+Fgi94kGsHJKCA48iMqy5ffkD3wIpQdPYqlQACMeeKU3G+T0g5KjHiYSBKucWoRum
+WVjSTeqiQwfaw0BGXWsykdtnnxHwEA==
+=sPJI
+-----END PGP SIGNATURE-----
 
-Which looks a lot like it won't print anything when CONFIG_SLUB_DEBUG=3Dn.
-
-But maybe I'm looking in the wrong place?
-
-cheers
+--u65IjBhB3TIa72Vp--
