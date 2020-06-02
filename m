@@ -2,231 +2,400 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE780C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAAEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9943F20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309A82081A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:29:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0OW29RiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgFBI25 (ORCPT
+        id S1726479AbgFBI3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:28:57 -0400
-Received: from relay.sw.ru ([185.231.240.75]:52076 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725897AbgFBI24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:28:56 -0400
-Received: from [192.168.15.86]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1jg2Ho-0000Xn-4B; Tue, 02 Jun 2020 11:28:40 +0300
-Subject: Re: [PATCH] shmem, memcg: enable memcg aware shrinker
-To:     Greg Thelen <gthelen@google.com>, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20200601032204.124624-1-gthelen@google.com>
- <ffdff0be-f2b6-c7c0-debc-9c5e8a33ae4e@virtuozzo.com>
- <xr93d06i4fus.fsf@gthelen.svl.corp.google.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <5da3cdac-cf05-456f-867f-f09d5a6a2621@virtuozzo.com>
-Date:   Tue, 2 Jun 2020 11:28:49 +0300
+        Tue, 2 Jun 2020 04:29:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgFBI3U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 04:29:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D7FC05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 01:29:20 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id p5so2415759wrw.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 01:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3RTuazf5i9JHlMDykeEXlm8G4ttdBjukN2WPd0K9oQg=;
+        b=0OW29RiRVrfl1PAiM7rWBjohG+AAVluEPhljP95FZqwFFw30iKHw7brDAg0f/GeMVs
+         +bZi3ifbwWDC2aqMtiP+sW0o/H8L5noshDV3nYGhapv1/02S0kziFr4wm8cokVCCMRi+
+         KEqc15Dd6t2sJZ9QH1OywiaPL2jATu/JGsBP+M9snh13IhglFi10nzCZop3SOV6NBkjw
+         QABJn8kiiggY3oa0u5XC6YO3dLHmsMPX7LGFq6fsAsWDJ3ZeOBa7dSI0HtC5A1nUOxRX
+         yLZkkYtYsPIZKlUQSOqNOtqkFxs+6yuMgVgrV2xJLYNKR+/UaKKrxUoKbSYjHt/6JKd1
+         OdJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3RTuazf5i9JHlMDykeEXlm8G4ttdBjukN2WPd0K9oQg=;
+        b=kqxh54/ICxtShvfaetPd2BYJ15h3un2ML3/dEWpxekrACHW++ribTiphzx968bxSNd
+         myFzyL3/0aFl/olOL556Ho7QLq3qUWBNsmUMpMcO7AieEPgr0wtD2PCjjrl8bvyHlKe/
+         n61rtntDvkRn7EnVUhdX+SAM/t51OcotHjvtTydIbkcrp878yRMvPhEoAQuB0fJmwFqw
+         vQHa/6hdWikVuMkY7j6HYQV8UqN3fsMcKqHOnHD6dMCW+Lq4OQfSYmUN8Gl5stT+R8EI
+         gQYHycmhXwvpxz0th9p3Y1A7R+p4oxmjJxP5PILQsuoZXcUTuLDDdmQQ+ctGNzVcBhD2
+         TrCA==
+X-Gm-Message-State: AOAM5331zCLeVxbMNbX0UFsMAmCoa+OsJ/62Er3VGGeGx+lITIx9rXEZ
+        5WUim2jYjBtsZnoEEESGB0RDk2ruWK8N6g==
+X-Google-Smtp-Source: ABdhPJyWerqEhvE3tfQLKuPmXHOVf/qgAEIWm2qP/V5PsTcizuOP+D88lFcd81u5QEwSkvhLU9+eCg==
+X-Received: by 2002:adf:9404:: with SMTP id 4mr22319789wrq.367.1591086558569;
+        Tue, 02 Jun 2020 01:29:18 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:acf8:18a8:b3a5:a17b? ([2a01:e35:2ec0:82b0:acf8:18a8:b3a5:a17b])
+        by smtp.gmail.com with ESMTPSA id b14sm2401421wmj.47.2020.06.02.01.29.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 01:29:17 -0700 (PDT)
+Subject: Re: [PATCH v2 4/6] nvmem: add support for the Khadas MCU Programmable
+ User Memory
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200512132613.31507-1-narmstrong@baylibre.com>
+ <20200512132613.31507-5-narmstrong@baylibre.com>
+ <09026bde-0ae7-b1a4-835f-bf2481199398@linaro.org>
+ <b885eeb5-1542-775f-ab7b-b1218c6a337a@baylibre.com>
+ <5f24e094-088b-5787-f1be-158ab9412812@linaro.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <b55b68fa-1872-199f-77e7-532ba9c78a61@baylibre.com>
+Date:   Tue, 2 Jun 2020 10:29:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <xr93d06i4fus.fsf@gthelen.svl.corp.google.com>
+In-Reply-To: <5f24e094-088b-5787-f1be-158ab9412812@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.06.2020 00:48, Greg Thelen wrote:
-> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+On 15/05/2020 12:55, Srinivas Kandagatla wrote:
 > 
->> Hi, Greg,
->>
->> good finding. See comments below.
->>
->> On 01.06.2020 06:22, Greg Thelen wrote:
->>> Since v4.19 commit b0dedc49a2da ("mm/vmscan.c: iterate only over charged
->>> shrinkers during memcg shrink_slab()") a memcg aware shrinker is only
->>> called when the per-memcg per-node shrinker_map indicates that the
->>> shrinker may have objects to release to the memcg and node.
->>>
->>> shmem_unused_huge_count and shmem_unused_huge_scan support the per-tmpfs
->>> shrinker which advertises per memcg and numa awareness.  The shmem
->>> shrinker releases memory by splitting hugepages that extend beyond
->>> i_size.
->>>
->>> Shmem does not currently set bits in shrinker_map.  So, starting with
->>> b0dedc49a2da, memcg reclaim avoids calling the shmem shrinker under
->>> pressure.  This leads to undeserved memcg OOM kills.
->>> Example that reliably sees memcg OOM kill in unpatched kernel:
->>>   FS=/tmp/fs
->>>   CONTAINER=/cgroup/memory/tmpfs_shrinker
->>>   mkdir -p $FS
->>>   mount -t tmpfs -o huge=always nodev $FS
->>>   # Create 1000 MB container, which shouldn't suffer OOM.
->>>   mkdir $CONTAINER
->>>   echo 1000M > $CONTAINER/memory.limit_in_bytes
->>>   echo $BASHPID >> $CONTAINER/cgroup.procs
->>>   # Create 4000 files.  Ideally each file uses 4k data page + a little
->>>   # metadata.  Assume 8k total per-file, 32MB (4000*8k) should easily
->>>   # fit within container's 1000 MB.  But if data pages use 2MB
->>>   # hugepages (due to aggressive huge=always) then files consume 8GB,
->>>   # which hits memcg 1000 MB limit.
->>>   for i in {1..4000}; do
->>>     echo . > $FS/$i
->>>   done
->>>
->>> v5.4 commit 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg
->>> aware") maintains the per-node per-memcg shrinker bitmap for THP
->>> shrinker.  But there's no such logic in shmem.  Make shmem set the
->>> per-memcg per-node shrinker bits when it modifies inodes to have
->>> shrinkable pages.
->>>
->>> Fixes: b0dedc49a2da ("mm/vmscan.c: iterate only over charged shrinkers during memcg shrink_slab()")
->>> Cc: <stable@vger.kernel.org> # 4.19+
->>> Signed-off-by: Greg Thelen <gthelen@google.com>
->>> ---
->>>  mm/shmem.c | 61 +++++++++++++++++++++++++++++++-----------------------
->>>  1 file changed, 35 insertions(+), 26 deletions(-)
->>>
->>> diff --git a/mm/shmem.c b/mm/shmem.c
->>> index bd8840082c94..e11090f78cb5 100644
->>> --- a/mm/shmem.c
->>> +++ b/mm/shmem.c
->>> @@ -1002,6 +1002,33 @@ static int shmem_getattr(const struct path *path, struct kstat *stat,
->>>  	return 0;
->>>  }
->>>  
->>> +/*
->>> + * Expose inode and optional page to shrinker as having a possibly splittable
->>> + * hugepage that reaches beyond i_size.
->>> + */
->>> +static void shmem_shrinker_add(struct shmem_sb_info *sbinfo,
->>> +			       struct inode *inode, struct page *page)
->>> +{
->>> +	struct shmem_inode_info *info = SHMEM_I(inode);
->>> +
->>> +	spin_lock(&sbinfo->shrinklist_lock);
->>> +	/*
->>> +	 * _careful to defend against unlocked access to ->shrink_list in
->>> +	 * shmem_unused_huge_shrink()
->>> +	 */
->>> +	if (list_empty_careful(&info->shrinklist)) {
->>> +		list_add_tail(&info->shrinklist, &sbinfo->shrinklist);
->>> +		sbinfo->shrinklist_len++;
->>> +	}
->>> +	spin_unlock(&sbinfo->shrinklist_lock);
->>> +
->>> +#ifdef CONFIG_MEMCG
->>> +	if (page && PageTransHuge(page))
->>> +		memcg_set_shrinker_bit(page->mem_cgroup, page_to_nid(page),
->>> +				       inode->i_sb->s_shrink.id);
->>> +#endif
->>> +}
->>> +
->>>  static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
->>>  {
->>>  	struct inode *inode = d_inode(dentry);
->>> @@ -1048,17 +1075,13 @@ static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
->>>  			 * to shrink under memory pressure.
->>>  			 */
->>>  			if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
->>> -				spin_lock(&sbinfo->shrinklist_lock);
->>> -				/*
->>> -				 * _careful to defend against unlocked access to
->>> -				 * ->shrink_list in shmem_unused_huge_shrink()
->>> -				 */
->>> -				if (list_empty_careful(&info->shrinklist)) {
->>> -					list_add_tail(&info->shrinklist,
->>> -							&sbinfo->shrinklist);
->>> -					sbinfo->shrinklist_len++;
->>> -				}
->>> -				spin_unlock(&sbinfo->shrinklist_lock);
->>> +				struct page *page;
->>> +
->>> +				page = find_get_page(inode->i_mapping,
->>> +					(newsize & HPAGE_PMD_MASK) >> PAGE_SHIFT);
->>> +				shmem_shrinker_add(sbinfo, inode, page);
->>> +				if (page)
->>> +					put_page(page);
->>
->> 1)I'd move PageTransHuge() check from shmem_shrinker_add() to here. In case of page is not trans huge,
->>   it looks strange and completely useless to add inode to shrinklist and then to avoid memcg_set_shrinker_bit().
->>   Nothing should be added to the shrinklist in this case.
 > 
-> Ack,  I'll take a look at this.
-> 
->> 2)In general I think this "last inode page spliter" does not fit SHINKER_MEMCG_AWARE conception, and
->>   shmem_unused_huge_shrink() should be reworked as a new separate !memcg-aware shrinker instead of
->>   .nr_cached_objects callback of generic fs shrinker.
+> On 13/05/2020 13:33, Neil Armstrong wrote:
+>> On 13/05/2020 12:34, Srinivas Kandagatla wrote:
+>>>
+>>>
+>>> On 12/05/2020 14:26, Neil Armstrong wrote:
+>>>> The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
+>>>> offering a 56bytes User Programmable NVMEM array.
+>>>>
+>>>> This array needs a password to be writable, thus a password sysfs file
+>>>> has been added on the device node to unlock the NVMEM.
+>>>
+>>> Is this one time programmable? Or does it need to be unlocked for every read/write?
 >>
->> CC: Kirill Shutemov
+>> It can be rewritten, and needs the password to read & write.
 >>
->> Kirill, are there any fundamental reasons to keep this shrinking logic in the generic fs shrinker?
->> Are there any no-go to for conversion this as a separate !memcg-aware shrinker?
+>>>
+>>> How can you make sure that the memory is unlocked before making attempt to read/write?
+>>
+>> The only way to know it's unlock is reading back the password when unlocked.
 > 
-> Making the shmem shrinker !memcg-aware seems like it would require tail
-> pages beyond i_size not be charged to memcg.  Otherwise memcg pressure
-> (which only calls memcg aware shrinkers) won't uncharge them.  Currently
-> the entire compound page is charged.
+> 
+> Current code has no such checks for every read/write?
+> and looks very disconnected w.r.t to password and read/writes.
+> 
+> If user attempts to read/write he will not be aware that he should program the password first!
+> 
+> Also if the password is static or un-changed then why not just statically program this from the driver rather than providing sysfs file?
 
-Shrinker is not about charging, shrinker is about uncharging ;) The pages will remain be charged
-like they used to be and where they used to be.
+The passworsd can be changed, how should this be taken in account ?
 
-The thing is we have single shrinklist for a superblock. An inode with pending tail page splitting
-is added to this list. Later, shmem_unused_huge_scan() iterates over the list. It splits the tail
-page for every inode in case of the inode size is still unaligned by huge page.
+> 
+> I dont see how kernel nvmem read/write interface can make sure that memory is unlocked?
 
-We do not care about memcg here. Tail pages for two inodes may be related to different memcg. But
-shmem_unused_huge_scan() shrink all of them, it does not care about memcg in sc->memcg. Even more:
-nobody in mm/shmem.c cares about memcg.
+Not sure how to be sure, if locked all the user memory and password is read as 0xff
 
-In traditional memcg-aware shrinkers we maintain separate lists for every existing memcg. Object,
-which is charged to a memcg, is added to a specific shrinker list related to the memcg. So, shrinker
-is able to iterate only that objects, which are charged to the memcg.
+> 
+> Who is the real consumer for this provider?
 
-In case of shmem we have single list for that objects (shrinklist). Even more, we have shrinklist
-not for charged objects, we link inodes there. Imagine a situation: file was shrinked and inode
-became linked to shrinklist. Tail page is unaligned and it is related to memcg1. Then file became
-shrinked one more time. New tail page is also unaligned and it related to another memcg2. So, shmem
-shrinker doesn't introduce lists for every memcg (i.e. list_lru), since inode's tail page relation
-to a memcg is not constant. So, as shmem shrinker splits any memcg pages (despite its sc->memcg),
-it can't be called memcg-aware.
+well, it's more user-space, indeed without the in-kernel password unlock, kernel won't be able
+to make great use of the data.
 
-Revisiting this once again today, I think we should make shrinklist a list_lru type. Every time,
-when inode is considered to be added to a shrinklist, we should move it to appropriate memcg list.
-In case of it's already linked and memcg is changed, we should move it to another memcg list. I.e.,
-every place like:
+I'll drop for next serie until we have a clearer view.
 
-	if (list_empty(&info->shrinklist)) {
-		list_add_tail(&info->shrinklist, &sbinfo->shrinklist); 
-		sbinfo->shrinklist_len++;
-	}
+Neil
 
-Convert into:
+> 
+> --srini
+> 
+> 
+>>
+>>>
+>>>>
+>>>> The default 6bytes password id: "Khadas"
+>>>>
+>>>> This implements the user NVMEM devices as cell of the Khadas MCU MFD driver.
+>>>>
+>>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>>> ---
+>>>>    drivers/nvmem/Kconfig               |   8 ++
+>>>>    drivers/nvmem/Makefile              |   2 +
+>>>>    drivers/nvmem/khadas-mcu-user-mem.c | 128 ++++++++++++++++++++++++++++
+>>>>    3 files changed, 138 insertions(+)
+>>>>    create mode 100644 drivers/nvmem/khadas-mcu-user-mem.c
+>>>>
+>>>> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+>>>> index d7b7f6d688e7..92cd4f6aa931 100644
+>>>> --- a/drivers/nvmem/Kconfig
+>>>> +++ b/drivers/nvmem/Kconfig
+>>>> @@ -67,6 +67,14 @@ config JZ4780_EFUSE
+>>>>          To compile this driver as a module, choose M here: the module
+>>>>          will be called nvmem_jz4780_efuse.
+>>>>    +config NVMEM_KHADAS_MCU_USER_MEM
+>>>> +    tristate "Khadas MCU User programmable memory support"
+>>>> +    depends on MFD_KHADAS_MCU
+>>>> +    depends on REGMAP
+>>>> +    help
+>>>> +      This is a driver for the MCU User programmable memory
+>>>> +      available on the Khadas VIM and Edge boards.
+>>>> +
+>>>>    config NVMEM_LPC18XX_EEPROM
+>>>>        tristate "NXP LPC18XX EEPROM Memory Support"
+>>>>        depends on ARCH_LPC18XX || COMPILE_TEST
+>>>> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+>>>> index a7c377218341..0516a309542d 100644
+>>>> --- a/drivers/nvmem/Makefile
+>>>> +++ b/drivers/nvmem/Makefile
+>>>> @@ -17,6 +17,8 @@ obj-$(CONFIG_NVMEM_IMX_OCOTP_SCU)    += nvmem-imx-ocotp-scu.o
+>>>>    nvmem-imx-ocotp-scu-y        := imx-ocotp-scu.o
+>>>>    obj-$(CONFIG_JZ4780_EFUSE)        += nvmem_jz4780_efuse.o
+>>>>    nvmem_jz4780_efuse-y        := jz4780-efuse.o
+>>>> +obj-$(CONFIG_NVMEM_KHADAS_MCU_USER_MEM)    += nvmem-khadas-mcu-user-mem.o
+>>>> +nvmem-khadas-mcu-user-mem-y    := khadas-mcu-user-mem.o
+>>>>    obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)    += nvmem_lpc18xx_eeprom.o
+>>>>    nvmem_lpc18xx_eeprom-y    := lpc18xx_eeprom.o
+>>>>    obj-$(CONFIG_NVMEM_LPC18XX_OTP)    += nvmem_lpc18xx_otp.o
+>>>> diff --git a/drivers/nvmem/khadas-mcu-user-mem.c b/drivers/nvmem/khadas-mcu-user-mem.c
+>>>> new file mode 100644
+>>>> index 000000000000..a1d5ae9a030c
+>>>> --- /dev/null
+>>>> +++ b/drivers/nvmem/khadas-mcu-user-mem.c
+>>>> @@ -0,0 +1,128 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Driver for Khadas MCU User programmable Memory
+>>>> + *
+>>>> + * Copyright (C) 2020 BayLibre SAS
+>>>> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
+>>>> + */
+>>>> +
+>>>> +#include <linux/clk.h>
+>>>
+>>> Why do we need this header?
+>>
+>> Will drop
+>>
+>>>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/nvmem-provider.h>
+>>>> +#include <linux/mfd/khadas-mcu.h>
+>>>> +#include <linux/regmap.h>
+>>>> +#include <linux/of.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +
+>>>> +static int khadas_mcu_user_mem_read(void *context, unsigned int offset,
+>>>> +                void *val, size_t bytes)
+>>>> +{
+>>>> +    struct khadas_mcu *khadas_mcu = context;
+>>>> +
+>>>> +    return regmap_bulk_read(khadas_mcu->map,
+>>>> +                KHADAS_MCU_USER_DATA_0_REG + offset,
+>>>> +                val, bytes);
+>>>> +}
+>>>> +
+>>>> +static int khadas_mcu_user_mem_write(void *context, unsigned int offset,
+>>>> +                 void *val, size_t bytes)
+>>>> +{
+>>>> +    struct khadas_mcu *khadas_mcu = context;
+>>>> +
+>>>> +    return regmap_bulk_write(khadas_mcu->map,
+>>>> +                KHADAS_MCU_USER_DATA_0_REG + offset,
+>>>> +                val, bytes);
+>>>> +}
+>>>> +
+>>>> +static ssize_t password_store(struct device *dev, struct device_attribute *attr,
+>>>> +                 const char *buf, size_t count)
+>>>> +{
+>>>> +    struct khadas_mcu *khadas_mcu = dev_get_drvdata(dev);
+>>>> +    int i, ret;
+>>>> +
+>>>> +    if (count < 6)
+>>>> +        return -EINVAL;
+>>>
+>>> Possibly this magic 6 value needs proper define. An additional check here for > 6 would be better as well.
+>>
+>> Ok
+>>
+>>>
+>>>> +
+>>>> +    ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 1);
+>>>> +    if (ret)
+>>>> +        return ret;
+>>>> +
+>>>> +    for (i = 0 ; i < 6 ; ++i) {
+>>>> +        ret = regmap_write(khadas_mcu->map,
+>>>> +                   KHADAS_MCU_CHECK_USER_PASSWD_REG,
+>>>> +                   buf[i]);
+>>>> +        if (ret)
+>>>> +            goto out;
+>>>> +    }
+>>>> +
+>>>> +    ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
+>>>> +    if (ret)
+>>>> +        return ret;
+>>>> +
+>>>> +    return count;
+>>>> +out:
+>>>> +    regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static DEVICE_ATTR_WO(password);
+>>>> +
+>>>> +static struct attribute *khadas_mcu_user_mem_sysfs_attributes[] = {
+>>>> +    &dev_attr_password.attr,
+>>>> +    NULL,
+>>>> +};
+>>>> +
+>>>> +static const struct attribute_group khadas_mcu_user_mem_sysfs_attr_group = {
+>>>> +    .attrs = khadas_mcu_user_mem_sysfs_attributes,
+>>>> +};
+>>>> +
+>>>> +static int khadas_mcu_user_mem_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct khadas_mcu *khadas_mcu = dev_get_drvdata(pdev->dev.parent);
+>>>
+>>> You could probably get away with dependency of this structure and the header itself by directly getting hold of regmap from parent device.
+>>
+>> Ok
+>>
+>>>
+>>>
+>>>> +    struct device *dev = &pdev->dev;
+>>>> +    struct nvmem_device *nvmem;
+>>>> +    struct nvmem_config *econfig;
+>>>> +
+>>>> +    econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
+>>>> +    if (!econfig)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    econfig->dev = pdev->dev.parent;
+>>>> +    econfig->name = dev_name(pdev->dev.parent);
+>>>> +    econfig->stride = 1;
+>>>> +    econfig->word_size = 1;
+>>>> +    econfig->reg_read = khadas_mcu_user_mem_read;
+>>>> +    econfig->reg_write = khadas_mcu_user_mem_write;
+>>>> +    econfig->size = 56;
+>>> define 56 to make it more readable!
+>>
+>> Ok
+>>
+>>>
+>>>> +    econfig->priv = khadas_mcu;
+>>>> +
+>>>> +    platform_set_drvdata(pdev, khadas_mcu);
+>>>> +
+>>>> +    nvmem = devm_nvmem_register(&pdev->dev, econfig);
+>>>> +    if (IS_ERR(nvmem))
+>>>> +        return PTR_ERR(nvmem);
+>>>> +
+>>>> +    return sysfs_create_group(&pdev->dev.kobj,
+>>>> +                  &khadas_mcu_user_mem_sysfs_attr_group);
+>>>> +}
+>>>> +
+>>>> +static const struct platform_device_id khadas_mcu_user_mem_id_table[] = {
+>>>> +    { .name = "khadas-mcu-user-mem", },
+>>>> +    {},
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(platform, khadas_mcu_user_mem_id_table);
+>>>> +
+>>>> +static struct platform_driver khadas_mcu_user_mem_driver = {
+>>>> +    .probe = khadas_mcu_user_mem_probe,
+>>>> +    .driver = {
+>>>> +        .name = "khadas-mcu-user-mem",
+>>>> +    },
+>>>> +    .id_table = khadas_mcu_user_mem_id_table,
+>>>> +};
+>>>> +
+>>>> +module_platform_driver(khadas_mcu_user_mem_driver);
+>>>> +
+>>>> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+>>>> +MODULE_DESCRIPTION("Khadas MCU User MEM driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>>>
+>>
+>> Thanks for the review.
+>>
+>> Neil
+>>
 
-	if (list_empty(&info->shrinklist)) {
-		list_lru_add(&sbinfo->shrinklist, &info->shrinklist);
-		info->memcg_id = memcg->id;
-	} else if (memcg_changed(info)) {
-		/* Remove from old memcg list */
-		list_lru_del(&info->shrinklist);
-		/* Link to new memcg list */
-		list_lru_add(&sbinfo->shrinklist, &info->shrinklist);
-	}
-
-We may cache memcg->id into info, so memcg_changed() we be able to compare cached memcg
-and current, and we will avoid del/add in case of tail page memcg remain the same.
-
-Kirill
