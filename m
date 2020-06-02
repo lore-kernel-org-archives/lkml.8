@@ -7,123 +7,152 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C64C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA9C20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AE720674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HHqX5UVk"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QbBe2b8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgFBNHM (ORCPT
+        id S1728587AbgFBNHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:07:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40354 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728337AbgFBNGV (ORCPT
+        Tue, 2 Jun 2020 09:07:16 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:64000 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgFBNHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:06:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591103180;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0y1VAVnqSFAPeWWtS5RcheCrLnqiQBKbwiujoWwz9Qo=;
-        b=HHqX5UVkP+KdIlkTkq+pYxu8MSp7bcm094wcRVwhPiZTtP0F4Ngy/NcR9eRCTALek1cHGw
-        sJ2l2rpcVyu/MbE5CWbZ2/8xKJ2M4Yg0ADBtBpNftOThyfpdYZkQ4yiZbv1oagZEJRwwe1
-        cJHVE1Kx7pwno8sHkcUlnbFm8XhjFxA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-p-6dXL0KPcGK_gpBB7S7Hg-1; Tue, 02 Jun 2020 09:06:18 -0400
-X-MC-Unique: p-6dXL0KPcGK_gpBB7S7Hg-1
-Received: by mail-wr1-f70.google.com with SMTP id l1so1374459wrc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 06:06:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0y1VAVnqSFAPeWWtS5RcheCrLnqiQBKbwiujoWwz9Qo=;
-        b=eYhfgkbZUb9KvcDprJ1qLBH2CDnmFe2CWylvkO1Iewp2RLlaHPdpUu+Ec4fV+lAjGL
-         tbVusGmw80Ngylofc1YkPwyGYQ3DCYq17eE4tdEk5oViW6QA5wFBo8bfXCidq/dp+pUF
-         XD+47zid3odv5btM6mNK6YvVt4ZOBiumwOuYi/HHmgEyxJ2hsj05jaOOMnL5ZpAEkWP+
-         sUXwWalNL80A2bkNo0MrVl1+sTTE1r+FrEvG/UYedz8guKnb2q7tvGmU0wp8fdJpTKu0
-         nJMleCb+NAA9dNIDKfjNAHWF7OwLor+iV9kKAzWDU04wuBz10pmb4DYxGYj/O0bu6QPx
-         eWqA==
-X-Gm-Message-State: AOAM531H5Fng+3KwSoEV/9g2udNA5N0Zo4L2eLB43eonnrOho08psKzz
-        hUGCVYaeRFNi/k/lHMUJHCQDJjTRZBXOknADYZEnCcUC8iSELgIRl0mxFVcYqCqEfOuIJUu9K0p
-        AawDVCoZbxAZOYFgSU6bilyUe
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr4037604wma.101.1591103177424;
-        Tue, 02 Jun 2020 06:06:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzIsLUicCN2EL2xmA9MPBvEHkJ+pLyVHS9KUoRtpMVFDzcdIynBCr8beMEJGbnVq7BNGALRIw==
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr4037575wma.101.1591103177147;
-        Tue, 02 Jun 2020 06:06:17 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id s8sm3988621wrm.96.2020.06.02.06.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 06:06:16 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 09:06:15 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH RFC 09/13] vhost/net: avoid iov length math
-Message-ID: <20200602130543.578420-10-mst@redhat.com>
-References: <20200602130543.578420-1-mst@redhat.com>
+        Tue, 2 Jun 2020 09:07:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591103227; x=1622639227;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=yXcscIx9TszwKz07XL6u8QTZrOQmEAxwAfn/hK3gC7Q=;
+  b=QbBe2b8DUrb8rqOWWqimmXkRgO51MFymAKTPWrM0t3QgGf4gVE8QWZdT
+   z8TPIj9jHci7Jb33rEQfAhSDa7+lBVO3f0vo/OB+JmDJ/AdEHh01ya7wY
+   srrYXTUPJstFuY5dppplAv1ff9D6d+PZCSJ3HSnJuajBc/8aMmxouCEOD
+   E=;
+IronPort-SDR: nC8b8AKKge52pMvpsUJykAc+9zQDcLWR3+//e6ireo+hA5Mc/Wly7o4xepmNyM7G5T4aVjWAny
+ RgoBNPGBedtA==
+X-IronPort-AV: E=Sophos;i="5.73,464,1583193600"; 
+   d="scan'208";a="49176524"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 02 Jun 2020 13:06:59 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 5A27FA2019;
+        Tue,  2 Jun 2020 13:06:57 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 13:06:56 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.175) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 2 Jun 2020 13:06:41 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v14 06/15] mm/damon: Implement callbacks
+Date:   Tue, 2 Jun 2020 15:01:16 +0200
+Message-ID: <20200602130125.20467-7-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200602130125.20467-1-sjpark@amazon.com>
+References: <20200602130125.20467-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602130543.578420-1-mst@redhat.com>
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.175]
+X-ClientProxiedBy: EX13D29UWC002.ant.amazon.com (10.43.162.254) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that API exposes buffer length, we no longer need to
-scan IOVs to figure it out.
+From: SeongJae Park <sjpark@amazon.de>
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+This commit implements callbacks for DAMON.  Using this, DAMON users can
+install their callbacks for each step of the access monitoring so that
+they can do something interesting with the monitored access patterns
+online.  For example, callbacks can report the monitored patterns to
+users or do some access pattern based memory management such as
+proactive reclamations or access pattern based THP promotions/demotions
+decision makings.
+
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Leonard Foerster <foersleo@amazon.de>
 ---
- drivers/vhost/net.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ include/linux/damon.h | 13 +++++++++++++
+ mm/damon.c            |  4 ++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 47af3d1ce3dd..36843058182b 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -607,11 +607,9 @@ static bool vhost_exceeds_maxpend(struct vhost_net *net)
- }
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index 5afcb2bb7f77..12536d9d2f74 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -80,6 +80,15 @@ struct damon_task {
+  * @kdamond_lock.  Accesses to other fields must be protected by themselves.
+  *
+  * @tasks_list:		Head of monitoring target tasks (&damon_task) list.
++ *
++ * @sample_cb:			Called for each sampling interval.
++ * @aggregate_cb:		Called for each aggregation interval.
++ *
++ * @sample_cb and @aggregate_cb are called from @kdamond for each of the
++ * sampling intervals and aggregation intervals, respectively.  Therefore,
++ * users can safely access to the monitoring results via @tasks_list without
++ * additional protection of @kdamond_lock.  For the reason, users are
++ * recommended to use these callback for the accesses to the results.
+  */
+ struct damon_ctx {
+ 	unsigned long sample_interval;
+@@ -96,6 +105,10 @@ struct damon_ctx {
+ 	struct mutex kdamond_lock;
  
- static size_t init_iov_iter(struct vhost_virtqueue *vq, struct iov_iter *iter,
--			    size_t hdr_size, int out)
-+			    size_t len, size_t hdr_size, int out)
- {
- 	/* Skip header. TODO: support TSO. */
--	size_t len = iov_length(vq->iov, out);
--
- 	iov_iter_init(iter, WRITE, vq->iov, out, len);
- 	iov_iter_advance(iter, hdr_size);
+ 	struct list_head tasks_list;	/* 'damon_task' objects */
++
++	/* callbacks */
++	void (*sample_cb)(struct damon_ctx *context);
++	void (*aggregate_cb)(struct damon_ctx *context);
+ };
  
-@@ -640,7 +638,7 @@ static int get_tx_bufs(struct vhost_net *net,
- 	}
+ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
+diff --git a/mm/damon.c b/mm/damon.c
+index de5ed38ac05c..42ce9df47f8b 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -850,6 +850,8 @@ static int kdamond_fn(void *data)
+ 	kdamond_init_regions(ctx);
+ 	while (!kdamond_need_stop(ctx)) {
+ 		kdamond_prepare_access_checks(ctx);
++		if (ctx->sample_cb)
++			ctx->sample_cb(ctx);
  
- 	/* Sanity check */
--	*len = init_iov_iter(vq, &msg->msg_iter, nvq->vhost_hlen, *out);
-+	*len = init_iov_iter(vq, &msg->msg_iter, buf->out_len, nvq->vhost_hlen, *out);
- 	if (*len == 0) {
- 		vq_err(vq, "Unexpected header len for TX: %zd expected %zd\n",
- 			*len, nvq->vhost_hlen);
-@@ -1080,7 +1078,7 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
- 			nlogs += *log_num;
- 			log += *log_num;
+ 		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
+ 
+@@ -857,6 +859,8 @@ static int kdamond_fn(void *data)
+ 
+ 		if (kdamond_aggregate_interval_passed(ctx)) {
+ 			kdamond_merge_regions(ctx, max_nr_accesses / 10);
++			if (ctx->aggregate_cb)
++				ctx->aggregate_cb(ctx);
+ 			kdamond_reset_aggregated(ctx);
+ 			kdamond_split_regions(ctx);
  		}
--		len = iov_length(vq->iov + seg, in);
-+		len = bufs[bufcount].in_len;
- 		datalen -= len;
- 		++bufcount;
- 		seg += in;
 -- 
-MST
+2.17.1
 
