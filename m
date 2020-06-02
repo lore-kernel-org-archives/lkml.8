@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD37DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44CE2077D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF7E206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lSddc/Av"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ORS0mq6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgFBKKM (ORCPT
+        id S1728224AbgFBKKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
+        Tue, 2 Jun 2020 06:10:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbgFBKJ7 (ORCPT
+        with ESMTP id S1727861AbgFBKJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:09:59 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57675C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 03:09:58 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q24so1223316pjd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 03:09:58 -0700 (PDT)
+        Tue, 2 Jun 2020 06:09:54 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79946C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 03:09:54 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id nu7so1151862pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 03:09:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wsqa0aiNnjxSKSxZ07dY/8X+UeLS5BJ6SaHqCOj/zLM=;
-        b=lSddc/AvN4z9zX0shlWtxeHp4IJFJCOtqh4MGjrINjiStIZWUQKc3yOAQuFdZJI06k
-         Vgy0UakBX9xert0KE1UF87P6NBRdcXPOptUNsYNpDvrAnNp1csMaFaG6DaxQeLZTBFt1
-         +HoTwMoBRqgd7Kx6DaTJKw9XgING9jXQsWc3DtKEdhn2tKdTbZEB2kkGmk2VBgyPjTh6
-         e9wj6eyF2irxqoUdh51pQk+J/3XrBBgkHPFn5f+2m0+sjSP4g2cq9nT3RbJymdxn+gOv
-         bydoevKbA+rxapu0nSr+tOr1TEEJPW01CMxZe7OMGPr9/LAMY2MvEQy6dcJxQRhCg4AW
-         aGdQ==
+        bh=WQ8tlQ9M2KNVUknmTLJ9Ovy1EUyM0LdAsA5zBG5CPW8=;
+        b=ORS0mq6UB6c17FJD3ZPVsoh2rQkYrnxC2efGcLAmVgm9JxOM0HLvsm7j/sOwyROJ1c
+         vnHyABy/OWd0dngrfZZAZHJOUrKVHIpKIaGWXt4fQJpPA7eSUdhBWwtuSJ/WNgDZiTR2
+         q+73a7K56YfV+d464vmMAIhnaw0kQ1XzUtwbnHJt8bntyPB8/TjQyNpV8OZcVFLsN+xA
+         XuWN7H82J/x8TeAcP9O/CX4kEojQS2ePs0lLscli7iplkq+xwOooLL744F9lIHrdVYbk
+         OWgEUL+cw4RLGF7Mxc1iW69EIsPbLhgOXQSBmTFxBKuYnWo5dT1OHptHuRwCZfDd4MHG
+         LIaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wsqa0aiNnjxSKSxZ07dY/8X+UeLS5BJ6SaHqCOj/zLM=;
-        b=Dbol1A1x8tP8HhC9VgwlSkClfZHCpc/8wIrwvBOhzFBuBBvssQaGv/5lxYH2LzWkuI
-         tynUOvs4jkrP0Z8KC/Sa3VmVxC3ZV7EL2hA2ezM49JWGKO2CsvtpBtlNdgY7VESWJ7r8
-         KsLptL00s4DwagvLl2FI5lfsJBAwgUSFzGWsqwOicg+M2cX4YZK+JFZlU3+staH34Yjh
-         qo54FiVUT/hsbADZoemG0WG/fn0Er6w2Yc29V1szX1p2jzqdz+kAlQvqbo2zJAiEnmIH
-         zGd/PujSHX/VsgFvbY/gzh2SWP7JrLySQHoR3GAFOiRLtCjgbCowXwsIU8LTeafMtmCk
-         KF6Q==
-X-Gm-Message-State: AOAM532vAgjBuKmBOYoCf4n7j3qoD8LDNohRftTMX3eTI739kCG8+kb0
-        kl3x+8ysp4gMXrBg2x2mgwL7rw==
-X-Google-Smtp-Source: ABdhPJxBYq+KqFnjJ1UQ+HHg3VFRhBmTfHQTgVlsT9+2hmQTf2hYbGj9JKW5daP2oYzepPi6Pw4uMg==
-X-Received: by 2002:a17:90a:3669:: with SMTP id s96mr4644955pjb.149.1591092597818;
-        Tue, 02 Jun 2020 03:09:57 -0700 (PDT)
+        bh=WQ8tlQ9M2KNVUknmTLJ9Ovy1EUyM0LdAsA5zBG5CPW8=;
+        b=R9bhJoiK+/YOsocHdpi7Tjnk8peQlnQag70oEK/DrlHjW8LL1947rc6hrnLy/g8LvN
+         ag1CgVISfrgPOfnKlm3d/JMV3RFUn8brPNCWFtWOxV0w/7YGxmI2uP+pGuGelwiW/xB8
+         f9IHnj/xEXoVWgVLTVOFJJVaR8BYVA/o9Mkbh93pQpWUBF+9x7ApGvQXeGqnpAlpkq3l
+         lZrsYKyA9pJvFQiEM2VOMPHpN+FX8o1d6yFvdAuaUpH3UIaga89Pt+rhOJ+9WMkoUMdd
+         jpJkMaJPIxwYYqyzZ2ROikOtBah2YWApEawSctMSx1bcm/LKaSgoq4XTW+7v2TdQGvGY
+         uvLg==
+X-Gm-Message-State: AOAM532sNamx7hsKZqiN/FcCM0YLHbRt00ijXkpaf82uaXMpbTX1i85J
+        vuiAPpWePgHMIYotjsRgbma76w==
+X-Google-Smtp-Source: ABdhPJzGq/twjlCqJvLiQfkF2b+jVjyBBBs4RdirCbWWigTJMsW87iF0xggNE/eM7YoulQsC4b298A==
+X-Received: by 2002:a17:90b:4c91:: with SMTP id my17mr4244853pjb.81.1591092593913;
+        Tue, 02 Jun 2020 03:09:53 -0700 (PDT)
 Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id d8sm1931276pgb.42.2020.06.02.03.09.54
+        by smtp.gmail.com with ESMTPSA id d8sm1931276pgb.42.2020.06.02.03.09.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 03:09:57 -0700 (PDT)
+        Tue, 02 Jun 2020 03:09:53 -0700 (PDT)
 From:   Sumit Semwal <sumit.semwal@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         broonie@kernel.org, robh+dt@kernel.org
@@ -66,9 +66,9 @@ Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         kgunda@codeaurora.org, rnayak@codeaurora.org,
         Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v4 5/5] regulator: qcom: labibb: Add SC interrupt handling
-Date:   Tue,  2 Jun 2020 15:39:24 +0530
-Message-Id: <20200602100924.26256-6-sumit.semwal@linaro.org>
+Subject: [PATCH v4 4/5] regulator: qcom: Add labibb driver
+Date:   Tue,  2 Jun 2020 15:39:23 +0530
+Message-Id: <20200602100924.26256-5-sumit.semwal@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200602100924.26256-1-sumit.semwal@linaro.org>
 References: <20200602100924.26256-1-sumit.semwal@linaro.org>
@@ -81,196 +81,268 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nisha Kumari <nishakumari@codeaurora.org>
 
-Add Short circuit interrupt handling and recovery for the lab and ibb
-regulators on qcom platforms.
+Qualcomm platforms have LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost)
+regulators, labibb for short, which are used as power supply for
+LCD Mode displays.
 
-The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
-notification which will be triggered on short circuit. They should
-try to enable the regulator once, and if it doesn't get enabled,
-handle shutting down the panel accordingly.
+This patch adds labibb regulator driver for pmi8998 PMIC, found on
+SDM845 platforms.
 
 Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
 Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-    [sumits: updated to rework to use regmap_read_poll_timeout, handle it per
-             regulator, add REGULATOR_EVENT_OVER_CURRENT handling and
-             notification to clients and other cleanup]
+  [sumits: reworked to driver for more common code, using core regulator
+    features, and using newly-added poll_enabled_time functionality
+    from core]
 --
-v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
-     per-regulator instead of clearing both lab and ibb errors on either irq
-     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
-     notification to clients.
-v3: sumits: updated as per review comments of v2: removed spurious check for
-     irq in handler and some unused variables; inlined some of the code,
-     omitted IRQF_TRIGGER_RISING as it's coming from DT.
-v4: sumits: updated 'int vreg_enabled' to 'boot enabled', made sc_irq a local var
-     and other review comments from v3.
----
- drivers/regulator/qcom-labibb-regulator.c | 102 +++++++++++++++++++++-
- 1 file changed, 99 insertions(+), 3 deletions(-)
+v2: sumits: reworked the driver for more common code, and addressed
+     review comments from v1
+v3: sumits: addressed review comments from v2; moved to use core
+     regulator features like enable_time, off_on_delay, and the newly
+     added poll_enabled_time. Moved the check_enabled functionality
+     to core framework via poll_enabled_time.
+v4: sumits: address review comments from v3, including cleaning up
+     register_labibb_regulator(), and adapted to updated meaning of
+     poll_enabled_time.
 
+---
+ drivers/regulator/Kconfig                 |  10 ++
+ drivers/regulator/Makefile                |   1 +
+ drivers/regulator/qcom-labibb-regulator.c | 193 ++++++++++++++++++++++
+ 3 files changed, 204 insertions(+)
+ create mode 100644 drivers/regulator/qcom-labibb-regulator.c
+
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index f4b72cb098ef..58704a9fd05d 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -1167,5 +1167,15 @@ config REGULATOR_WM8994
+ 	  This driver provides support for the voltage regulators on the
+ 	  WM8994 CODEC.
+ 
++config REGULATOR_QCOM_LABIBB
++	tristate "QCOM LAB/IBB regulator support"
++	depends on SPMI || COMPILE_TEST
++	help
++	  This driver supports Qualcomm's LAB/IBB regulators present on the
++	  Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
++	  based PMIC implementations. LAB can be used as positive
++	  boost regulator and IBB can be used as a negative boost regulator
++	  for LCD display panel.
++
+ endif
+ 
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 6610ee001d9a..5b313786c0e8 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -87,6 +87,7 @@ obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
+ obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
+ obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
+ obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
++obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
 diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-index 33b764ac69d1..bca0308b26dd 100644
---- a/drivers/regulator/qcom-labibb-regulator.c
+new file mode 100644
+index 000000000000..33b764ac69d1
+--- /dev/null
 +++ b/drivers/regulator/qcom-labibb-regulator.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- // Copyright (c) 2020, The Linux Foundation. All rights reserved.
- 
-+#include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/of_irq.h>
- #include <linux/of.h>
-@@ -18,6 +19,7 @@
- #define REG_LABIBB_ENABLE_CTL		0x46
- #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
- #define LABIBB_CONTROL_ENABLE		BIT(7)
-+#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
- 
- #define LAB_ENABLE_CTL_MASK		BIT(7)
- #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
-@@ -27,12 +29,16 @@
- #define IBB_ENABLE_TIME			(LABIBB_OFF_ON_DELAY * 10)
- #define LABIBB_POLL_ENABLED_TIME	1000
- 
-+#define POLLING_SCP_DONE_INTERVAL_US	5000
-+#define POLLING_SCP_TIMEOUT		16000
+@@ -0,0 +1,194 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (c) 2020, The Linux Foundation. All rights reserved.
 +
- struct labibb_regulator {
- 	struct regulator_desc		desc;
- 	struct device			*dev;
- 	struct regmap			*regmap;
- 	struct regulator_dev		*rdev;
- 	u16				base;
-+	bool				enabled;
- 	u8				type;
- };
- 
-@@ -59,12 +65,26 @@ static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
- 
- static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
- {
--	return regulator_enable_regmap(rdev);
-+	int ret;
-+	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
 +
-+	ret = regulator_enable_regmap(rdev);
-+	if (ret >= 0)
-+		reg->enabled = true;
++#define REG_PERPH_TYPE                  0x04
++#define QCOM_LAB_TYPE			0x24
++#define QCOM_IBB_TYPE			0x20
 +
-+	return ret;
- }
- 
- static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
- {
--	return regulator_disable_regmap(rdev);
-+	int ret = 0;
-+	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
++#define REG_LABIBB_STATUS1		0x08
++#define REG_LABIBB_ENABLE_CTL		0x46
++#define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
++#define LABIBB_CONTROL_ENABLE		BIT(7)
 +
-+	ret = regulator_disable_regmap(rdev);
-+	if (ret >= 0)
-+		reg->enabled = false;
++#define LAB_ENABLE_CTL_MASK		BIT(7)
++#define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
 +
-+	return ret;
- }
- 
- static struct regulator_ops qcom_labibb_ops = {
-@@ -73,12 +93,70 @@ static struct regulator_ops qcom_labibb_ops = {
- 	.is_enabled		= qcom_labibb_regulator_is_enabled,
- };
- 
-+static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
++#define LABIBB_OFF_ON_DELAY		1000
++#define LAB_ENABLE_TIME			(LABIBB_OFF_ON_DELAY * 2)
++#define IBB_ENABLE_TIME			(LABIBB_OFF_ON_DELAY * 10)
++#define LABIBB_POLL_ENABLED_TIME	1000
++
++struct labibb_regulator {
++	struct regulator_desc		desc;
++	struct device			*dev;
++	struct regmap			*regmap;
++	struct regulator_dev		*rdev;
++	u16				base;
++	u8				type;
++};
++
++struct labibb_regulator_data {
++	u16				base;
++	const char			*name;
++	u8				type;
++	unsigned int			enable_time;
++	unsigned int			enable_mask;
++};
++
++static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
 +{
 +	int ret;
-+	u16 reg;
 +	unsigned int val;
-+	struct labibb_regulator *labibb_reg = _reg;
-+	bool in_sc_err, scp_done = false;
++	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
 +
-+	ret = regmap_read(labibb_reg->regmap,
-+			  labibb_reg->base + REG_LABIBB_STATUS1, &val);
++	ret = regmap_read(reg->regmap, reg->base + REG_LABIBB_STATUS1, &val);
 +	if (ret < 0) {
-+		dev_err(labibb_reg->dev, "sc_err_irq: Read failed, ret=%d\n",
-+			ret);
-+		return IRQ_HANDLED;
++		dev_err(reg->dev, "Read register failed ret = %d\n", ret);
++		return ret;
 +	}
-+
-+	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
-+		labibb_reg->desc.name, val);
-+
-+	in_sc_err = !!(val & LABIBB_STATUS1_SC_DETECT_BIT);
-+
-+	/*
-+	 * The SC(short circuit) fault would trigger PBS(Portable Batch
-+	 * System) to disable regulators for protection. This would
-+	 * cause the SC_DETECT status being cleared so that it's not
-+	 * able to get the SC fault status.
-+	 * Check if the regulator is enabled in the driver but
-+	 * disabled in hardware, this means a SC fault had happened
-+	 * and SCP handling is completed by PBS.
-+	 */
-+	if (!in_sc_err) {
-+
-+		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
-+
-+		ret = regmap_read_poll_timeout(labibb_reg->regmap,
-+					reg, val,
-+					!(val & LABIBB_CONTROL_ENABLE),
-+					POLLING_SCP_DONE_INTERVAL_US,
-+					POLLING_SCP_TIMEOUT);
-+
-+		if (!ret && labibb_reg->enabled) {
-+			dev_dbg(labibb_reg->dev,
-+				"%s has been disabled by SCP\n",
-+				labibb_reg->desc.name);
-+			scp_done = true;
-+		}
-+	}
-+
-+	if (in_sc_err || scp_done) {
-+		regulator_lock(labibb_reg->rdev);
-+		regulator_notifier_call_chain(labibb_reg->rdev,
-+						REGULATOR_EVENT_OVER_CURRENT,
-+						NULL);
-+		regulator_unlock(labibb_reg->rdev);
-+	}
-+	return IRQ_HANDLED;
++	return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
 +}
 +
- static struct regulator_dev *register_labibb_regulator(struct labibb_regulator *reg,
- 				const struct labibb_regulator_data *reg_data,
- 				struct device_node *of_node)
- {
- 	struct regulator_config cfg = {};
--	int ret;
-+	int ret, sc_irq;
- 
- 	reg->base = reg_data->base;
- 	reg->type = reg_data->type;
-@@ -95,6 +173,24 @@ static struct regulator_dev *register_labibb_regulator(struct labibb_regulator *
- 	reg->desc.poll_enabled_time = LABIBB_POLL_ENABLED_TIME;
- 	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
- 
-+	sc_irq = of_irq_get_byname(of_node, "sc-err");
-+	if (sc_irq < 0) {
-+		dev_err(reg->dev, "Unable to get sc-err, ret = %d\n",
-+			sc_irq);
-+		return ERR_PTR(sc_irq);
-+	} else {
-+		ret = devm_request_threaded_irq(reg->dev,
-+						sc_irq,
-+						NULL, labibb_sc_err_handler,
-+						IRQF_ONESHOT,
-+						"sc-err", reg);
-+		if (ret) {
-+			dev_err(reg->dev, "Failed to register sc-err irq ret=%d\n",
++static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
++{
++	return regulator_enable_regmap(rdev);
++}
++
++static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
++{
++	return regulator_disable_regmap(rdev);
++}
++
++static struct regulator_ops qcom_labibb_ops = {
++	.enable			= qcom_labibb_regulator_enable,
++	.disable		= qcom_labibb_regulator_disable,
++	.is_enabled		= qcom_labibb_regulator_is_enabled,
++};
++
++static struct regulator_dev *register_labibb_regulator(struct labibb_regulator *reg,
++				const struct labibb_regulator_data *reg_data,
++				struct device_node *of_node)
++{
++	struct regulator_config cfg = {};
++	int ret;
++
++	reg->base = reg_data->base;
++	reg->type = reg_data->type;
++	reg->desc.enable_mask = reg_data->enable_mask;
++	reg->desc.enable_reg = reg->base + REG_LABIBB_ENABLE_CTL;
++	reg->desc.enable_val = LABIBB_CONTROL_ENABLE;
++	reg->desc.of_match = reg_data->name;
++	reg->desc.name = reg_data->name;
++	reg->desc.owner = THIS_MODULE;
++	reg->desc.type = REGULATOR_VOLTAGE;
++	reg->desc.ops = &qcom_labibb_ops;
++
++	reg->desc.enable_time = reg_data->enable_time;
++	reg->desc.poll_enabled_time = LABIBB_POLL_ENABLED_TIME;
++	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
++
++	cfg.dev = reg->dev;
++	cfg.driver_data = reg;
++	cfg.regmap = reg->regmap;
++	cfg.of_node = of_node;
++
++	return devm_regulator_register(reg->dev, &reg->desc, &cfg);
++}
++
++static const struct labibb_regulator_data pmi8998_labibb_data[] = {
++	{0xde00, "lab", QCOM_LAB_TYPE, LAB_ENABLE_TIME, LAB_ENABLE_CTL_MASK},
++	{0xdc00, "ibb", QCOM_IBB_TYPE, IBB_ENABLE_TIME, IBB_ENABLE_CTL_MASK},
++	{ },
++};
++
++static const struct of_device_id qcom_labibb_match[] = {
++	{ .compatible = "qcom,pmi8998-lab-ibb", .data = &pmi8998_labibb_data},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, qcom_labibb_match);
++
++static int qcom_labibb_regulator_probe(struct platform_device *pdev)
++{
++	struct labibb_regulator *labibb_reg;
++	struct device *dev = &pdev->dev;
++	struct device_node *child;
++	const struct of_device_id *match;
++	const struct labibb_regulator_data *reg_data;
++	struct regmap *reg_regmap;
++	unsigned int type;
++	int ret;
++
++	reg_regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!reg_regmap) {
++		dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
++		return -ENODEV;
++	}
++
++	match = of_match_device(qcom_labibb_match, &pdev->dev);
++	if (!match)
++		return -ENODEV;
++
++	for (reg_data = match->data; reg_data->name; reg_data++) {
++		child = of_get_child_by_name(pdev->dev.of_node, reg_data->name);
++
++		if (WARN_ON(child == NULL))
++			return -EINVAL;
++
++		/* Validate if the type of regulator is indeed
++		 * what's mentioned in DT.
++		 */
++		ret = regmap_read(reg_regmap, reg_data->base + REG_PERPH_TYPE,
++				  &type);
++		if (ret < 0) {
++			dev_err(dev,
++				"Peripheral type read failed ret=%d\n",
 +				ret);
-+			return ERR_PTR(ret);
++			return -EINVAL;
++		}
++
++		if (WARN_ON((type != QCOM_LAB_TYPE) && (type != QCOM_IBB_TYPE)) ||
++		    WARN_ON(type != reg_data->type))
++			return -EINVAL;
++
++		labibb_reg  = devm_kzalloc(&pdev->dev, sizeof(*labibb_reg),
++					   GFP_KERNEL);
++		if (!labibb_reg)
++			return -ENOMEM;
++
++		labibb_reg->regmap = reg_regmap;
++		labibb_reg->dev = dev;
++
++		dev_info(dev, "Registering %s regulator\n", child->full_name);
++
++		labibb_reg->rdev = register_labibb_regulator(labibb_reg, reg_data, child);
++		if (IS_ERR(labibb_reg->rdev)) {
++			dev_err(dev,
++				"qcom_labibb: error registering %s : %d\n",
++				child->full_name, ret);
++			return PTR_ERR(labibb_reg->rdev);
 +		}
 +	}
 +
- 	cfg.dev = reg->dev;
- 	cfg.driver_data = reg;
- 	cfg.regmap = reg->regmap;
++	return 0;
++}
++
++static struct platform_driver qcom_labibb_regulator_driver = {
++	.driver	= {
++		.name = "qcom-lab-ibb-regulator",
++		.of_match_table	= qcom_labibb_match,
++	},
++	.probe = qcom_labibb_regulator_probe,
++};
++module_platform_driver(qcom_labibb_regulator_driver);
++
++MODULE_DESCRIPTION("Qualcomm labibb driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.26.2
 
