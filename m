@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77919C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6E92072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B38B20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgFBTvC (ORCPT
+        id S1728685AbgFBTwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:51:02 -0400
+        Tue, 2 Jun 2020 15:52:33 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36862 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728123AbgFBTu5 (ORCPT
+        by vger.kernel.org with ESMTP id S1728322AbgFBTvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:50:57 -0400
+        Tue, 2 Jun 2020 15:51:00 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 2 Jun 2020 12:50:52 -0700
+ 15.0.1156.6; Tue, 2 Jun 2020 12:50:55 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id D95A240BED;
-        Tue,  2 Jun 2020 12:50:52 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id E925E40BF1;
+        Tue,  2 Jun 2020 12:50:55 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v4 08/32] objtool: mcount: Walk objtool Elf structs in find_secsym_ndx
-Date:   Tue, 2 Jun 2020 12:50:01 -0700
-Message-ID: <23497cb675be990627fa76eed26c1385cb0f5826.1591125127.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v4 12/32] objtool: mcount: Replace MIPS offset types
+Date:   Tue, 2 Jun 2020 12:50:05 -0700
+Message-ID: <0d0d88eefe95c90a4fa0bb08cccb15303d2a089d.1591125127.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1591125127.git.mhelsley@vmware.com>
 References: <cover.1591125127.git.mhelsley@vmware.com>
@@ -51,128 +51,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than using indices into raw ELF32/64 tables mapped for the
-wrapper, use the objtool functions to find the a suitable symbol
-in the given text section.
-
-Also take advantage of this commit to rename the function to
-something that reads more easily.
+Replace MIPS is_fake_mcount code using Elf_Addr with
+unsigned long for the offsets. This is consistent with the way
+that objtool more generally treats offsets and removes the
+last use of the Elf_Addr wrapper.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c |  2 ++
- tools/objtool/recordmcount.h | 42 ++++++++++++++++--------------------
- 2 files changed, 21 insertions(+), 23 deletions(-)
+ tools/objtool/recordmcount.h | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index f20582ac99e2..843027a46e1b 100644
---- a/tools/objtool/recordmcount.c
-+++ b/tools/objtool/recordmcount.c
-@@ -422,6 +422,8 @@ static int is_mcounted_section_name(char const *const txtname)
- 		strcmp(".cpuidle.text", txtname) == 0;
- }
- 
-+static const unsigned int missing_sym = (unsigned int)-1;
-+
- /* 32 bit and 64 bit are very similar */
- #include "recordmcount.h"
- #define RECORD_MCOUNT_64
 diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index b487308992ce..dba1c385106f 100644
+index a3fb62e88450..1a39f7acac11 100644
 --- a/tools/objtool/recordmcount.h
 +++ b/tools/objtool/recordmcount.h
-@@ -24,7 +24,7 @@
- #undef mcount_adjust
- #undef sift_rel_mcount
- #undef nop_mcount
--#undef find_secsym_ndx
-+#undef find_section_sym_index
+@@ -28,7 +28,6 @@
  #undef has_rel_mcount
  #undef tot_relsize
- #undef get_mcountsym
-@@ -53,7 +53,7 @@
- # define append_func		append64
- # define sift_rel_mcount	sift64_rel_mcount
- # define nop_mcount		nop_mcount_64
--# define find_secsym_ndx	find64_secsym_ndx
-+# define find_section_sym_index	find64_section_sym_index
- # define has_rel_mcount		has64_rel_mcount
- # define tot_relsize		tot64_relsize
- # define get_sym_str_and_relp	get_sym_str_and_relp_64
-@@ -85,7 +85,7 @@
- # define append_func		append32
- # define sift_rel_mcount	sift32_rel_mcount
- # define nop_mcount		nop_mcount_32
--# define find_secsym_ndx	find32_secsym_ndx
-+# define find_section_sym_index	find32_section_sym_index
- # define has_rel_mcount		has32_rel_mcount
- # define tot_relsize		tot32_relsize
- # define get_sym_str_and_relp	get_sym_str_and_relp_32
-@@ -427,38 +427,36 @@ static int nop_mcount(const struct section * const rels,
-  *    Num:    Value  Size Type    Bind   Vis      Ndx Name
-  *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
-  */
--static int find_secsym_ndx(unsigned const txtndx,
-+static int find_section_sym_index(unsigned const txtndx,
- 				char const *const txtname,
- 				uint_t *const recvalp,
- 				unsigned int *sym_index,
--				Elf_Shdr const *const symhdr,
- 				Elf_Ehdr const *const ehdr)
+ #undef do_func
+-#undef Elf_Addr
+ #undef Elf_Ehdr
+ #undef Elf_Shdr
+ #undef Elf_Rel
+@@ -53,7 +52,6 @@
+ # define fn_is_fake_mcount	fn_is_fake_mcount64
+ # define MIPS_is_fake_mcount	MIPS64_is_fake_mcount
+ # define mcount_adjust		mcount_adjust_64
+-# define Elf_Addr		Elf64_Addr
+ # define Elf_Ehdr		Elf64_Ehdr
+ # define Elf_Shdr		Elf64_Shdr
+ # define Elf_Rel		Elf64_Rel
+@@ -77,7 +75,6 @@
+ # define fn_is_fake_mcount	fn_is_fake_mcount32
+ # define MIPS_is_fake_mcount	MIPS32_is_fake_mcount
+ # define mcount_adjust		mcount_adjust_32
+-# define Elf_Addr		Elf32_Addr
+ # define Elf_Ehdr		Elf32_Ehdr
+ # define Elf_Shdr		Elf32_Shdr
+ # define Elf_Rel		Elf32_Rel
+@@ -129,11 +126,11 @@ static int mcount_adjust = 0;
+ 
+ static int MIPS_is_fake_mcount(struct reloc const *reloc)
  {
--	Elf_Sym const *const sym0 = (Elf_Sym const *)(_w(symhdr->sh_offset)
--		+ (void *)ehdr);
--	unsigned const nsym = _w(symhdr->sh_size) / _w(symhdr->sh_entsize);
--	Elf_Sym const *symp;
--	unsigned t;
-+	struct symbol *sym;
-+	struct section *txts = find_section_by_index(lf, txtndx);
+-	static Elf_Addr old_r_offset = ~(Elf_Addr)0;
+-	Elf_Addr current_r_offset = reloc->offset;
++	static unsigned long old_r_offset = ~0UL;
++	unsigned long current_r_offset = reloc->offset;
+ 	int is_fake;
  
--	for (symp = sym0, t = nsym; t; --t, ++symp) {
--		unsigned int const st_bind = ELF_ST_BIND(symp->st_info);
-+	if (!txts) {
-+		fprintf(stderr, "Cannot find section %u: %s.\n",
-+			txtndx, txtname);
-+		return missing_sym;
-+	}
- 
--		if (txtndx == w2(symp->st_shndx)
--			/* avoid STB_WEAK */
--		    && (STB_LOCAL == st_bind || STB_GLOBAL == st_bind)) {
-+	list_for_each_entry(sym, &txts->symbol_list, list) {
-+		if ((sym->bind == STB_LOCAL) || (sym->bind == STB_GLOBAL)) {
- 			/* function symbols on ARM have quirks, avoid them */
- 			if (w2(ehdr->e_machine) == EM_ARM
--			    && ELF_ST_TYPE(symp->st_info) == STT_FUNC)
-+			    && sym->type == STT_FUNC)
- 				continue;
- 
--			*recvalp = _w(symp->st_value);
--			*sym_index = symp - sym0;
-+			*recvalp = sym->sym.st_value;
-+			*sym_index = sym->idx;
- 			return 0;
- 		}
- 	}
- 	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
- 		txtndx, txtname);
--	return -1;
-+	return missing_sym;
- }
- 
- static char const *has_rel_mcount(const struct section * const rels)
-@@ -540,10 +538,8 @@ static int do_func(Elf_Ehdr *const ehdr,
- 			uint_t recval = 0;
- 
- 			symsec_sh_link = sec->sh.sh_link;
--			result = find_secsym_ndx(sec->sh.sh_info, txtname,
--						&recval, &recsym,
--						&shdr0[symsec_sh_link],
--						ehdr);
-+			result = find_section_sym_index(sec->sh.sh_info,
-+						txtname, &recval, &recsym, ehdr);
- 			if (result)
- 				goto out;
+-	is_fake = (old_r_offset != ~(Elf_Addr)0) &&
++	is_fake = (old_r_offset != ~0UL) &&
+ 		(current_r_offset - old_r_offset == MIPS_FAKEMCOUNT_OFFSET);
+ 	old_r_offset = current_r_offset;
  
 -- 
 2.20.1
