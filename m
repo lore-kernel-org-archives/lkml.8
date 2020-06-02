@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AFBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD0B205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C6E205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 22:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbgFBWbv (ORCPT
+        id S1730373AbgFBWbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 18:31:51 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46010 "EHLO
+        Tue, 2 Jun 2020 18:31:53 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:45987 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728446AbgFBWba (ORCPT
+        by vger.kernel.org with ESMTP id S1728445AbgFBWba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jun 2020 18:31:30 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 02 Jun 2020 15:31:23 -0700
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 02 Jun 2020 15:31:24 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 02 Jun 2020 15:31:22 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 02 Jun 2020 15:31:22 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id B3D5C4DF5; Tue,  2 Jun 2020 15:31:22 -0700 (PDT)
+        id 241304BDA; Tue,  2 Jun 2020 15:31:22 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -43,9 +43,9 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-arm-kernel@lists.infradead.org,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v16 09/11] backlight: pwm_bl: Use 64-bit division function
-Date:   Tue,  2 Jun 2020 15:31:14 -0700
-Message-Id: <0ba6e042fc207c1b0b7dfe3a86d8971240faace1.1591136989.git.gurus@codeaurora.org>
+Subject: [PATCH v16 01/11] drm/i915: Use 64-bit division macro
+Date:   Tue,  2 Jun 2020 15:31:05 -0700
+Message-Id: <d220cb6bf508a070affb67734d297a9d4c3ab758.1591136989.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1591136989.git.gurus@codeaurora.org>
 References: <cover.1591136989.git.gurus@codeaurora.org>
@@ -56,31 +56,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using div_u64 to handle a 64-bit
-dividend instead of a straight division operation.
+Since the PWM framework is switching struct pwm_state.duty_cycle's
+datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
+to handle a 64-bit dividend.
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 ---
- drivers/video/backlight/pwm_bl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 82b8d75..464baad 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -606,7 +606,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		pb->scale = data->max_brightness;
+diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
+index 276f438..81547a0 100644
+--- a/drivers/gpu/drm/i915/display/intel_panel.c
++++ b/drivers/gpu/drm/i915/display/intel_panel.c
+@@ -1920,7 +1920,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
+ 		return retval;
  	}
  
--	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-+	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-+				pb->scale));
- 
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
+-	level = DIV_ROUND_UP(pwm_get_duty_cycle(panel->backlight.pwm) * 100,
++	level = DIV_ROUND_UP_ULL(pwm_get_duty_cycle(panel->backlight.pwm) * 100,
+ 			     CRC_PMIC_PWM_PERIOD_NS);
+ 	panel->backlight.level =
+ 		intel_panel_compute_brightness(connector, level);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
