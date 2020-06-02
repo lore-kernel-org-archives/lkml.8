@@ -2,324 +2,127 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06458C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61452C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA1BA20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591121643;
-	bh=MrXSZE70Zbx4hxiTKRHGSxKbDAuPhmbRXB6E9TDnFN4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=B557tLukLGbHggXVgnsT5UWGAk6Cj5jkDB9oaOXgkZCIgNoiMU7F5BOvGEbFAPwlQ
-	 7TtWu6VhNhVoiRQKjrciZWxLclAMxnXRJA1QnL0GmTi2/pV0riWXmm+FC+gbseL7Zc
-	 PzKR4rte2boZqhsmz+8k7ft2gy+wUPRDnKd9oXFA=
+	by mail.kernel.org (Postfix) with ESMTP id 39DE620823
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lv5g79NM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgFBSOD (ORCPT
+        id S1726630AbgFBSRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgFBSOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:14:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CBFA2068D;
-        Tue,  2 Jun 2020 18:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591121641;
-        bh=MrXSZE70Zbx4hxiTKRHGSxKbDAuPhmbRXB6E9TDnFN4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Cv00d3gcS29yDXQRyxV3aU+Sbi7l6aFR15i6cPDbsoIdwmOrMID0JYdBHTBXKVG95
-         rupv0O3EYSXjJ702nFSv3zyHeZJgpZ/bcVYmQY476VPjKQZXbdJhM1TZOB/sOZBSac
-         CPerulRdB88pu2MiX3o1RumBLpbOA94fyP17VZXE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/55] 4.9.226-rc3 review
-Date:   Tue,  2 Jun 2020 20:13:59 +0200
-Message-Id: <20200602181325.420361863@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 2 Jun 2020 14:17:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59046 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgFBSRR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 14:17:17 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052I7t1h177905;
+        Tue, 2 Jun 2020 18:17:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : references : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=X49wKSnu9fOxTqf6/taZw+DmoyGY5qqdKkF7CwXyyhU=;
+ b=Lv5g79NM3PnfnYv8QvcLbn0XfFCOXjNP4txvAUlj2UekN+oloAsfr/MoevQSCgU/YA2F
+ 1L1Q6Lr1MVk2lkLoAXh0cbPvlZxcuOxAvDVmjlzK2GzST09NxCZKl5hgP2GogLZ3yN5W
+ Zg0dczpNpX8oennm5UYn+xxRXbjn3OLezuCqEeihy0kzDwM0NnzihsUAWOUHARtwqg/G
+ hezD+fKVptJ7hDiIXu5fopCOlicWKD+EpjVT8lx64+9b8XcDMunTNXPwjS+hKhZ68fwO
+ 88N7SedbcMhA0G5XuF2VmpkhtqvfENgk09P+t6SOE/Vk/XCw14ZV1Sn3WST0MA8+39aE Rw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31bewqwhdb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 18:17:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052I80jG005905;
+        Tue, 2 Jun 2020 18:15:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31dju1wkvj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 18:15:00 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052IEvIo025425;
+        Tue, 2 Jun 2020 18:14:57 GMT
+Received: from localhost (/67.169.218.210) by default (Oracle Beehive Gateway
+ v4.0) with ESMTP ; Tue, 02 Jun 2020 11:14:46 -0700
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.226-rc3.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.226-rc3
-X-KernelTest-Deadline: 2020-06-04T18:13+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <20200602181444.GD8230@magnolia>
+Date:   Tue, 2 Jun 2020 11:14:44 -0700 (PDT)
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     ira.weiny@intel.com, fstests@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] xfs/XXX: Add xfs/XXX
+References: <20200413054419.1560503-1-ira.weiny@intel.com>
+ <20200413163025.GB6742@magnolia> <5ED61324.6010300@cn.fujitsu.com>
+In-Reply-To: <5ED61324.6010300@cn.fujitsu.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=1 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006020132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.226 release.
-There are 55 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 04 Jun 2020 18:12:28 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.226-rc3.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.226-rc3
-
-Benjamin Block <bblock@linux.ibm.com>
-    scsi: zfcp: fix request object use-after-free in send path causing wrong traces
-
-Salil Mehta <salil.mehta@huawei.com>
-    net: hns: Fixes the missing put_device in positive leg for roce reset
-
-Guoqing Jiang <gqjiang@suse.com>
-    sc16is7xx: move label 'err_spi' to correct section
-
-Liviu Dudau <liviu@dudau.co.uk>
-    mm/vmalloc.c: don't dereference possible NULL pointer in __vunmap()
-
-Roopa Prabhu <roopa@cumulusnetworks.com>
-    net: rtnl_configure_link: fix dev flags changes arg to __dev_notify_flags
-
-Thomas Gleixner <tglx@linutronix.de>
-    genirq/generic_pending: Do not lose pending affinity update
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
-
-Qiushi Wu <wu000273@umn.edu>
-    bonding: Fix reference count leak in bond_sysfs_slave_add.
-
-Qiushi Wu <wu000273@umn.edu>
-    qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
-
-Phil Sutter <phil@nwl.cc>
-    netfilter: ipset: Fix subcounter update skip
-
-Michael Braun <michael-dev@fami-braun.de>
-    netfilter: nft_reject_bridge: enable reject with bridge vlan
-
-Xin Long <lucien.xin@gmail.com>
-    ip_vti: receive ipip packet by calling ip_tunnel_rcv
-
-Jeremy Sowden <jeremy@azazel.net>
-    vti4: eliminated some duplicate code.
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: fix a NULL-ptr deref in xfrm_local_error
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: fix a warning in xfrm_policy_insert_list
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
-
-Alexander Dahl <post@lespocky.de>
-    x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
-
-Linus Lüssing <ll@simonwunderlich.de>
-    mac80211: mesh: fix discovery timer re-arming issue / crash
-
-Helge Deller <deller@gmx.de>
-    parisc: Fix kernel panic in mem_init()
-
-Qiushi Wu <wu000273@umn.edu>
-    iommu: Fix reference count leak in iommu_group_alloc.
-
-Arnd Bergmann <arnd@arndb.de>
-    include/asm-generic/topology.h: guard cpumask_of_node() macro argument
-
-Alexander Potapenko <glider@google.com>
-    fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
-
-Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-    mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
-
-Jerry Lee <leisurelysw24@gmail.com>
-    libceph: ignore pool overlay and cache logic on redirects
-
-Eric W. Biederman <ebiederm@xmission.com>
-    exec: Always set cap_ambient in cap_bprm_set_creds
-
-Chris Chiu <chiu@endlessm.com>
-    ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
-
-Changming Liu <liu.changm@northeastern.edu>
-    ALSA: hwdep: fix a left shifting 1 by 31 UB bug
-
-Robert Beckett <bob.beckett@collabora.com>
-    ARM: dts/imx6q-bx50v3: Set display interface clock parents
-
-Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-    ARM: dts: imx6q-bx50v3: Add internal switch
-
-Martyn Welch <martyn.welch@collabora.co.uk>
-    ARM: dts: imx: Correct B850v3 clock assignment
-
-Kaike Wan <kaike.wan@intel.com>
-    IB/qib: Call kobject_put() when kobject_init_and_add() fails
-
-Wei Yongjun <weiyongjun1@huawei.com>
-    Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
-
-Kevin Locke <kevin@kevinlocke.name>
-    Input: i8042 - add ThinkPad S230u to i8042 reset list
-
-Łukasz Patron <priv.luk@gmail.com>
-    Input: xpad - add custom init packet for Xbox One S controllers
-
-Brendan Shanks <bshanks@codeweavers.com>
-    Input: evdev - call input_flush_device() on release(), not flush()
-
-James Hilliard <james.hilliard1@gmail.com>
-    Input: usbtouchscreen - add support for BonXeon TP
-
-Steve French <stfrench@microsoft.com>
-    cifs: Fix null pointer check in cifs_read
-
-Masahiro Yamada <masahiroy@kernel.org>
-    usb: gadget: legacy: fix redundant initialization warnings
-
-Lei Xue <carmark.dlut@gmail.com>
-    cachefiles: Fix race between read_waiter and read_copier involving op->to_do
-
-Bob Peterson <rpeterso@redhat.com>
-    gfs2: move privileged user check to gfs2_quota_lock_check
-
-Chuhong Yuan <hslester96@gmail.com>
-    net: microchip: encx24j600: add missed kthread_stop
-
-Stephen Warren <swarren@nvidia.com>
-    gpio: tegra: mask GPIO IRQs during IRQ shutdown
-
-Kalderon, Michal <Michal.Kalderon@cavium.com>
-    IB/cma: Fix reference count leak when no ipv4 addresses are set
-
-Dmitry V. Levin <ldv@altlinux.org>
-    uapi: fix linux/if_pppol2tp.h userspace compilation errors
-
-Qiushi Wu <wu000273@umn.edu>
-    net/mlx4_core: fix a memory leak bug.
-
-Qiushi Wu <wu000273@umn.edu>
-    net: sun: fix missing release regions in cas_init_one().
-
-Moshe Shemesh <moshe@mellanox.com>
-    net/mlx5: Add command entry handling completion
-
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-    net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
-
-Moshe Shemesh <moshe@mellanox.com>
-    net/mlx5e: Update netdev txq on completions during closure
-
-Jere Leppänen <jere.leppanen@nokia.com>
-    sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
-
-Roman Mashak <mrv@mojatatu.com>
-    net sched: fix reporting the first-time use timestamp
-
-Yuqi Jin <jinyuqi@huawei.com>
-    net: revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
-
-Vadim Fedorenko <vfedorenko@novek.ru>
-    net: ipip: fix wrong address family in init error path
-
-Eric Dumazet <edumazet@google.com>
-    ax25: fix setsockopt(SO_BINDTODEVICE)
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/arm/boot/dts/imx6q-b450v3.dts                 |  7 --
- arch/arm/boot/dts/imx6q-b650v3.dts                 |  7 --
- arch/arm/boot/dts/imx6q-b850v3.dts                 | 11 ----
- arch/arm/boot/dts/imx6q-bx50v3.dtsi                | 77 ++++++++++++++++++++++
- arch/parisc/mm/init.c                              |  2 +-
- arch/x86/include/asm/dma.h                         |  2 +-
- drivers/gpio/gpio-tegra.c                          |  1 +
- drivers/infiniband/hw/qib/qib_sysfs.c              |  9 +--
- drivers/input/evdev.c                              | 19 ++----
- drivers/input/joystick/xpad.c                      | 12 ++++
- drivers/input/rmi4/rmi_driver.c                    |  3 +-
- drivers/input/serio/i8042-x86ia64io.h              |  7 ++
- drivers/input/touchscreen/usbtouchscreen.c         |  1 +
- drivers/iommu/iommu.c                              |  2 +-
- drivers/net/bonding/bond_sysfs_slave.c             |  4 +-
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  3 +
- drivers/net/ethernet/mellanox/mlx4/fw.c            |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c      | 15 +++++
- drivers/net/ethernet/mellanox/mlx5/core/en_tx.c    |  6 +-
- drivers/net/ethernet/microchip/encx24j600.c        |  5 +-
- .../net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c    |  4 +-
- drivers/net/ethernet/sun/cassini.c                 |  3 +-
- drivers/s390/scsi/zfcp_fsf.c                       | 10 ++-
- drivers/tty/serial/sc16is7xx.c                     |  2 +
- drivers/usb/gadget/legacy/inode.c                  |  3 +-
- fs/binfmt_elf.c                                    |  2 +-
- fs/cachefiles/rdwr.c                               |  2 +-
- fs/cifs/file.c                                     |  2 +-
- fs/gfs2/quota.c                                    |  3 +-
- fs/gfs2/quota.h                                    |  3 +-
- include/asm-generic/topology.h                     |  2 +-
- include/linux/mlx5/driver.h                        |  1 +
- include/linux/mm.h                                 | 15 ++++-
- include/linux/netfilter/nf_conntrack_pptp.h        |  2 +-
- include/net/act_api.h                              |  3 +-
- include/rdma/ib_addr.h                             |  6 +-
- include/uapi/linux/l2tp.h                          |  7 +-
- kernel/irq/migration.c                             | 26 ++++++--
- mm/vmalloc.c                                       |  2 +-
- net/ax25/af_ax25.c                                 |  6 +-
- net/bridge/netfilter/nft_reject_bridge.c           |  6 ++
- net/ceph/osd_client.c                              |  4 +-
- net/core/rtnetlink.c                               |  2 +-
- net/ipv4/ip_vti.c                                  | 75 +++++++++++----------
- net/ipv4/ipip.c                                    |  2 +-
- net/ipv4/netfilter/nf_nat_pptp.c                   |  7 +-
- net/ipv4/route.c                                   | 14 ++--
- net/mac80211/mesh_hwmp.c                           |  7 ++
- net/netfilter/ipset/ip_set_list_set.c              |  2 +-
- net/netfilter/nf_conntrack_pptp.c                  | 62 +++++++++--------
- net/qrtr/qrtr.c                                    |  2 +-
- net/sctp/sm_statefuns.c                            |  9 +--
- net/xfrm/xfrm_input.c                              |  2 +-
- net/xfrm/xfrm_output.c                             |  3 +-
- net/xfrm/xfrm_policy.c                             |  7 +-
- security/commoncap.c                               |  1 +
- sound/core/hwdep.c                                 |  4 +-
- sound/usb/mixer.c                                  |  8 +++
- 59 files changed, 338 insertions(+), 182 deletions(-)
-
-
+On Tue, Jun 02, 2020 at 04:51:48PM +0800, Xiao Yang wrote:
+> On 2020/4/14 0:30, Darrick J. Wong wrote:
+> > This might be a good time to introduce a few new helpers:
+> > 
+> > _require_scratch_dax ("Does $SCRATCH_DEV support DAX?")
+> > _require_scratch_dax_mountopt ("Does the fs support the DAX mount options?")
+> > _require_scratch_daX_iflag ("Does the fs support FS_XFLAG_DAX?")
+> Hi Darrick,
+> 
+> Now, I am trying to introduce these new helpers and have some questions:
+> 1) There are five testcases related to old dax implementation, should we
+> only convert them to new dax implementation or make them compatible with old
+> and new dax implementation?
+
+What is the 'old' DAX implementation?  ext2 XIP?
+
+> 2) I think _require_xfs_io_command "chattr" "x" is enough to check if fs
+> supports FS_XFLAG_DAX.  Is it necessary to add _require_scratch_dax_iflag()?
+> like this:
+> _require_scratch_dax_iflag()
+> {
+> 	_require_xfs_io_command "chattr" "x"
+> }
+
+I suggested that list based on the major control knobs that will be
+visible to userspace programs.  Even if this is just a one-line helper,
+its name is useful for recognizing which of those knobs we're looking
+for.
+
+Yes, you could probably save a trivial amount of time by skipping one
+iteration of bash function calling, but now everyone has to remember
+that the xfs_io chattr "x" flag means the dax inode flag, and not
+confuse it for chmod +x or something else.
+
+--D
+
+> Best Regards,
+> Xiao Yang
+> 
+> 
