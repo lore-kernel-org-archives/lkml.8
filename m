@@ -2,88 +2,252 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B697CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D855DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5702067B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:57:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXSg1ywy"
+	by mail.kernel.org (Postfix) with ESMTP id B8A9F20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgFBP54 (ORCPT
+        id S1727773AbgFBP6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:57:56 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57430 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbgFBP54 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:57:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591113475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ASapiG1/TIS7H1SxUqbkFSMoaWA/OIJ5pQnMhbATzrQ=;
-        b=iXSg1ywyREwAwsDxRnPReXTwIr9S/hecv1SJM3VG/MGi3sFvYWqsZ9DBRFxqQGEFwa5gym
-        AKM19/xL+MAcWQ+GOEYTxqQYANzpcIJTOTlrmm187yIBSXsT/p4NMB1o9ao+oZlszLjR7D
-        QFnmDCo9OHWO59IHU2YP34Aj5OeK38g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-274-ktdmV6otPgG0CWWrUc8lSQ-1; Tue, 02 Jun 2020 11:57:42 -0400
-X-MC-Unique: ktdmV6otPgG0CWWrUc8lSQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B14C4107B0EF;
-        Tue,  2 Jun 2020 15:57:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE51A1BCBE;
-        Tue,  2 Jun 2020 15:57:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200602153505.64714-1-colin.king@canonical.com>
-References: <20200602153505.64714-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH][next] afs: fix double kfree on cell_name on error exit path
+        Tue, 2 Jun 2020 11:58:38 -0400
+Received: from mga05.intel.com ([192.55.52.43]:27050 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgFBP6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:58:37 -0400
+IronPort-SDR: EbFDflaUnXCWD2boVWqk3+3J+WL7AJVMp6x1rdTaGKfjrdG1feg6UNnoHyQUtak5YRIfI/CLnk
+ lrk+AGwmIJGQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 08:58:33 -0700
+IronPort-SDR: kHaIjDCsHvkAGq/3AOLHmbq+AZJhv36bPdx4yOtqrqfHo2E+eM9dw4+q2lcC0amjl2RYZ5kk/A
+ SnS2OYTl5cdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,465,1583222400"; 
+   d="scan'208";a="272404241"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga006.jf.intel.com with ESMTP; 02 Jun 2020 08:58:33 -0700
+Date:   Tue, 2 Jun 2020 08:58:30 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 0/9] Enable ext4 support for per-file/directory DAX
+ operations
+Message-ID: <20200602155830.GD1505637@iweiny-DESK2.sc.intel.com>
+References: <20200528150003.828793-1-ira.weiny@intel.com>
+ <20200529025441.GI228632@mit.edu>
+ <20200529041717.GN228632@mit.edu>
+ <20200529181237.GA829208@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1504659.1591113454.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 02 Jun 2020 16:57:34 +0100
-Message-ID: <1504660.1591113454@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529181237.GA829208@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+Ted,
 
-> From: Colin Ian King <colin.king@canonical.com>
-> =
+Sorry for the top post but did you catch this reply?  Generally the patch looks
+good but I had a couple of questions because I don't fully grok the mount code
+especially with regard to EXT2 support.
 
-> The error exit path is currently kfree'ing cell_name for a second time,
-> the previous kfree of this object occurred a statement earlier. Fix this
-> by removing it.
-> =
+If you already saw it sorry for bothering you I just know that our email
+servers sometimes 'file' things for me and I miss them...  ;-)
 
-> Addresses-Coverity: ("Double free")
-> Fixes: 6147fe6b7f8c ("afs: Detect cell aliases 3 - YFS Cells with a cano=
-nical cell name op")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Thanks,
+Ira
 
-I've folded it in, thanks.
-
-David
-
+On Fri, May 29, 2020 at 11:12:38AM -0700, 'Ira Weiny' wrote:
+> On Fri, May 29, 2020 at 12:17:17AM -0400, Theodore Y. Ts'o wrote:
+> > On Thu, May 28, 2020 at 10:54:41PM -0400, Theodore Y. Ts'o wrote:
+> > > 
+> > > Thanks, applied to the ext4-dax branch.
+> > > 
+> > 
+> > I spoke too soon.  While I tried merging with the ext4.git dev branch,
+> > a merge conflict made me look closer and I realize I needed to make
+> > the following changes (see diff between your patch set and what is
+> > currently in ext4-dax).
+> > 
+> > Essentially, I needed to rework the branch to take into account commit
+> > e0198aff3ae3 ("ext4: reject mount options not supported when
+> > remounting in handle_mount_opt()").
+> > 
+> > The problem is that if you allow handle_mount_opt() to apply the
+> > changes to the dax settings, and then later on, ext4_remount() realize
+> > that we're remounting, and we need to reject the change, there's a
+> > race if we restore the mount options to the original configuration.
+> > Specifically, as Syzkaller pointed out, between when we change the dax
+> > settings and then reset them, it's possible for some file to be opened
+> > with "wrong" dax setting, and then when they are reset, *boom*.
+> > 
+> > The correct way to deal with this is to reject the mount option change
+> > much earlier, in handle_mount_opt(), *before* we mess with the dax
+> > settings.
+> > 
+> > Please take a look at the ext4-dax for the actual changes which I
+> > made.
+> > 
+> > Cheers,
+> > 
+> > 					- Ted
+> > 
+> > 
+> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > index 3658e3016999..9a37d70394b2 100644
+> > --- a/fs/ext4/super.c
+> > +++ b/fs/ext4/super.c
+> > @@ -1733,7 +1733,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
+> >  #define MOPT_NO_EXT3	0x0200
+> >  #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
+> >  #define MOPT_STRING	0x0400
+> > -#define MOPT_SKIP	0x0800
+> 
+> I think we still need MOPT_SKIP...
+> 
+> This was put in to skip these options when printing to deal with printing only
+> dax=inode when it was specified by the user.
+> 
+> Ah but I see now.  By taking MOPT_SET away you have created the same behavior?
+> 
+> This is  orthogonal to the remount issue right?
+> 
+> > +#define MOPT_NO_REMOUNT	0x0800
+> >  
+> >  static const struct mount_opts {
+> >  	int	token;
+> > @@ -1783,18 +1783,15 @@ static const struct mount_opts {
+> >  	{Opt_min_batch_time, 0, MOPT_GTE0},
+> >  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+> >  	{Opt_init_itable, 0, MOPT_GTE0},
+> > -	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
+> > -	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
+> > -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> > -	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
+> > -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> > -	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
+> > -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> > +	{Opt_dax, 0, MOPT_NO_REMOUNT},
+> > +	{Opt_dax_always, 0, MOPT_NO_REMOUNT},
+> > +	{Opt_dax_inode, 0, MOPT_NO_REMOUNT},
+> > +	{Opt_dax_never, 0, MOPT_NO_REMOUNT},
+> 
+> Even if MOPT_SET is redundant.  Why don't we need still need MOPT_EXT4_ONLY?
+> 
+> And why don't we need to associate the defines; EXT4_MOUNT_DAX_ALWAYS etc?
+> 
+> >  	{Opt_stripe, 0, MOPT_GTE0},
+> >  	{Opt_resuid, 0, MOPT_GTE0},
+> >  	{Opt_resgid, 0, MOPT_GTE0},
+> > -	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0},
+> > -	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING},
+> > +	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0 | MOPT_NO_REMOUNT},
+> > +	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING | MOPT_NO_REMOUNT},
+> >  	{Opt_journal_ioprio, 0, MOPT_NO_EXT2 | MOPT_GTE0},
+> >  	{Opt_data_journal, EXT4_MOUNT_JOURNAL_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
+> >  	{Opt_data_ordered, EXT4_MOUNT_ORDERED_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
+> > @@ -1831,7 +1828,7 @@ static const struct mount_opts {
+> >  	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
+> >  	{Opt_max_dir_size_kb, 0, MOPT_GTE0},
+> >  	{Opt_test_dummy_encryption, 0, MOPT_GTE0},
+> > -	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET},
+> > +	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET | MOPT_NO_REMOUNT},
+> >  	{Opt_err, 0, 0}
+> >  };
+> >  
+> > @@ -1929,6 +1926,12 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+> >  			 "Mount option \"%s\" incompatible with ext3", opt);
+> >  		return -1;
+> >  	}
+> > +	if ((m->flags & MOPT_NO_REMOUNT) && is_remount) {
+> > +		ext4_msg(sb, KERN_ERR,
+> > +			 "Mount option \"%s\" not supported when remounting",
+> > +			 opt);
+> > +		return -1;
+> > +	}
+> 
+> I think this is cleaner!
+> 
+> Thanks, I did test this but not while trying to manipulate files as the same time
+> as a remount.  So a race would not have been caught.
+> 
+> Thanks!
+> Ira
+> 
+> >  
+> >  	if (args->from && !(m->flags & MOPT_STRING) && match_int(args, &arg))
+> >  		return -1;
+> > @@ -2008,11 +2011,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+> >  		}
+> >  		sbi->s_resgid = gid;
+> >  	} else if (token == Opt_journal_dev) {
+> > -		if (is_remount) {
+> > -			ext4_msg(sb, KERN_ERR,
+> > -				 "Cannot specify journal on remount");
+> > -			return -1;
+> > -		}
+> >  		*journal_devnum = arg;
+> >  	} else if (token == Opt_journal_path) {
+> >  		char *journal_path;
+> > @@ -2020,11 +2018,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+> >  		struct path path;
+> >  		int error;
+> >  
+> > -		if (is_remount) {
+> > -			ext4_msg(sb, KERN_ERR,
+> > -				 "Cannot specify journal on remount");
+> > -			return -1;
+> > -		}
+> >  		journal_path = match_strdup(&args[0]);
+> >  		if (!journal_path) {
+> >  			ext4_msg(sb, KERN_ERR, "error: could not dup "
+> > @@ -2287,7 +2280,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+> >  	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
+> >  		int want_set = m->flags & MOPT_SET;
+> >  		if (((m->flags & (MOPT_SET|MOPT_CLEAR)) == 0) ||
+> > -		    (m->flags & MOPT_CLEAR_ERR) || m->flags & MOPT_SKIP)
+> > +		    (m->flags & MOPT_CLEAR_ERR))
+> >  			continue;
+> >  		if (!nodefs && !(m->mount_opt & (sbi->s_mount_opt ^ def_mount_opt)))
+> >  			continue; /* skip if same as the default */
+> > @@ -5474,24 +5467,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+> >  		}
+> >  	}
+> >  
+> > -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_NO_MBCACHE) {
+> > -		ext4_msg(sb, KERN_ERR, "can't enable nombcache during remount");
+> > -		err = -EINVAL;
+> > -		goto restore_opts;
+> > -	}
+> > -
+> > -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
+> > -	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER ||
+> > -	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_INODE) {
+> > -		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+> > -			"dax mount option with busy inodes while remounting");
+> > -		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> > -		sbi->s_mount_opt |= old_opts.s_mount_opt & EXT4_MOUNT_DAX_ALWAYS;
+> > -		sbi->s_mount_opt2 &= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+> > -		sbi->s_mount_opt2 |= old_opts.s_mount_opt2 &
+> > -				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+> > -	}
+> > -
+> >  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+> >  		ext4_abort(sb, EXT4_ERR_ESHUTDOWN, "Abort forced by user");
+> >  
