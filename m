@@ -2,169 +2,151 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D629C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9177FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09D482073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73046206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="hW/f3fxV"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="n7ldVgRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgFBB3y (ORCPT
+        id S1728373AbgFBBaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 21:29:54 -0400
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21198 "EHLO
-        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgFBB3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 21:29:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1591061351; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=X8YxfuPazl7mHnj3IxfR+M405TYMuZxNB09ddihbLVcWq4wa8Wq288iYKiDBTabkEVV//NdJSF3vOMaYzAh1e81jiT+/HRy5fG7NM1d+ZzRKa11hdoYKObR2MNYp3MELk/0n+1CZV2biMbOVxSaEhWQUKt5me+UCjsPUmkdR9d4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1591061351; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=I+UGxvPJIllkMa39UOn+I1LFV6NgfWusHXOM8wN/vO4=; 
-        b=SeAbEfI6UQlWUHnuMxDPtxSEMxuRD+2AWNjbg5j6a4LaFjdY2LLzU6xTnylwDdaynLn6WPEakHC9us98uGhz6LSe9dCY/Qj9xmNEmr/oyVm39Bm2kKHLYjsxkyeeZLnAASjQNzUV+Fu7wd1GDuGw8R0YoKRLjr9C2dm/myWmCb4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=apertussolutions.com;
-        spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-        dmarc=pass header.from=<dpsmith@apertussolutions.com> header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1591061351;
-        s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=I+UGxvPJIllkMa39UOn+I1LFV6NgfWusHXOM8wN/vO4=;
-        b=hW/f3fxVOGD7YCFd+5KsGL74sgwFOK/v+FpykSGK24tNYtyFhEbxmeJtxRxyHE1E
-        3N5G3qXNmd2RC4o2dcEwJgiPE7vOnzu1BXcwOYT+sPB7M4rkd9ZIr5gehEjOcuJdfKe
-        yZWx219hkcdzI7v5fLzjAzgzhXnfPPKbICApLXNY=
-Received: from [10.10.1.24] (c-73-129-47-101.hsd1.md.comcast.net [73.129.47.101]) by mx.zohomail.com
-        with SMTPS id 1591061348180264.5929256851624; Mon, 1 Jun 2020 18:29:08 -0700 (PDT)
-Subject: Re: [GRUB PATCH RFC 00/18] i386: Intel TXT secure launcher
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>,
-        grub-devel@gnu.org, LKML <linux-kernel@vger.kernel.org>,
-        trenchboot-devel@googlegroups.com, X86 ML <x86@kernel.org>,
-        alexander.burmashev@oracle.com,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        eric.snowberg@oracle.com, javierm@redhat.com,
-        kanth.ghatraju@oracle.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
-        Matthew Garrett <mjg59@google.com>, phcoder@gmail.com,
-        piotr.krol@3mdeb.com, Peter Jones <pjones@redhat.com>,
-        Ross Philipson <ross.philipson@oracle.com>
-References: <f954e9ef-295a-a8ce-0ff8-a88ad81b01a3@apertussolutions.com>
- <C6007C2B-AEFF-4A48-B791-323CDC04266D@amacapital.net>
-From:   "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Message-ID: <01cc067e-f2f2-d4da-6944-2724dbc7b61e@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Mon, 1 Jun 2020 21:29:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <C6007C2B-AEFF-4A48-B791-323CDC04266D@amacapital.net>
-Content-Type: text/plain; charset=utf-8
+        Mon, 1 Jun 2020 21:30:18 -0400
+Received: from mail-eopbgr80089.outbound.protection.outlook.com ([40.107.8.89]:25588
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725804AbgFBBaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 21:30:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FVmxWUQHafnUNqz8oQawKfuJ9R+0AqHpe+PnufYu5NZS+zMtX8S+8JP68XqNj09QJsZSMoCHmqdIu3Ixh6bvHTTdtFH6ILySqXCjZJ9yWPFZAKtNsmmf1Zp72s8nmC429hhh38G/swVA8SE30y6WpCkDVBd4OgGn/BbwNtWv0c3/K/AyeWk9UiTILPpo81wdI+yMabGn+mW3NdN1KMMvUE0dsb5eyw9zPJpVDyt3A6mJHX4heINTcxXaCAvsyC4QmNw1wX79oRtAiAK+47N9xPu5ohT2LgBKTFjDl073pbhAc+nzjG8Ol56FCFDsxnI1Z3uZSubrKYuRsxEA/rIVGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eXWSrDHmWDDaPsQ8anOVWjn7hHX4VhiJGoTb8l/gFw4=;
+ b=S3iyHuEYlZWpR5ciROhuRsAZzXGty62iHHbpwcDQkcovWN3GOt3PH6RqiUdzbb/Q8zJOiqoRTw/QES+vcBBRFUs08HzJWfNCUgo9paa00uZPTcEcMi7s++V6wuaTMxIdv1JFhyF3brvdYpotxcxE5SAPudrava49aUmLrDm1WxuRcdD+GVBhPiRDyGoFriPQ39XuQ+hKQxS6Cf9xKbEJq9yNBc9hYMmBJjObma2Co+Oo7l6iLbfMppPuvr3R4GPLEhi1eWHkB1HboCJHTU8vfKqaX7RxfOtabsMOz6PcNpAfrIeDxtdLgR8p6VH7dSK2WrJ+GMOlM9Dd9DKOB75HkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eXWSrDHmWDDaPsQ8anOVWjn7hHX4VhiJGoTb8l/gFw4=;
+ b=n7ldVgRI9Loe3R0Xb7uxkdYuZuwlXlZzQhqSuZjGzR9DKJW68WZhJgVQMjGmxFUcaGfWWnGpLjEMlqCbUHJRqQagqNEpgaKpQWIewN5BXVDzPdts/gN5Ps4laFREz9/q9jYM5+4vPjCoIeqFHqWMluocSoUbAbIQRBN79AeGRkY=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18; Tue, 2 Jun
+ 2020 01:30:13 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
+ 01:30:13 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Jia Hongtao <hongtao.jia@nxp.com>
+Subject: RE: [PATCH V2] dt-bindings: thermal: Convert qoriq to json-schema
+Thread-Topic: [PATCH V2] dt-bindings: thermal: Convert qoriq to json-schema
+Thread-Index: AQHWN8cm5TKythWm10iiXmW2MSrcIajD+siAgACPbVA=
+Date:   Tue, 2 Jun 2020 01:30:13 +0000
+Message-ID: <DB3PR0402MB3916B92E3975C594DD980B08F58B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1590982520-5437-1-git-send-email-Anson.Huang@nxp.com>
+ <CAL_JsqKVL4J=-aLPsSYgGVdnx3qjA=J8M08ztzv9=0V9gY=14A@mail.gmail.com>
+In-Reply-To: <CAL_JsqKVL4J=-aLPsSYgGVdnx3qjA=J8M08ztzv9=0V9gY=14A@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 28aecac9-43e9-495f-1cf6-08d806947f45
+x-ms-traffictypediagnostic: DB3PR0402MB3916:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB391688EAA8253BC4906A3E4DF58B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0422860ED4
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J/k43LCm/3PjF4OqGp/sliYMSivq0yA6CsotMJOrfzR8V3PQBfciZzB5eXTF+VItmwHxu/xXO6Hb39xJwBWGaI8P7Ba7zV1IEAyTXZh0T10JpYZSFG5bTInSxBqXP1xVP20A3JrI4hFNPCfxSKrO+tg4Bw+icGbFhB8KNeuRgjIxI+h51HZkit7jJXhKT/pDfPw6HjHgNPvQAJNC3x8QldgHp1kjObxrp4fhLLZVjkAI6g5AJ/fqRrei5DuSiHeDk+raCxTLidjGrIMDXajsvqCYWvh8SbdmVrfZnetlgSKvo9k4yGeePwt/kDujVbpwQhkskXtw2B4iAOVdU6GS2U7aZ94vwvpv1WLA0/aKw/IID8q2u9AI4jFCKihF5XMoOlyMdsEPQFV9RfmdZ6JCCQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(52536014)(8936002)(66476007)(64756008)(66556008)(66446008)(55016002)(5660300002)(9686003)(26005)(53546011)(6506007)(44832011)(83080400001)(71200400001)(316002)(2906002)(8676002)(83380400001)(478600001)(86362001)(7696005)(54906003)(66946007)(33656002)(76116006)(4326008)(45080400002)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: t9Gd/v+thKNdYUxjPcWQxL4jYdWQrsYcp74PnQ9eOiCToyYQlX7w+/GFXXyTJfB6zEQrgrUwkOvShjM245YKJrys2ae1cpmqV0wS04+5Xz/zXwoz7+w4UPx+vNZqQ9Go6XDPXCd23UpkOoA5PA/teCB9YR7VgGAaj1cGq7hlFyB5lFAlDcxx4Grfd/fN6VUEQgxxTw+Ys3EPSq8m9SIP/hPXCuGvA77aPmLtWVlmiY3/M1W00uvkSKL1ZsesDkECzlnhLkk2Y3QBRdApSYy52NPllC7Mj5Sj3M8JVNsELWlIzDOB4C0Xzg4bghNWdAwrVYj4BMNQwXMy7fJmkB2GhZP2le9WLfVtv8RPFryzhTQlA0vP5LPNQKasEGh5atqdj7HkzB4HNqeHkuM4L6BYrsUTvXxtLKYsMQ6Ng4mWEPxhuJuejkIiTFwL1zhkk7LnCm1yDcWV7ImbnehfJ9Qzi0menFM+pzslTlOy/io4OKY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28aecac9-43e9-495f-1cf6-08d806947f45
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2020 01:30:13.1578
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sTnSsZgdsw6YtGEFoQNelXVoL5+EjCkO2ej0DpCpxK6Htt51vFLhv0ksB6f2vETYhtwfARJdyBQSfez/0wHTrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3916
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/20 8:49 PM, Andy Lutomirski wrote:
->=20
->=20
->> On Jun 1, 2020, at 5:14 PM, Daniel P. Smith <dpsmith@apertussolutions.co=
-m> wrote:
->>
->> =EF=BB=BFOn 6/1/20 3:39 PM, Andy Lutomirski wrote:
->>>>> .
->>
->> In other words, the log for the relaunch to attest what is currently
->> running is really no less useful than using the first launch log to
->> attest to the what was running in the first launch.
->>
->=20
-> Maybe it would help if you give some examples of what=E2=80=99s actually =
-in this log and why anyone, Linux or otherwise, cares for any purpose other=
- than debugging.  We=E2=80=99re talking about a log written by something li=
-ke GRUB, right?  If so, I=E2=80=99m imagining things like:
->=20
-> GRUB: loading such-and-such module
-> GRUB: loading the other module
-> GRUB: loading Linux at /boot/vmlinuz-whatever
-> GRUB: about to do the DRTM launch. Bye-bye.
->=20
-> This is surely useful for debugging.  But, if I understand your security =
-model correctly, it=E2=80=99s untrustworthy in the sense that this all come=
-s from before the DRTM launch and it could have been tampered with by SMM c=
-ode or even just a malicious USB stick.  Or even a malicious compromised ke=
-rnel on the same machine. So you could hash this log into a PCR, but I don=
-=E2=80=99t see what you=E2=80=99ve accomplished by doing so.
->=20
-> Or have I misunderstood what this log is?  Perhaps you=E2=80=99re talking=
- about something else entirely.
->=20
-
-Oh I see! Yes we are discussing two different logs and yes there are two
-"logs" in play here. The start of this thread by Lukasz was on the TPM
-Event log. This is the log that is a record of TPM events for the DRTM
-chain, you can see the equivalent for SRTM with `cat
-/sys/kernel/security/tpm0/ascii_bios_measurements`(provided you system
-configuration is set up for SRTM). The second log, which for lack of a
-better name is the "debug log", is what you are referring to and is in
-another proposal that just recently came out, "[BOOTLOADER SPECIFICATION
-RFC] The bootloader log format for TrenchBoot"[1].
-
-You are correct, the "debug log" is just filled with messages from
-components during the DRTM launch chain. While relaunch is being kept in
-mind as we work through getting first launch complete, not all aspects
-have been considered. What happens to the debug log on relaunch has no
-security relevance, as you called out earlier, and at this point I would
-say is an exercise for those integrating relaunch when it becomes
-available. I would expect them to treat it no different than the kmesg
-and syslog buffers on kexec/reboot, some may opt to kept a historical
-record and others will just let it disappear into the ether.
-
-Apologies that we got disconnected, I hope we are in sync now.
-
-[1] https://lists.gnu.org/archive/html/grub-devel/2020-05/msg00223.html
-
+SGksIFJvYg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjJdIGR0LWJpbmRpbmdzOiB0aGVybWFs
+OiBDb252ZXJ0IHFvcmlxIHRvIGpzb24tc2NoZW1hDQo+IA0KPiBPbiBTdW4sIE1heSAzMSwgMjAy
+MCBhdCA5OjQ1IFBNIEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToN
+Cj4gPg0KPiA+IENvbnZlcnQgdGhlIHFvcmlxIHRoZXJtYWwgYmluZGluZyB0byBEVCBzY2hlbWEg
+Zm9ybWF0IHVzaW5nDQo+ID4ganNvbi1zY2hlbWENCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFu
+c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMgc2lu
+Y2UgVjE6DQo+ID4gICAgICAgICAtIGFkZCAnbWF4SXRlbXMnIGZvciAnZnNsLHRtdS1yYW5nZScg
+cHJvcGVydHk7DQo+ID4gICAgICAgICAtIGFkZCAnbWluSXRlbXMnLydtYXhJdGVtcycgYW5kIGl0
+ZW1zIGRlc2NyaXB0aW9ucyBmb3INCj4gJ2ZzbCx0bXUtY2FsaWJyYXRpb24nIHByb3BlcnR5Ow0K
+PiA+ICAgICAgICAgLSByZW1vdmUgZGVzY3JpcHRpb24gZm9yIGNvbW1vbiBwcm9wZXJ0eSAnI3Ro
+ZXJtYWwtc2Vuc29yLWNlbGxzJzsNCj4gPiAgICAgICAgIC0gcmVmaW5lICdmc2wsdG11LWNhbGli
+cmF0aW9uJyBmb3JtYXQgaW4gZXhhbXBsZS4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnR4dCAgfCAgNzENCj4gPiAtLS0tLS0tLS0t
+LS0tICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRoZXJtYWwueWFtbCB8
+DQo+ID4gMTEyICsrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEx
+MiBpbnNlcnRpb25zKCspLCA3MSBkZWxldGlvbnMoLSkgIGRlbGV0ZSBtb2RlDQo+ID4gMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRoZXJtYWwu
+dHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy90aGVybWFsL3FvcmlxLXRoZXJtYWwueWFtbA0KPiANCj4gWy4uLl0NCj4gDQo+
+ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Ro
+ZXJtYWwvcW9yaXEtdGhlcm1hbC55YW1sDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdGhlcm1hbC9xb3JpcS10aGVybWFsLnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmM1ZGY5OTkNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvcW9yaXEtdGhl
+cm1hbC55YW1sDQo+ID4gQEAgLTAsMCArMSwxMTIgQEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRl
+bnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpICVZQU1MIDEuMg0KPiA+ICst
+LS0NCj4gPiArJGlkOg0KPiA+ICtodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91
+dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmRldmkNCj4gPg0KPiArY2V0cmVlLm9yZyUyRnNj
+aGVtYXMlMkZ0aGVybWFsJTJGcW9yaXEtdGhlcm1hbC55YW1sJTIzJmFtcDtkYXRhPTANCj4gMiU3
+Qw0KPiA+DQo+ICswMSU3Q0Fuc29uLkh1YW5nJTQwbnhwLmNvbSU3Q2JiMTQyMDBiZjlkZDQ3NDA0
+ZmQzMDhkODA2NGM1NzE5DQo+ICU3QzY4NmVhDQo+ID4NCj4gKzFkM2JjMmI0YzZmYTkyY2Q5OWM1
+YzMwMTYzNSU3QzAlN0MwJTdDNjM3MjY2MjcyMjMyMzI5NzExJmFtDQo+IHA7c2RhdGE9Z3oNCj4g
+PiArekxVcnI5ZjU2SGNQQjFpeTR4UXZqMnR3NDFNYzlBZjVRVUpidXZuQ1klM0QmYW1wO3Jlc2Vy
+dmVkPTANCj4gPiArJHNjaGVtYToNCj4gPiAraHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVj
+dGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZkZXZpDQo+ID4NCj4gK2NldHJlZS5v
+cmclMkZtZXRhLXNjaGVtYXMlMkZjb3JlLnlhbWwlMjMmYW1wO2RhdGE9MDIlN0MwMSU3Q0Fucw0K
+PiBvbi5IdWENCj4gPg0KPiArbmclNDBueHAuY29tJTdDYmIxNDIwMGJmOWRkNDc0MDRmZDMwOGQ4
+MDY0YzU3MTklN0M2ODZlYTFkM2JjMg0KPiBiNGM2ZmE5Mg0KPiA+DQo+ICtjZDk5YzVjMzAxNjM1
+JTdDMCU3QzAlN0M2MzcyNjYyNzIyMzIzMjk3MTEmYW1wO3NkYXRhPTdxa0hrcGoNCj4gWFBYTVlu
+MTNjDQo+ID4gK0kxcG5kQndGZ2ZJMiUyRjZnTWZDZ1dQclFTbm1jJTNEJmFtcDtyZXNlcnZlZD0w
+DQo+ID4gKw0KPiA+ICt0aXRsZTogVGhlcm1hbCBNb25pdG9yaW5nIFVuaXQgKFRNVSkgb24gRnJl
+ZXNjYWxlIFFvcklRIFNvQ3MNCj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gSG9u
+Z3RhbyBKaWEgPGhvbmd0YW8uamlhQGZyZWVzY2FsZS5jb20+DQo+IA0KPiBUaGlzIGVtYWlsIGlz
+IGJvdW5jaW5nLiBTaG91bGQgYmUgQG54cC5jb20/DQoNClllcywgYnV0IGxvb2tzIGxpa2UgaG9u
+Z3RhbyBpcyBubyBsb25nZXIgaW4gTlhQLCBzbyB0aGUgaG9uZ3Rhby5qaWFAbnhwLmNvbQ0KY2Fu
+IE5PVCBiZSB0b3VjaGVkIGluLCBJIHNlbnQgb3V0IFYzIHBhdGNoIGFuZCBhbHNvIGdvdCB0aGUg
+bm90aWZpY2F0aW9uIG9mIGZhaWxlZA0KdG8gc2VuZCB0byBob25ndGFvLmppYUBueHAuY29tLCBz
+byBJIHdpbGwgdXNlIG15c2VsZiBhcyBtYWludGFpbmVyLCBjb3JyZWN0IG1lIGlmIGFueXRoaW5n
+DQp3cm9uZy4gV2lsbCBzZW5kIGEgVjQuDQoNClRoYW5rcywNCkFuc29uIA0KDQo=
