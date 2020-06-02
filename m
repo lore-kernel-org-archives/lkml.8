@@ -2,100 +2,138 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C598C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715F2206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:39:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y97cQnPw"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB23206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgFBTjW (ORCPT
+        id S1728275AbgFBTjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFBTjV (ORCPT
+        Tue, 2 Jun 2020 15:39:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57156 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFBTjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:39:21 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A215C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=07uMamPsL7K8+1SyUHisvSOhlqTxoE0W90sdhD4QMmw=; b=Y97cQnPwok8IfPYNnHXAxYFLE9
-        WdQLHiOQg9IagRkIMwtUp1HAau/GbFgTi2G3wacHKgYLdxa0zK3cdzR2QqYPg9VlhiMrVnefwynHH
-        w74VxgLvnJfHT7JdRRFJfeR3VWvNEBKI4IL73PWtqfcDlyK1b8TmonSNb6mm+Loa+aCBSo86diW4Y
-        q73nrxkVnRGEMKbnqlbIoKzPjuUde5eeyIDA9IXIZ50allf/C84wOs96jQ+Xwlpjrug+w0tIK0niX
-        nM47c6PpjjLO2qPj+j7lj9g2XfdMJG0Alh5CjgwJsCiYyCt2lGboKn3F2nKzU1M1nzvWPn5w2k2zI
-        AGllSQRQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgCkQ-0003KJ-JB; Tue, 02 Jun 2020 19:38:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1B30A30081A;
-        Tue,  2 Jun 2020 21:38:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0EB462020B7BF; Tue,  2 Jun 2020 21:38:53 +0200 (CEST)
-Date:   Tue, 2 Jun 2020 21:38:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of
- KASAN and UBSAN
-Message-ID: <20200602193853.GF2604@hirez.programming.kicks-ass.net>
-References: <20200602184409.22142-1-elver@google.com>
- <CAKwvOd=5_pgx2+yQt=V_6h7YKiCnVp_L4nsRhz=EzawU1Kf1zg@mail.gmail.com>
- <20200602191936.GE2604@hirez.programming.kicks-ass.net>
- <CANpmjNP3kAZt3kXuABVqJLAJAW0u9-=kzr-QKDLmO6V_S7qXvQ@mail.gmail.com>
+        Tue, 2 Jun 2020 15:39:36 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 259968030808;
+        Tue,  2 Jun 2020 19:39:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GjhvlG4R7G07; Tue,  2 Jun 2020 22:39:31 +0300 (MSK)
+Date:   Tue, 2 Jun 2020 22:39:31 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 02/10] spi: dw: Add support for RX sample delay register
+Message-ID: <20200602193931.vl36k3c6uyiaizah@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-3-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CANpmjNP3kAZt3kXuABVqJLAJAW0u9-=kzr-QKDLmO6V_S7qXvQ@mail.gmail.com>
+In-Reply-To: <20200513140031.25633-3-lars.povlsen@microchip.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 09:25:47PM +0200, Marco Elver wrote:
-> On Tue, 2 Jun 2020 at 21:19, Peter Zijlstra <peterz@infradead.org> wrote:
-
-> > Currently x86 only, but I know other arch maintainers are planning to
-> > have a hard look at their code based on our findings.
+On Wed, May 13, 2020 at 04:00:23PM +0200, Lars Povlsen wrote:
+> This add support for the RX_SAMPLE_DLY register. If enabled in the
+> Designware IP, it allows tuning of the rx data signal by means of an
+> internal rx sample fifo.
 > 
-> I've already spotted a bunch of 'noinstr' outside arch/x86 e.g. in
-> kernel/{locking,rcu}, and a bunch of these functions use atomic_*, all
-> of which are __always_inline. The noinstr uses outside arch/x86 would
-> break builds on all architecture with GCC <= 7 when using sanitizers.
-> At least that's what led me to conclude we need this for all
-> architectures.
+> The register is located at offset 0xf0, and if the option is not
+> enabled in the IP, changing the register will have no effect.
+> 
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  drivers/spi/spi-dw.c | 7 +++++++
+>  drivers/spi/spi-dw.h | 2 ++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+> index e572eb34a3c1a..32997f28fa5bb 100644
+> --- a/drivers/spi/spi-dw.c
+> +++ b/drivers/spi/spi-dw.c
+> @@ -81,6 +81,9 @@ static ssize_t dw_spi_show_regs(struct file *file, char __user *user_buf,
+>  			"DMATDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMATDLR));
+>  	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+>  			"DMARDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMARDLR));
 
-True; but !x86 could, probably, get away with not fully respecting
-noinstr at this time. But that'd make a mess of things again, so my
-preference is as you did, unilaterally raise the min version for *SAN.
+> +	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+> +			 "RX_SAMPLE_DLY: \t0x%08x\n",
+> +			 dw_readl(dws, DW_SPI_RX_SAMPLE_DLY));
 
-That said; noinstr's __no_sanitize combined with atomic_t might be
-'interesting', because the regular atomic things have explicit
-annotations in them. That should give validation warnings for the right
-.config, I'll have to go try -- so far I've made sure to never enable
-the *SAN stuff.
+debugfs_reg32 interface is now utilized in the driver to dump the registers
+state. So this will have to be converted to just a new entry in the
+dw_spi_dbgfs_regs array.
 
+>  	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
+>  			"=================================\n");
+> 
+> @@ -315,6 +318,10 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+>  		spi_set_clk(dws, chip->clk_div);
+>  	}
+> 
 
+> +	/* Apply RX sample delay, iff requested (nonzero) */
+
+s/iff/if
+
+> +	if (dws->rx_sample_dly)
+> +		dw_writel(dws, DW_SPI_RX_SAMPLE_DLY, dws->rx_sample_dly);
+> +
+>  	dws->n_bytes = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
+>  	dws->dma_width = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
+> 
+> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+> index 1bf5713e047d3..ed6e47b3f50da 100644
+> --- a/drivers/spi/spi-dw.h
+> +++ b/drivers/spi/spi-dw.h
+> @@ -31,6 +31,7 @@
+>  #define DW_SPI_IDR			0x58
+>  #define DW_SPI_VERSION			0x5c
+>  #define DW_SPI_DR			0x60
+> +#define DW_SPI_RX_SAMPLE_DLY		0xf0
+>  #define DW_SPI_CS_OVERRIDE		0xf4
+> 
+>  /* Bit fields in CTRLR0 */
+> @@ -111,6 +112,7 @@ struct dw_spi {
+> 
+>  	int			cs_override;
+>  	u32			reg_io_width;	/* DR I/O width in bytes */
+
+> +	u8			rx_sample_dly;	/* RX fifo tuning (option) */
+
+This doesn't seem like a good place for this parameter. The sample delay is
+SPI-slave specific. So as I see it, the parameter should be moved to the
+chip_data.
+
+-Sergey
+
+>  	u16			bus_num;
+>  	u16			num_cs;		/* supported slave numbers */
+>  	void (*set_cs)(struct spi_device *spi, bool enable);
+> --
+> 2.26.2
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
