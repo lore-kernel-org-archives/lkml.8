@@ -2,109 +2,116 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47591C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE95206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cV6oh/I7"
+	by mail.kernel.org (Postfix) with ESMTP id 0F322206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgFBJay (ORCPT
+        id S1726904AbgFBJb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:30:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBJay (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:30:54 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECF2C061A0E;
-        Tue,  2 Jun 2020 02:30:53 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bmxQ1HgNz9sPF;
-        Tue,  2 Jun 2020 19:30:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591090251;
-        bh=AQe/VUiGG3MYATjhx0CdnC6wc5yX+zATfOS9ULtPrH8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cV6oh/I7C8r+fP9m8u6TEC5o7gHHQ50b2Hps4YsNmalulok+FpvNfx6AowJy4j0Ew
-         8gBHfdtWSDszWNiuSaAtYTEEXdgyRMc4PU1OajZjBVgqE2MqL3Na0hS+rp9O3+U+6h
-         j01W/bZVmJc2tUVtK4JCHyUdGcg0vI+9t2SjPpMtnu5LnasO7vIFoECUWldFn51oKo
-         y2BvYhDpANTNgTlvymYxT58HzRRl5HN7TJ2wC+nVIESkFvSxow43KQ4HNjW41ZQ58P
-         8GHmTAk6ggDAzSJsd4Sd19PHDY0KE83bTbXeT4EZX0SEo9SX+nIV9fMwhYCrtHxLnm
-         9hzw/jIuDw60g==
-Date:   Tue, 2 Jun 2020 19:30:48 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>
-Subject: linux-next: manual merge of the akpm tree with the net-next tree
-Message-ID: <20200602193048.6ab63e72@canb.auug.org.au>
+        Tue, 2 Jun 2020 05:31:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:48558 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgFBJb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:31:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45ACC55D;
+        Tue,  2 Jun 2020 02:31:28 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A47393F305;
+        Tue,  2 Jun 2020 02:31:26 -0700 (PDT)
+References: <20200527151613.16083-1-benjamin.gaignard@st.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     hugues.fruchet@st.com, mchehab@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        vincent.guittot@linaro.org, rjw@rjwysocki.net
+Subject: Re: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
+In-reply-to: <20200527151613.16083-1-benjamin.gaignard@st.com>
+Date:   Tue, 02 Jun 2020 10:31:21 +0100
+Message-ID: <jhjpnahizkm.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CCBnNGpy6kpy/I7QlBCJzIU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CCBnNGpy6kpy/I7QlBCJzIU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi Benjamin,
 
-Today's linux-next merge of the akpm tree got a conflict in:
+On 27/05/20 16:16, Benjamin Gaignard wrote:
+> Before start streaming set cpufreq minimum frequency requirement.
+> The cpufreq governor will adapt the frequencies and we will have
+> no latency for handling interrupts.
+>
 
-  kernel/trace/bpf_trace.c
+Few comments below from someone oblivious to your platform, they may not
+be all that relevant but I figured I'd pitch in anyway.
 
-between commit:
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/media/platform/stm32/stm32-dcmi.c | 29 ++++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index b8931490b83b..97c342351569 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -13,6 +13,7 @@
+>
+>  #include <linux/clk.h>
+>  #include <linux/completion.h>
+> +#include <linux/cpufreq.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/init.h>
+> @@ -99,6 +100,8 @@ enum state {
+>
+>  #define OVERRUN_ERROR_THRESHOLD	3
+>
+> +#define DCMI_MIN_FREQ	650000 /* in KHz */
+> +
 
-  b36e62eb8521 ("bpf: Use strncpy_from_unsafe_strict() in bpf_seq_printf() =
-helper")
+This assumes the handling part is guaranteed to always run on the same CPU
+with the same performance profile (regardless of the platform). If that's
+not guaranteed, it feels like you'd want this to be configurable in some
+way.
 
-from the net-next tree and patch:
+>  struct dcmi_graph_entity {
+>       struct v4l2_async_subdev asd;
+>
+[...]
+> @@ -2020,6 +2042,8 @@ static int dcmi_probe(struct platform_device *pdev)
+>               goto err_cleanup;
+>       }
+>
+> +	dcmi->policy = cpufreq_cpu_get(0);
+> +
 
-  "bpf:bpf_seq_printf(): handle potentially unsafe format string better"
+Ideally you'd want to fetch the policy of the CPU your IRQ (and handling
+thread) is affined to; The only compatible DTS I found describes a single
+A7, which is somewhat limited in the affinity area...
 
-from the akpm tree.
-
-I fixed it up (I just dropped the akpm tree patch (and its fix) for now)
-and can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CCBnNGpy6kpy/I7QlBCJzIU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7WHEgACgkQAVBC80lX
-0GzaFAf/cQHv6SkHPmkCK9lsZ37Eb2X0OhGy6aK3r7CfiDrKIME/QTIPQAi37Ej5
-w028QbX1s3Lrr6WxNYa9tQSv8mya5yVqE/HS42hAexGDViLRg617Z2ybbljqBS9s
-JBkl8n56KJv+0ZYA1dG4jlkt9tYSSqUSbKjOJb3CzcwUNUqWjba52tpitRiYrwWz
-g4khpa9UEYm+MfWlmh26irXy+4oKK+7xEy28BtAhN99zf51mwK50pEPUlkjC4AaC
-Zq13+gUDIEEL7uhaeEFOkWtwb9AOnOhor0OWeNj+hubnlcSZeORs+tsdTO8BcCKn
-A4wgg6cAZADqlNRLYeG9jsyIuDUmhw==
-=ZwTb
------END PGP SIGNATURE-----
-
---Sig_/CCBnNGpy6kpy/I7QlBCJzIU--
+>       dev_info(&pdev->dev, "Probe done\n");
+>
+>       platform_set_drvdata(pdev, dcmi);
+> @@ -2049,6 +2073,9 @@ static int dcmi_remove(struct platform_device *pdev)
+>
+>       pm_runtime_disable(&pdev->dev);
+>
+> +	if (dcmi->policy)
+> +		cpufreq_cpu_put(dcmi->policy);
+> +
+>       v4l2_async_notifier_unregister(&dcmi->notifier);
+>       v4l2_async_notifier_cleanup(&dcmi->notifier);
+>       media_entity_cleanup(&dcmi->vdev->entity);
