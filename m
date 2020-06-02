@@ -2,148 +2,125 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D087EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AADAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A830D2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56662068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bl7mUjpT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="UJulf+QV";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="UJulf+QV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgFBPYP (ORCPT
+        id S1726461AbgFBPZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:24:15 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37870 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFBPYO (ORCPT
+        Tue, 2 Jun 2020 11:25:18 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:46588 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726112AbgFBPZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:24:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052FI3TC079934;
-        Tue, 2 Jun 2020 15:24:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=RdKFhYWt2EVLN8DEYLxppo07dg9bx6p1SH/2PNSToNc=;
- b=bl7mUjpT2KhULZT0AnX4fMuZvGkjOkLUxpInTBx6wean0WADTqamDu1Bp0JGMSUu5AJU
- i6VGllzD4u6UDyYSBgtHIvveRn0+fb5DD0DLcbTgCXVy5Gw46RCqkTvDmhquiZ/zCEry
- tAq85L8nFWtDmBlb8gCXiWm6saYWy/+3dyd2Cu9mFpZf/g0II7QGSgYMBm/NZwx5dVGz
- MucVU6JHpEfhSUaXoPwYsFexcIP3qy7z3ovi2NaolrPlCvQzaFC6yUijVDzzeSfmC6ck
- 4J+z49SLYgClLb+5DBnHurqsx8vDd3u2OGtXBIjJVQDqZuNqtoKFPmuik+zpw8lRi4k9 dg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31dkruhpeu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 15:24:05 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052FDH6x051475;
-        Tue, 2 Jun 2020 15:22:05 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 31c1dxdwp0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 15:22:05 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052FM4iS020836;
-        Tue, 2 Jun 2020 15:22:04 GMT
-Received: from [192.168.0.190] (/68.201.65.98)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 08:22:03 -0700
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "jfs-discussion@lists.sourceforge.net" 
-        <jfs-discussion@lists.sourceforge.net>
-Subject: [GIT PULL] JFS fix for v5.8
-From:   Dave Kleikamp <dave.kleikamp@oracle.com>
-Autocrypt: addr=dave.kleikamp@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- rnNNL3zBkwD3nWcTxFnX
-Message-ID: <3be89f81-68af-3520-56f6-f4a34b823a38@oracle.com>
-Date:   Tue, 2 Jun 2020 10:22:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Tue, 2 Jun 2020 11:25:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B689E8EE268;
+        Tue,  2 Jun 2020 08:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591111516;
+        bh=9h1fCPan50/AtVC4RVH1VdFvVOUfimRNMHrA7y4N+zY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=UJulf+QVb/cdiB7yVjHvLsl0JSvP6p3JItwvZpl4WJoyLJIcMUtzzKoisQnrRjBCl
+         +otm5Mmq/+yAQ288lLQmoH/L5Oh3+pON9R9RCJCgDJ5/CkS0dXVAY9aQvb3iVgJIxb
+         gyMihm1LzaSkjC9R4uGhN1K7XKCEiur3iViclHVs=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8ds-ZsA7ujHy; Tue,  2 Jun 2020 08:25:16 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D3E348EE0F8;
+        Tue,  2 Jun 2020 08:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591111516;
+        bh=9h1fCPan50/AtVC4RVH1VdFvVOUfimRNMHrA7y4N+zY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=UJulf+QVb/cdiB7yVjHvLsl0JSvP6p3JItwvZpl4WJoyLJIcMUtzzKoisQnrRjBCl
+         +otm5Mmq/+yAQ288lLQmoH/L5Oh3+pON9R9RCJCgDJ5/CkS0dXVAY9aQvb3iVgJIxb
+         gyMihm1LzaSkjC9R4uGhN1K7XKCEiur3iViclHVs=
+Message-ID: <1591111514.4253.32.camel@HansenPartnership.com>
+Subject: Re: kobject_init_and_add is easy to misuse
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Wang Hai <wanghai38@huawei.com>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        khlebnikov@yandex-team.ru, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Tue, 02 Jun 2020 08:25:14 -0700
+In-Reply-To: <20200602121035.GL19604@bombadil.infradead.org>
+References: <20200602115033.1054-1-wanghai38@huawei.com>
+         <20200602121035.GL19604@bombadil.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=718
- spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1011
- adultscore=0 mlxlogscore=756 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
+On Tue, 2020-06-02 at 05:10 -0700, Matthew Wilcox wrote:
+> On Tue, Jun 02, 2020 at 07:50:33PM +0800, Wang Hai wrote:
+> > syzkaller reports for memory leak when kobject_init_and_add()
+> > returns an error in the function sysfs_slab_add() [1]
+> > 
+> > When this happened, the function kobject_put() is not called for
+> > the
+> > corresponding kobject, which potentially leads to memory leak.
+> > 
+> > This patch fixes the issue by calling kobject_put() even if
+> > kobject_init_and_add() fails.
+> 
+> I think this speaks to a deeper problem with kobject_init_and_add()
+> -- the need to call kobject_put() if it fails is not readily apparent
+> to most users.  This same bug appears in the first three users of
+> kobject_init_and_add() that I checked --
+> arch/ia64/kernel/topology.c
+> drivers/firmware/dmi-sysfs.c
+> drivers/firmware/efi/esrt.c
+> drivers/scsi/iscsi_boot_sysfs.c
+> 
+> Some do get it right --
+> arch/powerpc/kernel/cacheinfo.c
+> drivers/gpu/drm/ttm/ttm_bo.c
+> drivers/gpu/drm/ttm/ttm_memory.c
+> drivers/infiniband/hw/mlx4/sysfs.c
+> 
+> I'd argue that the current behaviour is wrong,
 
-  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
+Absolutely agree with this.  We have a big meta pattern here where we
+introduce functions with tortuous semantics then someone creates a
+checker for the semantics and misuses come crawling out of the woodwork
+leading to floods of patches, usually for little or never used error
+paths, which really don't buy anything apart from theoretical
+correctness.  Just insisting on simple semantics would have avoided
+this.
 
-are available in the Git repository at:
+>  that kobject_init_and_add() should call kobject_put() if the add
+> fails.  This would need a tree-wide audit.  But somebody needs to do
+> that anyway because based on my random sampling, half of the users
+> currently get it wrong.
 
-  git://github.com/kleikamp/linux-shaggy.git tags/jfs-5.8
+Well, the semantics of kobject_init() are free on fail, so these are
+the ones everyone seems to be using.  The semantics of kobject_add are
+put on fail.  The problem is that put on fail isn't necessarily correct
+in the kobject_init() case: the release function may make assumptions
+about the object hierarchy which aren't satisfied in the kobject_init()
+failure case.  This argues that kobject_init_and_add() can't ever have
+correct semantics and we should eliminate it.
 
-for you to fetch changes up to 7aba5dcc234635b44b2781dbc268048cfba388ad:
+James
 
-  jfs: Replace zero-length array with flexible-array member (2020-03-09 15:18:51 -0500)
 
-----------------------------------------------------------------
-Replace zero-length array in JFS
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      jfs: Replace zero-length array with flexible-array member
-
- fs/jfs/jfs_dtree.c | 2 +-
- fs/jfs/jfs_xattr.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
