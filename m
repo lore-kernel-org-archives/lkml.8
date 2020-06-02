@@ -2,188 +2,205 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A29BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDEC6206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="pJQn5zDp"
+	by mail.kernel.org (Postfix) with ESMTP id F2CF220738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgFBJvz (ORCPT
+        id S1726935AbgFBJv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:51:55 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:48275 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726139AbgFBJvy (ORCPT
+        Tue, 2 Jun 2020 05:51:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:54684 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgFBJvz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:51:54 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id g3aFjWeMdCKzeg3aIjIdIB; Tue, 02 Jun 2020 11:51:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1591091512; bh=rbS5BwZABjDn6ZQb04atYwsKFjjjmIjIMi4MB3uaqmg=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=pJQn5zDpx582MBsb/DYJlUnMfz08QZq9mHxdad1lT2CismDuKKnGtkv5SZuuzoDcG
-         3d83F9arLIFR7MaUyGDlliOu4r9ekzjy1TF0CzGa2GeuZOuUVaYPwln1XThbcK78VX
-         ADfMh5mEtobHwJHCOlN5PbI5IjXthOztH5EujMaw7FMFTg5gYS/lb6yw+520ZL71Md
-         DKt+Wxc6JX4YeSyO9Y5Ju3Lnh0vRkz4rO9mwPtkcpUcOhC4nZu8jqYDfZYypXpi6DX
-         zoAtV0o9DuuB5Ga4hqjtMn+KDvD49iH5XkHPEbZLbPa8Ovi7XOmrSQu/Wm0e8BsPLE
-         OHjQiArvpyWuQ==
-Subject: Re: [PATCH v6 03/14] videobuf2: handle V4L2 buffer cache flags
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
- <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
-Date:   Tue, 2 Jun 2020 11:51:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 2 Jun 2020 05:51:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 854CC8030836;
+        Tue,  2 Jun 2020 09:51:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id kXqPIGerUUjQ; Tue,  2 Jun 2020 12:51:48 +0300 (MSK)
+Date:   Tue, 2 Jun 2020 12:51:46 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Joe Perches <joe@perches.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH -next] MAINTAINERS: Update F: and X: entry ordering
+ (was Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers)
+Message-ID: <20200602095146.whjqqt25u2q5lgsa@mobilestation>
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+ <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
+ <20200601151903.ipd5ikw35z53eq2t@mobilestation>
+ <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
+ <20200601155204.hsatjbukj6haxhld@mobilestation>
+ <CAHp75Vej9gRAVspzfruciQ7weFunNBtj8GxbgBCVWtGwk5_ntQ@mail.gmail.com>
+ <2e96576791604862a11f094665b0c4e9c3263fd4.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfD+Blikn96SaJGYXgMKqTTgl+zDvKJpnFo2EnVkbPy2CqEIGFInNvj39m6Xn9VMPomeg18zifi96xVg1btmcv5qyP6g+7NIKRI3iQEL5c2IOOhA4yy8r
- tZA5UNA25vCZM3YIYyNXVjUjAKR4jRrCUeQ3Ixh1hsm4lbA2J6zfDpaYXOYLeeRpFtjEdXLhuaecwujjPDXVIjmZvU+YarwzUpkIMYIM/jvJn1dlhuTtwYk3
- acwkk7qKYgdb/8RKZyr4SMDOq28MlT17uEcJYT3hIKTGVL9RVnnNgDkT3N45Xe4ZvkXh2j5tyqPXhL6TF3ESMl8auH4qF4je+eBpr7aI6DtjKz4Ph9uHp/rP
- 39FL2EkRuqGVpdniP0+ucRNOIef+5gfRLL3kNwa9RIfHB/f4kvI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2e96576791604862a11f094665b0c4e9c3263fd4.camel@perches.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
+Hello Joe
 
-While doing final testing for this patch series (together with the v4l-utils patch)
-I found one remaining issue:
+On Mon, Jun 01, 2020 at 11:22:58AM -0700, Joe Perches wrote:
+> On Mon, 2020-06-01 at 19:04 +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 1, 2020 at 6:52 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > On Mon, Jun 01, 2020 at 06:30:22PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Jun 1, 2020 at 6:19 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > > On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
+> > > > > > On Mon, Jun 1, 2020 at 3:26 PM Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > > > > > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> > > > > > > and MIPS CPS CPUidle drivers.
+> > > > > > ...
+> > > > > > > +MIPS CORE DRIVERS
+> > > > > > > +M:     Serge Semin <fancer.lancer@gmail.com>
+> > > > > > > +L:     linux-mips@vger.kernel.org
+> > > > > > > +S:     Supported
+> > > > > > > +F:     drivers/bus/mips_cdmm.c
+> > > > > > > +F:     drivers/irqchip/irq-mips-cpu.c
+> > > > > > > +F:     drivers/irqchip/irq-mips-gic.c
+> > > > > > > +F:     drivers/clocksource/mips-gic-timer.c
+> > > > > > > +F:     drivers/cpuidle/cpuidle-cps.c
+> > > > > > 
+> > > > > > I think nowadays checkpatch.pl warns on wrong ordering in this data base.
+> []
+> > > Next time I won't forget that then. BTW the notes at the top of the MAINTAINERS
+> > > file don't explicitly say about the files-list order. Only about the
+> > > whole maintainers list entries order. Seeing the rest of the sub-entries like
+> > > L:, M:, etc. aren't ordered then it's probably better to have an explicit
+> > > statement, that files should be alphabetically listed, especially when
+> > > checkpatch.pl starts warning about that.
+> > 
+> > Joe, what do you think?
+> 
+> Fine by me.  Maybe something like the below.
+> 
+> Another thing might be to intermix the F and X entries so that
+> exclusions are more obviously against the F: entries.
+> 
+> There aren't many MAINTAINERS lines changed when the modified
+> parse-maintainers is run, but I think it reads better.
+> 
+> It doesn't seem the last major reordering with parse-maintainers
+> caused any significant issue for anyone.
 
-On 14/05/2020 18:01, Sergey Senozhatsky wrote:
-> From: Sergey Senozhatsky <senozhatsky@chromium.org>
+I was also thinking about a text explaining the F: section order requirement.
+Like this:
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 865aeafee3b2..253f8f97891f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -111,7 +111,8 @@ Descriptions of section entries and preferred order
+ 	   F:	drivers/net/	all files in and below drivers/net
+ 	   F:	drivers/net/*	all files in drivers/net, but not below
+ 	   F:	*/net/*		all files in "any top level directory"/net
+-	   One pattern per line.  Multiple F: lines acceptable.
++	   One pattern per line. Multiple F: lines acceptable, but are
++	   supposed to be listed in alphabetical order.
+ 	X: *Excluded* files and directories that are NOT maintained, same
+ 	   rules as F:. Files exclusions are tested before file matches.
+ 	   Can be useful for excluding a specific subdirectory, for instance:
+
+The rest suggested by you is fine with me. Intermixing F and X seems reasonable
+so the maintainers could group inclusion and exclusion sections together
+with respect to the files/directories they refer to.
+
+-Sergey
+
 > 
-> Set video buffer cache management flags corresponding to V4L2 cache
-> flags.
-> 
-> Both ->prepare() and ->finish() cache management hints should be
-> passed during this stage (buffer preparation), because there is
-> no other way for user-space to tell V4L2 to avoid ->finish() cache
-> flush.
-> 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> I think having Linus run scripts/parse-maintainers.pl just before
+> every release or every few releases would make this issue go away.
 > ---
->  .../media/common/videobuf2/videobuf2-v4l2.c   | 48 +++++++++++++++++++
->  include/media/videobuf2-core.h                | 11 +++++
->  2 files changed, 59 insertions(+)
+>  MAINTAINERS                  |  1 +
+>  scripts/checkpatch.pl        | 17 +++++++----------
+>  scripts/parse-maintainers.pl |  5 ++---
+>  3 files changed, 10 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> index eb5d5db96552..f13851212cc8 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -337,6 +337,53 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
->  	return 0;
->  }
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b045b70e54df..4b53119504ff 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -118,6 +118,7 @@ Descriptions of section entries and preferred order
+>  	   F:	net/
+>  	   X:	net/ipv6/
+>  	   matches all files in and below net excluding net/ipv6/
+> +	   F: and X: entries are intermixed in case sensitive alphabetic order
+>  	N: Files and directories *Regex* patterns.
+>  	   N:	[^a-z]tegra	all files whose path contains tegra
+>  	                        (not including files like integrator)
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index dd750241958b..499c85be0b2f 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3099,16 +3099,13 @@ sub process {
+>  				if ($curindex < 0) {
+>  					WARN("MAINTAINERS_STYLE",
+>  					     "Unknown MAINTAINERS entry type: '$cur'\n" . $herecurr);
+> -				} else {
+> -					if ($previndex >= 0 && $curindex < $previndex) {
+> -						WARN("MAINTAINERS_STYLE",
+> -						     "Misordered MAINTAINERS entry - list '$cur:' before '$prev:'\n" . $hereprev);
+> -					} elsif ((($prev eq 'F' && $cur eq 'F') ||
+> -						  ($prev eq 'X' && $cur eq 'X')) &&
+> -						 ($prevval cmp $curval) > 0) {
+> -						WARN("MAINTAINERS_STYLE",
+> -						     "Misordered MAINTAINERS entry - list file patterns in alphabetic order\n" . $hereprev);
+> -					}
+> +				} elsif ($previndex >= 0 && $curindex < $previndex && !($prev =~ /[FX]/ && $cur =~ /[FX]/)) {
+> +					WARN("MAINTAINERS_STYLE",
+> +					     "Misordered MAINTAINERS entry - list '$cur:' before '$prev:'\n" . $hereprev);
+> +				} elsif ((($prev =~ /[FX]/ && $cur =~ /[FX]/) &&
+> +					  ($prevval cmp $curval) > 0)) {
+> +					WARN("MAINTAINERS_STYLE",
+> +					     "Misordered MAINTAINERS entry - list F and X file patterns in alphabetic order\n" . $hereprev);
+>  				}
+>  			}
+>  		}
+> diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
+> index 2ca4eb3f190d..8d2247a596f0 100755
+> --- a/scripts/parse-maintainers.pl
+> +++ b/scripts/parse-maintainers.pl
+> @@ -84,9 +84,8 @@ sub by_pattern($$) {
+>      $a_index = 1000 if ($a_index == -1);
+>      $b_index = 1000 if ($b_index == -1);
 >  
-> +static void set_buffer_cache_hints(struct vb2_queue *q,
-> +				   struct vb2_buffer *vb,
-> +				   struct v4l2_buffer *b)
-> +{
-> +	/*
-> +	 * DMA exporter should take care of cache syncs, so we can avoid
-> +	 * explicit ->prepare()/->finish() syncs. For other ->memory types
-> +	 * we always need ->prepare() or/and ->finish() cache sync.
-> +	 */
-> +	if (q->memory == VB2_MEMORY_DMABUF) {
-> +		vb->need_cache_sync_on_finish = 0;
-> +		vb->need_cache_sync_on_prepare = 0;
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Cache sync/invalidation flags are set by default in order to
-> +	 * preserve existing behaviour for old apps/drivers.
-> +	 */
-> +	vb->need_cache_sync_on_prepare = 1;
-> +	vb->need_cache_sync_on_finish = 1;
-> +
-> +	if (!vb2_queue_allows_cache_hints(q)) {
-> +		/*
-> +		 * Clear buffer cache flags if queue does not support user
-> +		 * space hints. That's to indicate to userspace that these
-> +		 * flags won't work.
-> +		 */
-> +		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
-> +		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
-> +		return;
-> +	}
-
-These two flags need to be cleared for VB2_MEMORY_DMABUF as well in the test above.
-This bug is causing v4l2-compliance failures (use the test-media script in contrib/test
-in v4l-utils: 'sudo test-media vim2m').
-
-It's enough to post a v6.1 for this patch, everything else is fine.
-
-Regards,
-
-	Hans
-
-> +
-> +	/*
-> +	 * ->finish() cache sync can be avoided when queue direction is
-> +	 * TO_DEVICE.
-> +	 */
-> +	if (q->dma_dir == DMA_TO_DEVICE)
-> +		vb->need_cache_sync_on_finish = 0;
-> +
-> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
-> +		vb->need_cache_sync_on_finish = 0;
-> +
-> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-> +		vb->need_cache_sync_on_prepare = 0;
-> +}
-> +
->  static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *mdev,
->  				    struct v4l2_buffer *b, bool is_prepare,
->  				    struct media_request **p_req)
-> @@ -381,6 +428,7 @@ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *md
->  	}
+> -    if (($a1 =~ /^F$/ && $b1 =~ /^F$/) ||
+> -	($a1 =~ /^X$/ && $b1 =~ /^X$/)) {
+> -	return $a cmp $b;
+> +    if (($a1 =~ /^[FX]$/ && $b1 =~ /^[FX]$/)) {
+> +	return substr($a, 1) cmp substr($b, 1);
+>      }
 >  
->  	if (!vb->prepared) {
-> +		set_buffer_cache_hints(q, vb, b);
->  		/* Copy relevant information provided by the userspace */
->  		memset(vbuf->planes, 0,
->  		       sizeof(vbuf->planes[0]) * vb->num_planes);
-> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> index 7f39d9fffc8c..ccc5c498d3e3 100644
-> --- a/include/media/videobuf2-core.h
-> +++ b/include/media/videobuf2-core.h
-> @@ -635,6 +635,17 @@ struct vb2_queue {
->  #endif
->  };
->  
-> +/**
-> + * vb2_queue_allows_cache_hints() - Return true if the queue allows cache
-> + * and memory consistency hints.
-> + *
-> + * @q:		pointer to &struct vb2_queue with videobuf2 queue
-> + */
-> +static inline bool vb2_queue_allows_cache_hints(struct vb2_queue *q)
-> +{
-> +	return q->allow_cache_hints && q->memory == VB2_MEMORY_MMAP;
-> +}
-> +
->  /**
->   * vb2_plane_vaddr() - Return a kernel virtual address of a given plane.
->   * @vb:		pointer to &struct vb2_buffer to which the plane in
+>      if ($a_index < $b_index) {
 > 
-
+> 
