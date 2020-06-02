@@ -2,121 +2,106 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8065DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B453FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1E8207D0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCCF206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bHCL4Y1f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTTy3Jc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFBFsa (ORCPT
+        id S1726162AbgFBFsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:48:30 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43765 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgFBFs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:48:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bh0p1FwRz9sSc;
-        Tue,  2 Jun 2020 15:48:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591076907;
-        bh=MoozshKoSgiWDK1bkENFGy/6XcIC1kBg4kKlpbMgHJw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bHCL4Y1feX4y8yZdYIpPCmJekn1k+0f4IvOcPB3dEFA832NlQgx0nzD0VjxJwYJNx
-         YGu2YrjJxq1KRroKh8pClsgsl05HR12Y3guvRFMGBo7LkoberWGE/Qxmr2ZLxtvBHT
-         HLgSViBHJ8tmrcrovlzucMVSWWpgAUUqORr4yzCIW0nWoBfUgONXBLN3jY8xBO/YIJ
-         y9+PphmI4VXxMkW6TLDHoBEHxodqPXRLIiKwdBe/MdS+FIfAmzi9Of74RM3TaHhnDz
-         0S52d7zGyJQObQberQzbDSBZtY16WSERw9OiNIsdH3gRpKVymiVq73zhiEZYaGT1kL
-         bcAeQnbZpzwYw==
-Date:   Tue, 2 Jun 2020 15:48:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Rob Herring <robherring2@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: linux-next: manual merge of the tty tree with the devicetree tree
-Message-ID: <20200602154824.263bf711@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4g4t36k61npKPKomu/bA8MD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 2 Jun 2020 01:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgFBFsu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 01:48:50 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC51C061A0E;
+        Mon,  1 Jun 2020 22:48:48 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id z2so3462278ilq.0;
+        Mon, 01 Jun 2020 22:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=k9I8ETp57ehY+cewlXxiibzOu/2WehbLAtG+rirGofY=;
+        b=PTTy3Jc1hh5d7OAQOhMTiWNWJ4RspVKcuazsI9Qgbx+DVn0MAAadyVf3uR+SewUl1w
+         gqIcebnNBkhmqGbGqm5Fg4dRdKaeeX1SeyH1eiSkGZyofFaoVkQ2VOLVzhcTza5F3uOa
+         5Ij9D+nRUzuz4QO1wb6XWri6RH6ozWyuLsPSKcXJ4iuPX0de1IrYswiCNZAWCQdaI3Zt
+         1S9Fq6wCHjKOulSz3m7wqNOxsEP+ldTR1c+QrzPqFx5hiWA92V2kosaJls13rcfClr4B
+         0iEXswWzLMyYx7L4aM16VXMLHYczOkLn+7fC+706rUgVriAWcroR+dhT3kUhW51ejeFj
+         agyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k9I8ETp57ehY+cewlXxiibzOu/2WehbLAtG+rirGofY=;
+        b=Bu9aanQYQeiZFG1DF5hlFDzl7tUS7BTEnD8/Jq9TV9d44SxeSGWNa9PR23Rj224bVr
+         v+1sXxnhXqhvY1KJrMk4AXqWVa/Ryjot3x1NQwAotqzono+k6gCJQSt2v44lcMIM+NNE
+         6aB9M2oTWVmtbT+cJXMDxOGLxIdbo7LEJQ3Wm+I/H7ndhK9ErfIslztaMV6ZtSNMgo5K
+         DS/n+Ho3XP+ocDqI9LVOB6So/MOku24iJYn2ZDoKSQqDLxs0kLfFIznOISuWPoHjphIL
+         XSNQqqqZ/iIIcJ0vxbVIqE71o2R7uGwnbwMTqq1odLQymVYl/pXXjgMIkMCklGpO2WY1
+         s8xg==
+X-Gm-Message-State: AOAM5337HjMgd+Ky123YFeWwQGKhYjlhdW1NWT9I+oLyjTYGzKreGsVp
+        s4atjdrRNnCP5HBqIMwEDt4=
+X-Google-Smtp-Source: ABdhPJxaffrkPss8NMfyN5duhlcFxRD0Zwf2ag1xzDGUschjC6B9gf0XBShNKhn+Lw1PGm6gXIEycA==
+X-Received: by 2002:a92:5e07:: with SMTP id s7mr24998837ilb.266.1591076928307;
+        Mon, 01 Jun 2020 22:48:48 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id z4sm911293ilm.72.2020.06.01.22.48.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 22:48:47 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] media: staging: tegra-vde: add missing pm_runtime_put_autosuspend
+Date:   Tue,  2 Jun 2020 00:48:41 -0500
+Message-Id: <20200602054841.15746-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4g4t36k61npKPKomu/bA8MD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Call to pm_runtime_get_sync increments counter even in case of
+failure leading to incorrect ref count.
+Call pm_runtime_put_autosuspend if pm_runtime_get_sync fails.
 
-Hi all,
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/staging/media/tegra-vde/vde.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Today's linux-next merge of the tty tree got a conflict in:
+diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
+index d3e63512a765..52cdd4a91e93 100644
+--- a/drivers/staging/media/tegra-vde/vde.c
++++ b/drivers/staging/media/tegra-vde/vde.c
+@@ -776,8 +776,10 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+ 		goto release_dpb_frames;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev);
+ 		goto unlock;
++	}
+ 
+ 	/*
+ 	 * We rely on the VDE registers reset value, otherwise VDE
+-- 
+2.17.1
 
-  Documentation/devicetree/bindings/serial/rs485.yaml
-
-between commit:
-
-  9f60a65bc5e6 ("dt-bindings: Clean-up schema indentation formatting")
-
-from the devicetree tree and commit:
-
-  01c38ecff8b1 ("dt-bindings: serial: Add binding for rs485 bus termination=
- GPIO")
-
-from the tty tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/devicetree/bindings/serial/rs485.yaml
-index 8141e4aad530,a9ad17864889..000000000000
---- a/Documentation/devicetree/bindings/serial/rs485.yaml
-+++ b/Documentation/devicetree/bindings/serial/rs485.yaml
-@@@ -39,6 -41,9 +39,10 @@@ properties
-      $ref: /schemas/types.yaml#/definitions/flag
- =20
-    rs485-rx-during-tx:
- -   description: enables the receiving of data even while sending data.
- -   $ref: /schemas/types.yaml#/definitions/flag
- +    description: enables the receiving of data even while sending data.
- +    $ref: /schemas/types.yaml#/definitions/flag
-+=20
-+   rs485-term-gpios:
-+     description: GPIO pin to enable RS485 bus termination.
-+     maxItems: 1
- +...
-
---Sig_/4g4t36k61npKPKomu/bA8MD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7V6CkACgkQAVBC80lX
-0GyxaAf/dNscE5sw8bLnEODNavRf9f2XuVrNtjN6kXgpJFSpfTIWZDbsW4jpBcTl
-b50/JZbdigmjNm3tpQE7uyv5wk5ECaHQDE0RBngeIVJmIowdxffndSJabk9m9kjD
-85HLvCAsSz9vQn1p1lsPucKSuFjlDAqM03G7TYXZbR1qu10j0O8YHf2zFMJev/Ro
-uydh8t6TVxGkEcvmGsMzhJ8cPrxAO/vArzhNVguJebB7YZYkePPNzBoZ3ilMO9Wl
-01eRr1C6OeH/kECsCwiBr90/6eWvIrLhbeZbhjEZHodFxJThtfU2KbSHT8dJdCHl
-+XgIBcT3ah4Ov0hdeqEB1MeIQnvgag==
-=Erm4
------END PGP SIGNATURE-----
-
---Sig_/4g4t36k61npKPKomu/bA8MD--
