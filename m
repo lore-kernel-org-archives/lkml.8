@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EB9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD97C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E52120757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC03120757
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgFBOQV (ORCPT
+        id S1728372AbgFBOQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:16:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43090 "EHLO mx2.suse.de"
+        Tue, 2 Jun 2020 10:16:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43048 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728170AbgFBOQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728157AbgFBOQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jun 2020 10:16:13 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CD10DAE6F;
+        by mx2.suse.de (Postfix) with ESMTP id B968AAE67;
         Tue,  2 Jun 2020 14:16:12 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     Christoph Lameter <cl@linux.com>,
@@ -34,9 +34,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Matthew Garrett <mjg59@google.com>,
         Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
         Vijayanand Jitta <vjitta@codeaurora.org>
-Subject: [RFC PATCH 4/5] mm, slub: make remaining slub_debug related attributes read-only
-Date:   Tue,  2 Jun 2020 16:15:18 +0200
-Message-Id: <20200602141519.7099-5-vbabka@suse.cz>
+Subject: [RFC PATCH 1/5] mm, slub: extend slub_debug syntax for multiple blocks
+Date:   Tue,  2 Jun 2020 16:15:15 +0200
+Message-Id: <20200602141519.7099-2-vbabka@suse.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200602141519.7099-1-vbabka@suse.cz>
 References: <20200602141519.7099-1-vbabka@suse.cz>
@@ -47,135 +47,317 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SLUB_DEBUG creates several files under /sys/kernel/slab/<cache>/ that can be
-read to check if the respective debugging options are enabled for given cache.
-Some options, namely sanity_checks, trace, and failslab can be also enabled and
-disabled at runtime by writing into the files.
+The slub_debug kernel boot parameter can either apply a single set of options
+to all caches or a list of caches. There is a use case where debugging is
+applied for all caches and then disabled at runtime for specific caches, for
+performance and memory consumption reasons [1]. As runtime changes are
+dangerous, extend the boot parameter syntax so that multiple blocks of either
+global or slab-specific options can be specified, with blocks delimited by ';'.
+This will also support the use case of [1] without runtime changes.
 
-The runtime toggling is racy. Some options disable __CMPXCHG_DOUBLE when
-enabled, which means that in case of concurrent allocations, some can still use
-__CMPXCHG_DOUBLE and some not, leading to potential corruption. The s->flags
-field is also not updated or checked atomically. The simplest solution is to
-remove the runtime toggling. The extended slub_debug boot parameter syntax
-introduced by earlier patch should allow to fine-tune the debugging
-configuration during boot with same granularity.
+For details see the updated Documentation/vm/slub.rst
+
+[1] https://lore.kernel.org/r/1383cd32-1ddc-4dac-b5f8-9c42282fa81c@codeaurora.org
 
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- Documentation/vm/slub.rst |  7 ++---
- mm/slub.c                 | 62 ++-------------------------------------
- 2 files changed, 5 insertions(+), 64 deletions(-)
+ .../admin-guide/kernel-parameters.txt         |   2 +-
+ Documentation/vm/slub.rst                     |  17 ++
+ mm/slub.c                                     | 177 +++++++++++++-----
+ 3 files changed, 144 insertions(+), 52 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 6253849afac2..6ea00c8dd635 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4613,7 +4613,7 @@
+ 			fragmentation.  Defaults to 1 for systems with
+ 			more than 32MB of RAM, 0 otherwise.
+ 
+-	slub_debug[=options[,slabs]]	[MM, SLUB]
++	slub_debug[=options[,slabs][;[options[,slabs]]...]	[MM, SLUB]
+ 			Enabling slub_debug allows one to determine the
+ 			culprit if slab objects become corrupted. Enabling
+ 			slub_debug can create guard zones around objects and
 diff --git a/Documentation/vm/slub.rst b/Documentation/vm/slub.rst
-index 61805e984a0d..f240292589bd 100644
+index 4eee598555c9..f1154f707e06 100644
 --- a/Documentation/vm/slub.rst
 +++ b/Documentation/vm/slub.rst
-@@ -115,11 +115,8 @@ If the file contains 1, the option is enabled, 0 means disabled. The debug
- 	T	trace
- 	A	failslab
+@@ -41,6 +41,11 @@ slub_debug=<Debug-Options>,<slab name1>,<slab name2>,...
+ 	Enable options only for select slabs (no spaces
+ 	after a comma)
  
--The sanity_checks, trace and failslab files are writable, so writing 1 or 0
--will enable or disable the option at runtime. The writes to trace and failslab
--may return -EINVAL if the cache is subject to slab merging. Careful with
--tracing: It may spew out lots of information and never stop if used on the
--wrong slab.
-+Careful with tracing: It may spew out lots of information and never stop if
-+used on the wrong slab.
++Multiple blocks of options for all slabs or selected slabs can be given, with
++blocks of options delimited by ';'. The last of "all slabs" blocks is applied
++to all slabs except those that match one of the "select slabs" block. Options
++of the first "select slabs" blocks that matches the slab's name are applied.
++
+ Possible debug options are::
  
- Slab merging
- ============
+ 	F		Sanity checks on (enables SLAB_DEBUG_CONSISTENCY_CHECKS
+@@ -83,6 +88,18 @@ in low memory situations or if there's high fragmentation of memory.  To
+ 
+ 	slub_debug=O
+ 
++You can apply different options to different list of slab names, using blocks
++of options. This will enable red zoning for dentry and user tracking for
++kmalloc. All other slabs will not get any debugging enabled::
++
++	slub_debug=Z,dentry;U,kmalloc-*
++
++You can also enable options (e.g. sanity checks and poisoning) for all caches
++except some that are deemed too performance critical and don't need to be
++debugged::
++
++	slub_debug=FZ;-,zs_handle,zspage
++
+ In case you forgot to enable debugging on the kernel command line: It is
+ possible to enable debugging manually when the kernel is up. Look at the
+ contents of::
 diff --git a/mm/slub.c b/mm/slub.c
-index 58c1e9e7b3b3..38dd6f3ebb04 100644
+index 03e063cd979f..47430aad9a65 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -5056,20 +5056,6 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
- 	return x + sprintf(buf + x, "\n");
- }
- 
--#ifdef CONFIG_SLUB_DEBUG
--static int any_slab_objects(struct kmem_cache *s)
--{
--	int node;
--	struct kmem_cache_node *n;
--
--	for_each_kmem_cache_node(s, node, n)
--		if (atomic_long_read(&n->total_objects))
--			return 1;
--
--	return 0;
--}
--#endif
--
- #define to_slab_attr(n) container_of(n, struct slab_attribute, attr)
- #define to_slab(n) container_of(n, struct kmem_cache, kobj)
- 
-@@ -5291,43 +5277,13 @@ static ssize_t sanity_checks_show(struct kmem_cache *s, char *buf)
- {
- 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_CONSISTENCY_CHECKS));
- }
--
--static ssize_t sanity_checks_store(struct kmem_cache *s,
--				const char *buf, size_t length)
--{
--	s->flags &= ~SLAB_CONSISTENCY_CHECKS;
--	if (buf[0] == '1') {
--		s->flags &= ~__CMPXCHG_DOUBLE;
--		s->flags |= SLAB_CONSISTENCY_CHECKS;
--	}
--	return length;
--}
--SLAB_ATTR(sanity_checks);
-+SLAB_ATTR_RO(sanity_checks);
- 
- static ssize_t trace_show(struct kmem_cache *s, char *buf)
- {
- 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_TRACE));
- }
--
--static ssize_t trace_store(struct kmem_cache *s, const char *buf,
--							size_t length)
--{
--	/*
--	 * Tracing a merged cache is going to give confusing results
--	 * as well as cause other issues like converting a mergeable
--	 * cache into an umergeable one.
--	 */
--	if (s->refcount > 1)
--		return -EINVAL;
--
--	s->flags &= ~SLAB_TRACE;
--	if (buf[0] == '1') {
--		s->flags &= ~__CMPXCHG_DOUBLE;
--		s->flags |= SLAB_TRACE;
--	}
--	return length;
--}
--SLAB_ATTR(trace);
-+SLAB_ATTR_RO(trace);
- 
- static ssize_t red_zone_show(struct kmem_cache *s, char *buf)
- {
-@@ -5391,19 +5347,7 @@ static ssize_t failslab_show(struct kmem_cache *s, char *buf)
- {
- 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_FAILSLAB));
- }
--
--static ssize_t failslab_store(struct kmem_cache *s, const char *buf,
--							size_t length)
--{
--	if (s->refcount > 1)
--		return -EINVAL;
--
--	s->flags &= ~SLAB_FAILSLAB;
--	if (buf[0] == '1')
--		s->flags |= SLAB_FAILSLAB;
--	return length;
--}
--SLAB_ATTR(failslab);
-+SLAB_ATTR_RO(failslab);
+@@ -499,7 +499,7 @@ static slab_flags_t slub_debug = DEBUG_DEFAULT_FLAGS;
+ static slab_flags_t slub_debug;
  #endif
  
- static ssize_t shrink_show(struct kmem_cache *s, char *buf)
+-static char *slub_debug_slabs;
++static char *slub_debug_string;
+ static int disable_higher_order_debug;
+ 
+ /*
+@@ -1262,68 +1262,132 @@ static noinline int free_debug_processing(
+ 	return ret;
+ }
+ 
+-static int __init setup_slub_debug(char *str)
++/*
++ * Parse a block of slub_debug options. Blocks are delimited by ';'
++ *
++ * @str:    start of block
++ * @flags:  returns parsed flags, or DEBUG_DEFAULT_FLAGS if none specified
++ * @slabs:  return start of list of slabs, or NULL when there's no list
++ * @init:   assume this is initial parsing and not per-kmem-create parsing
++ *
++ * returns the start of next block if there's any, or NULL
++ */
++char *
++parse_slub_debug_flags(char *str, slab_flags_t *flags, char **slabs, bool init)
+ {
+-	slub_debug = DEBUG_DEFAULT_FLAGS;
+-	if (*str++ != '=' || !*str)
+-		/*
+-		 * No options specified. Switch on full debugging.
+-		 */
+-		goto out;
++	bool higher_order_disable = false;
+ 
+-	if (*str == ',')
++	/* Skip any completely empty blocks */
++	while (*str && *str == ';')
++		str++;
++
++	if (*str == ',') {
+ 		/*
+ 		 * No options but restriction on slabs. This means full
+ 		 * debugging for slabs matching a pattern.
+ 		 */
++		*flags = DEBUG_DEFAULT_FLAGS;
+ 		goto check_slabs;
++	}
++	*flags = 0;
+ 
+-	slub_debug = 0;
+-	if (*str == '-')
+-		/*
+-		 * Switch off all debugging measures.
+-		 */
+-		goto out;
+-
+-	/*
+-	 * Determine which debug features should be switched on
+-	 */
+-	for (; *str && *str != ','; str++) {
++	/* Determine which debug features should be switched on */
++	for (; *str && *str != ',' && *str != ';'; str++) {
+ 		switch (tolower(*str)) {
++		case '-':
++			*flags = 0;
++			break;
+ 		case 'f':
+-			slub_debug |= SLAB_CONSISTENCY_CHECKS;
++			*flags |= SLAB_CONSISTENCY_CHECKS;
+ 			break;
+ 		case 'z':
+-			slub_debug |= SLAB_RED_ZONE;
++			*flags |= SLAB_RED_ZONE;
+ 			break;
+ 		case 'p':
+-			slub_debug |= SLAB_POISON;
++			*flags |= SLAB_POISON;
+ 			break;
+ 		case 'u':
+-			slub_debug |= SLAB_STORE_USER;
++			*flags |= SLAB_STORE_USER;
+ 			break;
+ 		case 't':
+-			slub_debug |= SLAB_TRACE;
++			*flags |= SLAB_TRACE;
+ 			break;
+ 		case 'a':
+-			slub_debug |= SLAB_FAILSLAB;
++			*flags |= SLAB_FAILSLAB;
+ 			break;
+ 		case 'o':
+ 			/*
+ 			 * Avoid enabling debugging on caches if its minimum
+ 			 * order would increase as a result.
+ 			 */
+-			disable_higher_order_debug = 1;
++			higher_order_disable = true;
+ 			break;
+ 		default:
+-			pr_err("slub_debug option '%c' unknown. skipped\n",
+-			       *str);
++			if (init)
++				pr_err("slub_debug option '%c' unknown. skipped\n", *str);
+ 		}
+ 	}
+-
+ check_slabs:
+ 	if (*str == ',')
+-		slub_debug_slabs = str + 1;
++		*slabs = ++str;
++	else
++		*slabs = NULL;
++
++	/* Skip over the slab list */
++	while (*str && *str != ';')
++		str++;
++
++	/* Skip any completely empty blocks */
++	while (*str && *str == ';')
++		str++;
++
++	if (init && higher_order_disable)
++		disable_higher_order_debug = 1;
++
++	if (*str)
++		return str;
++	else
++		return NULL;
++}
++
++static int __init setup_slub_debug(char *str)
++{
++	slab_flags_t flags;
++	char *saved_str;
++	char *slab_list;
++	bool global_slub_debug_changed = false;
++	bool slab_list_specified = false;
++
++	slub_debug = DEBUG_DEFAULT_FLAGS;
++	if (*str++ != '=' || !*str)
++		/*
++		 * No options specified. Switch on full debugging.
++		 */
++		goto out;
++
++	saved_str = str;
++	while (str) {
++		str = parse_slub_debug_flags(str, &flags, &slab_list, true);
++
++		if (!slab_list) {
++			slub_debug = flags;
++			global_slub_debug_changed = true;
++		} else {
++			slab_list_specified = true;
++		}
++	}
++
++	/*
++	 * For backwards compatibility, a single list of flags with list of
++	 * slabs means debugging is only enabled for those slabs, so the global
++	 * slub_debug should be 0. We can extended that to multiple lists as
++	 * long as there is no option specifying flags without a slab list.
++	 */
++	if (slab_list_specified) {
++		if (!global_slub_debug_changed)
++			slub_debug = 0;
++		slub_debug_string = saved_str;
++	}
+ out:
+ 	if ((static_branch_unlikely(&init_on_alloc) ||
+ 	     static_branch_unlikely(&init_on_free)) &&
+@@ -1352,36 +1416,47 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
+ {
+ 	char *iter;
+ 	size_t len;
++	char *next_block;
++	slab_flags_t block_flags;
+ 
+ 	/* If slub_debug = 0, it folds into the if conditional. */
+-	if (!slub_debug_slabs)
++	if (!slub_debug_string)
+ 		return flags | slub_debug;
+ 
+ 	len = strlen(name);
+-	iter = slub_debug_slabs;
+-	while (*iter) {
+-		char *end, *glob;
+-		size_t cmplen;
+-
+-		end = strchrnul(iter, ',');
++	next_block = slub_debug_string;
++	/* Go through all blocks of debug options, see if any matches our slab's name */
++	while (next_block) {
++		next_block = parse_slub_debug_flags(next_block, &block_flags, &iter, false);
++		if (!iter)
++			continue;
++		/* Found a block that has a slab list, search it */
++		while (*iter) {
++			char *end, *glob;
++			size_t cmplen;
++
++			end = strchrnul(iter, ',');
++			if (next_block && next_block < end)
++				end = next_block - 1;
++
++			glob = strnchr(iter, end - iter, '*');
++			if (glob)
++				cmplen = glob - iter;
++			else
++				cmplen = max_t(size_t, len, (end - iter));
+ 
+-		glob = strnchr(iter, end - iter, '*');
+-		if (glob)
+-			cmplen = glob - iter;
+-		else
+-			cmplen = max_t(size_t, len, (end - iter));
++			if (!strncmp(name, iter, cmplen)) {
++				flags |= block_flags;
++				return flags;
++			}
+ 
+-		if (!strncmp(name, iter, cmplen)) {
+-			flags |= slub_debug;
+-			break;
++			if (!*end || *end == ';')
++				break;
++			iter = end + 1;
+ 		}
+-
+-		if (!*end)
+-			break;
+-		iter = end + 1;
+ 	}
+ 
+-	return flags;
++	return slub_debug;
+ }
+ #else /* !CONFIG_SLUB_DEBUG */
+ static inline void setup_object_debug(struct kmem_cache *s,
 -- 
 2.26.2
 
