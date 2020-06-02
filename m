@@ -2,176 +2,112 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F825C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B641C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218FC206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3D0206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zjRFqhv5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DaRRRUXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgFBIjf (ORCPT
+        id S1726580AbgFBIkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:39:35 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:44217 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgFBIjf (ORCPT
+        Tue, 2 Jun 2020 04:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFBIku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:39:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591087174; x=1622623174;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=5oSerVw4BUQ1JnWRjiKwnbjMfhGlmnPWZ9idp3chc+k=;
-  b=zjRFqhv5M3r0zwGkUD5i2LiNnp6m7DpLcE5qgVcf784esxprEfBISV9y
-   zsmyAryr61/wd7BxPm1IDhTxssMkxEjJuwQvYSO/6D/HnTJxE872JhlRV
-   85eSfwNWcqZeS0HDo0EsBRAN6TcLpDbE4aeiOAT2BB2FdlS34vsF+LGRI
-   NRRNU/NjUywiijUeGz5UhCVy+DXaFr0broUIc+BWAp3an9UocOPRCWLia
-   fQajAzBdXrV6oRD4Ey6u3ZBNeLkWotjMEhq3xx/rg7ebkTasUMjHCJqIK
-   YiFYBaJcIS1YjGRtJi6+jc9aI/3UDSMnPI4UgK1aur6m32cFp5L+DpERg
-   g==;
-IronPort-SDR: CGzwFgZnx38dfzy3f8q8Xm+puJ33BFnb4DM1BvkqwaF38Hj7IETfB7dGjdAjeim4iMDvI27Bgb
- +yICiF7lLYVnRVeN2quM6SHW3LNULatRt9IgxD6Hmrc5Mj67Nzo2VUMQ4fhnN8yNRMhhUTlXTw
- 6KLcvdEp5R6EdhQyGXTqq9+eC3ANvPCnHJ4q7XthvQrOvAPk/fETg5WqPtmUavy+SYUKK8t1lJ
- womw9WDinln+Lxa2xf8VRHl+rSWUFvWeazBmzkbVMb22LOT8PYyiB7Ovsoosv7e9z3TLTsGs4F
- G5g=
-X-IronPort-AV: E=Sophos;i="5.73,463,1583218800"; 
-   d="scan'208";a="81897758"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jun 2020 01:39:34 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 2 Jun 2020 01:39:33 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 2 Jun 2020 01:39:18 -0700
-References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-11-lars.povlsen@microchip.com> <20200528021826.GA3221035@bogus>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 10/14] dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
-In-Reply-To: <20200528021826.GA3221035@bogus>
-Date:   Tue, 2 Jun 2020 10:39:29 +0200
-Message-ID: <87h7vtq2ta.fsf@soft-dev15.microsemi.net>
+        Tue, 2 Jun 2020 04:40:50 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722E9C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 01:40:50 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z9so892335ljh.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 01:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ba7tS1EJd6J4rrFJlCgFQCMg5mXZk8lm0TUhKeqkFLg=;
+        b=DaRRRUXPe+h4lT7HKYjlwOZPLtpKjj5wrJfc7A/FfABHr7pqA6sBVcDxFpYhyNGX2f
+         mhQciVg9mJcl5lbwYvIUHYTLOz+H/JseFNTfhgEH1PUTCmGJfi2vmR2tmRbnXSyFTDE4
+         w4eCcHJwLE+Jelj9ifdDTlnu0lIKZx10kGWKP+LOH+aLlwER7WRXA5g20mnYOxnaNwWm
+         3M56FsBpyAAfxXgbKJti+9pbhLY8t86m4/VdbDv6kUVoyahF+iMYkTHJDo4u8M+83rUy
+         MafhdMblZid34Foa6n+p2WuWVyEuwMjkPZdBGHlFOS0Ezjf8cSGe7D1etislzBDLC4++
+         g6iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ba7tS1EJd6J4rrFJlCgFQCMg5mXZk8lm0TUhKeqkFLg=;
+        b=h32XOkQSU8CnOQPzxDtW0s1706DyPliawd28/UnW1b4x3CN6C1ZRYkk5gHiGcrOVf+
+         JVKZe8kR1MP49oT/liYCZMSyLsUdOn3Y3EUlJs2QW9wTKQo9VsbROeQKGglkdGQkdhI8
+         PbnBF8XFhLKsQgBjSfC7Ry//qu6tYdkt/Zw3CjnU6zQidIC+J1f8Nee3DFLgrWyc41qN
+         lypXhB7Ujpmbe336gUjdP8n3bUbjm/w4cvM6CZmaRKO6L5x2lOPp2EWKgUAiKvcv73Y7
+         eCeLH2z1Qx8peWNooK9C0aGTMZhzgQ7EgC1zFVTlfTLcL8q6R+Z7Pz2z5o/+TCG0R+Fu
+         pgeA==
+X-Gm-Message-State: AOAM530pKORmaNay+PO4xExWN4gcR8rcbAJSim8ADTWpKORc2KQj3N/Z
+        rA5KPW4qdgwuzQrBMGJPm/yY2Ak1vMHLCPLIzgVo6A==
+X-Google-Smtp-Source: ABdhPJxsrkSYKmMolrGDzGBzVUCmpV4Czal5MWGq3rA63F0c5cGNbbd8XSdXd5KOBCD+j1AK6KQkyAzoPLSK90Osl+U=
+X-Received: by 2002:a2e:81c5:: with SMTP id s5mr11803430ljg.372.1591087248899;
+ Tue, 02 Jun 2020 01:40:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
+ <1588758017-30426-2-git-send-email-sumit.garg@linaro.org> <20200601021132.GA796225@linux.intel.com>
+ <CAFA6WYP55W2xKtjHWWwu6Pbqy2TGY=eymwAoXxQh-5mF8deR6A@mail.gmail.com> <20200602071407.GB16602@linux.intel.com>
+In-Reply-To: <20200602071407.GB16602@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 2 Jun 2020 14:10:37 +0530
+Message-ID: <CAFA6WYOVho3sAO=ABaeO3CGw-DfWuGOE9H_D48pCwAq0+VX9Qw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] KEYS: trusted: Add generic trusted keys framework
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Markus Wamser <Markus.Wamser@mixed-mode.de>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        op-tee@lists.trustedfirmware.org,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Rob Herring writes:
-
-> On Wed, May 13, 2020 at 02:55:28PM +0200, Lars Povlsen wrote:
->> This add the DT bindings documentation for the Sparx5 SoC DPLL clock
->>
->> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../bindings/clock/microchip,sparx5-dpll.yaml | 46 +++++++++++++++++++
->>  1 file changed, 46 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->> new file mode 100644
->> index 0000000000000..594007d8fc59a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->> @@ -0,0 +1,46 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/microchip,sparx5-dpll.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Microchip Sparx5 DPLL Clock
->> +
->> +maintainers:
->> +  - Lars Povlsen <lars.povlsen@microchip.com>
->> +
->> +description: |
->> +  The Sparx5 DPLL clock controller generates and supplies clock to
->> +  various peripherals within the SoC.
->> +
->> +  This binding uses common clock bindings
->> +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +properties:
->> +  compatible:
->> +    const: microchip,sparx5-dpll
->> +
->> +  reg:
->> +    items:
->> +      - description: dpll registers
+On Tue, 2 Jun 2020 at 12:44, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
 >
-> For a single entry, just:
+> On Mon, Jun 01, 2020 at 02:41:55PM +0530, Sumit Garg wrote:
+> > > This, I think is wrong. You should have a compile time flag for TPM e.g.
+> > > CONFIG_TRUSTED_TPM, not this dynamic mess.
+> > >
+> >
+> > The whole idea to have it dynamic was to have a common trusted keys
+> > module which could support both TPM and TEE implementation depending
+> > on hardware. I guess it may be useful in scenarios where a particular
+> > hardware supports a TPM chip while other doesn't but both need to run
+> > a common kernel image.
 >
-> maxItems: 1
-
-Ok.
-
->
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  # Clock provider for eMMC:
->> +  - |
->> +    clks: clks@61110000c {
->
-> clock-controller@1110000c {
+> For now it should only scale to what is needed. No problems refining
+> it later when there is something to enable.
 >
 
-Got that.
+Fair enough, will switch to compile time mode then.
 
->> +         compatible = "microchip,sparx5-dpll";
->> +         #clock-cells = <1>;
->> +         reg = <0x1110000c 0x24>;
->
-> Looks like this is a sub-block in some other h/w block. What's the
-> parent device? That should be described and this should be part of it
-> either as a single node or a child node. Without a complete view of what
-> this block has I can't provide any guidance.
+-Sumit
 
-No, as Alex noted to a similar comment in the temp. sensor driver, the
-chip is using packed register spaces predominantly. So don't put too
-much into the register offsets.
-
----Lars
-
->
-> Rob
-
---
-Lars Povlsen,
-Microchip
+> /Jarkko
