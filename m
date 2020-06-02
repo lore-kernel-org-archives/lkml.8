@@ -2,101 +2,121 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC37DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8065DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3D2206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1E8207D0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHHp+KOG"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bHCL4Y1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgFBFq2 (ORCPT
+        id S1726096AbgFBFsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgFBFq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:46:27 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B31D1C061A0E;
-        Mon,  1 Jun 2020 22:46:26 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id p20so9492067iop.11;
-        Mon, 01 Jun 2020 22:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lutq7pfNwoE3dFJvq2H2xCXJlg/5j6WZ5IvheFzWD5Y=;
-        b=HHHp+KOGpluSJ4ldGS2XV9PQZ4jwGXeWWCdKIz84HiDM3IRbuzQS2hbQRmu8BS7bnV
-         DBunZ62iOoHCrgkkdjWdUedx1KpR1SEQ+2O7dvOyhPXuiJ9AaEabM+K2HuV/++qH3zgW
-         W1t9GqJs+l4OD/KVfcOlII/Wzs/wSDXpV6C444V6aWs0+3v7MJcpXXttvMFS+OdDYq6D
-         JrpWC/veejjHfUwPgV5yCDvLuMG5DXMXIwg+PADruBTUv78dyTO5njBy99dgs0+J3aXM
-         5KzYPcZO0mbIRp7RuBtbT/7ZJGQw0q34LslDiuchvE8WZad3cnHA0HafIB6PUO22iXhZ
-         pOQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lutq7pfNwoE3dFJvq2H2xCXJlg/5j6WZ5IvheFzWD5Y=;
-        b=DiPu37QFKfAQV4Xl5ijjfXmutEywYQd0sLiXVUr5XWX+XO+MvI6beppxXtlaPDT3/u
-         wDld4v2cYSXKsJ/nveWFXJ2o/RQFbdDSuxLl6YCygcnyfMsEpiPcv4d92Hdg+5HgESn3
-         fUDpJPzM4swllwvVSIh0WlyHpHf8QiHF4kYfynIJIv/Dn3BJ+sgXBRgbg2sTWMWWWCxw
-         pCPoJMjS48iby4RtzgIDpuAXAHzf1JaYEUZcnt6gGAV6gVxCHfzrJJChdrH8WS3h4xDH
-         XYS8sstHLBraHK7JPZYr5rrJuN9VuyeRBq8PlMkuMPrW9jhmQTZuFA9o7BRDHrtJiEAD
-         SYtQ==
-X-Gm-Message-State: AOAM53174vFZmpaE3r6c7eXf0WyzS4ZHn2lh7ROps+pbEr9D+KTJlht/
-        04feEfd5UPQ8Nx96Sq5GlJQ=
-X-Google-Smtp-Source: ABdhPJywelZne4Hp0ikvocBtxPokepjYb73VP2Gyh+hkTI3sSnVc/z7hrXdXVG9d3V7bCczxHVD4Wg==
-X-Received: by 2002:a05:6638:512:: with SMTP id i18mr5988934jar.74.1591076786111;
-        Mon, 01 Jun 2020 22:46:26 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id a17sm894947ild.31.2020.06.01.22.46.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 22:46:25 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] spi: img-spfi: add missing pm_runtime_pu
-Date:   Tue,  2 Jun 2020 00:46:19 -0500
-Message-Id: <20200602054619.4352-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jun 2020 01:48:30 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43765 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgFBFs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 01:48:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bh0p1FwRz9sSc;
+        Tue,  2 Jun 2020 15:48:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591076907;
+        bh=MoozshKoSgiWDK1bkENFGy/6XcIC1kBg4kKlpbMgHJw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bHCL4Y1feX4y8yZdYIpPCmJekn1k+0f4IvOcPB3dEFA832NlQgx0nzD0VjxJwYJNx
+         YGu2YrjJxq1KRroKh8pClsgsl05HR12Y3guvRFMGBo7LkoberWGE/Qxmr2ZLxtvBHT
+         HLgSViBHJ8tmrcrovlzucMVSWWpgAUUqORr4yzCIW0nWoBfUgONXBLN3jY8xBO/YIJ
+         y9+PphmI4VXxMkW6TLDHoBEHxodqPXRLIiKwdBe/MdS+FIfAmzi9Of74RM3TaHhnDz
+         0S52d7zGyJQObQberQzbDSBZtY16WSERw9OiNIsdH3gRpKVymiVq73zhiEZYaGT1kL
+         bcAeQnbZpzwYw==
+Date:   Tue, 2 Jun 2020 15:48:24 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Rob Herring <robherring2@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: linux-next: manual merge of the tty tree with the devicetree tree
+Message-ID: <20200602154824.263bf711@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/4g4t36k61npKPKomu/bA8MD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call to pm_runtime_get_sync increments counter even in case of
-failure leading to incorrect ref count.
-Call pm_runtime_put if pm_runtime_get_sync fails.
+--Sig_/4g4t36k61npKPKomu/bA8MD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/spi/spi-img-spfi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hi all,
 
-diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
-index 8543f5ed1099..c3d0452ac78a 100644
---- a/drivers/spi/spi-img-spfi.c
-+++ b/drivers/spi/spi-img-spfi.c
-@@ -785,8 +785,10 @@ static int img_spfi_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret)
-+	if (ret) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	spfi_reset(spfi);
- 	pm_runtime_put(dev);
- 
--- 
-2.17.1
+Today's linux-next merge of the tty tree got a conflict in:
 
+  Documentation/devicetree/bindings/serial/rs485.yaml
+
+between commit:
+
+  9f60a65bc5e6 ("dt-bindings: Clean-up schema indentation formatting")
+
+from the devicetree tree and commit:
+
+  01c38ecff8b1 ("dt-bindings: serial: Add binding for rs485 bus termination=
+ GPIO")
+
+from the tty tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/devicetree/bindings/serial/rs485.yaml
+index 8141e4aad530,a9ad17864889..000000000000
+--- a/Documentation/devicetree/bindings/serial/rs485.yaml
++++ b/Documentation/devicetree/bindings/serial/rs485.yaml
+@@@ -39,6 -41,9 +39,10 @@@ properties
+      $ref: /schemas/types.yaml#/definitions/flag
+ =20
+    rs485-rx-during-tx:
+ -   description: enables the receiving of data even while sending data.
+ -   $ref: /schemas/types.yaml#/definitions/flag
+ +    description: enables the receiving of data even while sending data.
+ +    $ref: /schemas/types.yaml#/definitions/flag
++=20
++   rs485-term-gpios:
++     description: GPIO pin to enable RS485 bus termination.
++     maxItems: 1
+ +...
+
+--Sig_/4g4t36k61npKPKomu/bA8MD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7V6CkACgkQAVBC80lX
+0GyxaAf/dNscE5sw8bLnEODNavRf9f2XuVrNtjN6kXgpJFSpfTIWZDbsW4jpBcTl
+b50/JZbdigmjNm3tpQE7uyv5wk5ECaHQDE0RBngeIVJmIowdxffndSJabk9m9kjD
+85HLvCAsSz9vQn1p1lsPucKSuFjlDAqM03G7TYXZbR1qu10j0O8YHf2zFMJev/Ro
+uydh8t6TVxGkEcvmGsMzhJ8cPrxAO/vArzhNVguJebB7YZYkePPNzBoZ3ilMO9Wl
+01eRr1C6OeH/kECsCwiBr90/6eWvIrLhbeZbhjEZHodFxJThtfU2KbSHT8dJdCHl
++XgIBcT3ah4Ov0hdeqEB1MeIQnvgag==
+=Erm4
+-----END PGP SIGNATURE-----
+
+--Sig_/4g4t36k61npKPKomu/bA8MD--
