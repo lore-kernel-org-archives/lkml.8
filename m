@@ -2,146 +2,352 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31354C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F06C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2F7206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="C8CI0uWp"
+	by mail.kernel.org (Postfix) with ESMTP id B0459206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgFBIhg (ORCPT
+        id S1726485AbgFBIi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:37:36 -0400
-Received: from mail-vi1eur05on2066.outbound.protection.outlook.com ([40.107.21.66]:6144
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726174AbgFBIhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:37:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NB/OVF0LnMbXu02UqCaBiCP6yrLevavUG7tYpiu5C44+ct2rZJwYEy8Q6RSHK79Sd8Lx6yfItwmoJ2GAnxzluZesLFppKDm3gi1JCIynlVSC3wFaRqflXOHLZUw+r2VRjpn2h5N9eC+9ViXg3ofhfPOE5WDHiA0AfseqjXDjCzYC5BxY+s9ziCg1LLqaz3cPuy84TIJeKwXouLGiTisxpMipURbG51GvvdAMgDVoxieAsN0gCLWLf8mKyjCvyRTsZrUHGHNpzl3LdqUOpo85plm1egdMKUE60tEQNTgnd3PttEs5MfExFY3iEXUU92m1/aiP8V+d4QpAhh1CCsUm6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3aUo7NUI5jfaMlCBAWMMS01DSg77z765ARsVkZNAoZg=;
- b=j50ItN5Uu5umFcwc66ltSzERWj0x0msWbTiKSJ4sV6t1ADBPiqfRWMxG/RrLh8EWPSRahstTEvdWkeGqVAThGXZoYfDo7TN8GeKnhALXsnKsq4+L26nxvpBnuK4xB4TXOKzH7VPRIRFAbdVi7+knBIVsUH2OHdRsBEjru3xgO7Ui5izfHmaWNvZGvY2lsHha/2WWA8GlzWhxiQph5o1G2b3M/fyrRqNJtB6JxfUV76eoDkoiST1M7+8Oaz3utzZMT/ZecIESuhUSFb4XFczNUhRehh1xIF+3C+wsjfldVP49ozsqgXs5ajVmivoMbQ9HNIEdU2QvBxQhGzjl142E4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3aUo7NUI5jfaMlCBAWMMS01DSg77z765ARsVkZNAoZg=;
- b=C8CI0uWpGvpx1bG6RziywRI40zaY9aWF1sbcQ91yc5ulo6qxoS2dUNwlYELehtZUb0SSBpBMkVOyYyAhRIpXWTmkVqIhBYzMeCyrrEo7sYEP53TBhYfS007RMEyE4POgRtbZEdvU/V+JWWbG23GMiQBzUWYwWSTkpfOgZ0qiB30=
-Authentication-Results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=mellanox.com;
-Received: from AM0PR05MB5810.eurprd05.prod.outlook.com (2603:10a6:208:11f::18)
- by AM0PR05MB4403.eurprd05.prod.outlook.com (2603:10a6:208:65::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Tue, 2 Jun
- 2020 08:37:30 +0000
-Received: from AM0PR05MB5810.eurprd05.prod.outlook.com
- ([fe80::d05d:35af:3f2f:9110]) by AM0PR05MB5810.eurprd05.prod.outlook.com
- ([fe80::d05d:35af:3f2f:9110%5]) with mapi id 15.20.3066.018; Tue, 2 Jun 2020
- 08:37:30 +0000
-Subject: Re: linux-next: manual merge of the block tree with the rdma tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jens Axboe <axboe@kernel.dk>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yamin Friedman <yaminf@mellanox.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200602125647.5f5ed151@canb.auug.org.au>
-From:   Max Gurtovoy <maxg@mellanox.com>
-Message-ID: <3717aca8-9d75-33f1-ea8c-044af767ab5c@mellanox.com>
-Date:   Tue, 2 Jun 2020 11:37:26 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200602125647.5f5ed151@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0P190CA0019.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:208:190::29) To AM0PR05MB5810.eurprd05.prod.outlook.com
- (2603:10a6:208:11f::18)
+        Tue, 2 Jun 2020 04:38:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:56723 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbgFBIi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 04:38:58 -0400
+IronPort-SDR: GukBTOF606yKbMOPiQecvTg77c7pQnD384Uxz7vlJ4ISNyNF9bY0uhpeMif8jQc0AKI9ogWCd4
+ G5GYqA1gND4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 01:38:56 -0700
+IronPort-SDR: 8sO6GsLqXGP45aRsv6hW/l1MocMNcJjRqURLQoqIQaH91alRPsVuVblXI8YPck0tG8nUZgV9Q0
+ ePFugCW+Ck4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
+   d="scan'208";a="470643664"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Jun 2020 01:38:53 -0700
+Date:   Tue, 2 Jun 2020 04:28:58 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
+ VFIO_IRQ_TYPE_REMAP_BAR_REGION
+Message-ID: <20200602082858.GA8915@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+ <20200518025245.14425-1-yan.y.zhao@intel.com>
+ <20200529154547.19a6685f@x1.home>
+ <20200601065726.GA5906@joy-OptiPlex-7040>
+ <20200601104307.259b0fe1@x1.home>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.0.0.3] (89.139.203.251) by AM0P190CA0019.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Tue, 2 Jun 2020 08:37:29 +0000
-X-Originating-IP: [89.139.203.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 72862497-1213-4f21-bb76-08d806d0301c
-X-MS-TrafficTypeDiagnostic: AM0PR05MB4403:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR05MB44038F45D78C9571AA6CD72CB68B0@AM0PR05MB4403.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 0422860ED4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kQn1oAjdmMeUuFD7/o0YyL+hto4IYZfkdNqNQis7inedwra3WiKz4fbO8k/XKbwe1/NgvIlp7Djn164k+Myn7OTpn4b8P5/rmeo732F2LjY/sE13oBFwMEk7KAzQ9dVzwuuFbX2dsEZ46dGo3gXhilCgPWvgVgsZ+ddPnKzqcySdxMDLW8DnsenB1tA8lI06UFjSnNDQA9OhWDVet3hUAz8JE1HpPU8PECcRaduQHn5iTHr6InlaIXKgyfrqA1kQ5qKTmhC0qrVVFShsv+yRvCfDgc4lXEWWdX2O0kvTzS1oKEDLxczrj0Y0pdzfj5AHGht9zMTpZvJGe/XfDyIkVfXoi3FzwS2z77j4w5Ulh11Lb4TApjutwq7ZsZ01+IE0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB5810.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(346002)(396003)(136003)(66946007)(53546011)(4744005)(6666004)(52116002)(478600001)(186003)(16526019)(2616005)(8936002)(8676002)(36756003)(83380400001)(86362001)(2906002)(16576012)(316002)(6636002)(31696002)(956004)(66476007)(54906003)(26005)(110136005)(31686004)(66556008)(4326008)(6486002)(5660300002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: VPe0lkV4PUaLd+qpaQTZ+QWG6aJzJ6GLX3p15TF4VvAO3hZNWRLs9mzIlHrWzeAB4igBmpavuaIy9Zn3d74LKfcJUs6y1M5KksIlsnq+9GhauMlIahkY7/VraxpOkdK2PyCFgAu9Qkmo0bYqZwlzQN9rJZ+6jqcLBIzoiXw9FtHjJ6TN2dM3q3QFR2C7eembgWOtw9u8wrvfq2IEF8GftcG/C3gWsAR1cGge7PMDVoOv2im3O2RtKuxeVwRdwwXgyxpeB6Q+NaETwZE/QHTmS5J9JWkcxZNgrEaU5ELBDlCdXpEm1g0KMt0tUDL+NKzEM2IxmLs2z07uYdW3OhVPdFzIoGTVPW1HrtpXstYhOuaZdZRbY2+dLEDOeG99Vcb7o5oXdxne7kABqsn1msjL/EcU1CAiA69fu0CrWjgzOu8ZpQLGScAkpZTZtZhK682OhUYrP5onRyKdjXb0U/qTZQ5HJs0Fp28ubYYjDiAwY1vyRS0Jp9WLvGcrDA9JRSUy
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72862497-1213-4f21-bb76-08d806d0301c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 08:37:30.4897
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lNyJGlMfOaW4PpT0oPpYZFG0PptmBmqgfgr5i2JFAQvnyNCb4VoHVQLZzfxj8t9ZvG/DIJgMB0QZDYKTAk0vTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4403
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601104307.259b0fe1@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 01, 2020 at 10:43:07AM -0600, Alex Williamson wrote:
+> On Mon, 1 Jun 2020 02:57:26 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > On Fri, May 29, 2020 at 03:45:47PM -0600, Alex Williamson wrote:
+> > > On Sun, 17 May 2020 22:52:45 -0400
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > This is a virtual irq type.
+> > > > vendor driver triggers this irq when it wants to notify userspace to
+> > > > remap PCI BARs.
+> > > > 
+> > > > 1. vendor driver triggers this irq and packs the target bar number in
+> > > >    the ctx count. i.e. "1 << bar_number".
+> > > >    if a bit is set, the corresponding bar is to be remapped.
+> > > > 
+> > > > 2. userspace requery the specified PCI BAR from kernel and if flags of
+> > > > the bar regions are changed, it removes the old subregions and attaches
+> > > > subregions according to the new flags.
+> > > > 
+> > > > 3. userspace notifies back to kernel by writing one to the eventfd of
+> > > > this irq.
+> > > > 
+> > > > Please check the corresponding qemu implementation from the reply of this
+> > > > patch, and a sample usage in vendor driver in patch [10/10].
+> > > > 
+> > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > > > ---
+> > > >  include/uapi/linux/vfio.h | 11 +++++++++++
+> > > >  1 file changed, 11 insertions(+)
+> > > > 
+> > > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > > index 2d0d85c7c4d4..55895f75d720 100644
+> > > > --- a/include/uapi/linux/vfio.h
+> > > > +++ b/include/uapi/linux/vfio.h
+> > > > @@ -704,6 +704,17 @@ struct vfio_irq_info_cap_type {
+> > > >  	__u32 subtype;  /* type specific */
+> > > >  };
+> > > >  
+> > > > +/* Bar Region Query IRQ TYPE */
+> > > > +#define VFIO_IRQ_TYPE_REMAP_BAR_REGION			(1)
+> > > > +
+> > > > +/* sub-types for VFIO_IRQ_TYPE_REMAP_BAR_REGION */
+> > > > +/*
+> > > > + * This irq notifies userspace to re-query BAR region and remaps the
+> > > > + * subregions.
+> > > > + */
+> > > > +#define VFIO_IRQ_SUBTYPE_REMAP_BAR_REGION	(0)  
+> > > 
+> > > Hi Yan,
+> > > 
+> > > How do we do this in a way that's backwards compatible?  Or maybe, how
+> > > do we perform a handshake between the vendor driver and userspace to
+> > > indicate this support?  
+> > hi Alex
+> > thank you for your thoughtful review!
+> > 
+> > do you think below sequence can provide enough backwards compatibility?
+> > 
+> > - on vendor driver opening, it registers an irq of type
+> >   VFIO_IRQ_TYPE_REMAP_BAR_REGION, and reports to driver vfio-pci there's
+> >   1 vendor irq.
+> > 
+> > - after userspace detects the irq of type VFIO_IRQ_TYPE_REMAP_BAR_REGION
+> >   it enables it by signaling ACTION_TRIGGER.
+> >   
+> > - on receiving this ACTION_TRIGGER, vendor driver will try to setup a
+> >   virqfd to monitor file write to the fd of this irq, enable this irq
+> >   and return its enabling status to userspace.
+> 
+> I'm not sure I follow here, what's the purpose of the irqfd?  When and
+> what does the user signal by writing to the irqfd?  Is this an ACK
+> mechanism?  Is this a different fd from the signaling eventfd?
+it's not the kvm irqfd.
+in the vendor driver side, once ACTION_TRIGGER is received for the remap irq,
+interface vfio_virqfd_enable() is called to monitor writes to the eventfd of
+this irq.
 
-On 6/2/2020 5:56 AM, Stephen Rothwell wrote:
-> Hi all,
+when vendor driver signals the eventfd, remap handler in QEMU is
+called and it writes to the eventfd after remapping is done.
+Then the virqfd->handler registered in vendor driver is called to receive
+the QEMU ack.
 
-Hi,
-
-This looks good to me.
-
-Can you share a pointer to the tree so we'll test it in our labs ?
-
-need to re-test:
-
-1. srq per core
-
-2. srq per core + T10-PI
-
-And both will run with shared CQ.
-
-
+> 
+> > > Would the vendor driver refuse to change
+> > > device_state in the migration region if the user has not enabled this
+> > > IRQ?  
+> > yes, vendor driver can refuse to change device_state if the irq
+> > VFIO_IRQ_TYPE_REMAP_BAR_REGION is not enabled.
+> > in my sample i40e_vf driver (patch 10/10), it implemented this logic
+> > like below:
+> > 
+> > i40e_vf_set_device_state
+> >     |-> case VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RUNNING:
+> >     |          ret = i40e_vf_prepare_dirty_track(i40e_vf_dev);
+> >                               |->ret = i40e_vf_remap_bars(i40e_vf_dev, true);
+> > 			                     |->if (!i40e_vf_dev->remap_irq_ctx.init)
+> >                                                     return -ENODEV;
+> > 
+> > 
+> > (i40e_vf_dev->remap_irq_ctx.init is set in below path)
+> > i40e_vf_ioctl(cmd==VFIO_DEVICE_SET_IRQS)
+> >     |->i40e_vf_set_irq_remap_bars
+> >        |->i40e_vf_enable_remap_bars_irq
+> >            |-> vf_dev->remap_irq_ctx.init = true;
+> 
+> This should be a documented aspect of the uapi, not left to vendor
+> discretion to implement.
 >
-> Today's linux-next merge of the block tree got a conflict in:
->
->    drivers/nvme/target/rdma.c
->
-> between commit:
->
->    5733111dcd97 ("nvmet-rdma: use new shared CQ mechanism")
->
-> from the rdma tree and commits:
->
->    b0012dd39715 ("nvmet-rdma: use SRQ per completion vector")
->    b09160c3996c ("nvmet-rdma: add metadata/T10-PI support")
->
-> from the block tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->
+ok. got it.
+
+> > > 
+> > > Everything you've described in the commit log needs to be in this
+> > > header, we can't have the usage protocol buried in a commit log.  It  
+> > got it! I'll move all descriptions in commit logs to this header so that
+> > readers can understand the whole picture here.
+> > 
+> > > also seems like this is unnecessarily PCI specific.  Can't the count
+> > > bitmap simply indicate the region index to re-evaluate?  Maybe you were  
+> > yes, it is possible. but what prevented me from doing it is that it's not
+> > easy to write an irq handler in qemu to remap other regions dynamically.
+> > 
+> > for BAR regions, there're 3 layers as below.
+> > 1. bar->mr  -->bottom layer
+> > 2. bar->region.mem --> slow path
+> > 3. bar->region->mmaps[i].mem  --> fast path
+> > so, bar remap irq handler can simply re-revaluate the region and
+> > remove/re-generate the layer 3 (fast path) without losing track of any
+> > guest accesses to the bar regions.
+> > 
+> > actually so far, the bar remap irq handler in qemu only supports remap
+> > mmap'd subregions (layout of mmap'd subregions are re-queried) and
+> > not supports updating the whole bar region size.
+> > (do you think updating bar region size is a must?)
+> 
+> It depends on whether our interrupt is defined that the user should
+> re-evaluate the entire region_info or just the spare mmap capability.
+> A device spontaneously changing region size seems like a much more
+> abstract problem.  We do need to figure out how to support resizeable
+> BARs, but it seems that would be at the direction of the user, for
+> example emulating the resizeable BAR capability and requiring userspace
+> to re-evaluate the region_info after interacting with that emulation.
+> So long as we specify that this IRQ is limited to re-evaluating the
+> sparse mmap capability for the indicated regions, I don't think we need
+> to handle the remainder of region_info spontaneously changing.
+got it.
+
+> > however, there are no such fast path and slow path in other regions, so
+> > remap handlers for them are region specific.
+> 
+> QEMU support for re-evaluating arbitrary regions for sparse mmap
+> changes should not limit our kernel implementation.  Maybe it does
+> suggest though that userspace should be informed of the region indexes
+> subject to re-evaluation such that it can choose to ignore this
+> interrupt (and lose the features enabled by the IRQ), if it doesn't
+> support re-evaluating all of the indicated regions.  For example the
+> capability could include a bitmap indicating regions that might be
+> signaled and the QEMU driver might skip registering an eventfd via
+> SET_IRQS if support for non-BAR region indexes is indicated as a
+> requirement.  I'd really prefer if we can design this to not be limited
+> to PCI BARs.
+> 
+what about use the irq_set->start and irq_set->count in ioctl SET_IRQS
+to notify vendor driver of the supported invalidation range of region
+indexes? e.g. currently it's irq_set->start = 0, and irq_set->count=6.
+this SET_IRQS ioctl can be called multiple of times to notify vendor
+driver all supported ranges.
+if vendor driver signals indexes outside of this range, QEMU just
+ignores the request.
+
+> > > worried about running out of bits in the ctx count?  An IRQ per region  
+> > yes. that's also possible :) 
+> > but current ctx count is 64bit, so it can support regions of index up to 63.
+> > if we don't need to remap dev regions, seems it's enough?
+> 
+> This is the kind of decision we might look back on 10yrs later and
+> wonder how we were so short sighted, but yes it does seem like enough
+> and we can define additional IRQs for each of the next 64 region
+> indexes if we need too.
+ok.
+
+>  
+> > > could resolve that, but maybe we could also just add another IRQ for
+> > > the next bitmap of regions.  I assume that the bitmap can indicate
+> > > multiple regions to re-evaluate, but that should be documented.  
+> > hmm. would you mind elaborating more about it?
+> 
+> I'm just confirming that the usage expectation would allow the user to
+> be signaled with multiple bits in the bitmap set and the user is
+> expected to re-evaluate each region index sparse bitmap.
+yes, currently, vendor driver is able to specify multiple bits in the
+bitmap set.
+
+> 
+> > > Also, what sort of service requirements does this imply?  Would the
+> > > vendor driver send this IRQ when the user tries to set the device_state
+> > > to _SAVING and therefore we'd require the user to accept, implement the
+> > > mapping change, and acknowledge the IRQ all while waiting for the write
+> > > to device_state to return?  That implies quite a lot of asynchronous
+> > > support in the userspace driver.  Thanks,  
+> > yes.
+> > (1) when user sets device_state to _SAVING, the vendor driver notifies this
+> > IRQ, waits until user IRQ ack is received.
+> > (2) in IRQ handler, user decodes and sends IRQ ack to vendor driver.
+> > 
+> > if a wait is required in (1) returns, it demands the qemu_mutex_iothread is
+> > not locked in migration thread when device_state is set in (1), as before
+> > entering (2), acquiring of this mutex is required.
+> > 
+> > Currently, this lock is not hold in vfio_migration_set_state() at
+> > save_setup stage but is hold in stop and copy stage. so we wait in
+> > kernel in save_setup stage and not wait in stop stage.
+> > it can be fixed by calling qemu_mutex_unlock_iothread() on entering
+> > vfio_migration_set_state() and qemu_mutex_lock_iothread() on leaving
+> > vfio_migration_set_state() in qemu.
+> > 
+> > do you think it's acceptable?
+> 
+> I'm not thrilled by it, it seems a bit tricky for both userspace and
+> the vendor driver to get right.  Userspace needs to handle this eventfd
+> while blocked on write(2) into a region, which for QEMU means
+> additional ioctls to retrieve new REGION_INFO, closing some mmaps,
+> maybe opening other mmaps, which implies new layering of MemoryRegion
+> sub-regions and all of the calls through KVM to implement those address
+> space changes.  The vendor driver must also be able to support
+> concurrency of handling the REGION_INFO ioctl, new calls to mmap
+> regions, and maybe vm_ops.close and vm_ops.fault.  These regions might
+> also be IOMMU mapped, so re-evaluating the sparse mmap could result in
+> DMA maps and unmaps, which the vendor driver might see via the notify
+> forcing it to unpin pages.  How would the vendor driver know when to
+> unblock the write to device_state, would it look for vm_ops.close on
+> infringing vmas or are you thinking of an ACK via irqfd?  I wouldn't
+> want to debug lockups as a result of this design :-\
+hmm, do you think below sequence is acceptable?
+1. QEMU sets device_state to PRE_SAVING.
+   vendor driver signals the remap irq and returns the device_state
+   write.
+
+2. QEMU remap irq handler is invoked to do the region remapping. after
+   that user ack is sent to vendor driver by the handler writing to eventfd.
+
+3. QEMU sets device state to SAVING.
+   vendor driver returns success if user ack is received or failure
+   after a timeout wait.
+
+> 
+> What happens if the mmap re-evaluation occurs asynchronous to the
+> device_state write?  The vendor driver can track outstanding mmap vmas
+> to areas it's trying to revoke, so the vendor driver can know when
+> userspace has reached an acceptable state (assuming we require
+> userspace to munmap areas that are no longer valid).  We should also
+> consider what we can accomplish by invalidating user mmaps, ex. can we
+> fault them back in on a per-page basis and continue to mark them dirty
+> in the migration state, re-invalidating on each iteration until they've
+> finally been closed.   It seems the vendor driver needs to handle
+> incrementally closing each mmap anyway, there's no requirement to the
+> user to stop the device (ie. block all access), make these changes,
+> then restart the device.  So perhaps the vendor driver can "limp" along
+> until userspace completes the changes.  I think we can assume we are in
+> a cooperative environment here, userspace wants to perform a migration,
+> disabling direct access to some regions is for mediating those accesses
+> during migration, not for preventing the user from accessing something
+> they shouldn't have access to, userspace is only delaying the migration
+> or affecting the state of their device by not promptly participating in
+> the protocol.
+> 
+the problem is that the mmap re-evaluation has to be done before
+device_state is successfully set to SAVING. otherwise, the QEMU may
+have left save_setup stage and it's too late to start dirty tracking.
+And the reason for us to trap the BAR regions is not because there're
+dirty data in this region, it is because we want to know when the device
+registers mapped in the BARs are written, so we can do dirty page track
+of system memory in software way.
+
+> Another problem I see though is what about p2p DMA?  If the vendor
+> driver invalidates an mmap we're removing it from both direct CPU as
+> well as DMA access via the IOMMU.  We can't signal to the guest OS that
+> a DMA channel they've been using is suddenly no longer valid.  Is QEMU
+> going to need to avoid ever IOMMU mapping device_ram for regions
+> subject to mmap invalidation?  That would introduce an undesirable need
+> to choose whether we want to support p2p or migration unless we had an
+> IOMMU that could provide dirty tracking via p2p, right?  Thanks,
+
+yes, if there are device memory mapped in the BARs to be remapped, p2p
+DMA would be affected. Perhaps it is what vendor driver should be aware
+of and know what it is doing before sending out the remap irq ?
+in i40e vf's case, the BAR 0 to be remapped is only for device registers,
+so is it still good?
+
+
+Thanks
+Yan
