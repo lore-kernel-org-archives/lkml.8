@@ -2,142 +2,173 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B51AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15DE7206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC7C20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Bt1qxCsd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IZTwU0Bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgFBS5D (ORCPT
+        id S1728012AbgFBS51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:57:03 -0400
-Received: from mout.web.de ([212.227.15.3]:33815 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbgFBS5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:57:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591124203;
-        bh=OX2/GaYOPz/8P3VUiSxzclj1qVBij8MKYoq+xqGybqw=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=Bt1qxCsd5EnPqyQlHKt5WhaOa5DFo39sYJatlLMQslcGK2dGIs86TeYtFgXlHh5iS
-         9NGN8YXbr7ncKDnmrpEcc+DhxOfgudkMTbZy01nG+YyyRtuu4jbhDJmr+VJxQbxv2+
-         h47nUCT9MB3xY3C/swQJF6neunkMPywO3SQyzc2w=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.186.246]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LwqHA-1ivv1P01ay-016OsA; Tue, 02
- Jun 2020 20:56:43 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yi Zhang <yi.zhang@huawei.com>, Barry Song <baohua@kernel.org>
-Subject: Re: [PATCH] pinctrl: sirf: Add missing put_device() call in
- sirfsoc_gpio_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Yu Kuai <yukuai3@huawei.com>, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Message-ID: <01abac73-2107-daf2-d7bd-bef9d73d554a@web.de>
-Date:   Tue, 2 Jun 2020 20:56:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 14:57:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbgFBS51 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 14:57:27 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A92C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:57:27 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r10so5509812pgv.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:57:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NBeXDiXpaNYSmdLg+CEOi/2SkM043Ho1hEbW/kRa2lU=;
+        b=IZTwU0Bw0+6fSqRCv9Rb1hqZukeW0A2CInQU+QYtnhyF1FAVac4O0yQM/pIpj/D/QY
+         Xb0giNjIoUl84sIu2MIZGSYm9j/hXtkTet9KUmat8ZzBCX9UWJCBccVSEQ5qsYyTcrEb
+         VZIrDp0CpLW/RfWYmgTHbQLaUn4Nm2ItOpsejrGP1ApXi1a03KODEgCxoD4PwIPtU2Rt
+         oSYdWzl5vLYs8TqE/SvPHJBZuNHfJv9KtMrToXzBs1HbGBH1bWSdEpieEeWAYl+dkWdD
+         1izyx4zjkDbMKf0J/+mNVTL9AgnrrvwGKVl4dx2pmGF2VK4RGOr02U9jCcUhwaNzV/oV
+         T+qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NBeXDiXpaNYSmdLg+CEOi/2SkM043Ho1hEbW/kRa2lU=;
+        b=Y4cHpd2USg78+6joE3QGfr9z7M6eAflssLJBlfwLvfQcnjg27VDUiRCy5FQ3IcWfV4
+         kh3XIhni0Coz125LW7/zM4S/Y+o5YsJ3hKHf5T///En9INFz0MrZb812xBGhStPYp5Et
+         o17atP6hCQwKM9LcY1ToYZry3ooRw90g6K/tVIuhfrPydGSaiepjawxIsIiqJ+kN1Ze7
+         mzmRn1dFJOZ+7EHu1JegTuiy7m21qOzTdS+uHF7KKTbqQFjUhjFFXslLu73CEwvYLCH1
+         rNR8V9f0ny98XmR/+jE4si8jzUXrsfECAvyLv2vTMsULCWtdySeNrqLE8PRccI3H2ZwA
+         TvXw==
+X-Gm-Message-State: AOAM533HhoC3y6eFp2yk2+fY3GZ6QJ96bxG+uLpqoBi0urjIkWx2ZtQt
+        /7oTYlxVFVs6Vow6jtKmnH9eM02T7A1tW+Jx2ISNHg==
+X-Google-Smtp-Source: ABdhPJwGXylQl9yW2rw0tsduvX3osVxH6X59NpC/sYYIFeyfjwWrX0X/KWdU0Kn06TTa7u+MdCvsiQMU181S9JerHio=
+X-Received: by 2002:a63:5644:: with SMTP id g4mr24385954pgm.381.1591124246486;
+ Tue, 02 Jun 2020 11:57:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6Eu4eLUr1jktilm0raggdU4v3HrpPYd7LlTluLiUmfElcWCsQ5h
- 8niBfRXVuO83KzmT3OKsDpMI/QXRyVK3DfcHKVmWwR50qsfgP13YPrT49MGtjonhJfGa2Hv
- PF6qR5BPFr3jSFDWeUcHc/0gB0/WJlgEvZ3wjPvMXzXM2TwqcR/cbXA4UwvcvBJH+i5sMFt
- GQWlkc58y35OcC3qSTyGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OfqK+27LJaY=:3omZ1TtJeW2oKaDaT2Qn5u
- VRH9s9KVNImChawhUDXTkJ/u6G0h9hpYV0qgZdk1AtNiFEoVC8LFjdhShHShrdLnLxxHOrG+X
- 6hAd3OfvqttPZvfp24+TeyKPg+784FnSVhoGnmMFPwucBQ92jtfeVQcgGu7uZ3JRF6PTboBMK
- iuSz2dfbVLuNiIjtu03K+oLP8zHDYFTVdB0P9ilOsH32SDcKSs8sQMlAG8m1qHfcq0RC+A4Ce
- D7KgykrMbtlL5+F+9D6meJp/Ttxl8p7xVY1GVbGxwv4cLCzT9n0dX4AZc4iG8e8XhiVjCWo/V
- SXeNN9M1OMAmbqr/vn25U9QzTTO6HZrXifjb3ADppSKb0rTXMl4Ff1oavJimBoH3jtw9nczV8
- ONaFith+wrIvBvZm8O1PTVywduRzcVmrvdySz9toLIyvU5MEZJC7X2cerQZHtSuQVX7bjJDm0
- PMY7Z16usffQD+pFP6ok5QypcnfKzZFqoCHOkmlLuJgj2FPXzbqQ/dMF8gg1KepDaWkoSlxIj
- PLMF538ZS5nIT3Jd65eEyG24+p1m5TMWB7vRccRdcuhV9jFQHXVRC0XGXqDSXpX2bXzTo/P8a
- R5c7h07TwFZBjTuXwWc4ml1qjq6anR136fsq9+bCguvIqpfanhx5ZovhsS843A7ikPuEYBUE/
- Fa98Tf2Dn2cM9hf1YyumwY4480oIVOcB6d0DYtaOLeTI3C9Ie2GGS9cWJWtE5J/UzrXCy/N3X
- jOEBwWQqzjRqMJqNZGg85hJRndomdKKlVUkdB7Fic1mlICZhYq0NGyetfvKBKNCJKT91aKuAv
- IUv1su7mqhcYIyk3aW71jISXsFro0HnBInWZhN3hB43XH02E4G/OzSmI+ZL/RX0xo4TQKmoNc
- sOQvwS17Z7kcdq6WiOa6NXlmIGudl6hbZaUuq/BEnvbEBU2WkYbW8B6c0slF09d6r/lfkhG3v
- sjNZ8Mo1p5hNE64Y/Q/KeOtsvToGJGpGZ+wQlALBv9bx/uJgLQwzPSdOujy4FsK7pLGuqvt4y
- dzYGI+6SrXSNNrWKX//Adihfa69JGWOhcEFhBSnLDRsV0J4yeQRZT25/DPeYxqNwHpvAuW8X2
- KqKH90IayW5zXLKYj56JhBWoZCgDmxNFfX+A9Vhlrlw2mSS0Ac3GIG7kUJDq9WXU1saM0aH7d
- J3Luo7OvZBOnRnJN4OVRcESQjsxw7nUSVUIcBTlhI/EPV+hlkGtWTQvr1BuwJvcuIUtRLZaqS
- 33j1Xgx9X6zxN/Gxy
+References: <20200602184409.22142-1-elver@google.com>
+In-Reply-To: <20200602184409.22142-1-elver@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 2 Jun 2020 11:57:15 -0700
+Message-ID: <CAKwvOd=5_pgx2+yQt=V_6h7YKiCnVp_L4nsRhz=EzawU1Kf1zg@mail.gmail.com>
+Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of KASAN
+ and UBSAN
+To:     Marco Elver <elver@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> in sirfsoc_gpio_probe(), if of_find_device_by_node() succeed,
-> put_device() is missing in the error handling patch.
+On Tue, Jun 2, 2020 at 11:44 AM 'Marco Elver' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> Adds config variable CC_HAS_WORKING_NOSANITIZE, which will be true if we
+> have a compiler that does not fail builds due to no_sanitize functions.
+> This does not yet mean they work as intended, but for automated
+> build-tests, this is the minimum requirement.
+>
+> For example, we require that __always_inline functions used from
+> no_sanitize functions do not generate instrumentation. On GCC <= 7 this
+> fails to build entirely, therefore we make the minimum version GCC 8.
+>
+> For KCSAN this is a non-functional change, however, we should add it in
+> case this variable changes in future.
+>
+> Link: https://lkml.kernel.org/r/20200602175859.GC2604@hirez.programming.kicks-ass.net
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-How do you think about another wording variant?
+Is this a problem only for x86?  If so, that's quite a jump in minimal
+compiler versions for a feature that I don't think is currently
+problematic for other architectures?  (Based on
+https://lore.kernel.org/lkml/20200529171104.GD706518@hirez.programming.kicks-ass.net/
+)
 
-   A coccicheck run provided information like the following.
+> ---
+> Apply after:
+> https://lkml.kernel.org/r/20200602173103.931412766@infradead.org
+> ---
+>  init/Kconfig      | 3 +++
+>  lib/Kconfig.kasan | 1 +
+>  lib/Kconfig.kcsan | 1 +
+>  lib/Kconfig.ubsan | 1 +
+>  4 files changed, 6 insertions(+)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 0f72eb4ffc87..3e8565bc8376 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -39,6 +39,9 @@ config TOOLS_SUPPORT_RELR
+>  config CC_HAS_ASM_INLINE
+>         def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
+>
+> +config CC_HAS_WORKING_NOSANITIZE
+> +       def_bool !CC_IS_GCC || GCC_VERSION >= 80000
+> +
+>  config CONSTRUCTORS
+>         bool
+>         depends on !UML
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 81f5464ea9e1..15e6c4b26a40 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -20,6 +20,7 @@ config KASAN
+>         depends on (HAVE_ARCH_KASAN && CC_HAS_KASAN_GENERIC) || \
+>                    (HAVE_ARCH_KASAN_SW_TAGS && CC_HAS_KASAN_SW_TAGS)
+>         depends on (SLUB && SYSFS) || (SLAB && !DEBUG_SLAB)
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           Enables KASAN (KernelAddressSANitizer) - runtime memory debugger,
+>           designed to find out-of-bounds accesses and use-after-free bugs.
+> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> index 5ee88e5119c2..2ab4a7f511c9 100644
+> --- a/lib/Kconfig.kcsan
+> +++ b/lib/Kconfig.kcsan
+> @@ -5,6 +5,7 @@ config HAVE_ARCH_KCSAN
+>
+>  config HAVE_KCSAN_COMPILER
+>         def_bool CC_IS_CLANG && $(cc-option,-fsanitize=thread -mllvm -tsan-distinguish-volatile=1)
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           For the list of compilers that support KCSAN, please see
+>           <file:Documentation/dev-tools/kcsan.rst>.
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index a5ba2fd51823..f725d126af7d 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -4,6 +4,7 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
+>
+>  menuconfig UBSAN
+>         bool "Undefined behaviour sanity checker"
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           This option enables the Undefined Behaviour sanity checker.
+>           Compile-time instrumentation is used to detect various undefined
+> --
 
-   drivers/pinctrl/sirf/pinctrl-sirf.c:798:2-8: ERROR: missing put_device;
-   call of_find_device_by_node on line 792, but without a corresponding
-   object release within this function.
-
-   Generated by: scripts/coccinelle/free/put_device.cocci
-
-   Thus add a jump target to fix the exception handling for this
-   function implementation.
-
-
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
-
-Regards,
-Markus
+-- 
+Thanks,
+~Nick Desaulniers
