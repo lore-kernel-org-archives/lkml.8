@@ -5,58 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE515C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A0C206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A051206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hhZEW1wH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OlSX02OP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgFBTfv (ORCPT
+        id S1727946AbgFBTfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:35:51 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49038 "EHLO
+        Tue, 2 Jun 2020 15:35:53 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49040 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFBTfu (ORCPT
+        with ESMTP id S1726420AbgFBTfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:35:50 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052JZUKG110487;
-        Tue, 2 Jun 2020 14:35:30 -0500
+        Tue, 2 Jun 2020 15:35:51 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 052JZaw2110528;
+        Tue, 2 Jun 2020 14:35:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591126530;
-        bh=b/5XkevPHJRhZ2gZPRNiUFvjA4NxbX0UBQv0ibyIS/k=;
-        h=From:To:CC:Subject:Date;
-        b=hhZEW1wH2G8LUUa2Oqp26T/S0wzqzgHBRdGcVPTBR99RJFKg9uCSRcXLHZ1BexB6a
-         0QaV3sNMEKJ3UN0VzxrPyRrEl7s7I2EC1cNPJFUJ5pp4o00ciz7dtYqgZn25Y8kinE
-         Tzywzhonp7f6Eyo/+TJxtmMaWLapAaGO5i55CwGM=
+        s=ti-com-17Q1; t=1591126536;
+        bh=/GqgLpU1uPJ1Wy+HenNmK2cNmc59eJZQiS6sZEF0GYw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=OlSX02OP6CNAVor5r6F8fugshagcZ2Sv+MkYt0Vgd9rdYWr9VELYiNwoKT+vmhj5z
+         NSXN/grf5ygZuwP5d/vY3wTP7Uk7+X8YFYPW6q98N3aSSrT68UozruYNGquOjEOX62
+         OJC8vTkpm7ieXB0KHalnv9yX1DMpP03q5vhIeLZU=
 Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052JZUVv102654;
-        Tue, 2 Jun 2020 14:35:30 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 052JZZAB091823
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 14:35:35 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
  (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 2 Jun
- 2020 14:35:29 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 14:35:35 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 2 Jun 2020 14:35:29 -0500
+ Frontend Transport; Tue, 2 Jun 2020 14:35:35 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052JZTWP050953;
-        Tue, 2 Jun 2020 14:35:30 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 052JZZeS006873;
+        Tue, 2 Jun 2020 14:35:35 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>
 CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
         <robh@kernel.org>, <devicetree@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 1/2] dt-bindings: ASoc: Fix tdm-slot documentation spelling error
-Date:   Tue, 2 Jun 2020 14:35:23 -0500
-Message-ID: <20200602193524.30309-1-dmurphy@ti.com>
+Subject: [PATCH 2/2] dt-bindings: tas2562: Convert the tas2562 binding to yaml
+Date:   Tue, 2 Jun 2020 14:35:24 -0500
+Message-ID: <20200602193524.30309-2-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200602193524.30309-1-dmurphy@ti.com>
+References: <20200602193524.30309-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,29 +69,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the spelling of 'specified'.  Also fix grammarical issue with the
-use of 'a' over 'an'
+Convert the TAS2562 text file to yaml format.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- Documentation/devicetree/bindings/sound/tdm-slot.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/sound/tas2562.txt     | 34 ----------
+ .../devicetree/bindings/sound/tas2562.yaml    | 65 +++++++++++++++++++
+ 2 files changed, 65 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
 
-diff --git a/Documentation/devicetree/bindings/sound/tdm-slot.txt b/Documentation/devicetree/bindings/sound/tdm-slot.txt
-index 34cf70e2cbc4..4bb513ae62fc 100644
---- a/Documentation/devicetree/bindings/sound/tdm-slot.txt
-+++ b/Documentation/devicetree/bindings/sound/tdm-slot.txt
-@@ -14,8 +14,8 @@ For instance:
- 	dai-tdm-slot-tx-mask = <0 1>;
- 	dai-tdm-slot-rx-mask = <1 0>;
- 
--And for each spcified driver, there could be one .of_xlate_tdm_slot_mask()
--to specify a explicit mapping of the channels and the slots. If it's absent
-+And for each specified driver, there could be one .of_xlate_tdm_slot_mask()
-+to specify an explicit mapping of the channels and the slots. If it's absent
- the default snd_soc_of_xlate_tdm_slot_mask() will be used to generating the
- tx and rx masks.
- 
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
+deleted file mode 100644
+index 94796b547184..000000000000
+--- a/Documentation/devicetree/bindings/sound/tas2562.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-Texas Instruments TAS2562 Smart PA
+-
+-The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
+-efficiently driving high peak power into small loudspeakers.
+-Integrated speaker voltage and current sense provides for
+-real time monitoring of loudspeaker behavior.
+-
+-Required properties:
+- - #address-cells  - Should be <1>.
+- - #size-cells     - Should be <0>.
+- - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
+- - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
+- - ti,imon-slot-no:- TDM TX current sense time slot.
+-
+-Optional properties:
+-- interrupt-parent: phandle to the interrupt controller which provides
+-                    the interrupt.
+-- interrupts: (GPIO) interrupt to which the chip is connected.
+-- shut-down: GPIO used to control the state of the device.
+-
+-Examples:
+-tas2562@4c {
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-        compatible = "ti,tas2562";
+-        reg = <0x4c>;
+-
+-        interrupt-parent = <&gpio1>;
+-        interrupts = <14>;
+-
+-	shut-down = <&gpio1 15 0>;
+-        ti,imon-slot-no = <0>;
+-};
+-
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
+new file mode 100644
+index 000000000000..11e0269d03b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
++# Copyright (C) 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments TAS2562 Smart PA
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
++  efficiently driving high peak power into small loudspeakers.
++  Integrated speaker voltage and current sense provides for
++  real time monitoring of loudspeaker behavior.
++
++properties:
++  compatible:
++    enum:
++      - ti,tas2562
++      - ti,tas2563
++
++  reg:
++    maxItems: 1
++    description: |
++       I2C addresss of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
++
++  shut-down:
++    description: GPIO used to control the state of the device.
++
++  interrupts:
++    maxItems: 1
++
++  ti,imon-slot-no:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: TDM TX current sense time slot.
++
++  '#sound-dai-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++additionalProperties: false
++
++examples:
++  - |
++   #include <dt-bindings/gpio/gpio.h>
++   i2c0 {
++     #address-cells = <1>;
++     #size-cells = <0>;
++     codec: codec@4c {
++       compatible = "ti,tas2562";
++       reg = <0x4c>;
++       #sound-dai-cells = <1>;
++       interrupt-parent = <&gpio1>;
++       interrupts = <14>;
++
++       shut-down = <&gpio1 15 0>;
++       ti,imon-slot-no = <0>;
++     };
++   };
++
 -- 
 2.26.2
 
