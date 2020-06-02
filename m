@@ -2,122 +2,158 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B083C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC6F206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77B42063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y63W1x+j"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g9X7wqQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbgFBFoz (ORCPT
+        id S1726110AbgFBFpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:44:55 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56768 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725298AbgFBFoz (ORCPT
+        Tue, 2 Jun 2020 01:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbgFBFpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:44:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591076693;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bCo6Hs1XvKVZ/we8zlozkhnglL2Do2YvAix/0i2LEXM=;
-        b=Y63W1x+jPASWT5dLtyK5KW30WZOC1GJJa8JS06G1AQ8rd9SaB6n6Ba29gFHIC68LRk5XXy
-        g2SJa4uKMislkCTuJGk9/GPoDTGc2xWNnWDPHhOddVLsi2p0XOogH+l+TXpAYJ5HKB7NQX
-        3+qoljhYnpwtl7RXlXHVtH/zL1vE5d0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-1OLmskEZNhOBtfnAOikoPA-1; Tue, 02 Jun 2020 01:44:49 -0400
-X-MC-Unique: 1OLmskEZNhOBtfnAOikoPA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40DBC835B40;
-        Tue,  2 Jun 2020 05:44:48 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-70.bne.redhat.com [10.64.54.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D7375D9C9;
-        Tue,  2 Jun 2020 05:44:45 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
-To:     Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        shan.gavin@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-10-gshan@redhat.com>
- <81adf013-3de7-23e6-7648-8aec821b033c@redhat.com>
- <a6addc25-29af-3690-8392-efa5e8381e98@redhat.com>
- <8ab64c6a-582b-691d-79ab-21cdc0455cd3@redhat.com>
- <6a4a82a4-af01-98c2-c854-9199f55f7bd3@redhat.com>
- <6965aaf641a23fab64fbe2ceeb790272@kernel.org>
- <d0bfb944-b50a-608a-7dcc-5a409cdc4524@redhat.com>
- <4337cca152df47c93d96e092189a0e36@kernel.org>
- <5c72c597-732e-7dbf-d056-665674ec1792@redhat.com>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <fca52ea1-294a-6011-45f1-d0df30069800@redhat.com>
-Date:   Tue, 2 Jun 2020 15:44:42 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <5c72c597-732e-7dbf-d056-665674ec1792@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Tue, 2 Jun 2020 01:45:24 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB42C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 22:45:22 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id f187so15886232ybc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 22:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=qiAGy0O4D5sZPZBUDOyzmafsREfPwQ+6o5+tiGkldzk=;
+        b=g9X7wqQHkwSsE67PytiDLtUkVlKt2EmXQ0Z2WRZ0Xh3f9+7wmd6h5PI65oCiURIzef
+         MvAXbSoNA7xpUP+3svirF5JhGDvXQZ1hGiTiID+6+4TXZMqd9HGHl42YU8KYdn1jlXX1
+         FMt8vXzUeNYIsYo7VzJ9wNA04qeDpKks+ZwPzp1zSUn24ptdkw6dUktr1kvqHK1hj/Dh
+         RbuIe+jX/KArQ5VsuwdkY5TYXdHBF42uQJwZ9RNePDGIoHfqlRknnDTaAHMFGPsBlaKN
+         2MW4rywYhNxn+jhu9c2wfi6Jt/pIxSZxA7DPdJ0zojBygsgLVkYPzDrLC7UFgRFc/Tqb
+         QJtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=qiAGy0O4D5sZPZBUDOyzmafsREfPwQ+6o5+tiGkldzk=;
+        b=LTwuxLBJxmEpYp1gIycEeAk47JVRKQYlMCdAtZsiWPyTl8EyYL0gVJgB1bkEBwC4IL
+         2SfyNsg/Y1stxhfA5TMIbG1JPk+jyWWczlvPRucDssrVe9hCFRcrESeR1Y+cAXMibVJS
+         NN3xsQSIi07z4zPWE08Cu+TQzQFhkzWGHP7nArWkaS6fyOImBnbQ429v+PtC1U9gHHUg
+         k7tV/bKYdzBRmqUxLVQF8Sfl6jZW+DdtuFFhBeVm9IhNYZqzMldGGH+PEjRgEgYF1n5l
+         3B6lLk9wSwwS8CUWOUX0tPmVvsH2fw6jsj82eacgN8xK+PoyQra5wZv3Tn0EKTqvZ4cn
+         Hb6A==
+X-Gm-Message-State: AOAM532fObq19onginz7M2SHHA8FV34ik5LCBNDL782YccXB8g/zJMiR
+        l0mPBIR+tJD0VWvv/8q8nLGchbGSsRBf
+X-Google-Smtp-Source: ABdhPJxQRom+GrIfagQbwRffGMeJJ+pGvfAJjE78cF4/2hejCZlko1O5W4bBRi7rlSUMctQMMaNTzCgul32z
+X-Received: by 2002:a25:fc5:: with SMTP id 188mr39503234ybp.429.1591076722056;
+ Mon, 01 Jun 2020 22:45:22 -0700 (PDT)
+Date:   Mon,  1 Jun 2020 22:45:17 -0700
+Message-Id: <20200602054517.191244-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
+Subject: [PATCH] iommu/vt-d: Don't apply gfx quirks to untrusted devices
+From:   Rajat Jain <rajatja@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com,
+        pmalani@google.com, bleung@google.com, levinale@google.com,
+        zsm@google.com, mnissler@google.com, tbroch@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc, Paolo,
+Currently, an external malicious PCI device can masquerade the VID:PID
+of faulty gfx devices, and thus apply iommu quirks to effectively
+disable the IOMMU restrictions for itself.
 
-On 6/1/20 7:21 PM, Paolo Bonzini wrote:
-> On 31/05/20 14:44, Marc Zyngier wrote:
->>>
->>> Is there an ARM-approved way to reuse the S2 fault syndromes to detect
->>> async page faults?
->>
->> It would mean being able to set an ESR_EL2 register value into ESR_EL1,
->> and there is nothing in the architecture that would allow that,
-> 
-> I understand that this is not what you want to do and I'm not proposing
-> it, but I want to understand this better: _in practice_ do CPUs check
-> closely what is written in ESR_EL1?
-> 
-> In any case, the only way to implement this, it seems to me, would be a
-> completely paravirtualized exception vector that doesn't use ESR at all.
-> 
-> On the other hand, for the page ready (interrupt) side assigning a PPI
-> seems complicated but doable.
-> 
+Thus we need to ensure that the device we are applying quirks to, is
+indeed an internal trusted device.
 
-Marc suggested to use SDEI in another reply. I think it might be the
-appropriate way to deliver page-not-present. To some extent, it could
-be regarded as exception, which doesn't use ESR at all. It matches with
-what Paolo is thinking of: paravirtualized exception vector that doesn't
-use ESR at all. However, it seems it's not supported in kvm-arm yet. So
-I assume it needs to be developed from scratch. Marc, could you please
-help to confirm? Thanks in advance.
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+ drivers/iommu/intel-iommu.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-I agree with Paolo PPI (interrupt) might be the best way to deliver
-page-ready currently. I don't think SDEI is suitable because there
-are no big difference between SDEI and currently used DABT injection
-to some extent. With SDEI, We will have the issues we are facing.
-For example, some critical code section isn't safe to receive SDEI
-if I'm correct.
-
-
-Thanks,
-Gavin
-
-[...]
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index ef0a5246700e5..f2a480168a02f 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -6214,6 +6214,11 @@ const struct iommu_ops intel_iommu_ops = {
+ 
+ static void quirk_iommu_igfx(struct pci_dev *dev)
+ {
++	if (dev->untrusted) {
++		pci_warn(dev, "skipping iommu quirk for untrusted gfx dev\n");
++		return;
++	}
++
+ 	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
+ 	dmar_map_gfx = 0;
+ }
+@@ -6255,6 +6260,11 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+ 
+ static void quirk_iommu_rwbf(struct pci_dev *dev)
+ {
++	if (dev->untrusted) {
++		pci_warn(dev, "skipping iommu quirk for untrusted dev\n");
++		return;
++	}
++
+ 	/*
+ 	 * Mobile 4 Series Chipset neglects to set RWBF capability,
+ 	 * but needs it. Same seems to hold for the desktop versions.
+@@ -6285,6 +6295,11 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
+ {
+ 	unsigned short ggc;
+ 
++	if (dev->untrusted) {
++		pci_warn(dev, "skipping iommu quirk for untrusted gfx dev\n");
++		return;
++	}
++
+ 	if (pci_read_config_word(dev, GGC, &ggc))
+ 		return;
+ 
+@@ -6318,6 +6333,13 @@ static void __init check_tylersburg_isoch(void)
+ 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
+ 	if (!pdev)
+ 		return;
++
++	if (pdev->untrusted) {
++		pci_warn(pdev, "skipping iommu quirk due to untrusted dev\n");
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	pci_dev_put(pdev);
+ 
+ 	/* System Management Registers. Might be hidden, in which case
+@@ -6327,6 +6349,12 @@ static void __init check_tylersburg_isoch(void)
+ 	if (!pdev)
+ 		return;
+ 
++	if (pdev->untrusted) {
++		pci_warn(pdev, "skipping iommu quirk due to untrusted dev\n");
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
+ 		pci_dev_put(pdev);
+ 		return;
+-- 
+2.27.0.rc2.251.g90737beb825-goog
 
