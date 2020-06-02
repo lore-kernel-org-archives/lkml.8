@@ -2,82 +2,135 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61092C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D5520772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FC9207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgFBMDz (ORCPT
+        id S1726606AbgFBMGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:03:55 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42036 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:03:54 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s21so3038878oic.9;
-        Tue, 02 Jun 2020 05:03:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IgExh/ny3ZdfEOHfQwIXJ7oTzjh0IcO4NnZTa4lzZZg=;
-        b=XoPJY8dgVqI6dF88I4ohPzj5yp8a2ZWH4R+ajgNEzXhq6XLxNCzSYot84tzVh06OEq
-         IG3qdoMrFGI65d6DZXI13xdl4FvdZGvVA7v6Sxm4ejvRyNMDli/ebrI4hqfr7dtOLnDv
-         HvaclkeqFxosFfZa2Nh+FXhkqX6j2I2D+1GwyHDUn4KRGURp5GRyVHfXROXBsj4WNNcC
-         rQEUPit6w4HE15n1HqxuFuN1WcxZpB3iy1BAAHJiVGJNF+TQQdYmEsIjpgWj0YwmiGEt
-         wZ5Zz6v51hu19dKh8LBWI93gkkZ/Vfj5L0+dyaiJXxy0GYrAjYjbzmtzs3pmjHtmVA86
-         W3Nw==
-X-Gm-Message-State: AOAM533PMqnXWUjN6qvNQp1FlV93jCj1LEPi3imOy/JPv+z51dDiSdZm
-        Fm5YzP9hlqrt2RnTcOnaWSI5lsqfOvbKFTkXHO4=
-X-Google-Smtp-Source: ABdhPJz2czAuYGYJfe62NGAvi2DIXZQZsfLZD8OxGXlID6t22QF7K8A5fIlnr/Ug64ryYGdMa83JGneje4dJWf0Q67U=
-X-Received: by 2002:aca:1a19:: with SMTP id a25mr1947756oia.54.1591099433899;
- Tue, 02 Jun 2020 05:03:53 -0700 (PDT)
+        Tue, 2 Jun 2020 08:06:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5333 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725921AbgFBMGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:06:17 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 81E03B2E8FAAB54CD06E;
+        Tue,  2 Jun 2020 20:06:15 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
+ 20:06:09 +0800
+Subject: Re: [RFC PATCH v4 2/2] arm64: tlb: Use the TLBI RANGE feature in
+ arm64
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
+        <guohanjun@huawei.com>, <olof@lixom.net>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200601144713.2222-1-yezhenyu2@huawei.com>
+ <20200601144713.2222-3-yezhenyu2@huawei.com>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <7f15f835-cf73-be5b-8bb0-cabb6e4eeed2@huawei.com>
+Date:   Tue, 2 Jun 2020 20:06:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <CGME20200504232908eucas1p296927bc7c736ad924cefaea9a546459d@eucas1p2.samsung.com>
- <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com> <380c0494-ed02-b2be-65b0-d385627fb894@samsung.com>
-In-Reply-To: <380c0494-ed02-b2be-65b0-d385627fb894@samsung.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 2 Jun 2020 14:03:38 +0200
-Message-ID: <CAMuHMdVYuk9+=3OTufOo98Dd3ijXS6JBH9RqK2v+9mwogxbnXA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] video: fbdev: amifb: add FIXMEs about
- {put,get}_user() failures
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200601144713.2222-3-yezhenyu2@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 1:52 PM Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> Since we lack the hardware (or proper emulator setup) for
-> testing needed changes add FIXMEs to document the issues
-> (so at least they are not forgotten).
->
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Hi all,
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Some optimizations to the codes:
 
-Gr{oetje,eeting}s,
+On 2020/6/1 22:47, Zhenyu Ye wrote:
+> -	start = __TLBI_VADDR(start, asid);
+> -	end = __TLBI_VADDR(end, asid);
+> +	/*
+> +	 * The minimum size of TLB RANGE is 2 pages;
+> +	 * Use normal TLB instruction to handle odd pages.
+> +	 * If the stride != PAGE_SIZE, this will never happen.
+> +	 */
+> +	if (range_pages % 2 == 1) {
+> +		addr = __TLBI_VADDR(start, asid);
+> +		__tlbi_last_level(vale1is, vae1is, addr, last_level);
+> +		start += 1 << PAGE_SHIFT;
+> +		range_pages >>= 1;
+> +	}
+>  
 
-                        Geert
+We flush a single page here, and below loop does the same thing
+if cpu not support TLB RANGE feature.  So may we use a goto statement
+to simplify the code.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> +	while (range_pages > 0) {
+> +		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
+> +		    stride == PAGE_SIZE) {
+> +			num = (range_pages & TLB_RANGE_MASK) - 1;
+> +			if (num >= 0) {
+> +				addr = __TLBI_VADDR_RANGE(start, asid, scale,
+> +							  num, 0);
+> +				__tlbi_last_level(rvale1is, rvae1is, addr,
+> +						  last_level);
+> +				start += __TLBI_RANGE_SIZES(num, scale);
+> +			}
+> +			scale++;
+> +			range_pages >>= TLB_RANGE_MASK_SHIFT;
+> +			continue;
+>  		}
+> +
+> +		addr = __TLBI_VADDR(start, asid);
+> +		__tlbi_last_level(vale1is, vae1is, addr, last_level);
+> +		start += stride;
+> +		range_pages -= stride >> 12;
+>  	}
+>  	dsb(ish);
+>  }
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Just like:
+
+--8<---
+	if (range_pages %2 == 1)
+		goto flush_single_tlb;
+
+	while (range_pages > 0) {
+		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
+		    stride == PAGE_SIZE) {
+			num = ((range_pages >> 1) & TLB_RANGE_MASK) - 1;
+			if (num >= 0) {
+				addr = __TLBI_VADDR_RANGE(start, asid, scale,
+							  num, 0);
+				__tlbi_last_level(rvale1is, rvae1is, addr,
+						  last_level);
+				start += __TLBI_RANGE_SIZES(num, scale);
+			}
+			scale++;
+			range_pages >>= TLB_RANGE_MASK_SHIFT;
+			continue;
+		}
+
+flush_single_tlb:
+		addr = __TLBI_VADDR(start, asid);
+		__tlbi_last_level(vale1is, vae1is, addr, last_level);
+		start += stride;
+		range_pages -= stride >> PAGE_SHIFT;
+	}
+--8<---
+
+
+
