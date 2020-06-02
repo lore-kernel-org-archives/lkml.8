@@ -2,156 +2,149 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1303C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E795C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA2C206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qq3QGiTb"
+	by mail.kernel.org (Postfix) with ESMTP id 398E9207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591107006;
+	bh=5kdWcRvjyQscoknTE3/+ligCbxi7dlo+MyoefG7KHJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qe5yJPFmAJoyOEzbqmM+FLr9Fu99cZJbVETBhJBvpAB6ohpsfKv3rwsx1ruc/Jb74
+	 5kREI5P8vLUBStGi+ne68XDYbHIxlmi5Qk89WLcUNEDO6GyHDTP/nq3AeLrfGTLcIi
+	 gZhMgDl4NpVA6hUGhbNZb95IwYcRkBWAHcR1RThU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgFBOHt (ORCPT
+        id S1726664AbgFBOKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:07:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgFBOHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:07:48 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563A8C08C5C0;
-        Tue,  2 Jun 2020 07:07:48 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o6so5127464pgh.2;
-        Tue, 02 Jun 2020 07:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dIkaVHtmcI7ZAayN2rp02gz9INiaKKtMhPyk6d6P6pM=;
-        b=Qq3QGiTbEF+puo1ZXtzIaWPT7MuJKYI0butXpXyTBvJlvOlZ/Tmfrh4atIYuL/CJ/7
-         C5BjwCj1LjayEuABGjeU8WJKEoHsaKNXj5ZIdmDOwdm2Ye76KM2/U1LilloMhV84g+aM
-         qTT4o6gmiMey+CcbpQgJuciwkq8Yw6lirxeORPmrE7QJrjegvHt0GmZaGK3jA3BDDZ52
-         fSI4XmQJmzLxvPB6JpxU6lAeN8PLQ3+oqScGyMswOKNMedE/aINJh7lY7gNfmXmbvZKx
-         NsTXOVcJ93A/xZwMPxe+M5ZNQla56maPMKmygI2MUPROXsg8ViJMCn97L2uCAeXgzXaB
-         oe+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dIkaVHtmcI7ZAayN2rp02gz9INiaKKtMhPyk6d6P6pM=;
-        b=olnolkCOQz/PDFTAIIrmgbtfgUjwu+grsYfIBfNXrxFDRG1eM6qvSYsFIVj1vDmB4g
-         GzQ2jYqdzc382FZIA+catiUkj495jWGFyPEirWvcjfF2TY+gOf4GpIAWCijxdxx0D78v
-         1UJciGgV8H40N+yamC6/gCMAtdes9hR/gnIMd7vpV3/4QAPAYmUfruuXMOYKCdwrUUhf
-         NMr1bEs0AqwfFFFalRwd0jMNu/9dQTx4vNsTdprpHrNLDBnDatbyvTTLFGGMpodvRpuj
-         W1x2tcSHb/wrzcYBEAdlbvXqcQdDGlq++AkfFGYOwl8n3/ToffS5Af8ZTtoqSEqoUrsW
-         TqaQ==
-X-Gm-Message-State: AOAM530IRhxOhXc1wOtpvPGxRtylz4+qBiLFE4c5Nr/0Od7CEJqw5D/A
-        gbSLE4SoP93lCmpoJcqPn/I=
-X-Google-Smtp-Source: ABdhPJz9vk/G08Em341SldnNjxuUXxoI4581YnYvZk6LKwI1LPpc2ydRpBmuTkE19qAWFKWKHWgPQQ==
-X-Received: by 2002:a62:b40b:: with SMTP id h11mr24856949pfn.183.1591106867824;
-        Tue, 02 Jun 2020 07:07:47 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l23sm2525732pff.80.2020.06.02.07.07.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 07:07:47 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 07:07:46 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: bt1-pvt: Declare Temp- and Volt-to-N poly when
- alarms are enabled
-Message-ID: <20200602140746.GA82514@roeck-us.net>
-References: <20200602091219.24404-1-Sergey.Semin@baikalelectronics.ru>
+        Tue, 2 Jun 2020 10:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgFBOKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 10:10:05 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD1F206E2;
+        Tue,  2 Jun 2020 14:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591107004;
+        bh=5kdWcRvjyQscoknTE3/+ligCbxi7dlo+MyoefG7KHJM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tGoNIc14TGzxGSo/15xBUc4QG/xmyGlKO6P5uk5ErbVyP7Fv3gC0HuiDd+aviFoYy
+         N9Zau/QFkOIIptzOPY6xgFnQU8aqvdqrJNBks/8n1DCQO6juRouhsKRfPXSwL8SPwc
+         RkLAlYzsmHoVycHtOInRoFwYL73GIwJHBXoQy8uk=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5F9D440AFD; Tue,  2 Jun 2020 11:10:02 -0300 (-03)
+Date:   Tue, 2 Jun 2020 11:10:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 2/2] perf tools: Remove some duplicated includes
+Message-ID: <20200602141002.GQ31795@kernel.org>
+References: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
+ <1591071304-19338-2-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602091219.24404-1-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1591071304-19338-2-git-send-email-yangtiezhu@loongson.cn>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 12:12:19PM +0300, Serge Semin wrote:
-> Clang-based kernel building with W=1 warns that some static const
-> variables are unused:
-> 
-> drivers/hwmon/bt1-pvt.c:67:30: warning: unused variable 'poly_temp_to_N' [-Wunused-const-variable]
-> static const struct pvt_poly poly_temp_to_N = {
->                              ^
-> drivers/hwmon/bt1-pvt.c:99:30: warning: unused variable 'poly_volt_to_N' [-Wunused-const-variable]
-> static const struct pvt_poly poly_volt_to_N = {
->                              ^
-> 
-> Indeed these polynomials are utilized only when the PVT sensor alarms are
-> enabled. In that case they are used to convert the temperature and
-> voltage alarm limits from normal quantities (Volts and degree Celsius) to
-> the sensor data representation N = [0, 1023]. Otherwise when alarms are
-> disabled the driver only does the detected data conversion to the human
-> readable form and doesn't need that polynomials defined. So let's declare
-> the Temp-to-N and Volt-to-N polynomials only if the PVT alarms are
-> switched on at compile-time.
-> 
-> Note gcc with W=1 doesn't notice the problem.
-> 
-> Fixes: 87976ce2825d ("hwmon: Add Baikal-T1 PVT sensor driver")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Em Tue, Jun 02, 2020 at 12:15:04PM +0800, Tiezhu Yang escreveu:
+> There exists some duplicated includes in tools/perf, remove them.
 
-I don't really like the added #if. Can you use __maybe_unused instead ?
+Applied, thanks.
 
-Thanks,
-Guenter
-
+- Arnaldo
+ 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  drivers/hwmon/bt1-pvt.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/perf/builtin-report.c | 1 -
+>  tools/perf/util/annotate.c  | 1 -
+>  tools/perf/util/auxtrace.c  | 1 -
+>  tools/perf/util/config.c    | 1 -
+>  tools/perf/util/session.c   | 1 -
+>  5 files changed, 5 deletions(-)
 > 
-> diff --git a/drivers/hwmon/bt1-pvt.c b/drivers/hwmon/bt1-pvt.c
-> index 1a9772fb1f73..1a5212c04549 100644
-> --- a/drivers/hwmon/bt1-pvt.c
-> +++ b/drivers/hwmon/bt1-pvt.c
-> @@ -64,6 +64,7 @@ static const struct pvt_sensor_info pvt_info[] = {
->   *     48380,
->   * where T = [-48380, 147438] mC and N = [0, 1023].
->   */
-> +#if defined(CONFIG_SENSORS_BT1_PVT_ALARMS)
->  static const struct pvt_poly poly_temp_to_N = {
->  	.total_divider = 10000,
->  	.terms = {
-> @@ -74,6 +75,7 @@ static const struct pvt_poly poly_temp_to_N = {
->  		{0, 1720400, 1, 1}
->  	}
->  };
-> +#endif /* CONFIG_SENSORS_BT1_PVT_ALARMS */
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index ba63390..5425a2c 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -47,7 +47,6 @@
+>  #include "util/time-utils.h"
+>  #include "util/auxtrace.h"
+>  #include "util/units.h"
+> -#include "util/branch.h"
+>  #include "util/util.h" // perf_tip()
+>  #include "ui/ui.h"
+>  #include "ui/progress.h"
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index d828c2d..76bfb4a 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -41,7 +41,6 @@
+>  #include <linux/bitops.h>
+>  #include <linux/kernel.h>
+>  #include <linux/string.h>
+> -#include <bpf/libbpf.h>
+>  #include <subcmd/parse-options.h>
+>  #include <subcmd/run-command.h>
 >  
->  static const struct pvt_poly poly_N_to_temp = {
->  	.total_divider = 1,
-> @@ -96,6 +98,7 @@ static const struct pvt_poly poly_N_to_temp = {
->   * N = (18658e-3*V - 11572) / 10,
->   * V = N * 10^5 / 18658 + 11572 * 10^4 / 18658.
->   */
-> +#if defined(CONFIG_SENSORS_BT1_PVT_ALARMS)
->  static const struct pvt_poly poly_volt_to_N = {
->  	.total_divider = 10,
->  	.terms = {
-> @@ -103,6 +106,7 @@ static const struct pvt_poly poly_volt_to_N = {
->  		{0, -11572, 1, 1}
->  	}
->  };
-> +#endif /* CONFIG_SENSORS_BT1_PVT_ALARMS */
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 749487a..94a8f4f 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -55,7 +55,6 @@
+>  #include "util/mmap.h"
 >  
->  static const struct pvt_poly poly_N_to_volt = {
->  	.total_divider = 10,
+>  #include <linux/ctype.h>
+> -#include <linux/kernel.h>
+>  #include "symbol/kallsyms.h"
+>  #include <internal/lib.h>
+>  
+> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+> index ef38eba..64f14a5 100644
+> --- a/tools/perf/util/config.c
+> +++ b/tools/perf/util/config.c
+> @@ -20,7 +20,6 @@
+>  #include "build-id.h"
+>  #include "debug.h"
+>  #include "config.h"
+> -#include "debug.h"
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+>  #include <stdlib.h>
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index c11d89e..5550e26e 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -33,7 +33,6 @@
+>  #include "../perf.h"
+>  #include "arch/common.h"
+>  #include <internal/lib.h>
+> -#include <linux/err.h>
+>  
+>  #ifdef HAVE_ZSTD_SUPPORT
+>  static int perf_session__process_compressed_event(struct perf_session *session,
+> -- 
+> 2.1.0
+> 
+
+-- 
+
+- Arnaldo
