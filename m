@@ -2,92 +2,104 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25235C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CFBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A76206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E6F206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 08:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmJGGygz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgFBIcC (ORCPT
+        id S1726589AbgFBIcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 04:32:02 -0400
-Received: from mailomta17-re.btinternet.com ([213.120.69.110]:39552 "EHLO
-        re-prd-fep-049.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725811AbgFBIcC (ORCPT
+        Tue, 2 Jun 2020 04:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgFBIcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 04:32:02 -0400
-Received: from re-prd-rgout-005.btmx-prd.synchronoss.net ([10.2.54.8])
-          by re-prd-fep-049.btinternet.com with ESMTP
-          id <20200602083159.THRB11381.re-prd-fep-049.btinternet.com@re-prd-rgout-005.btmx-prd.synchronoss.net>;
-          Tue, 2 Jun 2020 09:31:59 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [81.152.95.229]
-X-OWM-Source-IP: 81.152.95.229 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvufffkffosedttdertdertddtnecuhfhrohhmpeflohhhnhcuqfhlughmrghnuceojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqeenucggtffrrghtthgvrhhnpeegfedthfefueeihffgkeefteehuddttdefudetveelveefvdefhfejieejhffggfenucfkphepkedurdduhedvrdelhedrvddvleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeekuddrudehvddrleehrddvvdelpdhmrghilhhfrhhomhepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (81.152.95.229) by re-prd-rgout-005.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5E3A195F13ABC0DB; Tue, 2 Jun 2020 09:31:59 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] staging: rtl8192e: Using comparison to false is error prone
-Date:   Tue,  2 Jun 2020 09:31:27 +0100
-Message-Id: <20200602083127.25271-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jun 2020 04:32:07 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697E0C061A0E;
+        Tue,  2 Jun 2020 01:32:06 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a127so2702352pfa.12;
+        Tue, 02 Jun 2020 01:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9ZQUYgk2V7Mx0esfmh4y3mmfTGvC64s4iQn4Jh1H8G8=;
+        b=HmJGGygz1wL1O+w/dN5pG3C+kjX4bhh2rAcYhLaL4nrdg+aRCGL86aqPCKmDODTk0H
+         W6GnOC+vBXUbBT87WvAYn5flUU2VGCZxuEo+O9hDshlGMB7wKHIDIzNYs2k86cF4hwQO
+         Ki604kWSEjZcN1tfqdfjvbDUQmjMU+Rhv+DPPXRMRVS2T3zyLFjdS0sDOEW8PuZFoxOd
+         goc6foUxMpEkGQJkAyrofUhpaOE12U3LtRnCkhrdnRRcgd5ziD55wlen4lbG5sY70LYj
+         BNhjF1FIib1UbINzuK+MskR4KXmDzAtZOiMPUNA3Xu2v+17EiQRGofGcjTanOm2i6wc3
+         yuKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9ZQUYgk2V7Mx0esfmh4y3mmfTGvC64s4iQn4Jh1H8G8=;
+        b=IFDhJ9vwuFqUD1uh9Eb8ZxKiTo8dkfDdKMzfChf9t88y4YpP1s0HEwLPf+9rFRP/KW
+         K4OSc8BpSJfyzi/2aiEvsuEGNfyb/AqaDXPwJEZbTnKKsguJcWniNoWRY3F925Z1v4ew
+         a8tE5NI20Qk2zrANasuGbh5vXCljj9Pr41AkcNohWT9neNp0HCr6yW6hwL0moXTSP7zn
+         4xS7UcllhuIdLsnZqjPWhc+Liz1pO5g9HZNdWXAIxoKfTh7cTMTF11NuWB09yNeKsvbn
+         tF9WBBWKsg9NBaJpqGCXKhH7HavL+wESAZ6HBPqQwdwPe8ZpmK8EYjZwKjipC3yYkGAL
+         1bgQ==
+X-Gm-Message-State: AOAM532NdfEY4z9D4VI89oZ+mgK7MoLSdPndDCOYSpcp6DKuLLIRJVFD
+        eNatIRpRwWfpqFZpOnzWiTOUSSTnBfNPG9EZnPs=
+X-Google-Smtp-Source: ABdhPJwjAR6qWM3iADSoQUZxsvaZmkMb4RSf3zmVgzLNjjgc1H9ASyudk4ftkU45x4hKebGHa3tp9SwQoXYg0p/F9V8=
+X-Received: by 2002:a63:545a:: with SMTP id e26mr22582548pgm.4.1591086725894;
+ Tue, 02 Jun 2020 01:32:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200602001813.30459-1-tony@atomide.com> <20200602080811.GI19480@localhost>
+In-Reply-To: <20200602080811.GI19480@localhost>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jun 2020 11:31:54 +0300
+Message-ID: <CAHp75Vfi5nDgwT10J_EKYn90vGuiL1hyfre+t_w_OFREFY-Tqg@mail.gmail.com>
+Subject: Re: [PATCH] serial: 8250_port: Fix imprecise external abort for mctrl
+ if inactive
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clear below issues reported by checkpatch.pl:
+On Tue, Jun 2, 2020 at 11:09 AM Johan Hovold <johan@kernel.org> wrote:
+> On Mon, Jun 01, 2020 at 05:18:13PM -0700, Tony Lindgren wrote:
 
-CHECK: Using comparison to false is error prone
+...
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
----
- drivers/staging/rtl8192e/rtl819x_HTProc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> There's shouldn't be anything fundamental preventing you from adding the
+> missing resume calls to the mctrl paths even if it may require reworking
+> (and fixing) the whole RPM implementation (which would be a good thing
+> of course).
 
-diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-index d83d72594312..8abc921ecb3e 100644
---- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-@@ -371,7 +371,7 @@ void HTConstructInfoElement(struct rtllib_device *ieee, u8 *posHTInfo,
- 	if ((ieee->iw_mode == IW_MODE_ADHOC) ||
- 	    (ieee->iw_mode == IW_MODE_MASTER)) {
- 		pHTInfoEle->ControlChl	= ieee->current_network.channel;
--		pHTInfoEle->ExtChlOffset = ((pHT->bRegBW40MHz == false) ?
-+		pHTInfoEle->ExtChlOffset = ((!pHT->bRegBW40MHz) ?
- 					    HT_EXTCHNL_OFFSET_NO_EXT :
- 					    (ieee->current_network.channel <= 6)
- 					    ? HT_EXTCHNL_OFFSET_UPPER :
-@@ -526,7 +526,7 @@ void HTOnAssocRsp(struct rtllib_device *ieee)
- 	static u8 EWC11NHTCap[] = {0x00, 0x90, 0x4c, 0x33};
- 	static u8 EWC11NHTInfo[] = {0x00, 0x90, 0x4c, 0x34};
- 
--	if (pHTInfo->bCurrentHTSupport == false) {
-+	if (!pHTInfo->bCurrentHTSupport) {
- 		netdev_warn(ieee->dev, "%s(): HT_DISABLE\n", __func__);
- 		return;
- 	}
-@@ -873,7 +873,7 @@ void HTSetConnectBwMode(struct rtllib_device *ieee,
- {
- 	struct rt_hi_throughput *pHTInfo = ieee->pHTInfo;
- 
--	if (pHTInfo->bRegBW40MHz == false)
-+	if (!pHTInfo->bRegBW40MHz)
- 		return;
- 
- 	if (ieee->GetHalfNmodeSupportByAPsHandler(ieee->dev))
+Yes, for serial core I have long standing patch series to implement
+RPM (more or less?) properly.
+
+However, OMAP is a beast which prevents us to go due to a big hack
+called pm_runtime_irq_safe().
+Tony is aware of this and I think the above is somehow related to removal of it.
+
+But I completely agree that the goal is to get better runtime PM
+implementation over all.
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
