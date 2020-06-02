@@ -2,137 +2,197 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A74C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A71420772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2EAC206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 10:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bXg2bBWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgFBKJq (ORCPT
+        id S1727769AbgFBKJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 06:09:46 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:54824 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgFBKJl (ORCPT
+        Tue, 2 Jun 2020 06:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgFBKJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 06:09:41 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 09B438030808;
-        Tue,  2 Jun 2020 10:09:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id scbwbYtlcY9J; Tue,  2 Jun 2020 13:09:37 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/6] dt-bindings: power: Convert mti,mips-cpc to DT schema
-Date:   Tue, 2 Jun 2020 13:09:16 +0300
-Message-ID: <20200602100921.1155-2-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200602100921.1155-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200602100921.1155-1-Sergey.Semin@baikalelectronics.ru>
+        Tue, 2 Jun 2020 06:09:43 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E05C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 03:09:42 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a4so4836308pfo.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 03:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ndmZINi8/nRwu7d+LAYbr+txyzlIO7v5ED11d9EW/5I=;
+        b=bXg2bBWlRV/VWepPPKfUL4toFrac1pPv181g4AL+Z/4jvmKEoLiLV3a5TpS69Vhd7P
+         SKvhE2QvgNyLVsfiu9dGHIwJNl7pgam0LrNGvv6n6gxUbVmVkNRs47rlUxTFL4IdUlzz
+         /QAc7stsfcTiuRScjBBKFO1f8A+oOhK21xXbKiBK1eedA5Ca1PBNYgu6+9dNiHCjVZsu
+         Bjm5NvTEsouS0VIss9B43BxK7ywxTAXPe1xEGQKD9FBRftSgykI7WE+kS9i2cAp65Vqi
+         aEjbzs89tATVOyO6wZnJXiWM538d6Gu588wFJkgGUF/qNhCjPNN6l/fEqRNa632+zykf
+         msXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ndmZINi8/nRwu7d+LAYbr+txyzlIO7v5ED11d9EW/5I=;
+        b=bSya6yKwSXSNGOm8CW0avsebqpmVnFi87OdHvseQxL8A+MYv6i0Gg3zCMkwsnFeDVC
+         ybFbNKCSL/EkOBNaeL9/XenigDrSKEbyO1n/fR6Z8fl4xJ6DLPICo876312DoDKnOne0
+         CJ3R5pHUDxqqSZ0DHgjZfwQQK3IFTg/uMwCi8Zvfp0NwLIdLU+V/URD+A1tpj62J/GJ2
+         OUFBpTB3wjw0ZZKlCZf80xKV5J1aoQAhmTbiX+HR4i//DXd6rbRwlWZ7WXJydtQ+NEKj
+         patSDsly+GE6Qe1ewB1qsG0N45q9mPS3qePyuCa3VQNS9yvQ7I47UmcgwNxoJiJysGUR
+         nShg==
+X-Gm-Message-State: AOAM532EM4Oz92DUSBf1cXYkP/oCgqzaI+/J6MiXxtxZQRPSOcDyOUdJ
+        Lkr2DW0ucDqrxobE9Ap6ChipmA==
+X-Google-Smtp-Source: ABdhPJzLb9+p6Kfdr2Mjf3AENxX8NVujOQmqmyksXLrgLUu63ML3k4MQnHadxEaOa+SqRKDPi9C5IA==
+X-Received: by 2002:a63:cd0d:: with SMTP id i13mr23582221pgg.292.1591092582021;
+        Tue, 02 Jun 2020 03:09:42 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id d8sm1931276pgb.42.2020.06.02.03.09.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 03:09:41 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org
+Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v4 1/5] regulator: Allow regulators to verify enabled during enable()
+Date:   Tue,  2 Jun 2020 15:39:20 +0530
+Message-Id: <20200602100924.26256-2-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200602100924.26256-1-sumit.semwal@linaro.org>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a Cluster Power Controller embedded into the MIPS IP cores.
-Currently the corresponding dts node is supposed to have compatible
-and reg properties.
+Some regulators might need to verify that they have indeed been enabled
+after the enable() call is made and enable_time delay has passed.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is implemented by repeatedly checking is_enabled() upto
+poll_enabled_time, waiting for the already calculated enable delay in
+each iteration.
 
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+--
+v2: Address review comments, including swapping enable_time and poll_enabled_time.
 ---
+ drivers/regulator/core.c         | 58 +++++++++++++++++++++++++++++++-
+ include/linux/regulator/driver.h |  5 +++
+ 2 files changed, 62 insertions(+), 1 deletion(-)
 
-Changelog prev:
-- Reword the changelog summary - use shorter version.
-- Lowercase the example hex'es.
----
- .../bindings/power/mti,mips-cpc.txt           |  8 -----
- .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
- 2 files changed, 35 insertions(+), 8 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
- create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-deleted file mode 100644
-index c6b82511ae8a..000000000000
---- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-+++ /dev/null
-@@ -1,8 +0,0 @@
--Binding for MIPS Cluster Power Controller (CPC).
--
--This binding allows a system to specify where the CPC registers are
--located.
--
--Required properties:
--compatible : Should be "mti,mips-cpc".
--regs: Should describe the address & size of the CPC register region.
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-new file mode 100644
-index 000000000000..9cd92a57130c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 7486f6e4e613..d9ab888da95f 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -2347,6 +2347,32 @@ static void _regulator_enable_delay(unsigned int delay)
+ 		udelay(us);
+ }
+ 
++/* _regulator_check_status_enabled
++ *
++ * returns:
++ *          1 if status shows regulator is in enabled state
++ *          0 if not enabled state
++ *          else, error value as received from ops->get_status()
++ */
++static inline int _regulator_check_status_enabled(struct regulator_dev *rdev)
++{
++	int ret = rdev->desc->ops->get_status(rdev);
 +
-+title: MIPS Cluster Power Controller
++	if (ret < 0) {
++		rdev_info(rdev, "get_status returned error: %d\n", ret);
++		return ret;
++	}
 +
-+description: |
-+  Defines a location of the MIPS Cluster Power Controller registers.
++	switch (ret) {
++	case REGULATOR_STATUS_OFF:
++	case REGULATOR_STATUS_ERROR:
++	case REGULATOR_STATUS_UNDEFINED:
++		return 0;
++	default:
++		return 1;
++	}
++}
 +
-+maintainers:
-+  - Paul Burton <paulburton@kernel.org>
+ static int _regulator_do_enable(struct regulator_dev *rdev)
+ {
+ 	int ret, delay;
+@@ -2407,7 +2433,37 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
+ 	 * together.  */
+ 	trace_regulator_enable_delay(rdev_get_name(rdev));
+ 
+-	_regulator_enable_delay(delay);
++	/* If poll_enabled_time is set, poll upto the delay calculated
++	 * above, delaying poll_enabled_time uS to check if the regulator
++	 * actually got enabled.
++	 * If the regulator isn't enabled after enable_delay has
++	 * expired, return -ETIMEDOUT.
++	 */
++	if (rdev->desc->poll_enabled_time) {
++		unsigned int time_remaining = delay;
 +
-+properties:
-+  compatible:
-+    const: mti,mips-cpc
++		while (time_remaining > 0) {
++			_regulator_enable_delay(rdev->desc->poll_enabled_time);
 +
-+  reg:
-+    description: |
-+      Base address and size of an unoccupied memory region, which will be
-+      used to map the MIPS CPC registers block.
-+    maxItems: 1
++			if (rdev->desc->ops->get_status) {
++				ret = _regulator_check_status_enabled(rdev);
++				if (ret < 0)
++					return ret;
++				else if (ret)
++					break;
++			} else if (rdev->desc->ops->is_enabled(rdev))
++				break;
 +
-+required:
-+  - compatible
-+  - reg
++			time_remaining -= rdev->desc->poll_enabled_time;
++		}
 +
-+examples:
-+  - |
-+    cpc@1bde0000 {
-+      compatible = "mti,mips-cpc";
-+      reg = <0 0x1bde0000 0 0x8000>;
-+    };
-+...
++		if (time_remaining <= 0) {
++			rdev_err(rdev, "Enabled check failed.\n");
++			return -ETIMEDOUT;
++		}
++	} else {
++		_regulator_enable_delay(delay);
++	}
+ 
+ 	trace_regulator_enable_complete(rdev_get_name(rdev));
+ 
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index 29d920516e0b..bb50e943010f 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -322,6 +322,9 @@ enum regulator_type {
+  * @enable_time: Time taken for initial enable of regulator (in uS).
+  * @off_on_delay: guard time (in uS), before re-enabling a regulator
+  *
++ * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
++ *                          actually enabled, after enable() call
++ *
+  * @of_map_mode: Maps a hardware mode defined in a DeviceTree to a standard mode
+  */
+ struct regulator_desc {
+@@ -389,6 +392,8 @@ struct regulator_desc {
+ 
+ 	unsigned int off_on_delay;
+ 
++	unsigned int poll_enabled_time;
++
+ 	unsigned int (*of_map_mode)(unsigned int mode);
+ };
+ 
 -- 
 2.26.2
 
