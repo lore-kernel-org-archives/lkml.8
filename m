@@ -2,179 +2,509 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2838C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16714206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF62207DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xn3fHCfr"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dYjDJ5nb";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="prjuh7J+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgFBHJ5 (ORCPT
+        id S1726450AbgFBHLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:09:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24426 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726177AbgFBHJ4 (ORCPT
+        Tue, 2 Jun 2020 03:11:05 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37348 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725921AbgFBHLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:09:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591081795;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=oAzhLjdzBqVatiYNBS3naH7vYoT0gZIfV7WQqK2ZqiI=;
-        b=Xn3fHCfr7J+HNV6/HJ+BIaQqjBQNSgl3BRmcHNN2JV97XvZXf3BWsp4kU3dL/ydKSOhgqD
-        KeWJsdK9E6QwThaj7uEAJEaX4aFKC0lFj185+ygeWhuXSVOYj6ns7MVhk66nQxrlHHnFAo
-        z9eXkDs1zPBxSsW9qLslL6VRShGZtzc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-l0O28a1sMxebqY6OaFhNGg-1; Tue, 02 Jun 2020 03:09:50 -0400
-X-MC-Unique: l0O28a1sMxebqY6OaFhNGg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 2 Jun 2020 03:11:04 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF509835B40;
-        Tue,  2 Jun 2020 07:09:46 +0000 (UTC)
-Received: from [10.36.112.255] (ovpn-112-255.ams2.redhat.com [10.36.112.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B81ED60C80;
-        Tue,  2 Jun 2020 07:09:29 +0000 (UTC)
-Subject: Re: [PATCH v4 00/15] virtio-mem: paravirtualized memory
-To:     linux-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200507140139.17083-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <8e130bb2-e4bc-bbfc-a635-b44957f069ed@redhat.com>
-Date:   Tue, 2 Jun 2020 09:09:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200507140139.17083-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 28B1E40556;
+        Tue,  2 Jun 2020 07:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1591081864; bh=t3LqRQ5yj1Ovopl4FvYyFn0kYVtRSf3/l5HfCbWX7gI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=dYjDJ5nbvoAM2+47mJXImHsBo7D7BAvhrM35YzWLVVAEmKM8cL2YvwJuWWIQ3LxTu
+         Jf3mEo0uabRsBpKrTsl0lfwYjW5382JTQe4Tr7KzKcn/HcESU/C+NsGuixH0Ug3ThC
+         PQRBloivTWtl2od/sYgBEdd4baXuUuPjEabYte8ojKgWVUd+IWLWw4GnzWCegFGsye
+         r6SX8tEAf/9jJGrQ+x+8hrBgIoJz8TFItRKXsumoOaXTP8KxBVFTSI4RkC67yyrG5B
+         CYSv8uzYD50B9BC77g8o7q5h329C2ixIy46PKKM+8zRC6zKksy/f3u7wzGitmcs5ob
+         kSDavkkE0G1Dw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 992DBA0069;
+        Tue,  2 Jun 2020 07:11:02 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 2 Jun 2020 00:11:02 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Tue, 2 Jun 2020 00:11:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XEsLeBOuzdXz5VyXOh1i6VDm8FJDBeU0G1Nb41kjK09v9Wvq6PuvVlGEFrwqByLzULlwPSJ0YZMxHYmIllT+MxGtt8X6cm+NyMffiJV+a7vdTVO7kYx1l9xI3NXZXIMbY/Z6Q2uRScgrlbhHul7tzKaFTgrMrakH5dl5+TsV4GUYKEuU7aTG9T12sMKxqJ5LJudGXZ9s0T3eyArbTQcek/lTlXlPU2MQb7ICMk0vQMsShKtmbwcK1HUBPrgXljTtreSVirkRgOiearXM9DEr0Ny6WUWnIKmlh4KMs6sLWUPZIZN9R5Nr57iJ33l1E1TKrQIjiF/xQ162Eg2jYXsHVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xxyZUlbLVHWh6I8Anaw/wwDrLQsyRufFpiyW2WHmut4=;
+ b=lKc3v33lCcKbZlBuV78A0tzc66e4pRWz0/PrU1TSheQrVh5ihd/s0maEdJfCoqDRN8Sh28YmuOnIIFn83S2j8SKIvWu1k8TgGQ0NFUAQgVcFLse+fuWPLoP70VdZjTstxUoGU7WmsiYvxKRfX7sfqF1aYm3LCK19Z6MSVyeAXpexCHJ8wVs4MyzmosoE39UVSPZYBah9kw3BlhO9iC4HiHp1A9xGYNEqi+uvH3o7oJDrkjtk1Vj1EBlWdjKq6jAm+5pmvIuOS+ga9GpZrURpzbSWntv708ZGRjvDS824m0sOMEJGk15QepoeuWM9O5uABV7/mxc5sKr5yXUEH2MJXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xxyZUlbLVHWh6I8Anaw/wwDrLQsyRufFpiyW2WHmut4=;
+ b=prjuh7J+AKDGnMrxYKAvEGuLonYJINWc3klk/mfJ3TYqH9FN0fZmBirUkUqBO4tIe7+CUjCrV8i1Hw/QN7HvNtTNafOZWC5ScPrMCx4rQRBd1PV/7gyeqptoEqacuxwvvmYDT/uaz6A+PLnWgNTygriQgb5/EbYIH2FXjGIJPGo=
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
+ DM5PR12MB2534.namprd12.prod.outlook.com (2603:10b6:4:b4::31) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3045.19; Tue, 2 Jun 2020 07:11:00 +0000
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32]) by DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32%5]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
+ 07:11:00 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "shawn.guo@linaro.org" <shawn.guo@linaro.org>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1] PCI: dwc: convert to
+ devm_platform_ioremap_resource_byname()
+Thread-Topic: [PATCH v1] PCI: dwc: convert to
+ devm_platform_ioremap_resource_byname()
+Thread-Index: AQHWNQtFPRKU/5PQpUKyvyNa3OTanajE78mg
+Date:   Tue, 2 Jun 2020 07:11:00 +0000
+Message-ID: <DM5PR12MB1276BA103B8EB0115D3738C0DA8B0@DM5PR12MB1276.namprd12.prod.outlook.com>
+References: <20200528161510.31935-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200528161510.31935-1-zhengdejin5@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTM0MWNlZjVmLWE0YTAtMTFlYS05OGI4LWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFwzNDFjZWY2MS1hNGEwLTExZWEtOThiOC1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjEyMjI0IiB0PSIxMzIzNTU1NTQ1NzQ0?=
+ =?us-ascii?Q?MDkzNDkiIGg9IlBsTjlZemRvUVltUjZOeDU5RTB0aVExYXp6cz0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUJRSkFB?=
+ =?us-ascii?Q?Q0ZIblgyckRqV0FXdk00RGNkTFJjbmE4emdOeDB0RnljT0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUNrQ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBRW1NZWt3QUFBQUFBQUFBQUFBQUFBSjRBQUFCbUFHa0Fi?=
+ =?us-ascii?Q?Z0JoQUc0QVl3QmxBRjhBY0FCc0FHRUFiZ0J1QUdrQWJnQm5BRjhBZHdCaEFI?=
+ =?us-ascii?Q?UUFaUUJ5QUcwQVlRQnlBR3NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3Qm5BR1lBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQVlRQnRBSE1BZFFCdUFHY0FYd0JqQUc4QWJnQm1BQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFjd0Jo?=
+ =?us-ascii?Q?QUcwQWN3QjFBRzRBWndCZkFISUFaUUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCekFHMEFhUUJqQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFi?=
+ =?us-ascii?Q?Z0JsQUhJQWN3QmZBSE1BZEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1B?=
+ =?us-ascii?Q?RzhBZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWRB?=
+ =?us-ascii?Q?QnpBRzBBWXdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFI?=
+ =?us-ascii?Q?a0FYd0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0IxQUcwQVl3QUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFad0IwQUhNQVh3QndBSElBYndCa0FIVUFZd0IwQUY4?=
+ =?us-ascii?Q?QWRBQnlBR0VBYVFCdUFHa0FiZ0JuQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHRUFiQUJsQUhNQVh3QmhBR01BWXdCdkFIVUFiZ0IwQUY4QWNBQnNBR0VB?=
+ =?us-ascii?Q?YmdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSE1BWVFCc0FHVUFjd0Jm?=
+ =?us-ascii?Q?QUhFQWRRQnZBSFFBWlFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQWN3QnVBSEFBY3dCZkFHd0FhUUJqQUdVQWJnQnpB?=
+ =?us-ascii?Q?R1VBWHdCMEFHVUFjZ0J0QUY4QU1RQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
+ =?us-ascii?Q?QUJ6QUc0QWNBQnpBRjhBYkFCcEFHTUFaUUJ1QUhNQVpRQmZBSFFBWlFCeUFH?=
+ =?us-ascii?Q?MEFYd0J6QUhRQWRRQmtBR1VBYmdCMEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFIWUFad0JmQUdzQVpR?=
+ =?us-ascii?Q?QjVBSGNBYndCeUFHUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFB?=
+ =?us-ascii?Q?QUFBQUFDQUFBQUFBQT0iLz48L21ldGE+?=
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 51d859c7-d03d-4025-7e30-08d806c41aa2
+x-ms-traffictypediagnostic: DM5PR12MB2534:
+x-microsoft-antispam-prvs: <DM5PR12MB253495C203D2AAFA3F203FD0DA8B0@DM5PR12MB2534.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:109;
+x-forefront-prvs: 0422860ED4
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fo/F7CqX99o1xNUInNq27xO0FV8nDq62/ppmBW3aIROsaBeGvg8kxn6vsVsuKPhk3CmRrbv3Md6Bn2IBWFVjUDWHul75jHcY8weu2Q//5drsHEszle+nWwimvQgIWWGAk8d8PpSWmfQjfwdfPED8OX7Uj1AXOd+6qjGXPWRl8PS4OPpf8v5CqzQv8RbBsnCEsuSjY09uYdKDmDnULbTcoVnXLNRP7Q7ns/goXGmuKsY+MwfWIh33b8sl6cO+al7jeDUhFfBasFhukcM+t+BvCg1VUCPMMmLLI9kwAZaeeZolIWxT6jJrwYQM8R6K3HkK/45W4jITxK0QtKnXnm6+pw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(366004)(396003)(376002)(346002)(478600001)(9686003)(52536014)(8936002)(53546011)(55016002)(7696005)(6506007)(33656002)(186003)(2906002)(86362001)(4326008)(83380400001)(26005)(66946007)(76116006)(316002)(66556008)(64756008)(66476007)(30864003)(66446008)(5660300002)(110136005)(8676002)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: l2homRsZHGpniquPXnJvC487w2n1YK9XJqevaZjmgLNz9htC9ZvhRX4LZSWmeyxisgyOVvR9FoRsKK7GHzc474mjYMPqvvf4TQ5s148hrwI3l83Pq2tY1UijoEc84RcDBIjpJCE3PE//IZwfeD/7JmhLtWtXDtOXjrET0uXEMeZ174De2nXUy4ua25xe/pEo1EqnLUlfAWYpR7TQ/VgmTXIKBBPPaQ18nvqYQCKc6gTMxjVvZ5v0HnyPKcQf+Ur+bXG0q+NA3RuiWotKxzvGKsaasA93s6EyUN8bgT3cIK9DlSGkbCm9G7IGgdfSHFPpUNcMYk9B11XfbySwyYa3pjsh7xtn0gXrEWpxe/NMI1gy9o8OnhsDb3GPP+wkIr1zjfTry+pEX4qSGc+g7RcMjMn8b8pOn1n/lLJng/VSIZJPLPgM5+bSTzwWKhTqalzcQqb4iNeqI69TAtEDnxuVeKOEgkz/lJ8rWctwyk715b4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51d859c7-d03d-4025-7e30-08d806c41aa2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2020 07:11:00.1379
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4iArtyDeEBRdcpt/0YtMzcDZaQdubEUaqJ+UhRTgZ2NtCFZgjGNCpyLs/lOJMuzY8V6kj8sDhwK5prTfk2CZBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2534
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.05.20 16:01, David Hildenbrand wrote:
-> This series is based on v5.7-rc4. The patches are located at:
->     https://github.com/davidhildenbrand/linux.git virtio-mem-v4
-> 
-> This is basically a resend of v3 [1], now based on v5.7-rc4 and restested.
-> One patch was reshuffled and two ACKs I missed to add were added. The
-> rebase did not require any modifications to patches.
-> 
-> Details about virtio-mem can be found in the cover letter of v2 [2]. A
-> basic QEMU implementation was posted yesterday [3].
-> 
-> [1] https://lkml.kernel.org/r/20200507103119.11219-1-david@redhat.com
-> [2] https://lkml.kernel.org/r/20200311171422.10484-1-david@redhat.com
-> [3] https://lkml.kernel.org/r/20200506094948.76388-1-david@redhat.com
-> 
-> v3 -> v4:
-> - Move "MAINTAINERS: Add myself as virtio-mem maintainer" to #2
-> - Add two ACKs from Andrew (in reply to v2)
-> -- "mm: Allow to offline unmovable PageOffline() pages via ..."
-> -- "mm/memory_hotplug: Introduce offline_and_remove_memory()"
-> 
-> v2 -> v3:
-> - "virtio-mem: Paravirtualized memory hotplug"
-> -- Include "linux/slab.h" to fix build issues
-> -- Remember the "region_size", helpful for patch #11
-> -- Minor simplifaction in virtio_mem_overlaps_range()
-> -- Use notifier_from_errno() instead of notifier_to_errno() in notifier
-> -- More reliable check for added memory when unloading the driver
-> - "virtio-mem: Allow to specify an ACPI PXM as nid"
-> -- Also print the nid
-> - Added patch #11-#15
+On Thu, May 28, 2020 at 17:15:10, Dejin Zheng <zhengdejin5@gmail.com>=20
+wrote:
 
-@MST ping, v5.7 has been released
+> Use devm_platform_ioremap_resource_byname() to simplify codes.
+> it contains platform_get_resource_byname() and devm_ioremap_resource().
+>=20
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pci-dra7xx.c         | 11 ++++-------
+>  drivers/pci/controller/dwc/pci-keystone.c       |  7 +++----
+>  drivers/pci/controller/dwc/pcie-artpec6.c       | 12 ++++--------
+>  .../pci/controller/dwc/pcie-designware-plat.c   |  3 +--
+>  drivers/pci/controller/dwc/pcie-histb.c         |  7 ++-----
+>  drivers/pci/controller/dwc/pcie-intel-gw.c      |  7 ++-----
+>  drivers/pci/controller/dwc/pcie-kirin.c         | 17 ++++++-----------
+>  drivers/pci/controller/dwc/pcie-qcom.c          |  6 ++----
+>  drivers/pci/controller/dwc/pcie-uniphier.c      |  3 +--
+>  9 files changed, 25 insertions(+), 48 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/contro=
+ller/dwc/pci-dra7xx.c
+> index 6184ebc9392d..e5d0c7ac09b9 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -593,13 +593,12 @@ static int __init dra7xx_add_pcie_ep(struct dra7xx_=
+pcie *dra7xx,
+>  	ep =3D &pci->ep;
+>  	ep->ops =3D &pcie_ep_ops;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics");
+> -	pci->dbi_base =3D devm_ioremap_resource(dev, res);
+> +	pci->dbi_base =3D devm_platform_ioremap_resource_byname(pdev, "ep_dbics=
+");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics2")=
+;
+> -	pci->dbi_base2 =3D devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 =3D
+> +		devm_platform_ioremap_resource_byname(pdev, "ep_dbics2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+> =20
+> @@ -626,7 +625,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_=
+pcie *dra7xx,
+>  	struct dw_pcie *pci =3D dra7xx->pci;
+>  	struct pcie_port *pp =3D &pci->pp;
+>  	struct device *dev =3D pci->dev;
+> -	struct resource *res;
+> =20
+>  	pp->irq =3D platform_get_irq(pdev, 1);
+>  	if (pp->irq < 0) {
+> @@ -638,8 +636,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_=
+pcie *dra7xx,
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbics");
+> -	pci->dbi_base =3D devm_ioremap_resource(dev, res);
+> +	pci->dbi_base =3D devm_platform_ioremap_resource_byname(pdev, "rc_dbics=
+");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+> =20
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/cont=
+roller/dwc/pci-keystone.c
+> index 790679fdfa48..5ffc3b40c4f6 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -1228,8 +1228,8 @@ static int __init ks_pcie_probe(struct platform_dev=
+ice *pdev)
+>  	if (!pci)
+>  		return -ENOMEM;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+> -	ks_pcie->va_app_base =3D devm_ioremap_resource(dev, res);
+> +	ks_pcie->va_app_base =3D
+> +		devm_platform_ioremap_resource_byname(pdev, "app");
+>  	if (IS_ERR(ks_pcie->va_app_base))
+>  		return PTR_ERR(ks_pcie->va_app_base);
+> =20
+> @@ -1323,8 +1323,7 @@ static int __init ks_pcie_probe(struct platform_dev=
+ice *pdev)
+>  	}
+> =20
+>  	if (pci->version >=3D 0x480A) {
+> -		res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
+> -		atu_base =3D devm_ioremap_resource(dev, res);
+> +		atu_base =3D devm_platform_ioremap_resource_byname(pdev, "atu");
+>  		if (IS_ERR(atu_base)) {
+>  			ret =3D PTR_ERR(atu_base);
+>  			goto err_get_sync;
+> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/cont=
+roller/dwc/pcie-artpec6.c
+> index 28d5a1095200..7d2cfa288b01 100644
+> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
+> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+> @@ -455,8 +455,7 @@ static int artpec6_add_pcie_ep(struct artpec6_pcie *a=
+rtpec6_pcie,
+>  	ep =3D &pci->ep;
+>  	ep->ops =3D &pcie_ep_ops;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> -	pci->dbi_base2 =3D devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 =3D devm_platform_ioremap_resource_byname(pdev, "dbi2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+> =20
+> @@ -481,8 +480,6 @@ static int artpec6_pcie_probe(struct platform_device =
+*pdev)
+>  	struct device *dev =3D &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct artpec6_pcie *artpec6_pcie;
+> -	struct resource *dbi_base;
+> -	struct resource *phy_base;
+>  	int ret;
+>  	const struct of_device_id *match;
+>  	const struct artpec_pcie_of_data *data;
+> @@ -512,13 +509,12 @@ static int artpec6_pcie_probe(struct platform_devic=
+e *pdev)
+>  	artpec6_pcie->variant =3D variant;
+>  	artpec6_pcie->mode =3D mode;
+> =20
+> -	dbi_base =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	pci->dbi_base =3D devm_ioremap_resource(dev, dbi_base);
+> +	pci->dbi_base =3D devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+> =20
+> -	phy_base =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> -	artpec6_pcie->phy_base =3D devm_ioremap_resource(dev, phy_base);
+> +	artpec6_pcie->phy_base =3D
+> +		devm_platform_ioremap_resource_byname(pdev, "phy");
+>  	if (IS_ERR(artpec6_pcie->phy_base))
+>  		return PTR_ERR(artpec6_pcie->phy_base);
+> =20
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/=
+pci/controller/dwc/pcie-designware-plat.c
+> index 73646b677aff..712456f6ce36 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> @@ -153,8 +153,7 @@ static int dw_plat_add_pcie_ep(struct dw_plat_pcie *d=
+w_plat_pcie,
+>  	ep =3D &pci->ep;
+>  	ep->ops =3D &pcie_ep_ops;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> -	pci->dbi_base2 =3D devm_ioremap_resource(dev, res);
+> +	pci->dbi_base2 =3D devm_platform_ioremap_resource_byname(pdev, "dbi2");
+>  	if (IS_ERR(pci->dbi_base2))
+>  		return PTR_ERR(pci->dbi_base2);
+> =20
+> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/contro=
+ller/dwc/pcie-histb.c
+> index 811b5c6d62ea..6d3524c39a9b 100644
+> --- a/drivers/pci/controller/dwc/pcie-histb.c
+> +++ b/drivers/pci/controller/dwc/pcie-histb.c
+> @@ -304,7 +304,6 @@ static int histb_pcie_probe(struct platform_device *p=
+dev)
+>  	struct histb_pcie *hipcie;
+>  	struct dw_pcie *pci;
+>  	struct pcie_port *pp;
+> -	struct resource *res;
+>  	struct device_node *np =3D pdev->dev.of_node;
+>  	struct device *dev =3D &pdev->dev;
+>  	enum of_gpio_flags of_flags;
+> @@ -324,15 +323,13 @@ static int histb_pcie_probe(struct platform_device =
+*pdev)
+>  	pci->dev =3D dev;
+>  	pci->ops =3D &dw_pcie_ops;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
+> -	hipcie->ctrl =3D devm_ioremap_resource(dev, res);
+> +	hipcie->ctrl =3D devm_platform_ioremap_resource_byname(pdev, "control")=
+;
+>  	if (IS_ERR(hipcie->ctrl)) {
+>  		dev_err(dev, "cannot get control reg base\n");
+>  		return PTR_ERR(hipcie->ctrl);
+>  	}
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc-dbi");
+> -	pci->dbi_base =3D devm_ioremap_resource(dev, res);
+> +	pci->dbi_base =3D devm_platform_ioremap_resource_byname(pdev, "rc-dbi")=
+;
+>  	if (IS_ERR(pci->dbi_base)) {
+>  		dev_err(dev, "cannot get rc-dbi base\n");
+>  		return PTR_ERR(pci->dbi_base);
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/con=
+troller/dwc/pcie-intel-gw.c
+> index 2d8dbb318087..c3b3a1d162b5 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -253,11 +253,9 @@ static int intel_pcie_get_resources(struct platform_=
+device *pdev)
+>  	struct intel_pcie_port *lpp =3D platform_get_drvdata(pdev);
+>  	struct dw_pcie *pci =3D &lpp->pci;
+>  	struct device *dev =3D pci->dev;
+> -	struct resource *res;
+>  	int ret;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	pci->dbi_base =3D devm_ioremap_resource(dev, res);
+> +	pci->dbi_base =3D devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+> =20
+> @@ -291,8 +289,7 @@ static int intel_pcie_get_resources(struct platform_d=
+evice *pdev)
+>  	ret =3D of_pci_get_max_link_speed(dev->of_node);
+>  	lpp->link_gen =3D ret < 0 ? 0 : ret;
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+> -	lpp->app_base =3D devm_ioremap_resource(dev, res);
+> +	lpp->app_base =3D devm_platform_ioremap_resource_byname(pdev, "app");
+>  	if (IS_ERR(lpp->app_base))
+>  		return PTR_ERR(lpp->app_base);
+> =20
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/contro=
+ller/dwc/pcie-kirin.c
+> index c19617a912bd..e5e765038686 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -147,23 +147,18 @@ static long kirin_pcie_get_clk(struct kirin_pcie *k=
+irin_pcie,
+>  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+>  				    struct platform_device *pdev)
+>  {
+> -	struct device *dev =3D &pdev->dev;
+> -	struct resource *apb;
+> -	struct resource *phy;
+> -	struct resource *dbi;
+> -
+> -	apb =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
+> -	kirin_pcie->apb_base =3D devm_ioremap_resource(dev, apb);
+> +	kirin_pcie->apb_base =3D
+> +		devm_platform_ioremap_resource_byname(pdev, "apb");
+>  	if (IS_ERR(kirin_pcie->apb_base))
+>  		return PTR_ERR(kirin_pcie->apb_base);
+> =20
+> -	phy =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> -	kirin_pcie->phy_base =3D devm_ioremap_resource(dev, phy);
+> +	kirin_pcie->phy_base =3D
+> +		devm_platform_ioremap_resource_byname(pdev, "phy");
+>  	if (IS_ERR(kirin_pcie->phy_base))
+>  		return PTR_ERR(kirin_pcie->phy_base);
+> =20
+> -	dbi =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> -	kirin_pcie->pci->dbi_base =3D devm_ioremap_resource(dev, dbi);
+> +	kirin_pcie->pci->dbi_base =3D
+> +		devm_platform_ioremap_resource_byname(pdev, "dbi");
+>  	if (IS_ERR(kirin_pcie->pci->dbi_base))
+>  		return PTR_ERR(kirin_pcie->pci->dbi_base);
+> =20
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/control=
+ler/dwc/pcie-qcom.c
+> index 138e1a2d21cc..91e2e9086564 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1358,8 +1358,7 @@ static int qcom_pcie_probe(struct platform_device *=
+pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
+> -	pcie->parf =3D devm_ioremap_resource(dev, res);
+> +	pcie->parf =3D devm_platform_ioremap_resource_byname(pdev, "parf");
+>  	if (IS_ERR(pcie->parf)) {
+>  		ret =3D PTR_ERR(pcie->parf);
+>  		goto err_pm_runtime_put;
+> @@ -1372,8 +1371,7 @@ static int qcom_pcie_probe(struct platform_device *=
+pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> -	pcie->elbi =3D devm_ioremap_resource(dev, res);
+> +	pcie->elbi =3D devm_platform_ioremap_resource_byname(pdev, "elbi");
+>  	if (IS_ERR(pcie->elbi)) {
+>  		ret =3D PTR_ERR(pcie->elbi);
+>  		goto err_pm_runtime_put;
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/con=
+troller/dwc/pcie-uniphier.c
+> index a5401a0b1e58..3a7f403b57b8 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -416,8 +416,7 @@ static int uniphier_pcie_probe(struct platform_device=
+ *pdev)
+>  	if (IS_ERR(priv->pci.dbi_base))
+>  		return PTR_ERR(priv->pci.dbi_base);
+> =20
+> -	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> -	priv->base =3D devm_ioremap_resource(dev, res);
+> +	priv->base =3D devm_platform_ioremap_resource_byname(pdev, "link");
+>  	if (IS_ERR(priv->base))
+>  		return PTR_ERR(priv->base);
+> =20
+> --=20
+> 2.25.0
 
--- 
-Thanks,
 
-David / dhildenb
+Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
 
