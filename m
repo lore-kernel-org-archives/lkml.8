@@ -2,159 +2,170 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77610C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3780EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4768B20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFD820823
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591115555;
-	bh=v+Lmvib+NCsRI5ziuPVAAr+k1HI+OxAfCHs4MqKV0S8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=BUXA0CA8bnBL7o6dEtE+Cstzb5T/+sEKGGOyu5CCYp47FJhEf9CrR0iwWTMedo1RI
-	 qbycyGHjSsBQi6ootNvwoF8bFCPRK2CGuafP0PwCu4myaCh4ou/02l2aTGjmv54JDc
-	 eWv0RWgFy05/z1RwVryw0cIm0taQFPI14VC9EzK4=
+	s=default; t=1591115579;
+	bh=KEF/4sEpuXc2S9hUWzC5Rg9NoWrf4iyqBG4+55SorsI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=M4VAFr+0zbcWBY34WI41p4Huqk02gZvkgdb3AfabELwK0vdPGNqhCvyWjH+vAHOXx
+	 uLDdJ4W2Cb8j56W3O5eKY1HglKij0sNTQM1D10nUraQ79fpA/h8b8z4V2ee2+Jr6wE
+	 h1wuOB1l4HKT3VgyEk5DzJhFA/C02h4rdPGgYVuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgFBQce (ORCPT
+        id S1727026AbgFBQc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:32:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBQcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:32:33 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD82C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 09:32:33 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id p70so7886315oic.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 09:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OIPqrxkSqnuynSyRY7vRQBZYHR+WMgRkEpmVgbjrHTc=;
-        b=HG6Wxw5rrMdJqd7hGhdtskkbbmAPB2XQ3eAV+2Qcl4rpBYsCOjygxljQAyM2Jy1kkk
-         XFsQwe32kPYBzlFBb+/7mRLKidJ8bE8akWMH+cBzQ8TYU6c/cKGrZwdDuhsQkBuWfPbB
-         rvCONwG6lFEiU8Bpx5royuU3hazmbnnAxlavo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OIPqrxkSqnuynSyRY7vRQBZYHR+WMgRkEpmVgbjrHTc=;
-        b=aFR12Ui0aGfP4ULfrADbJKJdgcMbj70jk1uL31WOKKR3JVxMvj9jPAG9V/ZAy5sBap
-         /AG6Mua7ULiGqwsywxuNkY8ulkJPLqkCcb8+wU34gKgzl7wEoum0VPX0n7o0VZPsQErf
-         fNQ2XSm3ZfSp/hn3q5fLOhmNAcNrS1Boai1HkMDKm+KKYFSyysIcruIMmlwgav5ns7D0
-         kOLUMqVlvn1xmFKZ46LYKvSeaQjPaaWW9T+RB7Ta+bP8bO9baiB6goMm6SliftnXLeTl
-         +RZ+s3cocS/6Z5iWjAVKGX5eUPsK7YY9/FAtNMWg5kbVpUmfPzqQrRj2TgGM5s7gsJJv
-         iT8Q==
-X-Gm-Message-State: AOAM53194qNj776sjeC8Z/M7Nf1qHlySqn6ctgQDFZCcy7WzUgZ5J5J+
-        R6ynIWkIDfYE60HUyHKpFUgLYw==
-X-Google-Smtp-Source: ABdhPJyuZvnoCIiugarIgnNCPIIZA/ndxaeoH02CojLkcB8mkMHhNJzZuOixiJQetxBh///FWvlBuA==
-X-Received: by 2002:aca:4c15:: with SMTP id z21mr3660499oia.85.1591115552974;
-        Tue, 02 Jun 2020 09:32:32 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 33sm751060ott.0.2020.06.02.09.32.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 09:32:32 -0700 (PDT)
-Subject: Re: [PATCH 0/4] selftests, sysctl, lib: Fix prime_numbers and sysctl
- test to run
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     "Luis R . Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <159067751438.229397.6746886115540895104.stgit@devnote2>
- <218210da-7d06-5b6e-13af-13a07e8e7064@linuxfoundation.org>
- <20200529233942.a47bbd8e918175e9af3fefab@kernel.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <834784a5-835f-d42d-9cdb-2dbf3139f0b5@linuxfoundation.org>
-Date:   Tue, 2 Jun 2020 10:32:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 2 Jun 2020 12:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbgFBQc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 12:32:58 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B50A20738;
+        Tue,  2 Jun 2020 16:32:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591115577;
+        bh=KEF/4sEpuXc2S9hUWzC5Rg9NoWrf4iyqBG4+55SorsI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MinDMEL1xXnxdjvjLnAJ0W14PWa2eGUT44UUqj4dYj6QfLB2UuhGQphHqg9Ueodxb
+         4CZHHTPeUrOli+baLyISlpfKEb9BoWd8aQ8ARjBAJTchbaQjm8xL2PCjORtcnl5qud
+         da8sXHO4WjNhRbchbnTrVBwxEEStlBCI8h2ypBwg=
+Date:   Tue, 2 Jun 2020 11:32:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
+Message-ID: <20200602163255.GA821782@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200529233942.a47bbd8e918175e9af3fefab@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602115353.20143-12-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/20 8:39 AM, Masami Hiramatsu wrote:
-> On Fri, 29 May 2020 08:14:39 -0600
-> Shuah Khan <skhan@linuxfoundation.org> wrote:
+On Tue, Jun 02, 2020 at 01:53:52PM +0200, Ansuel Smith wrote:
+> From: Sham Muthayyan <smuthayy@codeaurora.org>
 > 
->> On 5/28/20 8:51 AM, Masami Hiramatsu wrote:
->>> Hi,
->>>
->>> Recently, I found some tests were always skipped.
->>> Here is a series of patches to fix those issues.
->>>
->>> The prime_numbers test is skipped in some cases because
->>> prime_numbers.ko is not always compiled.
->>> Since the CONFIG_PRIME_NUMBERS is not independently
->>> configurable item (it has no title and help), it is enabled
->>> only if other configs (DRM_DEBUG_SELFTEST etc.) select it.
->>>
->>> To fix this issue, I added a title and help for
->>> CONFIG_PRIME_NUMBERS.
->>>
->>> The sysctl test is skipped because
->>>    - selftests/sysctl/config requires CONFIG_TEST_SYSCTL=y. But
->>>      since lib/test_sysctl.c doesn't use module_init(), the
->>>      test_syscall is not listed under /sys/module/ and the
->>>      test script gives up.
->>>    - Even if we make CONFIG_TEST_SYSCTL=m, the test script checks
->>>      /sys/modules/test_sysctl before loading module and gives up.
->>>    - Ayway, since the test module introduces useless sysctl
->>>      interface to the kernel, it would better be a module.
->>>
->>> This series includes fixes for above 3 points.
->>>    - Fix lib/test_sysctl.c to use module_init()
->>>    - Fix tools/testing/selftests/sysctl/sysctl.sh to try to load
->>>      test module if it is not loaded (nor embedded).
->>>    - Fix tools/testing/selftests/sysctl/config to require
->>>      CONFIG_TEST_SYSCTL=m, not y.
->>>
->>> Thank you,
->>>
->>> ---
->>>
->>> Masami Hiramatsu (4):
->>>         lib: Make prime number generator independently selectable
->>>         lib: Make test_sysctl initialized as module
->>>         selftests/sysctl: Fix to load test_sysctl module
->>>         selftests/sysctl: Make sysctl test driver as a module
->>>
->>>
->>>    lib/math/Kconfig                         |    7 ++++++-
->>>    lib/test_sysctl.c                        |    2 +-
->>>    tools/testing/selftests/sysctl/config    |    2 +-
->>>    tools/testing/selftests/sysctl/sysctl.sh |   13 ++-----------
->>>    4 files changed, 10 insertions(+), 14 deletions(-)
->>>
->>> --
->>> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
->>>
->>
->> Thanks Masami. I see Kees reviewing patches. I will wait for Luis to
->> weigh in on patch 2 before pulling this series in.
+> Add Force GEN1 support needed in some ipq8064 board that needs to limit
+> some PCIe line to gen1 for some hardware limitation. This is set by the
+> max-link-speed binding and needed by some soc based on ipq8064. (for
+> example Netgear R7800 router)
 > 
-> OK, Thanks Shuah!
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 259b627bf890..0ce15d53c46e 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+> +#include "../../pci.h"
+>  #include "pcie-designware.h"
+>  
+>  #define PCIE20_PARF_SYS_CTRL			0x00
+> @@ -99,6 +100,8 @@
+>  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+>  #define SLV_ADDR_SPACE_SZ			0x10000000
+>  
+> +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
+> +
+>  #define DEVICE_TYPE_RC				0x4
+>  
+>  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+> @@ -195,6 +198,7 @@ struct qcom_pcie {
+>  	struct phy *phy;
+>  	struct gpio_desc *reset;
+>  	const struct qcom_pcie_ops *ops;
+> +	int gen;
+>  };
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	/* wait for clock acquisition */
+>  	usleep_range(1000, 1500);
+>  
+> +	if (pcie->gen == 1) {
+> +		val = readl(pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
+> +		val |= 1;
 
-Applied to linux-kselftest next for Linux 5.8-rc1.
+Is this the same bit that's visible in config space as
+PCI_EXP_LNKSTA_CLS_2_5GB?  Why not use that #define?
 
-thanks,
--- Shuah
+There are a bunch of other #defines in this file that look like
+redefinitions of standard things:
+
+  #define PCIE20_COMMAND_STATUS                   0x04
+    Looks like PCI_COMMAND
+
+  #define CMD_BME_VAL                             0x4
+    Looks like PCI_COMMAND_MASTER
+
+  #define PCIE20_DEVICE_CONTROL2_STATUS2          0x98
+    Looks like (PCIE20_CAP + PCI_EXP_DEVCTL2)
+
+  #define PCIE_CAP_CPL_TIMEOUT_DISABLE            0x10
+    Looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
+
+  #define PCIE20_CAP                              0x70
+    This one is obviously device-specific
+
+  #define PCIE20_CAP_LINK_CAPABILITIES            (PCIE20_CAP + 0xC)
+    Looks like (PCIE20_CAP + PCI_EXP_LNKCAP)
+
+  #define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT (BIT(10) | BIT(11))
+    Looks like PCI_EXP_LNKCAP_ASPMS
+
+  #define PCIE20_CAP_LINK_1                       (PCIE20_CAP + 0x14)
+  #define PCIE_CAP_LINK1_VAL                      0x2FD7F
+    This looks like PCIE20_CAP_LINK_1 should be (PCIE20_CAP +
+    PCI_EXP_SLTCAP), but "CAP_LINK_1" doesn't sound like the Slot
+    Capabilities register, and I don't know what PCIE_CAP_LINK1_VAL
+    means.
+
+> +		writel(val, pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
+> +	}
+>  
+>  	/* Set the Max TLP size to 2K, instead of using default of 4K */
+>  	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
+> @@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> +	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
+> +	if (pcie->gen < 0)
+> +		pcie->gen = 2;
+> +
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
+>  	pcie->parf = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(pcie->parf)) {
+> -- 
+> 2.25.1
+> 
