@@ -2,132 +2,391 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13397C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE9C206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DF6206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 21:53:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aFZuHwx5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgFBVv1 (ORCPT
+        id S1728285AbgFBVxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 17:51:27 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51001 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFBVv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 17:51:26 -0400
-IronPort-SDR: tVfeXCV5y15PITqE0UCcz5b0quFbCvHlZuRD8gumP287hiSaSncN16fJdXLm1pC83tjwGHmPaM
- w9qvnrtDf+5g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 14:51:25 -0700
-IronPort-SDR: iR8+Ln0fstDHE88ku259NVDG2r5XkvuDTsIJu61j1g1IhhZqGXk62HyEOVwlz/47rYS3ek4I4r
- 2Td9PUOFtx8Q==
-X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
-   d="scan'208";a="272511868"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.209.123.248]) ([10.209.123.248])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 14:51:25 -0700
-Subject: Re: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
-To:     Babu Moger <babu.moger@amd.com>, fenghua.yu@intel.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org
-References: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <b7625596-c1f9-798d-a138-b619178497b2@intel.com>
-Date:   Tue, 2 Jun 2020 14:51:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 2 Jun 2020 17:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgFBVxQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 17:53:16 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F93C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 14:53:16 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id d7so12544713ioq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 14:53:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uKk/50km335wP5vYExKHj8LF75uWPnrWjyE59PhAFDw=;
+        b=aFZuHwx5e1aDmo3x5/6O0f6louCN4buh/3DU6L5G8IPotwB25Tx2wTBsqrcy59mJIM
+         Ok9kuVzwd8gdQIWkxP4hvbjvyQ1G0/msj7GGV1HKUtOLsdvM+jQuXhQR+JMKHiHyZyaL
+         hykzo/edcOqt8KBoTl19bqBu/Tu+aJNa6+ja3Ljcl8GDcr/1CKbAHMcpkFBB7Zi61SSW
+         5FfuZnmmd2hoye7Q5GblXmaBYS3jSDMortOG1y0OpZPoT9fefeHvc4cArsCedMUFzRI+
+         lNcjtw85gcvuuY5qZsPfBBEcR2yNIOo57bBP+r2QWHDqs4kSI6QOE7Ddzz1aUaiYvftp
+         SHKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uKk/50km335wP5vYExKHj8LF75uWPnrWjyE59PhAFDw=;
+        b=mnCT/z8gfabzzcnBeWqwiLcWZ2nUr51W6IsH40Zj9fZi2TITxlK7OIyatBprxYiTSN
+         1lGkGTqRVePqEw1LRO+uajq9F+YdDsV0amIjnMpfgeGvgkphVJsfLqmgqaXOPFynazSe
+         vvRoo6VWvvYETVKhYF4By5vAUoN2iFeYPbT/TG9ueA91hQ6+N0EEKDRW0ZIGDKLs7wvE
+         62eP212hmx0ZoNo4J7ZZm91gBNLiLsUEipRNX367SJz7oaaT4paSBE0j3UeYn8SeQUR6
+         2FOnPPZUicHYrwMt+RPujEULldzwLVDo27cRpOrc7e8lVn6gOn0zJD1RKVjTjbw4xSDE
+         91rg==
+X-Gm-Message-State: AOAM530VBqrN8ACcnX6rRqnXMuyLEvRmRpx8Gt1y1Xk+rPg5f3+qt2Dy
+        NX5+Xyid/f1ariru/bk2y8FXZpqGC5vuDtfk+K5Xjw==
+X-Google-Smtp-Source: ABdhPJwK1gEygjIDHmHj+Z7wt3ksysqmkxnd7ELfYmPc4KxLR8NccueJ6iAkyWhc/DWpqV+goCTP8TPvKnFgeQkUfYc=
+X-Received: by 2002:a6b:6414:: with SMTP id t20mr1205986iog.32.1591134795058;
+ Tue, 02 Jun 2020 14:53:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200429190819.64235-1-irogers@google.com>
+In-Reply-To: <20200429190819.64235-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 2 Jun 2020 14:53:03 -0700
+Message-ID: <CAP-5=fVRdqvswtyQMg5cB+ntTGda+SAYskjTQednEH-AeZo13g@mail.gmail.com>
+Subject: Re: [PATCH v3] perf test x86: address multiplexing in rdpmc test
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Babu,
+On Wed, Apr 29, 2020 at 12:08 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Counters may be being used for pinned or other events which inhibit the
+> instruction counter in the test from being scheduled - time_enabled > 0
+> but time_running == 0. This causes the test to fail with division by 0.
+> Make time_running and enabled out parameters of mmap_read_self and add a
+> sleep loop to ensure that the counter is running before computing the
+> delta.
 
-On 6/1/2020 4:00 PM, Babu Moger wrote:
-> Memory bandwidth is calculated reading the monitoring counter
-> at two intervals and calculating the delta. It is the software’s
-> responsibility to read the count often enough to avoid having
-> the count roll over _twice_ between reads.
-> 
-> The current code hardcodes the bandwidth monitoring counter's width
-> to 24 bits for AMD. This is due to default base counter width which
-> is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
-> to adjust the counter width. But, the AMD hardware supports much
-> wider bandwidth counter with the default width of 44 bits.
-> 
-> Kernel reads these monitoring counters every 1 second and adjusts the
-> counter value for overflow. With 24 bits and scale value of 64 for AMD,
-> it can only measure up to 1GB/s without overflowing. For the rates
-> above 1GB/s this will fail to measure the bandwidth.
-> 
-> Fix the issue setting the default width to 44 bits by adjusting the
-> offset.
-> 
-> AMD future products will implement the CPUID 0xF.[ECX=1]:EAX.
-> 
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
+Ping. Peter does this address your feedback?
+
+Thanks,
+Ian
+
+> v3. Cleans up the code by adding a single scale_count boolean. It aligns
+>     the code with the comments in perf_event.h as suggested by Peter
+>     Zijlstra.
+> v2. Address review feedback from Peter Zijlstra.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> - Sending it second time. Email client had some issues first time.
-> - Generated the patch on top of 
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (x86/cache).
-> 
->  arch/x86/kernel/cpu/resctrl/core.c     |    8 +++++++-
->  arch/x86/kernel/cpu/resctrl/internal.h |    1 +
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-> index 12f967c6b603..6040e9ae541b 100644
-> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> @@ -983,7 +983,13 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
->  		c->x86_cache_occ_scale = ebx;
->  		if (c->x86_vendor == X86_VENDOR_INTEL)
->  			c->x86_cache_mbm_width_offset = eax & 0xff;
-> -		else
-> +		else if (c->x86_vendor == X86_VENDOR_AMD) {
-> +			if (eax)
-
-This test checks if _any_ bit is set in eax ...
-
-> +				c->x86_cache_mbm_width_offset = eax & 0xff;
-
-... with the assumption that the first eight bits contain a value.
-
-Even so, now that Intel and AMD will be using eax in the same way,
-perhaps it can be done simpler by always using eax to obtain the offset
-(and thus avoid the code duplication) and on AMD initialize the default
-if it cannot be obtained from eax?
-
-What I mean is something like:
-
-@@ -1024,10 +1024,12 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
-
- 		c->x86_cache_max_rmid  = ecx;
- 		c->x86_cache_occ_scale = ebx;
--		if (c->x86_vendor == X86_VENDOR_INTEL)
--			c->x86_cache_mbm_width_offset = eax & 0xff;
--		else
--			c->x86_cache_mbm_width_offset = -1;
-+		c->x86_cache_mbm_width_offset = eax & 0xff;
-+		if (c->x86_vendor == X86_VENDOR_AMD &&
-+		    c->x86_cache_mbm_width_offset == 0) {
-+			c->x86_cache_mbm_width_offset =
-+				MBM_CNTR_WIDTH_OFFSET_AMD;
-+		}
- 	}
- }
-
-What do you think?
-
-Reinette
+>  include/uapi/linux/perf_event.h       | 34 +++++++-----
+>  tools/include/uapi/linux/perf_event.h | 34 +++++++-----
+>  tools/perf/arch/x86/tests/rdpmc.c     | 80 +++++++++++++++++++--------
+>  3 files changed, 98 insertions(+), 50 deletions(-)
+>
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 7b2d6fc9e6ed..4936cce0a6d0 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -488,19 +488,22 @@ struct perf_event_mmap_page {
+>         /*
+>          * Bits needed to read the hw events in user-space.
+>          *
+> -        *   u32 seq, time_mult, time_shift, index, width;
+> -        *   u64 count, enabled, running;
+> -        *   u64 cyc, time_offset;
+> -        *   s64 pmc = 0;
+> +        *   u32 seq, time_mult, time_shift, index;
+> +        *   u64 cyc, time_offset, enabled, running = -1;
+> +        *   s64 count = 0;
+> +        *   bool scale_count = false;
+>          *
+>          *   do {
+>          *     seq = pc->lock;
+> -        *     barrier()
+> +        *     barrier();
+>          *
+> -        *     enabled = pc->time_enabled;
+> -        *     running = pc->time_running;
+> +        *     if (pc->cap_user_time) {
+> +        *       enabled = pc->time_enabled;
+> +        *       running = pc->time_running;
+> +        *       scale_count = enabled != running && running != 0;
+> +        *     }
+>          *
+> -        *     if (pc->cap_usr_time && enabled != running) {
+> +        *     if (scale_count) {
+>          *       cyc = rdtsc();
+>          *       time_offset = pc->time_offset;
+>          *       time_mult   = pc->time_mult;
+> @@ -509,9 +512,13 @@ struct perf_event_mmap_page {
+>          *
+>          *     index = pc->index;
+>          *     count = pc->offset;
+> -        *     if (pc->cap_user_rdpmc && index) {
+> -        *       width = pc->pmc_width;
+> -        *       pmc = rdpmc(index - 1);
+> +        *     if (pc->cap_user_rdpmc && index && running != 0) {
+> +        *       u16 width = pc->pmc_width;
+> +        *       s64 pmc = rdpmc(index - 1);
+> +        *
+> +        *       pmc <<= 64 - width;
+> +        *       pmc >>= 64 - width;  // signed shift right
+> +        *       count += pmc;
+>          *     }
+>          *
+>          *     barrier();
+> @@ -562,8 +569,9 @@ struct perf_event_mmap_page {
+>          *              ((rem * time_mult) >> time_shift);
+>          *
+>          * Where time_offset,time_mult,time_shift and cyc are read in the
+> -        * seqcount loop described above. This delta can then be added to
+> -        * enabled and possible running (if index), improving the scaling:
+> +        * seqcount loop described above when scale_count is true. This delta
+> +        * can then be added to enabled and possible running (if index),
+> +        * improving the scaling:
+>          *
+>          *   enabled += delta;
+>          *   if (index)
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index 7b2d6fc9e6ed..4936cce0a6d0 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -488,19 +488,22 @@ struct perf_event_mmap_page {
+>         /*
+>          * Bits needed to read the hw events in user-space.
+>          *
+> -        *   u32 seq, time_mult, time_shift, index, width;
+> -        *   u64 count, enabled, running;
+> -        *   u64 cyc, time_offset;
+> -        *   s64 pmc = 0;
+> +        *   u32 seq, time_mult, time_shift, index;
+> +        *   u64 cyc, time_offset, enabled, running = -1;
+> +        *   s64 count = 0;
+> +        *   bool scale_count = false;
+>          *
+>          *   do {
+>          *     seq = pc->lock;
+> -        *     barrier()
+> +        *     barrier();
+>          *
+> -        *     enabled = pc->time_enabled;
+> -        *     running = pc->time_running;
+> +        *     if (pc->cap_user_time) {
+> +        *       enabled = pc->time_enabled;
+> +        *       running = pc->time_running;
+> +        *       scale_count = enabled != running && running != 0;
+> +        *     }
+>          *
+> -        *     if (pc->cap_usr_time && enabled != running) {
+> +        *     if (scale_count) {
+>          *       cyc = rdtsc();
+>          *       time_offset = pc->time_offset;
+>          *       time_mult   = pc->time_mult;
+> @@ -509,9 +512,13 @@ struct perf_event_mmap_page {
+>          *
+>          *     index = pc->index;
+>          *     count = pc->offset;
+> -        *     if (pc->cap_user_rdpmc && index) {
+> -        *       width = pc->pmc_width;
+> -        *       pmc = rdpmc(index - 1);
+> +        *     if (pc->cap_user_rdpmc && index && running != 0) {
+> +        *       u16 width = pc->pmc_width;
+> +        *       s64 pmc = rdpmc(index - 1);
+> +        *
+> +        *       pmc <<= 64 - width;
+> +        *       pmc >>= 64 - width;  // signed shift right
+> +        *       count += pmc;
+>          *     }
+>          *
+>          *     barrier();
+> @@ -562,8 +569,9 @@ struct perf_event_mmap_page {
+>          *              ((rem * time_mult) >> time_shift);
+>          *
+>          * Where time_offset,time_mult,time_shift and cyc are read in the
+> -        * seqcount loop described above. This delta can then be added to
+> -        * enabled and possible running (if index), improving the scaling:
+> +        * seqcount loop described above when scale_count is true. This delta
+> +        * can then be added to enabled and possible running (if index),
+> +        * improving the scaling:
+>          *
+>          *   enabled += delta;
+>          *   if (index)
+> diff --git a/tools/perf/arch/x86/tests/rdpmc.c b/tools/perf/arch/x86/tests/rdpmc.c
+> index 1ea916656a2d..93e1770d03d3 100644
+> --- a/tools/perf/arch/x86/tests/rdpmc.c
+> +++ b/tools/perf/arch/x86/tests/rdpmc.c
+> @@ -16,13 +16,13 @@
+>  #include <internal/lib.h> // page_size
+>  #include "arch-tests.h"
+>
+> -static u64 rdpmc(unsigned int counter)
+> +static s64 rdpmc(unsigned int counter)
+>  {
+>         unsigned int low, high;
+>
+>         asm volatile("rdpmc" : "=a" (low), "=d" (high) : "c" (counter));
+>
+> -       return low | ((u64)high) << 32;
+> +       return low | ((s64)high) << 32;
+>  }
+>
+>  static u64 rdtsc(void)
+> @@ -34,49 +34,67 @@ static u64 rdtsc(void)
+>         return low | ((u64)high) << 32;
+>  }
+>
+> -static u64 mmap_read_self(void *addr)
+> +/*
+> + * Return a user rdpmc result as well as the time enabled and running. In the
+> + * situation that the counter was ran and the kernel is multiplexing events, the
+> + * counter is scaled.
+> + */
+> +static s64 mmap_read_self(void *addr, u64 *enabled, u64 *running)
+>  {
+>         struct perf_event_mmap_page *pc = addr;
+> -       u32 seq, idx, time_mult = 0, time_shift = 0;
+> -       u64 count, cyc = 0, time_offset = 0, enabled, running, delta;
+> +       u32 seq, time_mult = 0, time_shift = 0, index;
+> +       u64 cyc = 0, time_offset = 0;
+> +       s64 count = 0;
+> +       bool scale_count = false;
+>
+> +       *enabled = -1;
+> +       *running = -1;
+>         do {
+>                 seq = pc->lock;
+>                 barrier();
+>
+> -               enabled = pc->time_enabled;
+> -               running = pc->time_running;
+> +               if (pc->cap_user_time) {
+> +                       *enabled = pc->time_enabled;
+> +                       *running = pc->time_running;
+> +                       scale_count = *enabled != *running && *running != 0;
+> +               }
+>
+> -               if (enabled != running) {
+> +               if (scale_count) {
+>                         cyc = rdtsc();
+>                         time_mult = pc->time_mult;
+>                         time_shift = pc->time_shift;
+>                         time_offset = pc->time_offset;
+>                 }
+>
+> -               idx = pc->index;
+> +               index = pc->index;
+>                 count = pc->offset;
+> -               if (idx)
+> -                       count += rdpmc(idx - 1);
+> +               if (pc->cap_user_rdpmc && index && *running != 0) {
+> +                       u16 width = pc->pmc_width;
+> +                       s64 pmc = rdpmc(index - 1);
+> +
+> +                       pmc <<= 64 - width;
+> +                       pmc >>= 64 - width;  // signed shift right
+> +                       count += pmc;
+> +               }
+>
+>                 barrier();
+>         } while (pc->lock != seq);
+>
+> -       if (enabled != running) {
+> -               u64 quot, rem;
+> +       if (scale_count) {
+> +               u64 quot, rem, delta;
+>
+>                 quot = (cyc >> time_shift);
+>                 rem = cyc & (((u64)1 << time_shift) - 1);
+>                 delta = time_offset + quot * time_mult +
+>                         ((rem * time_mult) >> time_shift);
+>
+> -               enabled += delta;
+> -               if (idx)
+> -                       running += delta;
+> +               *enabled += delta;
+> +               if (index)
+> +                       *running += delta;
+>
+> -               quot = count / running;
+> -               rem = count % running;
+> -               count = quot * enabled + (rem * enabled) / running;
+> +               quot = count / *running;
+> +               rem = count % *running;
+> +               count = quot * *enabled + (rem * *enabled) / *running;
+>         }
+>
+>         return count;
+> @@ -104,7 +122,7 @@ static int __test__rdpmc(void)
+>                 .config = PERF_COUNT_HW_INSTRUCTIONS,
+>                 .exclude_kernel = 1,
+>         };
+> -       u64 delta_sum = 0;
+> +       u64 delta_sum = 0, sleep_count = 0;
+>          struct sigaction sa;
+>         char sbuf[STRERR_BUFSIZE];
+>
+> @@ -130,14 +148,23 @@ static int __test__rdpmc(void)
+>         }
+>
+>         for (n = 0; n < 6; n++) {
+> -               u64 stamp, now, delta;
+> -
+> -               stamp = mmap_read_self(addr);
+> +               u64 stamp, now, delta, enabled, running;
+> +
+> +               for (;;) {
+> +                       stamp = mmap_read_self(addr, &enabled, &running);
+> +                       if (enabled && running)
+> +                               break;
+> +                       /* Try to wait for event to be running. */
+> +                       sleep_count++;
+> +                       if (sleep_count > 20)
+> +                               goto out_never_run;
+> +                       sleep(1);
+> +               }
+>
+>                 for (i = 0; i < loops; i++)
+>                         tmp++;
+>
+> -               now = mmap_read_self(addr);
+> +               now = mmap_read_self(addr, &enabled, &running);
+>                 loops *= 10;
+>
+>                 delta = now - stamp;
+> @@ -155,6 +182,11 @@ static int __test__rdpmc(void)
+>                 return -1;
+>
+>         return 0;
+> +
+> +out_never_run:
+> +       close(fd);
+> +       pr_err("Event counter failed to multiplexed in. Are higher priority counters being sampled by a different process?\n");
+> +       return -1;
+>  }
+>
+>  int test__rdpmc(struct test *test __maybe_unused, int subtest __maybe_unused)
+> --
+> 2.26.2.303.gf8c07b1a785-goog
+>
