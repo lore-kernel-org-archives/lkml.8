@@ -2,115 +2,123 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA8DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1322DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6B820663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82A22072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:04:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qgcFhYp4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Om1H0Oeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgFBUEa (ORCPT
+        id S1728243AbgFBUEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:04:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54806 "EHLO
+        Tue, 2 Jun 2020 16:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgFBUE3 (ORCPT
+        with ESMTP id S1726139AbgFBUEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:04:29 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D49EC08C5C0;
-        Tue,  2 Jun 2020 13:04:29 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r9so4124823wmh.2;
-        Tue, 02 Jun 2020 13:04:29 -0700 (PDT)
+        Tue, 2 Jun 2020 16:04:43 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33693C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 13:04:42 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x22so6954067lfd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fFrkZGbA6MKpDgVip+5WxkE5C44o6dddKdANoh/CvHM=;
-        b=qgcFhYp45+G/WE7//BnFqthX06KgvrqMjiscgxv7rWUBSlCDMbW8St8blvXXSgOJtx
-         G+y1dBZH5s4+ojGuba0v3YjK7faXyitZKvxTbDHZgg7/4w0GJ2FkUKahJIGwn8YhfzhV
-         +90585NFL0x/C+UBfr+1VIVwWtDQD2HxCSM3SVX0LU5gS2r6jdmeShAkWR3d8Qv6Y6Ax
-         VJmzdZMzR1el2AuegYHt5kfLu063zBysz/gsgeU6mDMnaCsOZoIh/1tvF157QkvlmtJG
-         WRD7Yx/nqQO3fiU+SsmDQssVnikHXJYKf6gqe/pAkpUGR7P0HT6C/EIyCxFhk/B/jf9F
-         Boyg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YwRmnpMyYSKsuBVaIf/H8HlQR4v0H9X4t/FINDNUlCo=;
+        b=Om1H0Oeuuzm5pUwKfcMbsOt8vaAj1s6JaK5NLFAGjfyPxB+d2R41pm4vcvTRwOZbJw
+         6t2QIqGoC2cEfXn3pIKNxqt82rqVLsvBx6eYwhSdB9Vrkz9eufuFpbZC6Aeydk8hwL1f
+         e9cWaeaUDPSpFvgqJE/5wrybB8Hc2xLMOhdyg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fFrkZGbA6MKpDgVip+5WxkE5C44o6dddKdANoh/CvHM=;
-        b=aTeVH/OgUTGUI0jkZLN7+KdVbZ4JJWbgotubM1m0Vu+ttiB7LW4ECv3Sc+uR175qwq
-         KFBrQ2A6Oy+tjibelhvmSSP4Af9t5D2X9ily8EQkiDie0X25KBAHZVSu6IssgYxdDsaK
-         vQpj025HJpklVc7wo0bCwdERimxo+oCD3CUcJ68jvXxUgF8q8TQe/btGaSjAyASQba77
-         V7le62rdFc4OMu36tH2Xt4tGfYlKyqvz5Tt4bI1hEs6xDwQA9lhSdchkKfbGdDgFRuAI
-         0f8ydSUPnnUWf+yihzyqRBzVqBkgkKYtAEvtL3kYym/4V3z+XlJbW8Vfq/ijkEuz6GIo
-         JZwQ==
-X-Gm-Message-State: AOAM533TxgD8mY193lXZm2Bw8XwKzRC055wclJiLiG6NjF0kvFM+DNjU
-        iDhMKUKNFXeVCVfEiVWBwIg=
-X-Google-Smtp-Source: ABdhPJyX8nC46je0w47ASRbkIn1n/QchF1gqe14i2MuX22455rQM89KCOQuktRwbnBMv73hDtLTBxQ==
-X-Received: by 2002:a1c:188:: with SMTP id 130mr771701wmb.93.1591128267894;
-        Tue, 02 Jun 2020 13:04:27 -0700 (PDT)
-Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id a1sm1241777wmd.28.2020.06.02.13.04.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 13:04:27 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] soc: qcom: smd-rpm: Add msm8994 compatible
-Date:   Tue,  2 Jun 2020 22:04:07 +0200
-Message-Id: <20200602200407.320908-1-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YwRmnpMyYSKsuBVaIf/H8HlQR4v0H9X4t/FINDNUlCo=;
+        b=bE5EC/ayiN//tdt5IA1p5/eZwA5s5uNpwuk9t7yx0fiatODbXbSIGN7DE4xkbe/9bq
+         Ibl5LendqqzfFBo8VQ99im2KVuiYeWZ7ahRq+bDlsGIFvJToozyUfdNXeT+bpewx8Kp9
+         5V3l/jWl960k4HUg4yt7tm+WLnIgikXcxBr+lWHad/ke76638OAi2WNeyEKKmbrNcZ2A
+         ECtop3CEItv//lG/7hzexOududjcneZuceAEIAZ9SPzTXoc3K1Y7PRPhdXyuRRjbY5WE
+         W4b4zGPMNEnav7Dj97r7LU190021gzvAqT4zjcgotyZftNxPFzCOT3hd40k5VmTDx17Q
+         MHOQ==
+X-Gm-Message-State: AOAM530tWKpldErv/VdO2tVqlNO4age6bZkRSEcdRJiPuXX5x+HLv4U1
+        Khka6A1g2cyBht5FRE8VPh6u3gYLAsw=
+X-Google-Smtp-Source: ABdhPJzAkJiyYkomL2OTUkG+jR9ptv9vaeAYY1MBP3CB86MrwaclR8pMDiL7UT0B/CoOn9xlqNB5kg==
+X-Received: by 2002:ac2:51a7:: with SMTP id f7mr509382lfk.13.1591128279774;
+        Tue, 02 Jun 2020 13:04:39 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id 10sm729278ljw.134.2020.06.02.13.04.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 13:04:38 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id h188so6955625lfd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 13:04:38 -0700 (PDT)
+X-Received: by 2002:a19:c1c3:: with SMTP id r186mr509343lff.49.1591128278047;
+ Tue, 02 Jun 2020 13:04:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200602052533.15048-1-john.stultz@linaro.org>
+ <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com> <CALAqxLVA1ZQjwEdbX5KGbSyLnMBAzm9PoN_Ta_Z7rBf4w3GOvQ@mail.gmail.com>
+In-Reply-To: <CALAqxLVA1ZQjwEdbX5KGbSyLnMBAzm9PoN_Ta_Z7rBf4w3GOvQ@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 2 Jun 2020 13:04:26 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXPddgOvEX___unx7N2YsQctsZN+1vkwPbi8Ab_zfwFfzw@mail.gmail.com>
+Message-ID: <CA+ASDXPddgOvEX___unx7N2YsQctsZN+1vkwPbi8Ab_zfwFfzw@mail.gmail.com>
+Subject: Re: [PATCH] wireless: ath10k: Return early in ath10k_qmi_event_server_exit()
+ to avoid hard crash on reboot
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Rakesh Pillai <pillair@qti.qualcomm.com>,
+        Govind Singh <govinds@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        ath10k <ath10k@lists.infradead.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the compatible for the RPM in msm8994.
+On Tue, Jun 2, 2020 at 12:40 PM John Stultz <john.stultz@linaro.org> wrote:
+> On Tue, Jun 2, 2020 at 12:16 PM Brian Norris <briannorris@chromium.org> wrote:
+> > On Mon, Jun 1, 2020 at 10:25 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > Ever since 5.7-rc1, if we call
+> > > ath10k_qmi_remove_msa_permission(), the db845c hard crashes on
+> > > reboot, resulting in the device getting stuck in the usb crash
+> > > debug mode and not coming back up wihthout a hard power off.
+> > >
+> > > This hack avoids the issue by returning early in
+> > > ath10k_qmi_event_server_exit().
+> > >
+> > > A better solution is very much desired!
+> >
+> > Any chance you can bisect what caused this? There are a lot of
+> > non-ath10k pieces involved in this stuff.
+>
+> Amit had spent some work on chasing it down to the in kernel qrtr-ns
+> work, and reported it here:
+>   https://lists.infradead.org/pipermail/ath10k/2020-April/014970.html
+>
+> But that discussion seemingly stalled out, so I came up with this hack
+> to workaround it for us.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
- drivers/soc/qcom/smd-rpm.c                                  | 1 +
- 2 files changed, 2 insertions(+)
+If I'm reading it right, then that means we should revert this stuff
+from v5.7-rc1:
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index 616fddcd09fd..25541a475ead 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -23,6 +23,7 @@ resources.
- 		    "qcom,rpm-msm8916"
- 		    "qcom,rpm-msm8974"
- 		    "qcom,rpm-msm8976"
-+		    "qcom,rpm-msm8994"
- 		    "qcom,rpm-msm8998"
- 		    "qcom,rpm-sdm660"
- 		    "qcom,rpm-qcs404"
-diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-index 005dd30c58fa..54eb5cbc05fd 100644
---- a/drivers/soc/qcom/smd-rpm.c
-+++ b/drivers/soc/qcom/smd-rpm.c
-@@ -233,6 +233,7 @@ static const struct of_device_id qcom_smd_rpm_of_match[] = {
- 	{ .compatible = "qcom,rpm-msm8916" },
- 	{ .compatible = "qcom,rpm-msm8974" },
- 	{ .compatible = "qcom,rpm-msm8976" },
-+	{ .compatible = "qcom,rpm-msm8994" },
- 	{ .compatible = "qcom,rpm-msm8996" },
- 	{ .compatible = "qcom,rpm-msm8998" },
- 	{ .compatible = "qcom,rpm-sdm660" },
--- 
-2.26.2
+0c2204a4ad71 net: qrtr: Migrate nameservice to kernel from userspace
 
+At least, until people can resolve the tail end of that thread. New
+features (ath11k, etc.) are not a reason to break existing features
+(ath10k/wcn3990).
+
+Brian
