@@ -2,130 +2,167 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858D7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 654FB206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:08:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7YovVxE"
+	by mail.kernel.org (Postfix) with ESMTP id E741420734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591078278;
+	bh=S9BDyCPZ3sQBve1F7WjZIz76qdGdT07Qbc97K/4Wka8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OtME4aBQbWtJXpiBq0ANb4tM3Ibhdsaj9DH3poyRSRfFInJuGMw7q3Gk3aEH4LyG2
+	 RFxsyEZDqz3elRvbw+8Sp2jIgJzwW5ZJNx5Nf9WFDiAMrdDw8osyih+QTFcuhpGZ0l
+	 NUUj7mRbAROESkRldcl5zVlst1lVgtykvm85N7ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgFBGI7 (ORCPT
+        id S1726141AbgFBGLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgFBGI6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:08:58 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D220C061A0E;
-        Mon,  1 Jun 2020 23:08:56 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f5so1805639wmh.2;
-        Mon, 01 Jun 2020 23:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NDGYSbP7uksg9+a4r1iJamlh67Acsz3aGJVeqfoyDV0=;
-        b=o7YovVxEvNBhAdPPNBFaK+JmkxuBB4/xKKIT1qcpOELnjJ/YTf7DUjI3RFuu+qY2+X
-         NITAv3fgVQXIKRMRHSMVeyO6ajyBkf2OOQLpHCRN9pQGs8X+gqhCjaZSxu29v1Tami3u
-         MM7CY2e2hyRLnvqiV6gBifOfQAhqlSALfor+ITJr3qIPIcAJ7na+qMogYTp3rg4fgxwB
-         lfte6gUwulmhd+4FLeZy0Oj1mKnQK73EdD8hRAsDdjg9EDhwHmAt8CLUoiuJ8XJ3SFQl
-         f9D2jZX7IXB5zKvIj9CViLa3mJt4xvarJOhKrnqWawXJzMKY6rFXl91VnuA7v7ongqf9
-         SYYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NDGYSbP7uksg9+a4r1iJamlh67Acsz3aGJVeqfoyDV0=;
-        b=krwVROoxwCV9DpKHbzpHOGVHULNHRF8xnS7Qp9A4InnAZPYFRABLx2qCCsLwYNgyoc
-         FndfbL1L5IR/0Ruz6WydnG40JoVDE3Rj2IT4SNvq6cOSz4awGA1968bZMDHdO8mZooPR
-         pizBs56aCzfq6CbEOq/K+b0nme4HAqsHGX0KjQcpvYnUmnJlOVnSEObNMF2oJUJZ/oPj
-         9E+5ziNxILhJaCBhqsHE8EpIGO9+ekv10KReCMazfRPC8FaCERbSO4soE43z+h2QrRo0
-         0I9N2J+EtgKNOMGrZf2MJUxrqXtJeFlJFW1qVpQGhgSqEEdOa1UWEaEoQWm02IuWwWgE
-         S9fw==
-X-Gm-Message-State: AOAM533LMwqWBoDWlBLgyAnGKqpDxp8wflOA/zEkGLe5b45ARMoTc54o
-        2s7LtbTK4qK3cNyoSghwnZHUPZV4KODjgc7QAP8=
-X-Google-Smtp-Source: ABdhPJxbMW9gOsV6GMtEx1bIdBTWOTc6p9HlxeOtGMzSdOLfpQydLKKu4tsXYDL8918ULpDLfXZBeSLCzLSyoGzPpk8=
-X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr2533226wmi.30.1591078135229;
- Mon, 01 Jun 2020 23:08:55 -0700 (PDT)
+        Tue, 2 Jun 2020 02:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbgFBGLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 02:11:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 063F2206A2;
+        Tue,  2 Jun 2020 06:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591078275;
+        bh=S9BDyCPZ3sQBve1F7WjZIz76qdGdT07Qbc97K/4Wka8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n87q5ssQcTPcbQPy4ii4n0LRx2wpWrJK9vvsAw36MC/vsEKsffyUpXOPjcSlIES5S
+         7xuP9hHliVR4456n+8uSoDhnx0jlpwwagPijeMfWRc12Xan8GvfXsYVOEzPi+TcaCf
+         ZWUj/cuJlMa/67FTh0lUj8p8GeGkZ8AozWLEYUvE=
+Date:   Tue, 2 Jun 2020 08:11:12 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+Cc:     "rafael@kernel.org" <rafael@kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] driver core: platform: expose numa_node to users in sysfs
+Message-ID: <20200602061112.GC2256033@kroah.com>
+References: <20200602030139.73012-1-song.bao.hua@hisilicon.com>
+ <20200602042340.GA2130884@kroah.com>
+ <B926444035E5E2439431908E3842AFD24D8F9E@DGGEMI525-MBS.china.huawei.com>
 MIME-Version: 1.0
-References: <20200601052633.853874-1-jhubbard@nvidia.com> <20200601052633.853874-3-jhubbard@nvidia.com>
-In-Reply-To: <20200601052633.853874-3-jhubbard@nvidia.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Tue, 2 Jun 2020 08:08:44 +0200
-Message-ID: <CAM9Jb+hNSWp-TaQQFg4bs5uR8rYk_POZPT23RYy5V_B9-aOcYg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] vhost: convert get_user_pages() --> pin_user_pages()
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B926444035E5E2439431908E3842AFD24D8F9E@DGGEMI525-MBS.china.huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This code was using get_user_pages*(), in approximately a "Case 5"
-> scenario (accessing the data within a page), using the categorization
-> from [1]. That means that it's time to convert the get_user_pages*() +
-> put_page() calls to pin_user_pages*() + unpin_user_pages() calls.
->
-> There is some helpful background in [2]: basically, this is a small
-> part of fixing a long-standing disconnect between pinning pages, and
-> file systems' use of those pages.
->
-> [1] Documentation/core-api/pin_user_pages.rst
->
-> [2] "Explicit pinning of user-space pages":
->     https://lwn.net/Articles/807108/
->
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/vhost/vhost.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 21a59b598ed8..596132a96cd5 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -1762,15 +1762,14 @@ static int set_bit_to_user(int nr, void __user *addr)
->         int bit = nr + (log % PAGE_SIZE) * 8;
->         int r;
->
-> -       r = get_user_pages_fast(log, 1, FOLL_WRITE, &page);
-> +       r = pin_user_pages_fast(log, 1, FOLL_WRITE, &page);
->         if (r < 0)
->                 return r;
->         BUG_ON(r != 1);
->         base = kmap_atomic(page);
->         set_bit(bit, base);
->         kunmap_atomic(base);
-> -       set_page_dirty_lock(page);
-> -       put_page(page);
-> +       unpin_user_pages_dirty_lock(&page, 1, true);
+On Tue, Jun 02, 2020 at 05:09:57AM +0000, Song Bao Hua (Barry Song) wrote:
+> > >
+> > > Platform devices are NUMA?  That's crazy, and feels like a total abuse
+> > > of platform devices and drivers that really should belong on a "real"
+> > > bus.
+> > 
+> > I am not sure if it is an abuse of platform device. But smmu is a platform
+> > device,
+> > drivers/iommu/arm-smmu-v3.c is a platform driver.
+> > In a typical ARM server, there are maybe multiple SMMU devices which can
+> > support
+> > IO virtual address and page tables for other devices on PCI-like busses.
+> > Each different SMMU device might be close to different NUMA node. There is
+> > really a hardware topology.
+> > 
+> > If you have multiple CPU packages in a NUMA server, some platform devices
+> > might
+> > Belong to CPU0, some other might belong to CPU1.
+> 
+> Those devices are populated by acpi_iort for an ARM server:
+> 
+> drivers/acpi/arm64/iort.c:
+> 
+> static const struct iort_dev_config iort_arm_smmu_v3_cfg __initconst = {
+>         .name = "arm-smmu-v3",
+>         .dev_dma_configure = arm_smmu_v3_dma_configure,
+>         .dev_count_resources = arm_smmu_v3_count_resources,
+>         .dev_init_resources = arm_smmu_v3_init_resources,
+>         .dev_set_proximity = arm_smmu_v3_set_proximity,
+> };
+> 
+> void __init acpi_iort_init(void)
+> {
+>         acpi_status status;
+> 
+>         status = acpi_get_table(ACPI_SIG_IORT, 0, &iort_table);
+>         ...
+>         iort_check_id_count_workaround(iort_table);
+>         iort_init_platform_devices();
+> }
+> 
+> static void __init iort_init_platform_devices(void)
+> {
+>         ...
+> 
+>         for (i = 0; i < iort->node_count; i++) {
+>                 if (iort_node >= iort_end) {
+>                         pr_err("iort node pointer overflows, bad table\n");
+>                         return;
+>                 }
+> 
+>                 iort_enable_acs(iort_node);
+> 
+>                 ops = iort_get_dev_cfg(iort_node);
+>                 if (ops) {
+>                         fwnode = acpi_alloc_fwnode_static();
+>                         if (!fwnode)
+>                                 return;
+> 
+>                         iort_set_fwnode(iort_node, fwnode);
+> 
+>                         ret = iort_add_platform_device(iort_node, ops);
+>                         if (ret) {
+>                                 iort_delete_fwnode(iort_node);
+>                                 acpi_free_fwnode_static(fwnode);
+>                                 return;
+>                         }
+>                 }
+> 
+>                 ...
+>         }
+> ...
+> }
+> 
+> NUMA node is got from ACPI:
+> 
+> static int  __init arm_smmu_v3_set_proximity(struct device *dev,
+>                                               struct acpi_iort_node *node)
+> {
+>         struct acpi_iort_smmu_v3 *smmu;
+> 
+>         smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
+>         if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
+>                 int dev_node = acpi_map_pxm_to_node(smmu->pxm);
+> 
+>                 ...
+> 
+>                 set_dev_node(dev, dev_node);
+>                 ...
+>         }
 >         return 0;
->  }
+> }
+> 
+> Barry
 
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+That's fine, but those are "real" devices, not platform devices, right?
+
+What platform device has this issue?  What one will show up this way
+with the new patch?
+
+thanks,
+
+greg k-h
