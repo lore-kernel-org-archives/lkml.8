@@ -2,145 +2,80 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D910CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B133F20772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6921D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="ObqB132W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZFvRTdGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgFBPJi (ORCPT
+        id S1726342AbgFBPNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37168 "EHLO
+        Tue, 2 Jun 2020 11:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBPJh (ORCPT
+        with ESMTP id S1726000AbgFBPNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:09:37 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC15DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 08:09:37 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id g7so1899202qvx.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 08:09:37 -0700 (PDT)
+        Tue, 2 Jun 2020 11:13:42 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30F2C08C5C0;
+        Tue,  2 Jun 2020 08:13:41 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id s1so13059920ljo.0;
+        Tue, 02 Jun 2020 08:13:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=j1hs0sbBhFcDQ7MR3XFZ4Ba55z2Q7IxLUQ5YveNBojk=;
-        b=ObqB132WsPXJQaYMlGIcR0AVfl9JSbInH4CY0PmjmgmBn/u/f07H1aWiAeXK+tqPwK
-         dsi2xIus1EfNIFc8TnKO12+MaLjeALY5mTkCc5jTuZWl2xxCvcIFOQtCaYTUUSSr5lFS
-         irXV1vv7pUCClzlnyIvArLtNRtxquZeHjdA6yuYkQ/sOqdiyKEqcLJv7MP6Q+Ru1DIxB
-         NDg/hPpNABJmZkiuJeiUcc3n/dq5qhmzBxCuETJkfQixY+1PkSml2NBXExJqUtaq0Q13
-         NnEL7udrGjSMXHjfO0aAX4GwThwsArSj4m0rRa161hcPO0kqhqJKMKUh51pZA1Idf6f9
-         Y+Gg==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=TpKFo6Tno/WdRNvEOQwM0VGAsoys2P8vC+dwPzRM56A=;
+        b=ZFvRTdGkpbqCB2NNPWG8s+haqZKRhepCEpLVgucSMIMzy00f+qKBxWHoJ8zwgh1AXR
+         fT5QKmsRoqMQgdyq20ckxEOEktHhjU4R/ld8R3C30Vo8PuP25300jlLcnJ9j4duL2Dfq
+         UvAZ461kxuc9j09vzjx/cFFX2Mj+DZbvBU02en0PLCjPPzKhL+YZnd8nrNvKfifUgM68
+         MgR60sC1FiZ9fh368g8piQfWkzZr8Qx1Y8VyXbvgjuO/gmPTzANZzd4bg/SXjG9cYJ6h
+         0CBLn9EpT0yyiegsoCFMvGdMNz/huQiwgTlF+MaKac0jzjK+0pEgPL6/aNruCyEiYLVj
+         CxnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=j1hs0sbBhFcDQ7MR3XFZ4Ba55z2Q7IxLUQ5YveNBojk=;
-        b=O9EjdwFm41D7KsMiU3D4RFNRe97+ne293cIxNjAqtOY7q6ttV9TLW0lsmRzGxN0AsP
-         /f3wvvuz+16DEpXxtwpOukJlbo3UdvX45AAS0J/h+b4/IvEFFj9jk9WRfGVuTaIFYzBU
-         sUiLpf3pe+w6iK+Pr0GEKgs6jFyTFxtBWUz8vw+5AugKPamFWY6y17QX8AHyN9ikQw+8
-         IsCfuFKn3Y7NubUJex7YtMdZkNijlA9YU9l9+DqZsVDLR9eDzcd205yOh96jhxFz51Ge
-         sdJSxEiOveNZCRREZU+MGJ5Xbuv7kTFU3ZKE+O9hutsccLUwyrWlSJt6/3bfZc/edyuu
-         brow==
-X-Gm-Message-State: AOAM530UG+yjgSuL0udlEttE1AVHKtYsGnA9u/a/6sgxrXOIP/xwsIA7
-        fptjpdJmkyKLpSy+zIBPDom/ag==
-X-Google-Smtp-Source: ABdhPJz40ktC4+yWqh4CbuxGehjGDMZQSaC+ZGAuKWO/SoimNA3jsxKP6JWqviN4fsFr2AA2mux8bw==
-X-Received: by 2002:a0c:9021:: with SMTP id o30mr23107357qvo.177.1591110576105;
-        Tue, 02 Jun 2020 08:09:36 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id i94sm2871202qtd.2.2020.06.02.08.09.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 08:09:34 -0700 (PDT)
-Message-ID: <21733d1ad3c2f79a5646b4f1c541dfabda0978be.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: s5p-mfc: set V4L2_BUF_FLAG_LAST flag on final
- buffer
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Andriy Gelman <andriy.gelman@gmail.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 02 Jun 2020 11:09:33 -0400
-In-Reply-To: <20200502194052.485-1-andriy.gelman@gmail.com>
-References: <20200502194052.485-1-andriy.gelman@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=TpKFo6Tno/WdRNvEOQwM0VGAsoys2P8vC+dwPzRM56A=;
+        b=f1Muon8cTrP6cxeTfk9TbpkHoyuJ5eFnQlJlgsEzLz2ByFMSpAh2cfppsJpHIKrL20
+         Ik2belyNeSdeupglbH+2D37KuTDLPob2oYqmPUcj2efY1/iaSPbh48nWKLzKBTNzN6TV
+         SIBlfC2oUsMlVfzSQ/If06lHtDhxFMuD6Udlm+teYP2vDUTPgV6cU94FTCE1FYCY6Ric
+         eHeGl3fjaMOp7PqfL7iCF1xbV6LBG7frIHQl7E0AZkdpOerN01iMLTig1RoYhelmSRXf
+         Id36jKH33VcU6AJI+r19rn3ycPKdWoIRr7g1aSDyOlKKXgMEhhyt9oWFx6//vlKHWjgy
+         2bEQ==
+X-Gm-Message-State: AOAM531g/cvjT7a616wpg/7AsJtklXLCTz+2F72dDqjNlOSxoHm06Vhz
+        q29IF4Jw040F9hDsSmY5+pnaerPjm5EcFC9bMzqPqZZd
+X-Google-Smtp-Source: ABdhPJxFro7pTs+FgseKXXmKN73i/ajBYDPexPrEHo0C8QfHAD4i9rMKVRZms/dCQXvB0yS99EjpWq1CKjjJasJpxJ0=
+X-Received: by 2002:a2e:998f:: with SMTP id w15mr6632062lji.463.1591110820115;
+ Tue, 02 Jun 2020 08:13:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ac2:4551:0:0:0:0:0 with HTTP; Tue, 2 Jun 2020 08:13:39 -0700 (PDT)
+From:   Jari Ruusu <jari.ruusu@gmail.com>
+Date:   Tue, 2 Jun 2020 18:13:39 +0300
+Message-ID: <CACMCwJKcV41VNRqSKa0ZXzOKHis7sUjWiHnm2ttaYJzHdqR6cw@mail.gmail.com>
+Subject: Announce loop-AES-v3.7q file/swap crypto package
+To:     linux-crypto@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andriy,
+loop-AES changes since previous release:
+- Worked around kernel interface changes on 5.7 kernels
 
-thanks for you patch.
+bzip2 compressed tarball is here:
 
-Le samedi 02 mai 2020 à 15:40 -0400, Andriy Gelman a écrit :
-> From: Andriy Gelman <andriy.gelman@gmail.com>
-> 
-> As per V4L2 api, the final buffer should set V4L2_BUF_FLAG_LAST flag.
-> 
-> Signed-off-by: Andriy Gelman <andriy.gelman@gmail.com>
-> ---
->  drivers/media/platform/s5p-mfc/s5p_mfc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-> index 5c2a23b953a4..b3d9b3a523fe 100644
-> --- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
-> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-> @@ -614,6 +614,7 @@ static void s5p_mfc_handle_stream_complete(struct s5p_mfc_ctx *ctx)
->  		list_del(&mb_entry->list);
->  		ctx->dst_queue_cnt--;
->  		vb2_set_plane_payload(&mb_entry->b->vb2_buf, 0, 0);
-> +		mb_entry->b->flags |= V4L2_BUF_FLAG_LAST;
->  		vb2_buffer_done(&mb_entry->b->vb2_buf, VB2_BUF_STATE_DONE);
+    http://loop-aes.sourceforge.net/loop-AES/loop-AES-v3.7q.tar.bz2
+    md5sum b9628468b35e92feee63eccfee8e4863
 
-The empty buffer is only there for backward compatibility. As the spec
-says, userspace should completely ignore this buffer. I bet it will
-still have the effect to set last_buffer_dequeued = true in vb2,
-unblocking poll() operations and allowing for the queue to unblock and
-return EPIPE on further DQBUF.
+    http://loop-aes.sourceforge.net/loop-AES/loop-AES-v3.7q.tar.bz2.sign
 
-Perhaps you should make sure the if both the src and dst queues are
-empty/done by the time cmd_stop is called it will still work. Other
-drivers seems to handle this, but this one does not seems to have a
-special case for that, which may hang userspace in a different way.
-
-What you should do to verify this patch is correct, and that your
-userpace does not rely on legacy path is that it should always be able
-to detect the end of the drain with a EPIPE on DQBUF. LAST_BUF is just
-an early signalling, but may not occur if there was nothing left to
-produce (except for MFC which maybe be crafting a buffer in all cases,
-but that's going a roundtrip through the HW, which is not clear will
-work if the dst queue was empty).
-
-As shared on IRC, you have sent these patch to FFMPEG:
-
-https://patchwork.ffmpeg.org/project/ffmpeg/patch/20200429212942.28797-2-andriy.gelman@gmail.com/
-
-This should have been clarified as supporting legacy drivers / older
-kernel with Samsung driver. Seems like a fair patch. And you added:
-
-https://patchwork.ffmpeg.org/project/ffmpeg/patch/20200429212942.28797-1-andriy.gelman@gmail.com/
-
-This one should maybe add the clarification that this is an
-optimization to skip an extra poll/dqbuf dance, but that end of
-draining will ultimately be catched by EPIPE on dqbuf for the described
-cases. Remains valid enhancement to ffmpeg imho.
-
->  	}
->  
-
+-- 
+Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
