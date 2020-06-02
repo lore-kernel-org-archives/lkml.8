@@ -2,146 +2,108 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCED2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCBB20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591106185;
-	bh=+tKnyzW2ZhO+eQ8P+OskrT46Moe5oxt5I+gtC8+08g4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kkL7etHGsLTjyH+X84zETcWCDQAsMvXkUcfcvCpuZYp1RkAPj9sF/whN6zokd3Yjr
-	 0W1cEiEwpVCruFenh2O/FgpKAMX8kBwSVawn+jjLgryfDX3k6Xe5CWNZRisqUXlQOA
-	 II8H0DwrENgdubj9BEWLda6cpKL2NMRu0KRYIVqE=
+	by mail.kernel.org (Postfix) with ESMTP id 835572074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFBN4Y (ORCPT
+        id S1726380AbgFBN7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:56:24 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41403 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgFBN4X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:56:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j10so3498747wrw.8;
-        Tue, 02 Jun 2020 06:56:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xEDuRNO0hoLyf2dsuZwG9i6NBcBwN5Cee5iDNQjzrxQ=;
-        b=sDLREcBGj2jSzWIFevjiFSJJcDTJO4UJHigdV6fIuVZzx8gxKVUdHElBp2NBqX0/vr
-         KSPApcOMVc3IsPnMAXJQN8H+0fPqRW1jxzVliYzq0V+DhXMPfXX5y6mkowcv8ZoHnAsz
-         uV/6QmvIHlFi66mcB3bC53zYv3pSqjUtl+Hk4S166Rd3NvpOypamqzz2WyFdQD54RuBl
-         IrwWM/RCI70IA9Y587C9fN+o90FR788sDsBO53QzLRNq/87JLh4VafslxMGpORIdERzV
-         BXlDftWjbe2WDsDtXlnnbczrF+tG3Q8JvVJXwU0P3s6PBSQOgI0t7mOfgBHU6rjn1NbK
-         Xyrw==
-X-Gm-Message-State: AOAM533ddfF1Ex7YgE8o+m1CAUMBkoj0oxeP1uANuUtiMmJLDwGclTUP
-        YZg+yt6xz3H+SqR86ZsALeo8s0wv
-X-Google-Smtp-Source: ABdhPJwZR7zeuOOwd/F1h13TwWHbHDPsMBVbMUzwHWSM9A39cAGwW8kkkg0ywrN5jAe9fY9AUT0R8Q==
-X-Received: by 2002:adf:cf06:: with SMTP id o6mr26086363wrj.163.1591106181464;
-        Tue, 02 Jun 2020 06:56:21 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g187sm3851690wma.17.2020.06.02.06.56.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 06:56:20 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 13:56:18 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        KVM <kvm@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Doron <arilou@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: linux-next: manual merge of the hyperv tree with the kvm tree
-Message-ID: <20200602135618.5iw6zd2jqzqqcwxm@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200602171802.560d07bc@canb.auug.org.au>
+        Tue, 2 Jun 2020 09:59:08 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5769 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725841AbgFBN7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 09:59:08 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A2F4C9FFFE30778C5DEF;
+        Tue,  2 Jun 2020 21:59:05 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 2 Jun 2020 21:58:58 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <catalin.marinas@arm.com>, <peterz@infradead.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
+        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [PATCH v4 0/6] arm64: tlb: add support for TTL feature
+Date:   Tue, 2 Jun 2020 21:58:30 +0800
+Message-ID: <20200602135836.1620-1-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602171802.560d07bc@canb.auug.org.au>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 05:18:02PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the hyperv tree got a conflict in:
-> 
->   arch/x86/include/asm/hyperv-tlfs.h
-> 
-> between commit:
-> 
->   22ad0026d097 ("x86/hyper-v: Add synthetic debugger definitions")
-> 
+In order to reduce the cost of TLB invalidation, ARMv8.4 provides
+the TTL field in TLBI instruction.  The TTL field indicates the
+level of page table walk holding the leaf entry for the address
+being invalidated.  This series provide support for this feature.
 
-Paolo
+When ARMv8.4-TTL is implemented, the operand for TLBIs looks like
+below:
 
-As far as I can tell you merged that series a few days ago. Do you plan
-to submit it to Linus in this merge window? How do you want to proceed
-to fix the conflict?
+* +----------+-------+----------------------+
+* |   ASID   |  TTL  |        BADDR         |
+* +----------+-------+----------------------+
+* |63      48|47   44|43                   0|
 
-Wei.
+See patches for details, Thanks.
 
-> from the kvm tree and commit:
-> 
->   c55a844f46f9 ("x86/hyperv: Split hyperv-tlfs.h into arch dependent and independent files")
-> 
-> from the hyperv tree.
-> 
-> I fixed it up (I removed the conficting bits from that file and added
-> the following patch) and can carry the fix as necessary. This is now fixed
-> as far as linux-next is concerned, but any non trivial conflicts should
-> be mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 2 Jun 2020 17:15:49 +1000
-> Subject: [PATCH] x86/hyperv: merge fix for hyperv-tlfs.h split
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  include/asm-generic/hyperv-tlfs.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index 262fae9526b1..e73a11850055 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -145,6 +145,9 @@ struct ms_hyperv_tsc_page {
->  #define HVCALL_SET_VP_REGISTERS			0x0051
->  #define HVCALL_POST_MESSAGE			0x005c
->  #define HVCALL_SIGNAL_EVENT			0x005d
-> +#define HVCALL_POST_DEBUG_DATA			0x0069
-> +#define HVCALL_RETRIEVE_DEBUG_DATA		0x006a
-> +#define HVCALL_RESET_DEBUG_SESSION		0x006b
->  #define HVCALL_RETARGET_INTERRUPT		0x007e
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
-> @@ -177,6 +180,7 @@ enum HV_GENERIC_SET_FORMAT {
->  #define HV_STATUS_INVALID_HYPERCALL_INPUT	3
->  #define HV_STATUS_INVALID_ALIGNMENT		4
->  #define HV_STATUS_INVALID_PARAMETER		5
-> +#define HV_STATUS_OPERATION_DENIED		8
->  #define HV_STATUS_INSUFFICIENT_MEMORY		11
->  #define HV_STATUS_INVALID_PORT_ID		17
->  #define HV_STATUS_INVALID_CONNECTION_ID		18
-> -- 
-> 2.26.2
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+--
+ChangeList:
+v4:
+implement flush_*_tlb_range only on arm64.
+
+v3:
+minor changes: reduce the indentation levels of __tlbi_level().
+
+v2:
+rebase series on Linux 5.7-rc1 and simplify the code implementation.
+
+v1:
+add support for TTL feature in arm64.
+
+
+Marc Zyngier (2):
+  arm64: Detect the ARMv8.4 TTL feature
+  arm64: Add level-hinted TLB invalidation helper
+
+Peter Zijlstra (Intel) (1):
+  tlb: mmu_gather: add tlb_flush_*_range APIs
+
+Zhenyu Ye (3):
+  arm64: Add tlbi_user_level TLB invalidation helper
+  arm64: tlb: Set the TTL field in flush_tlb_range
+  arm64: tlb: Set the TTL field in flush_*_tlb_range
+
+ arch/arm64/include/asm/cpucaps.h  |  3 +-
+ arch/arm64/include/asm/pgtable.h  | 10 ++++++
+ arch/arm64/include/asm/sysreg.h   |  1 +
+ arch/arm64/include/asm/tlb.h      | 29 +++++++++++++++-
+ arch/arm64/include/asm/tlbflush.h | 54 +++++++++++++++++++++++++-----
+ arch/arm64/kernel/cpufeature.c    | 11 +++++++
+ include/asm-generic/tlb.h         | 55 ++++++++++++++++++++++---------
+ 7 files changed, 138 insertions(+), 25 deletions(-)
+
+-- 
+2.19.1
 
 
