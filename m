@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C740C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264662072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315AE2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgFBTvo (ORCPT
+        id S1728525AbgFBTvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:51:44 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:28096 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728426AbgFBTvK (ORCPT
+        Tue, 2 Jun 2020 15:51:46 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29399 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728419AbgFBTvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jun 2020 15:51:10 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 2 Jun 2020 12:51:09 -0700
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 2 Jun 2020 12:51:06 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id DBE7D40BED;
-        Tue,  2 Jun 2020 12:51:09 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id CDC1940BF1;
+        Tue,  2 Jun 2020 12:51:06 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,330 +35,227 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v4 30/32] objtool: mcount: Remove wrapper double-include trick
-Date:   Tue, 2 Jun 2020 12:50:23 -0700
-Message-ID: <1e7f39d9067324844f99a9609c8e5fa2a7f2f582.1591125127.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v4 26/32] objtool: mcount: Pre-allocate new ELF sections
+Date:   Tue, 2 Jun 2020 12:50:19 -0700
+Message-ID: <fbb33b1a2293a44bd898ac919d5b25b3363163a0.1591125127.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1591125127.git.mhelsley@vmware.com>
 References: <cover.1591125127.git.mhelsley@vmware.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
  designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We no longer need to double-include the recordmcount.h wrapper
-All of the types and functions that rely on them have been converted
-to using objtool's ELF code. This moves the remaining function to
-recordmcount.c and changes the function name to something slightly
-more descriptive while dropping the wrapped naming.
+Rather than allocating the ELF sections after collecting the
+mcount locations and building the relocation entries, create
+the empty sections beforehand. This has the benefit of
+removing the memcpy() and just using the resulting libgelf
+buffers directly.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 122 ++++++++++++++++++++++++++++--
- tools/objtool/recordmcount.h | 142 -----------------------------------
- 2 files changed, 116 insertions(+), 148 deletions(-)
- delete mode 100644 tools/objtool/recordmcount.h
+ tools/objtool/recordmcount.h | 122 +++++++++++++++--------------------
+ 1 file changed, 52 insertions(+), 70 deletions(-)
 
-diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index 096507829b0c..6980c0a8bdc3 100644
---- a/tools/objtool/recordmcount.c
-+++ b/tools/objtool/recordmcount.c
-@@ -441,10 +441,120 @@ static void sift_rel_mcount(GElf_Addr **mlocpp,
- 	*mrelpp = is_rela ? (void *)mrelap : (void *)mrelp;
- }
+diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
+index 853c4006a34f..de31ff003032 100644
+--- a/tools/objtool/recordmcount.h
++++ b/tools/objtool/recordmcount.h
+@@ -17,7 +17,6 @@
+  * This conversion to macros was done by:
+  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
+  */
+-#undef append_func
+ #undef sift_rel_mcount
+ #undef do_func
+ #undef Elf_Shdr
+@@ -31,7 +30,6 @@
+ #undef _size
  
--/* 32 bit and 64 bit are very similar */
--#include "recordmcount.h"
--#define RECORD_MCOUNT_64
--#include "recordmcount.h"
-+/* Overall supervision for Elf32 ET_REL file. */
-+static int do_mcount(unsigned const reltype, size_t rela_size)
-+{
-+	/* Upper bound on space: assume all relevant relocs are for mcount. */
-+	unsigned       totrelsz;
-+
-+	void *mrel0;
-+	void *mrelp;
-+
-+	GElf_Addr *mloc0;
-+	GElf_Addr *mlocp;
-+	GElf_Sxword r_offset; /* Used in the added relocations */
-+
-+	unsigned int rel_entsize = 0;
-+
+ #ifdef RECORD_MCOUNT_64
+-# define append_func		append64
+ # define sift_rel_mcount	sift64_rel_mcount
+ # define do_func		do64
+ # define Elf_Rel		Elf64_Rel
+@@ -43,7 +41,6 @@
+ # define _w			w8
+ # define _size			8
+ #else
+-# define append_func		append32
+ # define sift_rel_mcount	sift32_rel_mcount
+ # define do_func		do32
+ # define Elf_Rel		Elf32_Rel
+@@ -62,60 +59,6 @@ static void fn_ELF_R_INFO(Elf_Rel *const rp, unsigned sym, unsigned type)
+ }
+ static void (*Elf_r_info)(Elf_Rel *const rp, unsigned sym, unsigned type) = fn_ELF_R_INFO;
+ 
+-/* Append the new  __mcount_loc and its relocations. */
+-static int append_func(uint_t const *const mloc0,
+-			uint_t const *const mlocp,
+-			Elf_Rel const *const mrel0,
+-			Elf_Rel const *const mrelp,
+-			unsigned int const loc_size,
+-			unsigned int const rel_entsize,
+-			unsigned int const symsec_sh_link)
+-{
+-	/* Begin constructing output file */
+-	struct section *sec;
+-	char const *mc_name = (sizeof(Elf_Rela) == rel_entsize)
+-		? ".rela__mcount_loc"
+-		:  ".rel__mcount_loc";
+-	unsigned const old_shnum = lf->ehdr.e_shnum;
+-
+-	/* add section: __mcount_loc */
+-	sec = elf_create_section(lf, mc_name + (sizeof(Elf_Rela) == rel_entsize) + strlen(".rel"), loc_size, mlocp - mloc0);
+-	if (!sec)
+-		return -1;
+-
+-	// created sec->sh.sh_size = (void *)mlocp - (void *)mloc0;
+-	sec->sh.sh_link = 0;/* TODO objtool uses this? */
+-	sec->sh.sh_info = 0;/* TODO objtool uses this? */
+-	sec->sh.sh_addralign = loc_size;
+-	// created sec->sh.sh_entsize = _size;
+-
+-	// assert sec->data->d_size == (void *)mlocp - (void *)mloc0
+-	memcpy(sec->data->d_buf, mloc0, sec->data->d_size);
+-	/* HACK link in Pre-assembled buffer ?
+-	sec->data->d_buf = mloc0;
+-	sec->data->d_size = sec->sh.sh_size;*/
+-
+-	/* add section .rel[a]__mcount_loc */
+-	sec = elf_create_section(lf, mc_name, rel_entsize, mrelp - mrel0);
+-	if (!sec)
+-		return -1;
+-	sec->sh.sh_type = (sizeof(Elf_Rela) == rel_entsize)
+-				? SHT_RELA
+-				: SHT_REL;
+-	sec->sh.sh_flags = 0;
+-	sec->sh.sh_link = find_section_by_name(lf, ".symtab")->idx;
+-	sec->sh.sh_info = old_shnum;
+-	sec->sh.sh_addralign = loc_size;
+-
+-	// assert sec->data->d_size == (void *)mrelp - (void *)mrel0
+-	memcpy(sec->data->d_buf, mrel0, sec->data->d_size);
+-	/* HACK link in Pre-assembled buffer ?
+-	sec->data->d_buf = mrel0;
+-	sec->data->d_size = sec->sh.sh_size;*/
+-
+-	return elf_write(lf);
+-}
+-
+ /*
+  * Look at the relocations in order to find the calls to mcount.
+  * Accumulate the section offsets that are found, and their relocation info,
+@@ -172,11 +115,13 @@ static int do_func(unsigned const reltype)
+ 	uint_t *      mlocp;
+ 
+ 	unsigned int rel_entsize = 0;
+-	unsigned symsec_sh_link = 0;
+ 
+-	struct section *sec;
 +	struct section *sec, *mlocs, *mrels;
 +	unsigned int const old_shnum = lf->ehdr.e_shnum;
-+
+ 
+-	int result = 0;
 +	int result = -1;
 +	char const *mc_name;
 +	bool is_rela;
+ 
+ 	if (find_section_by_name(lf, "__mcount_loc") != NULL)
+ 		return 0;
+@@ -184,6 +129,7 @@ static int do_func(unsigned const reltype)
+ 	totrelsz = tot_relsize(&rel_entsize);
+ 	if (totrelsz == 0)
+ 		return 0;
 +
-+	if (find_section_by_name(lf, "__mcount_loc") != NULL)
-+		return 0;
-+
-+	totrelsz = tot_relsize(&rel_entsize);
-+	if (totrelsz == 0)
-+		return 0;
-+
-+	mrel0 = malloc(totrelsz);
-+	mrelp = mrel0;
-+	if (!mrel0)
-+		return -1;
-+
-+	/* 2*sizeof(address) <= sizeof(Elf_Rel) */
-+	mloc0 = malloc(totrelsz>>1);
-+	mlocp = mloc0;
-+	if (!mloc0) {
-+		free(mrel0);
-+		return -1;
-+	}
-+
-+	is_rela = (rela_size == rel_entsize);
+ 	mrel0 = malloc(totrelsz);
+ 	mrelp = mrel0;
+ 	if (!mrel0)
+@@ -197,6 +143,32 @@ static int do_func(unsigned const reltype)
+ 		return -1;
+ 	}
+ 
++	is_rela = (sizeof(Elf_Rela) == rel_entsize);
 +	mc_name = is_rela
 +			? ".rela__mcount_loc"
 +			:  ".rel__mcount_loc";
 +
 +	/* add section: __mcount_loc */
-+	mlocs = elf_create_section(lf, mc_name + (is_rela ? 1 : 0) + strlen(".rel"), sizeof(*mloc0), 0);
++	mlocs = elf_create_section(lf, mc_name + (is_rela ? 1 : 0) + strlen(".rel"), _size, 0);
 +	if (!mlocs)
 +		goto out;
 +
 +	mlocs->sh.sh_link = 0;
 +	mlocs->sh.sh_info = 0;
-+	mlocs->sh.sh_addralign = 8;
-+	mlocs->data->d_buf = mloc0;
-+	mlocs->data->d_type = ELF_T_ADDR; /* elf_xlatetof() conversion */
++	mlocs->sh.sh_addralign = _size;
 +
 +	/* add section .rel[a]__mcount_loc */
 +	mrels = elf_create_section(lf, mc_name, rel_entsize, 0);
 +	if (!mrels)
 +		goto out;
-+	/* Like elf_create_rela_section() without the name bits */
-+	mrels->sh.sh_type = is_rela ? SHT_RELA : SHT_REL;
++	mrels->sh.sh_type = is_rela
++				? SHT_RELA
++				: SHT_REL;
 +	mrels->sh.sh_flags = 0;
 +	mrels->sh.sh_link = find_section_by_name(lf, ".symtab")->idx;
 +	mrels->sh.sh_info = old_shnum;
-+	mrels->sh.sh_addralign = 8;
-+	mrels->data->d_buf = mrel0;
-+	mrels->data->d_type = is_rela ? ELF_T_RELA : ELF_T_REL; /* elf_xlatetof() conversion */
++	mrels->sh.sh_addralign = _size;
 +
-+	list_for_each_entry(sec, &lf->sections, list) {
-+		char const *txtname;
-+
-+		txtname = has_rel_mcount(sec);
-+		if (txtname && is_mcounted_section_name(txtname)) {
-+			unsigned long recval = 0;
-+			unsigned int recsym;
-+
+ 	list_for_each_entry(sec, &lf->sections, list) {
+ 		char const *txtname;
+ 
+@@ -205,10 +177,8 @@ static int do_func(unsigned const reltype)
+ 			unsigned long recval = 0;
+ 			unsigned int recsym;
+ 
+-			symsec_sh_link = sec->sh.sh_link;
+-			result = find_section_sym_index(sec->sh.sh_info,
+-						txtname, &recval, &recsym);
+-			if (result)
 +			if (find_section_sym_index(sec->sh.sh_info,
 +						txtname, &recval, &recsym))
-+				goto out;
-+
-+			sift_rel_mcount(&mlocp, &r_offset, &mrelp, sec,
-+				recsym, recval, reltype, is_rela);
-+		} else if (txtname && (warn_on_notrace_sect || make_nop)) {
-+			/*
-+			 * This section is ignored by ftrace, but still
-+			 * has mcount calls. Convert them to nops now.
-+			 */
+ 				goto out;
+ 
+ 			mlocp = sift_rel_mcount(mlocp,
+@@ -219,15 +189,27 @@ static int do_func(unsigned const reltype)
+ 			 * This section is ignored by ftrace, but still
+ 			 * has mcount calls. Convert them to nops now.
+ 			 */
+-			if (nop_mcount(sec, txtname) < 0) {
+-				result = -1;
 +			if (nop_mcount(sec, txtname) < 0)
-+				goto out;
-+		}
-+	}
+ 				goto out;
+-			}
+ 		}
+ 	}
+-	if (!result && mloc0 != mlocp)
+-		result = append_func(mloc0, mlocp, mrel0, mrelp,
+-				     _size, rel_entsize, symsec_sh_link);
 +
 +	if (mloc0 != mlocp) {
-+		/* Update the section size and Elf_Data size */
++		/* Update the section sizes */
 +		mlocs->sh.sh_size = (void *)mlocp - (void *)mloc0;
 +		mlocs->len = mlocs->sh.sh_size;
 +		mlocs->data->d_size = mlocs->len;
++		mlocs->data->d_buf = mloc0;
 +
-+		mrels->sh.sh_size = mrelp - mrel0;
++		mrels->sh.sh_size = (void *)mrelp - (void *)mrel0;
 +		mrels->len = mrels->sh.sh_size;
 +		mrels->data->d_size = mrels->len;
++		mrels->data->d_buf = mrel0;
 +
 +		/* overwrite the ELF file */
 +		result = elf_write(lf);
 +	} else
 +		result = 0;
-+out:
-+	free(mrel0);
-+	free(mloc0);
-+	return result;
-+}
- 
- static int arm_is_fake_mcount(struct reloc const *rp)
- {
-@@ -574,7 +684,7 @@ static int do_file(char const *const fname)
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
- 		loc_size = 4;
--		rc = do32(reltype, sizeof(Elf32_Rela));
-+		rc = do_mcount(reltype, sizeof(Elf32_Rela));
- 		break;
- 	case ELFCLASS64: {
- 		if (lf->ehdr.e_ehsize != sizeof(Elf64_Ehdr)
-@@ -592,7 +702,7 @@ static int do_file(char const *const fname)
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
- 		loc_size = 8;
--		rc = do64(reltype, sizeof(Elf64_Rela));
-+		rc = do_mcount(reltype, sizeof(Elf64_Rela));
- 		break;
- 	}
- 	}  /* end switch */
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-deleted file mode 100644
-index 50104d52d9bf..000000000000
---- a/tools/objtool/recordmcount.h
-+++ /dev/null
-@@ -1,142 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * recordmcount.h
-- *
-- * This code was taken out of recordmcount.c written by
-- * Copyright 2009 John F. Reiser <jreiser@BitWagon.com>.  All rights reserved.
-- *
-- * The original code had the same algorithms for both 32bit
-- * and 64bit ELF files, but the code was duplicated to support
-- * the difference in structures that were used. This
-- * file creates a macro of everything that is different between
-- * the 64 and 32 bit code, such that by including this header
-- * twice we can create both sets of functions by including this
-- * header once with RECORD_MCOUNT_64 undefined, and again with
-- * it defined.
-- *
-- * This conversion to macros was done by:
-- * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
-- */
--#undef do_func
--
--#ifdef RECORD_MCOUNT_64
--# define do_func		do64
--#else
--# define do_func		do32
--#endif
--
--
--/* Overall supervision for Elf32 ET_REL file. */
--static int do_func(unsigned const reltype, size_t rela_size)
--{
--	/* Upper bound on space: assume all relevant relocs are for mcount. */
--	unsigned       totrelsz;
--
--	void *mrel0;
--	void *mrelp;
--
--	GElf_Addr *mloc0;
--	GElf_Addr *mlocp;
--	GElf_Sxword r_offset = 0;
--
--	unsigned int rel_entsize = 0;
--
--	struct section *sec, *mlocs, *mrels;
--	unsigned int const old_shnum = lf->ehdr.e_shnum;
--
--	int result = -1;
--	char const *mc_name;
--	bool is_rela;
--
--	if (find_section_by_name(lf, "__mcount_loc") != NULL)
--		return 0;
--
--	totrelsz = tot_relsize(&rel_entsize);
--	if (totrelsz == 0)
--		return 0;
--
--	mrel0 = malloc(totrelsz);
--	mrelp = mrel0;
--	if (!mrel0)
--		return -1;
--
--	/* 2*sizeof(address) <= sizeof(Elf_Rel) */
--	mloc0 = malloc(totrelsz>>1);
--	mlocp = mloc0;
--	if (!mloc0) {
--		free(mrel0);
--		return -1;
--	}
--
--	is_rela = (rela_size == rel_entsize);
--	mc_name = is_rela
--			? ".rela__mcount_loc"
--			:  ".rel__mcount_loc";
--
--	/* add section: __mcount_loc */
--	mlocs = elf_create_section(lf, mc_name + (is_rela ? 1 : 0) + strlen(".rel"), sizeof(*mloc0), 0);
--	if (!mlocs)
--		goto out;
--
--	mlocs->sh.sh_link = 0;
--	mlocs->sh.sh_info = 0;
--	mlocs->sh.sh_addralign = 8;
--	mlocs->data->d_buf = mloc0;
--	mlocs->data->d_type = ELF_T_ADDR; /* elf_xlatetof() conversion */
--
--	/* add section .rel[a]__mcount_loc */
--	mrels = elf_create_section(lf, mc_name, rel_entsize, 0);
--	if (!mrels)
--		goto out;
--	/* Like elf_create_rela_section() without the name bits */
--	mrels->sh.sh_type = is_rela ? SHT_RELA : SHT_REL;
--	mrels->sh.sh_flags = 0;
--	mrels->sh.sh_link = find_section_by_name(lf, ".symtab")->idx;
--	mrels->sh.sh_info = old_shnum;
--	mrels->sh.sh_addralign = 8;
--	mrels->data->d_buf = mrel0;
--	mrels->data->d_type = is_rela ? ELF_T_RELA : ELF_T_REL; /* elf_xlatetof() conversion */
--
--	list_for_each_entry(sec, &lf->sections, list) {
--		char const *txtname;
--
--		txtname = has_rel_mcount(sec);
--		if (txtname && is_mcounted_section_name(txtname)) {
--			unsigned long recval = 0;
--			unsigned int recsym;
--
--			if (find_section_sym_index(sec->sh.sh_info,
--						txtname, &recval, &recsym))
--				goto out;
--
--			sift_rel_mcount(&mlocp, &r_offset, &mrelp, sec,
--				recsym, recval, reltype, is_rela);
--		} else if (txtname && (warn_on_notrace_sect || make_nop)) {
--			/*
--			 * This section is ignored by ftrace, but still
--			 * has mcount calls. Convert them to nops now.
--			 */
--			if (nop_mcount(sec, txtname) < 0)
--				goto out;
--		}
--	}
--
--	if (mloc0 != mlocp) {
--		/* Update the section size and Elf_Data size */
--		mlocs->sh.sh_size = (void *)mlocp - (void *)mloc0;
--		mlocs->len = mlocs->sh.sh_size;
--		mlocs->data->d_size = mlocs->len;
--
--		mrels->sh.sh_size = mrelp - mrel0;
--		mrels->len = mrels->sh.sh_size;
--		mrels->data->d_size = mrels->len;
--
--		/* overwrite the ELF file */
--		result = elf_write(lf);
--	} else
--		result = 0;
--out:
--	free(mrel0);
--	free(mloc0);
--	return result;
--}
+ out:
+ 	free(mrel0);
+ 	free(mloc0);
 -- 
 2.20.1
 
