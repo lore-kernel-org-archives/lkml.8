@@ -7,44 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3214C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A07206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C286A206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 11:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgFBLlD (ORCPT
+        id S1726630AbgFBLlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:41:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32992 "EHLO
+        Tue, 2 Jun 2020 07:41:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgFBLlC (ORCPT
+        with ESMTP id S1725919AbgFBLlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 07:41:02 -0400
+        Tue, 2 Jun 2020 07:41:08 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11E1C061A0E;
-        Tue,  2 Jun 2020 04:41:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9299C061A0E;
+        Tue,  2 Jun 2020 04:41:07 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jg5Hr-000499-3z; Tue, 02 Jun 2020 13:40:55 +0200
+        id 1jg5Hr-00049A-J1; Tue, 02 Jun 2020 13:40:55 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8CB2B1C01BB;
-        Tue,  2 Jun 2020 13:40:54 +0200 (CEST)
-Date:   Tue, 02 Jun 2020 11:40:54 -0000
-From:   "tip-bot2 for Stephane Eranian" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D2431C0475;
+        Tue,  2 Jun 2020 13:40:55 +0200 (CEST)
+Date:   Tue, 02 Jun 2020 11:40:55 -0000
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/rapl: Fix RAPL config variable bug
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200528201614.250182-1-eranian@google.com>
-References: <20200528201614.250182-1-eranian@google.com>
+Subject: [tip: sched/core] irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too
+Cc:     kbuild test robot <lkp@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, x86 <x86@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159109805436.17951.2430178152420855778.tip-bot2@tip-bot2>
+Message-ID: <159109805502.17951.3309823805480161693.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,41 +55,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     16accae3d97f97d7f61c4ee5d0002bccdef59088
-Gitweb:        https://git.kernel.org/tip/16accae3d97f97d7f61c4ee5d0002bccdef59088
-Author:        Stephane Eranian <eranian@google.com>
-AuthorDate:    Thu, 28 May 2020 13:16:14 -07:00
+Commit-ID:     25de110d148666752dc0e0da7a0b69de31cd7098
+Gitweb:        https://git.kernel.org/tip/25de110d148666752dc0e0da7a0b69de31cd7098
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Tue, 02 Jun 2020 12:08:39 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 02 Jun 2020 11:52:56 +02:00
+CommitterDate: Tue, 02 Jun 2020 12:34:45 +02:00
 
-perf/x86/rapl: Fix RAPL config variable bug
+irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too
 
-This patch fixes a bug introduced by:
+Some SMP platforms don't have CONFIG_IRQ_WORK defined, resulting in a link
+error at build time.
 
-  fd3ae1e1587d6 ("perf/x86/rapl: Move RAPL support to common x86 code")
+Define a stub and clean up the prototype definitions.
 
-The Kconfig variable name was wrong. It was missing the CONFIG_ prefix.
-
-Signed-off-by: Stephane Eranian <eraniangoogle.com>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Kim Phillips <kim.phillips@amd.com>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200528201614.250182-1-eranian@google.com
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/irq_work.h | 2 ++
+ kernel/smp.c             | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-index 12c42eb..9933c0e 100644
---- a/arch/x86/events/Makefile
-+++ b/arch/x86/events/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y					+= core.o probe.o
--obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
-+obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= rapl.o
- obj-y					+= amd/
- obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
+diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
+index f23a359..2735da5 100644
+--- a/include/linux/irq_work.h
++++ b/include/linux/irq_work.h
+@@ -58,9 +58,11 @@ void irq_work_sync(struct irq_work *work);
+ 
+ void irq_work_run(void);
+ bool irq_work_needs_cpu(void);
++void irq_work_single(void *arg);
+ #else
+ static inline bool irq_work_needs_cpu(void) { return false; }
+ static inline void irq_work_run(void) { }
++static inline void irq_work_single(void *arg) { }
+ #endif
+ 
+ #endif /* _LINUX_IRQ_WORK_H */
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 4dec04f..c80486a 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -194,8 +194,6 @@ void generic_smp_call_function_single_interrupt(void)
+ 	flush_smp_call_function_queue(true);
+ }
+ 
+-extern void irq_work_single(void *);
+-
+ /**
+  * flush_smp_call_function_queue - Flush pending smp-call-function callbacks
+  *
