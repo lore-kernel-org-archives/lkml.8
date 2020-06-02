@@ -2,167 +2,141 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B36C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C93B20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:22:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbtUWdUH"
+	by mail.kernel.org (Postfix) with ESMTP id D151E207D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 01:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFBBWW (ORCPT
+        id S1726666AbgFBBWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 21:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgFBBWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 21:22:22 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700B1C061A0E;
-        Mon,  1 Jun 2020 18:22:20 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id w15so5089713lfe.11;
-        Mon, 01 Jun 2020 18:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gTCLA4fS7iJOhl+Ggn935t2jp1dm3H6JOFPXN9B0GZM=;
-        b=BbtUWdUHFzYulXhLoOD83xJ2A1QcaLApa5z/emiUXPxUDIamNtJ1vO0WzEMnkc/rja
-         xBaT0ibZnlQ6jMLC+J9vmDF7/uhziW3Q8UNMML9+1W5bjMJEv7XTJ133scJEExCdGufw
-         VftclsfuELbpb7/Pm6EHwFwG8rL0N6/GydJ5WjwBg0qQLcK3UmSklwynKDbeEBiFQbIS
-         8LlJ449+cJffz53qWiSFCHpld0KoF5AzCDDUZfjO7bmnYQudDzUf49OnUHKnz3nC1I7p
-         VcSB4HPdTV9P4qID3n+QYV6aYL/U1chZwyHyL34oLYz+gSGOYFtSB2OMfcBi87oaTMfr
-         pNoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gTCLA4fS7iJOhl+Ggn935t2jp1dm3H6JOFPXN9B0GZM=;
-        b=U4lzdirqUStiIcsXmP9b+yHy81/PIo+FcD9XhlvwJC7TREJqyFcUJR0mHfbtdPqfaS
-         xY1NeTSOG6Sg3lEOQLJ2qyIFhI3o+2/9Mf3FAWd+kx5cx8n6PDo4JDqSbTGi1yQ6NqAN
-         RdANgIdFVpYdOcgi9RMYWwcFDfVyjNYLdGl6Mde4BW5pMBp/rHy43Hci90x91tonCgHf
-         9eY3lhPrnE6/iuk8kl2JTzto4VhSELX8F0VjIUau5UQp7cPNMz+HrZd0b/6kfvbKyhYN
-         pOwJSBCIl/HhHv2kiXxpz1xuqYC8x2VL7u2HXb+8WmRUmqgm/lWUQX+kGxlOKkR6rmVg
-         J8VQ==
-X-Gm-Message-State: AOAM530ExMjg6GxvjnfxZG5Jjrw41YcfnDiXAkUjtbUgp0yPUukrLxCK
-        hf+AtaiQILMHbnsT6QK5deCVcVCygMHBcT3f3dc=
-X-Google-Smtp-Source: ABdhPJwys0RWbrTiHu+ZdfmiMVQ55D1OmJgF4gAe1aU/NFCo7LujLE/8n9dcANOOP+dle4oss1iOzJ7LdrNeGY1hm5I=
-X-Received: by 2002:a19:6105:: with SMTP id v5mr10253806lfb.202.1591060938398;
- Mon, 01 Jun 2020 18:22:18 -0700 (PDT)
+        Mon, 1 Jun 2020 21:22:43 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5325 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725832AbgFBBWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 21:22:42 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4E8A139E2513CCB8B04F;
+        Tue,  2 Jun 2020 09:22:40 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.10) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
+ 09:22:33 +0800
+Subject: Re: Question: livepatch failed for new fork() task stack unreliable
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
+        <cj.chengjian@huawei.com>, <mingo@redhat.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>,
+        <mbenes@suse.cz>, <devel@etsukata.com>, <viro@zeniv.linux.org.uk>,
+        <esyr@redhat.com>
+References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
+ <20200529174433.wpkknhypx2bmjika@treble>
+ <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
+ <20200601180538.o5agg5trbdssqken@treble>
+From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Message-ID: <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
+Date:   Tue, 2 Jun 2020 09:22:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20200601174037.904070960@linuxfoundation.org> <20200601174039.942780034@linuxfoundation.org>
-In-Reply-To: <20200601174039.942780034@linuxfoundation.org>
-From:   Bo YU <tsu.yubo@gmail.com>
-Date:   Tue, 2 Jun 2020 09:20:43 +0800
-Message-ID: <CAKq8=3LkCVQb9Jt6LF2m3OPEjr6EP8CxNL2jXdn0zWAH_g9NPg@mail.gmail.com>
-Subject: Re: [PATCH 5.4 020/142] tipc: block BH before using dst_cache
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Xin Long <lucien.xin@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200601180538.o5agg5trbdssqken@treble>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.10]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 2:08 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> From: Eric Dumazet <edumazet@google.com>
->
-> [ Upstream commit 1378817486d6860f6a927f573491afe65287abf1 ]
->
-> dst_cache_get() documents it must be used with BH disabled.
->
-> sysbot reported :
 
-syzbot?
+在 2020/6/2 2:05, Josh Poimboeuf 写道:
+> On Sat, May 30, 2020 at 10:21:19AM +0800, Wangshaobo (bobo) wrote:
+>> 1) when a user mode task just fork start excuting ret_from_fork() till
+>> schedule_tail, unwind_next_frame found
+>>
+>> orc->sp_reg is ORC_REG_UNDEFINED but orc->end not equals zero, this time
+>> arch_stack_walk_reliable()
+>>
+>> terminates it's backtracing loop for unwind_done() return true. then 'if
+>> (!(task->flags & (PF_KTHREAD | PF_IDLE)))'
+>>
+>> in arch_stack_walk_reliable() true and return -EINVAL after.
+>>
+>> * The stack trace looks like that:
+>>
+>> ret_from_fork
+>>
+>>        -=> UNWIND_HINT_EMPTY
+>>
+>>        -=> schedule_tail             /* schedule out */
+>>
+>>        ...
+>>
+>>        -=> UNWIND_HINT_REGS      /*  UNDO */
+> Yes, makes sense.
+>
+>> 2) when using call_usermodehelper_exec_async() to create a user mode task,
+>> ret_from_fork() still not exec whereas
+>>
+>> the task has been scheduled in __schedule(), at this time, orc->sp_reg is
+>> ORC_REG_UNDEFINED but orc->end equals zero,
+>>
+>> unwind_error() return true and also terminates arch_stack_walk_reliable()'s
+>> backtracing loop, end up return from
+>>
+>> 'if (unwind_error())' branch.
+>>
+>> * The stack trace looks like that:
+>>
+>> -=> call_usermodehelper_exec
+>>
+>>                   -=> do_exec
+>>
+>>                             -=> search_binary_handler
+>>
+>>                                        -=> load_elf_binary
+>>
+>>                                                  -=> elf_map
+>>
+>>                                                           -=> vm_mmap_pgoff
+>>
+>> -=> down_write_killable
+>>
+>> -=> _cond_resched
+>>
+>>               -=> __schedule           /* scheduled to work */
+>>
+>> -=> ret_from_fork       /* UNDO */
+> I don't quite follow the stacktrace, but it sounds like the issue is the
+> same as the first one you originally reported:
 
+yes, true, same as the first one,  the only difference what i want to 
+say is the task has been scheduled but the first one is not.
+
+>> 1) The task was not actually scheduled to excute, at this time
+>> UNWIND_HINT_EMPTY in ret_from_fork() has not reset unwind_hint, it's
+>> sp_reg and end field remain default value and end up throwing an error
+>> in unwind_next_frame() when called by arch_stack_walk_reliable();
+> Or am I misunderstanding?
 >
-> BUG: using smp_processor_id() in preemptible [00000000] code: /21697
-> caller is dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
-> CPU: 0 PID: 21697 Comm:  Not tainted 5.7.0-rc6-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
->  debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
->  dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
->  tipc_udp_xmit.isra.0+0xb9/0xad0 net/tipc/udp_media.c:164
->  tipc_udp_send_msg+0x3e6/0x490 net/tipc/udp_media.c:244
->  tipc_bearer_xmit_skb+0x1de/0x3f0 net/tipc/bearer.c:526
->  tipc_enable_bearer+0xb2f/0xd60 net/tipc/bearer.c:331
->  __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
->  tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
->  genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
->  genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
->  genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
->  netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
->  genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
->  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
->  netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
->  netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
->  sock_sendmsg_nosec net/socket.c:652 [inline]
->  sock_sendmsg+0xcf/0x120 net/socket.c:672
->  ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
->  ___sys_sendmsg+0x100/0x170 net/socket.c:2416
->  __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x45ca29
->
-> Fixes: e9c1a793210f ("tipc: add dst_cache support for udp media")
-> Cc: Xin Long <lucien.xin@gmail.com>
-> Cc: Jon Maloy <jon.maloy@ericsson.com>
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Reported-by: syzbot <syzkaller@googlegroups.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  net/tipc/udp_media.c |    6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> --- a/net/tipc/udp_media.c
-> +++ b/net/tipc/udp_media.c
-> @@ -161,9 +161,11 @@ static int tipc_udp_xmit(struct net *net
->                          struct udp_bearer *ub, struct udp_media_addr *src,
->                          struct udp_media_addr *dst, struct dst_cache *cache)
->  {
-> -       struct dst_entry *ndst = dst_cache_get(cache);
-> +       struct dst_entry *ndst;
->         int ttl, err = 0;
->
-> +       local_bh_disable();
-> +       ndst = dst_cache_get(cache);
->         if (dst->proto == htons(ETH_P_IP)) {
->                 struct rtable *rt = (struct rtable *)ndst;
->
-> @@ -210,9 +212,11 @@ static int tipc_udp_xmit(struct net *net
->                                            src->port, dst->port, false);
->  #endif
->         }
-> +       local_bh_enable();
->         return err;
->
->  tx_error:
-> +       local_bh_enable();
->         kfree_skb(skb);
->         return err;
->  }
->
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller/20200601174039.942780034%40linuxfoundation.org.
+> And to reiterate, these are not "livepatch failures", right?  Livepatch
+> doesn't fail when stack_trace_save_tsk_reliable() returns an error.  It
+> recovers gracefully and tries again later.
+
+yes, you are right,  "livepatch failures" only indicates serveral retry 
+failures, we found if frequent fork() happend in current
+
+system, it is easier to cause retry but still always end up success.
+
+so i think this question is related to ORC unwinder, could i ask if you 
+have strategy or plan to avoid this problem ?
+
+thanks,
+
+Wang ShaoBo
+
+
