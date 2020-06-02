@@ -2,108 +2,124 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38517C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B790F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iCwkbeqx"
+	by mail.kernel.org (Postfix) with ESMTP id 063EE20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591126849;
+	bh=O8Y52rmvCor7/gioG1PySV36lRyVHgtIcDVZ3JNbgt8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=RNhPhCkNVFTHjEyVk0Zt16Py61nOQHAaSib/ZSKbfIqD46IwXvSBJNe96snZcv24S
+	 3FZq+KNVpS8C0ZntboK6Wvzrq0S3jrwh0GuHoXP1Ft+cNbU66aand/LO68PSazntV0
+	 y/OvuL1/R0ZjNKH3ZoVDRvEt42y7awFUmtLjkw3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgFBTko (ORCPT
+        id S1728306AbgFBTks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51076 "EHLO
+        Tue, 2 Jun 2020 15:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgFBTkn (ORCPT
+        with ESMTP id S1726922AbgFBTkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jun 2020 15:40:43 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41C1C08C5C1
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17866C08C5C0
         for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:40:42 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id n31so4803ooi.10
+Received: by mail-ot1-x344.google.com with SMTP id o7so7433509oti.9
         for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:40:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j41qRERVmEnkxgberq7H033Q0Z1/UAOYwaQZWgqzAJ4=;
-        b=iCwkbeqxlME3by8M0AWWiEa2NfnYmgUVW+2dhKbcgFfwD6fYkQHekNM9vC8F7e9C2Y
-         TlMvIBcp99ZJ/+DdztWI3TVhLNKROlrIKGuWIS5haWhblnHshEdJEeEqQqr4vQ3Yz8Nr
-         FpXUdBRB7Wbjme0y4/ok8n3J6WCbF31wgBPwOridjSntrocUVoyT2jWoW58+86b3Ntiy
-         UXXJfftBNVBqmmA0FJWh7lSY8wM6AbQpe+o5DfgPQSGlOSd/+fe/4dkM3QfrKOU63Scy
-         k44lZrrM2DOKXDBMhOdlcCqPM6TK1DdYcwb93d00pBnX6uKaWui/ZgUs4DxEZwXprs2z
-         L/qQ==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2I+4S8tbIx7DwMo7JNczQsK841BfxFTSjY0MHCxNYIU=;
+        b=RfILkcDdS5Dw4tjKJUDbUCzR3ll3NKNjJAcSgdGam226ZRMseGj5qe273EFQQvXA9f
+         KJi8xFz/CQ6R3Xll1dDTZpPe3A5Xl/nbUIB6FuftNNmc8eCPXJKV5AbZo1/gXBRabqu0
+         HGaaJmma/HW55BM8Cqxss1rUeAlL1vYBg2PT0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j41qRERVmEnkxgberq7H033Q0Z1/UAOYwaQZWgqzAJ4=;
-        b=EHlDfwSo+SaG+iteqOJ7Rjp6sGker+18kTDyC8aHlqfo2nbLk9gXuUMyIviofsnoS/
-         vacLx1ZF2XvsJfwSpKaz0sATnFj25K1fe5dh8n9ZE8mzIFZ6RJPHU5ux5IXwTiwAnwVD
-         8ytcP3kzYkYT+dK+AfWEt6gFEvEWT5g+qTZp0mRymaIRcJlgZ2g+7AJrOekkoc8EKKkm
-         GNqV3SSGzGwqGmHKu6Aftf9gSwIBNO7tPvxD+1RMB7+4nQFZ+iuNPbnMHC4E8SAALKPq
-         VVLNK6qnGBruuZVszyxriEGlmXYwToNOmoCFEKNykZJlVJf6aBmBD+8mQW5VOWcLj5D0
-         W/Ug==
-X-Gm-Message-State: AOAM531flYnAMzoUZs4j6B2+uQhpS2hmBAQTO9u8D/WbuOCUmvug2Zr/
-        zetmlK95dZfIoIZBetUtuNpODXER4KelQ49e+wQ4ig==
-X-Google-Smtp-Source: ABdhPJwl8Dv5pM/yCDtM36J8Y7/4B7NKAHZuFPlWnYchxfk/7+mvKVTRdGg8LnCdHNPQys50XsLIyHmztTMpaBCrEzo=
-X-Received: by 2002:a4a:94d1:: with SMTP id l17mr5960738ooi.88.1591126841669;
- Tue, 02 Jun 2020 12:40:41 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2I+4S8tbIx7DwMo7JNczQsK841BfxFTSjY0MHCxNYIU=;
+        b=ulfzTzFKdmfNdCLYsgL1NzyZv4dvUTlQXw6O+zfvMGBywKI54nfItdVdwHPbIqnye9
+         fxte8xFnAUvjmnayVcTHxtzdZLnzCgPMI8QGxwZ521PITDpbHuRuesWxLLlJzJ/+mG0L
+         FKyTUCg+/7rvUzkAuBwitIhvjwh2FJ+3t43ZJuFV9XNe95JsvYmyiT52+6qqE9ADDc+A
+         ytV0dfxhWdG1bvqi1Qv+kNLCzpliVEk6cv/unn8pZNDX2sjx89gpYOVtst3GxZ9Bc5OT
+         uRiUHTdD6BqXmPDlWv5HDdo/o/7bTkWCEseXh/EbBL5EcK/4WZWiqEm6/sao4kXRPOIO
+         C6pg==
+X-Gm-Message-State: AOAM533/tFEQJ23FZZO9QhZRBj0xWi87a3bd7km2WxClJNJfVMkxYH8k
+        2b2uz4pciWkCdYp9LpHpKNGe3FG7JFA=
+X-Google-Smtp-Source: ABdhPJyO+YiEkWCKUiWfbv50giAJAa8LV/HDs6CajK377rV7mJSLpwA75R+tRe8S/deTEbCX8vPnUA==
+X-Received: by 2002:a9d:4e5:: with SMTP id 92mr606889otm.146.1591126839965;
+        Tue, 02 Jun 2020 12:40:39 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c1sm850342otn.81.2020.06.02.12.40.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 12:40:39 -0700 (PDT)
+Subject: Re: [PATCH v3 0/6] Enable as many KUnit tests as possible
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Marco Elver <elver@google.com>,
+        David Gow <davidgow@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200511131350.29638-1-anders.roxell@linaro.org>
+ <CADYN=9LkA2h6dANREfPQq4iDvVEJX1wAdxjv31mpVBkaM_g0ZQ@mail.gmail.com>
+ <CAFd5g452oiRpMa3S=F9wFsb9SRKBYXJFuusge+6=zCEFX74kYQ@mail.gmail.com>
+ <76811e1b-c26f-53ac-5703-104aacd06666@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f6b5c1db-c0f6-5f8e-3afd-8a7075721ffb@linuxfoundation.org>
+Date:   Tue, 2 Jun 2020 13:40:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200602052533.15048-1-john.stultz@linaro.org> <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com>
-In-Reply-To: <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 2 Jun 2020 12:40:29 -0700
-Message-ID: <CALAqxLVA1ZQjwEdbX5KGbSyLnMBAzm9PoN_Ta_Z7rBf4w3GOvQ@mail.gmail.com>
-Subject: Re: [PATCH] wireless: ath10k: Return early in ath10k_qmi_event_server_exit()
- to avoid hard crash on reboot
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rakesh Pillai <pillair@qti.qualcomm.com>,
-        Govind Singh <govinds@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        ath10k <ath10k@lists.infradead.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <76811e1b-c26f-53ac-5703-104aacd06666@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 12:16 PM Brian Norris <briannorris@chromium.org> wrote:
->
-> + Sibi
->
-> On Mon, Jun 1, 2020 at 10:25 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > Ever since 5.7-rc1, if we call
-> > ath10k_qmi_remove_msa_permission(), the db845c hard crashes on
-> > reboot, resulting in the device getting stuck in the usb crash
-> > debug mode and not coming back up wihthout a hard power off.
-> >
-> > This hack avoids the issue by returning early in
-> > ath10k_qmi_event_server_exit().
-> >
-> > A better solution is very much desired!
->
-> Any chance you can bisect what caused this? There are a lot of
-> non-ath10k pieces involved in this stuff.
+On 5/28/20 1:13 PM, Shuah Khan wrote:
+> On 5/28/20 1:07 PM, Brendan Higgins wrote:
+>> On Wed, May 27, 2020 at 4:49 AM Anders Roxell 
+>> <anders.roxell@linaro.org> wrote:
+>>>
+>>> Hi all,
+>>>
+>>> Friendly ping: who can take this?
+>>
+>> Sorry, I just reviewed the last patch.
+>>
+>> Shuah, do you mind picking this up for 5.8?
+>>
+> 
+> Yup. Will do. I was watching this thread waiting for your
+> Ack. I will apply it once.
+> 
 
-Amit had spent some work on chasing it down to the in kernel qrtr-ns
-work, and reported it here:
-  https://lists.infradead.org/pipermail/ath10k/2020-April/014970.html
+Applied to linux-kselftest kunit branch for Linux 5.8-rc1
 
-But that discussion seemingly stalled out, so I came up with this hack
-to workaround it for us.
+thanks,
+-- Shuah
 
-thanks
--john
