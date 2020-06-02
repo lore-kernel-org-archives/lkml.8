@@ -2,125 +2,132 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE221C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2EF20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C806F20679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYsfrN7L"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uzsmwn7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgFBMkJ (ORCPT
+        id S1727113AbgFBMke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMkI (ORCPT
+        Tue, 2 Jun 2020 08:40:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49210 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBMkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:40:08 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E876C061A0E;
-        Tue,  2 Jun 2020 05:40:08 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n24so12610137ejd.0;
-        Tue, 02 Jun 2020 05:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pnkbE2uBubmbsQ93vSdhuAVLA29ePPmsNN07Qt9DHJ4=;
-        b=dYsfrN7LwYJdkBm0nZ1qPQHkUNeGceflDzI5C5NUoLIiZvmiZpWFc/mmvz6qM3A546
-         /5G/DdfN6Fg7pJ/64PoBkDDacuYGmPLFyoa4RbNvSIoU7w8rWqRVJ3lxBvGe+S/i0UYD
-         6iliy99FeqPecrqyPhTWDxi57Bh0r7g21U11O5jYSVleisF4GZ0k9xl02xK5uf+FAIuO
-         +UH2SEnaIXNdaGfuINUDDJ2CSi8JhQnS5Um2aqFgmbbPy5RE1fxA+70wAVhFoo7t0KfN
-         saJOvarvOlt/HnlsrlRRlvB9tcD9bYWuRv3vYg08ILqVox2Iyxml5oYoM8QCFsvyPI1G
-         8ZhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pnkbE2uBubmbsQ93vSdhuAVLA29ePPmsNN07Qt9DHJ4=;
-        b=djjKYeVuLKGy2NfqlTMUfx6EcQ8xqFEFqxLIYLrKgXrNiDiEaBI4GYbvgBZ1Vbw/74
-         GO0ntF7f8ypY9va3efRksgFC+phmvZCxG6JqmgrFFrTtjPYeiTnf7zjhnzuVQ/LXtKTv
-         U7Fc4MbJd4bTqanUijFp+Zj/mFp3kYGw+MGpGMZ+5mthqquXf5T2X6aI9X1DMO1Ve6wS
-         cKH4hR/SH2iCtkflYZD7zecONYeT9L0LMY6pUpnmOtg/0QIpJyTryY/aqJ70YFdRklIZ
-         46QGVV8kzTCPDuBd0m6XKc6uFYysPF6MTBD9Y8BznzugNliNIUTJfKXMAljJRiboGSRm
-         mosA==
-X-Gm-Message-State: AOAM530crT94CJEbL5OK5SKzvOgjqXrV+88T/Q7oaasVpe93SMgyGpYp
-        e0Mjl/h/drF1nGIwDhzX5g4=
-X-Google-Smtp-Source: ABdhPJz4LZjAT+sYrMfbdPxp8PF2QaCCD5/7pLVxD/qNvvvB/GiZeB2y1VMgWBQYjIBc3hOGpR7vVQ==
-X-Received: by 2002:a17:906:4d04:: with SMTP id r4mr22460219eju.317.1591101607207;
-        Tue, 02 Jun 2020 05:40:07 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id cb6sm620637edb.18.2020.06.02.05.40.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:40:05 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 14:40:04 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Peter Vasil <peter.vasil@gmail.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        nightwolf@relghuar.net
-Subject: Re: [PATCH v2] pwm: sun4i: direct clock output support for Allwinner
- A64
-Message-ID: <20200602124004.GB3360525@ulmo>
-References: <20200428164150.366966-1-peter.vasil@gmail.com>
+        Tue, 2 Jun 2020 08:40:33 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052CcSIv001774;
+        Tue, 2 Jun 2020 12:39:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=+hHvUJaPYzsi+fcWNIuGDxfwGDP2NYDK2A8UukYwLsg=;
+ b=uzsmwn7YqvyQ9EzQ2iEowprkxDu+h0QW+mTPgk/n+d/ws9CfK8jJe+OY/4p6ntObBilj
+ Kv7SKNlgcxGB8BeOHAZd2jNNlIqiMWeq7PcQmXHQF2g8q2aeNA5c4dTwRuZVp4C/jPEd
+ X1cyqsLoNmwDPfRnKVBIteRPu48AmNrF85QWtYyUXn7yrtPXMy5CnonvcdgjUcTv/TC/
+ 2R4LVXu55RXdqwP19B4SBQlT3S36d12TbEkA7ciWxs38ebbE2NiXIWKwYbVJyztFsrgB
+ Qs2gdYJdTsALUuy+0NSoRBmnd8Gsn+QhsBfaVTn8Q407dniu+dRSdbGpQkMUbyTEFKr+ 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31dkruguax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 12:39:43 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052CcLPP008707;
+        Tue, 2 Jun 2020 12:39:42 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31dju1bseu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 12:39:42 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052Cdflg021562;
+        Tue, 2 Jun 2020 12:39:41 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 05:39:40 -0700
+Date:   Tue, 2 Jun 2020 15:39:30 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        devel@driverdev.osuosl.org, alsa-devel@alsa-project.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
+Subject: Re: [RESEND PATCH v1 4/6] staging: greybus: audio: Resolve
+ compilation error in topology parser
+Message-ID: <20200602123930.GG30374@kadam>
+References: <cover.1591040859.git.vaibhav.sr@gmail.com>
+ <6131fec4cf9e18dbf70fa7f992de9d588299ee18.1591040859.git.vaibhav.sr@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428164150.366966-1-peter.vasil@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <6131fec4cf9e18dbf70fa7f992de9d588299ee18.1591040859.git.vaibhav.sr@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---+pHx0qQiF2pBVqBT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 28, 2020 at 06:41:50PM +0200, Peter Vasil wrote:
-> Allwinner A64 is capable of a direct clock output on PWM (see A64
-> User Manual chapter 3.10). Add support for this in the sun4i PWM
-> driver.
->=20
-> Signed-off-by: Peter Vasil <peter.vasil@gmail.com>
+On Tue, Jun 02, 2020 at 10:51:13AM +0530, Vaibhav Agarwal wrote:
+> Fix compilation errors for GB Audio topology parser code with recent
+> kernel versions.
+> 
+> Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
 > ---
->  drivers/pwm/pwm-sun4i.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/staging/greybus/audio_topology.c | 130 +++++++++++------------
+>  1 file changed, 61 insertions(+), 69 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/audio_topology.c b/drivers/staging/greybus/audio_topology.c
+> index 4ac30accf226..7d5e87341a5c 100644
+> --- a/drivers/staging/greybus/audio_topology.c
+> +++ b/drivers/staging/greybus/audio_topology.c
+> @@ -5,8 +5,8 @@
+>   * Copyright 2015-2016 Linaro Ltd.
+>   */
+>  
+> +#include <linux/greybus.h>
+>  #include "audio_codec.h"
+> -#include "greybus_protocols.h"
+>  
+>  #define GBAUDIO_INVALID_ID	0xFF
+>  
+> @@ -165,15 +165,15 @@ static int gbcodec_mixer_ctl_info(struct snd_kcontrol *kcontrol,
+>  	struct gbaudio_ctl_pvt *data;
+>  	struct gb_audio_ctl_elem_info *info;
+>  	struct gbaudio_module_info *module;
+> -	struct snd_soc_codec *codec = snd_kcontrol_chip(kcontrol);
+> -	struct gbaudio_codec_info *gbcodec = snd_soc_codec_get_drvdata(codec);
+> +	struct snd_soc_component *comp = snd_soc_kcontrol_component(kcontrol);
+> +	struct gbaudio_codec_info *gb = snd_soc_component_get_drvdata(comp);
 
-Applied, thanks.
+Please rename "gbcodec" in a different patch.  It's not related to
+fixing the compile.
 
-Thierry
+Otherwise it seems okay.
 
---+pHx0qQiF2pBVqBT
-Content-Type: application/pgp-signature; name="signature.asc"
+regards,
+dan carpenter
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7WSKQACgkQ3SOs138+
-s6EaEhAAm/NQGeJ/IOWtqrbF6KZ1hxhFv6kLldfbKchk0A0Rhnebp1FqHYMkQBwu
-/KzAQl8/ZLrQMM3oXqYeKEWW+sSowB/KyICk7Ynx/RRJjAQiBsdOjfANNvONeF56
-4VOWkiC12fHm7l+vOFWtQttg8ShAIoKQQM/XQ+Gj259BfdAeSs+Gv+7FL9ue8pTI
-n6iM9g68mr88CP2XkWMPsMhaSAE21o7UEgMI6y4BpHXETnb2bmbaIHPoWJB2jx/E
-rLpCN6iQTkxrgtV/mU8sXggejhRDqTWdq9aueNt3dEDj4o2eAayIJy4Rba4zbyb/
-l1C+6qiuT9MQglKbmY4of4FXWt339nfgtgXJL6aHRJob1ROu/OH0hVmW/jDfJV64
-C73+XaNUyfNUqgNc2Q+5B/xNCuRa7cENLhA8j3vu+gKFIlSMHVpD35ISBr/DSQwR
-qEBPZ2ZDW6TmqUxr2ZLuirW3SXV6jVngsMJhDqAFSWEaLc49MjIi3LG9ItEQdj6h
-h2OTJPS+IE3JSTKkX90e9BA/QEsi+f/SP3sQBpxetXYn19eUliLXMzIKv0V/rWUc
-L85/oyvgT1n8PVbc7O0hMEgqoRxwth9R/EOtozadIlceBw9zdpRy3lp+aO4DL8NR
-5mOiC5GtWuBmP2/l8/edwhneBVDCQQP2AYVZ6vm29XVX5Glklvs=
-=FM1x
------END PGP SIGNATURE-----
-
---+pHx0qQiF2pBVqBT--
