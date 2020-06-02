@@ -2,135 +2,213 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07659C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C0220679
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBFC20679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lJkZ+qas"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rdRhYJal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgFBMmY (ORCPT
+        id S1726728AbgFBMpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:42:24 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57159 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgFBMmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:42:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591101743; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=5Vd/bdUNGvly/grt98Jx4x27H8iSAXBdUqjZmOyOWf0=; b=lJkZ+qasACzeUN5DUiJLgkZn6GQiL0C1lJvHB2XwveQGOs3hDF/ieKZH9SC8PaYyYg4uIM/7
- NklFtDNYRas2SRT0e9lA3xZdWpA27QuzxUgncW7XKni8m7Bbo8ARj3+Q2o3CfCX7zSmlIZEz
- 0O0n+zJEs9d3ejkH0fr0vfGDvnk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5ed64919082f42857f6b8f85 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 12:42:01
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DFA9DC43395; Tue,  2 Jun 2020 12:42:00 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 62AFCC433C6;
-        Tue,  2 Jun 2020 12:41:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 62AFCC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] f2fs: fix retry logic in f2fs_write_cache_pages()
-Date:   Tue,  2 Jun 2020 18:11:47 +0530
-Message-Id: <1591101707-18802-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 2 Jun 2020 08:45:24 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58714 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBMpX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:45:23 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 298752A4;
+        Tue,  2 Jun 2020 14:45:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591101919;
+        bh=8aW7VkrN21YrmNlY+yNp/tFnAc6lalvF/4E+/+IuRlg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rdRhYJal7EXr+Ppe0fo/sidO0oDJ4JKAp9ZVjl492cvVWXsMJ213QSsL+HB3XNVIP
+         /7Dx5eQOAPXo6+JFkyK2iL15EKeGgkjqgTOCaHUxvQYoF1VwV6DtAvgn2zg173+xro
+         de7BGo6GEwHXiFgNowTPz++TXhrCONeFf6AwLEw0=
+Date:   Tue, 2 Jun 2020 15:45:04 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     kieran.bingham@ideasonboard.com,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dafna Hirschfeld <dafna3@gmail.com>
+Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
+Message-ID: <20200602124504.GA12043@pendragon.ideasonboard.com>
+References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
+ <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
+ <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
+ <273a36d8-fc87-f9d4-0cf2-15beddf1661c@collabora.com>
+ <f927c8e3-73de-598d-130d-97b5380579e5@collabora.com>
+ <3b4c4447-677c-08b9-9366-95a012f8f018@ideasonboard.com>
+ <cdcc42bf-b0dc-41b7-5104-eff8aa42feb2@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cdcc42bf-b0dc-41b7-5104-eff8aa42feb2@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case a compressed file is getting overwritten, the current retry
-logic doesn't include the current page to be retried now as it sets
-the new start index as 0 and new end index as writeback_index - 1.
-This causes the corresponding cluster to be uncompressed and written
-as normal pages without compression. Fix this by allowing writeback to
-be retried for the current page as well (in case of compressed page
-getting retried due to index mismatch with cluster index). So that
-this cluster can be written compressed in case of overwrite.
+Hello,
 
-Also, align f2fs_write_cache_pages() according to the change -
-<64081362e8ff>("mm/page-writeback.c: fix range_cyclic writeback vs
-writepages deadlock").
+On Tue, Jun 02, 2020 at 08:31:26AM -0300, Helen Koike wrote:
+> On 6/2/20 8:24 AM, Kieran Bingham wrote:
+> > On 02/06/2020 11:55, Helen Koike wrote:
+> >> On 6/2/20 7:52 AM, Dafna Hirschfeld wrote:
+> >>> On 01.06.20 14:16, Kaaira Gupta wrote:
+> >>>> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
+> >>>>> Hi,
+> >>>>> Thanks for the patch
+> >>>>>
+> >>>>> I don't know how real devices handle ARGB formats,
+> >>>>> I wonder if it should be the part of the debayer.
+> >>>>
+> >>>> Hi! qcam tries to support BA24 as it is one of the formats that vimc
+> >>>> lists as its supported formats wih --list-formats. Shouldn't BA24 be
+> >>>> possible to capture with vimc?
+> >>>
+> >>> Hi,
+> >>> Just to clarify, when listing the supported formats of a video node, the node lists
+> >>> the formats that the video node as an independent media entity support.
+> >>> It does not mean that the 'camera' as a whole (that is, the media topology graph) supports
+> >>> all the formats that the video node lists. When interacting with a video node or
+> >>> a subdevice node, one interacts only with that specific entity.
+> >>> In the case of vimc, the RGB video node as an independent entity supports BA24 so the format
+> >>> appears in the list of the its supported formats. But since the Debayer does not
+> >>> support it, the format can not be generated by the entire vimc topology.
+> >>> This is not a bug.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
-v2: 
-- Align the code to <64081362e8ff>("mm/page-writeback.c: fix range_cyclic
-  writeback vs writepages deadlock") and adjust the retry logic also as per
-  Chao's suggestion.
+Is here a valid configuration for the vimc pipeline that produces BA24 ?
+I agree that not all pipeline configurations need to support every
+format, but we shouldn't report a format that can't be produced at all.
 
- fs/f2fs/data.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+This being said, and as discussed before, the de-bayering subdev should
+just produce MEDIA_BUS_FMT_RGB888_1X24, and the video node should then
+implement the RGB pixel formats. BA24 should likely be one of the
+supported formats (or maybe BX24 ?).
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 4af5fcd..31af29f 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2825,7 +2825,6 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 	pgoff_t index;
- 	pgoff_t end;		/* Inclusive */
- 	pgoff_t done_index;
--	int cycled;
- 	int range_whole = 0;
- 	xa_mark_t tag;
- 	int nwritten = 0;
-@@ -2843,17 +2842,12 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 	if (wbc->range_cyclic) {
- 		writeback_index = mapping->writeback_index; /* prev offset */
- 		index = writeback_index;
--		if (index == 0)
--			cycled = 1;
--		else
--			cycled = 0;
- 		end = -1;
- 	} else {
- 		index = wbc->range_start >> PAGE_SHIFT;
- 		end = wbc->range_end >> PAGE_SHIFT;
- 		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
- 			range_whole = 1;
--		cycled = 1; /* ignore range_cyclic tests */
- 	}
- 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
- 		tag = PAGECACHE_TAG_TOWRITE;
-@@ -3021,12 +3015,13 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 		}
- 	}
- #endif
--	if ((!cycled && !done) || retry) {
--		cycled = 1;
-+	if (retry) {
- 		index = 0;
--		end = writeback_index - 1;
-+		end = -1;
- 		goto retry;
- 	}
-+	if (wbc->range_cyclic && !done)
-+		done_index = 0;
- 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
- 		mapping->writeback_index = done_index;
- 
+> >> This is also my understanding.
+> >>
+> >> You should have an -EPIPE error when start streaming though, it
+> >> shouldn't fail silently.
+> > 
+> > Yes, we had -EPIPE, and that is what I think we were trying to resolve.
+> > 
+> > How would userspace be expected to detect what formats to use ? Should
+> > the available formats on the capture node depend on the current linking
+> > of the media graph?
+> 
+> This is a good question, I don't recall v4l2 API defining this.
+
+A recent extension to VIDIOC_ENUMFMT allows enumerating pixel formats
+for a given media bus code, I think that's the way forward.
+
+> It would be a bit hard to implement in Vimc, specially when we have configfs
+> for custom topology, since the capture would need to query all the pipeline.
+> But could be implemented.
+> 
+> > Otherwise, to know what formats are supported - userspace must first
+> > 'get a list of formats' then try to 'set' the formats to know what is
+> > possible?
+> 
+> At the moment yes.
+> 
+> > Or should (given VIMC is quite specialist anyway) userspace 'just know'
+> > what is capable all the same?
+> > 
+> > That's possibly fine, as we can simply remove support for the ARGB
+> > formats from the libcamera pipeline handler if it is never expected to
+> > be supported.
+> 
+> With the configfs feature, you could build a topology with sensor->capture,
+> and ARGB would be supported.
+> 
+> > But then as a further question - what formats will we expect VIMC to
+> > support? VIVID has a (very) wide range of formats.
+> > 
+> > Would we ever expect VIMC to be as configurable?
+> > Or is the scope limited to what we have today?
+> 
+> I know it is very limited atm, but I would like to increase the range,
+> I'm just with a limited bandwitdh to work on it.
+>
+> >>>>
+> >>>> If yes, which entity should support it, if not debayer? Should there be
+> >>>> a separate conversion entity, or should we keep the support in debayer
+> >>>> itself for efficiency issues?
+> >>>>
+> >>>>> On 28.05.20 20:57, Kaaira Gupta wrote:
+> >>>>>> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
+> >>>>>> not support it. Hence, add the support for Alpha (255).
+> >>>>>
+> >>>>> I would change the commit log to:
+> >>>>>
+> >>>>> Add support for V4L2_PIX_FMT_RGB24 format in the debayer
+> >>>>> and set the alpha channel to constant 255.
+> >>>>>
+> >>>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> >>>>>> ---
+> >>>>>>    .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
+> >>>>>>    1 file changed, 18 insertions(+), 9 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> >>>>>> index c3f6fef34f68..f34148717a40 100644
+> >>>>>> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
+> >>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> >>>>>> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
+> >>>>>>        MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> >>>>>>        MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> >>>>>>        MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+> >>>>>> +    MEDIA_BUS_FMT_ARGB8888_1X32
+> >>>>>>    };
+> >>>>>>    static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+> >>>>>> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
+> >>>>>>        unsigned int i, index;
+> >>>>>>        vpix = vimc_pix_map_by_code(vdeb->src_code);
+> >>>>>> -    index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> >>>>>> -    for (i = 0; i < 3; i++) {
+> >>>>>> -        switch (vpix->pixelformat) {
+> >>>>>> -        case V4L2_PIX_FMT_RGB24:
+> >>>>>> -            vdeb->src_frame[index + i] = rgb[i];
+> >>>>>> -            break;
+> >>>>>> -        case V4L2_PIX_FMT_BGR24:
+> >>>>>> -            vdeb->src_frame[index + i] = rgb[2 - i];
+> >>>>>> -            break;
+> >>>>>> +
+> >>>>>> +    if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
+> >>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
+> >>>>>> +        vdeb->src_frame[index] = 255;
+> >>>>>> +        for (i = 0; i < 3; i++)
+> >>>>>> +            vdeb->src_frame[index + i + 1] = rgb[i];
+> >>>>>> +    } else {
+> >>>>>> +        index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> >>>>>> +        for (i = 0; i < 3; i++) {
+> >>>>>> +            switch (vpix->pixelformat) {
+> >>>>>> +            case V4L2_PIX_FMT_RGB24:
+> >>>>>> +                vdeb->src_frame[index + i] = rgb[i];
+> >>>>>> +                break;
+> >>>>>> +            case V4L2_PIX_FMT_BGR24:
+> >>>>>> +                vdeb->src_frame[index + i] = rgb[2 - i];
+> >>>>>> +                break;
+> >>>>>> +            }
+> >>>>>>            }
+> >>>>>>        }
+> >>>>>>    }
+
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Regards,
 
+Laurent Pinchart
