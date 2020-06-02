@@ -2,158 +2,117 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D476C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A66D2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B64B206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 05:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FmesZJFa"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tykouUWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgFBFAP (ORCPT
+        id S1726243AbgFBFAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 01:00:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44315 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725787AbgFBFAP (ORCPT
+        Tue, 2 Jun 2020 01:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgFBFAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 01:00:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591074013;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=n9PkjNEQqqTWuaN+CVoilTQvSdVudQk6CXvQLcnvEcI=;
-        b=FmesZJFaNbz0NUKCO50Jr4s6+aV+wqcJeIlu+m3WLBPsdc8NL80xo63OVTb2StGzwDrA7V
-        Xd+cCiQ54hMbZWWjDJ8+ET9vKxp37/piRwgaUApumPN4dnU7LZpRap/QIx1bKJDWYpgzHu
-        WPlGymCQ3237+tF3QY/Xks9gwZf8028=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-bH8aMhohMw6LmvpSZYUiIQ-1; Tue, 02 Jun 2020 01:00:11 -0400
-X-MC-Unique: bH8aMhohMw6LmvpSZYUiIQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 2 Jun 2020 01:00:42 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87D52C061A0E;
+        Mon,  1 Jun 2020 22:00:42 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 734E5107ACF5;
-        Tue,  2 Jun 2020 05:00:09 +0000 (UTC)
-Received: from unused.redhat.com (ovpn-12-206.pek2.redhat.com [10.72.12.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABF867B918;
-        Tue,  2 Jun 2020 04:59:54 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, akpm@linux-foundation.org,
-        ebiederm@xmission.com, jbohac@suse.cz, jmorris@namei.org,
-        mjg59@google.com, dyoung@redhat.com, bhe@redhat.com
-Subject: [PATCH v2] kexec: Do not verify the signature without the lockdown or mandatory signature
-Date:   Tue,  2 Jun 2020 12:59:52 +0800
-Message-Id: <20200602045952.27487-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49bfxh5c8Pz9sSc;
+        Tue,  2 Jun 2020 15:00:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591074041;
+        bh=kLo8D05nwjnkeeDgzqHh8FHUQMdvTn0azD2tCjFkAxI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tykouUWwxeeeXmYSea5wtQPX4Zrdymi7sBY5ptulqrLH0IzO11ZUKx7Dxmj7buT7k
+         HjkpOLr8XKhbvbbTxvKoZHAW6PzHnX1L1RT0CdCqpxWMf+YR6SlHXrfqxn+vnWGlx0
+         1nqCWA2nK66vgW7B6kh1833hmOzbu9VNJos5TeEcrDGYe1rUyhtU8FQYClNofmonAT
+         tmdVSJqoUh7p8DJhxu0jtwljqaNk70lgbdhrcDM1PKkqvyBZBqHVR7pXGx01BaZfeb
+         6WifNbgMx9MsGKdQ/2RMNIchbMcBC9rj5djdl2gN7jcOJIkagrz/lmnwn9i/CrDEnp
+         glNxF4o+Ui8Ag==
+Date:   Tue, 2 Jun 2020 15:00:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rich Felker <dalias@libc.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: Re: linux-sh for-next reactivation
+Message-ID: <20200602150039.780a0ac0@canb.auug.org.au>
+In-Reply-To: <20200602031123.GA1079@brightrain.aerifal.cx>
+References: <20200602031123.GA1079@brightrain.aerifal.cx>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/gsE_2=m7QKGJH_vSBhfk+y.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signature verification is an important security feature, to protect
-system from being attacked with a kernel of unknown origin. Kexec
-rebooting is a way to replace the running kernel, hence need be
-secured carefully.
+--Sig_/gsE_2=m7QKGJH_vSBhfk+y.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In the current code of handling signature verification of kexec kernel,
-the logic is very twisted. It mixes signature verification, IMA signature
-appraising and kexec lockdown.
+Hi Rich,
 
-If there is no KEXEC_SIG_FORCE, kexec kernel image doesn't have one of
-signature, the supported crypto, and key, we don't think this is wrong,
-Unless kexec lockdown is executed. IMA is considered as another kind of
-signature appraising method.
+On Mon, 1 Jun 2020 23:11:39 -0400 Rich Felker <dalias@libc.org> wrote:
+>
+> Could you reactivate linux-next pull from my arch/sh for-next branch?
+> It's where it was before, at:
+>=20
+>     git://git.libc.org/linux-sh for-next
+>=20
+> and has newly accepted patches ready.
 
-If kexec kernel image has signature/crypto/key, it has to go through the
-signature verification and pass. Otherwise it's seen as verification
-failure, and won't be loaded.
+I already have an SH tree from
+git://git.sourceforge.jp/gitroot/uclinux-h8/linux.git#sh-next .  Should
+I do anything with that one?
 
-Seems kexec kernel image with an unqualified signature is even worse than
-those w/o signature at all, this sounds very unreasonable. E.g. If people
-get a unsigned kernel to load, or a kernel signed with expired key, which
-one is more dangerous?
+It currently contains:
 
-So, here, let's simplify the logic to improve code readability. If the
-KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
-is mandated. Otherwise, we lift the bar for any kernel image.
+$ git log --oneline origin/master..sh/sh-next=20
+a193018e5290 (sh/sh-next) sh: add missing EXPORT_SYMBOL() for __delay
+1d5fd6c33b04 sh: add missing DECLARE_EXPORT() for __ashiftrt_r4_xx
+d70f1e3d5dbd Merge remote-tracking branch 'origin/master' into sh-next
+baf58858e8b6 sh: prefer __section from compiler_attributes.h
+8619b5a9035a sh: Drop -Werror from kernel Makefile
+3a3a78124693 sh: kernel: disassemble: Mark expected switch fall-throughs
+fb8f77490f55 sh: kernel: hw_breakpoint: Fix missing break in switch stateme=
+nt
+cd10afbc932d sh: remove unneeded uapi asm-generic wrappers
+cbfc6edb6a4a sh: use __builtin_constant_p() directly instead of IS_IMMEDIAT=
+E()
 
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
-Changes since v1:
-[1] Modify the log level(suggested by Jiri Bohac)
+--=20
+Cheers,
+Stephen Rothwell
 
- kernel/kexec_file.c | 34 ++++++----------------------------
- 1 file changed, 6 insertions(+), 28 deletions(-)
+--Sig_/gsE_2=m7QKGJH_vSBhfk+y.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index faa74d5f6941..fae496958a68 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -181,34 +181,19 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- static int
- kimage_validate_signature(struct kimage *image)
- {
--	const char *reason;
- 	int ret;
- 
- 	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
- 					   image->kernel_buf_len);
--	switch (ret) {
--	case 0:
--		break;
-+	if (ret) {
- 
--		/* Certain verification errors are non-fatal if we're not
--		 * checking errors, provided we aren't mandating that there
--		 * must be a valid signature.
--		 */
--	case -ENODATA:
--		reason = "kexec of unsigned image";
--		goto decide;
--	case -ENOPKG:
--		reason = "kexec of image with unsupported crypto";
--		goto decide;
--	case -ENOKEY:
--		reason = "kexec of image with unavailable key";
--	decide:
- 		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
--			pr_notice("%s rejected\n", reason);
-+			pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
- 			return ret;
- 		}
- 
--		/* If IMA is guaranteed to appraise a signature on the kexec
-+		/*
-+		 * If IMA is guaranteed to appraise a signature on the kexec
- 		 * image, permit it even if the kernel is otherwise locked
- 		 * down.
- 		 */
-@@ -216,17 +201,10 @@ kimage_validate_signature(struct kimage *image)
- 		    security_locked_down(LOCKDOWN_KEXEC))
- 			return -EPERM;
- 
--		return 0;
--
--		/* All other errors are fatal, including nomem, unparseable
--		 * signatures and signature check failures - even if signatures
--		 * aren't required.
--		 */
--	default:
--		pr_notice("kernel signature verification failed (%d).\n", ret);
-+		pr_debug("kernel signature verification failed (%d).\n", ret);
- 	}
- 
--	return ret;
-+	return 0;
- }
- #endif
- 
--- 
-2.17.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7V3PcACgkQAVBC80lX
+0GyoGAf+PUHFAeyT0a8axcC/6t3R6JTTGr4Dx8bRfuVNwMviPCLt9STH6rNfTuCc
+12si3wDrMOxdGC6PQ9CTkiHHYd6uGkRrepV859eZiXhr9da6iBfBtazjDgrbA73L
+bPuYDvjbj4VppSTh7gBn2XBV0yTRkpdH4b4CBDe5CN1bLvDnmrwVen6gtPnZHJ+V
+2ho2argum7J/j5XkvpQaZIpBXtfNwoQRpbJugfUtuUu3m4zmV9vJNFs/47AUJXEF
+gVcl6YqhbKORbrEuAk7qS1TMndbCzJhEitnDFYHmyDaW6gWTuB+36bBFHqcpnStD
+alFkOAFx1Ae2VkFfn3e+ImoL3vr8mQ==
+=btR0
+-----END PGP SIGNATURE-----
+
+--Sig_/gsE_2=m7QKGJH_vSBhfk+y.--
