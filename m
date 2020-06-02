@@ -2,105 +2,284 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7267E205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E5320663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DCo5Vlfy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gBXOsgmf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgFBMPQ (ORCPT
+        id S1728066AbgFBMPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:15:16 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:48484 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgFBMPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:15:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591100115; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=6aoCLmbhav5CL/lS7P/VV6KjhJoQcYui0Q86IrjJk7c=; b=DCo5VlfyVsI9YhaieDrLs4XyonquAIrbNMrq9HJxZa8xS0jH8Ia/5TOtyffHi1h4v01iuaFB
- 73UpaLRmFQPzxwzpNZwkqZOkC24linF6C85HAOObcino1sSjyF8P7boxGQDWyQa33qf5qjsI
- RptEGgmpXfXX30w5SSqW0q7hxjk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5ed642cd76fccbb4c8a4c15b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 12:15:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 65AC9C433CA; Tue,  2 Jun 2020 12:15:08 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBDBDC433C9;
-        Tue,  2 Jun 2020 12:15:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBDBDC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Subject: Re: linux-next: build failure after merge of the mmc tree
-References: <20200602134402.24c19488@canb.auug.org.au>
-Date:   Tue, 02 Jun 2020 15:15:03 +0300
-In-Reply-To: <20200602134402.24c19488@canb.auug.org.au> (Stephen Rothwell's
-        message of "Tue, 2 Jun 2020 13:44:02 +1000")
-Message-ID: <87a71lll4o.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 2 Jun 2020 08:15:33 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46956 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgFBMPd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:15:33 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052C8YZ6140455;
+        Tue, 2 Jun 2020 12:14:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=NBE5+I4CqSHnayNrwmdJkxTE42E3YIjg8dJCdAw1TJU=;
+ b=gBXOsgmf8FV/AzhHnNbmOfepIOv0bn23ch5lZ5gXg2RoRNBZ3i9IMHxyDXG3NfSj7lmE
+ OeT66XV6gaNNzQRYJRV/W/ZXc5UPAjjbTYk0oS8Zr0ruHRfM3E0Oz+ErB9n+2lEBjGmP
+ WvV0M/x/exOU5ccpNbFMyzfBSWZm+Uqw7oSlOR4qQMz0yg4ZFvEuO78meDkJMApLcmei
+ NJqc8sqdtyw4scElos6VsVNYSPQAt3aiJAP1mzQqFn1liAoh2rCw8aBMvGRzQwMSLGJL
+ qayqxwY22iPO3Enxg4xZdNAZMIjFwE28OLdIEc1dc98RxhtSF6daaAi0LymCV5nDiX/e ew== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31bfem3n7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 12:14:37 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052CDwcT120702;
+        Tue, 2 Jun 2020 12:14:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31dju1as04-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 12:14:36 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052CERfW006908;
+        Tue, 2 Jun 2020 12:14:32 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 05:14:26 -0700
+Date:   Tue, 2 Jun 2020 15:14:17 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        devel@driverdev.osuosl.org, alsa-devel@alsa-project.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
+Subject: Re: [RESEND PATCH v1 2/6] staging: greybus: audio: Maintain jack
+ list within GB Audio module
+Message-ID: <20200602121417.GE30374@kadam>
+References: <cover.1591040859.git.vaibhav.sr@gmail.com>
+ <ccb39352a30ab39df1534efafc9415aa89b156fa.1591040859.git.vaibhav.sr@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ccb39352a30ab39df1534efafc9415aa89b156fa.1591040859.git.vaibhav.sr@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+On Tue, Jun 02, 2020 at 10:51:11AM +0530, Vaibhav Agarwal wrote:
+> As per the current implementation for GB codec driver, a jack list is
+> maintained for each module. And it expects the list to be populated by
+> the snd_soc_jack structure which would require modifications in
+> mainstream code.
+> 
+> However, this is not a necessary requirement and the list can be easily
+> maintained within gbaudio_module_info as well. This patch provides the
+> relevant changes for the same.
+> 
+> Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
+> ---
+>  drivers/staging/greybus/audio_codec.c  | 76 ++++++++++++++------------
+>  drivers/staging/greybus/audio_codec.h  | 10 +++-
+>  drivers/staging/greybus/audio_module.c | 20 ++++---
+>  3 files changed, 60 insertions(+), 46 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
+> index ebf8484f0ae7..a2ee587e5a79 100644
+> --- a/drivers/staging/greybus/audio_codec.c
+> +++ b/drivers/staging/greybus/audio_codec.c
+> @@ -712,7 +712,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  			     struct snd_soc_card *card)
+>  {
+>  	int ret;
+> -
+> +	struct gbaudio_jack *gba_jack, *n;
+>  	struct snd_soc_jack *jack;
 
-> Hi all,
->
-> After merging the mmc tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
->
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c: In function
-> 'brcmf_sdiod_probe':
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7:
-> error: 'SDIO_DEVICE_ID_CYPRESS_4373' undeclared (first use in this
-> function); did you mean 'SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373'?
->   915 |  case SDIO_DEVICE_ID_CYPRESS_4373:
->       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->       |       SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7: note: each undeclared identifier is reported only once for each function it appears in
->
-> Caused by commit
->
->   1eb911258805 ("mmc: sdio: Fix Cypress SDIO IDs macros in common include file")
->
-> interacting with commit
->
->   2a7621ded321 ("brcmfmac: set F2 blocksize for 4373")
->
-> from the net-next tree.
->
-> I have applied the following merge fix patch.
+Because we got rid of the jack pointer then we can re-use the name here.
 
-Looks good to me, thanks. Ulf, I guess you will notify Linus about the
-conflict in your pull request?
+	struct gbaudio_jack *jack, *n;
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+We still don't want the "struct snd_soc_jack *jack;" pointer.
+
+>  	struct snd_soc_jack_pin *headset, *button;
+>  
+> @@ -728,7 +728,8 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  
+>  	headset->pin = module->jack_name;
+>  	headset->mask = module->jack_mask;
+> -	jack = &module->headset_jack;
+> +	gba_jack = &module->headset;
+> +	jack = &gba_jack->jack;
+
+Use module->headset.jack directly.
+
+>  
+>  	ret = snd_soc_card_jack_new(card, module->jack_name, module->jack_mask,
+>  				    jack, headset, 1);
+> @@ -737,6 +738,9 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  		return ret;
+>  	}
+>  
+> +	/* Add to module's jack list */
+> +	list_add(&gba_jack->list, &module->jack_list);
+
+
+Here as well.
+
+> +
+>  	if (!module->button_mask)
+>  		return 0;
+>  
+> @@ -745,20 +749,24 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  	button = devm_kzalloc(module->dev, sizeof(*headset), GFP_KERNEL);
+>  	if (!button) {
+>  		ret = -ENOMEM;
+> -		goto free_headset;
+> +		goto free_jack;
+
+Let's call the label "free_jacks" (plural).
+
+>  	}
+>  
+>  	button->pin = module->button_name;
+>  	button->mask = module->button_mask;
+> -	jack = &module->button_jack;
+> +	gba_jack = &module->button;
+> +	jack = &gba_jack->jack;
+>  
+>  	ret = snd_soc_card_jack_new(card, module->button_name,
+>  				    module->button_mask, jack, button, 1);
+>  	if (ret) {
+>  		dev_err(module->dev, "Failed to create button jack\n");
+> -		goto free_headset;
+> +		goto free_jack;
+>  	}
+>  
+> +	/* Add to module's jack list */
+> +	list_add(&gba_jack->list, &module->jack_list);
+> +
+>  	/*
+>  	 * Currently, max 4 buttons are supported with following key mapping
+>  	 * BTN_0 = KEY_MEDIA
+> @@ -768,58 +776,55 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  	 */
+>  
+>  	if (module->button_mask & SND_JACK_BTN_0) {
+> -		ret = snd_jack_set_key(module->button_jack.jack, SND_JACK_BTN_0,
+> +		ret = snd_jack_set_key(jack->jack, SND_JACK_BTN_0,
+>  				       KEY_MEDIA);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_0\n");
+> -			goto free_button;
+> +			goto free_jack;
+>  		}
+>  	}
+>  
+>  	if (module->button_mask & SND_JACK_BTN_1) {
+> -		ret = snd_jack_set_key(module->button_jack.jack, SND_JACK_BTN_1,
+> +		ret = snd_jack_set_key(jack->jack, SND_JACK_BTN_1,
+>  				       KEY_VOICECOMMAND);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_1\n");
+> -			goto free_button;
+> +			goto free_jack;
+>  		}
+>  	}
+>  
+>  	if (module->button_mask & SND_JACK_BTN_2) {
+> -		ret = snd_jack_set_key(module->button_jack.jack, SND_JACK_BTN_2,
+> +		ret = snd_jack_set_key(jack->jack, SND_JACK_BTN_2,
+>  				       KEY_VOLUMEUP);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_2\n");
+> -			goto free_button;
+> +			goto free_jack;
+>  		}
+>  	}
+>  
+>  	if (module->button_mask & SND_JACK_BTN_3) {
+> -		ret = snd_jack_set_key(module->button_jack.jack, SND_JACK_BTN_3,
+> +		ret = snd_jack_set_key(jack->jack, SND_JACK_BTN_3,
+>  				       KEY_VOLUMEDOWN);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_0\n");
+> -			goto free_button;
+> +			goto free_jack;
+>  		}
+>  	}
+>  
+>  	/* FIXME
+>  	 * verify if this is really required
+>  	set_bit(INPUT_PROP_NO_DUMMY_RELEASE,
+> -		module->button_jack.jack->input_dev->propbit);
+> +		module->button->jack->jack->input_dev->propbit);
+>  	*/
+>  
+>  	return 0;
+>  
+> -free_button:
+> -	jack = &module->button_jack;
+> -	snd_device_free(card->snd_card, jack->jack);
+> -	list_del(&jack->list);
+> -
+> -free_headset:
+> -	jack = &module->headset_jack;
+> -	snd_device_free(card->snd_card, jack->jack);
+> -	list_del(&jack->list);
+> +free_jack:
+> +	list_for_each_entry_safe(gba_jack, n, &module->jack_list, list) {
+> +		jack = &gba_jack->jack;
+> +		snd_device_free(card->snd_card, jack->jack);
+
+Since we renamed "gba_jack" to "jack" then this becomes:
+
+		snd_device_free(card->snd_card, jack->jack.jack);
+
+Which is sort of weird, but still okay.
+
+> +		list_del(&gba_jack->list);
+> +	}
+>  
+>  	return ret;
+>  }
+> @@ -829,6 +834,7 @@ int gbaudio_register_module(struct gbaudio_module_info *module)
+>  	int ret;
+>  	struct snd_soc_codec *codec;
+>  	struct snd_card *card;
+> +	struct gbaudio_jack *gba_jack = NULL;
+
+Don't introduce unused assignments.  It just silences static checker
+warnings about uninitialized variables and introduces bugs.
+
+Anyway, the same comments for the rest of the patch.  Please don't
+introduce so many variables which aren't required and which hurt
+grep-ability.
+
+regards,
+dan carpenter
+
