@@ -2,152 +2,210 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C35C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B27C205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4B4205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591100040;
+	bh=G3shmAvC/JvoxhRooWJ/NoPGmXLDXZL4OwOUhQFMNbY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dDzJoDHf8tZKcwyAKBMbpcd91h29w3ynx0jH03T6pkW1sOvHNNWYrI3GgBZwB3IfD
+	 pR1o+o3IloRe/xZ1S097gU5nmJqDqQCKvnJSDP4f+jLm7P9qZ6k2l0O/b0Va8AG9M3
+	 hiczFeWzliHFfJwTRIxIERkW7tl8OR6DvVZKIN2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgFBMNy (ORCPT
+        id S1726977AbgFBMN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:13:54 -0400
-Received: from m4a0072g.houston.softwaregrp.com ([15.124.2.130]:55198 "EHLO
-        m4a0072g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725940AbgFBMNx (ORCPT
+        Tue, 2 Jun 2020 08:13:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbgFBMN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:13:53 -0400
-Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.147) BY m4a0072g.houston.softwaregrp.com WITH ESMTP;
- Tue,  2 Jun 2020 12:12:28 +0000
-Received: from M4W0335.microfocus.com (2002:f78:1193::f78:1193) by
- M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 2 Jun 2020 12:12:34 +0000
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (15.124.8.10) by
- M4W0335.microfocus.com (15.120.17.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Tue, 2 Jun 2020 12:12:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O5IHjzvzD8ZjwGcYQXj/tChQAW2W6yXRcyi3M7vD/8DK7FBJM7Q8PCR2f2Ymgc6j9H8Kkb4/E28j9TFfBuVhIScZV9oMm0uMBkLeCS2/oScQvWf40WViKpR0i5zqzxqbjb5T4gEpfjbyiDG4lLFptYGMXLt5NvtoV+I9WVQVfZ/TGykiEvIIQG0CSIsGv3Rei0yizHCP8U96qdeBnOsanQldtuObxWhM5TIoWQ5xIVeu8AyCr+m8ux/8fSY22yOcDPUXRVk4W060n15ds7BfO/RFtnr22QEbyY5OODh4JT5N1EHxBXkANRhiHsmbNEqIhKILABeuyNeHRglO9HkGQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D+JjmCMUzUrwZobVBqGkk3omJ+aSdCqSmz6HXykLp90=;
- b=lgTe/hrK+cRGc7A178tYYCH6gLJX5UvT9NyZONnUOlSnCK8BstvvQYP93UPqedI20EsYL6UvTGp9Axu5jsa4TPSYCgzoODi4Ka7UK/kK5yHWjGAAPHnSCI+66Ga85PfBRZkFYi2Bt97TL/dUWzyu6c61bEvRpRWStkLZtC2anMCEYc+nLZgt36KeuXzUQvmozbyaeG76ny7leGEuqIgHa9vdDdOEtMLf5yKUwZ737FRdLszL2acLVMs3TFX8kr7bfiFkq0VjnAGGPt3qgXyQRKY18aftj+L5Er53xqWViAbDcaWo5dw3sWPuvB5csBO9hRbz/hBma3sfSTCcsuadqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=suse.com;
-Received: from MW3PR18MB3658.namprd18.prod.outlook.com (2603:10b6:303:54::24)
- by MW3PR18MB3689.namprd18.prod.outlook.com (2603:10b6:303:5e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Tue, 2 Jun
- 2020 12:12:33 +0000
-Received: from MW3PR18MB3658.namprd18.prod.outlook.com
- ([fe80::2da0:153f:7d56:210d]) by MW3PR18MB3658.namprd18.prod.outlook.com
- ([fe80::2da0:153f:7d56:210d%6]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
- 12:12:33 +0000
-Date:   Tue, 2 Jun 2020 20:12:25 +0800
-From:   Kai Liu <kai.liu@suse.com>
-To:     <xiakaixu1987@gmail.com>
-CC:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Xiaoming Gao <newtongao@tencent.com>
-Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by
- JBOD
-Message-ID: <20200602121225.okhqr2xitv6522pp@suse.com>
-References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
-User-Agent: NeoMutt/20200501
-X-ClientProxiedBy: HK2PR02CA0212.apcprd02.prod.outlook.com
- (2603:1096:201:20::24) To MW3PR18MB3658.namprd18.prod.outlook.com
- (2603:10b6:303:54::24)
+        Tue, 2 Jun 2020 08:13:58 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BE6C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:13:58 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id y17so3132975wrn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:13:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=xBI9buERWWZFDqQu66Y6GGKgz5PW2Y7HFNFgr8Aut3A=;
+        b=PPVzWHWevmaffS7eMfTUr1eJgFbd0UlOJOClvlDKCzHFysuTvKrJxkpV8sBok/O2vy
+         30BazPDNyRvO8PzO/GS5g5uTQ0fbx2asG4zpSxj4dZ4yldz8I5Vm5e/xwHvvLZJojys8
+         7XKuzTA3WY+k6DU5sDy971xib2efLSuvKuiWV8bMd0xYGqNChcQj7JbYBXkLhUw7KWbT
+         NBNggVcX2pBzUI7yO+Ewv1+HPIeYiCtK4h7X8ebf53PQIE4csB2nDy1nV7dLDtvpp5Xm
+         zVgPI9uiSSvUq79tiPcjjAHTX79wegMPpfWGfjokZ6QQ7e5r3K62y9r61cID86ResmQx
+         TQ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=xBI9buERWWZFDqQu66Y6GGKgz5PW2Y7HFNFgr8Aut3A=;
+        b=myfYXTEmq6lB6HywyjyJQqm1HmMmuHGK/AzCTy/br/ydDxxxx9PaeeppnAGKJNK/Ds
+         /3lxp0ymSZ6Vh+ouUuO7Mc4qRyQVx0oB/OFJqNHWhUCc+UK/dMwB9KmidouKBfmI8umh
+         6UA3/fH2iCcs3fK2AWYAY71X/Ih+uvu+U8KRWm4/7wXnuk48YxiMeVcI92+OO1wLB++p
+         SWaTzpJbR9W+LDQbNxz3o76Yc8u0wdvj3EBNrgl0C+z1EDAzyJ67mByZrzFIiKVpCNp3
+         Le+BvgZlsFR1bKaIsMr/DAKW7QtVzewGlrx29c//JtI1naiH2ad9cKu7soxCGmMpuO+3
+         802g==
+X-Gm-Message-State: AOAM532QrBRWw1HzRrypjt5Cm0oj1sFNxhJFcEXl9oSlATEmPc5ZZpXP
+        0txLzJ5vG4vJUS0tMyq746zTEn2T
+X-Google-Smtp-Source: ABdhPJzYq1eZn+zdAEY44HfhIhzu6xrFRUXW/dnkrFGoRtqml/eOy+HeZoe+0EvQSNP3pLdNc1XmJA==
+X-Received: by 2002:a5d:6b85:: with SMTP id n5mr25961771wrx.11.1591100036585;
+        Tue, 02 Jun 2020 05:13:56 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id z6sm3437008wrh.79.2020.06.02.05.13.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 05:13:55 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 14:13:52 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] scheduler changes for v5.8
+Message-ID: <20200602121352.GA3812351@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (113.116.107.68) by HK2PR02CA0212.apcprd02.prod.outlook.com (2603:1096:201:20::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18 via Frontend Transport; Tue, 2 Jun 2020 12:12:31 +0000
-X-Originating-IP: [113.116.107.68]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: caba565f-272f-4b3e-ffdb-08d806ee39cd
-X-MS-TrafficTypeDiagnostic: MW3PR18MB3689:
-X-Microsoft-Antispam-PRVS: <MW3PR18MB3689C7E6BFE5DC47512D6919988B0@MW3PR18MB3689.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:118;
-X-Forefront-PRVS: 0422860ED4
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: T1XU9JyPRxx044O2kPMNmLB35KGS3tqfeBD7ENB1dMyhJBZ1hn5K+mj9TahfMXX4hMGF0bXvBR+OyMdto7GVPxUJ6aPkp9C4MwYOfkIW26K2GCSjaR4RP6OoHa4YXcaP23kcqFduEPsgcN4fpxWmHmEJGVtDoWIhL14RtW8hvN4uJC7TGcccS/KZL+IsnRNOG3M2kDcLgYlISNbi95nUKJYLRFGwg7PgrVcn13s6arsIadFs8iIATIvnASpVfGV0uBBwAF0wescDuHmac9FNL8vokX+EBoa/Ea7xbH+DyOjx9MoAEW92wr5uMV5WCBKeSJzmdItXE8FQwXJxbv90c08FWCtbdnhojyX7W863uGMK6mB1am8+hzRBd5wHOceP
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR18MB3658.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(52116002)(86362001)(66946007)(5660300002)(4326008)(66556008)(66476007)(478600001)(6496006)(8676002)(2906002)(6916009)(6666004)(2616005)(956004)(83380400001)(44832011)(8936002)(186003)(16526019)(316002)(26005)(6486002)(1076003)(36756003)(357404004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: ZkDW7ODZqqoAYZC3U2scuZsvCS44bqIMeEQUE8GQytNxP44SNJgbTn/HqIkh0WV0wSxShlIWLfHgoYZqQAfDSmgiLPsu7PM9UVPAZkVwep+aPIjdH7amVYUCkJrB6JCYTbMMQHtv1r4Q6qSxJEAEVK0ltbomqVxkr9vqZ13OneiBURjf47LjJtQblhu5Ymf9wwxeMmJtEOtQTVdbjHyMjkrJZQDC++6Uueikrc4CVRBuKO4gSW3vS7T8y3jhMlDq/0c8amlWQY5zcNBqv3YUjcokHzVteeYoxFGVAG2IeoQ6XtSOkUSBPLyylcB08op8VhU80rDpkXQoLD2HC/PG9mJ0BPORoqXsWSJmLk2jj1dqwWYxTA3eybdmbFU9NnIGz9EBbhPh9cpPXL3UMXww4FzIjmfPBUn7Bw3M9aHL6546Pe7dtdRgSXmJ8rCaPrW8jv4iK6es8rMtbEGOW681eNX9yf8enjV6GaJGYHKEJ48ROVpdL3jFFMfHX/2qmsz1
-X-MS-Exchange-CrossTenant-Network-Message-Id: caba565f-272f-4b3e-ffdb-08d806ee39cd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 12:12:33.1948
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tKRFZCDvzZMlrM/DfL4eRfqjqMXqq8ZRe5i0t9r2iwLqOyIQVGFXB/T2/+13bE2H+au4ehu/t5fPvLCtLxRTVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR18MB3689
-X-OriginatorOrg: suse.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/28 Thu 15:31, xiakaixu1987@gmail.com wrote:
->From: Xiaoming Gao <newtongao@tencent.com>
->
->when kernel crash, and kexec into kdump kernel, megaraid_sas will hung and
->print follow error logs
->
->24.1485901 sd 0:0:G:0: [sda 1 tag809 BRCfl Debug mfi stat 0x2(1, data len requested/conpleted 0X100
->0/0x0)]
->24.1867171 sd 0:0:G :9: [sda I tag861 BRCfl Debug mfft stat 0x2d, data len reques ted/conp1e Led 0X100
->0/0x0]
->24.2054191 sd 0:O:6:O: [sda 1 tag861 FAILED Result: hustbyte=DIDGK drioerbyte-DRIUCR SENSE]
->24.2549711 bik_update_ request ! 1/0 error , dev sda, sector 937782912 op 0x0:(READ) flags 0x0 phys_seg 1 prio class
->21.2752791 buffer_io_error 2 callbacks suppressed
->21.2752731 Duffer IO error an dev sda, logical block 117212064, async page read
->
->this bug is caused by commit '59db5a931bbe73f ("scsi: megaraid_sas: Handle sequence JBOD map failure at
-> driver level
->")'
->and can be fixed by not set JOB when reset_devices on
+Linus,
 
-I've recently run into this exact issue on a arm64 machine with Avago 
-3408 controller. This patch fixed the issue. Thank you.
+Please pull the latest sched/core git tree from:
 
-Tested-by: Kai Liu <kai.liu@suse.com>
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-2020-06-02
 
-Best regards,
-Kai
+   # HEAD: 25de110d148666752dc0e0da7a0b69de31cd7098 irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too
 
->
->Signed-off-by: Xiaoming Gao <newtongao@tencent.com>
->---
-> drivers/scsi/megaraid/megaraid_sas_fusion.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
->index b2ad965..24e7f1b 100644
->--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
->+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
->@@ -3127,7 +3127,7 @@ static void megasas_build_ld_nonrw_fusion(struct megasas_instance *instance,
-> 		<< MR_RAID_CTX_RAID_FLAGS_IO_SUB_TYPE_SHIFT;
->
-> 	/* If FW supports PD sequence number */
->-	if (instance->support_seqnum_jbod_fp) {
->+	if (!reset_devices && instance->support_seqnum_jbod_fp) {
-> 		if (instance->use_seqnum_jbod_fp &&
-> 			instance->pd_list[pd_index].driveType == TYPE_DISK) {
->
->-- 
->1.8.3.1
->
+The changes in this cycle are:
 
+ - Optimize the task wakeup CPU selection logic, to improve scalability and
+   reduce wakeup latency spikes
+
+ - PELT enhancements
+
+ - CFS bandwidth handling fixes
+
+ - Optimize the wakeup path by remove rq->wake_list and replacing it with ->ttwu_pending
+
+ - Optimize IPI cross-calls by making flush_smp_call_function_queue()
+   process sync callbacks first.
+
+ - Misc fixes and enhancements.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+ Thanks,
+
+	Ingo
+
+------------------>
+Chen Yu (2):
+      sched: Make newidle_balance() static again
+      sched: Extract the task putting code from pick_next_task()
+
+Davidlohr Bueso (1):
+      sched/swait: Reword some of the main description
+
+Gustavo A. R. Silva (1):
+      sched/fair: Replace zero-length array with flexible-array
+
+Huaixin Chang (2):
+      sched/fair: Refill bandwidth before scaling
+      sched: Defend cfs and rt bandwidth quota against overflow
+
+Ingo Molnar (4):
+      Merge branch 'sched/urgent' into sched/core, to pick up fix
+      Merge branch 'core/rcu' into sched/core, to pick up dependency
+      sched/headers: Split out open-coded prototypes into kernel/sched/smp.h
+      irq_work: Define irq_work_single() on !CONFIG_IRQ_WORK too
+
+Jann Horn (1):
+      exit: Move preemption fixup up, move blocking operations down
+
+Josh Don (1):
+      sched/fair: Remove distribute_running from CFS bandwidth
+
+Mel Gorman (1):
+      sched/core: Offload wakee task activation if it the wakee is descheduling
+
+Muchun Song (4):
+      sched/fair: Mark sched_init_granularity __init
+      sched/fair: Use __this_cpu_read() in wake_wide()
+      sched/cpuacct: Use __this_cpu_add() instead of this_cpu_ptr()
+      sched/cpuacct: Fix charge cpuacct.usage_sys
+
+Paul Turner (1):
+      sched/fair: Eliminate bandwidth race between throttling and distribution
+
+Peng Wang (1):
+      sched/fair: Simplify the code of should_we_balance()
+
+Peter Zijlstra (10):
+      sched/core: Fix illegal RCU from offline CPUs
+      Merge branch 'sched/urgent'
+      sched/core: Optimize ttwu() spinning on p->on_cpu
+      sched: Fix smp_call_function_single_async() usage for ILB
+      smp: Optimize flush_smp_call_function_queue()
+      smp: Move irq_work_run() out of flush_smp_call_function_queue()
+      smp: Optimize send_call_function_single_ipi()
+      irq_work, smp: Allow irq_work on call_single_queue
+      sched: Add rq::ttwu_pending
+      sched: Replace rq::wake_list
+
+Peter Zijlstra (Intel) (1):
+      sched: Clean up scheduler_ipi()
+
+Thomas Gleixner (1):
+      sched: Make scheduler_ipi inline
+
+Valentin Schneider (4):
+      sched/fair: find_idlest_group(): Remove unused sd_flag parameter
+      sched/debug: Make sd->flags sysctl read-only
+      sched: Remove checks against SD_LOAD_BALANCE
+      sched/topology: Kill SD_LOAD_BALANCE
+
+Vincent Guittot (2):
+      sched/fair: Optimize enqueue_task_fair()
+      sched/pelt: Sync util/runnable_sum with PELT window when propagating
+
+Wei Yang (1):
+      sched/core: Simplify sched_init()
+
+Xie XiuQi (1):
+      sched/debug: Fix trival print_task() format
+
+ arch/powerpc/platforms/powernv/smp.c |   1 -
+ include/linux/irq_work.h             |   9 +++++++-
+ include/linux/sched.h                |  11 +++++++++-
+ include/linux/sched/mm.h             |   2 ++
+ include/linux/sched/topology.h       |  29 +++++++++++++-------------
+ include/linux/smp.h                  |  24 +++++++++++++++++++++-
+ include/linux/swait.h                |  23 +++++----------------
+ kernel/cpu.c                         |  18 +++++++++++++++-
+ kernel/exit.c                        |  25 +++++++++++++++--------
+ kernel/irq_work.c                    |  53 +++++++++++++++++++++++++----------------------
+ kernel/sched/core.c                  | 248 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------------------------------------------------
+ kernel/sched/cpuacct.c               |   7 ++++---
+ kernel/sched/debug.c                 |   9 ++++----
+ kernel/sched/fair.c                  | 259 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------------------------------------------------------------------
+ kernel/sched/idle.c                  |   6 +++++-
+ kernel/sched/pelt.c                  |  24 ++++++++++++++++++++++
+ kernel/sched/rt.c                    |  12 ++++++++++-
+ kernel/sched/sched.h                 |  36 +++++++++++++++-----------------
+ kernel/sched/smp.h                   |   9 ++++++++
+ kernel/sched/topology.c              |  31 +++++++++-------------------
+ kernel/smp.c                         | 175 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------------------------
+ 21 files changed, 603 insertions(+), 408 deletions(-)
+ create mode 100644 kernel/sched/smp.h
