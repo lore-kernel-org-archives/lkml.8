@@ -2,135 +2,147 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61092C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FC9207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7392068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 12:06:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rAuOnM4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgFBMGS (ORCPT
+        id S1727070AbgFBMGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 08:06:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5333 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725921AbgFBMGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 08:06:17 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 81E03B2E8FAAB54CD06E;
-        Tue,  2 Jun 2020 20:06:15 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
- 20:06:09 +0800
-Subject: Re: [RFC PATCH v4 2/2] arm64: tlb: Use the TLBI RANGE feature in
- arm64
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
-        <guohanjun@huawei.com>, <olof@lixom.net>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200601144713.2222-1-yezhenyu2@huawei.com>
- <20200601144713.2222-3-yezhenyu2@huawei.com>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <7f15f835-cf73-be5b-8bb0-cabb6e4eeed2@huawei.com>
-Date:   Tue, 2 Jun 2020 20:06:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 2 Jun 2020 08:06:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbgFBMGT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 08:06:19 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EDCC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 05:06:17 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id 1so1848185vsl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 05:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X8TLwbbwpigYbLnnsmu2/tqlSQ4fjBU1I+APno1oETk=;
+        b=rAuOnM4pnXKCbe7wrzaoRdTKnyJBeTd0qTlYB470WMcq3DPvaQWUPhFzMfBkCpt5VZ
+         eqX0bC/o4hoV08wZE2N3bjOaORbaid/b50ftvLPKRzHvqtl3ZWD+0cqyurIAB+8rxgg9
+         FLe+HWZGMaaoWYbpzC52HrGXjBJaRJT22su4XEsrUFmIlBSdpNQJRm8EB9ECCYGrQS/c
+         gsM2UIRsj39DnQ0mEFwFHCykOFhoWolqR3jk7Q1id5fDp9/o+8D31UpPdbEiqQYX2+WQ
+         iJlFk6Df2wlvnhfBOihX+7DHWobBPr1bpvJFHIRKi7BDNoYG1cN5d/+HJbUUj8viqZJQ
+         uuew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X8TLwbbwpigYbLnnsmu2/tqlSQ4fjBU1I+APno1oETk=;
+        b=B3ticL8VJ6KmPU/9hDtUkPQTbRVwFfKoXiH7cc82YQBIMZtEYCcXWISjNE0b07dWdt
+         xXgyGYeqbyNAhYcunqi+STotv9J6wTQUNziUPZ6P2uJhXGAbckWDxJOMCnoLfckqRmln
+         DI36OvZrmPcfm+nFHpwchX6LfVST4lwdIRafHNfCdEmpNmVje53tCRSThWX6YklomhQD
+         kmdVRdhBHVmlo/IydspI0IxBCRDQc/CZMQTzIlu18kUpZmXQf1ObNaV+rt8j+GB2mpYz
+         5ecspIzxyxV7CSdCm4pZDmPoFCu9rxY23i1zPARm1ps7k/a2QzRyFsEYaj2QB8nH7kdO
+         PSWA==
+X-Gm-Message-State: AOAM530Pyq78hBRo8vyv0wFwOY25X+2jhvjIZxzDVX9443o/9lZ5Qq+A
+        f7wTQzIE2zbZGi7gRQDi8L7p0kNaDs3TKdX4chvbBQ==
+X-Google-Smtp-Source: ABdhPJyYvO6EGUQzrkJXaKKQ2X1NWP8QbEKUI3/Bv4Zylahw5KDfo6vhcEr8o85kUFivcskLi7AfeWGuKQUXa0BPBk4=
+X-Received: by 2002:a67:8983:: with SMTP id l125mr7213160vsd.34.1591099576761;
+ Tue, 02 Jun 2020 05:06:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200601144713.2222-3-yezhenyu2@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+References: <20200602134402.24c19488@canb.auug.org.au>
+In-Reply-To: <20200602134402.24c19488@canb.auug.org.au>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 2 Jun 2020 14:05:39 +0200
+Message-ID: <CAPDyKFqjm3Egbv9nj8wR_q5onpJT=jSh-MvKn+VuJGX_ifG9TA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the mmc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Linus <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
++ Linus
 
-Some optimizations to the codes:
+On Tue, 2 Jun 2020 at 05:44, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the mmc tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>
+> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c: In function 'brcmf_sdiod_probe':
+> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7: error: 'SDIO_DEVICE_ID_CYPRESS_4373' undeclared (first use in this function); did you mean 'SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373'?
+>   915 |  case SDIO_DEVICE_ID_CYPRESS_4373:
+>       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |       SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373
+> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:915:7: note: each undeclared identifier is reported only once for each function it appears in
+>
+> Caused by commit
+>
+>   1eb911258805 ("mmc: sdio: Fix Cypress SDIO IDs macros in common include file")
+>
+> interacting with commit
+>
+>   2a7621ded321 ("brcmfmac: set F2 blocksize for 4373")
+>
+> from the net-next tree.
+>
+> I have applied the following merge fix patch.
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 2 Jun 2020 13:41:04 +1000
+> Subject: [PATCH] mmc: sdio: merge fix for "brcmfmac: set F2 blocksize for
+>  4373"
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-On 2020/6/1 22:47, Zhenyu Ye wrote:
-> -	start = __TLBI_VADDR(start, asid);
-> -	end = __TLBI_VADDR(end, asid);
-> +	/*
-> +	 * The minimum size of TLB RANGE is 2 pages;
-> +	 * Use normal TLB instruction to handle odd pages.
-> +	 * If the stride != PAGE_SIZE, this will never happen.
-> +	 */
-> +	if (range_pages % 2 == 1) {
-> +		addr = __TLBI_VADDR(start, asid);
-> +		__tlbi_last_level(vale1is, vae1is, addr, last_level);
-> +		start += 1 << PAGE_SHIFT;
-> +		range_pages >>= 1;
-> +	}
->  
+Thanks Stephen for fixing and reporting about this!
 
-We flush a single page here, and below loop does the same thing
-if cpu not support TLB RANGE feature.  So may we use a goto statement
-to simplify the code.
+Looks like the fix is rather trivial, so I assume Linus can
+cherry-pick your patch, while merging my pull request for mmc for
+v5.8. In any case, I will monitor the process and send a fix on top,
+if needed.
 
-> +	while (range_pages > 0) {
-> +		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
-> +		    stride == PAGE_SIZE) {
-> +			num = (range_pages & TLB_RANGE_MASK) - 1;
-> +			if (num >= 0) {
-> +				addr = __TLBI_VADDR_RANGE(start, asid, scale,
-> +							  num, 0);
-> +				__tlbi_last_level(rvale1is, rvae1is, addr,
-> +						  last_level);
-> +				start += __TLBI_RANGE_SIZES(num, scale);
-> +			}
-> +			scale++;
-> +			range_pages >>= TLB_RANGE_MASK_SHIFT;
-> +			continue;
->  		}
-> +
-> +		addr = __TLBI_VADDR(start, asid);
-> +		__tlbi_last_level(vale1is, vae1is, addr, last_level);
-> +		start += stride;
-> +		range_pages -= stride >> 12;
->  	}
->  	dsb(ish);
->  }
-> 
+Kind regards
+Uffe
 
-Just like:
-
---8<---
-	if (range_pages %2 == 1)
-		goto flush_single_tlb;
-
-	while (range_pages > 0) {
-		if (cpus_have_const_cap(ARM64_HAS_TLBI_RANGE) &&
-		    stride == PAGE_SIZE) {
-			num = ((range_pages >> 1) & TLB_RANGE_MASK) - 1;
-			if (num >= 0) {
-				addr = __TLBI_VADDR_RANGE(start, asid, scale,
-							  num, 0);
-				__tlbi_last_level(rvale1is, rvae1is, addr,
-						  last_level);
-				start += __TLBI_RANGE_SIZES(num, scale);
-			}
-			scale++;
-			range_pages >>= TLB_RANGE_MASK_SHIFT;
-			continue;
-		}
-
-flush_single_tlb:
-		addr = __TLBI_VADDR(start, asid);
-		__tlbi_last_level(vale1is, vae1is, addr, last_level);
-		start += stride;
-		range_pages -= stride >> PAGE_SHIFT;
-	}
---8<---
-
-
-
+> ---
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+> index e718bd466830..46346cb3bc84 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+> @@ -912,7 +912,7 @@ static int brcmf_sdiod_probe(struct brcmf_sdio_dev *sdiodev)
+>                 goto out;
+>         }
+>         switch (sdiodev->func2->device) {
+> -       case SDIO_DEVICE_ID_CYPRESS_4373:
+> +       case SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373:
+>                 f2_blksz = SDIO_4373_FUNC2_BLOCKSIZE;
+>                 break;
+>         case SDIO_DEVICE_ID_BROADCOM_4359:
+> --
+> 2.26.2
+>
+> --
+> Cheers,
+> Stephen Rothwell
