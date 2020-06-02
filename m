@@ -2,103 +2,111 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF93C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 291CE206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C42207D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 20:09:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XeGLUQDp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XxzlY4sx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgFBUIm (ORCPT
+        id S1728363AbgFBUJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 16:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBUIm (ORCPT
+        Tue, 2 Jun 2020 16:09:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37812 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgFBUJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 16:08:42 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A9C08C5C0;
-        Tue,  2 Jun 2020 13:08:41 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c71so4117132wmd.5;
-        Tue, 02 Jun 2020 13:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y+jeG0ZqrVfo+FYQhNDp8MJBv+24WC+dS4BIyM6NDKs=;
-        b=XeGLUQDpIvVZAOhGXpLXoZ05/8oUpeyco6yuo7H62Woq7W0xuRq/vW8rR7DVUd5vyK
-         XRT+q0lM/SslslRba+wUrENsCNIc/bbU/bWGc6H/5fqWNY1sK8neHeAu42wFglmugOCb
-         E7Cazu1TF7B5nKz67/cIbG3dc+g12izo+T2DNCw9FkXPAPmK3bdIR+nZqZbklxnHLKbZ
-         bAjse3nKUsi9EJzAQwrwrF5JWpK21x6utpsLFDkNjAPaxX2P2tIKpsUhtKZxH66RSWuW
-         q/fKOpPqXPXsPhhtnWCoRgVG+f1FsZm/otqRWlVC73rJkapyqnSCc0wHolaPMAGjBzn5
-         B+/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y+jeG0ZqrVfo+FYQhNDp8MJBv+24WC+dS4BIyM6NDKs=;
-        b=HKKZjTzvXOpRmjamRB0OpiHYH1etoZtLNWHIUfF5jcfTF0reuUIFspUx2w9CydcAiQ
-         sMLllnX0qZ6oC1ysEoWPbN2KM5WwN2Wlo7AsUUHnKZDQduYB435F7tpL5nuqZEoDSAV4
-         3n6tYvFWmmshXnKV0ZrZSHGKmuOFw642tAYkk6nZoj++UDHySn9dYN3Ip9WRQ9lZ+22U
-         iDQU61h4f385KO7mutYGXa2c/SC8vHtjPK7Rp5QwmAoQmNcUZewawSeHmCiLLXDANWaS
-         MPjN5dSvo1KX+CAHxaXSOrUFg9m7rU4tkn3JOoHV4hH/6PcuU1Puxh861MH+WBvZdxuc
-         VgqQ==
-X-Gm-Message-State: AOAM531rfqkOyxhklZlUsEfKQSuGbBGsKKj3o67GVkuhgWsn4jI/EjFK
-        Y7HKtTd5Q+PL7F7nQ2ccFiE=
-X-Google-Smtp-Source: ABdhPJwYnaOip6Sui7beKMmyEvg77hj+NaVMFX+2mWUkUmTT6nLerN0vv4KB6p1wrJ29FZ26pve46Q==
-X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr5480279wml.70.1591128520179;
-        Tue, 02 Jun 2020 13:08:40 -0700 (PDT)
-Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id c140sm1164317wmd.18.2020.06.02.13.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 13:08:39 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] Documentation: Document an existing qcom,rpm-msm8996 compatible
-Date:   Tue,  2 Jun 2020 22:08:36 +0200
-Message-Id: <20200602200837.321712-1-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 2 Jun 2020 16:09:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JulYa168523;
+        Tue, 2 Jun 2020 20:07:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=u/fCzrRFXKu5OAm9GMeH7Ay3Emb8+njH7NIt5wH2t7s=;
+ b=XxzlY4sx0sWv3jxz/jxMxRKHZbtYjTb4uPOXU6PqmOUn1rrF8AWxyLpzLb5NsBW8Bgdo
+ fA4ldu1DD/ctT2BLahOqOvdaZ39DBwyrCyoEXtRkaWLlQQ6TJKHxp9EjJGpzs9qfDHtV
+ wf4RgX3WbfUHm2SLSEc1oATP34jBAPj1ZmqeRbyU8xNV50qps5/GKfuhKLp3zU3RSkNU
+ AuOpo/SDe7PJisvroC4QOLKJld8rCZmqmP8OaX/9bo2X1hJ9EJitun2meX/mpzHVc7+w
+ bpGVYYeYj6pkUCA4OY1SjjJgOi3BpXer8h9HSn9+H/KxUw88Prj9l597+o/5xnHLXzyW wA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31bfem5uch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 20:07:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JxHrQ135232;
+        Tue, 2 Jun 2020 20:07:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 31c1dxtrmk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 20:07:41 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052K7cb2022814;
+        Tue, 2 Jun 2020 20:07:38 GMT
+Received: from ayz-linux.us.oracle.com (/10.154.185.88)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 13:07:38 -0700
+From:   Anthony Yznaga <anthony.yznaga@oracle.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        steven.sistare@oracle.com, anthony.yznaga@oracle.com
+Subject: [PATCH 1/3] KVM: x86: remove unnecessary rmap walk of read-only memslots
+Date:   Tue,  2 Jun 2020 13:07:28 -0700
+Message-Id: <1591128450-11977-2-git-send-email-anthony.yznaga@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1591128450-11977-1-git-send-email-anthony.yznaga@oracle.com>
+References: <1591128450-11977-1-git-send-email-anthony.yznaga@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This compatible has been included in the driver for
-some time, but it has been overlooked in documentation.
+There's no write access to remove.  An existing memslot cannot be updated
+to set or clear KVM_MEM_READONLY, and any mappings established in a newly
+created or moved read-only memslot will already be read-only.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/x86.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index 25541a475ead..4b916d67064a 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -24,6 +24,7 @@ resources.
- 		    "qcom,rpm-msm8974"
- 		    "qcom,rpm-msm8976"
- 		    "qcom,rpm-msm8994"
-+		    "qcom,rpm-msm8996"
- 		    "qcom,rpm-msm8998"
- 		    "qcom,rpm-sdm660"
- 		    "qcom,rpm-qcs404"
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index c17e6eb9ad43..23fd888e52ee 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10038,11 +10038,9 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+ static void kvm_mmu_slot_apply_flags(struct kvm *kvm,
+ 				     struct kvm_memory_slot *new)
+ {
+-	/* Still write protect RO slot */
+-	if (new->flags & KVM_MEM_READONLY) {
+-		kvm_mmu_slot_remove_write_access(kvm, new, PT_PAGE_TABLE_LEVEL);
++	/* Nothing to do for RO slots */
++	if (new->flags & KVM_MEM_READONLY)
+ 		return;
+-	}
+ 
+ 	/*
+ 	 * Call kvm_x86_ops dirty logging hooks when they are valid.
 -- 
-2.26.2
+2.13.3
 
