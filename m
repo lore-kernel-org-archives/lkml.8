@@ -2,272 +2,170 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EABBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0BCB206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6927A20671
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 02:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFKWs76d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVr9E3h+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgFBCeY (ORCPT
+        id S1726370AbgFBCe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 22:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33202 "EHLO
+        Mon, 1 Jun 2020 22:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgFBCeX (ORCPT
+        with ESMTP id S1725850AbgFBCe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 22:34:23 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406D7C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 19:34:23 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id g28so10459642qkl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 19:34:23 -0700 (PDT)
+        Mon, 1 Jun 2020 22:34:28 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00483C061A0E;
+        Mon,  1 Jun 2020 19:34:26 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p30so4375320pgl.11;
+        Mon, 01 Jun 2020 19:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WIV812zXdt1sSNO21HBL8cR2iY4avQ4bfEsobtUNfCM=;
-        b=cFKWs76db7QYS3TDdaWNc4V2cCDKOVhKW6Mya5Z6lI0jqEdEbjKD7MCzoE6a6qp8cT
-         nGSlPo+VgqvwNLi5iJ/+oAmtnBl1D8aMVa1vZsXhB+OwPVk6B60yA3cP4QCgFVzUcdxC
-         p9zeA6Hm2sPP/EmLCupJj0dPHow+inE7kLTsnO5CqWSSKxejDWH5mdlSAb1Fda8oB90H
-         Zb44vhn9fSWPdzVwsNEic+sU13jS/9XZvNPJ7zq8X5bsDJlX9HTBM8PRH8k0GuO2tG0i
-         TPB5rmgr6CgE07F/4Vs4/EGjTD0J/WvsgWRZwlqGCfOv6AmyJGGa68hWiUaaZIPaAGVq
-         jPUA==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s4UEYuJB3XBli5yd0KidgvrjcjkYTAO/sinQI+U9kL0=;
+        b=SVr9E3h+qDW24ehI3GnKXPBVnMq8IOQHh3vUnxsbkgQ/R92qU3yIMfqHv8AE2MTHzU
+         tByJKQrO2K+FRFPiMoDi846/wjV1c8gSzrkKa2XoOeV7jCWOi4G9gd5wRSAMaxJHLcT8
+         hEJpXMFml7Du5yOYVVwJ9I2arHd0PDnbemrOP/46uDIGztreWe5nZOTO7t5cg0khrhwE
+         8tRI3k35w9ISTgsGdVMQeSTLBWsvQXupB2D/t9zCNTYI62XyifwUzqxG+AJ3/FvDkjxx
+         g0qvg+5THyCC4OrABeDSCsz3HYPiYkk8tiCka/lDQG+NOuNGfWnao4R99oWJUorNIjT1
+         ZEAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WIV812zXdt1sSNO21HBL8cR2iY4avQ4bfEsobtUNfCM=;
-        b=q2c0H7rKI/TBUsZ/TZP5bTXcEITp6/abmviswSDeKWHPdjZLDFUqX+R/tdzzeluedX
-         ttJmI+hgRAZ8B7tk9GSLtI1p2rs2T5a7UodeQ249wjwGLMzP/mdRiJUPXIJAxUQa+Z3A
-         FCCb8rYiMHyYQjcPPWkehOxdAI2W+dcwKPxAbHH5ezLtsOPBHphOUgt2L5JDuhMOySW/
-         vIdNm+RVy9nwO/7KJo6Z/4wggsfS/az85VnR3JRRh3tUwNmMwUO3hfNwzgcjWMTTiZ1o
-         fu4q5ErCWiie7lq/HKajG+UCU524ic0Rq9t1Ao/FZbvkjjoo6lTHOtTxwt0RsOdkxCBT
-         Mzfg==
-X-Gm-Message-State: AOAM533eQ4laRyQp/FLXXQfC018DdfEHPLTtPyOxQRVxBI6+Agb0Sl1c
-        xgbRWv7iCiF6d11viaHOkPcpSd53ngQgg/1BytI=
-X-Google-Smtp-Source: ABdhPJw9+5hNfnvvSMNcTloFXeduRgAnxY7dVQ+MrEu5zMcyrl36HQroBoKPx8+xID0m7vPttHPDe7pPHxF6rMuRI/Q=
-X-Received: by 2002:a05:620a:164c:: with SMTP id c12mr20956489qko.343.1591065262176;
- Mon, 01 Jun 2020 19:34:22 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=s4UEYuJB3XBli5yd0KidgvrjcjkYTAO/sinQI+U9kL0=;
+        b=bb6GRCYCtaL3nlGnHmXF8FIArZ+7dExvVJ9mHCtkjRz6FCt9GROouNpO5uoIIfKufd
+         g7S1OdVkozVprjGdyBP6lPnm2xJ3k6TcXiWo1i19qE8c+H8wXesoJYsrP6pXcm6CPqba
+         y8LQzKU4cDVa3iQled3nOpvncnOznVo9xilL79cOqpsq5p0v1spiikhUhttN6QDHuNqA
+         UfFPwyKgsBEjw1Z5o/KfQ37z+pV9v7WklNZsTVyjzpRPK/TgwTjKIZKMjmm5NiBSxEPf
+         rYKSYcRmKjJn3yrTWg0W2QbrCAJtUpcPJT4vdUBbrvIeembREDNUPbgJZLgbMtKekIqc
+         OMjw==
+X-Gm-Message-State: AOAM532ZQtbCuaflTQWe7WJO9GcY63fm1mCZ+ACLILQtxpMC+UvHaysl
+        9ed4pVwnaglXkDpalWVRLYSQ9To0
+X-Google-Smtp-Source: ABdhPJy1JQHar4xcTo+hi1ELp8K09Nm+ftNlxYIU7PtXLGPkjhqHQu5VLWGu5FDKiAYozqWC7Swlog==
+X-Received: by 2002:a63:5105:: with SMTP id f5mr6587737pgb.261.1591065266227;
+        Mon, 01 Jun 2020 19:34:26 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v129sm660001pfv.18.2020.06.01.19.34.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 19:34:25 -0700 (PDT)
+Subject: Re: [PATCH 4.9 00/61] 4.9.226-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200601174010.316778377@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <2b4126ce-487e-91ed-e471-1af5b61b2fef@roeck-us.net>
+Date:   Mon, 1 Jun 2020 19:34:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200520232525.798933-1-hannes@cmpxchg.org> <20200520232525.798933-6-hannes@cmpxchg.org>
- <CAAmzW4MMLw=4BHRtt=g8BHpQLTaSmhG03Ct6WMjmDxVnOkNQYA@mail.gmail.com>
- <20200527134333.GF6781@cmpxchg.org> <CAAmzW4NW+cv7VnNApWKJr4r9=QKaufK3y5apyNXo-M-y=q0dgg@mail.gmail.com>
- <20200528170155.GA69521@cmpxchg.org> <CAAmzW4NEPZRWL5PBXEWwg9kBOL9fYUNqTTzh3WRDWbaSPLv=CQ@mail.gmail.com>
- <20200529151228.GA92892@cmpxchg.org> <CAAmzW4Pccc4UcBThhKyqbtY=kK83Fz7k4vYR4eJN4te2E25=_A@mail.gmail.com>
- <20200601155615.GA131075@cmpxchg.org>
-In-Reply-To: <20200601155615.GA131075@cmpxchg.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Tue, 2 Jun 2020 11:34:17 +0900
-Message-ID: <CAAmzW4NDVznjOsW1Vgg1P+0vSQarE1ziY=MN5S5f70pQiOPn-Q@mail.gmail.com>
-Subject: Re: [PATCH 05/14] mm: workingset: let cache workingset challenge anon
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 2=EC=9D=BC (=ED=99=94) =EC=98=A4=EC=A0=84 12:56, J=
-ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Mon, Jun 01, 2020 at 03:14:24PM +0900, Joonsoo Kim wrote:
-> > 2020=EB=85=84 5=EC=9B=94 30=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 12:=
-12, Johannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
-> > >
-> > > On Fri, May 29, 2020 at 03:48:00PM +0900, Joonsoo Kim wrote:
-> > > > 2020=EB=85=84 5=EC=9B=94 29=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84=
- 2:02, Johannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
-=84=B1:
-> > > > > On Thu, May 28, 2020 at 04:16:50PM +0900, Joonsoo Kim wrote:
-> > > > > > 2020=EB=85=84 5=EC=9B=94 27=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=
-=9B=84 10:43, Johannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=
-=91=EC=84=B1:
-> > > > > > > On Wed, May 27, 2020 at 11:06:47AM +0900, Joonsoo Kim wrote:
-> > > > > The only way they could get reclaimed is if their access distance=
- ends
-> > > > > up bigger than the file cache. But if that's the case, then the
-> > > > > workingset is overcommitted, and none of the pages qualify for re=
-claim
-> > > > > protection. Picking a subset to protect against the rest is arbit=
-rary.
-> > > >
-> > > > In the fixed example, although other file (500 MB) is repeatedly ac=
-cessed,
-> > > > it's not workingset. If we have unified list (file + anon), access =
-distance of
-> > > > Pn will be larger than whole memory size. Therefore, it's not overc=
-ommitted
-> > > > workingset and this patch wrongly try to activate it. As I said bef=
-ore,
-> > > > without considering inactive_age for anon list, this calculation ca=
-n not be
-> > > > correct.
-> > >
-> > > You're right. If we don't take anon age into account, the activations
-> > > could be over-eager; however, so would counting IO cost and exerting
-> > > pressure on anon be, which means my previous patch to split these two
-> > > wouldn't fix fundamental the problem you're pointing out. We simply
-> >
-> > Splitting would not fix the fundamental problem (over-eager) but it wou=
-ld
-> > greatly weaken the problem. Just counting IO cost doesn't break the
-> > active/inactive separation in file list. It does cause more scan on ano=
-n list
-> > but I think that it's endurable.
->
-> I think the split is a good idea.
->
-> The only thing I'm not sure yet is if we can get away without an
-> additional page flag if the active flag cannot be reused to denote
-> thrashing. I'll keep at it, maybe I can figure something out.
->
-> But I think it would be follow-up work.
->
-> > > have to take anon age into account for the refaults to be comparable.
-> >
-> > Yes, taking anon age into account is also a good candidate to fix the p=
-roblem.
->
-> Okay, good.
->
-> > > However, your example cannot have a completely silent stable state. A=
-s
-> > > we stop workingset aging, the refault distances will slowly increase
-> > > again. We will always have a bit of churn, and rightfully so, because
-> > > the workingset *could* go stale.
-> > >
-> > > That's the same situation in my cache-only example above. Anytime you
-> > > have a subset of pages that by itself could fit into memory, but can'=
-t
-> > > because of an established workingset, ongoing sampling is necessary.
-> > >
-> > > But the rate definitely needs to reduce as we detect that in-memory
-> > > pages are indeed hot. Otherwise we cause more churn than is required
-> > > for an appropriate rate of workingset sampling.
-> > >
-> > > How about the patch below? It looks correct, but I will have to re-ru=
-n
-> > > my tests to make sure I / we are not missing anything.
-> >
-> > Much better! It may solve my concern mostly.
->
-> Okay thanks for confirming. I'll send a proper version to Andrew.
+On 6/1/20 10:53 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.226 release.
+> There are 61 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 03 Jun 2020 17:38:19 +0000.
+> Anything received after that time might be too late.
+> 
 
-Okay.
+Lots of errors along the line of
 
-> > But, I still think that modified refault activation equation isn't
-> > safe. The next
-> > problem I found is related to the scan ratio limit patch ("limit the ra=
-nge of
-> > LRU type balancing") on this series. See the below example.
-> >
-> > anon: Hot (X M)
-> > file: Hot (200 M) / dummy (200 M)
-> > P: 1200 M (3 parts, each one 400 M, P1, P2, P3)
-> > Access Pattern: A -> F(H) -> P1 -> A -> F(H) -> P2 -> ... ->
-> >
-> > Without this patch, A and F(H) are kept on the memory and look like
-> > it's correct.
-> >
-> > With this patch and below fix, refault equation for Pn would be:
-> >
-> > Refault dist of Pn =3D 1200 (from file non-resident) + 1200 * anon scan
-> > ratio (from anon non-resident)
-> > anon + active file =3D X + 200
-> > 1200 + 1200 * anon scan ratio (0.5 ~ 2) < X + 200
->
-> That doesn't look quite right to me. The anon part of the refault
-> distance is driven by X, so the left-hand of this formula contains X
-> as well.
->
-> 1000 file (1200M reuse distance, 200M in-core size) + F(H) reactivations =
-+ X * scan ratio < X + 1000
+arch/arm/lib/clear_user.S: Assembler messages:
+arch/arm/lib/clear_user.S:33: Error: bad instruction `strbtal r2,[r0],#1'
+arch/arm/lib/clear_user.S:34: Error: bad instruction `strbtle r2,[r0],#1'
+arch/arm/lib/clear_user.S:35: Error: bad instruction `strbtlt r2,[r0],#1'
+arch/arm/lib/clear_user.S:39: Error: bad instruction `strtpl r2,[r0],#4'
+arch/arm/lib/clear_user.S:39: Error: bad instruction `strtpl r2,[r0],#4'
+arch/arm/lib/clear_user.S:42: Error: bad instruction `strtpl r2,[r0],#4'
+arch/arm/lib/clear_user.S:44: Error: bad instruction `strbtne r2,[r0],#1'
+arch/arm/lib/clear_user.S:44: Error: bad instruction `strbtne r2,[r0],#1'
 
-As I said before, there is no X on left-hand of this formula. To
-access all Pn and
-re-access P1, we need 1200M file list scan and reclaim. More scan isn't nee=
-ded.
-With your patch "limit the range of LRU type balancing", scan ratio
-between file/anon
-list is limited to 0.5 ~ 2.0, so, maximum anon scan would be 1200 M *
-2.0, that is,
-2400 M and not bounded by X. That means that file list cannot be
-stable with some X.
+Bisect log below.
 
-> Activations persist as long as anon isn't fully scanned and it isn't
-> established yet that it's fully hot. Meaning, we optimistically assume
-> the refaulting pages can be workingset until we're proven wrong.
->
-> > According to the size of X, Pn's refault result would be different. Pn =
-could
-> > be activated with large enough X and then F(H) could be evicted. In ide=
-al
-> > case (unified list), for this example, Pn should not be activated in an=
-y X.
->
-> Yes. The active/iocost split would allow us to be smarter about it.
->
-> > This is a fundamental problem since we have two list type (file/anon) a=
-nd
-> > scan ratio limit is required. Anyway, we need to take care of this real=
-ity and
-> > the way most safe is to count IO cost instead of doing activation in th=
-is
-> > 'non-resident dist < (active + anon list)' case.
->
-> Agreed here again.
->
-> > Again, for this patch, I'm not confident myself so please let me know i=
-f I'm
-> > wrong.
->
-> As far as this patch goes, I think it's important to look at the
-> bigger picture.
->
-> We need to have convergence first before being able to worry about
-> optimizing. Stable states are optimizations, but false stable states
-> are correctness problems.
->
-> For the longest time, we scanned active pages unconditionally during
-> page reclaim. This was always safe in the sense that it wouldn't get
-> stuck on a stale workingset, but it incurs unnecessary workingset
-> churn when reclaim is driven by use-once patterns.
->
-> We optimized the latter too aggressively, and as a result caused
-> situations where we indefinitely fail to cache the hottest
-> data. That's not really a workable trade-off.
->
-> With the active/iocost split you're suggesting, we can reasonably
-> optimize your example scenario. But we can't do it if the flipside
-> means complete failure to transition between in-memory sets.
->
-> So I think we should go ahead with this patch (with the anon age
-> recognition fixed, because that's a correctness issue), and follow it
-> up with the stable state optimization to shrink anon first.
+Guenter
 
-If my lastly found example is a correct example (your confirm is required),
-it is also related to the correctness issue since cold pages causes
-eviction of the hot pages repeatedly.
-
-In this case, they (without patch, with patch) all have some correctness
-issue so we need to judge which one is better in terms of overall impact.
-I don't have strong opinion about it so it's up to you to decide the way to=
- go.
-
-Thanks.
+---
+# bad: [f7c3cc559c2e60aedae9799208fc8dd85211b971] Linux 4.9.226-rc1
+# good: [82dddebfe7da9d2670977ab723da2fdac3eff5b0] Linux 4.9.225
+git bisect start 'HEAD' 'v4.9.225'
+# bad: [d1560c566028eb1ce2b446ef1ce8e36cb85f58e5] ARM: dts: imx: Correct B850v3 clock assignment
+git bisect bad d1560c566028eb1ce2b446ef1ce8e36cb85f58e5
+# good: [3a416993574184aefe8abe230bfcfae7464f438e] gfs2: move privileged user check to gfs2_quota_lock_check
+git bisect good 3a416993574184aefe8abe230bfcfae7464f438e
+# good: [1b96153fc668b0ba6fcc8c05729898773c5bf9cf] Input: xpad - add custom init packet for Xbox One S controllers
+git bisect good 1b96153fc668b0ba6fcc8c05729898773c5bf9cf
+# bad: [b6eb3d378d94ebcfd35ebc881310b6dc684ca7a6] ARM: uaccess: consolidate uaccess asm to asm/uaccess-asm.h
+git bisect bad b6eb3d378d94ebcfd35ebc881310b6dc684ca7a6
+# good: [a4174aaf3c0998c50023fabf48f4107286fe30e6] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
+git bisect good a4174aaf3c0998c50023fabf48f4107286fe30e6
+# bad: [db2e66e6d39b037c9538edc5b85094b70fff97ab] ARM: 8843/1: use unified assembler in headers
+git bisect bad db2e66e6d39b037c9538edc5b85094b70fff97ab
+# first bad commit: [db2e66e6d39b037c9538edc5b85094b70fff97ab] ARM: 8843/1: use unified assembler in headers
