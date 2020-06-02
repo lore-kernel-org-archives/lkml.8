@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E795C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 398E9207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181AA2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 14:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591107006;
-	bh=5kdWcRvjyQscoknTE3/+ligCbxi7dlo+MyoefG7KHJM=;
+	s=default; t=1591107090;
+	bh=q40Prapa4/P9sMDZERYGcRcWWL9XAhQVnAhfCZEjRSg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qe5yJPFmAJoyOEzbqmM+FLr9Fu99cZJbVETBhJBvpAB6ohpsfKv3rwsx1ruc/Jb74
-	 5kREI5P8vLUBStGi+ne68XDYbHIxlmi5Qk89WLcUNEDO6GyHDTP/nq3AeLrfGTLcIi
-	 gZhMgDl4NpVA6hUGhbNZb95IwYcRkBWAHcR1RThU=
+	b=boVV2ytSvr8yBy7Z3IMzjzcccbOj8w48SSR+l+GuSro+vwHaJ1cahYR8Xlz5mJ+9F
+	 7v8TRSuTx/P8MUTx2Xy3E7qxsnPxaa2w5rGn2r4QxOrLBhS3GeAejC78PI+wN/ebIA
+	 Bf7+SGysp0IB22yJFS/AvjJxmWDvtKKX2q1LxL+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgFBOKF (ORCPT
+        id S1727785AbgFBOL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 10:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58790 "EHLO mail.kernel.org"
+        Tue, 2 Jun 2020 10:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgFBOKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 10:10:05 -0400
+        id S1725958AbgFBOL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 10:11:28 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD1F206E2;
-        Tue,  2 Jun 2020 14:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B96206E2;
+        Tue,  2 Jun 2020 14:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591107004;
-        bh=5kdWcRvjyQscoknTE3/+ligCbxi7dlo+MyoefG7KHJM=;
+        s=default; t=1591107087;
+        bh=q40Prapa4/P9sMDZERYGcRcWWL9XAhQVnAhfCZEjRSg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tGoNIc14TGzxGSo/15xBUc4QG/xmyGlKO6P5uk5ErbVyP7Fv3gC0HuiDd+aviFoYy
-         N9Zau/QFkOIIptzOPY6xgFnQU8aqvdqrJNBks/8n1DCQO6juRouhsKRfPXSwL8SPwc
-         RkLAlYzsmHoVycHtOInRoFwYL73GIwJHBXoQy8uk=
+        b=BjcfXPBhHpKvYmnQxmqxc91oZSzvlh4agEbB05ua8GgAOT0JH/c7xzTovOtHKHnjb
+         yVoUxhmuYWy5otKMfHhLSLPFSAeOSxJsZ6K4iFXnh8MTGjASdzsGAj/K1I8Xl1PYX8
+         ob4hwtuaR6MQAhmS4IScVPCLgS5b/cazP7uE6Nuk=
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5F9D440AFD; Tue,  2 Jun 2020 11:10:02 -0300 (-03)
-Date:   Tue, 2 Jun 2020 11:10:02 -0300
+        id 2EE1540AFD; Tue,  2 Jun 2020 11:11:25 -0300 (-03)
+Date:   Tue, 2 Jun 2020 11:11:25 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -51,96 +51,96 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 2/2] perf tools: Remove some duplicated includes
-Message-ID: <20200602141002.GQ31795@kernel.org>
+Subject: Re: [PATCH 1/2] perf tools: check libasan and libubsan in
+ Makefile.config
+Message-ID: <20200602141125.GR31795@kernel.org>
 References: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
- <1591071304-19338-2-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591071304-19338-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 02, 2020 at 12:15:04PM +0800, Tiezhu Yang escreveu:
-> There exists some duplicated includes in tools/perf, remove them.
+Em Tue, Jun 02, 2020 at 12:15:03PM +0800, Tiezhu Yang escreveu:
+> When build perf with ASan or UBSan, if libasan or libubsan can not find,
+> the feature-glibc is 0 and there exists the following error log which is
+> wrong, because we can find gnu/libc-version.h in /usr/include, glibc-devel
+> is also installed.
 
-Applied, thanks.
+I'll check this later,
 
 - Arnaldo
  
+> [yangtiezhu@linux perf]$ make DEBUG=1 EXTRA_CFLAGS='-fno-omit-frame-pointer -fsanitize=address'
+>   BUILD:   Doing 'make -j4' parallel build
+>   HOSTCC   fixdep.o
+>   HOSTLD   fixdep-in.o
+>   LINK     fixdep
+> <stdin>:1:0: warning: -fsanitize=address and -fsanitize=kernel-address are not supported for this target
+> <stdin>:1:0: warning: -fsanitize=address not supported for this target
+> 
+> Auto-detecting system features:
+> ...                         dwarf: [ OFF ]
+> ...            dwarf_getlocations: [ OFF ]
+> ...                         glibc: [ OFF ]
+> ...                          gtk2: [ OFF ]
+> ...                      libaudit: [ OFF ]
+> ...                        libbfd: [ OFF ]
+> ...                        libcap: [ OFF ]
+> ...                        libelf: [ OFF ]
+> ...                       libnuma: [ OFF ]
+> ...        numa_num_possible_cpus: [ OFF ]
+> ...                       libperl: [ OFF ]
+> ...                     libpython: [ OFF ]
+> ...                     libcrypto: [ OFF ]
+> ...                     libunwind: [ OFF ]
+> ...            libdw-dwarf-unwind: [ OFF ]
+> ...                          zlib: [ OFF ]
+> ...                          lzma: [ OFF ]
+> ...                     get_cpuid: [ OFF ]
+> ...                           bpf: [ OFF ]
+> ...                        libaio: [ OFF ]
+> ...                       libzstd: [ OFF ]
+> ...        disassembler-four-args: [ OFF ]
+> 
+> Makefile.config:393: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
+> Makefile.perf:224: recipe for target 'sub-make' failed
+> make[1]: *** [sub-make] Error 2
+> Makefile:69: recipe for target 'all' failed
+> make: *** [all] Error 2
+> [yangtiezhu@linux perf]$ ls /usr/include/gnu/libc-version.h
+> /usr/include/gnu/libc-version.h
+> 
+> After install libasan and libubsan, the feature-glibc is 1 and the build
+> process is success, so the cause is related with libasan or libubsan, we
+> should check them and print an error log to reflect the reality.
+> 
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  tools/perf/builtin-report.c | 1 -
->  tools/perf/util/annotate.c  | 1 -
->  tools/perf/util/auxtrace.c  | 1 -
->  tools/perf/util/config.c    | 1 -
->  tools/perf/util/session.c   | 1 -
->  5 files changed, 5 deletions(-)
+>  tools/perf/Makefile.config | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index ba63390..5425a2c 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -47,7 +47,6 @@
->  #include "util/time-utils.h"
->  #include "util/auxtrace.h"
->  #include "util/units.h"
-> -#include "util/branch.h"
->  #include "util/util.h" // perf_tip()
->  #include "ui/ui.h"
->  #include "ui/progress.h"
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index d828c2d..76bfb4a 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -41,7 +41,6 @@
->  #include <linux/bitops.h>
->  #include <linux/kernel.h>
->  #include <linux/string.h>
-> -#include <bpf/libbpf.h>
->  #include <subcmd/parse-options.h>
->  #include <subcmd/run-command.h>
->  
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index 749487a..94a8f4f 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -55,7 +55,6 @@
->  #include "util/mmap.h"
->  
->  #include <linux/ctype.h>
-> -#include <linux/kernel.h>
->  #include "symbol/kallsyms.h"
->  #include <internal/lib.h>
->  
-> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> index ef38eba..64f14a5 100644
-> --- a/tools/perf/util/config.c
-> +++ b/tools/perf/util/config.c
-> @@ -20,7 +20,6 @@
->  #include "build-id.h"
->  #include "debug.h"
->  #include "config.h"
-> -#include "debug.h"
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <stdlib.h>
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index c11d89e..5550e26e 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -33,7 +33,6 @@
->  #include "../perf.h"
->  #include "arch/common.h"
->  #include <internal/lib.h>
-> -#include <linux/err.h>
->  
->  #ifdef HAVE_ZSTD_SUPPORT
->  static int perf_session__process_compressed_event(struct perf_session *session,
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 12a8204..b699d21 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -387,6 +387,12 @@ else
+>        NO_LIBBPF := 1
+>        NO_JVMTI := 1
+>      else
+> +      ifneq ($(shell ldconfig -p | grep libasan >/dev/null 2>&1; echo $$?), 0)
+> +        msg := $(error No libasan found, please install libasan);
+> +      endif
+> +      ifneq ($(shell ldconfig -p | grep libubsan >/dev/null 2>&1; echo $$?), 0)
+> +        msg := $(error No libubsan found, please install libubsan);
+> +      endif
+>        ifneq ($(filter s% -static%,$(LDFLAGS),),)
+>          msg := $(error No static glibc found, please install glibc-static);
+>        else
 > -- 
 > 2.1.0
 > 
