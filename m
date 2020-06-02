@@ -2,161 +2,146 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52871C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCED2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B21C2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rORvsn2d"
+	by mail.kernel.org (Postfix) with ESMTP id 8FCBB20757
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 13:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591106185;
+	bh=+tKnyzW2ZhO+eQ8P+OskrT46Moe5oxt5I+gtC8+08g4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kkL7etHGsLTjyH+X84zETcWCDQAsMvXkUcfcvCpuZYp1RkAPj9sF/whN6zokd3Yjr
+	 0W1cEiEwpVCruFenh2O/FgpKAMX8kBwSVawn+jjLgryfDX3k6Xe5CWNZRisqUXlQOA
+	 II8H0DwrENgdubj9BEWLda6cpKL2NMRu0KRYIVqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgFBNym (ORCPT
+        id S1726946AbgFBN4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 09:54:42 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52588 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbgFBNym (ORCPT
+        Tue, 2 Jun 2020 09:56:24 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41403 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgFBN4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 09:54:42 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052DqYKO120296;
-        Tue, 2 Jun 2020 13:54:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : reply-to : mime-version : content-type;
- s=corp-2020-01-29; bh=PvGlKKbIzRg+r/rxEzHH7QUrhuv1NTZV4doWX07tn4o=;
- b=rORvsn2dvfxdda6CIal3pCOM1RbD9OnHPl26ZLw5ONJ2y0cxGoo1O22WiYU7m822AAIu
- VbcMAeWlcMFLzA8mzZ63E2Pj5g6Ds+poCt+SCZNf+1fKk0bnvglQBuF0xE//vAn3MIQU
- V3gBtSLn/Zl7Hhw4smg2Bkf1IZAci4bpgpBwYPefKwt8YzOcF2bG/kTOJte8bdgimbNt
- 1h/4Es+smv9HxxntTFWSlChEb1WdGfxKEC89iSLqJCU8akrV5qo7AonT8/SFx+OjSTf3
- HtFT8XOljBdQIZAQSL+n3FtGv7Bz7z1v+nRFD7tjtvNXGvSr6r9jAJqzak+8GYWEXTGq 7g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31bewqv7gp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 02 Jun 2020 13:54:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052DrP2a142498;
-        Tue, 2 Jun 2020 13:54:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 31c12p80yc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jun 2020 13:54:18 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 052DsGZr004520;
-        Tue, 2 Jun 2020 13:54:16 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 06:54:16 -0700
-Date:   Tue, 2 Jun 2020 16:54:09 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Zhou Wang <wangzhou1@hisilicon.com>,
-        Shukun Tan <tanshukun1@huawei.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] crypto: hisilicon - allow smaller reads in debugfs
-Message-ID: <20200602135409.GA59808@mwanda>
-Reply-To: b6da310b-e633-9f74-f7af-7791d803aaf5@huawei.com
+        Tue, 2 Jun 2020 09:56:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j10so3498747wrw.8;
+        Tue, 02 Jun 2020 06:56:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xEDuRNO0hoLyf2dsuZwG9i6NBcBwN5Cee5iDNQjzrxQ=;
+        b=sDLREcBGj2jSzWIFevjiFSJJcDTJO4UJHigdV6fIuVZzx8gxKVUdHElBp2NBqX0/vr
+         KSPApcOMVc3IsPnMAXJQN8H+0fPqRW1jxzVliYzq0V+DhXMPfXX5y6mkowcv8ZoHnAsz
+         uV/6QmvIHlFi66mcB3bC53zYv3pSqjUtl+Hk4S166Rd3NvpOypamqzz2WyFdQD54RuBl
+         IrwWM/RCI70IA9Y587C9fN+o90FR788sDsBO53QzLRNq/87JLh4VafslxMGpORIdERzV
+         BXlDftWjbe2WDsDtXlnnbczrF+tG3Q8JvVJXwU0P3s6PBSQOgI0t7mOfgBHU6rjn1NbK
+         Xyrw==
+X-Gm-Message-State: AOAM533ddfF1Ex7YgE8o+m1CAUMBkoj0oxeP1uANuUtiMmJLDwGclTUP
+        YZg+yt6xz3H+SqR86ZsALeo8s0wv
+X-Google-Smtp-Source: ABdhPJwZR7zeuOOwd/F1h13TwWHbHDPsMBVbMUzwHWSM9A39cAGwW8kkkg0ywrN5jAe9fY9AUT0R8Q==
+X-Received: by 2002:adf:cf06:: with SMTP id o6mr26086363wrj.163.1591106181464;
+        Tue, 02 Jun 2020 06:56:21 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id g187sm3851690wma.17.2020.06.02.06.56.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 06:56:20 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 13:56:18 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        KVM <kvm@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jon Doron <arilou@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: linux-next: manual merge of the hyperv tree with the kvm tree
+Message-ID: <20200602135618.5iw6zd2jqzqqcwxm@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200602171802.560d07bc@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9639 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 suspectscore=0 impostorscore=0 cotscore=-2147483648
- lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006020098
+In-Reply-To: <20200602171802.560d07bc@canb.auug.org.au>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Originally this code rejected any read less than 256 bytes.  There
-is no need for this artificial limit.  We should just use the normal
-helper functions to read a string from the kernel.
+On Tue, Jun 02, 2020 at 05:18:02PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the hyperv tree got a conflict in:
+> 
+>   arch/x86/include/asm/hyperv-tlfs.h
+> 
+> between commit:
+> 
+>   22ad0026d097 ("x86/hyper-v: Add synthetic debugger definitions")
+> 
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-v2: Use simple_read_from_buffer().  The v1 was slightly half arsed
-because I left the original check for:
+Paolo
 
-	if (*pos)
-		return 0;
+As far as I can tell you merged that series a few days ago. Do you plan
+to submit it to Linus in this merge window? How do you want to proceed
+to fix the conflict?
 
-So it could result in partial reads.  The new code means that if you
-want to read the buffer one byte at a time, that's fine or if you want
-to read it in one 256 byte chunk that's also fine.  Plus it deletes 21
-lines of code and is a lot cleaner.
+Wei.
 
- drivers/crypto/hisilicon/qm.c | 33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
+> from the kvm tree and commit:
+> 
+>   c55a844f46f9 ("x86/hyperv: Split hyperv-tlfs.h into arch dependent and independent files")
+> 
+> from the hyperv tree.
+> 
+> I fixed it up (I removed the conficting bits from that file and added
+> the following patch) and can carry the fix as necessary. This is now fixed
+> as far as linux-next is concerned, but any non trivial conflicts should
+> be mentioned to your upstream maintainer when your tree is submitted for
+> merging.  You may also want to consider cooperating with the maintainer
+> of the conflicting tree to minimise any particularly complex conflicts.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 2 Jun 2020 17:15:49 +1000
+> Subject: [PATCH] x86/hyperv: merge fix for hyperv-tlfs.h split
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  include/asm-generic/hyperv-tlfs.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+> index 262fae9526b1..e73a11850055 100644
+> --- a/include/asm-generic/hyperv-tlfs.h
+> +++ b/include/asm-generic/hyperv-tlfs.h
+> @@ -145,6 +145,9 @@ struct ms_hyperv_tsc_page {
+>  #define HVCALL_SET_VP_REGISTERS			0x0051
+>  #define HVCALL_POST_MESSAGE			0x005c
+>  #define HVCALL_SIGNAL_EVENT			0x005d
+> +#define HVCALL_POST_DEBUG_DATA			0x0069
+> +#define HVCALL_RETRIEVE_DEBUG_DATA		0x006a
+> +#define HVCALL_RESET_DEBUG_SESSION		0x006b
+>  #define HVCALL_RETARGET_INTERRUPT		0x007e
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
+> @@ -177,6 +180,7 @@ enum HV_GENERIC_SET_FORMAT {
+>  #define HV_STATUS_INVALID_HYPERCALL_INPUT	3
+>  #define HV_STATUS_INVALID_ALIGNMENT		4
+>  #define HV_STATUS_INVALID_PARAMETER		5
+> +#define HV_STATUS_OPERATION_DENIED		8
+>  #define HV_STATUS_INSUFFICIENT_MEMORY		11
+>  #define HV_STATUS_INVALID_PORT_ID		17
+>  #define HV_STATUS_INVALID_CONNECTION_ID		18
+> -- 
+> 2.26.2
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index 9bb263cec6c30..13ccb9e29a2e1 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -1064,19 +1064,10 @@ static ssize_t qm_cmd_read(struct file *filp, char __user *buffer,
- 	char buf[QM_DBG_READ_LEN];
- 	int len;
- 
--	if (*pos)
--		return 0;
--
--	if (count < QM_DBG_READ_LEN)
--		return -ENOSPC;
-+	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n",
-+			"Please echo help to cmd to get help information");
- 
--	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n",
--		       "Please echo help to cmd to get help information");
--
--	if (copy_to_user(buffer, buf, len))
--		return -EFAULT;
--
--	return (*pos = len);
-+	return simple_read_from_buffer(buffer, count, pos, buf, len);
- }
- 
- static void *qm_ctx_alloc(struct hisi_qm *qm, size_t ctx_size,
-@@ -2691,24 +2682,12 @@ static ssize_t qm_status_read(struct file *filp, char __user *buffer,
- {
- 	struct hisi_qm *qm = filp->private_data;
- 	char buf[QM_DBG_READ_LEN];
--	int val, cp_len, len;
--
--	if (*pos)
--		return 0;
--
--	if (count < QM_DBG_READ_LEN)
--		return -ENOSPC;
-+	int val, len;
- 
- 	val = atomic_read(&qm->status.flags);
--	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
--	if (!len)
--		return -EFAULT;
--
--	cp_len = copy_to_user(buffer, buf, len);
--	if (cp_len)
--		return -EFAULT;
-+	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
- 
--	return (*pos = len);
-+	return simple_read_from_buffer(buffer, count, pos, buf, len);
- }
- 
- static const struct file_operations qm_status_fops = {
--- 
-2.26.2
 
