@@ -2,237 +2,178 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6496C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4157EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0562072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:30:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EAe3YvVg"
+	by mail.kernel.org (Postfix) with ESMTP id E752D207D0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591083236;
+	bh=sirDg1xJuxbZggDxmpG6hoGYOo2fRytgIE+Gmort8gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MQnFJ6Kx3RyZZqWDasRSR1jTYRgrfRWfo7q46ZDGhr/7JzbymoqL9Ghpwvcra+gCp
+	 YpGLG7BQiVjWCadh8c7K+MC4xk/iVX5BrdNOZuJEtVGrNk2MHMn42JrMxTUKvJrU+q
+	 wRv0seqSv57n5VFvqZiDov02l7bPVpjzyfipA/Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgFBHab (ORCPT
+        id S1726139AbgFBHdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:30:31 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:21848 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725616AbgFBHab (ORCPT
+        Tue, 2 Jun 2020 03:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgFBHdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:30:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591083029; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=t/U+WoycaFN2KK63K1sGkIxDUPZFgqtCuW351y3NGsQ=;
- b=EAe3YvVg2lZsQWsSVvVlIQEgkh/nYGly9Wk0dR5SE7FtNaP9mgyWa9hv4wf5qoGkdiDR+Wgk
- jfwGB27AbQnoMqB3I814X+zwYGGvt9ARG5Q/l7Krn7a+Q1qtmIye2F/0xihJ0bNAnruzzVlo
- x3+1ugGUaMZCXL4CMEMbQL68iKM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5ed5ffffb65440fdba5f0d02 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 07:30:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6AD15C433C6; Tue,  2 Jun 2020 07:30:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4C199C433C6;
-        Tue,  2 Jun 2020 07:30:05 +0000 (UTC)
+        Tue, 2 Jun 2020 03:33:54 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263BAC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 00:33:54 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l11so2298938wru.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MNE2ZaZoGCsQab8S1AhA7MsjetryRQlYEryj4Ashfjo=;
+        b=JbdpIHPQLNIKUWIiEIkVyKFCPCv+GqdRpJF2bSjHHiVUpO7JdMEQpH2ZEODHJkmK9E
+         G9EfOIHnWpFkx8+0l0geJ14u21Vc++S17CACfYSctHnR3ud8G3JujnpOArpqJMWrKeCB
+         sgxUeyL3vA/oBNqXX6NoVRXtwjsyFFxwSwa3XJAZPSKiTx22IXx1jGj2q0XNlAefSW5O
+         F8PDXjqMQnkWwvX3+oFSLPC1EpM3DpStW3Ca339TuWtIUEltPXeObp5HvMo0G+mRisiI
+         h/vT20Dd4KzPJ/dECFyszYTzq0WK27Z0U9PwcBnQB8iRrM4Tlo858WKzJGoxoia3YVBi
+         d5hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=MNE2ZaZoGCsQab8S1AhA7MsjetryRQlYEryj4Ashfjo=;
+        b=OIP0VQ/yNSJ1R4MkBdekQvXTjBEcvKV6sFF9ZpMZTHM7zibB1pX8spkDm/okHNECVk
+         LJ6yWljMmeNFQbxp6s4N8cpXAmyK+Olo0V5d4aEPuPyulSUOAobG8cYELuEX14klJTDg
+         ngjU/dzW8U+l7HN3FzE4V4VyYrfluZ+tZz65CMrVq3AXSkjgNDJyPlLLUC8Ic+Gxk0Ih
+         sc+y1b2Pyo98S+VI9ZBJDEJKgQkkKFFW6vhSHxqP66FnbXPRlZ27Sa8wP6uzjh476M3K
+         vLvhZo3bczsNXAppE6FshsUpERv+nrQK8E8YKRiE/a/cR95fP3SIm9xneL9Mdb4ZdhaZ
+         B2rQ==
+X-Gm-Message-State: AOAM531H9mqkhbPv2k9hG5ij/456OGSkdb4WEjFUstgOS4n52r5sX61v
+        PwjcruyTp/D2PY18JkEN/c3t3Gf4
+X-Google-Smtp-Source: ABdhPJwo7nfA/TWpDdc309CnVGj/liJ4+ZVx+NR+APvIEu3TpCeFlLxQkFPF4YHGb00DLJHiRhxyFw==
+X-Received: by 2002:a05:6000:1292:: with SMTP id f18mr25551203wrx.208.1591083232833;
+        Tue, 02 Jun 2020 00:33:52 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u13sm2247942wmm.6.2020.06.02.00.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 00:33:52 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 09:33:50 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Balbir Singh <sblbir@amazon.com>
+Cc:     torvalds@linux-foundation.org, a.p.zijlstra@chello.nl,
+        akpm@linux-foundation.org, bp@alien8.de,
+        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
+        benh@kernel.crashing.org
+Subject: Re: [GIT PULL] x86/mm changes for v5.8
+Message-ID: <20200602073350.GA481221@gmail.com>
+References: <20200601170102.GA1346815@gmail.com>
+ <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 02 Jun 2020 13:00:05 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
-        Stephen Boyd <swboyd@chromium.org>, robin.murphy@arm.com
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-In-Reply-To: <20200601212858.GB24287@xps15>
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15>
-Message-ID: <6d759cc28628ea72767c1304883630eb@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
 
-Thanks for taking your time for review.
+* Balbir Singh <sblbir@amazon.com> wrote:
 
-On 2020-06-02 02:58, Mathieu Poirier wrote:
-> Hi Sai,
+> > At a _minimum_, SMT being enabled should disable this kind of crazy
+> > pseudo-security entirely, since it is completely pointless in that
+> > situation. Scheduling simply isn't a synchronization point with SMT
+> > on, so saying "sure, I'll flush the L1 at context switch" is beyond
+> > stupid.
+> >
+> > I do not want the kernel to do things that seem to be "beyond stupid".
+> >
+> > Because I really think this is just PR and pseudo-security, and I
+> > think there's a real cost in making people think "oh, I'm so special
+> > that I should enable this".
+> >
+> > I'm more than happy to be educated on why I'm wrong, but for now I'm
+> > unpulling it for lack of data.
+> >
+> > Maybe it never happens on SMT because of all those subtle static
+> > branch rules, but I'd really like to that to be explained.
 > 
-> On top of the comments already privided by Mike, I have the following:
-> 
-> On Mon, Jun 01, 2020 at 01:32:26PM +0530, Sai Prakash Ranjan wrote:
->> Implement a shutdown callback to ensure ETR/ETF hardware is
->> properly shutdown in reboot/shutdown path. This is required
->> for ETR/ETF which has SMMU address translation enabled like
->> on SC7180 SoC and few others. If the hardware is still accessing
->> memory after SMMU translation is disabled as part of SMMU
->> shutdown callback in system reboot or shutdown path, then
->> IOVAs(I/O virtual address) which it was using will go on the bus
->> as the physical addresses which might result in unknown crashes
->> (NoC/interconnect errors). So we make sure from this shutdown
->> callback that the ETR/ETF is shutdown before SMMU translation is
->> disabled and device_link in SMMU driver will take care of ordering
->> of shutdown callbacks such that SMMU shutdown callback is not
->> called before any of its consumer shutdown callbacks.
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  .../hwtracing/coresight/coresight-tmc-etf.c   |  4 +--
->>  .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
->>  drivers/hwtracing/coresight/coresight-tmc.c   | 29 
->> +++++++++++++++++++
->>  drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
->>  4 files changed, 35 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c 
->> b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> index 36cce2bfb744..cba3e7592820 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> @@ -85,7 +85,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata 
->> *drvdata)
->>  	CS_LOCK(drvdata->base);
->>  }
->> 
->> -static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->>  	__tmc_etb_disable_hw(drvdata);
->>  	coresight_disclaim_device(drvdata->base);
->> @@ -118,7 +118,7 @@ static int tmc_etf_enable_hw(struct tmc_drvdata 
->> *drvdata)
->>  	return 0;
->>  }
->> 
->> -static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
->> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->>  	CS_UNLOCK(drvdata->base);
->> 
-> 
-> Why do we care about ETB and ETF when they both use RAM internal to the 
-> device?
-> Moreover, the system RAM they use is not dedicated and as such falls 
-> back to the
-> kernel's memory pool.
-> 
+> The documentation calls out the SMT restrictions.
 
-Actually we don't, I added the disable for ETF/ETB for completeness 
-since we are
-adding shutdown callback for TMC devices and not just ETR although this 
-issue applies
-only for ETR and it doesn't hurt to disable these devices in shutdown 
-path.
+That's not what Linus suggested though, and you didn't answer his 
+concerns AFAICS.
 
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c 
->> b/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> index 625882bc8b08..b29c2db94d96 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> @@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct 
->> tmc_drvdata *drvdata)
->> 
->>  }
->> 
->> -static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->>  	__tmc_etr_disable_hw(drvdata);
->>  	/* Disable CATU device if this ETR is connected to one */
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c 
->> b/drivers/hwtracing/coresight/coresight-tmc.c
->> index 5a271ebc4585..7e687a356fe0 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
->> @@ -540,6 +540,34 @@ static int tmc_probe(struct amba_device *adev, 
->> const struct amba_id *id)
->>  	return ret;
->>  }
->> 
->> +static void tmc_shutdown(struct amba_device *adev)
->> +{
->> +	struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
->> +
->> +	if (!drvdata->enable)
->> +		goto out;
->> +
->> +	/*
->> +	 * We do not care about the active trace sessions here
->> +	 * since the system is going down unlike remove callback,
->> +	 * just make sure that the hardware is shutdown.
->> +	 */
->> +	switch (drvdata->config_type) {
->> +	case TMC_CONFIG_TYPE_ETB:
->> +		tmc_etb_disable_hw(drvdata);
->> +		break;
->> +	case TMC_CONFIG_TYPE_ETF:
->> +		tmc_etf_disable_hw(drvdata);
->> +		break;
->> +	case TMC_CONFIG_TYPE_ETR:
->> +		tmc_etr_disable_hw(drvdata);
->> +	}
->> +
->> +out:
->> +	misc_deregister(&drvdata->miscdev);
->> +	coresight_unregister(drvdata->csdev);
-> 
-> If a session is active when tmc_shutdown() is called, unregistering the 
-> ETF/ETR
-> will result in a kernel crash if the session is stopped before the 
-> kernel has
-> had the opportunity to shutdown.  It is the problem as trying to make 
-> coresight
-> drivers modular.
-> 
-> For this to really work the ongoing session would need to be stopped.  
-> That
-> would teardown the path and stop the sink.
+The documentation commit merely mentions that this feature is useless 
+with SMT:
 
-I have tested this with and without active trace sessions multiple times 
-on 2 devices
-and did not observe a single crash. The crash should be easily triggered 
-as per
-what you are saying if we have active sessions but I do not see any 
-crash.
+  0fcfdf55db9e: ("Documentation: Add L1D flushing Documentation")
 
-> 
-> That being said I'm sure that dependencies on an IOMMU isn't a problem 
-> confined
-> to coresight. I am adding Robin Murphy, who added this commit [1], to 
-> the thread
-> in the hope that he can provide guidance on the right way to do this.
-> 
++Limitations
++-----------
++
++The mechanism does not mitigate L1D data leaks between tasks belonging to
++different processes which are concurrently executing on sibling threads of
++a physical CPU core when SMT is enabled on the system.
++
++This can be addressed by controlled placement of processes on physical CPU
++cores or by disabling SMT. See the relevant chapter in the L1TF mitigation
++document: :ref:`Documentation/admin-guide/hw-vuln/l1tf.rst <smt_control>`.
 
-SMMU/IOMMU won't be able to do much here as it is the client's 
-responsiblity to
-properly shutdown and SMMU device link just makes sure that 
-SMMU(supplier) shutdown is
-called only after its consumers shutdown callbacks are called.
+Linus is right that the proper response is for this feature to do 
+*nothing* if SMT is enabled on affected CPUs - but that's not 
+implemented in the patches ...
+
+Or rather, we should ask a higher level question as well, maybe we 
+should not do this feature at all?
+
+Typically cloud computing systems such as AWS will have SMT enabled, 
+because cloud computing pricing is essentially per vCPU, and they want 
+to sell the hyperthreads as vCPUs. So the safest solution, disabling 
+SMT on affected systems, is not actually done, because it's an 
+economic non-starter. (I'd like to note the security double standard 
+there: the most secure option, to disable SMT, is not actually used ...)
+
+BTW., I wonder how Amazon is solving the single-vCPU customer workload 
+problem on AWS: if the vast majority of AWS computing capacity is 
+running on a single vCPU, because it's the cheapest tier and because 
+it's more than enough capacity to run a website. Even core-scheduling 
+doesn't solve this fundamental SMT security problem: separate customer 
+workloads *cannot* share the same core - but this means that the 
+single-vCPU workloads will only be able to utilize 50% of all 
+available vCPUs if they are properly isolated.
+
+Or if the majority of AWS EC2 etc. customer systems are using 2,4 or 
+more vCPUs, then both this feature and 'core-scheduling' is 
+effectively pointless from a security POV, because the cloud computing 
+systems are de-facto partitioned into cores already, with each core 
+accounted as 2 vCPUs.
+
+The hour-up-rounded way AWS (and many other cloud providers) account 
+system runtime costs suggests that they are doing relatively static 
+partitioning of customer workloads already, i.e. customer workloads 
+are mapped to actual physical hardware in an exclusive fashion, with 
+no overcommitting of physical resources and no sharing of cores 
+between customers.
+
+If I look at the pricing and capabilities table of AWS:
+
+  https://aws.amazon.com/ec2/pricing/on-demand/
+
+Only the 't2' and 't3' On-Demand instances have 'Variable' pricing, 
+which is only 9% of the offered 228 configurations.
+
+I.e. I strongly suspect that neither L1D flushing nor core-scheduling 
+is actually required on affected vulnerable CPUs to keep customer 
+workloads isolated from each other, on the majority of cloud computing 
+systems, because they are already isolated via semi-static 
+partitioning, using pricing that reflects static partitioning.
 
 Thanks,
-Sai
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+	Ingo
