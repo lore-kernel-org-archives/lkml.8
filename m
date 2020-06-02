@@ -2,111 +2,131 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA5E2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:23:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="VCzX7wAD"
+	by mail.kernel.org (Postfix) with ESMTP id EDE3720734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 07:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgFBHXO (ORCPT
+        id S1726130AbgFBH0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 03:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFBHXN (ORCPT
+        Tue, 2 Jun 2020 03:26:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33860 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725616AbgFBH0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 03:23:13 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0A3C05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 00:23:13 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r15so1986693wmh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 00:23:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZHo1QuB0kAfaTwTp4RSd4mHS3YIQOmK6CEUo3780m3M=;
-        b=VCzX7wADfccH6WdRDKjo2XpH5R6yQWUPDumdpTdeokAH9JR5oym803nnUlxjwjh3tG
-         EUFPsHWr0DG/eUOJZy/h3sEJU57Dpy7zK5QnhUTF1RA2fVscezKmtKunGzb8oqCWO/MS
-         HOwBSYlwXrQhitaFL+ZU138oUQ7lYi/PdzReU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZHo1QuB0kAfaTwTp4RSd4mHS3YIQOmK6CEUo3780m3M=;
-        b=sTdF96vO9c1BxeVaS/5AH3hHsFdwRd09wqyEb9vaTZztFKL0RUCMvRqZjm7Id3L+Y+
-         SQSVy/FlzCMCUXQSr1k4YS4sgzIHm/TWVIpy9fjsc5XPJKGuXCFIofVqTQaqb75YGP15
-         8fK334DSropuTJnCELKbNfWRzZ2Ej7I9ee4UFEj1TUAmSE4I6GsWAmynbAaFHUZSoHVB
-         OWDlx3LAslsx8H2acHjm2I3JGYljRQs5dtIjebL8gKXwxZZylJBNzliDOkM7+PUc3yfC
-         yk8devBIOHCiedq/0sXtLDVBqyq70uRowoy8Xp65XvbpnXux81iPARR71XrloT5V5axv
-         eH5g==
-X-Gm-Message-State: AOAM533uvmjrXyNIdN0zDDd03tIQVV29v77vgqViClRqY3y7+aKpq4E0
-        ZfxyPvotRs/MZj6IIOX5722x9dit6PI=
-X-Google-Smtp-Source: ABdhPJxnayMLHt4aiPZE6YU+Emu7SV6i6jun3yYCseigX+vwnCJ1IfR+v0MLRVFDu1up3bCG2vlEfQ==
-X-Received: by 2002:a1c:49:: with SMTP id 70mr2663299wma.184.1591082591775;
-        Tue, 02 Jun 2020 00:23:11 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id v27sm2560033wrv.81.2020.06.02.00.23.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 00:23:11 -0700 (PDT)
-Subject: Re: [PATCH] ipv4: nexthop: Fix deadcode issue by performing a proper
- NULL check
-To:     David Miller <davem@davemloft.net>, patrickeigensatz@gmail.com
-Cc:     dsahern@kernel.org, scan-admin@coverity.com, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, kuba@kernel.org, netdev@vger.kernel.org,
+        Tue, 2 Jun 2020 03:26:31 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05271m0J109860;
+        Tue, 2 Jun 2020 03:26:28 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31dfsfcbuk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 03:26:28 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0527Q6Tk004162;
+        Tue, 2 Jun 2020 07:26:26 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf47wj47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 07:26:26 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0527QN1g64422064
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Jun 2020 07:26:23 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD7C752050;
+        Tue,  2 Jun 2020 07:26:23 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.186.47])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 733F85204E;
+        Tue,  2 Jun 2020 07:26:23 +0000 (GMT)
+Subject: Re: [PATCH 1/1] s390/pci: Log new handle in clp_disable_fh()
+To:     Petr Tesarik <ptesarik@suse.com>, linux-s390@vger.kernel.org,
+        Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         linux-kernel@vger.kernel.org
-References: <20200601111201.64124-1-patrick.eigensatz@gmail.com>
- <20200601.110654.1178868171436999333.davem@davemloft.net>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <4e6ba1a8-be3b-fd22-e0b8-485d33bb51eb@cumulusnetworks.com>
-Date:   Tue, 2 Jun 2020 10:23:09 +0300
+References: <20200522183922.5253-1-ptesarik@suse.com>
+ <20200528110813.7eb1fc1f@ezekiel.suse.cz>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <9e4a0dec-d249-9443-6b93-83e3f9f33674@linux.ibm.com>
+Date:   Tue, 2 Jun 2020 09:26:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200601.110654.1178868171436999333.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200528110813.7eb1fc1f@ezekiel.suse.cz>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-02_05:2020-06-01,2020-06-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ cotscore=-2147483648 mlxscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1011 impostorscore=0 mlxlogscore=801 lowpriorityscore=0
+ suspectscore=0 spamscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/06/2020 21:06, David Miller wrote:
-> From: patrickeigensatz@gmail.com
-> Date: Mon,  1 Jun 2020 13:12:01 +0200
-> 
->> From: Patrick Eigensatz <patrickeigensatz@gmail.com>
->>
->> After allocating the spare nexthop group it should be tested for kzalloc()
->> returning NULL, instead the already used nexthop group (which cannot be
->> NULL at this point) had been tested so far.
->>
->> Additionally, if kzalloc() fails, return ERR_PTR(-ENOMEM) instead of NULL.
->>
->> Coverity-id: 1463885
->> Reported-by: Coverity <scan-admin@coverity.com>
->> Signed-off-by: Patrick Eigensatz <patrickeigensatz@gmail.com>
-> 
-> Applied, thank you.
-> 
+Hi Petr,
 
-Hi Dave,
-I see this patch in -net-next but it should've been in -net as I wrote in my
-review[1]. This patch should go along with the recent nexthop set that fixes
-a few bugs, since it could result in a null ptr deref if the spare group cannot
-be allocated.
-How would you like to proceed? Should it be submitted for -net as well?
+sorry for not reacting sooner, I was on holiday, saw your message but figured it wasn't super critical.
+Thanks for finding this issue and thank you Pierre and Vasily for stepping in.
 
-Thanks,
- Nik
+Best,
+Niklas Schnelle
 
-[1] https://lkml.org/lkml/2020/6/1/391
+On 5/28/20 11:08 AM, Petr Tesarik wrote:
+> Hi all,
+> 
+> just a gentle ping.
+> 
+> If the current behaviour (logging the original handle) was intended,
+> then it was worth mentioning in the commit message for 17cdec960cf77,
+> which made the change, but since that's no longer an option, I'd be
+> happy with an explanation in email.
+> 
+> Petr T
+> 
+> On Fri, 22 May 2020 20:39:22 +0200
+> Petr Tesarik <ptesarik@suse.com> wrote:
+> 
+>> After disabling a function, the original handle is logged instead of
+>> the disabled handle.
+>>
+>> Fixes: 17cdec960cf77 (s390/pci: Recover handle in clp_set_pci_fn())
+>> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+>> ---
+>>  arch/s390/pci/pci_clp.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+>> index ea794ae755ae..179bcecefdee 100644
+>> --- a/arch/s390/pci/pci_clp.c
+>> +++ b/arch/s390/pci/pci_clp.c
+>> @@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
+>>  
+>>  int clp_disable_fh(struct zpci_dev *zdev)
+>>  {
+>> -	u32 fh = zdev->fh;
+>>  	int rc;
+>>  
+>>  	if (!zdev_enabled(zdev))
+>>  		return 0;
+>>  
+>>  	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
+>> -	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
+>> +	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
+>>  	return rc;
+>>  }
+>>  
+> 
