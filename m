@@ -2,121 +2,122 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D504C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44793C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB446207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202DF207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:41:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="YoNfbI0H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9QcqhuJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgFBPkL (ORCPT
+        id S1726598AbgFBPlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:40:11 -0400
-Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:38756 "EHLO
-        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgFBPkK (ORCPT
+        Tue, 2 Jun 2020 11:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgFBPlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:40:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7+V7p4s3f6AWLp39DcPw+D9QhL9GyRAq9RMEYMU9Bdc=; b=YoNfbI0HMnhh4lD0on7Bqyiq1G
-        VivHONsWqzBQga3TOAUl0Mj/7iORu5FA6q3vXMPolS6srxYXOdbN83IodyaApG6N6oo9DllHBkb4F
-        kh9lQssfwv4yCHURvb3bknkz009ZK6y3hYCSwIxuCwnNhrSEiq/QhIRx/9+g6VfBcGO+OVajcYOea
-        BRDtIAGxPlQjElh8VgbtHiaR9j/B8xMctAIIY7ZjAwOuVzRAagFLNSAfGByz+kewuH17m0h7LuEEP
-        /s8I0j1huwKsfUC2P7a/yPe4oEP6lBFJ1UtSO0zEnXf2ZwFKb8YqpgaAgo5UTmHDU3Z7MSKZDjg7Q
-        dFvehvCg==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jg91L-0003tl-JQ; Tue, 02 Jun 2020 09:40:10 -0600
-To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200602092002.31787-1-piotr.stankiewicz@intel.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <b13285b7-4803-5242-e180-75e4d514f1ab@deltatee.com>
-Date:   Tue, 2 Jun 2020 09:40:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 11:41:52 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA73C08C5C0;
+        Tue,  2 Jun 2020 08:41:51 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id 5so1652514pjd.0;
+        Tue, 02 Jun 2020 08:41:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KX3c8fO2lYmMAt3OHtw1oi3ANcKudMTPhDF4G19EAAQ=;
+        b=D9QcqhuJEs2IrQoossyHxDHpRLIgGEuV2VVn3QgJFExUkI9juh3QwN9GWer3diuRDy
+         7siCDZt6f8VBGxRGNJqQYeI8SCDcgDwlZTGrWwKMnN7TFj9Vjy7rr97Was3jcYAYhEG2
+         waP+7kczrlXSed6+WY97dB0u/PE9DfbFI6y2Yuqd1MzzzSMpK4KgSF9U5Y8ajovHGxcw
+         YcKdAngDGAKT3spA6jymicSn4ktlmwzWN+PQttF33jjGpCXXtOB+njSspFX/HDrLsvTL
+         KxPiOcSNAlRY7VewKLMDNfkA2RBt+x+UCAdJNicwgUQjRiqS9e88b1k9CB8mX8EgGfnM
+         Ey5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KX3c8fO2lYmMAt3OHtw1oi3ANcKudMTPhDF4G19EAAQ=;
+        b=idQY6QXQHHtEOIj8dGUUAuQjpp7jPQSAsH6rvTCoSIHFyvHx57tyZk9SLxb5ydlL66
+         ObWgwi9S7aoUKNPwu7Ek76GRVThuLKvhNRV7a64GK+kwC/+dFLNOPbLwehKv3RkcVn3D
+         1vGmpBVUqTRTptJepFTf6WhkMu8fKKifjr1PvwDPCDnBvJC9Df0oAAxUe916cl0dpS4k
+         kiVED601KanoYQbwVFqu7eW5jewq7chiTDG+ne8lmjMzV35Yh/xESwv8ZrXtls5zm4WU
+         Y7tGzdQOboqvEvyVrxaIhtGzhOvhkKzWJt4CS3YZTsotQTwG2E4Y6FvGRCNjrSyB6nSG
+         Qg0Q==
+X-Gm-Message-State: AOAM531D7An0bf8OBcGifemEcoEC2T9VVMoJhQ6rNJHD8pkjr6f6l0cu
+        kuaZ19TLLjBK5eZcOTO38NbRbK6lelTFB7ly1ks=
+X-Google-Smtp-Source: ABdhPJzwm8nE1kIQ/TKnWve0lieKdz/G0UN93sdbs2pWw8NsR1KluU9+qRq6EZWRMM9F/lSx94o0wiPVBNn36jHFkp8=
+X-Received: by 2002:a17:902:bb95:: with SMTP id m21mr13540578pls.262.1591112510781;
+ Tue, 02 Jun 2020 08:41:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200602092002.31787-1-piotr.stankiewicz@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, kurt.schwemmer@microsemi.com, bhelgaas@google.com, piotr.stankiewicz@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 03/15] PCI: use PCI_IRQ_MSI_TYPES where appropriate
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20200602092126.32327-1-piotr.stankiewicz@intel.com>
+In-Reply-To: <20200602092126.32327-1-piotr.stankiewicz@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jun 2020 18:41:39 +0300
+Message-ID: <CAHp75Vcw6tJkq72UHuV=YW__J__baSqFv2dy1akr=RrM5itMfg@mail.gmail.com>
+Subject: Re: [PATCH 15/15] scsi: use PCI_IRQ_MSI_TYPES and PCI_IRQ_ALL_TYPES
+ where appropriate
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Brian King <brking@us.ibm.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jim Gill <jgill@vmware.com>,
+        VMware PV-Drivers <pv-drivers@vmware.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-06-02 3:20 a.m., Piotr Stankiewicz wrote:
+On Tue, Jun 2, 2020 at 12:24 PM Piotr Stankiewicz
+<piotr.stankiewicz@intel.com> wrote:
+>
 > Seeing as there is shorthand available to use when asking for any type
 > of interrupt, or any type of message signalled interrupt, leverage it.
-> 
-> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-Seems fine to me, for the switchtec portions:
+>         irq_flag = PCI_IRQ_LEGACY;
+>         if (ioa_cfg->ipr_chip->has_msi)
+> -               irq_flag |= PCI_IRQ_MSI | PCI_IRQ_MSIX;
+> +               irq_flag |= PCI_IRQ_MSI_TYPES;
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Perhaps
 
-> ---
->  drivers/pci/pcie/portdrv_core.c | 4 ++--
->  drivers/pci/switch/switchtec.c  | 3 +--
->  2 files changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 50a9522ab07d..2a38a918ba12 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -105,7 +105,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
->  
->  	/* Allocate the maximum possible number of MSI/MSI-X vectors */
->  	nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
-> -			PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> +			PCI_IRQ_MSI_TYPES);
->  	if (nr_entries < 0)
->  		return nr_entries;
->  
-> @@ -131,7 +131,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
->  		pci_free_irq_vectors(dev);
->  
->  		nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
-> -				PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> +				PCI_IRQ_MSI_TYPES);
->  		if (nr_entries < 0)
->  			return nr_entries;
->  	}
-> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-> index e69cac84b605..11fbe9c6b201 100644
-> --- a/drivers/pci/switch/switchtec.c
-> +++ b/drivers/pci/switch/switchtec.c
-> @@ -1442,8 +1442,7 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
->  		nirqs = 4;
->  
->  	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, nirqs,
-> -				      PCI_IRQ_MSIX | PCI_IRQ_MSI |
-> -				      PCI_IRQ_VIRTUAL);
-> +				      PCI_IRQ_MSI_TYPES | PCI_IRQ_VIRTUAL);
->  	if (nvecs < 0)
->  		return nvecs;
->  
-> 
+       if (ioa_cfg->ipr_chip->has_msi)
+               irq_flag = PCI_IRQ_ALL_TYPES;
+       else
+               irq_flag = PCI_IRQ_LEGACY;
+
+?
+
+>         rc = pci_alloc_irq_vectors(pdev, 1, ipr_number_of_msix, irq_flag);
+>         if (rc < 0) {
+>                 ipr_wait_for_pci_err_recovery(ioa_cfg);
+> diff --git a/drivers/scsi/vmw_pvscsi.c b/drivers/scsi/vmw_pvscsi.c
+> index c3f010df641e..825b7db9c713 100644
+> --- a/drivers/scsi/vmw_pvscsi.c
+> +++ b/drivers/scsi/vmw_pvscsi.c
+> @@ -1347,7 +1347,7 @@ static u32 pvscsi_get_max_targets(struct pvscsi_adapter *adapter)
+>
+>  static int pvscsi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+> -       unsigned int irq_flag = PCI_IRQ_MSIX | PCI_IRQ_MSI | PCI_IRQ_LEGACY;
+> +       unsigned int irq_flag = PCI_IRQ_ALL_TYPES;
+>         struct pvscsi_adapter *adapter;
+>         struct pvscsi_adapter adapter_temp;
+>         struct Scsi_Host *host = NULL;
+> --
+> 2.17.2
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
