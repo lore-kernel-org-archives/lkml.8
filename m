@@ -2,79 +2,101 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB21BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B184DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B177620738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902C420738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 16:33:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oGjPC2V3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgFBQdL (ORCPT
+        id S1727921AbgFBQdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 12:33:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgFBQdK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 12:33:10 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABEBC05BD1E;
-        Tue,  2 Jun 2020 09:33:09 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jg9qc-0021g4-VR; Tue, 02 Jun 2020 16:33:07 +0000
-Date:   Tue, 2 Jun 2020 17:33:06 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Message-ID: <20200602163306.GM23230@ZenIV.linux.org.uk>
-References: <20200602084257.134555-1-mst@redhat.com>
- <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
+        Tue, 2 Jun 2020 12:33:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:55276 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbgFBQdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 12:33:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591115614; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=bML8xYcSHixqGiWlTX8GPg6V0NOqHOANEhjj6IVL0dI=; b=oGjPC2V3K2fSdG4F2v81ME2jz8cJzIBZmo7P0DN53kOmr4QW84Z5VOdSAjonFarcEgQcaa+S
+ lvCww4fFpNLlFCVe+rjzT7vfSTq01YrNNNUwmG9s5e7IggMCu7NyjpHYS8GfacaJ+BlajMQ0
+ 8qYPpuIjicolMdrScCtfXk6iAIk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5ed67f4b4c2ebead13ebe8b6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 16:33:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4A063C433A0; Tue,  2 Jun 2020 16:33:15 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 493AEC433CA;
+        Tue,  2 Jun 2020 16:33:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 493AEC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, ohad@wizery.com, rohitkr@codeaurora.org,
+        Sibi Sankar <sibis@codeaurora.org>, stable@vger.kernel.org
+Subject: [PATCH 1/2] remoteproc: qcom: q6v5: Update running state before requesting stop
+Date:   Tue,  2 Jun 2020 22:02:56 +0530
+Message-Id: <20200602163257.26978-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 06:15:57PM +0800, Jason Wang wrote:
-> 
-> On 2020/6/2 下午4:45, Michael S. Tsirkin wrote:
-> > So vhost needs to poke at userspace *a lot* in a quick succession.  It
-> > is thus benefitial to enable userspace access, do our thing, then
-> > disable. Except access_ok has already been pre-validated with all the
-> > relevant nospec checks, so we don't need that.  Add an API to allow
-> > userspace access after access_ok and barrier_nospec are done.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> > 
-> > Jason, so I've been thinking using something along these lines,
-> > then switching vhost to use unsafe_copy_to_user and friends would
-> > solve lots of problems you observed with SMAP.
-> > 
-> > What do you think?
-> 
-> 
-> I'm fine with this approach.
+Sometimes the stop triggers a watchdog rather than a stop-ack. Update
+the running state to false on requesting stop to skip the watchdog
+instead.
 
-I am not.
+Error Logs:
+$ echo stop > /sys/class/remoteproc/remoteproc0/state
+ipa 1e40000.ipa: received modem stopping event
+remoteproc-modem: watchdog received: sys_m_smsm_mpss.c:291:APPS force stop
+qcom-q6v5-mss 4080000.remoteproc-modem: port failed halt
+ipa 1e40000.ipa: received modem offline event
+remoteproc0: stopped remote processor 4080000.remoteproc-modem
 
-> >   Do we need any other APIs to make it practical?
-> 
-> 
-> It's not clear whether we need a new API, I think __uaccess_being() has the
-> assumption that the address has been validated by access_ok().
+Fixes: 3b415c8fb263 ("remoteproc: q6v5: Extract common resource handling")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-__uaccess_begin() is a stopgap, not a public API.
+diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+index 111a442c993c4..fd6fd36268d93 100644
+--- a/drivers/remoteproc/qcom_q6v5.c
++++ b/drivers/remoteproc/qcom_q6v5.c
+@@ -153,6 +153,8 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+ {
+ 	int ret;
+ 
++	q6v5->running = false;
++
+ 	qcom_smem_state_update_bits(q6v5->state,
+ 				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-The problem is real, but "let's add a public API that would do user_access_begin()
-with access_ok() already done" is no-go.
