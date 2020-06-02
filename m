@@ -2,231 +2,89 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDAC2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19C92068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 18:05:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PxjxUeYN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6SisKMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgFBSDs (ORCPT
+        id S1727924AbgFBSFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 14:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
+        Tue, 2 Jun 2020 14:05:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgFBSDq (ORCPT
+        with ESMTP id S1726037AbgFBSFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 14:03:46 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5190DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 11:03:46 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t7so4604343pgt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 11:03:46 -0700 (PDT)
+        Tue, 2 Jun 2020 14:05:07 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAE7C05BD1E;
+        Tue,  2 Jun 2020 11:05:07 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id j8so11769134iog.13;
+        Tue, 02 Jun 2020 11:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y1Y2fkE2q57cl3sVFwSCV2Rlv9H/o7RdqOXAJOzk5BI=;
-        b=PxjxUeYNGDO7nTddPMYiH16uFfFjhvhXlC7DHTn2Gwug8w9r+bMImzNz39NlxB5UPp
-         LgwcLmqrHUTSMexgkNWCMeryIJyQPTKKd2n7s06lhDTBUQJZ7jvQC+VHeC526lAKgHRI
-         Hwyx+1bfTWqtXOoxgkAPqd07kmOEteBXyu/Zg=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qi0HjvbuXmvWcbpKL9tqxqxdG7EHQ6ate3lS8JMnsis=;
+        b=n6SisKMzEskMMswvWF8T1MVJaEjU+M2p9WlOTCsTOkAMXSX7jjvFckywiWVsDYs2U+
+         kODUOFnwU53QHETCwHl6+t0CaXWQPRDgdAsmWdmRsjEtGETkyAlwMz13gBQpP3QZLOIv
+         hXMWI1WeQgeZYxAGlNUpnFJ4DHSmfyxhK5GoPELm45lW70eeqtaBUrVhWny4fmNh4gmB
+         tP+mUQwKTPdpw38XlJ4LPbq/dtZksPuqnqcZhDwoqt+kRsKZAfxm5jwzcJ6c9xLsw4Vn
+         nvQ7d+KwBNHfzTG6fnCfsGF0tKbmfWR17/Jv9AnV0z1cLRTDFgTEL0Tnyh1WpCJ0vlO4
+         SkKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y1Y2fkE2q57cl3sVFwSCV2Rlv9H/o7RdqOXAJOzk5BI=;
-        b=kVgkFIVoYIHwiMMI4ecC74lBhVWfSu7agsbatdVyYdwzgoDoaU2gLJAKIxxXnnQf+3
-         IdHyI2NWF/vYKBaVDY2/72R7QkOx9JqaVnqSLvp73CkNH+nlsbZZayDhBwaGuPgsV3Ls
-         xxBptEyt4yFhsF3sZjsPLTyL46SKlQRgDPjyryqFKcgKANPSWu8KMzomXUZ1jQ1B6Hzy
-         zm/zXgkrdKMvvR6cb8OBFl38LlOVGThrBI2ZiyQJRi3IUdI7ormi80nKCw1QmB9xDaa+
-         EDmkzHBznmoyhhdlNME3OxwiOt54XFRkpmMpKL6rXJHfzvi6MCRsiokHGwtGVKXDgEFJ
-         MzcA==
-X-Gm-Message-State: AOAM530cUXgYa1TQb1y3oSby+WLRaL26JgzfGHUrMC0UaU0H4pQqVFoS
-        oukGurnQQcMPXsgeav1U2wIt/A==
-X-Google-Smtp-Source: ABdhPJzj7E3Rw5Brt6uT6kfU748sbin8+qytbSZ/kf72ZyhfLBgJc/YaDn8GH05YuWtNdSM8MF7q0Q==
-X-Received: by 2002:aa7:8298:: with SMTP id s24mr27113500pfm.122.1591121025745;
-        Tue, 02 Jun 2020 11:03:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u17sm2726262pgo.90.2020.06.02.11.03.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 11:03:44 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 11:03:43 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matt Turner <mattst88@gmail.com>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org
-Subject: Re: Regression bisected to f2f84b05e02b (bug: consolidate
- warn_slowpath_fmt() usage)
-Message-ID: <202006021052.E52618F@keescook>
-References: <20200602024804.GA3776630@p50-ethernet.mattst88.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qi0HjvbuXmvWcbpKL9tqxqxdG7EHQ6ate3lS8JMnsis=;
+        b=GuqSAdvOV7DlmbuH+ls6ZGPyDaYtCBgQ8Cdt5KYBkTRGrM1SI4cYsuWrtErytUYwH9
+         gXV7PQmSbVx8uvE5wXeohugTA2wyOQma3pFFRGJOz9Xvnl97uxnP/2PTNgRB+gMqi0x6
+         yVFbN4PVvrlVDLQOyE/ICTu94kIhfXNtIskPaJ/OQ0f5DpDTOFs4OEP+HvnuEBiLGByJ
+         qlPICQw3BPJUd+qqN8qU2lX2LCvMbNk4EDoOuRj3sGy6Ivyyc2S7WdKMqBIsMX1axqmh
+         Asy/hxqKY/hZtDzvIPZL6gwGDHTY1Eoa1c0T5T7quw5L/mwpr3iU8PtFMN/68Kd3qxuE
+         hxFw==
+X-Gm-Message-State: AOAM53061Fdp1HSs+o0GCpA4h9WyfVeSVbTt4evQfL1Q5jZF8id4AbXG
+        WsBMs9Jj0GvYEDDF2gkPpv/t1VcabMwr9FIjUbk=
+X-Google-Smtp-Source: ABdhPJyonPyd5t+XvdQnqO2DVdloB9jkKGUp6lcECpSjq4TtuP0PsbQTgx66Mb8Kw6pkFBpx+vmXjKtzILYqu6/rG5Y=
+X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr525321iot.44.1591121106733;
+ Tue, 02 Jun 2020 11:05:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602024804.GA3776630@p50-ethernet.mattst88.com>
+References: <20200602064545.50288-1-yuehaibing@huawei.com>
+In-Reply-To: <20200602064545.50288-1-yuehaibing@huawei.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 2 Jun 2020 11:04:55 -0700
+Message-ID: <CAM_iQpXtsvewiN3bmfJqwuURN--aCkaR7N6zfYWf82KmFUZnLQ@mail.gmail.com>
+Subject: Re: [PATCH] net: genetlink: Fix memleak in genl_family_rcv_msg_dumpit()
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 07:48:04PM -0700, Matt Turner wrote:
-> I bisected a regression on alpha to f2f84b05e02b (bug: consolidate
-> warn_slowpath_fmt() usage) which looks totally innocuous.
-> 
-> Reverting it on master confirms that it somehow is the trigger. At or a
-> little after starting userspace, I'll see an oops like this:
-> 
-> Unable to handle kernel paging request at virtual address 0000000000000000
-> CPU 0
-> kworker/u2:5(98): Oops -1
-> pc = [<0000000000000000>]  ra = [<0000000000000000>]  ps = 0000    Not tainted
-> pc is at 0x0
-
-^^^^ so, the instruction pointer is NULL. The only way I can imagine
-that happening would be from this line:
-
-        worker->current_func(work);
-
-> ra is at 0x0
-> v0 = 0000000000000007  t0 = 0000000000000001  t1 = 0000000000000001
-> t2 = 0000000000000000  t3 = fffffc00bfe68780  t4 = 0000000000000001
-> t5 = fffffc00bf8cc780  t6 = 00000000026f8000  t7 = fffffc00bfe70000
-> s0 = fffffc000250d310  s1 = fffffc000250d310  s2 = fffffc000250d310
-> s3 = fffffc000250ca40  s4 = fffffc000250caa0  s5 = 0000000000000000
-> s6 = fffffc000250ca40
-> a0 = fffffc00024f0488  a1 = fffffc00bfe73d98  a2 = fffffc00bfe68800
-> a3 = fffffc00bf881400  a4 = 0001000000000000  a5 = 0000000000000002
-> t8 = 0000000000000000  t9 = 0000000000000000  t10= 0000000001321800
-> t11= 000000000000ba4e  pv = fffffc000189ca00  at = 0000000000000000
-> gp = fffffc000253e430  sp = 0000000043a83c2e
-> Disabling lock debugging due to kernel taint
-> Trace:
-> [<fffffc000105c8ac>] process_one_work+0x25c/0x5a0
-
-Can you verify where this     ^^^^^^^^^^^^^^   is?
-
-> [<fffffc000105cc4c>] worker_thread+0x5c/0x7d0
-> [<fffffc0001066c88>] kthread+0x188/0x1f0
-> [<fffffc0001011b48>] ret_from_kernel_thread+0x18/0x20
-> [<fffffc0001066b00>] kthread+0x0/0x1f0
-> [<fffffc000105cbf0>] worker_thread+0x0/0x7d0
-> 
-> Code:
->  00000000
->  00000000
->  00063301
->  000012e2
->  00001111
->  0005ffde
-> 
-> It seems to cause a hard lock on an SMP system, but not on a system with
-> a single CPU. Similarly, if I boot the SMP system (2 CPUs) with
-> maxcpus=1 the oops doesn't happen. Until I tested on a non-SMP system
-> today I suspected that it was unaffected, but I saw the oops there too.
-> With the revert applied, I don't see a warning or an oops.
-> 
-> Any clues how this patch could have triggered the oops?
-
-I cannot begin to imagine. :P Compared to other things I've seen like
-this in the past maybe it's some kind of effect from the code size
-changing the location/alignment or timing of something else?
-
-Various questions ranging in degrees of sanity:
-
-Does alpha use work queues for WARN?
-
-Which work queue is getting a NULL function? (And then things like "if
-WARN was much slower or much faster, is there a race to something
-setting itself to NULL?")
-
-Was there a WARN before the above Oops?
-
-Does WARN have side-effects on alpha?
-
-Does __WARN_printf() do something bad that warn_slowpath_null() doesn't?
-
-Does making incremental changes narrow anything down? (e.g. instead of
-this revert, remove the __warn() call in warn_slowpath_fmt() that was
-added? (I mean, that'll be quite broken for WARN, but will it not oops?)
-
-Does alpha have hardware breakpoints? When I had to track down a
-corruption in the io scheduler, I ended up setting breakpoints on the
-thing that went crazy (in this case, I assume the work queue function
-pointer) to figure out what touched it.
-
-... I can't think of anything else.
-
--Kees
-
-> 
-> Here's the revert, with a trivial conflict resolved, that I've used in
-> testing:
-> 
-> From fdbdd0f606f0f412ee06c1152e33a22ca17102bc Mon Sep 17 00:00:00 2001
-> From: Matt Turner <mattst88@gmail.com>
-> Date: Sun, 24 May 2020 20:46:00 -0700
-> Subject: [PATCH] Revert "bug: consolidate warn_slowpath_fmt() usage"
-> 
-> This reverts commit f2f84b05e02b7710a201f0017b3272ad7ef703d1.
-> ---
->  include/asm-generic/bug.h |  3 ++-
->  kernel/panic.c            | 15 +++++++--------
->  2 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-> index 384b5c835ced..a4a311d4b4b0 100644
-> --- a/include/asm-generic/bug.h
-> +++ b/include/asm-generic/bug.h
-> @@ -82,7 +82,8 @@ struct bug_entry {
->  extern __printf(4, 5)
->  void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
->  		       const char *fmt, ...);
-> -#define __WARN()		__WARN_printf(TAINT_WARN, NULL)
-> +extern void warn_slowpath_null(const char *file, const int line);
-> +#define __WARN()		warn_slowpath_null(__FILE__, __LINE__)
->  #define __WARN_printf(taint, arg...)					\
->  	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
->  #else
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index b69ee9e76cb2..c8ed8046b484 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -603,20 +603,19 @@ void warn_slowpath_fmt(const char *file, int line, unsigned taint,
->  {
->  	struct warn_args args;
-> -	pr_warn(CUT_HERE);
-> -
-> -	if (!fmt) {
-> -		__warn(file, line, __builtin_return_address(0), taint,
-> -		       NULL, NULL);
-> -		return;
-> -	}
-> -
->  	args.fmt = fmt;
->  	va_start(args.args, fmt);
->  	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
->  	va_end(args.args);
->  }
->  EXPORT_SYMBOL(warn_slowpath_fmt);
+On Mon, Jun 1, 2020 at 11:47 PM YueHaibing <yuehaibing@huawei.com> wrote:
+> @@ -630,6 +625,9 @@ static int genl_family_rcv_msg_dumpit(const struct genl_family *family,
+>                 err = __netlink_dump_start(net->genl_sock, skb, nlh, &c);
+>         }
+>
+> +       genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
+> +       genl_dumpit_info_free(info);
 > +
-> +void warn_slowpath_null(const char *file, int line)
-> +{
-> +	pr_warn(CUT_HERE);
-> +	__warn(file, line, __builtin_return_address(0), TAINT_WARN, NULL, NULL);
-> +}
-> +EXPORT_SYMBOL(warn_slowpath_null);
->  #else
->  void __warn_printk(const char *fmt, ...)
->  {
-> -- 
-> 2.26.2
+>         return err;
+>  }
 
-
-
--- 
-Kees Cook
+I do not think you can just move it after __netlink_dump_start(),
+because cb->done() can be called, for example, in netlink_sock_destruct()
+too.
