@@ -2,72 +2,110 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33847C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2322068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4EC2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591118753;
+	bh=BKGcxnycRsYmacJ65+dG6H2NfGLKvm6eXJrUb+JxQ2c=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Ppy08F/OU6Env0qPYSmDtOfmDt3oJ/A2203Lfgj8neWef2VUDWdaGaoFkIQbmnNSf
+	 0fytvqEyCS78a1F0qZoZD85XmoIZoM3MEpw8rWCoBALPo6vW2XtrCbEUE6Y+RY0P1z
+	 9LJnGV5+0gGyxhyLCbvqPvFWvBFemMKP7q2CzNF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgFBRYk (ORCPT
+        id S1727773AbgFBRZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:24:40 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45762 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgFBRYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:24:39 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jgAeS-0006h8-08; Tue, 02 Jun 2020 17:24:36 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        linux-clk@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: baikal-t1: remove redundant assignment to variable 'divider'
-Date:   Tue,  2 Jun 2020 18:24:35 +0100
-Message-Id: <20200602172435.70282-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 2 Jun 2020 13:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbgFBRZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 13:25:51 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25F452068D;
+        Tue,  2 Jun 2020 17:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591118751;
+        bh=BKGcxnycRsYmacJ65+dG6H2NfGLKvm6eXJrUb+JxQ2c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=R8pKIgFFzaZ4XegA/75oYHzQgfiFDiZKWkM5JxZatAKxpQljeGCaxMEQpCkdoMhNu
+         j0pBTqby+DIpaYEFNRzm6sWUSpCKqYpzmv4Xars+qzUVErycCNXiyMhGC9pywI2ML3
+         spck6YBUuZdetclcx5MIkJo2eb2rlEnfoIk8cBuc=
+Date:   Tue, 2 Jun 2020 10:25:50 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, ira.weiny@intel.com
+Subject: [GIT PULL] vfs: improve DAX behavior for 5.8, part 2
+Message-ID: <20200602172550.GF8204@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Linus,
 
-The variable divider is being initialized with a value that is never read
-and it is being updated later with a new value.  The initialization is
-redundant and can be removed.
+Please pull this second part of the 5.8 DAX changes.  This time around,
+we're hoisting the DONTCACHE flag from XFS into the VFS so that we can
+make the incore DAX mode changes become effective sooner.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/clk/baikal-t1/ccu-div.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We can't change the file data access mode on a live inode because we
+don't have a safe way to change the file ops pointers.  The incore state
+change becomes effective at inode loading time, which can happen if the
+inode is evicted.  Therefore, we're making it so that filesystems can
+ask the VFS to evict the inode as soon as the last holder drops.  The
+per-fs changes to make this call this will be in subsequent pull
+requests from Ted and myself.
 
-diff --git a/drivers/clk/baikal-t1/ccu-div.c b/drivers/clk/baikal-t1/ccu-div.c
-index bd40f5936f08..4062092d67f9 100644
---- a/drivers/clk/baikal-t1/ccu-div.c
-+++ b/drivers/clk/baikal-t1/ccu-div.c
-@@ -248,7 +248,7 @@ static int ccu_div_var_set_rate_fast(struct clk_hw *hw, unsigned long rate,
- 				     unsigned long parent_rate)
- {
- 	struct ccu_div *div = to_ccu_div(hw);
--	unsigned long flags, divider = 1;
-+	unsigned long flags, divider;
- 	u32 val;
- 
- 	divider = ccu_div_var_calc_divider(rate, parent_rate, div->mask);
--- 
-2.25.1
+I did a test merge of this branch against upstream this morning and
+there weren't any conflicts.  Please let us know if you have any
+complaints about pulling this.
 
+--D
+
+The following changes since commit 83d9088659e8f113741bb197324bd9554d159657:
+
+  Documentation/dax: Update Usage section (2020-05-04 08:49:39 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/vfs-5.8-merge-2
+
+for you to fetch changes up to 2c567af418e3f9380c2051aada58b4e5a4b5c2ad:
+
+  fs: Introduce DCACHE_DONTCACHE (2020-05-13 08:44:35 -0700)
+
+----------------------------------------------------------------
+(More) new code for 5.8:
+- Introduce DONTCACHE flags for dentries and inodes.  This hint will
+  cause the VFS to drop the associated objects immediately after the
+  last put, so that we can change the file access mode (DAX or page
+  cache) on the fly.
+
+----------------------------------------------------------------
+Ira Weiny (2):
+      fs: Lift XFS_IDONTCACHE to the VFS layer
+      fs: Introduce DCACHE_DONTCACHE
+
+ fs/dcache.c            | 19 +++++++++++++++++++
+ fs/xfs/xfs_icache.c    |  4 ++--
+ fs/xfs/xfs_inode.h     |  3 +--
+ fs/xfs/xfs_super.c     |  2 +-
+ include/linux/dcache.h |  2 ++
+ include/linux/fs.h     |  7 ++++++-
+ 6 files changed, 31 insertions(+), 6 deletions(-)
