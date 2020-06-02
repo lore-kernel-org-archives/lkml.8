@@ -2,202 +2,144 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A667C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE83C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E6020757
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591110238;
-	bh=flcx16Cn2mjUytR6i6DMY/HguEKna2+UVmRmQRv7Kg8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fGozDhH+lyzgj8zMHCRogs177PBKsoXzJxkjmK9jOUWDe/2zUFOmdOfbZ4RBmqovz
-	 FAezzLI+HXrEqqGNyEmaUyi5bgqLzM4pJ5UwWdi8B50AivDHLgaV/Bo/2MIBkwJ+wm
-	 hAjUC4kRRiWiQyHbs1FB9K9XT0q7FuVZh0sJeD4k=
+	by mail.kernel.org (Postfix) with ESMTP id 8E23520679
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 15:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="WQJQdg2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgFBPD6 (ORCPT
+        id S1726625AbgFBPFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 11:03:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbgFBPD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 11:03:57 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1744E2074B;
-        Tue,  2 Jun 2020 15:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591110236;
-        bh=flcx16Cn2mjUytR6i6DMY/HguEKna2+UVmRmQRv7Kg8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wO4He56VHVJliH4yKcpbrAR49UGiVE093heAtTWWry4iWWuPzQEyH0Y5+HVDY/7u/
-         88osmtEaLC1kgWofWXuyIjWbNKI071TnPtQqm+ZXINc1f6nXFCpzlsszmC37HotxGI
-         Q5wEFTnSsuw8Y1nUr3o/JGEGOlzf0+eOqEPeJj3E=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C7E2140AFD; Tue,  2 Jun 2020 12:03:52 -0300 (-03)
-Date:   Tue, 2 Jun 2020 12:03:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCHv3] perf stat: Ensure group is defined on top of the same
- cpu mask
-Message-ID: <20200602150352.GS31795@kernel.org>
-References: <20200531162206.911168-1-jolsa@kernel.org>
- <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
- <20200601082027.GF881900@krava>
- <CAP-5=fWLp8qyVjwVuQCTEoz=SY5FFtEEZyH5=L-5cAEeN4_5uw@mail.gmail.com>
- <20200602101736.GE1112120@krava>
- <20200602134256.GO31795@kernel.org>
- <20200602140508.GA1169993@krava>
+        Tue, 2 Jun 2020 11:05:40 -0400
+Received: from mail-eopbgr80091.outbound.protection.outlook.com ([40.107.8.91]:20737
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726073AbgFBPFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 11:05:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gau3skRLLVMIC2pATzfIwHfsknwBQ61rq/7BsgpqQTJ3mZn1i+BIT0j3ZDIKwrjw4KX/1gDIyZn0J9Awss3HhDKdVPlHpdsf4r298rvnOZLOnEhQPXrWE6Q8+YMKOsvuXd49t1NTZAQ0buBZ8kzrI8wFjhAn1fcgUoATwaU9kqtOAavgPCrv7pinh2shKl0Q5c6qjGknGxMOgLc682xRN4+MKeANrHtNykfBEgzrZg1qc31AhbNwnO7vBfgLY+vkPFywyLS0M8hq7P1cprnHbIt48NJtI8N4fpjlnr2w9KXbwK9xzKcZZAbFmnbKkrHw8DyLvFignuvb49cWa7vf2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AmpoA4vL7CKSGZUinjwHc/3liT6xHC8viqPCBaAs2V0=;
+ b=G73TZ4Z1/sgp36Xb06Dg/L0SB8Mw0dYT8BoAE0viuVE5Thd0OjXADTeDRGj9aQW1rQfIBVFTkra+ebotwUJyEwDDu8DQb4IqQG6UK4ytVasQidsSZfELKWp/BAXzvGxT0KPJWBeJQcWldMK8frthwxBpFrKQE9qotzJ5tzSt84kUec52XRmklbpkeFzOzJh+4FFtSWO9LJyf1LKsA4iFhpVNb4rdPmIMVj7EutU8dm14tK2Rm3XqK+XNl9Q8khXgitQDjyeAhpL0rbrAr3GAPYNTxwBAOYJhwaWI/QJ4Df9pDdBU/sa7PjIM4JG1mUQFtbN+pd641ZMPMKpjwS/FmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AmpoA4vL7CKSGZUinjwHc/3liT6xHC8viqPCBaAs2V0=;
+ b=WQJQdg2IHH8nRdBwi3PnJrmDjdsXm58j62v4YUW17L2tw1cnXActd2j0S18sHITijjCF5GreuB10BRP+9pAJdF/vJdxFzO0jBM00S5O0/TtLwxw2BTnr52eCMI0yOS/4WwF3HWhIXfBrmTxz6LfAyOmKqbGcYXrxZpLIzk2XGHw=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+ by DB8PR02MB5884.eurprd02.prod.outlook.com (2603:10a6:10:118::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18; Tue, 2 Jun
+ 2020 15:05:35 +0000
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::ccd1:96b3:48dc:c5d1]) by DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::ccd1:96b3:48dc:c5d1%7]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
+ 15:05:35 +0000
+Subject: Re: [PATCH 1/2] i2c: mux: pca9541: Change to correct bus control
+ commands
+To:     Quentin Strydom <quentin.strydom@bluwireless.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1591099969-30446-1-git-send-email-quentin.strydom@bluwireless.com>
+From:   Peter Rosin <peda@axentia.se>
+Organization: Axentia Technologies AB
+Message-ID: <2e2c3b98-20a6-2671-ad74-a0f171073bd0@axentia.se>
+Date:   Tue, 2 Jun 2020 17:05:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+In-Reply-To: <1591099969-30446-1-git-send-email-quentin.strydom@bluwireless.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: sv-SE
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1PR0402CA0057.eurprd04.prod.outlook.com
+ (2603:10a6:7:7c::46) To DB8PR02MB5482.eurprd02.prod.outlook.com
+ (2603:10a6:10:eb::29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602140508.GA1169993@krava>
-X-Url:  http://acmel.wordpress.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.13.3] (213.112.138.116) by HE1PR0402CA0057.eurprd04.prod.outlook.com (2603:10a6:7:7c::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Tue, 2 Jun 2020 15:05:34 +0000
+X-Originating-IP: [213.112.138.116]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8eb43fc0-34ee-4917-bf05-08d8070666d2
+X-MS-TrafficTypeDiagnostic: DB8PR02MB5884:
+X-Microsoft-Antispam-PRVS: <DB8PR02MB5884E67728082913DE5BDFBEBC8B0@DB8PR02MB5884.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0422860ED4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eVD9cKCsw/+jHy5mwohlaBdcKmJI5oASr+YcrgB1m7mo7v94W/41F9JtboNk7QWxgl6h69B4TbHO7hHXRVSZv+yHpd33KAOxoJOjrmF8Ui2F941ZcXeTOSqmXKpkez7VMPoWQbgHFKSnyqWjzXtibIPbDcuVfAD7xOciepxcuJCTG+WvB8PRye/6w7Y9PA7EYrG/nOk5tpS3jFpUIJ9QnbkOkaQNuQPq8gDy7Wc7PJhxEQmGQ0/kzgvLQmepKUN2SnkajLSSgmW8t6Tgf+LsQmNtcUj2GPLZgdLrvgugsWniMgYIJm8Ke4AlFiWr2xav7TxPGnT/hTbQp8Kq0/0spfKTA7Prr6QpTxcVGJdTrn06iqm6+ZpR1dBsicNPDTx3PaNj4cxwoVpN+tUS25oF0vIZyS4xcxYvdyGAKJ1KyTPHURHm4AQ3tsDKNH5sOAto9eQD8ZbgDLlMxWpE0tgwag==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39830400003)(366004)(396003)(136003)(83380400001)(5660300002)(316002)(36756003)(26005)(86362001)(31696002)(6666004)(186003)(66556008)(66476007)(16576012)(2906002)(16526019)(110136005)(66946007)(53546011)(6486002)(36916002)(52116002)(508600001)(956004)(8936002)(2616005)(966005)(31686004)(8676002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: MGdmsFe6bqEOEbIwbjxW0/PVs+6OgzfpysS55zTcwe+xrduIFDCQ7/tyvpf3TOjqonHBMCvB7+OBy311f6tg7dhx1fd/gCS3IP/rdUy66aQosmoUD9LZcc9Vsa4h1UcrWWw+jp2ZCJ4UckG4MYnTHjfd27BYPUQxEGNMRC2hGOenH7YcybcMtbEtiPE8goH7jCgvQQVcSZSsVzO9XaUoZ40FQ+9MJ+2ZesccNiP2cH20gcq2OuqlHK4S6EjPwoHgInSwizcWxF0SdiOzTmyzyBKzNoxY4dFkrLNhqNP9ZNmaTw8KBntHPaaEco9Vg1hQao6F/0zLk2GhAXwzAQXFGAW+w9Hv195BCjGtR3LI+lP7OSy+6F7/VvQFDMzsop/0GRaUMCDq4I5x5UZbSQHM6v8o5KIQnMQop3/SLehyqB7TzP/Gu5gu8cbkBHrGb9seGTa9Maj35ditOhWUgbhS7st6CPXlX2HXPgyiLO20tMw=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8eb43fc0-34ee-4917-bf05-08d8070666d2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2020 15:05:35.1449
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vxScoJ950OxqcQGkiBx79i91lft3I48wSKP1wKk7h7HKp2UvD/IFHOeoMqMHmrkp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5884
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 02, 2020 at 04:05:08PM +0200, Jiri Olsa escreveu:
-> On Tue, Jun 02, 2020 at 10:42:56AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Jun 02, 2020 at 12:17:36PM +0200, Jiri Olsa escreveu:
-> > > Jin Yao reported the issue (and posted first versions of this change)
-> > > with groups being defined over events with different cpu mask.
-> >
-> > > This causes assert aborts in get_group_fd, like:
-> >
-> > >   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
-> > >   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
-> > >   Aborted
-> >
-> > > All the events in the group have to be defined over the same
-> > > cpus so the group_fd can be found for every leader/member pair.
-> >
-> > > Adding check to ensure this condition is met and removing the
-> > > group (with warning) if we detect mixed cpus, like:
-> >
-> > >   $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
-> > >   WARNING: event cpu maps do not match, disabling group:
-> > >     anon group { power/energy-cores/, cycles }
-> > >     anon group { instructions, power/energy-cores/ }
-> >
-> > So it doesn't disable the 'group', it disables the 'grouping' of those
-> > events, right? I.e. reading the WARNING, I thought that it would count
-> > nothing, since it lists both groups as being disabled, but when I tested
-> > I noticed that:
-> >
-> >   [root@seventh ~]# perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
-> >   WARNING: grouped events cpus do not match, disabling group:
-> >     anon group { power/energy-cores/, cycles }
-> >     anon group { instructions, power/energy-cores/ }
-> >   ^C
-> >    Performance counter stats for 'system wide':
-> >
-> >                12.62 Joules power/energy-cores/
-> >          106,920,637        cycles
-> >           80,228,899        instructions              #    0.75  insn per cycle
-> >                12.62 Joules power/energy-cores/
-> >
-> >         14.514476987 seconds time elapsed
-> >
-> >
-> >   [root@seventh ~]#
-> >
-> >   I.e. it counted the events, ungrouped, or am I missing something?
->
-> right, it disables 'grouping', events are scheduled/counted individualy
+On 2020-06-02 14:12, Quentin Strydom wrote:
+> Change current bus commands to match the pca9541a datasheet
+> (see table 12 on page 14 of
+> https://www.nxp.com/docs/en/data-sheet/PCA9541A.pdf). Also
+> where entries are marked as no change the current control
+> command is repeated as the current master reading the
+> control register has control of the bus and bus is on.
+> 
+> Signed-off-by: Quentin Strydom <quentin.strydom@bluwireless.com>
+> ---
+>  drivers/i2c/muxes/i2c-mux-pca9541.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
+> index 6a39ada..50808fa 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca9541.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
+> @@ -211,7 +211,7 @@ static void pca9541_release_bus(struct i2c_client *client)
+>  
+>  /* Control commands per PCA9541 datasheet */
+>  static const u8 pca9541_control[16] = {
+> -	4, 0, 1, 5, 4, 4, 5, 5, 0, 0, 1, 1, 0, 4, 5, 1
+> +	4, 4, 5, 5, 4, 4, 5, 7, 8, 0, 1, 11, 0, 0, 1, 1
+>  };
+>  
+>  /*
 
-Ok, I applied this already, we can fix this in the next cycle.
+I found all your mails from git send-email in my spam folder. They probably
+lack some headers that have become increasingly important... [Don't ask me
+for further details.]
 
-> this way we will not hit the issue when looking for group_fd FD
-> and there's not any, because of different cpu maps
+I do not have the HW to test this. I'm only going by the datasheet.
 
-> > If I do:
+But yes, pca9541_control[1] and [2] indeed seem exchanged with [13] and [14].
 
-> >   [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' -a sleep 2
+However, pca9541_control[5], [7], [8], and [11] are never used AFAICT.
+Trying to write 7, 8 and 11 also attempts to write various read-only bits
+and makes no sense. So, I'd skip those changes.
 
-> >    Performance counter stats for 'system wide':
+All that said, I'm a bit skeptic as to why this has worked at all if this
+is incorrect. I would like to see a more detailed failure description that
+could explain why this change is indeed "it".
 
-> >                 1.73 Joules power/energy-cores/
-> >                 0.92 Joules power/energy-ram/
-> >           12,191,658        instructions              #    0.67  insn per cycles/
-> >           18,275,233        cycles
-
-> >          2.001272492 seconds time elapsed
-
-> >   [root@seventh ~]#
-> >
-> > It works, grouped. One observation, shouldn't we somehow show in the
-> > output that the first two were indeed grouped, ditto for the second two?
-
-> yea, we don't display groups in output.. also there's no number
-> for the group, it's still separate events numbers in output
-> grouping is only used when creating events
-
-perhaps if we just add a blank line to separate groups? I.e. the above
-would be:
-
-[root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' -a sleep 2
-
- Performance counter stats for 'system wide':
-
-              1.73 Joules power/energy-cores/
-              0.92 Joules power/energy-ram/
-
-        12,191,658        instructions              #    0.67  insn per cycle
-        18,275,233        cycles
-
-       2.001272492 seconds time elapsed
-
-[root@seventh ~]#
-
-Humm, in the presence of at least one group, any ungrouped events would
-have to be also separated, i.e.:
-
-[root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},instructions,cycles' -a sleep 2
-
- Performance counter stats for 'system wide':
-
-              1.73 Joules power/energy-cores/
-              0.92 Joules power/energy-ram/
-
-        12,191,658        instructions              #    0.67  insn per cycle
-
-        18,275,233        cycles
-
-       2.001272492 seconds time elapsed
-
-[root@seventh ~]#
-
-wdyt?
-
-> > Also, this needs improvement:
-
-> >   [root@seventh ~]# perf stat -e '{power/energy-cores/,power/energy-ram/},{instructions,cycles}' sleep 2
-> >   Error:
-> >   The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (power/energy-cores/).
-> >   /bin/dmesg | grep -i perf may provide additional information.
-
-> yes, power events don't work with events without cpu being defined,
-> which is what we do for 'workload' session.. we should either check
-> for that and display some sensible error for power events
-
-> or perhaps check if we could monitor like perf record does with creating
-> events for task and every cpu in the system
-
-- Arnaldo
+Cheers,
+Peter
