@@ -2,106 +2,153 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C676D20772
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C4320757
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 23:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmNB12tN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IeejpBdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgFBXNp (ORCPT
+        id S1728670AbgFBXNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 19:13:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
+        Tue, 2 Jun 2020 19:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgFBXNo (ORCPT
+        with ESMTP id S1726130AbgFBXNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 19:13:44 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC9FC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 16:13:44 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id y5so113514iob.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 16:13:44 -0700 (PDT)
+        Tue, 2 Jun 2020 19:13:52 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9AD3C08C5C1;
+        Tue,  2 Jun 2020 16:13:51 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so373301wru.0;
+        Tue, 02 Jun 2020 16:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LXZokHEySPFA08JPHMN8m6QgonxNfRX4BjCitd9AiX8=;
-        b=rmNB12tN8mdPfiqkCugvVPCvLrfqUH8B9GQsBpunJeYazumhNF8BzpFY76VwHaIvlt
-         nTUujxj8X1oTPrb6GkFAOysjhhKgC8QyN1HKdFMSQFDHG4VXnmnT+ukMOLRRoChl15MJ
-         var0Pu4BwoJ0TkDqAgtDnWkgxCphx16tj7+9elZW1CyyaRngNVIFPro3tJAJkss4AiQh
-         oexQBPlotrrwKi7Ve4LaY5Ml0/TfJdSLdvvLDkUVDKHQ5bL8cMS98RdFU5E9Vux3Leai
-         LwPQxW0RfnVNPjBwgoqj2mmu93fELzEl3/JrJmFbOm2CZHse+rU40RsWYdRfoPrTeaX6
-         +5gQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qwJh8Bb4M36Ea2x8XMaW1Wp2tdXXDvEeJAN1CUx0LEk=;
+        b=IeejpBdoAJespM4xBjpLegDDUBv53Lvl4EWZgtvj56lQOBwleYlaSDn0NdofiRMgMj
+         CU3E16SVKWokFPvrF9JjAWwk0hfZf1lmn+vBx+ouVQQBqdxaUJ7QdofoEdhb75MEEH/J
+         kI+wYVjExXN+Kj3l/1BdUkTYmmk3ltB6a3QWCTLdlbwhH57KWRD5TLyLh+WcG8Lw9vRt
+         +oL9uDOCVERDv4Q6tavFN926zarpTaS9D6f52qa0E0g/wkOb+SdBuGNI9Av1ddiEZRh3
+         lzJsQrmA0ahrLfhTMp6KpCgu2m6Rtj/DM1FKpsnt1cbA3jzcgEDOr8C7fNlxihm7NLhU
+         QHjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LXZokHEySPFA08JPHMN8m6QgonxNfRX4BjCitd9AiX8=;
-        b=UYbPgp7wCyxJs4zqU43JWTXMSk8tgA9Zd4sBWQaaeuBekSnCxHLOgH5TI7SLchcOhx
-         nI1lVFdQ2EcFZZSpBiixO8Pt1lG1GoIWqx8kh7OpSpT3Y5JsJf2yGKI9viRNb0DndZIy
-         Qojt31upfH9HzK0n5YgNIAJI7iQ+2+X5aYC4nUaY4Oi+pf9jcA7Ec7LAal69VIm843+B
-         Q6atVfrFdzErXT9ECSzRg1COvHZ1u72OxxEZnZnx5Dy/CiFXE+yy6xRS3NK6Xoi84ckd
-         7cZj+MudRmRvCbUjDIKk/wLrECYpSG2oo1ks16tATIFCVwF2BiqGRVfpEyAByotSIREZ
-         m9vA==
-X-Gm-Message-State: AOAM531RZKQju//kp7box2Ihn5o9hh3wyLlLEZCNaiRBOHU8SV4r4xI0
-        E/nZ6ZgEbu5OyEHffWzlAzk+q9UOhen4KNSBRzE=
-X-Google-Smtp-Source: ABdhPJxq+Iora96VovmCINQ4dS1t6iuqbkLmA6tTdxA1x7ePhhsdKwpNulQHfKweiaukCJFCTWZmX1/JySqgpQBhfIY=
-X-Received: by 2002:a6b:dc12:: with SMTP id s18mr1399660ioc.56.1591139623635;
- Tue, 02 Jun 2020 16:13:43 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qwJh8Bb4M36Ea2x8XMaW1Wp2tdXXDvEeJAN1CUx0LEk=;
+        b=hGkG/Zt4rDWL6DckMJRyBQo0vGrQqDYt8BzFm10oCuOryM3moyED4lnoXO8hOlztE6
+         W5TgzLBUlllpA6Pu8KIWmEgiIZfCfwj8y7NCSoEUbFkjqbvh0cRoAYw/jisNuACPJX60
+         iwcAq8wReOU/wT29hGlxUBo9JbwMnOePvXzUPC9aDF/zOEWwzZvfZmhHizsLv0t+WkgI
+         aFPEN7/4ZOIuWIq6NnohyZbxKUsZDV8/OJMmRRQnzJG6Lav8rVeE5oDuy6kRe+YGo0Fr
+         vrl4FkKUA+TcsJfof/QTQJShyj6grUTBPCnKVxYnLM5FmkCKf3RNddVFZw9hL2KdtpzF
+         WL/g==
+X-Gm-Message-State: AOAM533qLHdA4alImIklfcg4Cx4y42ZzLe+cl8wd7Pb+qVimpB9cRPES
+        EbUSiEoVsctxoMehiZYYbB7A/Jr1
+X-Google-Smtp-Source: ABdhPJxyacC9il4nE4eKv4EV6QejGKhHn9MTM4PGLu6aoGrpD5bhO4N57XqldoAiZTsceCluYGQUig==
+X-Received: by 2002:a5d:690b:: with SMTP id t11mr30746889wru.213.1591139630240;
+        Tue, 02 Jun 2020 16:13:50 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id u7sm627230wrm.23.2020.06.02.16.13.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 16:13:49 -0700 (PDT)
+Subject: Re: [PATCH net-next v5 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
+        davem@davemloft.net, robh@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200602164522.3276-1-dmurphy@ti.com>
+ <20200602164522.3276-5-dmurphy@ti.com>
+ <c3c68dcd-ccf1-25fd-fc4c-4c30608a1cc8@gmail.com>
+ <61888788-041f-7b93-9d99-7dad4c148021@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <6981527b-f155-a46b-574a-2e6621589ca4@gmail.com>
+Date:   Tue, 2 Jun 2020 16:13:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200601060802.3260-1-laijs@linux.alibaba.com>
- <20200602134915.2644-1-laijs@linux.alibaba.com> <20200602161350.GH31548@mtj.thefacebook.com>
-In-Reply-To: <20200602161350.GH31548@mtj.thefacebook.com>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Wed, 3 Jun 2020 07:13:32 +0800
-Message-ID: <CAJhGHyDso12OTjKTiX7fOnMXHG9-=0jD1p09-1ZgjLeSg18zmA@mail.gmail.com>
-Subject: Re: [PATCH] workqueue: ensure all flush_work() completed when being destoryed
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <61888788-041f-7b93-9d99-7dad4c148021@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 12:13 AM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello, Lai.
->
-> On Tue, Jun 02, 2020 at 01:49:14PM +0000, Lai Jiangshan wrote:
-> > +static void dec_nr_in_flight_flush_work(struct workqueue_struct *wq)
-> > +{
-> > +     if (atomic_dec_and_test(&wq->nr_flush_work))
->
-> Do you think it'd make sense to put this in pwq so that it can be
-> synchronized with the pool lock instead of using a separate atomic counter?
->
 
-Hello, Tejun
 
-When the counter is put in pwq, there will be a per-pwq counter,
-a per-pwq completion or pointer and a flush_workqueue_prep_pwqs()-like
-function (although simpler) to set up them before waiting for them.
+On 6/2/2020 4:10 PM, Dan Murphy wrote:
+> Florian
+> 
+> On 6/2/20 5:33 PM, Florian Fainelli wrote:
+>>
+>> On 6/2/2020 9:45 AM, Dan Murphy wrote:
+>>> Add RGMII internal delay configuration for Rx and Tx.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>> [snip]
+>>
+>>> +
+>>>   enum {
+>>>       DP83869_PORT_MIRRORING_KEEP,
+>>>       DP83869_PORT_MIRRORING_EN,
+>>> @@ -108,6 +113,8 @@ enum {
+>>>   struct dp83869_private {
+>>>       int tx_fifo_depth;
+>>>       int rx_fifo_depth;
+>>> +    s32 rx_id_delay;
+>>> +    s32 tx_id_delay;
+>>>       int io_impedance;
+>>>       int port_mirroring;
+>>>       bool rxctrl_strap_quirk;
+>>> @@ -232,6 +239,22 @@ static int dp83869_of_init(struct phy_device
+>>> *phydev)
+>>>                    &dp83869->tx_fifo_depth))
+>>>           dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
+>>>   +    ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
+>>> +                   &dp83869->rx_id_delay);
+>>> +    if (ret) {
+>>> +        dp83869->rx_id_delay =
+>>> +                dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>>> +        ret = 0;
+>>> +    }
+>>> +
+>>> +    ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>>> +                   &dp83869->tx_id_delay);
+>>> +    if (ret) {
+>>> +        dp83869->tx_id_delay =
+>>> +                dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
+>>> +        ret = 0;
+>>> +    }
+>> It is still not clear to me why is not the parsing being done by the PHY
+>> library helper directly?
+> 
+> Why would we do that for these properties and not any other?
 
-It would sound like the V1 patch. per-pwq counter may have better
-performance over per-wq atomic, it seems too tiny to add code
-complicity. V1 has the simplest pwq_dec_nr_in_flight() except
-there is too much WARN_ON_ONCE() in flush_no_color().
+Those properties have a standard name, which makes them suitable for
+parsing by the core PHY library.
 
-Thanks
-Lai
+> 
+> Unless there is a new precedence being set here by having the PHY
+> framework do all the dt node parsing for common properties.
 
-> Makes sense to me otherwise.
->
-> Thanks.
->
-> --
-> tejun
+You could parse the vendor properties through the driver, let the PHY
+library parse the standard properties, and resolve any ordering
+precedence within the driver. In general, I would favor standard
+properties over vendor properties.
+
+Does this help?
+-- 
+Florian
