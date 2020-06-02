@@ -2,107 +2,123 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A32C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F612C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46451207D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE5B206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saHbz83D"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d4x1Eadc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgFBTf7 (ORCPT
+        id S1728226AbgFBTgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:35:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgFBTf5 (ORCPT
+        Tue, 2 Jun 2020 15:36:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55726 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgFBTgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:35:57 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C70DC08C5C0;
-        Tue,  2 Jun 2020 12:35:57 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id z2so74824ilq.0;
-        Tue, 02 Jun 2020 12:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZaeDmvwutMFDkhGXN+aSrIZ/aqZNZQqgehXmm4OU8WQ=;
-        b=saHbz83DdIX3HLPmbOrEnGy96gXDa2LqsBe3j+qnBclnC0O60/LkTiWXVukocvudeF
-         qu6gwtDugAsZ5QnsvW8SIPWsXhv2lLTcmo5RzkoWhfclb7ZFhaSwvAoT7AF6DI01TJ8t
-         oHWcKllVoMI6sGMUbiwW6IPkt6/p8SwyWr2B1p788jWcu1HkoL3ja8ofpv7VKd3ovALh
-         BV7/3tjW62EE0k8wUTOpwpe4jI/5ryrpSpKFN5CbQHYZaYKR2HRyR/xCR065a7WjIVUQ
-         xXvBlIiY0+b900oIjjP7MiObfTXF1O7e3D9p2LgFFSsikadCqryBWtLGWwvJYg409SPu
-         DVJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZaeDmvwutMFDkhGXN+aSrIZ/aqZNZQqgehXmm4OU8WQ=;
-        b=tniaLj3pgfTy9hGlLRNJuF2qbUw90wuvtghLopRe7umNMdAggU3ftOTdg5UnGvd8IG
-         Fh5V60A9FkvOIaLIHQ4zXqT7rA4qg3JWp+2IMTM+x5tRYbFueELRsV8NRuRNl0S+9K5p
-         Mw0ArXt7dbqDyfZ7pEDvO8MeDE9axskXjYBqFBOzDwFPM5eJN0jt7iA+yD3BdvTqiWUr
-         A1OMVpTQjqB3xaiDQXSa9NWPk3yPcNfzB8vPYPGLF61/1pimC9FqBHVqxmENrOOjcpzj
-         tXDYqMXU/ph1sne+R9d06YdANtdXTG28gdqoOEO3WXbYQTstuOi8A0HsLmVJV07ocTUG
-         uNww==
-X-Gm-Message-State: AOAM53225w9tKZ3aSJtpDuVXsLU35xAvasICx0AeW/gsZ17IuyoRCs5j
-        3mqx4gKCV2P0n0StmkIVjW+lqZMr9B5TXmNsKMk=
-X-Google-Smtp-Source: ABdhPJx1p0jA7a00DSqjH4OmXarnO4ZgAmj5nti0GovjrHRIcvLw4r4uKb5TwNy6QqWtc6HiS36n2m7891sCmNXfgog=
-X-Received: by 2002:a05:6e02:13f4:: with SMTP id w20mr865871ilj.294.1591126556726;
- Tue, 02 Jun 2020 12:35:56 -0700 (PDT)
+        Tue, 2 Jun 2020 15:36:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JW4JY125967;
+        Tue, 2 Jun 2020 19:36:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : reply-to : mime-version : content-type;
+ s=corp-2020-01-29; bh=//t/xn6k1e3S2dramBlocepFkrrrWwexf1J1V0NoWKw=;
+ b=d4x1Eadc9JzMGRZY/aH8YvBkccLwe9Vb1O98tV6jpq5NVdCov8xqMHRvP83u6lKAQrm9
+ ctrzp5CL4Ftxv5h92MI+fmDbe1Pyn0EBz1YtYt6vk3STxqZe88sKJ8x4EWiuq6ym6L6S
+ I9WaLS7EQUHTzO0QFjQXGNPMquywJ7XDUqRQTh4UNpmmJvFezJG6ddthwWNB00LVNQAE
+ SOCqnlgLv6hLaaO3XbHTZxzViXuCnsuT0LXJXqGKP9OrdE30/UPtSp45gkD7wPZAqZb8
+ hIlwA+kumfD5eolQhReGUTOEo7LXk+o2Iw0hLK7DZkc471MGg4Ku8fJ65g2kh/tsldwG Yg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 31dkruju1f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 02 Jun 2020 19:36:22 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 052JRQ6F074395;
+        Tue, 2 Jun 2020 19:36:21 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31c12pr4sv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jun 2020 19:36:21 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 052JaJYp005301;
+        Tue, 2 Jun 2020 19:36:19 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 12:36:18 -0700
+Date:   Tue, 2 Jun 2020 22:36:11 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] x86/resctrl: fix a NULL vs IS_ERR() static checker warning
+Message-ID: <20200602193611.GA190851@mwanda>
+Reply-To: e27321cb-293e-7919-33fe-ad8381cd9993@intel.com
 MIME-Version: 1.0
-References: <26028f50-3fb8-eb08-3c9f-08ada018bf9e@web.de> <20200602094947.GA5684@sirena.org.uk>
- <1c13e0ec-e50f-9eea-5704-052d2d682727@web.de> <20200602141306.GH5684@sirena.org.uk>
- <cc8e1397-c605-d73e-363e-9d2ddfb9ae16@web.de> <20200602183644.GI5684@sirena.org.uk>
-In-Reply-To: <20200602183644.GI5684@sirena.org.uk>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Tue, 2 Jun 2020 14:35:45 -0500
-Message-ID: <CAEkB2ETDxZ3hgDtC_=Z_AG2Gsd3DO1HApcOzdJf5T0EeJ5DLPQ@mail.gmail.com>
-Subject: Re: spi: spi-ti-qspi: call pm_runtime_put on pm_runtime_get failure
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Markus Elfring <Markus.Elfring@web.de>, linux-spi@vger.kernel.org,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ adultscore=0 suspectscore=1 spamscore=0 bulkscore=0 mlxlogscore=973
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 suspectscore=1 malwarescore=0 clxscore=1015
+ adultscore=0 mlxlogscore=979 cotscore=-2147483648 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006020142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 1:36 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Jun 02, 2020 at 05:05:18PM +0200, Markus Elfring wrote:
-> > >> I find this commit message improvable also according to Linux software
-> > >> development documentation.
->
-> > > Causing people to send out new versions of things for tweaks to the
-> > > commit log consumes time for them and everyone they're sending changes to.
->
-> > Improving patches (besides source code adjustments) is an usual software
-> > development activity, isn't it?
->
-> Your updates were not improvements.  The formatting was worse and to my
-> native speaker eyes the grammar was worse.  With this sort of stylistic
-> thing it's especially important that any review aligns with the needs
-> and practices of the subsystem, there is opinion in there and multiple
-> opinions just makes things harder for submitters.
+The callers don't expect *d_cdp to be set to an error pointer, they only
+check for NULL.  This leads to a static checker warning:
 
-Thanks Mark for your constructive opinion,
-In most cases, such stylistic comments become confusing and
-discouraging to those who are trying to chip in. Personally I think as
-long as the patch does not contain typo and is not ambiguous from the
-maintainer's perspective, it should be fine to let it go forward.
+    arch/x86/kernel/cpu/resctrl/rdtgroup.c:2648 __init_one_rdt_domain()
+    warn: 'd_cdp' could be an error pointer
 
+This would not trigger a bug in this specific case because
+__init_one_rdt_domain() calls it with a valid domain that would not have
+a negative id and thus not trigger the return of the ERR_PTR(). If this
+was a negative domain id then the call to rdt_find_domain() in
+domain_add_cpu() would have returned the ERR_PTR() much earlier and the
+creation of the domain with an invalid id would have been prevented.
 
+Even though a bug is not triggered currently the right and safe thing to
+do is to set the pointer to NULL because that is what can be checked for
+when the caller is handling the CDP and non-CDP cases.
 
+Fixes: 52eb74339a62 ("x86/resctrl: Fix rdt_find_domain() return value and checks")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+v2: improve commit message with extra information from the maintainer
+
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 23b4b61319d3f..3f844f14fc0a6 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1117,6 +1117,7 @@ static int rdt_cdp_peer_get(struct rdt_resource *r, struct rdt_domain *d,
+ 	_d_cdp = rdt_find_domain(_r_cdp, d->id, NULL);
+ 	if (WARN_ON(IS_ERR_OR_NULL(_d_cdp))) {
+ 		_r_cdp = NULL;
++		_d_cdp = NULL;
+ 		ret = -EINVAL;
+ 	}
+ 
 -- 
-Navid.
+2.26.2
+
