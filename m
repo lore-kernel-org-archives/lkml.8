@@ -2,140 +2,211 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D190C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D083AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D45AB2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="1HXvkSvf"
+	by mail.kernel.org (Postfix) with ESMTP id B2A0E2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 19:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgFBTuq (ORCPT
+        id S1728174AbgFBTuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 15:50:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgFBTup (ORCPT
+        Tue, 2 Jun 2020 15:50:50 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36854 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726139AbgFBTur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 15:50:45 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21AEC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 12:50:45 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s10so20215pgm.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 12:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Mzflbrhvko6ep9R8wCU2OJXZtq8oTTi/5tkZ4gQS+KU=;
-        b=1HXvkSvfGPWZsFf9KXSa+UGDDH/KpDwMQ1AEANLUWLtLYCMadcW2V+7jbK5siUkQzD
-         aCr1WhbBlE0ZPeriCj1qZcieohUrQffr92IKQ5DsXah7wZg7XH0x4atSqMdRIxOu+4up
-         G58TXs1tA4TrGk+5zlRp4NvXNZNylyw0tLeQ8TJ/XACrEMV2iznvydyGcG0XDoXuevQi
-         2YocTCBoSWrTGpmskMxpiQE3vYB5t5tw+2U29okyWjEJua0JVxYDaFxC1yLbhYhk+lD/
-         2yAcm2hKSJ/rw4u1Oxo8DBN6gHjAzm9D8bs68A1EPQbZr5sprsq3PoOU/vyNEZvW1Mgt
-         iGFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Mzflbrhvko6ep9R8wCU2OJXZtq8oTTi/5tkZ4gQS+KU=;
-        b=cKGoTso/8VF61puyKZFaejTiq5y3ggxYT7Pg6bMbZqXiZpbuHWFgzr2ZFkZkGY1Yl1
-         SmPZsNG1NAT0Bc0NwN5hmS0u3dVqBmhDqObWIvKfLuEtqEruOgZBHUE9O0lmUKweyX/7
-         7tXh6fNo5rSLvTCgSFZ0apg4/1eDqU/9fNyzydEQ4Wt45ZY1YUUb9e4hjybQ80Zndyk6
-         FHJc5nujrAIfLqGVZp3fd6zPVn3I9u931w8KfuvNaEH6WGvkSAeAKvT7dPQjFzsi5fRG
-         kQ3tapPFZBzq0r8JxDKE7K8GyrtWOmg1Mc4elvR6TTWQK7Le8fz/QYt4q37bgdDDyam0
-         MyCw==
-X-Gm-Message-State: AOAM531roR29vttUVPBmeB09dD1vgsMB6MLwtrMKDO7AVAF13cM4AvhG
-        LUPiEx9O2oXh667op6wag/Wiug==
-X-Google-Smtp-Source: ABdhPJxlr3NaxlIvKmBsKz+yOh9jZdQ2fh6/hxF4Qy88GQazKgYAnQRroYSTPEuTjdmxlCgzgN9SQQ==
-X-Received: by 2002:a62:7e95:: with SMTP id z143mr9750440pfc.108.1591127445044;
-        Tue, 02 Jun 2020 12:50:45 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:64fc:8253:a1dc:f79c? ([2601:646:c200:1ef2:64fc:8253:a1dc:f79c])
-        by smtp.gmail.com with ESMTPSA id h3sm3083148pfr.2.2020.06.02.12.50.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 12:50:44 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] arch/x86: reset MXCSR to default in kernel_fpu_begin()
-Date:   Tue, 2 Jun 2020 12:50:42 -0700
-Message-Id: <C6F6F6E4-CBD8-4E72-812B-99F008ECAA4F@amacapital.net>
-References: <8b1f0bfa-79b0-74e4-0241-8b2a94491807@linuxfoundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Petteri Aimonen <jpa@git.mail.kapsi.fi>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-In-Reply-To: <8b1f0bfa-79b0-74e4-0241-8b2a94491807@linuxfoundation.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-X-Mailer: iPhone Mail (17F80)
+        Tue, 2 Jun 2020 15:50:47 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 2 Jun 2020 12:50:46 -0700
+Received: from sc9-mailhost3.vmware.com (unknown [10.200.192.49])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 748FE40BEE;
+        Tue,  2 Jun 2020 12:50:46 -0700 (PDT)
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [RFC][PATCH v4 00/32] objtool: Make recordmcount a subcommand
+Date:   Tue, 2 Jun 2020 12:49:53 -0700
+Message-ID: <cover.1591125127.git.mhelsley@vmware.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+recordmcount has its own ELF wrapper code and could utilize
+objtool's ELF code to more-portably handle architecture variations.
+This series makes recordmcount a subcommand of objtool. It  very
+gradually convert recordmcount to become a subcommand of objtool and
+then reuses parts of objtool's ELF code. recordmcount maps the file in
+and collects simple information it needs to append a section to the
+object file. The only part of the original file it modifies is the
+address of new section tables -- interestingly enough this
+resembles RCU in that we don't really trim the old tables so
+much as unlink them via a critical offset and then rely on
+future tooling, in this case, to drop the unused bits. Much of
+the recordmcount ELF code is only reading and walking the data
+structures to collect the mcount locations it records in a separate
+area of memory. This means it's safe to mix access to the mapped
+file with access to the objtool-style linked data
+structures as we gradually convert it to using only the linked data
+structures. Once the old ELF code is no longer in use we can drop it
+and use objtool to take over the task of writing the results without
+using the RCU-like trick any more.
+
+Testing:
+
+I've been using scripts to test cross compilation and execution of
+objtool, and mcount on objects built for x86, ppc64le, arm64, s390, and
+sparc. I used PowerPC as a sample arch for fixing a bug (see Changes)
+and confirmed it builds a full zImage with defconfig
+(CONFIG_DYNAMIC_FTRACE=y).
+
+Changes
+v4:
+	Split out recordmcount cleanups and upstreamed.
+	[ https://lore.kernel.org/lkml/20190802134712.2d8cc63f@gandalf.local.home/ ]
+
+	Split out and iterated on objtool multi-arch support.
+	[ https://lore.kernel.org/lkml/cover.1586468801.git.mhelsley@vmware.com/ ]
+
+	Split out expanded relocation support, renamed types, and functions
+	to reflect expanded relocation support, and posted.
+	[ https://lore.kernel.org/lkml/cover.1590785960.git.mhelsley@vmware.com/ ]
+
+	This set is based on the patches sent upstream and posted above.
+
+	Adapted to renames by Ingo and Peter: s/elf_open/elf_open_read/
+
+	Added weak symbols for mcount subcommand
+		This nicely eliminated the need for the mcount.h header.
+
+	Added tools/objtool/Makefile per-arch SUBCMD_ blocks for each
+		arch recordmcount / mcount supports.
+
+	Moved ftrace/mcount/record.h from objtool_dep to recordmcount_dep
+		This keeps the dependencies better organized.
+
+	Fixed Makefile issue reported for PowerPC and a couple other archs
+		by kbuild test robot. The always-$(BUILD_C_RECORDMCOUNT)
+		line wasn't sufficiently replaced. Added to prepare-objtool
+		target in top level Makefile.
+
+	Split up dependencies to be independent of CONFIG_STACK_VALIDATION
+		and CONFIG_UNWINDER_ORC since these are x86-specific.
+		Now any arch which uses the C version of recordmcount
+		will build objtool if dynamic tracing is enabled.
+
+	Added a second rename at the end to be consistent with other
+		objtool subcommands.
+
+v3:
+        Rebased on mainline. s/elf_open/elf_read/ in recordmcount.c
+
+v2:
+        Fix whitespace before line continuation
+
+        Add ftrace/mcount/record.h to objtool_dep
+
+        Rename the Makefile variable BUILD_C_RECORDMCOUNT to
+            better reflect its purpose
+
+        Similar: rename recordmcount_source => recordmcount_dep
+            When using objtool we can just depend on the
+            binary rather than the source the binary is
+            built from. This should address Josh's feedback and
+            make the Makefile code a bit clearer
+
+        Add a comment to make reading the Makefile a little
+            easier
+
+        Rebased to latest mainline -rc
 
 
-> On Jun 2, 2020, at 10:27 AM, Shuah Khan <skhan@linuxfoundation.org> wrote:=
+Matt Helsley (32):
+  objtool: Prepare to merge recordmcount
+  objtool: Make recordmcount into mcount subcmd
+  objtool: recordmcount: Start using objtool's elf wrapper
+  objtool: recordmcount: Search for __mcount_loc before walking the
+    sections
+  objtool: recordmcount: Convert do_func() relhdrs
+  objtool: mcount: Remove unused fname parameter
+  objtool: mcount: Use libelf for section header names
+  objtool: mcount: Walk objtool Elf structs in find_secsym_ndx
+  objtool: mcount: Use symbol structs to find mcount relocations
+  objtool: mcount: Walk relocation lists
+  objtool: mcount: Move get_mcountsym
+  objtool: mcount: Replace MIPS offset types
+  objtool: mcount: Move is_fake_mcount()
+  objtool: mcount: Stop using ehdr in find_section_sym_index
+  objtool: mcount: Move find_section_sym_index()
+  objtool: mcount: Restrict using ehdr in append_func()
+  objtool: mcount: Use objtool ELF to write
+  objtool: mcount: Move nop_mcount()
+  objtool: mcount: Move has_rel_mcount() and tot_relsize()
+  objtool: mcount: Move relocation entry size detection
+  objtool: mcount: Only keep ELF file size
+  objtool: mcount: Use ELF header from objtool
+  objtool: mcount: Remove unused file mapping
+  objtool: mcount: Reduce usage of _size wrapper
+  objtool: mcount: Move mcount_adjust out of wrapper
+  objtool: mcount: Pre-allocate new ELF sections
+  objtool: mcount: Generic location and relocation table types
+  objtool: mcount: Move sift_rel_mcount out of wrapper file
+  objtool: mcount: Remove wrapper for ELF relocation type
+  objtool: mcount: Remove wrapper double-include trick
+  objtool: mcount: Remove endian wrappers
+  objtool: mcount: Rename
 
->=20
-> =EF=BB=BFOn 6/2/20 11:03 AM, Andy Lutomirski wrote:
->>> On Tue, Jun 2, 2020 at 3:56 AM Borislav Petkov <bp@alien8.de> wrote:
->>>=20
->>> Hi,
->>>=20
->>> On Tue, Jun 02, 2020 at 01:29:51PM +0300, Petteri Aimonen wrote:
->>>> The kernel module is not actually x86-specific, even though it is
->>>> currently only enabled for x86. amdgpu driver already does kernel mode
->>>> floating point operations on PPC64 also, and the same module could be
->>>> used to test the same thing there.
->>>=20
->>> Then make it generic please and put the user portion in, say,
->>> tools/testing/selftests/fpu/ and we can ask ppc people to test it too.
->>> People might wanna add more stuff to it in the future, which would be
->>> good.
->>>=20
->>>> To deterministically trigger the bug, the syscall has to come from the
->>>> same thread that has modified MXCSR. Going through /usr/sbin/modprobe
->>>> won't work, and manually doing the necessary syscalls for module loadin=
-g
->>>> seems too complicated.
->>>=20
->>> Ok, fair enough. But put that file in debugfs pls.
->> I think I agree.  While it would be delightful to have general
->> selftest tooling for kernel modules, we don't have that right now, and
->> having the test just work with an appropriately configured kernel
->> would be nice.
->=20
-> Let's extend it to do what we want it to do. I will happy to take
-> patches. If you have some concrete ideas on what we can add, please
-> do a short summary of what is missing. I will find a way to get this
-> done.
->=20
->> How about putting the file you frob in
->> /sys/kernel/debug/selftest_helpers/something_or_other.  The idea would
->> be that /sys/kernel/debug/selftest_helpers would be a general place
->> for kernel helpers needed to make selftests work.
->=20
-> Is this a workaround for the lack of selftest tooling for kernel
-> modules? In which case, let's us focus on fix selftest tooling.
+ Documentation/dontdiff                     |   2 +-
+ Documentation/trace/ftrace-design.rst      |   4 +-
+ Documentation/trace/ftrace.rst             |   6 +-
+ Makefile                                   |  24 +-
+ arch/arm64/include/asm/ftrace.h            |   2 +-
+ arch/x86/include/asm/ftrace.h              |   2 +-
+ kernel/trace/Kconfig                       |   2 +-
+ scripts/.gitignore                         |   1 -
+ scripts/Makefile                           |   1 -
+ scripts/Makefile.build                     |  22 +-
+ scripts/recordmcount.c                     | 663 --------------------
+ scripts/recordmcount.h                     | 606 ------------------
+ scripts/sorttable.h                        |   2 +-
+ tools/objtool/.gitignore                   |   1 +
+ tools/objtool/Build                        |   2 +
+ tools/objtool/Makefile                     |  37 +-
+ tools/objtool/builtin-mcount.c             |  50 ++
+ tools/objtool/builtin.h                    |   2 +
+ tools/objtool/elf.c                        |   5 +-
+ tools/objtool/elf.h                        |   2 +
+ tools/objtool/mcount.c                     | 682 +++++++++++++++++++++
+ tools/objtool/objtool.c                    |   1 +
+ tools/objtool/objtool.h                    |   1 +
+ {scripts => tools/objtool}/recordmcount.pl |   0
+ tools/objtool/weak.c                       |   5 +
+ 25 files changed, 821 insertions(+), 1304 deletions(-)
+ delete mode 100644 scripts/recordmcount.c
+ delete mode 100644 scripts/recordmcount.h
+ create mode 100644 tools/objtool/builtin-mcount.c
+ create mode 100644 tools/objtool/mcount.c
+ rename {scripts => tools/objtool}/recordmcount.pl (100%)
 
-The goal here is to have a selftest that runs kernel code as part of its ope=
-ration. That is, the selftest is, logically, starting in userspace:
 
-setup_evil_state();
-ret =3D call_kernel_helper();
-check_some_other_stuff();
-undo_evil_state();
+base-commit: 2160e6958fc4fa0a70d5f8a2f32760c7ab3bfd6c
+-- 
+2.20.1
 
-And the call_kernel_helper() could be moderately specific to the test.
-
->=20
-> thanks,
-> -- Shuah
