@@ -2,172 +2,108 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F210C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF44D20734
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="pBzsdEqb"
+	by mail.kernel.org (Postfix) with ESMTP id DA6C020738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 09:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgFBJHW (ORCPT
+        id S1726630AbgFBJHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 05:07:22 -0400
-Received: from mail-eopbgr1410137.outbound.protection.outlook.com ([40.107.141.137]:9440
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726311AbgFBJHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:07:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KwoM9x9rYN/Rbzl9hZYP71j6jTOXZHTJV6OefrUbYarSsMUawvygh+8uzT9H0frxYPrzIrivzMOHrQLd0j+swOPAQ//f4RHr/Jul9X13y8SvwPadluhQUNHzyVBSK2nNudkZ//IX6L/KF+vGMkawygDshxFvaV0VkVIBB6v+MTXc+mco1FXbi2AxVfp1M8z+t1gub2gJZlbbv/PWGzvq6t3f8qdtsCnRzrPnlyfmsCarMbVWAF9b2LJ/6f4gwa4VbxdYcYozxHAKwhyL8PYg9BfpK2WHsGSpWSACM8l6SQSjsiG6xAGZXOAP73SYlRhSjYY6+us4rJvB/FVstC3IUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AX6/p9SoNQGtsFzGs/40isfbplQwU4ymyIQZ8X6wDF4=;
- b=cEJQRrVq/oVhtdSaCZh5t62wDyHlS5nMPRBS0sR1JnuusgzmiFgT3a1vIivsRC3HM0V8KTIaV1ycjaNPlbIuxzVfXX80yjiIOIRMip3fWyjuOljEw5EWG3w9P//B0oooqVKJyPgHl+CQ7oZk2FwQSqOnkfrF34OBc5uubhC+4SbWdHMHct9TFgCCfAPJmPB3HMO1thrftX5JHku+/FHA6aTZCaRxMxhrD5cO+XWjnwT7ebpnnGZoXcUqqYrPf2krgcBsxKp4CBe7Sl5PPqTHClRbzrA1j0rR+H6aQBiJn1FaX3y0RdueRABIBpsR5Hc3PLoD5ZILNIh4cV5lJfyJpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AX6/p9SoNQGtsFzGs/40isfbplQwU4ymyIQZ8X6wDF4=;
- b=pBzsdEqboNGXHNwFRvNZc88tPQm6RSos6tMzSE7MJKpumr29l1oJrWWdwMBtqN5ShqRM77Fz2I05tAfYsCL0tvxwhhGJHhwBuNQpPcU4mln2w04JzHXTuLAC3kJbtmbrJPoivGQ/rjSmw1YzEO19bm6TUaXWP8jbrTgl/qHGhtA=
-Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com (2603:1096:603:37::20)
- by OSAPR01MB2177.jpnprd01.prod.outlook.com (2603:1096:603:18::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.25; Tue, 2 Jun
- 2020 09:07:16 +0000
-Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com
- ([fe80::c44c:5473:6b95:d9fd]) by OSAPR01MB2385.jpnprd01.prod.outlook.com
- ([fe80::c44c:5473:6b95:d9fd%6]) with mapi id 15.20.3045.024; Tue, 2 Jun 2020
- 09:07:15 +0000
-From:   Chris Paterson <Chris.Paterson2@renesas.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 4.4 00/48] 4.4.226-rc1 review
-Thread-Topic: [PATCH 4.4 00/48] 4.4.226-rc1 review
-Thread-Index: AQHWOEblTp/wW69zwEmAlBmsCs3iiajEQ4lwgABQ3oCAAHTo4A==
-Date:   Tue, 2 Jun 2020 09:07:15 +0000
-Message-ID: <OSAPR01MB2385A58EDAF34A14A3756230B78B0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
-References: <20200601173952.175939894@linuxfoundation.org>
- <OSAPR01MB23858265B59669B78394A94CB78A0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
- <20200602020651.GM1407771@sasha-vm>
-In-Reply-To: <20200602020651.GM1407771@sasha-vm>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 15404bcb-fe4e-4a1b-93de-08d806d45838
-x-ms-traffictypediagnostic: OSAPR01MB2177:
-x-microsoft-antispam-prvs: <OSAPR01MB2177D9D8C63E37696949E2ADB78B0@OSAPR01MB2177.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0422860ED4
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aa2dXi7ddlBBScsueMkKF9uH7hkEFca/sqgwN2Vsv+absf7KDlHZ9+4sRuZPXfPefdAHxD23p6GMdCGO0tpJajtJSgGezRadJIvLXnUwoJ5Pr4KCgyPtXyVhnVhZE1Qav29RCGtNKblN7brz/yFQYqXRokGZEIOcsBAh1tGvt3jYs8WOp0BlTeLmGX1RazocgaHnvEW1RkksjMYMu8j5TAsbO/FEVQBuw2jAHTgVI40NbHOoOuE0oTcHVZrAwZ0vfDlLeKsBgadvWcOSBxBOM7n7+4w+HlllTnGu6aq9Px9uLmIlLZgAIYOosPhLhRn5dCYrbN/irpJOziVJzZxNKc0+qONmYxxbAzX0FrQTnfdNcfLZ7MFxIAEYI+Vrsfjg94OCx19QuUwzS8XYMrVWxg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB2385.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(8676002)(316002)(478600001)(7696005)(966005)(33656002)(54906003)(186003)(26005)(6506007)(9686003)(4326008)(8936002)(55016002)(66946007)(66476007)(66556008)(64756008)(66446008)(86362001)(83380400001)(76116006)(6916009)(2906002)(7416002)(52536014)(71200400001)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: uMwFoNXJ9PbK9Q5VMfgYrIr4rWypzjSMPF1vKFx+5JIGZCHYqV9FHFJD+7j1H1QtCSJpdsbVp1j/sa6Q8ad6NpAtv1+J/el13Vm1LrGNdYq3yjxqX31OlnYQWySEdV/9F8FfiukDMyMr/v1vqqbP+iDAbaZcKXYsOhadLpLRqNt8najcC+xVBfDcqqrJQRD7n0xb9aawQBmeB4fA5WzNobji3qqlWmprCmPFJ5qfV3B/v8CVXXy1jYbY9M6ZhjQFVbZjH4fgqzWvBX4bxjulN+lhAI25NIf8Da3CHUbu0pf5D8ZZbBdNVFtHoLAzPj4Ciop9536XfGualYyE4rkDJOFH/Vj8bkKZyX5g21JeqGqUi6nXGrd1OmFQCo7SvTSN5d+26KwKgZR0GoeQmXZ5LsmrMyd4txj9/Js82DqohpHdpgeZTXxEYX/Jqg1lvAkQk/nueJzfym8e0QKrk5DVDXUqYYJlJhbhkPB1Db7IszmUlX4Mhs2sFoYy/NDdqPWU
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 2 Jun 2020 05:07:47 -0400
+Received: from mx.socionext.com ([202.248.49.38]:5666 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbgFBJHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:07:46 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 02 Jun 2020 18:07:43 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id BB527180B46;
+        Tue,  2 Jun 2020 18:07:43 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 2 Jun 2020 18:07:43 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 673931A0E67;
+        Tue,  2 Jun 2020 18:07:43 +0900 (JST)
+Received: from [10.213.31.100] (unknown [10.213.31.100])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id BC777120136;
+        Tue,  2 Jun 2020 18:07:42 +0900 (JST)
+Subject: Re: [PATCH v2 4/5] PCI: uniphier: Add iATU register support
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1589536743-6684-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1589536743-6684-5-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200601213215.GA1521885@bogus>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <e6e7de73-6a89-b0e9-a9b0-de353c4e3218@socionext.com>
+Date:   Tue, 2 Jun 2020 18:07:42 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15404bcb-fe4e-4a1b-93de-08d806d45838
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2020 09:07:15.3942
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YuMaozuaZcXfyN7R4WoU90gkIkbUhu1qFSefQ58g1uD2DOYa4dyfc/W8eBKGjMv9ACAaNdGFi5B6LtfMR5D0GX8k5rOlfxxnE9a8txhtILU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2177
+In-Reply-To: <20200601213215.GA1521885@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sasha,
+Hi Rob,
 
-> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> Behalf Of Sasha Levin
-> Sent: 02 June 2020 03:07
->=20
-> On Mon, Jun 01, 2020 at 10:14:20PM +0000, Chris Paterson wrote:
-> >Hi Greg,
-> >
-> >> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> >> Behalf Of Greg Kroah-Hartman
-> >> Sent: 01 June 2020 18:53
-> >>
-> >> This is the start of the stable review cycle for the 4.4.226 release.
-> >> There are 48 patches in this series, all will be posted as a response
-> >> to this one.  If anyone has any issues with these being applied, pleas=
-e
-> >> let me know.
-> >
-> >I'm seeing some issues with Linux 4.4.226-rc1 (dc230329b026).
-> >
-> >We have 4 configurations that fail, 2x Armv7 and 2x x86, whilst building=
- the
-> modules.
-> >
-> >Error message:
-> >  ERROR: "pptp_msg_name" [net/netfilter/nf_conntrack_pptp.ko] undefined!
-> >  ERROR: "pptp_msg_name" [net/ipv4/netfilter/nf_nat_pptp.ko] undefined!
-> >
-> >Relevant patches are:
-> >  69969e0f7e37 ("netfilter: nf_conntrack_pptp: prevent buffer overflows =
-in
-> debug code")
-> >  3441cc75e4d1 ("netfilter: nf_conntrack_pptp: fix compilation warning w=
-ith
-> W=3D1 build")
-> >
-> >I haven't had a chance to dig deeper yet but will do in the morning.
-> >
-> >Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/lin=
-ux-stable-
-> rc-ci/pipelines/151700917
-> >GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip=
--
-> pipelines/-/blob/master/trees/linux-4.4.y.yml
-> >Relevant LAVA jobs:
-> https://lava.ciplatform.org/scheduler/alljobs?length=3D25&search=3Ddc2303=
-#table
->=20
-> Thats and interesting one... I've queued fe22cd9b7c98 ("printk: help
-> pr_debug and pr_devel to optimize out arguments") for 4.4 to address
-> this.
+On 2020/06/02 6:32, Rob Herring wrote:
+> On Fri, May 15, 2020 at 06:59:02PM +0900, Kunihiko Hayashi wrote:
+>> This gets iATU register area from reg property. In Synopsis DWC version
+>> 4.80 or later, since iATU register area is separated from core register
+>> area, this area is necessary to get from DT independently.
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-uniphier.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> index a8dda39..493f105 100644
+>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> @@ -447,6 +447,13 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>>   	if (IS_ERR(priv->pci.dbi_base))
+>>   		return PTR_ERR(priv->pci.dbi_base);
+>>   
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
+>> +	if (res) {
+>> +		priv->pci.atu_base = devm_pci_remap_cfg_resource(dev, res);
+> 
+> This isn't config space, so this function shouldn't be used.
+> 
+> Use devm_platform_ioremap_resource_byname().
 
-This patch resolves the issue for me.
+Indeed. I'll replace with it.
 
-Test pipeline: https://gitlab.com/cip-project/cip-kernel/linux-cip/pipeline=
-s/151885545
+>> +		if (IS_ERR(priv->pci.atu_base))
+>> +			priv->pci.atu_base = NULL;
+>> +	}
+>> +
+>>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+>>   	priv->base = devm_ioremap_resource(dev, res);
+> 
+> Feel free to convert this one too.
 
-Thanks, Chris
+This should be replaced as well.
 
->=20
-> Thanks for the report Chris!
->=20
-> --
-> Thanks,
-> Sasha
+Thank you,
+  
+---
+Best Regards
+Kunihiko Hayashi
