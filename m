@@ -2,175 +2,202 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B87FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19602C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7F6206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591120078;
-	bh=nOl/eHoUgAYSK6OmPKp3yM9a32tsTL8sV8SLz5NDRuo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=RpBUR9FlQtmn0wt9P9BN2El5d4jDzxwnLrh6q4UwLQCvsVXEO/kONT5PZ26bC7IkQ
-	 NkEbzn/yh8H9KSa7V0mlQ8bEpG7Rpmjs1GKC8sefIYIjdGo7TQD4QEeppPWtCT741Q
-	 /4HJqqm22eHLd7u/kLoA7Iqfp9cynDnU1ZoC+LOs=
+	by mail.kernel.org (Postfix) with ESMTP id 02A9D206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 17:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgFBRr5 (ORCPT
+        id S1726728AbgFBRvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 13:47:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40163 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgFBRr5 (ORCPT
+        Tue, 2 Jun 2020 13:51:07 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:53673 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726019AbgFBRvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 13:47:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r15so4005187wmh.5;
-        Tue, 02 Jun 2020 10:47:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Hac4NbkKwQMIBWzkyLbsnlFGvKNTeYymNblYtF3qCYI=;
-        b=LHL6LYLcuYeDFRfVd/+ii8gkT8DEYXQsGeKDCIug3U44y+4VPg9Su/oPIUwKDmsbMw
-         HG6FjFTJZGuFjecdVBh1bAC41HjffN4TkBWApQzPVZeY93X2ODr59Qvd70sfLQBtJenb
-         CWCmZgzXXrffZZZTL1EQkCRWHfxM+V9T+EG3e9tTry2wzeofdPfC4g6T37vYVRFY42+z
-         K1mseZnsKjjlxevq8Uy3uWdN6VUPdPjVApOTf9wmEZ78LOL2fEiszL317L7c4iqwympS
-         GbzxK1v6l7gkKk0VXtpNmmpsRDMYq90j2wA1YzGNU/llItoo0cV8IR8V5BmCqF/Phsuu
-         ZJMQ==
-X-Gm-Message-State: AOAM5320WU5sIFWtiJZ/i8YwNw/yYjMMqrZjPHzsIDNHK6F6+q1gYcS4
-        HJiyS9w+G9o84RawiwIasWs=
-X-Google-Smtp-Source: ABdhPJzdI0Af12c/h6zywVKhzVzAyUSBB0Ph4N0UZxvGFQcJshQSaq0/y2I1K8LEJE1xCLYF24XopQ==
-X-Received: by 2002:a7b:c249:: with SMTP id b9mr4732456wmj.143.1591120074168;
-        Tue, 02 Jun 2020 10:47:54 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u10sm554074wmc.31.2020.06.02.10.47.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 10:47:53 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 17:47:52 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Hyper-V commits for 5.8
-Message-ID: <20200602174752.u67tmpxojt5dv655@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+        Tue, 2 Jun 2020 13:51:07 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.143.250])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 7A652550CCA6;
+        Tue,  2 Jun 2020 19:51:04 +0200 (CEST)
+Received: from localhost (34.103.240.103) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 2 Jun 2020
+ 19:51:03 +0200
+Date:   Tue, 2 Jun 2020 19:48:46 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v3 2/4] iio: chemical: scd30: add I2C interface driver
+Message-ID: <20200602174846.GB2668@arch>
+References: <20200602164723.28858-1-tomasz.duszynski@octakon.com>
+ <20200602164723.28858-3-tomasz.duszynski@octakon.com>
+ <CAHp75Vc60q1PC9j6KR1-OJHxw=nBAHt9zJK=h9f27yJxMHpb8A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAHp75Vc60q1PC9j6KR1-OJHxw=nBAHt9zJK=h9f27yJxMHpb8A@mail.gmail.com>
+X-Originating-IP: [34.103.240.103]
+X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 10486631732823481503
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjihesthdtredttddtjeenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtheevtefhffduteejfedtkeeuheejgeejvdetfffgveekffefgeffueeghefgjeenucfkpheptddrtddrtddrtddpfeegrddutdefrddvgedtrddutdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus
+Hello Andy,
 
-Please pull the signed tag for Hyper-V commits for 5.8.
+On Tue, Jun 02, 2020 at 08:14:13PM +0300, Andy Shevchenko wrote:
+> On Tue, Jun 2, 2020 at 7:49 PM Tomasz Duszynski
+> <tomasz.duszynski@octakon.com> wrote:
+> >
+> > Add I2C interface driver for the SCD30 sensor.
+>
+> ...
+>
+> > +static u16 scd30_i2c_cmd_lookup_tbl[] = {
+> > +       [CMD_START_MEAS] = 0x0010,
+> > +       [CMD_STOP_MEAS] = 0x0104,
+> > +       [CMD_MEAS_INTERVAL] = 0x4600,
+> > +       [CMD_MEAS_READY] = 0x0202,
+> > +       [CMD_READ_MEAS] = 0x0300,
+> > +       [CMD_ASC] = 0x5306,
+> > +       [CMD_FRC] = 0x5204,
+> > +       [CMD_TEMP_OFFSET] = 0x5403,
+> > +       [CMD_FW_VERSION] = 0xd100,
+> > +       [CMD_RESET] = 0xd304,
+>
+> Keep sorted by value?
+>
 
-There is a conflict in arch/x86/include/asm/hyperv-tlfs.h with a patch
-in KVM tree. Michael Kelley and Jon Doron touched that file separately.
-Michael's patches are going through the Hyper-V tree while Jon's patches
-are going through KVM tree.
+I'd rather leave it as is simply because order here matches order in
+sensor datasheet.
 
-A fix for the conflict can be found at:
+> > +};
+>
+> ...
+>
+> > +       ret = i2c_master_send(client, txbuf, txsize);
+>
+> > +       if (ret != txsize)
+> > +               return ret < 0 ? ret : -EIO;
+>
+> Wouldn't be better
+>
+>   if (ret < 0)
+>     return ret;
+>   if (ret != txsize)
+>     return -EIO;
+>
+> ?
+>
 
-https://lore.kernel.org/lkml/20200602171802.560d07bc@canb.auug.org.au/
+Hmm, okay. Perhaps slightly easier to read.
 
-For the same reason, you will see a build failure after merging Hyper-V
-and KVM tree.  That's because a constant was renamed from
-HV_X64_DEBUGGING to HV_DEBUGGING. A patch to fix the build can be found
-at:
+> > +       if (!rxbuf)
+> > +               return 0;
+> > +
+> > +       ret = i2c_master_recv(client, rxbuf, rxsize);
+>
+> > +       if (ret != rxsize)
+> > +               return ret < 0 ? ret : -EIO;
+>
+> Ditto.
+>
+> ...
+>
+> > +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd,
+> > +                            u16 arg, void *response, int size)
+> > +{
+> > +       char crc, buf[SCD30_I2C_MAX_BUF_SIZE], *rsp = response;
+> > +       int i, ret;
+>
+> i -> offset ?
+>
 
-https://lore.kernel.org/lkml/20200602173556.17ad06a1@canb.auug.org.au/
+'i' is shorter and I am lazy :).
 
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+> > +       put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
+> > +       i = 2;
+> > +
+> > +       if (rsp) {
+> > +               /* each two bytes are followed by a crc8 */
+> > +               size += size / 2;
+> > +       } else {
+> > +               put_unaligned_be16(arg, buf + i);
+> > +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> > +               i += 2;
+>
+> > +               buf[i] = crc;
+> > +               i += 1;
+>
+> buf[offset++] = crc; ?
+>
 
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+I'd rather stick to what I have now. It looks more consistent.
 
-are available in the Git repository at:
+> > +               /* commands below don't take an argument */
+> > +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
+> > +                       i -= 3;
+> > +       }
+> > +
+> > +       ret = scd30_i2c_xfer(state, buf, i, buf, size);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /* validate received data and strip off crc bytes */
+> > +       for (i = 0; i < size; i += 3) {
+> > +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> > +               if (crc != buf[i + 2]) {
+> > +                       dev_err(state->dev, "data integrity check failed\n");
+> > +                       return -EIO;
+> > +               }
+> > +
+>
+> > +               *rsp++ = buf[i];
+>
+> + 0 (for the sake of consistency?
+>
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
+Adding 0 is a little bit odd.
 
-for you to fetch changes up to afaa33da08abd10be8978781d7c99a9e67d2bbff:
+> > +               *rsp++ = buf[i + 1];
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+>
+> ...
+>
+> > +static struct i2c_driver scd30_i2c_driver = {
+> > +       .driver = {
+>
+> > +               .name = KBUILD_MODNAME,
+>
+> Better to hard code.
+>
 
-  Drivers: hv: vmbus: Resolve more races involving init_vp_index() (2020-05-23 09:07:00 +0000)
+I seriously doubt anyone will ever want to change module name. What for?
 
-----------------------------------------------------------------
-
- - A series from Andrea to support channel reassignment
- - A series from Vitaly to clean up Vmbus message handling
- - A series from Michael to clean up and augment hyperv-tlfs.h
- - Patches from Andy to clean up GUID usage in Hyper-V code
- - A few other misc patches
-
-----------------------------------------------------------------
-Andrea Parri (Microsoft) (13):
-      Drivers: hv: vmbus: Always handle the VMBus messages on CPU0
-      Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific CPU
-      Drivers: hv: vmbus: Replace the per-CPU channel lists with a global array of channels
-      hv_netvsc: Disable NAPI before closing the VMBus channel
-      hv_utils: Always execute the fcopy and vss callbacks in a tasklet
-      Drivers: hv: vmbus: Use a spin lock for synchronizing channel scheduling vs. channel removal
-      PCI: hv: Prepare hv_compose_msi_msg() for the VMBus-channel-interrupt-to-vCPU reassignment functionality
-      Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity logic
-      Drivers: hv: vmbus: Synchronize init_vp_index() vs. CPU hotplug
-      Drivers: hv: vmbus: Introduce the CHANNELMSG_MODIFYCHANNEL message type
-      scsi: storvsc: Re-init stor_chns when a channel interrupt is re-assigned
-      Drivers: hv: vmbus: Resolve race between init_vp_index() and CPU hotplug
-      Drivers: hv: vmbus: Resolve more races involving init_vp_index()
-
-Andy Shevchenko (4):
-      hyper-v: Use UUID API for exporting the GUID (part 2)
-      hyper-v: Supply GUID pointer to printf() like functions
-      hyper-v: Replace open-coded variant of %*phN specifier
-      hyper-v: Switch to use UUID types directly
-
-Colin Ian King (1):
-      drivers: hv: remove redundant assignment to pointer primary_channel
-
-Gustavo A. R. Silva (1):
-      vmbus: Replace zero-length array with flexible-array
-
-Michael Kelley (4):
-      KVM: x86: hyperv: Remove duplicate definitions of Reference TSC Page
-      x86/hyperv: Remove HV_PROCESSOR_POWER_STATE #defines
-      x86/hyperv: Split hyperv-tlfs.h into arch dependent and independent files
-      asm-generic/hyperv: Add definitions for Get/SetVpRegister hypercalls
-
-Vitaly Kuznetsov (5):
-      Drivers: hv: copy from message page only what's needed
-      Drivers: hv: allocate the exact needed memory for messages
-      Drivers: hv: avoid passing opaque pointer to vmbus_onmessage()
-      Drivers: hv: make sure that 'struct vmbus_channel_message_header' compiles correctly
-      Drivers: hv: check VMBus messages lengths
-
-Wei Liu (1):
-      Driver: hv: vmbus: drop a no long applicable comment
-
- MAINTAINERS                         |   1 +
- arch/x86/include/asm/hyperv-tlfs.h  | 472 +++-------------------------------
- arch/x86/include/asm/kvm_host.h     |   2 +-
- arch/x86/kvm/hyperv.c               |   4 +-
- drivers/hv/channel.c                |  58 +++--
- drivers/hv/channel_mgmt.c           | 439 +++++++++++++++++---------------
- drivers/hv/connection.c             |  58 +----
- drivers/hv/hv.c                     |  16 +-
- drivers/hv/hv_fcopy.c               |   2 +-
- drivers/hv/hv_snapshot.c            |   2 +-
- drivers/hv/hv_trace.h               |  25 +-
- drivers/hv/hyperv_vmbus.h           |  81 ++++--
- drivers/hv/vmbus_drv.c              | 314 +++++++++++++++++------
- drivers/net/hyperv/netvsc.c         |   7 +-
- drivers/pci/controller/pci-hyperv.c |  44 ++--
- drivers/scsi/storvsc_drv.c          |  96 ++++++-
- include/asm-generic/hyperv-tlfs.h   | 493 ++++++++++++++++++++++++++++++++++++
- include/linux/hyperv.h              |  68 +++--
- include/linux/mod_devicetable.h     |   2 +-
- 19 files changed, 1309 insertions(+), 875 deletions(-)
- create mode 100644 include/asm-generic/hyperv-tlfs.h
+> > +               .of_match_table = scd30_i2c_of_match,
+> > +               .pm = &scd30_pm_ops,
+> > +       },
+> > +       .probe_new = scd30_i2c_probe,
+> > +};
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
