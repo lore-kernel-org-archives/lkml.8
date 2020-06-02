@@ -2,100 +2,80 @@ Return-Path: <SRS0=QAx1=7P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D48F20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591078390;
-	bh=rRykBBWnGs96WxsrQLDxmACWOa/UFVBVpsVgwWsmVXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jS0zbsLx8WjyJa9XR7p/dpVxbjJUqKTXfMEq+2CPZ7znaKKzXOK2tiR/PVzh58M6i
-	 3+cgfJRFMnMZ2YQTjiMcd8V9JuoZncOEMfSO5zcJNgyegTsoq8lboJlznlixQI2h9j
-	 pumPxYKn2JOtjr1I6MD7jI3vVMVi49vbhP1LA9xA=
+	by mail.kernel.org (Postfix) with ESMTP id 9FA5F20734
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jun 2020 06:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgFBGNJ (ORCPT
+        id S1726139AbgFBGRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 02:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbgFBGNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:13:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38F5206A2;
-        Tue,  2 Jun 2020 06:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591078388;
-        bh=rRykBBWnGs96WxsrQLDxmACWOa/UFVBVpsVgwWsmVXk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1Hjjl6n79wTkMOGwUGwEfwwZ3SrDwiog0vc+onIjwGGuMKSzKjJvPZlMTPoeBSV3T
-         s00gQNv4yH6M7lX9kvpeFeAHUFFI/guixhK0D6JH5aXOm+zA8naHv9mb1MQJ2Wi8AE
-         gcQr/P3/ruI6VfcDbwA53bx45o8NZmrvKj7Cj1H8=
-Date:   Tue, 2 Jun 2020 08:13:05 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Tao pilgrim <pilgrimtao@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        sth@linux.ibm.com, viro@zeniv.linux.org.uk, clm@fb.com,
-        jaegeuk@kernel.org, hch@infradead.org,
-        Mark Fasheh <mark@fasheh.com>, dhowells@redhat.com,
-        balbi@kernel.org, damien.lemoal@wdc.com, bvanassche@acm.org,
-        ming.lei@redhat.com, martin.petersen@oracle.com, satyat@google.com,
-        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
-        asml.silence@gmail.com, ajay.joshi@wdc.com,
-        linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>, hoeppner@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        sagi@grimberg.me, linux-nvme@lists.infradead.org,
-        linux-usb@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        dsterba@suse.com, linux-btrfs@vger.kernel.org, chao@kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
-        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
-Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
-Message-ID: <20200602061305.GA2258861@kroah.com>
-References: <20200529141100.37519-1-pilgrimtao@gmail.com>
- <c8412d98-0328-0976-e5f9-5beddc148a35@kernel.dk>
- <CAAWJmAZOQQQeNiTr48OSRRdO2pG+q4c=6gjT55CkWC5FN=HXmA@mail.gmail.com>
- <20200601084426.GB1667318@kroah.com>
- <20200602055152.GA11620@lst.de>
+        Tue, 2 Jun 2020 02:17:03 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34478 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725616AbgFBGRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 02:17:03 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CDB40BC41E81E25A4047;
+        Tue,  2 Jun 2020 14:16:54 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 2 Jun 2020
+ 14:16:44 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mike.marciniszyn@intel.com>, <dennis.dalessandro@intel.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>,
+        <sadanand.warrier@intel.com>, <grzegorz.andrejczuk@intel.com>,
+        <yuehaibing@huawei.com>
+CC:     <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.carpenter@oracle.com>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] IB/hfi1: Use free_netdev() in hfi1_netdev_free()
+Date:   Tue, 2 Jun 2020 14:16:35 +0800
+Message-ID: <20200602061635.31224-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200601135644.GD4872@ziepe.ca>
+References: <20200601135644.GD4872@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602055152.GA11620@lst.de>
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 07:51:52AM +0200, Christoph Hellwig wrote:
-> On Mon, Jun 01, 2020 at 10:44:26AM +0200, Greg KH wrote:
-> > But does this code path actually show up anywhere that is actually
-> > measurable as mattering?
-> > 
-> > If so, please show that benchmark results.
-> 
-> I think the requests are starting to be a bit unreasonable.  Tao is
-> replacing a reimplementation of a standard function with that standard
-> function / compiler builtin.  We don't put such a high burden on that.
+dummy_netdev shold be freed by free_netdev() instead of
+kfree(). Also remove unneeded variable 'priv'
 
-That's fine, but to say it is "faster" usually means we want to see it
-actually going faster somehow :)
+Fixes: 4730f4a6c6b2 ("IB/hfi1: Activate the dummy netdev")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/infiniband/hw/hfi1/netdev_rx.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-> And once the proper existing fields are used where possible as shown
-> in my reply just replacing the rest seems totally obvious - quite
-> contrary I think keeping a reimplementation would need a high bar.
+diff --git a/drivers/infiniband/hw/hfi1/netdev_rx.c b/drivers/infiniband/hw/hfi1/netdev_rx.c
+index 58af6a454761..63688e85e8da 100644
+--- a/drivers/infiniband/hw/hfi1/netdev_rx.c
++++ b/drivers/infiniband/hw/hfi1/netdev_rx.c
+@@ -371,12 +371,9 @@ int hfi1_netdev_alloc(struct hfi1_devdata *dd)
+ 
+ void hfi1_netdev_free(struct hfi1_devdata *dd)
+ {
+-	struct hfi1_netdev_priv *priv;
+-
+ 	if (dd->dummy_netdev) {
+-		priv = hfi1_netdev_priv(dd->dummy_netdev);
+ 		dd_dev_info(dd, "hfi1 netdev freed\n");
+-		kfree(dd->dummy_netdev);
++		free_netdev(dd->dummy_netdev);
+ 		dd->dummy_netdev = NULL;
+ 	}
+ }
+-- 
+2.17.1
 
-Your patch makes sense, I was not objecting to that.
 
-thanks,
-
-greg k-h
