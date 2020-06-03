@@ -2,126 +2,67 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6232C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E559C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C3F20734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6Bb0DGH"
+	by mail.kernel.org (Postfix) with ESMTP id 2C5BD20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591208111;
+	bh=N6lKc2UQsjy0TL1JIKnEJXXC99NIaNRCmFJS6Wjg93k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Afs+fIcfYcFkJOBoXJCdONJrYx3iZ73BvTzXuhunFGkUjUa7q+h6kijbNxbH9VfLp
+	 75Gbil8AcLLYLo65okWY/nyXt6B7jVg86hCenHHV4dicRi4IiYW4EB6d8oW+VFbIbs
+	 /IGUkWYq7JbXTR7e2D3hqfm6iLrsZqEZ7aUTl/fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgFCSPC (ORCPT
+        id S1726521AbgFCSPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCSPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:15:02 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2C6C08C5C0;
-        Wed,  3 Jun 2020 11:15:01 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r10so2278715pgv.8;
-        Wed, 03 Jun 2020 11:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Y69G6uVVBfPw/o8oXR0qs1ud5Tbzu38pJnxMfLYq0Zg=;
-        b=T6Bb0DGHdWeRunRSRpTFJD9nczhjYVDqrbWKvP7mSI/1MDORYQd9cKqOo+MYzk73re
-         NR4ToNHCa7a2fqfKkG7IZ4jjHTeZBCr8Uf7MHNQfMiZSHm8ZlWXWn0meaC5DzSoJP8OK
-         NT+OgCXwEosGY3+ncSHB7dO0XijwUzNQxNC70zeLRUf5aTLStCu/HeBaUup03ebcY+NT
-         L+QxhKz9Tc2xWdfXGbWAarUkDhSCs+EXBN0Vu2N3GADVXXLadSzQnst5GSooVAcC33YP
-         fnYDrYkGQ3aAQMh7q3kmkHck70Tx71gNEFT5oFE0eqLwSn3DNrqYDKxwmN9nfVcSbafN
-         GTYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Y69G6uVVBfPw/o8oXR0qs1ud5Tbzu38pJnxMfLYq0Zg=;
-        b=bSzGSK7L3p7IHyDurkIkJoaE10i9skSgyOmrUzOZuzwXq9ChlWy3Oetbj6LQ2Dw/3W
-         YSzdBmGSmAJhjhKCIiue0DzpU8QVraZRVyB79DXgRQXnxK0kYGM+C/eqgKt24zAZDP5N
-         0mWtZMcIpvPCslJo2+KIGsBedbu+Umo7BVR3Y+sbQiIlpQhxAHs61v+p8tFsnbWAjaDL
-         qbBZrXQ6h5ykC0zQHp3QC9kMCX6D+1/Ld3T1KGy26gh2euSe3qweFPo6KPbUOV434Wl8
-         ngu7xW0+5P2zLBvNNjavbOvApCGPNpr7AIghoDmXGIg5N+T/y9H89Bbv7SE84pbXgyFK
-         ExNQ==
-X-Gm-Message-State: AOAM532fSYW8gMW0ntvtqgsLm1N/wOdg6pRXsXwqqIA8SDdfe1rpMhCA
-        JWxf+FQpt7kBHvyw6FTss74=
-X-Google-Smtp-Source: ABdhPJyBJ9u4ZhaM6mHxPwDDrYVO2bMrMWY65A9M5JPMF9jetO5zs8mkBFXfQunbXlFTgdUNFdcLmw==
-X-Received: by 2002:a63:eb03:: with SMTP id t3mr643201pgh.222.1591208100418;
-        Wed, 03 Jun 2020 11:15:00 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:514a])
-        by smtp.gmail.com with ESMTPSA id h11sm3296290pjk.20.2020.06.03.11.14.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 11:14:58 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 11:14:55 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc:     Ferenc Fejes <fejes@inf.elte.hu>, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf] bpf: fix unused-var without NETDEVICES
-Message-ID: <20200603181455.4sajgdyat7rkxxnf@ast-mbp.dhcp.thefacebook.com>
-References: <20200603081124.1627600-1-matthieu.baerts@tessares.net>
- <CAAej5NZZNg+0EbZsa-SrP0S_sOPMqdzgQ9hS8z6DYpQp9G+yhw@mail.gmail.com>
- <1cb3266c-7c8c-ebe6-0b6e-6d970e0adbd1@tessares.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1cb3266c-7c8c-ebe6-0b6e-6d970e0adbd1@tessares.net>
+        Wed, 3 Jun 2020 14:15:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgFCSPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:15:07 -0400
+Subject: Re: [GIT pull] irq/core for v5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591208106;
+        bh=N6lKc2UQsjy0TL1JIKnEJXXC99NIaNRCmFJS6Wjg93k=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=2alJMYJgR+m28k2b7NPYpE9b1ceA/ESh0PF21/tCpFU2bPe58u4wU27ZrU/qF7sSJ
+         qsxULkL+WtGWXIrFcpZJld32hS9zvMraXSIY9KDOCHaoZK6PnjB0emt/XJ2sqbSBDu
+         ZqjcUmGqY303GyQRCJU+CIP7rbHnBA4NHPiVGbMM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <159109968973.14228.6780339995273133401.tglx@nanos.tec.linutronix.de>
+References: <159109968973.14228.6780339995273133401.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <159109968973.14228.6780339995273133401.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-2020-06-02
+X-PR-Tracked-Commit-Id: d77aeb5d403d379ff458e04fc07b5b86700270f2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f6606d0c0010953e4c28c8662623662b5108b4ce
+Message-Id: <159120810668.18635.11991503790150406255.pr-tracker-bot@kernel.org>
+Date:   Wed, 03 Jun 2020 18:15:06 +0000
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 11:12:01AM +0200, Matthieu Baerts wrote:
-> Hi Ferenc,
-> 
-> On 03/06/2020 10:56, Ferenc Fejes wrote:
-> > Matthieu Baerts <matthieu.baerts@tessares.net> ezt írta (időpont:
-> > 2020. jún. 3., Sze, 10:11):
-> > > 
-> > > A recent commit added new variables only used if CONFIG_NETDEVICES is
-> > > set.
-> > 
-> > Thank you for noticing and fixed this!
-> > 
-> > > A simple fix is to only declare these variables if the same
-> > > condition is valid.
-> > > 
-> > > Other solutions could be to move the code related to SO_BINDTODEVICE
-> > > option from _bpf_setsockopt() function to a dedicated one or only
-> > > declare these variables in the related "case" section.
-> > 
-> > Yes thats indeed a cleaner way to approach this. I will prepare a fix for that.
-> 
-> I should have maybe added that I didn't take this approach because in the
-> rest of the code, I don't see that variables are declared only in a "case"
-> section (no "{" ... "}" after "case") and code is generally not moved into a
-> dedicated function in these big switch/cases. But maybe it makes sense here
-> because of the #ifdef!
-> At the end, I took the simple approach because it is for -net.
-> 
-> In other words, I don't know what maintainers would prefer here but I am
-> happy to see any another solutions implemented to remove these compiler
-> warnings :)
+The pull request you sent on Tue, 02 Jun 2020 12:08:09 -0000:
 
-since CONFIG_NETDEVICES doesn't change anything in .h
-I think the best is to remove #ifdef CONFIG_NETDEVICES from net/core/filter.c
-and rely on sock_bindtoindex() returning ENOPROTOOPT
-in the extreme case of oddly configured kernels.
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-2020-06-02
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f6606d0c0010953e4c28c8662623662b5108b4ce
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
