@@ -2,77 +2,80 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C147C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14966C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D968B206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B6F207D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgFCCUg (ORCPT
+        id S1725926AbgFCCUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:20:36 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35926 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725794AbgFCCUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:20:35 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DFD1A856B65A4062CCA4;
-        Wed,  3 Jun 2020 10:20:31 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 10:20:27 +0800
-Subject: Re: [PATCH] net: genetlink: Fix memleak in
- genl_family_rcv_msg_dumpit()
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-References: <20200602064545.50288-1-yuehaibing@huawei.com>
- <CAM_iQpXtsvewiN3bmfJqwuURN--aCkaR7N6zfYWf82KmFUZnLQ@mail.gmail.com>
-CC:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Jiri Pirko" <jiri@mellanox.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <da1d3625-f2a1-bd38-21e0-1e64139f6893@huawei.com>
-Date:   Wed, 3 Jun 2020 10:20:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAM_iQpXtsvewiN3bmfJqwuURN--aCkaR7N6zfYWf82KmFUZnLQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+        Tue, 2 Jun 2020 22:20:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56266 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgFCCUh (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:20:37 -0400
+IronPort-SDR: D8qdFwugUyplzsf1d1sJQ017MUqdNTHXQm5dxYNlLgtjgO56ZS8iF8rGZ/uYafU7pc7VUdhdFs
+ 6CE1c8NRI5AQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 19:20:36 -0700
+IronPort-SDR: qUWPpwL+GNS9ShkA8gnkiQ3wv6ZmVLaikZGSo7rEqFhPZnZ82QVlTSDQSvDRK/GlrHX8r4usEI
+ 8g0y+HU5QKMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
+   d="scan'208";a="293792544"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
+  by fmsmga004.fm.intel.com with ESMTP; 02 Jun 2020 19:20:33 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH 0/2] Update CascadelakeX and SkylakeX events list
+Date:   Wed,  3 Jun 2020 10:18:16 +0800
+Message-Id: <20200603021818.27028-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/3 2:04, Cong Wang wrote:
-> On Mon, Jun 1, 2020 at 11:47 PM YueHaibing <yuehaibing@huawei.com> wrote:
->> @@ -630,6 +625,9 @@ static int genl_family_rcv_msg_dumpit(const struct genl_family *family,
->>                 err = __netlink_dump_start(net->genl_sock, skb, nlh, &c);
->>         }
->>
->> +       genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
->> +       genl_dumpit_info_free(info);
->> +
->>         return err;
->>  }
-> 
-> I do not think you can just move it after __netlink_dump_start(),
-> because cb->done() can be called, for example, in netlink_sock_destruct()
-> too.
+This patchset updates CascadelakeX events to v1.08 and
+updates SkylakeX events to v1.21.
 
-netlink_sock_destruct() call cb->done() while nlk->cb_running is true,
+The events have been tested on CascadelakeX and SkylakeX
+servers with latest perf/core branch.
 
-if nlk->cb_running is not set to true in __netlink_dump_start() before return,
+Jin Yao (2):
+  perf vendor events: Update CascadelakeX events to v1.08
+  perf vendor events: Update SkylakeX events to v1.21
 
-the memleak still occurs.
+ .../arch/x86/cascadelakex/cache.json          |   28 +-
+ .../arch/x86/cascadelakex/clx-metrics.json    |  153 +-
+ .../arch/x86/cascadelakex/frontend.json       |   34 +
+ .../arch/x86/cascadelakex/memory.json         |  704 ++---
+ .../arch/x86/cascadelakex/other.json          | 1100 ++++----
+ .../arch/x86/cascadelakex/pipeline.json       |   10 -
+ .../arch/x86/cascadelakex/uncore-other.json   |   21 +
+ .../pmu-events/arch/x86/skylakex/cache.json   | 2348 +++++++++--------
+ .../arch/x86/skylakex/floating-point.json     |   96 +-
+ .../arch/x86/skylakex/frontend.json           |  656 ++---
+ .../pmu-events/arch/x86/skylakex/memory.json  | 1977 +++++++-------
+ .../pmu-events/arch/x86/skylakex/other.json   |  172 +-
+ .../arch/x86/skylakex/pipeline.json           | 1206 +++++----
+ .../arch/x86/skylakex/skx-metrics.json        |  141 +-
+ .../arch/x86/skylakex/uncore-memory.json      |   26 +-
+ .../arch/x86/skylakex/uncore-other.json       |  730 ++++-
+ .../arch/x86/skylakex/virtual-memory.json     |  358 +--
+ 17 files changed, 5198 insertions(+), 4562 deletions(-)
 
-> 
-> 
+-- 
+2.17.1
 
