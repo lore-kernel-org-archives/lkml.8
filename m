@@ -2,104 +2,90 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ABCC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E536C20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9452620678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgFCLu2 (ORCPT
+        id S1726071AbgFCLvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:50:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:22510 "EHLO mga11.intel.com"
+        Wed, 3 Jun 2020 07:51:16 -0400
+Received: from port70.net ([81.7.13.123]:51454 "EHLO port70.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725859AbgFCLu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:50:26 -0400
-IronPort-SDR: jPuk67EgRyH6/pbAmQYeExvv7YJx6dv9xC62nKF89W2LyDhUP8mjkR9jeQons4sRhA17659on1
- uR5/jN7SsgRA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 04:50:26 -0700
-IronPort-SDR: qkbrEW2Rx6p01xjZlvSKzwDazVBrViLQgu/fxhAL4SKW3W+yjoQlOgJs0+RTfgzPlYTcfSQf2F
- x/RO4Ht7wvaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="269052095"
-Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by orsmga003.jf.intel.com with ESMTP; 03 Jun 2020 04:50:22 -0700
-From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Brian King <brking@us.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jim Gill <jgill@vmware.com>,
-        VMware PV-Drivers <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wen Xiong <wenxiong@linux.vnet.ibm.com>,
-        Takashi Iwai <tiwai@suse.de>, Ming Lei <ming.lei@redhat.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jan Kara <jack@suse.cz>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/15] scsi: Use PCI_IRQ_MSI_TYPES and PCI_IRQ_ALL_TYPES where appropriate
-Date:   Wed,  3 Jun 2020 13:50:16 +0200
-Message-Id: <20200603115019.13958-1-piotr.stankiewicz@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
-References: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
+        id S1725859AbgFCLvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:51:14 -0400
+X-Greylist: delayed 324 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 07:51:13 EDT
+Received: by port70.net (Postfix, from userid 1002)
+        id 3A60FABEC0C2; Wed,  3 Jun 2020 13:45:46 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 13:45:46 +0200
+From:   Szabolcs Nagy <nsz@port70.net>
+To:     Rich Felker <dalias@libc.org>
+Cc:     musl@lists.openwall.com, libc-alpha@sourceware.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: sys/sysinfo.h clash with linux/kernel.h
+Message-ID: <20200603114546.GA125404@port70.net>
+Mail-Followup-To: Rich Felker <dalias@libc.org>, musl@lists.openwall.com,
+        libc-alpha@sourceware.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <20200602213704.GF1079@brightrain.aerifal.cx>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602213704.GF1079@brightrain.aerifal.cx>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing as there is shorthand available to use when asking for any type
-of interrupt, or any type of message signalled interrupt, leverage it.
 
-Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
- drivers/scsi/ipr.c        | 5 +++--
- drivers/scsi/vmw_pvscsi.c | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+i think the linux-api list is the right place for this
+so adding it on cc.
 
-diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
-index d48a8fa997b9..8e8d66daabea 100644
---- a/drivers/scsi/ipr.c
-+++ b/drivers/scsi/ipr.c
-@@ -10273,9 +10273,10 @@ static int ipr_probe_ioa(struct pci_dev *pdev,
- 		ipr_number_of_msix = IPR_MAX_MSIX_VECTORS;
- 	}
- 
--	irq_flag = PCI_IRQ_LEGACY;
- 	if (ioa_cfg->ipr_chip->has_msi)
--		irq_flag |= PCI_IRQ_MSI | PCI_IRQ_MSIX;
-+		irq_flag = PCI_IRQ_ALL_TYPES;
-+	else
-+		irq_flag = PCI_IRQ_LEGACY;
- 	rc = pci_alloc_irq_vectors(pdev, 1, ipr_number_of_msix, irq_flag);
- 	if (rc < 0) {
- 		ipr_wait_for_pci_err_recovery(ioa_cfg);
-diff --git a/drivers/scsi/vmw_pvscsi.c b/drivers/scsi/vmw_pvscsi.c
-index c3f010df641e..825b7db9c713 100644
---- a/drivers/scsi/vmw_pvscsi.c
-+++ b/drivers/scsi/vmw_pvscsi.c
-@@ -1347,7 +1347,7 @@ static u32 pvscsi_get_max_targets(struct pvscsi_adapter *adapter)
- 
- static int pvscsi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
--	unsigned int irq_flag = PCI_IRQ_MSIX | PCI_IRQ_MSI | PCI_IRQ_LEGACY;
-+	unsigned int irq_flag = PCI_IRQ_ALL_TYPES;
- 	struct pvscsi_adapter *adapter;
- 	struct pvscsi_adapter adapter_temp;
- 	struct Scsi_Host *host = NULL;
--- 
-2.17.2
+* Rich Felker <dalias@libc.org> [2020-06-02 17:37:05 -0400]:
+> linux/kernel.h is a uapi header that does almost nothing but define
+> some internal-use alignment macros and -- oddly -- include
+> linux/sysinfo.h to provide a definition of struct sysinfo. It's
+> included only from 6 places in the kernel uapi headers:
+> 
+> include/uapi/linux/lightnvm.h
+> include/uapi/linux/ethtool.h
+> include/uapi/linux/sysctl.h
+> include/uapi/linux/netlink.h
+> include/uapi/linux/netfilter/x_tables.h
+> include/uapi/linux/mroute6.h
+> 
+> However, it's also included from glibc's sys/sysinfo.h to provide
+> struct sysinfo (glibc depends on the kernel for the definition). On
+> musl, this produces a conflicting definition if both sys/sysinfo.h and
+> any of the above 6 headers are included in the same file.
+> 
+> I think the underlying problem here is that the same header is used
+> for two very disjoint purposes: by glibc as the provider of struct
+> sysinfo, and by other kernel headers as provider of the alignment
+> macros.
+> 
+> The glibc use is effectively a permanent contract that can't be
+> changed, so what I'd like to do is move the macros out to a separate
+> header (maybe linux/something_macros.h?) and have linux/kernel.h and
+> the above 6 uapi headers all include that. Then nothing but
+> linux/kernel.h would pull in linux/sysinfo.h.
 
+i think providing a patch would make this happen faster.
+
+ideally uapi would be reorganized such that it's clear
+what headers are supposed to be compatible with inclusion
+together with libc headers and what headers may conflict.
+
+> 
+> Note that in practice this is a rather hard issue to hit since almost
+> nothing needs sysinfo() at the same time as the above uapi interfaces.
+> However it did come up in toybox, which is how I first (just today)
+> learned about the conflict, so it seems like something that should be
+> fixed.
+> 
+> Rich
