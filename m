@@ -2,151 +2,150 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA4AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8912B20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8ED20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:52:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mI5aPFlm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RFveqadg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgFCLv6 (ORCPT
+        id S1726154AbgFCLw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFCLv5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:51:57 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF449C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:51:57 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 9so2314564ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 04:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZdBB5hfXeMUbxEadj8HyXcRzRwZM+PPwSB4AAz3DRGw=;
-        b=mI5aPFlm4k8KFAD/9YB1eDbVdeziZR/ErHPbp/wRCC8wXXF+CZyztaQ4Kk/vvYyuBJ
-         HozI4UzdsNGaqHg4MJhQmWRdoOvBD5r5yexuyUa3ee5i2E2ZwGKIFPP1wy5iCV97459W
-         fT9k1KSus2StCFqzxCGTAqFVk1HXRXWRXSbnF8FBqrv+JuDh0KzhFwnq6CLrwH2iN9E0
-         wza4bf3IOPqxJCvH+mtlBd4SCduGmeCciSI4X4oeaVDYAdsLCH1enJG/8vd1vH3f3JEu
-         ZG4XXt/RJzF5PgH9pftNeFs0E/agvaR6f3P3h9TIV3dguN8ypGKrwWmhoZnZvS6VVhAA
-         Faew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZdBB5hfXeMUbxEadj8HyXcRzRwZM+PPwSB4AAz3DRGw=;
-        b=kxCj8w7WohjFRzXkdalDv2aYJtOxuJYJ0veRadwFFlrlGVPV6+ZQO18ZxlmzfNjncO
-         wKX4TO7PuA55bw6Ybd4dw0KI1GkZYR6O5o3mofJsLdehkoWzvGTsL5FoSNhvJIcdx/0K
-         NsPk2H05h0DyTW7zn+6Bz8kIMHPGBlJqXY9XozEdBPNC2HqwXTQl6KoqJicgEgsHgsFE
-         pKpTTfOMkjzHJwb6/8OYgeiastW8kUngrCJgljbM03XNZmk9CUDFeY0NgnMzm/VbULCM
-         9M8nhaGlKFNkDfOyvEZSD1JG4gFuKUeZ2c+ftOR7Dqwf5WPy+MVcV4/hSXCU350IUBgR
-         z87Q==
-X-Gm-Message-State: AOAM530KTa8fYqKrES9YQNKavMGKmertl3XFWk+YlWG2FUrmyNL4uecX
-        JaUEyusOVfXZ6SSw+SQVtJDh5Ffxmh4B4RzlFBLn2w==
-X-Google-Smtp-Source: ABdhPJyf5ID0wFLZrpBtkoD4Bbg02jpPZv24wGHOaCOu5JUKLGvhg2+QXOqH5CyRdbH2HtcXK+IXsJLgkB9JGLk0PJM=
-X-Received: by 2002:a2e:8554:: with SMTP id u20mr1865102ljj.188.1591185115803;
- Wed, 03 Jun 2020 04:51:55 -0700 (PDT)
+        Wed, 3 Jun 2020 07:52:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:60625 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgFCLw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:52:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591185176; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=MnbKsVV2ZlEOXvNHx0ywcuIwpzxoe8YLhIo5hyVFXgA=;
+ b=RFveqadglnwH28+oG5NBEmUwYYevijOpDVt0MfRiSa8Vjaj8D2WanmmKu7usK703pqqIqGQc
+ VaTUxM5sIJKdY3AoWxcuBg2qNc20ZaKz8hMmRdYyoEgIGc8dR8zg5hR60RPTJ70+quaSIuyS
+ CvJQo5Dh88JnGg5XzbQlJosZifo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5ed78f1709c3530d12a3ef5d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 11:52:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CA11BC43395; Wed,  3 Jun 2020 11:52:55 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF534C433CA;
+        Wed,  3 Jun 2020 11:52:54 +0000 (UTC)
 MIME-Version: 1.0
-References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
- <20200601232542.GA473883@bjorn-Precision-5520> <20200602050626.GA2174820@kroah.com>
- <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com> <20200603060751.GA465970@kroah.com>
-In-Reply-To: <20200603060751.GA465970@kroah.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Wed, 3 Jun 2020 04:51:18 -0700
-Message-ID: <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jun 2020 17:22:54 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Pradeep P V K <ppvk@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
+        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V1 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
+ support
+In-Reply-To: <1591175376-2374-2-git-send-email-ppvk@codeaurora.org>
+References: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
+ <1591175376-2374-2-git-send-email-ppvk@codeaurora.org>
+Message-ID: <29826613b412e4f4db4289e292a1fe57@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hey Pradeep,
+Thanks for the patch.
 
->
-> > Thanks for the pointer! I'm still looking at the details yet, but a
-> > quick look (usb_dev_authorized()) seems to suggest that this API is
-> > "device based". The multiple levels of "authorized" seem to take shape
-> > from either how it is wired or from userspace choice. Once authorized,
-> > USB device or interface is authorized to be used by *anyone* (can be
-> > attached to any drivers). Do I understand it right that it does not
-> > differentiate between drivers?
->
-> Yes, and that is what you should do, don't fixate on drivers.  Users
-> know how to control and manage devices.  Us kernel developers are
-> responsible for writing solid drivers and getting them merged into the
-> kernel tree and maintaining them over time.  Drivers in the kernel
-> should always be trusted, ...
+On 2020-06-03 14:39, Pradeep P V K wrote:
+> Interconnect bandwidth scaling support is now added as a
+> part of OPP [1]. So, make sure interconnect driver is ready
+> before handling interconnect scaling.
+> 
+> This change is based on
+> [1] [Patch v8] Introduce OPP bandwidth bindings
+> (https://lkml.org/lkml/2020/5/12/493)
+> 
+> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
+> for dev_pm_opp_of_add_table()
+> (https://lkml.org/lkml/2020/5/5/491)
+> 
+> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c 
+> b/drivers/mmc/host/sdhci-msm.c
+> index b277dd7..bf95484 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/interconnect.h>
+> 
+>  #include "sdhci-pltfm.h"
+>  #include "cqhci.h"
+> @@ -1999,6 +2000,7 @@ static int sdhci_msm_probe(struct platform_device 
+> *pdev)
+>  	struct sdhci_pltfm_host *pltfm_host;
+>  	struct sdhci_msm_host *msm_host;
+>  	struct clk *clk;
+> +	struct icc_path *sdhc_path;
+>  	int ret;
+>  	u16 host_version, core_minor;
+>  	u32 core_version, config;
+> @@ -2070,6 +2072,20 @@ static int sdhci_msm_probe(struct 
+> platform_device *pdev)
+>  	}
+>  	msm_host->bulk_clks[0].clk = clk;
+> 
+> +	/* Make sure that ICC driver is ready for interconnect bandwdith
+> +	 * scaling before registering the device for OPP.
+> +	 */
+> +	sdhc_path = of_icc_get(&pdev->dev, NULL);
+> +	ret = PTR_ERR_OR_ZERO(sdhc_path);
+> +	if (ret) {
+> +		if (ret == -EPROBE_DEFER)
+> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
+> +		else
+> +			dev_err(&pdev->dev, "failed to get icc path:%d\n", ret);
+> +		goto bus_clk_disable;
+> +	}
+> +	icc_put(sdhc_path);
 
-1) Yes, I agree that this would be ideal, and this should be our
-mission. I should clarify that I may have used the wrong term
-"Trusted/Certified drivers". I didn't really mean that the drivers may
-be malicious by intent. What I really meant is that a driver may have
-an attack surface, which is a vulnerability that may be exploited.
-Realistically speaking, finding vulnerabilities in drivers, creating
-attacks to exploit them, and fixing them is a never ending cat and
-mouse game. At Least "identifying the vulnerabilities" part is better
-performed by security folks rather than driver writers. Earlier in the
-thread I had mentioned certain studies/projects that identified and
-exploited such vulnerabilities in the drivers. I should have used the
-term "Vetted Drivers" maybe to convey the intent better - drivers that
-have been vetted by a security focussed team (admin). What I'm
-advocating here is an administrator's right to control the drivers
-that he wants to allow for external ports on his systems.
+ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
 
-2) In addition to the problem of driver negligences / vulnerabilities
-to be exploited, we ran into another problem with the "whitelist
-devices only" approach. We did start with the "device based" approach
-only initially - but quickly realized that anything we use to
-whitelist an external device can only be based on the info provided by
-*that device* itself. So until we have devices that exchange
-certificates with kernel [1], it is easy for a malicious device to
-spoof a whitelisted device (by presenting the same VID:DID or any
-other data that is used by us to whitelist it).
+since there are multiple paths
+described in the bindings you
+should use ^^ instead and you
+can drop temporary path as well.
 
-[1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
+> +
+>  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+>  	if (IS_ERR(msm_host->opp_table)) {
+>  		ret = PTR_ERR(msm_host->opp_table);
 
-I hope that helps somewhat clarify how / why we reached here?
-
-Thanks & Best Regards,
-
-Rajat
-
-> thanks,
->
-> greg k-h
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
