@@ -2,146 +2,100 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74353C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387C32074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4852074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="C0+b3DJ7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dd1HIESh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgFCSla (ORCPT
+        id S1726147AbgFCSmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39066 "EHLO
+        Wed, 3 Jun 2020 14:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCSl3 (ORCPT
+        with ESMTP id S1725821AbgFCSmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:41:29 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 730A2C08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 11:41:29 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id e2so3235023eje.13
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 11:41:29 -0700 (PDT)
+        Wed, 3 Jun 2020 14:42:31 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6922CC08C5C0;
+        Wed,  3 Jun 2020 11:42:30 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id p20so3412504iop.11;
+        Wed, 03 Jun 2020 11:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S0TgVRaqXvLo/zqjh6Bua71lJw4suwzv026W+P/Naw8=;
-        b=C0+b3DJ7FfEDQKaieP18CwiGEkvjteY8TXKD0hCkYxGC6+7gm7AmFxZW15fIQkRLIM
-         Kh5Jm7ok0fzu9poY7ZLIhZ58/u5sJAzW/bQRxIwpy3VQkbCpomTVIyqSRH154MdLzXX5
-         YK/+gOw8xoGKlM2oPEYWWp+ER6BVIWaY9o4JNWbYF9snmgSbjVOjxeEIbCRpEK+ieMsn
-         dNHlym5awwcmUDb/tuJ5D309AkhWFct4ouZ0rQ28LCNE2tcZduzokMTHY+TUJim9+DBc
-         fQj29FDGhJlHjJsvspR0d0qb+Sk70NpBKh87gEJiND8QB+0g8SxdDuGN/LadFwZH0YLO
-         wpLg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/ayQQstOIIDAVAm7DUEsy/1EwnXM4OCks6yx7VXAtz0=;
+        b=dd1HIESh9wjeMB2DRzWc+TNFLWLCSZ/CoiLCmo3JmBscQFak1Qq5oY08YE2L90GXH1
+         2fDZoyLmCNOpFaJGmPaoWBRHdh7x9KNy3zcr7le7XloQTpGztHhmv6uvU8itraWKN2MM
+         zFXSdBavffxBrwb7rSWk4WU80egnSDepHzFonmWiqFp+6CB4gF4hvWDsnCpDni7YsiCw
+         g5VmI3XerxuTnhVsTh+Za3GihjwXClmwwcfwgIVSKSzqg123q/6ldP+D22L7yDa3WzIM
+         Yr/0CEv4pFOfO7aUjaWiaOzh/TyMoreWW9BovBBi6SrhGREC/mRHvAImkkKlRkMJRAJ2
+         eQVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S0TgVRaqXvLo/zqjh6Bua71lJw4suwzv026W+P/Naw8=;
-        b=FE7m3JGsSFRb8OBQE74MJOqTEZea3VG61RYZNS4rDYjW8o+TU2ABWrVdce1Ts2KNqD
-         OkcXgN1RSbt6nFuFROU7YFJsSyR+u5w/AyBbskoI9PBT+qvM/hGcaJYlJtb0Tq154CZE
-         BFQq8NPl3p+pWeVXCRKvOzlFctrNbXRbGAPayfbXBRxb31bf18dE8DwSJgxxD1k/idsL
-         DXLQ1/FypX7H4eC3XlG0Zv5DZ1e+on53iEbP7cMsxbejO3+MLeZcrnNNBXun/tMu6V5p
-         NzZjnLqgglLwZ9xqXNAoYKD5Nu2LVsfCvRdD7yXAX4ZJKmFSRGKLQH8kIT8yj0pjiPJ2
-         Dy7w==
-X-Gm-Message-State: AOAM53144wfOdYGzWbPmgtmSATitGIPDvRX/Kv39A5S2g+yutqq7d0RH
-        TbRsd+ZQ72p5ZWA2yqjNzOc0FwhB3uvtYg==
-X-Google-Smtp-Source: ABdhPJyIkqyDZdhScRe/cVgZz1DArjOSJB1ZOuF91yiG6bL5ZYJWLlB1HCb8yyyo1znlBZLda+63rg==
-X-Received: by 2002:a17:907:2162:: with SMTP id rl2mr522768ejb.365.1591209687728;
-        Wed, 03 Jun 2020 11:41:27 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([79.132.248.22])
-        by smtp.gmail.com with ESMTPSA id l18sm196629eds.46.2020.06.03.11.41.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 11:41:27 -0700 (PDT)
-Subject: Re: [PATCH bpf] bpf: fix unused-var without NETDEVICES
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Ferenc Fejes <fejes@inf.elte.hu>, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200603081124.1627600-1-matthieu.baerts@tessares.net>
- <CAAej5NZZNg+0EbZsa-SrP0S_sOPMqdzgQ9hS8z6DYpQp9G+yhw@mail.gmail.com>
- <1cb3266c-7c8c-ebe6-0b6e-6d970e0adbd1@tessares.net>
- <20200603181455.4sajgdyat7rkxxnf@ast-mbp.dhcp.thefacebook.com>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <3573c0dd-baa8-5313-067a-eec6b04f0f36@tessares.net>
-Date:   Wed, 3 Jun 2020 20:41:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/ayQQstOIIDAVAm7DUEsy/1EwnXM4OCks6yx7VXAtz0=;
+        b=iUK0fTYMVvj/6tmA/J3RrrS7mOBM+gNmPztdBgWfBzjGI7eygD49tmSDv3zAa6BBqD
+         WlqyV8Mb4ejPSQzRkwVduuGbHb0e8ewYDLqk1nEC3li0vjNd/ueAxnXGLOzYBC4Co6bA
+         lbwuADwnpmP603sCWdfnX9PAaJLfB8qAhmdVSaeGeL0f+O9Af4SIw47vUQrwiZVMDbIG
+         1Z3G8sYYrO+CJZU4BNygh2LPA/klb6vYk6JnMs2jYYSWwAHB8fQDlwLxgCVxT1ZZHSeI
+         zNePoGPkqdhT8qRD5JdC7fuZoYBaurcw7D4iP/Zvu/WJFYi6E2ITwwRmPV9XzzqH5Vlm
+         EWcg==
+X-Gm-Message-State: AOAM530ev5ilENOUrZEcMg0DrKw0LzwxwcgwB+ZgyoBu/6IzTysuKI5r
+        DKqri79I6Nl9F9oVWN0AQJXK9IND6LMVkyg4PnA=
+X-Google-Smtp-Source: ABdhPJy9yjqCeCXKJJyrSLwf3jOll6RD3VKatdzC9kRnS4OaxQByAamVPr9nSXVqOHcrBwK1GfHmQzHWsfk9kuBkRSk=
+X-Received: by 2002:a5d:8958:: with SMTP id b24mr999661iot.53.1591209749811;
+ Wed, 03 Jun 2020 11:42:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200603181455.4sajgdyat7rkxxnf@ast-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200519012927.GT2165@builder.lan> <20200519034055.hfvifqz442yfduhg@vireshk-i7>
+ <CABb+yY30nmbBUzYG62xGEbrr7107h_Edyq3jKPheZAQ0Cvr9Yg@mail.gmail.com> <20200603183120.GE23722@bogus>
+In-Reply-To: <20200603183120.GE23722@bogus>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Wed, 3 Jun 2020 13:42:18 -0500
+Message-ID: <CABb+yY2KXqRnxqHC-Hs8NsosEPtyTYO4v_b1cCGs9Lphpz_X+A@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexei,
+On Wed, Jun 3, 2020 at 1:31 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> > >
+> > H/W is actually fine :)   Its just that the driver is written to
+> > _also_ support a platform (my original) that doesn't have shmem and
+> > need to pass data via 32bit registers.
+> > Frankly, I am not against the doorbell mode, I am against implementing
+> > two modes in a driver. If it really helped (note the past tense) the
+> > SCMI, we could implement the driver only in doorbell mode but
+> > unfortunately SCMI would still be _broken_ for non-doorbell
+> > controllers.
+>
+> Should be fine as the specification is designed to work with only shmem
+> for any data transfer and mailbox is just a signal mechanism. I won't
+> be too worried about that.
+>
+Please clarify how it will work on, say again, rockchip platform with shmem.
 
-On 03/06/2020 20:14, Alexei Starovoitov wrote:
-> On Wed, Jun 03, 2020 at 11:12:01AM +0200, Matthieu Baerts wrote:
->> Hi Ferenc,
->>
->> On 03/06/2020 10:56, Ferenc Fejes wrote:
->>> Matthieu Baerts <matthieu.baerts@tessares.net> ezt írta (időpont:
->>> 2020. jún. 3., Sze, 10:11):
->>>>
->>>> A recent commit added new variables only used if CONFIG_NETDEVICES is
->>>> set.
->>>
->>> Thank you for noticing and fixed this!
->>>
->>>> A simple fix is to only declare these variables if the same
->>>> condition is valid.
->>>>
->>>> Other solutions could be to move the code related to SO_BINDTODEVICE
->>>> option from _bpf_setsockopt() function to a dedicated one or only
->>>> declare these variables in the related "case" section.
->>>
->>> Yes thats indeed a cleaner way to approach this. I will prepare a fix for that.
->>
->> I should have maybe added that I didn't take this approach because in the
->> rest of the code, I don't see that variables are declared only in a "case"
->> section (no "{" ... "}" after "case") and code is generally not moved into a
->> dedicated function in these big switch/cases. But maybe it makes sense here
->> because of the #ifdef!
->> At the end, I took the simple approach because it is for -net.
->>
->> In other words, I don't know what maintainers would prefer here but I am
->> happy to see any another solutions implemented to remove these compiler
->> warnings :)
-> 
-> since CONFIG_NETDEVICES doesn't change anything in .h
-> I think the best is to remove #ifdef CONFIG_NETDEVICES from net/core/filter.c
-> and rely on sock_bindtoindex() returning ENOPROTOOPT
-> in the extreme case of oddly configured kernels.
-
-Good idea, thank you!
-I can send a patch implementing that.
-
-And sorry for the oddly configured kernels :)
-It's just used to test the compilation of the code related to MPTCP.
-
-Cheers,
-Matt
--- 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts@tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+thanks.
