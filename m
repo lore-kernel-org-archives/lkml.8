@@ -2,178 +2,160 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C602BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52C3207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F12E20823
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bv2NGZRk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FnKoWR7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726011AbgFCHuV (ORCPT
+        id S1726057AbgFCHwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:50:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
+        Wed, 3 Jun 2020 03:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgFCHuU (ORCPT
+        with ESMTP id S1725828AbgFCHwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:50:20 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF181C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 00:50:19 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 202so702285lfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 00:50:19 -0700 (PDT)
+        Wed, 3 Jun 2020 03:52:04 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125FCC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 00:52:04 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id x22so1081034pfn.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 00:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RI6iXB0qMqr3xlMnwnNSpUiS3SZYn3+NS4HUs4hvuFk=;
-        b=Bv2NGZRkizy50GG012REDa+Ac6WD7Cdlhp9SBQUZne2ONByEmjbrF1ObuaG8BusUuc
-         tT4fFF6bOT7sbpGB8srbSU8sAzLauoqfKgAnHEMe+Njoiq8cN8L4/OILOwpNPvXxVoRH
-         Pnb1931Hl0DGZD17DmZWdVQg3OicSRvDhOV3hpc3knBMfWL7aYPz7QcGjsOC6+dIYy1Z
-         BBA8Nzqwm/A2HE/lLI5xIt/BnG1w3KfdtF35Eoo4b/oIXYE9IQp3jdFlXdXmLTzZjFuK
-         x6SKMLDcFQfsamwJtMSktvo/Ma8v/iZmfw/yQqiVXjsUKZjmCLRSvusNarN0vntWMQ8c
-         P4bA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r/WSOOgzKah1n7hh2oJZG/JFgX3kZ1eyc3n37SqQbvQ=;
+        b=FnKoWR7RT8zK6PByUgH0+LGhcQmKt1grg2AvPgaaga/WlmpLgGnhAUb2SiK8pAq34n
+         fVUqKqAXp2fimwkYQ4Bz9FN4F0MPN8jqiwJiim4n+PAfy/qX+SCeAvcGk0vHvdoeqtMp
+         TgyP45XWLuCiDOigaq+k80TeuklEgj5PEb8f1ChyNTB7sMY6UI+Kj3nHUcW0P77mDum2
+         bWoDmtW8iQhFgCOgRdXJoixndB2OaRjsuLl9TThhsUuXmHQr9VTEcsjatQPxV91bOw8i
+         Rk5DFYMufWU2v8h0M+JUdDHbPIUwU+htVbEVgl8k8l7iq57Bqzl2Jrjx5Fxd/Il6nH9+
+         tKzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RI6iXB0qMqr3xlMnwnNSpUiS3SZYn3+NS4HUs4hvuFk=;
-        b=ON1BQmMu/OKsaZM2hfl7l1h38PqAx6KdPyWwDYRUyYCn1bVwCOmP5jY6pOoATE9OQu
-         5Jll306Rq/nkVH+hSpSDXdqiKMWkjZAQRjUZzTPPcNQTLb8+JQdYqLTu6Hev1TQPG7ze
-         3+xKfS6rg4JjT57pk+HAQBwNF1wpvvLAnJNStht+mrIzKplMiLmq+hi/rqmrdc+Vxlvf
-         v5fZ9mzD7XgzysJmUNzHnfma/llig0O1tYdlg2kA3Ar3RQ7cPgC8scshS6AMPoilzA3L
-         KS5JCl1Rgxuk5Xjv16JVe7rgbpni7HmcDa8EFwzUenUuvyGwmVS159IKIqaj61bJqfjU
-         +xdg==
-X-Gm-Message-State: AOAM531Dx3fmwNT7Tkyr30KwFjLlworlZ+Kqf/8j+vaPMpiv4nfheP96
-        WJFRbhgWwd6l/Ph1Je2hNkYElXZm6dIK81VZ75vF2g==
-X-Google-Smtp-Source: ABdhPJwQ86B8yTe/9il9L6LnfiUJTL8erQbgj0KU1+oMuQ+QlImP1yxiL4f9rbdAdwNQf8DKbxDu0Dm6tMQQyCoUlhY=
-X-Received: by 2002:a19:5013:: with SMTP id e19mr1725514lfb.95.1591170618304;
- Wed, 03 Jun 2020 00:50:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r/WSOOgzKah1n7hh2oJZG/JFgX3kZ1eyc3n37SqQbvQ=;
+        b=Nz+lFt1tdXQI5DflTJJSb6pQkfwzCKgMIvKKFtguXEyElNTUqU5Z3pM+2r2KBdx+qL
+         Nk6PMIexYNiiErc5xopxtvFG19gJQDau0ZFRe3GQnkEDndXGdQhMAhe7VhRWFiGTan8c
+         n4QVl+6+sWX1I0WQyRHd3CIrxZl3Rrjp+WHKiXW1WIVBRU71xP1METofjLy1QTsGo7lw
+         z4QzA47gBRT8O3xId9NeTtgjW2TX4GApv0AFHDjmbMsximjCghv5+5Cjv0qrzZXkKk+2
+         41m5N5v8LWCRVBv1xZOze5tX9mOPbOhH/XpUS3iFwuyHZtl9tsd3CkJE4IvaytiRlJqx
+         +g6g==
+X-Gm-Message-State: AOAM532rC/f/ph/AFlBYBavUJG0xLYfDLrwEj5yw9TVsdLWEfpo6AGex
+        4SpgYGEHzo3uEod17xWc68CP2w==
+X-Google-Smtp-Source: ABdhPJx9FLnXp46sE75jcDP06AhA8yH9xya7bs8ESIwmSWrpAkgdgtdF7M45DKCBnszLb5rTxGVwvg==
+X-Received: by 2002:a17:90b:78b:: with SMTP id l11mr3995244pjz.97.1591170723258;
+        Wed, 03 Jun 2020 00:52:03 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id j26sm1159884pfr.215.2020.06.03.00.52.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jun 2020 00:52:02 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 13:22:00 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     rjw@rjwysocki.net, guohanjun@huawei.com, Sudeep.Holla@arm.com,
+        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+Message-ID: <20200603075200.hbyofgcyiwocl565@vireshk-i7>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
 MIME-Version: 1.0
-References: <20200527151613.16083-1-benjamin.gaignard@st.com>
- <jhjpnahizkm.mognet@arm.com> <f95ce45f-7a1c-0feb-afa8-203ddb500f2f@st.com>
- <jhjo8q1io9o.mognet@arm.com> <1b0ace18-e7f8-0b75-f6fe-968a269626b0@st.com>
-In-Reply-To: <1b0ace18-e7f8-0b75-f6fe-968a269626b0@st.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 3 Jun 2020 09:50:06 +0200
-Message-ID: <CAKfTPtCbM-w_0VrTB5tsSM5PKRtC44f3sSmAR=U=P3e3KQ+cMw@mail.gmail.com>
-Subject: Re: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 09:34, Benjamin GAIGNARD <benjamin.gaignard@st.com> wrote:
->
->
->
-> On 6/2/20 3:35 PM, Valentin Schneider wrote:
-> > On 02/06/20 12:37, Benjamin GAIGNARD wrote:
-> >> On 6/2/20 11:31 AM, Valentin Schneider wrote:
-> >>>> @@ -99,6 +100,8 @@ enum state {
-> >>>>
-> >>>>    #define OVERRUN_ERROR_THRESHOLD 3
-> >>>>
-> >>>> +#define DCMI_MIN_FREQ     650000 /* in KHz */
-> >>>> +
-> >>> This assumes the handling part is guaranteed to always run on the same CPU
-> >>> with the same performance profile (regardless of the platform). If that's
-> >>> not guaranteed, it feels like you'd want this to be configurable in some
-> >>> way.
-> >> Yes I could add a st,stm32-dcmi-min-frequency (in KHz) parameter the
-> >> device tree node.
-> >>
-> > Something like that - I'm not sure how well this fits with the DT
-> > landscape, as you could argue it isn't really a description of the
-> > hardware, more of a description of the performance expectations of the
-> > software. I won't really argue here.
-> >
-> >>>>    struct dcmi_graph_entity {
-> >>>>         struct v4l2_async_subdev asd;
-> >>>>
-> >>> [...]
-> >>>> @@ -2020,6 +2042,8 @@ static int dcmi_probe(struct platform_device *pdev)
-> >>>>                 goto err_cleanup;
-> >>>>         }
-> >>>>
-> >>>> +  dcmi->policy = cpufreq_cpu_get(0);
-> >>>> +
-> >>> Ideally you'd want to fetch the policy of the CPU your IRQ (and handling
-> >>> thread) is affined to; The only compatible DTS I found describes a single
-> >>> A7, which is somewhat limited in the affinity area...
-> >> If I move this code just before start streaming and use get_cpu(), would
-> >> it works ?
-> >>
-> > AFAIA streaming_start() is not necessarily executing on the same CPU as the
-> > one that will handle the interrupt. I was thinking you could use the IRQ's
-> > effective affinity as a hint of which CPU(s) to boost, i.e. something like:
-> >
-> > ---
-> >      struct cpumask_var_t visited;
-> >      struct irq_data *d = irq_get_irq_data(irq);
-> >
-> >      err = alloc_cpumask_var(visited, GFP_KERNEL);
-> >      /* ... */
-> >      for_each_cpu(cpu, irq_data_get_effective_affinity_mask(d)) {
-> >              /* check if not already spanned */
-> >              if (cpumask_test_cpu(cpu, visited))
-> >                      continue;
-> >
-> >              policy = cpufreq_cpu_get(cpu);
-> >              cpumask_or(visited, visited, policy->cpus);
-> >              /* do the boost for that policy here */
-> >              /* ... */
-> >              cpufreq_cpu_put(policy);
-> >      }
-> > ---
-> >
-> > That of course falls apart when hotplug gets involved, and the effective
-> > affinity changes... There's irq_set_affinity_notifier() out there, but it
-> > seems it's only about the affinity, not the effective_affinity, I'm not
-> > sure how valid it would be to query the effective_affinity in that
-> > notifier.
-> If I wait to be in the irq it will be too late so I think I will do a
-> loop over all possible CPUs
-> before start the streaming to change the policies.
+On 02-06-20, 11:34, Xiongfeng Wang wrote:
+> Hi Viresh,
+> 
+> Sorry to disturb you about another problem as follows.
+> 
+> CPPC use the increment of Desired Performance counter and Reference Performance
+> counter to get the CPU frequency and show it in sysfs through
+> 'cpuinfo_cur_freq'. But ACPI CPPC doesn't specifically define the behavior of
+> these two counters when the CPU is in idle state, such as stop incrementing when
+> the CPU is in idle state.
+> 
+> ARMv8.4 Extension inctroduced support for the Activity Monitors Unit (AMU). The
+> processor frequency cycles and constant frequency cycles in AMU can be used as
+> Delivered Performance counter and Reference Performance counter. These two
+> counter in AMU does not increase when the PE is in WFI or WFE. So the increment
+> is zero when the PE is in WFI/WFE. This cause no issue because
+> 'cppc_get_rate_from_fbctrs()' in cppc_cpufreq driver will check the increment
+> and return the desired performance if the increment is zero.
+> 
+> But when the CPU goes into power down idle state, accessing these two counters
+> in AMU by memory-mapped address will return zero. Such as CPU1 went into power
+> down idle state and CPU0 try to get the frequency of CPU1. In this situation,
+> will display a very big value for 'cpuinfo_cur_freq' in sysfs. Do you have some
+> advice about this problem ?
+> 
+> I was thinking about an idea as follows. We can run 'cppc_cpufreq_get_rate()' on
+> the CPU to be measured, so that we can make sure the CPU is in C0 state when we
+> access the two counters. Also we can return the actual frequency rather than
+> desired performance when the CPU is in WFI/WFE. But this modification will
+> change the existing logical and I am not sure if this will cause some bad effect.
+> 
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index 257d726..ded3bcc 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -396,9 +396,10 @@ static int cppc_get_rate_from_fbctrs(struct cppc_cpudata *cpu,
+>         return cppc_cpufreq_perf_to_khz(cpu, delivered_perf);
+>  }
+> 
+> -static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+> +static int cppc_cpufreq_get_rate_cpu(void *info)
+>  {
+>         struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
+> + unsigned int cpunum = *(unsigned int *)info;
+>         struct cppc_cpudata *cpu = all_cpu_data[cpunum];
+>         int ret;
+> 
+> @@ -418,6 +419,22 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>         return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
+>  }
+> 
+> +static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+> +{
+> + unsigned int ret;
+> +
+> + ret = smp_call_on_cpu(cpunum, cppc_cpufreq_get_rate_cpu, &cpunum, true);
+> +
+> + /*
+> +  * convert negative error code to zero, otherwise we will display
+> +  * an odd value for 'cpuinfo_cur_freq' in sysfs
+> +  */
+> + if (ret < 0)
+> +         ret = 0;
+> +
+> + return ret;
+> +}
+> +
+>  static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
+>  {
+>         struct cppc_cpudata *cpudata;
 
-Can't you use irq_get_affinity_mask  and loop over it ?
+I don't see any other sane solution, even if this brings the CPU back
+to normal state and waste power. We should be able to reliably provide
+value to userspace.
 
-Also You should better use freq_qos_add/remove_request during probe
-and remove of the driver and use freq_qos_update_request in
-dcmi_start/stop_streaming to set/unset your constraint.
+Rafael / Sudeep: What you do say ?
 
->
-> >
-> >> Benjamin
-> >>>>         dev_info(&pdev->dev, "Probe done\n");
-> >>>>
-> >>>>         platform_set_drvdata(pdev, dcmi);
-> >>>> @@ -2049,6 +2073,9 @@ static int dcmi_remove(struct platform_device *pdev)
-> >>>>
-> >>>>         pm_runtime_disable(&pdev->dev);
-> >>>>
-> >>>> +  if (dcmi->policy)
-> >>>> +          cpufreq_cpu_put(dcmi->policy);
-> >>>> +
-> >>>>         v4l2_async_notifier_unregister(&dcmi->notifier);
-> >>>>         v4l2_async_notifier_cleanup(&dcmi->notifier);
-> >>>>         media_entity_cleanup(&dcmi->vdev->entity);
+-- 
+viresh
