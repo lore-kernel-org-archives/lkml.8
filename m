@@ -2,132 +2,82 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1037C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 481AA20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:23:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JFZ7B1cb"
+	by mail.kernel.org (Postfix) with ESMTP id B2744205CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbgFCRXK (ORCPT
+        id S1726191AbgFCR0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:23:10 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24069 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgFCRXK (ORCPT
+        Wed, 3 Jun 2020 13:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgFCR0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:23:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591204988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=BBwgQMLjQcT93l5oHgQ0C5n6kW+0rnqW19ugaGnZwA4=;
-        b=JFZ7B1cb6WChq+gNPNtQ8gBxWb7eEq7sHPmbQc4JQ222ELKOvPRnWDp/0LOYp0+Oqz4GXD
-        nGzjo4VfsZSUunXuYYwZuAg/QCUzDqgerWyNTxogoBSGaCbku0s4qcR311w6gUsfyKUwga
-        X4LXWpp+xClKqSeUjvSGwy/ONLwnaG8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-1De3qDeVNDChGHbvHaG4Xg-1; Wed, 03 Jun 2020 13:23:06 -0400
-X-MC-Unique: 1De3qDeVNDChGHbvHaG4Xg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 763921856941;
-        Wed,  3 Jun 2020 17:23:05 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3DB8D10013D0;
-        Wed,  3 Jun 2020 17:23:05 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 11:23:04 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
+        Wed, 3 Jun 2020 13:26:14 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770F8C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:26:14 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jgX9W-0005Za-S0; Wed, 03 Jun 2020 19:26:11 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D61AA10108D; Wed,  3 Jun 2020 19:26:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: [GIT PULL] VFIO updates for v5.8-rc1
-Message-ID: <20200603112304.017a7954@x1.home>
-Organization: Red Hat
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] timers/core for v5.8
+In-Reply-To: <CAHk-=wiQr=wMrjpDXfvR=g+muNr4ST6=4O_jv6pOuTbtdbE_aw@mail.gmail.com>
+References: <159109968973.14228.6780339995273133401.tglx@nanos.tec.linutronix.de> <159109969095.14228.4958990874220284812.tglx@nanos.tec.linutronix.de> <CAHk-=wiQr=wMrjpDXfvR=g+muNr4ST6=4O_jv6pOuTbtdbE_aw@mail.gmail.com>
+Date:   Wed, 03 Jun 2020 19:26:09 +0200
+Message-ID: <87mu5kf4cu.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Linus Torvalds <torvalds@linux-foundation.org> writes:
+> On Tue, Jun 2, 2020 at 5:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> The truly boring timer and clocksource updates for 5.8:
+>>
+>>  - Not a single new clocksource or clockevent driver!
+>
+> The diffstat proved that to be a filthy lie:
+>
+>>  drivers/clocksource/timer-ti-dm-systimer.c         | 727 +++++++++++++++++++++
+>
+> comes from
+>
+>> Tony Lindgren (6):
+>>       clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support
+>
+> Ok, ok, it's "based on existing arch/arm/mach-omap2/timer.c". So I
+> guess you considered it one of the device tree cleanups.
 
-The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
+Hrm.
 
-  Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
+> But I'm not fooled by your transparent little white lies.  We will
+> never ever have a release without new clocksource drivers.
+>
+> Sob.
 
-are available in the Git repository at:
+Darn, you just killed my illusion that the new clock* driver frenzy
+finally subsides.
 
-  git://github.com/awilliam/linux-vfio.git tags/vfio-v5.8-rc1
+Thanks,
 
-for you to fetch changes up to 4f085ca2f5a8047845ab2d6bbe97089daed28655:
-
-  Merge branch 'v5.8/vfio/kirti-migration-fixes' into v5.8/vfio/next (2020-06-02 13:53:00 -0600)
-
-----------------------------------------------------------------
-VFIO updates for v5.8-rc1
-
- - Block accesses to disabled MMIO space (Alex Williamson)
-
- - VFIO device migration API (Kirti Wankhede)
-
- - type1 IOMMU dirty bitmap API and implementation (Kirti Wankhede)
-
- - PCI NULL capability masking (Alex Williamson)
-
- - Memory leak fixes (Qian Cai)
-
- - Reference leak fix (Qiushi Wu)
-
-----------------------------------------------------------------
-Alex Williamson (7):
-      vfio/type1: Support faulting PFNMAP vmas
-      vfio-pci: Fault mmaps to enable vma tracking
-      vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
-      vfio-pci: Mask cap zero
-      Merge branches 'v5.8/vfio/alex-block-mmio-v3', 'v5.8/vfio/alex-zero-cap-v2' and 'v5.8/vfio/qian-leak-fixes' into v5.8/vfio/next
-      Merge branch 'qiushi-wu-mdev-ref-v1' into v5.8/vfio/next
-      Merge branch 'v5.8/vfio/kirti-migration-fixes' into v5.8/vfio/next
-
-Kirti Wankhede (10):
-      vfio: UAPI for migration interface for device state
-      vfio iommu: Remove atomicity of ref_count of pinned pages
-      vfio iommu: Cache pgsize_bitmap in struct vfio_iommu
-      vfio iommu: Add ioctl definition for dirty pages tracking
-      vfio iommu: Implementation of ioctl for dirty pages tracking
-      vfio iommu: Update UNMAP_DMA ioctl to get dirty bitmap before unmap
-      vfio iommu: Add migration capability to report supported features
-      vfio: Selective dirty page tracking if IOMMU backed device pins pages
-      vfio iommu: Use shift operation for 64-bit integer division
-      vfio iommu: typecast corrections
-
-Qian Cai (2):
-      vfio/pci: fix memory leaks in alloc_perm_bits()
-      vfio/pci: fix memory leaks of eventfd ctx
-
-Qiushi Wu (1):
-      vfio/mdev: Fix reference count leak in add_mdev_supported_type
-
- drivers/vfio/mdev/mdev_sysfs.c      |   2 +-
- drivers/vfio/pci/vfio_pci.c         | 353 +++++++++++++++++++--
- drivers/vfio/pci/vfio_pci_config.c  |  50 ++-
- drivers/vfio/pci/vfio_pci_intrs.c   |  14 +
- drivers/vfio/pci/vfio_pci_private.h |  15 +
- drivers/vfio/pci/vfio_pci_rdwr.c    |  24 +-
- drivers/vfio/vfio.c                 |  13 +-
- drivers/vfio/vfio_iommu_type1.c     | 609 ++++++++++++++++++++++++++++++++----
- include/linux/vfio.h                |   4 +-
- include/uapi/linux/vfio.h           | 319 +++++++++++++++++++
- 10 files changed, 1301 insertions(+), 102 deletions(-)
-
+        tglx
