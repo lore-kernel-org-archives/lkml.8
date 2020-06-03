@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66CDC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0820A2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C73F206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgFCF0P (ORCPT
+        id S1725916AbgFCF0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:26:15 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60034 "EHLO inva021.nxp.com"
+        Wed, 3 Jun 2020 01:26:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:60144 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgFCF0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:26:13 -0400
+        id S1725275AbgFCF0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 01:26:14 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D0DE8200D8A;
-        Wed,  3 Jun 2020 07:26:11 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AFF5E200D21;
+        Wed,  3 Jun 2020 07:26:12 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CABF200D42;
-        Wed,  3 Jun 2020 07:26:08 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C1A7200D53;
+        Wed,  3 Jun 2020 07:26:09 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D2E4640299;
-        Wed,  3 Jun 2020 13:26:03 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B2687402B1;
+        Wed,  3 Jun 2020 13:26:04 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     jassisinghbrar@gmail.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/3] mailbox: imx: Add runtime PM callback to handle MU clocks
-Date:   Wed,  3 Jun 2020 13:15:43 +0800
-Message-Id: <1591161344-12885-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/3] mailbox: imx: ONLY IPC MU needs IRQF_NO_SUSPEND flag
+Date:   Wed,  3 Jun 2020 13:15:44 +0800
+Message-Id: <1591161344-12885-4-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591161344-12885-1-git-send-email-Anson.Huang@nxp.com>
 References: <1591161344-12885-1-git-send-email-Anson.Huang@nxp.com>
@@ -45,104 +45,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of i.MX8M SoCs have MU clock, they need to be managed in runtime
-to make sure the MU clock can be off in runtime, add runtime PM callback
-to handle MU clock.
+IPC MU has no power domain assigned and there could be IPC during
+noirq suspend phase, so IRQF_NO_SUSPEND flag is needed for IPC MU.
+However, for other MUs, they have power domain assigned and their
+power will be turned off during noirq suspend phase, but with
+IRQF_NO_SUSPEND set, their interrupts are NOT disabled even after
+their power turned off, it will cause system crash when mailbox
+driver trys to handle pending interrupts but the MU power is already
+turned off.
 
-And on i.MX8MP, the MU clock is combined with power domain and runtime
-PM is enabled for the clock driver, during noirq suspend/resume phase,
-runtime PM is disabled by device suspend, but the MU context save/restore
-needs to enable MU clock for register access, calling clock prepare/enable
-will trigger runtime resume failure and lead to system suspend failed.
-
-Actually, the MU context save/restore is ONLY necessary for SCU IPC MU,
-other MUs especially on i.MX8MP platforms which have MU clock assigned,
-they need to runtime request/free mailbox channel in the consumer driver,
-so no need to save/restore MU context for them, hence it can avoid this
-issue, so the MU context save/restore is ONLY applied to i.MX platforms
-MU instance without clock present.
+So, IRQF_NO_SUSPEND flag should ONLY be added to IPC MU which has
+power domain managed by SCU, then all other MUs' pending interrupts
+after noirq suspend phase will be handled after system resume.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/mailbox/imx-mailbox.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+ drivers/mailbox/imx-mailbox.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index da90a8e..080b608 100644
+index 080b608..7205b82 100644
 --- a/drivers/mailbox/imx-mailbox.c
 +++ b/drivers/mailbox/imx-mailbox.c
-@@ -536,10 +536,13 @@ static int imx_mu_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto disable_runtime_pm;
- 
-+	clk_disable_unprepare(priv->clk);
-+
- 	return 0;
- 
- disable_runtime_pm:
- 	pm_runtime_disable(dev);
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
-@@ -547,7 +550,6 @@ static int imx_mu_remove(struct platform_device *pdev)
+@@ -292,6 +292,7 @@ static int imx_mu_startup(struct mbox_chan *chan)
  {
- 	struct imx_mu_priv *priv = platform_get_drvdata(pdev);
+ 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+ 	struct imx_mu_con_priv *cp = chan->con_priv;
++	unsigned long irq_flag = IRQF_SHARED;
+ 	int ret;
  
--	clk_disable_unprepare(priv->clk);
- 	pm_runtime_disable(priv->dev);
+ 	pm_runtime_get_sync(priv->dev);
+@@ -302,8 +303,12 @@ static int imx_mu_startup(struct mbox_chan *chan)
+ 		return 0;
+ 	}
  
- 	return 0;
-@@ -595,7 +597,8 @@ static int imx_mu_suspend_noirq(struct device *dev)
- {
- 	struct imx_mu_priv *priv = dev_get_drvdata(dev);
- 
--	priv->xcr = imx_mu_read(priv, priv->dcfg->xCR);
-+	if (!priv->clk)
-+		priv->xcr = imx_mu_read(priv, priv->dcfg->xCR);
- 
- 	return 0;
- }
-@@ -612,15 +615,38 @@ static int imx_mu_resume_noirq(struct device *dev)
- 	 * send failed, may lead to system freeze. This issue
- 	 * is observed by testing freeze mode suspend.
- 	 */
--	if (!imx_mu_read(priv, priv->dcfg->xCR))
-+	if (!imx_mu_read(priv, priv->dcfg->xCR) && !priv->clk)
- 		imx_mu_write(priv, priv->xcr, priv->dcfg->xCR);
- 
- 	return 0;
- }
- 
-+static int imx_mu_runtime_suspend(struct device *dev)
-+{
-+	struct imx_mu_priv *priv = dev_get_drvdata(dev);
+-	ret = request_irq(priv->irq, imx_mu_isr, IRQF_SHARED |
+-			  IRQF_NO_SUSPEND, cp->irq_desc, chan);
++	/* IPC MU should be with IRQF_NO_SUSPEND set */
++	if (!priv->dev->pm_domain)
++		irq_flag |= IRQF_NO_SUSPEND;
 +
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int imx_mu_runtime_resume(struct device *dev)
-+{
-+	struct imx_mu_priv *priv = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		dev_err(dev, "failed to enable clock\n");
-+
-+	return ret;
-+}
-+
- static const struct dev_pm_ops imx_mu_pm_ops = {
- 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_mu_suspend_noirq,
- 				      imx_mu_resume_noirq)
-+	SET_RUNTIME_PM_OPS(imx_mu_runtime_suspend,
-+			   imx_mu_runtime_resume, NULL)
- };
- 
- static struct platform_driver imx_mu_driver = {
++	ret = request_irq(priv->irq, imx_mu_isr, irq_flag,
++			  cp->irq_desc, chan);
+ 	if (ret) {
+ 		dev_err(priv->dev,
+ 			"Unable to acquire IRQ %d\n", priv->irq);
 -- 
 2.7.4
 
