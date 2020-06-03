@@ -2,143 +2,106 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D444AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE49C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC4B22067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658E120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="66VWlnG+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vB1J20VF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgFCKTl (ORCPT
+        id S1726769AbgFCKWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:19:41 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:15530 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725943AbgFCKTf (ORCPT
+        Wed, 3 Jun 2020 06:22:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgFCKWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:19:35 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 053AJ364024266;
-        Wed, 3 Jun 2020 06:19:14 -0400
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2104.outbound.protection.outlook.com [104.47.70.104])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31e4skrwxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 06:19:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gw5a1DZ18Qzc/XAOh69EJJx98vha6Vs0qFNabwH4P/JU0odmeX+IRuogramKpgTwATBl8al1l4aiJnkYPpKLZ+hjvsvfnUmVDgxefSPpa6onrGghyseCY0Zdo3gEENkLnNCQ56ouFZBs+KahXbvqP/SKJ08jsVM0Q8PCDxN10s544g3pCpMtABMD+HCvh72YkIdUUdccuu7QvT5ZltFL1itvyCUdbRqrcKqsMYs3RiFwWlszE+bn9JquLGJHrvupdh0cwb3UKFdqi4KzjxKUOtTodgjphHfUuHfBcRRE/xw6hD15tkoCFbl+jZCtBSFauh+eEzVKFegHqjj8rs0Y0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oID6TCyRvc2WXXxY4PnAIzJSsM2EC1d0o9xIqhLNkFE=;
- b=D8BwAa7SP/WE72aASbO5TpNFVytMLja4YuFo4ay3pcJNAups4i4sRlpYnUOFwKgDZ0IOJs9Fxr+5+h+S9zW9XmXSwvUDcoijjlBzpcYZC0/Cl53nxya2b74gdfSSVpaCcOIe8xwpHv/r0WTO47l/bE1PK+0TN6dLTAQkAkcCrIsaQ/UGjNy1w26zsV9ycz1cSsbb6wzwA7UrG02aeR7CKZt7AANkoPjS8EJWTr+6z+ZQ+L4yVhtIGXsGWYMQQOOSApG4j/iRB4n7ADEJ5DufaBmCIJPzNCXtxt9CDz98PVC701u7MzlgjAkEA8Ah/0VxHjzWiVRoMruIXM2xnfTwTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Wed, 3 Jun 2020 06:22:03 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8E0C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 03:22:02 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so1442806pgv.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 03:22:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oID6TCyRvc2WXXxY4PnAIzJSsM2EC1d0o9xIqhLNkFE=;
- b=66VWlnG+zlYwE41nSeo7JSXCi0RpYxQueoEhZ2JCuge//67MG9jtxsiYUWbBdaNEZvaGV74grWLRRHdgEiFHBJHcHfmxDGlMHP5y2dtAKJLIMT+rC9j0nD0yywcDkuQKA4BlYLwMivgx1wjJA2oVIQo6bzETrjI376IdwO08YvU=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB3675.namprd03.prod.outlook.com (2603:10b6:5:b2::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Wed, 3 Jun
- 2020 10:19:12 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::e02f:b3c0:d1e9:5eaf]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::e02f:b3c0:d1e9:5eaf%3]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 10:19:12 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "hslester96@gmail.com" <hslester96@gmail.com>
-CC:     "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "paul.cercueil@analog.com" <paul.cercueil@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Subject: Re: [PATCH v3] iio: amplifiers: ad8366: Change devm_gpiod_get() to
- optional and add the missed check
-Thread-Topic: [PATCH v3] iio: amplifiers: ad8366: Change devm_gpiod_get() to
- optional and add the missed check
-Thread-Index: AQHWOYkQTe2ar2DxB0uchj/PiWxC56jGrdmA
-Date:   Wed, 3 Jun 2020 10:19:12 +0000
-Message-ID: <36f033adf9b53adb289e7569ea5fca647c0dbb7a.camel@analog.com>
-References: <20200603092610.1424489-1-hslester96@gmail.com>
-In-Reply-To: <20200603092610.1424489-1-hslester96@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=analog.com;
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2262a0a2-27ce-4ed4-6107-08d807a78f89
-x-ms-traffictypediagnostic: DM6PR03MB3675:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR03MB3675983D7BF51B412B7B45DFF9880@DM6PR03MB3675.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 04238CD941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KS7S9v47VL4+DWAxcuA/pNXoGHXT5dlOm/vRaQbe43k0ahVA/ywFmV8xmV2WggZYxunEYpRUKD3OcdoGt50IbQYhxYfNzjf8Xcnrw63GNV9WyZGLoJgIPSnv9kLMPVQZS7Z02MjrDDt9mcwXBbw37phbHVowkNYar3yy/UqW7IwrxRICrydYS/z/rK/KCyurhd3RQVziRgj05L1PEOu3w5O8uE2WmuvW/Vz/Msq/pjs7JkBB/8m6PIrafHUIN8he6d3AEScYAKPuLtJ6BRI74J4HaCM73aE58bybkzhd245THMPjmzgZSZQVRI48Rhso93fqIipqlkdT9PDAILyXYg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(376002)(396003)(136003)(39860400002)(6506007)(6486002)(26005)(186003)(8936002)(2616005)(316002)(8676002)(478600001)(54906003)(6916009)(6512007)(66446008)(83380400001)(71200400001)(4326008)(2906002)(76116006)(91956017)(66946007)(66556008)(66476007)(86362001)(64756008)(36756003)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 1CtvPm2H26PeZpGyYeMTTv7iG47a90Wq1h/fNRISrBLUEqO/VsOcf+76166xMk9pzyLJa7HF+wIR6KM/yBM5/8fKRxHn6Rjs5/GHnxf+db2HP+icRqPCrHlTkQ7xM+l4PM0ZMkzPtx0vaoOwiPDEu9uQmxqBCFoi0ggQ2y9i/MFghnQmLsLNgYXx5Chci1U9OjbmortUwf3BK+4wl1n1e/r0ivTIGopX0bSDVhSwNf5pkVaBcoxODIpk9yWcZmwa+PLVOQGuXDnqnLjaF6BWjB6+qJHBgzgbLrAnKUAd7H2jqBZtUUp7bcDGuR68Cb84tDRaBuG6Njq/9vtyITRg0b6Df6bfwTAhYYJpU4SskqOHMENYtp0AGQLodynFnbqq2OFO/d1jg+H3tNQswam11wQ1iRn7vE5WT6SyPmx0g6vUv54e02JnHf9Tg5C8nhnbAC+lMe52qLEF8+r87zzG/ma862boinF/XduB4IV02ss=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7574E6F69FDC854BBC756F3A37DD13BA@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Gywm26xbzcC5sdjTvVeyjB7NiVJ+nJwHGQ5uOCG0NYE=;
+        b=vB1J20VFGewR4H/3VgNf96mwVbgrJhCTNOZQToO37jkblxQ8CWkPCmDTeoEzXtdN4r
+         lEu9fVYygQXOsv3/MxY/Qr1iSDz8MLdOzcwWAS0gSkZbSPQrzDskkpgkWMJps0ALgL8U
+         xbjgGk6Pt4wWNeRYBWKnpIwLU3stXsDJoAqaj0IskXM7acKqvA392vO7ccUDfrNHg7Op
+         yYgBhQzWUo13glFGkIqFV7eVPXUq/ZnLHqc3Hhj/fPP/F/QAMCSH/onyKp9VkU7GzzXb
+         y/A6JKQLAxf+wQcyOlnA2OD9/JJwQTCnHO49DQnjYDKRr0Eu/WoQ00ZuDbt7+4SenJaH
+         gs+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Gywm26xbzcC5sdjTvVeyjB7NiVJ+nJwHGQ5uOCG0NYE=;
+        b=VgcsxgL1NJDp3HWGJ94kxx/up8a87XZFFz0mQnYyTtp1fsoQVAejaO2fUtHDPBpfCx
+         qmju9njfwIuys9yPoMkjrCxsaNxlu7oKOA4DcgXeHQp2tvWEm55HXyDAc9YHcfnKHam9
+         x8D3tl16NhOhH/tNyO3h3vCz9/EMH3+UkyDt93nj3gLIYZZqfVNUjWS38aJw5+IjJCO1
+         /wrd/vY0huf6l8J7C+jhV+s96ILcyxlB3w9y8I3pXELUJOvR+4P8v79DlltDwTYpjDET
+         j4wkeL1bXL49xxQJKKInTMHzbKm7QtxN//2s0wxs1C4aFJACA/8agDu81uJpKYvvN06J
+         XbCA==
+X-Gm-Message-State: AOAM532SS3bgYI5oh40ZQ1dTZjjedZBLMGlUvMtBKPmwRPcjodrtXk+Y
+        RQUldg2kcky3PrpxCvkXk2p9Kg==
+X-Google-Smtp-Source: ABdhPJx7hGed1u73cga8aPJW4199IO02IItfgP1iacq9bOqJEYbhgjOEe5p1iizcRmE3PxyDxJMNRw==
+X-Received: by 2002:a63:e550:: with SMTP id z16mr26873816pgj.92.1591179722363;
+        Wed, 03 Jun 2020 03:22:02 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id 2sm1561645pfd.163.2020.06.03.03.22.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jun 2020 03:22:01 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 15:51:59 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        guohanjun@huawei.com, ionela.voinescu@arm.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+Message-ID: <20200603102159.hzctwiqiukwhrpo7@vireshk-i7>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+ <20200603075200.hbyofgcyiwocl565@vireshk-i7>
+ <20200603100727.GB7259@bogus>
+ <20200603101010.alijrfmte2c6xv5c@vireshk-i7>
+ <20200603101753.GC7259@bogus>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2262a0a2-27ce-4ed4-6107-08d807a78f89
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 10:19:12.0753
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jsgRuCBMkBwFGENvFgpjFMzTxCm6XTMRE8SP+5OPAh0r7yMmEFlP225YhV1Up70LSW/3YpzquuPf6mPthNBt/IHJEWPqj+rQQit9njYslys=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3675
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-03_11:2020-06-02,2020-06-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- cotscore=-2147483648 lowpriorityscore=0 phishscore=0 clxscore=1015
- mlxscore=0 spamscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030080
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200603101753.GC7259@bogus>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTAzIGF0IDE3OjI2ICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+
-IFNpbmNlIGlmIHRoZXJlIGlzIG5vIEdQSU8sIG5vdGhpbmcgaGFwcGVucywgcmVwbGFjZSBkZXZt
-X2dwaW9kX2dldCgpDQo+IHdpdGggZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoKS4NCj4gQWxzbyBh
-ZGQgSVNfRVJSKCkgdG8gZml4IHRoZSBtaXNzaW5nLWNoZWNrIGJ1Zy4NCj4gDQoNCkFja2VkLWJ5
-OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KDQo+
-IEZpeGVzOiBjZWUyMTFmNGU1YTAgKCJpaW86IGFtcGxpZmllcnM6IGFkODM2NjogQWRkIHN1cHBv
-cnQgZm9yIHRoZSBBREE0OTYxDQo+IERHQSIpDQo+IFNpZ25lZC1vZmYtYnk6IENodWhvbmcgWXVh
-biA8aHNsZXN0ZXI5NkBnbWFpbC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2VzIGluIHYzOg0KPiAgIC0g
-Q2hhbmdlIGRldm1fZ3Bpb2RfZ2V0KCkgdG8gb3B0aW9uYWwuDQo+ICAgLSBNb2RpZnkgZGVzY3Jp
-cHRpb24uDQo+IA0KPiAgZHJpdmVycy9paW8vYW1wbGlmaWVycy9hZDgzNjYuYyB8IDYgKysrKyst
-DQo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0K
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYW1wbGlmaWVycy9hZDgzNjYuYyBiL2RyaXZlcnMv
-aWlvL2FtcGxpZmllcnMvYWQ4MzY2LmMNCj4gaW5kZXggNjIxNjdiODdjYWVhLi44ODE5ZTg5OTdm
-NzYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaWlvL2FtcGxpZmllcnMvYWQ4MzY2LmMNCj4gKysr
-IGIvZHJpdmVycy9paW8vYW1wbGlmaWVycy9hZDgzNjYuYw0KPiBAQCAtMjYyLDggKzI2MiwxMiBA
-QCBzdGF0aWMgaW50IGFkODM2Nl9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAgCWNh
-c2UgSURfQURBNDk2MToNCj4gIAljYXNlIElEX0FETDUyNDA6DQo+ICAJY2FzZSBJRF9ITUMxMTE5
-Og0KPiAtCQlzdC0+cmVzZXRfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0KCZzcGktPmRldiwgInJlc2V0
-IiwNCj4gKwkJc3QtPnJlc2V0X2dwaW8gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbCgmc3BpLT5k
-ZXYsICJyZXNldCIsDQo+ICAJCQlHUElPRF9PVVRfSElHSCk7DQo+ICsJCWlmIChJU19FUlIoc3Qt
-PnJlc2V0X2dwaW8pKSB7DQo+ICsJCQlyZXQgPSBQVFJfRVJSKHN0LT5yZXNldF9ncGlvKTsNCj4g
-KwkJCWdvdG8gZXJyb3JfZGlzYWJsZV9yZWc7DQo+ICsJCX0NCj4gIAkJaW5kaW9fZGV2LT5jaGFu
-bmVscyA9IGFkYTQ5NjFfY2hhbm5lbHM7DQo+ICAJCWluZGlvX2Rldi0+bnVtX2NoYW5uZWxzID0g
-QVJSQVlfU0laRShhZGE0OTYxX2NoYW5uZWxzKTsNCj4gIAkJYnJlYWs7DQo=
+On 03-06-20, 11:17, Sudeep Holla wrote:
+> On Wed, Jun 03, 2020 at 03:40:10PM +0530, Viresh Kumar wrote:
+> > On 03-06-20, 11:07, Sudeep Holla wrote:
+> > > But I have another question. If we can detect that CPPC on some platforms
+> > > rely on CPU registers(I assume FFH registers here and not system/io/...
+> > > type of GAS registers), can we set dvfs_on_any_cpu(can't recall exact
+> > > flag name) to false if not already done to prevent such issues. Or I am
+> > > talking non-sense as it may be applicable only for _set operation and
+> >
+> >           Yes, non-sense :)
+> >
+> 
+> Thanks for confirming 👍.
+
+Hehe.
+
+So, do you agree that we better do the read from the CPUs themselves ?
+
+-- 
+viresh
