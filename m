@@ -2,206 +2,82 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6045DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2079C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32AF620772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TnMhhLK/"
+	by mail.kernel.org (Postfix) with ESMTP id 923C7206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgFCNv0 (ORCPT
+        id S1726143AbgFCNvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgFCNvX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:51:23 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BE3C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:51:22 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id q13so1832613edi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 06:51:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HT6Jc3j2wV7RmXXPBI9xBKNNCNks3guHWgmY6UH0Bes=;
-        b=TnMhhLK/LjZa4U+b57SZZcXBGH9KbG3fKuIyMZ+4ULLTlthdnE1uS8UF/P8KS5SGpU
-         PqdbHle2YSIuqs9ZzCbKjdr7fdmZlUAveUrmiU7EdOu/coIuttGQ3cKRmONakytLalOv
-         XKK/rkX3xa1/m3TCYYcNwXGHtyTOpNb8SCUER1XcJVSJnKf/iTI/nruI5xBlv2/mQO0Z
-         F/sBstOe57JrH77McxzpfDsa7ENLEpt+GAl0KABK/XptanScNbgIrB5yTpArSCz0EAGU
-         Kn0PAg2HIQypjsIXc/kPkyQ7ewST6SJjJwpjCiXAw308PEXYjgn++N9ozS8EFMr9QGb9
-         7P9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HT6Jc3j2wV7RmXXPBI9xBKNNCNks3guHWgmY6UH0Bes=;
-        b=L/41XduIPbOPJwxJ53yUaBNbjA4YmetDw+U0+CVp992/90ZMgwahHBpffXO7WLBNAL
-         1sW0p5QXfoa3kQuKpj7cao2KC0m2XnMVj9x5Q5KSfIkCZu479O2TYwQkFBi5W5QCW0cs
-         OlunhQ+XPUTJHddDzLFz3IijW6cAdQ2Yd2nD9rjimfif8KmVtjioX9yDTHYGkEwCvIt3
-         /mEGy6G4oHzdtimP5S+swNuZhHJKsOl4U8jZ26OaWdB2NVNBJNZ8PkXspz0P/lIhmbPZ
-         qq1Gu0Xd6OqMxC2cBs3Q0Omco21Rp/x9dK/VBx8LpsQ5fDOT/cdpdWNnD04kfpQL7kv5
-         WaIQ==
-X-Gm-Message-State: AOAM530w0YIvDB7PMA7qsMqhTCRfiDwceVizS/T/wVBEmNLEOU7l6rc0
-        hM+jSlkpvrWX6a8+H7n8y0gESjsGiKB2VhToZeuwIQ==
-X-Google-Smtp-Source: ABdhPJwR2vjJry78FpxUk8oMC0I8QgflKiFfnUU3O2YO1V0+Cgkk0EEZfk46wQLVk0jJWhT7WOgQcXIVpsmYLhauAP0=
-X-Received: by 2002:a50:f289:: with SMTP id f9mr20683380edm.188.1591192281579;
- Wed, 03 Jun 2020 06:51:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15> <6d759cc28628ea72767c1304883630eb@codeaurora.org>
- <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
- <f0357072de96970b641bbd0da98c1d61@codeaurora.org> <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
- <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org> <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
- <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
-In-Reply-To: <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 3 Jun 2020 14:51:10 +0100
-Message-ID: <CAJ9a7Vj3sL=4O3DU+aJWYLhue1UxQmX4Ba5JdEnmxKDEYo_z4Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 3 Jun 2020 09:51:40 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33487 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbgFCNvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:51:40 -0400
+IronPort-SDR: DsN0y61Xs6ZH4srtPzbK4n/gjheE0Ois0c8Y25do0ilmfccxcUSSBp9K4WzRxaQlgfp1SF/0bf
+ LqMV9B10mM/Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 06:51:39 -0700
+IronPort-SDR: catGTPvQvQK+7mQSyl66XozjADBtn4hRlUTcrYgCvxFUFmManVSiAbf9+u2MvVXhHuig3+r5Sn
+ lIIA0JZnKQag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
+   d="scan'208";a="269082010"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by orsmga003.jf.intel.com with ESMTP; 03 Jun 2020 06:51:38 -0700
+From:   richard.gong@linux.intel.com
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, richard.gong@linux.intel.com,
+        Richard Gong <richard.gong@intel.com>
+Subject: [PATCHv1] firmware: stratix10-rsu: fix warnings
+Date:   Wed,  3 Jun 2020 09:06:52 -0500
+Message-Id: <1591193212-15082-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Richard Gong <richard.gong@intel.com>
 
+Patch fixes sparse warnings: using plain integer as NULL pointer. Replaces
+equal to with logical not operator.
 
-On Wed, 3 Jun 2020 at 14:34, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-06-03 14:22, Mike Leach wrote:
-> > Hi Sai,
-> >
-> > On Wed, 3 Jun 2020 at 13:14, Sai Prakash Ranjan
-> > <saiprakash.ranjan@codeaurora.org> wrote:
-> >>
-> >> Hi Mike,
-> >>
-> >> On 2020-06-03 16:57, Mike Leach wrote:
-> >>> Hi,
-> >>>
-> >>> On Wed, 3 Jun 2020 at 11:24, Sai Prakash Ranjan
-> >>> <saiprakash.ranjan@codeaurora.org> wrote:
-> >>>>
-> >>>> Hi Mike,
-> >>>>
-> >>>> Thanks again for looking at this.
-> >>>>
-> >>>> On 2020-06-03 03:42, Mike Leach wrote:
-> >>>> [...]
-> >>>>
-> >>>>>>
-> >>>>>> SMMU/IOMMU won't be able to do much here as it is the client's
-> >>>>>> responsiblity to
-> >>>>>> properly shutdown and SMMU device link just makes sure that
-> >>>>>> SMMU(supplier) shutdown is
-> >>>>>> called only after its consumers shutdown callbacks are called.
-> >>>>>
-> >>>>> I think this use case can be handled slightly differently than the
-> >>>>> general requirements for modular CoreSight drivers.
-> >>>>>
-> >>>>> What is needed here is a way of stopping the underlying ETR hardware
-> >>>>> from issuing data to the SMMU, until the entire device has been shut
-> >>>>> down, in a way that does not remove the driver, breaking existing
-> >>>>> references and causing a system crash.
-> >>>>>
-> >>>>> We could introduce a new mode to the ETR driver - e.g.
-> >>>>> CS_MODE_SHUTDOWN.
-> >>>>>
-> >>>>> At the end of the block tmc_shutdown(struct amba_device *adev), set
-> >>>>> drvdata->mode to CS_MODE_SHUTDOWN & remove the coresight_unregister().
-> >>>>> This new mode can be used to  prevent the underlying hardware from
-> >>>>> being able to restart until the device is re-powered.
-> >>>>>
-> >>>>> This mode can be detected in the code that enables / disables the ETR
-> >>>>> and handled appropriately (updates to tmc_enable_etr_sink and
-> >>>>> tmc_disable_etr_sink).
-> >>>>> This mode will persist until the device is re-started - but because we
-> >>>>> are on the device shutdown path this is not an issue.
-> >>>>>
-> >>>>> This should leave the CoreSight infrastructure stable until the
-> >>>>> drivers are shut down normally as part of the device power down
-> >>>>> process.
-> >>>>>
-> >>>>
-> >>>> Sounds good to me, but if the coresight_unregister() is the trouble
-> >>>> point
-> >>>> causing these crashes, then can't we just remove that from
-> >>>> tmc_shutdown()
-> >>>> callback? This would be like maintaining the same behaviour as now
-> >>>> where
-> >>>> on reboot/shutdown we basically don't do anything except for disabling
-> >>>> ETR.
-> >>>
-> >>> No - the new mode prevents race conditions where the thread shutting
-> >>> down the SMMU does the ETR shutdown, but then another thread happens
-> >>> to be trying to start trace and restarts the ETR.
-> >>> It also prevents the condition Mathieu discussed where a thread might
-> >>> be attempting to shutdown trace - this could try to disable the
-> >>> hardware again re-releasing resources/ re-flushing and waiting for
-> >>> stop.
-> >>>
-> >>
-> >> I do not think there will a race between SMMU shutdown and ETR shutdown.
-> >> Driver core takes care of calling SMMU shutdown after its consumer
-> >> shutdown callbacks via device link, otherwise there would already be
-> >> bugs in all other client drivers.
-> >>
-> >
-> > I am not saying there could be a race between tmc_shutdowm and
-> > Smmu_shutdown - there may be a case if the coresight_disable_path
-> > sequence is running and gets to the point of disabling the ETR after
-> > the SMMU callback has disabled it.
->
-> I'm confused now - there is no "SMMU callback", we're talking about the
-> system-wide cleanup from kernel_shutdown_prepare() or
-> kernel_restart_prepare(). As far as I'm aware userspace should be long
-> gone by that point, so although trace may have been left running ||
-           ((offset >= TRCCIDCVRn(0)) && (offset <= TRCVMIDCVRn(7)), the
-> chance of racing against other driver operations seems pretty unlikely.
->
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Richard Gong <richard.gong@intel.com>
+---
+ drivers/firmware/stratix10-rsu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Sorry - bad choice of terminology. I was referring to the SMMU
-ensuring that it had all its clients shut-down before if shut down. To
-quote Sai...
+diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
+index 4379475..469b8f7 100644
+--- a/drivers/firmware/stratix10-rsu.c
++++ b/drivers/firmware/stratix10-rsu.c
+@@ -290,7 +290,7 @@ static ssize_t reboot_image_store(struct device *dev,
+ 	unsigned long address;
+ 	int ret;
+ 
+-	if (priv == 0)
++	if (!priv)
+ 		return -ENODEV;
+ 
+ 	ret = kstrtoul(buf, 0, &address);
+@@ -315,7 +315,7 @@ static ssize_t notify_store(struct device *dev,
+ 	unsigned long status;
+ 	int ret;
+ 
+-	if (priv == 0)
++	if (!priv)
+ 		return -ENODEV;
+ 
+ 	ret = kstrtoul(buf, 0, &status);
+-- 
+2.7.4
 
->>>>> SMMU device link just makes sure that
-> >>>>>> SMMU(supplier) shutdown is
-> >>>>>> called only after its consumers shutdown callbacks are called.
-
-I agree it is unlikely, but if removing the device from the CoreSight
-infrastructure via coresight_unregister() is a potential source of a
-crash, it would seem that there is a potential path where some
-CoreSight driver side work might be possible. therefore a mode to
-prevent this crash, and ensure that the device hardware remains off
-and not sending trace to SMMU until such time as shutdown / reboot
-restart occurs, seemed prudent.
-
-Mike
-
-> Robin.
-
-
-
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
