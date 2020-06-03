@@ -2,84 +2,105 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1595C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC491C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C2A20734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CEC920734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:33:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKQIjUAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgFCUdF (ORCPT
+        id S1726377AbgFCUdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:33:05 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45491 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgFCUdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:33:05 -0400
-IronPort-SDR: ixakrZKy0djqqq32V61yBwYyAG9Dg7sZzmGTqJfn2y78xnocC3EQva11s3FpGzeh0V2syX2yJr
- ZwlerNkunJyg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 13:33:05 -0700
-IronPort-SDR: uN5rqF5/QSJRCFmpf7SBwVkazagR2ifEkLz+T4mDp01oqNHwiB3THuValIjq/o8IgvJsb4poP5
- VlclBhG3n8fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,469,1583222400"; 
-   d="scan'208";a="416679395"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 03 Jun 2020 13:33:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH] KVM: VMX: Always treat MSR_IA32_PERF_CAPABILITIES as a valid PMU MSR
-Date:   Wed,  3 Jun 2020 13:33:03 -0700
-Message-Id: <20200603203303.28545-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Wed, 3 Jun 2020 16:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgFCUdG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:33:06 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F49C08C5C0;
+        Wed,  3 Jun 2020 13:33:04 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d6so100430pjs.3;
+        Wed, 03 Jun 2020 13:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tKK54s37lQCe/iastVr/8YgFF4Qz2iFi8Ru/giratfc=;
+        b=cKQIjUAAnyVFabLs4fElfG3Cv10Qjq7ZEkJ+YkgCFBYDAf/VKYDrPtEJGWcTwbpzf3
+         k1WrTOyUZU7Z+sfuK0xWmI8Zt6xnLEFwKGl/FiSLYPKkzvJUsWXZibRZ3JjnZeN10k6m
+         ofA1mwaq/6iB2Jo96JCPlDBbCSK3Qj7xdBf5/MhmUpPn2cVycDd0y++a21AaFr+tiCc/
+         fN4MVjiRnicjR18xshg8o1v0Rj5Ye1OU/JivxEHA5GlPyUZc4JkMjuU4xgHuxcyJAWi5
+         0WVDVd8MBw57vbfs7ZstpWTMWnCjj+BHJz9pwjynbn+eL9sNGezQSjskxN8lK71vzsBn
+         iz5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tKK54s37lQCe/iastVr/8YgFF4Qz2iFi8Ru/giratfc=;
+        b=Rz6HRar5Hd6RWv/4z35x0SbS5XHajA5PtGVKRmuDbEqCwYG5OdQ0Rgv8X/rO0oAace
+         wubc75qE2BEiLnMKHYsc94D8Ns/25OVfFBenyKgNWzM65CKUFcYiFWYdGjKYPFys3XIN
+         vbtsob1S57LFQxQK+tjVUCFaXbfFE+IQjQhWhHddiQeVu5sxPJIKAFW6usO8WJFDNXK1
+         pDncmptbMh9CWp00jOsKZXaWCBKXZ006vqf6qRFTvnFPOQDWDy5gS0SCIBLkDnpfY1Sv
+         yeCYrxV13Z+1j1Qy6haBG9jtQE1KFP+nrUonp4NpiMoMvYjJvdvUa3K/Mj0Dvf2GCR7J
+         LL1g==
+X-Gm-Message-State: AOAM533vR3Yxpiz8UUKPKjxKrEAqe75Yj62KYX4964hvDq3ng+hmooJP
+        ke5OZ4ZoZAbK4KpC9FulY+aYZPCL
+X-Google-Smtp-Source: ABdhPJyLkFbq2hs5iJJsfKh7chIJrewBYh8p9pOzBn1RZaK00q+ODcLjjar1be1cKhF/sxx4V04S/Q==
+X-Received: by 2002:a17:902:9a43:: with SMTP id x3mr1496123plv.190.1591216383928;
+        Wed, 03 Jun 2020 13:33:03 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 85sm2597077pfz.145.2020.06.03.13.33.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 13:33:03 -0700 (PDT)
+Subject: Re: [PATCH v3 10/13] PCI: brcmstb: Set internal memory viewport sizes
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200603192058.35296-1-james.quinlan@broadcom.com>
+ <20200603192058.35296-11-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <40eda019-21a2-32ae-d0d7-6dc77f9d91f7@gmail.com>
+Date:   Wed, 3 Jun 2020 13:33:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200603192058.35296-11-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unconditionally return true when querying the validity of
-MSR_IA32_PERF_CAPABILITIES so as to defer the validity check to
-intel_pmu_{get,set}_msr(), which can properly give the MSR a pass when
-the access is initiated from host userspace.  The MSR is emulated so
-there is no underlying hardware dependency to worry about.
 
-Fixes: 27461da31089a ("KVM: x86/pmu: Support full width counting")
-Cc: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
 
-KVM selftests are completely hosed for me, everything fails on KVM_GET_MSRS.
+On 6/3/2020 12:20 PM, Jim Quinlan wrote:
+> BrcmSTB PCIe controllers are intimately connected to the memory
+> controller(s) on the SOC.  There is a "viewport" for each memory controller
+> that allows inbound accesses to CPU memory.  Each viewport's size must be
+> set to a power of two, and that size must be equal to or larger than the
+> amount of memory each controller supports.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
- arch/x86/kvm/vmx/pmu_intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index d33d890b605f..bdcce65c7a1d 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -181,7 +181,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 		ret = pmu->version > 1;
- 		break;
- 	case MSR_IA32_PERF_CAPABILITIES:
--		ret = guest_cpuid_has(vcpu, X86_FEATURE_PDCM);
-+		ret = 1;
- 		break;
- 	default:
- 		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.26.0
-
+Florian
