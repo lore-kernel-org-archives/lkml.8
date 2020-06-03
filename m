@@ -2,153 +2,140 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B35EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B46C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B2F2068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D20320674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="c3dxij/t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5zLCboq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgFCHe3 (ORCPT
+        id S1726054AbgFCHfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:34:29 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:6550 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725275AbgFCHe3 (ORCPT
+        Wed, 3 Jun 2020 03:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCHfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:34:29 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0537XPHE021565;
-        Wed, 3 Jun 2020 09:34:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=dvyUJs8o6kUEeuCGb8i9PeF6Oa2j1pEYn0SCIXZTWRQ=;
- b=c3dxij/t3E/97u08riL5vamIIH5ZfAApuIY6SKzQUuiL5Yzs2/g+/jkZZRDjLxfAfODO
- ThrOKkihXG0D5qrstMz5PfwfMio7hQM8XRCw+cJhRfqaOrm3+9tTRgkPLQ3j4SKmp7tk
- N8jKJMDPm0pReetQay9AHDKLlUXRf0+e121C704AMjB2kP7ffpPq0cbR4FWm28Bh6DQN
- oIqI0RLJKfJ/rJyyrZztBNvJHy105vw8hGRmwGM/Gh8X6Zb/hHzhevcBnSQ/fpWRdfgN
- OeHWp1dsqsZMuoQ7L7dlv9d7DgITusuxL4uEQhjL3D6jex4UG1I4gX3iiND7zv+mUAbl Mw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31bd8w2vf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 09:34:14 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA70710002A;
-        Wed,  3 Jun 2020 09:34:13 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A03D82AE6B2;
-        Wed,  3 Jun 2020 09:34:13 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jun
- 2020 09:34:12 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 3 Jun 2020 09:34:13 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-CC:     Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
-Thread-Topic: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
-Thread-Index: AQHWNDnEPjQ+BLRck0Okhc2Oie/dNajE9yuAgAAjSoCAACDvgIABLWEA
-Date:   Wed, 3 Jun 2020 07:34:13 +0000
-Message-ID: <1b0ace18-e7f8-0b75-f6fe-968a269626b0@st.com>
-References: <20200527151613.16083-1-benjamin.gaignard@st.com>
- <jhjpnahizkm.mognet@arm.com> <f95ce45f-7a1c-0feb-afa8-203ddb500f2f@st.com>
- <jhjo8q1io9o.mognet@arm.com>
-In-Reply-To: <jhjo8q1io9o.mognet@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 3 Jun 2020 03:35:11 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19423C05BD43
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 00:35:11 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id m7so533222plt.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 00:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a0uAEKUPj5s/C3AmfM0zbUvPo0nW2J6CY0cZs/p797o=;
+        b=j5zLCboqBy9fsb5WOvJkQ0wDsTZT6PSpoeAbd6mmuHRpW04G5yS2w4er8h9ZlpJU6B
+         yGso/trwW+xxXiiiYPFmTJyHXhIbnXdq8K2MS3qn8Ix7sBI8vPmKxV2RnlWWpBFxV4PL
+         gyMkrJxSDvx00RdjSE658LNSHyB4afYMtfLvRCksHVpFCcnUsAASFDWzhls2ClSVqMA5
+         WL0tEJv8ZMuaIcOfZ7lAYN4jQgipZ2VLAMJeXz/Uo8ls9hdRWTfy3jbOy2iFTx9DZMBN
+         hnCxEnra2TWzREj9QAzGJWa0Koz4P1mXSP6DrtZlvnH8LL92Z4Pus1Qgy69LlGB63lPD
+         5QKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a0uAEKUPj5s/C3AmfM0zbUvPo0nW2J6CY0cZs/p797o=;
+        b=BfOaUFpSsxJ3+2ZYKq3QGJCtgqrAsUCH2vV0SxORH/MHQaWsnX1LYPzmyhHQl8dtl+
+         t2qfq+leaVlzmu65H9RoVzTM5Ctnowhy4qo9UNx1brL3Q1LS8K9ERp0/cGH9YSkxmULS
+         aR7MGkzDt4Iqty0VnG3WFCj77Zw/xf3xB7idGssdzZjlI6g3gRkPXtW18iuafzsw0US2
+         RTUISsoGlbCLLAxS84BfSnaVS80dUDVtpXCIXwDtDgvYZOR6aTsH9qhzgsdsA2O1YUGl
+         wQiNWCy6I+9qdPJvXv4cKA/Zm1VYKYn3FAkaplq3w1+Brw/zHYnKUinA3ZOq7Pj/YVaW
+         RdEw==
+X-Gm-Message-State: AOAM530Fp9QO7xPsdUvF8tYtIp4wPsAzxdBvudJH3mMrrJWdrGUBcB2M
+        hFEAJymcyb2ka/dq7Z/8nPg=
+X-Google-Smtp-Source: ABdhPJxcz2xWQ64axdZLz2bkSkIOFn6YX+4btHjtMB/FSiF2MoCcsfDPcfqFHv/xkXgBq+nqxjUJdA==
+X-Received: by 2002:a17:902:b78a:: with SMTP id e10mr15926003pls.201.1591169710519;
+        Wed, 03 Jun 2020 00:35:10 -0700 (PDT)
+Received: from [192.168.1.60] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id 17sm1159828pfn.19.2020.06.03.00.35.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 00:35:09 -0700 (PDT)
+Subject: Re: [PATCH 1/1] driver core: Fix unbalance probe_count in
+ really_probe()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, peter_hong@fintek.com.tw,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+References: <20200603064509.32736-1-hpeter+linux_kernel@gmail.com>
+ <CAMuHMdV3sNojXqaxLmVjK3ziGugd3cWEKfLXikDwvaOmocTCzQ@mail.gmail.com>
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Message-ID: <65b25d4b-39ad-e5be-ecfd-39bdc7ae9458@gmail.com>
+Date:   Wed, 3 Jun 2020 15:35:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2D00D8D0FB5BE449A19E3E0E430841A6@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-03_06:2020-06-02,2020-06-03 signatures=0
+In-Reply-To: <CAMuHMdV3sNojXqaxLmVjK3ziGugd3cWEKfLXikDwvaOmocTCzQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDYvMi8yMCAzOjM1IFBNLCBWYWxlbnRpbiBTY2huZWlkZXIgd3JvdGU6DQo+IE9uIDAy
-LzA2LzIwIDEyOjM3LCBCZW5qYW1pbiBHQUlHTkFSRCB3cm90ZToNCj4+IE9uIDYvMi8yMCAxMToz
-MSBBTSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPj4+PiBAQCAtOTksNiArMTAwLDggQEAg
-ZW51bSBzdGF0ZSB7DQo+Pj4+DQo+Pj4+ICAgICNkZWZpbmUgT1ZFUlJVTl9FUlJPUl9USFJFU0hP
-TEQJMw0KPj4+Pg0KPj4+PiArI2RlZmluZSBEQ01JX01JTl9GUkVRCTY1MDAwMCAvKiBpbiBLSHog
-Ki8NCj4+Pj4gKw0KPj4+IFRoaXMgYXNzdW1lcyB0aGUgaGFuZGxpbmcgcGFydCBpcyBndWFyYW50
-ZWVkIHRvIGFsd2F5cyBydW4gb24gdGhlIHNhbWUgQ1BVDQo+Pj4gd2l0aCB0aGUgc2FtZSBwZXJm
-b3JtYW5jZSBwcm9maWxlIChyZWdhcmRsZXNzIG9mIHRoZSBwbGF0Zm9ybSkuIElmIHRoYXQncw0K
-Pj4+IG5vdCBndWFyYW50ZWVkLCBpdCBmZWVscyBsaWtlIHlvdSdkIHdhbnQgdGhpcyB0byBiZSBj
-b25maWd1cmFibGUgaW4gc29tZQ0KPj4+IHdheS4NCj4+IFllcyBJIGNvdWxkIGFkZCBhIHN0LHN0
-bTMyLWRjbWktbWluLWZyZXF1ZW5jeSAoaW4gS0h6KSBwYXJhbWV0ZXIgdGhlDQo+PiBkZXZpY2Ug
-dHJlZSBub2RlLg0KPj4NCj4gU29tZXRoaW5nIGxpa2UgdGhhdCAtIEknbSBub3Qgc3VyZSBob3cg
-d2VsbCB0aGlzIGZpdHMgd2l0aCB0aGUgRFQNCj4gbGFuZHNjYXBlLCBhcyB5b3UgY291bGQgYXJn
-dWUgaXQgaXNuJ3QgcmVhbGx5IGEgZGVzY3JpcHRpb24gb2YgdGhlDQo+IGhhcmR3YXJlLCBtb3Jl
-IG9mIGEgZGVzY3JpcHRpb24gb2YgdGhlIHBlcmZvcm1hbmNlIGV4cGVjdGF0aW9ucyBvZiB0aGUN
-Cj4gc29mdHdhcmUuIEkgd29uJ3QgcmVhbGx5IGFyZ3VlIGhlcmUuDQo+DQo+Pj4+ICAgIHN0cnVj
-dCBkY21pX2dyYXBoX2VudGl0eSB7DQo+Pj4+ICAgICAgICAgc3RydWN0IHY0bDJfYXN5bmNfc3Vi
-ZGV2IGFzZDsNCj4+Pj4NCj4+PiBbLi4uXQ0KPj4+PiBAQCAtMjAyMCw2ICsyMDQyLDggQEAgc3Rh
-dGljIGludCBkY21pX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+Pj4+ICAg
-ICAgICAgICAgICAgICBnb3RvIGVycl9jbGVhbnVwOw0KPj4+PiAgICAgICAgIH0NCj4+Pj4NCj4+
-Pj4gKwlkY21pLT5wb2xpY3kgPSBjcHVmcmVxX2NwdV9nZXQoMCk7DQo+Pj4+ICsNCj4+PiBJZGVh
-bGx5IHlvdSdkIHdhbnQgdG8gZmV0Y2ggdGhlIHBvbGljeSBvZiB0aGUgQ1BVIHlvdXIgSVJRIChh
-bmQgaGFuZGxpbmcNCj4+PiB0aHJlYWQpIGlzIGFmZmluZWQgdG87IFRoZSBvbmx5IGNvbXBhdGli
-bGUgRFRTIEkgZm91bmQgZGVzY3JpYmVzIGEgc2luZ2xlDQo+Pj4gQTcsIHdoaWNoIGlzIHNvbWV3
-aGF0IGxpbWl0ZWQgaW4gdGhlIGFmZmluaXR5IGFyZWEuLi4NCj4+IElmIEkgbW92ZSB0aGlzIGNv
-ZGUganVzdCBiZWZvcmUgc3RhcnQgc3RyZWFtaW5nIGFuZCB1c2UgZ2V0X2NwdSgpLCB3b3VsZA0K
-Pj4gaXQgd29ya3MgPw0KPj4NCj4gQUZBSUEgc3RyZWFtaW5nX3N0YXJ0KCkgaXMgbm90IG5lY2Vz
-c2FyaWx5IGV4ZWN1dGluZyBvbiB0aGUgc2FtZSBDUFUgYXMgdGhlDQo+IG9uZSB0aGF0IHdpbGwg
-aGFuZGxlIHRoZSBpbnRlcnJ1cHQuIEkgd2FzIHRoaW5raW5nIHlvdSBjb3VsZCB1c2UgdGhlIElS
-USdzDQo+IGVmZmVjdGl2ZSBhZmZpbml0eSBhcyBhIGhpbnQgb2Ygd2hpY2ggQ1BVKHMpIHRvIGJv
-b3N0LCBpLmUuIHNvbWV0aGluZyBsaWtlOg0KPg0KPiAtLS0NCj4gICAgICBzdHJ1Y3QgY3B1bWFz
-a192YXJfdCB2aXNpdGVkOw0KPiAgICAgIHN0cnVjdCBpcnFfZGF0YSAqZCA9IGlycV9nZXRfaXJx
-X2RhdGEoaXJxKTsNCj4NCj4gICAgICBlcnIgPSBhbGxvY19jcHVtYXNrX3Zhcih2aXNpdGVkLCBH
-RlBfS0VSTkVMKTsNCj4gICAgICAvKiAuLi4gKi8NCj4gICAgICBmb3JfZWFjaF9jcHUoY3B1LCBp
-cnFfZGF0YV9nZXRfZWZmZWN0aXZlX2FmZmluaXR5X21hc2soZCkpIHsNCj4gICAgICAgICAgICAg
-IC8qIGNoZWNrIGlmIG5vdCBhbHJlYWR5IHNwYW5uZWQgKi8NCj4gICAgICAgICAgICAgIGlmIChj
-cHVtYXNrX3Rlc3RfY3B1KGNwdSwgdmlzaXRlZCkpDQo+ICAgICAgICAgICAgICAgICAgICAgIGNv
-bnRpbnVlOw0KPg0KPiAgICAgICAgICAgICAgcG9saWN5ID0gY3B1ZnJlcV9jcHVfZ2V0KGNwdSk7
-DQo+ICAgICAgICAgICAgICBjcHVtYXNrX29yKHZpc2l0ZWQsIHZpc2l0ZWQsIHBvbGljeS0+Y3B1
-cyk7DQo+ICAgICAgICAgICAgICAvKiBkbyB0aGUgYm9vc3QgZm9yIHRoYXQgcG9saWN5IGhlcmUg
-Ki8NCj4gICAgICAgICAgICAgIC8qIC4uLiAqLw0KPiAgICAgICAgICAgICAgY3B1ZnJlcV9jcHVf
-cHV0KHBvbGljeSk7DQo+ICAgICAgfQ0KPiAtLS0NCj4NCj4gVGhhdCBvZiBjb3Vyc2UgZmFsbHMg
-YXBhcnQgd2hlbiBob3RwbHVnIGdldHMgaW52b2x2ZWQsIGFuZCB0aGUgZWZmZWN0aXZlDQo+IGFm
-ZmluaXR5IGNoYW5nZXMuLi4gVGhlcmUncyBpcnFfc2V0X2FmZmluaXR5X25vdGlmaWVyKCkgb3V0
-IHRoZXJlLCBidXQgaXQNCj4gc2VlbXMgaXQncyBvbmx5IGFib3V0IHRoZSBhZmZpbml0eSwgbm90
-IHRoZSBlZmZlY3RpdmVfYWZmaW5pdHksIEknbSBub3QNCj4gc3VyZSBob3cgdmFsaWQgaXQgd291
-bGQgYmUgdG8gcXVlcnkgdGhlIGVmZmVjdGl2ZV9hZmZpbml0eSBpbiB0aGF0DQo+IG5vdGlmaWVy
-Lg0KSWYgSSB3YWl0IHRvIGJlIGluIHRoZSBpcnEgaXQgd2lsbCBiZSB0b28gbGF0ZSBzbyBJIHRo
-aW5rIEkgd2lsbCBkbyBhIA0KbG9vcCBvdmVyIGFsbCBwb3NzaWJsZSBDUFVzDQpiZWZvcmUgc3Rh
-cnQgdGhlIHN0cmVhbWluZyB0byBjaGFuZ2UgdGhlIHBvbGljaWVzLg0KDQo+DQo+PiBCZW5qYW1p
-bg0KPj4+PiAgICAgICAgIGRldl9pbmZvKCZwZGV2LT5kZXYsICJQcm9iZSBkb25lXG4iKTsNCj4+
-Pj4NCj4+Pj4gICAgICAgICBwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBkY21pKTsNCj4+Pj4g
-QEAgLTIwNDksNiArMjA3Myw5IEBAIHN0YXRpYyBpbnQgZGNtaV9yZW1vdmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCj4+Pj4NCj4+Pj4gICAgICAgICBwbV9ydW50aW1lX2Rpc2FibGUo
-JnBkZXYtPmRldik7DQo+Pj4+DQo+Pj4+ICsJaWYgKGRjbWktPnBvbGljeSkNCj4+Pj4gKwkJY3B1
-ZnJlcV9jcHVfcHV0KGRjbWktPnBvbGljeSk7DQo+Pj4+ICsNCj4+Pj4gICAgICAgICB2NGwyX2Fz
-eW5jX25vdGlmaWVyX3VucmVnaXN0ZXIoJmRjbWktPm5vdGlmaWVyKTsNCj4+Pj4gICAgICAgICB2
-NGwyX2FzeW5jX25vdGlmaWVyX2NsZWFudXAoJmRjbWktPm5vdGlmaWVyKTsNCj4+Pj4gICAgICAg
-ICBtZWRpYV9lbnRpdHlfY2xlYW51cCgmZGNtaS0+dmRldi0+ZW50aXR5KTsNCg==
+Hi Geert,
+
+Geert Uytterhoeven 於 2020/6/3 下午 03:13 寫道:
+> Hi Ji-Ze,
+> 
+> If devres_head is not empty, you have a serious problem on your system,
+> as those resources may be in an unknown state (e.g. freed but still in
+> use).  While I had missed the probe_count imbalance when implementing
+> the original change, it may actually be safer to not decrease
+> probe_count, to prevent further probes from happening.  But I guess it
+> doesn't matter: if you get here, your system is in a bad state anyway.
+
+We want to fix the shutdown/reboot freeze issue and bisect to this
+patch and found if the probe_count != 0, the PC will stuck with
+wait_for_device_probe() with shutdown/reboot forever. So we just
+change the increment after return -EBUSY.
+
+In this case, it maybe 8250_PNP & serial 8250 platform driver resources
+conflict. I'll try to dump more message to debug.
+
+IMO, the shutdown/reboot operation should not block.
+
+
+>> with serial8250 platform driver. e.g. AOPEN DE6200. The conflict boot
+>> dmesg below:
+>>
+>>          Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+>>          00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 921600) is a 16550A
+>>          00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 921600) is a 16550A
+>>          00:05: ttyS2 at I/O 0x3e8 (irq = 5, base_baud = 921600) is a 16550A
+>>          serial8250: ttyS3 at I/O 0x2e8 (irq = 3, base_baud = 921600) is a 16550A
+>>
+>> Reboot/Shutdown will freeze in wait_for_device_probe(), message as
+>> following:
+>>          INFQ: task systemd-shutdown: 1 blocked for more than 120 seconds.
+> 
+> Now, how did you get to this state, i.e. which driver triggered the
+> "Resources present before probing" message? Because that is the root
+> issue that must be fixed, and the probe_count imbalance is IMHO just a
+> red herring.
+> 
+
+Sorry for lost important dmesg:
+
+Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 921600) is a 16550A
+00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 921600) is a 16550A
+00:05: ttyS2 at I/O 0x3e8 (irq = 5, base_baud = 921600) is a 16550A
+serial8250: ttyS3 at I/O 0x2e8 (irq = 3, base_baud = 921600) is a 16550A
+platform serial8250: Resources present before probing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-- 
+With Best Regards,
+Peter Hong
