@@ -2,192 +2,125 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD0E9206A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+Yp9fYf"
+	by mail.kernel.org (Postfix) with ESMTP id 62DF720772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgFCNbQ (ORCPT
+        id S1725981AbgFCNdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgFCNbF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:31:05 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C59C08C5C0;
-        Wed,  3 Jun 2020 06:31:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l11so2417756wru.0;
-        Wed, 03 Jun 2020 06:31:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=9ndkIlZSg/mH+rbFHIDBj/zBoeKcA9h8ZR9NNtsZznk=;
-        b=E+Yp9fYfWadZ0gzjYHm3X2TfmpLUtWSjKvklNVPqZnSag3B4KVMDcfui6NdLsYinAa
-         JIj4D3xuYQPGyTqVomV5a+qvsWc0YIR898x58s6qiPJVk+QvKi5rqHa2L8IdERI68ufv
-         RFo5QYCOzcRxyUEbCudBGjhEztI/heInEv6Nh3zGsyUTLxU22MSEnJ3LdJy1HVFSHfPh
-         b2xtSHpSiyNWlmyZZBGtX4gD5XypllxXyv9O49KclzVmS8EqHdDiNKAXbMOh4tGUOOSM
-         QmBaI8QGRzd3xrr3AqW7Pk8Sv6Ui7wRm5zy5ENb/3GVXrw1cd7WveYKfGnl8gHZlZDOl
-         Pk9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9ndkIlZSg/mH+rbFHIDBj/zBoeKcA9h8ZR9NNtsZznk=;
-        b=oFw33OJcQ5rSVPF0jN8nrJQdvX3GFT52VX58VsEc2SEJlUkpLx3bekk2RXmhl2gDrj
-         M4X0WFtJns4lYPd29OK3Mssh/JYcWERTxuF3vsjWCfXPYghICBXT0irjZc1sG2mc6faJ
-         CDVIGvzLtPS+3Kt/GvpmcZ247v+Wxsaa8vv09p9FViDt9fsfOx5+oYQ+0n2NGG0c5jW5
-         bLhIa5D+S9+teLHwvAprtprGq67yrH2+eypBdFAYLzS99mauTtprc0+mKGvbsAZE0UOh
-         aWyAMTK64MEuHXxhk732JdDjACRS043YRG90zjUJwTq57eLhtNic5C6diR7SPQdZ430E
-         jtjA==
-X-Gm-Message-State: AOAM5302382ggpts7RLz76rn6KM3ymZZqIf0Fa4o0uQ8LuoZmnL87d3a
-        oqDy+uu0Gv9nZztcxRo+t0Q=
-X-Google-Smtp-Source: ABdhPJyROjyiwDarvK/ah2mGur021WnF8FGsgCBJMO9LNVB53aoXhCWMlGy23wCQiFIhUNaWiY+03w==
-X-Received: by 2002:a05:6000:1146:: with SMTP id d6mr30436877wrx.400.1591191064098;
-        Wed, 03 Jun 2020 06:31:04 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id a1sm3189716wmd.28.2020.06.03.06.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 06:31:03 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] io_uring: deduplicate io_openat{,2}_prep()
-Date:   Wed,  3 Jun 2020 16:29:31 +0300
-Message-Id: <163d20dc646c414830096778965f1b828965f86a.1591190471.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1591190471.git.asml.silence@gmail.com>
-References: <cover.1591190471.git.asml.silence@gmail.com>
+        Wed, 3 Jun 2020 09:33:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48008 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgFCNdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:33:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 636FDAE92;
+        Wed,  3 Jun 2020 13:33:03 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 15:32:57 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-next <linux-next@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        mpe <mpe@ellerman.id.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        sachinp <sachinp@linux.vnet.ibm.com>,
+        manvanth <manvanth@linux.vnet.ibm.com>,
+        "aneesh.kumar" <aneesh.kumar@linux.vnet.ibm.com>,
+        akpm@linux-foundation.org, Steven Rostedt <rostedt@goodmis.org>,
+        hch <hch@lst.de>
+Subject: Re: [mainline][Oops][bisected 2ba3e6 ] 5.7.0 boot fails with kernel
+ panic on powerpc
+Message-ID: <20200603133257.GL6857@suse.de>
+References: <1591181457.9020.13.camel@abdul>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591181457.9020.13.camel@abdul>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-io_openat_prep() and io_openat2_prep() are identical except for how
-struct open_how is built. Deduplicate it with a helper.
+On Wed, Jun 03, 2020 at 04:20:57PM +0530, Abdul Haleem wrote:
+> @Joerg, Could you please have a look?
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 55 ++++++++++++++++++---------------------------------
- 1 file changed, 19 insertions(+), 36 deletions(-)
+Can you please try the attached patch?
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 75ff635bb30e..7d49bcba859c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2989,26 +2989,21 @@ static int io_fallocate(struct io_kiocb *req, bool force_nonblock)
- 	return 0;
+diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
+index 58046ddc08d0..afbab31fbd7e 100644
+--- a/include/asm-generic/5level-fixup.h
++++ b/include/asm-generic/5level-fixup.h
+@@ -17,6 +17,11 @@
+ 	((unlikely(pgd_none(*(p4d))) && __pud_alloc(mm, p4d, address)) ? \
+ 		NULL : pud_offset(p4d, address))
+ 
++#define pud_alloc_track(mm, p4d, address, mask)					\
++	((unlikely(pgd_none(*(p4d))) &&						\
++	  (__pud_alloc(mm, p4d, address) || ({*(mask)|=PGTBL_P4D_MODIFIED;0;})))?	\
++	  NULL : pud_offset(p4d, address))
++
+ #define p4d_alloc(mm, pgd, address)		(pgd)
+ #define p4d_alloc_track(mm, pgd, address, mask)	(pgd)
+ #define p4d_offset(pgd, start)			(pgd)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7e07f4f490cb..d46bf03b804f 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2088,35 +2088,35 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
+ 		NULL : pud_offset(p4d, address);
  }
  
--static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
-+static int __io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+-static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
++static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
+ 				     unsigned long address,
+ 				     pgtbl_mod_mask *mod_mask)
+-
  {
- 	const char __user *fname;
--	u64 flags, mode;
- 	int ret;
- 
- 	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
- 		return -EINVAL;
--	if (sqe->ioprio || sqe->buf_index)
-+	if (unlikely(sqe->ioprio || sqe->buf_index))
- 		return -EINVAL;
--	if (req->flags & REQ_F_FIXED_FILE)
-+	if (unlikely(req->flags & REQ_F_FIXED_FILE))
- 		return -EBADF;
--	if (req->flags & REQ_F_NEED_CLEANUP)
--		return 0;
- 
--	mode = READ_ONCE(sqe->len);
--	flags = READ_ONCE(sqe->open_flags);
--	if (force_o_largefile())
--		flags |= O_LARGEFILE;
--	req->open.how = build_open_how(flags, mode);
-+	/* open.how should be already initialised */
-+	if (!(req->open.how.flags & O_PATH) && force_o_largefile())
-+		req->open.how.flags |= O_LARGEFILE;
- 
- 	req->open.dfd = READ_ONCE(sqe->fd);
- 	fname = u64_to_user_ptr(READ_ONCE(sqe->addr));
-@@ -3018,33 +3013,33 @@ static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 		req->open.filename = NULL;
- 		return ret;
+-	if (unlikely(pgd_none(*pgd))) {
+-		if (__p4d_alloc(mm, pgd, address))
++	if (unlikely(p4d_none(*p4d))) {
++		if (__pud_alloc(mm, p4d, address))
+ 			return NULL;
+-		*mod_mask |= PGTBL_PGD_MODIFIED;
++		*mod_mask |= PGTBL_P4D_MODIFIED;
  	}
--
- 	req->open.nofile = rlimit(RLIMIT_NOFILE);
- 	req->flags |= REQ_F_NEED_CLEANUP;
- 	return 0;
+ 
+-	return p4d_offset(pgd, address);
++	return pud_offset(p4d, address);
  }
  
-+static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
-+{
-+	u64 flags, mode;
+-#endif /* !__ARCH_HAS_5LEVEL_HACK */
+-
+-static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
++static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
+ 				     unsigned long address,
+ 				     pgtbl_mod_mask *mod_mask)
 +
-+	if (req->flags & REQ_F_NEED_CLEANUP)
-+		return 0;
-+	mode = READ_ONCE(sqe->len);
-+	flags = READ_ONCE(sqe->open_flags);
-+	req->open.how = build_open_how(flags, mode);
-+	return __io_openat_prep(req, sqe);
-+}
-+
- static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
  {
- 	struct open_how __user *how;
--	const char __user *fname;
- 	size_t len;
- 	int ret;
+-	if (unlikely(p4d_none(*p4d))) {
+-		if (__pud_alloc(mm, p4d, address))
++	if (unlikely(pgd_none(*pgd))) {
++		if (__p4d_alloc(mm, pgd, address))
+ 			return NULL;
+-		*mod_mask |= PGTBL_P4D_MODIFIED;
++		*mod_mask |= PGTBL_PGD_MODIFIED;
+ 	}
  
--	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
--		return -EINVAL;
--	if (sqe->ioprio || sqe->buf_index)
--		return -EINVAL;
--	if (req->flags & REQ_F_FIXED_FILE)
--		return -EBADF;
- 	if (req->flags & REQ_F_NEED_CLEANUP)
- 		return 0;
--
--	req->open.dfd = READ_ONCE(sqe->fd);
--	fname = u64_to_user_ptr(READ_ONCE(sqe->addr));
- 	how = u64_to_user_ptr(READ_ONCE(sqe->addr2));
- 	len = READ_ONCE(sqe->len);
--
- 	if (len < OPEN_HOW_SIZE_VER0)
- 		return -EINVAL;
- 
-@@ -3053,19 +3048,7 @@ static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	if (ret)
- 		return ret;
- 
--	if (!(req->open.how.flags & O_PATH) && force_o_largefile())
--		req->open.how.flags |= O_LARGEFILE;
--
--	req->open.filename = getname(fname);
--	if (IS_ERR(req->open.filename)) {
--		ret = PTR_ERR(req->open.filename);
--		req->open.filename = NULL;
--		return ret;
--	}
--
--	req->open.nofile = rlimit(RLIMIT_NOFILE);
--	req->flags |= REQ_F_NEED_CLEANUP;
--	return 0;
-+	return __io_openat_prep(req, sqe);
+-	return pud_offset(p4d, address);
++	return p4d_offset(pgd, address);
  }
  
- static int io_openat2(struct io_kiocb *req, bool force_nonblock)
--- 
-2.24.0
-
++#endif /* !__ARCH_HAS_5LEVEL_HACK */
++
+ static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+ {
+ 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
