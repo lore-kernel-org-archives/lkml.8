@@ -2,134 +2,125 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F60C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4421A207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591216940;
-	bh=rgIDUtx4gnXafsKf4tEIintiRIoSRYzk7KDiatMjQfE=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=F5Y78041lnibqix5Z5g99O+vF/Zm5Oggf1IGV2jh7pu2S1PPR4DFqeTyue39vK32v
-	 Qg1KfptFDQEnP9e5ajlB1giy4qPaxdpKDjZu96omF2AyI4sCc210p7meQ1dc7mTy6J
-	 fKnASI28aePyUs0zSHuW7dIAqcUGyITSYQOQGTwk=
+	by mail.kernel.org (Postfix) with ESMTP id 13E642077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vv3735Jj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgFCUmT (ORCPT
+        id S1726184AbgFCUon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgFCUmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:42:18 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC452077D;
-        Wed,  3 Jun 2020 20:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591216938;
-        bh=rgIDUtx4gnXafsKf4tEIintiRIoSRYzk7KDiatMjQfE=;
-        h=Date:From:To:cc:Subject:From;
-        b=eANFuzemT/yH+Ov2ksJh3+VWEWJH9YQQeObtKkT475K52lLEu6iZDIw/gOsws2v3b
-         24jfMACpLXug1lv7vODzgHfVDG0PWqqi4bDNCqLPHBjtABpvMjXFpahN2lvcWF7huz
-         VXzfw7Ok/zkmFcL2z7jzTS2Wbrnwx2HGrSrR8DpQ=
-Date:   Wed, 3 Jun 2020 22:42:14 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: [GIT PULL] livepatching for 5.8
-Message-ID: <nycvar.YFH.7.76.2006032232540.13242@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 3 Jun 2020 16:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgFCUom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:44:42 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A77C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 13:44:42 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id v17so3043772ote.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 13:44:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b8CzJ+FqssESnl3mBi6gkwykaMKjKen6olasDfdb0GY=;
+        b=Vv3735Jju6p5aGz7YrCtFx9whs5k4RNmmhok/3IIkYLhOg7Yomd4cU9GFnDQfJp1jP
+         ZjxVmKh1NqQ0Fji/zH4tjchWpWuO0R+iZ3PueeLAiCc6I44QxooXmCp84CAwyeuLb7tu
+         JO0AIPyxUOGkC22B0yjkXKtf5I5qSxZbXhhrfKCNFiRU0493HnEy3kdcmqvabzFObfb8
+         3N1UdQQWi1f6Ht2UBBNZ/bQvR7elMb1cjQ8PHfNK0nOtegYOm/qVUT0n2P76k97Nv++W
+         dFoAiTlJ9jbBKXpnm5CS+OPJaIcj98wVHvjEPUEUolz7P4zFRRGQgFVK1hFeG4+XnEDI
+         jYOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b8CzJ+FqssESnl3mBi6gkwykaMKjKen6olasDfdb0GY=;
+        b=cYtDyijD07xpEyBfNYhWfMWn418mvUh60/gWEnzP/DgcbWwPgJxxVhbL6+meqiazni
+         8vNwNqKMlTEOtn3oT29+k/wS+suAiMJyWrNGfsvrwqY3Gz8tJn+ixkoV2zvn1ZSbWbRa
+         7EMFFeXwAJTnp6NV6BezaUKPMZbtHJM9wsVEy1Sg0Ga9MHVc6uopQ+c5r6XPsqq+dJV0
+         vxt8O9Czz2UV6c8jrzhlVfufcvQdhu8ju5qouj0pCnthQ9s6sB6hd8QOQ1YWKOtKuNoA
+         1Vf9L32FA2fiOT3XX0kBul1QepP+suADtkzlAM2/e0m+20r6hDUajB0w3S4aO7p8Q5TI
+         fbdw==
+X-Gm-Message-State: AOAM531kK/SFwnwMTd980lz7Ej3W1hA8Oph8d3P7/95pWE7/FnX1Bf0X
+        kuEm5+trhUNHfdVLmfvhyXKx+Ha/
+X-Google-Smtp-Source: ABdhPJxJwVPQUCVIyXl62Xh3LzjOmhOnc45bHIPDTyIl6VtAro16p1wUwwP+OA9ACF0HFgsR1oBN1w==
+X-Received: by 2002:a9d:4e93:: with SMTP id v19mr1366500otk.68.1591217081653;
+        Wed, 03 Jun 2020 13:44:41 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id z11sm773362oop.38.2020.06.03.13.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 13:44:41 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 13:44:39 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [git pull] misc uaccess stuff
+Message-ID: <20200603204439.GA2649647@ubuntu-n2-xlarge-x86>
+References: <20200603192306.GX23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603192306.GX23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Wed, Jun 03, 2020 at 08:23:06PM +0100, Al Viro wrote:
+> 	uaccess patches that really didn't fit anywhere else.
+> kvm_hv_set_msr() patch left as-is; __put_user() is by no means
+> final there, but that'll be dealt with along with other KVM
+> uaccess stuff next cycle.
+> 
+> The following changes since commit b44f687386875b714dae2afa768e73401e45c21c:
+> 
+>   drm/i915/gem: Replace user_access_begin by user_write_access_begin (2020-05-01 12:35:22 +1000)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git uaccess.misc
+> 
+> for you to fetch changes up to 4ec76a2b74c72ef9eed875ce63e27a5e7f8d80cc:
+> 
+>   bpf: make bpf_check_uarg_tail_zero() use check_zeroed_user() (2020-06-01 14:42:37 -0400)
+> 
+> ----------------------------------------------------------------
+> Al Viro (9):
+>       pselect6() and friends: take handling the combined 6th/7th args into helper
+>       binfmt_elf: don't bother with __{put,copy_to}_user()
+>       binfmt_elf_fdpic: don't use __... uaccess primitives
 
-please pull from
+This patch breaks arm32:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git for-linus
+$ make -sj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- allyesconfig fs/binfmt_elf_fdpic.o
+...
+In file included from ./include/linux/sched/task.h:11,
+                 from ./include/linux/sched/signal.h:9,
+                 from ./include/linux/rcuwait.h:6,
+                 from ./include/linux/percpu-rwsem.h:7,
+                 from ./include/linux/fs.h:34,
+                 from fs/binfmt_elf_fdpic.c:11:
+./include/linux/uaccess.h:149:1: note: declared here
+  149 | copy_to_user(void __user *to, const void *from, unsigned long n)
+      | ^~~~~~~~~~~~
+fs/binfmt_elf_fdpic.c:612:7: error: too few arguments to function 'copy_to_user'
+  612 |   if (copy_to_user(ent + nr, &v))    \
+      |       ^~~~~~~~~~~~
+fs/binfmt_elf_fdpic.c:659:2: note: in expansion of macro 'NEW_AUX_ENT'
+  659 |  NEW_AUX_ENT(AT_EXECFN, bprm->exec);
+      |  ^~~~~~~~~~~
+...
 
-to receive livepatching subsystem updates for 5.8.
-
-You are going to get a minor conflict with modules tree; the correct 
-resolution is documented at
-
-	http://lore.kernel.org/r/20200508180524.6995b07e@canb.auug.org.au
-
-Alternatively, I can just prepare a branch for you to pull with the 
-conflict resolved.
-
-Thanks.
-
-=====
-- simplifications and improvements for issues Peter Ziljstra found during 
-  his previous work on W^X cleanups. This allows us to remove livepatch 
-  arch-specific .klp.arch sections and add proper support for jump labels
-  in patched code. Also, this patchset removes the last 
-  module_disable_ro() usage in the tree. Patches from Josh Poimboeuf and 
-  Peter Zijlstra
-- a few other minor cleanups  
-=====
-
-----------------------------------------------------------------
-Jiri Kosina (1):
-      livepatch: add arch-specific headers to MAINTAINERS
-
-Josh Poimboeuf (8):
-      livepatch: Disallow vmlinux.ko
-      livepatch: Apply vmlinux-specific KLP relocations early
-      livepatch: Prevent module-specific KLP rela sections from referencing vmlinux symbols
-      s390: Change s390_kernel_write() return type to match memcpy()
-      livepatch: Remove module_disable_ro() usage
-      module: Remove module_disable_ro()
-      x86/module: Use text_mutex in apply_relocate_add()
-      module: Make module_enable_ro() static again
-
-Kamalesh Babulal (1):
-      MAINTAINERS: add lib/livepatch to LIVE PATCHING
-
-Lukas Bulwahn (1):
-      MAINTAINERS: adjust to livepatch .klp.arch removal
-
-Peter Zijlstra (3):
-      livepatch: Remove .klp.arch
-      s390/module: Use s390_kernel_write() for late relocations
-      x86/module: Use text_poke() for late relocations
-
-Samuel Zou (1):
-      livepatch: Make klp_apply_object_relocs static
-
- Documentation/livepatch/module-elf-format.rst |  15 +--
- MAINTAINERS                                   |   4 +-
- arch/s390/include/asm/uaccess.h               |   2 +-
- arch/s390/kernel/module.c                     | 147 ++++++++++++---------
- arch/s390/mm/maccess.c                        |   9 +-
- arch/um/kernel/um_arch.c                      |  16 +++
- arch/x86/kernel/Makefile                      |   1 -
- arch/x86/kernel/livepatch.c                   |  53 --------
- arch/x86/kernel/module.c                      |  43 ++++++-
- include/linux/livepatch.h                     |  17 ++-
- include/linux/module.h                        |   8 --
- kernel/livepatch/core.c                       | 178 ++++++++++++++++----------
- kernel/module.c                               |  26 ++--
- 13 files changed, 283 insertions(+), 236 deletions(-)
- delete mode 100644 arch/x86/kernel/livepatch.c
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Cheers,
+Nathan
