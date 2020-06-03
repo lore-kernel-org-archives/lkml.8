@@ -2,195 +2,176 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD90C205CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B2820734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591174926;
+	bh=Gyi0dOix0HwUafX8BvF9pPLKW1LCn7KvhkPrNOPA+yE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LvT+fXMka1jPFIvqSHK8PayJlLSjXQycuYmT20hnFvETYMbbCeT41lV9S6su2978o
+	 m28wdebROjtDMm7mcdeVV9skv+LRJc4DIxzXGeyyYXSZqYVfQk6dL93xSZES1jQ13d
+	 fNiE3zPB23sV1Q0fSMYkkYFv9d1GJYGbT4Wt2qH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgFCJA7 (ORCPT
+        id S1726469AbgFCJCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:00:59 -0400
-Received: from atl4mhfb01.myregisteredsite.com ([209.17.115.55]:43986 "EHLO
-        atl4mhfb01.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726243AbgFCJA6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:00:58 -0400
-Received: from jax4mhob16.registeredsite.com (jax4mhob16.registeredsite.com [64.69.218.104])
-        by atl4mhfb01.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 05390t0a004589
-        for <linux-kernel@vger.kernel.org>; Wed, 3 Jun 2020 05:00:55 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.203])
-        by jax4mhob16.registeredsite.com (8.14.4/8.14.4) with ESMTP id 05390r2h002062
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Wed, 3 Jun 2020 05:00:53 -0400
-Received: (qmail 1338 invoked by uid 0); 3 Jun 2020 09:00:53 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 3 Jun 2020 09:00:53 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-usb@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org, balbi@kernel.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] usb: dwc3: Add support for VBUS power control
-Date:   Wed,  3 Jun 2020 10:59:32 +0200
-Message-Id: <20200603085932.31746-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 05:02:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbgFCJCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:02:04 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEA12077D;
+        Wed,  3 Jun 2020 09:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591174923;
+        bh=Gyi0dOix0HwUafX8BvF9pPLKW1LCn7KvhkPrNOPA+yE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=l3wEGeAbafS8OSLg/pnCBx8dyzHrfMazgR/qjdJWE+fHU4vIwlkpi9Hn/Ec0Aq6/x
+         qs6Jo256ij+mvNs2KnsGz6yrdDXkFr/PbODzZs6cGAJpiX3V8KQxQCPBioC2VvMnIL
+         /aji6dPlEG6m86LFnDshou0uG9ioSUWWT2geFSRg=
+Received: by mail-ot1-f51.google.com with SMTP id 69so1305252otv.2;
+        Wed, 03 Jun 2020 02:02:03 -0700 (PDT)
+X-Gm-Message-State: AOAM531r/NvuFAV/ll6bU3LaovovtyKX49+8rbMa7RxlfMz51vPBduDt
+        8+d5M2J2o8KIi/X6b5P5rdcf4imr5okwp44ZfYE=
+X-Google-Smtp-Source: ABdhPJygtMM2aN1a+Rd+U59+lk2KSXh9ekpIARsHO86YPELXRsLOOV4+DF/MlzGOVTmNOhdxiuDfmE8FIxqUnoWscII=
+X-Received: by 2002:a9d:2de4:: with SMTP id g91mr2320543otb.90.1591174923040;
+ Wed, 03 Jun 2020 02:02:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200603053313.3863761-1-masahiroy@kernel.org>
+ <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com>
+ <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
+ <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com> <CAK7LNARLUeuiu3Y1cFqT7550MaF8fnBmMTZxKEG0Cy3vpxVkMQ@mail.gmail.com>
+In-Reply-To: <CAK7LNARLUeuiu3Y1cFqT7550MaF8fnBmMTZxKEG0Cy3vpxVkMQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 3 Jun 2020 11:01:51 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFKuMoYW8Sj=DHeYBSkWyeu+QgP9=fgET83K5D=-DsJ7Q@mail.gmail.com>
+Message-ID: <CAMj1kXFKuMoYW8Sj=DHeYBSkWyeu+QgP9=fgET83K5D=-DsJ7Q@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support VBUS power control using regulator framework. Enables the regulator
-while the port is in host mode.
+On Wed, 3 Jun 2020 at 10:59, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Wed, Jun 3, 2020 at 5:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Wed, 3 Jun 2020 at 10:36, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > On Wed, Jun 3, 2020 at 3:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >
+> > > > On Wed, 3 Jun 2020 at 07:34, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > >
+> > > > > Documentation/kbuild/makefiles.rst says:
+> > > > >
+> > > > >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+> > > > >
+> > > > > I want to disallow lib-y outside of them.
+> > > > >
+> > > >
+> > > > Why?
+> > >
+> > >
+> > > Because I plan to remove lib-y entirely at some point.
+> > >
+> > > lib-y is not so useful to shrink the image size because:
+> > >
+> > >   - An object in lib.a can be omitted only when no symbol
+> > >     in that object is referenced.  This rarely happens.
+> > >
+> > >   -  lib-y objects are often exported by nature
+> > >      because lib-y is a collection of utility functions.
+> > >      Even if no in-tree user, we always need to keep them
+> > >      because EXPORT_SYMBOL() is the interface to modules.
+> > >
+> > >
+> > > When I worked on commit 7273ad2b08f8ac9563579d16a3cf528857b26f49,
+> > > I made some research.
+> > >
+> > > The benefit of lib-y is just 362 byte for x86_64_defconfig.
+> > > ( Before: 26578002, After: 26578364)
+> > >
+> > > My hope is lib-y will be replaced by dead-code elimination or
+> > > ultimately by LTO.
+> > >
+> > > drivers/firmware/efi/libstub/Makefile
+> > > is the only Makefile that breaks the rule:
+> > > "Use of lib-y is normally restricted to `lib/` and `arch/*/lib`"
+> > >
+> > >
+> > >
+> > >
+> > > >
+> > > > > Add a custom rule to build lib.a, which is linked to the decompressor
+> > > > > for ARCH=x86, ARCH=arm.
+> > > > >
+> > > > > For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
+> > > > > way.
+> > > > >
+> > > >
+> > > > The code works perfectly fine as is, and I don't see what is
+> > > > fundamentally wrong with using static libraries outside of lib/ and
+> > > > arch/*/lib.
+> > >
+> > > The intended usage of lib-y is to hook lib.a
+> > > to scripts/vmlinux.sh via KBUILD_VMLINUX_LIBS.
+> > >
+> > > This Makefile is just what you found to work.
+> > >
+> > >
+> > > >
+> > > > Also, I would like this code to still be incorporated as a static
+> > > > library into arm64 as well, so that only pieces that are actually
+> > > > needed are incorporated into the final image.
+> > >
+> > > No.
+> > > It is not working like that because you set
+> > > lib.a to core-y.
+> > >
+> > > All objects in core-y are always linked to vmlinux.
+> > >
+> >
+> > The lib.a file is passed to the linker as a static library, so it will
+> > only grab what it needs.
+> >
+> > For instance, if you build arm64 from mainline today, the
+> > efi_relocate_kernel will not be in the final image, even though it is
+> > built as part of libstub
+>
+>
+> I built today's mainline kernel
+> (d6f9469a03d832dcd17041ed67774ffb5f3e73b3).
+>
+>
+> I see it in vmlinux.
+>
+>
+> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  defconfig
+> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  -j24
+>     ...
+> $ aarch64-linux-gnu-nm  -n  vmlinux | grep  efi_relocate_kernel
+> ffff8000114afb90 t __efistub_efi_relocate_kernel
+>
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- .../devicetree/bindings/usb/dwc3.txt          |  1 +
- drivers/usb/dwc3/core.c                       | 30 ++++++++++++++-----
- drivers/usb/dwc3/core.h                       |  4 +++
- drivers/usb/dwc3/drd.c                        |  6 ++--
- 4 files changed, 29 insertions(+), 12 deletions(-)
+That is strange. I tested this before, and it worked.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 9946ff9ba735..56bc3f238e2d 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -37,6 +37,7 @@ Optional properties:
-  - phys: from the *Generic PHY* bindings
-  - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
- 	or "usb3-phy".
-+ - vbus-supply: Regulator handle that provides the VBUS power.
-  - resets: set of phandle and reset specifier pairs
-  - snps,usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index edc17155cb2b..a9e58a301446 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -25,6 +25,7 @@
- #include <linux/of.h>
- #include <linux/acpi.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- 
- #include <linux/usb/ch9.h>
-@@ -112,6 +113,23 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
- }
- 
-+void dwc3_set_vbus(struct dwc3 *dwc, bool enable)
-+{
-+	int ret;
-+
-+	if (enable != dwc->vbus_reg_enabled) {
-+		if (enable)
-+			ret = regulator_enable(dwc->vbus_reg);
-+		else
-+			ret = regulator_disable(dwc->vbus_reg);
-+		if (!ret)
-+			dwc->vbus_reg_enabled = enable;
-+	}
-+
-+	if (dwc->usb2_phy)
-+		otg_set_vbus(dwc->usb2_phy->otg, enable);
-+}
-+
- static void __dwc3_set_mode(struct work_struct *work)
- {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -164,8 +182,7 @@ static void __dwc3_set_mode(struct work_struct *work)
- 		if (ret) {
- 			dev_err(dwc->dev, "failed to initialize host\n");
- 		} else {
--			if (dwc->usb2_phy)
--				otg_set_vbus(dwc->usb2_phy->otg, true);
-+			dwc3_set_vbus(dwc, true);
- 			phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 			phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
- 		}
-@@ -173,8 +190,7 @@ static void __dwc3_set_mode(struct work_struct *work)
- 	case DWC3_GCTL_PRTCAP_DEVICE:
- 		dwc3_event_buffers_setup(dwc);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
- 
-@@ -1183,8 +1199,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
- 	case USB_DR_MODE_PERIPHERAL:
- 		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
- 
-@@ -1198,8 +1213,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
- 	case USB_DR_MODE_HOST:
- 		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, true);
-+		dwc3_set_vbus(dwc, true);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
- 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 4c171a8e215f..cee2574d7bf4 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1085,6 +1085,9 @@ struct dwc3 {
- 
- 	bool			phys_ready;
- 
-+	struct regulator	*vbus_reg;
-+	bool			vbus_reg_enabled;
-+
- 	struct ulpi		*ulpi;
- 	bool			ulpi_ready;
- 
-@@ -1397,6 +1400,7 @@ struct dwc3_gadget_ep_cmd_params {
- 
- /* prototypes */
- void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode);
-+void dwc3_set_vbus(struct dwc3 *dwc, bool enable);
- void dwc3_set_mode(struct dwc3 *dwc, u32 mode);
- u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type);
- 
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index 7db1ffc92bbd..45fdec2d128d 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -384,8 +384,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_idstatus)
- 		if (ret) {
- 			dev_err(dwc->dev, "failed to initialize host\n");
- 		} else {
--			if (dwc->usb2_phy)
--				otg_set_vbus(dwc->usb2_phy->otg, true);
-+			dwc3_set_vbus(dwc, true);
- 			if (dwc->usb2_generic_phy)
- 				phy_set_mode(dwc->usb2_generic_phy,
- 					     PHY_MODE_USB_HOST);
-@@ -398,8 +397,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_idstatus)
- 		dwc3_event_buffers_setup(dwc);
- 		spin_unlock_irqrestore(&dwc->lock, flags);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		if (dwc->usb2_generic_phy)
- 			phy_set_mode(dwc->usb2_generic_phy,
- 				     PHY_MODE_USB_DEVICE);
--- 
-2.17.1
-
+Did anything change recently in the way the linker is invoked?
