@@ -2,70 +2,107 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC24C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50DDC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D885C20734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDA920659
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H8lAAd7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgFCUdc (ORCPT
+        id S1726233AbgFCUfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:33:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56326 "EHLO
+        Wed, 3 Jun 2020 16:35:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgFCUdb (ORCPT
+        with ESMTP id S1726116AbgFCUfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:33:31 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C18FDC08C5C0;
-        Wed,  3 Jun 2020 13:33:31 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 9056D2E4;
-        Wed,  3 Jun 2020 20:33:30 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 14:33:29 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: reference to Linux Foundation NDA program obsolete?
-Message-ID: <20200603143329.6e303a46@lwn.net>
-In-Reply-To: <alpine.DEB.2.21.2005240722560.5201@felia>
-References: <alpine.DEB.2.21.2005240722560.5201@felia>
-Organization: LWN.net
+        Wed, 3 Jun 2020 16:35:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD71C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 13:35:12 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y11so1208797plt.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 13:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W5rG5azrfwU1SE5+6VF2CaiUSY0EB63jPHlaOLOAids=;
+        b=H8lAAd7t8MN6jYw5eMcIVe9rAHxpKI1yFv/LZqIHzVdqTGi0osItXRbEC3imxxp5fw
+         XiTsvqNcg9jDA5i7CRdaI5PyhRfdYFu1/Haxwk1herusBfde/0Rxv2M8k7zdqcBZ5vO2
+         uAqTfTk4PSLas1IJTdwiVj7qe87PLWc/DJroM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W5rG5azrfwU1SE5+6VF2CaiUSY0EB63jPHlaOLOAids=;
+        b=hl9oDFVz4a4lsYWmdZSt/mRdEg/oHODl4CQR0/r0rYdv+6LQyvLHV/FdI3d/9ZURZy
+         YG4WfV9rtzgqf60HvzBWHq9bUxdiacS53QrbMmzxT93s9gJfxGw41KObgDpBalzVcWOI
+         TJZZM5fITPdCQ7Dm862kKvWIF+MSynzjCaJo7svbFtRol0lSEjLjvEqlfjwvK8GEAHsT
+         gFwm4XuKrfH30BD83RaESoR6bHo2j5MQ/+BFOAptmMP0+zO185TH2TF9QztSP81rZ1uO
+         gXN/pUgHKF+UrK3kFGEH3WgdGJ5ItIle2srI/M5vLEdnzicVugYnYUgTajdtsYflnCdv
+         +PSQ==
+X-Gm-Message-State: AOAM531nWrjyengJMEluy4yPkYa+28veK46x5t/XJeuGyjwcQqeaV/a1
+        Blo3pfy1JPRApM1QLBzGLqJKsw==
+X-Google-Smtp-Source: ABdhPJxh+aatEAcsfm7x2O7pF9u4HQEykZUt/5RuZbEPGXrhPVdcNGxmsklSppL48UqLLLYO/xjupQ==
+X-Received: by 2002:a17:902:714e:: with SMTP id u14mr1478127plm.175.1591216512009;
+        Wed, 03 Jun 2020 13:35:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i10sm2573857pfa.166.2020.06.03.13.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 13:35:10 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 13:35:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     glider@google.com
+Cc:     miklos@szeredi.hu, linux-unionfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, royyang@google.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ovl: explicitly initialize error in ovl_copy_xattr()
+Message-ID: <202006031219.36197D0729@keescook>
+References: <20200603174714.192027-1-glider@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603174714.192027-1-glider@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 May 2020 07:33:29 +0200 (CEST)
-Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-
->     http://www.linuxfoundation.org/en/NDA_program
+On Wed, Jun 03, 2020 at 07:47:14PM +0200, glider@google.com wrote:
+> Under certain circumstances (we found this out running Docker on a
+> Clang-built kernel with CONFIG_INIT_STACK_ALL) ovl_copy_xattr() may
+> return uninitialized value of |error| from ovl_copy_xattr().
+> It is then returned by ovl_create() to lookup_open(), which casts it to
+> an invalid dentry pointer, that can be further read or written by the
+> lookup_open() callers.
 > 
-> This kind of review is often enough to avoid serious problems later on
-> without requiring public disclosure of the project.
-> 
-> <--
-> 
-> The link is dead; internet search only showed some references from 
-> meeting minutes in 2008, but nothing more since then.
-> 
-> Has this LF NDA program simply been phased out?
+> Signed-off-by: Alexander Potapenko <glider@google.com>
 
-That information has now resurfaced at:
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1050405
+Fixes: e4ad29fa0d22 ("ovl: use a minimal buffer in ovl_copy_xattr")
+Cc: stable@vger.kernel.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-	https://www.linuxfoundation.org/nda/
+It seems the error isn't reported anywhere, so the value likely isn't
+too important. -EINVAL seems sane to me.
 
-I guess somebody should see to it that the docs get updated...:)
+Thought: should CONFIG_INIT_STACK_ALL=y disable uninitialized_var()?
 
-Thanks again,
+$ git grep uninitialized_var | wc -l
+300
 
-jon
+We have evidence this is being used inappropriately and is masking bugs.
+I would actually think it should should be removed globally, but it
+seems especially important for CONFIG_INIT_STACK_ALL=y.
+
+I've opened:
+https://github.com/KSPP/linux/issues/81
+
+-- 
+Kees Cook
