@@ -2,99 +2,162 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E95FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C09C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30DD120663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A568520738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:00:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o7xV1BeG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G9lBqE2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbgFCB7k (ORCPT
+        id S1725924AbgFCCAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:59:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52026 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbgFCB7k (ORCPT
+        Tue, 2 Jun 2020 22:00:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbgFCCAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:59:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0531q8Tn136677;
-        Wed, 3 Jun 2020 01:59:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=LA/R9GKBwbdN4mXyUNmnz5fo3CahJp9bsWipVyj+2Is=;
- b=o7xV1BeGfb9Bu2fOyx79Iz4dI/nQdWO13YVde928CMguoqwvJIhiXpAQRLG+Lt4QcyXP
- oG6k8fuaDV1lsSpSvOSmUCCtd7EV3iKVCUaROGWpRzIeWtcWgENnn827CkS0PSCGtr/J
- CHTEdFpauv+wTbgcJXiI2nWvLfBbLxPo2IDiqd+VrPDxAWPJm1CcJA53xgTefmHwVP4F
- NQu1BPDMDnBj5acSxVang3RGlR8nDKZAcUvJ/uebiHlWimjiB57xcPi/VqWlzZsCZrlj
- QHdd7yZkeKJFefZHhWBNjG5y2vFPTgmShwO/Qk3Qkg7x4xCvvDoL4lZzaca7kmVeWGpz /A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31dkrukthb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 01:59:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0531rH70005886;
-        Wed, 3 Jun 2020 01:57:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 31c1dy727y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 01:57:35 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0531vYhv001954;
-        Wed, 3 Jun 2020 01:57:34 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 18:57:34 -0700
-To:     Don Brace <don.brace@microsemi.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCHES] uaccess hpsa
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1v9k89ajq.fsf@ca-mkp.ca.oracle.com>
-References: <20200528234025.GT23230@ZenIV.linux.org.uk>
-        <20200529233923.GL23230@ZenIV.linux.org.uk>
-Date:   Tue, 02 Jun 2020 21:57:32 -0400
-In-Reply-To: <20200529233923.GL23230@ZenIV.linux.org.uk> (Al Viro's message of
-        "Sat, 30 May 2020 00:39:23 +0100")
+        Tue, 2 Jun 2020 22:00:31 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4507BC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 19:00:31 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id b3so349715oib.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 19:00:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ok2sDrK2SLA0bHHaUOMWpvGtTcXD/H3ASuegQf7ne4w=;
+        b=G9lBqE2sDVv4nTGEbBHIu9uhIITCHh57QQ4he4DeP3tHyOTOAhnBUtX7fRqU+lwxY7
+         w3zDT9qiBxkR4xptUyyCgrQjBAr1tqi4ILRksieZfrVp2653IkI3Ng3d6myNAPqZ5kIZ
+         Y9zptv655EFxKggJYsPCmC4/rl6X4TiTCgJHp2GvYIFeb2KvDUkd1etEQGQo3YaBG2GC
+         YS/poFaTstns6ev0955ICTMF6gLMioHlDoTUUcRW+JDaOTkzrHl88qkeVmgJCa5uOWtd
+         qSx3nVtd+PsVFwPB86Pb5ZprH547zu7K7fm1AXJLHq+NR49Z+iGDy9KXAgJTIe1SeX/v
+         6SfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ok2sDrK2SLA0bHHaUOMWpvGtTcXD/H3ASuegQf7ne4w=;
+        b=P7CoNMwcvw7SpM0s+jpaI5xYIanIUiJDSv9QLXdSYxFiE6InOC9Kd3BNOMUY4DtiLN
+         jWqLUl4Z77ATVwEIGPzdL9qWzOJjfKJQbNToX7gf0orTuylG9Ac7qQgHEWpDAj2KoVYJ
+         Ep6/0fJ9wC9NtZDLaNlQNIhob1Yh+X8/Kd055sP7qT5VXqndiuyHkxIvMTZ+KW82JqyR
+         UULutQIbAOj3HpgkIPkKGIsyAtXkY7asLlvObf1m08hZhITsZRUQFxTu42zhSr4rnn2w
+         aSAQ6pOzUW25BiRg8plZ2XDc+qg1SjhiocRRE4bFaMSbFQ1G/tJ+DgN/c93aVXCaQ3BG
+         1pGg==
+X-Gm-Message-State: AOAM530PHoVx8AzzgY842Q3W3P7jJgtHOHwpZptOj5NiD7S4Riqs6nSE
+        JXjwJySi6szUj58EGPr0++tV1cVHfBdOiCCOsbxG/EcJ
+X-Google-Smtp-Source: ABdhPJx0Y/BF3YBAltt+QDGLgccJ7gbb+zCGlexxmF3cbGIzaeOaJeLBsaJFY30sBshHVZpbTbfC838KuUmveX/L9SQ=
+X-Received: by 2002:a05:6808:3ac:: with SMTP id n12mr3228031oie.172.1591149630339;
+ Tue, 02 Jun 2020 19:00:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=848
- spamscore=0 bulkscore=0 adultscore=0 suspectscore=1 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030012
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=1 malwarescore=0 clxscore=1011
- adultscore=0 mlxlogscore=890 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030012
+References: <20200411045918.179455-1-saravanak@google.com> <86sghas7so.wl-maz@kernel.org>
+ <CALAqxLXkbNh4GVC82SqXNoib+4FQS2Y3XbePyhreJcwWoVEQaw@mail.gmail.com>
+ <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
+ <20200429102832.4eee22b4@why> <CAGETcx_d0aM+MdeOFDaXDnTEs85rVY=H7zvhZf7NNB4w-t_CGg@mail.gmail.com>
+ <5b605bd46d3ef213c7ec82d02967e4bb@kernel.org> <CAGETcx9kYKOEAmLbJzmOucR2Z4qy9PCY2=UCYdYTJWTL=BeZNQ@mail.gmail.com>
+In-Reply-To: <CAGETcx9kYKOEAmLbJzmOucR2Z4qy9PCY2=UCYdYTJWTL=BeZNQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 2 Jun 2020 18:59:54 -0700
+Message-ID: <CAGETcx9x4+6HfqGF7T2hXSpG29PKjHMZ=3UzSVM9vGrSYkfLkA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper macros
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> 	hpsa compat ioctl done (hopefully) saner.  I really want
-> to kill compat_alloc_user_space() off - it's always trouble and
-> for a driver-private ioctls it's absolutely pointless.
+On Fri, May 1, 2020 at 1:23 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> 	Note that this is only compile-tested - I don't have the
-> hardware to test it on *or* userland to issue the ioctls in
-> question.  So this series definitely needs a review and testing
-> from hpsa maintainers before it might go anywhere.
+> On Fri, May 1, 2020 at 1:48 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On 2020-04-29 20:04, Saravana Kannan wrote:
+> > > On Wed, Apr 29, 2020 at 2:28 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > [...]
+> >
+> > >> One thing though: this seems to be exclusively DT driven. Have you
+> > >> looked into how that would look like for other firmware types such as
+> > >> ACPI?
+> > >
+> > > I'm not very familiar with ACPI at all. I've just started to learn
+> > > about how it works in the past few months poking at code when I have
+> > > some time. So I haven't tried to get this to work with ACPI nor do I
+> > > think I'll be able to do that anytime in the near future. I hope that
+> > > doesn't block this from being used for DT based platforms.
+> >
+> > As long as you don't try to modularise a driver that does both DT and
+> > ACPI, you'll be safe. I'm also actively trying to discourage people
+> > from inventing custom irqchips on ACPI platforms (the spec almost
+> > forbids them, but not quite).
+> >
+> > >> Another thing is the handling of dependencies. Statically built
+> > >> irqchips are initialized in the right order based on the topology
+> > >> described in DT, and are initialized early enough that client devices
+> > >> will find their irqchip This doesn't work here, obviously.
+> > >
+> > > Yeah, I read that code thoroughly :)
+> > >
+> > >> How do you
+> > >> propose we handle these dependencies, both between irqchip drivers and
+> > >> client drivers?
+> > >
+> > > For client drivers, we don't need to do anything. The IRQ apis seem to
+> > > already handle -EPROBE_DEFER correctly in this case.
+> > >
+> > > For irqchip drivers, the easy answer can be: Load the IRQ modules
+> > > early if you make them modules.
+> >
+> > Uhuh. I'm afraid that's not a practical solution. We need to offer the
+> > same behaviour for both and not rely on the user to understand the
+> > topology of the SoC.
+> >
+> > > But in my case, I've been testing this with fw_devlink=on. The TL;DR
+> > > of "fw_devlink=on" in this context is that the IRQ devices will get
+> > > device links created based on "interrupt-parent" property. So, with
+> > > the magic of device links, these IRQ devices will probe in the right
+> > > topological order without any wasted deferred probe attempts. For
+> > > cases without fw_devlink=on, I think I can improve
+> > > platform_irqchip_probe() in my patch to check if the parent device has
+> > > probed and defer if it hasn't.
+> >
+> > Seems like an interesting option. Two things then:
+> >
+> > - Can we enforce the use of fw_devlink for modularized irqchips?
+>
+> fw_devlink doesn't have any config and it's a command line option. So
+> not sure how you can enforce that.
+>
+> > - For those irqchips that can be modularized, it is apparent that they
+> >    should have been written as platform devices the first place. Maybe
+> >    we should just do that (long term, though).
+>
+> I agree. If they can be platform devices, they should be. But when
+> those platform device drivers are built in, you'll either need:
+> 1) fw_devlink=on to enforce the topological init order
+> Or
+> 2) have a generic irqchip probe helper function that ensures that.
+> My patch with some additional checks added to platform_irqchip_probe()
+> can provide (2).
+>
+> In the short term, my patch series also makes it easier to convert
+> existing non-platform drivers into platform drivers.
+>
+> So if I fix up platform_irqchip_probe() to also do -EPROBE_DEFER to
+> enforce topology, will that make this patch acceptable?
+>
 
-Don: Please test and review. Thanks!
+Friendly reminder.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+-Saravana
