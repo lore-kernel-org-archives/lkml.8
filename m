@@ -2,109 +2,97 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E028EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F62A2074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=meresinski.eu header.i=tomasz@meresinski.eu header.b="sydJSkWd"
+	by mail.kernel.org (Postfix) with ESMTP id B460E2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591216707;
+	bh=ynTIpUVLHd3Fetf06EYiB+OyQhltY0fHhPnuDW+nP7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XNyErCkxlDfzv1MS/Lyeoptw1hlPwBdjwvp+5ZWTCibh/9Ur0uUm/rrto4lOTsocV
+	 ne1fRdXJZk1GUPo7BQehi5ojjO8OHjb2+FZOcFm31vCE59PoFQP+2fsf0bYjVPla9u
+	 FdjRMINi55FPFhI+B8BSnnwmRA/N86nPf4RgrpLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFCUfr (ORCPT
+        id S1726181AbgFCUi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:35:47 -0400
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21167 "EHLO
-        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgFCUfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:35:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1591216528; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=XtuGx0syGIaRfttsTq7X2YDyak4086XJ8kNU+QqBpgZOeHbjOyBy/bLOwxG+TUAtXMjtnZYfyJtvB0cu95pC/ns/BbsxrFXbjTnnjFBo59xM4PaxNVAhCVthPkGKyT18Wc7ATL1DD4FylFSwVmdyqaz4P+cq8JYGgxZw8Vp67T4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1591216528; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject; 
-        bh=iieshxWnuWqIoayg7cEdrMVEeyE1LrIxIGyyzYieWuQ=; 
-        b=aubAok86zqg0oTrbfRKHVOR7MUIvBQTiV+YyODici4Hn4XihIbdy6w+hobsowCc/wilkzdxci1r2dyzVC4+TtfVbF29uqfP4w21GIFxGynEVPPrhXe8K+lGllV8bUy75IOFJENMLG6qyLsHIvCtqzH8CRt8kpjbB9qbQcUuDnRk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=meresinski.eu;
-        spf=pass  smtp.mailfrom=tomasz@meresinski.eu;
-        dmarc=pass header.from=<tomasz@meresinski.eu> header.from=<tomasz@meresinski.eu>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1591216528;
-        s=zoho; d=meresinski.eu; i=tomasz@meresinski.eu;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=iieshxWnuWqIoayg7cEdrMVEeyE1LrIxIGyyzYieWuQ=;
-        b=sydJSkWd2rGSJH+RPW97lsb1/DAy+6tazkau/UFu893dMWcN7GGzVZPufgZ53Psn
-        RmgmrI0pc5BbBhHV5h5iEVpW/znD7rq/E/dX/CH+NmK7X7HNJle/13I6tZr/QGfv/gM
-        VZxut6NpZxcyAZcG6nMuLaZtTfxqfczLwNiHR5UA=
-Received: from localhost.localdomain (78-11-200-65.static.ip.netia.com.pl [78.11.200.65]) by mx.zohomail.com
-        with SMTPS id 1591216526971281.37892539217535; Wed, 3 Jun 2020 13:35:26 -0700 (PDT)
-From:   =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>
-Cc:     =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Jonathan Cox <jonathan@jdcox.net>,
-        Dan Lazewatsky <dlaz@chromium.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Dodd <richard.o.dodd@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <20200603203347.7792-1-tomasz@meresinski.eu>
-Subject: [PATCH] usb: add USB_QUIRK_DELAY_INIT for Logitech C922
-Date:   Wed,  3 Jun 2020 22:33:46 +0200
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 16:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgFCUi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:38:26 -0400
+Received: from localhost (p5486cfa5.dip0.t-ipconnect.de [84.134.207.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 899522074B;
+        Wed,  3 Jun 2020 20:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591216706;
+        bh=ynTIpUVLHd3Fetf06EYiB+OyQhltY0fHhPnuDW+nP7k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f2FZRU2mcJEtxwIplnFuwE3HGvAocU4WnMmA5NCU1VX5Bv6um+1TjlU20JYnqXiSe
+         mH3Hpqtkd7uIwH2i/30LatW1GAI+PN+jjob5oCjiMhLYCoB+PjDinJlIgyvXARNrjd
+         XxhLMODN+7sFHY3YwQOkSci2ztumvgm1J2RpRMjk=
+Date:   Wed, 3 Jun 2020 22:38:18 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: pxa: don't error out if there's no pinctrl
+Message-ID: <20200603203818.GA1347@ninjato>
+References: <20200602193823.267048-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Disposition: inline
+In-Reply-To: <20200602193823.267048-1-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Logitech C922, just like other Logitech webcams,
-needs the USB_QUIRK_DELAY_INIT or it will randomly
-not respond after device connection
 
-Signed-off-by: Tomasz Meresi=C5=84ski <tomasz@meresinski.eu>
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-usb: add USB_QUIRK_DELAY_INIT for Logitech C922
+On Tue, Jun 02, 2020 at 09:38:23PM +0200, Lubomir Rintel wrote:
+> The bus recovery patch regresses on OLPC XO-1.75 that has no pinctrl in
+> its DT.
+>=20
+> Fixes: 7c9ec2c52518 ("i2c: pxa: implement generic i2c bus recovery")'
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-The Logitech C922 webcam, just like other Logitech webcams,
-needs the USB_QUIRK_DELAY_INIT or it will randomly
-not respond after device connection
-
-Signed-off-by: Tomasz Meresi=C5=84ski <tomasz@meresinski.eu>
----
- drivers/usb/core/quirks.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index 3e8efe759c3e..e0b77674869c 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -218,11 +218,12 @@ static const struct usb_device_id usb_quirk_list[] =
-=3D {
- =09/* Logitech HD Webcam C270 */
- =09{ USB_DEVICE(0x046d, 0x0825), .driver_info =3D USB_QUIRK_RESET_RESUME }=
-,
-=20
--=09/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
-+=09/* Logitech HD Pro Webcams C920, C920-C, C922, C925e and C930e */
- =09{ USB_DEVICE(0x046d, 0x082d), .driver_info =3D USB_QUIRK_DELAY_INIT },
- =09{ USB_DEVICE(0x046d, 0x0841), .driver_info =3D USB_QUIRK_DELAY_INIT },
- =09{ USB_DEVICE(0x046d, 0x0843), .driver_info =3D USB_QUIRK_DELAY_INIT },
- =09{ USB_DEVICE(0x046d, 0x085b), .driver_info =3D USB_QUIRK_DELAY_INIT },
-+=09{ USB_DEVICE(0x046d, 0x085c), .driver_info =3D USB_QUIRK_DELAY_INIT },
-=20
- =09/* Logitech ConferenceCam CC3000e */
- =09{ USB_DEVICE(0x046d, 0x0847), .driver_info =3D USB_QUIRK_DELAY_INIT },
---=20
-2.17.1
+Applied to for-next, thanks!
 
 
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7YCjYACgkQFA3kzBSg
+KbYs1RAAqXFrAks4gE6JldEwD2WqZJrHqz7WDRY6scbc3FrEUZy1Kn1yA/KaJyuR
+HKVJISXP/UHGnQTL3QRrc0hMUCeSYcAgBh9HCqEPomlWKF1e0I5zRovpKd36dMxY
+aWM4C+VF+KV622MOSIFGQlHYRua+Bld8bi0BP/+DRvfA82ArAjVRB4gez1x55hQZ
+I4gSdxn1jPw9azHt7g5kJmKRaPFjPfuzXCVo76BpWevcGu14lvh04CSl+OzFhqQB
+xIF8ma2jv7RfKDGWQD1TMVreVDtLitCVDYvnUD6RVQ3ZDE95Ji7XAhalGSN445xY
+bknJkglyKhgSH8DuD87alkstj36UqPV3n8r6W2ETB+7bqC8d60zuoZp2dL6lgf3J
+4NuTJpU13XunMhx4oU1VR2CUK5HG5vxm9fw5yj82rs9FzsHqAF0bHPMS5x9bcA+I
+YQjI8XXpoe/ZCcu05hQe350khVyDrpQfB+/iRR82/srp/8CwpMPPFmQ6SNmZk70D
+rLRMzKE43wkMjAVftINuIxnW+09bGmnWSjHhpRaMbHwj5V6Cj3ADrlmRtZWcxrHB
+af2uPpvVHkG6/ntWk4Qls8CGKMqNEEWfZRFg2+uCUDKTRHUMlvCKe10/qsSXg7Yl
+RvA+OPx47hjNrTXnvKw6zeIMvu6n00DY6JcQqOpsCMlnYT6nABc=
+=KqSX
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
