@@ -2,32 +2,32 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E801EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC44C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C442B20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5DA520772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgFCOuL (ORCPT
+        id S1726383AbgFCOuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
+        Wed, 3 Jun 2020 10:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgFCOuG (ORCPT
+        with ESMTP id S1726229AbgFCOuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:50:06 -0400
+        Wed, 3 Jun 2020 10:50:04 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FAA2C08C5C2;
-        Wed,  3 Jun 2020 07:50:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C5C8C08C5C0;
+        Wed,  3 Jun 2020 07:50:04 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1jgUiJ-0001vC-NA; Wed, 03 Jun 2020 16:49:55 +0200
+        id 1jgUiE-0001uB-Jj; Wed, 03 Jun 2020 16:49:50 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -40,15 +40,17 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH v2 1/6] net: core: device_rename: Use rwsem instead of a seqcount
-Date:   Wed,  3 Jun 2020 16:49:44 +0200
-Message-Id: <20200603144949.1122421-2-a.darwish@linutronix.de>
+        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
+        linux-block@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 0/6] seqlock: seqcount_t call sites bugfixes
+Date:   Wed,  3 Jun 2020 16:49:43 +0200
+Message-Id: <20200603144949.1122421-1-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200603144949.1122421-1-a.darwish@linutronix.de>
-References: <20200603144949.1122421-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -58,152 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sequence counters write paths are critical sections that must never be
-preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
+Hi,
 
-Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
-netdev name retrieval.") handled a deadlock, observed with
-CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
-infinitely spinning: it got scheduled after the seqcount write side
-blocked inside its own critical section.
+Since patch #7 and #8 from the series:
 
-To fix that deadlock, among other issues, the commit added a
-cond_resched() inside the read side section. While this will get the
-non-preemptible kernel eventually unstuck, the seqcount reader is fully
-exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
+   [PATCH v1 00/25] seqlock: Extend seqcount API with associated locks
+   https://lore.kernel.org/lkml/20200519214547.352050-1-a.darwish@linutronix.de
 
-The fix is also still broken: if the seqcount reader belongs to a
-real-time scheduling policy, it can spin forever and the kernel will
-livelock.
+are now pending on the lockdep/x86 IRQ state tracking patch series:
 
-Disabling preemption over the seqcount write side critical section will
-not work: inside it are a number of GFP_KERNEL allocations and mutex
-locking through the drivers/base/ :: device_rename() call chain.
+   [PATCH 00/14] x86/entry: disallow #DB more and x86/entry lockdep/nmi
+   https://lkml.kernel.org/r/20200529212728.795169701@infradead.org
 
-From all the above, replace the seqcount with a rwsem.
+   [PATCH v3 0/5] lockdep: Change IRQ state tracking to use per-cpu variables
+   https://lkml.kernel.org/r/20200529213550.683440625@infradead.org
 
-Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
-Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
-Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
-Cc: <stable@vger.kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com> [ v1 missing up_read() on error exit ]
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com> [ v1 missing up_read() on error exit ]
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- net/core/dev.c | 40 ++++++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+This is a repost only of the seqcount_t call sites bugfixes that were on
+top of the seqlock patch series.
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 2d8aceee4284..93a279ab4e97 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -79,6 +79,7 @@
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
- #include <linux/mutex.h>
-+#include <linux/rwsem.h>
- #include <linux/string.h>
- #include <linux/mm.h>
- #include <linux/socket.h>
-@@ -194,7 +195,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
- static unsigned int napi_gen_id = NR_CPUS;
- static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
- 
--static seqcount_t devnet_rename_seq;
-+static DECLARE_RWSEM(devnet_rename_sem);
- 
- static inline void dev_base_seq_inc(struct net *net)
- {
-@@ -930,33 +931,28 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
-  *	@net: network namespace
-  *	@name: a pointer to the buffer where the name will be stored.
-  *	@ifindex: the ifindex of the interface to get the name from.
-- *
-- *	The use of raw_seqcount_begin() and cond_resched() before
-- *	retrying is required as we want to give the writers a chance
-- *	to complete when CONFIG_PREEMPTION is not set.
-  */
- int netdev_get_name(struct net *net, char *name, int ifindex)
- {
- 	struct net_device *dev;
--	unsigned int seq;
-+	int ret;
- 
--retry:
--	seq = raw_seqcount_begin(&devnet_rename_seq);
-+	down_read(&devnet_rename_sem);
- 	rcu_read_lock();
-+
- 	dev = dev_get_by_index_rcu(net, ifindex);
- 	if (!dev) {
--		rcu_read_unlock();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto out;
- 	}
- 
- 	strcpy(name, dev->name);
--	rcu_read_unlock();
--	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
--		cond_resched();
--		goto retry;
--	}
- 
--	return 0;
-+	ret = 0;
-+out:
-+	rcu_read_unlock();
-+	up_read(&devnet_rename_sem);
-+	return ret;
- }
- 
- /**
-@@ -1228,10 +1224,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
- 		return -EBUSY;
- 
--	write_seqcount_begin(&devnet_rename_seq);
-+	down_write(&devnet_rename_sem);
- 
- 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return 0;
- 	}
- 
-@@ -1239,7 +1235,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 
- 	err = dev_get_valid_name(net, dev, newname);
- 	if (err < 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return err;
- 	}
- 
-@@ -1254,11 +1250,11 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 	if (ret) {
- 		memcpy(dev->name, oldname, IFNAMSIZ);
- 		dev->name_assign_type = old_assign_type;
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return ret;
- 	}
- 
--	write_seqcount_end(&devnet_rename_seq);
-+	up_write(&devnet_rename_sem);
- 
- 	netdev_adjacent_rename_links(dev, oldname);
- 
-@@ -1279,7 +1275,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 		/* err >= 0 after dev_alloc_name() or stores the first errno */
- 		if (err >= 0) {
- 			err = ret;
--			write_seqcount_begin(&devnet_rename_seq);
-+			down_write(&devnet_rename_sem);
- 			memcpy(dev->name, oldname, IFNAMSIZ);
- 			memcpy(oldname, newname, IFNAMSIZ);
- 			dev->name_assign_type = old_assign_type;
--- 
+These fixes are independent, and can thus be merged on their own. I'm
+reposting them now so they can at least hit -rc2 or -rc3.
+
+Changelog-v2:
+
+  - patch #1: Add a missing up_read() on netdev_get_name() error path
+              exit. Thanks to Dan/kbuild-bot report.
+
+  - patch #4: new patch, invalid preemptible context found by the new
+              lockdep checks added in the seqlock series + kbuild-bot.
+
+Thanks,
+
+8<--------------
+
+Ahmed S. Darwish (6):
+  net: core: device_rename: Use rwsem instead of a seqcount
+  net: phy: fixed_phy: Remove unused seqcount
+  u64_stats: Document writer non-preemptibility requirement
+  net: mdiobus: Disable preemption upon u64_stats update
+  block: nr_sects_write(): Disable preemption on seqcount write
+  dma-buf: Remove custom seqcount lockdep class key
+
+ block/blk.h                    |  2 ++
+ drivers/dma-buf/dma-resv.c     |  9 +------
+ drivers/net/phy/fixed_phy.c    | 26 ++++++++------------
+ drivers/net/phy/mdio_bus.c     |  2 ++
+ include/linux/dma-resv.h       |  2 --
+ include/linux/u64_stats_sync.h | 43 ++++++++++++++++++----------------
+ net/core/dev.c                 | 40 ++++++++++++++-----------------
+ 7 files changed, 56 insertions(+), 68 deletions(-)
+
+base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+--
 2.20.1
-
