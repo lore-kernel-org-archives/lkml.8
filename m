@@ -4,100 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E4EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF9DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3CDD20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AAD20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgFCOMV (ORCPT
+        id S1725936AbgFCOM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:12:21 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38228 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbgFCOMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:12:20 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 47A855205DCCCBE6A13C;
-        Wed,  3 Jun 2020 22:12:10 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 22:12:01 +0800
-From:   Cheng Jian <cj.chengjian@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>
-CC:     <cj.chengjian@huawei.com>, <chenwandun@huawei.com>,
-        <xiexiuqi@huawei.com>, <bobo.shaobowang@huawei.com>,
-        <huawei.libin@huawei.com>, <jeyu@kernel.org>, <jikos@kernel.org>
-Subject: [PATCH] module: make module symbols visible after init
-Date:   Wed, 3 Jun 2020 14:12:00 +0000
-Message-ID: <20200603141200.17745-1-cj.chengjian@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 10:12:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52532 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgFCOMW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 10:12:22 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jgU7u-0006Xp-Ui; Wed, 03 Jun 2020 14:12:19 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Tai-hwa Liang <avatar@sentelic.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org
+Subject: [PATCH] input: sentelic: fix error return when fsp_reg_write fails
+Date:   Wed,  3 Jun 2020 15:12:18 +0100
+Message-Id: <20200603141218.131663-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When lookup the symbols of module by module_kallsyms_lookup_name(),
-the symbols address is visible only if the module's status isn't
-MODULE_STATE_UNFORMED, This is problematic.
+From: Colin Ian King <colin.king@canonical.com>
 
-When complete_formation is done, the state of the module is modified
-to MODULE_STATE_COMING, and the symbol of module is visible to the
-outside.
+Currently when the call to fsp_reg_write fails -EIO is not being returned
+because the count is being returned instead of the return value in retval.
+Fix this by returning the value in retval instead of count.
 
-At this time, the init function of the module has not been called,
-so if the address of the function symbol has been found and called,
-it may cause some exceptions.
-
-For livepatch module, the relocation information of the livepatch
-module is completed in init by klp_write_object_relocations(), and
-the symbol name of the old and new functions are the same. Therefore,
-when we lookup the symbol, we may get the function address of the
-livepatch module. a crash can occurs when we call this function.
-
-	CPU 0				CPU 1
-	==================================================
-	load_module
-	add_unformed_module # MODULE_STATE_UNFORMED;
-	post_relocation
-	complete_formation  # MODULE_STATE_COMING;
-					------------------
-					module_kallsymc_lookup_name("A")
-					call A()	# CRASH
-					------------------
-	do_init_module
-	klp_write_object_relocations
-	mod->state = MODULE_STATE_LIVE;
-
-In commit 0bd476e6c671 ("kallsyms: unexport kallsyms_lookup_name() and
-kallsyms_on_each_symbol()") restricts the invocation for kernel unexported
-symbols, but it is still incorrect to make the symbols of non-LIVE modules
-visible to the outside.
-
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+Addresses-Coverity: ("Unused value")
+Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- kernel/module.c | 2 +-
+ drivers/input/mouse/sentelic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 64a2b4daaaa5..96c9cb64de57 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -4220,7 +4220,7 @@ unsigned long module_kallsyms_lookup_name(const char *name)
- 			ret = find_kallsyms_symbol_value(mod, colon+1);
- 	} else {
- 		list_for_each_entry_rcu(mod, &modules, list) {
--			if (mod->state == MODULE_STATE_UNFORMED)
-+			if (mod->state != MODULE_STATE_LIVE)
- 				continue;
- 			if ((ret = find_kallsyms_symbol_value(mod, name)) != 0)
- 				break;
+diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
+index e99d9bf1a267..e78c4c7eda34 100644
+--- a/drivers/input/mouse/sentelic.c
++++ b/drivers/input/mouse/sentelic.c
+@@ -441,7 +441,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
+ 
+ 	fsp_reg_write_enable(psmouse, false);
+ 
+-	return count;
++	return retval;
+ }
+ 
+ PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
 -- 
-2.17.1
+2.25.1
 
