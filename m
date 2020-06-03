@@ -2,105 +2,81 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CAAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4537C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD8720679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C284E2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q8M7JXqF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pmNQbjbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgFCRbg (ORCPT
+        id S1726277AbgFCRb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:31:36 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42194 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgFCRbf (ORCPT
+        Wed, 3 Jun 2020 13:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgFCRb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:31:35 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053HQTYh137126;
-        Wed, 3 Jun 2020 17:31:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=cKww5NHtHr8O110UaceecEv8mEyi1P/1b4jOpriRUjE=;
- b=q8M7JXqFPoaXUUz9NirHXeQ9git6VbNCS4uELEwFpAzVG+Hc4CMiLg1LQ18zobgrWpbh
- XLG/4yNEG54+NuquElAM/BGwBGkjnX5dY/spCbbENzFPsnIIrfHnK317OjVx5c6C/pVj
- awMEwS1COS75IxLKUOmQOKGQ9OKM/q4FDOvvjSMzASa34soOkfYuFP6c2mSso6IUnKxx
- 8bU6V8faBoTjnfCn4zjeEPLvgtEuZCv4YPruYfrQjSN9Wz734UJKCH/XuKeoqrA0hCU5
- gO8Uyoq1D4KR9m/LeHeiserkA2lxklWjULYZ2/42PE/KB3MZnVT/HhEx7Wcw4/IVQjf2 GQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31bfemagnc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 17:31:33 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053HRTS4077935;
-        Wed, 3 Jun 2020 17:31:33 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 31c12r722g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 17:31:33 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053HVWFL010730;
-        Wed, 3 Jun 2020 17:31:32 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jun 2020 10:31:32 -0700
-Date:   Wed, 3 Jun 2020 20:31:25 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Wed, 3 Jun 2020 13:31:57 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D9CC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fQ5rJHxTAUDx/PzHWXapRSQXU1QWJQi13AuiMXfnHFs=; b=pmNQbjbLo1a4P6/ria3gmP6/v
+        76SMiuM5a34BC0yvpTkMfAAPuSFq9FtAmCVPnbYEi/Zxz0F8yz2lvHz6odCSZ/FcGlBh/XSW7tQTH
+        1wqxG3iy5f5DxuyTOi534i5Xv9zvNWIPiI69EVnxTDfneltF3m9vqSDqMjFROccnChavM5hS6vcCL
+        Nxmqv8BJrmKc2LW0UkeHbaXYDjAWffTp5IsuLMtenTl3wBjjUwWW9KVOBAcQspEu28fZaQNfvMe+e
+        B51zbst1eSfYeFUa8YNRf37i/CP84aKeQurW7jRjxTCvKqpQztoXv6y4wL39YA9juk5U5MI0Wm8PH
+        ZWz1BnsXA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40884)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jgXF1-0005wn-Rn; Wed, 03 Jun 2020 18:31:52 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jgXF0-0005ZA-Cg; Wed, 03 Jun 2020 18:31:50 +0100
+Date:   Wed, 3 Jun 2020 18:31:50 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][V2] input: ims-pcu: return error code rather than -ENOMEM
-Message-ID: <20200603173125.GN30374@kadam>
-References: <20200603152151.139337-1-colin.king@canonical.com>
+Subject: v5.7: new core kernel option missing help text
+Message-ID: <20200603173150.GB1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603152151.139337-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030135
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 04:21:51PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the assignment of -ENOMEM to error is redudant because error
-> is not being read and -ENOMEM is being hard coded as an error return.
-> Fix this by returning the error code in variable 'error'; this also
-> allows the error code from a failed call to input_register_device to
-> be preserved and returned to the caller rather than just returning
-> a possibly inappropriate -ENOMEM.
-> 
-> Kudos to Dan Carpenter for the suggestion of an improved fix.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Hi,
 
-Thanks!
+A new kernel configuration option ("SCHED_THERMAL_PRESSURE") was
+recently added, but has no help text. This is most unhelpful when
+trying to configure the kernel, since one does not know what the
+effect of answering yes or no to this option would be.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Please supply a proper help text when adding core kernel options
+so that people can make an informed decision when answering the
+prompt, rather than just guessing.
 
-regards,
-dan carpenter
+One suggestion on IRC has been that this option has something to
+do with climate change.
 
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
