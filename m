@@ -2,89 +2,251 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C06EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5679420678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2616120738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591185724;
+	bh=uvpf2rjYWouX2oyg6JUv4xFYLWUsYLbvlK4ad9StXrw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zeG3VV/7P3nWyqoFaXTqVThkwjZhwJdbz1XyMUtEB+ekIEJzui8t/Vb82uolI5JIZ
+	 OTzVrBejj6nFGdsM2X9uf2DvxeYNWhCWZgVPFOc2gFJA1vKWM0r68O+l0LCpK2BjLb
+	 z8bVOu0Q+swrddVUiMDArV3VvDd36eqYaLKZfe5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgFCMBy (ORCPT
+        id S1726206AbgFCMCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:01:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:39838 "EHLO mga18.intel.com"
+        Wed, 3 Jun 2020 08:02:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCMBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:01:53 -0400
-IronPort-SDR: 0y0hastG5IOCw0q7gzW/CFji7Y7TFck/mgxJ0zLis0ZG0Ms0wNm6hKhWq0kZrYzAxLINJ9jrJx
- 0RzkNwlt+tKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 05:01:52 -0700
-IronPort-SDR: rbg3z6jFAbPtmY2X6lN/SvzgffBc9LROu4aPUQXjqOT+q9jEL/BRzVTiSbzUx9a06u4RGEzHJ/
- 4fPPiNcKm/yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="304585228"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 03 Jun 2020 05:01:46 -0700
-Received: from [10.249.225.188] (abudanko-mobl.ccr.corp.intel.com [10.249.225.188])
-        by linux.intel.com (Postfix) with ESMTP id 8766E58045A;
-        Wed,  3 Jun 2020 05:01:44 -0700 (PDT)
-Subject: Re: [PATCH v6 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
- <40643542-6676-e0bc-2d10-165dfde41e29@linux.intel.com>
- <33c91520-7040-bd6b-b176-004ddbec2a63@intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <b04311d6-b1c6-d625-b227-9ae4f4370626@linux.intel.com>
-Date:   Wed, 3 Jun 2020 15:01:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1725854AbgFCMCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:02:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83DF320678;
+        Wed,  3 Jun 2020 12:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591185721;
+        bh=uvpf2rjYWouX2oyg6JUv4xFYLWUsYLbvlK4ad9StXrw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1jjmj5IEylPS/qVE6nObXSw3PQKmzrpRXgIDSpcMC28JiY9ygA7y0EG2BbhHkTsc4
+         ZaGW/JNoqD9bAvrVtSDIEq599L5HWJE9D6aG91Kanr8R0nFbEFZM/SgP4O1O/2GvI3
+         65LVMr0yLca2pj0549H98uWoTwMJ5FkiY6+Z2Kig=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 4.4.226
+Date:   Wed,  3 Jun 2020 14:01:56 +0200
+Message-Id: <1591185716246126@kroah.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <33c91520-7040-bd6b-b176-004ddbec2a63@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+I'm announcing the release of the 4.4.226 kernel.
 
-On 03.06.2020 14:38, Adrian Hunter wrote:
-> On 1/06/20 11:05 pm, Alexey Budankov wrote:
->>
->> Implement adding of file descriptors by fdarray__add_stat() to
->> fix-sized (currently 1) stat_entries array located at struct fdarray.
->> Append added file descriptors to the array used by poll() syscall
->> during fdarray__poll() call. Copy poll() result of the added
->> descriptors from the array back to the storage for separate analysis.
-> 
-> Why not instead call evlist__add_pollfd() before other fds are added, so
-> the fda->entries[] position is always fixed. Then this patch is not needed.
+All users of the 4.4 kernel series must upgrade.
 
-It then will block event consumption loop, at least in record mode, due to
-change sin initial assumptions behind fdarray__filter(). So extension of the
-API with 'static' fds looks safer w.r.t. possible functional regressions at 
-the same time extending the API with ability to atomically wait for (poll())
-not only event fds but also any other fds during monitoring.
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Feel free to ask more.
+thanks,
 
-~Alexey
+greg k-h
+
+------------
+
+ Makefile                                            |    2 
+ arch/parisc/mm/init.c                               |    2 
+ arch/x86/include/asm/dma.h                          |    2 
+ drivers/gpu/drm/drm_fb_helper.c                     |    2 
+ drivers/gpu/drm/msm/msm_gem.c                       |   20 ++---
+ drivers/infiniband/hw/qib/qib_sysfs.c               |    9 +-
+ drivers/input/evdev.c                               |   19 +----
+ drivers/input/joystick/xpad.c                       |   12 +++
+ drivers/input/serio/i8042-x86ia64io.h               |    7 +
+ drivers/input/touchscreen/usbtouchscreen.c          |    1 
+ drivers/iommu/iommu.c                               |    2 
+ drivers/net/bonding/bond_sysfs_slave.c              |    4 -
+ drivers/net/ethernet/mellanox/mlx4/fw.c             |    2 
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c       |   15 ++++
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c |    4 -
+ drivers/net/ethernet/sun/cassini.c                  |    3 
+ drivers/s390/scsi/zfcp_fsf.c                        |   10 ++
+ drivers/tty/serial/sc16is7xx.c                      |    2 
+ drivers/usb/gadget/legacy/inode.c                   |    3 
+ drivers/usb/renesas_usbhs/mod_gadget.c              |    2 
+ fs/binfmt_elf.c                                     |    2 
+ fs/cachefiles/rdwr.c                                |    2 
+ fs/cifs/file.c                                      |    2 
+ include/asm-generic/asm-prototypes.h                |    6 +
+ include/asm-generic/topology.h                      |    2 
+ include/linux/mlx5/driver.h                         |    1 
+ include/linux/mm.h                                  |    1 
+ include/linux/netfilter/nf_conntrack_pptp.h         |    2 
+ include/linux/printk.h                              |   12 +--
+ include/rdma/ib_addr.h                              |    6 +
+ include/uapi/linux/l2tp.h                           |    7 -
+ kernel/irq/migration.c                              |   26 +++++-
+ mm/vmalloc.c                                        |    2 
+ net/ax25/af_ax25.c                                  |    6 +
+ net/bridge/netfilter/nft_reject_bridge.c            |    6 +
+ net/core/rtnetlink.c                                |    2 
+ net/ipv4/ip_vti.c                                   |   75 ++++++++++----------
+ net/ipv4/netfilter/nf_nat_pptp.c                    |    7 -
+ net/ipv4/route.c                                    |   14 +--
+ net/mac80211/sta_info.c                             |    1 
+ net/netfilter/ipset/ip_set_list_set.c               |    2 
+ net/netfilter/nf_conntrack_pptp.c                   |   62 +++++++++-------
+ net/sctp/sm_statefuns.c                             |    9 +-
+ net/xfrm/xfrm_input.c                               |    2 
+ net/xfrm/xfrm_output.c                              |    3 
+ net/xfrm/xfrm_policy.c                              |    7 -
+ security/commoncap.c                                |    1 
+ sound/core/hwdep.c                                  |    4 -
+ sound/usb/mixer.c                                   |    8 ++
+ 49 files changed, 241 insertions(+), 162 deletions(-)
+
+Aaron Conole (1):
+      printk: help pr_debug and pr_devel to optimize out arguments
+
+Alexander Dahl (1):
+      x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
+
+Alexander Potapenko (1):
+      fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
+
+Arnd Bergmann (1):
+      include/asm-generic/topology.h: guard cpumask_of_node() macro argument
+
+Ben Hutchings (1):
+      drm/msm: Fix possible null dereference on failure of get_pages()
+
+Benjamin Block (1):
+      scsi: zfcp: fix request object use-after-free in send path causing wrong traces
+
+Brendan Shanks (1):
+      Input: evdev - call input_flush_device() on release(), not flush()
+
+Changming Liu (1):
+      ALSA: hwdep: fix a left shifting 1 by 31 UB bug
+
+Chris Chiu (1):
+      ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
+
+Dmitry V. Levin (1):
+      uapi: fix linux/if_pppol2tp.h userspace compilation errors
+
+Eric Dumazet (1):
+      ax25: fix setsockopt(SO_BINDTODEVICE)
+
+Eric W. Biederman (1):
+      exec: Always set cap_ambient in cap_bprm_set_creds
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.226
+
+Guoqing Jiang (1):
+      sc16is7xx: move label 'err_spi' to correct section
+
+Helge Deller (1):
+      parisc: Fix kernel panic in mem_init()
+
+James Hilliard (1):
+      Input: usbtouchscreen - add support for BonXeon TP
+
+Jere Leppänen (1):
+      sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
+
+Jeremy Sowden (1):
+      vti4: eliminated some duplicate code.
+
+Kaike Wan (1):
+      IB/qib: Call kobject_put() when kobject_init_and_add() fails
+
+Kalderon, Michal (1):
+      IB/cma: Fix reference count leak when no ipv4 addresses are set
+
+Kevin Locke (1):
+      Input: i8042 - add ThinkPad S230u to i8042 reset list
+
+Konstantin Khlebnikov (1):
+      mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
+
+Lei Xue (1):
+      cachefiles: Fix race between read_waiter and read_copier involving op->to_do
+
+Liviu Dudau (1):
+      mm/vmalloc.c: don't dereference possible NULL pointer in __vunmap()
+
+Masahiro Yamada (1):
+      usb: gadget: legacy: fix redundant initialization warnings
+
+Matt Roper (1):
+      drm/fb-helper: Use proper plane mask for fb cleanup
+
+Michael Braun (1):
+      netfilter: nft_reject_bridge: enable reject with bridge vlan
+
+Michal Marek (1):
+      asm-prototypes: Clear any CPP defines before declaring the functions
+
+Moshe Shemesh (1):
+      net/mlx5: Add command entry handling completion
+
+Pablo Neira Ayuso (2):
+      netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
+      netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
+
+Phil Sutter (1):
+      netfilter: ipset: Fix subcounter update skip
+
+Qiushi Wu (5):
+      net: sun: fix missing release regions in cas_init_one().
+      net/mlx4_core: fix a memory leak bug.
+      iommu: Fix reference count leak in iommu_group_alloc.
+      qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
+      bonding: Fix reference count leak in bond_sysfs_slave_add.
+
+Roopa Prabhu (1):
+      net: rtnl_configure_link: fix dev flags changes arg to __dev_notify_flags
+
+Steve French (1):
+      cifs: Fix null pointer check in cifs_read
+
+Sudip Mukherjee (1):
+      mac80211: fix memory leak
+
+Thomas Gleixner (1):
+      genirq/generic_pending: Do not lose pending affinity update
+
+Xin Long (4):
+      xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
+      xfrm: fix a warning in xfrm_policy_insert_list
+      xfrm: fix a NULL-ptr deref in xfrm_local_error
+      ip_vti: receive ipip packet by calling ip_tunnel_rcv
+
+Yoshihiro Shimoda (1):
+      usb: renesas_usbhs: gadget: fix spin_lock_init() for &uep->lock
+
+Yuqi Jin (1):
+      net: revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
+
+Łukasz Patron (1):
+      Input: xpad - add custom init packet for Xbox One S controllers
+
