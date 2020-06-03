@@ -2,105 +2,89 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87524C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBD7206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB9F2065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgFCFUE (ORCPT
+        id S1725859AbgFCF0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCFUE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:20:04 -0400
-Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7E6C05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 22:20:03 -0700 (PDT)
-Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
-        by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jpa@lakka.kapsi.fi>)
-        id 1jgLoY-0003XD-TX; Wed, 03 Jun 2020 08:19:47 +0300
-Received: from jpa by lakka.kapsi.fi with local (Exim 4.92)
-        (envelope-from <jpa@lakka.kapsi.fi>)
-        id 1jgLoY-000616-Qw; Wed, 03 Jun 2020 08:19:46 +0300
-Date:   Wed, 3 Jun 2020 08:19:46 +0300
-From:   Petteri Aimonen <jpa@git.mail.kapsi.fi>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Shuah Khan <shuah@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arch/x86: reset MXCSR to default in kernel_fpu_begin()
-Message-ID: <20200603051946.GF17423@lakka.kapsi.fi>
-References: <8b1f0bfa-79b0-74e4-0241-8b2a94491807@linuxfoundation.org>
- <C6F6F6E4-CBD8-4E72-812B-99F008ECAA4F@amacapital.net>
- <b4629042-21c7-2b38-4c3f-44f9be469cca@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4629042-21c7-2b38-4c3f-44f9be469cca@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Rspam-Score: 1.2 (+)
-X-Rspam-Report: Action: no action
- Symbol: RCVD_TLS_LAST(0.00)
- Symbol: ARC_NA(0.00)
- Symbol: FROM_HAS_DN(0.00)
- Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
- Symbol: MIME_GOOD(-0.10)
- Symbol: DMARC_NA(0.00)
- Symbol: AUTH_NA(1.00)
- Symbol: TO_DN_ALL(0.00)
- Symbol: RCPT_COUNT_SEVEN(0.00)
- Symbol: NEURAL_HAM(-0.00)
- Symbol: R_SPF_NA(0.00)
- Symbol: FORGED_SENDER(0.30)
- Symbol: R_DKIM_NA(0.00)
- Symbol: MIME_TRACE(0.00)
- Symbol: ASN(0.00)
- Symbol: FROM_NEQ_ENVFROM(0.00)
- Symbol: RCVD_COUNT_TWO(0.00)
- Message-ID: 20200603051946.GF17423@lakka.kapsi.fi
-X-Rspam-Bar: +
-X-SA-Exim-Connect-IP: 2001:67c:1be8::11
-X-SA-Exim-Mail-From: jpa@lakka.kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+        Wed, 3 Jun 2020 01:26:12 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59804 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFCF0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 01:26:12 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1E23D200D4F;
+        Wed,  3 Jun 2020 07:26:10 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ADEFC200D21;
+        Wed,  3 Jun 2020 07:26:06 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 218E9402E4;
+        Wed,  3 Jun 2020 13:26:02 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 0/3] Handle mailbox clock/power management related issues
+Date:   Wed,  3 Jun 2020 13:15:41 +0800
+Message-Id: <1591161344-12885-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Current i.MX mailbox driver mainly supports 2 series i.MX SoCs with
+different architecture, one is for i.MX8X platforms with SCU inside,
+the other is for i.MX6/7/8M series without SCU.
 
-> Is it correct to assume the stuff checked differs from test to test
-> and done in user-space.
-> 
-> > undo_evil_state();
-> 
-> Is it correct to assume undoing evil differs from test to test
-> and done in user-space, provide it can be done from userspace.
+For i.MX8X, 2 types of MU are supported, one is for system IPC, such kind
+of MU has no clock/power assignment, they are both controlled by SCU. The
+other is for application, such kind of MU has no clock assignment, but have
+power domain assignment, consumers need to call mailbox APIs to manage MU
+power in runtime;
 
-Yes, currently the test works like:
+For i.MX6/7/8M, MU clock or power could be assigned based on different SoCs,
+but all the MUs are for application, consumers need to call mailbox APIs to
+manage MU clock/power in runtime.
 
-do_test_setup();
-read_from_debugfs_file();
-check_results();
+For the power management related issue mentioned above, they are as below:
 
-and the middle step stays the same. But of course in general case there 
-could be argument passing etc, even though the test for this issue 
-doesn't need them.
+1. clock should be managed in runtime to make sure MU clock/power can be off
+   on i.MX6/7/8M platforms;
+2. ONLY system IPC MU needs to have IRQF_NO_SUSPEND flag set, other application
+   MU no need to have this flag, since the MU clock/power is OFF in noirq
+   suspend phase and if MU interrupt arrives, with IRQF_NO_SUSPEND flag set,
+   the MU ISR will try to access MU register and lead to system hang because
+   of clock/power disabled;
 
-Myself I don't see the problem with just adding a file under debugfs and 
-bind to its read.
+To distinguish these different MU instances, use MU's clock/power assignment
+status to decide whether to save/restore MU context during suspend/resume,
+whether to have IRQF_NO_SUSPEND flag set, etc..
 
---
-Petteri
+patch #1 is identical with https://patchwork.kernel.org/patch/11581215/, the
+patch #2/#3 depend on #1, so I resend #1 in this series to make them as a whole
+series.
+
+Anson Huang (2):
+  mailbox: imx: Add runtime PM callback to handle MU clocks
+  mailbox: imx: ONLY IPC MU needs IRQF_NO_SUSPEND flag
+
+Dong Aisheng (1):
+  mailbox: imx: Add context save/restore for suspend/resume
+
+ drivers/mailbox/imx-mailbox.c | 72 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 69 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
+
