@@ -2,80 +2,85 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238ED20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134AC20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B5HfY2k7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cKDJ0CH/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgFCMbb (ORCPT
+        id S1726096AbgFCMbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38038 "EHLO
+        Wed, 3 Jun 2020 08:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgFCMb2 (ORCPT
+        with ESMTP id S1726054AbgFCMbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:31:28 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62077C08C5C0;
-        Wed,  3 Jun 2020 05:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1R/2YdAZSvt3VyvYBxysqrGCsIyLuWCrDG39UYVf7Wo=; b=B5HfY2k7oWgDgwYI4Ho2MRl72v
-        qRcxT5aVUTiZPip/orNqNpF2m5BQLkMvGTG/FQRd5dR00vVEVUv+s+GOWOrVY855oa3PQTYNmiDAt
-        Rwbv3/Kw7Ne/csOfPykzVrbSrLpQ7KLWd6ShCnyfDYwKjXkGPV2DzfKs9UW+jC6NyEzb0R1o3Qfps
-        /QSf2uDzRTGeaBa5itJc6lBDDJ/LjgaFzGLfHnj4V2Kfw0mRDNDVYH7ptFqDv/ZMUOlg+UQCyiC8h
-        26OdfkOmk6iopJPpDhdl/qI+e029JYR0Vxomnpz64CpaX5WFJB+RAcatXi2HfLZ9cxj7AL94feeO0
-        Yz5hLKtg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgSXx-0006oY-9w; Wed, 03 Jun 2020 12:31:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 277C4301ABC;
-        Wed,  3 Jun 2020 14:31:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 11B2B20BDBF72; Wed,  3 Jun 2020 14:31:03 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 14:31:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Subject: Re: [PATCH v2 0/3] More frequency invariance fixes for x86
-Message-ID: <20200603123103.GI2604@hirez.programming.kicks-ass.net>
-References: <20200531182453.15254-1-ggherdovich@suse.cz>
+        Wed, 3 Jun 2020 08:31:42 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 856F7C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 05:31:41 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id n23so2472281ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 05:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=P9MOihz2dNvs8KZnA010MIHpIN88q045MfnMNo8RW/o=;
+        b=cKDJ0CH/AF02dBkES1fgqvnlScibwydiQmc/O6sYnvqocnJJn8D7Dt7BUqJbsXHFOq
+         3Dh5EB5u05D+YUsYcdK2/dpz8P58l57wXAVWJcRb+qIKRfzhB1yUJK1hWXTcUY4lbCuG
+         USjD327wh1diUNLSkiylOunzvvYK+8hVXWtRTK1+Ul1Zfo3EtpeJBZTM8Z4Oqp98gjBd
+         DkWSSTa1qO5cNWMJDug4MRPvXkJ15iRqaEZ7DizskD2LQJKlcCVx4DV6nFhmgQDe10kX
+         Xpy2RgMSqATYotfaUQk02ZT1fs/CLkW4WoouCR9LTIlwVpbLTgEVYlT3tpDHo7uZkbM5
+         EI+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=P9MOihz2dNvs8KZnA010MIHpIN88q045MfnMNo8RW/o=;
+        b=hQJeRn8OPq5Y7AjBpCHhPS3BpfWcAr/C7AVOlQFuV9u/ugrwIuKDegLsdbqHlzzx7o
+         whJcKz7p6lgMspsmzO4fHfNlrZvRpb055MZiFpxaDqPr3ZuUMYDw2uOCmILVwhb90thG
+         mxugM9I8PLux1y5WuMjvt+Z6sMkggbOgyRLH6rYgTGawZ+h7UmMjesIUZ3imY1rTLtIo
+         uyuFDm7r+uYqJDYDq3eQ+N3ZUSa+9HaKxVvG0Q7OkGfTnpIWoikJk1ZM23cA2LB/Y0dZ
+         dCaFGDQWs2MqHZ7Jcihn4PEqwYeJl+WBqx8GVRMv3hiwSbQh2ZvgnHUpkAJRd9lPPyVU
+         ML/Q==
+X-Gm-Message-State: AOAM531bNzJpaJyAFRYJrw3Ic8QtFbDAAgFFSDM0Em68y1IfZfRInFSn
+        TloOac9h+B+JwUb5GyDv3MUKF3Qazt3A9+qc8qHx7Q==
+X-Google-Smtp-Source: ABdhPJw8SSAJIyE84pdf0Z6PzkVQ0XCT1269nX2POe1eYPap+iF6PA0W87bqQfgKU2PzWMulWs5QUCll7p5vTFgMEVE=
+X-Received: by 2002:a2e:911:: with SMTP id 17mr2041281ljj.411.1591187499787;
+ Wed, 03 Jun 2020 05:31:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200531182453.15254-1-ggherdovich@suse.cz>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 3 Jun 2020 18:01:28 +0530
+Message-ID: <CA+G9fYtCP3d805MpSMq0TGkz2uhHpFLaizP8uHxHzC5jnAc0hQ@mail.gmail.com>
+Subject: linux-next: arm64 build failed - aarch64-linux-gnu-ld: cannot find
+ ./drivers/firmware/efi/libstub/lib.abuilt-in.a: No such file or directory
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-efi@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Cc:     ardb@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        nivedita@alum.mit.edu, jarkko.sakkinen@linux.intel.com,
+        xypron.glpk@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 08:24:50PM +0200, Giovanni Gherdovich wrote:
-> changes wrt v1:
-> 
-> - add Peter Zijlstra's code to check for multiplication overflow, see
->   https://lore.kernel.org/lkml/20200501133042.GE3762@hirez.programming.kicks-ass.net/
-> - put all frequence invariant code behind CONFIG_X86_64, as the overflow
->   checks need 64 bits operations, see the build error at
->   https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/7GDIBOMNVDG5W2XZD4EICE2TUZR3THBN/
-> - add additional patch to check for when base_freq > turbo_freq,
->   suggested by Peter Zijlstra at
->   https://lore.kernel.org/lkml/20200501130427.GD3762@hirez.programming.kicks-ass.net/
+arm64 build failed on Linux-next 20200603.
 
-Thanks!
+make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm64
+CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
+aarch64-linux-gnu-gcc" O=build Image
+ #
+aarch64-linux-gnu-ld: cannot find
+./drivers/firmware/efi/libstub/lib.abuilt-in.a: No such file or
+directory
+ make[1]: *** [/linux/Makefile:1132: vmlinux] Error 1
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
