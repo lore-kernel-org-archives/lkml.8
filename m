@@ -2,78 +2,134 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB12C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EED62077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DB82065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgFCHT2 (ORCPT
+        id S1726156AbgFCHUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:19:28 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54519 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgFCHT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:19:27 -0400
-IronPort-SDR: rGwGPhXSM5/dn80h6lM0plq4aF1RAc/vRfDQ9ey8XjJ+hvWoWOroCkc+aaXSD9vDlLQrf2yJ9C
- 5sEuH2jf7e4w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 00:19:27 -0700
-IronPort-SDR: Yyl9KM/4BH8YDORSPS8aPRUDVd45t282Vv6JqhEp+3M9F8OJHnZM2qMC0PwlIr7sc8Xw7TSkeA
- 2KEjhPrZouhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="444996268"
-Received: from lkp-server02.sh.intel.com (HELO 8f84dc34deca) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2020 00:19:22 -0700
-Received: from kbuild by 8f84dc34deca with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jgNgH-000034-1X; Wed, 03 Jun 2020 07:19:21 +0000
-Date:   Wed, 3 Jun 2020 15:18:59 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Barry Song <song.bao.hua@hisilicon.com>, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
-        catalin.marinas@arm.com
-Cc:     kbuild-all@lists.01.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, Jonathan.Cameron@huawei.com,
-        john.garry@huawei.com
-Subject: [RFC PATCH] dma-direct: dma_contiguous_pernuma_area[] can be static
-Message-ID: <20200603071859.GA64477@6bb44d8ad825>
-References: <20200603024231.61748-2-song.bao.hua@hisilicon.com>
+        Wed, 3 Jun 2020 03:20:13 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:39049 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbgFCHUN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:20:13 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jgNh3-003huP-T1; Wed, 03 Jun 2020 09:20:09 +0200
+Received: from p57bd9b57.dip0.t-ipconnect.de ([87.189.155.87] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jgNh3-000itB-Cs; Wed, 03 Jun 2020 09:20:09 +0200
+Subject: Re: [PATCH v2] sh: Implement __get_user_u64() required for 64-bit
+ get_user()
+To:     linux-sh@vger.kernel.org
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        linux-kernel@vger.kernel.org
+References: <20200531104715.2512247-1-glaubitz@physik.fu-berlin.de>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <b6271c7a-1eaf-61d9-9eb6-061aa8a13ac8@physik.fu-berlin.de>
+Date:   Wed, 3 Jun 2020 09:20:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603024231.61748-2-song.bao.hua@hisilicon.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200531104715.2512247-1-glaubitz@physik.fu-berlin.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.155.87
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi!
 
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- contiguous.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/31/20 12:47 PM, John Paul Adrian Glaubitz wrote:
+>  Changes since v1:
+>  - Replace single mov instruction for exception handling
+>    in case of invalid load
 
-diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-index 4b10d0ca0456d..2094c8e0590ac 100644
---- a/kernel/dma/contiguous.c
-+++ b/kernel/dma/contiguous.c
-@@ -37,7 +37,7 @@
- #endif
- 
- struct cma *dma_contiguous_default_area;
--struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
-+static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
- 
- /*
-  * Default global CMA area size can be defined in kernel's .config.
+Yutaka Niibe has had a look at my patch and he says, we might have to add
+an entry for the fault handling of the upper word.
+
+Quote:
+
+> (1) I think that there is possibility that the second access to user
+> space fails (while the first access succeeds).  IIUC, it's good have
+> an entry in __ex_tables for the second access too, like:
+>     ".long 1b+2, 3b\n\t"
+> I don't know if the expression "1b+2" is correct, my intention is
+> detecting the failure in the seccond access.
+
+Comments?
+
+@Sato-san: Can you comment on the patch as well?
+
+Thanks,
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
