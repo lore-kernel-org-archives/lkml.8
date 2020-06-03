@@ -2,130 +2,167 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A170220738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D6020738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CZzKLn8T"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XbJ72n1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgFCC1z (ORCPT
+        id S1725920AbgFCC3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:27:55 -0400
-Received: from ozlabs.org ([203.11.71.1]:40661 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgFCC1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:27:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cCVv317kz9sTD;
-        Wed,  3 Jun 2020 12:27:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591151271;
-        bh=LLwKcC/PGzT4qu21KqMhNXqhAHbGudTK5MS/jr7G3sw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CZzKLn8TxsqdPtFu3mOZvTCsfaR6pP1rCWXPKKnA48bRujilwCU8kNiKNtvih8ihy
-         5XwNhoc/r/IoEdb9vWetMNMaxtQEcZO9U9w3E1cPtFSrQxkXt0Ys97f1K9slshp12c
-         obOlGhscmz38yzhSdveqizFB2XGnqqYKvxzwrpgu8uZ4WeC+rtOWXL9yowtLnrxLL1
-         0pgFJTLfeA9r9ZttJaKtQYMUpkxc0y2r/RTwGmUpOPnO+g5JldVYkhQ4e4PxwxRZJW
-         s1rrwsjZi0nlbL2GmCdj3+QXmmlzCGZ5ON5FwZxHWWsdfJz6NQbYfL3R097x0n+Uez
-         OM/lfW61LcFfw==
-Date:   Wed, 3 Jun 2020 12:27:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the jc_docs tree with the ext4 tree
-Message-ID: <20200603122750.70bf9c55@canb.auug.org.au>
-In-Reply-To: <20200522130616.5fd7054c@canb.auug.org.au>
-References: <20200522130616.5fd7054c@canb.auug.org.au>
+        Tue, 2 Jun 2020 22:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgFCC3j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:29:39 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B4A0C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 19:29:38 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id v15so257108ybk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 19:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a+XO9SC5QE1UzVSk5S/GhGAG3dL8bmndI9l/Hk1kMRg=;
+        b=XbJ72n1F6qmRExzIYYv3PoAXST79prZ1fWKeYuXaayFsFIaRl1qNqzAoCO7eDTaJ4U
+         06GTl1FM6RnxnMYZlWZsOJztw1gE0URNojn6QYQvNbAKNP17sDihGNt+PzMHq4CPRm3d
+         3KLtNKoFybQtemewslCy/oLPEDkSjdIRQ+oobw+GuvA3RXeiAWEaVosHEFpmKgHRpqpA
+         BONcWsVuhVyyfmcFX6bvkiXeqPjIcFqZh5jnX/MfqO/4IFPf59eFr32lf791QeRF+V+W
+         hcfjg24luoJVo57jqCjbOqNcAhNYMZ/HrVhsbPn4U5enlej/lr+CP1/2lRZAxmaeD9nM
+         sdpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a+XO9SC5QE1UzVSk5S/GhGAG3dL8bmndI9l/Hk1kMRg=;
+        b=XZCqcGDZKjc353WDeE/se/aVaLY/bQu7fixecv0COrPIflLv23+jOdztsLsCEwNBDs
+         /dCbq2OhN3KbjWGMKv8HmZn/DKnjH5nf/s+Dbq24bOd7hPg6t5ANtWfE1/SRfEOlNe3W
+         KwPMCAHHlREUG/isKAoT23E1ZDYiwcgGtpKkmpVJaiojEH84503hG47cZd2qLQME8Q6m
+         L83NQ6sti3HD00BZJjx3+fiUSAWZ8QaGSnG6h+SPTnTNwvQkMddIP4eXY/egee8ckQEh
+         QEY1eWEH5EykyhLEgZyWcB0+5V5jyct9h+Y0QjlXns+Ru0GDIQfURrjLT+2wNfxhoSwh
+         em2A==
+X-Gm-Message-State: AOAM530ylt9M0OG52zAWexH9ou6JVXet0Z4SJSQDfwfjs4YkCchDxrFH
+        hmjUZJsNSp+MUa0+HBckY4XSKIfMMCJd/56a/B8rdQ==
+X-Google-Smtp-Source: ABdhPJzddZEa2Y5Xs0+yB1nuuziVdZJXRqYA6crD+xaMeUxYImJOQ1hSHwFIFkckXn0ML1vtAOZKUJlBvC7AxZW75R0=
+X-Received: by 2002:a25:ec0d:: with SMTP id j13mr6143030ybh.364.1591151377292;
+ Tue, 02 Jun 2020 19:29:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/n.K/_u=W2U4MCWLxSXA8GNJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+ <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com> <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
+In-Reply-To: <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 2 Jun 2020 19:29:25 -0700
+Message-ID: <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     Jason Xing <kerneljasonxing@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/n.K/_u=W2U4MCWLxSXA8GNJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Fri, 22 May 2020 13:06:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Tue, Jun 2, 2020 at 6:53 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
 >
-> Today's linux-next merge of the jc_docs tree got a conflict in:
->=20
->   Documentation/filesystems/fiemap.rst
->=20
-> between commit:
->=20
->   469581d9e5c9 ("fs: move fiemap range validation into the file systems i=
-nstances")
->=20
-> from the ext4 tree and commit:
->=20
->   e6f7df74ec1a ("docs: filesystems: convert fiemap.txt to ReST")
->=20
-> from the jc_docs tree.
->=20
-> diff --cc Documentation/filesystems/fiemap.rst
-> index 35c8571eccb6,2a572e7edc08..000000000000
-> --- a/Documentation/filesystems/fiemap.rst
-> +++ b/Documentation/filesystems/fiemap.rst
-> @@@ -203,10 -206,9 +206,10 @@@ EINTR once fatal signal received
->  =20
->  =20
->   Flag checking should be done at the beginning of the ->fiemap callback =
-via the
-> - fiemap_prep() helper:
->  -fiemap_check_flags() helper::
-> ++fiemap_prep() helper::
->  =20
-> - int fiemap_prep(struct inode *inode, struct fiemap_extent_info *fieinfo,
-> - 		u64 start, u64 *len, u32 supported_flags);
->  -  int fiemap_check_flags(struct fiemap_extent_info *fieinfo, u32 fs_fla=
-gs);
-> ++  int fiemap_prep(struct inode *inode, struct fiemap_extent_info *fiein=
-fo,
-> ++		  u64 start, u64 *len, u32 supported_flags);
->  =20
->   The struct fieinfo should be passed in as received from ioctl_fiemap().=
- The
->   set of fiemap flags which the fs understands should be passed via fs_fl=
-ags. If
+> Hi Eric,
+>
+> I'm sorry that I didn't write enough clearly. We're running the
+> pristine 4.19.125 linux kernel (the latest LTS version) and have been
+> haunted by such an issue. This patch is high-important, I think. So
+> I'm going to resend this email with the [patch 4.19] on the headline
+> and cc Greg.
 
-This is now a conflict between the ext4 tree and Linus' tree.
+Yes, please always give for which tree a patch is meant for.
 
---=20
-Cheers,
-Stephen Rothwell
+Problem is that your patch is not correct.
+In these old kernels, tcp_internal_pacing() is called _after_ the
+packet has been sent.
+It is too late to 'give up pacing'
 
---Sig_/n.K/_u=W2U4MCWLxSXA8GNJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+The packet should not have been sent if the pacing timer is queued
+(otherwise this means we do not respect pacing)
 
------BEGIN PGP SIGNATURE-----
+So the bug should be caught earlier. check where tcp_pacing_check()
+calls are missing.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XCqYACgkQAVBC80lX
-0GwopggApOjo/iECIglrNssnqA1mIVjx1LNI4M8S5tRBjgjypT0ft79nttI6uhdM
-1oQ7CJL6awyv+pXxRnER4QLK2I8M0vChwAEQeEBgIC6osLCklhivV0wtPmT8lZCX
-OFpjCBMjd9BXa6RDmXv5pVCoO3ZHqkeREX7kHEG90dxABSTbVhFe+mscjrrI68Ck
-CpTUNbL9Ywn8U42v7K5vJEsEWNY4XuBqpp5yS54VXamZKlg8r0j729KQOGZLOLe8
-lrl6l8asW/G0hBvxtDCLCiat6T9lAKEETzBmSQNSDLfpC7SQrUX43bH92b+cfNR1
-Wi3DChife2lgm1xUl+qaR5znEwQqFA==
-=+bFZ
------END PGP SIGNATURE-----
 
---Sig_/n.K/_u=W2U4MCWLxSXA8GNJ--
+
+>
+>
+> Thanks,
+> Jason
+>
+> On Tue, Jun 2, 2020 at 9:05 PM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > On Tue, Jun 2, 2020 at 1:05 AM <kerneljasonxing@gmail.com> wrote:
+> > >
+> > > From: Jason Xing <kerneljasonxing@gmail.com>
+> > >
+> > > TCP socks cannot be released because of the sock_hold() increasing the
+> > > sk_refcnt in the manner of tcp_internal_pacing() when RTO happens.
+> > > Therefore, this situation could increase the slab memory and then trigger
+> > > the OOM if the machine has beening running for a long time. This issue,
+> > > however, can happen on some machine only running a few days.
+> > >
+> > > We add one exception case to avoid unneeded use of sock_hold if the
+> > > pacing_timer is enqueued.
+> > >
+> > > Reproduce procedure:
+> > > 0) cat /proc/slabinfo | grep TCP
+> > > 1) switch net.ipv4.tcp_congestion_control to bbr
+> > > 2) using wrk tool something like that to send packages
+> > > 3) using tc to increase the delay in the dev to simulate the busy case.
+> > > 4) cat /proc/slabinfo | grep TCP
+> > > 5) kill the wrk command and observe the number of objects and slabs in TCP.
+> > > 6) at last, you could notice that the number would not decrease.
+> > >
+> > > Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
+> > > Signed-off-by: liweishi <liweishi@kuaishou.com>
+> > > Signed-off-by: Shujin Li <lishujin@kuaishou.com>
+> > > ---
+> > >  net/ipv4/tcp_output.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > > index cc4ba42..5cf63d9 100644
+> > > --- a/net/ipv4/tcp_output.c
+> > > +++ b/net/ipv4/tcp_output.c
+> > > @@ -969,7 +969,8 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
+> > >         u64 len_ns;
+> > >         u32 rate;
+> > >
+> > > -       if (!tcp_needs_internal_pacing(sk))
+> > > +       if (!tcp_needs_internal_pacing(sk) ||
+> > > +           hrtimer_is_queued(&tcp_sk(sk)->pacing_timer))
+> > >                 return;
+> > >         rate = sk->sk_pacing_rate;
+> > >         if (!rate || rate == ~0U)
+> > > --
+> > > 1.8.3.1
+> > >
+> >
+> > Hi Jason.
+> >
+> > Please do not send patches that do not apply to current upstream trees.
+> >
+> > Instead, backport to your kernels the needed fixes.
+> >
+> > I suspect that you are not using a pristine linux kernel, but some
+> > heavily modified one and something went wrong in your backports.
+> > Do not ask us to spend time finding what went wrong.
+> >
+> > Thank you.
