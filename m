@@ -6,93 +6,104 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E32C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0A720734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18DD20734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgFCUZ6 (ORCPT
+        id S1726303AbgFCU0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:25:58 -0400
-Received: from sauhun.de ([88.99.104.3]:50126 "EHLO pokefinder.org"
+        Wed, 3 Jun 2020 16:26:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:37624 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgFCUZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:25:58 -0400
-Received: from localhost (p5486cfa5.dip0.t-ipconnect.de [84.134.207.165])
-        by pokefinder.org (Postfix) with ESMTPSA id 116E32C1FE2;
-        Wed,  3 Jun 2020 22:25:55 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 22:25:53 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v14 0/3] i2c: npcm7xx: add NPCM i2c controller driver
-Message-ID: <20200603202553.GB7684@kunai>
-References: <20200527200820.47359-1-tali.perry1@gmail.com>
+        id S1725961AbgFCU0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:26:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 303D155D;
+        Wed,  3 Jun 2020 13:26:06 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6ACA53F52E;
+        Wed,  3 Jun 2020 13:26:05 -0700 (PDT)
+References: <20200603173150.GB1551@shell.armlinux.org.uk> <jhjh7vshvwl.mognet@arm.com> <20200603184500.GC1551@shell.armlinux.org.uk> <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com> <20200603195853.GD1551@shell.armlinux.org.uk>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: v5.7: new core kernel option missing help text
+In-reply-to: <20200603195853.GD1551@shell.armlinux.org.uk>
+Date:   Wed, 03 Jun 2020 21:25:57 +0100
+Message-ID: <jhjftbbj3qi.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
-Content-Disposition: inline
-In-Reply-To: <20200527200820.47359-1-tali.perry1@gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---DBIVS5p969aUjpLe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 03/06/20 20:58, Russell King - ARM Linux admin wrote:
+> On Wed, Jun 03, 2020 at 09:24:56PM +0200, Vincent Guittot wrote:
+>> On Wed, 3 Jun 2020 at 20:45, Russell King - ARM Linux admin
+>> <linux@armlinux.org.uk> wrote:
+>> > It's a start.  I'm still wondering whether I should answer yes or no
+>> > for the platforms I'm building for.
+>> >
+>> > So far, all I've found is:
+>> >
+>> > arch/arm/include/asm/topology.h:#define arch_scale_thermal_pressure topology_get_thermal_pressure
+>> >
+>> > which really doesn't tell me anything about this.  So I'm still in
+>> > the dark.
+>> >
+>> > I guess topology_get_thermal_pressure is provided by something in
+>> > drivers/ which will be conditional on some driver or something.
+>>
+>> You need cpufreq_cooling device to make it useful and only for SMP
+>> I don't think that this should not be user configurable because even
+>> with the description above, it is not easy to choose.
+>> This should be set by the driver that implement the feature which is
+>> only cpufreq cooling device for now it
+>
+> As I have CONFIG_CPU_FREQ_THERMAL=y in my config, I'm guessing (and it's
+> only a guess) that I should say y to SCHED_THERMAL_PRESSURE ?
+>
 
-On Wed, May 27, 2020 at 11:08:17PM +0300, Tali Perry wrote:
-> This patch set adds i2c controller support=20
-> for the Nuvoton NPCM Baseboard Management Controller (BMC).
->=20
-> NPCM7xx includes 16 I2C controllers. This driver operates the controller.
-> This module also includes a slave mode.
->=20
-> ---
-> v14 -> v13:
-> 	- Fix yaml example: add missing include.
-> 	- Replace all udelay to usleep_range, except one which is called from
-> 	  irq.
-> 	- Fix compilation error (module_platfrom_init conflict).
-> 	- debugfs counters always updated. Counting till max value,
-> 	  then stop counting.
-> 	- Rename bus-frequency to clock-frequency.
-> 	- Remove unused variables.
+arm and arm64 implement arch_scale_thermal_pressure(); the actual
+implementation is in the arch_topology "driver" (GENERIC_ARCH_TOPOLOGY).
 
-I don't have time for a deeper review, but from what I can tell this
-driver is good to go and we can fix things incrementally from now on.
+Then, the caller of arch_set_thermal_pressure() is cpufreq_cooling (see
+below); that'll only get called if you have thermal zones using CPU
+cooling devices.
 
-Applied to for-next (will go into 5.8), thanks!
+AFAICT the current state of things imply we should have something like
 
+        depends on (ARM || ARM64) && GENERIC_ARCH_TOPOLOGY
 
---DBIVS5p969aUjpLe
-Content-Type: application/pgp-signature; name="signature.asc"
+for that option.
 
------BEGIN PGP SIGNATURE-----
+>> > > +     help
+>> > > +       This option allows the scheduler to be aware of CPU thermal throttling
+>> > > +       (i.e. thermal pressure), providing arch_scale_thermal_pressure() is
+>> > > +       implemented.
+>
+> Is this feature documented in terms of what it does?  Do I assume that
+> as the thermal trip points start tripping, that has an influence on
+> the scheduler?  Or is it the case that the scheduler is wanting to
+> know when the cpu frequency changes?
+>
+> Grepping for "thermal" in Documentation/scheduler brings up nothing.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7YB1EACgkQFA3kzBSg
-KbZmVw//dD5ttj+RhzDcyUcRJ9NMb6dXctKo/EQYXzZfQlKOJqL36iVqKjy8rmFM
-S2F42QY95jaNRdUHEGaFzDazxEUhy7J+07z0XPHk1CrGUDBVVtRf28dsEAXS7UTm
-o8pq67KgL+rr4PcKVd92OnBF0Sdi5d6HlVYah9W7dlnR/crg95cd9JUdwn1THmFw
-/PEmw4XRnYk/+GC4D+hai+W/E86RPpMzCU9YbOCfgnTWC+L7b9W4hS3j9+xtv62V
-HD2GagLUGpBiKENxUSS0NJ7agC31Eea7gi9Gn5P8OfxYr4VtPSagnchKwCoohFbU
-EySi0qXRd5+hWMOjg2DcGqC8mo/FC2ZDSKlLYWiicTgyZjP4vkRpMHqqtwS9u+23
-EFQv0Gy+QjePWEJdjYHP+TxuKw0+2OqMfSr/mkB49sgcKe1Fd7EFlCJbnDmIoZc1
-loO0x9MGK9bl/hlVWUpTorkAJGJygdstxTVk9jFJAEFvUXz6ZNk7HKdb0yOqvZcu
-hRqp1nOCL3fSUjtNPfE3ovaEQBiJO/FcGPf4bSgKycnfeFEbnJy+lYhCvsTV6x6A
-fUy85pKXZad4b51OFi9Hgo+a59ocTopYQRPvAiTcD+e9x2WagmMJCdNjTFsKCUy0
-kprWATccn3TZJ3pSZpqlPX9FvP8u3mZOywM4WXtpX8xvT6qXqys=
-=fEJK
------END PGP SIGNATURE-----
+The former; changing a CPU cooling device's state (IOW changing its max
+allowed frequency for thermal reasons) leads to a call to
+arch_set_thermal_pressure() (see
+cpufreq_cooling.c::cpufreq_set_cur_state()).
 
---DBIVS5p969aUjpLe--
+It's somewhat interesting to have, at least in theory. On plain SMP that
+would let the scheduler see if some CPUs are more throttled that others,
+which would be leveraged when doing load balancing. It's more
+interesting for big.LITTLE & co, where in the worst cases we can have
+things like capacity inversion, i.e. the bigs are so thermally throttled
+that they give less oomf than a LITTLE.
