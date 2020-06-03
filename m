@@ -2,150 +2,132 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E66FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62642067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E701206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qaVfTWUQ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="F3y0EjPD"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="hq0i2axV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgFCWen (ORCPT
+        id S1726877AbgFCWiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 18:34:43 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:15517 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgFCWek (ORCPT
+        Wed, 3 Jun 2020 18:38:50 -0400
+Received: from sonic311-30.consmr.mail.ne1.yahoo.com ([66.163.188.211]:36025
+        "EHLO sonic311-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726644AbgFCWit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 18:34:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1591223678; x=1622759678;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=S+7tQQLKiE1NMaEu0us5Bre+bQi9UrnEfPbpkfRElwA=;
-  b=qaVfTWUQNJZQJ5ELxbgN6t0g5qSe/RaaaRoI5Zslb7ySTKACl2zoNaZW
-   gc8+hCH7O9XkxASBNgHc631isj9tXJYPGPUqPsWqaDBThnEuw9Uvx4kph
-   8LCDuhrmBLeDtwnQh3lPpL1aRIdBn4Av3SNlklK/CDGBC+T6/Jwxq3wWD
-   scGFsYw/DYHqVX8+Lwlz5idpYfKJWOm8NHZ+rExkRXRlZZeUr02BPyD6i
-   80FWSbn05D7eYP5aH/y5V9MsSLyVIHcJNLxLGmBE75iyfw5VVBMO4q8Ai
-   Y/UeKLZRV5ibuWXThgnh2hcS1JWBHLv1I5VmXQg3C5yK8Ha3yJac2wrzU
-   A==;
-IronPort-SDR: lJybmMA+phi2oLLNFz9S82RUX+hRcTuWy8/vroKGkqVvE+rTOTMg25gUJgwwePhDJutxmPsZNo
- oN0hMerGaK1pdsCbrpl1E7gRrf95ss7EZVP4WwlvGV8TSuNSbcnIBkV7DSy1kr2NuCGTDmpf2l
- 02C3JPswbbMHDZTpR8BE6wmydhgGPUm2M1IxUY3ZJueUpGe6iKwfQ6cCxEDA/5fB8G5D6eELCp
- CJ5rMPPfW3KSXznOGi5AmQCAOUD4ZUj4z1rMLkYNZou2/MNvO9SbbV2WXcjP9zNYvVw9Yz7JuE
- 7xE=
-X-IronPort-AV: E=Sophos;i="5.73,470,1583164800"; 
-   d="scan'208";a="139143251"
-Received: from mail-sn1nam02lp2056.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.56])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Jun 2020 06:34:36 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OjYAW+DeYYOCJTPaDtJnbqUAnv58FWQxgnhXKykg9Er55IcHTxN3h1xCj1WK/i3VcnLhBoXfvGvoJbDvmFvIhDn6lM1y+aCe3nREWE8GO9VuaRm7O/f/Y5w/GrG+WJPWdB3FRGoM+RYuhPIwvorl5ANC1ngtV9x2bfO+QMhGb2xzgApIStsJ8KqVXSMDxFPePGWd+KrSNg+WJnN56zI5JQ/LvLKOVzDcTH8SnxqX5c98SNP2PtBEJo+jQ/AZsowPNgquRYrHB3chQLaiTrQacD7yvGnYFzfKz1IQZiENaOLuru7hFozUqiGA34CuUMad/KOBqhRCp/TekrPXkJwWsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nZhYxQFvjYucjwkI+OTGTlww1kQV47s0QZMA8BeQ8zc=;
- b=BHGrqsmtdfX4JjxlrFPQ073TPDIi1+0Tp2b/xIQ9Hh/rLBnEKdEipq61JeQOuV2gF/gbf5rkgjVXyM1MUktHgcStSEqFrtTwurdkMIjS0hIIjo5kjAt5vP4Nr2jgVrV1yP91hYjSyPW7E6jqvSujaI8IkB7prNWDTCHemEPmycFj3DYtYZpFajeT5HcSUEOZKdkFScbilLWff4nNLBNrDaAqV6/J6GfEN03snVGoLbh/RpZlNUk5UEKYpnNcSKOQB1JWmCvPmUx1VISegoePkxjgjcsPtbAujkTucA2W6OUWJF4C7yrT4a2X/JyFpXtS5UtH87YtP+GNKQWnuASaig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nZhYxQFvjYucjwkI+OTGTlww1kQV47s0QZMA8BeQ8zc=;
- b=F3y0EjPDz1xtTzdeb9Eg+Az3rrS2S8cQ2BOhVTr25dz3804oQPVN/ip/3Mv9yD9IeiooXx51PgwYaZytpC7KdWXcm2ikU64ujDjbouizx8FtheW50JES1HGzJDuqy2/9bON8TH5RU/WGFW1vXJDOzqV3u6hffmLSIArc0qDety4=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB4792.namprd04.prod.outlook.com (2603:10b6:a03:12::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 3 Jun
- 2020 22:34:34 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6%7]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 22:34:34 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Jens Axboe <axboe@kernel.dk>
-CC:     kernel test robot <lkp@intel.com>, "Jan, Kara," <jack@suse.cz>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: kernel/trace/blktrace.c:347:12: sparse: sparse: incorrect type in
- assignment (different address spaces)
-Thread-Topic: kernel/trace/blktrace.c:347:12: sparse: sparse: incorrect type
- in assignment (different address spaces)
-Thread-Index: AQHWOZq0JeGPDjwwNk2lvn18OjkZKw==
-Date:   Wed, 3 Jun 2020 22:34:34 +0000
-Message-ID: <BYAPR04MB496578B5C8F42E1639F56D8A86880@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <202006031903.CiDVFCgm%lkp@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.dk; dkim=none (message not signed)
- header.d=none;kernel.dk; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dcad22f8-9cf4-4957-1a15-08d8080e4a82
-x-ms-traffictypediagnostic: BYAPR04MB4792:
-x-microsoft-antispam-prvs: <BYAPR04MB479223346AA64393371E9FD786880@BYAPR04MB4792.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:612;
-x-forefront-prvs: 04238CD941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fbJmln0pfRCGHpzUAKanX2lksuvlyLLJ2yh1G+JfbdGf1qhiMcMMvxTW3WS2eosEv/2BuBiKgz0kYjfyNieQOeMm9Qo7NAQSErkzD2FfUFD6vym9UPVYj8fs6Tu663fBjKHsYWp5zjkZyGSc9x/S+tkXBvkokZ2QHIEcBQ2qDzdgv+ucaHiVaCXDn3KnGrubix7T9KivmZrQV1eKvfkFBtAeQJXtZ4s40ZUR/vXaNG5plN1wFhCjGXJu+pwfbe1xd4pVezQH0Ok6oFc7QvA2V2xqId8GtSeYf/U0HlzMi9WCe6KDVSyDan6QDhtGMAC4e5vbGSq+wk7yB6MqOykoHmsOJiOtUdmx3RXAHjzqBKbJPHndFT+PJwv+Z7qjpN0LZa2HpVC67TUC95djDESFGg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(39860400002)(346002)(366004)(66446008)(64756008)(66946007)(66476007)(54906003)(66556008)(76116006)(4326008)(71200400001)(52536014)(186003)(6916009)(55016002)(2906002)(7696005)(316002)(4744005)(33656002)(53546011)(26005)(5660300002)(8936002)(478600001)(86362001)(9686003)(6506007)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: PkErdIyQ+3I9OA6s6jLG23kD90OHxKTQ85we2oX0ALE+m0Y1Ypuzjf7Yq8pWyBZD94V+ZmWFxZXnjgUzpQyxEsUZTthl/dgGu7DSt2a3ksjqyNXPAYWOSq1lQjHU/mzAkxNJwVEnD8URB+LAlU5eVBd97f+NGmCftsqHkIFxImjdSgRPIOGm7cGN3xfoPqSHXurHkGkDn/HogqCl2EjuWUHK/00GbAtlsHIh5YhQ2zJj4QcozWxY3cXOR0WGouXtEGh0iVgRDbPDGZSKlcqQZF3hBDUrJeB5bG+wW1lzXiXxOovDx+6SHNwcYriqwJmd8CaH6ZRNfQhf7kziPGlgubIoZ9RGHd5MErRu8ZGHxGoHvb/n8mqzWF4dxU5cevI2ukN31ztfqMtHwIwJ0DoXasgL50Yzif5wmKtvIISK7ydcsS1WU3FJS2hBi1dLdXFyR61wS6wopNfN2yw0e9SgpYWVsnwz1gv7S4DkxkIooA0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Jun 2020 18:38:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1591223927; bh=Gx2XzRm+Z+xBtg5AfAZKtt2V3x0bnaPU/sVUutAaSmU=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=hq0i2axVGHrVgEZvFCD9wApK4Mc3aVFpLVXGLCdYgq92JblGL+igdzROOM5atapvHTM1046M0/HuEdKABdBoJ7ratrY1weeVSpC0S7NkM0D5+j1e/yky/e8sSN77DCbZcVbFpP0yf/GG6j+qwcRgiSv+1KZ80SMbb8gTAxyRfin4AXfUSviiABLhWstLdvsT+irUzxTiWYNIuJqju99cO+E+Pxr5LnSytk3KIxM5YhHuX7nuNJGPaYOZkON7bDTnvd3Iq0s5oZHiE9mTs0uE+Wj2kPzN4TrHwp/yCU8353/0uEqEngr/WS+c5NMHbNm+YppZLzqImekRe7VZ6U4qFA==
+X-YMail-OSG: djsLCScVM1nZlS1I4A.hTLOew4.QaqfX03Pz1mDKpph.6Z1q_iC2qVn4930VBvt
+ FsVnBXPpALLqpBSCN_Pw.QDWBJfhnshdtFPSJdKIpvK.pZjJWCaVuFPMEOLo4RMfLX5YC.POm9T1
+ CCq5CbsvB9u1UAUTbIY14jjftxdhY.Gw6kEbTmnVETeHQd9jBVSXQJifPuVNQaBxNmyi14hy5gtv
+ 6MOleISxrxKHKaUwUT8LEmVOlGBnnZyRXHAFNf81WAe7XmZLxDDZvhU2xASjoY_EWD9ZRSnAIcog
+ P.hj8414UDA4QJyMLajl23n3q7rhb_U8h3YXcDTbCN2asTsVqFRhRsNX9oQ7_2QfAGVpaXSqLA4o
+ CaZ7bMxBHhH4Rxw4yOJyeSz_A08c5ChiZ4hsSOMgA9aXTIbnsiENeJSHQFLcvUS9r9uzAyjwvAPn
+ qab3idRHmKTDDJvC_LcC0pOjqsTOtkPNOF4nAnsuy.S_yGIH3Pftxk2VXk4tTP2elHAyn5SL93Uv
+ 7DCFlyBkX8QK3iZxvfqLmkxC7GYzsSAAnIPv6Vs_bDduzjy4uBCxFQjOOh0K96nNzN5s.OKpNdwY
+ FurIV.NwUdrdGROhz_JusMn9XP2saxAHUCcx7K1Vb196B5Qo2oUeZOTqhVDAI.CtCY8brlwlB6Ad
+ jhdnvYQp6gXm9UzJ9xUbeurmNo1Ww.p_bNfH7I41PfQp6B6bDLGIGUGiAYuzbB7YtB484RiAelHs
+ eUnv5l076r_YvtURishn5D8ElMMZlIdlaz0ouNC7k2cswqTHGDUF68NQQQ0Y2qqk2k_sC88kK_zb
+ a1eBAHAnmIsQq9.7Xpd0wxa8TnRzZV5RIMWhSgA4r2.xW3_VD0eDiHRVm78Rm5vnQfJrxqQ5fMYp
+ T4d0l.txOH3sn24yEmRmCiZh4N.cW2meaKuf19t61kEp3iGQ3p_feghVFtLYl109EqGD4j.OotnZ
+ 8SFNe8D19aWIBc9NVvLs52ENQ0TizfvYYKokTXGpF7sJ0BYqq4uZtM1LmT2CWw55PTLf47hRjacE
+ fN53V7nvDUFwAgImnOWUTm2jc_neICd6igcn4iruXcnA3Qxnqc8I0SlnluFHzNMvtDXbzrRrmwB9
+ OUyAacPYCdBQM7nfjmBDodrLp6_d8_fhjG9wUEF1Y3y9ambXMSbqFZ3sLPR1b0UqzUGMIkRCEql7
+ Jf2ox.ykN9fo7sxMktbAfuk2IjGpkzATiosjc4J9H4JlPYnUE5TeYmy8e4P.EOewS2dhBf9e3hPg
+ fRPqXVicaF2882XRUQU6xC2DfqbkQd4OZQPXonC7JTUmWbd_xtXUfkmojJMdQIjcLnrdaqTIrm6C
+ zXfJpWkQp.QADrK_URNe14dqkRtgNyLdJ73vhFdFYJIpxv3mqVklZs30UTTpeCRc2u61POc45Nce
+ GLcOdU6rtUM2kteM-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Wed, 3 Jun 2020 22:38:47 +0000
+Received: by smtp412.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID f5aa7d329c3647264f56349380598c86;
+          Wed, 03 Jun 2020 22:38:45 +0000 (UTC)
+Subject: Re: [GIT PULL] SELinux patches for v5.8
+To:     James Morris <jmorris@namei.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
+ <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
+ <290017a8-d943-570f-1f90-acecf1c075a1@schaufler-ca.com>
+ <alpine.LRH.2.21.2006040809280.6050@namei.org>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <761f5d15-3422-1834-7be5-8f3276d10172@schaufler-ca.com>
+Date:   Wed, 3 Jun 2020 15:38:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcad22f8-9cf4-4957-1a15-08d8080e4a82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 22:34:34.3531
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D7y8wys5AsxKp2eP3MdiyMRKWUlUVYpSBuloAxZ70AUILM7zXbJar7EIDIBDtceQMi0113eZm3Pfjl6yfzVlawE+UcAUma7bXZ0ivkVSdOs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4792
+In-Reply-To: <alpine.LRH.2.21.2006040809280.6050@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Mailer: WebService/1.1.16037 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jens,=0A=
-=0A=
-On 6/3/20 4:32 AM, kernel test robot wrote:=0A=
-> tree:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  =
-master=0A=
-> head:   d6f9469a03d832dcd17041ed67774ffb5f3e73b3=0A=
-> commit: c780e86dd48ef6467a1146cf7d0fe1e05a635039 blktrace: Protect q->blk=
-_trace with RCU=0A=
-> date:   3 months ago=0A=
-> config: arc-randconfig-s031-20200603 (attached as .config)=0A=
-> compiler: arc-elf-gcc (GCC) 9.3.0=0A=
-> reproduce:=0A=
->          # apt-get install sparse=0A=
->          # sparse version: v0.6.1-244-g0ee050a8-dirty=0A=
->          git checkout c780e86dd48ef6467a1146cf7d0fe1e05a635039=0A=
->          # save the attached .config to linux build tree=0A=
->          make W=3D1 C=3D1 ARCH=3Darc CF=3D'-fdiagnostic-prefix -D__CHECK_=
-ENDIAN__'=0A=
-> =0A=
-> If you fix the issue, kindly add following tag as appropriate=0A=
-> Reported-by: kernel test robot<lkp@intel.com>=0A=
-=0A=
-I think Jan has sent the patch to fix the rcu and I've sent out the =0A=
-series to fix the rest of the issues.=0A=
-=0A=
-Can you please let me know how can we proceed with the series so that=0A=
-we can stop these emails ?=0A=
+On 6/3/2020 3:12 PM, James Morris wrote:
+> On Wed, 3 Jun 2020, Casey Schaufler wrote:
+>
+>> The use of security modules was expected to be rare.
+> This is not correct. Capabilities were ported to LSM and stacked from t=
+he=20
+> beginning, and several major distros worked on LSM so they could ship=20
+> their own security modules.
+
+Capabilities has always been a special case.
+Until Android adopted SELinux the actual use of LSMs was rare.
+
+
+
