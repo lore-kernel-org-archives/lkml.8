@@ -2,118 +2,249 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F141EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2AC20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WlP1G6Dy"
+	by mail.kernel.org (Postfix) with ESMTP id C66AE20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgFCQ1H (ORCPT
+        id S1726170AbgFCQ3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:27:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37354 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgFCQ1G (ORCPT
+        Wed, 3 Jun 2020 12:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgFCQ3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:27:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053GI2gS193450;
-        Wed, 3 Jun 2020 16:27:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=FEiXZ6/Qhn4G0P2rQp5P3+kAxGftVnFrnRAG0wneIw0=;
- b=WlP1G6DyVeO/jgOTJ/7fVztE3FeVU41h45IG2RMadceUApQyscs5yHZTUsxiukVdnNbm
- 1eOpjPp4QYy3COXzRduidHMLf2RlgkUmuPVAeImwIqbHVm6W9StimgezyePuYs1q001W
- ExOxG2VbuoG9HzbaJdi2gZDYDJSGTXMR7dE//aA580GoAKUq+BrHm0FFa2NyK0QIQa/5
- Q3E2sixf99qlNWhbmJfB2dg+bGdX8S4ME96kGuvrm+WXDffHF8BdAJN+S5dbZPtvOUNI
- reNit9d3DERBM65eIX8dt14SVeo08AmHF2PrLoEKNht/oacx5FnxdVHsjs1qke0Q1gzj Ig== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31bewr2am0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 16:27:02 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053GJSt3142693;
-        Wed, 3 Jun 2020 16:27:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 31c12r4qsj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 16:27:01 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 053GR18d006218;
-        Wed, 3 Jun 2020 16:27:01 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jun 2020 09:27:00 -0700
-Date:   Wed, 3 Jun 2020 09:26:59 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        Wed, 3 Jun 2020 12:29:20 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910E2C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 09:29:20 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jgWGJ-0006lc-9a; Wed, 03 Jun 2020 18:29:07 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jgWGI-0003qv-Km; Wed, 03 Jun 2020 18:29:06 +0200
+Date:   Wed, 3 Jun 2020 18:29:06 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, jonathanh@nvidia.com, bbasu@nvidia.com,
+        ldewangan@nvidia.com, kyarlagadda@nvidia.com,
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Add the missed xfs_perag_put() for
- xfs_ifree_cluster()
-Message-ID: <20200603162659.GA8230@magnolia>
-References: <20200603092707.1424619-1-hslester96@gmail.com>
+Subject: Re: [PATCH V4] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+Message-ID: <20200603162906.vyfynqtxa7mpjxxv@taurus.defre.kleine-koenig.org>
+References: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aolxn5mvfn62f3oc"
 Content-Disposition: inline
-In-Reply-To: <20200603092707.1424619-1-hslester96@gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=1 spamscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 suspectscore=1 impostorscore=0 cotscore=-2147483648
- lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006030129
+In-Reply-To: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 05:27:07PM +0800, Chuhong Yuan wrote:
-> xfs_ifree_cluster() calls xfs_perag_get() at the beginning, but forgets to
-> call xfs_perag_put() in one failed path.
-> Add the missed function call to fix it.
-> 
-> Fixes: ce92464c180b ("xfs: make xfs_trans_get_buf return an error code")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-Yeah, that looks like a bug, will test.
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+--aolxn5mvfn62f3oc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---D
+Hello,
 
-> ---
->  fs/xfs/xfs_inode.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index d1772786af29..8845faa8161a 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -2639,8 +2639,10 @@ xfs_ifree_cluster(
->  		error = xfs_trans_get_buf(tp, mp->m_ddev_targp, blkno,
->  				mp->m_bsize * igeo->blocks_per_cluster,
->  				XBF_UNMAPPED, &bp);
-> -		if (error)
-> +		if (error) {
-> +			xfs_perag_put(pag);
->  			return error;
-> +		}
->  
->  		/*
->  		 * This buffer may not have been correctly initialised as we
-> -- 
-> 2.26.2
-> 
+On Mon, Jun 01, 2020 at 10:50:36AM +0530, Sandipan Patra wrote:
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index d26ed8f..1daf591 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -4,8 +4,36 @@
+>   *
+>   * Tegra pulse-width-modulation controller driver
+>   *
+> - * Copyright (c) 2010, NVIDIA Corporation.
+> + * Copyright (c) 2010-2020, NVIDIA Corporation.
+>   * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix=
+=2Ede>
+> + *
+> + * Overview of Tegra Pulse Width Modulator Register:
+> + * 1. 13-bit: Frequency division (SCALE)
+> + * 2. 8-bit : Pulse division (DUTY)
+> + * 3. 1-bit : Enable bit
+> + *
+> + * The PWM clock frequency is divided by 256 before subdividing it based
+> + * on the programmable frequency division value to generate the required
+> + * frequency for PWM output. The maximum output frequency that can be
+> + * achieved is (max rate of source clock) / 256.
+> + * e.g. if source clock rate is 408 MHz, maximum output frequency can be:
+> + * 408 MHz/256 =3D 1.6 MHz.
+> + * This 1.6 MHz frequency can further be divided using SCALE value in PW=
+M.
+> + *
+> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
+> + * To achieve 100% duty cycle, program Bit [24] of this register to
+> + * 1=E2=80=99b1. In which case the other bits [23:16] are set to don't c=
+are.
+> + *
+> + * Limitations:
+> + * -	When PWM is disabled, the output is driven to inactive.
+> + * -	It does not allow the current PWM period to complete and
+> + *	stops abruptly.
+> + *
+
+I'd prefer to have no empty lines in the in Limitations paragraph to be
+able to get all infos using something like:
+
+	sed -rn '/\* Limitations:/,/^ \*\/?$/p' drivers/pwm/pwm-tegra.c
+
+> + * -	If the register is reconfigured while PWM is running,
+> + *	it does not complete the currently running period.
+> + *
+> + * -	If the user input duty is beyond acceptible limits,
+> + *	-EINVAL is returned.
+
+s/acceptible/acceptable/ (but in fact this isn't a limitation, so I'd
+drop this here, as pointed out in v2).
+
+In v2 I mentioned a few things to add here.
+
+>   */
+> =20
+>  #include <linux/clk.h>
+> @@ -41,6 +69,7 @@ struct tegra_pwm_chip {
+>  	struct reset_control*rst;
+> =20
+>  	unsigned long clk_rate;
+> +	unsigned long min_period_ns;
+> =20
+>  	void __iomem *regs;
+> =20
+> @@ -68,7 +97,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, stru=
+ct pwm_device *pwm,
+>  {
+>  	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
+>  	unsigned long long c =3D duty_ns, hz;
+> -	unsigned long rate;
+> +	unsigned long rate, required_clk_rate;
+
+In v2 I requested to move this into the if block below. You replied to
+want to move it accordingly.
+
+>  	u32 val =3D 0;
+>  	int err;
+> =20
+> @@ -83,9 +112,47 @@ static int tegra_pwm_config(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  	val =3D (u32)c << PWM_DUTY_SHIFT;
+> =20
+>  	/*
+> +	 *  min period =3D max clock limit >> PWM_DUTY_WIDTH
+> +	 */
+> +	if (period_ns < pc->min_period_ns)
+> +		return -EINVAL;
+> +
+> +	/*
+>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+> +	 *
+> +	 * num_channels: If single instance of PWM controller has multiple
+> +	 * channels (e.g. Tegra210 or older) then it is not possible to
+> +	 * configure separate clock rates to each of the channels, in such
+> +	 * case the value stored during probe will be referred.
+> +	 *
+> +	 * If every PWM controller instance has one channel respectively, i.e.
+> +	 * nums_channels =3D=3D 1 then only the clock rate can be modified
+> +	 * dynamically (e.g. Tegra186 or Tegra194).
+>  	 */
+> +	if (pc->soc->num_channels =3D=3D 1) {
+> +		/*
+> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
+> +		 * with the maximum possible rate that the controller can
+> +		 * provide. Any further lower value can be derived by setting
+> +		 * PFM bits[0:12].
+
+It looks a bit strange that the algorithm to calculate the clock
+settings depends on the number of channels. Looks like a wrong
+abstraction.
+
+> +		 *
+> +		 * required_clk_rate is a reference rate for source clock and
+> +		 * it is derived based on user requested period. By setting the
+> +		 * source clock rate as required_clk_rate, PWM controller will
+> +		 * be able to configure the requested period.
+> +		 */
+> +		required_clk_rate =3D
+> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
+> +
+> +		err =3D clk_set_rate(pc->clk, required_clk_rate);
+> +		if (err < 0)
+> +			return -EINVAL;
+> +
+> +		/* Store the new rate for further references */
+> +		pc->clk_rate =3D clk_get_rate(pc->clk);
+> +	}
+> +
+>  	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
+> =20
+>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> @@ -94,7 +161,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+> =20
+>  	/*
+>  	 * Since the actual PWM divider is the register's frequency divider
+> -	 * field minus 1, we need to decrement to get the correct value to
+> +	 * field plus 1, we need to decrement to get the correct value to
+
+I would have put this in a separate change.
+
+>  	 * write to the register.
+>  	 */
+>  	if (rate > 0)
+> @@ -205,6 +272,10 @@ static int tegra_pwm_probe(struct platform_device *p=
+dev)
+>  	 */
+>  	pwm->clk_rate =3D clk_get_rate(pwm->clk);
+> =20
+> +	/* Set minimum limit of PWM period for the IP */
+> +	pwm->min_period_ns =3D
+> +	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
+
+To ensure that required_clk_rate in tegra_pwm_config doesn't get bigger
+than pwm->soc->max_frequency this isn't the right formula I think. I'd
+use
+
+	pwm->min_period_ns =3D DIV_ROUNDUP(NSEC_PER_SEC, pwm->soc->max_frequency >=
+> PWM_DUTY_WIDTH);
+
+=2E Can you confirm?
+
+Best regards
+Uwe
+
+--aolxn5mvfn62f3oc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7Xz88ACgkQwfwUeK3K
+7AlrAAf/aYBSEFxW/wXZ2OQi20KmCo1gebNdYjqppcGWBHFcslo+Zy//4zemJatL
+/zx40sFn60GynifMqDb3vGsgAtt3DCZsb9+MC3H8PQLXa70yaWeJ1n9oEapQ5UIk
+tD5GGH8Pa/dBdM7cH5bWjcziQ1elZZXDV8q7X5G/IJF79hHvoDYTnSJbeO1RVxG6
+XBopnHUquZladbAMRLK6mXUdiU1d0dRVcDCdMGqoypAkFbUNgVWXnVq6SpQqvice
+m+BUzT7ekqJ/0vE54NRJeudBnGkjmkuGMuX14+GJJqbO0NZVKPyi5XREm+eqlzvq
+1rD4TCb2n45vagAbws+IpFaRWueWkg==
+=t6tJ
+-----END PGP SIGNATURE-----
+
+--aolxn5mvfn62f3oc--
