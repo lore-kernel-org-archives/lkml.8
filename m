@@ -2,151 +2,109 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4220AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2799120679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6018E20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dRwvImId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgFCNeQ (ORCPT
+        id S1726054AbgFCNek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:34:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:33540 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgFCNeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:34:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E2C355D;
-        Wed,  3 Jun 2020 06:34:15 -0700 (PDT)
-Received: from [10.57.0.45] (unknown [10.57.0.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 828073F52E;
-        Wed,  3 Jun 2020 06:34:13 -0700 (PDT)
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-To:     Mike Leach <mike.leach@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15>
- <6d759cc28628ea72767c1304883630eb@codeaurora.org>
- <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
- <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
- <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
- <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org>
- <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
-Date:   Wed, 3 Jun 2020 14:34:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 09:34:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgFCNek (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:34:40 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CAAAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:34:39 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id e2so2156675eje.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 06:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=JhoMw3YkQpCseFSsh/lVmeFHj2TYb955rgd4sIpGDw4=;
+        b=dRwvImIdqP196cKPZv0g9rBkpfV6Yf6mwGv20iBgvLuMc1StUpUhgTRBKvMpxOKzkq
+         MDlm0rXRugI/E1j84RRRZNT+qardRrxBTaMTXsL/zJWlkbCmWNcn4fH9ybBObQk+vHHW
+         r3sLTlz+xWYM33r/XfdAJTgSSiNS62wPN/vbo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=JhoMw3YkQpCseFSsh/lVmeFHj2TYb955rgd4sIpGDw4=;
+        b=m49ayVk8BOCt9cgdloFI749RFMq6RSpgkJZRvNWYTXTL77agtXIZAC2IhrIU7Y3M2+
+         9OPRGExtQUsuIkITHPENGptnriK2dlUFOMCOO0sZFF9Cm9clNv3NmoL6kIruJzpwkiu8
+         AqF1Q00mdLppqwwnw9gmBylGzy2bTColzGhGjUkNauVmyBn+3P5rqc6yp3fCRioK1mEh
+         Pb4p7X9AQ2Ls7lQhcSwBS26sLdQ6vh2yJjM+isUaOTNQ3Ju/D+GvSFVTZuDJ6Cplz+5f
+         mDqzQ6NTI3G3oRwQSWV1VLJ50x0eBHH8Sl1BEFOf06/jG3098o2bsZycJJ+5Nkf8L9LB
+         bO2Q==
+X-Gm-Message-State: AOAM530MwplcmF6eaZRYftW8lEITCZKVBThTMAMYnU/YzaIwzE4j4oi4
+        Y7ypCVvmIy8AfAgxZJa+sRWaxr4YcBk0WflOBfzyBw==
+X-Google-Smtp-Source: ABdhPJwKKAgiK1gE/ZW8FEEq6vj7DAUATxy+ips4f8JzLgMIh//phQkBGbaQKVR8QGqMH7Vk+glpPxWCbEa3pmFOWhs=
+X-Received: by 2002:a17:906:5645:: with SMTP id v5mr11075782ejr.533.1591191278202;
+ Wed, 03 Jun 2020 06:34:38 -0700 (PDT)
+From:   Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+References: <1590651115-9619-1-git-send-email-newtongao@tencent.com> <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com>
+In-Reply-To: <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJb9Wzm0098wwdcUnfhuPbO5i84ZwGnJavmp64zHeA=
+Date:   Wed, 3 Jun 2020 19:04:35 +0530
+Message-ID: <08525d33fafb0a10c427838621fb571f@mail.gmail.com>
+Subject: RE: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by JBOD
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>
+Cc:     xiakaixu1987@gmail.com, jejb@linux.ibm.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiaoming Gao <newtongao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-03 14:22, Mike Leach wrote:
-> Hi Sai,
-> 
-> On Wed, 3 Jun 2020 at 13:14, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
+>Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung
+caused by JBOD
+>
+>
+>> when kernel crash, and kexec into kdump kernel, megaraid_sas will hung
+>> and print follow error logs
 >>
->> Hi Mike,
+>> 24.1485901 sd 0:0:G:0: [sda 1 tag809 BRCfl Debug mfi stat 0x2(1, data
+>> len requested/conpleted 0X100 0/0x0)]
+>> 24.1867171 sd 0:0:G :9: [sda I tag861 BRCfl Debug mfft stat 0x2d, data
+>> len reques ted/conp1e Led 0X100 0/0x0]
+>> 24.2054191 sd 0:O:6:O: [sda 1 tag861 FAILED Result: hustbyte=DIDGK
+>> drioerbyte-DRIUCR SENSE]
+>> 24.2549711 bik_update_ request ! 1/0 error , dev sda, sector 937782912
+>> op 0x0:(READ) flags 0x0 phys_seg 1 prio class
+>> 21.2752791 buffer_io_error 2 callbacks suppressed
+>> 21.2752731 Duffer IO error an dev sda, logical block 117212064, async
+>> page read
 >>
->> On 2020-06-03 16:57, Mike Leach wrote:
->>> Hi,
->>>
->>> On Wed, 3 Jun 2020 at 11:24, Sai Prakash Ranjan
->>> <saiprakash.ranjan@codeaurora.org> wrote:
->>>>
->>>> Hi Mike,
->>>>
->>>> Thanks again for looking at this.
->>>>
->>>> On 2020-06-03 03:42, Mike Leach wrote:
->>>> [...]
->>>>
->>>>>>
->>>>>> SMMU/IOMMU won't be able to do much here as it is the client's
->>>>>> responsiblity to
->>>>>> properly shutdown and SMMU device link just makes sure that
->>>>>> SMMU(supplier) shutdown is
->>>>>> called only after its consumers shutdown callbacks are called.
->>>>>
->>>>> I think this use case can be handled slightly differently than the
->>>>> general requirements for modular CoreSight drivers.
->>>>>
->>>>> What is needed here is a way of stopping the underlying ETR hardware
->>>>> from issuing data to the SMMU, until the entire device has been shut
->>>>> down, in a way that does not remove the driver, breaking existing
->>>>> references and causing a system crash.
->>>>>
->>>>> We could introduce a new mode to the ETR driver - e.g.
->>>>> CS_MODE_SHUTDOWN.
->>>>>
->>>>> At the end of the block tmc_shutdown(struct amba_device *adev), set
->>>>> drvdata->mode to CS_MODE_SHUTDOWN & remove the coresight_unregister().
->>>>> This new mode can be used to  prevent the underlying hardware from
->>>>> being able to restart until the device is re-powered.
->>>>>
->>>>> This mode can be detected in the code that enables / disables the ETR
->>>>> and handled appropriately (updates to tmc_enable_etr_sink and
->>>>> tmc_disable_etr_sink).
->>>>> This mode will persist until the device is re-started - but because we
->>>>> are on the device shutdown path this is not an issue.
->>>>>
->>>>> This should leave the CoreSight infrastructure stable until the
->>>>> drivers are shut down normally as part of the device power down
->>>>> process.
->>>>>
->>>>
->>>> Sounds good to me, but if the coresight_unregister() is the trouble
->>>> point
->>>> causing these crashes, then can't we just remove that from
->>>> tmc_shutdown()
->>>> callback? This would be like maintaining the same behaviour as now
->>>> where
->>>> on reboot/shutdown we basically don't do anything except for disabling
->>>> ETR.
->>>
->>> No - the new mode prevents race conditions where the thread shutting
->>> down the SMMU does the ETR shutdown, but then another thread happens
->>> to be trying to start trace and restarts the ETR.
->>> It also prevents the condition Mathieu discussed where a thread might
->>> be attempting to shutdown trace - this could try to disable the
->>> hardware again re-releasing resources/ re-flushing and waiting for
->>> stop.
->>>
->>
->> I do not think there will a race between SMMU shutdown and ETR shutdown.
->> Driver core takes care of calling SMMU shutdown after its consumer
->> shutdown callbacks via device link, otherwise there would already be
->> bugs in all other client drivers.
->>
-> 
-> I am not saying there could be a race between tmc_shutdowm and
-> Smmu_shutdown - there may be a case if the coresight_disable_path
-> sequence is running and gets to the point of disabling the ETR after
-> the SMMU callback has disabled it.
+>> this bug is caused by commit '59db5a931bbe73f ("scsi: megaraid_sas:
+>> Handle sequence JBOD map failure at driver level ")' and can be fixed
+>> by not set JOB when reset_devices on
+>
+>Broadcom: Please review.
+>
+>Thanks!
+>
+>--
+>Martin K. Petersen	Oracle Linux Engineering
 
-I'm confused now - there is no "SMMU callback", we're talking about the 
-system-wide cleanup from kernel_shutdown_prepare() or 
-kernel_restart_prepare(). As far as I'm aware userspace should be long 
-gone by that point, so although trace may have been left running, the 
-chance of racing against other driver operations seems pretty unlikely.
+We are working on it and will update you at the earliest.
 
-Robin.
+Thanks,
+Chandrakanth Patil
