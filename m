@@ -2,115 +2,93 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B43C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E44B2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591206467;
-	bh=N8R8pSuHgSbcthCl3xg6pH5o3sSUgkR8ukFXEmttun4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1WXC/TlW/qnEXAopznGhF3W4bz5lVEkBbdtuzmeA+Ipcnbu6tQv2yFgQKjyhUhrWe
-	 quIflBEK1H56YToZY85wJv7l7WtvtYXZgaBrLB+e6zq8tURwzVM591/Qwq23h5hWeZ
-	 x7mjy80SzeYz6OxXg6Fhpi/rHnKpQT9bGWCwOD44=
+	by mail.kernel.org (Postfix) with ESMTP id EC3082053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgFCRrr (ORCPT
+        id S1726415AbgFCRrz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:47:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbgFCRrq (ORCPT
+        Wed, 3 Jun 2020 13:47:55 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:35918 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbgFCRry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:47:46 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D073C08C5C9
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:38:06 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x27so1841354lfg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jmZLnge/JsJbbtstAv9yQbEIQ8yd6Uru632t/pS89cQ=;
-        b=NFxCY+bXPLUGZdo7dT3SyTWmToxnyjr4RwN7Skl85wz7MjddHjn2AVfAy7MdqJtKKC
-         uXAje7NxrbVdIfpXaqXBBty29zjcQKBbI5aRDK6Ya5s3e7WblNy4BfS4+Mfuz6pzBafg
-         rVo3l+YqXE/um6wh4OJHcUO+5+Pm7Fiza4+jo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jmZLnge/JsJbbtstAv9yQbEIQ8yd6Uru632t/pS89cQ=;
-        b=szzT1YJchZEbR1RswqeZANvqmJTB2hF2DdRPETGECHFC0X6lnzEb8oXIUEPq5WjI2p
-         eTrXjXa9l4IswgBWjlx3tWtNcOYtFKEbYdwO+jEJfd8uGfW7TqcJomUicK9SHex4ngkW
-         +olqQLxdURWPr8Gw3yT6ckqmUZj2ibpFjfRERXgXqCCvVLKizLH++5g/rkQ9P8it9/Ou
-         uqbCPszlkpDY9scP7BFeWqJxBIwKiUcWFjB9zKArb0GOyK3HX0uzXtYqHZA+3oPTS6+k
-         +2UcDF7kmeL5CTb/Flq2TizoFqQ37YxdDVuuYatnV+1lztaZFlnhvYYrlpz72hvMG9vA
-         pNIA==
-X-Gm-Message-State: AOAM531BAXr2sLFy42fZc3nxWf9BxdaC+ot2JCXorsfXj7cX+BV0tT6T
-        ureVtwmepZfeBlv24269/6rPM9rzFVs=
-X-Google-Smtp-Source: ABdhPJxoq+ByOv01G0ywfxgi9F5iuefXxZDJbYnI4GFsOnsyNWunxPLeRfCS5q5kTPHmqdM0Yt9FAw==
-X-Received: by 2002:a05:6512:2023:: with SMTP id s3mr338993lfs.78.1591205884606;
-        Wed, 03 Jun 2020 10:38:04 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id n8sm816844lfb.20.2020.06.03.10.38.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 10:38:03 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id c11so3841517ljn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:38:03 -0700 (PDT)
-X-Received: by 2002:a2e:b5d9:: with SMTP id g25mr159019ljn.285.1591205882849;
- Wed, 03 Jun 2020 10:38:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
- <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com> <290017a8-d943-570f-1f90-acecf1c075a1@schaufler-ca.com>
-In-Reply-To: <290017a8-d943-570f-1f90-acecf1c075a1@schaufler-ca.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 3 Jun 2020 10:37:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgkZROyMpBa8EKPDVK=SvurnrzJXgphQ8Fstx8rrfO6MQ@mail.gmail.com>
-Message-ID: <CAHk-=wgkZROyMpBa8EKPDVK=SvurnrzJXgphQ8Fstx8rrfO6MQ@mail.gmail.com>
-Subject: Re: [GIT PULL] SELinux patches for v5.8
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 3 Jun 2020 13:47:54 -0400
+Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
+        by mail.holtmann.org (Postfix) with ESMTPSA id D637ACED2E;
+        Wed,  3 Jun 2020 19:57:39 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 0/4] marvell: Fix firmware filenames for sd8977/sd8997
+ chipsets
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200603082229.15043-1-pali@kernel.org>
+Date:   Wed, 3 Jun 2020 19:47:51 +0200
+Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        =?utf-8?Q?Marek_Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Hemantkumar Suthar <shemant@marvell.com>,
+        Rakesh Parmar <rakeshp@marvell.com>,
+        Zhaoyang Liu <liuzy@marvell.com>, Cathy Luo <cluo@marvell.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <3159E2B0-8B61-42AC-8DBC-BC036B809A85@holtmann.org>
+References: <20200603082229.15043-1-pali@kernel.org>
+To:     =?utf-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 10:20 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
->
-> We could have inode->i_security be the blob, rather than a pointer to it.
-> That will have its own performance issues.
+Hi Pali,
 
-It wouldn't actually really fix anything, because the inode is so big
-and sparsely accessed that it doesn't even really help the cache
-density issue. Yeah, it gets rid of the pointer access, but that's
-pretty much it. The fact that we randomize the order means that we
-can't even really try to aim for any cache density.
+> This patch series fixes mwifiex and btmrvl drivers to load firmware for sd8977
+> and sd8997 chipsets from correct filename.
+> 
+> Both Marvell distribution package and linux-firmware repository [1] contain
+> firmware for these chipsets in files sdsd8977_combo_v2.bin/sdsd8997_combo_v4.bin.
+> 
+> Linux drivers mwifiex and btmrvl try to load firmware for these chipsets from
+> sd8977_uapsta.bin/sd8997_uapsta.bin files which obviously fails as these files
+> do not exist neither in linux-firmware [1] nor in Marvell distribution packages.
+> 
+> So the result is that Marvell sd8977 and sd8997 chipsets via mainline kernel
+> drivers (mwifiex and btmrvl) do not work out of box.
+> 
+> Each patch in this series fixes particular git commit which introduced usage
+> of incorrect firmware filename. Also each patch contains Fixes: line for easier
+> backporting to stable kernels.
+> 
+> mwifiex (1/4, 2/4) and btmrvl (3/4, 4/4) parts of this patch series can be
+> applied separately via wireless and bluetooth trees. I'm sending all four
+> patches in one patch series for easier review.
+> 
+> [1] - https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/mrvl
+> 
+> Pali Rohár (4):
+>  mwifiex: Fix firmware filename for sd8977 chipset
+>  mwifiex: Fix firmware filename for sd8997 chipset
+>  btmrvl: Fix firmware filename for sd8977 chipset
+>  btmrvl: Fix firmware filename for sd8997 chipset
+> 
+> drivers/bluetooth/btmrvl_sdio.c             | 8 ++++----
+> drivers/net/wireless/marvell/mwifiex/sdio.h | 4 ++--
+> 2 files changed, 6 insertions(+), 6 deletions(-)
 
-And it would actually not be possible with the current layered
-security model anyway, since those blob sizes are dynamic at runtime.
+all 4 patches have been applied to bluetooth-next tree.
 
-If we had _only_ SELinux, we could perhaps have hidden the
-sid/sclass/task_sid directly in the inode (it would be only slightly
-larger than the pointer is, anyway), but even that ship sailed long
-long ago due to the whole "no security person can ever agree with
-another one on fundamentals".
+Regards
 
-So don't try to blame the rest of the system design. This is on the
-security people. We've been able to handle other layers fairly well
-because they generally agree on fundamentals (although it can take
-decades before they then end up merging their code - things like the
-filesystem people standardizing on iomap and other core concepts). And
-as mentioned, when there is agreed-upon security rules (ie "struct
-cred") we've been able to spend the effort to architect it so that it
-doesn't add unnecessary overheads.
+Marcel
 
-             Linus
