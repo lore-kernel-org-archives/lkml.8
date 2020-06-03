@@ -2,83 +2,151 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A09C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66567206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CE320674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591173925;
+	bh=cblJEWAd3DPBh04Tlvi8BcWOqhwYMzDqk94d+BenPsg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1AUvw/smAYFSkxKaPEojqJHdR+iwvyk6oJXXGXaLOAN2jMgfcwIgxbMSB4Plmxe7g
+	 hOU1tXLU9FkCM5mB0z5Zu0FUCkSZ4p6VdTQns5LO8YVZe6raWadwomb2cZAGlIg7CA
+	 VmKKMvN8xHFndKEeXndYGxL1MoGolkd5ztRg3i/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgFCImW (ORCPT
+        id S1726202AbgFCIpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:42:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43530 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726150AbgFCImV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:42:21 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3114677EA63A4D0DE41F;
-        Wed,  3 Jun 2020 16:42:19 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.202.66) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 3 Jun 2020 16:42:07 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <akpm@linux-foundation.org>, <mike.kravetz@oracle.com>
-CC:     <guro@fb.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: [PATCH 2/2] mm: hugetlb: fix the name of hugetlb CMA
-Date:   Wed, 3 Jun 2020 20:40:25 +1200
-Message-ID: <20200603084025.62740-3-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20200603084025.62740-1-song.bao.hua@hisilicon.com>
-References: <20200603084025.62740-1-song.bao.hua@hisilicon.com>
+        Wed, 3 Jun 2020 04:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgFCIpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:45:24 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90AB92074B;
+        Wed,  3 Jun 2020 08:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591173923;
+        bh=cblJEWAd3DPBh04Tlvi8BcWOqhwYMzDqk94d+BenPsg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JMMp8Ma1HO/w/A4xLIz/t4cDUfnR9e6+1nfkhAszV/2t7s5h2fFOHOWb5WhGNIVww
+         HlDhJJr2T/2K1hDog0MaSCnEnalnWwGta927B0xxNxUBzO38h+iAKd2gjX8L/qSCg6
+         T77Fw9B1pB9+weIlI0CutbQ8W7oT1wSKDmnpUmIk=
+Received: by mail-ot1-f43.google.com with SMTP id b18so1281469oti.1;
+        Wed, 03 Jun 2020 01:45:23 -0700 (PDT)
+X-Gm-Message-State: AOAM531oZN/gcuD3wfWmocPmxYLOYYIXle7IE2FwRUMFYasDNB31kidR
+        zuneZdDlmnToPYnMv3EFk7kxaD7TNsx53A7EjMg=
+X-Google-Smtp-Source: ABdhPJzoqH82vfddBcZ2ilJNSYyw2hykyw6p+iOltpxefWYgGi1NHuWQjSjLS+b1Ow7vhgSqC6IYHofRPCZ/ijqKzNE=
+X-Received: by 2002:a9d:7684:: with SMTP id j4mr1249171otl.108.1591173922903;
+ Wed, 03 Jun 2020 01:45:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.202.66]
-X-CFilter-Loop: Reflected
+References: <20200603053313.3863761-1-masahiroy@kernel.org>
+ <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com> <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
+In-Reply-To: <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 3 Jun 2020 10:45:11 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com>
+Message-ID: <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-once we enable CMA_DEBUGFS, we will get the below errors:
-directory 'cma-hugetlb' with parent 'cma' already present
+On Wed, 3 Jun 2020 at 10:36, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Wed, Jun 3, 2020 at 3:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Wed, 3 Jun 2020 at 07:34, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > Documentation/kbuild/makefiles.rst says:
+> > >
+> > >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+> > >
+> > > I want to disallow lib-y outside of them.
+> > >
+> >
+> > Why?
+>
+>
+> Because I plan to remove lib-y entirely at some point.
+>
+> lib-y is not so useful to shrink the image size because:
+>
+>   - An object in lib.a can be omitted only when no symbol
+>     in that object is referenced.  This rarely happens.
+>
+>   -  lib-y objects are often exported by nature
+>      because lib-y is a collection of utility functions.
+>      Even if no in-tree user, we always need to keep them
+>      because EXPORT_SYMBOL() is the interface to modules.
+>
+>
+> When I worked on commit 7273ad2b08f8ac9563579d16a3cf528857b26f49,
+> I made some research.
+>
+> The benefit of lib-y is just 362 byte for x86_64_defconfig.
+> ( Before: 26578002, After: 26578364)
+>
+> My hope is lib-y will be replaced by dead-code elimination or
+> ultimately by LTO.
+>
+> drivers/firmware/efi/libstub/Makefile
+> is the only Makefile that breaks the rule:
+> "Use of lib-y is normally restricted to `lib/` and `arch/*/lib`"
+>
+>
+>
+>
+> >
+> > > Add a custom rule to build lib.a, which is linked to the decompressor
+> > > for ARCH=x86, ARCH=arm.
+> > >
+> > > For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
+> > > way.
+> > >
+> >
+> > The code works perfectly fine as is, and I don't see what is
+> > fundamentally wrong with using static libraries outside of lib/ and
+> > arch/*/lib.
+>
+> The intended usage of lib-y is to hook lib.a
+> to scripts/vmlinux.sh via KBUILD_VMLINUX_LIBS.
+>
+> This Makefile is just what you found to work.
+>
+>
+> >
+> > Also, I would like this code to still be incorporated as a static
+> > library into arm64 as well, so that only pieces that are actually
+> > needed are incorporated into the final image.
+>
+> No.
+> It is not working like that because you set
+> lib.a to core-y.
+>
+> All objects in core-y are always linked to vmlinux.
+>
 
-only the first numa node will get a directory in debugfs.
-we should have different names for different CMA areas.
+The lib.a file is passed to the linker as a static library, so it will
+only grab what it needs.
 
-Cc: Roman Gushchin <guro@fb.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- mm/hugetlb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index bcabbe02192b..4ebc4edc3b40 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5586,12 +5586,14 @@ void __init hugetlb_cma_reserve(int order)
- 	reserved = 0;
- 	for_each_node_state(nid, N_ONLINE) {
- 		int res;
-+		char name[20];
- 
- 		size = min(per_node, hugetlb_cma_size - reserved);
- 		size = round_up(size, PAGE_SIZE << order);
- 
-+		snprintf(name, 20, "hugetlb%d", nid);
- 		res = cma_declare_contiguous_nid(0, size, 0, PAGE_SIZE << order,
--						 0, false, "hugetlb",
-+						 0, false, name,
- 						 &hugetlb_cma[nid], nid);
- 		if (res) {
- 			pr_warn("hugetlb_cma: reservation failed: err %d, node %d",
--- 
-2.23.0
-
-
+For instance, if you build arm64 from mainline today, the
+efi_relocate_kernel will not be in the final image, even though it is
+built as part of libstub
