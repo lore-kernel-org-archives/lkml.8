@@ -2,80 +2,122 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBA5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13420C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9459420885
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AB12053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrcWDFPO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgFCJTm (ORCPT
+        id S1726755AbgFCJUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:19:42 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59694 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFCJTj (ORCPT
+        Wed, 3 Jun 2020 05:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgFCJUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:19:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7AA73803083B;
-        Wed,  3 Jun 2020 09:19:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xlDcL2gyq2Ni; Wed,  3 Jun 2020 12:19:35 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 12:19:34 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Colin King <colin.king@canonical.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH][next] clk: baikal-t1: fix spelling mistake
- "Uncompatible" -> "Incompatible"
-Message-ID: <20200603091934.vt5skqdzy6gnc5rk@mobilestation>
-References: <20200602121030.39132-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200602121030.39132-1-colin.king@canonical.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Wed, 3 Jun 2020 05:20:15 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF5FC05BD43;
+        Wed,  3 Jun 2020 02:20:15 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id x1so1377794ejd.8;
+        Wed, 03 Jun 2020 02:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3DI0t3OHBLadpo7QorIFcufLBAcgTKa7K38eRTU2zac=;
+        b=rrcWDFPOBajLO3DBatyL3qv6TP2l1qbGg53b4iPYWVbAUXDyOAt05D+PU1XoSK+NZT
+         O0wZB/qgo+ig/Y7wYxOqFMe6eIzNN+6wY0NwZL9PSBPtNliQThtRV7/uOPmqhyHZHFmg
+         JS/eGy8OVDzU0whCYe977jIIS2z96Fyr+1gHPYtPnNSbqdGsdpXl0RwIurkLWpHR2RGg
+         AbSJ1NdQOWgC8tOvMGtonn1+6/4cFXM9s1lPO5iTA8r3xWf5aWXHUPHBEWDHeIj874y4
+         342uTHhjKIFP7fmnPHhUml7WOP9JL1icZeN56mqCloxkRbrYaDn6wZ7/LNTXowh3o5BZ
+         07GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3DI0t3OHBLadpo7QorIFcufLBAcgTKa7K38eRTU2zac=;
+        b=XDHIYugpXCkvtWCHwnXJhnyDmdBIrxW7CGeuKxfmUULhXzea2Zcyv2sUnCHyl5fyIr
+         bYynWVLVgAvB+Hvql12Z5XbfJfx3Sk5AOmolaJQQQP3U4+XjH7FPAkuZfvC43HsGl8ul
+         cjbfsDDuUffvv3WHwsrwRuyuyijVV60ZquwYvmP0+BLQ0cZJSZU2EPjswOaPa7LFuIK3
+         KX8rvhtP4Gdj57LZLTAg0Zz9S1rQZmYLXvSeZqn9D8SbeuhNIGv/fpLcZr75kQwBJYO6
+         TQdRp/vKUhrsp1Lgn+hP+Oi2GqygfRXWqhh1L41JpKathL3Dzf/M+hG3lGjihFDj69e7
+         EvXg==
+X-Gm-Message-State: AOAM530wyF5iTCNoov62CB6zQF1tx0nPtbe/jOzv1t/YsMnXNgsPpcrb
+        WmqfZ2k7bgRk/2+SOoeNlL8=
+X-Google-Smtp-Source: ABdhPJwlttuTqCVLTqVHp3w14w1u2iU3UwK9d2/tPK3GNbRUkWH2ImiK2QVPrMrDNAQZjpMetldFIw==
+X-Received: by 2002:a17:906:a458:: with SMTP id cb24mr12743050ejb.5.1591176014067;
+        Wed, 03 Jun 2020 02:20:14 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:598:d00c:464c:92b:aecc:3637:dc7c])
+        by smtp.gmail.com with ESMTPSA id 64sm865636eda.85.2020.06.03.02.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 02:20:13 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        beanhuo@outlook.com
+Subject: [RESENT PATCH v5 0/5] scsi: ufs: cleanup ufs initialization
+Date:   Wed,  3 Jun 2020 11:19:54 +0200
+Message-Id: <20200603091959.27618-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 01:10:30PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a pr_err error message. Fix it.
+From: Bean Huo <beanhuo@micron.com>
 
-Thanks!
+Resent this patchset since linux-scsi@vger.kernel.org and
+linux-kernel@vger.kernel.org rejected my email
 
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/clk/baikal-t1/clk-ccu-div.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/baikal-t1/clk-ccu-div.c b/drivers/clk/baikal-t1/clk-ccu-div.c
-> index b479156e5e9b..f141fda12b09 100644
-> --- a/drivers/clk/baikal-t1/clk-ccu-div.c
-> +++ b/drivers/clk/baikal-t1/clk-ccu-div.c
-> @@ -316,7 +316,7 @@ static struct ccu_div_data *ccu_div_create_data(struct device_node *np)
->  		data->rst_num = ARRAY_SIZE(sys_rst_map);
->  		data->rst_map = sys_rst_map;
->  	} else {
-> -		pr_err("Uncompatible DT node '%s' specified\n",
-> +		pr_err("Incompatible DT node '%s' specified\n",
->  			of_node_full_name(np));
->  		ret = -EINVAL;
->  		goto err_kfree_data;
-> -- 
-> 2.25.1
-> 
+Cleanup UFS descriptor length initialization, and delete some unnecessary code.
+
+Changelog:
+v4 - v5:
+    1. Rebased patch
+    2. In the patch 3/5, change "param_size > buff_len" to
+       "(param_offset + param_size) > buff_len"
+
+v3 - v4:
+    1. add desc_id >= QUERY_DESC_IDN_MAX check in patch 4/5 (Avri Altman)
+    2. update buff_len to hold the true descriptor size in 4/5 (Avri Altman)
+    3. add new patch 3/5
+
+v2 - v3:
+    1. Fix typo in the commit message (Avri Altman & Bart van Assche)
+    2. Delete ufshcd_init_desc_sizes() in patch 3/4 (Stanley Chu)
+    3. Remove max_t() and buff_len in patch 1/4 (Bart van Assche)
+    4. Add patch 4/4 to compatable with 3.1 UFS unit descriptor length
+
+v1 - v2:
+    1. split patch
+    2. fix one compiling WARNING (Reported-by: kbuild test robot <lkp@intel.com>)
+
+Bart van Assche (1):
+  scsi: ufs: remove max_t in ufs_get_device_desc
+
+Bean Huo (4):
+  scsi: ufs: delete ufshcd_read_desc()
+  scsi: ufs: fix potential access NULL pointer while memcpy
+  scsi: ufs: cleanup ufs initialization path
+  scsi: ufs: add compatibility with 3.1 UFS unit descriptor length
+
+ drivers/scsi/ufs/ufs.h     |  11 +-
+ drivers/scsi/ufs/ufs_bsg.c |   5 +-
+ drivers/scsi/ufs/ufshcd.c  | 207 +++++++++----------------------------
+ drivers/scsi/ufs/ufshcd.h  |  16 +--
+ 4 files changed, 54 insertions(+), 185 deletions(-)
+
+-- 
+2.17.1
+
