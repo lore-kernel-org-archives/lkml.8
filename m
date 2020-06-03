@@ -2,112 +2,130 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C814DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2D1207DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bZwPXZPZ"
+	by mail.kernel.org (Postfix) with ESMTP id 49E4920678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgFCHo6 (ORCPT
+        id S1725943AbgFCHse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:44:58 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17116 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgFCHo5 (ORCPT
+        Wed, 3 Jun 2020 03:48:34 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40416 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCHsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:44:57 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed754980003>; Wed, 03 Jun 2020 00:43:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 03 Jun 2020 00:44:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 03 Jun 2020 00:44:57 -0700
-Received: from [10.26.72.154] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jun
- 2020 07:44:55 +0000
-Subject: Re: [PATCH 5.6 000/174] 5.6.16-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>
-References: <20200602101934.141130356@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4c120c44-1ddc-da80-0700-ed22ca165f62@nvidia.com>
-Date:   Wed, 3 Jun 2020 08:44:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200602101934.141130356@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591170200; bh=Q/ovEomueayU2Nz4J2JbM8RtkKbGWe8+Hh2m9x/cpNY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bZwPXZPZWHauYmrBU0Db+vqyywS+aUovcMClunXypZHSh+xdq+i4MgPEQZth5SHrd
-         sYvOZfoZqq8OCd8/0u9obD5vDcwke1XC4lADtpZDqcW2sb9vHeSJJvpOlm2EIffIXG
-         HxVYNf4/urIX6BXxQWeP+qoGTbJo8kn5kADgjKbnQtG7LNLPOMP7gXFatqhSIi/zfH
-         AxMUg+dE2BbT1FuIu+j6JJ8k/58YfgDRS4Ui4jW23o0xG5h+hkOacZSdRJdqndJl5Z
-         /PYKGjpUtY2n+vCcBWr0v6G87p/IyzGe+NeUuaZZGR+79XiRI6qoYZWs+R33YY4nQT
-         NT5FBs9REEYCw==
+        Wed, 3 Jun 2020 03:48:33 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jgO8S-0008I8-SH; Wed, 03 Jun 2020 07:48:29 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     axboe@kernel.dk
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3] libata: Use per port sync for detach
+Date:   Wed,  3 Jun 2020 15:48:19 +0800
+Message-Id: <20200603074819.21639-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
+detach") may cause system freeze during suspend.
 
-On 02/06/2020 11:24, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.16 release.
-> There are 174 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 04 Jun 2020 10:16:52 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.16-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Using async_synchronize_full() in PM callbacks is wrong, since async
+callbacks that are already scheduled may wait for not-yet-scheduled
+callbacks, causes a circular dependency.
 
-All tests are passing for Tegra ...
+Instead of using big hammer like async_synchronize_full(), use async
+cookie to make sure port probe are synced, without affecting other
+scheduled PM callbacks.
 
-Test results for stable-v5.6:
-    11 builds:	11 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    42 tests:	42 pass, 0 fail
+Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
+BugLink: https://bugs.launchpad.net/bugs/1867983
+Suggested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+ - Move the comment to properly align with the code.
 
-Linux version:	5.6.16-rc2-g7bff8a0b4fd4
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+v2:
+ - Sync up to cookie + 1.
+ - Squash the synchronization into the same loop.
 
-Sorry for the delay, I was having all changes of problems with our
-testers, email, yesterday!
+ drivers/ata/libata-core.c | 11 +++++------
+ include/linux/libata.h    |  3 +++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-Cheers
-Jon
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 69361ec43db5..b1cd4d97bc2a 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -42,7 +42,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/scatterlist.h>
+ #include <linux/io.h>
+-#include <linux/async.h>
+ #include <linux/log2.h>
+ #include <linux/slab.h>
+ #include <linux/glob.h>
+@@ -5778,7 +5777,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
+ 	/* perform each probe asynchronously */
+ 	for (i = 0; i < host->n_ports; i++) {
+ 		struct ata_port *ap = host->ports[i];
+-		async_schedule(async_port_probe, ap);
++		ap->cookie = async_schedule(async_port_probe, ap);
+ 	}
+ 
+ 	return 0;
+@@ -5920,11 +5919,11 @@ void ata_host_detach(struct ata_host *host)
+ {
+ 	int i;
+ 
+-	/* Ensure ata_port probe has completed */
+-	async_synchronize_full();
+-
+-	for (i = 0; i < host->n_ports; i++)
++	for (i = 0; i < host->n_ports; i++) {
++		/* Ensure ata_port probe has completed */
++		async_synchronize_cookie(host->ports[i]->cookie + 1);
+ 		ata_port_detach(host->ports[i]);
++	}
+ 
+ 	/* the host is dead now, dissociate ACPI */
+ 	ata_acpi_dissociate(host);
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index af832852e620..8a4843704d28 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -22,6 +22,7 @@
+ #include <linux/acpi.h>
+ #include <linux/cdrom.h>
+ #include <linux/sched.h>
++#include <linux/async.h>
+ 
+ /*
+  * Define if arch has non-standard setup.  This is a _PCI_ standard
+@@ -872,6 +873,8 @@ struct ata_port {
+ 	struct timer_list	fastdrain_timer;
+ 	unsigned long		fastdrain_cnt;
+ 
++	async_cookie_t		cookie;
++
+ 	int			em_message_type;
+ 	void			*private_data;
+ 
 -- 
-nvpublic
+2.17.1
+
