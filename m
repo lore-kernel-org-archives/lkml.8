@@ -2,61 +2,269 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6793C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7FC20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B7E20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ISsF+C4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgFCMEh (ORCPT
+        id S1726197AbgFCMFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:04:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:60686 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgFCMEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:04:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08FC331B;
-        Wed,  3 Jun 2020 05:04:36 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3D193F305;
-        Wed,  3 Jun 2020 05:04:34 -0700 (PDT)
-References: <1590597554-370150-1-git-send-email-vincent.donnefort@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     vincent.donnefort@arm.com
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org, patrick.bellasi@matbug.net,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com
-Subject: Re: [PATCH] sched/debug: Add new tracepoints to track util_est
-In-reply-to: <1590597554-370150-1-git-send-email-vincent.donnefort@arm.com>
-Date:   Wed, 03 Jun 2020 13:04:26 +0100
-Message-ID: <jhjlfl4icdx.mognet@arm.com>
+        Wed, 3 Jun 2020 08:05:01 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53347 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725855AbgFCME7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:04:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591185897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I1hAyly7NhesZ77QwDd9STwcXrPYKxChvgkxKRkQ9hs=;
+        b=ISsF+C4cBVgTsDhFErP9RxQkLWhppRMe5DFrs73kOZtX2wrJJ1zlmYvY+762Z9GYf5MX3k
+        7e/f6zaaTiNShEwaCF5Gd3xVetlTa3/VIaHYuJx5MQyr0xbwQ7igGLYRh/hO+/O19MDZ4q
+        ciNLHP3pUP7eB02Z84xZziqcWhfPDuI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-XUmdhkusMDq-jhTXjwZ9aA-1; Wed, 03 Jun 2020 08:04:53 -0400
+X-MC-Unique: XUmdhkusMDq-jhTXjwZ9aA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72AFD8018A5;
+        Wed,  3 Jun 2020 12:04:52 +0000 (UTC)
+Received: from [10.72.12.129] (ovpn-12-129.pek2.redhat.com [10.72.12.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 32ECD10013D7;
+        Wed,  3 Jun 2020 12:04:46 +0000 (UTC)
+Subject: Re: [PATCH RFC 01/13] vhost: option to fetch descriptors through an
+ independent struct
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-2-mst@redhat.com>
+ <e35e5df9-7e36-227e-7981-232a62b06607@redhat.com>
+ <20200603045825-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <48e6d644-c4aa-2754-9d06-22133987b3be@redhat.com>
+Date:   Wed, 3 Jun 2020 20:04:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200603045825-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 27/05/20 17:39, vincent.donnefort@arm.com wrote:
-> From: Vincent Donnefort <vincent.donnefort@arm.com>
+On 2020/6/3 下午5:48, Michael S. Tsirkin wrote:
+> On Wed, Jun 03, 2020 at 03:13:56PM +0800, Jason Wang wrote:
+>> On 2020/6/2 下午9:05, Michael S. Tsirkin wrote:
+
+
+[...]
+
+
+>>> +
+>>> +static int fetch_indirect_descs(struct vhost_virtqueue *vq,
+>>> +				struct vhost_desc *indirect,
+>>> +				u16 head)
+>>> +{
+>>> +	struct vring_desc desc;
+>>> +	unsigned int i = 0, count, found = 0;
+>>> +	u32 len = indirect->len;
+>>> +	struct iov_iter from;
+>>> +	int ret;
+>>> +
+>>> +	/* Sanity check */
+>>> +	if (unlikely(len % sizeof desc)) {
+>>> +		vq_err(vq, "Invalid length in indirect descriptor: "
+>>> +		       "len 0x%llx not multiple of 0x%zx\n",
+>>> +		       (unsigned long long)len,
+>>> +		       sizeof desc);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	ret = translate_desc(vq, indirect->addr, len, vq->indirect,
+>>> +			     UIO_MAXIOV, VHOST_ACCESS_RO);
+>>> +	if (unlikely(ret < 0)) {
+>>> +		if (ret != -EAGAIN)
+>>> +			vq_err(vq, "Translation failure %d in indirect.\n", ret);
+>>> +		return ret;
+>>> +	}
+>>> +	iov_iter_init(&from, READ, vq->indirect, ret, len);
+>>> +
+>>> +	/* We will use the result as an address to read from, so most
+>>> +	 * architectures only need a compiler barrier here. */
+>>> +	read_barrier_depends();
+>>> +
+>>> +	count = len / sizeof desc;
+>>> +	/* Buffers are chained via a 16 bit next field, so
+>>> +	 * we can have at most 2^16 of these. */
+>>> +	if (unlikely(count > USHRT_MAX + 1)) {
+>>> +		vq_err(vq, "Indirect buffer length too big: %d\n",
+>>> +		       indirect->len);
+>>> +		return -E2BIG;
+>>> +	}
+>>> +	if (unlikely(vq->ndescs + count > vq->max_descs)) {
+>>> +		vq_err(vq, "Too many indirect + direct descs: %d + %d\n",
+>>> +		       vq->ndescs, indirect->len);
+>>> +		return -E2BIG;
+>>> +	}
+>>> +
+>>> +	do {
+>>> +		if (unlikely(++found > count)) {
+>>> +			vq_err(vq, "Loop detected: last one at %u "
+>>> +			       "indirect size %u\n",
+>>> +			       i, count);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +		if (unlikely(!copy_from_iter_full(&desc, sizeof(desc), &from))) {
+>>> +			vq_err(vq, "Failed indirect descriptor: idx %d, %zx\n",
+>>> +			       i, (size_t)indirect->addr + i * sizeof desc);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +		if (unlikely(desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_INDIRECT))) {
+>>> +			vq_err(vq, "Nested indirect descriptor: idx %d, %zx\n",
+>>> +			       i, (size_t)indirect->addr + i * sizeof desc);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +
+>>> +		push_split_desc(vq, &desc, head);
+>>
+>> The error is ignored.
+> See above:
 >
-> The util_est signals are key elements for EAS task placement and
-> frequency selection. Having tracepoints to track these signals enables
-> load-tracking and schedutil testing and/or debugging by a toolkit.
+>       	if (unlikely(vq->ndescs + count > vq->max_descs))
 >
-> Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
+> So it can't fail here, we never fetch unless there's space.
+>
+> I guess we can add a WARN_ON here.
+
+
+Yes.
+
+
+>
+>>> +	} while ((i = next_desc(vq, &desc)) != -1);
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int fetch_descs(struct vhost_virtqueue *vq)
+>>> +{
+>>> +	unsigned int i, head, found = 0;
+>>> +	struct vhost_desc *last;
+>>> +	struct vring_desc desc;
+>>> +	__virtio16 avail_idx;
+>>> +	__virtio16 ring_head;
+>>> +	u16 last_avail_idx;
+>>> +	int ret;
+>>> +
+>>> +	/* Check it isn't doing very strange things with descriptor numbers. */
+>>> +	last_avail_idx = vq->last_avail_idx;
+>>> +
+>>> +	if (vq->avail_idx == vq->last_avail_idx) {
+>>> +		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+>>> +			vq_err(vq, "Failed to access avail idx at %p\n",
+>>> +				&vq->avail->idx);
+>>> +			return -EFAULT;
+>>> +		}
+>>> +		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
+>>> +
+>>> +		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
+>>> +			vq_err(vq, "Guest moved used index from %u to %u",
+>>> +				last_avail_idx, vq->avail_idx);
+>>> +			return -EFAULT;
+>>> +		}
+>>> +
+>>> +		/* If there's nothing new since last we looked, return
+>>> +		 * invalid.
+>>> +		 */
+>>> +		if (vq->avail_idx == last_avail_idx)
+>>> +			return vq->num;
+>>> +
+>>> +		/* Only get avail ring entries after they have been
+>>> +		 * exposed by guest.
+>>> +		 */
+>>> +		smp_rmb();
+>>> +	}
+>>> +
+>>> +	/* Grab the next descriptor number they're advertising */
+>>> +	if (unlikely(vhost_get_avail_head(vq, &ring_head, last_avail_idx))) {
+>>> +		vq_err(vq, "Failed to read head: idx %d address %p\n",
+>>> +		       last_avail_idx,
+>>> +		       &vq->avail->ring[last_avail_idx % vq->num]);
+>>> +		return -EFAULT;
+>>> +	}
+>>> +
+>>> +	head = vhost16_to_cpu(vq, ring_head);
+>>> +
+>>> +	/* If their number is silly, that's an error. */
+>>> +	if (unlikely(head >= vq->num)) {
+>>> +		vq_err(vq, "Guest says index %u > %u is available",
+>>> +		       head, vq->num);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	i = head;
+>>> +	do {
+>>> +		if (unlikely(i >= vq->num)) {
+>>> +			vq_err(vq, "Desc index is %u > %u, head = %u",
+>>> +			       i, vq->num, head);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +		if (unlikely(++found > vq->num)) {
+>>> +			vq_err(vq, "Loop detected: last one at %u "
+>>> +			       "vq size %u head %u\n",
+>>> +			       i, vq->num, head);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +		ret = vhost_get_desc(vq, &desc, i);
+>>> +		if (unlikely(ret)) {
+>>> +			vq_err(vq, "Failed to get descriptor: idx %d addr %p\n",
+>>> +			       i, vq->desc + i);
+>>> +			return -EFAULT;
+>>> +		}
+>>> +		ret = push_split_desc(vq, &desc, head);
+>>> +		if (unlikely(ret)) {
+>>> +			vq_err(vq, "Failed to save descriptor: idx %d\n", i);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +	} while ((i = next_desc(vq, &desc)) != -1);
+>>> +
+>>> +	last = peek_split_desc(vq);
+>>> +	if (unlikely(last->flags & VRING_DESC_F_INDIRECT)) {
+>>> +		pop_split_desc(vq);
+>>> +		ret = fetch_indirect_descs(vq, last, head);
+>>
+>> Note that this means we don't supported chained indirect descriptors which
+>> complies the spec but we support this in vhost_get_vq_desc().
+> Well the spec says:
+> 	A driver MUST NOT set both VIRTQ_DESC_F_INDIRECT and VIRTQ_DESC_F_NEXT in flags.
+>
+> Did I miss anything?
 >
 
-To put it more bluntly, we can't really do task placement / load tracking
-testing if util_est is enabled (which reminds me we may want to get rid of
-the SCHED_FEAT at some point, it's been default on since ~v4.17), since
-there can be noticeable gaps between util_avg and util_est.
+No, but I meant current vhost_get_vq_desc() supports chained indirect 
+descriptor. Not sure if there's an application that depends on this 
+silently.
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Thanks
+
+
