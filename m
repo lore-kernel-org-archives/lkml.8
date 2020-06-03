@@ -2,340 +2,121 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8300C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D8620829
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hSUizZk7"
+	by mail.kernel.org (Postfix) with ESMTP id 96CEC20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgFCXFs (ORCPT
+        id S1726316AbgFCXHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgFCXFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:05:47 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 100ECC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:05:46 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id d7so2371480lfi.12
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QByVHWerg+6CCdPejtKU904pyLQMob3h8tAv1OiM+hg=;
-        b=hSUizZk7xrwWFBi8HYX3a8EJWePwzN7q8gehHqK0JH7vzZeqy4NsYf9qqViYLXdJGV
-         ulu01X0Lyo8yiUsL5pS1Yd6LtSICNQhFCi/MFdPpEhIr8LtICP/1tRJCDe9g6mBoPQs2
-         VTpyk7BqsC98500/Kqdz+QIyB5SojCOPfsMoU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QByVHWerg+6CCdPejtKU904pyLQMob3h8tAv1OiM+hg=;
-        b=r44abTtA7VAFoXEcwnrbYL0xsdo9HXivscUHOpJibSRjXqHJ2FEwpiBe6jLTAdFXsw
-         m6IM8ClJBMsJ2AAawzs+In1qLrPbg4plgxLCgeOaJXRzQ8+UZFsXOczOiWsVitlCPJUg
-         g+V684Lwi97G4Brm8+mGcouFdbCBbECa3d0p7ITdSxCf7DpKLutvBhlvGW7nMBRv7EtB
-         Mqb6BLfOR2G+uotyy5AjXp8M0m8MCyC9Z+llf2EBfiZ4u3JvlF6Vp1newCMOL/Z98voL
-         l9Dp2KVMzu5Gn4BkYBgAjw+Kr4kl05QaPwjV7XfS2LAlG8Cbk2FsQZdSU2q9nGXWSh7y
-         neAg==
-X-Gm-Message-State: AOAM533joumsTEH1Cq0A66bITkCk097bBd72Zij9qvR+EEe2gPdOY6QU
-        sku8l1d6up/zocui9+bbSudaaV5ERz/MMh9Uiqt4mg==
-X-Google-Smtp-Source: ABdhPJwAHV1wn9mbHgSH4BZU1nQEUqaGVnv54HRXlZit+Vppc64RYgiSSn/+nliheJKSTagD4wP1zZQmtlpixebT/iI=
-X-Received: by 2002:a19:5206:: with SMTP id m6mr887807lfb.144.1591225544351;
- Wed, 03 Jun 2020 16:05:44 -0700 (PDT)
+        Wed, 3 Jun 2020 19:07:17 -0400
+Received: from mga05.intel.com ([192.55.52.43]:57581 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgFCXHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 19:07:17 -0400
+IronPort-SDR: 7wrL/6neXPBUwswJEbQByCUAE6LfZEdks5kpP3/ut0OinZH2O1EtzUe9INiev1CWhbFsBQWe60
+ U6sjKjx5rgmQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 16:07:16 -0700
+IronPort-SDR: 9vgjozx/oRvfwuPeSTLMZum356iRJhNe/DrZ/MBqnUU3vFsurtA0Q5wtboYcgXlyglaP+MZ8SD
+ SBq1OTh5oacw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,470,1583222400"; 
+   d="scan'208";a="445286783"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2020 16:07:16 -0700
+Date:   Wed, 3 Jun 2020 16:07:16 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 25/75] x86/sev-es: Add support for handling IOIO
+ exceptions
+Message-ID: <20200603230716.GD25606@linux.intel.com>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-26-joro@8bytes.org>
+ <20200520062055.GA17090@linux.intel.com>
+ <20200603142325.GB23071@8bytes.org>
 MIME-Version: 1.0
-References: <20200528165324.v1.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
- <20200528165324.v1.2.I7f3372c74a6569cd3445b77a67a0b0fcfdd8a333@changeid> <1359027D-E531-4022-89DD-DB19B3C7F499@holtmann.org>
-In-Reply-To: <1359027D-E531-4022-89DD-DB19B3C7F499@holtmann.org>
-From:   Miao-chen Chou <mcchou@chromium.org>
-Date:   Wed, 3 Jun 2020 16:05:33 -0700
-Message-ID: <CABmPvSE0f766DjB1Npfa7ktn0XQuzdxV+yGpSax9WfF+4v8dYg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/7] Bluetooth: Add handler of MGMT_OP_READ_ADV_MONITOR_FEATURES
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Manish Mandlik <mmandlik@chromium.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Yoni Shavit <yshavit@chromium.org>,
-        Michael Sun <michaelfsun@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603142325.GB23071@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
+On Wed, Jun 03, 2020 at 04:23:25PM +0200, Joerg Roedel wrote:
+> > > +		 */
+> > > +		io_bytes   = (exit_info_1 >> 4) & 0x7;
+> > > +		ghcb_count = sizeof(ghcb->shared_buffer) / io_bytes;
+> > > +
+> > > +		op_count    = (exit_info_1 & IOIO_REP) ? regs->cx : 1;
+> > > +		exit_info_2 = min(op_count, ghcb_count);
+> > > +		exit_bytes  = exit_info_2 * io_bytes;
+> > > +
+> > > +		es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
+> > > +
+> > > +		if (!(exit_info_1 & IOIO_TYPE_IN)) {
+> > > +			ret = vc_insn_string_read(ctxt,
+> > > +					       (void *)(es_base + regs->si),
+> > 
+> > SEV(-ES) is 64-bit only, why bother with the es_base charade?
+> 
+> User-space can also cause IOIO #VC exceptions, and user-space can be
+> 32-bit legacy code with segments, so es_base has to be taken into
+> account.
 
-Thanks for your review. V2 was uploaded to address these 3 comments.
+Is there actually a use case for this?  Exposing port IO to userspace
+doesn't exactly improve security.
 
-Regards,
-Miao
+Given that i386 ABI requires EFLAGS.DF=0 upon function entry/exit, i.e. is
+the de facto default, the DF bug implies this hasn't been tested.  And I
+don't see how this could possibly have worked for SEV given that the kernel
+unrolls string I/O because the VMM can't emulate string I/O.  Presumably
+someone would have complained if they "needed" to run legacy crud.  The
+host and guest obviously need major updates, so supporting e.g. DPDK with
+legacy virtio seems rather silly.
 
-On Wed, Jun 3, 2020 at 10:59 AM Marcel Holtmann <marcel@holtmann.org> wrote:
->
-> Hi Miao-chen,
->
-> > This adds the request handler of MGMT_OP_READ_ADV_MONITOR_FEATURES
-> > command. Since the controller-based monitoring is not yet in place, this
-> > report only the supported features but not the enabled features.
-> >
-> > The following test was performed.
-> > - Issuing btmgmt advmon-features.
-> >
-> > Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
-> > ---
-> >
-> > include/net/bluetooth/hci_core.h | 24 +++++++++++++++++
-> > net/bluetooth/hci_core.c         | 10 ++++++-
-> > net/bluetooth/mgmt.c             | 46 ++++++++++++++++++++++++++++++++
-> > net/bluetooth/msft.c             |  7 +++++
-> > net/bluetooth/msft.h             |  9 +++++++
-> > 5 files changed, 95 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> > index cdd4f1db8670e..431fe0265dcfb 100644
-> > --- a/include/net/bluetooth/hci_core.h
-> > +++ b/include/net/bluetooth/hci_core.h
-> > @@ -25,6 +25,7 @@
-> > #ifndef __HCI_CORE_H
-> > #define __HCI_CORE_H
-> >
-> > +#include <linux/idr.h>
-> > #include <linux/leds.h>
-> > #include <linux/rculist.h>
-> >
-> > @@ -220,6 +221,24 @@ struct adv_info {
-> > #define HCI_MAX_ADV_INSTANCES         5
-> > #define HCI_DEFAULT_ADV_DURATION      2
-> >
-> > +struct adv_pattern {
-> > +     struct list_head list;
-> > +     __u8 ad_type;
-> > +     __u8 offset;
-> > +     __u8 length;
-> > +     __u8 value[HCI_MAX_AD_LENGTH];
-> > +};
-> > +
-> > +struct adv_monitor {
-> > +     struct list_head patterns;
-> > +     bool            active;
-> > +     __u16           handle;
-> > +};
-> > +
-> > +#define HCI_MIN_ADV_MONITOR_HANDLE           1
-> > +#define HCI_MAX_ADV_MONITOR_NUM_HANDLES      32
-> > +#define HCI_MAX_ADV_MONITOR_NUM_PATTERNS     16
-> > +
-> > #define HCI_MAX_SHORT_NAME_LENGTH     10
-> >
-> > /* Min encryption key size to match with SMP */
-> > @@ -477,6 +496,9 @@ struct hci_dev {
-> >       __u16                   adv_instance_timeout;
-> >       struct delayed_work     adv_instance_expire;
-> >
-> > +     struct idr              adv_monitors_idr;
-> > +     unsigned int            adv_monitors_cnt;
-> > +
-> >       __u8                    irk[16];
-> >       __u32                   rpa_timeout;
-> >       struct delayed_work     rpa_expired;
-> > @@ -1217,6 +1239,8 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
-> > int hci_remove_adv_instance(struct hci_dev *hdev, u8 instance);
-> > void hci_adv_instances_set_rpa_expired(struct hci_dev *hdev, bool rpa_expired);
-> >
-> > +void hci_adv_monitors_clear(struct hci_dev *hdev);
-> > +
-> > void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
-> >
-> > void hci_init_sysfs(struct hci_dev *hdev);
-> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> > index dbe2d79f233fb..23bfe4f1d1e9d 100644
-> > --- a/net/bluetooth/hci_core.c
-> > +++ b/net/bluetooth/hci_core.c
-> > @@ -26,7 +26,6 @@
-> > /* Bluetooth HCI core. */
-> >
-> > #include <linux/export.h>
-> > -#include <linux/idr.h>
-> > #include <linux/rfkill.h>
-> > #include <linux/debugfs.h>
-> > #include <linux/crypto.h>
-> > @@ -2996,6 +2995,12 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
-> >       return 0;
-> > }
-> >
-> > +/* This function requires the caller holds hdev->lock */
-> > +void hci_adv_monitors_clear(struct hci_dev *hdev)
-> > +{
-> > +     idr_destroy(&hdev->adv_monitors_idr);
-> > +}
-> > +
-> > struct bdaddr_list *hci_bdaddr_list_lookup(struct list_head *bdaddr_list,
-> >                                        bdaddr_t *bdaddr, u8 type)
-> > {
-> > @@ -3574,6 +3579,8 @@ int hci_register_dev(struct hci_dev *hdev)
-> >
-> >       queue_work(hdev->req_workqueue, &hdev->power_on);
-> >
-> > +     idr_init(&hdev->adv_monitors_idr);
-> > +
-> >       return id;
-> >
-> > err_wqueue:
-> > @@ -3644,6 +3651,7 @@ void hci_unregister_dev(struct hci_dev *hdev)
-> >       hci_smp_irks_clear(hdev);
-> >       hci_remote_oob_data_clear(hdev);
-> >       hci_adv_instances_clear(hdev);
-> > +     hci_adv_monitors_clear(hdev);
-> >       hci_bdaddr_list_clear(&hdev->le_white_list);
-> >       hci_bdaddr_list_clear(&hdev->le_resolv_list);
-> >       hci_conn_params_clear_all(hdev);
-> > diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-> > index 9e8a3cccc6ca3..8d8275ee9718b 100644
-> > --- a/net/bluetooth/mgmt.c
-> > +++ b/net/bluetooth/mgmt.c
-> > @@ -36,6 +36,7 @@
-> > #include "hci_request.h"
-> > #include "smp.h"
-> > #include "mgmt_util.h"
-> > +#include "msft.h"
-> >
-> > #define MGMT_VERSION  1
-> > #define MGMT_REVISION 17
-> > @@ -111,6 +112,7 @@ static const u16 mgmt_commands[] = {
-> >       MGMT_OP_READ_SECURITY_INFO,
-> >       MGMT_OP_READ_EXP_FEATURES_INFO,
-> >       MGMT_OP_SET_EXP_FEATURE,
-> > +     MGMT_OP_READ_ADV_MONITOR_FEATURES,
-> > };
-> >
-> > static const u16 mgmt_events[] = {
-> > @@ -3849,6 +3851,49 @@ static int set_exp_feature(struct sock *sk, struct hci_dev *hdev,
-> >                              MGMT_STATUS_NOT_SUPPORTED);
-> > }
-> >
-> > +static int read_adv_monitor_features(struct sock *sk, struct hci_dev *hdev,
-> > +                                  void *data, u16 len)
-> > +{
-> > +     struct adv_monitor *monitor = NULL;
-> > +     struct mgmt_rp_read_adv_monitor_features *rp = NULL;
-> > +     int handle;
-> > +     size_t rp_size = 0;
-> > +     __u32 supported = 0;
-> > +     __u16 num_handles = 0;
-> > +     __u16 handles[HCI_MAX_ADV_MONITOR_NUM_HANDLES];
-> > +
-> > +     BT_DBG("request for %s", hdev->name);
-> > +
-> > +     hci_dev_lock(hdev);
-> > +
-> > +     if (msft_get_features(hdev) & MSFT_FEATURE_MASK_LE_ADV_MONITOR)
-> > +             supported |= MGMT_ADV_MONITOR_FEATURE_MASK_OR_PATTERNS;
-> > +
-> > +     idr_for_each_entry(&hdev->adv_monitors_idr, monitor, handle)
-> > +             handles[num_handles++] = monitor->handle;
->
-> I would put { } here to make it readable.
->
-> > +
-> > +     hci_dev_unlock(hdev);
-> > +
-> > +     rp_size = sizeof(*rp) + (num_handles * sizeof(u16));
-> > +     rp = kmalloc(rp_size, GFP_KERNEL);
-> > +     if (!rp)
-> > +             return -ENOMEM;
-> > +
-> > +     // Once controller-based monitoring is in place, the enabled_features
-> > +     // should reflect the use.
->
-> Please use /* */ comment style here.
->
-> > +     rp->supported_features = supported;
-> > +     rp->enabled_features = 0;
-> > +     rp->max_num_handles = HCI_MAX_ADV_MONITOR_NUM_HANDLES;
-> > +     rp->max_num_patterns = HCI_MAX_ADV_MONITOR_NUM_PATTERNS;
->
-> These are little-endian.
->
-> > +     rp->num_handles = num_handles;
-> > +     if (num_handles)
-> > +             memcpy(&rp->handles, &handles, (num_handles * sizeof(u16)));
-> > +
-> > +     return mgmt_cmd_complete(sk, hdev->id,
-> > +                              MGMT_OP_READ_ADV_MONITOR_FEATURES,
-> > +                              MGMT_STATUS_SUCCESS, rp, rp_size);
-> > +}
-> > +
-> > static void read_local_oob_data_complete(struct hci_dev *hdev, u8 status,
-> >                                        u16 opcode, struct sk_buff *skb)
-> > {
-> > @@ -7297,6 +7342,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
-> >       { set_exp_feature,         MGMT_SET_EXP_FEATURE_SIZE,
-> >                                               HCI_MGMT_VAR_LEN |
-> >                                               HCI_MGMT_HDEV_OPTIONAL },
-> > +     { read_adv_monitor_features, MGMT_READ_ADV_MONITOR_FEATURES_SIZE },
-> > };
-> >
-> > void mgmt_index_added(struct hci_dev *hdev)
-> > diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
-> > index d6c4e6b5ae777..8579bfeb28364 100644
-> > --- a/net/bluetooth/msft.c
-> > +++ b/net/bluetooth/msft.c
-> > @@ -139,3 +139,10 @@ void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb)
-> >
-> >       bt_dev_dbg(hdev, "MSFT vendor event %u", event);
-> > }
-> > +
-> > +__u64 msft_get_features(struct hci_dev *hdev)
-> > +{
-> > +     struct msft_data *msft = hdev->msft_data;
-> > +
-> > +     return  msft ? msft->features : 0;
-> > +}
-> > diff --git a/net/bluetooth/msft.h b/net/bluetooth/msft.h
-> > index 5aa9130e1f8ab..e9c478e890b8b 100644
-> > --- a/net/bluetooth/msft.h
-> > +++ b/net/bluetooth/msft.h
-> > @@ -3,16 +3,25 @@
-> >  * Copyright (C) 2020 Google Corporation
-> >  */
-> >
-> > +#define MSFT_FEATURE_MASK_BREDR_RSSI_MONITOR         BIT(0)
-> > +#define MSFT_FEATURE_MASK_LE_CONN_RSSI_MONITOR               BIT(1)
-> > +#define MSFT_FEATURE_MASK_LE_ADV_RSSI_MONITOR                BIT(2)
-> > +#define MSFT_FEATURE_MASK_LE_ADV_MONITOR             BIT(3)
-> > +#define MSFT_FEATURE_MASK_CURVE_VALIDITY             BIT(4)
-> > +#define MSFT_FEATURE_MASK_CONCURRENT_ADV_MONITOR     BIT(5)
-> > +
-> > #if IS_ENABLED(CONFIG_BT_MSFTEXT)
-> >
-> > void msft_do_open(struct hci_dev *hdev);
-> > void msft_do_close(struct hci_dev *hdev);
-> > void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb);
-> > +__u64 msft_get_features(struct hci_dev *hdev);
-> >
-> > #else
-> >
-> > static inline void msft_do_open(struct hci_dev *hdev) {}
-> > static inline void msft_do_close(struct hci_dev *hdev) {}
-> > static inline void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb) {}
-> > +static inline __u64 msft_get_features(struct hci_dev *hdev) { return 0; }
->
-> Regards
->
-> Marcel
->
+> > > +					       ghcb->shared_buffer, io_bytes,
+> > > +					       exit_info_2, df);
+> > 
+> > df handling is busted, it's aways non-zero.  Same goes for the SI/DI
+> > adjustments below.
+> 
+> Right, this is fixed now.
+> 
+> > Batching the memory accesses and I/O accesses separately is technically
+> > wrong, e.g. a #DB on a memory access will result in bogus data being shown
+> > in the debugger.  In practice it seems unlikely to matter, but I'm curious
+> > as to why string I/O is supported in the first place.  I didn't think there
+> > was that much string I/O in the kernel?
+> 
+> True, #DBs won't be correct anymore. Currently debugging is not
+> supported in SEV-ES guests anyway, but if it is supported the #DB
+> exception would happen in the #VC handler and not on the original
+> instruction.
+
+As in, the guest can't debug itself?  Or the host can't debug the guest?
