@@ -2,129 +2,127 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF68C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11788C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7703720679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E103D206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:37:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXJWnFWP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgFCPhV (ORCPT
+        id S1726179AbgFCPhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:37:21 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37783 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgFCPhT (ORCPT
+        Wed, 3 Jun 2020 11:37:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgFCPhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:37:19 -0400
-X-Originating-IP: 90.112.45.105
-Received: from debian.home (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id BB59E2000F;
-        Wed,  3 Jun 2020 15:37:16 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Anup Patel <anup@brainfault.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH 1/2] riscv: Get memory below load_pa while ensuring linear mapping is PMD aligned
-Date:   Wed,  3 Jun 2020 11:36:07 -0400
-Message-Id: <20200603153608.30056-2-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200603153608.30056-1-alex@ghiti.fr>
-References: <20200603153608.30056-1-alex@ghiti.fr>
+        Wed, 3 Jun 2020 11:37:18 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12EBEC08C5C0;
+        Wed,  3 Jun 2020 08:37:17 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id s23so519187pfh.7;
+        Wed, 03 Jun 2020 08:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Oja/QTDc5nY9hQwAXuclHQY4F3oBF5r1pW9cwZnZ+X4=;
+        b=ZXJWnFWPnh5MqF8yFf9qnpzT4yi3So+4B5egS4fWYyl7m0FU3Cy9Lo5dGUxaVWFR9v
+         G4Dq9AsLtfQyAlFI9BMOe7me5k7EpagXjuBaNsawqTKB+l7QzNmDf00aS6AiDCjjKcfB
+         nbQTNjYbJPN7k9AOireY+pjcju2bjPyCAgxZgEFUW4aESyV72ohgzCPU1l90IF4BtfaS
+         9U8DhdPqpZlT+hjxLqCvtYqZYaT1SDQqz2PP6U2tWU8Rd3BAxTfXYTnaW7o0M/yyEu7m
+         fywyS2zWf3JIuMt5Ja8LNt4v2MUhUvkl5NmubDISzgpGjFgvKBS0Vn6SxbX8v2qrDQhY
+         RHhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Oja/QTDc5nY9hQwAXuclHQY4F3oBF5r1pW9cwZnZ+X4=;
+        b=J50liQ+9nqUzpf1LXDutkUbXfPY9+wf/FXFOfDNtzlTuOF29toMlVVAlngIIrwgpqw
+         gd2dpoEM2aKBqTp4TjW6/8osDg3hucyQSvzsDGtv1fkDUWMyB3DvPsCJuFAGK/4LKOae
+         p6g5Z3eLOqJA7x5u1OuCVcFIGE5uZUSn5WqaZ4OMxPtdSoam7Ob35FzCGFwnDPXdRNmx
+         Ys8bF5coyCOVi9j+xUSa1YrIIe8cB+KYH1IByXDPgHtyKpJCQYOm1yYdYPCdWmm1ust8
+         o6hNqC1DbNYnpF3TyI8aYQVIxfYxM9gFGG6mcdWvZIwMwfc3ZUO+j9ghlPzHSzJ/7RqA
+         n51g==
+X-Gm-Message-State: AOAM530WK6Kb1JJr0vH7xdcT3Kqh9g6LtMoKFS7SckviUtL4dXXNZbrB
+        NJHJNOagdyFN5dv3+szGBJN06lkj
+X-Google-Smtp-Source: ABdhPJzzLqeER6FoyTzHOsNBsA9hvP0AxeupOTcszhQE2UphbBm8z/GfP4QO+jMqiwkn/QKGh7EiRg==
+X-Received: by 2002:a17:90b:3004:: with SMTP id hg4mr340959pjb.208.1591198636589;
+        Wed, 03 Jun 2020 08:37:16 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u1sm1878219pgf.28.2020.06.03.08.37.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jun 2020 08:37:15 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 08:37:14 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 05/14] ia64: csum_partial_copy_nocheck(): don't
+ abuse csum_partial_copy_from_user()
+Message-ID: <20200603153714.GA33147@roeck-us.net>
+References: <20200327233006.GW23230@ZenIV.linux.org.uk>
+ <20200327233117.1031393-1-viro@ZenIV.linux.org.uk>
+ <20200327233117.1031393-5-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327233117.1031393-5-viro@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Early page table uses the kernel load address as mapping for PAGE_OFFSET:
-that makes memblock remove any memory below the kernel which results in
-using only PMD entries for the linear mapping.
+On Fri, Mar 27, 2020 at 11:31:08PM +0000, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> Just inline the call and use memcpy() instead of __copy_from_user() and
+> note that the tail is precisely ia64 csum_partial().
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-By setting MIN_MEMBLOCK_ADDR to 0, we allow this memory to be present
-when creating the kernel page table: that potentially allows to use
-PUD/PGDIR entries for the linear mapping.
+This patch results in:
 
-But as the firmware might ask the kernel to remove some part of this
-memory, we need to ensure that the physical address targeted by
-PAGE_OFFSET is at least aligned on PMD size since otherwise the linear
-mapping would use only PTE entries.
+arch/ia64/lib/csum_partial_copy.c: In function 'csum_partial_copy_nocheck':
+arch/ia64/lib/csum_partial_copy.c:110:9: error: implicit declaration of function 'csum_partial'
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+for ia64:{defconfig, allnoconfig, tinyconfig}.
+
+Guenter
+
 ---
- arch/riscv/include/asm/page.h |  8 ++++++++
- arch/riscv/mm/init.c          | 24 +++++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-index 5e77fe7f0d6d..b416396fc357 100644
---- a/arch/riscv/include/asm/page.h
-+++ b/arch/riscv/include/asm/page.h
-@@ -100,6 +100,14 @@ typedef struct page *pgtable_t;
- #define PTE_FMT "%08lx"
- #endif
- 
-+/*
-+ * Early page table maps PAGE_OFFSET to load_pa, which may not be the memory
-+ * base address and by default MIN_MEMBLOCK_ADDR is equal to __pa(PAGE_OFFSET)
-+ * then memblock ignores memory below load_pa: we want this memory to get mapped
-+ * as it may allow to use hugepages for linear mapping.
-+ */
-+#define MIN_MEMBLOCK_ADDR	0
-+
- #ifdef CONFIG_MMU
- extern unsigned long va_pa_offset;
- extern unsigned long va_kernel_pa_offset;
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 4064639b24e4..9a5c97e091c1 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -664,7 +664,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- static void __init setup_vm_final(void)
- {
- 	uintptr_t va, map_size;
--	phys_addr_t pa, start, end;
-+	phys_addr_t pa, start, end, dram_start;
- 	struct memblock_region *reg;
- 	static struct vm_struct vm_kernel = { 0 };
- 
-@@ -676,6 +676,28 @@ static void __init setup_vm_final(void)
- 			   __pa_symbol(fixmap_pgd_next),
- 			   PGDIR_SIZE, PAGE_TABLE);
- 
-+	/*
-+	 * Make sure that virtual and physical addresses are at least aligned
-+	 * on PMD_SIZE, even if we have to lose some memory (< PMD_SIZE)
-+	 * otherwise the linear mapping would get mapped using PTE entries.
-+	 */
-+	dram_start = memblock_start_of_DRAM();
-+	if (dram_start & (PMD_SIZE - 1)) {
-+		uintptr_t next_dram_start;
-+
-+		next_dram_start	= (dram_start + PMD_SIZE - 1) & ~(PMD_SIZE - 1);
-+		memblock_remove(dram_start, next_dram_start - dram_start);
-+		dram_start = next_dram_start;
-+	}
-+
-+	/*
-+	 * We started considering PAGE_OFFSET would start at load_pa because
-+	 * it was the only piece of information we had, but now make PAGE_OFFSET
-+	 * point to the real beginning of the memory area.
-+	 */
-+	va_pa_offset = PAGE_OFFSET - dram_start;
-+	pfn_base = PFN_DOWN(dram_start);
-+
- 	/* Map all memory banks */
- 	for_each_memblock(memory, reg) {
- 		start = reg->base;
--- 
-2.20.1
-
+# bad: [d6f9469a03d832dcd17041ed67774ffb5f3e73b3] Merge tag 'erofs-for-5.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+# good: [b23c4771ff62de8ca9b5e4a2d64491b2fb6f8f69] Merge tag 'docs-5.8' of git://git.lwn.net/linux
+git bisect start 'HEAD' 'b23c4771ff62'
+# good: [6cf991611bc72c077f0cc64e23987341ad7ef41e] Merge tag 'drm-intel-next-2020-05-15' of git://anongit.freedesktop.org/drm/drm-intel into drm-next
+git bisect good 6cf991611bc72c077f0cc64e23987341ad7ef41e
+# bad: [faa392181a0bd42c5478175cef601adeecdc91b6] Merge tag 'drm-next-2020-06-02' of git://anongit.freedesktop.org/drm/drm
+git bisect bad faa392181a0bd42c5478175cef601adeecdc91b6
+# bad: [c5d6c13843880ad0112f0513f3eb041b258be66e] Merge tag 'mmc-v5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+git bisect bad c5d6c13843880ad0112f0513f3eb041b258be66e
+# bad: [94709049fb8442fb2f7b91fbec3c2897a75e18df] Merge branch 'akpm' (patches from Andrew)
+git bisect bad 94709049fb8442fb2f7b91fbec3c2897a75e18df
+# good: [a29adb6209cead1f6c34a8d72481fb183bfc2d68] mm: rename vmap_page_range to map_kernel_range
+git bisect good a29adb6209cead1f6c34a8d72481fb183bfc2d68
+# bad: [56446efab9ce4961fe0fe6bbc5bc66374b08b9f3] Merge branch 'uaccess.__copy_from_user' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
+git bisect bad 56446efab9ce4961fe0fe6bbc5bc66374b08b9f3
+# good: [87c233b8158a20a9c9ab1da96cb5cb1734d9006e] vmci_host: get rid of pointless access_ok()
+git bisect good 87c233b8158a20a9c9ab1da96cb5cb1734d9006e
+# bad: [001c1a655f0a4e4ebe5d9beb47466dc5c6ab4871] default csum_and_copy_to_user(): don't bother with access_ok()
+git bisect bad 001c1a655f0a4e4ebe5d9beb47466dc5c6ab4871
+# bad: [808b49da54e640cba5c5c92dee658018a529226b] alpha: turn csum_partial_copy_from_user() into csum_and_copy_from_user()
+git bisect bad 808b49da54e640cba5c5c92dee658018a529226b
+# good: [0a5ea224b2fdf9dca9291ef7b5a12fd846a5dc34] x86: switch both 32bit and 64bit to providing csum_and_copy_from_user()
+git bisect good 0a5ea224b2fdf9dca9291ef7b5a12fd846a5dc34
+# bad: [cc03f19cfd45f44a75f0445c5be0073bbd3dda1c] ia64: csum_partial_copy_nocheck(): don't abuse csum_partial_copy_from_user()
+git bisect bad cc03f19cfd45f44a75f0445c5be0073bbd3dda1c
+# good: [c281a6c1ac6b0867e4341ea801030fa9a62157f9] x86: switch 32bit csum_and_copy_to_user() to user_access_{begin,end}()
+git bisect good c281a6c1ac6b0867e4341ea801030fa9a62157f9
+# first bad commit: [cc03f19cfd45f44a75f0445c5be0073bbd3dda1c] ia64: csum_partial_copy_nocheck(): don't abuse csum_partial_copy_from_user()
