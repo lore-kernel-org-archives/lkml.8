@@ -2,67 +2,178 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F29DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E307C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E903C206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B18A20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOXBuK+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgFCGhC (ORCPT
+        id S1726088AbgFCGiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:37:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58916 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbgFCGhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:37:00 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 423E1ED8987522C55550;
-        Wed,  3 Jun 2020 14:36:58 +0800 (CST)
-Received: from huawei.com (10.67.174.156) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 14:36:49 +0800
-From:   Chen Tao <chentao107@huawei.com>
-To:     <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <chentao107@huawei.com>
-Subject: [PATCH -next] mm/page_alloc.c: Add missing line breaks
-Date:   Wed, 3 Jun 2020 14:35:46 +0800
-Message-ID: <20200603063547.235825-1-chentao107@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 3 Jun 2020 02:38:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60759 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725876AbgFCGiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:38:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591166283;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9YIEZphT4WQWpLHR5u5cJhoz+kzmhXmqU3aAWshGKzY=;
+        b=YOXBuK+UmeWuKoDuuSW6sPMjKUiWmry64iCd0DsUoktlfG7wpcAuuTUewe4rnCV3Fz1eCp
+        q0Yqo0ggTqVR0f1JnaLhdV7C/V5wg1rCXAE04DKM9sSG4Rwk89K5nwuvfPviDdyFtG03OV
+        hZCxTLmPdzDa/+nocuke0hmk3jQm2UY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-s9_v9VnYMJaEfh0m8hUAHw-1; Wed, 03 Jun 2020 02:38:01 -0400
+X-MC-Unique: s9_v9VnYMJaEfh0m8hUAHw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DAC0C7441;
+        Wed,  3 Jun 2020 06:37:59 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 121E35D9CD;
+        Wed,  3 Jun 2020 06:37:52 +0000 (UTC)
+Subject: Re: [PATCH 4/6] vhost_vdpa: support doorbell mapping via mmap
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com
+References: <20200529080303.15449-5-jasowang@redhat.com>
+ <202006020308.kLXTHt4n%lkp@intel.com>
+ <20200602005007-mutt-send-email-mst@kernel.org>
+ <bd7dde11-b726-ee08-4e80-71fb784fa549@redhat.com>
+ <20200602093025-mutt-send-email-mst@kernel.org>
+ <5db6b413-cb6c-a566-2f2d-ad580d8e165b@redhat.com>
+ <20200603023429-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3c4ed3de-00e9-2e3d-854e-4bd47063820b@redhat.com>
+Date:   Wed, 3 Jun 2020 14:37:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.156]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200603023429-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing line breaks on pr_warn().
 
-Signed-off-by: Chen Tao <chentao107@huawei.com>
----
- mm/page_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2020/6/3 下午2:34, Michael S. Tsirkin wrote:
+> On Wed, Jun 03, 2020 at 12:18:44PM +0800, Jason Wang wrote:
+>> On 2020/6/2 下午9:31, Michael S. Tsirkin wrote:
+>>> On Tue, Jun 02, 2020 at 02:49:38PM +0800, Jason Wang wrote:
+>>>> On 2020/6/2 下午12:56, Michael S. Tsirkin wrote:
+>>>>> On Tue, Jun 02, 2020 at 03:22:49AM +0800, kbuild test robot wrote:
+>>>>>> Hi Jason,
+>>>>>>
+>>>>>> I love your patch! Yet something to improve:
+>>>>>>
+>>>>>> [auto build test ERROR on vhost/linux-next]
+>>>>>> [also build test ERROR on linus/master v5.7 next-20200529]
+>>>>>> [if your patch is applied to the wrong git tree, please drop us a note to help
+>>>>>> improve the system. BTW, we also suggest to use '--base' option to specify the
+>>>>>> base tree in git format-patch, please seehttps://stackoverflow.com/a/37406982]
+>>>>>>
+>>>>>> url:https://github.com/0day-ci/linux/commits/Jason-Wang/vDPA-doorbell-mapping/20200531-070834
+>>>>>> base:https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git   linux-next
+>>>>>> config: m68k-randconfig-r011-20200601 (attached as .config)
+>>>>>> compiler: m68k-linux-gcc (GCC) 9.3.0
+>>>>>> reproduce (this is a W=1 build):
+>>>>>>            wgethttps://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross  -O ~/bin/make.cross
+>>>>>>            chmod +x ~/bin/make.cross
+>>>>>>            # save the attached .config to linux build tree
+>>>>>>            COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
+>>>>>>
+>>>>>> If you fix the issue, kindly add following tag as appropriate
+>>>>>> Reported-by: kbuild test robot<lkp@intel.com>
+>>>>>>
+>>>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>>>>>
+>>>>>> drivers/vhost/vdpa.c: In function 'vhost_vdpa_fault':
+>>>>>>>> drivers/vhost/vdpa.c:754:22: error: implicit declaration of function 'pgprot_noncached' [-Werror=implicit-function-declaration]
+>>>>>> 754 |  vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+>>>>>> |                      ^~~~~~~~~~~~~~~~
+>>>>>>>> drivers/vhost/vdpa.c:754:22: error: incompatible types when assigning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
+>>>>>> cc1: some warnings being treated as errors
+>>>>>>
+>>>>>> vim +/pgprot_noncached +754 drivers/vhost/vdpa.c
+>>>>>>
+>>>>>>       742	
+>>>>>>       743	static vm_fault_t vhost_vdpa_fault(struct vm_fault *vmf)
+>>>>>>       744	{
+>>>>>>       745		struct vhost_vdpa *v = vmf->vma->vm_file->private_data;
+>>>>>>       746		struct vdpa_device *vdpa = v->vdpa;
+>>>>>>       747		const struct vdpa_config_ops *ops = vdpa->config;
+>>>>>>       748		struct vdpa_notification_area notify;
+>>>>>>       749		struct vm_area_struct *vma = vmf->vma;
+>>>>>>       750		u16 index = vma->vm_pgoff;
+>>>>>>       751	
+>>>>>>       752		notify = ops->get_vq_notification(vdpa, index);
+>>>>>>       753	
+>>>>>>     > 754		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+>>>>>>       755		if (remap_pfn_range(vma, vmf->address & PAGE_MASK,
+>>>>>>       756				    notify.addr >> PAGE_SHIFT, PAGE_SIZE,
+>>>>>>       757				    vma->vm_page_prot))
+>>>>>>       758			return VM_FAULT_SIGBUS;
+>>>>>>       759	
+>>>>>>       760		return VM_FAULT_NOPAGE;
+>>>>>>       761	}
+>>>>>>       762	
+>>>>> Yes well, all this remapping clearly has no chance to work
+>>>>> on systems without CONFIG_MMU.
+>>>> It looks to me mmap can work according to Documentation/nommu-mmap.txt. But
+>>>> I'm not sure it's worth to bother.
+>>>>
+>>>> Thanks
+>>> Well
+>>>
+>>> int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
+>>>                   unsigned long pfn, unsigned long size, pgprot_t prot)
+>>> {
+>>>           if (addr != (pfn << PAGE_SHIFT))
+>>>                   return -EINVAL;
+>>>
+>>>           vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+>>>           return 0;
+>>> }
+>>> EXPORT_SYMBOL(remap_pfn_range);
+>>>
+>>>
+>>> So things aren't going to work if you have a fixed PFN
+>>> which is the case of the hardware device.
+>> Looking at the implementation of some drivers e.g mtd_char. If I read the
+>> code correctly, we can do this by providing get_unmapped_area method and use
+>> physical address directly.
+>>
+>> But start form CONFIG_MMU should be fine.  Do you prefer making vhost_vdpa
+>> depends on CONFIG_MMU or just fail mmap when CONFIG_MMU is not configured?
+>>
+>> Thanks
+> I'd just not specify the mmap callback at all.
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index cef05d3a23f5..0b0f05e1e49e 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7123,7 +7123,7 @@ static void __init find_zone_movable_pfns_for_nodes(void)
- 		}
- 
- 		if (mem_below_4gb_not_mirrored)
--			pr_warn("This configuration results in unmirrored kernel memory.");
-+			pr_warn("This configuration results in unmirrored kernel memory.\n");
- 
- 		goto out2;
- 	}
--- 
-2.22.0
+
+Ok, will do.
+
+Thanks
+
+
+>
 
