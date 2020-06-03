@@ -2,310 +2,127 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A73C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A7D207D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF87820674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:57:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nD38w/Mk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fg3Q1c1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgFCD5U (ORCPT
+        id S1726150AbgFCD5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 23:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgFCD5T (ORCPT
+        Tue, 2 Jun 2020 23:57:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39981 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726123AbgFCD5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 23:57:19 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8418C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 20:57:18 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id z47so105034uad.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 20:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+wo3dW8m0c+iQXJh08GxVTguCzxCF09qjrI8A5/q9So=;
-        b=nD38w/MkQ1T5AjnPSo+Ast0pHABbPUSa+yH9Hbot28j7vRweO+uYQ061v6DyZL/MJr
-         1A4CDvaPNxyznhRSX0DAqVBiZc9prX4x38bHATeYB5uCqxKQbT6Hm2m40T/Z4a2FgVN4
-         mMYDCBYcqcNk6x72is7mCkhGOckKPpEhthuUmASEHtrJmrAZ0XuxN86AfDiKwrB8BXoI
-         AaHMc4AO5OD2NkQc3uy1n7IDWmBB8SdbmMYKn0JCzlEU9c6vR777WFYB/BV5LM0dnfaH
-         dbs85ftDFaJ/ge18rRfDdf3uY8z8XoiVSoud0w69M8T9SyH4Br3iUkv92TXSEG34rUch
-         sqlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+wo3dW8m0c+iQXJh08GxVTguCzxCF09qjrI8A5/q9So=;
-        b=eR8qtN19WhbDdeVRE8znY8fJW8zSVjSx7q0W6/JhzEIvVIcg4vScc4SQKTUREq8Lml
-         dbRGSW2Ie2/a0ck1cKE4rUCIlhNuQFNiriT5UjS6+E0j8uURSI7ztWlaFujaCOssNg54
-         4Phb0dojmg/JCMYFpYrc887i/+Gv4ihePmruCpAa4NAughC2p+w3Yqo+ag6qZ6xUcOqm
-         CvQXggpStDtvRiodQH0RSNsWdFThBz1xz5WgIw8KI4fF2TGEuUY7d/rNNGucCyzQo8bU
-         NN3Ul429LSuvWWBLOhNIEoUzdviw2kMpBh+9mCR1zBS2lIIrvKJKpZhCDZ7pXlFof1NG
-         W6UQ==
-X-Gm-Message-State: AOAM532Q2R21nrtelCCBFIyiubITOfVQ++yVY+lWghVjuJs9zBZdYyjq
-        X+xxeyHksDDs3oYxVuG9Dxh9zsdRxfVozjUPUbHQgg==
-X-Google-Smtp-Source: ABdhPJxnfZ9JWwfJzRclYZg4/BtDEjBVKi9MMY28iCIFFCs5HFMTdnTtpDHDKW0lF7K0VvWQ4CbRLf9V7VsB/OLV7+k=
-X-Received: by 2002:ab0:2eb5:: with SMTP id y21mr5055545uay.92.1591156637571;
- Tue, 02 Jun 2020 20:57:17 -0700 (PDT)
+        Tue, 2 Jun 2020 23:57:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591156640;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UyDIdDugCgBr44CrPYBWsuEUV5F9G8QEY0u0WtGA1tw=;
+        b=Fg3Q1c1vRn5bnLpMrv508AArwnE0R8hSupIERvCIKxY+ItqUQ8q/mAgJwkBz3QP6bZxtmi
+        Ai0vkQZs01YjXeTNJSmxGNpUAEK9+rB3lJeCisYRSE+cPUqWXCAjJXU0FPqDPnBgZoSdqW
+        iNrP+gBmr/5WUVbQD9PP0YPJEXPu0K0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-maRQScxMM7ay19yJgDRIDg-1; Tue, 02 Jun 2020 23:57:18 -0400
+X-MC-Unique: maRQScxMM7ay19yJgDRIDg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14B801800D42;
+        Wed,  3 Jun 2020 03:57:17 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBA9210013C3;
+        Wed,  3 Jun 2020 03:57:12 +0000 (UTC)
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20200602084257.134555-1-mst@redhat.com>
+ <20200603014815.GR23230@ZenIV.linux.org.uk>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3358ae96-abb6-6be9-346a-0e971cb84dcd@redhat.com>
+Date:   Wed, 3 Jun 2020 11:57:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com>
- <f8b9b387-df30-d960-4833-ce6e7974a633@suse.cz> <CAAmzW4OsxZV-xRtPqXUVAoP+dM6SQSaw1E1EE+0Fw2fS1Z9K9A@mail.gmail.com>
-In-Reply-To: <CAAmzW4OsxZV-xRtPqXUVAoP+dM6SQSaw1E1EE+0Fw2fS1Z9K9A@mail.gmail.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 2 Jun 2020 20:57:06 -0700
-Message-ID: <CAJuCfpEgLkQUhwC4cpDjSr8a5vnX1ePzHa9Dz2Cy920vFjVRig@mail.gmail.com>
-Subject: Re: [PATCH v5 00/10] workingset protection/detection on the anonymous
- LRU list
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200603014815.GR23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 5:50 PM Joonsoo Kim <js1304@gmail.com> wrote:
->
-> 2020=EB=85=84 4=EC=9B=94 9=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 1:55, =
-Vlastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> >
-> > On 4/3/20 7:40 AM, js1304@gmail.com wrote:
-> > > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > >
-> > > Hello,
-> > >
-> > > This patchset implements workingset protection and detection on
-> > > the anonymous LRU list.
-> >
-> > Hi!
->
-> Hi!
->
-> > > I did another test to show the performance effect of this patchset.
-> > >
-> > > - ebizzy (with modified random function)
-> > > ebizzy is the test program that main thread allocates lots of memory =
-and
-> > > child threads access them randomly during the given times. Swap-in/ou=
-t
-> > > will happen if allocated memory is larger than the system memory.
-> > >
-> > > The random function that represents the zipf distribution is used to
-> > > make hot/cold memory. Hot/cold ratio is controlled by the parameter. =
-If
-> > > the parameter is high, hot memory is accessed much larger than cold o=
-ne.
-> > > If the parameter is low, the number of access on each memory would be
-> > > similar. I uses various parameters in order to show the effect of
-> > > patchset on various hot/cold ratio workload.
-> > >
-> > > My test setup is a virtual machine with 8 cpus and 1024MB memory.
-> > >
-> > > Result format is as following.
-> > >
-> > > Parameter 0.1 ... 1.3
-> > > Allocated memory size
-> > > Throughput for base (larger is better)
-> > > Throughput for patchset (larger is better)
-> > > Improvement (larger is better)
-> > >
-> > >
-> > > * single thread
-> > >
-> > >      0.1      0.3      0.5      0.7      0.9      1.1      1.3
-> > > <512M>
-> > >   7009.0   7372.0   7774.0   8523.0   9569.0  10724.0  11936.0
-> > >   6973.0   7342.0   7745.0   8576.0   9441.0  10730.0  12033.0
-> > >    -0.01     -0.0     -0.0     0.01    -0.01      0.0     0.01
-> > > <768M>
-> > >    915.0   1039.0   1275.0   1687.0   2328.0   3486.0   5445.0
-> > >    920.0   1037.0   1238.0   1689.0   2384.0   3638.0   5381.0
-> > >     0.01     -0.0    -0.03      0.0     0.02     0.04    -0.01
-> > > <1024M>
-> > >    425.0    471.0    539.0    753.0   1183.0   2130.0   3839.0
-> > >    414.0    468.0    553.0    770.0   1242.0   2187.0   3932.0
-> > >    -0.03    -0.01     0.03     0.02     0.05     0.03     0.02
-> > > <1280M>
-> > >    320.0    346.0    410.0    556.0    871.0   1654.0   3298.0
-> > >    316.0    346.0    411.0    550.0    892.0   1652.0   3293.0
-> > >    -0.01      0.0      0.0    -0.01     0.02     -0.0     -0.0
-> > > <1536M>
-> > >    273.0    290.0    341.0    458.0    733.0   1381.0   2925.0
-> > >    271.0    293.0    344.0    462.0    740.0   1398.0   2969.0
-> > >    -0.01     0.01     0.01     0.01     0.01     0.01     0.02
-> > > <2048M>
-> > >     77.0     79.0     95.0    147.0    276.0    690.0   1816.0
-> > >     91.0     94.0    115.0    170.0    321.0    770.0   2018.0
-> > >     0.18     0.19     0.21     0.16     0.16     0.12     0.11
-> > >
-> > >
-> > > * multi thread (8)
-> > >
-> > >      0.1      0.3      0.5      0.7      0.9      1.1      1.3
-> > > <512M>
-> > >  29083.0  29648.0  30145.0  31668.0  33964.0  38414.0  43707.0
-> > >  29238.0  29701.0  30301.0  31328.0  33809.0  37991.0  43667.0
-> > >     0.01      0.0     0.01    -0.01     -0.0    -0.01     -0.0
-> > > <768M>
-> > >   3332.0   3699.0   4673.0   5830.0   8307.0  12969.0  17665.0
-> > >   3579.0   3992.0   4432.0   6111.0   8699.0  12604.0  18061.0
-> > >     0.07     0.08    -0.05     0.05     0.05    -0.03     0.02
-> > > <1024M>
-> > >   1921.0   2141.0   2484.0   3296.0   5391.0   8227.0  14574.0
-> > >   1989.0   2155.0   2609.0   3565.0   5463.0   8170.0  15642.0
-> > >     0.04     0.01     0.05     0.08     0.01    -0.01     0.07
-> > > <1280M>
-> > >   1524.0   1625.0   1931.0   2581.0   4155.0   6959.0  12443.0
-> > >   1560.0   1707.0   2016.0   2714.0   4262.0   7518.0  13910.0
-> > >     0.02     0.05     0.04     0.05     0.03     0.08     0.12
-> > > <1536M>
-> > >   1303.0   1399.0   1550.0   2137.0   3469.0   6712.0  12944.0
-> > >   1356.0   1465.0   1701.0   2237.0   3583.0   6830.0  13580.0
-> > >     0.04     0.05      0.1     0.05     0.03     0.02     0.05
-> > > <2048M>
-> > >    172.0    184.0    215.0    289.0    514.0   1318.0   4153.0
-> > >    175.0    190.0    225.0    329.0    606.0   1585.0   5170.0
-> > >     0.02     0.03     0.05     0.14     0.18      0.2     0.24
-> > >
-> > > As we can see, as allocated memory grows, patched kernel get the bett=
-er
-> > > result. Maximum improvement is 21% for the single thread test and
-> > > 24% for the multi thread test.
-> >
-> > So, these results seem to be identical since v1. After the various chan=
-ges up to
-> > v5, should  the benchmark be redone? And was that with a full patchset =
-or
-> > patches 1+2?
->
-> It was done with a full patchset. I think that these results would not
-> be changed
-> even on v5 since it is improvement from the concept of this patchset and
-> implementation detail doesn't much matter. However, I will redo.
->
-> > > * EXPERIMENT
-> > > I made a test program to imitates above scenario and confirmed that
-> > > problem exists. Then, I checked that this patchset fixes it.
-> > >
-> > > My test setup is a virtual machine with 8 cpus and 6100MB memory. But=
-,
-> > > the amount of the memory that the test program can use is about 280 M=
-B.
-> > > This is because the system uses large ram-backed swap and large ramdi=
-sk
-> > > to capture the trace.
-> > >
-> > > Test scenario is like as below.
-> > >
-> > > 1. allocate cold memory (512MB)
-> > > 2. allocate hot-1 memory (96MB)
-> > > 3. activate hot-1 memory (96MB)
-> > > 4. allocate another hot-2 memory (96MB)
-> > > 5. access cold memory (128MB)
-> > > 6. access hot-2 memory (96MB)
-> > > 7. repeat 5, 6
-> > >
-> > > Since hot-1 memory (96MB) is on the active list, the inactive list ca=
-n
-> > > contains roughly 190MB pages. hot-2 memory's re-access interval
-> > > (96+128 MB) is more 190MB, so it cannot be promoted without workingse=
-t
-> > > detection and swap-in/out happens repeatedly. With this patchset,
-> > > workingset detection works and promotion happens. Therefore, swap-in/=
-out
-> > > occurs less.
-> > >
-> > > Here is the result. (average of 5 runs)
-> > >
-> > > type swap-in swap-out
-> > > base 863240 989945
-> > > patch 681565 809273
-> > >
-> > > As we can see, patched kernel do less swap-in/out.
-> >
-> > Same comment, also v1 has this note:
->
-> I had tested this scenario on every version of the patchset and found the=
- same
-> trend.
->
-> > > Note that, this result is gotten from v5.1. Although workingset detec=
-tion
-> > > works on v5.1, it doesn't work well on v5.5. It looks like that recen=
-t
-> > > code change on workingset.c is the reason of this problem. I will
-> > > track it soon.
-> > What was the problem then, assuming it's fixed? Maybe I just missed it
-> > mentioned. Can results now be gathered on 5.6?
->
-> It was fixed on v2. Change log on v2 "fix a critical bug that uses out of=
- index
-> lru list in workingset_refault()" is for this problem. I should note
-> that clearly.
->
-> > In general, this patchset seems to be doing the right thing. I haven't =
-reviewed
-> > the code yet, but hope to do so soon. But inevitably, with any changes =
-in this
-> > area there will be workloads that will suffer instead of benefit. That =
-can be
-> > because we are actually doing a wrong thing, or there's a bug in the co=
-de, or
-> > the workloads happen to benefit from the current behavior even if it's =
-not the
-> > generally optimal one. And I'm afraid only testing on a variety of work=
-loads can
-> > show that. You mentioned somewhere that your production workloads benef=
-it? Can
-> > it be quantified more? Could e.g. Johannes test this a bit at Facebook,=
- or
->
-> I cannot share the detail of the test for my production (smart TV)
-> workload. Roughly,
-> it is repeat of various action and app (channel change, volume change,
-> youtube, etc.)
-> on smart TV and it is memory stress test. Result after the workload is:
->
-> base
-> pswpin 328211
-> pswpout 304015
->
-> patched
-> pswpin 261884
-> pswpout 276062
->
-> So, improvement on pswpin and pswpout is roughly 20% and 9%, respectively=
-.
->
-> > it be quantified more? Could e.g. Johannes test this a bit at Facebook,=
- or
-> > somebody at Google?
->
-> It's really helpful if someone else could test this on their workload.
 
-Please let me know when the new version (after Johannes' memcg
-charging changes) is available for testing. I'll try them on Android
-workload.
-Thanks.
+On 2020/6/3 上午9:48, Al Viro wrote:
+> On Tue, Jun 02, 2020 at 04:45:05AM -0400, Michael S. Tsirkin wrote:
+>> So vhost needs to poke at userspace *a lot* in a quick succession.  It
+>> is thus benefitial to enable userspace access, do our thing, then
+>> disable. Except access_ok has already been pre-validated with all the
+>> relevant nospec checks, so we don't need that.  Add an API to allow
+>> userspace access after access_ok and barrier_nospec are done.
+> BTW, what are you going to do about vq->iotlb != NULL case?  Because
+> you sure as hell do *NOT* want e.g. translate_desc() under STAC.
+> Disable it around the calls of translate_desc()?
+
+
+translate_desc() itself doesn't do userspace access, so the idea is 
+probably disabling STAC around a batch of vhost_get_uesr()/vhost_put_user().
+
 
 >
-> Thanks.
+> How widely do you hope to stretch the user_access areas, anyway?
+
+
+To have best performance for small packets like 64B, if possible, we 
+want to disable STAC not only for the metadata access done by vhost 
+accessors but also the data access via iov iterator.
+
+
 >
+> BTW, speaking of possible annotations: looks like there's a large
+> subset of call graph that can be reached only from vhost_worker()
+> or from several ioctls, with all uaccess limited to that subgraph
+> (thankfully).  Having that explicitly marked might be a good idea...
+>
+> Unrelated question, while we are at it: is there any point having
+> vhost_get_user() a polymorphic macro?  In all callers the third
+> argument is __virtio16 __user * and the second one is an explicit
+> *<something> where <something> is __virtio16 *.  Similar for
+> vhost_put_user(): in all callers the third arugment is
+> __virtio16 __user * and the second - cpu_to_vhost16(vq, something).
+
+
+This is because all virtqueue metadata that needs to be accessed 
+atomically is __virtio16 now, but this may not be true for future virtio 
+extension.
+
+
+>
+> Incidentally, who had come up with the name __vhost_get_user?
+> Makes for lovey WTF moment for readers - esp. in vhost_put_user()...
+
+
+I think the confusion comes since it does not accept userspace pointer 
+(when IOTLB is enabled).
+
+How about renaming it as vhost_read()/vhost_write() ?
+
+Thanks
+
+>
+
