@@ -6,70 +6,80 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26086C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1159C20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB7D206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgFCPYn (ORCPT
+        id S1726197AbgFCPZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:24:43 -0400
-Received: from 8bytes.org ([81.169.241.247]:46066 "EHLO theia.8bytes.org"
+        Wed, 3 Jun 2020 11:25:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:34708 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgFCPYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:24:39 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A9A2028B; Wed,  3 Jun 2020 17:24:37 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 17:24:36 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 38/75] x86/sev-es: Add SEV-ES Feature Detection
-Message-ID: <20200603152436.GA17841@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-39-joro@8bytes.org>
- <20200520083916.GB1457@zn.tnic>
+        id S1725867AbgFCPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:25:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3362B55D;
+        Wed,  3 Jun 2020 08:25:10 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FCFA3F52E;
+        Wed,  3 Jun 2020 08:25:08 -0700 (PDT)
+References: <20200603124559.22652-1-benjamin.gaignard@st.com> <20200603124559.22652-3-benjamin.gaignard@st.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     hugues.fruchet@st.com, mchehab@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        vincent.guittot@linaro.org, rjw@rjwysocki.net
+Subject: Re: [PATCH v2 2/3] media: stm32-dcmi: Set minimum cpufreq requirement
+In-reply-to: <20200603124559.22652-3-benjamin.gaignard@st.com>
+Date:   Wed, 03 Jun 2020 16:25:01 +0100
+Message-ID: <jhjk10oi33m.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520083916.GB1457@zn.tnic>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:39:16AM +0200, Borislav Petkov wrote:
-> On Tue, Apr 28, 2020 at 05:16:48PM +0200, Joerg Roedel wrote:
-> > +bool sev_es_active(void)
-> > +{
-> > +	return !!(sev_status & MSR_AMD64_SEV_ES_ENABLED);
-> > +}
-> > +EXPORT_SYMBOL_GPL(sev_es_active);
-> 
-> I don't see this being used in modules anywhere in the patchset. Or am I
-> missing something?
 
-It is used in several places, for example do do_nmi() to conditionally
-re-open the NMI window in SEV-ES guests. But there are other uses too,
-like int sev_es_efi_map_ghcbs() or in sev_es_init_vc_handling() to opt
-out if not running as an SEV-ES guest.
+On 03/06/20 13:45, Benjamin Gaignard wrote:
+> +static void dcmi_set_min_frequency(struct stm32_dcmi *dcmi, u64 freq)
+> +{
+> +	struct cpufreq_policy *p;
+> +	int cpu;
+> +
+> +	for_each_cpu(cpu, irq_get_affinity_mask(dcmi->irq)) {
+> +		p = per_cpu(policy, cpu);
+> +		if (!p)
+> +			continue;
+> +
+> +		freq_qos_update_request(&per_cpu(qos_req, cpu), freq);
+> +	}
+> +}
+> +
 
+You may want to use a "visited" cpumask as I suggested in the previous
+thread, since a policy can cover more than one CPU (IOW, a frequency domain
+can span more than one CPU). It's not required per-se, AFAICT, but it makes
+things a bit neater.
 
-	Joerg
+I also think you'll have to use the affinity notifier
+(irq_set_affinity_notifier()), since AFAICT userspace can change the
+affinity of that IRQ. I suppose you'll want something like:
+- Check if we currently are in streaming mode
+- Clear the QoS request for CPUs that were previously boosted but that
+  aren't in the new mask
+- Add the request for the new CPUs.
 
+You'll probably need serialize the reading of the mask in the regular
+dcmi_set_min_frequency() as well. I concur all of that is somewhat
+annoying, but AFAICT that's required for a sturdy implementation.
+
+>  static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  {
+>       struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
