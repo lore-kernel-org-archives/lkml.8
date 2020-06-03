@@ -2,156 +2,108 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08DB20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591191603;
-	bh=pLJZXcccx6IchdAe78q78aRaGPNn5KFvGVxMe+G0Jd8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nIKvniVTGf8bm5QU/ZhqTVgcqlUqIqL6AeMZrQw0/I2TqJ7DJdXwHCweFMZ76X6Ov
-	 HNqT0daY6+XL6MOuVHfnLQo/q+fGfGsPBg4lO8s7LZsXWx4SJ+N5zFsDSsOpm7/pJJ
-	 VuU9PaUWrLgH9Z98DOjiprNHS2T/CnwV10jghP00=
+	by mail.kernel.org (Postfix) with ESMTP id 442AB20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgFCNkD (ORCPT
+        id S1726021AbgFCNk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:40:03 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46329 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgFCNkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:40:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 25so899009oiy.13;
-        Wed, 03 Jun 2020 06:40:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QtRjhLaAAXrKs3rcG85ERI4DR22fXXuoilSjsbEiHeg=;
-        b=fxH11YFr76LFMpYXBHGs8JZ6LozbXxhqQ8niywQHPznjnQQ3gyDWyoeQ5WlkJdVOBT
-         ZuNmeafBTSvXH3Lg3BmmzdpCAL3aAQLCfKe5Hbwyi4BJ+14mBhPZUZO/0HhvxGzbnk3X
-         HLv36Miuat40mkksoJt+tXQ0CW6r/7Qf3Etrwj1a/3tp32nGbCw/+CWlfrRL+xEwSesS
-         eQkgdMPEGCltntto848scIqS7xlT+HlFobfodSaz6e8hXd4ywQXgCi3Zgx5quwVivQ6j
-         6S/za8z90qUtJKdl8d5I7v8UxvgkO2/XRDqYCuKC+zXd7mhua61o9grIrJPDpjyfjG1z
-         m7wA==
-X-Gm-Message-State: AOAM532Hz6jsBOJd67DpZTKQ6ttlauHd5CCUy1Mi4FrjhQUZoYRuSx4h
-        AhEfckdjibiQ1goQ31jerlSE+3XrgGmmoOA3naY=
-X-Google-Smtp-Source: ABdhPJw2Ggs2UAYrV1Zmdg+DmF9enY2HudhpmMbzKPc6AAo+xShivMecWM1sRR3PTOj/anHdgZiDRHEDySOecdlpZJE=
-X-Received: by 2002:aca:ad88:: with SMTP id w130mr6530787oie.103.1591191601127;
- Wed, 03 Jun 2020 06:40:01 -0700 (PDT)
+        Wed, 3 Jun 2020 09:40:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:33682 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgFCNk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:40:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B1C255D;
+        Wed,  3 Jun 2020 06:40:56 -0700 (PDT)
+Received: from [10.57.0.45] (unknown [10.57.0.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9B3C3F52E;
+        Wed,  3 Jun 2020 06:40:54 -0700 (PDT)
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
+        Stephen Boyd <swboyd@chromium.org>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <20200601212858.GB24287@xps15> <bf7e8ac2-51b2-d9cb-9c4f-c311297accac@arm.com>
+ <1549935cf69ac3a006f32eb278821027@codeaurora.org>
+ <6c1a4fbd-98cb-a49c-0ced-1318d5d5e7c8@arm.com>
+ <7fe5762b5cb8f87e988232922d06c55d@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <68444180-3ebe-8988-493a-fdd1dff994b6@arm.com>
+Date:   Wed, 3 Jun 2020 14:40:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com> <20200603075200.hbyofgcyiwocl565@vireshk-i7>
-In-Reply-To: <20200603075200.hbyofgcyiwocl565@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Jun 2020 15:39:46 +0200
-Message-ID: <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7fe5762b5cb8f87e988232922d06c55d@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 9:52 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 02-06-20, 11:34, Xiongfeng Wang wrote:
-> > Hi Viresh,
-> >
-> > Sorry to disturb you about another problem as follows.
-> >
-> > CPPC use the increment of Desired Performance counter and Reference Performance
-> > counter to get the CPU frequency and show it in sysfs through
-> > 'cpuinfo_cur_freq'. But ACPI CPPC doesn't specifically define the behavior of
-> > these two counters when the CPU is in idle state, such as stop incrementing when
-> > the CPU is in idle state.
-> >
-> > ARMv8.4 Extension inctroduced support for the Activity Monitors Unit (AMU). The
-> > processor frequency cycles and constant frequency cycles in AMU can be used as
-> > Delivered Performance counter and Reference Performance counter. These two
-> > counter in AMU does not increase when the PE is in WFI or WFE. So the increment
-> > is zero when the PE is in WFI/WFE. This cause no issue because
-> > 'cppc_get_rate_from_fbctrs()' in cppc_cpufreq driver will check the increment
-> > and return the desired performance if the increment is zero.
-> >
-> > But when the CPU goes into power down idle state, accessing these two counters
-> > in AMU by memory-mapped address will return zero. Such as CPU1 went into power
-> > down idle state and CPU0 try to get the frequency of CPU1. In this situation,
-> > will display a very big value for 'cpuinfo_cur_freq' in sysfs. Do you have some
-> > advice about this problem ?
-> >
-> > I was thinking about an idea as follows. We can run 'cppc_cpufreq_get_rate()' on
-> > the CPU to be measured, so that we can make sure the CPU is in C0 state when we
-> > access the two counters. Also we can return the actual frequency rather than
-> > desired performance when the CPU is in WFI/WFE. But this modification will
-> > change the existing logical and I am not sure if this will cause some bad effect.
-> >
-> >
-> > diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> > index 257d726..ded3bcc 100644
-> > --- a/drivers/cpufreq/cppc_cpufreq.c
-> > +++ b/drivers/cpufreq/cppc_cpufreq.c
-> > @@ -396,9 +396,10 @@ static int cppc_get_rate_from_fbctrs(struct cppc_cpudata *cpu,
-> >         return cppc_cpufreq_perf_to_khz(cpu, delivered_perf);
-> >  }
-> >
-> > -static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
-> > +static int cppc_cpufreq_get_rate_cpu(void *info)
-> >  {
-> >         struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
-> > + unsigned int cpunum = *(unsigned int *)info;
-> >         struct cppc_cpudata *cpu = all_cpu_data[cpunum];
-> >         int ret;
-> >
-> > @@ -418,6 +419,22 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
-> >         return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
-> >  }
-> >
-> > +static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
-> > +{
-> > + unsigned int ret;
-> > +
-> > + ret = smp_call_on_cpu(cpunum, cppc_cpufreq_get_rate_cpu, &cpunum, true);
-> > +
-> > + /*
-> > +  * convert negative error code to zero, otherwise we will display
-> > +  * an odd value for 'cpuinfo_cur_freq' in sysfs
-> > +  */
-> > + if (ret < 0)
-> > +         ret = 0;
-> > +
-> > + return ret;
-> > +}
-> > +
-> >  static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
-> >  {
-> >         struct cppc_cpudata *cpudata;
->
-> I don't see any other sane solution, even if this brings the CPU back
-> to normal state and waste power. We should be able to reliably provide
-> value to userspace.
->
-> Rafael / Sudeep: What you do say ?
+On 2020-06-03 13:26, Sai Prakash Ranjan wrote:
+> Hi Robin,
+> 
+> On 2020-06-03 17:51, Robin Murphy wrote:
+>> On 2020-06-03 13:00, Sai Prakash Ranjan wrote:
+>>> Hi Robin, Mathieu
+>>>
+>>> On 2020-06-03 17:07, Robin Murphy wrote:
+>>>> On 2020-06-01 22:28, Mathieu Poirier wrote:
+>>>>> That being said I'm sure that dependencies on an IOMMU isn't a 
+>>>>> problem confined
+>>>>> to coresight. I am adding Robin Murphy, who added this commit [1], 
+>>>>> to the thread
+>>>>> in the hope that he can provide guidance on the right way to do this.
+>>>>
+>>>> Right, it's not specific to CoreSight, and it's not even specific to
+>>>> IOMMUs really. In short, blame kexec ;)
+>>>>
+>>>
+>>> Yes it is not specific to coresight, we are targeting this for all
+>>> consumers/clients of SMMU(atleast on SC7180 SoC). We have display 
+>>> throwing
+>>> NoC/interconnect errors[1] during reboot after SMMU is disabled.
+>>> This is also not specific to kexec either as you explained here [2] 
+>>> about
+>>> a case with display which is exacly what is happening in our system [1].
+>>
+>> Sure, but those instances are begging the question of why the SMMU is
+>> disabled at reboot in the first place ;)
+>>
+> 
+> That is what happens in SMMU shutdown callback right? It is the 
+> reboot/shutdown flow.
 
-The frequency value obtained by kicking the CPU out of idle
-artificially is bogus, though.  You may as well return a random number
-instead.
+Yes, that's where it happens, but my point is *why* it happens at all.
 
-The frequency of a CPU in an idle state is in fact unknown in the case
-at hand, so returning 0 looks like the cleanest option to me.
+hint: `git log --grep=shutdown drivers/iommu/`
 
-Thanks!
+If we could assume the system is always about to be powered off or 
+reset, we wouldn't need to do anything to the SMMU either ;)
+
+Robin.
+
+> 
+>     arm_smmu_device_shutdown()
+>      platform_drv_shutdown()
+>       device_shutdown()
+>        kernel_restart_prepare()
+>         kernel_restart()
+> 
+> Thanks,
+> Sai
+> 
