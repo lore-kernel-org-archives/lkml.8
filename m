@@ -2,66 +2,103 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9393C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799BD206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8878E206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="STO4UMrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgFCM6b (ORCPT
+        id S1726122AbgFCM7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:58:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53904 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCM6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:58:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 62077AF95;
-        Wed,  3 Jun 2020 12:58:32 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 14:58:26 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-next <linux-next@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        mpe <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        sachinp <sachinp@linux.vnet.ibm.com>,
-        manvanth <manvanth@linux.vnet.ibm.com>,
-        "aneesh.kumar" <aneesh.kumar@linux.vnet.ibm.com>,
-        akpm@linux-foundation.org, Steven Rostedt <rostedt@goodmis.org>,
-        hch <hch@lst.de>
-Subject: Re: [mainline][Oops][bisected 2ba3e6 ] 5.7.0 boot fails with kernel
- panic on powerpc
-Message-ID: <20200603125826.GK6857@suse.de>
-References: <1591181457.9020.13.camel@abdul>
+        Wed, 3 Jun 2020 08:59:10 -0400
+Received: from www413.your-server.de ([88.198.28.140]:59804 "EHLO
+        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCM7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:59:09 -0400
+X-Greylist: delayed 1518 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 08:59:08 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WLXbW7eXUFsbHAU7HjXMcrh7C07cQvd1bw2Aquc/MMQ=; b=STO4UMrdwTubX7v2omyrFeJGM
+        qq1ZY5ooXteqYoYSLnmjaa26PlLavdzZlWh+u8ynyZLVI3Q0Uaxf402CkZy/RE4ZV18Od2J2uywZL
+        0B1rHQHjfnHHqiKmwIQUqAiEY2G1DFCmNHqEkClSgIVtDaUl7JOuXXw/PE64bbxZMJNcUEKZW0nmg
+        pWFa9cHKM35fG6Czz9iSJcJUasT2242nsmibkiyGYkBZnDBs8dKH+356OK5Ea5pSGrX0D4tO+G9VV
+        vXtnD3cxWfSWGQHS08JTJ9+oCPvGgxMazUqgZxj8wjIXX0mWAqPmTQ0ufTVzJaFMBwt5o5FVOQ7J+
+        8AQnbtzRA==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1jgSaZ-0000IJ-Jk; Wed, 03 Jun 2020 14:33:48 +0200
+Received: from [2001:16b8:5718:c600:5706:3182:8b16:9ba] (helo=linux.fritz.box)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1:ECDHE-RSA-AES256-SHA:256)
+        (Exim 4.92)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1jgSaZ-000LTO-DG; Wed, 03 Jun 2020 14:33:47 +0200
+From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
+To:     intel-gvt-dev@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Julian Stecklina <julian.stecklina@cyberus-technology.de>,
+        Thomas Prescher <thomas.prescher@cyberus-technology.de>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH] drm/i915/gvt: print actionable error message when gm runs out
+Date:   Wed,  3 Jun 2020 14:33:21 +0200
+Message-Id: <20200603123321.263895-1-julian.stecklina@cyberus-technology.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591181457.9020.13.camel@abdul>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25831/Tue Jun  2 14:41:03 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Abdul,
+When a user tries to allocate too many or too big vGPUs and runs out
+of graphics memory, the resulting error message is not actionable and
+looks like an internal error.
 
-On Wed, Jun 03, 2020 at 04:20:57PM +0530, Abdul Haleem wrote:
-> Greeting's
-> 
-> Today's mainline kernel panics when booting on my powerpc lpar
+Change the error message to clearly point out what actions a user can
+take to resolve this situation.
 
-Thanks for the report, I am looking into it with my limited powerpc
-knowledge. But I have an idea and will send you something to test later
-today.
+Cc: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+---
+ drivers/gpu/drm/i915/gvt/aperture_gm.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Thanks,
-
-	Joerg
+diff --git a/drivers/gpu/drm/i915/gvt/aperture_gm.c b/drivers/gpu/drm/i915/gvt/aperture_gm.c
+index 0d6d598713082..5c5c8e871dae2 100644
+--- a/drivers/gpu/drm/i915/gvt/aperture_gm.c
++++ b/drivers/gpu/drm/i915/gvt/aperture_gm.c
+@@ -69,9 +69,12 @@ static int alloc_gm(struct intel_vgpu *vgpu, bool high_gm)
+ 				  start, end, flags);
+ 	mmio_hw_access_post(gt);
+ 	mutex_unlock(&gt->ggtt->vm.mutex);
+-	if (ret)
+-		gvt_err("fail to alloc %s gm space from host\n",
+-			high_gm ? "high" : "low");
++	if (ret) {
++		gvt_err("vgpu%d: failed to allocate %s gm space from host\n",
++			vgpu->id, high_gm ? "high" : "low");
++		gvt_err("vgpu%d: destroying vGPUs, decreasing vGPU memory size or increasing GPU aperture size may resolve this\n",
++			vgpu->id);
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.26.2
 
