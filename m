@@ -2,113 +2,83 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4F720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B451206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgFCOdC (ORCPT
+        id S1726120AbgFCOdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:33:02 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:52342 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725859AbgFCOdC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:33:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U-UFIuQ_1591194686;
-Received: from localhost(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0U-UFIuQ_1591194686)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 03 Jun 2020 22:31:26 +0800
-From:   Huaixin Chang <changhuaixin@linux.alibaba.com>
-To:     jpoimboe@redhat.com
-Cc:     bp@alien8.de, changhuaixin@linux.alibaba.com, hpa@zytor.com,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        luto@amacapital.net, michal.lkml@markovi.net, mingo@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org,
-        yamada.masahiro@socionext.com
-Subject: [PATCH 3/3] x86/unwind/orc: Simplify unwind_init() for x86 boot
-Date:   Wed,  3 Jun 2020 22:31:23 +0800
-Message-Id: <20200603143123.57364-4-changhuaixin@linux.alibaba.com>
-X-Mailer: git-send-email 2.14.4.44.g2045bb6
-In-Reply-To: <20200603143123.57364-1-changhuaixin@linux.alibaba.com>
-References: <20200601173840.3f36m6l4fsu5bill@treble>
- <20200603143123.57364-1-changhuaixin@linux.alibaba.com>
+        Wed, 3 Jun 2020 10:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgFCOdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 10:33:46 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 183F320679;
+        Wed,  3 Jun 2020 14:33:44 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 10:33:43 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: Re: [PATCH v2 3/7] selftests/ftrace: Add "requires:" list support
+Message-ID: <20200603103343.2db5b5c6@gandalf.local.home>
+In-Reply-To: <20200603085113.67d6cdd16acdece4f167cab4@kernel.org>
+References: <159108888259.42416.547252366885528860.stgit@devnote2>
+        <159108891139.42416.16735397217311780715.stgit@devnote2>
+        <20200602092145.06afaf72@gandalf.local.home>
+        <20200603085113.67d6cdd16acdece4f167cab4@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orc fast lookup table is built by scripts/sorttable tool. All that
-is left is setting lookup_num_blocks.
+On Wed, 3 Jun 2020 08:51:13 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
----
- arch/x86/kernel/unwind_orc.c | 40 ----------------------------------------
- 1 file changed, 40 deletions(-)
+> On Tue, 2 Jun 2020 09:21:45 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Tue,  2 Jun 2020 18:08:31 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >   
+> > > +++ b/tools/testing/selftests/ftrace/test.d/template
+> > > @@ -1,6 +1,7 @@
+> > >  #!/bin/sh
+> > >  # SPDX-License-Identifier: GPL-2.0
+> > >  # description: %HERE DESCRIBE WHAT THIS DOES%
+> > > +# requires: %HERE LIST UP REQUIRED FILES%  
+> > 
+> > Not sure what you mean by "LIST UP". Perhaps you mean "LIST OF"?  
+> 
+> Ah, perhups we don't need UP. "list the required files" will be OK?
+> 
+>
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2d240f..11b87ecf8919 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -264,48 +264,8 @@ void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
- 
- void __init unwind_init(void)
- {
--	size_t orc_ip_size = (void *)__stop_orc_unwind_ip - (void *)__start_orc_unwind_ip;
--	size_t orc_size = (void *)__stop_orc_unwind - (void *)__start_orc_unwind;
--	size_t num_entries = orc_ip_size / sizeof(int);
--	struct orc_entry *orc;
--	int i;
--
--	if (!num_entries || orc_ip_size % sizeof(int) != 0 ||
--	    orc_size % sizeof(struct orc_entry) != 0 ||
--	    num_entries != orc_size / sizeof(struct orc_entry)) {
--		orc_warn("WARNING: Bad or missing .orc_unwind table.  Disabling unwinder.\n");
--		return;
--	}
--
--	/*
--	 * Note, the orc_unwind and orc_unwind_ip tables were already
--	 * sorted at build time via the 'sorttable' tool.
--	 * It's ready for binary search straight away, no need to sort it.
--	 */
--
- 	/* Initialize the fast lookup table: */
- 	lookup_num_blocks = orc_lookup_end - orc_lookup;
--	for (i = 0; i < lookup_num_blocks-1; i++) {
--		orc = __orc_find(__start_orc_unwind_ip, __start_orc_unwind,
--				 num_entries,
--				 LOOKUP_START_IP + (LOOKUP_BLOCK_SIZE * i));
--		if (!orc) {
--			orc_warn("WARNING: Corrupt .orc_unwind table.  Disabling unwinder.\n");
--			return;
--		}
--
--		orc_lookup[i] = orc - __start_orc_unwind;
--	}
--
--	/* Initialize the ending block: */
--	orc = __orc_find(__start_orc_unwind_ip, __start_orc_unwind, num_entries,
--			 LOOKUP_STOP_IP);
--	if (!orc) {
--		orc_warn("WARNING: Corrupt .orc_unwind table.  Disabling unwinder.\n");
--		return;
--	}
--	orc_lookup[lookup_num_blocks-1] = orc - __start_orc_unwind;
--
- 	orc_init = true;
- }
- 
--- 
-2.14.4.44.g2045bb6
+Yes, that sounds much better.
 
+I tested out the patches with a few different configurations, and they all
+look good.
+
+Although I found that the irqsoff_tracer.tc (test for the preemptirqsoff
+tracer) changed from UNRESOLVED to UNSUPPORTED.
+
+I'll run a few more different configs and see what happens, but you can add:
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
