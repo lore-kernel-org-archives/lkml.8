@@ -4,146 +4,156 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F31C433EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8CC2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471CF2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qGzEB7IN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fiQwobOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgFCXdP (ORCPT
+        id S1726885AbgFCXdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:33:15 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:50471 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgFCXdH (ORCPT
+        Wed, 3 Jun 2020 19:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgFCXcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:33:07 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200603233300epoutp03d7f7a573964f62bf013d4a1055d147e8~VLLC_4caO2863228632epoutp039
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 23:33:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200603233300epoutp03d7f7a573964f62bf013d4a1055d147e8~VLLC_4caO2863228632epoutp039
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591227181;
-        bh=dGDVCvjLxDpBE/A7r7Do5LBsJtM5zh/1GdFe9TJZj28=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=qGzEB7INXH/P/NttKRAo/DGU7OFP07NsPyTtnHAXOA0WLV6pQMNs4vDGZ3brm/q8Q
-         YUWA0a0oW2SKzT9GPnAJxiTS4I6R/GqzAykanPwYyDwxAWclLvxqHlfSJwzhNJGMnF
-         1TcAKaCeTBxUgltHsJpF5qYwMEW8YsBlxvbjILPs=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200603233300epcas1p1a2674e256a3bedc1fffdbb6b7b9e0181~VLLCj1id12965129651epcas1p1_;
-        Wed,  3 Jun 2020 23:33:00 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 49clZg3Ks4zMqYkV; Wed,  3 Jun
-        2020 23:32:59 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        09.53.28581.B2338DE5; Thu,  4 Jun 2020 08:32:59 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200603233258epcas1p3b17bdc6c4f8df1089693eebaf1124d0a~VLLA0YkM_1446414464epcas1p3D;
-        Wed,  3 Jun 2020 23:32:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200603233258epsmtrp1dbd5d4e18c4e439b4b94af78dde8a481~VLLAzvAMk0951309513epsmtrp1d;
-        Wed,  3 Jun 2020 23:32:58 +0000 (GMT)
-X-AuditID: b6c32a38-2e3ff70000006fa5-bc-5ed8332bac40
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9B.64.08382.A2338DE5; Thu,  4 Jun 2020 08:32:58 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.103.87]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200603233258epsmtip2d835859cbd8f885418c2488a23af86b0~VLLAkKJMs2159721597epsmtip2K;
-        Wed,  3 Jun 2020 23:32:58 +0000 (GMT)
-From:   Namjae Jeon <namjae.jeon@samsung.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, sj1557.seo@samsung.com,
-        Namjae Jeon <namjae.jeon@samsung.com>, stable@vger.kernel.org
-Subject: [PATCH] exfat: fix incorrect update of stream entry in
- __exfat_truncate()
-Date:   Thu,  4 Jun 2020 08:28:08 +0900
-Message-Id: <20200603232808.2397-1-namjae.jeon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7bCmga628Y04g8kzRSz27D3JYnF51xw2
-        ix/T6y22/DvCarFg4yNGB1aPvi2rGD0+b5ILYIrKsclITUxJLVJIzUvOT8nMS7dV8g6Od443
-        NTMw1DW0tDBXUshLzE21VXLxCdB1y8wBWqakUJaYUwoUCkgsLlbSt7Mpyi8tSVXIyC8usVVK
-        LUjJKTA0KNArTswtLs1L10vOz7UyNDAwMgWqTMjJOHymm6XgFmfF9tVP2BoYf7F3MXJySAiY
-        SBz7f4uxi5GLQ0hgB6PEhPWPwBJCAp8YJU5tSIVIfGOUmHj7HwtMx6PPr6E69jJKvFo0gwnC
-        AeqYu3weUIaDg01AW+LPFlEQU0RAUeLyeyeQXmaBSonD1/ezgtjCAiESH55NZwSxWQRUJZZv
-        ewi2mFfAWuLW2yY2iF3yEqs3HGAGGS8h0M4usbJpIdQRLhJTp7czQdjCEq+Ob4F6R0riZX8b
-        O8heCYFqiY/7mSHCHYwSL77bQtjGEjfXb2AFKWEW0JRYv0sfIqwosfP3XEaIM/kk3n3tYYWY
-        wivR0SYEUaIq0XfpMNRSaYmu9g9QSz0kLn99Bw22WIljV+ezTWCUnYWwYAEj4ypGsdSC4tz0
-        1GLDAhPkGNrECE49WhY7GOe+/aB3iJGJg/EQowQHs5IIr5XstTgh3pTEyqrUovz4otKc1OJD
-        jKbA4JrILCWanA9Mfnkl8YamRsbGxhYmZuZmpsZK4rwnrS7ECQmkJ5akZqemFqQWwfQxcXBK
-        NTAlPnIuVT1wTIVBqfztab2zAVeLZsxjUm1pKtYw/NLEvoB7olkEf6KkwGrL2VpyDALJahX/
-        byqEil1U7de4+Tw/Z2bj/wuZ8Q5mh0s9Ahg3rLD+8v9co2nzlDQOQcbkKYF8Rf88Lc7vY9Dz
-        Cdi57nxcr2TAu3l33G7UsH5rffzBtHvbUw3ldYxX+sNnW7m+Tw831Uy8nH/sQvVHH8lVHZuP
-        6F5S/87wanETy+ngFm5T7vK2xo64hWIhb5dXVXUuP5epGrm2uJrfeu/sbw6bWnWKIx1uPF9W
-        H2v8/dIqluqaBUzRKu53Dl3wl5i22/PNvk/hqYZ7p19lkQw8uHOdb+HGmDkuZ/XuVYUt9j33
-        X4mlOCPRUIu5qDgRAD5DZRrGAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJMWRmVeSWpSXmKPExsWy7bCSvK6W8Y04g5tv5Cz27D3JYnF51xw2
-        ix/T6y22/DvCarFg4yNGB1aPvi2rGD0+b5ILYIrisklJzcksSy3St0vgyjh8ppul4BZnxfbV
-        T9gaGH+xdzFyckgImEg8+vyasYuRi0NIYDejRF/XPCaIhLTEsRNnmLsYOYBsYYnDh4shaj4w
-        SmzsucUKEmcT0Jb4s0UUxBQRUJS4/N4JxGQWqJVYclAOZIiwQJBE+6pvYJtYBFQllm97CGbz
-        ClhL3HrbxAaxSF5i9YYDzBMYeRYwMqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/dxAgO
-        BS3NHYzbV33QO8TIxMF4iFGCg1lJhNdK9lqcEG9KYmVValF+fFFpTmrxIUZpDhYlcd4bhQvj
-        hATSE0tSs1NTC1KLYLJMHJxSDUwz5Ngvn/I1OGQgLvjAQovvWsSs2zNt932aftNjFQNTL4+0
-        V8zedfsTVl1z+VlZ48yWtMGw9f+uNpuoOzea0v4ejzDR/VXLr5r36ISAU5BN0Jkl86rKl4XH
-        ll5cZff5QpLcvZONeVNrHu6+a+unNO0Re9k+b5eFv5rnNitYTf6lu6lIzSrv+NU0Udn+/VnM
-        NwKn9Pb07otV/3ngRlJCZg5zmwv/zMhFAeyi31befztzzhrxvOq1ZiFpzzZl3GSU63xjJ3hv
-        nZLYhvVrAzL/lgj1tIgd21jPpPTjhtnvws6PPWycs7RXHL+wUyrdSWLKcZsfT185v+rfs2C3
-        rXvpVckzH61b3YUFdF2Ul7tdl1JiKc5INNRiLipOBACk8RijdAIAAA==
-X-CMS-MailID: 20200603233258epcas1p3b17bdc6c4f8df1089693eebaf1124d0a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200603233258epcas1p3b17bdc6c4f8df1089693eebaf1124d0a
-References: <CGME20200603233258epcas1p3b17bdc6c4f8df1089693eebaf1124d0a@epcas1p3.samsung.com>
+        Wed, 3 Jun 2020 19:32:24 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836D1C08C5CB
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:32:19 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a127so2470365pfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OzsXBVjaZ9OyhsxAhNYMGGdoHV1Ey3EdXUcZrl9vzVM=;
+        b=fiQwobOmB8JfoctwPcv9w7of7+WQd9TYcia/JYyZCbsrU9Y8/1P+jBMjyrycCzGPks
+         k3E6rjY6DJsSHcxaDq1Tu7Q/DfBMxQ8rMeh/wfYcOaVB5kbniYqtcSsHt+OsYLHdKBZx
+         t2PGOxXperAYxdbLB/SYYU6TMLn1K13kfox0Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OzsXBVjaZ9OyhsxAhNYMGGdoHV1Ey3EdXUcZrl9vzVM=;
+        b=agNUGSkMR4u1Vv2MHYSOOxmW1lpX09EhXiPlpGCDPuOyqBmcbhRj8Cy2y5P/jkKDJZ
+         qBTOGDRMtR35dKsKL7bhx2tyvckJKd+YU7FkouuQIdpWCzkW8WlobljX1cP38uzRtTaQ
+         TbNC5zRr2qYdfhxEflRX+axmXVVnL8H5Hwx8v643/TS2s+kRYIe8wNUu8a4dqRzSklFN
+         p6izwpWPZaBunbKPQ3dtZrL7gLuDiIeeB+mik4mwpNk+g+zA4jtirmLXJPMviNHdMDi8
+         NR7F2S1RYXzLS7paYe1mrD1hjRC1hC6oXyEk+0hMB+9AVe0FB/Wulh7umoDNpKu/QJ6S
+         edZg==
+X-Gm-Message-State: AOAM531DUy7HMzv69M62X97gqFcElWrW/z4rtxEcSufLcyqQkem5xnZX
+        7dRTo3B4VcVZ7c+YxO+bP86fUQ==
+X-Google-Smtp-Source: ABdhPJx+2U9hKaJOBj6eBoL3ylJxwEvHjFbKnopLLfUC+crlAi7qwt10Oa3/8CNVIO6wXkejTT/bbA==
+X-Received: by 2002:a62:27c6:: with SMTP id n189mr1466796pfn.277.1591227139068;
+        Wed, 03 Jun 2020 16:32:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x1sm2647707pfn.76.2020.06.03.16.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 16:32:16 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: [PATCH 08/10] checkpatch: Remove awareness of uninitialized_var() macro
+Date:   Wed,  3 Jun 2020 16:32:01 -0700
+Message-Id: <20200603233203.1695403-9-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200603233203.1695403-1-keescook@chromium.org>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At truncate, there is a problem of incorrect updating in the file entry
-pointer instead of stream entry. This will cause the problem of
-overwriting the time field of the file entry to new_size. Fix it to
-update stream entry.
+Using uninitialized_var() is dangerous as it papers over real bugs[1]
+(or can in the future), and suppresses unrelated compiler warnings
+(e.g. "unused variable"). If the compiler thinks it is uninitialized,
+either simply initialize the variable or make compiler changes.
 
-Fixes: 98d917047e8b ("exfat: add file operations")
-Cc: stable@vger.kernel.org # v5.7
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+In preparation for removing[2] the[3] macro[4], effectively revert
+commit 16b7f3c89907 ("checkpatch: avoid warning about uninitialized_var()")
+and remove all remaining mentions of uninitialized_var().
+
+[1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+[2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+[3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+[4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/exfat/file.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ scripts/checkpatch.pl | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index 8e3f0eef45d7..fce03f318787 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -171,11 +171,11 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index b83be177edf0..e9f8146600d0 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -838,7 +838,6 @@ our $FuncArg = qr{$Typecast{0,1}($LvalOrFunc|$Constant|$String)};
+ our $declaration_macros = qr{(?x:
+ 	(?:$Storage\s+)?(?:[A-Z_][A-Z0-9]*_){0,2}(?:DEFINE|DECLARE)(?:_[A-Z0-9]+){1,6}\s*\(|
+ 	(?:$Storage\s+)?[HLP]?LIST_HEAD\s*\(|
+-	(?:$Storage\s+)?${Type}\s+uninitialized_var\s*\(|
+ 	(?:SKCIPHER_REQUEST|SHASH_DESC|AHASH_REQUEST)_ON_STACK\s*\(
+ )};
  
- 		/* File size should be zero if there is no cluster allocated */
- 		if (ei->start_clu == EXFAT_EOF_CLUSTER) {
--			ep->dentry.stream.valid_size = 0;
--			ep->dentry.stream.size = 0;
-+			ep2->dentry.stream.valid_size = 0;
-+			ep2->dentry.stream.size = 0;
- 		} else {
--			ep->dentry.stream.valid_size = cpu_to_le64(new_size);
--			ep->dentry.stream.size = ep->dentry.stream.valid_size;
-+			ep2->dentry.stream.valid_size = cpu_to_le64(new_size);
-+			ep2->dentry.stream.size = ep->dentry.stream.valid_size;
+@@ -4075,7 +4074,7 @@ sub process {
  		}
  
- 		if (new_size == 0) {
+ # check for function declarations without arguments like "int foo()"
+-		if ($line =~ /(\b$Type\s*$Ident)\s*\(\s*\)/) {
++		if ($line =~ /(\b$Type\s+$Ident)\s*\(\s*\)/) {
+ 			if (ERROR("FUNCTION_WITHOUT_ARGS",
+ 				  "Bad function definition - $1() should probably be $1(void)\n" . $herecurr) &&
+ 			    $fix) {
+@@ -6271,8 +6270,7 @@ sub process {
+ 			if (defined $cond) {
+ 				substr($s, 0, length($cond), '');
+ 			}
+-			if ($s =~ /^\s*;/ &&
+-			    $function_name ne 'uninitialized_var')
++			if ($s =~ /^\s*;/)
+ 			{
+ 				WARN("AVOID_EXTERNS",
+ 				     "externs should be avoided in .c files\n" .  $herecurr);
+@@ -6291,17 +6289,13 @@ sub process {
+ 		}
+ 
+ # check for function declarations that have arguments without identifier names
+-# while avoiding uninitialized_var(x)
+ 		if (defined $stat &&
+-		    $stat =~ /^.\s*(?:extern\s+)?$Type\s*(?:($Ident)|\(\s*\*\s*$Ident\s*\))\s*\(\s*([^{]+)\s*\)\s*;/s &&
+-		    (!defined($1) ||
+-		     (defined($1) && $1 ne "uninitialized_var")) &&
+-		     $2 ne "void") {
+-			my $args = trim($2);
++		    $stat =~ /^.\s*(?:extern\s+)?$Type\s*(?:$Ident|\(\s*\*\s*$Ident\s*\))\s*\(\s*([^{]+)\s*\)\s*;/s &&
++		    $1 ne "void") {
++			my $args = trim($1);
+ 			while ($args =~ m/\s*($Type\s*(?:$Ident|\(\s*\*\s*$Ident?\s*\)\s*$balanced_parens)?)/g) {
+ 				my $arg = trim($1);
+-				if ($arg =~ /^$Type$/ &&
+-					$arg !~ /enum\s+$Ident$/) {
++				if ($arg =~ /^$Type$/ && $arg !~ /enum\s+$Ident$/) {
+ 					WARN("FUNCTION_ARGUMENTS",
+ 					     "function definition argument '$arg' should also have an identifier name\n" . $herecurr);
+ 				}
 -- 
-2.17.1
+2.25.1
 
