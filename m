@@ -2,153 +2,93 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E310C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C0920772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kqc3kgbD"
+	by mail.kernel.org (Postfix) with ESMTP id 694B220679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgFCPeS (ORCPT
+        id S1726171AbgFCPgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:34:18 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23798 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbgFCPeR (ORCPT
+        Wed, 3 Jun 2020 11:36:18 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34971 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgFCPgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:34:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591198456;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qaCbCFVzSvAuhoMZaBKDEMbKv2nC6/i8181cqEt1QZM=;
-        b=Kqc3kgbDIpYRqhyOkFEIVPCyF91lyYRodOh+a17Zhix4DZX4SJfRstagGk4ko6eSLt1ulI
-        FFKm9g4zSKTggcxmWUu2Eg1PZfClezrZNpBCCBiYSljWA2mCapkEZgENPt1bBmqJJhATuI
-        EdO3ArvJdrwgWDlfKjqRWb+TgmMbpDk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-P5dUG9HHPu6e5UN1z0hIDA-1; Wed, 03 Jun 2020 11:34:12 -0400
-X-MC-Unique: P5dUG9HHPu6e5UN1z0hIDA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 866843640A;
-        Wed,  3 Jun 2020 15:34:10 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EBADD78EFD;
-        Wed,  3 Jun 2020 15:34:05 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 10:33:58 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Cc:     huawei.libin@huawei.com, xiexiuqi@huawei.com,
-        cj.chengjian@huawei.com, mingo@redhat.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        mbenes@suse.cz, devel@etsukata.com, viro@zeniv.linux.org.uk,
-        esyr@redhat.com
-Subject: Re: Question: livepatch failed for new fork() task stack unreliable
-Message-ID: <20200603153358.2ezz2pgxxxld7mj7@treble>
-References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
- <20200529174433.wpkknhypx2bmjika@treble>
- <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
- <20200601180538.o5agg5trbdssqken@treble>
- <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
- <20200602131450.oydrydelpdaval4h@treble>
- <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
+        Wed, 3 Jun 2020 11:36:18 -0400
+X-Originating-IP: 90.112.45.105
+Received: from debian.home (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id CE2A5FF811;
+        Wed,  3 Jun 2020 15:36:14 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Anup Patel <anup@brainfault.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH 0/2] PUD/PGDIR entries for linear mapping 
+Date:   Wed,  3 Jun 2020 11:36:06 -0400
+Message-Id: <20200603153608.30056-1-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 10:06:07PM +0800, Wangshaobo (bobo) wrote:
-> Today I test your fix, but arch_stack_walk_reliable() still return failed
-> sometimes, I
-> 
-> found one of three scenarios mentioned failed:
-> 
-> 
-> 1. user task (just fork) but not been scheduled
-> 
->     test FAILED
-> 
->     it is because unwind_next_frame() get the first frame, this time
-> state->signal is false, and then return
-> 
->     failed in the same place for ret_from_fork has not executed at all.
+This small patchset intends to use PUD/PGDIR entries for linear mapping
+in order to better utilize TLB.
 
-Oops - I meant to do it in __unwind_start (as you discovered).
+At the moment, only PMD entries can be used since on common platforms
+(qemu/unleashed), the kernel is loaded at DRAM + 2MB which dealigns virtual
+and physical addresses and then prevents the use of PUD/PGDIR entries.
+So the kernel must be able to get those 2MB for PAGE_OFFSET to map the
+beginning of the DRAM: this is achieved in patch 1.
 
-> 2. user task (just fork) start excuting ret_from_fork() till schedule_tail
-> but not UNWIND_HINT_REGS
-> 
->     test condition :loop fork() in current  system
-> 
->     result : SUCCESS,
-> 
->     it looks like this modification works for my perspective :
-> 
-> 	-	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
-> 	-	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
-> 	-		return -EINVAL;
->   but is this possible to miss one invalid judgement condition ? (1)
+But furthermore, at the moment, the firmware (opensbi) explicitly asks the
+kernel not to map the region it occupies, which is on those common
+platforms at the very beginning of the DRAM and then it also dealigns
+virtual and physical addresses. I proposed a patch here:
 
-I'm not sure I understand your question, but I think this change
-shouldn't break anything else because the ORC unwinder is careful to
-always set an error if it doesn't reach the end of the stack, especially
-with my recent ORC fixes which went into 5.7.
+https://github.com/riscv/opensbi/pull/167
 
-> 3. call_usermodehelper_exec_async
-> 
->     test condition :loop call call_usermodehelper() in a module selfmade.
-> 
->     result : SUCCESS,
-> 
->    it looks state->signal==true works when unwind_next_frame() gets the end
-> ret_from_fork() frame,
-> 
->    but i don't know how does it work, i am confused by this sentences, how
-> does the comment means sibling calls and
-> 
->     calls to noreturn functions? (2)
-> 
->             /*
->              * Find the orc_entry associated with the text address.
->              *
->              * Decrement call return addresses by one so they work for sibling
->              * calls and calls to noreturn functions.
->              */
->             orc = orc_find(state->signal ? state->ip : state->ip - 1);
->             if (!orc) {
+that removes this 'constraint' but *not* all the time as it offers some
+kind of protection in case PMP is not available. So sometimes, we may
+have a part of the memory below the kernel that is removed creating a
+misalignment between virtual and physical addresses. So for performance
+reasons, we must at least make sure that PMD entries can be used: that
+is guaranteed by patch 1 too.
 
-To be honest, I don't remember what I meant by sibling calls.  They
-don't even leave anything on the stack.
+Finally the second patch simply improves best_map_size so that whenever
+possible, PUD/PGDIR entries are used. 
 
-For noreturns, the code might be laid out like this:
+Below is the kernel page table without this patch on a 6G platform:
 
-func1:
-	...
-	call noreturn_foo
-func2:
+---[ Linear mapping ]---
+0xffffc00000000000-0xffffc00176e00000    0x0000000080200000 5998M PMD     D A . . . W R V 
 
-func2 is immediately after the call to noreturn_foo.  So the return
-address on the stack will actually be 'func2'.  We want to retrieve the
-ORC data for the call instruction (inside func1), instead of the
-instruction at the beginning of func2.
+And with this patchset + opensbi patch:
 
-I should probably update that comment.
+---[ Linear mapping ]---
+0xffffc00000000000-0xffffc00140000000 0x0000000080000000         5G PUD     D A . . . W R V
+0xffffc00140000000-0xffffc00177000000    0x00000001c0000000 880M PMD     D A . . . W R V
+
+Alexandre Ghiti (2):
+  riscv: Get memory below load_pa while ensuring linear mapping is PMD
+    aligned
+  riscv: Use PUD/PGDIR entries for linear mapping when possible
+
+ arch/riscv/include/asm/page.h |  8 ++++
+ arch/riscv/mm/init.c          | 69 +++++++++++++++++++++++++++++------
+ 2 files changed, 65 insertions(+), 12 deletions(-)
 
 -- 
-Josh
+2.20.1
 
