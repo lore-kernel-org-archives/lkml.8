@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8091206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6773920738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591146607;
-	bh=Yn9mHxjqxws6vQ0rrEyWuufyN0hqo+ADRa9GCpbDcz8=;
+	s=default; t=1591146608;
+	bh=jWVJCRzIi5rxx76ZMWxJsqDwcIYmelZ8tRzaS/f4wOM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=d7pc/agziS5ZKoCOSvCybumEJmSdnrM7EbR/B6yHEt3xA7XXb3S8t61EteTpTKK/2
-	 Ue7HgUY7BTQ7gk3gp1u/QNOE98wn1Uza6LR8TfDbfyuvu3J7Vs+xZldVhxlYQtTwzB
-	 Ue5zDqpGrrx9tEVqlvJA8bnVFjpluOba4dX/DFCI=
+	b=mp1MTYzI6NS9rbkBjmUmr4nTTUW1QEW3PY9gdsar1z82fsyTPL+nLyHV1tcf722t5
+	 bPBVjlFggkN7nublne2yEFS8fmWZi8uAwFsH/JjOlh9D0UMBhZ1c5OAEdEK5y0KTAQ
+	 YQUvfZZCqxPWTqk3V6xcDKvJ1CFee+s8D28ipExQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgFCBKG (ORCPT
+        id S1728254AbgFCBKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43860 "EHLO mail.kernel.org"
+        Tue, 2 Jun 2020 21:10:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFCBKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:10:06 -0400
-Subject: Re: [GIT PULL] Audit patches for v5.8
+        id S1726112AbgFCBKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 21:10:07 -0400
+Subject: Re: [GIT PULL] SELinux patches for v5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1591146606;
-        bh=Yn9mHxjqxws6vQ0rrEyWuufyN0hqo+ADRa9GCpbDcz8=;
+        bh=jWVJCRzIi5rxx76ZMWxJsqDwcIYmelZ8tRzaS/f4wOM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=J4nkKT97VEe9xJUBa7M6PbiB6Gmp8x3/pmqUIcxyaPG1r7YL9mLCH4BEXDz2f+Ea9
-         jYfZ2zeCfR/JPYEXWCHqRD/nxWj3tjp/Iwu8HJGtuHS6Jz0DKATqcUKn4oQvbk9FTu
-         snW4dqbrAwi70Jly3mzVizu2SPCKPa8zsB0DjX/8=
+        b=SJKamLceubdGhXYjGf4/5ZdW03IM3xeV7DbdhwYopRJRScKCxXns7VKTBnyRc+v93
+         SMIHddqeVI6BDD3mItMZzENUjB4CS7fNyweXZZnXinrt7GSfm5tfPH4x6OSXJIE0Lm
+         QjDxWZe6Wh6RGmotfU7BpnI2V3lCzCQVIzzhMXcg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAHC9VhQqnAG5DxvoQKa643d06rDTVtHVFEj5arCsHwyoamCckA@mail.gmail.com>
-References: <CAHC9VhQqnAG5DxvoQKa643d06rDTVtHVFEj5arCsHwyoamCckA@mail.gmail.com>
+In-Reply-To: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
+References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAHC9VhQqnAG5DxvoQKa643d06rDTVtHVFEj5arCsHwyoamCckA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git
- tags/audit-pr-20200601
-X-PR-Tracked-Commit-Id: 9d44a121c5a79bc8a9d67c058456bd52a83c79e7
+X-PR-Tracked-Message-Id: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+ tags/selinux-pr-20200601
+X-PR-Tracked-Commit-Id: fe5a90b8c14914397a3bb0c214d142103c1ba3bf
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9d99b1647fa56805c1cfef2d81ee7b9855359b62
-Message-Id: <159114660605.11472.8600694237100035153.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: f41030a20b38552a2da3b3f6bc9e7a78637d6c23
+Message-Id: <159114660678.11472.15482345694870905600.pr-tracker-bot@kernel.org>
 Date:   Wed, 03 Jun 2020 01:10:06 +0000
 To:     Paul Moore <paul@paul-moore.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 1 Jun 2020 20:48:59 -0400:
+The pull request you sent on Mon, 1 Jun 2020 21:06:48 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20200601
+> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20200601
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9d99b1647fa56805c1cfef2d81ee7b9855359b62
+https://git.kernel.org/torvalds/c/f41030a20b38552a2da3b3f6bc9e7a78637d6c23
 
 Thank you!
 
