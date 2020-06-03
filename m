@@ -2,141 +2,87 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3071C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E793EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9102F20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67F020738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tVfb+69e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxACmpbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgFCOOJ (ORCPT
+        id S1726187AbgFCOOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:14:09 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:54210 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgFCOOI (ORCPT
+        Wed, 3 Jun 2020 10:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgFCOOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:14:08 -0400
+        Wed, 3 Jun 2020 10:14:38 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1AFC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 07:14:38 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id y5so2367782iob.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591193648; x=1622729648;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=4Ff2FlavwNWCorfCk4OWW1ES8k5kxbCqQvU0uywv4K0=;
-  b=tVfb+69e/SsRImO1ca/5EtBZf7wUe4xWDRzJjv1qR3f7PRl7kXl8lLvO
-   QKEdHcEw7j43+ODTZCsWsfxEwv/+kSI1iPC6hMrcnzKlFdirC7MYOj+Li
-   hswKZAf3PnTDCDGWldYsJJSu197tGFSSpw3ojpYnICFJtiQcGdupfcTFC
-   o=;
-IronPort-SDR: 9LPTo87SywWCVFvOKx9F2B7bSyqWuI15pbcIlfIhXQMnPvAPH8bAMF7pI2Asnp0wHrIHkBx6DC
- FEioX7uvQnOQ==
-X-IronPort-AV: E=Sophos;i="5.73,467,1583193600"; 
-   d="scan'208";a="41265128"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 03 Jun 2020 14:14:07 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id 3C4ECA1C6F;
-        Wed,  3 Jun 2020 14:14:05 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 14:14:04 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.90) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 14:13:48 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v2 5/9] Docs/damon: Document 'initial_regions' feature
-Date:   Wed, 3 Jun 2020 16:11:31 +0200
-Message-ID: <20200603141135.10575-6-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200603141135.10575-1-sjpark@amazon.com>
-References: <20200603141135.10575-1-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=svZoKn4xGPR4SS45fq6+SKw2sCAIAoHnLGq22FBq738=;
+        b=LxACmpbv08TgK6F7H4VnmPbRZrBcz4vbFuw7uwxc9OG8DYfaBqoi2IUmPOgqWcFiLe
+         aiJLTOexhnYuIlhoMx+PKNalgGLyzk/PCGKZ/zTTJZM68Cuwk6CcQ+eioANYUFfo+h8n
+         by/JI6i7qAscM+mBHQgyfKFgFvZM7eTzpczVMC25DRkF68zbvMXItA4dxfjLhu7W5exv
+         ji0LIY+T8Cy5yDGCyCw46LQ4w25+LS1HKcAJXWU0QIcJX3VS6UQAnY3VK3s4jtMlDxZN
+         lS50T8FTMdTGqV+0IPrrW+TafuTxpxLfjppiy5UsU2JqGYtOeuA29uzXau+WszxVPJZX
+         TFvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=svZoKn4xGPR4SS45fq6+SKw2sCAIAoHnLGq22FBq738=;
+        b=OKwdoB/TA6Og9r8XqJv0dfIny7HxSEh5P8pd3iodC1a+N8ePmA0YKgoDL15YPLR7ny
+         eyHFgzO/lsYnd5dyjb4roQZ+22Nc+SHL87Rd7zNT73XDBi/TQNpljFz8c+hIkBdexIKj
+         gzgICYYYXlxyxm1HHdMWyXo6/gWPvOiywwIsaeGfBUBG1tkFyoTEoFHwZ2qVYAsUJvBJ
+         zWrMyyKCkN0G6oYFLa+Db+HCzEyEYHQ5ORDN1DkIC9HuXCiBEEgB/D5ToLty0Cf15677
+         /svcYh1c8yIRQW3Dl9C+0BS/zbyZZDqUuJ3Y+8Il5zPVa4f1WsmSuEfEIovcyZq0SVWe
+         Bjcg==
+X-Gm-Message-State: AOAM533d6SEnKt/mFhJ/rJUsXIGud7O7Cr3/yHDgQM6JE47+GbWDPCDL
+        Js2yXMZrrQUwuupzeFZnt5MoNVqwEdNKi+i2FAA=
+X-Google-Smtp-Source: ABdhPJxa2oyjWRoZohXrmz15wupkaQOWdagTFY89oc2GOMryFOKHoPx4iiWhVt4MgZ6nOjJ7yVjNWeTONSrd5QN7dJI=
+X-Received: by 2002:a02:5184:: with SMTP id s126mr107435jaa.30.1591193677903;
+ Wed, 03 Jun 2020 07:14:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D45UWB002.ant.amazon.com (10.43.161.78) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
+In-Reply-To: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Wed, 3 Jun 2020 16:14:26 +0200
+Message-ID: <CAFLxGvwdkj4J_O_82nnhUcc_AnLwmT1eCp8qkjJBn8Ce6GHVeA@mail.gmail.com>
+Subject: Re: headers_install builds break on a lot of targets?
+To:     Rob Landley <rob@landley.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rich Felker <dalias@libc.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Wed, Jun 3, 2020 at 3:51 PM Rob Landley <rob@landley.net> wrote:
+> um
+> gcc: error: missing argument to =E2=80=98-Wframe-larger-than=3D=E2=80=99
+> Makefile:1230: *** Headers not exportable for the um architecture.  Stop.
+> make: *** [__build_one_by_one] Error 2
 
-This commit documents the 'initial_regions' feature.
+Exporting headers of UML makes not much sense.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- Documentation/admin-guide/mm/damon/usage.rst | 34 ++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index 18a19c35b4f3..137ed770c2d6 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -326,6 +326,40 @@ having pids 42 and 4242 as the processes to be monitored and check it again::
- Note that setting the pids doesn't start the monitoring.
- 
- 
-+Initla Monitoring Target Regions
-+--------------------------------
-+
-+DAMON automatically sets and updates the monitoring target regions so that
-+entire memory mappings of target processes can be covered.  However, users
-+might want to limit the monitoring region to specific address ranges, such as
-+the heap, the stack, or specific file-mapped area.  Or, some users might know
-+the initial access pattern of their workloads and therefore want to set optimal
-+initial regions for the 'adaptive regions adjustment'.
-+
-+In such cases, users can explicitly set the initial monitoring target regions
-+as they want, by writing proper values to the ``init_regions`` file.  Each line
-+of the input should represent one region in below form.::
-+
-+    <pid> <start address> <end address>
-+
-+The ``pid`` should be already in ``pids`` file, and the regions should be
-+passed in address order.  For example, below commands will set a couple of
-+address ranges, ``1-100`` and ``100-200`` as the initial monitoring target
-+region of process 42, and another couple of address ranges, ``20-40`` and
-+``50-100`` as that of process 4242.::
-+
-+    # cd <debugfs>/damon
-+    # echo "42   1       100
-+            42   100     200
-+            4242 20      40
-+            4242 50      100" > init_regions
-+
-+Note that this sets the initial monitoring target regions only.  DAMON will
-+automatically updates the boundary of the regions after one ``regions update
-+interval``.  Therefore, users should set the ``regions update interval`` large
-+enough.
-+
-+
- Record
- ------
- 
--- 
-2.17.1
-
+--=20
+Thanks,
+//richard
