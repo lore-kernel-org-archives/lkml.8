@@ -2,134 +2,196 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C208B20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5495F20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PDtwXBsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726123AbgFCOn2 (ORCPT
+        id S1726026AbgFCOpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgFCOn1 (ORCPT
+        Wed, 3 Jun 2020 10:45:20 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60948 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgFCOpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:43:27 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794B0C08C5C0;
-        Wed,  3 Jun 2020 07:43:27 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 76F6A4EEA; Wed,  3 Jun 2020 10:43:26 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 10:43:26 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: unable to handle kernel paging request in rb_erase
-Message-ID: <20200603144326.GA2035@fieldses.org>
-References: <0000000000005016dd05a5e6b308@google.com>
- <20200603043435.13820-1-hdanton@sina.com>
+        Wed, 3 Jun 2020 10:45:20 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053Eg7YM033013;
+        Wed, 3 Jun 2020 14:45:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=CD8BPhNFQrGZglesYkAqKUL+AjoZd9qnDdoPTaQkXGg=;
+ b=PDtwXBsk3rWyVxk+WWxPZWGTx0B83SqsP4ONTTbyd1bRt6AllT/uzoi5renJrMdhy+Q1
+ BDZf+itg1qBg84wtDy06UZSm0h7Q71z1pVyhdmes4ulfyD3PisfI18N212RQIhU39/qM
+ /lpggRNqt92eOdI16/ggRThfuO6jEQHdlsxeSUZJqHGZVvR2oz5l2R7kUrHp4yZF6dO8
+ byW/FhOMV3lSzemr4+qgk/X9D+8QYdk+2QXtvrGeeCcTXgPjpsPTCGG0iA0p4BYropCl
+ UQm4GxakBo5qG1dWOendmAGJNIsYnCNPROTv97el/gx35N+3EhZPr87wYXtbRHW2l1qj OQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31dkrupre4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 03 Jun 2020 14:45:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053Ei1Wi061055;
+        Wed, 3 Jun 2020 14:45:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31c25saefa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Jun 2020 14:45:15 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053EjDPa003831;
+        Wed, 3 Jun 2020 14:45:13 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Jun 2020 07:45:13 -0700
+Date:   Wed, 3 Jun 2020 17:45:07 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] input: ims-pcu: remove redundant assignment to variable
+ 'error'
+Message-ID: <20200603144507.GM30374@kadam>
+References: <20200603135102.130436-1-colin.king@canonical.com>
+ <20200603140953.GL30374@kadam>
+ <c4290ddf-8faa-bb09-bd96-4c01a3f1cc2b@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603043435.13820-1-hdanton@sina.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <c4290ddf-8faa-bb09-bd96-4c01a3f1cc2b@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006030117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 suspectscore=2 malwarescore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006030117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 12:34:35PM +0800, Hillf Danton wrote:
-> 
-> On Tue, 2 Jun 2020 17:55:17 -0400 "J. Bruce Fields" wrote:
+On Wed, Jun 03, 2020 at 03:18:46PM +0100, Colin Ian King wrote:
+> On 03/06/2020 15:09, Dan Carpenter wrote:
+> > On Wed, Jun 03, 2020 at 02:51:02PM +0100, Colin King wrote:
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> The variable error is being initialized with a value that is
+> >> never read and the -ENOMEM error return is being returned anyhow
+> >> by the error exit path to label err_free_mem.  The assignment is
+> >> redundant and can be removed.
+> >>
+> >> Addresses-Coverity: ("Unused value")
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >> ---
+> >>  drivers/input/misc/ims-pcu.c | 1 -
+> >>  1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/drivers/input/misc/ims-pcu.c b/drivers/input/misc/ims-pcu.c
+> >> index d8dbfc030d0f..4ba68aa3d281 100644
+> >> --- a/drivers/input/misc/ims-pcu.c
+> >> +++ b/drivers/input/misc/ims-pcu.c
+> >> @@ -292,7 +292,6 @@ static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
+> >>  	if (!gamepad || !input) {
+> >>  		dev_err(pcu->dev,
+> >>  			"Not enough memory for gamepad device\n");
+> >> -		error = -ENOMEM;
+> >>  		goto err_free_mem;
 > > 
-> > As far as I know, this one's still unresolved.  I can't see the bug from
-> > code inspection, and we don't have a reproducer.  If anyone else sees
-> > this or has an idea what might be going wrong, I'd be interested.--b.
+> > It would be better to change the return instead.
+> > 
+> > regards,
+> > dan carpenter
+> > 
 > 
-> It's a PF reported in the syz-executor.3 context (PID: 8682 on CPU:1),
-> meanwhile there's another at 
-> 
->  https://lore.kernel.org/lkml/20200603011425.GA13019@fieldses.org/T/#t
->  Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
-> 
-> in the kworker context, and one of the quick questions is, is it needed
-> to serialize the two players, say, using a mutex?
+> I'm not sure about that, the err_free_mem path is used by another error
+> exit return path that also needs to free the device and gamepad and
+> returns ENOMEM, so I think this is a good enough shared error exit strategy.
 
-nfsd_reply_cache_shutdown() doesn't take any locks.  All the data
-structures it's tearing down are per-network-namespace, and it's assumed
-all the users of that structure are gone by the time we get here.
+The code looks like this:
 
-I wonder if that assumption's correct.  Looking at nfsd_exit_net()....
+drivers/input/misc/ims-pcu.c
+   284  static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
+   285  {
+   286          struct ims_pcu_gamepad *gamepad;
+   287          struct input_dev *input;
+   288          int error;
+   289  
+   290          gamepad = kzalloc(sizeof(struct ims_pcu_gamepad), GFP_KERNEL);
+   291          input = input_allocate_device();
+   292          if (!gamepad || !input) {
+   293                  dev_err(pcu->dev,
+   294                          "Not enough memory for gamepad device\n");
+   295                  error = -ENOMEM;
+   296                  goto err_free_mem;
 
-nfsd_reply_cache_shutdown() is one of the first things we do, so I think
-we're depending on the assumption that the interfaces in that network
-namespace, and anything referencing associated sockets (in particular,
-any associated in-progress rpc's), must be gone before our net exit
-method is called.
+The "error" is always set before all the gotos.
 
-I wonder if that's a good assumption.
+   297          }
+   298  
+   299          gamepad->input = input;
+   300  
+   301          snprintf(gamepad->name, sizeof(gamepad->name),
+   302                   "IMS PCU#%d Gamepad Interface", pcu->device_no);
+   303  
+   304          usb_make_path(pcu->udev, gamepad->phys, sizeof(gamepad->phys));
+   305          strlcat(gamepad->phys, "/input1", sizeof(gamepad->phys));
+   306  
+   307          input->name = gamepad->name;
+   308          input->phys = gamepad->phys;
+   309          usb_to_input_id(pcu->udev, &input->id);
+   310          input->dev.parent = &pcu->ctrl_intf->dev;
+   311  
+   312          __set_bit(EV_KEY, input->evbit);
+   313          __set_bit(BTN_A, input->keybit);
+   314          __set_bit(BTN_B, input->keybit);
+   315          __set_bit(BTN_X, input->keybit);
+   316          __set_bit(BTN_Y, input->keybit);
+   317          __set_bit(BTN_START, input->keybit);
+   318          __set_bit(BTN_SELECT, input->keybit);
+   319  
+   320          __set_bit(EV_ABS, input->evbit);
+   321          input_set_abs_params(input, ABS_X, -1, 1, 0, 0);
+   322          input_set_abs_params(input, ABS_Y, -1, 1, 0, 0);
+   323  
+   324          error = input_register_device(input);
+   325          if (error) {
+   326                  dev_err(pcu->dev,
+   327                          "Failed to register gamepad input device: %d\n",
+   328                          error);
+   329                  goto err_free_mem;
 
---b.
+The input_register_device() can return a bunch of different error codes.
+Better to preserve them.  "error" is set.
 
-> 
-> 
-> > On Sun, May 17, 2020 at 11:59:12PM -0700, syzbot wrote:
-> > > Hello,
-> > > 
-> > > syzbot found the following crash on:
-> > > 
-> > > HEAD commit:    9b1f2cbd Merge tag 'clk-fixes-for-linus' of git://git.kern..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=15dfdeaa100000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=0e37e9d19bded16b8ab9
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > 
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com
-> > > 
-> > > BUG: unable to handle page fault for address: ffff887ffffffff0
-> > > #PF: supervisor read access in kernel mode
-> > > #PF: error_code(0x0000) - not-present page
-> > > PGD 0 P4D 0 
-> > > Oops: 0000 [#1] PREEMPT SMP KASAN
-> > > CPU: 1 PID: 8682 Comm: syz-executor.3 Not tainted 5.7.0-rc5-syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
-> > > RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
-> > > Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
-> > > RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
-> > > RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
-> > > RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
-> > > RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
-> > > R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
-> > > R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
-> > > FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > Call Trace:
-> > >  nfsd_reply_cache_free_locked+0x198/0x380 fs/nfsd/nfscache.c:127
-> > >  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
-> > >  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
-> > >  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
-> > >  setup_net+0x50c/0x860 net/core/net_namespace.c:364
-> > >  copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
-> > >  create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:108
-> > >  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:229
-> > >  ksys_unshare+0x43d/0x8e0 kernel/fork.c:2970
-> > >  __do_sys_unshare kernel/fork.c:3038 [inline]
-> > >  __se_sys_unshare kernel/fork.c:3036 [inline]
-> > >  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3036
-> > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+   330          }
+   331  
+   332          pcu->gamepad = gamepad;
+   333          return 0;
+   334  
+   335  err_free_mem:
+   336          input_free_device(input);
+   337          kfree(gamepad);
+   338          return -ENOMEM;
+
+We just change this from "return -ENOMEM;" to "return error;"
+
+   339  }
+
+regards,
+dan carpenter
+
