@@ -2,118 +2,80 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF465C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73790207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:22:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hUGFjL20"
+	by mail.kernel.org (Postfix) with ESMTP id A827D2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgFCTWM (ORCPT
+        id S1726661AbgFCTXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:22:12 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43002 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbgFCTVT (ORCPT
+        Wed, 3 Jun 2020 15:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgFCTXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:21:19 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 86A1430DE78;
-        Wed,  3 Jun 2020 12:21:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 86A1430DE78
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1591212078;
-        bh=ghQG1exvCaXXlRvSsLKTAcuAVtnxwVxDWUkAuQvaBmQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hUGFjL20ztebrMmFW3oApxdwPZY4ZB9vC/+wV6mwTRHQ/GsMi51O9+cBkANm/LS2e
-         GbRN40N2cpZV9474b+Ec4H8DsjCDLvVz6AOxW7/mXC99d1e+xS+OXIxewO/SVXf+J7
-         9eU1XBks+2eF/bQADXeuvKbysTuGc1m0feaWChqU=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 0527114008B;
-        Wed,  3 Jun 2020 12:21:16 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 02/13] ata: ahci_brcm: Fix use of BCM7216 reset controller
-Date:   Wed,  3 Jun 2020 15:20:34 -0400
-Message-Id: <20200603192058.35296-3-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200603192058.35296-1-james.quinlan@broadcom.com>
-References: <20200603192058.35296-1-james.quinlan@broadcom.com>
+        Wed, 3 Jun 2020 15:23:08 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B9FC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:23:08 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jgYyg-002dEI-3A; Wed, 03 Jun 2020 19:23:06 +0000
+Date:   Wed, 3 Jun 2020 20:23:06 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] misc uaccess stuff
+Message-ID: <20200603192306.GX23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+	uaccess patches that really didn't fit anywhere else.
+kvm_hv_set_msr() patch left as-is; __put_user() is by no means
+final there, but that'll be dealt with along with other KVM
+uaccess stuff next cycle.
 
-A reset controller "rescal" is shared between the AHCI driver and the PCIe
-driver for the BrcmSTB 7216 chip.  The code is modified to allow this
-sharing and to deassert() properly.
+The following changes since commit b44f687386875b714dae2afa768e73401e45c21c:
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+  drm/i915/gem: Replace user_access_begin by user_write_access_begin (2020-05-01 12:35:22 +1000)
 
-Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller
-name")
----
- drivers/ata/ahci_brcm.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+are available in the git repository at:
 
-diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 6853dbb4131d..c4ea555573dd 100644
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *of_id;
- 	struct device *dev = &pdev->dev;
--	const char *reset_name = NULL;
- 	struct brcm_ahci_priv *priv;
- 	struct ahci_host_priv *hpriv;
- 	struct resource *res;
-@@ -452,11 +451,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 
- 	/* Reset is optional depending on platform and named differently */
- 	if (priv->version == BRCM_SATA_BCM7216)
--		reset_name = "rescal";
-+		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev,
-+								     "rescal");
- 	else
--		reset_name = "ahci";
--
--	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
-+		priv->rcdev = devm_reset_control_get_optional(&pdev->dev,
-+							      "ahci");
- 	if (IS_ERR(priv->rcdev))
- 		return PTR_ERR(priv->rcdev);
- 
-@@ -479,10 +478,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
--	if (priv->version == BRCM_SATA_BCM7216)
--		ret = reset_control_reset(priv->rcdev);
--	else
--		ret = reset_control_deassert(priv->rcdev);
-+	ret = reset_control_deassert(priv->rcdev);
- 	if (ret)
- 		return ret;
- 
--- 
-2.17.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git uaccess.misc
 
+for you to fetch changes up to 4ec76a2b74c72ef9eed875ce63e27a5e7f8d80cc:
+
+  bpf: make bpf_check_uarg_tail_zero() use check_zeroed_user() (2020-06-01 14:42:37 -0400)
+
+----------------------------------------------------------------
+Al Viro (9):
+      pselect6() and friends: take handling the combined 6th/7th args into helper
+      binfmt_elf: don't bother with __{put,copy_to}_user()
+      binfmt_elf_fdpic: don't use __... uaccess primitives
+      binfmt_flat: don't use __put_user()
+      x86: switch cp_stat64() to unsafe_put_user()
+      TEST_ACCESS_OK _never_ had been checked anywhere
+      user_regset_copyout_zero(): use clear_user()
+      x86: kvm_hv_set_msr(): use __put_user() instead of 32bit __clear_user()
+      bpf: make bpf_check_uarg_tail_zero() use check_zeroed_user()
+
+ arch/x86/include/asm/pgtable_32.h |   7 ---
+ arch/x86/kernel/sys_ia32.c        |  40 ++++++++------
+ arch/x86/kvm/hyperv.c             |   2 +-
+ fs/binfmt_elf.c                   |  14 ++---
+ fs/binfmt_elf_fdpic.c             |  31 +++++++----
+ fs/binfmt_flat.c                  |  22 +++++---
+ fs/select.c                       | 112 ++++++++++++++++++++++----------------
+ include/linux/regset.h            |   2 +-
+ kernel/bpf/syscall.c              |  25 ++-------
+ 9 files changed, 134 insertions(+), 121 deletions(-)
