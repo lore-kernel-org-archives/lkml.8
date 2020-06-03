@@ -2,179 +2,211 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7430C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E60C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8313B20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CcT9D9lZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6E9ED20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgFCLpf (ORCPT
+        id S1726026AbgFCLqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgFCLpe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:45:34 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C83C08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:45:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so1115843lfb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 04:45:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R6lEVGZYGJxxHN7lE3eo9NqLzCsnQCicun988jWmqf0=;
-        b=CcT9D9lZNg/SMdu0oTdh0D/2xb8iHgHFyH7fmH90WYrNn/U+znPsNUWsM5AsKxoBUC
-         vVFKe4LUjup9xTgkizKTwyQ0mp3tl+y8Welh9N/GllG4VLXKlxXHjSr9F6k+N7aS+Mdu
-         brRhX1nAh2aZFrsppZeJGN+BzJyK3Lq86tRW/+cuA0RgpK9vhrG7icHwQdZTE/6WgEzE
-         i9QfGI97QzeIy4v9j5Ft+ogMFQd85zLlT19K8GDYCEQMP+XrX3bHBWhIxegbA2Ze1qk9
-         Tp4ZMNmBt1B0C5WbcpAKgxOqrlvbotQ7CtwkSesdW9/OtKZup/VpnJtb/cWiuTEdTFjl
-         3sow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R6lEVGZYGJxxHN7lE3eo9NqLzCsnQCicun988jWmqf0=;
-        b=NLMEQW6fgWZiBaBkUPjWGgmcAw0HiMbArR9/mh87fKdpwWM8gKDheRY2Q2hqvD/eMW
-         ReMzuKHieFq4OnNEML4KLy6/V5smVimaCTcNoheNhpFCMy6Wh3jxeC4cU4rlzJKRvIQ+
-         fy0zAW1W5Vy+GgW6P/zlwNt4i43giwOEPvZu0Kk1HsuAXQtCysA/aJcocaBeM6UalPR4
-         FRVrVxPttovLtu4sUTk2Wbf1bmiIVTfHy2+EH6wiTY3/AgqXrEGokMD8GHar0JYIUMZF
-         WAA9/N+pQ7ec21aEGb5NoFZPAuR+AX47OlpsNZZj2Kp8ftjlu9EZSlvQT8f7vRh/YoAd
-         QMZA==
-X-Gm-Message-State: AOAM531AySVfySJu59mPSccT8YvZ5/cJMH+5oOLM24EewqRQFr5F1Zvh
-        aJsO9HRUvnqVWaFDnSsSSU/ll3NgwLK8OwToodQwvw==
-X-Google-Smtp-Source: ABdhPJxrRq5dz8jR0pX7TOEXl5+O6MeJ4s3D9zLb2o4VMf6+9QwUKNjv2xRDI0+UrWAaW8w3feNHDUNL6jPLIkqDsJg=
-X-Received: by 2002:ac2:44bb:: with SMTP id c27mr2301161lfm.59.1591184732251;
- Wed, 03 Jun 2020 04:45:32 -0700 (PDT)
+        Wed, 3 Jun 2020 07:46:34 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2269 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbgFCLqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:46:34 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2A19753E00645E3BBB16;
+        Wed,  3 Jun 2020 12:46:30 +0100 (IST)
+Received: from [127.0.0.1] (10.47.0.59) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 3 Jun 2020
+ 12:46:29 +0100
+Subject: arm64 build issue and mainline crash (was Re: linux-next: Tree for
+ Jun 3)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200603210603.1fcf63ed@canb.auug.org.au>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ba1f622a-6866-2a58-706b-045e8a0d9012@huawei.com>
+Date:   Wed, 3 Jun 2020 12:45:18 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <1591107505-6030-1-git-send-email-sumit.garg@linaro.org>
- <1591108981.4253.17.camel@linux.ibm.com> <CAFA6WYOoMdLJ2g3gocZBZWdu-7Nfw7LKHnzX8S8FKeC7cuNwYg@mail.gmail.com>
- <CAKrSGQSLKpb8T=H9zUoPP1B6EFrgMTMP3ZX1pEv99JtdPq7H0w@mail.gmail.com>
-In-Reply-To: <CAKrSGQSLKpb8T=H9zUoPP1B6EFrgMTMP3ZX1pEv99JtdPq7H0w@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 3 Jun 2020 17:15:20 +0530
-Message-ID: <CAFA6WYOFO8YptYp2JrY7nQL0MeM02VLCHvtnxUCEDd5-fb-z+Q@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Introduce TEE based Trusted Keys support
-To:     Luke Hinds <lhinds@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200603210603.1fcf63ed@canb.auug.org.au>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.0.59]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 14:20, Luke Hinds <lhinds@redhat.com> wrote:
->
->
->
-> On Wed, Jun 3, 2020 at 9:08 AM Sumit Garg <sumit.garg@linaro.org> wrote:
->>
->> On Tue, 2 Jun 2020 at 20:14, James Bottomley <jejb@linux.ibm.com> wrote:
->> >
->> > On Tue, 2020-06-02 at 19:48 +0530, Sumit Garg wrote:
->> > > Add support for TEE based trusted keys where TEE provides the
->> > > functionality to seal and unseal trusted keys using hardware unique
->> > > key. Also, this is an alternative in case platform doesn't possess a
->> > > TPM device.
->> >
->> > So here's a meta problem: in the case when the platform possesses both
->> > TEE and TPM  what should it do?
->>
->> IMO, trust source (either a TPM or a TEE) should be unique and
->> carefully chosen as per platform security policy corresponding to a
->> particular threat model.
->>
->> And moreover TEEs have been mostly used in the embedded world where
->> having a hardware TPM is cumbersome given constraints regarding BoM
->> cost and hardware resources.
->>
->> >  Things like this:
->> >
->> > > --- a/security/keys/trusted-keys/trusted_core.c
->> > > +++ b/security/keys/trusted-keys/trusted_core.c
->> > > @@ -25,6 +25,8 @@
->> > >
->> > >  #if defined(CONFIG_TRUSTED_TPM)
->> > >  static struct trusted_key_ops *trusted_key_ops =
->> > > &tpm_trusted_key_ops;
->> > > +#elif defined(CONFIG_TRUSTED_TEE)
->> > > +static struct trusted_key_ops *trusted_key_ops =
->> > > &tee_trusted_key_ops;
->> > >  #else
->> >
->> > Say it's either/or at a Kconfig level: so if you select both TEE and
->> > TPM based trusted keys at compile time, we intall the TPM ops and
->> > ignore the TEE ops, is that right?  Surely this should be runtime
->> > selectable based on what the platform has ...
->>
->> This dynamic selection was already part of v4 patch-set but after
->> objection from Jarrko here [1], I switched to compile time mode
->> instead.
->>
->> [1] https://lkml.org/lkml/2020/6/2/139
->
->
-> Unless I have misunderstood, my concerns about compile time are that distributors will be cornered into releasing kernels with an opinionated selection of either TEE or TPM and any users needing the non default will need to compile their own kernel.
->
+On 03/06/2020 12:06, Stephen Rothwell wrote:
 
-I echo with your concerns.
+JFYI, I am finding the vanilla defconfig build broken for arm64:
 
-Jarrko,
+LD      vmlinux.o 
+ 
 
-If it's fine with you then I can switch back to dynamic approach again
-in the next version.
+/home/john/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-ld: 
+cannot find ./drivers/firmware/efi/libstub/lib.abuilt-in.a: No such file 
+or directory
+make[1]: *** [vmlinux] Error 1 
+ 
 
--Sumit
+make: *** [__sub-make] Error 2 
+ 
 
->>
->>
->> > perhaps it should even be
->> > selectable per key?
->> >
->> > Once it is runtime selectable, what should be selected in the both
->> > case?  Or should we allow the user to decide, if so, how?
->> >
->> > when you pipe a trusted key, I think the subtype (TEE or TPM) should be
->> > part of the piped information, so it loads again seamlessly.  This
->> > would actually be fixed by something like the ASN.1 scheme I'm trying
->> > to upstream, at least for TPM keys, but do TEE keys have a recognized
->> > ASN.1 format?
->> >
->>
->> I guess this is something which we can refine later if there are real
->> platforms that have a particular security requirement to support both
->> TPM and a TEE.
->>
->> -Sumit
->>
->> > James
->> >
->>
->
+john@htsatcamb-server:~/linux-next$
+
+In addition, the reason I was testing this was because Linus' master 
+(d6f9469a03d8 Merge tag 'erofs-for-5.8-rc1' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs) was crashing:
+
+[ 5.368948] loop: module loaded
+[ 5.372113] Unable to handle kernel paging request at virtual address 
+fffff9ffcfec4000
+[ 5.380067] Mem abort info:
+[ 5.382865]ESR = 0x96000044
+[ 5.385927]EC = 0x25: DABT (current EL), IL = 32 bits
+[ 5.391260]SET = 0, FnV = 0
+[ 5.394319]EA = 0, S1PTW = 0
+[ 5.397467] Data abort info:
+[ 5.400354]ISV = 0, ISS = 0x00000044
+[ 5.404203]CM = 0, WnR = 1
+[ 5.407178] swapper pgtable: 4k pages, 48-bit VAs, pgdp=000000002f3f1000
+[ 5.413909] [fffff9ffcfec4000] pgd=0000000000000000
+[ 5.418807] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+[ 5.424399] Modules linked in:
+[ 5.427462] CPU: 11 PID: 1 Comm: swapper/0 Not tainted 
+5.7.0-05047-gd6f9469a03d8 #388
+[ 5.435325] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 
+IT21 Nemo 2.0 RC0 04/18/2018
+[ 5.444499] pstate: 40000005 (nZcv daif -PAN -UAO BTYPE=--)
+[ 5.450098] pc : __memset+0x16c/0x1c0
+[ 5.453770] lr : pcpu_alloc+0x1a0/0x668
+[ 5.457615] sp : ffff800011d3bbd0
+[ 5.460936] x29: ffff800011d3bbd0 x28: ffff001fb5495180
+[ 5.466267] x27: 0000000000000001 x26: 0000000000000100
+[ 5.471597] x25: 0000000000000001 x24: 0000000000000001
+[ 5.476928] x23: ffff80001135e9a0 x22: ffff80001196a200
+[ 5.482259] x21: ffff80001196a360 x20: 0000000000000000
+[ 5.487590] x19: 0000000000000000 x18: fffffe107e6fdb08
+[ 5.492920] x17: 000000000000003f x16: 0000000000000000
+[ 5.498251] x15: ffff001ffbffee00 x14: 0000000000000002
+[ 5.503581] x13: 0000000000000000 x12: 000000000000003f
+[ 5.508912] x11: 0000000000000040 x10: 0000000000000040
+[ 5.514243] x9 : 0000000000000000 x8 : fffff9ffcfec4000
+[ 5.519573] x7 : 0000000000000000 x6 : 000000000000003f
+[ 5.524904] x5 : 0000000000000040 x4 : 0000000000000000
+[ 5.530234] x3 : 0000000000000004 x2 : 00000000000000c0
+[ 5.535565] x1 : 0000000000000000 x0 : fffff9ffcfec4000
+[ 5.540896] Call trace:
+[ 5.543344]  __memset+0x16c/0x1c0
+[ 5.546666]  __alloc_percpu+0x14/0x1c
+[ 5.550338]  alloc_workqueue+0x164/0x42c
+[ 5.554273]  init+0x24/0xa4
+[ 5.557071]  do_one_initcall+0x50/0x194
+[ 5.560917]  kernel_init_freeable+0x1e4/0x250
+[ 5.565288]  kernel_init+0x10/0x104
+[ 5.568785]  ret_from_fork+0x10/0x18
+[ 5.572372] Code: 91010108 54ffff4a 8b040108 cb050042 (d50b7428)
+[ 5.578568] ---[ end trace 63c299bbe9b8ea9e ]---
+[ 5.583205] Kernel panic - not syncing: Attempted to kill init! 
+exitcode=0x0000000b
+[ 5.590903] SMP: stopping secondary CPUs
+[ 5.594846] Kernel Offset: 0xf0000 from 0xffff800010000000
+[ 5.600350] PHYS_OFFSET: 0x0
+[ 5.603235] CPU features: 0x240022,20806008
+[ 5.607430] Memory Limit: none
+[ 5.610500] ---[ end Kernel panic - not syncing: Attempted to kill init! 
+exitcode=0x0000000b ]---
+
+I'll check that when I get a chance. Maybe all just transient.
+
+Thanks
+
+
+> Hi all,
+> 
+> News: The merge window has opened, so please do *not* add v5.9 material
+> to your linux-next included branches until after v5.8-rc1 has been
+> released.
+> 
+> Changes since 20200602:
+> 
+> New tree: sh-rf
+> 
+> My fixes tree contains:
+> 
+>    4cb4bfffe2c1 ("device_cgroup: Fix RCU list debugging warning")
+> 
+> The drm-intel-fixes tree gained a conflict against Linus' tree.
+> 
+> The overlayfs tree gained a build failure for which I applied a patch.
+> 
+> The v4l-dvb-next tree gained a conflict against the v4l-dvb tree and a
+> build failure so I used the version from next-20200602.
+> 
+> The drm-msm tree lost its build failure.
+> 
+> The akpm-current tree gained a conflict against Linus' tree.
+> 
+> The akpm tree lost its build failure and gained conflicts against the
+> kselftest and powerpc trees.
+> 
+> Non-merge commits (relative to Linus' tree): 10845
+>   11211 files changed, 689281 insertions(+), 199935 deletions(-)
+> 
+> ----------------------------------------------------------------------------
+> 
+> I have created today's linux-next tree at
+> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+> are tracking the linux-next tree using git, you should not use "git pull"
+> to do so as that will try to merge the new linux-next release with the
+> old one.  You should use "git fetch" and checkout or reset to the new
+> master.
+> 
+> You can see which trees have been included by looking in the Next/Trees
+> file in the source.  There are also quilt-import.log and merge.log
+> files in the Next directory.  Between each merge, the tree was built
+> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+> multi_v7_defconfig for arm and a native build of tools/perf. After
+> the final fixups (if any), I do an x86_64 modules_install followed by
+> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+> and sparc64 defconfig and htmldocs. And finally, a simple boot test
+> of the powerpc pseries_le_defconfig kernel in qemu (with and without
+> kvm enabled).
+> 
+> Below is a summary of the state of the merge.
+> 
+> I am currently merging 325 trees (counting Linus' and 82 trees of bug
+> fix patches pending for the current merge release).
+> 
+> Stats about the size of the tree over time can be seen at
+> http://neuling.org/linux-next-size.html .
+> 
+> Status of my local build tests will be at
+> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+> advice about cross compilers/configs that work, we are always open to add
+> more builds.
+> 
+> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+> Gortmaker for triage and bug fixes.
+> 
+
