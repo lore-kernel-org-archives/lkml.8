@@ -2,82 +2,114 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6892FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6F4207ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591221541;
-	bh=bG694Z1X/g0cz+3ydC7MrxJgPWTI9MNwlVNzgabAQpc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GEBHMY6T2rxy29+l6YHdWErKiYszWY+S9ZBj8qb0m/C9lfvaUWyoDxBTLrGOoV4wQ
-	 +brii7hZxw5NW2WCxA4qDq+yWOAso//Yb4XVIk28aT8hQYMPtiy2wpxppK5lvCYnDX
-	 3gQ4phOaicXM2Ac1q0eWKKZ4fsHpZ2+R2Gagn8oY=
+	by mail.kernel.org (Postfix) with ESMTP id 3F2AE207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yx2NibBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgFCV67 (ORCPT
+        id S1726625AbgFCV7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 17:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgFCV66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 17:58:58 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B13B207D0;
-        Wed,  3 Jun 2020 21:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591221538;
-        bh=bG694Z1X/g0cz+3ydC7MrxJgPWTI9MNwlVNzgabAQpc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=C0EqvJxRgn7C7eJE3bee+mhegLwWCqMYruNH8EFYeZEpca1dUbur8vepANEmM4D2h
-         Xjfa15trH++Ax4rZS64DaIqUYDKByyESOIGISy0BT6CNSiRFo81FPMGiPXDclDvvZ2
-         ThXijie937+TXbsaITUeUsp7Ere4T98m/6Oow51g=
-Received: by mail-ot1-f45.google.com with SMTP id v17so3203363ote.0;
-        Wed, 03 Jun 2020 14:58:58 -0700 (PDT)
-X-Gm-Message-State: AOAM532l1N6ekbmW3yLyTEpt6/fNsO/21q6lzOXgvjkzKF4InNVzdPwW
-        Nx9Mj4Ls2/dyr+RcWByx34Y7AQ5kTtrU1S6KQg==
-X-Google-Smtp-Source: ABdhPJy4IsVGYDhLYERMjF2wCFHQWTVglTGafLNce+hvxMjpqsGUWZniKT8a62dbG+w21svvLRVjQYYO0Na2rx5zZUU=
-X-Received: by 2002:a05:6830:549:: with SMTP id l9mr1513425otb.129.1591221537765;
- Wed, 03 Jun 2020 14:58:57 -0700 (PDT)
+        Wed, 3 Jun 2020 17:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgFCV7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 17:59:36 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD191C08C5C0;
+        Wed,  3 Jun 2020 14:59:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 23so1507066pfw.10;
+        Wed, 03 Jun 2020 14:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jnwF1Toq1zg+I3R9H/up2SBuKxY8hOvcaRaCLXmqEXc=;
+        b=Yx2NibBUqoCv/OV7CuvgU0yPb0k5dEgIjh2e7TZrKO6n28nrlKQ9ODCFCQlOPbHVxL
+         p36WBWpm1IGVdoLE3c32MTZx4ZgEnQDZkL/b/VmfzuPw/jWEhv5yMEwGs6s/9n9i1SHJ
+         d7B6B/87MRihs3ip1BE/dGvwMRX4RT8JHc3Vh/Sjh4NfcJ5SDD7BBDApd88td4YvPCwD
+         DsK7uh38qMa3h/+UZw2JSsOB1vybwkFEm4pOxeLq8HCSzBAVtIyLw+tghnV/JdJysJmY
+         uL9lsvXEFGzBTJSnMvYQLtTzAVDm7QbXNJEPYoFl+ay1XoCKy+YVhNnWr+fU1SLCivOG
+         WM9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jnwF1Toq1zg+I3R9H/up2SBuKxY8hOvcaRaCLXmqEXc=;
+        b=dsKpsB9z7UD14J0koTWiUMXoCPAL7StVZgIvwB8cnD2f/kZTevaxnPgkQqzlDB7T+5
+         KRHhhcbRSd0dBzKWIZVbR3+P84Y4FdbMrPCBbRDxxI+dsjdy5eb6luGYwBtQv2ga/Nf2
+         icC+wx7s4SQqQhYvotmNMDeH3JibeZNaNzvSpogZqnYWFOeF/X7CZzJAOrdWGqmB2zSi
+         KVJxXiu5EGnJYz+3efoR89RgRTnQZqRJJcF5vvZzUAmAxU8n97jsDdURHoA2xo8FuUPq
+         8XBcSWzfV4c0QWcbUxH/esvoLzPiD11zZV73gBJ7S4xdCFH4L2uj+Qty7YHlr0jJH4Mf
+         ZlTA==
+X-Gm-Message-State: AOAM530uTFyMpYlMnM9qehFXeIwM6ZM2Wm7T0SKInHj8X7MPpQp1kC6O
+        wC/BQKmmYkP8UIsuwptjPZPIxAK2GO/EAWRMryQ=
+X-Google-Smtp-Source: ABdhPJwe/UN28Z8IzKpuwEHFOD1+W9b4Y3sdNM9oTVjMFxDCtr0nl4zSecglffjDiMj06pAkjlfWwQMjsR2P1c6Pxpc=
+X-Received: by 2002:a63:545a:: with SMTP id e26mr1395213pgm.4.1591221576413;
+ Wed, 03 Jun 2020 14:59:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200528031549.13846-1-zhouyanjie@wanyeetech.com>
- <20200528031549.13846-4-zhouyanjie@wanyeetech.com> <20200529191431.GA2779176@bogus>
- <159078668338.69627.5841582436445900180@swboyd.mtv.corp.google.com>
-In-Reply-To: <159078668338.69627.5841582436445900180@swboyd.mtv.corp.google.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 3 Jun 2020 15:58:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKQgSsd4ZgLrSSZifpB=1eqdgr503YyrWB1qmECd0z4VQ@mail.gmail.com>
-Message-ID: <CAL_JsqKQgSsd4ZgLrSSZifpB=1eqdgr503YyrWB1qmECd0z4VQ@mail.gmail.com>
-Subject: Re: [PATCH v13 3/7] dt-bindings: clock: Add documentation for X1830 bindings.
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, zhenwenjin@gmail.com,
-        sernia.zhou@foxmail.com, Paul Cercueil <paul@crapouillou.net>,
-        dongsheng.qiu@ingenic.com, devicetree@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
+ <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com>
+ <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
+ <CAHp75VfBe-LMiAi=E4Cy8OasmE8NdSqevp+dsZtTEOLwF-TgmA@mail.gmail.com>
+ <CACG_h5p1UpLRoA+ubE4NTFQEvg-oT6TFmsLXXTAtBvzN9z3iPg@mail.gmail.com>
+ <CAHp75Vdxa1_ANBLEOB6g25x3O0V5h3yjZve8qpz-xkisD3KTLg@mail.gmail.com>
+ <20200531223716.GA20752@rikard> <20200601083330.GB1634618@smile.fi.intel.com>
+ <20200602190136.GA913@rikard> <CAHp75VdUf8=y+y4Q3OtWc7owxg0uX8LhZY4Nrgnezuv+aSyzUg@mail.gmail.com>
+ <20200603215314.GA916134@rikard> <CAHp75VeQ+3rRAs+5Tmn=Tj_jkdKff=crwX9S3bPGLO6iVQ8Kqg@mail.gmail.com>
+In-Reply-To: <CAHp75VeQ+3rRAs+5Tmn=Tj_jkdKff=crwX9S3bPGLO6iVQ8Kqg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 4 Jun 2020 00:59:19 +0300
+Message-ID: <CAHp75VdVqKfGC1+yLOTORLXLRcLxXXUPW2v3iY0uGAS7CDUifQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Emil Velikov <emil.l.velikov@gmail.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 3:11 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Thu, Jun 4, 2020 at 12:58 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Quoting Rob Herring (2020-05-29 12:14:31)
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
+> On Thu, Jun 4, 2020 at 12:53 AM Rikard Falkeborn
+> <rikard.falkeborn@gmail.com> wrote:
+> > On Wed, Jun 03, 2020 at 11:49:37AM +0300, Andy Shevchenko wrote:
+> > > On Tue, Jun 2, 2020 at 10:01 PM Rikard Falkeborn
+> > > <rikard.falkeborn@gmail.com> wrote:
 >
-> Please apply to bindings tree Rob. The yaml conversion is in your tree.
+> ...
+>
+> > I'd be very surprised if compilers warned for explicit casts but  I'll
+> > send a proper patch soon to let the build robot try it.
+>
+> I noticed that you should have received kbuild bot report about a
+> driver where it appears.
+>
+> You patch broke all cases where (l) = 0 and (h) is type of unsigned
+> (not a const from compiler point of view).
 
-Done.
+I will ask to revert for rc1 if there will be no fix.
 
-Rob
+
+-- 
+With Best Regards,
+Andy Shevchenko
