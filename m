@@ -2,141 +2,146 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C40C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4B120659
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63EF2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="IrVDJRYB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JmlTRC4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgFCXfQ (ORCPT
+        id S1726085AbgFCXif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56118 "EHLO
+        Wed, 3 Jun 2020 19:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgFCXfP (ORCPT
+        with ESMTP id S1725876AbgFCXie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:35:15 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1264C08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:35:14 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id y13so4044288eju.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:35:14 -0700 (PDT)
+        Wed, 3 Jun 2020 19:38:34 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E538C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:38:34 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u5so2678149pgn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:38:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4W+pwBV/mV37XypbafarSnoIpb157MO7R0Lt+xMM2XY=;
-        b=IrVDJRYBvShwaz9jFI1Vg8hoNLNLP8LAt3BGU3N4cSS1dFwNh596fdNHNruj/106sE
-         KaI75eZ69dRttV4MoxtGRt5SIEoAgrvFosoCHmeMOj0MSop1p32uWtrURygHuy8Ale7L
-         uefIOZAFLT+aeyv9zWUcFHlYSTpdUDMeJYE0v9dDPPZQaCaFuFqltHL3laGRipjMLOaV
-         VhV7aDpO9DsZypYp3owSl8jm1L4H1HlwtD76StMd+H4sbmj8NEpH8Pl5A6mDVk26qrdr
-         KOuS4CE29fM87rjTLr0H3LAZAEewxRL5Qk2yc33IMUrhKHQMrmMhg8suhNHcg/D48OTI
-         taIw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=261RUT31PuSmoranObguIYWCcctoAaPL9LPaG28MbCU=;
+        b=JmlTRC4P+LHl2wjuekNmYIKEnD04fMoCLlZ0I/bKxc3s+wrPgOMkQpUa8tCRZWYVNQ
+         RQk3XFYW9ggapHPcpi7C+gFEFykC6RpngWkj5aT8DTc3UV5kh++XlU2i9BHpur85EIrw
+         qn2qk8wLyFnfBMQK0k7qez5Jl+psaL0sRQYXI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4W+pwBV/mV37XypbafarSnoIpb157MO7R0Lt+xMM2XY=;
-        b=oRNVdeNh2yCPVnJji1iHZEUGuQ2rlV/5mJmAt8jX/2uEaJBvxlof1fr5BFpbj3gklG
-         GZTN4mlfIHzQ7zVQsiLhiYcgjyL1xpCvrtl8rRKAG/sB2xFq2Trkp8JYES1797lbAowK
-         WqXdZU6Djo0rFenHvklWUSdyUwkzL05lTVaVByfDArjoNIXaGGU330NhkZenXZQVR2ER
-         jFTszUpqEfv8rWTrfD6VM0Ud4R38miMjKBixh24Q3U6VrdXGv0LrpOO1hebRBvcUKPQc
-         VoqfuN9rCOpIWb1E4FbwChtzqLP5uwBq1WlU/88SpzO34ufq/kInkJnZLVx/x5lIPshO
-         dz7g==
-X-Gm-Message-State: AOAM533/UlkhGf0+HRlfKSBaawbOpYpPGpgkHzI1hqohfmTZpxz8+t5T
-        2TwL0ekXoQ1zW/0QpKa+/VBge622o+D+x5mJD3eT
-X-Google-Smtp-Source: ABdhPJwbAgFPcW4CnxOHA+T2vCRxymvldOOhJdNZSzkxO/F/g4D4h2BhGj5/BGVl+Eao8KqaCdecIrkORsqYCgYHREQ=
-X-Received: by 2002:a17:906:19d3:: with SMTP id h19mr1534177ejd.106.1591227313295;
- Wed, 03 Jun 2020 16:35:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=261RUT31PuSmoranObguIYWCcctoAaPL9LPaG28MbCU=;
+        b=WSOYQlRUbxgVc5xhTRLRyq3+8NRHR4zDqupV/c5guRLqx6+68rffOcZllgrLsj/Jtm
+         f0Tj8m9GDLojlbkWXUqNclZQEjoud9eYXh+uMqsnDtNQT3W5VtaFIGnu77GNpkAg8LSW
+         hUM78Oqgfyb+Vt4J1L8cjXhF/ByLJx71dVYiK89VKeRGulzbMwH4JSa1RtOsOSnZVKkp
+         aEncloHbzTMR3vFGbJU2fEWT0Xyj9ayNZg3nSEKsvi4I9j43U9++0XqBQgTFRK9gn2U1
+         i9nHZPlL+QELAGqz8ZtXZUbliPUyTp50dXvxRBVkm/xQTlHlxCVnjOn40TKqQbSFxvXI
+         YBnA==
+X-Gm-Message-State: AOAM532yO3nTLgT7ucqpYy7PzkSVxKTQEl0MhsTiaRVMBji+vsNkSOXa
+        rbFh5gwu9Z8UdgfOeY61sGJyAw==
+X-Google-Smtp-Source: ABdhPJwu4vjgHI/sr/02FzeDWVOfrsTIi4ohngcW7RRLaBTVoASPovhFX0qIFpsYzUJ7p8kB3zlO7Q==
+X-Received: by 2002:a62:1a0f:: with SMTP id a15mr1545975pfa.177.1591227514055;
+        Wed, 03 Jun 2020 16:38:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g17sm2431622pgg.43.2020.06.03.16.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 16:38:33 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 16:38:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] pwm: Add missing "CONFIG_" prefix
+Message-ID: <202006031634.477F65AC53@keescook>
+References: <202006031539.4198EA6@keescook>
+ <b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com>
 MIME-Version: 1.0
-References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
- <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
-In-Reply-To: <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 3 Jun 2020 19:35:02 -0400
-Message-ID: <CAHC9VhQN3TvY5ZTnPu76La89tkdnLXhrrbxWocv5F4ygVyG+-Q@mail.gmail.com>
-Subject: Re: [GIT PULL] SELinux patches for v5.8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 8:31 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> Side note since you mention performance work: in the past when I've
-> looked at SELinux performance (generally as part of pathname lookup
-> etc VFS loads), the biggest cost by far was that all the SELinux data
-> structures take a ton of cache misses.
->
-> Yes, some of the hashing shows up in the profiles, but _most_ of it
-> was loading the data from inode->i_security etc.
->
-> And the reason seemed to be that every single inode ends up having a
-> separately allocated "struct inode_security_struct" (aka "isec"). Even
-> if the contents are often all exactly the same for a large set of
-> inodes that thus _could_ conceptually share the data.
->
-> Now, it used to be - before being able to stack security layers -
-> SElinux would control that pointer, and it could have done some kind
-> of sharing scheme with copy-on-write behavior (the way we do 'struct
-> cred' for processes), and it would have caused a much smaller cache
-> footprint (and thus likely much fewer cache misses).
+On Wed, Jun 03, 2020 at 04:04:31PM -0700, Joe Perches wrote:
+> more odd uses (mostly in comments)
+> 
+> $ git grep -P -oh '\bIS_ENABLED\s*\(\s*\w+\s*\)'| \
+>   sed -r 's/\s+//g'| \
+>   grep -v '(CONFIG_' | \
+>   sort | uniq -c | sort -rn
 
-I believe right about the time that Eric Paris was stepping away from
-SELinux he was working on a patchset that basically did what you
-describe: copy-on-write for the SELinux inode blobs (aka
-inode_security_struct, aka isec, etc.).  Unfortunately I don't believe
-that work was ever finished and the idea was lost many years ago in
-the maintainer shuffle; I was trying to figure out this whole
-"maintainer thing" and perhaps didn't push Eric to post those patches
-as much as I should have.  Although it's a big academic now with the
-LSM stacking work.
+I think a missed a bunch because my grep was messy. :) This is much
+easier to scan.
 
-Most of my SELinux thoughts these days are around the correctness and
-robustness of the code, making sure we are testing as much as possible
-(related to the first point), and trying to catch changes in other
-subsystems which cause us breakage.  Not the most glamorous stuff, but
-it's important.  SELinux is lucky enough to have a few active kernel
-developers, and thankfully a couple of them appear to be looking at
-some of the performance issues.
+>       7 IS_ENABLED(DEBUG)
+>       4 IS_ENABLED(cfg)
+>       2 IS_ENABLED(opt_name)
+>       2 IS_ENABLED(DEBUG_PRINT_TRIE_GRAPHVIZ)
+>       2 IS_ENABLED(config)
+>       2 IS_ENABLED(cond)
+>       2 IS_ENABLED(__BIG_ENDIAN)
+>       1 IS_ENABLED(x)
+>       1 IS_ENABLED(PWM_DEBUG)
+>       1 IS_ENABLED(option)
+>       1 IS_ENABLED(DEBUG_RANDOM_TRIE)
+>       1 IS_ENABLED(DEBUG_CHACHA20POLY1305_SLOW_CHUNK_TEST)
 
-> These days, that sharing of the i_security pointer across different
-> security layers makes that sound really really painful.
+These seem to be "as expected".
 
-Yeah.  It's pretty much impossible now to do copy-on-write with the
-main security blobs due to the differing nature of the LSMs and the
-single, shared allocation for each blob.  I suppose if you wanted to
-attempt copy-on-write inside a LSM you could introduce another layer
-of pointers/allocation, but I'm not sure how much of an improvement
-that might be.
+>       4 IS_ENABLED(DRM_I915_SELFTEST)
+>       1 IS_ENABLED(STRICT_KERNEL_RWX)
+>       1 IS_ENABLED(ETHTOOL_NETLINK)
 
-Perhaps a bit more thought will produce a "eureka!" moment, but I'm
-not overly optimistic.
+But these are not.
 
-> But I do wonder if anybody in selinux land (or general security
-> subsystem land) has been thinking of maybe at least having a "this
-> inode has no special labeling" marker that could possibly avoid having
-> all those extra allocations.
+> 
+> STRICT_KERNEL_RWX is misused here in ppc
+> 
+> ---
+> 
+> Fix pr_warn without newline too.
+> 
+>  arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+> index 51e3c15f7aff..dd60c5f2b991 100644
+> --- a/arch/powerpc/mm/book3s64/hash_utils.c
+> +++ b/arch/powerpc/mm/book3s64/hash_utils.c
+> @@ -660,11 +660,10 @@ static void __init htab_init_page_sizes(void)
+>  		 * Pick a size for the linear mapping. Currently, we only
+>  		 * support 16M, 1M and 4K which is the default
+>  		 */
+> -		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
+> +		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
+>  		    (unsigned long)_stext % 0x1000000) {
+>  			if (mmu_psize_defs[MMU_PAGE_16M].shift)
+> -				pr_warn("Kernel not 16M aligned, "
+> -					"disabling 16M linear map alignment");
+> +				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
+>  			aligned = false;
+>  		}
 
-I don't want to get into the "security people can't agree on anything"
-discussion, but I think for that to work all of the loaded LSMs would
-need to agree that they don't need to stash anything in the inode (or
-other object); which I think is pretty much impossible most of the
-time.  At least in the SELinux case, even if we were doing some sort
-of copy-on-write, we would need to keep a reference back to the inode
-security blob that does contain our needed info.
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 
 -- 
-paul moore
-www.paul-moore.com
+Kees Cook
