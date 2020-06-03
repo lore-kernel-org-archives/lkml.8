@@ -2,132 +2,172 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8050CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B7D20757
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DBucrm9e"
+	by mail.kernel.org (Postfix) with ESMTP id 634CA2072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgFCCHy (ORCPT
+        id S1725906AbgFCCIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:07:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgFCCHy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:07:54 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E602C08C5C0;
-        Tue,  2 Jun 2020 19:07:54 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cC3r1V72z9sSc;
-        Wed,  3 Jun 2020 12:07:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591150072;
-        bh=xuJUjo7+YelOU3llC+D80IQp+Ob0+zeNH9Y00+TBzq8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DBucrm9e9f6+ABOFi0eeIagnW9RiJMsh9GXYtLGZtCYal2MteBR1Y0LXeOfa0b2pA
-         LTNByuMyskgkxMZMPkZDmqkPJF/ubABjlqAiOCC+CsG0QESWukygyh1789Nl6NwV7w
-         q7oQIrKX6Y/nn+++rfZXmyPHTiuVX6YU0XFpxxYP7Q8ZP3Zav+kQpDadV1wCg+ecRi
-         h6MIkymt5dPnWnz11BcXx4urD2W05BSuHgOnrkmK/Xp4Z+n28TihUr3inQ2MbD/V7H
-         JIf7IP7wOSs7qA0Zdq2er+3nLGtV+Nmj33YTIMBdx+mVBurlDNlloJHnAYnS2WL/qr
-         9CWPJIpnN+wyw==
-Date:   Wed, 3 Jun 2020 12:07:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- btrfs tree
-Message-ID: <20200603120751.5cc12744@canb.auug.org.au>
-In-Reply-To: <20200525211128.1cc8c00d@canb.auug.org.au>
-References: <20200525211128.1cc8c00d@canb.auug.org.au>
+        Tue, 2 Jun 2020 22:08:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5775 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbgFCCIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:08:35 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DFB861CD10B357886A0D;
+        Wed,  3 Jun 2020 10:08:31 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.99) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
+ 10:08:29 +0800
+Subject: Re: [PATCH -next] vgacon: Fix an out-of-bounds in
+ vgacon_scrollback_update()
+To:     <linux-kernel@vger.kernel.org>
+CC:     <b.zolnierkie@samsung.com>
+References: <1589336932-35508-1-git-send-email-yangyingliang@huawei.com>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <9f47ceb6-fa01-d43e-f434-86a0b1c8df64@huawei.com>
+Date:   Wed, 3 Jun 2020 10:08:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cT2T2oAM0oRDooaP4vznsSt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1589336932-35508-1-git-send-email-yangyingliang@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.166.215.99]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cT2T2oAM0oRDooaP4vznsSt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+ping
 
-Hi all,
-
-On Mon, 25 May 2020 21:11:28 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On 2020/5/13 10:28, Yang Yingliang wrote:
+> I got a slab-out-of-bounds report when I doing fuzz test.
 >
-> Today's linux-next merge of the akpm-current tree got a conflict in:
->=20
->   fs/btrfs/inode.c
->=20
-> between commit:
->=20
->   f31e5f70919f ("btrfs: switch to iomap_dio_rw() for dio")
->=20
-> from the btrfs tree and commit:
->=20
->   2167c1133b8b ("btrfs: convert from readpages to readahead")
->=20
-> from the akpm-current tree.
->=20
-> diff --cc fs/btrfs/inode.c
-> index fb95efeb63ed,8b3489f229c7..000000000000
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@@ -10075,8 -10538,8 +10060,8 @@@ static const struct address_space_opera
->   	.readpage	=3D btrfs_readpage,
->   	.writepage	=3D btrfs_writepage,
->   	.writepages	=3D btrfs_writepages,
-> - 	.readpages	=3D btrfs_readpages,
-> + 	.readahead	=3D btrfs_readahead,
->  -	.direct_IO	=3D btrfs_direct_IO,
->  +	.direct_IO	=3D noop_direct_IO,
->   	.invalidatepage =3D btrfs_invalidatepage,
->   	.releasepage	=3D btrfs_releasepage,
->   #ifdef CONFIG_MIGRATION
+> [  334.989515] ==================================================================
+> [  334.989577] BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
+> [  334.989588] Write of size 1766 at addr ffff8883de69ff3e by task test/2658
+> [  334.989593]
+> [  334.989608] CPU: 3 PID: 2658 Comm: test Not tainted 5.7.0-rc5-00005-g152036d1379f #789
+> [  334.989617] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+> [  334.989624] Call Trace:
+> [  334.989646]  dump_stack+0xe4/0x14e
+> [  334.989676]  print_address_description.constprop.5+0x3f/0x60
+> [  334.989699]  ? vgacon_scroll+0x57a/0x8ed
+> [  334.989710]  __kasan_report.cold.8+0x92/0xaf
+> [  334.989735]  ? vgacon_scroll+0x57a/0x8ed
+> [  334.989761]  kasan_report+0x37/0x50
+> [  334.989789]  check_memory_region+0x1c1/0x1e0
+> [  334.989806]  memcpy+0x38/0x60
+> [  334.989824]  vgacon_scroll+0x57a/0x8ed
+> [  334.989876]  con_scroll+0x4ef/0x5e0
+> [  334.989904]  ? lockdep_hardirqs_on+0x5e0/0x5e0
+> [  334.989934]  lf+0x24f/0x2a0
+> [  334.989951]  ? con_scroll+0x5e0/0x5e0
+> [  334.989975]  ? find_held_lock+0x33/0x1c0
+> [  334.990005]  do_con_trol+0x313/0x5ff0
+> [  334.990027]  ? lock_downgrade+0x730/0x730
+> [  334.990045]  ? reset_palette+0x440/0x440
+> [  334.990070]  ? _raw_spin_unlock_irqrestore+0x4b/0x60
+> [  334.990095]  ? notifier_call_chain+0x120/0x170
+> [  334.990132]  ? __atomic_notifier_call_chain+0xf0/0x180
+> [  334.990160]  do_con_write.part.16+0xb2b/0x1b20
+> [  334.990238]  ? do_con_trol+0x5ff0/0x5ff0
+> [  334.990258]  ? mutex_lock_io_nested+0x1280/0x1280
+> [  334.990269]  ? rcu_read_unlock+0x50/0x50
+> [  334.990315]  ? __mutex_unlock_slowpath+0xd9/0x670
+> [  334.990340]  ? lockdep_hardirqs_on+0x3a2/0x5e0
+> [  334.990368]  con_write+0x36/0xc0
+> [  334.990389]  do_output_char+0x561/0x780
+> [  334.990414]  n_tty_write+0x58e/0xd30
+> [  334.990478]  ? n_tty_read+0x1800/0x1800
+> [  334.990500]  ? prepare_to_wait_exclusive+0x300/0x300
+> [  334.990525]  ? __might_fault+0x17a/0x1c0
+> [  334.990557]  tty_write+0x430/0x960
+> [  334.990568]  ? n_tty_read+0x1800/0x1800
+> [  334.990600]  ? tty_release+0x1280/0x1280
+> [  334.990622]  __vfs_write+0x81/0x100
+> [  334.990648]  vfs_write+0x1ce/0x510
+> [  334.990676]  ksys_write+0x104/0x200
+> [  334.990691]  ? __ia32_sys_read+0xb0/0xb0
+> [  334.990708]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+> [  334.990725]  ? trace_hardirqs_off_caller+0x40/0x1a0
+> [  334.990744]  ? do_syscall_64+0x3b/0x5e0
+> [  334.990775]  do_syscall_64+0xc8/0x5e0
+> [  334.990798]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> [  334.990811] RIP: 0033:0x44f369
+> [  334.990827] Code: 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+> [  334.990834] RSP: 002b:00007ffe9ace0968 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> [  334.990848] RAX: ffffffffffffffda RBX: 0000000000400418 RCX: 000000000044f369
+> [  334.990856] RDX: 0000000000000381 RSI: 0000000020003500 RDI: 0000000000000003
+> [  334.990865] RBP: 00007ffe9ace0980 R08: 0000000020003530 R09: 00007ffe9ace0980
+> [  334.990873] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000402110
+> [  334.990881] R13: 0000000000000000 R14: 00000000006bf018 R15: 0000000000000000
+> [  334.990937]
+> [  334.990943] The buggy address belongs to the page:
+> [  334.990962] page:ffffea000f79a400 refcount:1 mapcount:0 mapping:000000002bff47b3 index:0x0 head:ffffea000f79a400 order:4 compound_mapcount:0 compound_pincount:0
+> [  334.990973] flags: 0x2fffff80010000(head)
+> [  334.990992] raw: 002fffff80010000 dead000000000100 dead000000000122 0000000000000000
+> [  334.991006] raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+> [  334.991013] page dumped because: kasan: bad access detected
+> [  334.991017]
+> [  334.991023] Memory state around the buggy address:
+> [  334.991034]  ffff8883de6a0000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> [  334.991044]  ffff8883de6a0080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> [  334.991054] >ffff8883de6a0100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc
+> [  334.991061]                                                              ^
+> [  334.991071]  ffff8883de6a0180: fc fc fc fc fc fc 00 00 00 00 00 00 00 00 00 00
+> [  334.991082]  ffff8883de6a0200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> [  334.991088] ==================================================================
+>
+> Because vgacon_scrollback_cur->tail plus memcpy size is greater than
+> vgacon_scrollback_cur->size. Fix this by checking the memcpy size.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>   drivers/video/console/vgacon.c | 11 ++++++++---
+>   1 file changed, 8 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
+> index 998b0de1812f..b51ffb9a208d 100644
+> --- a/drivers/video/console/vgacon.c
+> +++ b/drivers/video/console/vgacon.c
+> @@ -243,6 +243,7 @@ static void vgacon_scrollback_startup(void)
+>   static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
+>   {
+>   	void *p;
+> +	int size;
+>   
+>   	if (!vgacon_scrollback_cur->data || !vgacon_scrollback_cur->size ||
+>   	    c->vc_num != fg_console)
+> @@ -251,13 +252,17 @@ static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
+>   	p = (void *) (c->vc_origin + t * c->vc_size_row);
+>   
+>   	while (count--) {
+> +		size = vgacon_scrollback_cur->size - vgacon_scrollback_cur->tail;
+> +		if (size > c->vc_size_row)
+> +			size = c->vc_size_row;
+> +
+>   		scr_memcpyw(vgacon_scrollback_cur->data +
+>   			    vgacon_scrollback_cur->tail,
+> -			    p, c->vc_size_row);
+> +			    p, size);
+>   
+>   		vgacon_scrollback_cur->cnt++;
+> -		p += c->vc_size_row;
+> -		vgacon_scrollback_cur->tail += c->vc_size_row;
+> +		p += size;
+> +		vgacon_scrollback_cur->tail += size;
+>   
+>   		if (vgacon_scrollback_cur->tail >= vgacon_scrollback_cur->size)
+>   			vgacon_scrollback_cur->tail = 0;
 
-This is now a conflict between commit
-
-  ba206a026ff4 ("btrfs: convert from readpages to readahead")
-
-from Linus' tree and commit
-
-  a43a67a2d715 ("btrfs: switch to iomap_dio_rw() for dio")
-
-from the btrfs tree.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/cT2T2oAM0oRDooaP4vznsSt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XBfcACgkQAVBC80lX
-0GwXpgf7BWVbLYzCGUc0tiK9692M42gzHZXfa//AnE/kyeHMFchJ/7Is1We+MLBg
-0O0fewPAvbOXbkSapFskQ6XSRfQelXykpO24o7ja93BbOXPVobRVSDPRaTg9uVbO
-+B6viJkN0z8T9tZRMOOcu9ZvkbVSNE2tdT18PwLioFV8o2Sv/B/ZswBQnxm2JI1S
-E7rCzIZ1w5nVk4IPytvQDhKPShahtb/36RGI2r1A3ZYFmnnmH7+yRElnUbC7Y498
-6KWKWwS9sAO6tDyhbmj+urowN85ZyVTiQ11Phkti19goFGU9SCMCUk5QEp7YCYqi
-zxIALg2EAjI8Uc0SlbCP8LgbuB0+Kg==
-=5L+u
------END PGP SIGNATURE-----
-
---Sig_/cT2T2oAM0oRDooaP4vznsSt--
