@@ -2,95 +2,117 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68835C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB8712074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ADC12077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:06:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDQClyiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgFCUEH (ORCPT
+        id S1726195AbgFCUGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:04:07 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58062 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726088AbgFCUDv (ORCPT
+        Wed, 3 Jun 2020 16:06:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgFCUGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:03:51 -0400
-Received: from [78.134.115.170] (port=37458 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jgZc4-005dPA-Nm; Wed, 03 Jun 2020 22:03:48 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Axel Lin <axel.lin@ingics.com>
-Subject: [RFC 4/4] regulator: lp87565: add LP87524-Q1 variant
-Date:   Wed,  3 Jun 2020 22:03:19 +0200
-Message-Id: <20200603200319.16184-5-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200603200319.16184-1-luca@lucaceresoli.net>
-References: <20200603200319.16184-1-luca@lucaceresoli.net>
+        Wed, 3 Jun 2020 16:06:10 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9ACC08C5C0;
+        Wed,  3 Jun 2020 13:06:09 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y17so1187473plb.8;
+        Wed, 03 Jun 2020 13:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8SckYXNhOKP0BM4U/XRIohhWa9dVky1cTtSkQiiBe80=;
+        b=uDQClyiMo13aZBAA16EvaegKGeXXTqMzBafeDrgTYxQI1SqW3kHC0vsSMiZbXm0GdQ
+         h5VBLUpgad+47wOfHO5NU/ZcQyktlo0Pfxi5/RI9d1zY4gWJcfzroLtWc7XaM1Wkk2QR
+         ZWOBcSUJXdXfjZj4y2oaEyuXZG+OBW6nxOSzq0G+yIvrTdfp6Wqiz7mcI+XQ93Uxi67y
+         rJbOLBFoeRhJi0z48N1D2/QAtfi/tw67xItYWFy7zaBupRd1JBcsai0jeeWsQ2L9Bv1Q
+         9zkJ07cvf3dSf+uwSM5uKtM+rUCQUuByVB9gFrQEcbO0TTyKDjNjTpAwnurBK6jxABXA
+         WAzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8SckYXNhOKP0BM4U/XRIohhWa9dVky1cTtSkQiiBe80=;
+        b=Z9iOq6Kw1plhbsgr5Sq/E95BGN1k6eES9pzVhZkjQFpHSFyV6JPXvY39876w0hXHIP
+         LtU28u+ZqU1zflwIU5xtRNHMEhXMerMlaeRFDBpIFdVQQZzwcLxglYpX9yYS6Fk5TAj7
+         gwd2FmO+uVK365VXIT7kByo5KrGgemN/WgoO4r3f5amj/0u0BHTRR+Egw3QIlspewmru
+         0hriYblTeFEI9NlXs1fCgjDnFwP5lDNl4L+cpzl9z8UnTrMSJz6ueaJeVD64gTmBtD8G
+         hFNuYuwFXxtdM+S9ZVrHci9RDk3i+z2dZVayM0EIUHSjqtYJRQxgjsQ7+g+Z04oTB4er
+         Hl2g==
+X-Gm-Message-State: AOAM532b84SOk91kvIjury3FGFhiKdfZ9m2lhxhYdQqlpkSfLg8meBqt
+        211vghbxlLfD2U3QuIzM3WY9BVhf
+X-Google-Smtp-Source: ABdhPJzBLNcFjE1l215XhZVkV8Fw5Vstqw5QjosgAfX+y7AzQZEZSayzQVNnNm5wirHbT9+qoXndpw==
+X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr1383928plm.179.1591214769048;
+        Wed, 03 Jun 2020 13:06:09 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p12sm2620073pfq.69.2020.06.03.13.06.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 13:06:08 -0700 (PDT)
+Subject: Re: [PATCH v3 12/13] PCI: brcmstb: Set bus max burst size by chip
+ type
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200603192058.35296-1-james.quinlan@broadcom.com>
+ <20200603192058.35296-13-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a3ec9783-5859-9729-e79a-e42b3ca02242@gmail.com>
+Date:   Wed, 3 Jun 2020 13:06:05 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+In-Reply-To: <20200603192058.35296-13-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the LP87524B/J/P-Q1 Four 4-MHz Buck Converter. This is a
-variant of the LP87565 having 4 single-phase outputs and up to 10 A of
-total output current.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- drivers/mfd/lp87565.c       | 4 ++++
- include/linux/mfd/lp87565.h | 1 +
- 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/mfd/lp87565.c b/drivers/mfd/lp87565.c
-index 4a5c8ade4ae0..cc1072927f6d 100644
---- a/drivers/mfd/lp87565.c
-+++ b/drivers/mfd/lp87565.c
-@@ -26,6 +26,10 @@ static const struct mfd_cell lp87565_cells[] = {
- 
- static const struct of_device_id of_lp87565_match_table[] = {
- 	{ .compatible = "ti,lp87565", },
-+	{
-+		.compatible = "ti,lp87524-q1",
-+		.data = (void *)LP87565_DEVICE_TYPE_LP87524_Q1,
-+	},
- 	{
- 		.compatible = "ti,lp87565-q1",
- 		.data = (void *)LP87565_DEVICE_TYPE_LP87565_Q1,
-diff --git a/include/linux/mfd/lp87565.h b/include/linux/mfd/lp87565.h
-index ce965354bbad..ad240f2d0d3f 100644
---- a/include/linux/mfd/lp87565.h
-+++ b/include/linux/mfd/lp87565.h
-@@ -14,6 +14,7 @@
- 
- enum lp87565_device_type {
- 	LP87565_DEVICE_TYPE_UNKNOWN	= 0,
-+	LP87565_DEVICE_TYPE_LP87524_Q1,
- 	LP87565_DEVICE_TYPE_LP87561_Q1,
- 	LP87565_DEVICE_TYPE_LP87565_Q1,
- };
+On 6/3/2020 12:20 PM, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> The proper value of the parameter SCB_MAX_BURST_SIZE varies per chip.  The
+> 2711 family requires 128B whereas other devices can employ 512.  The
+> assignment is complicated by the fact that the values for this two-bit
+> field have different meanings;
+> 
+>   Value   Type_Generic    Type_7278
+
+It looks like Type_Generic and Type_7278 should be swapped in this
+description. Other than that:
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+> 
+>      00       Reserved         128B
+>      01           128B         256B
+>      10           256B         512B
+>      11           512B     Reserved
 -- 
-2.27.0
-
+Florian
