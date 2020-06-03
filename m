@@ -2,165 +2,251 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEE5C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16D2C20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47F520674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HPiwpNtw"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LQj5gdjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgFCSrg (ORCPT
+        id S1726103AbgFCStl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:47:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgFCSrf (ORCPT
+        Wed, 3 Jun 2020 14:49:41 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42582 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgFCStk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:47:35 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972C9C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 11:47:35 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l11so3517850wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 11:47:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=TzkCJWzdXaXToiK1TH4bCK6fKN5cv3juL4tw/MkKx6w=;
-        b=HPiwpNtwlOc31xmKeKSwthIlmCa/tOMQd/8kH1Smc+RG80zxiqip4pjUe/KbToiKth
-         1jg+auUvy0TzI4kQ+wsVWroEXtGf4xb5T1Y1R4iT02cZ6lxnsOl1LqDfkPSDxdwdJwzY
-         Ka9GI0aq/AGJf0EUB5aCHTK9PkWj4xdXCLoiA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TzkCJWzdXaXToiK1TH4bCK6fKN5cv3juL4tw/MkKx6w=;
-        b=ZIzKViS7F7klPLZ46AFPwHfPIa74hsutA+z6hm45hDwXxO9OL5gJQMu5XAaC1ggk+n
-         V/Vkaoh0UfGQNU4UdkFRiXRpUrcV1Hqmpd24yLzWhezZHijDHFtNOOyL6/mM/ey2gede
-         D1wnbGbp0tcn3sz91yjDjO2XAt/DpurAxCG/qvtIRO/L1oh0yJ3qWnYT7ISEDHUZWbsI
-         U++8m7s6/ljt+i6f/lk20knoDEXyj0FAn3E3P+O7m0bdt/w5z7UmBpMR9rgjgLHDDN8q
-         htN0Ihq0ivgmw36b/b6VGYRwXYyTbHssa7pirTpiYgaOiNqFRsUXySK0S2ughrhp+cG9
-         7ulg==
-X-Gm-Message-State: AOAM5315Qxigqh0goOBd8gQzSMqsUOHLAc0wHP920XqrQ/XZfDfiJwWC
-        5lAwoab7xNssKpYctGfGKaDnfw==
-X-Google-Smtp-Source: ABdhPJyU+ic03oHqmau6OU/msEDtw9ypuyg7l03D3xQ7uDwGOZ1+JJWX1PGIHshdEbfWG/GbBSGPDw==
-X-Received: by 2002:a5d:50c9:: with SMTP id f9mr794147wrt.9.1591210054149;
-        Wed, 03 Jun 2020 11:47:34 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id k14sm4428396wrq.97.2020.06.03.11.47.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 11:47:33 -0700 (PDT)
-Subject: Re: Re: [RESEND PATCH v5 5/5] Documentation/vmcoreinfo: Add
- documentation for 'TCR_EL1.T1SZ'
-To:     Bhupesh Sharma <bhsharma@redhat.com>,
-        James Morse <james.morse@arm.com>, linux-kernel@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-doc@vger.kernel.org, Will Deacon <will@kernel.org>,
-        x86@kernel.org, kexec@lists.infradead.org,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        Dave Anderson <anderson@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        bhupesh.linux@gmail.com, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Steve Capper <steve.capper@arm.com>
-References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
- <1575057559-25496-6-git-send-email-bhsharma@redhat.com>
- <8a982138-f1fa-34e8-18fd-49a79cea3652@arm.com>
- <b7d8d603-d9fe-3e18-c754-baf2015acd16@redhat.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <51606585-77a3-265f-1d4e-19f25a90697d@broadcom.com>
-Date:   Wed, 3 Jun 2020 11:47:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 14:49:40 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200603184938euoutp02f0d18e5a5947894218aafa92cf04a48b~VHTn03obG1620316203euoutp02I
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 18:49:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200603184938euoutp02f0d18e5a5947894218aafa92cf04a48b~VHTn03obG1620316203euoutp02I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591210178;
+        bh=YKIUkBl+i3nWmua71Tqp7CpD5PkjVjfibSNwRGPfGsg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LQj5gdjsRROIv657HcLTWwgLyaayR7fmN6EmqCfSxe9WSDRtbrMg//fso2uA/ubIR
+         QJbjipTMcDv0wQOVjFLQ8VZqgz73XvL/DhdO9gbQ6OS57pu5zsSfcwiRqM0cM/GGfL
+         U5CPJidj/oYrSml6nEPVNeBnn1XM37tmJrz1nxAw=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200603184937eucas1p2afab162e8479be72f2e25e827ee5798b~VHTnpgMZU2433624336eucas1p2W;
+        Wed,  3 Jun 2020 18:49:37 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 35.3F.60698.1C0F7DE5; Wed,  3
+        Jun 2020 19:49:37 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200603184937eucas1p20bd459cd754b6ccf28ae318740325e5d~VHTnPCk4E0047300473eucas1p20;
+        Wed,  3 Jun 2020 18:49:37 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200603184937eusmtrp2b93537329eba0628cf79ebfb05c8e63e~VHTnOZsUK0281802818eusmtrp2W;
+        Wed,  3 Jun 2020 18:49:37 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-1e-5ed7f0c137f0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 96.A2.08375.1C0F7DE5; Wed,  3
+        Jun 2020 19:49:37 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200603184936eusmtip222e2e6b2fa1d5ee11d5d1128bf245253~VHTmm3Ta-0069500695eusmtip2-;
+        Wed,  3 Jun 2020 18:49:36 +0000 (GMT)
+Subject: Re: [PATCHv1 00/19] Improve SBS battery support
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <a210e6e0-32db-98e9-f217-cec538407191@samsung.com>
+Date:   Wed, 3 Jun 2020 20:49:37 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <b7d8d603-d9fe-3e18-c754-baf2015acd16@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200602180119.52izs7kd72u3kmr4@earth.universe>
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djPc7oHP1yPM1gzwcRi/pFzrBbNi9ez
+        WWw+18NqcXnXHDaLz71HGC1mnN/HZDH3y1Rmi9a9R9gt7r72c+D02HF3CaPHplWdbB77565h
+        9/i8SS6AJYrLJiU1J7MstUjfLoErY8mqeYwFv3Ur3szzbmBsVe9i5OSQEDCRWNfYzd7FyMUh
+        JLCCUeLA6jPMEM4XRokl096zQjifGSV+LzzHBtNyYkEDE0RiOaPEljmX2UESQgLvGSVW7/cA
+        sYUFLCS+LPoNFhcRMJc4cesmI0gDs8AqJok56/qZQRJsAoYSXW+7wKbyCthJ3F22hwnEZhFQ
+        kfhx6CKYLSoQK9Fz/xUzRI2gxMmZT1i6GDk4OAVsJV5dEAEJMwvISzRvnc0MYYtL3HoyH+w4
+        CYFd7BJ7f61igbjaReLKgy2sELawxKvjW9ghbBmJ/zthGpoZJR6eW8sO4fQwSlxumsEIUWUt
+        cefcLzaQzcwCmhLrd+lDhB0lJh7ezQwSlhDgk7jxVhDiCD6JSdumQ4V5JTrahCCq1SRmHV8H
+        t/bghUvMExiVZiH5bBaSd2YheWcWwt4FjCyrGMVTS4tz01OLjfNSy/WKE3OLS/PS9ZLzczcx
+        AlPR6X/Hv+5g3Pcn6RCjAAejEg8vQ931OCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXH
+        F5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnVwMhjIV+Y/V4xSvfFmRsnijr2
+        /pKz73q6l39O1uTCe6kN678xLppXmuS/YqVNYH9NpvfJBa7KP749LAwOsE6ZcUU8iDe88aOI
+        xqUHdkwy8+a0S03WupPSriP+Lf3BTf48Vy6nmy8r+qS0ni6S1vZQXu6tmalxZ0drdOTxzJk5
+        6zOeV/7QMbAsUmIpzkg01GIuKk4EAOOgsaFBAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xe7oHP1yPM7h9SMJi/pFzrBbNi9ez
+        WWw+18NqcXnXHDaLz71HGC1mnN/HZDH3y1Rmi9a9R9gt7r72c+D02HF3CaPHplWdbB77565h
+        9/i8SS6AJUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjf
+        LkEvY8mqeYwFv3Ur3szzbmBsVe9i5OSQEDCROLGggamLkYtDSGApo0TH3bvMEAkZiZPTGlgh
+        bGGJP9e62CCK3jJK/L72mR0kISxgIfFl0W8wW0TAXOLErZuMIEXMAquYJP4fW8EC0fGSSWJT
+        13qwsWwChhJdb0FGcXLwCthJ3F22hwnEZhFQkfhx6CKYLSoQK9G9+Ac7RI2gxMmZT4AGcXBw
+        CthKvLogAhJmFjCTmLf5ITOELS/RvHU2lC0ucevJfKYJjEKzkHTPQtIyC0nLLCQtCxhZVjGK
+        pJYW56bnFhvqFSfmFpfmpesl5+duYgRG37ZjPzfvYLy0MfgQowAHoxIPL0Pd9Tgh1sSy4src
+        Q4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2I0BfptIrOUaHI+MDHklcQbmhqaW1gamhub
+        G5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpgbLy6beIMOYeImM9Xhf8uEiwQy3g/p3bX
+        oifr97vn78h6wrDt1Le9mptcl/WG3MvNW3P50wqOrrYj3npzCqS/hd1u2iKQdmW6XPiiPW2C
+        F+I4Tv7in7T0otCh+u1KvBmux9eJpe5qDOG6p6MxozXF58zph1fuBBxwkLhvuGBuSlmcs2y0
+        a+sBHSWW4oxEQy3mouJEACqcDyvUAgAA
+X-CMS-MailID: 20200603184937eucas1p20bd459cd754b6ccf28ae318740325e5d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200601104027eucas1p2b076ee860520d709e8178c41550653f7
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+        <CGME20200601104027eucas1p2b076ee860520d709e8178c41550653f7@eucas1p2.samsung.com>
+        <15933a91-dd89-1f94-c2f2-79be4395f4c1@samsung.com>
+        <20200601170528.r5w3aeijny3v5yx3@earth.universe>
+        <b3fd35de-1dd6-1ddc-7e57-2d9ab2860e81@samsung.com>
+        <20200602180119.52izs7kd72u3kmr4@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
+Hi Sebastian,
 
-Would be great to get this patch series upstreamed?
-
-On 2019-12-25 10:49 a.m., Bhupesh Sharma wrote:
-> Hi James,
->
-> On 12/12/2019 04:02 PM, James Morse wrote:
->> Hi Bhupesh,
->
-> I am sorry this review mail skipped my attention due to holidays and 
-> focus on other urgent issues.
->
->> On 29/11/2019 19:59, Bhupesh Sharma wrote:
->>> Add documentation for TCR_EL1.T1SZ variable being added to
->>> vmcoreinfo.
+On 02.06.2020 20:01, Sebastian Reichel wrote:
+> On Tue, Jun 02, 2020 at 09:17:09AM +0200, Marek Szyprowski wrote:
+>> On 01.06.2020 19:05, Sebastian Reichel wrote:
+>>> On Mon, Jun 01, 2020 at 12:40:27PM +0200, Marek Szyprowski wrote:
+>>>> On 13.05.2020 20:55, Sebastian Reichel wrote:
+>>>>> This patchset improves support for SBS compliant batteries. Due to
+>>>>> the changes, the battery now exposes 32 power supply properties and
+>>>>> (un)plugging it generates a backtrace containing the following message
+>>>>> without the first patch in this series:
+>>>>>
+>>>>> ---------------------------
+>>>>> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0x104
+>>>>> add_uevent_var: too many keys
+>>>>> ---------------------------
+>>>>>
+>>>>> For references this is what an SBS battery status looks like after
+>>>>> the patch series has been applied:
+>>>>>
+>>>>> cat /sys/class/power_supply/sbs-0-000b/uevent
+>>>>> POWER_SUPPLY_NAME=sbs-0-000b
+>>>>> POWER_SUPPLY_TYPE=Battery
+>>>>> POWER_SUPPLY_STATUS=Discharging
+>>>>> POWER_SUPPLY_CAPACITY_LEVEL=Normal
+>>>>> POWER_SUPPLY_HEALTH=Good
+>>>>> POWER_SUPPLY_PRESENT=1
+>>>>> POWER_SUPPLY_TECHNOLOGY=Li-ion
+>>>>> POWER_SUPPLY_CYCLE_COUNT=12
+>>>>> POWER_SUPPLY_VOLTAGE_NOW=11441000
+>>>>> POWER_SUPPLY_CURRENT_NOW=-26000
+>>>>> POWER_SUPPLY_CURRENT_AVG=-24000
+>>>>> POWER_SUPPLY_CAPACITY=76
+>>>>> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=1
+>>>>> POWER_SUPPLY_TEMP=198
+>>>>> POWER_SUPPLY_TIME_TO_EMPTY_AVG=438600
+>>>>> POWER_SUPPLY_TIME_TO_FULL_AVG=3932100
+>>>>> POWER_SUPPLY_SERIAL_NUMBER=0000
+>>>>> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=10800000
+>>>>> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=10800000
+>>>>> POWER_SUPPLY_ENERGY_NOW=31090000
+>>>>> POWER_SUPPLY_ENERGY_FULL=42450000
+>>>>> POWER_SUPPLY_ENERGY_FULL_DESIGN=41040000
+>>>>> POWER_SUPPLY_CHARGE_NOW=2924000
+>>>>> POWER_SUPPLY_CHARGE_FULL=3898000
+>>>>> POWER_SUPPLY_CHARGE_FULL_DESIGN=3800000
+>>>>> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3000000
+>>>>> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=12300000
+>>>>> POWER_SUPPLY_MANUFACTURE_YEAR=2017
+>>>>> POWER_SUPPLY_MANUFACTURE_MONTH=7
+>>>>> POWER_SUPPLY_MANUFACTURE_DAY=3
+>>>>> POWER_SUPPLY_MANUFACTURER=UR18650A
+>>>>> POWER_SUPPLY_MODEL_NAME=GEHC
+>>>> This patch landed in linux-next dated 20200529. Sadly it causes a
+>>>> regression on Samsung Exynos-based Chromebooks (Exynos5250 Snow,
+>>>> Exynos5420 Peach-Pi and Exynos5800 Peach-Pit). System boots to
+>>>> userspace, but then, when udev populates /dev, booting hangs:
+>>>>
+>>>> [    4.435167] VFS: Mounted root (ext4 filesystem) readonly on device
+>>>> 179:51.
+>>>> [    4.457477] devtmpfs: mounted
+>>>> [    4.460235] Freeing unused kernel memory: 1024K
+>>>> [    4.464022] Run /sbin/init as init process
+>>>> INIT: version 2.88 booting
+>>>> [info] Using makefile-style concurrent boot in runlevel S.
+>>>> [    5.102096] random: crng init done
+>>>> [....] Starting the hotplug events dispatcher: systemd-udevdstarting
+>>>> version 236
+>>>> [ ok .
+>>>> [....] Synthesizing the initial hotplug events...[ ok done.
+>>>> [....] Waiting for /dev to be fully populated...[   34.409914]
+>>>> TPS65090_RAILSDCDC1: disabling
+>>>> [   34.412977] TPS65090_RAILSDCDC2: disabling
+>>>> [   34.417021] TPS65090_RAILSDCDC3: disabling
+>>>> [   34.423848] TPS65090_RAILSLDO1: disabling
+>>>> [   34.429068] TPS65090_RAILSLDO2: disabling
+>>> :(
 >>>
->>> It indicates the size offset of the memory region addressed by 
->>> TTBR1_EL1
->>
->>> and hence can be used for determining the vabits_actual value.
->>
->> used for determining random-internal-kernel-variable, that might not 
->> exist tomorrow.
->>
->> Could you describe how this is useful/necessary if a debugger wants 
->> to walk the page
->> tables from the core file? I think this is a better argument.
->>
->> Wouldn't the documentation be better as part of the patch that adds 
->> the export?
->> (... unless these have to go via different trees? ..)
->
-> Ok, will fix the same in v6 version.
->
->>> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst 
->>> b/Documentation/admin-guide/kdump/vmcoreinfo.rst
->>> index 447b64314f56..f9349f9d3345 100644
->>> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
->>> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
->>> @@ -398,6 +398,12 @@ KERNELOFFSET
->>>   The kernel randomization offset. Used to compute the page offset. If
->>>   KASLR is disabled, this value is zero.
->>>   +TCR_EL1.T1SZ
->>> +------------
->>> +
->>> +Indicates the size offset of the memory region addressed by TTBR1_EL1
->>
->>> +and hence can be used for determining the vabits_actual value.
->>
->> 'vabits_actual' may not exist when the next person comes to read this 
->> documentation (its
->> going to rot really quickly).
->>
->> I think the first half of this text is enough to say what this is 
->> for. You should include
->> words to the effect that its the hardware value that goes with 
->> swapper_pg_dir. You may
->> want to point readers to the arm-arm for more details on what the 
->> value means.
->
-> Ok, got it. Fixed this in v6, which should be on its way shortly.
-I can't seem to find v6?
->
-> Thanks,
-> Bhupesh
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+>>> log does not look useful either.
+>>>
+>>>> Bisect between v5.7-rc1 and next-20200529 pointed me to the first bad
+>>>> commit: [c4b12a2f3f3de670f6be5e96092a2cab0b877f1a] power: supply:
+>>>> sbs-battery: simplify read_read_string_data.
+>>> ok. I tested this on an to-be-upstreamed i.MX6 based system
+>>> and arch/arm/boot/dts/imx53-ppd.dts. I think the difference
+>>> is, that i2c-exynos5 does not expose I2C_FUNC_SMBUS_READ_BLOCK_DATA.
+>>> I hoped all systems using SBS battery support this, but now
+>>> I see I2C_FUNC_SMBUS_EMUL only supports writing block data.
+>>> Looks like I need to add another patch implementing that
+>>> using the old code with added PEC support.
+>>>
+>>> In any case that should only return -ENODEV for the property
+>>> (and uevent), but not break boot. So something fishy is going
+>>> on.
+>>>
+>>>> However reverting it in linux-next doesn't fix the issue, so the
+>>>> next commits are also relevant to this issue.
+>>> The next patch, which adds PEC support depends on the simplification
+>>> of sbs_read_string_data. The old, open coded variant will result in
+>>> PEC failure for string properties (which should not stop boot either
+>>> of course). Can you try reverting both?
+>> Indeed, reverting both (and fixing the conflict) restores proper boot.
+> Ok, I pushed out a revert of those two patches. They should land in
+> tomorrows linux-next release. Please test it.
+
+
+Today's linux-next (20200603) boots fine on the Samsung Exynos-based 
+Chromebooks. Let me know how if you need any help debugging the issues 
+to resurrect those patches.
+
+
+>>> If that helps I will revert those two instead of dropping the whole
+>>> series for this merge window.
+>>>
+>>>> Let me know how can I help debugging it.
+>>> I suspect, that this is userspace endlessly retrying reading the
+>>> battery uevent when an error is returned. Could you check this?
+>>> Should be easy to see by adding some printfs.
+>> I've added some debug messages in sbs_get_property() and it read the
+>> same properties many times. However I've noticed that if I wait long
+>> enough booting finally continues.
+> So basically userspace slows down itself massively by trying to
+> re-read uevent over and over when an error occurs. Does not seem
+> like a sensible thing to do. I will have a look at this when I find
+> some time.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
