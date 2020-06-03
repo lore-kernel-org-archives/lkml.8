@@ -2,128 +2,68 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69021C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530CF207DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D700207F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HrsjkFjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbgFCF0Z (ORCPT
+        id S1725955AbgFCF0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:26:25 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59932 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgFCF0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:26:12 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A148200D77;
-        Wed,  3 Jun 2020 07:26:11 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 98B55200D29;
-        Wed,  3 Jun 2020 07:26:07 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 00434402E8;
-        Wed,  3 Jun 2020 13:26:02 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     jassisinghbrar@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/3] mailbox: imx: Add context save/restore for suspend/resume
-Date:   Wed,  3 Jun 2020 13:15:42 +0800
-Message-Id: <1591161344-12885-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591161344-12885-1-git-send-email-Anson.Huang@nxp.com>
-References: <1591161344-12885-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 3 Jun 2020 01:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgFCF0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 01:26:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C544C05BD43;
+        Tue,  2 Jun 2020 22:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=B9FZXvCVa4OcevC1BEI/2OAvMbOb5AtVuCYULJ2X2Z4=; b=HrsjkFjE34DIX8ilChH6LzX4q5
+        1cFzLEE4zdcDZtVK4jdUnSk+WPpHG9ggL2mJhsgob8SUnwEkV+FIbx5ZrUeB55xHQk4+LHrQv6T+j
+        qR5YYxJGrxqqRnhnysgmeZU+vAC5OsPyk8HFaRQ8jPsCKGJLRAjSSsk9L59OhOCB8aK5+cz2pYbWB
+        y9ox2eqbd3/dsbJ72gidswzwgWBsVIqsJUyy1km1tBKGv5SCo/XRPqz2KWm7FEN4e1o2U6lgthItJ
+        +7Sc3nhY5ZzXPGwsiRziDBV5LepLvEoGAEhhNbsztPl26udsWo0NHdzKGopYs79CJSF2GLun3MjxX
+        q20wr0ng==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgLvD-0005QD-N3; Wed, 03 Jun 2020 05:26:39 +0000
+Date:   Tue, 2 Jun 2020 22:26:39 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/15] mmc: sdhci: use PCI_IRQ_MSI_TYPES where appropriate
+Message-ID: <20200603052639.GB15520@infradead.org>
+References: <20200602092059.32146-1-piotr.stankiewicz@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602092059.32146-1-piotr.stankiewicz@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dong Aisheng <aisheng.dong@nxp.com>
+On Tue, Jun 02, 2020 at 11:20:59AM +0200, Piotr Stankiewicz wrote:
+> Seeing as there is shorthand available to use when asking for any type
+> of interrupt, or any type of message signalled interrupt, leverage it.
+> 
+> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-For "mem" mode suspend on i.MX8 SoCs, MU settings could be
-lost because its power is off, so save/restore is needed
-for MU settings during suspend/resume. However, the restore
-can ONLY be done when MU settings are actually lost, for the
-scenario of settings NOT lost in "freeze" mode suspend, since
-there could be still IPC going on multiple CPUs, restoring the
-MU settings could overwrite the TIE by mistake and cause system
-freeze, so need to make sure ONLY restore the MU settings when
-it is powered off, Anson fixes this by checking whether restore
-is actually needed when resume.
-
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/mailbox/imx-mailbox.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index bd69ecf..da90a8e 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -67,6 +67,8 @@ struct imx_mu_priv {
- 	struct clk		*clk;
- 	int			irq;
- 
-+	u32 xcr;
-+
- 	bool			side_b;
- };
- 
-@@ -589,12 +591,45 @@ static const struct of_device_id imx_mu_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
- 
-+static int imx_mu_suspend_noirq(struct device *dev)
-+{
-+	struct imx_mu_priv *priv = dev_get_drvdata(dev);
-+
-+	priv->xcr = imx_mu_read(priv, priv->dcfg->xCR);
-+
-+	return 0;
-+}
-+
-+static int imx_mu_resume_noirq(struct device *dev)
-+{
-+	struct imx_mu_priv *priv = dev_get_drvdata(dev);
-+
-+	/*
-+	 * ONLY restore MU when context lost, the TIE could
-+	 * be set during noirq resume as there is MU data
-+	 * communication going on, and restore the saved
-+	 * value will overwrite the TIE and cause MU data
-+	 * send failed, may lead to system freeze. This issue
-+	 * is observed by testing freeze mode suspend.
-+	 */
-+	if (!imx_mu_read(priv, priv->dcfg->xCR))
-+		imx_mu_write(priv, priv->xcr, priv->dcfg->xCR);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops imx_mu_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_mu_suspend_noirq,
-+				      imx_mu_resume_noirq)
-+};
-+
- static struct platform_driver imx_mu_driver = {
- 	.probe		= imx_mu_probe,
- 	.remove		= imx_mu_remove,
- 	.driver = {
- 		.name	= "imx_mu",
- 		.of_match_table = imx_mu_dt_ids,
-+		.pm = &imx_mu_pm_ops,
- 	},
- };
- module_platform_driver(imx_mu_driver);
--- 
-2.7.4
-
+So this crap now shows up piecemail on various lists?  Indepent of that
+it seems like a bad idea to start with, bombing people with patches that
+apparently depend on something you did first but they are not Cced on
+is just an amazingly bad idea.  Don't do that ever.
