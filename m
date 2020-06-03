@@ -2,94 +2,146 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE69C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C464F2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bbY2Dpz1"
+	by mail.kernel.org (Postfix) with ESMTP id 311D92067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgFCKKP (ORCPT
+        id S1726886AbgFCKK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFCKKO (ORCPT
+        Wed, 3 Jun 2020 06:10:26 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34841 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgFCKK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:10:14 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039BBC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 03:10:14 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id z64so1316293pfb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 03:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NMA8UswHoR10ZkKb/xOBjfFah7opSPUF3++8T+IfxFs=;
-        b=bbY2Dpz1nYTTpJmtv4MB4qZePaCtWdI2q0cWL16Ks+j0wZKR8/5Ks5hu4TPVUai1sr
-         RYBRPO4yT9Wwkur4+WZRMT1CZ3rIvVrNEiparBSnRiDOx4HgDLldQ26qvGo2mgR+70MW
-         +qD6UM9LZC1GqAPuvv3Om2jH99di6UMYJtvICVhDyQ4cVkXchRRpGdZhQT+FMPbg0Vif
-         oDnFjOudHWJwuHzUq18DbSfR/TV442MJ2N/xa6Ch/Uj4O27wgsOLZVlTXb2zyu5hALVQ
-         c7WL7a9RDlgB9qnUGHusQ+Ygqo9gzRZVMX/faO5lc1xArPgKQdwoA24EsDHFVvKxrTDp
-         QyyQ==
+        Wed, 3 Jun 2020 06:10:26 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 82so956256lfh.2;
+        Wed, 03 Jun 2020 03:10:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NMA8UswHoR10ZkKb/xOBjfFah7opSPUF3++8T+IfxFs=;
-        b=OrazwTabj3Y88IygtC+FaCTK1WL+dV2slDyc4euOh34HYSIjo+TuJw83AX5HHVCZcQ
-         nStlomE2sBK7p+FxfD/C8IdQ8QUClxs3J6Dw50pRq9YLK9iSfyE4ufHT/o6htBuk19UX
-         tHFKjwcx1hJxmdnMhmgrIz8ELfYuwjT9S15+si/rACIFeYNDckJecm27vbYDdnW5bVKH
-         QIzb5BATnitC12zIexhiLDqttpILBQMXHjERzKWkCZYtWMEt3WfYLmFEYZp9jhlNfjCT
-         rblaMw+ZB8RHwp0kmsl5hk/yqSDCL7YCBJ6isfy1qEZDgxCLNAtIs5kl72zTIRUX6cfo
-         hrxA==
-X-Gm-Message-State: AOAM530XfS149jKbu4QFkZEVrBtxX+LTCq+/gq7wvVuUyH7URD0VW86+
-        ZauaDxoUeuL1PhPYxftcmUYR1A==
-X-Google-Smtp-Source: ABdhPJxkZFOpVSUQKBvnC0ohU+GJ++eICExvZmctfWCbjff/g0JyLwrXZZFZxU+HAISkO3HyZGHNww==
-X-Received: by 2002:aa7:96d7:: with SMTP id h23mr14182341pfq.320.1591179013326;
-        Wed, 03 Jun 2020 03:10:13 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id w6sm1947722pjy.15.2020.06.03.03.10.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jun 2020 03:10:12 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 15:40:10 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
-        guohanjun@huawei.com, ionela.voinescu@arm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-Message-ID: <20200603101010.alijrfmte2c6xv5c@vireshk-i7>
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
- <20200603075200.hbyofgcyiwocl565@vireshk-i7>
- <20200603100727.GB7259@bogus>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VJQBChCpqVmScxIVsRE/tzoYaBw5y+ElxuBAFpFZSx4=;
+        b=gOeRpZGYaA4iy2YeApF4AKUMhmEYQCHIUdxJVaBNm4vI04v8b9l/r4wQOFJNRLI+eT
+         meEivp30PWxYMup3xoELC3FEZX2MLQu7htyNtQnLowM5Z05rz1Sso0YYXrU6Z2nDAq5i
+         PdtE/JljFojeMxX+G+JzHdsi2zH8HSciRE9vFwydVjEg3VRovPwLr6uarsMhAxSptFfB
+         vOIycKfYcwA9R1h/LHKnYp8IPsJ5qLA8kG7mqv2LqToiWIXknVac45JMXmci8hSdKNg/
+         K9v/sJ1ULASmJRuXqt6prqk60ZhcIGKDaLNnnpFFAk/NyyCLGTlOyT2OqXkblaaw0S23
+         LDxA==
+X-Gm-Message-State: AOAM530vPHsFiGnkz3CZrbmni8KQfOraN8DoY7s599bWgvPKcyKyDkyj
+        k8wXk7Z/wspq4inF9/6hzs8=
+X-Google-Smtp-Source: ABdhPJzbHpX6SdFHdCuPksS1gYu3+YX8RbNf4MpiT/293QxC9qClinHQc5NeGx+pAE+5VR6t9NaeGQ==
+X-Received: by 2002:ac2:5604:: with SMTP id v4mr2125245lfd.124.1591179022502;
+        Wed, 03 Jun 2020 03:10:22 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id c4sm346896lja.56.2020.06.03.03.10.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 03:10:21 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     pbonzini@redhat.com
+Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: Use vmemdup_user()
+Date:   Wed,  3 Jun 2020 13:11:31 +0300
+Message-Id: <20200603101131.2107303-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <0c00d96c46d34d69f5f459baebf3c89a507730fc.camel@perches.com>
+References: <0c00d96c46d34d69f5f459baebf3c89a507730fc.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603100727.GB7259@bogus>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-06-20, 11:07, Sudeep Holla wrote:
-> But I have another question. If we can detect that CPPC on some platforms
-> rely on CPU registers(I assume FFH registers here and not system/io/...
-> type of GAS registers), can we set dvfs_on_any_cpu(can't recall exact
-> flag name) to false if not already done to prevent such issues. Or I am
-> talking non-sense as it may be applicable only for _set operation and
+Replace opencoded alloc and copy with vmemdup_user().
 
-          Yes, non-sense :)
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+Looks like these are the only places in KVM that are suitable for
+vmemdup_user().
 
-> not _get.
+ arch/x86/kvm/cpuid.c | 17 +++++++----------
+ virt/kvm/kvm_main.c  | 19 ++++++++-----------
+ 2 files changed, 15 insertions(+), 21 deletions(-)
 
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 901cd1fdecd9..27438a2bdb62 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -182,17 +182,14 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+ 	r = -E2BIG;
+ 	if (cpuid->nent > KVM_MAX_CPUID_ENTRIES)
+ 		goto out;
+-	r = -ENOMEM;
+ 	if (cpuid->nent) {
+-		cpuid_entries =
+-			vmalloc(array_size(sizeof(struct kvm_cpuid_entry),
+-					   cpuid->nent));
+-		if (!cpuid_entries)
+-			goto out;
+-		r = -EFAULT;
+-		if (copy_from_user(cpuid_entries, entries,
+-				   cpuid->nent * sizeof(struct kvm_cpuid_entry)))
++		cpuid_entries = vmemdup_user(entries,
++					     array_size(sizeof(struct kvm_cpuid_entry),
++							cpuid->nent));
++		if (IS_ERR(cpuid_entries)) {
++			r = PTR_ERR(cpuid_entries);
+ 			goto out;
++		}
+ 	}
+ 	for (i = 0; i < cpuid->nent; i++) {
+ 		vcpu->arch.cpuid_entries[i].function = cpuid_entries[i].function;
+@@ -212,8 +209,8 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+ 	kvm_x86_ops.cpuid_update(vcpu);
+ 	r = kvm_update_cpuid(vcpu);
+ 
++	kvfree(cpuid_entries);
+ out:
+-	vfree(cpuid_entries);
+ 	return r;
+ }
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 731c1e517716..46a3743e95ff 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3722,21 +3722,18 @@ static long kvm_vm_ioctl(struct file *filp,
+ 		if (routing.flags)
+ 			goto out;
+ 		if (routing.nr) {
+-			r = -ENOMEM;
+-			entries = vmalloc(array_size(sizeof(*entries),
+-						     routing.nr));
+-			if (!entries)
+-				goto out;
+-			r = -EFAULT;
+ 			urouting = argp;
+-			if (copy_from_user(entries, urouting->entries,
+-					   routing.nr * sizeof(*entries)))
+-				goto out_free_irq_routing;
++			entries = vmemdup_user(urouting->entries,
++					       array_size(sizeof(*entries),
++							  routing.nr));
++			if (IS_ERR(entries)) {
++				r = PTR_ERR(entries);
++				goto out;
++			}
+ 		}
+ 		r = kvm_set_irq_routing(kvm, entries, routing.nr,
+ 					routing.flags);
+-out_free_irq_routing:
+-		vfree(entries);
++		kvfree(entries);
+ 		break;
+ 	}
+ #endif /* CONFIG_HAVE_KVM_IRQ_ROUTING */
 -- 
-viresh
+2.26.2
+
