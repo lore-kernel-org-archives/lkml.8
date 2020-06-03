@@ -2,202 +2,100 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44742C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A172C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 298ED20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3588820738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rajZp/2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgFCOGY (ORCPT
+        id S1726068AbgFCOGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:06:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33584 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725833AbgFCOGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:06:24 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id ADD0EDE030222471F283;
-        Wed,  3 Jun 2020 22:06:19 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.10) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 22:06:09 +0800
-Subject: Re: Question: livepatch failed for new fork() task stack unreliable
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
-        <cj.chengjian@huawei.com>, <mingo@redhat.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>,
-        <mbenes@suse.cz>, <devel@etsukata.com>, <viro@zeniv.linux.org.uk>,
-        <esyr@redhat.com>
-References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
- <20200529174433.wpkknhypx2bmjika@treble>
- <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
- <20200601180538.o5agg5trbdssqken@treble>
- <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
- <20200602131450.oydrydelpdaval4h@treble>
-From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Message-ID: <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
-Date:   Wed, 3 Jun 2020 22:06:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 3 Jun 2020 10:06:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCOGh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 10:06:37 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A150FC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 07:06:36 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id c17so2860371lji.11
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qCMwwfFVZYEgkxVHE4dr/ePj/4wKMJeH+gSl8PNTdQ8=;
+        b=rajZp/2FMkFBLZKKhWrLhHNA0z3IMa4+LHyq+6HtrwYdZa7bMZs89B0ydUprvhVTMW
+         KEKQshm/OMlJQdZQsaMjBesgJ8nfpLso6BaChvnWRxA/SLNbIVRw8WOUSXqqNgNN6fKl
+         gwcT3gV9vLPw90c+ndl5XydNRYAJuU2PCJfTUmAj9lgqfMscLp0tU3sEQbGkemQgcN2u
+         meK6uON74NY4cB3xIBWzWD8r7iS8hBriNISR0XB6/1u78kfp6OlgqbZlg8TDY0txReZg
+         CmZbSl7+DSxgiz9BaTIYrKGJMqFl3vsWV62y3AOk9WZPxb67rqJ5yxZMVx9IGFhAadXZ
+         36yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qCMwwfFVZYEgkxVHE4dr/ePj/4wKMJeH+gSl8PNTdQ8=;
+        b=W7eFM4vEHEy2lGxXpCoqkGZtz2c0wU0OJswYD3i3+jgdRVyieEW3VuUkQQD8n8fpsz
+         kVg/oTlQp68tyB0HWFgFlTaVyxpR8qB/dt/mW0Tj+YRCgCUiBnqQCCNrmc2WJmaPuAme
+         iNPyneuECfoWI4VTQnPd3z22EpN3B5eZPcN6nnxgA4u8Mueoqe/7TTAwDae2o5j+xOpe
+         4a8pxgSrrD74AAgBcZ1LADtZ+T2x/VmKs2w2nLB4eeoMYttpZoUWMWEyxTzOmzV0vo8a
+         zxcWgDL1nP0Ia80gI2UGprNpa3Ge3t/xMYkr3uVI/fVvylIXjcBeapXs+ka/pzbOZ7Jn
+         XgBA==
+X-Gm-Message-State: AOAM53249LUmluM8rUbPacx9z7viYFfm7R40S1pAiGWsaDlNDtkWmHWt
+        lOKd35xSDkuFM4hJHBBovU2k2tQx3en/0/T8vE8=
+X-Google-Smtp-Source: ABdhPJxkNsshI1Wyne7bYH2cEMfBvSBO8Nsf/gU0fZJn/CX4xVlDlCZOi/h129nksJLvuygXdlNRPfsvgpTqAaI02/Q=
+X-Received: by 2002:a05:651c:11c7:: with SMTP id z7mr2275345ljo.29.1591193195076;
+ Wed, 03 Jun 2020 07:06:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200602131450.oydrydelpdaval4h@treble>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.10]
-X-CFilter-Loop: Reflected
+References: <20200602184409.22142-1-elver@google.com> <20200602184409.22142-2-elver@google.com>
+ <CAKwvOdkXVcZa5UwnoZqX7_FytabYn2ZRi=zQy_DyzduVmyQNMA@mail.gmail.com>
+In-Reply-To: <CAKwvOdkXVcZa5UwnoZqX7_FytabYn2ZRi=zQy_DyzduVmyQNMA@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 3 Jun 2020 16:06:23 +0200
+Message-ID: <CANiq72=iNHeLc3aqt0NrykucHsTPwmBfnsyaay3VYnEhV9T5ag@mail.gmail.com>
+Subject: Re: [PATCH -tip 2/2] compiler_types.h: Add __no_sanitize_{address,undefined}
+ to noinstr
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-在 2020/6/2 21:14, Josh Poimboeuf 写道:
-> On Tue, Jun 02, 2020 at 09:22:30AM +0800, Wangshaobo (bobo) wrote:
->> so i think this question is related to ORC unwinder, could i ask if you have
->> strategy or plan to avoid this problem ?
-> I suspect something like this would fix it (untested):
+On Tue, Jun 2, 2020 at 8:49 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
 >
-> diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-> index 6ad43fc44556..8cf95ded1410 100644
-> --- a/arch/x86/kernel/stacktrace.c
-> +++ b/arch/x86/kernel/stacktrace.c
-> @@ -50,7 +50,7 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
->   		if (regs) {
->   			/* Success path for user tasks */
->   			if (user_mode(regs))
-> -				return 0;
-> +				break;
->   
->   			/*
->   			 * Kernel mode registers on the stack indicate an
-> @@ -81,10 +81,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
->   	if (unwind_error(&state))
->   		return -EINVAL;
->   
-> -	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
-> -	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
-> -		return -EINVAL;
-> -
->   	return 0;
->   }
->   
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index 7f969b2d240f..d7396431261a 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
->   		state->sp = sp;
->   		state->regs = NULL;
->   		state->prev_regs = NULL;
-> -		state->signal = false;
-> +		state->signal = ((void *)state->ip == ret_from_fork);
->   		break;
->   
->   	case ORC_TYPE_REGS:
+> Currently most of our compiler attribute detection is done in
+> include/linux/compiler_attributes.h; I think this should be handled
+> there. +Miguel Ojeda
 
-what a awesome job, thanks a lot, Josh
+Thanks a lot for the CC Nick! Marco is right, since this attribute is
+different per-compiler, we don't want them in `compiler_attributes.h`
+(for the moment -- we'll see if they end up with the same
+syntax/behavior in the future).
 
-Today I test your fix, but arch_stack_walk_reliable() still return 
-failed sometimes, I
+Acked-by:  Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-found one of three scenarios mentioned failed:
-
-
-1. user task (just fork) but not been scheduled
-
-     test FAILED
-
-     it is because unwind_next_frame() get the first frame, this time 
-state->signal is false, and then return
-
-     failed in the same place for ret_from_fork has not executed at all.
-
-
-2. user task (just fork) start excuting ret_from_fork() till 
-schedule_tail but not UNWIND_HINT_REGS
-
-     test condition :loop fork() in current  system
-
-     result : SUCCESS,
-
-     it looks like this modification works for my perspective :
-
-	-	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
-	-	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
-	-		return -EINVAL;
-   but is this possible to miss one invalid judgement condition ? (1)
-
-3. call_usermodehelper_exec_async
-
-     test condition :loop call call_usermodehelper() in a module selfmade.
-
-     result : SUCCESS,
-
-    it looks state->signal==true works when unwind_next_frame() gets the 
-end ret_from_fork() frame,
-
-    but i don't know how does it work, i am confused by this sentences, 
-how does the comment means sibling calls and
-
-     calls to noreturn functions? (2)
-
-             /*
-              * Find the orc_entry associated with the text address.
-              *
-              * Decrement call return addresses by one so they work for 
-sibling
-              * calls and calls to noreturn functions.
-              */
-             orc = orc_find(state->signal ? state->ip : state->ip - 1);
-             if (!orc) {
-
-
-So i slightly modify your code, i move  state->signal = ((void 
-*)state->ip == ret_from_fork) to unwind_start()
-
-and render unwind_next_frame() remain the same as before:
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index e9cc182aa97e..ecce5051e8fd 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -620,6 +620,7 @@ void __unwind_start(struct unwind_state *state, 
-struct task_struct *task,
-                 state->sp = task->thread.sp;
-                 state->bp = READ_ONCE_NOCHECK(frame->bp);
-                 state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+              state->signal = ((void *)state->ip == ret_from_fork);
-         }
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2d240f..d7396431261a 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
-  		state->sp = sp;
-  		state->regs = NULL;
-  		state->prev_regs = NULL;
--		state->signal = ((void *)state->ip == ret_from_fork);
-+		state->signal = false;
-  		break;
-
-
-After modification all the three scenarios are captured and no longer 
-return failed,  but i don't know
-
-how does it affect the scenarios 3, because current frame->ret_addr(the 
-first frame) is not ret_from_fork,
-
-it should return failed as scenarios1, but it didn't , i really want to 
-know the reason. (3)
-
-
-thanks again
-
-Wang ShaoBo
-
-
+Cheers,
+Miguel
