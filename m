@@ -2,139 +2,141 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEA9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB78C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0A62067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nhVTSB5y"
+	by mail.kernel.org (Postfix) with ESMTP id CD5B32067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgFCKH3 (ORCPT
+        id S1726819AbgFCKHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:07:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:43406 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725854AbgFCKH3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:07:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591178848; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=uyzsI0JW6ZqWgRjfRioirvwF2C7h2JnRAHdFXXPljts=;
- b=nhVTSB5ybpO8RoJvH6Vwv2fEnQSzpCs+jXlDfuDB4IJzdTs87+7MTqls/dnq6rnv0vnNcFwo
- Z5HT6r1LUmMh2tBGS3S2uM9TFE9iQ2xm6kiy0qhrc7X/UZX5ovnugnCWYcUVdX9oEKq2VJeh
- gzg36FXRcqVXnVEo8sj5jUeIBSg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5ed7764f09c3530d1278f8ad (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 10:07:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AD5D4C4339C; Wed,  3 Jun 2020 10:07:11 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: govinds)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB560C433CA;
-        Wed,  3 Jun 2020 10:07:10 +0000 (UTC)
+        Wed, 3 Jun 2020 06:07:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:59482 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbgFCKHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:07:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5158F31B;
+        Wed,  3 Jun 2020 03:07:32 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D2653F305;
+        Wed,  3 Jun 2020 03:07:29 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 11:07:27 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        guohanjun@huawei.com, ionela.voinescu@arm.com,
+        Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+Message-ID: <20200603100727.GB7259@bogus>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+ <20200603075200.hbyofgcyiwocl565@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 15:37:10 +0530
-From:   govinds@codeaurora.org
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rakesh Pillai <pillair@qti.qualcomm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        ath10k <ath10k@lists.infradead.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH] wireless: ath10k: Return early in
- ath10k_qmi_event_server_exit() to avoid hard crash on reboot
-In-Reply-To: <20200603002715.GA5349@Mani-XPS-13-9360>
-References: <20200602052533.15048-1-john.stultz@linaro.org>
- <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com>
- <CALAqxLVA1ZQjwEdbX5KGbSyLnMBAzm9PoN_Ta_Z7rBf4w3GOvQ@mail.gmail.com>
- <CA+ASDXPddgOvEX___unx7N2YsQctsZN+1vkwPbi8Ab_zfwFfzw@mail.gmail.com>
- <20200603002715.GA5349@Mani-XPS-13-9360>
-Message-ID: <4e0642b9882c41f4c10963b265bf6d9f@codeaurora.org>
-X-Sender: govinds@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603075200.hbyofgcyiwocl565@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani,
-
-On 2020-06-03 05:57, Manivannan Sadhasivam wrote:
-> On Tue, Jun 02, 2020 at 01:04:26PM -0700, Brian Norris wrote:
->> On Tue, Jun 2, 2020 at 12:40 PM John Stultz <john.stultz@linaro.org> 
->> wrote:
->> > On Tue, Jun 2, 2020 at 12:16 PM Brian Norris <briannorris@chromium.org> wrote:
->> > > On Mon, Jun 1, 2020 at 10:25 PM John Stultz <john.stultz@linaro.org> wrote:
->> > > >
->> > > > Ever since 5.7-rc1, if we call
->> > > > ath10k_qmi_remove_msa_permission(), the db845c hard crashes on
->> > > > reboot, resulting in the device getting stuck in the usb crash
->> > > > debug mode and not coming back up wihthout a hard power off.
->> > > >
->> > > > This hack avoids the issue by returning early in
->> > > > ath10k_qmi_event_server_exit().
->> > > >
->> > > > A better solution is very much desired!
->> > >
->> > > Any chance you can bisect what caused this? There are a lot of
->> > > non-ath10k pieces involved in this stuff.
->> >
->> > Amit had spent some work on chasing it down to the in kernel qrtr-ns
->> > work, and reported it here:
->> >   https://lists.infradead.org/pipermail/ath10k/2020-April/014970.html
->> >
->> > But that discussion seemingly stalled out, so I came up with this hack
->> > to workaround it for us.
->> 
->> If I'm reading it right, then that means we should revert this stuff
->> from v5.7-rc1:
->> 
->> 0c2204a4ad71 net: qrtr: Migrate nameservice to kernel from userspace
->> 
->> At least, until people can resolve the tail end of that thread. New
->> features (ath11k, etc.) are not a reason to break existing features
->> (ath10k/wcn3990).
+On Wed, Jun 03, 2020 at 01:22:00PM +0530, Viresh Kumar wrote:
+> On 02-06-20, 11:34, Xiongfeng Wang wrote:
+> > Hi Viresh,
+> > 
+> > Sorry to disturb you about another problem as follows.
+> > 
+> > CPPC use the increment of Desired Performance counter and Reference Performance
+> > counter to get the CPU frequency and show it in sysfs through
+> > 'cpuinfo_cur_freq'. But ACPI CPPC doesn't specifically define the behavior of
+> > these two counters when the CPU is in idle state, such as stop incrementing when
+> > the CPU is in idle state.
+> > 
+> > ARMv8.4 Extension inctroduced support for the Activity Monitors Unit (AMU). The
+> > processor frequency cycles and constant frequency cycles in AMU can be used as
+> > Delivered Performance counter and Reference Performance counter. These two
+> > counter in AMU does not increase when the PE is in WFI or WFE. So the increment
+> > is zero when the PE is in WFI/WFE. This cause no issue because
+> > 'cppc_get_rate_from_fbctrs()' in cppc_cpufreq driver will check the increment
+> > and return the desired performance if the increment is zero.
+> > 
+> > But when the CPU goes into power down idle state, accessing these two counters
+> > in AMU by memory-mapped address will return zero. Such as CPU1 went into power
+> > down idle state and CPU0 try to get the frequency of CPU1. In this situation,
+> > will display a very big value for 'cpuinfo_cur_freq' in sysfs. Do you have some
+> > advice about this problem ?
+> > 
+> > I was thinking about an idea as follows. We can run 'cppc_cpufreq_get_rate()' on
+> > the CPU to be measured, so that we can make sure the CPU is in C0 state when we
+> > access the two counters. Also we can return the actual frequency rather than
+> > desired performance when the CPU is in WFI/WFE. But this modification will
+> > change the existing logical and I am not sure if this will cause some bad effect.
+> > 
+> > 
+> > diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> > index 257d726..ded3bcc 100644
+> > --- a/drivers/cpufreq/cppc_cpufreq.c
+> > +++ b/drivers/cpufreq/cppc_cpufreq.c
+> > @@ -396,9 +396,10 @@ static int cppc_get_rate_from_fbctrs(struct cppc_cpudata *cpu,
+> >         return cppc_cpufreq_perf_to_khz(cpu, delivered_perf);
+> >  }
+> > 
+> > -static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+> > +static int cppc_cpufreq_get_rate_cpu(void *info)
+> >  {
+> >         struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
+> > + unsigned int cpunum = *(unsigned int *)info;
+> >         struct cppc_cpudata *cpu = all_cpu_data[cpunum];
+> >         int ret;
+> > 
+> > @@ -418,6 +419,22 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+> >         return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
+> >  }
+> > 
+> > +static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+> > +{
+> > + unsigned int ret;
+> > +
+> > + ret = smp_call_on_cpu(cpunum, cppc_cpufreq_get_rate_cpu, &cpunum, true);
+> > +
+> > + /*
+> > +  * convert negative error code to zero, otherwise we will display
+> > +  * an odd value for 'cpuinfo_cur_freq' in sysfs
+> > +  */
+> > + if (ret < 0)
+> > +         ret = 0;
+> > +
+> > + return ret;
+> > +}
+> > +
+> >  static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
+> >  {
+> >         struct cppc_cpudata *cpudata;
 > 
-> I don't agree with this. If you read through the replies to the bug 
-> report,
-> it is clear that NS migration uncovered a corner case or even a bug. So 
-> we
-> should try to fix that indeed.
+> I don't see any other sane solution, even if this brings the CPU back
+> to normal state and waste power. We should be able to reliably provide
+> value to userspace.
 > 
-> Govind: Did you get chance to work on fixing this issue?
-> 
+> Rafael / Sudeep: What you do say ?
 
-I have done basic testing by moving msa map/unmap from qmi service 
-callbacks to init/de-init path.
-I will send patch for review.
-Reason for del_server needs to investigated from rproc side.
+Agreed on returning 0 as it aligns with the semantics followed. We can't
+return the last set/fetched value as it fails to align with the values
+returned when CPU is not idle.
 
-> Thanks,
-> Mani
-> 
->> 
->> Brian
+But I have another question. If we can detect that CPPC on some platforms
+rely on CPU registers(I assume FFH registers here and not system/io/...
+type of GAS registers), can we set dvfs_on_any_cpu(can't recall exact
+flag name) to false if not already done to prevent such issues. Or I am
+talking non-sense as it may be applicable only for _set operation and
+not _get.
 
-Thanks,
-Govind
+-- 
+Regards,
+Sudeep
