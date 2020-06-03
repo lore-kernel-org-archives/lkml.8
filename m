@@ -2,108 +2,108 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 004CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6610AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C7320674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Db0LhHXV"
+	by mail.kernel.org (Postfix) with ESMTP id 432C420674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591204633;
+	bh=veuV2+7Rkf0gWDrvSOVKN4XDxbUP4RC1xCXLM56xwWE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ATrL5e3SSbDXYsNqXwfqhRhPDJbXJAbKeVDmKPKtc/t2GGNp+qCTnKr/2l/AqM6VD
+	 3NezDBWGdZnWXkjwSv3TTkiZ+bDbFgmELqPEdkvw9aZFvyJXVvlYugLENjaF+d1c78
+	 8Ubt/soBAvofIxJQlcVC2L8yHPKXDMQBD+HVWpyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgFCROY (ORCPT
+        id S1726151AbgFCRRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53804 "EHLO
+        Wed, 3 Jun 2020 13:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbgFCROX (ORCPT
+        with ESMTP id S1725956AbgFCRRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:14:23 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73477C08C5C0;
-        Wed,  3 Jun 2020 10:14:23 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d5so3105446ios.9;
-        Wed, 03 Jun 2020 10:14:23 -0700 (PDT)
+        Wed, 3 Jun 2020 13:17:11 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 428B3C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:17:11 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a25so3746603ljp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=L1fN4KADaSCEVr+fi2VR4+YYdyW02dzdqKarwAuE5JM=;
-        b=Db0LhHXVPJ1WDh4jiINB0XFaVbDBzWenltsB/4/hA7fJZ6Hr8v0Xht83c3199T1yxi
-         wj6zyxjnOytfhPMMJoqYDdWPXy13gaAApB9OAijKtHKZiI2X6rX0gFcT05L+2PIc7wEg
-         sAuGgs0Oi2thTotzd7Kz3DVQyVc8wOdDv9YLmxxRVFSbxdfo00cEj51yRXyPEQgVNuyt
-         iyg2XZsVkEYuK83zco2OpPkPFOjgxshuaW61s4O6ttmYKWrMzjenifBmbDHToXgSUmod
-         ZOa0ddWhfLP1JZosxFIKMvhxA97FHlf/ANjJkOFh5wPRfryMd9a0NPvJSIsP4dsX+tUB
-         NhRA==
+        bh=aHub1uTy4UEBqMa85bH4hyQo4rSo+RVKxNnJQlGH7V4=;
+        b=XDY9jgsakz9p4vzjxoPfFB+n0zW+QahVTh0VzwRCUGtogxEwUvxNY4pMed/ZIldMfj
+         umKugveGuh+jtvBlqfBOdxCNcs1Kn1aRu/2DZ3dNniDcMBniZGagQQco3K4c81uRmQGN
+         A+XUMWe6pLQ33u12ZEnrpp9dn3mCTlzS+P45E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=L1fN4KADaSCEVr+fi2VR4+YYdyW02dzdqKarwAuE5JM=;
-        b=BZCJNKcCFrQMpxHIv9ih39Jy616RSiG99ggmG5p08bjNCxemRKr2uXnzK2mg4Dendz
-         ijV2ymCTiVPk7Sj7VzJ9m5er4nTmPJME0eDbuMqUIAV2HNdNPTryJX2VsNYgrkb3SIOm
-         oXDxZ+gewz7vRujmA1F6KlrIIPsCWLyDpBBO0WtwOx66qnBN57YeHj/ANTpOi6uhnqpL
-         QRgFBrYKmoUK3AII8nuQMuaqY00OH2js5nynIcqRHhrtKGf5ff5Dluynds8pVNLsctWB
-         ZIeDFdp+2S2BRcBEoC3X8AoK2u0b/9TE3593dr0FOYegX5GAPzLi9xBgjE16m330vg70
-         Uzvw==
-X-Gm-Message-State: AOAM533jrY6mBM89GspVoLSIcjln40p6+McWlE24kfSuOr1oitHmiQkc
-        fbNlNxyLo8nW7Iy8VsdTvv6H/d6HkijI/sVl5g==
-X-Google-Smtp-Source: ABdhPJwjZZNidpPXbWcqeOMttWh4MrMd0WNuRBvM2NVR4bh1JG/Y8s7Xe8ro/oDnN+4cwCNlt5lqXFhGvn0iRNhKMj8=
-X-Received: by 2002:a6b:fc0d:: with SMTP id r13mr715961ioh.40.1591204462837;
- Wed, 03 Jun 2020 10:14:22 -0700 (PDT)
+        bh=aHub1uTy4UEBqMa85bH4hyQo4rSo+RVKxNnJQlGH7V4=;
+        b=VjHzV1YXRJbf+1X1rrG4ZJ+wGQs5mzLd+gcsxHNC6IY5Kv99e7q4b1BxK9+E13I51A
+         WGDgG+Y8x3E60maUoLA+FDDsXa53AxliWn2JfKbiKsSTyKnf3kSLs17bPMM0oj5S7jcJ
+         9eKlkunDDBpGoLDR7C01LRKlL6tdzf214hK+DlAIJ9voLm7nU/pHNAu5UqHuG8dB5kAp
+         +hBkxaqe/zFMmsuRar2St0Cd8bzlSVB4jEbSCbFEh9QpuLwRT1OaxT/iA7qct/upKt5h
+         oJUqTyaHv/aoHzn0opwoQDgjhDFKrVWbxTWHYAleU1jpxtNQYQDdXCyk9w8SAYvPP9CT
+         kwWw==
+X-Gm-Message-State: AOAM532/GmX9Erjqr2jzz1aTajDGz4TsYfLArwJI83QAkUqjpYF2lHaG
+        j53THo4h3VdFOq1IaDLMlTZRnnuduZs=
+X-Google-Smtp-Source: ABdhPJxV7qEEkbeDBr1D6rKY7r4epe1pvzc0ZH1ZveEveZF8nugJ4DtYh3JNpDqC40QtrG9yHMtnBA==
+X-Received: by 2002:a2e:584e:: with SMTP id x14mr135849ljd.106.1591204629186;
+        Wed, 03 Jun 2020 10:17:09 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id c20sm803562lfb.33.2020.06.03.10.17.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 10:17:08 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id n24so3696810lji.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:17:07 -0700 (PDT)
+X-Received: by 2002:a2e:b5d9:: with SMTP id g25mr115613ljn.285.1591204627492;
+ Wed, 03 Jun 2020 10:17:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200428151725.31091-1-joro@8bytes.org> <20200428151725.31091-36-joro@8bytes.org>
- <CAMzpN2gfiBAeCV_1+9ogh42bMMuDW=qdwd7dYp49-=zY3kzBaA@mail.gmail.com> <20200603151857.GC23071@8bytes.org>
-In-Reply-To: <20200603151857.GC23071@8bytes.org>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Wed, 3 Jun 2020 13:14:11 -0400
-Message-ID: <CAMzpN2j4t7UwOFwSR8gVo-FpAQ_RS5pE1c8JZns3xyUXP3yANQ@mail.gmail.com>
-Subject: Re: [PATCH v3 35/75] x86/head/64: Build k/head64.c with -fno-stack-protector
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>
+References: <159109968973.14228.6780339995273133401.tglx@nanos.tec.linutronix.de>
+ <159109969095.14228.4958990874220284812.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <159109969095.14228.4958990874220284812.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 3 Jun 2020 10:16:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiQr=wMrjpDXfvR=g+muNr4ST6=4O_jv6pOuTbtdbE_aw@mail.gmail.com>
+Message-ID: <CAHk-=wiQr=wMrjpDXfvR=g+muNr4ST6=4O_jv6pOuTbtdbE_aw@mail.gmail.com>
+Subject: Re: [GIT pull] timers/core for v5.8
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 11:18 AM Joerg Roedel <joro@8bytes.org> wrote:
+On Tue, Jun 2, 2020 at 5:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> On Tue, May 19, 2020 at 09:58:18AM -0400, Brian Gerst wrote:
-> > On Tue, Apr 28, 2020 at 11:28 AM Joerg Roedel <joro@8bytes.org> wrote:
+> The truly boring timer and clocksource updates for 5.8:
 >
-> > The proper fix would be to initialize MSR_GS_BASE earlier.
->
-> That'll mean to initialize it two times during boot, as the first C
-> function with stack-protection is called before the kernel switches to
-> its high addresses (early_idt_setup call-path). But okay, I can do that.
+>  - Not a single new clocksource or clockevent driver!
 
-Good point.  Since this is boot code which isn't subject to stack
-smashing attacks, disabling stack protector is probably the simpler
-option.
+The diffstat proved that to be a filthy lie:
 
---
-Brian Gerst
+>  drivers/clocksource/timer-ti-dm-systimer.c         | 727 +++++++++++++++++++++
+
+comes from
+
+> Tony Lindgren (6):
+>       clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support
+
+Ok, ok, it's "based on existing arch/arm/mach-omap2/timer.c". So I
+guess you considered it one of the device tree cleanups.
+
+But I'm not fooled by your transparent little white lies.  We will
+never ever have a release without new clocksource drivers.
+
+Sob.
+
+                 Linus
