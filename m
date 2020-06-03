@@ -2,97 +2,201 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B47C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1923C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E51206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591157582;
-	bh=hdUhaExxBm5jjyPIPwbcCxPkiyTOSr74Bb4MKKtuE1I=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=oDZhNGEaWixJ8haNJt+U4gs4DFaIcvZtabYWxAI4UDjHF5EbFrMwmBOaHNxHp8FH+
-	 P8CR9FeLo8RUa/KWWrlHvlOS1Qy+N7EPhzTyW19WOFWENouyoFWiTIi0U4sf5oAxn6
-	 wB0y6OZwxSgEMUZ6kfp5Hat81W/81ZCOpd74aALU=
+	by mail.kernel.org (Postfix) with ESMTP id 728A820738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:13:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="0GIfDYJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725915AbgFCENB (ORCPT
+        id S1725943AbgFCENi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 00:13:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:55479 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCENA (ORCPT
+        Wed, 3 Jun 2020 00:13:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgFCENh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 00:13:00 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0534CZcV032283;
-        Wed, 3 Jun 2020 13:12:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0534CZcV032283
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591157556;
-        bh=RdqgzaEZ5aWkaJNeElZf+u5QPaRSIBZWZfDxCZ0IlNs=;
-        h=From:Date:Subject:To:Cc:From;
-        b=FyKCtassgLAnKLG9f0KtxiRBQASSGdr3iDTQ5uy85jATUv4b0Rh6QnldaTf0tQcwt
-         hQtnnEf57MGc0iHDJ3QB7wmnYR0tsFHfNT0l0vqTnFOXyl3OMbdM0TjXBYrHFK4z/p
-         R+1MS4nqwzX5PxY6qwIZxJ1hV9B8QWFqFRpPeCo6BPf0SK2yJhemsSi5fh7n0CqEzo
-         GF3jxbbDGX9lsHic0b2lmqhYPfrfO7hhU2WdPQ8Ic+yYfV4vqrsvBFBewFXIvfVCTn
-         wm3J8DCN0KjY7p1O6/abRzzEwHvO4ImrdT9Ixdn/RLxjWscF6mRrr/xM0EOLZkkDEU
-         SzYIF/ZH5nhiw==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id d21so225515vsh.12;
-        Tue, 02 Jun 2020 21:12:36 -0700 (PDT)
-X-Gm-Message-State: AOAM533WxqQESqNO6jYqfgCOQ3sny2bwKPvH4uw1+mh91NG7PXNXNxaP
-        b9u8DgdYLy+fmVdpGsnUr23KU/YpDh1442EcnPw=
-X-Google-Smtp-Source: ABdhPJyq2XxPKPo8PHm8wvmCI5Y5KjbfROxsQpWcJLX4huqTb3nfIELobNfM0SH/W9xYha/rY7vo5zMFhMrsmI0VGw8=
-X-Received: by 2002:a67:67c5:: with SMTP id b188mr9633348vsc.155.1591157555346;
- Tue, 02 Jun 2020 21:12:35 -0700 (PDT)
+        Wed, 3 Jun 2020 00:13:37 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11DE9C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 21:13:37 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a127so689392pfa.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 21:13:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8EI4OAEKoGntLt5U48AD1ncRE6C+EW6yUePVytLhGOA=;
+        b=0GIfDYJu79CU9iGdBWKBfqQoT5Mr8ufMEigFhivqv2dR/NJddP92TwQAfG6/Yjh7nj
+         chkT3aviwMgJGLS7qQtp4OWXeMs2hvdlYfXnZ+bKtEHfQbAA8M5yi6kjYmDrNzHP3S0c
+         dc16MqSztsTTWATreX3xADLEflzkJ7QIxkCXy62zyM9aTsq+yXMqj6SHtwk/eaQmvMEr
+         ce5TCDjc0kcfxy5JzK1Afv5lxOlW5qlE3qmMVUeQr3PqtQDVrIpCQ3eOnI4x4pgH/iLu
+         JrJksE3O5utK1s5tBPPzXx5elmt+6/L2u9bOr/ZZaJ8s0WZvsZFZ8xcKTPACHnWivHDj
+         dDIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=8EI4OAEKoGntLt5U48AD1ncRE6C+EW6yUePVytLhGOA=;
+        b=eopjM84Jg3BPltay789jiv6h/yTJapFmgIucIzbnl5/6zAwQ1auVYPALUh4ttJVHXU
+         hcV6DJ3Izla6HwS7JEmRb4vhmyEGRGytRb3Ay5463e2koJcz/QU7W1/dKPzAamvmFKjW
+         BeYMFzg7Q+VD/Y4OcCHu/gQg8jPMLrMyhsf7nzLufR5bbEuKY5eOvcAeKPVjdLUBO96i
+         M3V6I7wUWA/glajzbnkAV78OTJ+I9tGQ7dIB6sYl7HJ3Gnk9x9yv+fGgoKjHgrmtE2g2
+         thwF/SQi9sgFjUtnkTBtKX8qvkP08UVEgTRUX2yewvwpSAnKiRNGGlZJ4ICSXhDJuxA6
+         oyZA==
+X-Gm-Message-State: AOAM532pVoormxKfYnzD80WqhWybaXrbSMW/3IdXTS+aShjYoVN731qs
+        01DvLOEkjwVPo3osJ5q+94gSmTA7vsKZEw==
+X-Google-Smtp-Source: ABdhPJwbFTUQgC4PFs80/lTcuwctbv2R44UBN3CDf1Lw+WIw67rRVnNibgbHI9K50/Ab69k/lR0Q3A==
+X-Received: by 2002:a17:90a:c246:: with SMTP id d6mr3159483pjx.60.1591157616340;
+        Tue, 02 Jun 2020 21:13:36 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id i21sm404549pgn.20.2020.06.02.21.13.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 21:13:35 -0700 (PDT)
+Subject: Re: [PATCH 1/4] dma-mapping: move the remaining DMA API calls out of
+ line
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200414122506.438134-1-hch@lst.de>
+ <20200414122506.438134-2-hch@lst.de>
+ <c2572d30-f03c-450d-e257-3a8673b42d44@ozlabs.ru>
+ <20200415061859.GA32392@lst.de>
+ <5139e8e1-6389-3387-dc39-6983b08ff28d@ozlabs.ru>
+ <20200417075852.GA20049@lst.de>
+ <70296d53-3504-2645-4b16-0eb73b0cd0d9@ozlabs.ru>
+ <20200509081946.GA21834@lst.de>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
+ EePO1JqpVuIow/wGud9xaPA5uvuVgRS1q7RU8otD+7VLDFzPRiRE4Jfr2CW89Ox6BF+q5ZPV
+ /pS4v4G9eOrw1v09lEKHB9WtiBVhhxKK1LnUjPEH3ifkOkgW7jFfoYgTdtB3XaXVgYnNPDFo
+ PTBYsJy+wr89XfyHr2Ev7BB3Xaf7qICXdBF8MEVY8t/UFsesg4wFWOuzCfqxFmKEaPDZlTuR
+ tfLAeVpslNfWCi5ybPlowLx6KJqOsI9R2a9o4qRXWGP7IwiMRAC3iiPyk9cknt8ee6EUIxI6
+ t847eFaVKI/6WcxhszI0R6Cj+N4y+1rHfkGWYWupCiHwj9DjILW9iEAncVgQmkNPpUsZECLT
+ WQzMuVSxjuXW4nJ6f4OFHqL2dU//qR+BM/eJ0TT3OnfLcPqfucGxubhT7n/CXUxEy+mvWwnm
+ s9p4uqVpTfEuzQ0/bE6t7dZdPBua7eYox1AQnk8JQDwC3Rn9kZq2O7u5KuJP5MfludMmQevm
+ pHYEMF4vZuIpWcOrrSctJfIIEyhDoDmR34bCXAZfNJ4p4H6TPqPh671uMQV82CfTxTrMhGFq
+ 8WYU2AH86FrVQfWoH09z1WqhlOm/KZhAV5FndwVjQJs1MRXD8QARAQABtCRBbGV4ZXkgS2Fy
+ ZGFzaGV2c2tpeSA8YWlrQG96bGFicy5ydT6JAjgEEwECACIFAk+rT0sCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAAAoJEIYTPdgrwSC5fAIP/0wf/oSYaCq9PhO0UP9zLSEz66SSZUf7
+ AM9O1rau1lJpT8RoNa0hXFXIVbqPPKPZgorQV8SVmYRLr0oSmPnTiZC82x2dJGOR8x4E01gK
+ TanY53J/Z6+CpYykqcIpOlGsytUTBA+AFOpdaFxnJ9a8p2wA586fhCZHVpV7W6EtUPH1SFTQ
+ q5xvBmr3KkWGjz1FSLH4FeB70zP6uyuf/B2KPmdlPkyuoafl2UrU8LBADi/efc53PZUAREih
+ sm3ch4AxaL4QIWOmlE93S+9nHZSRo9jgGXB1LzAiMRII3/2Leg7O4hBHZ9Nki8/fbDo5///+
+ kD4L7UNbSUM/ACWHhd4m1zkzTbyRzvL8NAVQ3rckLOmju7Eu9whiPueGMi5sihy9VQKHmEOx
+ OMEhxLRQbzj4ypRLS9a+oxk1BMMu9cd/TccNy0uwx2UUjDQw/cXw2rRWTRCxoKmUsQ+eNWEd
+ iYLW6TCfl9CfHlT6A7Zmeqx2DCeFafqEd69DqR9A8W5rx6LQcl0iOlkNqJxxbbW3ddDsLU/Y
+ r4cY20++WwOhSNghhtrroP+gouTOIrNE/tvG16jHs8nrYBZuc02nfX1/gd8eguNfVX/ZTHiR
+ gHBWe40xBKwBEK2UeqSpeVTohYWGBkcd64naGtK9qHdo1zY1P55lHEc5Uhlk743PgAnOi27Q
+ ns5zuQINBE+rT0sBEACnV6GBSm+25ACT+XAE0t6HHAwDy+UKfPNaQBNTTt31GIk5aXb2Kl/p
+ AgwZhQFEjZwDbl9D/f2GtmUHWKcCmWsYd5M/6Ljnbp0Ti5/xi6FyfqnO+G/wD2VhGcKBId1X
+ Em/B5y1kZVbzcGVjgD3HiRTqE63UPld45bgK2XVbi2+x8lFvzuFq56E3ZsJZ+WrXpArQXib2
+ hzNFwQleq/KLBDOqTT7H+NpjPFR09Qzfa7wIU6pMNF2uFg5ihb+KatxgRDHg70+BzQfa6PPA
+ o1xioKXW1eHeRGMmULM0Eweuvpc7/STD3K7EJ5bBq8svoXKuRxoWRkAp9Ll65KTUXgfS+c0x
+ gkzJAn8aTG0z/oEJCKPJ08CtYQ5j7AgWJBIqG+PpYrEkhjzSn+DZ5Yl8r+JnZ2cJlYsUHAB9
+ jwBnWmLCR3gfop65q84zLXRQKWkASRhBp4JK3IS2Zz7Nd/Sqsowwh8x+3/IUxVEIMaVoUaxk
+ Wt8kx40h3VrnLTFRQwQChm/TBtXqVFIuv7/Mhvvcq11xnzKjm2FCnTvCh6T2wJw3de6kYjCO
+ 7wsaQ2y3i1Gkad45S0hzag/AuhQJbieowKecuI7WSeV8AOFVHmgfhKti8t4Ff758Z0tw5Fpc
+ BFDngh6Lty9yR/fKrbkkp6ux1gJ2QncwK1v5kFks82Cgj+DSXK6GUQARAQABiQIfBBgBAgAJ
+ BQJPq09LAhsMAAoJEIYTPdgrwSC5NYEP/2DmcEa7K9A+BT2+G5GXaaiFa098DeDrnjmRvumJ
+ BhA1UdZRdfqICBADmKHlJjj2xYo387sZpS6ABbhrFxM6s37g/pGPvFUFn49C47SqkoGcbeDz
+ Ha7JHyYUC+Tz1dpB8EQDh5xHMXj7t59mRDgsZ2uVBKtXj2ZkbizSHlyoeCfs1gZKQgQE8Ffc
+ F8eWKoqAQtn3j4nE3RXbxzTJJfExjFB53vy2wV48fUBdyoXKwE85fiPglQ8bU++0XdOr9oyy
+ j1llZlB9t3tKVv401JAdX8EN0++ETiOovQdzE1m+6ioDCtKEx84ObZJM0yGSEGEanrWjiwsa
+ nzeK0pJQM9EwoEYi8TBGhHC9ksaAAQipSH7F2OHSYIlYtd91QoiemgclZcSgrxKSJhyFhmLr
+ QEiEILTKn/pqJfhHU/7R7UtlDAmFMUp7ByywB4JLcyD10lTmrEJ0iyRRTVfDrfVP82aMBXgF
+ tKQaCxcmLCaEtrSrYGzd1sSPwJne9ssfq0SE/LM1J7VdCjm6OWV33SwKrfd6rOtvOzgadrG6
+ 3bgUVBw+bsXhWDd8tvuCXmdY4bnUblxF2B6GOwSY43v6suugBttIyW5Bl2tXSTwP+zQisOJo
+ +dpVG2pRr39h+buHB3NY83NEPXm1kUOhduJUA17XUY6QQCAaN4sdwPqHq938S3EmtVhsuQIN
+ BFq54uIBEACtPWrRdrvqfwQF+KMieDAMGdWKGSYSfoEGGJ+iNR8v255IyCMkty+yaHafvzpl
+ PFtBQ/D7Fjv+PoHdFq1BnNTk8u2ngfbre9wd9MvTDsyP/TmpF0wyyTXhhtYvE267Av4X/BQT
+ lT9IXKyAf1fP4BGYdTNgQZmAjrRsVUW0j6gFDrN0rq2J9emkGIPvt9rQt6xGzrd6aXonbg5V
+ j6Uac1F42ESOZkIh5cN6cgnGdqAQb8CgLK92Yc8eiCVCH3cGowtzQ2m6U32qf30cBWmzfSH0
+ HeYmTP9+5L8qSTA9s3z0228vlaY0cFGcXjdodBeVbhqQYseMF9FXiEyRs28uHAJEyvVZwI49
+ CnAgVV/n1eZa5qOBpBL+ZSURm8Ii0vgfvGSijPGbvc32UAeAmBWISm7QOmc6sWa1tobCiVmY
+ SNzj5MCNk8z4cddoKIc7Wt197+X/X5JPUF5nQRvg3SEHvfjkS4uEst9GwQBpsbQYH9MYWq2P
+ PdxZ+xQE6v7cNB/pGGyXqKjYCm6v70JOzJFmheuUq0Ljnfhfs15DmZaLCGSMC0Amr+rtefpA
+ y9FO5KaARgdhVjP2svc1F9KmTUGinSfuFm3quadGcQbJw+lJNYIfM7PMS9fftq6vCUBoGu3L
+ j4xlgA/uQl/LPneu9mcvit8JqcWGS3fO+YeagUOon1TRqQARAQABiQRsBBgBCAAgFiEEZSrP
+ ibrORRTHQ99dhhM92CvBILkFAlq54uICGwICQAkQhhM92CvBILnBdCAEGQEIAB0WIQQIhvWx
+ rCU+BGX+nH3N7sq0YorTbQUCWrni4gAKCRDN7sq0YorTbVVSD/9V1xkVFyUCZfWlRuryBRZm
+ S4GVaNtiV2nfUfcThQBfF0sSW/aFkLP6y+35wlOGJE65Riw1C2Ca9WQYk0xKvcZrmuYkK3DZ
+ 0M9/Ikkj5/2v0vxz5Z5w/9+IaCrnk7pTnHZuZqOh23NeVZGBls/IDIvvLEjpD5UYicH0wxv+
+ X6cl1RoP2Kiyvenf0cS73O22qSEw0Qb9SId8wh0+ClWet2E7hkjWFkQfgJ3hujR/JtwDT/8h
+ 3oCZFR0KuMPHRDsCepaqb/k7VSGTLBjVDOmr6/C9FHSjq0WrVB9LGOkdnr/xcISDZcMIpbRm
+ EkIQ91LkT/HYIImL33ynPB0SmA+1TyMgOMZ4bakFCEn1vxB8Ir8qx5O0lHMOiWMJAp/PAZB2
+ r4XSSHNlXUaWUg1w3SG2CQKMFX7vzA31ZeEiWO8tj/c2ZjQmYjTLlfDK04WpOy1vTeP45LG2
+ wwtMA1pKvQ9UdbYbovz92oyZXHq81+k5Fj/YA1y2PI4MdHO4QobzgREoPGDkn6QlbJUBf4To
+ pEbIGgW5LRPLuFlOPWHmIS/sdXDrllPc29aX2P7zdD/ivHABslHmt7vN3QY+hG0xgsCO1JG5
+ pLORF2N5XpM95zxkZqvYfC5tS/qhKyMcn1kC0fcRySVVeR3tUkU8/caCqxOqeMe2B6yTiU1P
+ aNDq25qYFLeYxg67D/4w/P6BvNxNxk8hx6oQ10TOlnmeWp1q0cuutccblU3ryRFLDJSngTEu
+ ZgnOt5dUFuOZxmMkqXGPHP1iOb+YDznHmC0FYZFG2KAc9pO0WuO7uT70lL6larTQrEneTDxQ
+ CMQLP3qAJ/2aBH6SzHIQ7sfbsxy/63jAiHiT3cOaxAKsWkoV2HQpnmPOJ9u02TPjYmdpeIfa
+ X2tXyeBixa3i/6dWJ4nIp3vGQicQkut1YBwR7dJq67/FCV3Mlj94jI0myHT5PIrCS2S8LtWX
+ ikTJSxWUKmh7OP5mrqhwNe0ezgGiWxxvyNwThOHc5JvpzJLd32VDFilbxgu4Hhnf6LcgZJ2c
+ Zd44XWqUu7FzVOYaSgIvTP0hNrBYm/E6M7yrLbs3JY74fGzPWGRbBUHTZXQEqQnZglXaVB5V
+ ZhSFtHopZnBSCUSNDbB+QGy4B/E++Bb02IBTGl/JxmOwG+kZUnymsPvTtnNIeTLHxN/H/ae0
+ c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
+ DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
+ XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
+Message-ID: <95c46afb-bb40-3cb3-bf32-3e510fcd474d@ozlabs.ru>
+Date:   Wed, 3 Jun 2020 14:13:29 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 3 Jun 2020 13:11:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT_rgoDQPgDB2cTvwmXrQv2mFH1ysuhvWxp2HnVMd0W7Q@mail.gmail.com>
-Message-ID: <CAK7LNAT_rgoDQPgDB2cTvwmXrQv2mFH1ysuhvWxp2HnVMd0W7Q@mail.gmail.com>
-Subject: ARCH=arm64 build breakage for Kbuild for-next branch
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200509081946.GA21834@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
-If you pull the latest kbuild for-next branch,
-ARCH=arm64 will fail to build.
-
-I will fix it soon.
-
-For today's linux-next, you can patch
-as follows.
-(or, you can use the old branch)
 
 
-diff --git a/Makefile b/Makefile
-index f80c4ff93ec9..fbb4b95ae648 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1074,7 +1074,7 @@ build-dirs        := $(vmlinux-dirs)
- clean-dirs     := $(vmlinux-alldirs)
+On 09/05/2020 18:19, Christoph Hellwig wrote:
+> On Tue, May 05, 2020 at 02:18:37PM +1000, Alexey Kardashevskiy wrote:
+>>
+>>
+>> On 17/04/2020 17:58, Christoph Hellwig wrote:
+>>> On Wed, Apr 15, 2020 at 09:21:37PM +1000, Alexey Kardashevskiy wrote:
+>>>> And the fact they were exported leaves possibility that there is a
+>>>> driver somewhere relying on these symbols or distro kernel won't build
+>>>> because the symbol disappeared from exports (I do not know what KABI
+>>>> guarantees or if mainline kernel cares).
+>>>
+>>> We absolutely do not care.  In fact for abuses of APIs that drivers
+>>> should not use we almost care to make them private and break people
+>>> abusing them.
+>>
+>> ok :)
+>>
+>>>> I do not care in particular but
+>>>> some might, a line separated with empty lines in the commit log would do.
+>>>
+>>> I'll add a blurb for the next version.
+>>
+>>
+>> Has it gone anywhere? Thanks,
+> 
+> I've been hoping for the sg_buf helpers to land first, as they need
+> backporting and would conflict.  Do you urgently need the series?
 
- # Externally visible symbols (used by link-vmlinux.sh)
--KBUILD_VMLINUX_OBJS := $(head-y) $(addsuffix built-in.a, $(core-y))
-+KBUILD_VMLINUX_OBJS := $(head-y) $(patsubst %/,%/built-in.a, $(core-y))
- KBUILD_VMLINUX_OBJS += $(addsuffix built-in.a, $(filter %/, $(libs-y)))
- ifdef CONFIG_MODULES
- KBUILD_VMLINUX_OBJS += $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
+Any progress with sg_buf helpers stuff? Thanks,
 
 
-Thanks.
 
 -- 
-Best Regards
-Masahiro Yamada
+Alexey
