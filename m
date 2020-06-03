@@ -2,152 +2,95 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6489C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31265C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D3020810
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="em6VoVH3"
+	by mail.kernel.org (Postfix) with ESMTP id 0B3F820734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgFCIIC (ORCPT
+        id S1726345AbgFCIIb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:08:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgFCIH6 (ORCPT
+        Wed, 3 Jun 2020 04:08:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30513 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726099AbgFCIIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:07:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03125C03E96E
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 01:07:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m18so1547968ljo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 01:07:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qm1Fufz0OVB6tfCS+0Zsp1jGFDeHl0Qe2Wk3cNVFIjE=;
-        b=em6VoVH3kTta5GgGnR4yxb0C9pC1Go/C30Wl2dHtASemgL3MKbw20qcTF6Xp/bqged
-         RqOiCSv36QuACxRruwObvBTcwUk07Vmv1pRD7jpaD80GjeML6wGVdnohnXhDpk4O6+vj
-         CYcJiJHrTqBZ0vrJitGDSVZcpdMJoTTeyYXQ6IKOQcGDkoR5aMwVFg1dMeW+q79MUbvm
-         UM03uTMHvxOc+IDw/fvKIk3IgDSfh7K96pi/PSu+HgDag/sDDXiL0MFQeFJsr7+wOAHd
-         jiR0M0thaeIfsT1hu5gedkVkCI75yMeGExpSo9+ia+XoHXJRolqp+4yzG5CkerIzUioR
-         nkaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qm1Fufz0OVB6tfCS+0Zsp1jGFDeHl0Qe2Wk3cNVFIjE=;
-        b=SVAdztEw9cfFFjaoisO/fOu00d1YBJQU/uov/7QRjk7rTbYO+EwEz1X3LOhTOkh0yn
-         CkhigQxYs7v96i0JPUXxByLylJ2mYdR9Reyh/i4LJPW+N8sVcaZ9AkhSP/wfDp+4kpn6
-         mIZ/fFX1041g6oNFdiWLTUJ5x5jW10FlBDaLTW0EBDqPa7EE9A5E7Iz9yMOtapCIsf6w
-         ZWNmk3Xl6UPRjkINMwgS0qKusxDZMF67DsKdTd9/zngeU1CMUzGwtqon8H2L9kxTqaE9
-         4lqFvlY8mOUh2nnrF20/GCPBC8yBiymL81tFfQJdsXPAsXRYBZIv4f41/6rPLao6BL1r
-         J73w==
-X-Gm-Message-State: AOAM530+I6SGDE1MMGBUupj4S71t7PiCu2yO4sRSAtN69OoP/IQ0nlrh
-        T+N1hn4Gch3gTQcUdc/JPOXzaZ0ONpbeyjn+HlgPog==
-X-Google-Smtp-Source: ABdhPJxcPvpE6Kivg7poyIQDKjTdaR1zLLkk4Fmt5UIvp5/hGBWWhPNMg87+/+CuxmPgVa3FetzyOOjx5sQTccuyCM0=
-X-Received: by 2002:a05:651c:1103:: with SMTP id d3mr1553238ljo.110.1591171676264;
- Wed, 03 Jun 2020 01:07:56 -0700 (PDT)
+        Wed, 3 Jun 2020 04:08:30 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-172-_4y6Z0HxOsCLflypv4x5zQ-1; Wed, 03 Jun 2020 09:08:17 +0100
+X-MC-Unique: _4y6Z0HxOsCLflypv4x5zQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 3 Jun 2020 09:08:17 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 3 Jun 2020 09:08:17 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>
+CC:     "'Michael S. Tsirkin'" <mst@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: RE: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Thread-Topic: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Thread-Index: AQHWOR0GBiAzsIPf10apeP3ZClgqcqjFyCZAgAAGv4CAALncwA==
+Date:   Wed, 3 Jun 2020 08:08:17 +0000
+Message-ID: <a6d865f0dc7a427bb180cf451b8d470f@AcuMS.aculab.com>
+References: <20200602084257.134555-1-mst@redhat.com>
+ <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
+ <20200602163306.GM23230@ZenIV.linux.org.uk>
+ <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
+ <20200602162931-mutt-send-email-mst@kernel.org>
+ <950896ceff2d44e8aaf6f9f5fab210e4@AcuMS.aculab.com>
+ <20200602215827.GP23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200602215827.GP23230@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <1591107505-6030-1-git-send-email-sumit.garg@linaro.org> <1591108981.4253.17.camel@linux.ibm.com>
-In-Reply-To: <1591108981.4253.17.camel@linux.ibm.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 3 Jun 2020 13:37:44 +0530
-Message-ID: <CAFA6WYOoMdLJ2g3gocZBZWdu-7Nfw7LKHnzX8S8FKeC7cuNwYg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Introduce TEE based Trusted Keys support
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 20:14, James Bottomley <jejb@linux.ibm.com> wrote:
->
-> On Tue, 2020-06-02 at 19:48 +0530, Sumit Garg wrote:
-> > Add support for TEE based trusted keys where TEE provides the
-> > functionality to seal and unseal trusted keys using hardware unique
-> > key. Also, this is an alternative in case platform doesn't possess a
-> > TPM device.
->
-> So here's a meta problem: in the case when the platform possesses both
-> TEE and TPM  what should it do?
+From: Al Viro <viro@ftp.linux.org.uk> On Behalf Of Al Viro
+> Sent: 02 June 2020 22:58
+> On Tue, Jun 02, 2020 at 08:41:38PM +0000, David Laight wrote:
+> 
+> > In which case you need a 'user_access_begin' that takes the mm
+> > as an additional parameter.
+> 
+> 	What does any of that have to do with mm?  Details, please.
 
-IMO, trust source (either a TPM or a TEE) should be unique and
-carefully chosen as per platform security policy corresponding to a
-particular threat model.
+Actually probably nothing.
 
-And moreover TEEs have been mostly used in the embedded world where
-having a hardware TPM is cumbersome given constraints regarding BoM
-cost and hardware resources.
+I was sort of thinking that maybe the user process's memory
+map (mm?) would be temporarily 'attached' to the kernel thread
+so that it used the normal copy_to/from_user() fault
+handling to access the 'other' process.
 
->  Things like this:
->
-> > --- a/security/keys/trusted-keys/trusted_core.c
-> > +++ b/security/keys/trusted-keys/trusted_core.c
-> > @@ -25,6 +25,8 @@
-> >
-> >  #if defined(CONFIG_TRUSTED_TPM)
-> >  static struct trusted_key_ops *trusted_key_ops =
-> > &tpm_trusted_key_ops;
-> > +#elif defined(CONFIG_TRUSTED_TEE)
-> > +static struct trusted_key_ops *trusted_key_ops =
-> > &tee_trusted_key_ops;
-> >  #else
->
-> Say it's either/or at a Kconfig level: so if you select both TEE and
-> TPM based trusted keys at compile time, we intall the TPM ops and
-> ignore the TEE ops, is that right?  Surely this should be runtime
-> selectable based on what the platform has ...
+In which case you'd want to do the bound check against the
+limit of the user addresses in the mm rather than those of
+the current process.
 
-This dynamic selection was already part of v4 patch-set but after
-objection from Jarrko here [1], I switched to compile time mode
-instead.
+But later posts probably imply that it is all done differently.
 
-[1] https://lkml.org/lkml/2020/6/2/139
+	David
 
-> perhaps it should even be
-> selectable per key?
->
-> Once it is runtime selectable, what should be selected in the both
-> case?  Or should we allow the user to decide, if so, how?
->
-> when you pipe a trusted key, I think the subtype (TEE or TPM) should be
-> part of the piped information, so it loads again seamlessly.  This
-> would actually be fixed by something like the ASN.1 scheme I'm trying
-> to upstream, at least for TPM keys, but do TEE keys have a recognized
-> ASN.1 format?
->
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-I guess this is something which we can refine later if there are real
-platforms that have a particular security requirement to support both
-TPM and a TEE.
-
--Sumit
-
-> James
->
