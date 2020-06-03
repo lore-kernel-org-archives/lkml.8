@@ -2,157 +2,178 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2177B2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C5220823
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:34:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WFyguRK5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="aFWUUXJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFCJcR (ORCPT
+        id S1726268AbgFCJey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38336 "EHLO
+        Wed, 3 Jun 2020 05:34:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgFCJcQ (ORCPT
+        with ESMTP id S1725854AbgFCJex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:32:16 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33E9C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 02:32:15 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id e125so894747lfd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 02:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4f1Cyl0YeI3L9KPObQmKLYBSMli65+QxBgDMxC3xLDI=;
-        b=WFyguRK5TZF/ig1HlfEo56DPZl6QsdgRHwyzME5BE9Cnyzh2Tin6y4QU1grNXFyGi7
-         N+BBHNjCVoSyp0epO1PvM0r3VVWE7M7b3aV4cyAxiVaeYZy4V/JpEMw0p/Vk+ZX/cMsR
-         6Pfhxh2sdhOnCKXfTurwp8zJiRYQTtHBFCIwwvWuFCPGTgHDFHJtdlwVC5Qf4zMdhBn+
-         KCtZHx9z/kFQYyABvuuX+NuXAWMJ/Bbe32m618ClyK4WM9RDLFndtES3lvMWfl435RkJ
-         cozY/g85V6O70ZfWKJYXXrw/Kmi6KNj4Golqm2vioeoIO20wEANgjNEx9INwfPOg6ujn
-         91cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4f1Cyl0YeI3L9KPObQmKLYBSMli65+QxBgDMxC3xLDI=;
-        b=N3PoFyWP4uOE5c5/opZkDIsYTK6ysqv53D+fEx0q+s1SRKMbLl5tr4T/ATgkbHE+SK
-         wtJrtDzVtllrR5TTyqtb6nRlPFiwkFA8GSAKUUkjAGT5lYFuJ08CmIABOb8sM2o3BdET
-         kkDgEXis1IQn5oeUjKk+W4glOYZIU2pKg4KwiI0Ex/nd104e5ONfwLjJNiL1Q+0Dzkxf
-         kTBJGKymj06DzBlxq6tPxlaZEnkrxKl8qEkHVDBWY+Bya/9o0xaqZGB5qC3phQrLz/jw
-         JtGdowU/dQjxDWKCawMh2cWLToY2AZU8ZulZilgnlOUfR+rWBC53mfaGaEmjwP/3LVca
-         cMKQ==
-X-Gm-Message-State: AOAM533nReB+fOgG0b65fjQQgIvJaXwiIX0ueJkIoJSHQaEXjOuqpm6p
-        eIT9ivkUM1ZAhhVgOg0zrioDt3X53q2t2SSqlqJP1Q==
-X-Google-Smtp-Source: ABdhPJyMF3bTtwkxfKQ/zGDUE2fed47JYmAtXSJ5vvW8/FnxuQhwtIXWbzmhEspLiTN7/hirZv2g5bsjDGS/iKQTNDY=
-X-Received: by 2002:ac2:41d4:: with SMTP id d20mr2002613lfi.204.1591176734387;
- Wed, 03 Jun 2020 02:32:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591168935-6382-1-git-send-email-sumit.garg@linaro.org>
- <1591168935-6382-5-git-send-email-sumit.garg@linaro.org> <20200603082503.GD14855@linux-b0ei>
-In-Reply-To: <20200603082503.GD14855@linux-b0ei>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 3 Jun 2020 15:02:02 +0530
-Message-ID: <CAFA6WYMHtXzW-VLJYhC_-7w5+1NgM8PYrNXv=-2g_GKdOO+sNQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] kdb: Switch to use safer dbg_io_ops over console APIs
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Wed, 3 Jun 2020 05:34:53 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5196C05BD43;
+        Wed,  3 Jun 2020 02:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RCFP1A+jP0Ejskt3PALHHBHaCjZj9CjOP9H+ZUjtVwM=; b=aFWUUXJqdnK1WDUWqzRKMDXBM
+        1kVv5yXQAwa2Lb3TmbtSDvvBJ64BRFACoVB+RZ0tgL0YuklkRY/bcQdyJW2P60h1MJeiTlpxi6g9I
+        meZNBHpZMQ8WsKgm4tqAC16EYMcl/NpNGlG4fgZTNJE0RCxca/b0rSHQvJeKrbKnKWv4YWXgf58he
+        yXqLmgHCujl9SFNppMaI9CEPWAtNSvh3A3yBafP64u3ywxSGDLlNuRtysF6aLQd1qGP0SIeIHJT2Y
+        ZI/Lc0+PtL3erv1xuxcT+FQtsMq8POUrUjHA1w7xpnoTb1gNl9uRDIQuJ8AenWbYjQCTLvoKghfki
+        s4pbL54Lg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38300)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jgPn9-00058L-4d; Wed, 03 Jun 2020 10:34:35 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jgPmq-0005HW-Su; Wed, 03 Jun 2020 10:34:16 +0100
+Date:   Wed, 3 Jun 2020 10:34:16 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Neal Liu <neal.liu@mediatek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Julius Werner <jwerner@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sean Wang <sean.wang@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Crystal Guo =?utf-8?B?KOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Security Random Number Generator support
+Message-ID: <20200603093416.GY1551@shell.armlinux.org.uk>
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+ <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+ <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
+ <1591169342.4878.9.camel@mtkswgap22>
+ <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 13:55, Petr Mladek <pmladek@suse.com> wrote:
->
-> On Wed 2020-06-03 12:52:15, Sumit Garg wrote:
-> > In kgdb context, calling console handlers aren't safe due to locks used
-> > in those handlers which could in turn lead to a deadlock. Although, using
-> > oops_in_progress increases the chance to bypass locks in most console
-> > handlers but it might not be sufficient enough in case a console uses
-> > more locks (VT/TTY is good example).
-> >
-> > Currently when a driver provides both polling I/O and a console then kdb
-> > will output using the console. We can increase robustness by using the
-> > currently active polling I/O driver (which should be lockless) instead
-> > of the corresponding console. For several common cases (e.g. an
-> > embedded system with a single serial port that is used both for console
-> > output and debugger I/O) this will result in no console handler being
-> > used.
-> >
-> > In order to achieve this we need to reverse the order of preference to
-> > use dbg_io_ops (uses polling I/O mode) over console APIs. So we just
-> > store "struct console" that represents debugger I/O in dbg_io_ops and
-> > while emitting kdb messages, skip console that matches dbg_io_ops
-> > console in order to avoid duplicate messages. After this change,
-> > "is_console" param becomes redundant and hence removed.
-> >
-> > diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> > index 4139698..6e182aa 100644
-> > --- a/drivers/tty/serial/kgdboc.c
-> > +++ b/drivers/tty/serial/kgdboc.c
-> > @@ -558,6 +557,7 @@ static int __init kgdboc_earlycon_init(char *opt)
-> >       }
-> >
-> >       earlycon = con;
-> > +     kgdboc_earlycon_io_ops.cons = con;
-> >       pr_info("Going to register kgdb with earlycon '%s'\n", con->name);
-> >       if (kgdb_register_io_module(&kgdboc_earlycon_io_ops) != 0) {
-> >               earlycon = NULL;
->
-> Should we clear kgdboc_earlycon_io_ops.cons here when
-> kgdb_register_io_module() failed?
->
+On Wed, Jun 03, 2020 at 08:40:58AM +0100, Marc Zyngier wrote:
+> On 2020-06-03 08:29, Neal Liu wrote:
+> > On Tue, 2020-06-02 at 21:02 +0800, Marc Zyngier wrote:
+> > > On 2020-06-02 13:14, Ard Biesheuvel wrote:
+> > > > On Tue, 2 Jun 2020 at 10:15, Neal Liu <neal.liu@mediatek.com> wrote:
+> > > >>
+> > > >> These patch series introduce a security random number generator
+> > > >> which provides a generic interface to get hardware rnd from Secure
+> > > >> state. The Secure state can be Arm Trusted Firmware(ATF), Trusted
+> > > >> Execution Environment(TEE), or even EL2 hypervisor.
+> > > >>
+> > > >> Patch #1..2 adds sec-rng kernel driver for Trustzone based SoCs.
+> > > >> For security awareness SoCs on ARMv8 with TrustZone enabled,
+> > > >> peripherals like entropy sources is not accessible from normal world
+> > > >> (linux) and rather accessible from secure world (HYP/ATF/TEE) only.
+> > > >> This driver aims to provide a generic interface to Arm Trusted
+> > > >> Firmware or Hypervisor rng service.
+> > > >>
+> > > >>
+> > > >> changes since v1:
+> > > >> - rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs can
+> > > >> reuse
+> > > >>   this driver.
+> > > >>   - refine coding style and unnecessary check.
+> > > >>
+> > > >>   changes since v2:
+> > > >>   - remove unused comments.
+> > > >>   - remove redundant variable.
+> > > >>
+> > > >>   changes since v3:
+> > > >>   - add dt-bindings for MediaTek rng with TrustZone enabled.
+> > > >>   - revise HWRNG SMC call fid.
+> > > >>
+> > > >>   changes since v4:
+> > > >>   - move bindings to the arm/firmware directory.
+> > > >>   - revise driver init flow to check more property.
+> > > >>
+> > > >>   changes since v5:
+> > > >>   - refactor to more generic security rng driver which
+> > > >>     is not platform specific.
+> > > >>
+> > > >> *** BLURB HERE ***
+> > > >>
+> > > >> Neal Liu (2):
+> > > >>   dt-bindings: rng: add bindings for sec-rng
+> > > >>   hwrng: add sec-rng driver
+> > > >>
+> > > >
+> > > > There is no reason to model a SMC call as a driver, and represent it
+> > > > via a DT node like this.
+> > > 
+> > > +1.
+> > > 
+> > > > It would be much better if this SMC interface is made truly generic,
+> > > > and wired into the arch_get_random() interface, which can be used much
+> > > > earlier.
+> > > 
+> > > Wasn't there a plan to standardize a SMC call to rule them all?
+> > > 
+> > >          M.
+> > 
+> > Could you give us a hint how to make this SMC interface more generic in
+> > addition to my approach?
+> > There is no (easy) way to get platform-independent SMC function ID,
+> > which is why we encode it into device tree, and provide a generic
+> > driver. In this way, different devices can be mapped and then get
+> > different function ID internally.
+> 
+> The idea is simply to have *one* single ID that caters for all
+> implementations, just like we did for PSCI at the time. This
+> requires ARM to edict a standard, which is what I was referring
+> to above.
 
-AFAIK, kgdboc_earlycon_io_ops won't be used at any later stage in case
-registration fails. So IMO, it would be a redundant assignment unless
-I missed something.
+This sounds all too familiar.
 
--Sumit
+This kind of thing is something that ARM have seems to shy away from
+doing - it's a point I brought up many years ago when the whole
+trustzone thing first appeared with its SMC call.  Those around the
+conference table were not interested - ARM seemed to prefer every
+vendor to do off and do their own thing with the SMC interface.
 
-> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> > index c62d764..529116b 100644
-> > --- a/include/linux/kgdb.h
-> > +++ b/include/linux/kgdb.h
-> > @@ -276,8 +276,7 @@ struct kgdb_arch {
-> >   * the I/O driver.
-> >   * @post_exception: Pointer to a function that will do any cleanup work
-> >   * for the I/O driver.
-> > - * @is_console: 1 if the end device is a console 0 if the I/O device is
-> > - * not a console
-> > + * @cons: valid if the I/O device is a console; else NULL.
-> >   */
-> >  struct kgdb_io {
-> >       const char              *name;
-> > @@ -288,7 +287,7 @@ struct kgdb_io {
-> >       void                    (*deinit) (void);
-> >       void                    (*pre_exception) (void);
-> >       void                    (*post_exception) (void);
-> > -     int                     is_console;
-> > +     struct console          *cons;
->
-> Nit: I would call it "con". The trailing 's' makes me feel that that the
->      variable points to an array or list of consoles.
->
-> >  };
-> >
->
-> Otherwise, it looks pretty straightforward.
->
-> Best Regards,
-> Petr
+Then OMAP came along with its SMC interfaces, and so did the pain of
+not having a standardised way to configure the L2C when Linux was
+running in the non-secure world, resulting in stuff like l2c_configure
+etc, where each and every implementation has to supply a function to
+call its platform specific SMC interfaces to configure a piece of
+hardware common across many different platforms.
+
+ARM have seemed reluctant to standardise on stuff like this, so
+unless someone pushes hard for it from inside ARM, I doubt it will
+ever happen.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
