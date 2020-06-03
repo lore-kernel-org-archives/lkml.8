@@ -2,121 +2,74 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6882067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eUyvNAOa"
+	by mail.kernel.org (Postfix) with ESMTP id 66B382067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgFCVft (ORCPT
+        id S1726363AbgFCVoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 17:35:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
+        Wed, 3 Jun 2020 17:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbgFCVfs (ORCPT
+        with ESMTP id S1725961AbgFCVoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 17:35:48 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D65EC08C5C0;
-        Wed,  3 Jun 2020 14:35:48 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 3 Jun 2020 17:44:08 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54D4C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 14:44:08 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49chzP0yzWz9sSJ;
-        Thu,  4 Jun 2020 07:35:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591220145;
-        bh=smjuTbzXd6BvqaUqEYmjtqmDBBc6noS8vZURIsvhtX4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eUyvNAOaVsYDxUrHrJZ7OzkpEU4vIIH+w3VsTYIN08zVjMEngEIu/R11SciPTVhn7
-         cmdD9irjW7y7o0IwhyTLs9iO7xEPurK9zmHvczgV0joLTB665lY3RA93B3qANMjdbu
-         zNLzvRVpoLcIaUoJ3Zkstn1v5+8wVxbTUdWK5NDftDj2fpd7zZHMSA08UhwsWjQjaH
-         0Rg4lKr2O+K89VUn60kxRCLP69zILrTYkVYdkHJXd4izuDU08xPsTvai4fdto9h+RQ
-         6DX9m68zMA/qo4i3Dvlcjz/+f0vSktUjwytD1XvLLfVYp390d53aJGPWzCW/3N5+SB
-         9imOpsQUXEzxw==
-Date:   Thu, 4 Jun 2020 07:35:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the amdgpu tree
-Message-ID: <20200604073544.1ef1e38a@canb.auug.org.au>
+        by ms.lwn.net (Postfix) with ESMTPSA id E7CED37C;
+        Wed,  3 Jun 2020 21:44:07 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 15:44:06 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH] irqchip: Fix the description of the Loongson PCH MSI
+ controller
+Message-ID: <20200603154406.189594a5@lwn.net>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ljOty.cDXnnjyWaoYNnoYta";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ljOty.cDXnnjyWaoYNnoYta
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Commit 632dcc2c75ef ("irqchip: Add Loongson PCH MSI controller") appears to
+suffer from a lack of copy-and-paste fixup, with the result that the
+KConfig description describes the wrong device.  Avoid potential user
+confusion by getting the right acronym where it was meant to be.
 
-Hi all,
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+---
+ drivers/irqchip/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Commits
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 66b9a68f5e9f..d7c920afcfcb 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -550,7 +550,7 @@ config LOONGSON_PCH_PIC
+ 	  Support for the Loongson PCH PIC Controller.
+ 
+ config LOONGSON_PCH_MSI
+-	bool "Loongson PCH PIC Controller"
++	bool "Loongson PCH MSI Controller"
+ 	depends on MACH_LOONGSON64 || COMPILE_TEST
+ 	depends on PCI
+ 	default MACH_LOONGSON64
+-- 
+2.26.2
 
-  2967442ac479 ("drm/amd/display: Add DCN3 to Kconfig")
-  4e7406acd3e6 ("drm/amd/display: Add DCN3 blocks to Makefile")
-  b8163750954c ("drm/amd/display: fix and simplify pipe split logic for DCN=
-3")
-  a6a7b1845598 ("drm/amdgpu: Enable DM block for DCN3")
-  5aa25fb310d5 ("drm/amd/display: Remove Unused Registers")
-  ea05812d2d55 ("drm/amd/display: Handle RGBE_ALPHA Pixel Format")
-  b663d733cbe1 ("drm/amd/display: Init function tables for DCN3")
-  19e1ceaeaadf ("drm/amd/display: Add DCN3 VPG")
-  889bc1fa55f5 ("drm/amd/display: Add DCN3 AFMT")
-  0e5cf8885f67 ("drm/amd/display: Add DCN3 Command Table Helpers")
-  3086e21408a6 ("drm/amd/display: Add DCN3 Resource")
-  3fbd2731be3e ("drm/amd/display: Add DCN3 Support in DM (v2)")
-  581b9589487e ("drm/amd/display: Add DCN3 HWSEQ")
-  ca2e97c317ad ("drm/amd/display: Add DCN3 DMUB")
-  c8728a921074 ("drm/amd/display: Add DCN3 GPIO")
-  e51d66e1d338 ("drm/amd/display: Add DCN3 IRQ")
-  3ab489724031 ("drm/amd/display: Add DCN3 DML")
-  202ad3f23604 ("drm/amd/display: Add DCN3 DWB")
-  8905a0576034 ("drm/amd/display: Add DCN3 MMHUBHUB")
-  481beb130dec ("drm/amd/display: Add DCN3 HUBP")
-  ee52a594ac12 ("drm/amd/display: Add DCN3 HUBHUB")
-  7dcc0bbf90d9 ("drm/amd/display: Add DCN3 DPP")
-  c37075e358b6 ("drm/amd/display: Add DCN3 MPC")
-  5629c57da234 ("drm/amd/display: Add DCN3 OPP header")
-  86f1f7c7bc4f ("drm/amd/display: Add DCN3 OPTC")
-  f0d3ced5769c ("drm/amd/display: Add DCN3 DCCG")
-  bce3430d79d4 ("drm/amd/display: Add DCN3 CLK_MGR")
-  ca1404079b72 ("drm/amd/display: Add DCN3 DIO")
-  639f7ee6f6d3 ("drm/amd/display: Add DCN3 chip ids")
-  5fa689e66bf4 ("drm/amdgpu/powerplay: add smu block for sienna_cichlid")
-
-are missing a Signed-off-by from their committer.
-
-Is all this new stuff really destined for v5.8?
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ljOty.cDXnnjyWaoYNnoYta
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YF7AACgkQAVBC80lX
-0Gzm7AgAmbC5AU94Aepy+ubqqqR/SXExw8bcELuaeSpwSP4KnGRfwBcc6xwYlH7H
-eFvIUmetiK9iKTMhVeCuxhKYTY7VkmxVXjMXP6GmmXn0aeT4eX+Ts86ulnxv90+2
-zdLdpaVuvI/nk3X9nhWk3QvW98NFN6XhDPxbnkiCBBlQdkfbuygSLktHAVHH6Hdt
-YrrJdXWS9Ni7UJLyWpY5U3whlrBuWDSywnB2oxytKyTZEWhw+n2kmXjSdklEEbvs
-sWa56VVLiBaXKk46JOxgNC0rOHmqi+P9XcNa4FV2YPrZ653It1d8wgYdKQEHgQ23
-aloX0PX383s6AZzh1JVU2aGydLpwGQ==
-=zJjQ
------END PGP SIGNATURE-----
-
---Sig_/ljOty.cDXnnjyWaoYNnoYta--
