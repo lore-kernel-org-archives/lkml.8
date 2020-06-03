@@ -2,120 +2,135 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449F0207D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591195900;
-	bh=MWiSHKcEDoFmLXcn0l2hLsXb589lxoVYrPuEr2KKSPE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xR6tjtj8Chld/DteLH9V03BCf8zeIMGXYY4gxiDnaZgn3F3tuMu2znCUOtdKyZs5D
-	 MUPK5IL9f+ZfBvoX+XTkXjCo9PP9O9lK9dU+yZqvAIgm1W+aGJLNup6bHu9x6JjWYx
-	 v4RHOBZA+xvDRgG4Qmxsg9ja81st/SKYzd6588Og=
+	by mail.kernel.org (Postfix) with ESMTP id E17E120738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgFCOvj (ORCPT
+        id S1726408AbgFCOvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:51:39 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39396 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgFCOvg (ORCPT
+        Wed, 3 Jun 2020 10:51:53 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:57688 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgFCOvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:51:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g5so2069432otg.6;
-        Wed, 03 Jun 2020 07:51:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+IFxkwdJki1WIWWrFUItKHxjWSf4ueSBqfwRQQudi88=;
-        b=tMR8MNQ3Y2eCFDh4CEbiq7m9U3AmQ8uElTDhB+WiEofCYQ062bEdcCeb5bKX1a00Ax
-         N20KlQSzK6AarYZNvo+OuknoB7BzsUlwnY/W/IZmIWkInpE/l8r8tfd30B17UhV5kU+/
-         1Sdt3kkRLB3sq1KrICnvfDk+4mNUqSjUsyvqVlRpOMXr3/rtb0ZkfgWn8x7g5QckhGHl
-         fxsWQl8QVYV4IPJYblLmXpt/1GCkqhKyV57gqBj8Kg9iBsD3XMYoDHiuj8sa99qXeWrO
-         yJwIh+OuRIqJoCzJmsVfTP8eHzWFR7BoA1KN6ifkgTylNTzOPWAi3+cGisonDx6M+oKJ
-         DqXw==
-X-Gm-Message-State: AOAM5309TkeoeYeWil9LGPWKSNjQ2FbR2gGrDy9ms0wM5vDPh0ujWvI9
-        y6Ik6h1ujlzsfmcsJk5zr4vb6IOerDaAJOtVUsE=
-X-Google-Smtp-Source: ABdhPJwIEcy/bVF3SW/JRia20NXxWrHhYWn8UPD0KO/W61cy6Dhgv1+6DhN8aYGYhoVFdS0tesZTDuB0tYuKIXrjXiU=
-X-Received: by 2002:a9d:3d05:: with SMTP id a5mr272952otc.262.1591195892184;
- Wed, 03 Jun 2020 07:51:32 -0700 (PDT)
+        Wed, 3 Jun 2020 10:51:52 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jgUkA-0006ZY-JD; Wed, 03 Jun 2020 08:51:50 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jgUk9-0005aR-P2; Wed, 03 Jun 2020 08:51:50 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>
+Date:   Wed, 03 Jun 2020 09:47:51 -0500
+Message-ID: <875zc8kxyg.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200531182453.15254-1-ggherdovich@suse.cz> <20200531182453.15254-4-ggherdovich@suse.cz>
-In-Reply-To: <20200531182453.15254-4-ggherdovich@suse.cz>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Jun 2020 16:51:21 +0200
-Message-ID: <CAJZ5v0iNFDjt6rqXfiwn_UwiKgJDgAUshChVh5YoOCXF9hy=_A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] x86, sched: Bail out of frequency invariance if
- turbo_freq/base_freq gives 0
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jgUk9-0005aR-P2;;;mid=<875zc8kxyg.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+hMjF0oDHJ4xXsPRpWOhyuUU9Uw6OySHE=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [GIT PULL] proc changes for v5.8-rc1
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 8:26 PM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
->
-> Be defensive against the case where the processor reports a base_freq
-> larger than turbo_freq (the ratio would be zero).
->
-> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Please pull the proc-linus branch from the git tree:
 
-> ---
->  arch/x86/kernel/smpboot.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index fe154c8226ba..f619007f46cf 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -1976,6 +1976,7 @@ static bool core_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
->  static bool intel_set_max_freq_ratio(void)
->  {
->         u64 base_freq, turbo_freq;
-> +       u64 turbo_ratio;
->
->         if (slv_set_max_freq_ratio(&base_freq, &turbo_freq))
->                 goto out;
-> @@ -2009,9 +2010,15 @@ static bool intel_set_max_freq_ratio(void)
->                 return false;
->         }
->
-> -       arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
-> -                                       base_freq);
-> +       turbo_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE, base_freq);
-> +       if (!turbo_ratio) {
-> +               pr_debug("Non-zero turbo and base frequencies led to a 0 ratio.\n");
-> +               return false;
-> +       }
-> +
-> +       arch_turbo_freq_ratio = turbo_ratio;
->         arch_set_max_freq_ratio(turbo_disabled());
-> +
->         return true;
->  }
->
-> --
-> 2.16.4
->
+   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git proc-linus
+
+   HEAD: 9d78edeaec759f997c303f286ecd39daee166f2a proc: proc_pid_ns takes super_block as an argument
+
+This branch has 4 sets of changes:
+
+      proc: modernize proc to support multiple private instances
+      proc: Ensure we see the exit of each process tid exactly
+      Removing has_group_leader_pid
+      posix-cpu-timers: Use pids not tasks in lookup
+
+Alexey updated proc so each mount of proc uses a new superblock.  This
+allows people to actually use mount options with proc with no fear of
+messing up another mount of proc.  Given the kernel's internal mounts of
+proc for things like uml this was a real problem, and resulted in
+Android's hidepid mount options being ignored and introducing security
+issues.
+
+The rest of the changes are small cleanups and fixes that came out of my
+work to allow this change to proc.  In essence it is swapping the pids
+in de_thread during exec which revoves a special case the code had to
+handle.  Then updating the code to stop handling that special case.
+
+Alexey Gladkov (9):
+      proc: modernize proc to support multiple private instances
+      proc: rename struct proc_fs_info to proc_fs_opts
+      proc: allow to mount many instances of proc in one pid namespace
+      proc: instantiate only pids that we can ptrace on 'hidepid=4' mount option
+      proc: add option to mount only a pids subset
+      docs: proc: add documentation for "hidepid=4" and "subset=pid" options and new mount behavior
+      proc: use human-readable values for hidepid
+      proc: use named enums for better readability
+      Use proc_pid_ns() to get pid_namespace from the proc superblock
+      proc: proc_pid_ns takes super_block as an argument
+
+Eric W. Biederman (14):
+      proc: Use PIDTYPE_TGID in next_tgid
+      rculist: Add hlists_swap_heads_rcu
+      proc: Ensure we see the exit of each process tid exactly once
+      proc: Ensure we see the exit of each process tid exactly
+      posix-cpu-timer: Tidy up group_leader logic in lookup_task
+      posix-cpu-timer:  Unify the now redundant code in lookup_task
+      exec: Remove BUG_ON(has_group_leader_pid)
+      signal: Remove has_group_leader_pid
+      posix-cpu-timers: Extend rcu_read_lock removing task_struct references
+      posix-cpu-timers: Replace cpu_timer_pid_type with clock_pid_type
+      posix-cpu-timers: Replace __get_task_for_clock with pid_for_clock
+      Removing has_group_leader_pid
+      posix-cpu-timers: Use pids not tasks in lookup
+
+Oleg Nesterov (1):
+      remove the no longer needed pid_alive() check in __task_pid_nr_ns()
+
+ Documentation/filesystems/proc.rst                 |  92 ++++++++++++---
+ fs/exec.c                                          |   6 +-
+ fs/locks.c                                         |   4 +-
+ fs/proc/array.c                                    |   2 +-
+ fs/proc/base.c                                     |  74 ++++++------
+ fs/proc/generic.c                                  |   9 ++
+ fs/proc/inode.c                                    |  30 ++++-
+ fs/proc/root.c                                     | 131 ++++++++++++++++-----
+ fs/proc/self.c                                     |   8 +-
+ fs/proc/thread_self.c                              |   8 +-
+ fs/proc_namespace.c                                |  14 +--
+ include/linux/pid.h                                |   1 +
+ include/linux/pid_namespace.h                      |  12 --
+ include/linux/proc_fs.h                            |  32 ++++-
+ include/linux/rculist.h                            |  21 ++++
+ include/linux/sched/signal.h                       |  11 --
+ kernel/fork.c                                      |   2 +-
+ kernel/pid.c                                       |  22 +++-
+ kernel/time/posix-cpu-timers.c                     | 111 ++++++++---------
+ net/ipv6/ip6_flowlabel.c                           |   2 +-
+ security/tomoyo/realpath.c                         |   4 +-
+ tools/testing/selftests/proc/.gitignore            |   2 +
+ tools/testing/selftests/proc/Makefile              |   2 +
+ .../testing/selftests/proc/proc-fsconfig-hidepid.c |  50 ++++++++
+ .../testing/selftests/proc/proc-multiple-procfs.c  |  48 ++++++++
+ 25 files changed, 492 insertions(+), 206 deletions(-)
+
+Eric
