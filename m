@@ -2,118 +2,69 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9352DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E196BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7784E2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3ilaOYF"
+	by mail.kernel.org (Postfix) with ESMTP id C09082053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgFCS27 (ORCPT
+        id S1726071AbgFCSbW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
+        Wed, 3 Jun 2020 14:31:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCS27 (ORCPT
+        with ESMTP id S1725821AbgFCSbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:28:59 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AB8C08C5C0;
-        Wed,  3 Jun 2020 11:28:57 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a13so3528366ilh.3;
-        Wed, 03 Jun 2020 11:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3NGIVu2o5ZfD238nU7EioWKtwbHFSnlq8NDGe0k+Ao4=;
-        b=k3ilaOYF8Zi0ElPbQJ/D49l1sxfzgbs2aELXse9DU/MINXIppqkdvBI8IRGXkt7qnr
-         YYF3d7PfHOOFB+hGrxZ3+xPRdzQU6XMqlx9T38qqrfKVoP64G+ZP4jO5wUMxTHl8sVhS
-         cTJIPP/Q/q3qVd/z5hd/6Of2I0zkRaYEO0Z7YG2BOh+yG84ubkHJDtAHlttRRrV18rqD
-         6X5ezQCYJ9TFzK4NOjPnaGDjgL1OfSlWRI0KRsAwMaDAIJY0CKKCJmptYGerKyak8Eud
-         VNWoH3Z8z2mFwedGksqyvg03pOBIA90ohxYaa7prO8d+ShBZ3ixbSd3YzdNuJUYaEL/3
-         qzUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3NGIVu2o5ZfD238nU7EioWKtwbHFSnlq8NDGe0k+Ao4=;
-        b=LaK+7v3zgpTuq1rrTGZyxqNzjVGk8YJ05HaZYuH3m7ZecAPlbBElqczPoBg4lvNElK
-         jR1dHLJ/RMBR36QoaF7pAmK7gWibA6buSCuw5CeHQOhG/Kz5BCOjDeZYLxcXl4jpRaRn
-         itd7yMCP/prlvve8Uw/A6PbRyaKIX3TJIdmfuHXNShQGQ37KeiS+7JEVE9StUlJMSGlb
-         QQ60nDDN/OGDAlQIjljZlDjs2QijZByZJ8oCfuH2VDNyQjPKjRBgYf5qR36v41kTOtO5
-         bqJj2Ki3I7Oc7nenl0XZ1UIFnwA5F3SCC5RUcYoynMf0ZmCfgJph//OHlOQjdKNc6iaK
-         f/iQ==
-X-Gm-Message-State: AOAM530Le5wLL+/h8ERvFD35nLz6w+GXcg968De7VQKHxy3fSe7rpCnw
-        5u1gP01pDZyqYXhpfw3vzKA=
-X-Google-Smtp-Source: ABdhPJxloba1LOqTexHUXjZhHas0R9a8NLk9aQarShAtzLkMpIQM5Zn2/I2esN8JN1+SF46qVDdTtQ==
-X-Received: by 2002:a92:5e59:: with SMTP id s86mr843617ilb.104.1591208937224;
-        Wed, 03 Jun 2020 11:28:57 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id y2sm152329ilg.69.2020.06.03.11.28.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 11:28:56 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] dmaengine: stm32-mdma: call pm_runtime_put if pm_runtime_get_sync fails
-Date:   Wed,  3 Jun 2020 13:28:50 -0500
-Message-Id: <20200603182850.66692-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 14:31:21 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12563C08C5C0;
+        Wed,  3 Jun 2020 11:31:21 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jgYAM-0005ZE-ML; Wed, 03 Jun 2020 20:31:06 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] lan743x: Added fixed link and RGMII support / debugging
+From:   Roelof Berg <rberg@berg-solutions.de>
+In-Reply-To: <20200603180615.GB971209@lunn.ch>
+Date:   Wed, 3 Jun 2020 20:31:06 +0200
+Cc:     David Miller <davem@davemloft.net>,
+        Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C69EECC3-5701-46FF-84E4-4F0AFDB52809@berg-solutions.de>
+References: <20200529193003.3717-1-rberg@berg-solutions.de>
+ <20200601.115136.1314501977250032604.davem@davemloft.net>
+ <D784BC1B-D14C-4FE4-8FD8-76BEBE60A39D@berg-solutions.de>
+ <20200603155927.GC869823@lunn.ch>
+ <42337EA1-C7D1-46C6-815F-C619B27A4E77@berg-solutions.de>
+ <20200603180615.GB971209@lunn.ch>
+To:     Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1591209081;b92e8198;
+X-HE-SMSGID: 1jgYAM-0005ZE-ML
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+I’m testing with Microchip Lan7430, which is an integrated circuit that contains MAC and PHY in one package. With the release kernel the hardware works fine, so the overall configuration is ok (jumpers).
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/dma/stm32-mdma.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+I will verify wether the effective RGMII and delay settings, you mention, are equal in both driver versions.
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index 5469563703d1..79bee1bb73f6 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -1449,8 +1449,10 @@ static int stm32_mdma_alloc_chan_resources(struct dma_chan *c)
- 	}
- 
- 	ret = pm_runtime_get_sync(dmadev->ddev.dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dmadev->ddev.dev);
- 		return ret;
-+	}
- 
- 	ret = stm32_mdma_disable_chan(chan);
- 	if (ret < 0)
-@@ -1718,8 +1720,10 @@ static int stm32_mdma_pm_suspend(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_sync(dev);
- 		return ret;
-+	}
- 
- 	for (id = 0; id < dmadev->nr_channels; id++) {
- 		ccr = stm32_mdma_read(dmadev, STM32_MDMA_CCR(id));
--- 
-2.17.1
+>> Ok, let's proceed :) 
+> What PHY is being used?
+> Is it using RGMII?
+> 
+> If it looks like the PHY and the MAC are happy, just that frames are
+> not being transferred between them, it could be RGMII delays.
+> 
+>    Andrew
+> 
 
