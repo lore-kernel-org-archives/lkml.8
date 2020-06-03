@@ -2,86 +2,149 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D78C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08854C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A782074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:53:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o1mSU51C"
+	by mail.kernel.org (Postfix) with ESMTP id E81E820678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgFCFxE (ORCPT
+        id S1726015AbgFCFyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:53:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgFCFwu (ORCPT
+        Wed, 3 Jun 2020 01:54:14 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35165 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgFCFyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:52:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C449AC05BD43;
-        Tue,  2 Jun 2020 22:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=VTC5z9WT+GGVGPYd/YpFD1cmXsGsFb5+ORKTNAOuro8=; b=o1mSU51CZ8EA5+r7DZyaRGWlZE
-        jMupoQn720fhh6NupmpEMc8l/DcA23ZRWOV5LW3ZW1ZwCPuuXiUc/TY9L9wbpcHIvCNL7CBXaMIDQ
-        7DH1shYafh37ZtG0OTN/VcxG4PPUVDLkuOwYj0zJn5ju97VncPMDkMedmW/Fet64lKgHX3uejyR0U
-        Xb81DVpqW5NX5Veq4HcsMUnZpQEzcBmC3NgE/cI/0E7WEc4D3yk6G4lWLGB9xOWiJzCz6YqsUQu+B
-        Cs/vtNoa495GDnmyfad3wBqAkUvTtNjBUR/uMjhJkv9sPfPuZfKU17CMdtRdI+k3bpHg8vTaRUFxb
-        Us44Nk8w==;
-Received: from p4fdb1ad2.dip0.t-ipconnect.de ([79.219.26.210] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgMKW-0003op-0j; Wed, 03 Jun 2020 05:52:48 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        build test robot <lkp@intel.com>
-Subject: [PATCH 3/4] random: fix an incorrect __user annotation on proc_do_entropy
-Date:   Wed,  3 Jun 2020 07:52:36 +0200
-Message-Id: <20200603055237.677416-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200603055237.677416-1-hch@lst.de>
-References: <20200603055237.677416-1-hch@lst.de>
+        Wed, 3 Jun 2020 01:54:14 -0400
+X-Originating-IP: 157.36.79.87
+Received: from localhost (unknown [157.36.79.87])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 23E36C0005;
+        Wed,  3 Jun 2020 05:54:03 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 11:23:59 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     masonccyang@mxic.com.tw
+Cc:     boris.brezillon@collabora.com, broonie@kernel.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        matthias.bgg@gmail.com, miquel.raynal@bootlin.com, p.yadav@ti.com,
+        richard@nod.at, tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v4 7/7] mtd: spi-nor: macronix: Add Octal 8D-8D-8D
+ supports for Macronix mx25uw51245g
+Message-ID: <20200603055359.y35dwznglc7tlewq@yadavpratyush.com>
+References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
+ <1590737775-4798-8-git-send-email-masonccyang@mxic.com.tw>
+ <20200529094202.7vjs7clhykncivux@yadavpratyush.com>
+ <OF577383DB.7BF12AA3-ON4825857B.002468AB-4825857B.00250F16@mxic.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OF577383DB.7BF12AA3-ON4825857B.002468AB-4825857B.00250F16@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No user pointers for sysctls anymore.
+On 02/06/20 02:44PM, masonccyang@mxic.com.tw wrote:
+> 
+> Hi Pratyush,
+> 
+>  
+> > Subject
+> > 
+> > Re: [PATCH v4 7/7] mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports 
+> for 
+> > Macronix mx25uw51245g
+> > 
+> > On 29/05/20 03:36PM, Mason Yang wrote:
+> > > Macronix mx25uw51245g is a SPI NOR that supports 1-1-1/8-8-8 mode.
+> > > 
+> > > Correct the dummy cycles to device for various frequencies
+> > > after xSPI profile 1.0 table parsed.
+> > > 
+> > > Enable mx25uw51245g to Octal DTR mode by executing the command 
+> sequences
+> > > to change to octal DTR mode.
+> > > 
+> > > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > > ---
+> > >  drivers/mtd/spi-nor/macronix.c | 55 
+> ++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 55 insertions(+)
+> > > 
+> > > diff --git a/drivers/mtd/spi-nor/macronix.c 
+> b/drivers/mtd/spi-nor/macronix.c
+> > > index 96735d8..6c9a24c 100644
+> > > --- a/drivers/mtd/spi-nor/macronix.c
+> > > +++ b/drivers/mtd/spi-nor/macronix.c
+> > > @@ -8,6 +8,57 @@
+> > > 
+> > >  #include "core.h"
+> > > 
+> > > +#define MXIC_CR2_DUMMY_SET_ADDR 0x300
+> > > +
+> > > +/* Fixup the dummy cycles to device and setup octa_dtr_enable() */
+> > > +static void mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
+> > > +{
+> > > +   struct spi_nor_flash_parameter *params = nor->params;
+> > > +   int ret;
+> > > +   u8 rdc, wdc;
+> > > +
+> > > +   ret = spi_nor_read_cr2(nor, MXIC_CR2_DUMMY_SET_ADDR, &rdc);
+> > > +   if (ret)
+> > > +      return;
+> > > +
+> > > +   /* Refer to dummy cycle and frequency table(MHz) */
+> > > +   switch (params->dummy_cycles) {
+> > > +   case 10:   /* 10 dummy cycles for 104 MHz */
+> > > +      wdc = 5;
+> > > +      break;
+> > > +   case 12:   /* 12 dummy cycles for 133 MHz */
+> > > +      wdc = 4;
+> > > +      break;
+> > > +   case 16:   /* 16 dummy cycles for 166 MHz */
+> > > +      wdc = 2;
+> > > +      break;
+> > > +   case 18:   /* 18 dummy cycles for 173 MHz */
+> > > +      wdc = 1;
+> > > +      break;
+> > > +   case 20:   /* 20 dummy cycles for 200 MHz */
+> > > +   default:
+> > > +      wdc = 0;
+> > > +   }
+> > 
+> > I don't get the point of this. You already know the fastest the 
+> > mx25uw51245g flash can run at. Why not just use the maximum dummy 
+> > cycles? SPI NOR doesn't know the speed the controller is running at so 
+> > the best it can do is use the maximum dummy cycles possible so it never 
+> > falls short. Sure, it will be _slightly_ less performance, but we will 
+> > be sure to read the correct data, which is much much more important.
+> 
+> In general, 200MHz needs 20 dummy cycles but some powerful device may only 
+> 
+> needs 18 dummy cycles or less.
 
-Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
-Reported-by: build test robot <lkp@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/char/random.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, but do different mx25uw51245g chips have different dummy cycle 
+requirements? Shouldn't all the chips with the same ID have same 
+performance?
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 1e0db78b83baa..cf8a43f5eb2a0 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2087,7 +2087,7 @@ static int proc_do_uuid(struct ctl_table *table, int write,
-  * Return entropy available scaled to integral bits
-  */
- static int proc_do_entropy(struct ctl_table *table, int write,
--			   void __user *buffer, size_t *lenp, loff_t *ppos)
-+			   void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	struct ctl_table fake_table;
- 	int entropy_count;
+This is a fixup hook for mx25uw51245g, so you should already know how 
+many cycles are needed for this specific device. Is there any need for 
+generic code here?
+ 
+> Set a proper dummy cycles for a better performance.
+> 
+> > 
+> > Is it possible to have two chips which have _exactly_ the same ID but 
+> > one supports say 200MHz frequency but the other doesn't? Without that, 
+> > we can just enable the maximum and move on.
+> > 
+> 
+
 -- 
-2.26.2
-
+Regards,
+Pratyush Yadav
