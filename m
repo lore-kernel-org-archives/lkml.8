@@ -2,112 +2,176 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF12C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F08CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7CD20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HUgxPLCU"
+	by mail.kernel.org (Postfix) with ESMTP id 3007820679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbgFCG0E (ORCPT
+        id S1725995AbgFCG2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:26:04 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46664 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgFCG0C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:26:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591165561;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=W9gnWO3EugB5fOJdsC5D6jCryswD8dlMs+CpQYmUgaY=;
-        b=HUgxPLCU6WnGK0LMkoSYx48M7MGp+z/gdL24d6IoOIPji/FKxsmjknTX/o6n7WcUEFDnIy
-        vQfNsi3CJgtcuKDJ/OYpmiO/fROY50Eq9l5mCrrO32CQ0coVfeOQd8I12kKUo5BjhE6sS6
-        V5CfSZoi8Ee9MV4cIp0+Ar/AatbWRiE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-wYH1NXpyNXmIeDLZwULIkw-1; Wed, 03 Jun 2020 02:26:00 -0400
-X-MC-Unique: wYH1NXpyNXmIeDLZwULIkw-1
-Received: by mail-wm1-f69.google.com with SMTP id f62so406614wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 23:26:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W9gnWO3EugB5fOJdsC5D6jCryswD8dlMs+CpQYmUgaY=;
-        b=qUrDC8kbEaKgXNxTs+/nqJ6i5G1tvVKQ5OpWK7HS244zRUGDPmKXtJNUpXsKTWEWaW
-         +0nB/Gw6v8JA0K8ori0Q/i+aIDlVkQNEv04xag/kAPyNR9JkVdASPdznjjyB1ouABAJv
-         kYwrpfruk42C6MGylP7SM7vgF2GECKAw3U+0+FAhtqVIkwoGiRR+y70xLsRPIjZnywzD
-         37j/bZ7VPEeMP/AdSppjmsA+9Dwqkv1p9tjRK7oVWWleLxxp2Rmc1o7SqQiv4sP+Gqv7
-         qug/TKeUsnv5TV7lscRCTpdODlR2ilZaZOmLR04m0BOXw926PATSbaiE6Ay1L0ypj1tO
-         bwYQ==
-X-Gm-Message-State: AOAM532ItOSWK7wX0+PaSVAv5uPShLfqVZGQkDgdGT0GETfMhScE/xuM
-        0K4RU4MHfP42ZEbALaRWwffsZKWpSlwR71JHhrO4M6g9l1cDqGTdNvRVFRGh3lPwQ+cTWSIHOb3
-        SJ4ZxLOxjuYdWWmKsnNeI8PRJ
-X-Received: by 2002:adf:f64e:: with SMTP id x14mr30741023wrp.426.1591165559060;
-        Tue, 02 Jun 2020 23:25:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy1i5xHd6fc3nWnTFZOzvGSSo6xaM9/6SXCQM6Yg/CKeNgxi2/7C9Q2o+55R5dUbq2NQc+Szw==
-X-Received: by 2002:adf:f64e:: with SMTP id x14mr30741013wrp.426.1591165558867;
-        Tue, 02 Jun 2020 23:25:58 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id s5sm1394880wme.37.2020.06.02.23.25.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 23:25:58 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 02:25:56 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Message-ID: <20200603020325-mutt-send-email-mst@kernel.org>
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <3358ae96-abb6-6be9-346a-0e971cb84dcd@redhat.com>
- <20200603041849.GT23230@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603041849.GT23230@ZenIV.linux.org.uk>
+        Wed, 3 Jun 2020 02:28:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57152 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgFCG2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:28:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C4442AD10;
+        Wed,  3 Jun 2020 06:28:13 +0000 (UTC)
+Date:   Wed, 03 Jun 2020 08:28:09 +0200
+Message-ID: <s5heeqwfyti.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Johan Hovold <johan@kernel.org>,
+        Hui Wang <hui.wang@canonical.com>,
+        Szabolcs =?UTF-8?B?U3rFkWtl?= <szszoke.code@gmail.com>,
+        <alsa-devel@alsa-project.org>, <linux-usb@vger.kernel.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] sound: usb: pcm: fix incorrect power state when playing sound after PM_AUTO suspend
+In-Reply-To: <1591153515.23525.50.camel@mtkswgap22>
+References: <s5hpnahhbz8.wl-tiwai@suse.de>
+        <1591153515.23525.50.camel@mtkswgap22>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 05:18:49AM +0100, Al Viro wrote:
-> On Wed, Jun 03, 2020 at 11:57:11AM +0800, Jason Wang wrote:
+On Wed, 03 Jun 2020 05:05:15 +0200,
+Macpaul Lin wrote:
 > 
-> > > How widely do you hope to stretch the user_access areas, anyway?
+> On Tue, 2020-06-02 at 14:46 +0200, Takashi Iwai wrote:
+> > On Tue, 02 Jun 2020 13:53:41 +0200,
+> > Macpaul Lin wrote:
+> > > 
+> > > This patch fix incorrect power state changed by usb_audio_suspend()
+> > > when CONFIG_PM is enabled.
+> > > 
+> > > After receiving suspend PM message with auto flag, usb_audio_suspend()
+> > > change card's power state to SNDRV_CTL_POWER_D3hot. Only when the other
+> > > resume PM message with auto flag can change power state to
+> > > SNDRV_CTL_POWER_D0 in __usb_audio_resume().
+> > > 
+> > > However, when system is not under auto suspend, resume PM message with
+> > > auto flag might not be able to receive on time which cause the power
+> > > state was incorrect. At this time, if a player starts to play sound,
+> > > will cause snd_usb_pcm_open() to access the card and setup_hw_info() will
+> > > resume the card.
+> > > 
+> > > But even the card is back to work and all function normal, the power
+> > > state is still in SNDRV_CTL_POWER_D3hot.
 > > 
-> > 
-> > To have best performance for small packets like 64B, if possible, we want to
-> > disable STAC not only for the metadata access done by vhost accessors but
-> > also the data access via iov iterator.
+> > Hm, in exactly which situation does this happen?  I still don't get
+> > it.  Could you elaborate how to trigger this?
 > 
-> If you want to try and convince Linus to go for that, make sure to Cc
-> me on that thread.  Always liked quality flame...
+> I'm not sure if this will happen on laptop or on PC.
+> We've found this issue on Android phone (I'm not sure if each Android
+> phone can reproduce this.).
+> 
+> After booting the android phone, insert type-c headset without charging
+> and play music at any duration, say, 1 second, then stop. Put phone away
+> to idle about 17~18 minutes. Wait auto pm happened and the power state
+> change to SNDRV_CTL_POWER_D3hot in sound/usb/card.c. Then wake up the
+> phone, play music again. Then you'll probably found the music was not
+> playing and the progress bar keep at the same position. It only happen 
+> when power state is SNDRV_CTL_POWER_D3hot. If not (the power state is
+> SNDRV_CTL_POWER_D0), repeat the steps for several times, then it will be
+> produced at some time.
+> 
+> When it happened, sound_usb_pcm_open() will wake up the sound card by 
+> setup_hw_info()->__usb_audio_resume(). However, the card and the
+> interface is function properly right now, the power state keeps remain
+> SNDRV_CTL_POWER_D3hot.
 
-It's not about iov the way I see it.
+And at this point it's already something wrong.  We need to check why
+SNDRV_CTL_POWER_D3hot is kept there, instead of working around the
+rest behavior.
 
-It's a more fine-grained version of "nosmap".
+> The suggestive parameter settings from upper
+> sound request will be pending since later snd_power_wait() call will
+> still wait the card awaken. Ideally, auto PM should be recovered by
+> sound card itself. But once the card is awaken at this circumstance, it
+> looks like there are not more auto pm event. And the sound system of
+> this interface will stuck here forever until user plug out the headset
+> (reset the hardware).
+> 
+> The root cause is that once the card has been resumed, it should inform
+> auto pm change the state back into SNDRV_CTL_POWER_D0 and mark the
+> device is using by some one.
+> 
+> > > Which cause the infinite loop
+> > > happened in snd_power_wait() to check the power state. Thus the
+> > > successive setting ioctl cannot be passed to card.
+> > > 
+> > > Hence we suggest to change power state to SNDRV_CTL_POWER_D0 when card
+> > > has been resumed successfully.
+> > 
+> > This doesn't look like a right solution for the problem, sorry.
+> > The card PM status must be recovered to D0 when the autoresume
+> > succeeds.  If not, something is broken there, and it must be fixed
+> > instead of fiddling the status flag externally.
+> 
+> Yes, I agreed, but after checking the code in sound drivers, 
+> it looks like there is only chance that auto pm triggered by low-level
+> code in sound/usb/card.c. In kernel 4.14, auto pm suspend is triggered
+> by snd_pcm_suspend_all(). In later kernel, it is triggered by
+> snd_usb_pcm_suspend(). However, it looks like there are no any resume
+> trigger to recover auto pm state when the card has been waken by
+> sound_usb_pcm_open().
 
-Right now you basically want nosmap if you are running
-a workload that does 100 byte reads/writes of userspace memory
-all the time.
+If a running PCM stream has been suspended, the stream needs to be
+resumed manually by user-space.  There is no automatic resume.  You
+can forget about it and skip scratching that surface.
 
-Which isn't so bad, I'm not sure how much security does smap add at all.
-Were there any exploits that it blocked ever since it was introduced?
+Again, the point to be checked is why D3hot is kept after
+snd_usb_autoresume() is called.
 
-But in any case, it would be nice to also have an option to make it
-possible to disable smap e.g. just for vhost. Not because vhost is
-so secure, but simply because user wants this tradeoff.
+It's Android, and I wonder whether the system does the system-suspend
+(S3), or it's all runtime PM?  Basically D3hot is set only for the
+former, the system suspend, where the driver's PM callback is called
+with PMSG_SUSPEND.  Please check this at first.  That is,
+usb_audio_suspend() receives PMSG_SUSPEND or such, which makes
+chip->autosuspended=1.  The D3hot flag is set only in this condition.
 
--- 
-MST
+Then, check the resume patterns.  The usb-audio suspend/resume has
+multiple refcounts.  One is the Linux device PM refcount, and
+chip->active refcount, and chip->num_suspended_intf refcount.
 
+The first one (PM refount) is the primary refcount to manage the whole
+system, and this is incremented / decremented by the standard PM
+calls.  The second one, chip->active, is a temporary flag to avoid the
+re-entrance of the PM callbacks, and incremented at the probe enter
+and __usb_audio_resume(), and decremented at the probe exit and
+__usb_audio_resume() exist.  The last one, chip->num_suspended_intf is
+a refcount for the multiple interfaces assigned to a single card.
+
+And, the most suspicious case is the last one,
+chip->num_suspended-intf.  It means that the device has multiple
+USB interfaces and they went to suspend, while the resume isn't
+performed for the all suspended interfaces in return.
+
+If that's the case, you need to check where the suspend gets called to
+which USB-interface (and which pm_message_t) and whether the resume
+gets called for those.
+
+
+thanks,
+
+Takashi
