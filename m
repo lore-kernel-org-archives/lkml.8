@@ -2,108 +2,196 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA41C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5146520663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:38:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R5925KjM"
+	by mail.kernel.org (Postfix) with ESMTP id 8FDED20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591152009;
+	bh=+31w9c0mvbe/cCFWUmlmX11hEzkM5dYU3hArBzTz8j8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MGZwCGKN1xdiWcWpkuzQIb9IdOM2NgXTIPIR9Ea3KvXb1uAcYlsG0EQU7Nnx04SGc
+	 ls/WFbt7cRrYaeUcPju73NnLspJxe7BIuxHvxskO4YL0wI+Wacw55rD7Z01zC1H5JN
+	 MLLcYxVTD7+L5tI+eghbCegF/4lklBzTbumc/H/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgFCCiH (ORCPT
+        id S1725905AbgFCCkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:38:07 -0400
-Received: from ozlabs.org ([203.11.71.1]:58067 "EHLO ozlabs.org"
+        Tue, 2 Jun 2020 22:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgFCCiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:38:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725810AbgFCCkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:40:05 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cCkh3Jskz9sSc;
-        Wed,  3 Jun 2020 12:38:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591151884;
-        bh=wCuhGAt2S6T9b9OYrbE0Pz9RT0PDc0H9lp7Q4wq5NWQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=R5925KjMRIkbWX4k/PCW/2DO2Rrcmq0jIAeA2VrJpEm8cGXSiFDyBxlj/uNzorm9J
-         OjsSSDP4XXsbM9XSwuDOFKRQv6l1V0J8oMDzZEnIQAvgYRmP7VYWzSnf0zHQlwAdIK
-         X2vBRbepvfVSyzxrd481hYtqfSovDS+KwmmZJaqje+1ewlEO3zE7H920xakeakDTOl
-         Oo/Ghr6O9YYAMkRHWbN0kkJ2FrsNV8wdRFVGvI6rPAkXmKeBUQeeEc7PdTRGAqgaL9
-         HQ6YcRA2B0hbHSlJRjB5NbbmnXHL78kj139tKXDMOPyoDfZeJLYvy/QGQ6gIib5Dkm
-         IZ7eZBdrsEtgw==
-Date:   Wed, 3 Jun 2020 12:38:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the v4l-dvb-next tree with the v4l-dvb
- tree
-Message-ID: <20200603123803.7e97d3e8@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C58320663;
+        Wed,  3 Jun 2020 02:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591152004;
+        bh=+31w9c0mvbe/cCFWUmlmX11hEzkM5dYU3hArBzTz8j8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gWkGUW6+6m8DHimK44S5gJp/xNxUSTvXmJemlTxRG/BxDqS6l8jG0CAz2z8KBC4zD
+         OtPWhTAcvyksypsbUoFSj6tJlWJ6WOmQyTbLb4U1TMMgUPW1n6KjXhLtySf1rA2jbZ
+         RGD21c9u1K2l2BCa/fbJNDXpEZR95hpWJCdqpylM=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v3 0/7] selftsts/ftrace: Add requires list for each test case
+Date:   Wed,  3 Jun 2020 11:40:01 +0900
+Message-Id: <159115200085.70027.6141550347953439240.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/u55De0lN8oZiulhevwYInOI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/u55De0lN8oZiulhevwYInOI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+Here is the 3rd version of the series of "requires:" list for
+simplifying and unifying requirement checks for each test case.
 
-Today's linux-next merge of the v4l-dvb-next tree got a conflict in:
+The previous version is here.
 
-  drivers/staging/media/atomisp/pci/sh_css.c
+https://lkml.kernel.org/r/159108888259.42416.547252366885528860.stgit@devnote2
 
-between commit:
+I've fixed a comment in the template file in this version.
 
-  27333dadef57 ("media: atomisp: adjust some code at sh_css that could be b=
-roken")
+In short, this series introduces "requires:" line instead of
+checking required ftrace interfaces in each test case.
 
-from the v4l-dvb tree and commits:
+The requires line supports following checks
+ - tracefs interface check: Check whether the given file or directory
+   in the tracefs. (No suffix) [3/7],[4/7],[5/7]
+ - available tracer check: Check whether the given tracer is available
+   (":tracer" suffix) [6/7]
+ - README feature check: Check whether the given string is in the
+   README (":README" suffix) [7/7]
 
-  815618c139d7 ("media: atomisp: fix pipeline initialization code")
-  be1fdab273a9 ("media: atomisp: change the detection of ISP2401 at runtime=
-")
+This series also includes the description line fix and
+unresolved -> unsupported change ([1/7] and [2/7]).
 
-from the v4l-dvb-next tree.
+Since this series depends on following 2 commits,
 
-I fixed it up (I used the version from the latter tree) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
+commit 619ee76f5c9f ("selftests/ftrace: Return unsupported if no
+ error_log file") on Shuah's Kselftest tree
+commit bea24f766efc ("selftests/ftrace: Distinguish between hist
+ and synthetic event checks") on Steven's Tracing tree
 
-Can you please make sure that the v4l-dvb tree and v4l-dvb-next tree
-are ins sync?  They share some patches that are not the same commits.
+This can be applied on the tree which merged both of them.
+Also, you can get the series from the following.
 
---=20
-Cheers,
-Stephen Rothwell
+ git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git ftracetest-requires-v3
 
---Sig_/u55De0lN8oZiulhevwYInOI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+Thank you,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XDQsACgkQAVBC80lX
-0Gxb6gf+Mhj6yyioEm2vSvjQqRcg85Qfguuo6BmG1cJMZt3eAyZQbMgmpKzJ0VVh
-2gHqOY+4EAVAyY/iqS5SLo4i9yMv8Vzm/+ObpA65v3KS/L4q4OHO6q5NWMPCAGxq
-428WaxjSJODPH8z6NAVH8y/5z5IlwM1uWiExXG12BzyYtqb3/ugxgFSzjwmcxDP0
-0cElCc7Xo4191HVEfX7DzLXb67kkHbkNmkMjRhDN/5jrIoAWa33IAYkmf6DdgVCU
-kYkS+G6AnYJLRxlL2XxzsGrvJg4p10FM9YIpP1VVoX860PTVSS0jpKfRBDcF/ebe
-myDAsOqgUaEtdzRTxgGYZgB5Wfh39A==
-=+n+p
------END PGP SIGNATURE-----
+---
 
---Sig_/u55De0lN8oZiulhevwYInOI--
+Masami Hiramatsu (7):
+      selftests/ftrace: Allow ":" in description
+      selftests/ftrace: Return unsupported for the unconfigured features
+      selftests/ftrace: Add "requires:" list support
+      selftests/ftrace: Convert required interface checks into requires list
+      selftests/ftrace: Convert check_filter_file() with requires list
+      selftests/ftrace: Support ":tracer" suffix for requires
+      selftests/ftrace: Support ":README" suffix for requires
+
+
+ tools/testing/selftests/ftrace/ftracetest          |   11 ++++++-
+ .../selftests/ftrace/test.d/00basic/snapshot.tc    |    3 +-
+ .../selftests/ftrace/test.d/00basic/trace_pipe.tc  |    3 +-
+ .../ftrace/test.d/direct/kprobe-direct.tc          |    6 +---
+ .../ftrace/test.d/dynevent/add_remove_kprobe.tc    |    6 +---
+ .../ftrace/test.d/dynevent/add_remove_synth.tc     |    5 +--
+ .../ftrace/test.d/dynevent/clear_select_events.tc  |   11 +------
+ .../ftrace/test.d/dynevent/generic_clear_event.tc  |    8 +----
+ .../selftests/ftrace/test.d/event/event-enable.tc  |    6 +---
+ .../selftests/ftrace/test.d/event/event-no-pid.tc  |   11 +------
+ .../selftests/ftrace/test.d/event/event-pid.tc     |   11 +------
+ .../ftrace/test.d/event/subsystem-enable.tc        |    6 +---
+ .../ftrace/test.d/event/toplevel-enable.tc         |    6 +---
+ .../ftrace/test.d/ftrace/fgraph-filter-stack.tc    |   14 +--------
+ .../ftrace/test.d/ftrace/fgraph-filter.tc          |    8 +----
+ .../ftrace/test.d/ftrace/func-filter-glob.tc       |    8 +----
+ .../test.d/ftrace/func-filter-notrace-pid.tc       |   13 +-------
+ .../ftrace/test.d/ftrace/func-filter-pid.tc        |   13 +-------
+ .../ftrace/test.d/ftrace/func-filter-stacktrace.tc |    3 +-
+ .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |    6 +---
+ .../ftrace/test.d/ftrace/func_event_triggers.tc    |    7 ++---
+ .../ftrace/test.d/ftrace/func_mod_trace.tc         |    3 +-
+ .../ftrace/test.d/ftrace/func_profile_stat.tc      |    3 +-
+ .../ftrace/test.d/ftrace/func_profiler.tc          |   12 +-------
+ .../ftrace/test.d/ftrace/func_set_ftrace_file.tc   |    6 ++--
+ .../ftrace/test.d/ftrace/func_stack_tracer.tc      |    8 +----
+ .../test.d/ftrace/func_traceonoff_triggers.tc      |    6 ++--
+ .../ftrace/test.d/ftrace/tracing-error-log.tc      |   12 ++------
+ tools/testing/selftests/ftrace/test.d/functions    |   28 ++++++++++++++----
+ .../ftrace/test.d/instances/instance-event.tc      |    6 +---
+ .../selftests/ftrace/test.d/instances/instance.tc  |    6 +---
+ .../ftrace/test.d/kprobe/add_and_remove.tc         |    3 +-
+ .../selftests/ftrace/test.d/kprobe/busy_check.tc   |    3 +-
+ .../selftests/ftrace/test.d/kprobe/kprobe_args.tc  |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_comm.tc       |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_string.tc     |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_symbol.tc     |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_syntax.tc     |    5 +--
+ .../ftrace/test.d/kprobe/kprobe_args_type.tc       |    5 +--
+ .../ftrace/test.d/kprobe/kprobe_args_user.tc       |    4 +--
+ .../ftrace/test.d/kprobe/kprobe_eventname.tc       |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_ftrace.tc          |    6 +---
+ .../ftrace/test.d/kprobe/kprobe_module.tc          |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |    5 +--
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    5 +--
+ .../ftrace/test.d/kprobe/kretprobe_args.tc         |    3 +-
+ .../ftrace/test.d/kprobe/kretprobe_maxactive.tc    |    4 +--
+ .../ftrace/test.d/kprobe/multiple_kprobes.tc       |    3 +-
+ .../selftests/ftrace/test.d/kprobe/probepoint.tc   |    3 +-
+ .../selftests/ftrace/test.d/kprobe/profile.tc      |    3 +-
+ .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 +--
+ .../ftrace/test.d/preemptirq/irqsoff_tracer.tc     |    4 +--
+ tools/testing/selftests/ftrace/test.d/template     |    4 +++
+ .../selftests/ftrace/test.d/tracer/wakeup.tc       |    6 +---
+ .../selftests/ftrace/test.d/tracer/wakeup_rt.tc    |    6 +---
+ .../inter-event/trigger-action-hist-xfail.tc       |   13 +-------
+ .../inter-event/trigger-field-variable-support.tc  |   16 +---------
+ .../trigger-inter-event-combined-hist.tc           |   16 +---------
+ .../inter-event/trigger-multi-actions-accept.tc    |   16 +---------
+ .../inter-event/trigger-onchange-action-hist.tc    |    8 +----
+ .../inter-event/trigger-onmatch-action-hist.tc     |   16 +---------
+ .../trigger-onmatch-onmax-action-hist.tc           |   16 +---------
+ .../inter-event/trigger-onmax-action-hist.tc       |   16 +---------
+ .../inter-event/trigger-snapshot-action-hist.tc    |   20 +------------
+ .../trigger-synthetic-event-createremove.tc        |   11 +------
+ .../inter-event/trigger-synthetic-event-syntax.tc  |   11 +------
+ .../inter-event/trigger-trace-action-hist.tc       |   18 +-----------
+ .../ftrace/test.d/trigger/trigger-eventonoff.tc    |   11 +------
+ .../ftrace/test.d/trigger/trigger-filter.tc        |   11 +------
+ .../ftrace/test.d/trigger/trigger-hist-mod.tc      |   16 +---------
+ .../test.d/trigger/trigger-hist-syntax-errors.tc   |   18 +-----------
+ .../ftrace/test.d/trigger/trigger-hist.tc          |   16 +---------
+ .../ftrace/test.d/trigger/trigger-multihist.tc     |   16 +---------
+ .../ftrace/test.d/trigger/trigger-snapshot.tc      |   16 +---------
+ .../ftrace/test.d/trigger/trigger-stacktrace.tc    |   11 +------
+ .../test.d/trigger/trigger-trace-marker-hist.tc    |   21 +-------------
+ .../trigger/trigger-trace-marker-snapshot.tc       |   21 +-------------
+ .../trigger-trace-marker-synthetic-kernel.tc       |   31 +-------------------
+ .../trigger/trigger-trace-marker-synthetic.tc      |   26 +----------------
+ .../ftrace/test.d/trigger/trigger-traceonoff.tc    |   11 +------
+ 80 files changed, 119 insertions(+), 633 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
