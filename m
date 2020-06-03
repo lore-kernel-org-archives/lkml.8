@@ -2,341 +2,163 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44455C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7417F2081A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122ED20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SqJqL3dS"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bO3sAFci";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KlP9QtKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgFCOP1 (ORCPT
+        id S1726109AbgFCOPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:15:27 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:50191 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgFCOP0 (ORCPT
+        Wed, 3 Jun 2020 10:15:54 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:1140 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725936AbgFCOPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:15:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591193724; x=1622729724;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=faje2xiXtBmZmE30JnFGMsjEdqz81v/UC5sZtQepIaM=;
-  b=SqJqL3dS7qZ+2FbKKBIhg9/xmo6Ior8qaStnOHAuxu5mgzv2Itus3yLX
-   EiukerZMuNFU6pS/4m4Kv+zWnQDHcU7MEOGpKhAnF+flQbwDFp+x8smEx
-   mEuAWAcm5VlQ8JipOjHBCRVY3aQfTl7Sz+qq+mAEjDs5F+TpjYWxPpNmy
-   E=;
-IronPort-SDR: 6ctg4vvr34L9vkWItNnSgSIDRGwYm4wKTCYNXC5cMzWDUXISMusWumRj3NY3IxwqNwOseav9XI
- x/T10QSfLJuA==
-X-IronPort-AV: E=Sophos;i="5.73,467,1583193600"; 
-   d="scan'208";a="34144210"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 03 Jun 2020 14:15:09 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id A775BA2685;
-        Wed,  3 Jun 2020 14:14:58 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 14:14:57 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.90) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 14:14:41 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v2 7/9] mm/damon: Implement callbacks for physical memory monitoring
-Date:   Wed, 3 Jun 2020 16:11:33 +0200
-Message-ID: <20200603141135.10575-8-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200603141135.10575-1-sjpark@amazon.com>
-References: <20200603141135.10575-1-sjpark@amazon.com>
+        Wed, 3 Jun 2020 10:15:53 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 053E9Qwq028336;
+        Wed, 3 Jun 2020 07:13:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=FiBUCa1y87rEpo2nb1sqgvjKgbp3KmwUDIsZJE+OOyg=;
+ b=bO3sAFciyrHLb7KloO5MO+aL6WMTWGaTW641xjZIL4hrT8P11U2U3fy7OWJ6nFTqtL9k
+ nMLNnRIOTaSEFnLtmhcQo5UonH7amYU9xT+sPzMe6menPseHLTcT60gHjCzgQg2ZZvcD
+ HqhjHoQbq8DOEfAsvEUaof0Vpzyv5r/LIVU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 31bk00hqee-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 03 Jun 2020 07:13:49 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 3 Jun 2020 07:13:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jrxLDHPrLsvRuyjXdWpY+IhNvoNyGkEZ2GVoRi7keB2GIB1KoW4f9oSmcoyuT/yvX8KsUVu368wAJd4Gi3ed8RKF8LsUkmO5t8K7ZvjP1pQ1hUzNk66HMCaUY3ZgNwubUz17mh75CJzn4ufgZP/4XvITke6f6enF2lC1p4yWGEROgWwuNfcKCGvONHot21bu+uRpYEDEKIbUSUjX9z+gKzFy1fsVye8gc/JuuLolzgN8hC6PjlFTf7F7b2LF10APb/VV/wWu7+UXgxYsDHg35h+8KJGZzx7Vo0VF88gD4x6QsoMeOJ0SXco1fiWSGuGk55+OHSd+j3305+9SUXo1lQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FiBUCa1y87rEpo2nb1sqgvjKgbp3KmwUDIsZJE+OOyg=;
+ b=NXtukPCsZqa3Acctkj8Q5KWV63DezEtPzbPmnB6LpcFaG/sv4tcx0sC9lzH+m47dU5pFQr89pVhWwhEShNmiAF9qHEZZdAsJAobU5bkckkEFNLRcay4QOfinLSCUd3RCJIswlKQIC3ByIBVFBPMOrvk219GbFQe2tfPopThqkZBem7mJvjAbhGs4BOeWxpHkFoZZ3z6qJF4j7Bu2Lm+OOBBsTPPzGjeiElX2cZFYjpTRoPrUkJ+hHi/aPsbbqlemwlLdXYO4JwKSjcuIwxCzlbodOaumyDaX9TxY9KpxgjjAcVHIdeVXhsTH5lhW9mUuE9SDM5ahWbgsJl2QNpTzbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FiBUCa1y87rEpo2nb1sqgvjKgbp3KmwUDIsZJE+OOyg=;
+ b=KlP9QtKtmQRuRXxZmOfLzYelbBG5TE+il+VV9Jm1dBTQ/2wQP0qdxU+ChV/vhbSWx/6ZCgPyhknVnw9tcKd2v1S9OyK1YHtARj9NfpaKa/C/masaITMS9Ga4L7x2uY4ycurkiz9HUQzfeWTQksWUox9GBZNBPHHZh1lWTVhFabk=
+Authentication-Results: hisilicon.com; dkim=none (message not signed)
+ header.d=none;hisilicon.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2598.namprd15.prod.outlook.com (2603:10b6:a03:14d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Wed, 3 Jun
+ 2020 14:13:45 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 14:13:45 +0000
+Date:   Wed, 3 Jun 2020 07:13:42 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Barry Song <song.bao.hua@hisilicon.com>
+CC:     <akpm@linux-foundation.org>, <mike.kravetz@oracle.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
+Subject: Re: [PATCH 2/2] mm: hugetlb: fix the name of hugetlb CMA
+Message-ID: <20200603141342.GB559132@carbon.DHCP.thefacebook.com>
+References: <20200603084025.62740-1-song.bao.hua@hisilicon.com>
+ <20200603084025.62740-3-song.bao.hua@hisilicon.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603084025.62740-3-song.bao.hua@hisilicon.com>
+X-ClientProxiedBy: BY5PR13CA0028.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::41) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D45UWB002.ant.amazon.com (10.43.161.78) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:2a2b) by BY5PR13CA0028.namprd13.prod.outlook.com (2603:10b6:a03:180::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.7 via Frontend Transport; Wed, 3 Jun 2020 14:13:44 +0000
+X-Originating-IP: [2620:10d:c090:400::5:2a2b]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 29072879-0060-41eb-865e-08d807c8538a
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2598:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB259881CD258253F2E6FCCEEFBE880@BYAPR15MB2598.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 04238CD941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f+7zxKRgEiamcGzHBVWIj5//ZfFeX03W6uowc5pOza7x8B0bNaGM34xq62o2peJ2SQkxUNIhnDLh3chYAwbQZNxiWZ7SnP6YDeMn0VHecMMTcgB5h2Dek6hNXx5IvXa5bRtbkkjsumP8XmvyM4D7nj+UBJQ2OagDEDeGVo5XdU5s6uuaUjjD69CyDysUMCIzaNMMIsaHNkaMZaszcmiDa2S4GFnEKK4ljzp40lzNfec97CAU5ebc7tOBrDSRy94CK504CsJoIEE37LANARfua2p1QydnPx/dmXnHGbMcQldn4AzFcYY0R9AcK+CaTzUHT/yGzf/fnVGpsnvBhLOSYg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(366004)(136003)(376002)(346002)(396003)(6916009)(16526019)(186003)(6506007)(66556008)(52116002)(7696005)(66946007)(83380400001)(8676002)(478600001)(8936002)(66476007)(2906002)(55016002)(33656002)(4326008)(86362001)(316002)(5660300002)(9686003)(1076003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: b4iOTasch0vvvyVlz5iOY6+0eRJaG376uijMPaEz0bZPj7e3+5VXRAjaG6EHkeTSQQhUTfBkIoM/YLnjjQ0y7027MapsdW3VDbn1+8fJDKVCyYv2h5A0Lqzg38UCeyXi08lVPR9YnVS/MZrg/zpLOJhP1DgsyoziNcDGiABLscFJ2ZrwaQgS/+enFojyfuYiJAA0T0QJPDC0L7+KkDgnbAlcqqNf0UDsMub5QrUQ5jYQB8VbEfaXVkN2CdiBZzBmf0FLEUvaO3KobBCJB3xQYLWqNGKKvl4b0UOP7jF5QhPVmlDWm2BYiDgvAeJO7M7QY1Z8g8r/Wx6Mqo47GFBGDeDCUqADmRnYZPcm5xbrGFiMusKIt9DA5DOniukdFiCTfcY2HzhMICnG0/8nCI8WF5WmGKejHN4bGVk3LGMz6dmh2/iGWK4Qx5JYoM8FIdPxd3CLNM3GVRXQspGaAy0anV7/Ykg5flIU/kzw0PFxBWC0HyOy5xIPO8OSPDTaWO11lsx2CpDZmUcPuPURcgANsg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29072879-0060-41eb-865e-08d807c8538a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 14:13:45.0965
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kTFmg6mthdG59JAVNMV73NjIc1MLuhBzGNtWrZ/wER/Ll6k6Ex3/NNkcUMgBKy26
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2598
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-03_12:2020-06-02,2020-06-03 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 adultscore=0
+ clxscore=1015 lowpriorityscore=0 priorityscore=1501 cotscore=-2147483648
+ malwarescore=0 spamscore=0 suspectscore=1 bulkscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006030113
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Wed, Jun 03, 2020 at 08:40:25PM +1200, Barry Song wrote:
+> once we enable CMA_DEBUGFS, we will get the below errors:
+> directory 'cma-hugetlb' with parent 'cma' already present
+> 
+> only the first numa node will get a directory in debugfs.
+> we should have different names for different CMA areas.
+> 
+> Cc: Roman Gushchin <guro@fb.com>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 
-This commit implements the four callbacks (->init_target_regions,
-->update_target_regions, ->prepare_access_check, and ->check_accesses)
-for the basic access monitoring of the physical memory address space.
-By setting the callback pointers to point those, users can easily
-monitor the accesses to the physical memory.
+Acked-by: Roman Gushchin <guro@fb.com>
 
-Internally, it uses the PTE Accessed bit, as similar to that of the
-virtual memory support.  Also, it supports only page frames that
-supported by idle page tracking.  Acutally, most of the code is stollen
-from idle page tracking.  Users who want to use other access check
-primitives and monitor the frames that not supported with this
-implementation could implement their own callbacks on their own.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |   5 ++
- mm/damon.c            | 184 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 189 insertions(+)
-
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 1a788bfd1b4e..f96503a532ea 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -216,6 +216,11 @@ void kdamond_update_vm_regions(struct damon_ctx *ctx);
- void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
- unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
- 
-+void kdamond_init_phys_regions(struct damon_ctx *ctx);
-+void kdamond_update_phys_regions(struct damon_ctx *ctx);
-+void kdamond_prepare_phys_access_checks(struct damon_ctx *ctx);
-+unsigned int kdamond_check_phys_accesses(struct damon_ctx *ctx);
-+
- int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
-diff --git a/mm/damon.c b/mm/damon.c
-index f5cbc97a3bbc..6a5c6d540580 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -19,7 +19,9 @@
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/page_idle.h>
-+#include <linux/pagemap.h>
- #include <linux/random.h>
-+#include <linux/rmap.h>
- #include <linux/sched/mm.h>
- #include <linux/sched/task.h>
- #include <linux/slab.h>
-@@ -480,6 +482,11 @@ void kdamond_init_vm_regions(struct damon_ctx *ctx)
- 	}
- }
- 
-+/* Do nothing.  Users should set the initial regions by themselves */
-+void kdamond_init_phys_regions(struct damon_ctx *ctx)
-+{
-+}
-+
- static void damon_mkold(struct mm_struct *mm, unsigned long addr)
- {
- 	pte_t *pte = NULL;
-@@ -611,6 +618,178 @@ unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
- 	return max_nr_accesses;
- }
- 
-+/* access check functions for physical address based regions */
-+
-+/* This code is stollen from page_idle.c */
-+static struct page *damon_phys_get_page(unsigned long pfn)
-+{
-+	struct page *page;
-+	pg_data_t *pgdat;
-+
-+	if (!pfn_valid(pfn))
-+		return NULL;
-+
-+	page = pfn_to_page(pfn);
-+	if (!page || !PageLRU(page) ||
-+	    !get_page_unless_zero(page))
-+		return NULL;
-+
-+	pgdat = page_pgdat(page);
-+	spin_lock_irq(&pgdat->lru_lock);
-+	if (unlikely(!PageLRU(page))) {
-+		put_page(page);
-+		page = NULL;
-+	}
-+	spin_unlock_irq(&pgdat->lru_lock);
-+	return page;
-+}
-+
-+static bool damon_page_mkold(struct page *page, struct vm_area_struct *vma,
-+		unsigned long addr, void *arg)
-+{
-+	damon_mkold(vma->vm_mm, addr);
-+	return true;
-+}
-+
-+static void damon_phys_mkold(unsigned long paddr)
-+{
-+	struct page *page = damon_phys_get_page(PHYS_PFN(paddr));
-+	struct rmap_walk_control rwc = {
-+		.rmap_one = damon_page_mkold,
-+		.anon_lock = page_lock_anon_vma_read,
-+	};
-+	bool need_lock;
-+
-+	if (!page)
-+		return;
-+
-+	if (!page_mapped(page) || !page_rmapping(page))
-+		return;
-+
-+	need_lock = !PageAnon(page) || PageKsm(page);
-+	if (need_lock && !trylock_page(page))
-+		return;
-+
-+	rmap_walk(page, &rwc);
-+
-+	if (need_lock)
-+		unlock_page(page);
-+	put_page(page);
-+}
-+
-+static void damon_prepare_phys_access_check(struct damon_ctx *ctx,
-+					    struct damon_region *r)
-+{
-+	r->sampling_addr = damon_rand(r->ar.start, r->ar.end);
-+
-+	damon_phys_mkold(r->sampling_addr);
-+}
-+
-+void kdamond_prepare_phys_access_checks(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(t, ctx) {
-+		damon_for_each_region(r, t)
-+			damon_prepare_phys_access_check(ctx, r);
-+	}
-+}
-+
-+struct damon_phys_access_chk_result {
-+	unsigned long page_sz;
-+	bool accessed;
-+};
-+
-+static bool damon_page_accessed(struct page *page, struct vm_area_struct *vma,
-+		unsigned long addr, void *arg)
-+{
-+	struct damon_phys_access_chk_result *result = arg;
-+
-+	result->accessed = damon_young(vma->vm_mm, addr, &result->page_sz);
-+
-+	/* If accessed, stop walking */
-+	return !result->accessed;
-+}
-+
-+static bool damon_phys_young(unsigned long paddr, unsigned long *page_sz)
-+{
-+	struct page *page = damon_phys_get_page(PHYS_PFN(paddr));
-+	struct damon_phys_access_chk_result result = {
-+		.page_sz = PAGE_SIZE,
-+		.accessed = false,
-+	};
-+	struct rmap_walk_control rwc = {
-+		.arg = &result,
-+		.rmap_one = damon_page_accessed,
-+		.anon_lock = page_lock_anon_vma_read,
-+	};
-+	bool need_lock;
-+
-+	if (!page)
-+		return false;
-+
-+	if (!page_mapped(page) || !page_rmapping(page))
-+		return false;
-+
-+	need_lock = !PageAnon(page) || PageKsm(page);
-+	if (need_lock && !trylock_page(page))
-+		return false;
-+
-+	rmap_walk(page, &rwc);
-+
-+	if (need_lock)
-+		unlock_page(page);
-+	put_page(page);
-+
-+	*page_sz = result.page_sz;
-+	return result.accessed;
-+}
-+
-+/*
-+ * Check whether the region was accessed after the last preparation
-+ *
-+ * mm	'mm_struct' for the given virtual address space
-+ * r	the region of physical address space that needs to be checked
-+ */
-+static void damon_check_phys_access(struct damon_ctx *ctx,
-+				    struct damon_region *r)
-+{
-+	static unsigned long last_addr;
-+	static unsigned long last_page_sz = PAGE_SIZE;
-+	static bool last_accessed;
-+
-+	/* If the region is in the last checked page, reuse the result */
-+	if (ALIGN_DOWN(last_addr, last_page_sz) ==
-+				ALIGN_DOWN(r->sampling_addr, last_page_sz)) {
-+		if (last_accessed)
-+			r->nr_accesses++;
-+		return;
-+	}
-+
-+	last_accessed = damon_phys_young(r->sampling_addr, &last_page_sz);
-+	if (last_accessed)
-+		r->nr_accesses++;
-+
-+	last_addr = r->sampling_addr;
-+}
-+
-+unsigned int kdamond_check_phys_accesses(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+	unsigned int max_nr_accesses = 0;
-+
-+	damon_for_each_task(t, ctx) {
-+		damon_for_each_region(r, t) {
-+			damon_check_phys_access(ctx, r);
-+			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
-+		}
-+	}
-+
-+	return max_nr_accesses;
-+}
-+
- /*
-  * damon_check_reset_time_interval() - Check if a time interval is elapsed.
-  * @baseline:	the time to check whether the interval has elapsed since
-@@ -1058,6 +1237,11 @@ void kdamond_update_vm_regions(struct damon_ctx *ctx)
- 	}
- }
- 
-+/* Do nothing.  If necessary, users should update regions in other callbacks */
-+void kdamond_update_phys_regions(struct damon_ctx *ctx)
-+{
-+}
-+
- /*
-  * Check whether current monitoring should be stopped
-  *
--- 
-2.17.1
-
+> ---
+>  mm/hugetlb.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index bcabbe02192b..4ebc4edc3b40 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -5586,12 +5586,14 @@ void __init hugetlb_cma_reserve(int order)
+>  	reserved = 0;
+>  	for_each_node_state(nid, N_ONLINE) {
+>  		int res;
+> +		char name[20];
+>  
+>  		size = min(per_node, hugetlb_cma_size - reserved);
+>  		size = round_up(size, PAGE_SIZE << order);
+>  
+> +		snprintf(name, 20, "hugetlb%d", nid);
+>  		res = cma_declare_contiguous_nid(0, size, 0, PAGE_SIZE << order,
+> -						 0, false, "hugetlb",
+> +						 0, false, name,
+>  						 &hugetlb_cma[nid], nid);
+>  		if (res) {
+>  			pr_warn("hugetlb_cma: reservation failed: err %d, node %d",
+> -- 
+> 2.23.0
+> 
+> 
+> 
