@@ -2,180 +2,120 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68593C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4487B20734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NldWpumu"
+	by mail.kernel.org (Postfix) with ESMTP id 8577F207ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591207872;
+	bh=dbdZ2Zri2MRs+RtGvh5/n56tv50ACELvzX6ycBRjknM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ZKK3Lqk7R3v6vSjncZI0wta0AJBXF9DxWG6xsWeZQY/qD7TryuIIXSECPYHJa4K1l
+	 0yh/tGtxwG6Bc3IPwwpxZCqjPiGHYHeiJRuo97EpsZa9K7Wav6kiBpHexGIgS2sxtc
+	 m2LJ1S1ePrYuyAjTomdjAeAJPCbElEK68b5MWV+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgFCSJx (ORCPT
+        id S1726496AbgFCSLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgFCSJw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:09:52 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84740C08C5C3
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 11:09:51 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id g18so2829981qtu.13
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 11:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l+YRFO1Jqur/v+izNNUOK0uXUs+D9YNZAMbqThNlzeA=;
-        b=NldWpumuhDbPRpYzENr0K/9s/qHVPFcaULayo2UH6gBZY5klR9F0u7BdisexLTUr60
-         rtrNS5LDZo4+h7qSUL1dULzAzJamfgEuu2abhGV5SZqiPQakbedt3sJhIG0HoBRFH+3l
-         L6xLtKbwTDA/9Z2SNH4d45SZRYWQQ/TqqhzJKX3igwQhHbBP6m49b0vT06weMuB5+FFK
-         gdoqGDR7MJFK1cAvidDnBb2AsdsPvl94j1gf6E8JeNupkkDWVLG0vZSaX6eBYJgpO5r2
-         hWY1b9i8O9CuTQTGKEIwjuLXiYiP2eXUxVKLajVQUqaHObMbFuZq8LmA64skR4XaRbSE
-         IoEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l+YRFO1Jqur/v+izNNUOK0uXUs+D9YNZAMbqThNlzeA=;
-        b=BtwRawUf6mTxx4/x2mWycKZICnnOgHG9jupuQ+6iEnMM9fCbTtrITFn4/mxp7MHJbJ
-         g7SwXOjqiSdfS/ICe7Q/0CbnMqOBIAUA7xEhI4Z0xgpVAYynu5O9nEbdBt2ipo6L0/sz
-         8YJhlcA6nXlh9tSUs06X6JHgH9k/Jdtn7A9GlzYdCwngtXL1NSB1XfKX8/Y9G771siqT
-         WUgbBfto4SjrLSASJXnCTrGItWc78n97boDmFmgpxoB9xoH7sxX4RaUiE9HNdbpONTHA
-         nE2gnb3HE3/TnpQWnFeN+3oz8mKvFXKCXvqibEbh/MOAJI7Kc4NUSitN053OiGnV8yX7
-         NURA==
-X-Gm-Message-State: AOAM530z69WMn6QQl+hwvl+9bNoywA44Ynr8nGwcnXVgqT6Mxpa0O50s
-        diCH4YOwkeXgAfmSS8wrPAl9cA==
-X-Google-Smtp-Source: ABdhPJykygamjsojzqNXzfdSommDfxYT09rvBLBZ/o9nNI1XtfpsPstLVOAM+OK1Jj+lwJGLleSXFA==
-X-Received: by 2002:ac8:3fdb:: with SMTP id v27mr623567qtk.220.1591207790414;
-        Wed, 03 Jun 2020 11:09:50 -0700 (PDT)
-Received: from yoga ([2607:fb90:84f0:6dc6:b843:e3ff:fe62:cb58])
-        by smtp.gmail.com with ESMTPSA id v144sm2243803qka.69.2020.06.03.11.09.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 11:09:49 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 11:09:43 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 08/10] clk: qcom: Add graphics clock controller driver
- for SM8250
-Message-ID: <20200603180943.GX11847@yoga>
-References: <20200524210615.17035-1-jonathan@marek.ca>
- <20200524210615.17035-9-jonathan@marek.ca>
- <c4d43cf01b6d014fdc2258abb94eb2c5@codeaurora.org>
- <20200529011127.GJ279327@builder.lan>
- <dbcb5c24f8888d6b0cfc63a80e310319@codeaurora.org>
+        Wed, 3 Jun 2020 14:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbgFCSLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:11:10 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8827207D3;
+        Wed,  3 Jun 2020 18:11:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591207869;
+        bh=dbdZ2Zri2MRs+RtGvh5/n56tv50ACELvzX6ycBRjknM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=F7CUJv/UYkI0d5tmTC5kszJufUeac232ZpexEXJ5S5wW5RwSa2s/BliRunX8tXXT9
+         rsHSFY/F785waDH+jrn++C+auqsfpbMIW8pgJGU0lwAIkwV2O9fYp0iZx5k/WgX8c7
+         lnDZZOU8pgTPuedsblLadu0vA5SU2GczCrcFODgA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AB01935209C5; Wed,  3 Jun 2020 11:11:09 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 11:11:09 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>
+Subject: Re: [PATCH] rcu/performance: Fix kfree_perf_init() build warning on
+ 32-bit kernels
+Message-ID: <20200603181109.GA5438@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <158923078019.390.12609597570329519463.tip-bot2@tip-bot2>
+ <20200526182744.GA3722128@gmail.com>
+ <20200527011413.GD149611@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <dbcb5c24f8888d6b0cfc63a80e310319@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200527011413.GD149611@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28 May 23:56 PDT 2020, Sai Prakash Ranjan wrote:
-
-> Hi Bjorn,
-> 
-> On 2020-05-29 06:41, Bjorn Andersson wrote:
-> > On Mon 25 May 02:47 PDT 2020, Sai Prakash Ranjan wrote:
+On Tue, May 26, 2020 at 09:14:13PM -0400, Joel Fernandes wrote:
+> On Tue, May 26, 2020 at 08:27:44PM +0200, Ingo Molnar wrote:
+> [...]
+> > ./include/linux/kern_levels.h:5:18: warning: format ‘%lu’ expects argument
+> > of type ‘long unsigned int’, but argument 2 has type ‘unsigned int’
+> > [-Wformat=] 5 | #define KERN_SOH "\001"  /* ASCII Start Of Header */ |
+> > ^~~~~~
+> > ./include/linux/kern_levels.h:9:20: note: in expansion of macro ‘KERN_SOH’
+> >     9 | #define KERN_ALERT KERN_SOH "1" /* action must be taken immediately */
+> >       |                    ^~~~~~~~
+> > ./include/linux/printk.h:295:9: note: in expansion of macro ‘KERN_ALERT’
+> >   295 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+> >       |         ^~~~~~~~~~
+> > kernel/rcu/rcuperf.c:726:2: note: in expansion of macro ‘pr_alert’
+> >   726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+> >       |  ^~~~~~~~
+> > kernel/rcu/rcuperf.c:726:32: note: format string is defined here
+> >   726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+> >       |                              ~~^
+> >       |                                |
+> >       |                                long unsigned int
+> >       |                              %u
 > > 
-> > > Hi Jonathan,
-> > > 
-> > > On 2020-05-25 02:36, Jonathan Marek wrote:
-> > > > Add support for the graphics clock controller found on SM8250
-> > > > based devices. This would allow graphics drivers to probe and
-> > > > control their clocks.
-> > > >
-> > > > This is copied from the downstream kernel, adapted for upstream.
-> > > > For example, GDSCs have been added.
-> > > >
-> > > > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> > > 
-> > > Since this is taken from downstream, maintain the original author's
-> > > signed-off and add yourself as the co-developer if you have done
-> > > any modifications. Same applies to all other patches.
-> > > 
 > > 
-> > I disagree with this.
+> > The reason for the warning is that both kfree_mult and sizeof() are 
+> > 'int' types on 32-bit kernels, while the format string expects a long.
 > > 
-> > As expressed in the commit message, this patch is based on the
-> > downstream driver, not the individual patch.  As such, the _patch_ is
-> > prepared by Jonathan and by his Signed-off-by certifies the origin of
-> > the contribution per section 11.a or 11.b of submitting-patches.rst.
-> > 
+> > Instead of casting the type to long or tweaking the format string, the 
+> > most straightforward solution is to upgrade kfree_mult to a long. 
+> > Since this depends on CONFIG_RCU_PERF_TEST
 > 
-> I lost at the downstream driver vs the individual patch here. So the
-> downstream driver is also an individual patch right or did I get
-> something completely wrong.
+> Thanks for fixing it.
 > 
-
-The downstream driver is the result of a series of patches, by various
-people, whom all use their Signed-off-by to denote that what they add is
-conforming to the given license and that they have permission to
-contribute to the project.
-
-> So if someone prepares a patch and includes a commit description
-> saying it is taken from downstream, does it mean he is the author
-> of that patch?
-
-No, but I think the wording here is wrong. The patch is not taken from
-downstream, it's based on downstream code.
-
-> Shouldn't the author be included in  "From: Author"
-> and his signed-off appear first before the submitter's(also a contributor)
-> signed-off?
-
-It should, in the case that what is contributed is the forwarding of a
-patch found somewhere.
-
-But as I said before, Jonathan does through his S-o-b state that his
-patch is based on previous work that is covered under appropriate open
-source license and that he has the right under that license to
-contribute said work.
-
-As such, his patch is meeting the requirements.
-
-
-The other part is how to give credit to authors of the original work,
-Jonathan does that by stating that it's based on work in the downstream
-kernel - which is quite typical to how it's done.
-
-> Or is it because these clock data is auto generated and it
-> doesnt really matter?
+> > BTW., could we please also rename this code from 'PERF_TEST'/'perf test'
+> > to 'PERFORMANCE_TEST'/'performance test'? At first glance I always
+> > mistakenly believe that it's somehow related to perf, while it isn't. =B-)
 > 
+> Would it be better to call it 'RCUPERF_TEST' instead of the
+> 'RCU_PERFORMANCE_TEST' you are proposing? I feel the word 'PERFORMANCE' is
+> too long.  Also, 'rcuperf test' instead of the 'rcu performance test' you are
+> proposing.  I am Ok with doing it however you and Paul want it though, let me
+> know.
 
-No. The author and s-o-b relates to license compliance, as such the
-person who committed the auto generated work will sign off that the
-content is license compliant and he/she is allowed to contribute it to
-the project.
+As long as we are bikeshedding the name...  How about refscale.c and
+RCU_REF_SCALE_TEST on the one hand and rcuscale.c and RCU_SCALE_TEST on
+the other?  That keeps the names reasonably short and does not allude
+to perf at all.
 
-Regards,
-Bjorn
+> Paul, should I send you a renaming patch for the new performance tests as
+> well (which I believe should be in the -dev branch).
 
-> > 
-> > Regarding co-developed-by; this should not be used when "forwarding" an
-> > existing patch. Per section 11.c the contributor should add their
-> > Signed-off-by to certify the origin of the patch. Any modifications
-> > should be documented in immediately proceeding the s-o-b, as described
-> > later in section 11.
-> > 
-> 
-> Yes makes sense to not have co-developed-by for forwarding patch.
-> 
-> Thanks,
-> Sai
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+I am still modifying refperf/refscale/refwhatever, so I will update
+that one.
+
+						Thanx, Paul
