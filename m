@@ -2,307 +2,154 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2006BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDC0E20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF3220678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:23:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AKoUcit5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgFCGWB (ORCPT
+        id S1726119AbgFCGXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:22:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55902 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbgFCGVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:21:35 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5E94BA54E25950125C75;
-        Wed,  3 Jun 2020 14:21:33 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 3 Jun 2020 14:21:24 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <chiqijun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: [PATCH net-next 4/5] hinic: add support to identify physical device
-Date:   Wed, 3 Jun 2020 14:20:14 +0800
-Message-ID: <20200603062015.12640-5-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200603062015.12640-1-luobin9@huawei.com>
-References: <20200603062015.12640-1-luobin9@huawei.com>
+        Wed, 3 Jun 2020 02:23:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49695 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725878AbgFCGXS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:23:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591165397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lfjOXsWWEkBdc5PrrjtOTiVJWBB/Cmo/FhE9Ax069a4=;
+        b=AKoUcit5GqkRogJEJSn5XhBwBI+tibubMyzMeE2Xe4BYZjxgrvKO5O3Gx/pytTDpYHSaUN
+        Lfu2nSDiDra2+QBd9STTKFk6JV3G23kSspzFFRX13+4n2VqIxU2cZptTGZqaj1bxzNE11F
+        tG4hu26d9pu/HYEWy/EvZF31cu9LvIA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-wGU6dBYQN5WU97h8OzbzCQ-1; Wed, 03 Jun 2020 02:23:15 -0400
+X-MC-Unique: wGU6dBYQN5WU97h8OzbzCQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C47AF185695D;
+        Wed,  3 Jun 2020 06:23:14 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A74F760C81;
+        Wed,  3 Jun 2020 06:23:10 +0000 (UTC)
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20200602084257.134555-1-mst@redhat.com>
+ <20200603014815.GR23230@ZenIV.linux.org.uk>
+ <3358ae96-abb6-6be9-346a-0e971cb84dcd@redhat.com>
+ <20200603041849.GT23230@ZenIV.linux.org.uk>
+ <3e723db8-0d55-fae6-288e-9d95905592db@redhat.com>
+ <20200603013600-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b7de29fa-33f2-bbc1-08dc-d73b28e3ded5@redhat.com>
+Date:   Wed, 3 Jun 2020 14:23:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200603013600-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support to identify physical device by flashing an LED
-attached to it with ethtool -p cmd.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
- .../net/ethernet/huawei/hinic/hinic_ethtool.c | 41 ++++++++++++++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  2 +
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  1 +
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |  4 +-
- .../net/ethernet/huawei/hinic/hinic_port.c    | 55 +++++++++++++++++++
- .../net/ethernet/huawei/hinic/hinic_port.h    | 35 ++++++++++++
- .../net/ethernet/huawei/hinic/hinic_sriov.c   |  4 +-
- 7 files changed, 139 insertions(+), 3 deletions(-)
+On 2020/6/3 下午1:46, Michael S. Tsirkin wrote:
+> On Wed, Jun 03, 2020 at 01:18:54PM +0800, Jason Wang wrote:
+>> On 2020/6/3 下午12:18, Al Viro wrote:
+>>> On Wed, Jun 03, 2020 at 11:57:11AM +0800, Jason Wang wrote:
+>>>
+>>>>> How widely do you hope to stretch the user_access areas, anyway?
+>>>> To have best performance for small packets like 64B, if possible, we want to
+>>>> disable STAC not only for the metadata access done by vhost accessors but
+>>>> also the data access via iov iterator.
+>>> If you want to try and convince Linus to go for that, make sure to Cc
+>>> me on that thread.  Always liked quality flame...
+>>>
+>>> The same goes for interval tree lookups with uaccess allowed.  IOW, I _really_
+>>> doubt that it's a good idea.
+>>
+>> I see. We are just seeking an approach to perform better in order to compete
+>> with userspace dpdk backends.
+>>
+>> I tried another approach of using direct mapping + mmu notifier [1] but the
+>> synchronization with MMU notifier is not easy to perform well.
+>>
+>> [1] https://patchwork.kernel.org/patch/11133009/
+>>
+>>
+>>>>> Incidentally, who had come up with the name __vhost_get_user?
+>>>>> Makes for lovey WTF moment for readers - esp. in vhost_put_user()...
+>>>> I think the confusion comes since it does not accept userspace pointer (when
+>>>> IOTLB is enabled).
+>>>>
+>>>> How about renaming it as vhost_read()/vhost_write() ?
+>>> Huh?
+>>>
+>>> __vhost_get_user() is IOTLB remapping of userland pointer.  It does not access
+>>> userland memory.  Neither for read, nor for write.  It is used by vhost_get_user()
+>>> and vhost_put_user().
+>>>
+>>> Why would you want to rename it into vhost_read _or_ vhost_write, and in any case,
+>>> how do you give one function two names?  IDGI...
+>>
+>> I get you know, I thought you're concerning the names of
+>> vhost_get_user()/vhost_put_user() but actually __vhost_get_user().
+>>
+>> Maybe something like __vhost_fetch_uaddr() is better.
+>>
+>> Thanks
+>
+> It's basically vhost_translate_uaddr isn't it?
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index 5d6278cf74ad..61a5c59532b8 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -1759,6 +1759,46 @@ static void hinic_diag_test(struct net_device *netdev,
- 		netif_carrier_on(netdev);
- }
- 
-+static int hinic_set_phys_id(struct net_device *netdev,
-+			     enum ethtool_phys_id_state state)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	int err = 0;
-+	u8 port;
-+
-+	port = nic_dev->hwdev->port_id;
-+
-+	switch (state) {
-+	case ETHTOOL_ID_ACTIVE:
-+		err = hinic_set_led_status(nic_dev->hwdev, port,
-+					   HINIC_LED_TYPE_LINK,
-+					   HINIC_LED_MODE_FORCE_2HZ);
-+		if (err)
-+			netif_err(nic_dev, drv, netdev,
-+				  "Set LED blinking in 2HZ failed\n");
-+		else
-+			netif_info(nic_dev, drv, netdev,
-+				   "Set LED blinking in 2HZ success\n");
-+		break;
-+
-+	case ETHTOOL_ID_INACTIVE:
-+		err = hinic_reset_led_status(nic_dev->hwdev, port);
-+		if (err)
-+			netif_err(nic_dev, drv, netdev,
-+				  "Reset LED to original status failed\n");
-+		else
-+			netif_info(nic_dev, drv, netdev,
-+				   "Reset LED to original status success\n");
-+
-+		break;
-+
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return err;
-+}
-+
- static const struct ethtool_ops hinic_ethtool_ops = {
- 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
- 				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
-@@ -1789,6 +1829,7 @@ static const struct ethtool_ops hinic_ethtool_ops = {
- 	.get_ethtool_stats = hinic_get_ethtool_stats,
- 	.get_strings = hinic_get_strings,
- 	.self_test = hinic_diag_test,
-+	.set_phys_id = hinic_set_phys_id,
- };
- 
- static const struct ethtool_ops hinicvf_ethtool_ops = {
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 4de50e4ba4df..45c137827a16 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -83,6 +83,8 @@ static int parse_capability(struct hinic_hwdev *hwdev,
- 		nic_cap->max_vf_qps = dev_cap->max_vf_sqs + 1;
- 	}
- 
-+	hwdev->port_id = dev_cap->port_id;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index c92c39a50b81..01fe94f2d4bc 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -312,6 +312,7 @@ struct hinic_hwdev {
- 	struct hinic_mbox_func_to_func  *func_to_func;
- 
- 	struct hinic_cap                nic_cap;
-+	u8				port_id;
- };
- 
- struct hinic_nic_cb {
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-index a3349ae30ff3..919d2c6ffc35 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-@@ -81,7 +81,9 @@ enum hinic_comm_cmd {
- 	HINIC_COMM_CMD_MSI_CTRL_REG_WR_BY_UP,
- 	HINIC_COMM_CMD_MSI_CTRL_REG_RD_BY_UP,
- 
--	HINIC_COMM_CMD_L2NIC_RESET		= 0x4b,
-+	HINIC_COMM_CMD_SET_LED_STATUS	= 0x4a,
-+
-+	HINIC_COMM_CMD_L2NIC_RESET	= 0x4b,
- 
- 	HINIC_COMM_CMD_PAGESIZE_SET	= 0x50,
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-index 53ea2740ba9f..fc99d9f6799a 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-@@ -1271,3 +1271,58 @@ int hinic_set_loopback_mode(struct hinic_hwdev *hwdev, u32 mode, u32 enable)
- 
- 	return 0;
- }
-+
-+static int _set_led_status(struct hinic_hwdev *hwdev, u8 port,
-+			   enum hinic_led_type type,
-+			   enum hinic_led_mode mode, u8 reset)
-+{
-+	struct hinic_led_info led_info = {0};
-+	u16 out_size = sizeof(led_info);
-+	struct hinic_pfhwdev *pfhwdev;
-+	int err;
-+
-+	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
-+
-+	led_info.port = port;
-+	led_info.reset = reset;
-+
-+	led_info.type = type;
-+	led_info.mode = mode;
-+
-+	err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
-+				HINIC_COMM_CMD_SET_LED_STATUS,
-+				&led_info, sizeof(led_info),
-+				&led_info, &out_size, HINIC_MGMT_MSG_SYNC);
-+	if (err || led_info.status || !out_size) {
-+		dev_err(&hwdev->hwif->pdev->dev, "Failed to set led status, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, led_info.status, out_size);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+int hinic_set_led_status(struct hinic_hwdev *hwdev, u8 port,
-+			 enum hinic_led_type type, enum hinic_led_mode mode)
-+{
-+	if (!hwdev)
-+		return -EINVAL;
-+
-+	return _set_led_status(hwdev, port, type, mode, 0);
-+}
-+
-+int hinic_reset_led_status(struct hinic_hwdev *hwdev, u8 port)
-+{
-+	int err;
-+
-+	if (!hwdev)
-+		return -EINVAL;
-+
-+	err = _set_led_status(hwdev, port, HINIC_LED_TYPE_INVALID,
-+			      HINIC_LED_MODE_INVALID, 1);
-+	if (err)
-+		dev_err(&hwdev->hwif->pdev->dev,
-+			"Failed to reset led status\n");
-+
-+	return err;
-+}
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-index b21956d7232e..5c916875f295 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-@@ -666,6 +666,17 @@ struct hinic_port_loopback {
- 	u32	en;
- };
- 
-+struct hinic_led_info {
-+	u8	status;
-+	u8	version;
-+	u8	rsvd0[6];
-+
-+	u8	port;
-+	u8	type;
-+	u8	mode;
-+	u8	reset;
-+};
-+
- int hinic_port_add_mac(struct hinic_dev *nic_dev, const u8 *addr,
- 		       u16 vlan_id);
- 
-@@ -765,6 +776,30 @@ int hinic_dcb_set_pfc(struct hinic_hwdev *hwdev, u8 pfc_en, u8 pfc_bitmap);
- 
- int hinic_set_loopback_mode(struct hinic_hwdev *hwdev, u32 mode, u32 enable);
- 
-+enum hinic_led_mode {
-+	HINIC_LED_MODE_ON,
-+	HINIC_LED_MODE_OFF,
-+	HINIC_LED_MODE_FORCE_1HZ,
-+	HINIC_LED_MODE_FORCE_2HZ,
-+	HINIC_LED_MODE_FORCE_4HZ,
-+	HINIC_LED_MODE_1HZ,
-+	HINIC_LED_MODE_2HZ,
-+	HINIC_LED_MODE_4HZ,
-+	HINIC_LED_MODE_INVALID,
-+};
-+
-+enum hinic_led_type {
-+	HINIC_LED_TYPE_LINK,
-+	HINIC_LED_TYPE_LOW_SPEED,
-+	HINIC_LED_TYPE_HIGH_SPEED,
-+	HINIC_LED_TYPE_INVALID,
-+};
-+
-+int hinic_reset_led_status(struct hinic_hwdev *hwdev, u8 port);
-+
-+int hinic_set_led_status(struct hinic_hwdev *hwdev, u8 port,
-+			 enum hinic_led_type type, enum hinic_led_mode mode);
-+
- int hinic_open(struct net_device *netdev);
- 
- int hinic_close(struct net_device *netdev);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-index efab2dd2c889..f5c7c1f48542 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-@@ -383,7 +383,7 @@ static int hinic_del_vf_mac_msg_handler(void *hwdev, u16 vf_id,
- 
- 	nic_io = &hw_dev->func_to_io;
- 	vf_info = nic_io->vf_infos + HW_VF_ID_TO_OS(vf_id);
--	if (vf_info->pf_set_mac  && is_valid_ether_addr(mac_in->mac) &&
-+	if (vf_info->pf_set_mac && is_valid_ether_addr(mac_in->mac) &&
- 	    !memcmp(vf_info->vf_mac_addr, mac_in->mac, ETH_ALEN)) {
- 		dev_warn(&hw_dev->hwif->pdev->dev, "PF has already set VF mac.\n");
- 		mac_out->status = HINIC_PF_SET_VF_ALREADY;
-@@ -905,7 +905,6 @@ int hinic_ndo_set_vf_spoofchk(struct net_device *netdev, int vf, bool setting)
- 
- 	err = hinic_set_vf_spoofchk(sriov_info->hwdev,
- 				    OS_VF_ID_TO_HW(vf), setting);
--
- 	if (!err) {
- 		netif_info(nic_dev, drv, netdev, "Set VF %d spoofchk %s successfully\n",
- 			   vf, setting ? "on" : "off");
-@@ -1020,6 +1019,7 @@ static int cfg_mbx_pf_proc_vf_msg(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
- 	dev_cap->max_vf = cap->max_vf;
- 	dev_cap->max_sqs = cap->max_vf_qps;
- 	dev_cap->max_rqs = cap->max_vf_qps;
-+	dev_cap->port_id = dev->port_id;
- 
- 	*out_size = sizeof(*dev_cap);
- 
--- 
-2.17.1
+
+Yes.
+
+
+>
+> BTW now I re-read it I don't understand __vhost_get_user_slow:
+>
+>
+> static void __user *__vhost_get_user_slow(struct vhost_virtqueue *vq,
+>                                            void __user *addr, unsigned int size,
+>                                            int type)
+> {
+>          int ret;
+>
+>          ret = translate_desc(vq, (u64)(uintptr_t)addr, size, vq->iotlb_iov,
+>                               ARRAY_SIZE(vq->iotlb_iov),
+>                               VHOST_ACCESS_RO);
+>
+> ..
+> }
+>
+> how does this work? how can we cast a pointer to guest address without
+> adding any offsets?
+
+
+I'm not sure I get you here. What kind of offset did you mean?
+
+Thanks
+
+
+>
+>
 
