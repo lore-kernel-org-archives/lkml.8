@@ -2,167 +2,100 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ED6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 556112053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3DD2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ugFBxxmQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VPkJ50Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgFCSUb (ORCPT
+        id S1726069AbgFCSVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:20:31 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:48696 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725926AbgFCSUb (ORCPT
+        Wed, 3 Jun 2020 14:21:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28317 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725821AbgFCSVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:20:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591208429; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=w6HeEmRM3pXLn2ekFS+/1eTGwOSBEOg/dSAacEoqx8k=;
- b=ugFBxxmQebbJpnB5HA4O4/wdeKZvTMgrvWnYYKWWFwtV8Rzfk0XPktEy94pkIwqWmgVGblL1
- vaXzA7uTIB3yszE1vocTMCpWmv2knSRnkJ6FKhHfhSn37EyNlIrAW3wJlgCeYsjo53Vw6SYt
- 37o6jVRb3rO2yq0CwWZsCgHZFqk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5ed7e9e82738686126fb37dc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 18:20:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E3DF9C43391; Wed,  3 Jun 2020 18:20:23 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 3 Jun 2020 14:21:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591208496;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+c1cgHsK07BrW3OA4NvtHTy/+/91BrD1QDQgKn/57QU=;
+        b=VPkJ50TaienKvfD5j4p6lqvgK9XflWoc8UfNyBqufr/2vRtq8jStDh8l6zX9wZNIwuJaZR
+        Tfrvnlasp+HE9K4CAo6mX4bvfpoaAqqe7nySr0bv0p3+bZ2D/1ERGxKtlltt2DzU1LJJca
+        uFabiJZfID/4zMNrXrXTif+mjnwnrCg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-z6ZVHDynO0SDP4ytoFxXvQ-1; Wed, 03 Jun 2020 14:21:34 -0400
+X-MC-Unique: z6ZVHDynO0SDP4ytoFxXvQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35F91C433C6;
-        Wed,  3 Jun 2020 18:20:23 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 608F2107ACF2;
+        Wed,  3 Jun 2020 18:21:33 +0000 (UTC)
+Received: from dm.redhat.com (unknown [10.10.67.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 982BD5D9CD;
+        Wed,  3 Jun 2020 18:21:29 +0000 (UTC)
+From:   Yannick Cote <ycote@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kselftest@vger.kernel.org, joe.lawrence@redhat.com,
+        linux-kernel@vger.kernel.org, pmladek@suse.com, mbenes@suse.cz,
+        kamalesh@linux.vnet.ibm.com
+Subject: [PATCH v2 0/4] selftests/livepatch: rework of test-klp-{callbacks,shadow_vars}
+Date:   Wed,  3 Jun 2020 14:20:54 -0400
+Message-Id: <20200603182058.109470-1-ycote@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 23:50:23 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 08/10] clk: qcom: Add graphics clock controller driver for
- SM8250
-In-Reply-To: <20200603180943.GX11847@yoga>
-References: <20200524210615.17035-1-jonathan@marek.ca>
- <20200524210615.17035-9-jonathan@marek.ca>
- <c4d43cf01b6d014fdc2258abb94eb2c5@codeaurora.org>
- <20200529011127.GJ279327@builder.lan>
- <dbcb5c24f8888d6b0cfc63a80e310319@codeaurora.org>
- <20200603180943.GX11847@yoga>
-Message-ID: <7b2620cf98dc915307d2a29f05eca454@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+v2:
+ - drop completion variables and flush workqueue [pmladek]
+ - comment typo/pr_info cleanup [kbabulal/mbenes]
+ - cleanup goto ret assignations [pmladek]
+ - allocate pndup[]'s, leave some svar allocations to
+   shadow_get_or_alloc() [pmladek]
+ - change allocation order for cleaner test dmesg output [pmladek]
 
-On 2020-06-03 23:39, Bjorn Andersson wrote:
-> On Thu 28 May 23:56 PDT 2020, Sai Prakash Ranjan wrote:
-> 
->> Hi Bjorn,
->> 
->> On 2020-05-29 06:41, Bjorn Andersson wrote:
->> > On Mon 25 May 02:47 PDT 2020, Sai Prakash Ranjan wrote:
->> >
->> > > Hi Jonathan,
->> > >
->> > > On 2020-05-25 02:36, Jonathan Marek wrote:
->> > > > Add support for the graphics clock controller found on SM8250
->> > > > based devices. This would allow graphics drivers to probe and
->> > > > control their clocks.
->> > > >
->> > > > This is copied from the downstream kernel, adapted for upstream.
->> > > > For example, GDSCs have been added.
->> > > >
->> > > > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->> > >
->> > > Since this is taken from downstream, maintain the original author's
->> > > signed-off and add yourself as the co-developer if you have done
->> > > any modifications. Same applies to all other patches.
->> > >
->> >
->> > I disagree with this.
->> >
->> > As expressed in the commit message, this patch is based on the
->> > downstream driver, not the individual patch.  As such, the _patch_ is
->> > prepared by Jonathan and by his Signed-off-by certifies the origin of
->> > the contribution per section 11.a or 11.b of submitting-patches.rst.
->> >
->> 
->> I lost at the downstream driver vs the individual patch here. So the
->> downstream driver is also an individual patch right or did I get
->> something completely wrong.
->> 
-> 
-> The downstream driver is the result of a series of patches, by various
-> people, whom all use their Signed-off-by to denote that what they add 
-> is
-> conforming to the given license and that they have permission to
-> contribute to the project.
-> 
->> So if someone prepares a patch and includes a commit description
->> saying it is taken from downstream, does it mean he is the author
->> of that patch?
-> 
-> No, but I think the wording here is wrong. The patch is not taken from
-> downstream, it's based on downstream code.
-> 
->> Shouldn't the author be included in  "From: Author"
->> and his signed-off appear first before the submitter's(also a 
->> contributor)
->> signed-off?
-> 
-> It should, in the case that what is contributed is the forwarding of a
-> patch found somewhere.
-> 
-> But as I said before, Jonathan does through his S-o-b state that his
-> patch is based on previous work that is covered under appropriate open
-> source license and that he has the right under that license to
-> contribute said work.
-> 
-> As such, his patch is meeting the requirements.
-> 
-> 
-> The other part is how to give credit to authors of the original work,
-> Jonathan does that by stating that it's based on work in the downstream
-> kernel - which is quite typical to how it's done.
-> 
->> Or is it because these clock data is auto generated and it
->> doesnt really matter?
->> 
-> 
-> No. The author and s-o-b relates to license compliance, as such the
-> person who committed the auto generated work will sign off that the
-> content is license compliant and he/she is allowed to contribute it to
-> the project.
-> 
+The test-klp-callbacks change implements a synchronization replacement of
+initial code which relied on solely on sleep delays. Remove the sleeps
+and pass a block_transition flag from test script to module. Use
+flush_workqueue() to serialize module output for test result
+consideration.
 
-Thanks for these nice explanations.
+The test-klp-shadow-vars changes first refactors the code to be more of
+a readable example as well as continuing to verify the component code.
+The patch is broken in two to display the renaming and restructuring in
+part 1 and the addition and change of logic in part 2. The last change
+frees memory before bailing in case of errors.
 
-Regards,
-Sai
+Patchset to be merged via the livepatching tree is against: livepatching/for-next
+
+Joe Lawrence (1):
+  selftests/livepatch: simplify test-klp-callbacks busy target tests
+
+Yannick Cote (3):
+  selftests/livepatch: rework test-klp-shadow-vars
+  selftests/livepatch: more verification in test-klp-shadow-vars
+  selftests/livepatch: fix mem leaks in test-klp-shadow-vars
+
+ lib/livepatch/test_klp_callbacks_busy.c       |  37 ++-
+ lib/livepatch/test_klp_shadow_vars.c          | 240 ++++++++++--------
+ .../selftests/livepatch/test-callbacks.sh     |  29 +--
+ .../selftests/livepatch/test-shadow-vars.sh   |  81 +++---
+ 4 files changed, 225 insertions(+), 162 deletions(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.25.4
+
