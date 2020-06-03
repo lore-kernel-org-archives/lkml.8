@@ -2,196 +2,102 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9274FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4780BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E18C206A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gx0lYwEt"
+	by mail.kernel.org (Postfix) with ESMTP id 2C3912072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgFCCsu (ORCPT
+        id S1725876AbgFCC5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgFCCss (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:48:48 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A266C08C5C0;
-        Tue,  2 Jun 2020 19:48:46 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x27so321612lfg.9;
-        Tue, 02 Jun 2020 19:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qOKDoSBli51DIYrV+/BavzMGsCzLxEyswY3rhX9J9ow=;
-        b=Gx0lYwEtK90Rb0yiyibESharhnlq10cu1Vm+7kmCldA8wec3RaQhwNC4tEZ50QtqXZ
-         Gho4AG3lV1xP1aywWnQ9hOnEcgEicQmuybc1gw5JYs1dBK9w6S9P1AOrb1muq3pP0+2J
-         REmBJfOZsdQkhCsJZDfI9XeMiEYNfaZF9inHo4zcZvi8yL+OU0KtIFPMgQS1rfUgJwuK
-         tKGfzpYOUxtC7SUiCPkp3U5XUtqkMA9dOM6aPxDzsDmgGfKflqVS+GEWTw1KZ2lAg4u2
-         9xZbY4IuRftBnRNDuvvvjZKRz0tHXW0NcIrmujQQGbX4hy9JpQDF2JHEHcR0e0fHHIJK
-         rbFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qOKDoSBli51DIYrV+/BavzMGsCzLxEyswY3rhX9J9ow=;
-        b=e+zlA6nKkSkvPbKOxLE+j9GaoWgbON/iZO766H0FAjujilFtw98M204Ej6EfYx8n8c
-         5U2/oTuLolYLBvNGf0Xo6lkTD1JRnwSoUFNU53AwVimnAn0FyRzG2zR6BEaBDBBeL/69
-         94zZj+76TOL++W1YHJUxjIdW4rcKIvljnT4z8Wiy798ILdIQrqKSl8mNI/BJOCzhZHy4
-         Dve1pH0bO0dU7XS20uBgLHA2JK4c7ARcSWqxm2VmzhR3ZAhF53yH7nQ207lC9bZ4h66n
-         rV+p89e1A6e8b2RQSh1ggkpbA+uHAOdi4N8VloZkHCNVNeokzI3pCUcFpOzLgFLH+imP
-         Pn+g==
-X-Gm-Message-State: AOAM5338M+W/hzlIMq1UpIPCtG20i6KRVVkaZuZTH4XjSSPqE/CHdapp
-        AVyMdiRStrxA28E+YZd4XM5ksiMXiK7349y2rb9ukV74dzI=
-X-Google-Smtp-Source: ABdhPJzHkx4QSbOwKRlmc2dsSKv8eGkWRny1QukE6QfFG2NvoJTI9BvnFWYYyY7PVy9LxWaRIbOVSbE3jekyVVuIvC8=
-X-Received: by 2002:a19:f017:: with SMTP id p23mr1172772lfc.79.1591152525110;
- Tue, 02 Jun 2020 19:48:45 -0700 (PDT)
+        Tue, 2 Jun 2020 22:57:21 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:51518 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgFCC5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:57:21 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 0532uQ2A009471
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Tue, 2 Jun 2020 19:56:36 -0700
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 2 Jun 2020 19:56:16 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <kt0755@gmail.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+Date:   Wed, 3 Jun 2020 11:05:06 +0800
+Message-ID: <20200603030506.31577-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
- <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
- <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
- <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
- <CAL+tcoDn_=T--uB0CRymfTGvD022PPDk5Yw2yCxvqOOpZ4G_dQ@mail.gmail.com> <CANn89i+dPu9=qJowhRVm9d3CesY4p+zzJ0HGiCMc_yJxux6pow@mail.gmail.com>
-In-Reply-To: <CANn89i+dPu9=qJowhRVm9d3CesY4p+zzJ0HGiCMc_yJxux6pow@mail.gmail.com>
-From:   Jason Xing <kerneljasonxing@gmail.com>
-Date:   Wed, 3 Jun 2020 10:48:08 +0800
-Message-ID: <CAL+tcoB2_4H4gOgn-M_693qZmKF+Fk=Wxc+e02Q=K3JkkvQGMQ@mail.gmail.com>
-Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
-        Shujin Li <lishujin@kuaishou.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for reminding me.
-I will test the cases through using sch_fq.
+From: Zqiang <qiang.zhang@windriver.com>
 
-Jason
+BUG: memory leak
+unreferenced object 0xffff888055046e00 (size 256):
+  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
+  hex dump (first 32 bytes):
+    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
+    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
+  backtrace:
+    [<00000000d121dccf>] kmemleak_alloc_recursive
+include/linux/kmemleak.h:43 [inline]
+    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
+    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
+    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
+    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
+drivers/usb/misc/usbtest.c:2790
+    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
+drivers/usb/core/driver.c:361
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
+drivers/base/dd.c:831
+    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
+    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
+    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
+    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
+    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
+    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
+drivers/usb/core/message.c:2030
+    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
+    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
+drivers/usb/core/driver.c:266
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
 
-On Wed, Jun 3, 2020 at 10:44 AM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Tue, Jun 2, 2020 at 7:42 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
-> >
-> > I agree with you. The upstream has already dropped and optimized this
-> > part (commit 864e5c090749), so it would not happen like that. However
-> > the old kernels like LTS still have the problem which causes
-> > large-scale crashes on our thousands of machines after running for a
-> > long while. I will send the fix to the correct tree soon :)
->
-> If you run BBR at scale (thousands of machines), you probably should
-> use sch_fq instead of internal pacing,
-> just saying ;)
->
->
-> >
-> > Thanks again,
-> > Jason
-> >
-> > On Wed, Jun 3, 2020 at 10:29 AM Eric Dumazet <edumazet@google.com> wrote:
-> > >
-> > > On Tue, Jun 2, 2020 at 6:53 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
-> > > >
-> > > > Hi Eric,
-> > > >
-> > > > I'm sorry that I didn't write enough clearly. We're running the
-> > > > pristine 4.19.125 linux kernel (the latest LTS version) and have been
-> > > > haunted by such an issue. This patch is high-important, I think. So
-> > > > I'm going to resend this email with the [patch 4.19] on the headline
-> > > > and cc Greg.
-> > >
-> > > Yes, please always give for which tree a patch is meant for.
-> > >
-> > > Problem is that your patch is not correct.
-> > > In these old kernels, tcp_internal_pacing() is called _after_ the
-> > > packet has been sent.
-> > > It is too late to 'give up pacing'
-> > >
-> > > The packet should not have been sent if the pacing timer is queued
-> > > (otherwise this means we do not respect pacing)
-> > >
-> > > So the bug should be caught earlier. check where tcp_pacing_check()
-> > > calls are missing.
-> > >
-> > >
-> > >
-> > > >
-> > > >
-> > > > Thanks,
-> > > > Jason
-> > > >
-> > > > On Tue, Jun 2, 2020 at 9:05 PM Eric Dumazet <edumazet@google.com> wrote:
-> > > > >
-> > > > > On Tue, Jun 2, 2020 at 1:05 AM <kerneljasonxing@gmail.com> wrote:
-> > > > > >
-> > > > > > From: Jason Xing <kerneljasonxing@gmail.com>
-> > > > > >
-> > > > > > TCP socks cannot be released because of the sock_hold() increasing the
-> > > > > > sk_refcnt in the manner of tcp_internal_pacing() when RTO happens.
-> > > > > > Therefore, this situation could increase the slab memory and then trigger
-> > > > > > the OOM if the machine has beening running for a long time. This issue,
-> > > > > > however, can happen on some machine only running a few days.
-> > > > > >
-> > > > > > We add one exception case to avoid unneeded use of sock_hold if the
-> > > > > > pacing_timer is enqueued.
-> > > > > >
-> > > > > > Reproduce procedure:
-> > > > > > 0) cat /proc/slabinfo | grep TCP
-> > > > > > 1) switch net.ipv4.tcp_congestion_control to bbr
-> > > > > > 2) using wrk tool something like that to send packages
-> > > > > > 3) using tc to increase the delay in the dev to simulate the busy case.
-> > > > > > 4) cat /proc/slabinfo | grep TCP
-> > > > > > 5) kill the wrk command and observe the number of objects and slabs in TCP.
-> > > > > > 6) at last, you could notice that the number would not decrease.
-> > > > > >
-> > > > > > Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
-> > > > > > Signed-off-by: liweishi <liweishi@kuaishou.com>
-> > > > > > Signed-off-by: Shujin Li <lishujin@kuaishou.com>
-> > > > > > ---
-> > > > > >  net/ipv4/tcp_output.c | 3 ++-
-> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> > > > > > index cc4ba42..5cf63d9 100644
-> > > > > > --- a/net/ipv4/tcp_output.c
-> > > > > > +++ b/net/ipv4/tcp_output.c
-> > > > > > @@ -969,7 +969,8 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
-> > > > > >         u64 len_ns;
-> > > > > >         u32 rate;
-> > > > > >
-> > > > > > -       if (!tcp_needs_internal_pacing(sk))
-> > > > > > +       if (!tcp_needs_internal_pacing(sk) ||
-> > > > > > +           hrtimer_is_queued(&tcp_sk(sk)->pacing_timer))
-> > > > > >                 return;
-> > > > > >         rate = sk->sk_pacing_rate;
-> > > > > >         if (!rate || rate == ~0U)
-> > > > > > --
-> > > > > > 1.8.3.1
-> > > > > >
-> > > > >
-> > > > > Hi Jason.
-> > > > >
-> > > > > Please do not send patches that do not apply to current upstream trees.
-> > > > >
-> > > > > Instead, backport to your kernels the needed fixes.
-> > > > >
-> > > > > I suspect that you are not using a pristine linux kernel, but some
-> > > > > heavily modified one and something went wrong in your backports.
-> > > > > Do not ask us to spend time finding what went wrong.
-> > > > >
-> > > > > Thank you.
+Fixes: fabbf2196d0d ("USB: usbtest fix coding style")
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+---
+ drivers/usb/misc/usbtest.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index 98ada1a3425c..bae88893ee8e 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -2873,6 +2873,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
+ 
+ 	usb_set_intfdata(intf, NULL);
+ 	dev_dbg(&intf->dev, "disconnect\n");
++	kfree(dev->buf);
+ 	kfree(dev);
+ }
+ 
+-- 
+2.24.1
+
