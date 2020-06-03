@@ -2,71 +2,83 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7133FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B41622077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PX8/AEo7"
+	by mail.kernel.org (Postfix) with ESMTP id 904D22077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgFCE62 (ORCPT
+        id S1725882AbgFCE7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 00:58:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCE62 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 00:58:28 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D0BEC05BD43;
-        Tue,  2 Jun 2020 21:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4hilE/7L5QlGGOsWg+8etgv/113+iSUSl6TGtC/AcDQ=; b=PX8/AEo7bHIzGr1KmB4+ay+aB3
-        8I21/1neIEfA/E+ANgo7ymdeT4BMPYcyXt0gNairBfGVvD60ABXHeL2LovBIAoHbaEPoWGOCcinVa
-        knfN9pZvH7LURV9bRrSx/SBINQZxv0dAV36UEpv1I1vm3D8iitkVzcgHI/u7vFJV7Xa8tWzdiijxG
-        mvEt4+U2NSwaexg1+2hv8gQLRg0P+VN5tsLf3WxsYFXlWInMV1/SDWlz1xCk2zbOPnSpHLhVEKEJH
-        GTlQ5PSzIf1/R2mH2DeSd8swKrOl+yLIxAc7r80CQgxbnmfXf3nL5tsbQ5au88bL7XodyWSJ2Xeia
-        HxFSAjVw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgLTq-0004Uf-2w; Wed, 03 Jun 2020 04:58:22 +0000
-Date:   Tue, 2 Jun 2020 21:58:22 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, linux-raid@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH RFC 1/3] block: add flag 'nowait_requests' into queue
- limits
-Message-ID: <20200603045822.GA17137@infradead.org>
-References: <159101473169.180989.12175693728191972447.stgit@buzz>
- <159101502963.180989.6228080995222059011.stgit@buzz>
+        Wed, 3 Jun 2020 00:59:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:57114 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFCE7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 00:59:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB27155D;
+        Tue,  2 Jun 2020 21:59:43 -0700 (PDT)
+Received: from [10.163.77.218] (unknown [10.163.77.218])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BC6C3F6CF;
+        Tue,  2 Jun 2020 21:59:40 -0700 (PDT)
+Subject: Re: [PATCH] mm/vmstat: Add events for PMD based THP migration without
+ split
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, hughd@google.com,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+References: <1590118444-21601-1-git-send-email-anshuman.khandual@arm.com>
+ <20200602150141.GN19604@bombadil.infradead.org>
+ <2d4634ce-9167-6ca6-fb91-f3c671fff672@arm.com>
+ <20200603025729.GO19604@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <280304c7-882b-cb2f-55bf-87b2e2f28711@arm.com>
+Date:   Wed, 3 Jun 2020 10:28:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159101502963.180989.6228080995222059011.stgit@buzz>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200603025729.GO19604@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 03:37:09PM +0300, Konstantin Khlebnikov wrote:
-> Add flag for marking bio-based queues which support REQ_NOWAIT.
-> Set for all request based (mq) devices.
-> 
-> Stacking device should set it after blk_set_stacking_limits() if method
-> make_request() itself doesn't delay requests or handles REQ_NOWAIT.
 
-I don't think this belongs into the queue limits.  For example a
-stacking driver that always defers requests to a workqueue can support
-REQ_NOWAIT entirely independent of the underlying devices.  I think
-this just needs to be a simple queue flag.
+
+On 06/03/2020 08:27 AM, Matthew Wilcox wrote:
+> On Wed, Jun 03, 2020 at 06:56:57AM +0530, Anshuman Khandual wrote:
+>> On 06/02/2020 08:31 PM, Matthew Wilcox wrote:
+>>> On Fri, May 22, 2020 at 09:04:04AM +0530, Anshuman Khandual wrote:
+>>>> This adds the following two new VM events which will help in validating PMD
+>>>> based THP migration without split. Statistics reported through these events
+>>>> will help in performance debugging.
+>>>>
+>>>> 1. THP_PMD_MIGRATION_SUCCESS
+>>>> 2. THP_PMD_MIGRATION_FAILURE
+>>>
+>>> There's nothing actually PMD specific about these events, is there?
+>>> If we have a THP of a non-PMD size, you'd want that reported through the
+>>> same statistic, wouldn't you?
+>>
+>> Yes, there is nothing PMD specific here and we would use the same statistics
+>> for non-PMD size THP migration (if any) as well. But is THP migration really
+>> supported for non-PMD sizes ? CONFIG_ARCH_ENABLE_THP_MIGRATION depends upon
+>> CONFIG_TRANSPARENT_HUGEPAGE without being specific or denying about possible
+>> PUD level support. Fair enough, will drop the PMD from the events and their
+>> functions.
+> 
+> I guess you haven't read my large pages patchset?
+
+I believe you are referring this "[PATCH v5 00/39] Large pages in the page cache"
+(https://lkml.org/lkml/2020/5/28/1755). Unfortunately, I have not been following
+the series. But is there something else in particular that needs to be taken care
+of as well ?
