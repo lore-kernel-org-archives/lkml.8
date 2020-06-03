@@ -2,168 +2,165 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EF6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B848C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6E820772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713AC206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:35:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dHJRR/6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgFCNfG (ORCPT
+        id S1726088AbgFCNfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:35:06 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57305 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgFCNfG (ORCPT
+        Wed, 3 Jun 2020 09:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgFCNfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:35:06 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 053DZ3U2094511;
-        Wed, 3 Jun 2020 22:35:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
- Wed, 03 Jun 2020 22:35:03 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 053DZ3eP094496
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 3 Jun 2020 22:35:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: twist: allow disabling reboot request
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzkaller <syzkaller@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
- <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
- <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
- <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
- <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
- <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
- <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
- <19d377d3-8037-8090-0f99-447f72cc1d8c@i-love.sakura.ne.jp>
- <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
- <51eaa6cd-33ce-f9d8-942c-c797c0ec6733@i-love.sakura.ne.jp>
- <20200603124405.GA22497@linux-b0ei>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <9203e56c-1d84-bfce-b2d8-b2395ef0168a@i-love.sakura.ne.jp>
-Date:   Wed, 3 Jun 2020 22:35:02 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 3 Jun 2020 09:35:17 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C0EC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:35:16 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t7so1791615pgt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 06:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ffoWRsiIdmktI0Aa3BFBPpp+Z+t9ruAh+fRHAhTsS0U=;
+        b=dHJRR/6wW+Z9VxUy02A1GbkhTGTpdITLLiCNP7SrObYzLb2S4UcftYeN0g86M61f4V
+         9x2840KTpC1zvmT+VG0/6g3qrYGrsW4xEjdcMgfuBwnQOvkqui4A+p5CdUzrp6j2qQUS
+         4AsDihJgUNR/sjxWvBc50WS2cv9BWq58otSVwvur6PGLHP8gxVKHWdJo/ChR6ubvYrG/
+         b/GqAp0Be36KQLIxdGiGeULgmTYMw2R35Ksyf/IqBkm5Hs2OKIS2JlGZ5wc2yIImStR7
+         uFJ6AjRmyaZCpzBuw4UPMXCfsnsklPyREr5g6XGa9OS4i98f38rEPo6E8Sys9TVFcrsB
+         4fWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ffoWRsiIdmktI0Aa3BFBPpp+Z+t9ruAh+fRHAhTsS0U=;
+        b=Fnw7bAmOFWO+7941wL9xw+/LGO02R0diq/lIad6fZtuJOtliyBkjrCTlqE3Y/NWNbW
+         pNdBMH8m8vNpu+NiOvEv3opKA2W8/EKC+2+G6XyUxT4x2Ol1jwDnSbmTC2kt80vS+dCs
+         eZKF308J9jGvmglDraTCydGuyN72LVLsqNztG7mojFoXTDo/Yc34c58q+6fOkNm8bshR
+         zYP/hfOV4GwMQhXQDEYCy2ZMkEbvqs054BjJWHolvJCETb69uBCqsYDvOoYNeIReN+FN
+         AyUGJpYnntUzfoIWEQbQmv2ICv4/YIJ0MpWi7YPE6qQCluvtQHBeGAjUBh6HgR3TeThZ
+         bvXg==
+X-Gm-Message-State: AOAM533exck1ejXWFImylcppb81lndDoHbnMWUmUL/7M3ys1jZvRYtvT
+        50ts6Hm654DTTY3TC3uez/cxzu4N5DhUjltzT1eDag==
+X-Google-Smtp-Source: ABdhPJyvjC3bqxFUI8Qm2pczJ8KpqvTJM3sK/pWQRCIjW9KvGJsPIuXrTRnHzqqHUo1IkIqbzJ+y0NwjSti3x3JyUu8=
+X-Received: by 2002:a17:90b:1244:: with SMTP id gx4mr2285007pjb.136.1591191316071;
+ Wed, 03 Jun 2020 06:35:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200603124405.GA22497@linux-b0ei>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200602184409.22142-1-elver@google.com>
+In-Reply-To: <20200602184409.22142-1-elver@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 3 Jun 2020 15:35:05 +0200
+Message-ID: <CAAeHK+yNmGB6mEQoogGhUh_F1fXFF_baA14G3=4NyYv=oz8Fdw@mail.gmail.com>
+Subject: Re: [PATCH -tip 1/2] Kconfig: Bump required compiler version of KASAN
+ and UBSAN
+To:     Marco Elver <elver@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/03 21:44, Petr Mladek wrote:
-> On Wed 2020-06-03 20:03:28, Tetsuo Handa wrote:
->> On 2020/05/29 22:26, Tetsuo Handa wrote:
->>>     By the way, I do worry that people forget to perform these steps when they do
->>>     their tests without asking syzbot...
->>
->> Here is a draft of boot-time switching. Since kconfig can handle string variable up to
->> 2048 characters, we could hold the content of the "your-config" file inside .config file
->> in order to avoid relying on external file in "syzkaller tree". But since only one kconfig
->> option is used, basically the way to temporarily include/exclude specific options (under
->> automated testing by syzbot) seems to remain directly patching apply_twist_flags(), for
->> https://github.com/google/syzkaller/blob/master/dashboard/config/util.sh will automatically
->> overwrite CONFIG_DEFAULT_TWIST_FLAGS settings. If each twist flag were using independent
->> kconfig option, the way to temporarily include/exclude specific options will become directly
->> patching Kconfig file.
->>
->> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
->> index 82d91547d122..78fdbb4f17b1 100644
->> --- a/include/linux/kernel.h
->> +++ b/include/linux/kernel.h
->> @@ -1038,4 +1038,12 @@ static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
->>  	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
->>  	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
->>  	 (perms))
->> +
->> +/* Flags for twisting kernel behavior. */
->> +struct twist_flags {
->> +	bool disable_kbd_k_spec_handler;
->> +	bool disable_reboot_request;
->> +};
->> +extern struct twist_flags twist_flags;
-> 
-> 
-> Why all these options have to be in a single structure?
+On Tue, Jun 2, 2020 at 8:44 PM Marco Elver <elver@google.com> wrote:
+>
+> Adds config variable CC_HAS_WORKING_NOSANITIZE, which will be true if we
+> have a compiler that does not fail builds due to no_sanitize functions.
+> This does not yet mean they work as intended, but for automated
+> build-tests, this is the minimum requirement.
+>
+> For example, we require that __always_inline functions used from
+> no_sanitize functions do not generate instrumentation. On GCC <= 7 this
+> fails to build entirely, therefore we make the minimum version GCC 8.
+>
+> For KCSAN this is a non-functional change, however, we should add it in
+> case this variable changes in future.
+>
+> Link: https://lkml.kernel.org/r/20200602175859.GC2604@hirez.programming.kicks-ass.net
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-There will be many options (maybe some dozens).
-Do we really want to expose so many options individually?
+Acked-by:  Andrey Konovalov <andreyknvl@google.com>
 
-(If these options were build-time configuration, we won't need
-this structure at all.)
-
-> 
-> 
->> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
->> index 498d344ea53a..41cfabc74ad7 100644
->> --- a/lib/Kconfig.debug
->> +++ b/lib/Kconfig.debug
->> @@ -2338,4 +2338,9 @@ config HYPERV_TESTING
->>  
->>  endmenu # "Kernel Testing and Coverage"
->>  
->> +menuconfig DEFAULT_TWIST_FLAGS
->> +	string "Default twist options (DANGEROUS)"
->> +	help
->> +	  Don't specify anything unless you know what you are doing.
->> +
->>  endmenu # Kernel hacking
-> 
-> Why such a crazy build configure option?
-> 
-> I think that the only way to get this upstream is to:
-> 
->    + Add separate boot options that might theoretically be used also
->      by other people.
-
-Like you said
-
-  I am afraid that many of them could not be normal options. They change or
-  break some behavior that is necessary by seriously used system.
-
-these options are meant for helping fuzzers to find bugs while protecting
-the kernel from legitimate-but-stupid requests from fuzzers. Other people
-can include projects other than syzbot, but basically only useful for
-debugging projects. (And making these options boot-time configuration
-increases garbage/overhead for non-debugging usage.)
-
-> 
->    + Use boot parameters and not build configuration.
-
-That sounds like a very tight restriction for syzbot. Relying on external
-files breaks reproducibility; people can fail to specify intended options.
-Saving intended options into the .config file is the most robust/reliable
-approach.
-
-> 
->    + Avoid the meaningless word "twist" !!!
-
-Then, what do you suggest? I think that we need some keyword for grouping.
-https://lkml.kernel.org/r/41a49d42-7119-62b9-085b-aa99cadc4dd1@i-love.sakura.ne.jp
-
-> 
-> 
-> Best Regards,
-> Petr
-> 
+> ---
+> Apply after:
+> https://lkml.kernel.org/r/20200602173103.931412766@infradead.org
+> ---
+>  init/Kconfig      | 3 +++
+>  lib/Kconfig.kasan | 1 +
+>  lib/Kconfig.kcsan | 1 +
+>  lib/Kconfig.ubsan | 1 +
+>  4 files changed, 6 insertions(+)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 0f72eb4ffc87..3e8565bc8376 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -39,6 +39,9 @@ config TOOLS_SUPPORT_RELR
+>  config CC_HAS_ASM_INLINE
+>         def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
+>
+> +config CC_HAS_WORKING_NOSANITIZE
+> +       def_bool !CC_IS_GCC || GCC_VERSION >= 80000
+> +
+>  config CONSTRUCTORS
+>         bool
+>         depends on !UML
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 81f5464ea9e1..15e6c4b26a40 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -20,6 +20,7 @@ config KASAN
+>         depends on (HAVE_ARCH_KASAN && CC_HAS_KASAN_GENERIC) || \
+>                    (HAVE_ARCH_KASAN_SW_TAGS && CC_HAS_KASAN_SW_TAGS)
+>         depends on (SLUB && SYSFS) || (SLAB && !DEBUG_SLAB)
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           Enables KASAN (KernelAddressSANitizer) - runtime memory debugger,
+>           designed to find out-of-bounds accesses and use-after-free bugs.
+> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> index 5ee88e5119c2..2ab4a7f511c9 100644
+> --- a/lib/Kconfig.kcsan
+> +++ b/lib/Kconfig.kcsan
+> @@ -5,6 +5,7 @@ config HAVE_ARCH_KCSAN
+>
+>  config HAVE_KCSAN_COMPILER
+>         def_bool CC_IS_CLANG && $(cc-option,-fsanitize=thread -mllvm -tsan-distinguish-volatile=1)
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           For the list of compilers that support KCSAN, please see
+>           <file:Documentation/dev-tools/kcsan.rst>.
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index a5ba2fd51823..f725d126af7d 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -4,6 +4,7 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
+>
+>  menuconfig UBSAN
+>         bool "Undefined behaviour sanity checker"
+> +       depends on CC_HAS_WORKING_NOSANITIZE
+>         help
+>           This option enables the Undefined Behaviour sanity checker.
+>           Compile-time instrumentation is used to detect various undefined
+> --
+> 2.27.0.rc2.251.g90737beb825-goog
+>
