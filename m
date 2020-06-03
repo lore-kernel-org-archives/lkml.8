@@ -2,171 +2,90 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD512074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:37:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qRc63U1E"
+	by mail.kernel.org (Postfix) with ESMTP id 1839D2074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgFCHhP (ORCPT
+        id S1726096AbgFCHiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:37:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:61954 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgFCHhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:37:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591169833; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=aJvFtRy1el1NP+Z5+87GQ+m2nk+T28gjost9JU7AaP0=;
- b=qRc63U1EH5D471YJ50iO7V9AwCUorCNv3EzewUIP/9lYrrIqvMIOCsEnebg8ugZvVWqBeC/F
- Dvsg+Ix2FMEncSE3LQA0s9tHQJMkljPPM8kbNfp1Zj23iDAieu1UF2XgJWF6k++bv8dIJfnb
- 38ZZ3kWu2KTbCglluH6UBP9duB4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ed75326cb04586933e89806 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 07:37:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 94CBFC43395; Wed,  3 Jun 2020 07:37:09 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: guptap)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D600BC433CA;
-        Wed,  3 Jun 2020 07:37:08 +0000 (UTC)
+        Wed, 3 Jun 2020 03:38:18 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:44521 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbgFCHiR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:38:17 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U-RVoRv_1591169866;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U-RVoRv_1591169866)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 03 Jun 2020 15:37:47 +0800
+Subject: Re: [PATCH] doc: zh_CN: use doc reference to resolve undefined label
+ warning
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc:     Harry Wei <harryxiyou@gmail.com>, Wang Wenhu <wenhu.wang@vivo.com>,
+        Chucheng Luo <luochucheng@vivo.com>,
+        linux-kernel@vger.kernel.org
+References: <20200531183556.5751-1-lukas.bulwahn@gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <67729261-8deb-c1f4-979c-762786ab1954@linux.alibaba.com>
+Date:   Wed, 3 Jun 2020 15:36:11 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 13:07:08 +0530
-From:   guptap@codeaurora.org
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     mhocko@suse.com, owner-linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] iommu/dma: limit iova free size to unmmaped iova
-In-Reply-To: <9b5f8501-6e6e-0cd2-7f98-7cfea13051d7@arm.com>
-References: <20200521113004.12438-1-guptap@codeaurora.org>
- <7aaa8dcc-6a47-f256-431d-2a1b034b4076@arm.com>
- <90662ef3123dbf2e93f9718ee5cc14a7@codeaurora.org>
- <2d873ab9-ebb9-3c2d-f129-55a036ab47d0@arm.com>
- <4ba082d3bb965524157704ea1ffb1ff4@codeaurora.org>
- <9b5f8501-6e6e-0cd2-7f98-7cfea13051d7@arm.com>
-Message-ID: <4b6a864674a9231b3ac35e5ce0c7292f@codeaurora.org>
-X-Sender: guptap@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200531183556.5751-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-02 18:37, Robin Murphy wrote:
-> On 2020-05-26 08:19, guptap@codeaurora.org wrote:
->> On 2020-05-22 14:54, Robin Murphy wrote:
->>> On 2020-05-22 07:25, guptap@codeaurora.org wrote:
->>>> On 2020-05-22 01:46, Robin Murphy wrote:
->>>>> On 2020-05-21 12:30, Prakash Gupta wrote:
->> Sorry for delayed response, it was a long weekend.
->> I agree that invalid DMA API call can result in unexpected issues and 
->> client
->> should fix it, but then the present behavior makes it difficult to 
->> catch cases
->> when driver is making wrong DMA API calls. When invalid iova pfn is 
->> passed it
->> doesn't fail then and there, though DMA layer is aware of iova being 
->> invalid. It
->> fails much after that in the context of an valid map/unmap, with 
->> BUG_ON().
->> 
->> Downgrading BUG_ON() to WARN_ON() in iova_magazine_free_pfns() will 
->> not help
->> much as invalid iova will cause NULL pointer dereference.
-> 
-> Obviously I didn't mean a literal s/BUG/WARN/ substitution - some
-> additional control flow to actually handle the error case was implied.
-> 
-> I'll write up the patch myself, since it's easier than further 
-> debating.
-> 
 
-I think it will address the issue I am facing as well. I will wait for 
-your patch.
 
->> I see no reason why DMA layer wants to free an iova for which unmapped 
->> failed.
->> IMHO queuing an invalid iova (which already failed unmap) to rcache 
->> which
->> eventually going to crash the system looks like iommu-dma layer issue.
+ÔÚ 2020/6/1 ÉÏÎç2:35, Lukas Bulwahn Ð´µÀ:
+> Documentation generation warns:
 > 
-> What if the unmap fails because the address range is already entirely
-> unmapped? Freeing the IOVA (or at least attempting to) would be
-> logically appropriate in that case. In fact some IOMMU drivers might
-> not even consider that a failure, so the DMA layer may not even be
-> aware that it's been handed a bogus unallocated address.
+>   Documentation/translations/zh_CN/filesystems/debugfs.rst:5:
+>   WARNING: undefined label: debugfs_index
+
+It's due to debugfs.txt changed to debugfs.rst.
+
 > 
-> The point is that unmapping *doesn't* fail under normal and correct
-> operation, so the DMA layer should not expect to have to handle it.
-> Even if it does happen, that's a highly exceptional case that the DMA
-> layer cannot recover from by itself; at best it can just push the
-> problem elsewhere. It's pretty hard to justify doing extra work to
-> simply move an exceptional problem around without really addressing
-> it.
+> Use doc reference for files rather than introducing a label to refer to.
+> This resolves the warning above.
+
+Anyway this fix is also fine for me.
+
+Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+
 > 
-
-iommu_unmap() expects that all areas within unmap size are mapped. 
-infact It
-abandons further unmap if it find any chunk not mapped.  So if an IOMMU
-implementation is not returning failure for already unmapped area,
-then it's prone to issue where DMA API reuse the IOVA, which is already 
-mapped.
-
-In this case where iommu implementation returns error for already 
-unmapped area,
-currently there is no way to distinguish an unmap failure due to range 
-already
-unmapped or say while partially unmapping a section map, memory 
-allocation fails
-and thus unmap returns failure.
-In second case, we will free the iova even with mapping present. And 
-subsequent
-dma mapping will keep on failing if it uses this freed iova. For managed 
-iova
-both unmap/map should be done with dma APIs, it should be safe to expect 
-if a
-range is unmapped with DMA APIs corresponding iova is also freed, so 
-there
-shouldn't be a real need to free iova where unmap fails due to range 
-already
-entirely unmapped.
-
-> And in this particular case, personally I would *much* rather see
-> warnings spewing from both the pagetable and IOVA code as early as
-> possible to clearly indicate that the DMA layer itself has been thrown
-> out of sync, than just have warnings that might represent some other
-> source of pagetable corruption (or at worst, depending on the
-> pagetable code, no warnings at all and only have dma_map_*() calls
-> quietly start failing much, much later due to all the IOVA space
-> having been leaked by bad unmaps).
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Jonathan, please pick this quick warning fix.
 > 
-
-I am not sure how useful is this freed iova if corresponding mappings 
-are not
-unmapped. We won't be able to use those iova. The subsequent iommu_map 
-will fail
-if using this freed iova. So it's important to ensure we only free iova 
-which is
-unmapped successfully.
-
-Thanks,
-Prakash
+> applies on your doc-next and next-20200529
+> 
+>  Documentation/translations/zh_CN/filesystems/debugfs.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/translations/zh_CN/filesystems/debugfs.rst b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+> index f8a28793c277..822c4d42fdf9 100644
+> --- a/Documentation/translations/zh_CN/filesystems/debugfs.rst
+> +++ b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+> @@ -2,7 +2,7 @@
+>  
+>  .. include:: ../disclaimer-zh_CN.rst
+>  
+> -:Original: :ref:`Documentation/filesystems/debugfs.txt <debugfs_index>`
+> +:Original: :doc:`../../../filesystems/debugfs`
+>  
+>  =======
+>  Debugfs
+> 
