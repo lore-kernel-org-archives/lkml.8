@@ -2,155 +2,173 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F23020734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FA72074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pUCWTJtR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VSnmAG4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgFCJyg (ORCPT
+        id S1726315AbgFCJ5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:54:36 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33114 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCJyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:54:33 -0400
-Received: from zn.tnic (p200300ec2f0b2300d541c55e36baf562.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2300:d541:c55e:36ba:f562])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 66CAB1EC02CF;
-        Wed,  3 Jun 2020 11:54:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591178071;
+        Wed, 3 Jun 2020 05:57:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34300 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725854AbgFCJ5G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:57:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591178225;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=bSC5v9pq6HGi+3XtTAaeKewohWX8QeHbDID0hOwG0pY=;
-        b=pUCWTJtRDBixL1/rL2J71p2JHm64P1CBHO/NNH00XF5+OWmSZlJj9GLIdiFdwhbHnX2pZo
-        bXBLABD3QW9lvT9++tK9YYmUj+a23sMwG/rk+KEtxVIZE6lh+Eg+hw94jVOfh1CpdIWyzO
-        9QBaI53KU5J74sP9JTJoBhekViVGObE=
-Date:   Wed, 3 Jun 2020 11:54:26 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 73/75] x86/sev-es: Support CPU offline/online
-Message-ID: <20200603095426.GA19711@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-74-joro@8bytes.org>
+         in-reply-to:in-reply-to:references:references;
+        bh=4MA6Azc4ArSFQSxrgXC2tTu2QvV0djuoR5kPx8BJBBc=;
+        b=VSnmAG4ps6GmRV093OTucHQpKFptaMzORGAwMh/1B1osBNFmbA6PFSNVspCNsqScDjpS0q
+        rbDgdnqe5K256T3SL16DgL43E99znGphtQXPsks/EkFsMNLOeqlf0EflUTkTvqp+jBOLMc
+        pvkctVC5lIFT8bxX1O3OpK+rPbwRCDE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-DjnYCkpwPTyZ2R-wCsIHVQ-1; Wed, 03 Jun 2020 05:57:01 -0400
+X-MC-Unique: DjnYCkpwPTyZ2R-wCsIHVQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E67491009600;
+        Wed,  3 Jun 2020 09:56:58 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-13-100.pek2.redhat.com [10.72.13.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AB0D60BE1;
+        Wed,  3 Jun 2020 09:56:53 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 17:56:50 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        akpm@linux-foundation.org, ebiederm@xmission.com, jbohac@suse.cz,
+        jmorris@namei.org, mjg59@google.com, bhe@redhat.com
+Subject: Re: [PATCH v2] kexec: Do not verify the signature without the
+ lockdown or mandatory signature
+Message-ID: <20200603095650.GA4078@dhcp-128-65.nay.redhat.com>
+References: <20200602045952.27487-1-lijiang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-74-joro@8bytes.org>
+In-Reply-To: <20200602045952.27487-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:17:23PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+On 06/02/20 at 12:59pm, Lianbo Jiang wrote:
+> Signature verification is an important security feature, to protect
+> system from being attacked with a kernel of unknown origin. Kexec
+> rebooting is a way to replace the running kernel, hence need be
+> secured carefully.
 > 
-> Add a play_dead handler when running under SEV-ES. This is needed
-> because the hypervisor can't deliver an SIPI request to restart the AP.
-> Instead the kernel has to issue a VMGEXIT to halt the VCPU. When the
-> hypervisor would deliver and SIPI is wakes up the VCPU instead.
-
-That last sentence needs fixing.
-
-Also, that explanation belongs as comment over sev_es_ap_hlt_loop()
-because commit messages are not that easy to find.
-
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> In the current code of handling signature verification of kexec kernel,
+> the logic is very twisted. It mixes signature verification, IMA signature
+> appraising and kexec lockdown.
+> 
+> If there is no KEXEC_SIG_FORCE, kexec kernel image doesn't have one of
+> signature, the supported crypto, and key, we don't think this is wrong,
+> Unless kexec lockdown is executed. IMA is considered as another kind of
+> signature appraising method.
+> 
+> If kexec kernel image has signature/crypto/key, it has to go through the
+> signature verification and pass. Otherwise it's seen as verification
+> failure, and won't be loaded.
+> 
+> Seems kexec kernel image with an unqualified signature is even worse than
+> those w/o signature at all, this sounds very unreasonable. E.g. If people
+> get a unsigned kernel to load, or a kernel signed with expired key, which
+> one is more dangerous?
+> 
+> So, here, let's simplify the logic to improve code readability. If the
+> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
+> is mandated. Otherwise, we lift the bar for any kernel image.
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 > ---
->  arch/x86/include/uapi/asm/svm.h |  1 +
->  arch/x86/kernel/sev-es.c        | 58 +++++++++++++++++++++++++++++++++
->  2 files changed, 59 insertions(+)
+> Changes since v1:
+> [1] Modify the log level(suggested by Jiri Bohac)
 > 
-> diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-> index a19ce9681ec2..20a05839dd9a 100644
-> --- a/arch/x86/include/uapi/asm/svm.h
-> +++ b/arch/x86/include/uapi/asm/svm.h
-> @@ -84,6 +84,7 @@
->  /* SEV-ES software-defined VMGEXIT events */
->  #define SVM_VMGEXIT_MMIO_READ			0x80000001
->  #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
-> +#define SVM_VMGEXIT_AP_HLT_LOOP			0x80000004
->  #define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
->  #define		SVM_VMGEXIT_SET_AP_JUMP_TABLE			0
->  #define		SVM_VMGEXIT_GET_AP_JUMP_TABLE			1
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index 28725c38e6fb..00a5d0483730 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -32,6 +32,8 @@
->  #include <asm/processor.h>
->  #include <asm/traps.h>
->  #include <asm/svm.h>
-> +#include <asm/smp.h>
-> +#include <asm/cpu.h>
+>  kernel/kexec_file.c | 34 ++++++----------------------------
+>  1 file changed, 6 insertions(+), 28 deletions(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index faa74d5f6941..fae496958a68 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -181,34 +181,19 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  static int
+>  kimage_validate_signature(struct kimage *image)
+>  {
+> -	const char *reason;
+>  	int ret;
 >  
->  #define DR7_RESET_VALUE        0x400
+>  	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>  					   image->kernel_buf_len);
+> -	switch (ret) {
+> -	case 0:
+> -		break;
+> +	if (ret) {
 >  
-> @@ -448,6 +450,60 @@ static bool __init sev_es_setup_ghcb(void)
->  	return true;
+> -		/* Certain verification errors are non-fatal if we're not
+> -		 * checking errors, provided we aren't mandating that there
+> -		 * must be a valid signature.
+> -		 */
+> -	case -ENODATA:
+> -		reason = "kexec of unsigned image";
+> -		goto decide;
+> -	case -ENOPKG:
+> -		reason = "kexec of image with unsupported crypto";
+> -		goto decide;
+> -	case -ENOKEY:
+> -		reason = "kexec of image with unavailable key";
+> -	decide:
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+> -			pr_notice("%s rejected\n", reason);
+> +			pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
+>  			return ret;
+>  		}
+>  
+> -		/* If IMA is guaranteed to appraise a signature on the kexec
+> +		/*
+> +		 * If IMA is guaranteed to appraise a signature on the kexec
+>  		 * image, permit it even if the kernel is otherwise locked
+>  		 * down.
+>  		 */
+> @@ -216,17 +201,10 @@ kimage_validate_signature(struct kimage *image)
+>  		    security_locked_down(LOCKDOWN_KEXEC))
+>  			return -EPERM;
+>  
+> -		return 0;
+> -
+> -		/* All other errors are fatal, including nomem, unparseable
+> -		 * signatures and signature check failures - even if signatures
+> -		 * aren't required.
+> -		 */
+> -	default:
+> -		pr_notice("kernel signature verification failed (%d).\n", ret);
+> +		pr_debug("kernel signature verification failed (%d).\n", ret);
+>  	}
+>  
+> -	return ret;
+> +	return 0;
 >  }
+>  #endif
 >  
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +static void sev_es_ap_hlt_loop(void)
-> +{
-> +	struct ghcb_state state;
-> +	struct ghcb *ghcb;
-> +
-> +	ghcb = sev_es_get_ghcb(&state);
-> +
-> +	while (true) {
-> +		vc_ghcb_invalidate(ghcb);
-> +		ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_HLT_LOOP);
-> +		ghcb_set_sw_exit_info_1(ghcb, 0);
-> +		ghcb_set_sw_exit_info_2(ghcb, 0);
-> +
-> +		sev_es_wr_ghcb_msr(__pa(ghcb));
-> +		VMGEXIT();
-> +
-> +		/* Wakup Signal? */
+> -- 
+> 2.17.1
+> 
 
-		  "Wakeup"
+Acked-by: Dave Young <dyoung@redhat.com>
 
-> +		if (ghcb_is_valid_sw_exit_info_2(ghcb) &&
-> +		    ghcb->save.sw_exit_info_2 != 0)
+Thanks
+Dave
 
-No need for the "!= 0".
-
-> +			break;
-> +	}
-> +
-> +	sev_es_put_ghcb(&state);
-> +}
-
-...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
