@@ -2,105 +2,146 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB46C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37519C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F6120674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F00207D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="E9yPN5mF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgFCMVj (ORCPT
+        id S1726143AbgFCMWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:21:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:60916 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCMVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:21:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCEE531B;
-        Wed,  3 Jun 2020 05:21:37 -0700 (PDT)
-Received: from [10.57.0.45] (unknown [10.57.0.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2F1A3F305;
-        Wed,  3 Jun 2020 05:21:34 -0700 (PDT)
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
-        Stephen Boyd <swboyd@chromium.org>
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15> <bf7e8ac2-51b2-d9cb-9c4f-c311297accac@arm.com>
- <1549935cf69ac3a006f32eb278821027@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6c1a4fbd-98cb-a49c-0ced-1318d5d5e7c8@arm.com>
-Date:   Wed, 3 Jun 2020 13:21:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 08:22:45 -0400
+Received: from mail.efficios.com ([167.114.26.124]:46328 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCMWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:22:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 05EB22BB52D;
+        Wed,  3 Jun 2020 08:22:44 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SoAZOJHovtgo; Wed,  3 Jun 2020 08:22:43 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 936A32BB70D;
+        Wed,  3 Jun 2020 08:22:43 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 936A32BB70D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1591186963;
+        bh=rdHO25JTPUux1QRiP8eQL4NjJR+TM6Hs9XXZEI9NbcE=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=E9yPN5mFCA4QWBJXMZFlTG+7K10V/RE5uJoGtqBvL9RBymhrVXBtfgQqd1qDJ/H6I
+         k2LwVpoWPerkSSIhCoIEDNe0U2mOqjrWDFePSzHnPaHpqO4P+XSjgp2kRzSQPULaZ0
+         FtHgXBIoOkmtbWFS8Ez9FFcIyR6TTY4MNH8DuX1yP5UhDoYhU8MRP8t7S8n7pntRyj
+         xbiZ0OjQi/phSCreDYLVwMfplVVxkjEpwE2iinrRfavny2LLamrRQgnTOOV5Rcd2Ja
+         h4SDX00QgkHVPpQr3QnLAaWuUfq00QaCgKHBjxVv3Cot+JXLbAp2KbbT7HejobInsc
+         yy86diWOT7KSw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id mdVrHRNhgPJV; Wed,  3 Jun 2020 08:22:43 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 80AFF2BB70C;
+        Wed,  3 Jun 2020 08:22:43 -0400 (EDT)
+Date:   Wed, 3 Jun 2020 08:22:43 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1953500643.51064.1591186963416.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87d06gxsla.fsf@oldenburg2.str.redhat.com>
+References: <20200527185130.5604-1-mathieu.desnoyers@efficios.com> <20200527185130.5604-2-mathieu.desnoyers@efficios.com> <87d06gxsla.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
+ and thread creation (v20)
 MIME-Version: 1.0
-In-Reply-To: <1549935cf69ac3a006f32eb278821027@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v20)
+Thread-Index: JjnqmhZtAhK7Ohdp5xp6UQAQci2wtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-03 13:00, Sai Prakash Ranjan wrote:
-> Hi Robin, Mathieu
-> 
-> On 2020-06-03 17:07, Robin Murphy wrote:
->> On 2020-06-01 22:28, Mathieu Poirier wrote:
->>> That being said I'm sure that dependencies on an IOMMU isn't a 
->>> problem confined
->>> to coresight. I am adding Robin Murphy, who added this commit [1], to 
->>> the thread
->>> in the hope that he can provide guidance on the right way to do this.
->>
->> Right, it's not specific to CoreSight, and it's not even specific to
->> IOMMUs really. In short, blame kexec ;)
->>
-> 
-> Yes it is not specific to coresight, we are targeting this for all
-> consumers/clients of SMMU(atleast on SC7180 SoC). We have display throwing
-> NoC/interconnect errors[1] during reboot after SMMU is disabled.
-> This is also not specific to kexec either as you explained here [2] about
-> a case with display which is exacly what is happening in our system [1].
+----- On Jun 3, 2020, at 8:05 AM, Florian Weimer fweimer@redhat.com wrote:
 
-Sure, but those instances are begging the question of why the SMMU is 
-disabled at reboot in the first place ;)
+> * Mathieu Desnoyers:
+>=20
+>> +#ifdef __cplusplus
+>> +# if  __cplusplus >=3D 201103L
+>> +#  define __rseq_static_assert(expr, diagnostic) static_assert (expr,
+>> diagnostic)
+>> +#  define __rseq_alignof(type)                   alignof (type)
+>> +#  define __rseq_alignas(x)                      alignas (x)
+>> +#  define __rseq_tls_storage_class               thread_local
+>> +# endif
+>> +#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
+>> +# define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr,
+>> diagnostic)
+>> +# define __rseq_alignof(type)                    _Alignof (type)
+>> +# define __rseq_alignas(x)                       _Alignas (x)
+>> +# define __rseq_tls_storage_class                _Thread_local
+>> +#endif
+>=20
+> This does not seem to work.  I get this with GCC 9:
+>=20
+> In file included from /tmp/cih_test_gsrKbC.cc:8:0:
+> ../sysdeps/unix/sysv/linux/sys/rseq.h:42:50: error: attribute ignored
+> [-Werror=3Dattributes]
+> #  define __rseq_alignas(x)                      alignas (x)
+>                                                  ^
+> ../sysdeps/unix/sysv/linux/sys/rseq.h:122:14: note: in expansion of macro
+> =E2=80=98__rseq_alignas=E2=80=99
+>     uint32_t __rseq_alignas (32) version;
+>              ^
 
-Robin.
+Is that when compiling C or C++ code ? If it's C code, I would expect
+"_Alignas" to be used, not "alignas".
 
-> 
-> [1] 
-> https://lore.kernel.org/lkml/1591009402-681-1-git-send-email-mkrishn@codeaurora.org/ 
-> 
-> [2] 
-> https://lore.kernel.org/lkml/5858bdac-b7f9-ac26-0c0d-c9653cef841d@arm.com/
-> 
->> The fundamental thing is that devices should stop any DMA activity at
->> shutdown. For a normal poweroff you can typically get away without
->> doing so, but over kexec, ongoing DMA traffic may corrupt memory in
->> the new kernel (at worst, I think even DMA reads could potentially
->> cause unexpected cache behaviour that might lead to mishaps, given the
->> right combination of memory attributes).
->>
->> IOMMUs merely help to make the situation more serious. For similar
->> kexec reasons, they need to disable any existing translations at
->> shutdown (imagine if the second kernel didn't have an IOMMU driver).
->> And at that point, even the normal poweroff case becomes problematic,
->> because any device DMA that hasn't been shut down beforehand is now
->> not necessarily going benignly to memory as it would in the no-IOMMU
->> case above, but potentially to random physical addresses, with all the
->> hilarity ensuing that you would expect from that.
->>
-> 
-> Thanks,
-> Sai
+Which exact version of gcc do you use ?
+
+>=20
+> In any case, these changes really have to go into the UAPI header first.
+> Only the __thread handling should remain.  Otherwise, we'll have a tough
+> situation on our hands changing the UAPI header, without introducing
+> macro definition conflicts.  I'd suggest to stick to the aligned
+> attribute for the time being, like the current UAPI headers.
+
+OK. Should I do that in a separate patch, or you do it on top of my patchse=
+t,
+or should I re-spin another round of the series ?
+>=20
+> The resut looks okay to me.
+>=20
+> I'm still waiting for feedback from other maintainers whether the level
+> of documentation and testing is appropriate.
+
+OK.
+
+Thanks,
+
+Mathieu
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
