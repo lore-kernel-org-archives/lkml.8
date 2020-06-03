@@ -2,162 +2,153 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF13BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD2D207F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591200978;
-	bh=BoDLkq02THt+WbJVaiCCXtU5luclbfhVMmW4TS/e9Qg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=deQk7BOvIzS1ivlnF7KVY7U0CS7e0vTpA3nBBD9HbUlxWbc6An26uXATyY+FyZV7y
-	 uaVjiEOs0ohbl9Ad0APmhlfBGS7d/EmG+ifaWBRyVDToIFYhXSjsLCLzEBcIliLYjw
-	 NOXkMY18VP3O3jaFZ2xsOjcP61J2j4KlLd9i6L6U=
+	by mail.kernel.org (Postfix) with ESMTP id 84ED3207D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PH4RhJZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbgFCQQS (ORCPT
+        id S1726104AbgFCQQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgFCQQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:16:17 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 3 Jun 2020 12:16:57 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22051 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgFCQQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 12:16:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591201015;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=vSikr6xbZnA95Bp36UZKiXnO9Jo/eUqwqwA+BJtCOpw=;
+        b=PH4RhJZS0n8+ybtjgry9wxpC44rezSI0u9o9LJMYxKfiGLSN+Ib3Umw0seQ7rEDW3eSkOu
+        Ju/LYhudp0UQbBAM/zZjQ0SIfCQbmDx92qPNSZssu7pBlK8Gle1y4ueoHTY0IXDDw3lkMO
+        ZF9gGwkW/n0newOtjqlPiR/ELecn6b8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-CtZO5kMvNKqSkjcTLFuRrA-1; Wed, 03 Jun 2020 12:16:51 -0400
+X-MC-Unique: CtZO5kMvNKqSkjcTLFuRrA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CE0206E6;
-        Wed,  3 Jun 2020 16:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591200976;
-        bh=BoDLkq02THt+WbJVaiCCXtU5luclbfhVMmW4TS/e9Qg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0xIWs3b4/5BAZl5fKQdnqF63gWHhHFrLKLNd3bnlrXtYV3z5O3XIMZKKAeViSvDpj
-         7QtQQmZgy6EEP1w0l1pRehQWLxi2AUoS7PW4Tszk7IMBO1IehQCvOH9ILZ2VVEHWlA
-         elWvPMGVyHjgU46ArmjkTY1B+lAU3xRVTCndgAlI=
-Received: by mail-ot1-f46.google.com with SMTP id h7so2340121otr.3;
-        Wed, 03 Jun 2020 09:16:16 -0700 (PDT)
-X-Gm-Message-State: AOAM531YoKakT/77tl1BZqmjNOs0g9IUw9CHRbb2QjFiODuL7kShC3/2
-        /Mf4a3YtSAsj+NOlVEN1X5Ywuk7JgeGWqHalvA==
-X-Google-Smtp-Source: ABdhPJygRbGJCR00jC843Jp0prKdRc4VE8QO7dAZqmdODfIB/KZwGlghUEPf3SCOdRw3ZaN+HGgzsMSbMQOZ9qnxXPM=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr575554ots.192.1591200976092;
- Wed, 03 Jun 2020 09:16:16 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C974A1005510;
+        Wed,  3 Jun 2020 16:16:49 +0000 (UTC)
+Received: from [10.36.113.192] (ovpn-113-192.ams2.redhat.com [10.36.113.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E306160BF4;
+        Wed,  3 Jun 2020 16:16:47 +0000 (UTC)
+Subject: Re: [PATCH] mm/memblock: export max_pfn for kernel modules
+To:     Miles Chen <miles.chen@mediatek.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+References: <20200603161132.2441-1-miles.chen@mediatek.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <23a9a2cc-3461-52bb-4285-b063a01bd7c6@redhat.com>
+Date:   Wed, 3 Jun 2020 18:16:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1591184925-13055-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1591184925-13055-1-git-send-email-Anson.Huang@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 3 Jun 2020 10:15:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKGibK00edV5eG8HR1A0ks7ojY5uNssaqtYwiGJWt+GuA@mail.gmail.com>
-Message-ID: <CAL_JsqKGibK00edV5eG8HR1A0ks7ojY5uNssaqtYwiGJWt+GuA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: rtc: Convert imxdi rtc to json-schema
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Roland Stigge <stigge@antcom.de>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200603161132.2441-1-miles.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 5:59 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> Convert the i.MXDI RTC binding to DT schema format using json-schema
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On 03.06.20 18:11, Miles Chen wrote:
+> max_pfn is uesd to get the highest pfn in the system. Drivers like
+> drivers/iommu/mtk_iommu.c checks max_pfn to see if it should enable
+> its "4GB mode".
+> 
+> This patch exports the max_pfn symbol, so we can build the driver as
+> a kernel module.
+
+Please add that change to the respective user patch (and cc MM-people
+for that patch), so we have the actual user right along the change and
+can figure out if this is the right thing to do.
+
+> 
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 > ---
->  .../devicetree/bindings/rtc/imxdi-rtc.txt          | 20 -----------
->  .../devicetree/bindings/rtc/imxdi-rtc.yaml         | 42 ++++++++++++++++++++++
->  2 files changed, 42 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-> deleted file mode 100644
-> index c797bc9..0000000
-> --- a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-> +++ /dev/null
-> @@ -1,20 +0,0 @@
-> -* i.MX25 Real Time Clock controller
-> -
-> -Required properties:
-> -- compatible: should be: "fsl,imx25-rtc"
-> -- reg: physical base address of the controller and length of memory mapped
-> -  region.
-> -- clocks: should contain the phandle for the rtc clock
-> -- interrupts: rtc alarm interrupt
-> -
-> -Optional properties:
-> -- interrupts: dryice security violation interrupt (second entry)
-> -
-> -Example:
-> -
-> -rtc@53ffc000 {
-> -       compatible = "fsl,imx25-rtc";
-> -       reg = <0x53ffc000 0x4000>;
-> -       clocks = <&clks 81>;
-> -       interrupts = <25 56>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
-> new file mode 100644
-> index 0000000..6e43926
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rtc/imxdi-rtc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: i.MX25 Real Time Clock controller
-> +
-> +maintainers:
-> +  - Roland Stigge <stigge@antcom.de>
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx25-rtc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    items:
-> +      - description: rtc alarm interrupt
-> +      - description: dryice security violation interrupt
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
+>  mm/memblock.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index c79ba6f9920c..3b2b21ecebb6 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -99,6 +99,7 @@ EXPORT_SYMBOL(contig_page_data);
+>  unsigned long max_low_pfn;
+>  unsigned long min_low_pfn;
+>  unsigned long max_pfn;
+> +EXPORT_SYMBOL(max_pfn);
+>  unsigned long long max_possible_pfn;
+>  
+>  static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock;
+> 
 
-Needs:
 
-additionalProperties: false
+-- 
+Thanks,
 
-(or if you have a top level $ref, 'unevaluatedProperties: false')
+David / dhildenb
 
-I fixed these up in what I applied already, but please check all of
-yours pending and fix.
-
-Rob
