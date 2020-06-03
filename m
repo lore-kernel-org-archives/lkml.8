@@ -2,244 +2,185 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39E2020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D9520757
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Fa4gkbqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbgFCCJh (ORCPT
+        id S1726032AbgFCCJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:09:37 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40270 "EHLO inva020.nxp.com"
+        Tue, 2 Jun 2020 22:09:56 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61255 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725910AbgFCCJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:09:33 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AFC2F1A0075;
-        Wed,  3 Jun 2020 04:09:30 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D17611A0064;
-        Wed,  3 Jun 2020 04:09:24 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9D88B402E8;
-        Wed,  3 Jun 2020 10:09:16 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux@rempel-privat.de, pandy.gao@nxp.com, wolfram@the-dreams.de,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] dt-bindings: i2c: Convert imx i2c to json-schema
-Date:   Wed,  3 Jun 2020 09:58:55 +0800
-Message-Id: <1591149535-342-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591149535-342-1-git-send-email-Anson.Huang@nxp.com>
-References: <1591149535-342-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725794AbgFCCJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:09:55 -0400
+IronPort-SDR: 2+Fvnd5eFzNypVoxXb/UXPgoedu+UE4X29etYMhFuOT+FbmJUa5+2VQHQL6c+8xXwI/hMrDhU1
+ ovLngig335wg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 19:09:54 -0700
+IronPort-SDR: QbflBtgYucsFCYdwYWVAXfTCvscpVYn0PXEMN1daIhEUw/0qVvQJv7S4y349ne5pj0lbCvsORt
+ Q6RYXZhIRZmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
+   d="scan'208";a="286866321"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 19:09:53 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 2 Jun 2020 19:09:53 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX122.amr.corp.intel.com (10.22.225.227) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 2 Jun 2020 19:09:53 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.57) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 2 Jun 2020 19:09:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=POe7yxJ9JlvIA27N8d5QTpSeEC+VUmUzJaKyKD8ufQNq0MbMBq7FUci4MUY6JiAeA9fhBGbsdSItPhH9NHK9q7k3XILc0RozF+024B7kOc8ABlYlcz9vwRTWfZjh/hdw+sDvQFPLR6wBz+X5M7i63vuhM5lLdqEJ/C9DJES3SL7Zq5TKaP2XKS3WnIUNkOa0JbnqZ8L64DRO3qTWNofwUSLU41xbhIOAie8j55Fp456z0hLwuHti+OsJ9yJ7p1SgWjZCBbEVFefbLGf+RkdVvANCAeUTO25dSUEMn2BlqkAwhhGu2TbKD12IjT/Pl7MW2gxNQcSahYnLNYE8rA4jEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=boCeAhovVHPKht5qpq+r8fMQ09IMx8GYfQq11X3J+Rk=;
+ b=JQnGG/IsE6DMdW7zXA0j7rH0XryNVqtj0OhwD5W9qLMd0xX2AkEwniAYC03rxkywTV/A+Nle3OEktDbbip7eLjhgIUvSb5ZBrkph9fmaUJf+TwS/ItQqcvWc1OaQ/dDfXMq2QXwEB5xZmKulJZmmZl6GYRJDXvqmSog95ldiFOC8y7wpjOhPChHWXL7QXic9BB8DvWg/g2wvQvk9lRrkCOWjtp9XM4Tp+nMSQV3bEUF+LjFak5JKJcgzNfYbjUQHqg0quU4tEkAY4NXUptyTvEA07pe01bU5hlrY2L9e/yEXtETUTTg3cnut8WVqPI2ac94buSBkS3f2VTyO78J59w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=boCeAhovVHPKht5qpq+r8fMQ09IMx8GYfQq11X3J+Rk=;
+ b=Fa4gkbqjCmKU1lx1+vZMDkck9drtv2bzfrYSFbsyRmFwnj0hYf4pMNsdYBByVV0kl0EvjDfUAF6ZZKb0xiwpRot5uRmB8DzNSCEvQK/eGHSCZ2kWwDA7wZpcS0Lc2zjLXhNcHeIlyBzxEn7qQVEJ4kyYVTKAEATrNMIoKbPpLaQ=
+Received: from CY4PR1101MB2216.namprd11.prod.outlook.com
+ (2603:10b6:910:25::17) by CY4PR1101MB2296.namprd11.prod.outlook.com
+ (2603:10b6:910:1a::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.22; Wed, 3 Jun
+ 2020 02:09:51 +0000
+Received: from CY4PR1101MB2216.namprd11.prod.outlook.com
+ ([fe80::9c64:9b0a:fde3:b715]) by CY4PR1101MB2216.namprd11.prod.outlook.com
+ ([fe80::9c64:9b0a:fde3:b715%5]) with mapi id 15.20.3045.024; Wed, 3 Jun 2020
+ 02:09:51 +0000
+From:   "Huang, Kai" <kai.huang@intel.com>
+To:     "kirill@shutemov.name" <kirill@shutemov.name>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "wad@chromium.org" <wad@chromium.org>,
+        "Kleen, Andi" <andi.kleen@intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "aarcange@redhat.com" <aarcange@redhat.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
+Thread-Topic: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
+Thread-Index: AQHWMDfmobu4KV6DMkmIy0XuK+plk6i46ZCAgAAEoYCAAnnKAIAAPEWAgAqTbwA=
+Date:   Wed, 3 Jun 2020 02:09:51 +0000
+Message-ID: <0cd53be8abede7e82a68c32b1d8b0e4ca6f24a05.camel@intel.com>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+         <20200522125214.31348-3-kirill.shutemov@linux.intel.com>
+         <87d06s83is.fsf@vitty.brq.redhat.com> <20200525151525.qmfvzxbl7sq46cdq@box>
+         <20200527050350.GK31696@linux.intel.com>
+         <87eer56abe.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87eer56abe.fsf@vitty.brq.redhat.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+authentication-results: shutemov.name; dkim=none (message not signed)
+ header.d=none;shutemov.name; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.55.52.216]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8b969c4a-359b-46f6-9403-08d807633330
+x-ms-traffictypediagnostic: CY4PR1101MB2296:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1101MB2296F34F9FC6E4B97FA3B3B3F7880@CY4PR1101MB2296.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04238CD941
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cbtW1qNtbDRyz+cziHF7HHRl7mUu16LnaqN9JnfOrinuWw5zd5yEMquYB0lXEqxjpCXRBbeKbinmrUZgsZn9T/ctLaxyY+q7FVm4AINR9wy+7nmW+ZACPkRpD1mktSL8NhLXkUeHCcVZA5AC2qjpQ/D/v6BhUv8AMXcfpwhJLS+dK1R2XvM1a15qW6qaxyjInBIy/5RxXyR8Y8obx2uQ5PcGAJWayH3IHErp+TnY4uU4GnzK6dyou3vPC0cnJO/RjHbV67tdJp3Wm143mPSUJG9s0PN8kLrPWdVwofrbRsjMHmZjpzLrYrkQ/wtRt4NpTwqYKhNQ8xdi7jt9+fylqg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1101MB2216.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(376002)(366004)(39850400004)(346002)(136003)(26005)(86362001)(2906002)(36756003)(186003)(478600001)(6506007)(110136005)(316002)(71200400001)(5660300002)(54906003)(2616005)(66446008)(8936002)(7416002)(83380400001)(6512007)(4326008)(66946007)(64756008)(6486002)(76116006)(91956017)(66476007)(66556008)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: bROksxzbTfp83Rb8sCOl1pxH+gUtPnRhGFV9Gsgz5yP8krbT6ebsXFasdDkiwQ6ooYBLOrQtcJ0EUjCCes7v4egYKRKLHJdmul/MQyje/YFsl//emzvW6ISyNJLegj0d2NBByoRZeWbIXJu0c+i377n3ffQ7i2lWWQwl8Ma5UmGSvnYcoBagxqNS03BTr6KVI4QVv/ahd5E66vK9Yta4fpizltkpWCXqJncg1zKvf8FgM+SVO14LTFstmKhukrHRTCBrSGhcx2Q9/wdbYhtyoRWUKl56U6ijeg5dYBVtTPk557enIfaDl9q+EH7OSKGg3p/ex26OPicdJUcc1HF+PsRzkoLk2h5fk3PA0NIy+lartfZyShGexmcv2czIswlcTxbFTB0b4A01VOLB3PiCRaKf6An7Ji/9NxsW46fgJWH2+Yxs5Yvn/3T/k4JaGpDxBLIpdSRB9T1HCANwwPpVExqUSvfzUvEEiVYO79b+5eo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5C5F792F5855A44C80818142B624C311@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b969c4a-359b-46f6-9403-08d807633330
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 02:09:51.3734
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pWyLKNl2ICA6eGKUu6vGjJyKiFdbzT1xg8Sma5fNhXfKcP9Y8ZZFBBUw+xyfgwjP2F6ib1dS2vxb3AHmHtRemw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1101MB2296
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX I2C binding to DT schema format using json-schema,
-some improvements applied, such as update example based on latest DT
-file, add more compatible for existing SoCs, and remove unnecessary
-common property "pinctrl".
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/i2c/i2c-imx.txt  |  49 ---------
- Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 118 +++++++++++++++++++++
- 2 files changed, 118 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-deleted file mode 100644
-index b967544..0000000
---- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Freescale Inter IC (I2C) and High Speed Inter IC (HS-I2C) for i.MX
--
--Required properties:
--- compatible :
--  - "fsl,imx1-i2c" for I2C compatible with the one integrated on i.MX1 SoC
--  - "fsl,imx21-i2c" for I2C compatible with the one integrated on i.MX21 SoC
--  - "fsl,vf610-i2c" for I2C compatible with the one integrated on Vybrid vf610 SoC
--- reg : Should contain I2C/HS-I2C registers location and length
--- interrupts : Should contain I2C/HS-I2C interrupt
--- clocks : Should contain the I2C/HS-I2C clock specifier
--
--Optional properties:
--- clock-frequency : Constains desired I2C/HS-I2C bus clock frequency in Hz.
--  The absence of the property indicates the default frequency 100 kHz.
--- dmas: A list of two dma specifiers, one for each entry in dma-names.
--- dma-names: should contain "tx" and "rx".
--- scl-gpios: specify the gpio related to SCL pin
--- sda-gpios: specify the gpio related to SDA pin
--- pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
--  bus recovery, call it "gpio" state
--
--Examples:
--
--i2c@83fc4000 { /* I2C2 on i.MX51 */
--	compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
--	reg = <0x83fc4000 0x4000>;
--	interrupts = <63>;
--};
--
--i2c@70038000 { /* HS-I2C on i.MX51 */
--	compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
--	reg = <0x70038000 0x4000>;
--	interrupts = <64>;
--	clock-frequency = <400000>;
--};
--
--i2c0: i2c@40066000 { /* i2c0 on vf610 */
--	compatible = "fsl,vf610-i2c";
--	reg = <0x40066000 0x1000>;
--	interrupts =<0 71 0x04>;
--	dmas = <&edma0 0 50>,
--		<&edma0 0 51>;
--	dma-names = "rx","tx";
--	pinctrl-names = "default", "gpio";
--	pinctrl-0 = <&pinctrl_i2c1>;
--	pinctrl-1 = <&pinctrl_i2c1_gpio>;
--	scl-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
--	sda-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
--};
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-new file mode 100644
-index 0000000..0d31d1c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-@@ -0,0 +1,118 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/i2c-imx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Inter IC (I2C) and High Speed Inter IC (HS-I2C) for i.MX
-+
-+maintainers:
-+  - Wolfram Sang <wolfram@the-dreams.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: fsl,imx1-i2c
-+      - const: fsl,imx21-i2c
-+      - const: fsl,vf610-i2c
-+      - items:
-+          - const: fsl,imx35-i2c
-+          - const: fsl,imx1-i2c
-+      - items:
-+          - enum:
-+            - fsl,imx25-i2c
-+            - fsl,imx27-i2c
-+            - fsl,imx31-i2c
-+            - fsl,imx50-i2c
-+            - fsl,imx51-i2c
-+            - fsl,imx53-i2c
-+            - fsl,imx6q-i2c
-+            - fsl,imx6sl-i2c
-+            - fsl,imx6sx-i2c
-+            - fsl,imx6sll-i2c
-+            - fsl,imx6ul-i2c
-+            - fsl,imx7s-i2c
-+            - fsl,imx8mq-i2c
-+            - fsl,imx8mm-i2c
-+            - fsl,imx8mn-i2c
-+            - fsl,imx8mp-i2c
-+          - const: fsl,imx21-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Constains desired I2C/HS-I2C bus clock frequency in Hz.
-+      The absence of the property indicates the default frequency 100 kHz.
-+    default: 100000
-+
-+  dmas:
-+    items:
-+      - description: DMA controller phandle and request line for RX
-+      - description: DMA controller phandle and request line for TX
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+  sda-gpios:
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+    description: |
-+      gpio used for the sda signal, this should be flagged as
-+      active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
-+      from <dt-bindings/gpio/gpio.h> since the signal is by definition
-+      open drain.
-+    maxItems: 1
-+
-+  scl-gpios:
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+    description: |
-+      gpio used for the scl signal, this should be flagged as
-+      active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
-+      from <dt-bindings/gpio/gpio.h> since the signal is by definition
-+      open drain.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx5-clock.h>
-+    #include <dt-bindings/clock/vf610-clock.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    i2c@83fc4000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
-+        reg = <0x83fc4000 0x4000>;
-+        interrupts = <63>;
-+        clocks = <&clks IMX5_CLK_I2C2_GATE>;
-+    };
-+
-+    i2c@40066000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "fsl,vf610-i2c";
-+        reg = <0x40066000 0x1000>;
-+        interrupts = <71 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clks VF610_CLK_I2C0>;
-+        clock-names = "ipg";
-+        dmas = <&edma0 0 50>,
-+               <&edma0 0 51>;
-+        dma-names = "rx","tx";
-+    };
--- 
-2.7.4
-
+T24gV2VkLCAyMDIwLTA1LTI3IGF0IDEwOjM5ICswMjAwLCBWaXRhbHkgS3V6bmV0c292IHdyb3Rl
+Og0KPiBTZWFuIENocmlzdG9waGVyc29uIDxzZWFuLmouY2hyaXN0b3BoZXJzb25AaW50ZWwuY29t
+PiB3cml0ZXM6DQo+IA0KPiA+IE9uIE1vbiwgTWF5IDI1LCAyMDIwIGF0IDA2OjE1OjI1UE0gKzAz
+MDAsIEtpcmlsbCBBLiBTaHV0ZW1vdiB3cm90ZToNCj4gPiA+IE9uIE1vbiwgTWF5IDI1LCAyMDIw
+IGF0IDA0OjU4OjUxUE0gKzAyMDAsIFZpdGFseSBLdXpuZXRzb3Ygd3JvdGU6DQo+ID4gPiA+ID4g
+QEAgLTcyNyw2ICs3MzQsMTUgQEAgc3RhdGljIHZvaWQgX19pbml0IGt2bV9pbml0X3BsYXRmb3Jt
+KHZvaWQpDQo+ID4gPiA+ID4gIHsNCj4gPiA+ID4gPiAgCWt2bWNsb2NrX2luaXQoKTsNCj4gPiA+
+ID4gPiAgCXg4Nl9wbGF0Zm9ybS5hcGljX3Bvc3RfaW5pdCA9IGt2bV9hcGljX2luaXQ7DQo+ID4g
+PiA+ID4gKw0KPiA+ID4gPiA+ICsJaWYgKGt2bV9wYXJhX2hhc19mZWF0dXJlKEtWTV9GRUFUVVJF
+X01FTV9QUk9URUNURUQpKSB7DQo+ID4gPiA+ID4gKwkJaWYgKGt2bV9oeXBlcmNhbGwwKEtWTV9I
+Q19FTkFCTEVfTUVNX1BST1RFQ1RFRCkpIHsNCj4gPiA+ID4gPiArCQkJcHJfZXJyKCJGYWlsZWQg
+dG8gZW5hYmxlIEtWTSBtZW1vcnkNCj4gPiA+ID4gPiBwcm90ZWN0aW9uXG4iKTsNCj4gPiA+ID4g
+PiArCQkJcmV0dXJuOw0KPiA+ID4gPiA+ICsJCX0NCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKwkJ
+bWVtX3Byb3RlY3RlZCA9IHRydWU7DQo+ID4gPiA+ID4gKwl9DQo+ID4gPiA+ID4gIH0NCj4gPiA+
+ID4gDQo+ID4gPiA+IFBlcnNvbmFsbHksIEknZCBwcmVmZXIgdG8gZG8gdGhpcyB2aWEgc2V0dGlu
+ZyBhIGJpdCBpbiBhIEtWTS1zcGVjaWZpYw0KPiA+ID4gPiBNU1IgaW5zdGVhZC4gVGhlIGJlbmVm
+aXQgaXMgdGhhdCB0aGUgZ3Vlc3QgZG9lc24ndCBuZWVkIHRvIHJlbWVtYmVyIGlmDQo+ID4gPiA+
+IGl0IGVuYWJsZWQgdGhlIGZlYXR1cmUgb3Igbm90LCBpdCBjYW4gYWx3YXlzIHJlYWQgdGhlIGNv
+bmZpZyBtc3IuIE1heQ0KPiA+ID4gPiBjb21lIGhhbmR5IGZvciBlLmcuIGtleGVjL2tkdW1wLg0K
+PiA+ID4gDQo+ID4gPiBJIHRoaW5rIHdlIHdvdWxkIG5lZWQgdG8gcmVtZW1iZXIgaXQgYW55d2F5
+LiBBY2Nlc3NpbmcgTVNSIGlzIHNvbWV3aGF0DQo+ID4gPiBleHBlbnNpdmUuIEJ1dCwgb2theSwg
+SSBjYW4gcmV3b3JrIGl0IE1TUiBpZiBuZWVkZWQuDQo+ID4gDQo+ID4gSSB0aGluayBWaXRhbHkg
+aXMgdGFsa2luZyBhYm91dCB0aGUgY2FzZSB3aGVyZSB0aGUga2VybmVsIGNhbid0IGVhc2lseSBn
+ZXQNCj4gPiBhdCBpdHMgY2FjaGVkIHN0YXRlLCBlLmcuIGFmdGVyIGJvb3RpbmcgaW50byBhIG5l
+dyBrZXJuZWwuICBUaGUga2VybmVsIHdvdWxkDQo+ID4gc3RpbGwgaGF2ZSBhbiBYODZfRkVBVFVS
+RSBiaXQgb3Igd2hhdGV2ZXIsIHByb3ZpZGluZyBhIHZpcnR1YWwgTVNSIHdvdWxkIGJlDQo+ID4g
+cHVyZWx5IGZvciByYXJlIHNsb3cgcGF0aHMuDQo+ID4gDQo+ID4gVGhhdCBiZWluZyBzYWlkLCBh
+IGh5cGVyY2FsbCBwbHVzIENQVUlEIGJpdCBtaWdodCBiZSBiZXR0ZXIsIGUuZy4gdGhhdCdkDQo+
+ID4gYWxsb3cgdGhlIGd1ZXN0IHRvIHF1ZXJ5IHRoZSBzdGF0ZSB3aXRob3V0IHJpc2tpbmcgYSAj
+R1AuDQo+IA0KPiBXZSBoYXZlIHJkbXNyX3NhZmUoKSBmb3IgdGhhdCEgOi0pIE1TUiAoYW5kIGh5
+cGVyY2FsbCB0byB0aGF0IG1hdHRlcikNCj4gc2hvdWxkIGhhdmUgYW4gYXNzb2NpYXRlZCBDUFVJ
+RCBmZWF0dXJlIGJpdCBvZiBjb3Vyc2UuDQo+IA0KPiBZZXMsIGh5cGVyY2FsbCArIENQVUlEIHdv
+dWxkIGRvIGJ1dCBub3JtYWxseSB3ZSB0cmVhdCBDUFVJRCBkYXRhIGFzDQo+IHN0YXRpYyBhbmQg
+aW4gdGhpcyBjYXNlIHdlJ2xsIG1ha2UgaXQgYSBkeW5hbWljYWxseSBmbGlwcGluZw0KPiBiaXQu
+IEVzcGVjaWFsbHkgaWYgd2UgaW50cm9kdWNlICdLVk1fSENfRElTQUJMRV9NRU1fUFJPVEVDVEVE
+JyBsYXRlci4NCg0KTm90IHN1cmUgd2h5IGlzIEtWTV9IQ19ESVNBQkxFX01FTV9QUk9URUNURUQg
+bmVlZGVkPw0KDQo+IA0KPiA+ID4gTm90ZSwgdGhhdCB3ZSBjYW4gYXZvaWQgdGhlIGVuYWJsaW5n
+IGFsZ290aGVyLCBpZiB3ZSBtb2RpZnkgQklPUyB0byBkZWFsDQo+ID4gPiB3aXRoIHByaXZhdGUv
+c2hhcmVkIG1lbW9yeS4gQ3VycmVudGx5IEJJT1MgZ2V0IHN5c3RlbSBjcmFzaCBpZiB3ZSBlbmFi
+bGUNCj4gPiA+IHRoZSBmZWF0dXJlIGZyb20gdGltZSB6ZXJvLg0KPiA+IA0KPiA+IFdoaWNoIHdv
+dWxkIG1lc2ggYmV0dGVyIHdpdGggYSBDUFVJRCBmZWF0dXJlIGJpdC4NCj4gPiANCj4gDQo+IEFu
+ZCBtYXliZSBldmVuIGhlbHAgdXMgdG8gcmVzb2x2ZSAncmVib290JyBwcm9ibGVtLg0KDQpJTU8g
+d2UgY2FuIGFzayBRZW11IHRvIGNhbGwgaHlwZXJjYWxsIHRvICdlbmFibGUnIG1lbW9yeSBwcm90
+ZWN0aW9uIHdoZW4NCmNyZWF0aW5nIFZNLCBhbmQgZ3Vlc3Qga2VybmVsICpxdWVyaWVzKiB3aGV0
+aGVyIGl0IGlzIHByb3RlY3RlZCB2aWEgQ1BVSUQNCmZlYXR1cmUgYml0Lg0KDQo=
