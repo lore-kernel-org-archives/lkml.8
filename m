@@ -2,151 +2,92 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A09C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CE320674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591173925;
-	bh=cblJEWAd3DPBh04Tlvi8BcWOqhwYMzDqk94d+BenPsg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1AUvw/smAYFSkxKaPEojqJHdR+iwvyk6oJXXGXaLOAN2jMgfcwIgxbMSB4Plmxe7g
-	 hOU1tXLU9FkCM5mB0z5Zu0FUCkSZ4p6VdTQns5LO8YVZe6raWadwomb2cZAGlIg7CA
-	 VmKKMvN8xHFndKEeXndYGxL1MoGolkd5ztRg3i/Y=
+	by mail.kernel.org (Postfix) with ESMTP id B62FF20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:45:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EglGzROt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgFCIpY (ORCPT
+        id S1726376AbgFCIpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCIpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:45:24 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AB92074B;
-        Wed,  3 Jun 2020 08:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591173923;
-        bh=cblJEWAd3DPBh04Tlvi8BcWOqhwYMzDqk94d+BenPsg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JMMp8Ma1HO/w/A4xLIz/t4cDUfnR9e6+1nfkhAszV/2t7s5h2fFOHOWb5WhGNIVww
-         HlDhJJr2T/2K1hDog0MaSCnEnalnWwGta927B0xxNxUBzO38h+iAKd2gjX8L/qSCg6
-         T77Fw9B1pB9+weIlI0CutbQ8W7oT1wSKDmnpUmIk=
-Received: by mail-ot1-f43.google.com with SMTP id b18so1281469oti.1;
-        Wed, 03 Jun 2020 01:45:23 -0700 (PDT)
-X-Gm-Message-State: AOAM531oZN/gcuD3wfWmocPmxYLOYYIXle7IE2FwRUMFYasDNB31kidR
-        zuneZdDlmnToPYnMv3EFk7kxaD7TNsx53A7EjMg=
-X-Google-Smtp-Source: ABdhPJzoqH82vfddBcZ2ilJNSYyw2hykyw6p+iOltpxefWYgGi1NHuWQjSjLS+b1Ow7vhgSqC6IYHofRPCZ/ijqKzNE=
-X-Received: by 2002:a9d:7684:: with SMTP id j4mr1249171otl.108.1591173922903;
- Wed, 03 Jun 2020 01:45:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200603053313.3863761-1-masahiroy@kernel.org>
- <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com> <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
-In-Reply-To: <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 3 Jun 2020 10:45:11 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com>
-Message-ID: <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Wed, 3 Jun 2020 04:45:32 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37350 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726243AbgFCIpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:45:32 -0400
+X-UUID: f30f1bf5163c40d4b518c5f6d536a3c4-20200603
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=GqhgG6L1zGtST6u5yF493LQmjohmvvIpbn2zNdLG3lI=;
+        b=EglGzROtLnjGP6UZ7vtLOLO5lL7jNEVYEoUCIoIuLfLHEOTqUvF9DjQG4pbPUSbhipRSvqUq/8y9yfbB3PixdysjiKhpCwP1Kc8RRtA3Om4bWvICDizKNaBk7433ramkhTVmPUezXbIx6d7GXgKnXMF0Pujhp2WqTGC92QMAMlc=;
+X-UUID: f30f1bf5163c40d4b518c5f6d536a3c4-20200603
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1543401211; Wed, 03 Jun 2020 16:45:29 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs01n2.mediatek.inc
+ (172.21.101.79) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 3 Jun
+ 2020 16:45:26 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 3 Jun 2020 16:45:26 +0800
+Message-ID: <1591173806.15527.1.camel@mhfsdcap03>
+Subject: Re: [PATCH v2] usb: host: xhci-mtk: avoid runtime suspend when
+ removing hcd
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+CC:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
+Date:   Wed, 3 Jun 2020 16:43:26 +0800
+In-Reply-To: <1590726778-29065-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1590726569-28248-1-git-send-email-macpaul.lin@mediatek.com>
+         <1590726778-29065-1-git-send-email-macpaul.lin@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: CA6D6B5CA1B57E8E80E8EA32F96818490747DA2EE90F21A39CF72B716572D3462000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 10:36, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Wed, Jun 3, 2020 at 3:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Wed, 3 Jun 2020 at 07:34, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > Documentation/kbuild/makefiles.rst says:
-> > >
-> > >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
-> > >
-> > > I want to disallow lib-y outside of them.
-> > >
-> >
-> > Why?
->
->
-> Because I plan to remove lib-y entirely at some point.
->
-> lib-y is not so useful to shrink the image size because:
->
->   - An object in lib.a can be omitted only when no symbol
->     in that object is referenced.  This rarely happens.
->
->   -  lib-y objects are often exported by nature
->      because lib-y is a collection of utility functions.
->      Even if no in-tree user, we always need to keep them
->      because EXPORT_SYMBOL() is the interface to modules.
->
->
-> When I worked on commit 7273ad2b08f8ac9563579d16a3cf528857b26f49,
-> I made some research.
->
-> The benefit of lib-y is just 362 byte for x86_64_defconfig.
-> ( Before: 26578002, After: 26578364)
->
-> My hope is lib-y will be replaced by dead-code elimination or
-> ultimately by LTO.
->
-> drivers/firmware/efi/libstub/Makefile
-> is the only Makefile that breaks the rule:
-> "Use of lib-y is normally restricted to `lib/` and `arch/*/lib`"
->
->
->
->
-> >
-> > > Add a custom rule to build lib.a, which is linked to the decompressor
-> > > for ARCH=x86, ARCH=arm.
-> > >
-> > > For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
-> > > way.
-> > >
-> >
-> > The code works perfectly fine as is, and I don't see what is
-> > fundamentally wrong with using static libraries outside of lib/ and
-> > arch/*/lib.
->
-> The intended usage of lib-y is to hook lib.a
-> to scripts/vmlinux.sh via KBUILD_VMLINUX_LIBS.
->
-> This Makefile is just what you found to work.
->
->
-> >
-> > Also, I would like this code to still be incorporated as a static
-> > library into arm64 as well, so that only pieces that are actually
-> > needed are incorporated into the final image.
->
-> No.
-> It is not working like that because you set
-> lib.a to core-y.
->
-> All objects in core-y are always linked to vmlinux.
->
+T24gRnJpLCAyMDIwLTA1LTI5IGF0IDEyOjMyICswODAwLCBNYWNwYXVsIExpbiB3cm90ZToNCj4g
+V2hlbiBydW50aW1lIHN1c3BlbmQgd2FzIGVuYWJsZWQsIHJ1bnRpbWUgc3VzcGVuZCBtaWdodCBo
+YXBwZW5lZA0KPiB3aGVuIHhoY2kgaXMgcmVtb3ZpbmcgaGNkLiBUaGlzIG1pZ2h0IGNhdXNlIGtl
+cm5lbCBwYW5pYyB3aGVuIGhjZA0KPiBoYXMgYmVlbiBmcmVlZCBidXQgcnVudGltZSBwbSBzdXNw
+ZW5kIHJlbGF0ZWQgaGFuZGxlIG5lZWQgdG8NCj4gcmVmZXJlbmNlIGl0Lg0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogTWFjcGF1bCBMaW4gPG1hY3BhdWwubGluQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+
+ICBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMgfCAgICA1ICsrKy0tDQo+ICAxIGZpbGUgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tdGsuYyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tdGsu
+Yw0KPiBpbmRleCBiZmJkYjNjLi42NDFkMjRlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi9o
+b3N0L3hoY2ktbXRrLmMNCj4gKysrIGIvZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay5jDQo+IEBA
+IC01ODcsNiArNTg3LDkgQEAgc3RhdGljIGludCB4aGNpX210a19yZW1vdmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqZGV2KQ0KPiAgCXN0cnVjdCB4aGNpX2hjZAkqeGhjaSA9IGhjZF90b194aGNp
+KGhjZCk7DQo+ICAJc3RydWN0IHVzYl9oY2QgICpzaGFyZWRfaGNkID0geGhjaS0+c2hhcmVkX2hj
+ZDsNCj4gIA0KPiArCXBtX3J1bnRpbWVfcHV0X3N5bmMoJmRldi0+ZGV2KTsNCj4gKwlwbV9ydW50
+aW1lX2Rpc2FibGUoJmRldi0+ZGV2KTsNCj4gKw0KPiAgCXVzYl9yZW1vdmVfaGNkKHNoYXJlZF9o
+Y2QpOw0KPiAgCXhoY2ktPnNoYXJlZF9oY2QgPSBOVUxMOw0KPiAgCWRldmljZV9pbml0X3dha2V1
+cCgmZGV2LT5kZXYsIGZhbHNlKTsNCj4gQEAgLTU5Nyw4ICs2MDAsNiBAQCBzdGF0aWMgaW50IHho
+Y2lfbXRrX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpDQo+ICAJeGhjaV9tdGtf
+c2NoX2V4aXQobXRrKTsNCj4gIAl4aGNpX210a19jbGtzX2Rpc2FibGUobXRrKTsNCj4gIAl4aGNp
+X210a19sZG9zX2Rpc2FibGUobXRrKTsNCj4gLQlwbV9ydW50aW1lX3B1dF9zeW5jKCZkZXYtPmRl
+dik7DQo+IC0JcG1fcnVudGltZV9kaXNhYmxlKCZkZXYtPmRldik7DQo+ICANCj4gIAlyZXR1cm4g
+MDsNCj4gIH0NCg0KUmV2aWV3ZWQtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlh
+dGVrLmNvbT4NCg0KVGhhbmtzDQoNCg0K
 
-The lib.a file is passed to the linker as a static library, so it will
-only grab what it needs.
-
-For instance, if you build arm64 from mainline today, the
-efi_relocate_kernel will not be in the final image, even though it is
-built as part of libstub
