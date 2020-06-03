@@ -2,101 +2,202 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13171C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79BF820679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE5620679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x7ti2329"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJEAx+43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgFCR2Z (ORCPT
+        id S1726277AbgFCR2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:28:25 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39682 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgFCR2Z (ORCPT
+        Wed, 3 Jun 2020 13:28:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgFCR2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:28:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053HQUMV137150;
-        Wed, 3 Jun 2020 17:28:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=vbY728mY2dJ2mA65YYNK1FR2EZFZUAkwrFnDgcYPCww=;
- b=x7ti2329haYELDIERJPt68C9Ymc6fEhOfCuzf3u2ZWfaQWqkOyiyWrSBOgx42PoENzFt
- OJgJcXFntqHgw6Y3ptJOsuR3c2s8q2Apm+ZZZl5Fo9HFz9Jg7UpOl67ud4A6h/kqskMW
- jALl1PEfYueNbSw6nEjuhT433e1jpTdMxIjK7Bj4nHCQvx+uAr0xCs4yx2GQztBE58kf
- ByfOaLlxSo/2X6WkpoUGvKH3OrjRfrQwCCfP3yN1uYSNQwE6RtiwBI6rSaP6c8UqP7M0
- XK3QwbwCbwz5PQLDzceRyw1MUiUP5GR9R+ZZlpdoUEwEwJPACcsQrtKMUVOZRjjGA5qy pQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31bfemag42-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 17:28:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053HRS4q077907;
-        Wed, 3 Jun 2020 17:28:09 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 31c12r6v06-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 17:28:09 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053HS7N3031977;
-        Wed, 3 Jun 2020 17:28:07 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jun 2020 10:28:07 -0700
-Subject: Re: [PATCH 2/2] mm: hugetlb: fix the name of hugetlb CMA
-To:     Barry Song <song.bao.hua@hisilicon.com>, akpm@linux-foundation.org
-Cc:     guro@fb.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com
-References: <20200603084025.62740-1-song.bao.hua@hisilicon.com>
- <20200603084025.62740-3-song.bao.hua@hisilicon.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <1027f43d-b756-7dca-e409-430b189947ca@oracle.com>
-Date:   Wed, 3 Jun 2020 10:28:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 13:28:41 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28744C08C5C0;
+        Wed,  3 Jun 2020 10:28:41 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id w7so2449697edt.1;
+        Wed, 03 Jun 2020 10:28:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WVI6luCOohmM6qtuTKw9WrRMCZTsi+C83iXVnslX7rA=;
+        b=GJEAx+43WdEYHTT43ATJjegpGSMYXCQIeBqog4TyBcmkCi3byjhhsFZEyyCkr7UFRE
+         6PeB2iNz86LyDeFJjUNQ3lpoWcW0xuuvi4X7v1rdyT7qTteOfOfp0JGiTuT0gyBws/iX
+         gxLVfJpFcOIMjD8+OWiGSZvrc6cTwF/WzkkW+b3YFYLgb2PBltRDN4N30gb/EZdElnWR
+         lWYsC+Q2H+YAvDXN52wiN4R1/WxoYu8k0/Su1nubUzZlnwcRJadcbuJ20ZYC90aN130b
+         RqppjXZPdST0NQplnNaGbL/Rs8x2iyn+LQKAK9uuiODxHoSOtEUrvx+xmUgtdCZqcnbS
+         aT4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WVI6luCOohmM6qtuTKw9WrRMCZTsi+C83iXVnslX7rA=;
+        b=YFCEoOFUFgmBWigByOg/sI0ll//zs8Om2kMiNqt/UVeAK/quG1cw4MWOqcR0dyaCGR
+         YbFBzpiOFpSqLXQ7ERh1UUZsnRUwstn/Uum9klvgT6tQZULWNHG7Z59a3PYEbypv66GT
+         kxx/QS7ts7cOHpKyQJ9XhWQGD5q+D2ANS7I6wkh2SeP6Dm8h0Ci2xH1JSSDZFZIi28y+
+         MtZq1jGal+ArA4mvsuRygkxl+m3+VYvJSnhdI08nW9bfV66lLyfQvrVcgvxdNaZgVKJ6
+         IWg083a0OfioV9RP1CWTa3CPIBaBH0IOl/cCt2Gc3A2PUkHruIMKuk9RKvneb2ID5oeG
+         PyOw==
+X-Gm-Message-State: AOAM530cE4UjyKMFtziV6B5u4yhlIl39SMaa15xQDODHjzj6eCRjy2qE
+        +Dn6NrnTbtvY8y3tNvT9gtox/10R1QGWuZuaXio=
+X-Google-Smtp-Source: ABdhPJxOeyPwfHr68BPk1LyMY14u7d6PVWFDNWe+GFxbBEkzVXCYLZG+MS363P7oNsScacZSmnMly8Af3Rtiz2JqdQ4=
+X-Received: by 2002:a50:fe94:: with SMTP id d20mr488426edt.254.1591205319745;
+ Wed, 03 Jun 2020 10:28:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200603084025.62740-3-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030135
+References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+ <1591119192-18538-2-git-send-email-amittomer25@gmail.com> <3D3E2940-11E3-4093-8F60-82EB2C11B617@linaro.org>
+In-Reply-To: <3D3E2940-11E3-4093-8F60-82EB2C11B617@linaro.org>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Wed, 3 Jun 2020 22:58:02 +0530
+Message-ID: <CABHD4K-jee4GM1WybAoqaCJTkVO7FC7fJC3U_zZwP_XbH4kpOA@mail.gmail.com>
+Subject: Re: [PATCH v3 01/10] dmaengine: Actions: get rid of bit fields from
+ dma descriptor
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/20 1:40 AM, Barry Song wrote:
-> once we enable CMA_DEBUGFS, we will get the below errors:
-> directory 'cma-hugetlb' with parent 'cma' already present
-> 
-> only the first numa node will get a directory in debugfs.
-> we should have different names for different CMA areas.
-> 
-> Cc: Roman Gushchin <guro@fb.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+Hi,
 
-Thank you
+Thanks for having a look.
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+On Wed, Jun 3, 2020 at 12:52 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> Individual comments for these enums?
 
---
-Mike Kravetz
+I was expecting this comment , and thought these fields are self explanatory
+But if you prefer to have description about it, I would have it in next version.
+
+> >+enum owl_dmadesc_offsets {
+> >+      OWL_DMADESC_NEXT_LLI = 0,
+> >+      OWL_DMADESC_SADDR,
+> >+      OWL_DMADESC_DADDR,
+> >+      OWL_DMADESC_FLEN,
+> >+      OWL_DMADESC_SRC_STRIDE,
+> >+      OWL_DMADESC_DST_STRIDE,
+> >+      OWL_DMADESC_CTRLA,
+> >+      OWL_DMADESC_CTRLB,
+> >+      OWL_DMADESC_CONST_NUM,
+> >+      OWL_DMADESC_SIZE
+> > };
+> >
+> > /**
+> >@@ -153,7 +144,7 @@ struct owl_dma_lli_hw {
+> >  * @node: node for txd's lli_list
+> >  */
+> > struct owl_dma_lli {
+> >-      struct  owl_dma_lli_hw  hw;
+> >+      u32                     hw[OWL_DMADESC_SIZE];
+> >       dma_addr_t              phys;
+> >       struct list_head        node;
+> > };
+> >@@ -320,6 +311,11 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
+> >       return ctl;
+> > }
+> >
+> >+static u32 llc_hw_flen(struct owl_dma_lli *lli)
+> >+{
+> >+      return lli->hw[OWL_DMADESC_FLEN] & GENMASK(19, 0);
+> >+}
+> >+
+> > static void owl_dma_free_lli(struct owl_dma *od,
+> >                            struct owl_dma_lli *lli)
+> > {
+> >@@ -351,8 +347,9 @@ static struct owl_dma_lli *owl_dma_add_lli(struct
+> >owl_dma_txd *txd,
+> >               list_add_tail(&next->node, &txd->lli_list);
+> >
+> >       if (prev) {
+> >-              prev->hw.next_lli = next->phys;
+> >-              prev->hw.ctrla |= llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+> >+              prev->hw[OWL_DMADESC_NEXT_LLI] = next->phys;
+> >+              prev->hw[OWL_DMADESC_CTRLA] |=
+> >+                                      llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+> >       }
+> >
+> >       return next;
+> >@@ -365,8 +362,7 @@ static inline int owl_dma_cfg_lli(struct
+> >owl_dma_vchan *vchan,
+> >                                 struct dma_slave_config *sconfig,
+> >                                 bool is_cyclic)
+> > {
+> >-      struct owl_dma_lli_hw *hw = &lli->hw;
+> >-      u32 mode;
+> >+      u32 mode, ctrlb;
+> >
+> >       mode = OWL_DMA_MODE_PW(0);
+> >
+> >@@ -407,22 +403,22 @@ static inline int owl_dma_cfg_lli(struct
+> >owl_dma_vchan *vchan,
+> >               return -EINVAL;
+> >       }
+> >
+> >-      hw->next_lli = 0; /* One link list by default */
+> >-      hw->saddr = src;
+> >-      hw->daddr = dst;
+> >-
+> >-      hw->fcnt = 1; /* Frame count fixed as 1 */
+> >-      hw->flen = len; /* Max frame length is 1MB */
+> >-      hw->src_stride = 0;
+> >-      hw->dst_stride = 0;
+> >-      hw->ctrla = llc_hw_ctrla(mode,
+> >-                               OWL_DMA_LLC_SAV_LOAD_NEXT |
+> >-                               OWL_DMA_LLC_DAV_LOAD_NEXT);
+> >+      lli->hw[OWL_DMADESC_CTRLA] = llc_hw_ctrla(mode,
+> >+                                                OWL_DMA_LLC_SAV_LOAD_NEXT |
+> >+                                                OWL_DMA_LLC_DAV_LOAD_NEXT);
+> >
+> >       if (is_cyclic)
+> >-              hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+> >+              ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+> >       else
+> >-              hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
+> >+              ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
+> >+
+> >+      lli->hw[OWL_DMADESC_NEXT_LLI] = 0;
+>
+> Again, please preserve the old comments.
+
+Sure, would do it.
+>
+> >+      lli->hw[OWL_DMADESC_SADDR] = src;
+> >+      lli->hw[OWL_DMADESC_DADDR] = dst;
+> >+      lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
+> >+      lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
+> >+      lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+>
+> Please explain what you're doing here.
+
+Actually , in next the patch 2/10 there is comment that explains a bit
+about it.
+
+        /*
+         * S700 put flen and fcnt at offset 0x0c and 0x1c respectively,
+         * whereas S900 put flen and fcnt at offset 0x0c.
+         */
+
+Shall I add more details to it in the next patch 02/10 ?
+
+Thanks
+-Amit.
