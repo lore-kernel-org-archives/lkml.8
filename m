@@ -2,229 +2,257 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E62BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5B90206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CEBC20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgFCLjF (ORCPT
+        id S1726108AbgFCLkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:39:05 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12461 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCLjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:39:04 -0400
-IronPort-SDR: wC+cIayyy/7m63iPkqmHk7HmR2JhHBbiv5dpT4A5ZAaeYZV5jvMyDsEWlVzbTLxEIgP3Xl0v2X
- tU1IjbyBXMiA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 04:39:03 -0700
-IronPort-SDR: cG/RksiWjsjYxU9NvELT5AQnhGYAc8QtBKG9YvnF43ZPxOIgzKmBiVKgC/2W54REw2zltDltj4
- G2VlR4YTVyZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="269049933"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga003.jf.intel.com with ESMTP; 03 Jun 2020 04:39:00 -0700
-Subject: Re: [PATCH v6 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
- <40643542-6676-e0bc-2d10-165dfde41e29@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <33c91520-7040-bd6b-b176-004ddbec2a63@intel.com>
-Date:   Wed, 3 Jun 2020 14:38:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 3 Jun 2020 07:40:33 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:21396 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725855AbgFCLkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:40:32 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 053BcF6n032572;
+        Wed, 3 Jun 2020 07:40:31 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 31e4sks5pv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 Jun 2020 07:40:30 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 053BeTuJ004301
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 3 Jun 2020 07:40:29 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 3 Jun 2020 04:40:28 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 3 Jun 2020 04:40:27 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 3 Jun 2020 04:40:27 -0700
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 053BeOtH017839;
+        Wed, 3 Jun 2020 07:40:26 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <johan@kernel.org>, <andy.shevchenko@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 1/6] iio: core: pass parent device as parameter during allocation
+Date:   Wed, 3 Jun 2020 14:40:18 +0300
+Message-ID: <20200603114023.175102-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200603114023.175102-1-alexandru.ardelean@analog.com>
+References: <20200603114023.175102-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <40643542-6676-e0bc-2d10-165dfde41e29@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-03_11:2020-06-02,2020-06-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ cotscore=-2147483648 lowpriorityscore=0 phishscore=0 clxscore=1015
+ mlxscore=0 spamscore=0 priorityscore=1501 suspectscore=2 impostorscore=0
+ mlxlogscore=999 adultscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006030092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/06/20 11:05 pm, Alexey Budankov wrote:
-> 
-> Implement adding of file descriptors by fdarray__add_stat() to
-> fix-sized (currently 1) stat_entries array located at struct fdarray.
-> Append added file descriptors to the array used by poll() syscall
-> during fdarray__poll() call. Copy poll() result of the added
-> descriptors from the array back to the storage for separate analysis.
+The change passes the parent device to the iio_device_alloc() call. This
+also updates the devm_iio_device_alloc() call to consider the device object
+as the parent device by default.
 
-Why not instead call evlist__add_pollfd() before other fds are added, so
-the fda->entries[] position is always fixed. Then this patch is not needed.
+Having it passed like this, should ensure that any IIO device object
+already has a device object as parent, allowing for neater control, like
+passing the 'indio_dev' object for other stuff [like buffers/triggers/etc],
+and potentially creating iiom_xxx(indio_dev) functions.
 
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  tools/lib/api/fd/array.c                 | 42 +++++++++++++++++++++++-
->  tools/lib/api/fd/array.h                 |  7 ++++
->  tools/lib/perf/evlist.c                  | 11 +++++++
->  tools/lib/perf/include/internal/evlist.h |  2 ++
->  4 files changed, 61 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> index 58d44d5eee31..b0027f2169c7 100644
-> --- a/tools/lib/api/fd/array.c
-> +++ b/tools/lib/api/fd/array.c
-> @@ -11,10 +11,16 @@
->  
->  void fdarray__init(struct fdarray *fda, int nr_autogrow)
->  {
-> +	int i;
-> +
->  	fda->entries	 = NULL;
->  	fda->priv	 = NULL;
->  	fda->nr		 = fda->nr_alloc = 0;
->  	fda->nr_autogrow = nr_autogrow;
-> +
-> +	fda->nr_stat = 0;
-> +	for (i = 0; i < FDARRAY__STAT_ENTRIES_MAX; i++)
-> +		fda->stat_entries[i].fd = -1;
->  }
->  
->  int fdarray__grow(struct fdarray *fda, int nr)
-> @@ -83,6 +89,20 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
->  	return pos;
->  }
->  
-> +int fdarray__add_stat(struct fdarray *fda, int fd, short revents)
-> +{
-> +	int pos = fda->nr_stat;
-> +
-> +	if (pos >= FDARRAY__STAT_ENTRIES_MAX)
-> +		return -1;
-> +
-> +	fda->stat_entries[pos].fd = fd;
-> +	fda->stat_entries[pos].events = revents;
-> +	fda->nr_stat++;
-> +
-> +	return pos;
-> +}
-> +
->  int fdarray__filter(struct fdarray *fda, short revents,
->  		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
->  		    void *arg)
-> @@ -113,7 +133,27 @@ int fdarray__filter(struct fdarray *fda, short revents,
->  
->  int fdarray__poll(struct fdarray *fda, int timeout)
->  {
-> -	return poll(fda->entries, fda->nr, timeout);
-> +	int nr, i, pos, res;
-> +
-> +	nr = fda->nr;
-> +
-> +	for (i = 0; i < fda->nr_stat; i++) {
-> +		if (fda->stat_entries[i].fd != -1) {
-> +			pos = fdarray__add(fda, fda->stat_entries[i].fd,
-> +					   fda->stat_entries[i].events);
-> +			if (pos >= 0)
-> +				fda->priv[pos].idx = i;
-> +		}
-> +	}
-> +
-> +	res = poll(fda->entries, fda->nr, timeout);
-> +
-> +	for (i = nr; i < fda->nr; i++)
-> +		fda->stat_entries[fda->priv[i].idx] = fda->entries[i];
-> +
-> +	fda->nr = nr;
-> +
-> +	return res;
->  }
->  
->  int fdarray__fprintf(struct fdarray *fda, FILE *fp)
-> diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
-> index b39557d1a88f..9bca72e80b09 100644
-> --- a/tools/lib/api/fd/array.h
-> +++ b/tools/lib/api/fd/array.h
-> @@ -3,6 +3,7 @@
->  #define __API_FD_ARRAY__
->  
->  #include <stdio.h>
-> +#include <poll.h>
->  
->  struct pollfd;
->  
-> @@ -16,6 +17,9 @@ struct pollfd;
->   *	  I.e. using 'fda->priv[N].idx = * value' where N < fda->nr is ok,
->   *	  but doing 'fda->priv = malloc(M)' is not allowed.
->   */
-> +
-> +#define FDARRAY__STAT_ENTRIES_MAX	1
-> +
->  struct fdarray {
->  	int	       nr;
->  	int	       nr_alloc;
-> @@ -25,6 +29,8 @@ struct fdarray {
->  		int    idx;
->  		void   *ptr;
->  	} *priv;
-> +	int	       nr_stat;
-> +	struct pollfd  stat_entries[FDARRAY__STAT_ENTRIES_MAX];
->  };
->  
->  void fdarray__init(struct fdarray *fda, int nr_autogrow);
-> @@ -34,6 +40,7 @@ struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow);
->  void fdarray__delete(struct fdarray *fda);
->  
->  int fdarray__add(struct fdarray *fda, int fd, short revents);
-> +int fdarray__add_stat(struct fdarray *fda, int fd, short revents);
->  int fdarray__poll(struct fdarray *fda, int timeout);
->  int fdarray__filter(struct fdarray *fda, short revents,
->  		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 6a875a0f01bb..e68e4c08e7c2 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -317,6 +317,17 @@ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
->  	return pos;
->  }
->  
-> +int perf_evlist__add_pollfd_stat(struct perf_evlist *evlist, int fd,
-> +			         short revent)
-> +{
-> +	int pos = fdarray__add_stat(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
-> +
-> +	if (pos >= 0)
-> +		fcntl(fd, F_SETFL, O_NONBLOCK);
-> +
-> +	return pos;
-> +}
-> +
->  static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
->  					 void *arg __maybe_unused)
->  {
-> diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-> index 74dc8c3f0b66..2b3b4518c05e 100644
-> --- a/tools/lib/perf/include/internal/evlist.h
-> +++ b/tools/lib/perf/include/internal/evlist.h
-> @@ -46,6 +46,8 @@ struct perf_evlist_mmap_ops {
->  int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
->  int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
->  			    void *ptr, short revent);
-> +int perf_evlist__add_pollfd_stat(struct perf_evlist *evlist, int fd,
-> +			         short revent);
->  
->  int perf_evlist__mmap_ops(struct perf_evlist *evlist,
->  			  struct perf_evlist_mmap_ops *ops,
-> 
+With this patch, only the 'drivers/platform/x86/toshiba_acpi.c' needs an
+update to pass the parent object as a parameter.
+
+In the next patch all devm_iio_device_alloc() calls will be handled.
+
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/dummy/iio_simple_dummy.c         | 14 ++++++++------
+ drivers/iio/industrialio-core.c              | 11 ++++++-----
+ drivers/platform/x86/toshiba_acpi.c          |  3 +--
+ drivers/staging/iio/Documentation/device.txt |  4 +---
+ include/linux/iio/iio.h                      |  4 ++--
+ 5 files changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
+index 6cb02299a215..b35ae7c039f7 100644
+--- a/drivers/iio/dummy/iio_simple_dummy.c
++++ b/drivers/iio/dummy/iio_simple_dummy.c
+@@ -566,6 +566,13 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+ 	struct iio_dev *indio_dev;
+ 	struct iio_dummy_state *st;
+ 	struct iio_sw_device *swd;
++	struct device *parent = NULL;
++
++	/*
++	 * With hardware: Set the parent device.
++	 * parent = &spi->dev;
++	 * parent = &client->dev;
++	 */
+ 
+ 	swd = kzalloc(sizeof(*swd), GFP_KERNEL);
+ 	if (!swd) {
+@@ -580,7 +587,7 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+ 	 * It also has a region (accessed by iio_priv()
+ 	 * for chip specific state information.
+ 	 */
+-	indio_dev = iio_device_alloc(sizeof(*st));
++	indio_dev = iio_device_alloc(parent, sizeof(*st));
+ 	if (!indio_dev) {
+ 		ret = -ENOMEM;
+ 		goto error_ret;
+@@ -590,11 +597,6 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+ 	mutex_init(&st->lock);
+ 
+ 	iio_dummy_init_device(indio_dev);
+-	/*
+-	 * With hardware: Set the parent device.
+-	 * indio_dev->dev.parent = &spi->dev;
+-	 * indio_dev->dev.parent = &client->dev;
+-	 */
+ 
+ 	 /*
+ 	 * Make the iio_dev struct available to remove function.
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 1527f01a44f1..75661661aaba 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1493,7 +1493,7 @@ struct device_type iio_device_type = {
+  * iio_device_alloc() - allocate an iio_dev from a driver
+  * @sizeof_priv:	Space to allocate for private structure.
+  **/
+-struct iio_dev *iio_device_alloc(int sizeof_priv)
++struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+ {
+ 	struct iio_dev *dev;
+ 	size_t alloc_size;
+@@ -1510,6 +1510,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+ 	if (!dev)
+ 		return NULL;
+ 
++	dev->dev.parent = parent;
+ 	dev->dev.groups = dev->groups;
+ 	dev->dev.type = &iio_device_type;
+ 	dev->dev.bus = &iio_bus_type;
+@@ -1551,7 +1552,7 @@ static void devm_iio_device_release(struct device *dev, void *res)
+ 
+ /**
+  * devm_iio_device_alloc - Resource-managed iio_device_alloc()
+- * @dev:		Device to allocate iio_dev for
++ * @parent:		Device to allocate iio_dev for, and parent for this IIO device
+  * @sizeof_priv:	Space to allocate for private structure.
+  *
+  * Managed iio_device_alloc. iio_dev allocated with this function is
+@@ -1560,7 +1561,7 @@ static void devm_iio_device_release(struct device *dev, void *res)
+  * RETURNS:
+  * Pointer to allocated iio_dev on success, NULL on failure.
+  */
+-struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
++struct iio_dev *devm_iio_device_alloc(struct device *parent, int sizeof_priv)
+ {
+ 	struct iio_dev **ptr, *iio_dev;
+ 
+@@ -1569,10 +1570,10 @@ struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
+ 	if (!ptr)
+ 		return NULL;
+ 
+-	iio_dev = iio_device_alloc(sizeof_priv);
++	iio_dev = iio_device_alloc(parent, sizeof_priv);
+ 	if (iio_dev) {
+ 		*ptr = iio_dev;
+-		devres_add(dev, ptr);
++		devres_add(parent, ptr);
+ 	} else {
+ 		devres_free(ptr);
+ 	}
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 808944546739..4a4d09c352dd 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -3128,7 +3128,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 
+ 	toshiba_accelerometer_available(dev);
+ 	if (dev->accelerometer_supported) {
+-		dev->indio_dev = iio_device_alloc(sizeof(*dev));
++		dev->indio_dev = iio_device_alloc(&acpi_dev->dev, sizeof(*dev));
+ 		if (!dev->indio_dev) {
+ 			pr_err("Unable to allocate iio device\n");
+ 			goto iio_error;
+@@ -3138,7 +3138,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 
+ 		dev->indio_dev->info = &toshiba_iio_accel_info;
+ 		dev->indio_dev->name = "Toshiba accelerometer";
+-		dev->indio_dev->dev.parent = &acpi_dev->dev;
+ 		dev->indio_dev->modes = INDIO_DIRECT_MODE;
+ 		dev->indio_dev->channels = toshiba_iio_accel_channels;
+ 		dev->indio_dev->num_channels =
+diff --git a/drivers/staging/iio/Documentation/device.txt b/drivers/staging/iio/Documentation/device.txt
+index ec42544a46aa..0d1275b1eb3f 100644
+--- a/drivers/staging/iio/Documentation/device.txt
++++ b/drivers/staging/iio/Documentation/device.txt
+@@ -8,7 +8,7 @@ The crucial structure for device drivers in iio is iio_dev.
+ 
+ First allocate one using:
+ 
+-struct iio_dev *indio_dev = iio_device_alloc(sizeof(struct chip_state));
++struct iio_dev *indio_dev = iio_device_alloc(parent, sizeof(struct chip_state));
+ where chip_state is a structure of local state data for this instance of
+ the chip.
+ 
+@@ -16,8 +16,6 @@ That data can be accessed using iio_priv(struct iio_dev *).
+ 
+ Then fill in the following:
+ 
+-- indio_dev->dev.parent
+-	Struct device associated with the underlying hardware.
+ - indio_dev->name
+ 	Name of the device being driven - made available as the name
+ 	attribute in sysfs.
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index a1be82e74c93..91a69f4751aa 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -676,7 +676,7 @@ static inline void *iio_device_get_drvdata(struct iio_dev *indio_dev)
+ 
+ /* Can we make this smaller? */
+ #define IIO_ALIGN L1_CACHE_BYTES
+-struct iio_dev *iio_device_alloc(int sizeof_priv);
++struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+ 
+ static inline void *iio_priv(const struct iio_dev *indio_dev)
+ {
+@@ -690,7 +690,7 @@ static inline struct iio_dev *iio_priv_to_dev(void *priv)
+ }
+ 
+ void iio_device_free(struct iio_dev *indio_dev);
+-struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
++struct iio_dev *devm_iio_device_alloc(struct device *parent, int sizeof_priv);
+ struct iio_trigger *devm_iio_trigger_alloc(struct device *dev,
+ 						const char *fmt, ...);
+ /**
+-- 
+2.25.1
 
