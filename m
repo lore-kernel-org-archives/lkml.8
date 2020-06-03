@@ -2,114 +2,108 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A082C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E258420734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84A22067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591222961;
-	bh=FbZizFCbXTo82zhp90elPXeQrp3LeJltCz9UBkieMa0=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=hoYZpmP1K/jv3/YRXzSJ8JvOiygaBfYgrdGiCG8WVP5jXs86Eqmi3SgqYN9NecnQw
-	 0RiaO/3pGcCiOo1+cuHDYA3IcS62DqKaxIF/rTRXoXdIDNk4MfIYs+dJMWqrZFe1rn
-	 pHM7zLoSifSUzUzuFZR06rCNIlykIChw32OD1tKc=
+	s=default; t=1591222972;
+	bh=KkHGhoUNVUm6PPU2Wc3n69d1PFrjoUPau99hvQGcD1E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WXXeG/IGWG6zIPBKX0JmLhMSw3t7PrLUA/OcMu9wUylr/vNRh9hNtPk9F9SjW54oY
+	 W6IShc7OQwtbukzlKJD0aQf/jcUJw3yu2c6ChP2PddkATchZWhL8l6rwSSBabC7lcu
+	 eIsPKue+4jxan2fmk0pWZENvbnst3EiOKdmlpXcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFCWWk (ORCPT
+        id S1726871AbgFCWWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 18:22:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56462 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 18:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbgFCWWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 18:22:39 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726441AbgFCWWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 18:22:49 -0400
+Received: from sstabellini-ThinkPad-T480s.hsd1.ca.comcast.net (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0902F2067B;
-        Wed,  3 Jun 2020 22:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D431C2067B;
+        Wed,  3 Jun 2020 22:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591222959;
-        bh=FbZizFCbXTo82zhp90elPXeQrp3LeJltCz9UBkieMa0=;
-        h=Date:From:To:cc:Subject:From;
-        b=UliQ4Xc0s6kZlNyoqhnZToK1IzE2Oj4wUjDuW8fE4ZVtpg23emU+hIIetm/p3gS6X
-         I5fikv0SrWzGlcMWVVAA/OXGN5h8aK+xYKoyKk0nyhLQCEVjiGuNTKdL5S/YGdf+Y6
-         zofhZFz2KDHQnFwvSm3nSU0DF9MBACdKFzRLyvTM=
-Date:   Wed, 3 Jun 2020 15:22:38 -0700 (PDT)
+        s=default; t=1591222969;
+        bh=KkHGhoUNVUm6PPU2Wc3n69d1PFrjoUPau99hvQGcD1E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iS/9d1NEK4nODfzf/8QcScf3N+hmvvrgLTCxl91JpBRBcydxeV138kYdTqiJMEt9b
+         nhYp1DoW/P0X+h2Do5xbSeYfbg7p+rgwfDoq04oiBlfmzPiGObo11WusHd99feCP+G
+         hdz7+XBkfDJCmzl8jFCi1R+GtcVCvV0kGA2FLHcQ=
 From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
 To:     jgross@suse.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-cc:     sstabellini@kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, tamas@tklengyel.com, roman@zededa.com
-Subject: [PATCH v2 00/11] fix swiotlb-xen for RPi4
-Message-ID: <alpine.DEB.2.21.2006031506590.6774@sstabellini-ThinkPad-T480s>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Cc:     sstabellini@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, tamas@tklengyel.com,
+        roman@zededa.com,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: [PATCH v2 01/11] swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
+Date:   Wed,  3 Jun 2020 15:22:37 -0700
+Message-Id: <20200603222247.11681-1-sstabellini@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <alpine.DEB.2.21.2006031506590.6774@sstabellini-ThinkPad-T480s>
+References: <alpine.DEB.2.21.2006031506590.6774@sstabellini-ThinkPad-T480s>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-This series is a collection of fixes to get Linux running on the RPi4 as
-dom0.
+xen_alloc_coherent_pages might return pages for which virt_to_phys and
+virt_to_page don't work, e.g. ioremap'ed pages.
 
-Conceptually there are only two significant changes:
+So in xen_swiotlb_free_coherent we can't assume that virt_to_page works.
+Instead add a is_vmalloc_addr check and use vmalloc_to_page on vmalloc
+virt addresses.
 
-- make sure not to call virt_to_page on vmalloc virt addresses (patch
-  #1)
-- use phys_to_dma and dma_to_phys to translate phys to/from dma
-  addresses (all other patches)
+This patch fixes the following crash at boot on RPi4:
+https://marc.info/?l=xen-devel&m=158862573216800
 
-In particular in regards to the second part, the RPi4 is the first
-board where Xen can run that has the property that dma addresses are
-different from physical addresses, and swiotlb-xen was written with the
-assumption that phys addr == dma addr.
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Tested-by: Roman Shaposhnik <roman@zededa.com>
+---
+Changes in v2:
+- update commit message
+---
+ drivers/xen/swiotlb-xen.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-This series adds the phys_to_dma and dma_to_phys calls to make it work.
-
-Cheers,
-
-Stefano
-
-
-
-The following changes since commit b85051e755b0e9d6dd8f17ef1da083851b83287d:
-
-  Merge tag 'fixes-for-5.7-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux (2020-05-20 13:23:55 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/sstabellini/xen.git fix-rpi4-v2 
-
-for you to fetch changes up to 49783ba67f75da3490d2c01ed9b445d8a89bbb0d:
-
-  xen/arm: call dma_to_phys on the dma_addr_t parameter of dma_cache_maint (2020-06-03 15:05:53 -0700)
-
-----------------------------------------------------------------
-Boris Ostrovsky (1):
-      swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
-
-Stefano Stabellini (10):
-      swiotlb-xen: remove start_dma_addr
-      swiotlb-xen: add struct device* parameter to xen_phys_to_bus
-      swiotlb-xen: add struct device* parameter to xen_bus_to_phys
-      swiotlb-xen: add struct device* parameter to xen_dma_sync_for_cpu
-      swiotlb-xen: add struct device* parameter to xen_dma_sync_for_device
-      swiotlb-xen: add struct device* parameter to is_xen_swiotlb_buffer
-      swiotlb-xen: introduce phys_to_dma/dma_to_phys translations
-      swiotlb-xen: rename xen_phys_to_bus to xen_phys_to_dma and xen_bus_to_phys to xen_dma_to_phys
-      xen/arm: introduce phys/dma translations in xen_dma_sync_for_*
-      xen/arm: call dma_to_phys on the dma_addr_t parameter of dma_cache_maint
-
- arch/arm/xen/mm.c         | 32 +++++++++++++++++++-------------
- drivers/xen/swiotlb-xen.c | 72 +++++++++++++++++++++++++++++++++++++-----------------------------------
- include/xen/swiotlb-xen.h | 10 ++++++----
- 3 files changed, 62 insertions(+), 52 deletions(-)
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index b6d27762c6f8..a42129cba36e 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -335,6 +335,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	int order = get_order(size);
+ 	phys_addr_t phys;
+ 	u64 dma_mask = DMA_BIT_MASK(32);
++	struct page *pg;
+ 
+ 	if (hwdev && hwdev->coherent_dma_mask)
+ 		dma_mask = hwdev->coherent_dma_mask;
+@@ -346,9 +347,11 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	/* Convert the size to actually allocated. */
+ 	size = 1UL << (order + XEN_PAGE_SHIFT);
+ 
++	pg = is_vmalloc_addr(vaddr) ? vmalloc_to_page(vaddr) :
++				      virt_to_page(vaddr);
+ 	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
+ 		     range_straddles_page_boundary(phys, size)) &&
+-	    TestClearPageXenRemapped(virt_to_page(vaddr)))
++	    TestClearPageXenRemapped(pg))
+ 		xen_destroy_contiguous_region(phys, order);
+ 
+ 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+-- 
+2.17.1
 
