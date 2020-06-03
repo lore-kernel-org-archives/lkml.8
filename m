@@ -2,125 +2,129 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80238C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4572B20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643D820678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="tYgKOpxv";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="j5tgOuQk"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="VTX1tiIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgFCTCM (ORCPT
+        id S1726135AbgFCTEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:02:12 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:59946 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbgFCTCL (ORCPT
+        Wed, 3 Jun 2020 15:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgFCTEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:02:11 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 4E7038EE10C;
-        Wed,  3 Jun 2020 12:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591210931;
-        bh=Wt5yO3RIAVSuQI0FXzR9uphWwJwRA94DtPjtTGGrjmg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=tYgKOpxvQWk0GivCIXWOn2Oe5AWlQVPqEpwRBr+cGaerXJTH18ciQH8HRH1F1UoNG
-         SXySXBA1pkU/jTzVhuvAJC6qwIJ17yf35kizCcDucpQL5blBwTCbER+24GqLISlsPL
-         lRvEZ4z5azznPQWWv1h1sOoOuwxHO5/4k5uZNmsM=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gbL326jwZz7r; Wed,  3 Jun 2020 12:02:10 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id A90878EE0DF;
-        Wed,  3 Jun 2020 12:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591210930;
-        bh=Wt5yO3RIAVSuQI0FXzR9uphWwJwRA94DtPjtTGGrjmg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=j5tgOuQk9khBWshrGTaReeF1m4rYp5uqmAOaBA1uQoQHThE10yXM7HgQDBNmawgDB
-         bWygpAQiZcLuFHDp6F+VBTqlPaa0Om1gRuwEzJAN7euT6Fj7UawBh3fngqGAZvHbB/
-         Ipomli+452K4rncMB9yDS2ps1lQO/SEnrI4l/LGg=
-Message-ID: <1591210928.13983.24.camel@HansenPartnership.com>
-Subject: Re: kobject_init_and_add is easy to misuse
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Wang Hai <wanghai38@huawei.com>, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Wed, 03 Jun 2020 12:02:08 -0700
-In-Reply-To: <20200603183650.GI6578@ziepe.ca>
-References: <20200602115033.1054-1-wanghai38@huawei.com>
-         <20200602121035.GL19604@bombadil.infradead.org>
-         <1591111514.4253.32.camel@HansenPartnership.com>
-         <20200602173603.GB3579519@kroah.com>
-         <1591127656.16819.7.camel@HansenPartnership.com>
-         <20200602200756.GA3933938@kroah.com>
-         <1591134670.16819.18.camel@HansenPartnership.com>
-         <20200603002205.GE6578@ziepe.ca>
-         <1591207475.4462.41.camel@HansenPartnership.com>
-         <20200603183650.GI6578@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Jun 2020 15:04:40 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B902C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:04:38 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q19so3335955eja.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 12:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1ob8DHHd/z/xVN5INJTzit4Jsbs2bUN8orwDkBUzED4=;
+        b=VTX1tiITS/4e2XYWvoHClDpZLAHWVU2LJ514haRTCPcl4bz9/iJwO6QacpVPDurZfs
+         A/2dpDfEYsg41SqIevLzEJVUcQyr+r5qiADVsFtXYquX5KW/xvNR8nu/CWMeUf7wzU3F
+         x5PskuQRHwinsAuL5Qkk79P0VECGZF7++0vL8sdFF+vgpMw8pvkux0Nq0+JrOmnO8OP3
+         aXXrFef+GT7u3ZE/TDY6H2Fu1Zhl2y8E8JyY7Vnw23noyzOAYVO5Ha5zZ0gCF5sY86lj
+         vhgyWTg4RSZBBKATq6sQhQPwGjvIKfmk8yRRcrP7MohMA6EOIB7JnZOOj+6KgPdiEH7Z
+         rSFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1ob8DHHd/z/xVN5INJTzit4Jsbs2bUN8orwDkBUzED4=;
+        b=kfaw2AOpps9q3FUZH+aurc3QzmcRRgxHemriSxD0xwhHd5HW/6JzH3MEYWJErviw7N
+         PTLvo7sxXv/H7sCBLuh1FAosIFrAxh3yIN5i7mf+I9N3MjUO8pQ5pskrObq1RcDQ357C
+         rBleOWjcYFw3p9S7LX7d/Qy3itAjX70NceJCPvHWvbD2hOMJIe0YS7sPezMWDgexapxY
+         O1qDv/ZB+BMzYWUXAvvwU6E0qJ81IfUqas8/OA917O0tB5VmR/v4WbaSpWPeO8j5SiiT
+         iuJKTeS+sfWz1DogryqIIa9LQ07f+9AK5eA4EyNJV5Yt9hXTWHBbLODD2rDR3XQSSzE6
+         Ez1A==
+X-Gm-Message-State: AOAM533dRKKWiV1YorUInYp7OW2m2BJNhZDNnLCl9gRzccoRWBSsfPay
+        rQxL6Jh7OMyvDkEBPwzSX6d91w==
+X-Google-Smtp-Source: ABdhPJw9+z6x6Ov/IIGHZ2GLEUbp2IAgUZ5fQ4jkLx95eaBELc9tb8OGzht6TOF4bHWUO0XoZVNxaQ==
+X-Received: by 2002:a17:906:1cd3:: with SMTP id i19mr631125ejh.321.1591211077010;
+        Wed, 03 Jun 2020 12:04:37 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id w8sm229561eds.41.2020.06.03.12.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 12:04:35 -0700 (PDT)
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+To:     alexei.starovoitov@gmail.com
+Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, fejes@inf.elte.hu,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        matthieu.baerts@tessares.net, netdev@vger.kernel.org,
+        songliubraving@fb.com, yhs@fb.com
+Subject: [PATCH bpf v2] bpf: fix unused-var without NETDEVICES
+Date:   Wed,  3 Jun 2020 21:03:47 +0200
+Message-Id: <20200603190347.2310320-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAADnVQ+k7+fQmuNQL=GLLaGUvd5+zZN6GViy-oP7Sfq7aQVG1Q@mail.gmail.com>
+References: <CAADnVQ+k7+fQmuNQL=GLLaGUvd5+zZN6GViy-oP7Sfq7aQVG1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-03 at 15:36 -0300, Jason Gunthorpe wrote:
-> On Wed, Jun 03, 2020 at 11:04:35AM -0700, James Bottomley wrote:
-> > On Tue, 2020-06-02 at 21:22 -0300, Jason Gunthorpe wrote:
-> > > On Tue, Jun 02, 2020 at 02:51:10PM -0700, James Bottomley wrote:
-> > > 
-> > > > My first thought was "what?  I got suckered into creating a
-> > > > patch", thanks ;-)  But now I look, all the error paths do
-> > > > unwind back to the initial state, so kfree() on error looks to
-> > > > be completely correct. 
-> > > 
-> > > It doesn't fully unwind if the kobject is put into a kset, then
-> > > another thread can get the kref during kset_find_obj() and
-> > > kfree() won't wait for the kref to go to 0. It must use put.
-> > 
-> > That does seem a bit contrived: the only failure
-> > kobject_add_internal() can get after kobj_kset_join() is from
-> > directory creation.  If directory creation fails, no name appears
-> > in sysfs and no event for the name is sent, how did another thread
-> > get the name to pass in to kset_find_obj()?
-> 
-> The other thread just guesses in a hostile way? 
-> 
-> Eg it looks like the iommu stuff just feeds in user data to
-> kobj_kset_join().
+A recent commit added new variables only used if CONFIG_NETDEVICES is
+set. A simple fix would be to only declare these variables if the same
+condition is valid but Alexei suggested an even simpler solution:
 
-Well, if we have to go down the rabbit hole this far, it turns out to
-be fixable because of the state_in_sysfs flag:
+    since CONFIG_NETDEVICES doesn't change anything in .h I think the
+    best is to remove #ifdef CONFIG_NETDEVICES from net/core/filter.c
+    and rely on sock_bindtoindex() returning ENOPROTOOPT in the extreme
+    case of oddly configured kernels.
 
-@@ -899,7 +903,8 @@ struct kobject *kset_find_obj(struct kset *kset, const char *name)
- 	spin_lock(&kset->list_lock);
- 
- 	list_for_each_entry(k, &kset->list, entry) {
--		if (kobject_name(k) && !strcmp(kobject_name(k), name)) {
-+		if (kobject_name(k) && k->state_in_sysfs &&
-+		    !strcmp(kobject_name(k), name)) {
- 			ret = kobject_get_unless_zero(k);
+Fixes: 70c58997c1e8 ("bpf: Allow SO_BINDTODEVICE opt in bpf_setsockopt")
+Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+
+Notes:
+    This fix currently applies on net-next and bpf-next only. Except that
+    net-next is now closed and -net will get commits from net-next after
+    Linus' pull.
+
+    v2: remove #ifdef CONFIG_NETDEVICES (Alexei)
+
+ net/core/filter.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/net/core/filter.c b/net/core/filter.c
+index d01a244b5087..90d2eb77002f 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -4340,8 +4340,6 @@ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
+ 			}
  			break;
- 		}
-
-That would ensure the name can't be found until the sysfs directory
-creation has succeeded, which would be the point from which
-kobject_init_and_add() can't fail.
-
-James
+ 		case SO_BINDTODEVICE:
+-			ret = -ENOPROTOOPT;
+-#ifdef CONFIG_NETDEVICES
+ 			optlen = min_t(long, optlen, IFNAMSIZ - 1);
+ 			strncpy(devname, optval, optlen);
+ 			devname[optlen] = 0;
+@@ -4360,7 +4358,6 @@ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
+ 				dev_put(dev);
+ 			}
+ 			ret = sock_bindtoindex(sk, ifindex, false);
+-#endif
+ 			break;
+ 		default:
+ 			ret = -EINVAL;
+-- 
+2.25.1
 
