@@ -2,430 +2,90 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D869CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC345C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7FA02077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1xJCX2Ki"
+	by mail.kernel.org (Postfix) with ESMTP id 926AB2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgFCKH4 (ORCPT
+        id S1726874AbgFCKJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:07:56 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:54667 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725943AbgFCKHz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:07:55 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 97E42580171;
-        Wed,  3 Jun 2020 06:07:53 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 03 Jun 2020 06:07:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kiZMMi
-        VW28mqXcVOHneQa9SiH1xMLLzOdM96VKl6Yl0=; b=1xJCX2Kimb/wBxLX6VllTJ
-        NFwxuJGvqGvIn/St+VyoqIs3nA2qO+MuzyHsDiJmcdZcZK4KFhw9/DOI/3mdI2c8
-        OJQYflZKWpaKyVZ7W0FOj/WjfOIwvs/HvcEh/3Ap6Pc2cCnCu8c/Dk6+/QsjmtEj
-        bGurvzGjCARW6S6k7WUZDKztXPjaDFa0258V0XYxijr2+9kFjBrej3gJJfI1Hpy5
-        Vesk03NZOXlPwdnnBjNNBcZk/grDOeRa/wnPbjviU/1s598KPvxLjuXnbTxIQ+55
-        gcqUdp5Ap/MUuOrI97/8ABSWO97uUsFhFfsBg2+oPyLVXeVXiJEg/AgsGaoN/N1w
-        ==
-X-ME-Sender: <xms:d3bXXgaoBF3B_pMKpFlnDpLSBdbnP1DTa85PCMHh7EYFJy5AjLQv3w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefledgudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
-    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
-    teenucfkphepudelfedrgeejrdduieehrddvhedunecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:d3bXXrYKbyvwwlGdBP0o_285xcqK_hxDm-2IMtuUbEq7CuR9jo5ACg>
-    <xmx:d3bXXq9rD-3oeqp7PGa35DCoHx50u8qxkJaW2c4D0QMfNaKj4ETkQw>
-    <xmx:d3bXXqp_hxanzE-tPjlXn5HKTlAag3t_IDK9eOZr6sciWPrT4uP0_A>
-    <xmx:eXbXXojQvKWUraDchj-Cs4uuE4LXXtNqXNCt2bRAfS6r7RH08YabSQ>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 52D8030618C1;
-        Wed,  3 Jun 2020 06:07:51 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 13:07:49 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mickey Rachamim <mickeyr@marvell.com>
-Subject: Re: [net-next 3/6] net: marvell: prestera: Add basic devlink support
-Message-ID: <20200603100749.GB1847993@splinter>
-References: <20200528151245.7592-1-vadym.kochan@plvision.eu>
- <20200528151245.7592-4-vadym.kochan@plvision.eu>
+        Wed, 3 Jun 2020 06:09:02 -0400
+Received: from 8bytes.org ([81.169.241.247]:45858 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbgFCKJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:09:01 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 4CD7E28B; Wed,  3 Jun 2020 12:08:59 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 12:08:57 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 23/75] x86/boot/compressed/64: Setup GHCB Based VC
+ Exception handler
+Message-ID: <20200603100857.GA20099@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-24-joro@8bytes.org>
+ <20200511200709.GE25861@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528151245.7592-4-vadym.kochan@plvision.eu>
+In-Reply-To: <20200511200709.GE25861@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:12:42PM +0300, Vadym Kochan wrote:
-> Add very basic support for devlink interface:
+On Mon, May 11, 2020 at 10:07:09PM +0200, Borislav Petkov wrote:
+> On Tue, Apr 28, 2020 at 05:16:33PM +0200, Joerg Roedel wrote:
+> > @@ -63,3 +175,45 @@ void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
+> >  	while (true)
+> >  		asm volatile("hlt\n");
+> >  }
+> > +
+> > +static enum es_result vc_insn_string_read(struct es_em_ctxt *ctxt,
+> > +					  void *src, char *buf,
+> > +					  unsigned int data_size,
+> > +					  unsigned int count,
+> > +					  bool backwards)
+> > +{
+> > +	int i, b = backwards ? -1 : 1;
+> > +	enum es_result ret = ES_OK;
+> > +
+> > +	for (i = 0; i < count; i++) {
+> > +		void *s = src + (i * data_size * b);
+> > +		char *d = buf + (i * data_size);
 > 
->     - driver name
->     - fw version
->     - devlink ports
-
-I suggest adding support for reload while the driver is still simple. I
-use it all the time because I run with modules built-in. It's also used
-in FIB offload tests to relocate the netdevs to a different namespace
-where the test is performed
-
+> >From a previous review:
 > 
-> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> ---
->  drivers/net/ethernet/marvell/prestera/Kconfig |   1 +
->  .../net/ethernet/marvell/prestera/Makefile    |   2 +-
->  .../net/ethernet/marvell/prestera/prestera.h  |   4 +
->  .../marvell/prestera/prestera_devlink.c       | 111 ++++++++++++++++++
->  .../marvell/prestera/prestera_devlink.h       |  25 ++++
->  .../ethernet/marvell/prestera/prestera_main.c |  27 ++++-
->  6 files changed, 165 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.c
->  create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-> 
-> diff --git a/drivers/net/ethernet/marvell/prestera/Kconfig b/drivers/net/ethernet/marvell/prestera/Kconfig
-> index 0848edb272a5..dfd5174d0568 100644
-> --- a/drivers/net/ethernet/marvell/prestera/Kconfig
-> +++ b/drivers/net/ethernet/marvell/prestera/Kconfig
-> @@ -6,6 +6,7 @@
->  config PRESTERA
->  	tristate "Marvell Prestera Switch ASICs support"
->  	depends on NET_SWITCHDEV && VLAN_8021Q
-> +	select NET_DEVLINK
->  	help
->  	  This driver supports Marvell Prestera Switch ASICs family.
->  
-> diff --git a/drivers/net/ethernet/marvell/prestera/Makefile b/drivers/net/ethernet/marvell/prestera/Makefile
-> index 2146714eab21..babd71fba809 100644
-> --- a/drivers/net/ethernet/marvell/prestera/Makefile
-> +++ b/drivers/net/ethernet/marvell/prestera/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_PRESTERA)	+= prestera.o
->  prestera-objs		:= prestera_main.o prestera_hw.o prestera_dsa.o \
-> -			   prestera_rxtx.o
-> +			   prestera_rxtx.o prestera_devlink.o
->  
->  obj-$(CONFIG_PRESTERA_PCI)	+= prestera_pci.o
-> diff --git a/drivers/net/ethernet/marvell/prestera/prestera.h b/drivers/net/ethernet/marvell/prestera/prestera.h
-> index 5079d872e18a..f8abaaff5f21 100644
-> --- a/drivers/net/ethernet/marvell/prestera/prestera.h
-> +++ b/drivers/net/ethernet/marvell/prestera/prestera.h
-> @@ -11,6 +11,9 @@
->  #include <linux/notifier.h>
->  #include <uapi/linux/if_ether.h>
->  #include <linux/workqueue.h>
-> +#include <net/devlink.h>
-> +
-> +#define PRESTERA_DRV_NAME	"prestera"
->  
->  struct prestera_fw_rev {
->  	u16 maj;
-> @@ -63,6 +66,7 @@ struct prestera_port_caps {
->  struct prestera_port {
->  	struct net_device *dev;
->  	struct prestera_switch *sw;
-> +	struct devlink_port dl_port;
->  	u32 id;
->  	u32 hw_id;
->  	u32 dev_id;
-> diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.c b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-> new file mode 100644
-> index 000000000000..58021057981b
-> --- /dev/null
-> +++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-> @@ -0,0 +1,111 @@
-> +// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
-> +/* Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved */
-> +
-> +#include <net/devlink.h>
-> +
-> +#include "prestera.h"
-> +#include "prestera_devlink.h"
-> +
-> +static int prestera_dl_info_get(struct devlink *dl,
-> +				struct devlink_info_req *req,
-> +				struct netlink_ext_ack *extack)
-> +{
-> +	struct prestera_switch *sw = devlink_priv(dl);
-> +	char buf[16];
-> +	int err = 0;
-> +
-> +	err = devlink_info_driver_name_put(req, PRESTERA_DRV_NAME);
-> +	if (err)
-> +		return err;
-> +
-> +	snprintf(buf, sizeof(buf), "%d.%d.%d",
-> +		 sw->dev->fw_rev.maj,
-> +		 sw->dev->fw_rev.min,
-> +		 sw->dev->fw_rev.sub);
-> +
-> +	err = devlink_info_version_running_put(req,
-> +					       DEVLINK_INFO_VERSION_GENERIC_FW,
-> +					       buf);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct devlink_ops prestera_dl_ops = {
-> +	.info_get = prestera_dl_info_get,
-> +};
-> +
-> +struct prestera_switch *prestera_devlink_alloc(void)
-> +{
-> +	struct devlink *dl;
-> +
-> +	dl = devlink_alloc(&prestera_dl_ops, sizeof(struct prestera_switch));
-> +
-> +	return devlink_priv(dl);
-> +}
-> +
-> +void prestera_devlink_free(struct prestera_switch *sw)
-> +{
-> +	struct devlink *dl = priv_to_devlink(sw);
-> +
-> +	devlink_free(dl);
-> +}
-> +
-> +int prestera_devlink_register(struct prestera_switch *sw)
-> +{
-> +	struct devlink *dl = priv_to_devlink(sw);
-> +	int err;
-> +
-> +	err = devlink_register(dl, sw->dev->dev);
-> +	if (err) {
-> +		dev_warn(sw->dev->dev, "devlink_register failed: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void prestera_devlink_unregister(struct prestera_switch *sw)
-> +{
-> +	struct devlink *dl = priv_to_devlink(sw);
-> +
-> +	devlink_unregister(dl);
-> +}
-> +
-> +int prestera_devlink_port_register(struct prestera_port *port)
-> +{
-> +	struct devlink *dl = priv_to_devlink(port->sw);
-> +	struct prestera_switch *sw;
-> +	int err;
-> +
-> +	sw = port->sw;
-> +	dl = priv_to_devlink(sw);
-> +
-> +	devlink_port_attrs_set(&port->dl_port, DEVLINK_PORT_FLAVOUR_PHYSICAL,
-> +			       port->fp_id, false, 0,
-> +			       &port->sw->id, sizeof(port->sw->id));
-> +
-> +	err = devlink_port_register(dl, &port->dl_port, port->fp_id);
-> +	if (err)
-> +		dev_err(sw->dev->dev, "devlink_port_register failed: %d\n", err);
+> Where are we checking whether that count is not exceeding @buf or
+> similar discrepancies?
 
-Return the error?
+These two functions are only called from vc_handle_ioio() and buf always
+points to ghcb->shared_buffer.
 
-> +
-> +	return 0;
-> +}
-> +
-> +void prestera_devlink_port_unregister(struct prestera_port *port)
-> +{
-> +	devlink_port_unregister(&port->dl_port);
-> +}
-> +
-> +void prestera_devlink_port_type_set(struct prestera_port *port)
-> +{
-> +	devlink_port_type_eth_set(&port->dl_port, port->dev);
-> +}
-> +
-> +struct devlink_port *prestera_devlink_get_port(struct net_device *dev)
-> +{
-> +	struct prestera_port *port = netdev_priv(dev);
-> +
-> +	return &port->dl_port;
-> +}
-> diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.h b/drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-> new file mode 100644
-> index 000000000000..b46441d1e758
-> --- /dev/null
-> +++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-> @@ -0,0 +1,25 @@
-> +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
-> + *
-> + * Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved.
-> + *
-> + */
-> +
-> +#ifndef _PRESTERA_DEVLINK_H_
-> +#define _PRESTERA_DEVLINK_H_
-> +
-> +#include "prestera.h"
-> +
-> +struct prestera_switch *prestera_devlink_alloc(void);
-> +void prestera_devlink_free(struct prestera_switch *sw);
-> +
-> +int prestera_devlink_register(struct prestera_switch *sw);
-> +void prestera_devlink_unregister(struct prestera_switch *sw);
-> +
-> +int prestera_devlink_port_register(struct prestera_port *port);
-> +void prestera_devlink_port_unregister(struct prestera_port *port);
-> +
-> +void prestera_devlink_port_type_set(struct prestera_port *port);
-> +
-> +struct devlink_port *prestera_devlink_get_port(struct net_device *dev);
-> +
-> +#endif /* _PRESTERA_DEVLINK_H_ */
-> diff --git a/drivers/net/ethernet/marvell/prestera/prestera_main.c b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-> index b5241e9b784a..ddab9422fe5e 100644
-> --- a/drivers/net/ethernet/marvell/prestera/prestera_main.c
-> +++ b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-> @@ -14,6 +14,7 @@
->  #include "prestera.h"
->  #include "prestera_hw.h"
->  #include "prestera_rxtx.h"
-> +#include "prestera_devlink.h"
->  
->  #define PRESTERA_MTU_DEFAULT 1536
->  
-> @@ -185,6 +186,7 @@ static const struct net_device_ops netdev_ops = {
->  	.ndo_change_mtu = prestera_port_change_mtu,
->  	.ndo_get_stats64 = prestera_port_get_stats64,
->  	.ndo_set_mac_address = prestera_port_set_mac_address,
-> +	.ndo_get_devlink_port = prestera_devlink_get_port,
->  };
->  
->  static int prestera_port_autoneg_set(struct prestera_port *port, bool enable,
-> @@ -234,9 +236,13 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
->  					&port->hw_id, &port->dev_id);
->  	if (err) {
->  		dev_err(prestera_dev(sw), "Failed to get port(%u) info\n", id);
-> -		goto err_port_init;
-> +		goto err_port_info_get;
+In general, the caller has to make sure that sizeof(*buf) is at least
+data_size*count, and handle_ioio() calculates count based on the size of
+*buf.
 
-Seems like an unrelated change
 
->  	}
->  
-> +	err = prestera_devlink_port_register(port);
-> +	if (err)
-> +		goto err_dl_port_register;
-> +
->  	dev->features |= NETIF_F_NETNS_LOCAL;
->  	dev->netdev_ops = &netdev_ops;
->  
-> @@ -295,11 +301,16 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
->  	if (err)
->  		goto err_register_netdev;
->  
-> +	prestera_devlink_port_type_set(port);
-> +
->  	return 0;
->  
->  err_register_netdev:
->  	list_del_rcu(&port->list);
->  err_port_init:
-> +	prestera_devlink_port_unregister(port);
-> +err_dl_port_register:
-> +err_port_info_get:
->  	free_netdev(dev);
->  	return err;
->  }
-> @@ -313,6 +324,7 @@ static void prestera_port_destroy(struct prestera_port *port)
-
-Shouldn't you call devlink_port_type_clear() here?
-
->  
->  	list_del_rcu(&port->list);
->  
-> +	prestera_devlink_port_unregister(port);
->  	free_netdev(dev);
->  }
->  
-> @@ -435,6 +447,10 @@ static int prestera_switch_init(struct prestera_switch *sw)
->  	if (err)
->  		return err;
->  
-> +	err = prestera_devlink_register(sw);
-> +	if (err)
-> +		goto err_dl_register;
-> +
->  	err = prestera_create_ports(sw);
->  	if (err)
->  		goto err_ports_create;
-> @@ -442,6 +458,8 @@ static int prestera_switch_init(struct prestera_switch *sw)
->  	return 0;
->  
->  err_ports_create:
-> +	prestera_devlink_unregister(sw);
-> +err_dl_register:
->  	prestera_event_handlers_unregister(sw);
->  
->  	return err;
-> @@ -450,6 +468,7 @@ static int prestera_switch_init(struct prestera_switch *sw)
->  static void prestera_switch_fini(struct prestera_switch *sw)
->  {
->  	prestera_destroy_ports(sw);
-> +	prestera_devlink_unregister(sw);
->  	prestera_event_handlers_unregister(sw);
->  	prestera_rxtx_switch_fini(sw);
->  }
-> @@ -459,7 +478,7 @@ int prestera_device_register(struct prestera_device *dev)
->  	struct prestera_switch *sw;
->  	int err;
->  
-> -	sw = kzalloc(sizeof(*sw), GFP_KERNEL);
-> +	sw = prestera_devlink_alloc();
->  	if (!sw)
->  		return -ENOMEM;
->  
-> @@ -468,7 +487,7 @@ int prestera_device_register(struct prestera_device *dev)
->  
->  	err = prestera_switch_init(sw);
->  	if (err) {
-> -		kfree(sw);
-> +		prestera_devlink_free(sw);
->  		return err;
->  	}
->  
-> @@ -481,7 +500,7 @@ void prestera_device_unregister(struct prestera_device *dev)
->  	struct prestera_switch *sw = dev->priv;
->  
->  	prestera_switch_fini(sw);
-> -	kfree(sw);
-> +	prestera_devlink_free(sw);
->  }
->  EXPORT_SYMBOL(prestera_device_unregister);
->  
-> -- 
-> 2.17.1
-> 
+	Joerg
