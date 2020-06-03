@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F64C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0832C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544BA2068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C874D2068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591167735;
-	bh=zTgcn1xyeisASr5rtVgAA69S8arZoiZGZVVbiDZboIY=;
+	s=default; t=1591167737;
+	bh=726xFVF7IIAMWok/JzclpdaLkSETydAbYT1Vt3Cjp8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A2lq/RMRgtWpnM1OFtUJil9mjYY9Z+GRQKG59J5E+NHDc0eQ39+OHKE5zOklC48jt
-	 rcd4W2VFEzY5d2vvEn9aCVXoOirTRLXuqGao9WbK8qqNQBG81IIaqR/y2RHo3DS61+
-	 lmnZV5TTHJpTpev0a0xXzgnHgb1wm0/Z9M2kW/J8=
+	b=o/FBDaveSe6LKGpbAbpjEM07AFibT28Kji8Me9h6ckMiubhNM/73/Rcp9iUWi0omW
+	 A+4aytR/obEpE3hmeO/P5mzp/u363u35rk4jYgr7wkjOoPXILPKiNkN0xhqHHlK9m/
+	 T5a1Tjj7sWghilIE+auMR6ctJX26zL0Hn59p//AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgFCHCO (ORCPT
+        id S1726460AbgFCHCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:02:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 03:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgFCHBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725855AbgFCHBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Jun 2020 03:01:06 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8076A207D3;
+        by mail.kernel.org (Postfix) with ESMTPSA id 82E28207DA;
         Wed,  3 Jun 2020 07:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1591167665;
-        bh=zTgcn1xyeisASr5rtVgAA69S8arZoiZGZVVbiDZboIY=;
+        bh=726xFVF7IIAMWok/JzclpdaLkSETydAbYT1Vt3Cjp8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3mW5vRx6VtVR1qOohDuchqIYDATutlTjsBRi+9PvVCCjvla3e+vffujS/0ru4xSE
-         kwjiB0ulPpV4ayluWgkbMb9UVL6/z3ArY+K6bEPtZHr491RkrI99EHYSZS2Othjo/K
-         afoZ1WO9OkKYsPV48QR/mE45FZpgzTkLDC98WA/s=
+        b=vu9BNj2fM3gbZHbWhjuubDiMS4qI0xLAieNaacl7R6P2L575yK/TRs0dXm4ztihx6
+         CUYFREUQ5pmlVqEBwd209t4YlMNmf0dGpLgpVkx6TEmAvajjlwXlhnf858E08zP5jM
+         uewOtnehIHmdlfzbUswDdGDf0J9eMlkFaZpzCEWI=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jgNOZ-004j8V-DI; Wed, 03 Jun 2020 09:01:03 +0200
+        id 1jgNOZ-004j8C-75; Wed, 03 Jun 2020 09:01:03 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Media Mailing List <linux-media@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 07/15] media: atomisp: use just one mamoiada_params.h
-Date:   Wed,  3 Jun 2020 09:00:53 +0200
-Message-Id: <628be9a7bed955aab004b076f5c6a44c32c90ad9.1591167358.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 03/15] media: atomisp: get rid of a duplicated file
+Date:   Wed,  3 Jun 2020 09:00:49 +0200
+Message-Id: <5a1fbf15b2a720f74f0548edcd27690efbaffe67.1591167358.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1591167358.git.mchehab+huawei@kernel.org>
 References: <cover.1591167358.git.mchehab+huawei@kernel.org>
@@ -61,41 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As both isp2400 and isp2401 files are identical, remove one
-of them and remove the test for ISP variant.
+The contents of hive_isp_css_2401_irq_types_hrt.h and
+hive_isp_css_common/irq_global.h are identical, except for
+one unused enum:
+
+On isp2401, this IRQ line has this name:
+
+	hrt_isp_css_irq_is2401 = HIVE_GP_DEV_IRQ_ISP_PMEM_ERROR_BIT_ID,
+
+While the same bit is named as:
+	hrt_isp_css_irq_isp_pmem_error = HIVE_GP_DEV_IRQ_ISP_PMEM_ERROR_BIT_ID,
+
+At the isp2400 version.
+
+Remove one of them, in order to reduce the code differences
+between those two versions.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../pci/hive_isp_css_common/isp_global.h      |   6 +-
- .../atomisp/pci/isp2401_mamoiada_params.h     | 211 ------------------
- ...00_mamoiada_params.h => mamoiada_params.h} |   0
- 3 files changed, 1 insertion(+), 216 deletions(-)
- delete mode 100644 drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
- rename drivers/staging/media/atomisp/pci/{css_2400_system/hrt/isp2400_mamoiada_params.h => mamoiada_params.h} (100%)
+ .../pci/hive_isp_css_2401_irq_types_hrt.h     | 69 -------------------
+ .../pci/hive_isp_css_common/irq_global.h      | 10 +--
+ ...sp_css_irq_types_hrt.h => irq_types_hrt.h} |  0
+ 3 files changed, 1 insertion(+), 78 deletions(-)
+ delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_2401_irq_types_hrt.h
+ rename drivers/staging/media/atomisp/pci/{css_2400_system/hrt/hive_isp_css_irq_types_hrt.h => irq_types_hrt.h} (100%)
 
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/isp_global.h b/drivers/staging/media/atomisp/pci/hive_isp_css_common/isp_global.h
-index 5212d52198bd..5c6891c9b451 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/isp_global.h
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/isp_global.h
-@@ -18,11 +18,7 @@
- 
- #include <system_local.h>
- 
--#ifdef ISP2401
--#include "isp2401_mamoiada_params.h"
--#else
--#include "isp2400_mamoiada_params.h"
--#endif
-+#include "mamoiada_params.h"
- 
- #define ISP_PMEM_WIDTH_LOG2		ISP_LOG2_PMEM_WIDTH
- #define ISP_PMEM_SIZE			ISP_PMEM_DEPTH
-diff --git a/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h b/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_2401_irq_types_hrt.h b/drivers/staging/media/atomisp/pci/hive_isp_css_2401_irq_types_hrt.h
 deleted file mode 100644
-index e18e5f3576df..000000000000
---- a/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
+index 69fefe634a6a..000000000000
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_2401_irq_types_hrt.h
 +++ /dev/null
-@@ -1,211 +0,0 @@
+@@ -1,69 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 */
 -/*
 - * Support for Intel Camera Imaging ISP subsystem.
@@ -111,206 +107,85 @@ index e18e5f3576df..000000000000
 - * more details.
 - */
 -
--/* Version */
--#define RTL_VERSION
+-#ifndef _HIVE_ISP_CSS_2401_IRQ_TYPES_HRT_H_
+-#define _HIVE_ISP_CSS_2401_IRQ_TYPES_HRT_H_
 -
--/* instruction pipeline depth */
--#define ISP_BRANCHDELAY                        5
+-/*
+- * These are the indices of each interrupt in the interrupt
+- * controller's registers. these can be used as the irq_id
+- * argument to the hrt functions irq_controller.h.
+- *
+- * The definitions are taken from <system>_defs.h
+- */
+-typedef enum hrt_isp_css_irq {
+-	hrt_isp_css_irq_gpio_pin_0           = HIVE_GP_DEV_IRQ_GPIO_PIN_0_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_1           = HIVE_GP_DEV_IRQ_GPIO_PIN_1_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_2           = HIVE_GP_DEV_IRQ_GPIO_PIN_2_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_3           = HIVE_GP_DEV_IRQ_GPIO_PIN_3_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_4           = HIVE_GP_DEV_IRQ_GPIO_PIN_4_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_5           = HIVE_GP_DEV_IRQ_GPIO_PIN_5_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_6           = HIVE_GP_DEV_IRQ_GPIO_PIN_6_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_7           = HIVE_GP_DEV_IRQ_GPIO_PIN_7_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_8           = HIVE_GP_DEV_IRQ_GPIO_PIN_8_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_9           = HIVE_GP_DEV_IRQ_GPIO_PIN_9_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_10          = HIVE_GP_DEV_IRQ_GPIO_PIN_10_BIT_ID,
+-	hrt_isp_css_irq_gpio_pin_11          = HIVE_GP_DEV_IRQ_GPIO_PIN_11_BIT_ID,
+-	hrt_isp_css_irq_sp                   = HIVE_GP_DEV_IRQ_SP_BIT_ID,
+-	hrt_isp_css_irq_isp                  = HIVE_GP_DEV_IRQ_ISP_BIT_ID,
+-	hrt_isp_css_irq_isys                 = HIVE_GP_DEV_IRQ_ISYS_BIT_ID,
+-	hrt_isp_css_irq_isel                 = HIVE_GP_DEV_IRQ_ISEL_BIT_ID,
+-	hrt_isp_css_irq_ifmt                 = HIVE_GP_DEV_IRQ_IFMT_BIT_ID,
+-	hrt_isp_css_irq_sp_stream_mon        = HIVE_GP_DEV_IRQ_SP_STREAM_MON_BIT_ID,
+-	hrt_isp_css_irq_isp_stream_mon       = HIVE_GP_DEV_IRQ_ISP_STREAM_MON_BIT_ID,
+-	hrt_isp_css_irq_mod_stream_mon       = HIVE_GP_DEV_IRQ_MOD_STREAM_MON_BIT_ID,
+-	hrt_isp_css_irq_is2401               = HIVE_GP_DEV_IRQ_ISP_PMEM_ERROR_BIT_ID,
+-	hrt_isp_css_irq_isp_bamem_error      = HIVE_GP_DEV_IRQ_ISP_BAMEM_ERROR_BIT_ID,
+-	hrt_isp_css_irq_isp_dmem_error       = HIVE_GP_DEV_IRQ_ISP_DMEM_ERROR_BIT_ID,
+-	hrt_isp_css_irq_sp_icache_mem_error  = HIVE_GP_DEV_IRQ_SP_ICACHE_MEM_ERROR_BIT_ID,
+-	hrt_isp_css_irq_sp_dmem_error        = HIVE_GP_DEV_IRQ_SP_DMEM_ERROR_BIT_ID,
+-	hrt_isp_css_irq_mmu_cache_mem_error  = HIVE_GP_DEV_IRQ_MMU_CACHE_MEM_ERROR_BIT_ID,
+-	hrt_isp_css_irq_gp_timer_0           = HIVE_GP_DEV_IRQ_GP_TIMER_0_BIT_ID,
+-	hrt_isp_css_irq_gp_timer_1           = HIVE_GP_DEV_IRQ_GP_TIMER_1_BIT_ID,
+-	hrt_isp_css_irq_sw_pin_0             = HIVE_GP_DEV_IRQ_SW_PIN_0_BIT_ID,
+-	hrt_isp_css_irq_sw_pin_1             = HIVE_GP_DEV_IRQ_SW_PIN_1_BIT_ID,
+-	hrt_isp_css_irq_dma                  = HIVE_GP_DEV_IRQ_DMA_BIT_ID,
+-	hrt_isp_css_irq_sp_stream_mon_b      = HIVE_GP_DEV_IRQ_SP_STREAM_MON_B_BIT_ID,
+-	/* this must (obviously) be the last on in the enum */
+-	hrt_isp_css_irq_num_irqs
+-} hrt_isp_css_irq_t;
 -
--/* bus */
--#define ISP_BUS_WIDTH                          32
--#define ISP_BUS_ADDR_WIDTH                     32
--#define ISP_BUS_BURST_SIZE                     1
+-typedef enum hrt_isp_css_irq_status {
+-	hrt_isp_css_irq_status_error,
+-	hrt_isp_css_irq_status_more_irqs,
+-	hrt_isp_css_irq_status_success
+-} hrt_isp_css_irq_status_t;
 -
--/* data-path */
--#define ISP_SCALAR_WIDTH                       32
--#define ISP_SLICE_NELEMS                       4
--#define ISP_VEC_NELEMS                         64
--#define ISP_VEC_ELEMBITS                       14
--#define ISP_VEC_ELEM8BITS                      16
--#define ISP_CLONE_DATAPATH_IS_16               1
--
--/* memories */
--#define ISP_DMEM_DEPTH                         4096
--#define ISP_DMEM_BSEL_DOWNSAMPLE               8
--#define ISP_VMEM_DEPTH                         3072
--#define ISP_VMEM_BSEL_DOWNSAMPLE               8
--#define ISP_VMEM_ELEMBITS                      14
--#define ISP_VMEM_ELEM_PRECISION                14
--#define ISP_PMEM_DEPTH                         2048
--#define ISP_PMEM_WIDTH                         640
--#define ISP_VAMEM_ADDRESS_BITS                 12
--#define ISP_VAMEM_ELEMBITS                     12
--#define ISP_VAMEM_DEPTH                        2048
--#define ISP_VAMEM_ALIGNMENT                    2
--#define ISP_VA_ADDRESS_WIDTH                   896
--#define ISP_VEC_VALSU_LATENCY                  ISP_VEC_NELEMS
--#define ISP_HIST_ADDRESS_BITS                  12
--#define ISP_HIST_ALIGNMENT                     4
--#define ISP_HIST_COMP_IN_PREC                  12
--#define ISP_HIST_DEPTH                         1024
--#define ISP_HIST_WIDTH                         24
--#define ISP_HIST_COMPONENTS                    4
--
--/* program counter */
--#define ISP_PC_WIDTH                           13
--
--/* Template switches */
--#define ISP_SHIELD_INPUT_DMEM                  0
--#define ISP_SHIELD_OUTPUT_DMEM                 1
--#define ISP_SHIELD_INPUT_VMEM                  0
--#define ISP_SHIELD_OUTPUT_VMEM                 0
--#define ISP_SHIELD_INPUT_PMEM                  1
--#define ISP_SHIELD_OUTPUT_PMEM                 1
--#define ISP_SHIELD_INPUT_HIST                  1
--#define ISP_SHIELD_OUTPUT_HIST                 1
--/* When LUT is select the shielding is always on */
--#define ISP_SHIELD_INPUT_VAMEM                 1
--#define ISP_SHIELD_OUTPUT_VAMEM                1
--
--#define ISP_HAS_IRQ                            1
--#define ISP_HAS_SOFT_RESET                     1
--#define ISP_HAS_VEC_DIV                        0
--#define ISP_HAS_VFU_W_2O                       1
--#define ISP_HAS_DEINT3                         1
--#define ISP_HAS_LUT                            1
--#define ISP_HAS_HIST                           1
--#define ISP_HAS_VALSU                          1
--#define ISP_HAS_3rdVALSU                       1
--#define ISP_VRF1_HAS_2P                        1
--
--#define ISP_SRU_GUARDING                       1
--#define ISP_VLSU_GUARDING                      1
--
--#define ISP_VRF_RAM			     1
--#define ISP_SRF_RAM			     1
--
--#define ISP_SPLIT_VMUL_VADD_IS                 0
--#define ISP_RFSPLIT_FPGA                       0
--
--/* RSN or Bus pipelining */
--#define ISP_RSN_PIPE                           1
--#define ISP_VSF_BUS_PIPE                       0
--
--/* extra slave port to vmem */
--#define ISP_IF_VMEM                            0
--#define ISP_GDC_VMEM                           0
--
--/* Streaming ports */
--#define ISP_IF                                 1
--#define ISP_IF_B                               1
--#define ISP_GDC                                1
--#define ISP_SCL                                1
--#define ISP_GPFIFO                             1
--#define ISP_SP                                 1
--
--/* Removing Issue Slot(s) */
--#define ISP_HAS_NOT_SIMD_IS2                   0
--#define ISP_HAS_NOT_SIMD_IS3                   0
--#define ISP_HAS_NOT_SIMD_IS4                   0
--#define ISP_HAS_NOT_SIMD_IS4_VADD              0
--#define ISP_HAS_NOT_SIMD_IS5                   0
--#define ISP_HAS_NOT_SIMD_IS6                   0
--#define ISP_HAS_NOT_SIMD_IS7                   0
--#define ISP_HAS_NOT_SIMD_IS8                   0
--
--/* ICache  */
--#define ISP_ICACHE                             1
--#define ISP_ICACHE_ONLY                        0
--#define ISP_ICACHE_PREFETCH                    1
--#define ISP_ICACHE_INDEX_BITS                  8
--#define ISP_ICACHE_SET_BITS                    5
--#define ISP_ICACHE_BLOCKS_PER_SET_BITS         1
--
--/* Experimental Flags */
--#define ISP_EXP_1                              0
--#define ISP_EXP_2                              0
--#define ISP_EXP_3                              0
--#define ISP_EXP_4                              0
--#define ISP_EXP_5                              0
--#define ISP_EXP_6                              0
--
--/* Derived values */
--#define ISP_LOG2_PMEM_WIDTH                    10
--#define ISP_VEC_WIDTH                          896
--#define ISP_SLICE_WIDTH                        56
--#define ISP_VMEM_WIDTH                         896
--#define ISP_VMEM_ALIGN                         128
--#define ISP_SIMDLSU                            1
--#define ISP_LSU_IMM_BITS                       12
--
--/* convenient shortcuts for software*/
--#define ISP_NWAY                               ISP_VEC_NELEMS
--#define NBITS                                  ISP_VEC_ELEMBITS
--
--#define _isp_ceil_div(a, b)                     (((a) + (b) - 1) / (b))
--
--#define ISP_VEC_ALIGN                          ISP_VMEM_ALIGN
--
--/* register file sizes */
--#define ISP_RF0_SIZE        64
--#define ISP_RF1_SIZE        16
--#define ISP_RF2_SIZE        64
--#define ISP_RF3_SIZE        4
--#define ISP_RF4_SIZE        64
--#define ISP_RF5_SIZE        16
--#define ISP_RF6_SIZE        16
--#define ISP_RF7_SIZE        16
--#define ISP_RF8_SIZE        16
--#define ISP_RF9_SIZE        16
--#define ISP_RF10_SIZE       16
--#define ISP_RF11_SIZE       16
--
--#define ISP_SRF1_SIZE       4
--#define ISP_SRF2_SIZE       64
--#define ISP_SRF3_SIZE       64
--#define ISP_SRF4_SIZE       32
--#define ISP_SRF5_SIZE       64
--#define ISP_FRF0_SIZE       16
--#define ISP_FRF1_SIZE       4
--#define ISP_FRF2_SIZE       16
--#define ISP_FRF3_SIZE       4
--#define ISP_FRF4_SIZE       4
--#define ISP_FRF5_SIZE       8
--#define ISP_FRF6_SIZE       4
--/* register file read latency */
--#define ISP_VRF1_READ_LAT       1
--#define ISP_VRF2_READ_LAT       1
--#define ISP_VRF3_READ_LAT       1
--#define ISP_VRF4_READ_LAT       1
--#define ISP_VRF5_READ_LAT       1
--#define ISP_VRF6_READ_LAT       1
--#define ISP_VRF7_READ_LAT       1
--#define ISP_VRF8_READ_LAT       1
--#define ISP_SRF1_READ_LAT       1
--#define ISP_SRF2_READ_LAT       1
--#define ISP_SRF3_READ_LAT       1
--#define ISP_SRF4_READ_LAT       1
--#define ISP_SRF5_READ_LAT       1
--#define ISP_SRF5_READ_LAT       1
--/* immediate sizes */
--#define ISP_IS1_IMM_BITS        14
--#define ISP_IS2_IMM_BITS        13
--#define ISP_IS3_IMM_BITS        14
--#define ISP_IS4_IMM_BITS        14
--#define ISP_IS5_IMM_BITS        9
--#define ISP_IS6_IMM_BITS        16
--#define ISP_IS7_IMM_BITS        9
--#define ISP_IS8_IMM_BITS        16
--#define ISP_IS9_IMM_BITS        11
--/* fifo depths */
--#define ISP_IF_FIFO_DEPTH         0
--#define ISP_IF_B_FIFO_DEPTH       0
--#define ISP_DMA_FIFO_DEPTH        0
--#define ISP_OF_FIFO_DEPTH         0
--#define ISP_GDC_FIFO_DEPTH        0
--#define ISP_SCL_FIFO_DEPTH        0
--#define ISP_GPFIFO_FIFO_DEPTH     0
--#define ISP_SP_FIFO_DEPTH         0
-diff --git a/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h b/drivers/staging/media/atomisp/pci/mamoiada_params.h
+-#endif /* _HIVE_ISP_CSS_2401_IRQ_TYPES_HRT_H_ */
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/irq_global.h b/drivers/staging/media/atomisp/pci/hive_isp_css_common/irq_global.h
+index f8e9005dc9c1..4a1dea6dfd40 100644
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/irq_global.h
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/irq_global.h
+@@ -23,15 +23,7 @@
+ 
+ /* We cannot include the (hrt host ID) file defining the "CSS_RECEIVER" property without side effects */
+ #ifndef HAS_NO_RX
+-#if defined(IS_ISP_2400_MAMOIADA_SYSTEM)
+-/*#define CSS_RECEIVER testbench_isp_inp_sys_csi_receiver*/
+-#include "hive_isp_css_irq_types_hrt.h"	/* enum	hrt_isp_css_irq */
+-#elif defined(IS_ISP_2401_MAMOIADA_SYSTEM)
+-/*#define CSS_RECEIVER testbench_isp_is_2400_inp_sys_csi_receiver*/
+-#include "hive_isp_css_2401_irq_types_hrt.h"	/* enum	hrt_isp_css_irq */
+-#else
+-#error "irq_global.h: 2400_SYSTEM must be one of {2400, 2401 }"
+-#endif
++#include "irq_types_hrt.h"
+ #endif
+ 
+ /* The IRQ is not mapped uniformly on its related interfaces */
+diff --git a/drivers/staging/media/atomisp/pci/css_2400_system/hrt/hive_isp_css_irq_types_hrt.h b/drivers/staging/media/atomisp/pci/irq_types_hrt.h
 similarity index 100%
-rename from drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h
-rename to drivers/staging/media/atomisp/pci/mamoiada_params.h
+rename from drivers/staging/media/atomisp/pci/css_2400_system/hrt/hive_isp_css_irq_types_hrt.h
+rename to drivers/staging/media/atomisp/pci/irq_types_hrt.h
 -- 
 2.26.2
 
