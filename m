@@ -2,169 +2,129 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4CE9207D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="eDbD0YYJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3916220829
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgFCOQn (ORCPT
+        id S1726044AbgFCOSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:16:43 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:37575 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbgFCOQg (ORCPT
+        Wed, 3 Jun 2020 10:18:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52749 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgFCOSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:16:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591193796; x=1622729796;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Q95Imqm6D4GsRp4TGS1qrEUIPf92/YhKKGxjfjqdz5s=;
-  b=eDbD0YYJzxl5IHLNfy4GgBvJxs/fDMpYz42218Fw2gGxv4JLTuLBp429
-   LxgouLDE7qEScWwn/eIWLSZstIhi/dng4LsXYONk5xIknpEa0lc1S4co3
-   21MLDhKJqXuuhzj4rArLT2+Xpsb5KdhBG94ShjG7WJPFrJBUenaHJ0CwQ
-   Q=;
-IronPort-SDR: lspKg3ajDh5Oo2wnIVCzaXvCQutKzWtGrcE+8aN0BzbvFkBGtmQ8EEl+hH5XyAVRNxqSDbBgCb
- HnYlj4rQ6KoA==
-X-IronPort-AV: E=Sophos;i="5.73,467,1583193600"; 
-   d="scan'208";a="35573782"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 03 Jun 2020 14:16:33 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id 01E29A27D2;
-        Wed,  3 Jun 2020 14:16:29 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 14:16:29 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.90) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 14:16:13 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v2 9/9] Docs/damon: Document physical memory monitoring support
-Date:   Wed, 3 Jun 2020 16:11:35 +0200
-Message-ID: <20200603141135.10575-10-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200603141135.10575-1-sjpark@amazon.com>
-References: <20200603141135.10575-1-sjpark@amazon.com>
+        Wed, 3 Jun 2020 10:18:49 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jgUEA-00070O-Cm; Wed, 03 Jun 2020 14:18:46 +0000
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200603135102.130436-1-colin.king@canonical.com>
+ <20200603140953.GL30374@kadam>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH] input: ims-pcu: remove redundant assignment to variable
+ 'error'
+Message-ID: <c4290ddf-8faa-bb09-bd96-4c01a3f1cc2b@canonical.com>
+Date:   Wed, 3 Jun 2020 15:18:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D45UWB002.ant.amazon.com (10.43.161.78) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200603140953.GL30374@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On 03/06/2020 15:09, Dan Carpenter wrote:
+> On Wed, Jun 03, 2020 at 02:51:02PM +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> The variable error is being initialized with a value that is
+>> never read and the -ENOMEM error return is being returned anyhow
+>> by the error exit path to label err_free_mem.  The assignment is
+>> redundant and can be removed.
+>>
+>> Addresses-Coverity: ("Unused value")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  drivers/input/misc/ims-pcu.c | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/input/misc/ims-pcu.c b/drivers/input/misc/ims-pcu.c
+>> index d8dbfc030d0f..4ba68aa3d281 100644
+>> --- a/drivers/input/misc/ims-pcu.c
+>> +++ b/drivers/input/misc/ims-pcu.c
+>> @@ -292,7 +292,6 @@ static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
+>>  	if (!gamepad || !input) {
+>>  		dev_err(pcu->dev,
+>>  			"Not enough memory for gamepad device\n");
+>> -		error = -ENOMEM;
+>>  		goto err_free_mem;
+> 
+> It would be better to change the return instead.
+> 
+> regards,
+> dan carpenter
+> 
 
-This commit adds description for the physical memory monitoring usage in
-the DAMON document.
+I'm not sure about that, the err_free_mem path is used by another error
+exit return path that also needs to free the device and gamepad and
+returns ENOMEM, so I think this is a good enough shared error exit strategy.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- Documentation/admin-guide/mm/damon/usage.rst | 42 ++++++++++++++------
- 1 file changed, 29 insertions(+), 13 deletions(-)
-
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index 137ed770c2d6..359745f0dbfb 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -314,27 +314,42 @@ check it again::
- Target PIDs
- -----------
- 
--Users can get and set the pids of monitoring target processes by reading from
--and writing to the ``pids`` file.  For example, below commands set processes
--having pids 42 and 4242 as the processes to be monitored and check it again::
-+To monitor the virtual memory address spaces of specific processes, users can
-+get and set the pids of monitoring target processes by reading from and writing
-+to the ``pids`` file.  For example, below commands set processes having pids 42
-+and 4242 as the processes to be monitored and check it again::
- 
-     # cd <debugfs>/damon
-     # echo 42 4242 > pids
-     # cat pids
-     42 4242
- 
-+Users can also monitor the physical memory address space of the system by
-+writing a special keyword, "``paddr\n``" to the file.  In this case, reading the
-+file will show ``-1``, as below::
-+
-+    # cd <debugfs>/damon
-+    # echo paddr > pids
-+    # cat pids
-+    -1
-+
- Note that setting the pids doesn't start the monitoring.
- 
- 
- Initla Monitoring Target Regions
- --------------------------------
- 
--DAMON automatically sets and updates the monitoring target regions so that
--entire memory mappings of target processes can be covered.  However, users
--might want to limit the monitoring region to specific address ranges, such as
--the heap, the stack, or specific file-mapped area.  Or, some users might know
--the initial access pattern of their workloads and therefore want to set optimal
--initial regions for the 'adaptive regions adjustment'.
-+In case of the virtual memory monitoring, DAMON automatically sets and updates
-+the monitoring target regions so that entire memory mappings of target
-+processes can be covered.  However, users might want to limit the monitoring
-+region to specific address ranges, such as the heap, the stack, or specific
-+file-mapped area.  Or, some users might know the initial access pattern of
-+their workloads and therefore want to set optimal initial regions for the
-+'adaptive regions adjustment'.
-+
-+In contrast, DAMON do not automatically sets and updates the monitoring target
-+regions in case of physical memory monitoring.  Therefore, users should set the
-+monitoring target regions by themselves.
- 
- In such cases, users can explicitly set the initial monitoring target regions
- as they want, by writing proper values to the ``init_regions`` file.  Each line
-@@ -354,10 +369,11 @@ region of process 42, and another couple of address ranges, ``20-40`` and
-             4242 20      40
-             4242 50      100" > init_regions
- 
--Note that this sets the initial monitoring target regions only.  DAMON will
--automatically updates the boundary of the regions after one ``regions update
--interval``.  Therefore, users should set the ``regions update interval`` large
--enough.
-+Note that this sets the initial monitoring target regions only.  In case of
-+virtual memory monitoring, DAMON will automatically updates the boundary of the
-+regions after one ``regions update interval``.  Therefore, users should set the
-+``regions update interval`` large enough in this case, if they don't want the
-+update.
- 
- 
- Record
--- 
-2.17.1
-
+Colin
