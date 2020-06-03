@@ -2,129 +2,133 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7274C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6853C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8236020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLQbd/+8"
+	by mail.kernel.org (Postfix) with ESMTP id CA103206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgFCNnt (ORCPT
+        id S1725943AbgFCNsV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgFCNnr (ORCPT
+        Wed, 3 Jun 2020 09:48:21 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:34629 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725866AbgFCNsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:43:47 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9A7C08C5C0;
-        Wed,  3 Jun 2020 06:43:47 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h5so2426322wrc.7;
-        Wed, 03 Jun 2020 06:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SOmyve9bUDmubIVPzpcziP63vVpum2UbcrFicqpkq+w=;
-        b=dLQbd/+8npTMk4QLp1GlJLJSXrvXa8CCkj+1zvjWm4wHCtiVTwrq10h9aZ8EzttvgH
-         kJY1Ro32Qv32VjsmheO8rPIQTYMTXHQjWKtsoKdhC/6fkjgi+uMe3mJgDggZWU0HwoYQ
-         Cs3Goq8PKh3PlsqRTG8pZ/803xSfaphW1r5tJVqAKbBoTb9M4N5qVQuqUIxhxAKqX6df
-         wSO4RTleRp1+UKJ8HlRhL2Ev7l6ZAZXGAJP5BeFs7Ar9uPyJ84DvN0XCHKha6fuo4Kb0
-         4paMO6Z/6XR5CFul1cJJmPh5unfcREiHYfKfg09IJmc+76JgIlchU9bNd8vJcirWpn0h
-         QFMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SOmyve9bUDmubIVPzpcziP63vVpum2UbcrFicqpkq+w=;
-        b=jQAL+Cmi882qkOK4TAodpdEeL6cMOjrMIGyuoEoSPTrU+3JnHGdIVL5WbmGiFiTuDw
-         js/VBUVTBv+smOubUIjRoCRcxvY8MXnR91gWIj3iaUrSM8z9rV+wrGoZXEdEgzSqkjNn
-         KtLy9ODeDOw8I4HIf5myw7YKdugsM2scbD0JKOQApy0vPc8rGYXfnM9Niesc6uCseEwq
-         UGsK5EmmlbV7tXevgjW+I6EhaC8RF32oOsW38Txhig/HJ5nRsZkL20HUbfoFm1bsSStn
-         VN1/sSG00TM8snHwf1B67H7cslS8vcUO52dV0lQROHK72jld5gsApndABwu187qbB6w9
-         tpLQ==
-X-Gm-Message-State: AOAM531Ua/Mz/YgSBf/coNFgrNi5upXpIwJsktsWUFCn/Ti8Kokt2VkO
-        fHrXC1yeu1lXMbfWW8fEDJT3QMbgCGM0kJkM0Gg=
-X-Google-Smtp-Source: ABdhPJyDqMwuUN33to+4ovZr0Z2o1K7X5Asu5DFxHM0Idg4MwGzkmHriwv3Fc/65Nvi83qQQQIvJeu3qs+VvIdRSuGc=
-X-Received: by 2002:a5d:6789:: with SMTP id v9mr33118221wru.124.1591191826155;
- Wed, 03 Jun 2020 06:43:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200603114212.12525-1-piotr.stankiewicz@intel.com> <20200603114758.13295-1-piotr.stankiewicz@intel.com>
-In-Reply-To: <20200603114758.13295-1-piotr.stankiewicz@intel.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 3 Jun 2020 09:43:34 -0400
-Message-ID: <CADnq5_Pa4J3NVprJnpKTih8O1G-oyMMUT4nHb=RZz96i_x+sKw@mail.gmail.com>
-Subject: Re: [PATCH v2 07/15] drm/amdgpu: Use PCI_IRQ_MSI_TYPES where appropriate
-To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Emily Deng <Emily.Deng@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        shaoyunl <shaoyun.liu@amd.com>, Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 3 Jun 2020 09:48:20 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U-TwqSa_1591192068;
+Received: from 30.39.27.85(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0U-TwqSa_1591192068)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 03 Jun 2020 21:47:49 +0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
+From:   changhuaixin <changhuaixin@linux.alibaba.com>
+In-Reply-To: <20200601173840.3f36m6l4fsu5bill@treble>
+Date:   Wed, 3 Jun 2020 21:47:47 +0800
+Cc:     changhuaixin <changhuaixin@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        bp@alien8.de, hpa@zytor.com, luto@amacapital.net,
+        michal.lkml@markovi.net, mingo@redhat.com, peterz@infradead.org,
+        tglx@linutronix.de, x86@kernel.org, yamada.masahiro@socionext.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <037BCC2F-FEF5-40AB-8F7B-7A966073113C@linux.alibaba.com>
+References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
+ <20200522182815.ezanmvbemhzq2fmm@treble>
+ <482837A8-E9D9-4229-B7B1-8E14403FB2AC@linux.alibaba.com>
+ <20200601173840.3f36m6l4fsu5bill@treble>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 7:48 AM Piotr Stankiewicz
-<piotr.stankiewicz@intel.com> wrote:
->
-> Seeing as there is shorthand available to use when asking for any type
-> of interrupt, or any type of message signalled interrupt, leverage it.
->
-> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> index 5ed4227f304b..2588dd1015db 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-> @@ -249,15 +249,10 @@ int amdgpu_irq_init(struct amdgpu_device *adev)
->
->         if (amdgpu_msi_ok(adev)) {
->                 int nvec = pci_msix_vec_count(adev->pdev);
 
-I think you can drop pci_msix_vec_count() here.  It's not used since
-we always request 1 vector.
 
-Alex
+> On Jun 2, 2020, at 1:38 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> 
+> On Sun, May 31, 2020 at 01:26:54PM +0800, changhuaixin wrote:
+>>   It turned out to be an alignment problem. If sh_size of previous section
+>>   orc_unwind is not 4-byte aligned, sh_offset of the following orc_lookup
+>>   section is not 4-byte aligned too. However, the VMA of section orc_lookup
+>>   is aligned to the nearest 4-byte. Thus, the orc_lookup section means two
+>>   different ares for scripts/sorttable tool and kernel.
+>> 
+>>   Sections headers look like this when it happens:
+>> 
+>>   12 .orc_unwind_ip 00172124  ffffffff82573b28  0000000002573b28  01773b28
+>>    2**0
+>>                    CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+>>   13 .orc_unwind   0022b1b6  ffffffff826e5c4c  00000000026e5c4c  018e5c4c
+>>    2**0
+>>                    CONTENTS, ALLOC, LOAD, READONLY, DATA
+>>   14 .orc_lookup   0003003c  ffffffff82910e04  0000000002910e04  01b10e02
+>>    2**0
+>>                    ALLOC
+>>   15 .vvar         00001000  ffffffff82941000  0000000002941000  01b41000
+>>    2**4
+>>                    CONTENTS, ALLOC, LOAD, DATA
+>> 
+>>   Sorttable tool uses the are starting with offset 0x01b10e02 for 0x0003003c
+>>   bytes. While kernel use the area starting with VMA at  0xffffffff82910e04
+>>   for 0x0003003c bytes, meaning that each entry in this table used by kernel
+>>   is actually 2 bytes behind the corresponding entry set from sorttable
+>>   tool.
+>> 
+>>   Any suggestion on fixing this？
+> 
+> The VMA and LMA are both 4-byte aligned.  The file offset alignment
+> (0x01b10e02) shouldn't matter.
+> 
+> Actually it looks like the problem is that the section doesn't have
+> CONTENTS, so it's just loaded as a BSS section (all zeros).  The section
+> needs to be type SHT_PROGBITS instead of SHT_NOBITS.
+> 
+> $ readelf -S vmlinux |grep orc_lookup
+>  [16] .orc_lookup       NOBITS           ffffffff82b68418  01d68418
+> 
+> I tried to fix it with
+> 
+> diff --git a/scripts/sorttable.h b/scripts/sorttable.h
+> index a36c76c17be4..76adb1fb88f8 100644
+> --- a/scripts/sorttable.h
+> +++ b/scripts/sorttable.h
+> @@ -341,6 +341,7 @@ static int do_sort(Elf_Ehdr *ehdr,
+> 			param.lookup_table_size = s->sh_size;
+> 			param.orc_lookup_table = (unsigned int *)
+> 				((void *)ehdr + s->sh_offset);
+> +			w(SHT_PROGBITS, &s->sh_type);
+> 		}
+> 		if (!strcmp(secstrings + idx, ".text")) {
+> 			param.text_size = s->sh_size;
+> 
+> 
+> But that makes kallsyms unhappy, so I guess we need to do it from the
+> linker script where .orc_lookup is created.
+> 
+> Linker script doesn't seem to allow manual specification of the section
+> type, so this is the best I could come up with:
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index db600ef218d7..49f4f5bc6165 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -826,6 +826,8 @@
+> 		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
+> 			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
+> 		orc_lookup_end = .;					\
+> +		/* HACK: force SHT_PROGBITS so sorttable can edit: */	\
+> +		BYTE(1);						\
+> 	}
+> #else
+> #define ORC_UNWIND_TABLE
 
-> -               unsigned int flags;
->
-> -               if (nvec <= 0) {
-> -                       flags = PCI_IRQ_MSI;
-> -               } else {
-> -                       flags = PCI_IRQ_MSI | PCI_IRQ_MSIX;
-> -               }
->                 /* we only need one vector */
-> -               nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1, flags);
-> +               nvec = pci_alloc_irq_vectors(adev->pdev, 1, 1,
-> +                                            PCI_IRQ_MSI_TYPES);
->                 if (nvec > 0) {
->                         adev->irq.msi_enabled = true;
->                         dev_dbg(adev->dev, "amdgpu: using MSI/MSI-X.\n");
-> --
-> 2.17.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks! It works.
+
+
