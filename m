@@ -2,72 +2,70 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2013BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7755BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1FA120734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C6720734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgFCWCt convert rfc822-to-8bit (ORCPT
+        id S1726761AbgFCWCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 3 Jun 2020 18:02:53 -0400
+Received: from muru.com ([72.249.23.125]:56922 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbgFCWCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Jun 2020 18:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgFCWCt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 18:02:49 -0400
-Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1059AC08C5C0;
-        Wed,  3 Jun 2020 15:02:49 -0700 (PDT)
-Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
-        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jgbTB-0003Qr-6b; Thu, 04 Jun 2020 00:02:45 +0200
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] lan743x: Added fixed link and RGMII support / debugging
-From:   Roelof Berg <rberg@berg-solutions.de>
-In-Reply-To: <20200603180615.GB971209@lunn.ch>
-Date:   Thu, 4 Jun 2020 00:02:44 +0200
-Cc:     David Miller <davem@davemloft.net>,
-        Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <EAE302D7-D2C8-40C5-81DC-E8CC008CE3D2@berg-solutions.de>
-References: <20200529193003.3717-1-rberg@berg-solutions.de>
- <20200601.115136.1314501977250032604.davem@davemloft.net>
- <D784BC1B-D14C-4FE4-8FD8-76BEBE60A39D@berg-solutions.de>
- <20200603155927.GC869823@lunn.ch>
- <42337EA1-C7D1-46C6-815F-C619B27A4E77@berg-solutions.de>
- <20200603180615.GB971209@lunn.ch>
-To:     Andrew Lunn <andrew@lunn.ch>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1591221769;7a04ee88;
-X-HE-SMSGID: 1jgbTB-0003Qr-6b
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 72D84809C;
+        Wed,  3 Jun 2020 22:03:38 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Merlijn Wajer <merlijn@wizzup.org>
+Subject: [PATCH] bus: ti-sysc: Increase max softreset wait
+Date:   Wed,  3 Jun 2020 15:02:42 -0700
+Message-Id: <20200603220242.24165-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, I found the cause, the delta patch is submitted. Lan7430 runs now in different speeds, also ‚hot swap‘ between different speeds works well. Normal mode and fixed-phy mode coexist properly.
+Otherwise we can get "OCP softreset timed out" warnings occasionally
+at least for i2c2 on omap4 now that we check the OCP softreset completed
+bit on enable.
 
-So, I guess we’re done :) However, I’ll spend some more time testing to ensure we’re really safe.
+Reported-by: Merlijn Wajer <merlijn@wizzup.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/bus/ti-sysc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-(I’m sending this e-mail through a Microchip Lan7430 by the way :)
-
-Roelof Berg
-
-> 
-> Adding #define DEBUG to the top of drivers/net/phy/phy.c will get you
-> some debug info.
-> 
-> […]
-
->    Andrew
-> 
-
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -29,7 +29,7 @@
+ 
+ #define SOC_FLAG(match, flag)	{ .machine = match, .data = (void *)(flag), }
+ 
+-#define MAX_MODULE_SOFTRESET_WAIT		10000
++#define MAX_MODULE_SOFTRESET_WAIT		20000
+ 
+ enum sysc_soc {
+ 	SOC_UNKNOWN,
+-- 
+2.26.2
