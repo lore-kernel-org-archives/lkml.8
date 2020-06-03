@@ -2,80 +2,138 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF465C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A92EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A827D2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58F52067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UXa9VETT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgFCTXJ (ORCPT
+        id S1726190AbgFCTYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
+        Wed, 3 Jun 2020 15:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCTXI (ORCPT
+        with ESMTP id S1725985AbgFCTYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:23:08 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B9FC08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:23:08 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jgYyg-002dEI-3A; Wed, 03 Jun 2020 19:23:06 +0000
-Date:   Wed, 3 Jun 2020 20:23:06 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull] misc uaccess stuff
-Message-ID: <20200603192306.GX23230@ZenIV.linux.org.uk>
+        Wed, 3 Jun 2020 15:24:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455BFC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:24:01 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x13so3594664wrv.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 12:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eKmZFODxU/V1iE906T8Ef11jEu4sRvf6rW5JJEx9JQQ=;
+        b=UXa9VETTQawjhSxj5nM4Agh4SuVLfZUM4nVsTXhDxHn9yFXnREMQcZHfCjFaa9fwgq
+         bHQyRdjqyJtlIooe0p9xhkBnY4sVBygZA1PIoXK8WuNoMtu81VJxPRvBgO4carCzyP4S
+         smzbFIgNE70FDiBofuMgkmpqGVV9OAfWwhWPf5ldMwrj/aEKrRKDbycFQk/SSjBufiaQ
+         U/lMESMtiJnqmAlnxxkvwN6LVHowWRR9O6Wo615JHFMKXdpOfVNoL/nbhJLDZqoTBq5D
+         qXKqwOl40cVDnqhf4hv0+6vL8PXKpiS7cgdzmqEreFJUJZgCzaVj0wzApm35HvPkZWn7
+         53vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eKmZFODxU/V1iE906T8Ef11jEu4sRvf6rW5JJEx9JQQ=;
+        b=LqSkqH8UIAMoFj0X1n97zwzqdOG488TrzVlPKzdhwhuBVvVn4JrfRni0BwozLQS841
+         LMjrdgRC24ru8DExV7NOkqAnGGFwoN1gsG7nP4yXKC5i2pjhNY/OPZdTUY4/dlxBLGlK
+         33sWpagX4ncVAeFZOEOkYqrnLh04Tu7gqcGcfdOGdESyq7eJVjxjTaZbhXN0i4TM/W1v
+         KLix1ELxhvFtzMe/0sdoT10aemey5Xw4mXJunrwkXI/a2qpELlBZZ0ui0lgY8fRQEiI+
+         JBKu53Z5Xl86PbVlAq8Pep7geBQX8htwbAoDPulLEGvKB/Lg927fNtMc407OSOEWmgtI
+         THLw==
+X-Gm-Message-State: AOAM533ol8YKLlRc8l9SB0teeKDXxFCZFTHWT32HZ9jP+w1DzHBc/uvV
+        ufTdMf9EjAASi/W9CSWTlwLtrA==
+X-Google-Smtp-Source: ABdhPJwUVTOFpofE2C3k3f+UFBTdrMS7aFklqZgR7nOCOKaMeOPcUFbCTX3L6GOWSrdfPPMMa4Na9Q==
+X-Received: by 2002:a5d:4008:: with SMTP id n8mr892040wrp.82.1591212239832;
+        Wed, 03 Jun 2020 12:23:59 -0700 (PDT)
+Received: from google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id z25sm4131038wmf.10.2020.06.03.12.23.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 12:23:59 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 21:23:53 +0200
+From:   Marco Elver <elver@google.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+Message-ID: <20200603192353.GA180529@google.com>
+References: <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513165008.GA24836@willie-the-truck>
+ <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
+ <20200513174747.GB24836@willie-the-truck>
+ <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
+ <20200513212520.GC28594@willie-the-truck>
+ <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
+ <20200514110537.GC4280@willie-the-truck>
+ <20200603185220.GA20613@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200603185220.GA20613@zn.tnic>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	uaccess patches that really didn't fit anywhere else.
-kvm_hv_set_msr() patch left as-is; __put_user() is by no means
-final there, but that'll be dealt with along with other KVM
-uaccess stuff next cycle.
 
-The following changes since commit b44f687386875b714dae2afa768e73401e45c21c:
 
-  drm/i915/gem: Replace user_access_begin by user_write_access_begin (2020-05-01 12:35:22 +1000)
+On Wed, 03 Jun 2020, Borislav Petkov wrote:
 
-are available in the git repository at:
+> On Thu, May 14, 2020 at 12:05:38PM +0100, Will Deacon wrote:
+> > Talking off-list, Clang >= 7 is pretty reasonable wrt inlining decisions
+> > and the behaviour for __always_inline is:
+> > 
+> >   * An __always_inline function inlined into a __no_sanitize function is
+> >     not instrumented
+> >   * An __always_inline function inlined into an instrumented function is
+> >     instrumented
+> >   * You can't mark a function as both __always_inline __no_sanitize, because
+> >     __no_sanitize functions are never inlined
+> > 
+> > GCC, on the other hand, may still inline __no_sanitize functions and then
+> > subsequently instrument them.
+> 
+> Yeah, about that: I've been looking for a way to trigger this so that
+> I can show preprocessed source to gcc people. So do you guys have a
+> .config or somesuch I can try?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git uaccess.misc
+For example take this:
 
-for you to fetch changes up to 4ec76a2b74c72ef9eed875ce63e27a5e7f8d80cc:
+	int x;
 
-  bpf: make bpf_check_uarg_tail_zero() use check_zeroed_user() (2020-06-01 14:42:37 -0400)
+	static inline __attribute__((no_sanitize_thread)) void do_not_sanitize(void) {
+	  x++;
+	}
 
-----------------------------------------------------------------
-Al Viro (9):
-      pselect6() and friends: take handling the combined 6th/7th args into helper
-      binfmt_elf: don't bother with __{put,copy_to}_user()
-      binfmt_elf_fdpic: don't use __... uaccess primitives
-      binfmt_flat: don't use __put_user()
-      x86: switch cp_stat64() to unsafe_put_user()
-      TEST_ACCESS_OK _never_ had been checked anywhere
-      user_regset_copyout_zero(): use clear_user()
-      x86: kvm_hv_set_msr(): use __put_user() instead of 32bit __clear_user()
-      bpf: make bpf_check_uarg_tail_zero() use check_zeroed_user()
+	void sanitize_this(void) {
+	  do_not_sanitize();
+	}
 
- arch/x86/include/asm/pgtable_32.h |   7 ---
- arch/x86/kernel/sys_ia32.c        |  40 ++++++++------
- arch/x86/kvm/hyperv.c             |   2 +-
- fs/binfmt_elf.c                   |  14 ++---
- fs/binfmt_elf_fdpic.c             |  31 +++++++----
- fs/binfmt_flat.c                  |  22 +++++---
- fs/select.c                       | 112 ++++++++++++++++++++++----------------
- include/linux/regset.h            |   2 +-
- kernel/bpf/syscall.c              |  25 ++-------
- 9 files changed, 134 insertions(+), 121 deletions(-)
+Then
+
+	gcc-10 -O3 -fsanitize=thread -o example.o -c example.c
+	objdump -D example.o
+
+will show that do_not_sanitize() was inlined into sanitize_this() and is
+instrumented. (With Clang this doesn't happen.)
+
+Hope this is enough.
+
+Thanks,
+-- Marco
