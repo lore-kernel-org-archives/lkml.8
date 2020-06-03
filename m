@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D00C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4480EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2842F20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1603620674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591167718;
-	bh=aO/eNnWMPoyWWYFwMjUCvhFtUVjC34oKmnoqH7DxW3E=;
+	s=default; t=1591167723;
+	bh=5+spvHFVv9/Zby40LDALwvi1QN6xquc/OnWOGsCbRRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xtLgi1lHB2OddPA/Qn/Lf9Gbcz+m1QsO5XZs2q/mJKyw8XHU4+AoJYruZnIvgmz/6
-	 AUzlGRofXDyCaZ+U5d9JB4ohIoOZI9Dfp0OG8VheUcrWzvZag28mWjgZ+3RaDRvwB1
-	 IQP6LI50xXb2fQiodygQDuc45Iq4KtSN0cfeDce0=
+	b=2Mtfbw9blsZrQAbuh1/kb21sqtoKSAbIRLex4jCEIW7ZyQkK11En9F3U0GKOPZBi0
+	 edqKl+Vqx3IFtUSp2lBASxmlg+35Fkd+TsBIbvRuZDnM+Igqik1/Hm/0kzI1vNEFSO
+	 t7KNt+GGjmFc6pWS6KmRGOBahTzp5yqZTVrAiuzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgFCHB5 (ORCPT
+        id S1726351AbgFCHCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43404 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 03:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgFCHBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:01:08 -0400
+        id S1726057AbgFCHBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:01:07 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 835BF207DF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D72A20872;
         Wed,  3 Jun 2020 07:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1591167665;
-        bh=aO/eNnWMPoyWWYFwMjUCvhFtUVjC34oKmnoqH7DxW3E=;
+        bh=5+spvHFVv9/Zby40LDALwvi1QN6xquc/OnWOGsCbRRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CPnyLGeBL0dBvrkg14aURykBWp5d6YaIuipGjum+Q+/ZFjGJuUDHU1CC5aF0KQ+td
-         J+R3WvTjsgTxskgnhYwrymzTZ7wi1Lp8k1yUv99c2n+kh6+oppWv60qsk8IKpqT/yE
-         pTxZPmfzWjr2qlscVrntkUJuxB7yZI4daIwo9qkA=
+        b=ex6liaXDWT0dsrR9Mht02ZWbAGkEwQhVriWidZ+IntRTb3MbIyFAy0FpnK6x/LZtG
+         Zi/XKYU4z+8FgO3eHqbFmjrR8e+sEn0h9IeHffIhRBAtcYTSCABN24vTPKvB+CI4w6
+         xBGZB6UVGyz+8vuM/4IJbO6Tb+9QYeN1sX5ERvZM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jgNOZ-004j8f-GZ; Wed, 03 Jun 2020 09:01:03 +0200
+        id 1jgNOZ-004j8z-NE; Wed, 03 Jun 2020 09:01:03 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Media Mailing List <linux-media@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 09/15] media: atomisp: don't set hpll_freq twice with different values
-Date:   Wed,  3 Jun 2020 09:00:55 +0200
-Message-Id: <1ae1868ee95529ce2a2fa4ae3390b3f77219c5a0.1591167358.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 13/15] media: atomisp: set DFS to MAX if sensor doesn't report fps
+Date:   Wed,  3 Jun 2020 09:00:59 +0200
+Message-Id: <79b4062a8efa176ffa0f1f898cf8de64807173ac.1591167358.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1591167358.git.mchehab+huawei@kernel.org>
 References: <cover.1591167358.git.mchehab+huawei@kernel.org>
@@ -61,50 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The logic which sets the hpll_freq for BYT sets hpll_freq
-to 1600MHz, but ignores it, and sets it again after reading
-from-device-specific EFI vars (this time, using a default
-of 2000MHz).
+If the sensor doesn't implement support for g_frame_interval,
+it won't return the expected fps rate.
 
-Remove the first set, as this will be overriden anyway.
-
-While here, do minor adjustments on comments and on a
-printk message.
+Instead of keeping DFS on its minimal value (which will likely
+not work), set it to the max.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/staging/media/atomisp/pci/atomisp_cmd.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-index c7f6b621ef3f..64e2386f328f 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-@@ -1659,10 +1659,12 @@ static int atomisp_pci_probe(struct pci_dev *dev,
- 		 * resolution accordingly.
- 		 */
- 		isp->dfs = &dfs_config_byt;
--		isp->hpll_freq = HPLL_FREQ_1600MHZ;
--		/* HPLL frequency is known to be device-specific, but we don't
-+
-+		/*
-+		 * HPLL frequency is known to be device-specific, but we don't
- 		 * have specs yet for exactly how it varies.  Default to
--		 * BYT-CR but let provisioning set it via EFI variable */
-+		 * BYT-CR but let provisioning set it via EFI variable
-+		 */
- 		isp->hpll_freq = gmin_get_var_int(&dev->dev, false, "HpllFreq",
- 						  HPLL_FREQ_2000MHZ);
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
+index 6c324815c0f6..845fa851029a 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
+@@ -243,8 +243,12 @@ int atomisp_freq_scaling(struct atomisp_device *isp,
+ 	}
  
-@@ -1714,7 +1716,7 @@ static int atomisp_pci_probe(struct pci_dev *dev,
- 		default:
- 			isp->hpll_freq = HPLL_FREQ_1600MHZ;
- 			dev_warn(isp->dev,
--				 "read HPLL from cck failed.default 1600MHz.\n");
-+				 "read HPLL from cck failed. Default to 1600 MHz.\n");
- 		}
- 		break;
- 	default:
+ 	fps = atomisp_get_sensor_fps(asd);
+-	if (fps == 0)
+-		return -EINVAL;
++	if (fps == 0) {
++		dev_info(isp->dev,
++			 "Sensor didn't report FPS. Using DFS max mode.\n");
++		new_freq = dfs->highest_freq;
++		goto done;
++	}
+ 
+ 	curr_rules.width = asd->fmt[asd->capture_pad].fmt.width;
+ 	curr_rules.height = asd->fmt[asd->capture_pad].fmt.height;
 -- 
 2.26.2
 
