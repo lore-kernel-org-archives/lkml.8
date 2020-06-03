@@ -2,61 +2,63 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13420C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0AB12053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96142053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrcWDFPO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3Rzqkip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgFCJUQ (ORCPT
+        id S1726853AbgFCJUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
+        Wed, 3 Jun 2020 05:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFCJUP (ORCPT
+        with ESMTP id S1725954AbgFCJUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:20:15 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF5FC05BD43;
-        Wed,  3 Jun 2020 02:20:15 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id x1so1377794ejd.8;
-        Wed, 03 Jun 2020 02:20:15 -0700 (PDT)
+        Wed, 3 Jun 2020 05:20:19 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7B7C05BD1E;
+        Wed,  3 Jun 2020 02:20:19 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id q13so1143071edi.3;
+        Wed, 03 Jun 2020 02:20:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3DI0t3OHBLadpo7QorIFcufLBAcgTKa7K38eRTU2zac=;
-        b=rrcWDFPOBajLO3DBatyL3qv6TP2l1qbGg53b4iPYWVbAUXDyOAt05D+PU1XoSK+NZT
-         O0wZB/qgo+ig/Y7wYxOqFMe6eIzNN+6wY0NwZL9PSBPtNliQThtRV7/uOPmqhyHZHFmg
-         JS/eGy8OVDzU0whCYe977jIIS2z96Fyr+1gHPYtPnNSbqdGsdpXl0RwIurkLWpHR2RGg
-         AbSJ1NdQOWgC8tOvMGtonn1+6/4cFXM9s1lPO5iTA8r3xWf5aWXHUPHBEWDHeIj874y4
-         342uTHhjKIFP7fmnPHhUml7WOP9JL1icZeN56mqCloxkRbrYaDn6wZ7/LNTXowh3o5BZ
-         07GQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=xU7pX4nkK7ZQg7clUMzQ4yPEEjGSdbLLAvPKUl0GCPM=;
+        b=L3RzqkippX2qj1i6eCQ5wpBKTfjAzeOGUJeZHSyz1uM5TAj9tfrJw7HGi6Nt8tPeIE
+         J+Y+Q4PbcOq9uP1M9n0kW79eS+E4RC072dnehJlQfZ53T5Z2pGVdL9s3ewLRIAHGVCb8
+         kvTybfqwvz5cwZfhsLLDljSa4VPfj/q+6ZYnUXqhbYScms91UK6MsBaklPeu2ANigvxu
+         0H98xL64nCPH2SmWwPT3iO7NaHaV+YrGtcoWhDQGQWEi0at9lDye5cGIKaSsUsp0fSCJ
+         CwV2EWzn9bICFXGHLXNgh7zgYcQhkJXAEH3Y2wQ4nrO3o5IYsXRRVodoOACobTgc54Ev
+         lnEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3DI0t3OHBLadpo7QorIFcufLBAcgTKa7K38eRTU2zac=;
-        b=XDHIYugpXCkvtWCHwnXJhnyDmdBIrxW7CGeuKxfmUULhXzea2Zcyv2sUnCHyl5fyIr
-         bYynWVLVgAvB+Hvql12Z5XbfJfx3Sk5AOmolaJQQQP3U4+XjH7FPAkuZfvC43HsGl8ul
-         cjbfsDDuUffvv3WHwsrwRuyuyijVV60ZquwYvmP0+BLQ0cZJSZU2EPjswOaPa7LFuIK3
-         KX8rvhtP4Gdj57LZLTAg0Zz9S1rQZmYLXvSeZqn9D8SbeuhNIGv/fpLcZr75kQwBJYO6
-         TQdRp/vKUhrsp1Lgn+hP+Oi2GqygfRXWqhh1L41JpKathL3Dzf/M+hG3lGjihFDj69e7
-         EvXg==
-X-Gm-Message-State: AOAM530wyF5iTCNoov62CB6zQF1tx0nPtbe/jOzv1t/YsMnXNgsPpcrb
-        WmqfZ2k7bgRk/2+SOoeNlL8=
-X-Google-Smtp-Source: ABdhPJwlttuTqCVLTqVHp3w14w1u2iU3UwK9d2/tPK3GNbRUkWH2ImiK2QVPrMrDNAQZjpMetldFIw==
-X-Received: by 2002:a17:906:a458:: with SMTP id cb24mr12743050ejb.5.1591176014067;
-        Wed, 03 Jun 2020 02:20:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=xU7pX4nkK7ZQg7clUMzQ4yPEEjGSdbLLAvPKUl0GCPM=;
+        b=oTFPR155lYQNS1PUyUEcrwaVl7N8cvElTx35JR3zuL8FkpgPXqRiOC2SKxjgizQRhn
+         qp5KrJ8Ti0AU5+72zOgkr50YX97APH7sRS7cLZOZp8g8PnSTRmQo112nb3+wq1xNQci0
+         IAyrmUHLTWrlpWQIvfCueh/fSLiCvTR4rXjbbHi/PELt71vpL8lpP4zof7SEqgpbrYoC
+         40oTFn9wtkyO17ClDnh4kbOuwskLb5rF74jECwx5a5qT1l4ndI6PJTPYDyXPBhvea204
+         Ja8q559cUq0VYnotoBdmQvet8WgJQIxuGHSfzPLLHdfDWFg/P4Vr2kDpEwM9rdLt4aSc
+         ZSRQ==
+X-Gm-Message-State: AOAM533g9zyTxIJNpgPE+p5dmM4BgFNSSo678Eybfolf5adO7sg+XBUs
+        vWkY7KIRtk8069sMn5RO+08=
+X-Google-Smtp-Source: ABdhPJz65a3RCO/nFWS+lEzKjLuelstixw+3z5Wxj/AMi5H3E8W8EY5y9nAdTSz/0uTQdNP9ZDhMqQ==
+X-Received: by 2002:a50:b2e1:: with SMTP id p88mr30552214edd.198.1591176017991;
+        Wed, 03 Jun 2020 02:20:17 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:598:d00c:464c:92b:aecc:3637:dc7c])
-        by smtp.gmail.com with ESMTPSA id 64sm865636eda.85.2020.06.03.02.20.09
+        by smtp.gmail.com with ESMTPSA id 64sm865636eda.85.2020.06.03.02.20.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 02:20:13 -0700 (PDT)
+        Wed, 03 Jun 2020 02:20:17 -0700 (PDT)
 From:   Bean Huo <huobean@gmail.com>
 To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
         asutoshd@codeaurora.org, jejb@linux.ibm.com,
@@ -65,10 +67,12 @@ To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
         cang@codeaurora.org
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         beanhuo@outlook.com
-Subject: [RESENT PATCH v5 0/5] scsi: ufs: cleanup ufs initialization
-Date:   Wed,  3 Jun 2020 11:19:54 +0200
-Message-Id: <20200603091959.27618-1-huobean@gmail.com>
+Subject: [RESENT PATCH v5 2/5] scsi: ufs: delete ufshcd_read_desc()
+Date:   Wed,  3 Jun 2020 11:19:56 +0200
+Message-Id: <20200603091959.27618-3-huobean@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200603091959.27618-1-huobean@gmail.com>
+References: <20200603091959.27618-1-huobean@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,48 +80,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bean Huo <beanhuo@micron.com>
 
-Resent this patchset since linux-scsi@vger.kernel.org and
-linux-kernel@vger.kernel.org rejected my email
+Delete ufshcd_read_desc(). Instead, let caller directly call
+ufshcd_read_desc_param().
 
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Bart van Assche <bvanassche@acm.org>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+---
+ drivers/scsi/ufs/ufshcd.c | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
 
-Cleanup UFS descriptor length initialization, and delete some unnecessary code.
-
-Changelog:
-v4 - v5:
-    1. Rebased patch
-    2. In the patch 3/5, change "param_size > buff_len" to
-       "(param_offset + param_size) > buff_len"
-
-v3 - v4:
-    1. add desc_id >= QUERY_DESC_IDN_MAX check in patch 4/5 (Avri Altman)
-    2. update buff_len to hold the true descriptor size in 4/5 (Avri Altman)
-    3. add new patch 3/5
-
-v2 - v3:
-    1. Fix typo in the commit message (Avri Altman & Bart van Assche)
-    2. Delete ufshcd_init_desc_sizes() in patch 3/4 (Stanley Chu)
-    3. Remove max_t() and buff_len in patch 1/4 (Bart van Assche)
-    4. Add patch 4/4 to compatable with 3.1 UFS unit descriptor length
-
-v1 - v2:
-    1. split patch
-    2. fix one compiling WARNING (Reported-by: kbuild test robot <lkp@intel.com>)
-
-Bart van Assche (1):
-  scsi: ufs: remove max_t in ufs_get_device_desc
-
-Bean Huo (4):
-  scsi: ufs: delete ufshcd_read_desc()
-  scsi: ufs: fix potential access NULL pointer while memcpy
-  scsi: ufs: cleanup ufs initialization path
-  scsi: ufs: add compatibility with 3.1 UFS unit descriptor length
-
- drivers/scsi/ufs/ufs.h     |  11 +-
- drivers/scsi/ufs/ufs_bsg.c |   5 +-
- drivers/scsi/ufs/ufshcd.c  | 207 +++++++++----------------------------
- drivers/scsi/ufs/ufshcd.h  |  16 +--
- 4 files changed, 54 insertions(+), 185 deletions(-)
-
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2cf077ab9dfd..c18c2aadbe14 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3221,16 +3221,6 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
+ 	return ret;
+ }
+ 
+-static inline int ufshcd_read_desc(struct ufs_hba *hba,
+-				   enum desc_idn desc_id,
+-				   int desc_index,
+-				   void *buf,
+-				   u32 size)
+-{
+-	return ufshcd_read_desc_param(hba, desc_id, desc_index, 0, buf, size);
+-}
+-
+-
+ /**
+  * struct uc_string_id - unicode string
+  *
+@@ -3278,9 +3268,8 @@ int ufshcd_read_string_desc(struct ufs_hba *hba, u8 desc_index,
+ 	if (!uc_str)
+ 		return -ENOMEM;
+ 
+-	ret = ufshcd_read_desc(hba, QUERY_DESC_IDN_STRING,
+-			       desc_index, uc_str,
+-			       QUERY_DESC_MAX_SIZE);
++	ret = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_STRING, desc_index, 0,
++				     (u8 *)uc_str, QUERY_DESC_MAX_SIZE);
+ 	if (ret < 0) {
+ 		dev_err(hba->dev, "Reading String Desc failed after %d retries. err = %d\n",
+ 			QUERY_REQ_RETRIES, ret);
+@@ -6711,8 +6700,8 @@ static void ufshcd_set_active_icc_lvl(struct ufs_hba *hba)
+ 	if (!desc_buf)
+ 		return;
+ 
+-	ret = ufshcd_read_desc(hba, QUERY_DESC_IDN_POWER, 0,
+-			desc_buf, buff_len);
++	ret = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_POWER, 0, 0,
++				     desc_buf, buff_len);
+ 	if (ret) {
+ 		dev_err(hba->dev,
+ 			"%s: Failed reading power descriptor.len = %d ret = %d",
+@@ -6913,8 +6902,8 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+ 		goto out;
+ 	}
+ 
+-	err = ufshcd_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, desc_buf,
+-			hba->desc_size.dev_desc);
++	err = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_DEVICE, 0, 0, desc_buf,
++				     hba->desc_size.dev_desc);
+ 	if (err) {
+ 		dev_err(hba->dev, "%s: Failed reading Device Desc. err = %d\n",
+ 			__func__, err);
+@@ -7196,8 +7185,8 @@ static int ufshcd_device_geo_params_init(struct ufs_hba *hba)
+ 		goto out;
+ 	}
+ 
+-	err = ufshcd_read_desc(hba, QUERY_DESC_IDN_GEOMETRY, 0,
+-			desc_buf, buff_len);
++	err = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_GEOMETRY, 0, 0,
++				     desc_buf, buff_len);
+ 	if (err) {
+ 		dev_err(hba->dev, "%s: Failed reading Geometry Desc. err = %d\n",
+ 				__func__, err);
 -- 
 2.17.1
 
