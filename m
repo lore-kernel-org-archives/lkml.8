@@ -2,116 +2,133 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ABAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF56C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCF220663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:02:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ax87zDA2"
+	by mail.kernel.org (Postfix) with ESMTP id 2F0832072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgFCCCU (ORCPT
+        id S1725877AbgFCCFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:02:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbgFCCCT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:02:19 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4CAC08C5C0;
-        Tue,  2 Jun 2020 19:02:19 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cBxM6yJFz9sRR;
-        Wed,  3 Jun 2020 12:02:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591149736;
-        bh=vhVIoWfRSqSXFrzE3g6qmYx7HtBU/h0jRCqrvADViUo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ax87zDA2OMU9bhGi7CX2giGqfJNRR4ffm4/mCm+/r4zM4WTK4ZIlQQVm4drgGDQV+
-         KbJKZ47lVS/axmNhj/9uGtK+wp3RTDRY/YjZ+wpMgWVm8votFb3NqT4HooByZ82Qhv
-         72aJfQc7Ste0xwseybcO/7Xrh1/l8Nm6KOeq0j6CzD4CLs3a1jHOUaI2UJtga6Jwdk
-         z7d6kSY/KndFdKNmOIauZI2wC6qSYT09z/rew8HKknjKs0HcbV/9pav0Es5Us8lDUm
-         92dHV8oQgaM0Ii3zbCld6TmJDPHF16/6BtLs3nMXpYcfsA7KeU5D7PvgNbRMi0K8CZ
-         dt6PFgEQd2NLg==
-Date:   Wed, 3 Jun 2020 12:02:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: linux-next: manual merge of the rcu tree with the powerpc tree
-Message-ID: <20200603120215.758ec1f0@canb.auug.org.au>
-In-Reply-To: <20200519172316.3b37cbae@canb.auug.org.au>
-References: <20200519172316.3b37cbae@canb.auug.org.au>
+        Tue, 2 Jun 2020 22:05:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33556 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725789AbgFCCFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:05:37 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2B4E85FC262AB94366C8;
+        Wed,  3 Jun 2020 10:05:33 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.93) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
+ 10:05:23 +0800
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        <viresh.kumar@linaro.org>, <rjw@rjwysocki.net>
+CC:     <Sudeep.Holla@arm.com>, <ionela.voinescu@arm.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <ef524d5f-185d-4ca8-c717-929e59db0813@huawei.com>
+Date:   Wed, 3 Jun 2020 10:05:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/re/4mt4BnHhc__uwjuL5lI1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.213.93]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/re/4mt4BnHhc__uwjuL5lI1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020/6/2 11:34, Xiongfeng Wang wrote:
+> Hi Viresh,
+> 
+> Sorry to disturb you about another problem as follows.
+> 
+> CPPC use the increment of Desired Performance counter and Reference Performance
+> counter to get the CPU frequency and show it in sysfs through
+> 'cpuinfo_cur_freq'. But ACPI CPPC doesn't specifically define the behavior of
+> these two counters when the CPU is in idle state, such as stop incrementing when
+> the CPU is in idle state.
+> 
+> ARMv8.4 Extension inctroduced support for the Activity Monitors Unit (AMU). The
+> processor frequency cycles and constant frequency cycles in AMU can be used as
+> Delivered Performance counter and Reference Performance counter. These two
+> counter in AMU does not increase when the PE is in WFI or WFE. So the increment
+> is zero when the PE is in WFI/WFE. This cause no issue because
+> 'cppc_get_rate_from_fbctrs()' in cppc_cpufreq driver will check the increment
+> and return the desired performance if the increment is zero.
+> 
+> But when the CPU goes into power down idle state, accessing these two counters
+> in AMU by memory-mapped address will return zero. Such as CPU1 went into power
+> down idle state and CPU0 try to get the frequency of CPU1. In this situation,
+> will display a very big value for 'cpuinfo_cur_freq' in sysfs. Do you have some
+> advice about this problem ?
 
-Hi all,
+Just a wild guess, how about just return 0 for idle CPUs? which means
+the frequency is 0 for idle CPUs.
 
-On Tue, 19 May 2020 17:23:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> Today's linux-next merge of the rcu tree got a conflict in:
->=20
->   arch/powerpc/kernel/traps.c
->=20
-> between commit:
->=20
->   116ac378bb3f ("powerpc/64s: machine check interrupt update NMI accounti=
-ng")
->=20
-> from the powerpc tree and commit:
->=20
->   187416eeb388 ("hardirq/nmi: Allow nested nmi_enter()")
->=20
-> from the rcu tree.
+> 
+> I was thinking about an idea as follows. We can run 'cppc_cpufreq_get_rate()' on
+> the CPU to be measured, so that we can make sure the CPU is in C0 state when we
+> access the two counters. Also we can return the actual frequency rather than
+> desired performance when the CPU is in WFI/WFE. But this modification will
+> change the existing logical and I am not sure if this will cause some bad effect.
+> 
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index 257d726..ded3bcc 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -396,9 +396,10 @@ static int cppc_get_rate_from_fbctrs(struct cppc_cpudata *cpu,
+>          return cppc_cpufreq_perf_to_khz(cpu, delivered_perf);
+>   }
+> 
+> -static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+> +static int cppc_cpufreq_get_rate_cpu(void *info)
+>   {
+>          struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
+> + unsigned int cpunum = *(unsigned int *)info;
+>          struct cppc_cpudata *cpu = all_cpu_data[cpunum];
+>          int ret;
+> 
+> @@ -418,6 +419,22 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>          return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
+>   }
+> 
+> +static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+> +{
+> + unsigned int ret;
+> +
+> + ret = smp_call_on_cpu(cpunum, cppc_cpufreq_get_rate_cpu, &cpunum, true);
+> +
+> + /*
+> +  * convert negative error code to zero, otherwise we will display
+> +  * an odd value for 'cpuinfo_cur_freq' in sysfs
+> +  */
+> + if (ret < 0)
+> +         ret = 0;
+> +
+> + return ret;
+> +}
+> +
+>   static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
+>   {
+>          struct cppc_cpudata *cpudata;
+> 
 
-This is now a conflict between commit
+It will bring the CPU back if the CPU is in idle state, not friendly to
+powersaving :)
 
-  69ea03b56ed2 ("hardirq/nmi: Allow nested nmi_enter()")
+Thanks
+Hanjun
 
-=46rom Linus tree and the above powerpc tree commit.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/re/4mt4BnHhc__uwjuL5lI1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XBKcACgkQAVBC80lX
-0Gz/Wgf+L+rFqD4u+L0Kv5bqDMacIs7hXXsLQI+vN7E4C2cx1LcZiI9aWrRDpUTK
-uUO5eVIwczW5tvq91C04sT7F6jrApts2PS2hbCwqPM+ZjWTI4SNO5yHopOrWKzUW
-RfV7+lCLfE+SwDlA+ZbzJotktvIL6gpUEBRpiMcSe7ka3iAiarcywWzgo/vhQ4J9
-I3oQUZiMblqFr653oSSYxwb7omI2TU3aAgV8Aheh8OmZktW90UfyYhJjoh6DYulQ
-r+qCwBkQ+MpYcRTOklfrOt9N96sJy1WuNP6bCw34/jd8L/d44loxB4YLO18igyAE
-biuCnndxOIm1utVMy+mR6g83z8twsA==
-=sOc/
------END PGP SIGNATURE-----
-
---Sig_/re/4mt4BnHhc__uwjuL5lI1--
