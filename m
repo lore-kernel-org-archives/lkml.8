@@ -2,154 +2,76 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9020AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF3220678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:23:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AKoUcit5"
+	by mail.kernel.org (Postfix) with ESMTP id 6CCFF20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgFCGXT (ORCPT
+        id S1725985AbgFCGYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:23:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49695 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725878AbgFCGXS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:23:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591165397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lfjOXsWWEkBdc5PrrjtOTiVJWBB/Cmo/FhE9Ax069a4=;
-        b=AKoUcit5GqkRogJEJSn5XhBwBI+tibubMyzMeE2Xe4BYZjxgrvKO5O3Gx/pytTDpYHSaUN
-        Lfu2nSDiDra2+QBd9STTKFk6JV3G23kSspzFFRX13+4n2VqIxU2cZptTGZqaj1bxzNE11F
-        tG4hu26d9pu/HYEWy/EvZF31cu9LvIA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-wGU6dBYQN5WU97h8OzbzCQ-1; Wed, 03 Jun 2020 02:23:15 -0400
-X-MC-Unique: wGU6dBYQN5WU97h8OzbzCQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C47AF185695D;
-        Wed,  3 Jun 2020 06:23:14 +0000 (UTC)
-Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A74F760C81;
-        Wed,  3 Jun 2020 06:23:10 +0000 (UTC)
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <3358ae96-abb6-6be9-346a-0e971cb84dcd@redhat.com>
- <20200603041849.GT23230@ZenIV.linux.org.uk>
- <3e723db8-0d55-fae6-288e-9d95905592db@redhat.com>
- <20200603013600-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b7de29fa-33f2-bbc1-08dc-d73b28e3ded5@redhat.com>
-Date:   Wed, 3 Jun 2020 14:23:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200603013600-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Wed, 3 Jun 2020 02:24:00 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:42922 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbgFCGYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:24:00 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 640DD20007D;
+        Wed,  3 Jun 2020 08:23:58 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 819F7200089;
+        Wed,  3 Jun 2020 08:23:53 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3B26B402DF;
+        Wed,  3 Jun 2020 14:23:47 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     broonie@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        marex@denx.de, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 0/3] Convert mxs/imx spi/cspi/lpspi binding to json-schema
+Date:   Wed,  3 Jun 2020 14:13:26 +0800
+Message-Id: <1591164809-13964-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series converts mxs/imx spi/cspi/lpspi binding to json-schema.
 
-On 2020/6/3 下午1:46, Michael S. Tsirkin wrote:
-> On Wed, Jun 03, 2020 at 01:18:54PM +0800, Jason Wang wrote:
->> On 2020/6/3 下午12:18, Al Viro wrote:
->>> On Wed, Jun 03, 2020 at 11:57:11AM +0800, Jason Wang wrote:
->>>
->>>>> How widely do you hope to stretch the user_access areas, anyway?
->>>> To have best performance for small packets like 64B, if possible, we want to
->>>> disable STAC not only for the metadata access done by vhost accessors but
->>>> also the data access via iov iterator.
->>> If you want to try and convince Linus to go for that, make sure to Cc
->>> me on that thread.  Always liked quality flame...
->>>
->>> The same goes for interval tree lookups with uaccess allowed.  IOW, I _really_
->>> doubt that it's a good idea.
->>
->> I see. We are just seeking an approach to perform better in order to compete
->> with userspace dpdk backends.
->>
->> I tried another approach of using direct mapping + mmu notifier [1] but the
->> synchronization with MMU notifier is not easy to perform well.
->>
->> [1] https://patchwork.kernel.org/patch/11133009/
->>
->>
->>>>> Incidentally, who had come up with the name __vhost_get_user?
->>>>> Makes for lovey WTF moment for readers - esp. in vhost_put_user()...
->>>> I think the confusion comes since it does not accept userspace pointer (when
->>>> IOTLB is enabled).
->>>>
->>>> How about renaming it as vhost_read()/vhost_write() ?
->>> Huh?
->>>
->>> __vhost_get_user() is IOTLB remapping of userland pointer.  It does not access
->>> userland memory.  Neither for read, nor for write.  It is used by vhost_get_user()
->>> and vhost_put_user().
->>>
->>> Why would you want to rename it into vhost_read _or_ vhost_write, and in any case,
->>> how do you give one function two names?  IDGI...
->>
->> I get you know, I thought you're concerning the names of
->> vhost_get_user()/vhost_put_user() but actually __vhost_get_user().
->>
->> Maybe something like __vhost_fetch_uaddr() is better.
->>
->> Thanks
->
-> It's basically vhost_translate_uaddr isn't it?
+In fsl-imx-cspi.yaml, also update compatible, remove obsolete properties
+"fsl,spi-num-chipselects" and update the example based on latest DT file;
 
+In spi-fsl-lpspi.yaml, the original maintainer's email address
+pandy.gao@nxp.com is no longer valid, so I use mine.
 
-Yes.
+Anson Huang (3):
+  dt-bindings: spi: Convert mxs spi to json-schema
+  dt-bindings: spi: Convert imx cspi to json-schema
+  dt-bindings: spi: Convert imx lpspi to json-schema
 
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       | 56 -------------
+ .../devicetree/bindings/spi/fsl-imx-cspi.yaml      | 97 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/spi/mxs-spi.txt  | 26 ------
+ Documentation/devicetree/bindings/spi/mxs-spi.yaml | 55 ++++++++++++
+ .../devicetree/bindings/spi/spi-fsl-lpspi.txt      | 29 -------
+ .../devicetree/bindings/spi/spi-fsl-lpspi.yaml     | 60 +++++++++++++
+ 6 files changed, 212 insertions(+), 111 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
 
->
-> BTW now I re-read it I don't understand __vhost_get_user_slow:
->
->
-> static void __user *__vhost_get_user_slow(struct vhost_virtqueue *vq,
->                                            void __user *addr, unsigned int size,
->                                            int type)
-> {
->          int ret;
->
->          ret = translate_desc(vq, (u64)(uintptr_t)addr, size, vq->iotlb_iov,
->                               ARRAY_SIZE(vq->iotlb_iov),
->                               VHOST_ACCESS_RO);
->
-> ..
-> }
->
-> how does this work? how can we cast a pointer to guest address without
-> adding any offsets?
-
-
-I'm not sure I get you here. What kind of offset did you mean?
-
-Thanks
-
-
->
->
+-- 
+2.7.4
 
