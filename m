@@ -2,133 +2,99 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF56C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4401C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0832072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B144C2072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YgjDG2DO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbgFCCFh (ORCPT
+        id S1725888AbgFCCHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:05:37 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33556 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725789AbgFCCFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:05:37 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2B4E85FC262AB94366C8;
-        Wed,  3 Jun 2020 10:05:33 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.93) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 10:05:23 +0800
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        <viresh.kumar@linaro.org>, <rjw@rjwysocki.net>
-CC:     <Sudeep.Holla@arm.com>, <ionela.voinescu@arm.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <ef524d5f-185d-4ca8-c717-929e59db0813@huawei.com>
-Date:   Wed, 3 Jun 2020 10:05:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 2 Jun 2020 22:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgFCCHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:07:18 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E98C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 19:07:17 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s10so681344pgm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 19:07:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=05oZ75W4PAkbEc2W7bJ8bzylCGe8tKmwbPUEdrxK2MI=;
+        b=YgjDG2DOa5fJsziE47TJOIqO8/01xtN5rj6XQhEyI58geqkjsw62uCrQ7ZmmhL1jkL
+         +kdgjXt7D4Aq84xaZGh0L81EUocGLPlyFYiHF2fvO1P9QWVrCSVyYbDEz9iL9hZEe4Ui
+         7YZAAfcJIdO1plU1NAB8hK7wr7/4flAHjNYD8hU0lNN7/8+Zkt4blJX442q/S/nA/vZh
+         ugEK+rcs2zZVVsFqei43wS/VJn57yAxbDa+HeKXRww6Cp4IUKjMn6uAQPi2N6jZB0j3A
+         bduC0KNOtfAW6NAb8ORPkEUhbnT2iM3J6BRWL+y5fs4WuBDMiQzfut9IcvNApvAQ/5b+
+         ACDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=05oZ75W4PAkbEc2W7bJ8bzylCGe8tKmwbPUEdrxK2MI=;
+        b=BTnF6RKtuwD07O1Q/MEwSZoBlx9gTOFB71XWY8NX4NIqpFbzC9y87dPzKWwmmsNx4X
+         JuyMiQm3YkTSPeDZRtjs0gkXV1zspxKp1rZthxs4AiLH/W87iynjinpEpaKPkn6kSIFl
+         I4YFTcOcoZJur948DROwES+DhKZ2jmGHRKCVftFFOTeW0pifEaJ7UkN69qm5CVGW2yuD
+         xUQkDVk/91QQztyAc1IGEsI5RTyqeVzpb1Y/swQMayZm2gokXtjLMtSJ4GQJgMTtTjLj
+         LoociHjWiyxFGNcYkZdsZfst9nnqJxbmNqR9dLuW6rwtCgXFShdaqIT4IKf1fUCBGhiY
+         VWuQ==
+X-Gm-Message-State: AOAM5332DfhQ9G+i1D1eyiEnMoHTdD1HJShC/erFO0GIWMw012fXtj+q
+        FrfugKhESHuOhoE+CFXTaEd1NjbXXJwGKA==
+X-Google-Smtp-Source: ABdhPJw+m9Bk6S9FVc4FjMyeOU0mdWCwQ/Z6Zb3KXA32gR56BP6UBcW9Kd3MbvhePimU1xOaEgMogA==
+X-Received: by 2002:a17:90a:d998:: with SMTP id d24mr2559305pjv.33.1591150036093;
+        Tue, 02 Jun 2020 19:07:16 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id k7sm216841pga.87.2020.06.02.19.07.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 19:07:14 -0700 (PDT)
+Subject: Re: [GIT PULL] io_uring updates for 5.8-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <dacd50ff-f674-956b-18cd-9d30e2221b09@kernel.dk>
+ <CAHk-=wjuAN_vgUN_TiPtzSpz2NX9XQq7-nJ1u=gHG=EKdRdrkA@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <237d782f-8163-dbc2-4505-ed5f88ce4362@kernel.dk>
+Date:   Tue, 2 Jun 2020 20:07:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+In-Reply-To: <CAHk-=wjuAN_vgUN_TiPtzSpz2NX9XQq7-nJ1u=gHG=EKdRdrkA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.213.93]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/2 11:34, Xiongfeng Wang wrote:
-> Hi Viresh,
+On 6/2/20 5:03 PM, Linus Torvalds wrote:
+> On Mon, Jun 1, 2020 at 10:55 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>>   git://git.kernel.dk/linux-block.git for-5.8/io_uring-2020-06-01
 > 
-> Sorry to disturb you about another problem as follows.
+> I'm not sure why pr-tracker-bot didn't like your io_uring pull request.
 > 
-> CPPC use the increment of Desired Performance counter and Reference Performance
-> counter to get the CPU frequency and show it in sysfs through
-> 'cpuinfo_cur_freq'. But ACPI CPPC doesn't specifically define the behavior of
-> these two counters when the CPU is in idle state, such as stop incrementing when
-> the CPU is in idle state.
-> 
-> ARMv8.4 Extension inctroduced support for the Activity Monitors Unit (AMU). The
-> processor frequency cycles and constant frequency cycles in AMU can be used as
-> Delivered Performance counter and Reference Performance counter. These two
-> counter in AMU does not increase when the PE is in WFI or WFE. So the increment
-> is zero when the PE is in WFI/WFE. This cause no issue because
-> 'cppc_get_rate_from_fbctrs()' in cppc_cpufreq driver will check the increment
-> and return the desired performance if the increment is zero.
-> 
-> But when the CPU goes into power down idle state, accessing these two counters
-> in AMU by memory-mapped address will return zero. Such as CPU1 went into power
-> down idle state and CPU0 try to get the frequency of CPU1. In this situation,
-> will display a very big value for 'cpuinfo_cur_freq' in sysfs. Do you have some
-> advice about this problem ?
+> It replied to your two other pull requests, but not to this one. I'm
+> not seeing any hugely fundamental differences between this and the two
+> others..
 
-Just a wild guess, how about just return 0 for idle CPUs? which means
-the frequency is 0 for idle CPUs.
+Pretty sure that happened last time too, but I don't know why. For
+the incremental ones after the merge window, it seemed to work fine...
 
-> 
-> I was thinking about an idea as follows. We can run 'cppc_cpufreq_get_rate()' on
-> the CPU to be measured, so that we can make sure the CPU is in C0 state when we
-> access the two counters. Also we can return the actual frequency rather than
-> desired performance when the CPU is in WFI/WFE. But this modification will
-> change the existing logical and I am not sure if this will cause some bad effect.
-> 
-> 
-> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> index 257d726..ded3bcc 100644
-> --- a/drivers/cpufreq/cppc_cpufreq.c
-> +++ b/drivers/cpufreq/cppc_cpufreq.c
-> @@ -396,9 +396,10 @@ static int cppc_get_rate_from_fbctrs(struct cppc_cpudata *cpu,
->          return cppc_cpufreq_perf_to_khz(cpu, delivered_perf);
->   }
-> 
-> -static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
-> +static int cppc_cpufreq_get_rate_cpu(void *info)
->   {
->          struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
-> + unsigned int cpunum = *(unsigned int *)info;
->          struct cppc_cpudata *cpu = all_cpu_data[cpunum];
->          int ret;
-> 
-> @@ -418,6 +419,22 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
->          return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
->   }
-> 
-> +static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
-> +{
-> + unsigned int ret;
-> +
-> + ret = smp_call_on_cpu(cpunum, cppc_cpufreq_get_rate_cpu, &cpunum, true);
-> +
-> + /*
-> +  * convert negative error code to zero, otherwise we will display
-> +  * an odd value for 'cpuinfo_cur_freq' in sysfs
-> +  */
-> + if (ret < 0)
-> +         ret = 0;
-> +
-> + return ret;
-> +}
-> +
->   static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
->   {
->          struct cppc_cpudata *cpudata;
-> 
-
-It will bring the CPU back if the CPU is in idle state, not friendly to
-powersaving :)
-
-Thanks
-Hanjun
+-- 
+Jens Axboe
 
