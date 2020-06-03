@@ -2,389 +2,433 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2103C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B743420734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D226F20734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbgFCXYR (ORCPT
+        id S1726170AbgFCXYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:24:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40577 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgFCXYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:24:16 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jgcjz-00009i-BX; Wed, 03 Jun 2020 23:24:11 +0000
-Date:   Thu, 4 Jun 2020 01:24:10 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kyle Evans <self@kyle-evans.net>,
-        Victor Stinner <victor.stinner@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH v5 0/3] close_range()
-Message-ID: <20200603232410.i3opsbmepv5ktsjq@wittgenstein>
-References: <20200602204219.186620-1-christian.brauner@ubuntu.com>
- <CAHk-=wjy234P7tvpQb6bnd1rhO78Uc+B0g1CPg9VOhJNTxmtWw@mail.gmail.com>
- <20200602233355.zdwcfow3ff4o2dol@wittgenstein>
- <CAHk-=wimp3tNuMcix2Z3uCF0sFfQt5GhVku=yhJAmSALucYGjg@mail.gmail.com>
+        Wed, 3 Jun 2020 19:24:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:19251 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbgFCXYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 19:24:47 -0400
+IronPort-SDR: MKj8x39kiWgzpWtyFkpYimmFdyXBws+WQHns/xxEuiM9iAA9NuWes4XDfjJAI9d+g5IQG/kdGx
+ HJnDceIJDmtg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 16:22:45 -0700
+IronPort-SDR: QLBdFTYOnHoMjvkrHWU8/2RK+K3ruhtyHQKsB+SvEN0DufIpseX4blso5ANIbCmEfvFV0K2HaW
+ Uyh2fvCIAk0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,470,1583222400"; 
+   d="scan'208";a="471230693"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Jun 2020 16:22:45 -0700
+Date:   Wed, 3 Jun 2020 16:22:45 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RESEND PATCH v9 4/5] ndctl/papr_scm,uapi: Add support for PAPR
+ nvdimm specific methods
+Message-ID: <20200603232244.GL1505637@iweiny-DESK2.sc.intel.com>
+References: <20200602101438.73929-1-vaibhav@linux.ibm.com>
+ <20200602101438.73929-5-vaibhav@linux.ibm.com>
+ <20200602205148.GF1505637@iweiny-DESK2.sc.intel.com>
+ <20200602210553.GG1505637@iweiny-DESK2.sc.intel.com>
+ <87lfl3hp2n.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wimp3tNuMcix2Z3uCF0sFfQt5GhVku=yhJAmSALucYGjg@mail.gmail.com>
+In-Reply-To: <87lfl3hp2n.fsf@linux.ibm.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 05:08:22PM -0700, Linus Torvalds wrote:
-> On Tue, Jun 2, 2020 at 4:33 PM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> > >
-> > > And maybe this _did_ get mentioned last time, and I just don't find
-> > > it. I also don't see anything like that in the patches, although the
-> > > flags argument is there.
+On Thu, Jun 04, 2020 at 01:58:00AM +0530, Vaibhav Jain wrote:
+> Hi Ira,
+> 
+> Thanks again for reviewing this patch. My Response below:
+> 
+> Ira Weiny <ira.weiny@intel.com> writes:
+> 
+> > On Tue, Jun 02, 2020 at 01:51:49PM -0700, 'Ira Weiny' wrote:
+> >> On Tue, Jun 02, 2020 at 03:44:37PM +0530, Vaibhav Jain wrote:
 > >
-> > I spent some good time digging and I couldn't find this mentioned
-> > anywhere so maybe it just never got sent to the list?
+> > ...
+> >
+> >> > +
+> >> > +/*
+> >> > + * PDSM Envelope:
+> >> > + *
+> >> > + * The ioctl ND_CMD_CALL transfers data between user-space and kernel via
+> >> > + * envelope which consists of a header and user-defined payload sections.
+> >> > + * The header is described by 'struct nd_pdsm_cmd_pkg' which expects a
+> >> > + * payload following it and accessible via 'nd_pdsm_cmd_pkg.payload' field.
+> >> > + * There is reserved field that can used to introduce new fields to the
+> >> > + * structure in future. It also tries to ensure that 'nd_pdsm_cmd_pkg.payload'
+> >> > + * lies at a 8-byte boundary.
+> >> > + *
+> >> > + *  +-------------+---------------------+---------------------------+
+> >> > + *  |   64-Bytes  |       16-Bytes      |       Max 176-Bytes       |
+> >> > + *  +-------------+---------------------+---------------------------+
+> >> > + *  |               nd_pdsm_cmd_pkg     |                           |
+> >> > + *  |-------------+                     |                           |
+> >> > + *  |  nd_cmd_pkg |                     |                           |
+> >> > + *  +-------------+---------------------+---------------------------+
+> >> > + *  | nd_family   |                     |                           |
+> >> > + *  | nd_size_out | cmd_status          |                           |
+> >> > + *  | nd_size_in  | payload_version     |     payload               |
+> >> > + *  | nd_command  | reserved            |                           |
+> >> > + *  | nd_fw_size  |                     |                           |
+> >> > + *  +-------------+---------------------+---------------------------+
+> >
+> > One more comment WRT nd_size_[in|out].  I know that it is defined as the size
+> > of the FW payload but normally when you nest headers 'size' in Header A
+> > represents everything after Header A, including Header B.  In this case that
+> > would be including nd_pdsm_cmd_pkg...
+> >
+> > It looks like that is not what you have done?  Or perhaps I missed it?
+> >
+> Not sure if I understand the question correctly.
+> 'struct nd_pdsm_cmd_pkg' contains 'struct nd_cmd_pkg' at its head and
+> its size_[in|out] are populated by the libndctl in userspace, setting
+> them to data following the 'struct nd_cmd_pkg'.
 > 
-> It's entirely possible that it was just a private musing, and you
-> re-opening this issue just resurrected the thought.
+> Copying of 'struct nd_cmd_pkg' to the input/out envelop is implicitly
+> done in __nd_ioctl via the command descriptor array
+> __nd_cmd_bus_descs. So I dont need to add the size of 'struct
+> nd_cmd_pkg' to nd_size_[in|out].
+
+Yea I see that now...  Coming from a networking background I find that odd...
+:-/  Usually 'size' in a header includes all data after that header.  Because
+header A knows nothing of the rest of the 'payload'...
+
+FWIW you could define nd_size_in anyway you want because you are not really
+sending any payload back from firmware directly.  But I suppose I can live with
+it.
+
+Ira
+
 > 
-> I'm not sure how simple it would be to implement, but looking at it it
-> shouldn't be problematic to add a "max_fd" argument to unshare_fd()
-> and dup_fd().
+> > Ira
+> >
+> >> > + *
+> >> > + * PDSM Header:
+> >> > + *
+> >> > + * The header is defined as 'struct nd_pdsm_cmd_pkg' which embeds a
+> >> > + * 'struct nd_cmd_pkg' instance. The PDSM command is assigned to member
+> >> > + * 'nd_cmd_pkg.nd_command'. Apart from size information of the envelope which is
+> >> > + * contained in 'struct nd_cmd_pkg', the header also has members following 
+> >>                                                              ^^^^^
+> >>                                                         ...  the  ...
+> >> 
+> >> > + * members:
+> >> > + *
+> >> > + * 'cmd_status'		: (Out) Errors if any encountered while servicing PDSM.
+> >> > + * 'payload_version'	: (In/Out) Version number associated with the payload.
+> >> > + * 'reserved'		: Not used and reserved for future.
+> >> > + *
+> >> > + * PDSM Payload:
+> >> > + *
+> >> > + * The layout of the PDSM Payload is defined by various structs shared between
+> >> > + * papr_scm and libndctl so that contents of payload can be interpreted. During
+> >> > + * servicing of a PDSM the papr_scm module will read input args from the payload
+> >> > + * field by casting its contents to an appropriate struct pointer based on the
+> >> > + * PDSM command. Similarly the output of servicing the PDSM command will be
+> >> > + * copied to the payload field using the same struct.
+> >> > + *
+> >> > + * 'libnvdimm' enforces a hard limit of 256 bytes on the envelope size, which
+> >> > + * leaves around 176 bytes for the envelope payload (ignoring any padding that
+> >> > + * the compiler may silently introduce).
+> >> > + *
+> >> > + * Payload Version:
+> >> > + *
+> >> > + * A 'payload_version' field is present in PDSM header that indicates a specific
+> >> > + * version of the structure present in PDSM Payload for a given PDSM command.
+> >> > + * This provides backward compatibility in case the PDSM Payload structure
+> >> > + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
+> >> > + *
+> >> > + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
+> >> > + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
+> >> > + * module when servicing the PDSM envelope checks the 'payload_version' and then
+> >> > + * uses 'payload struct version' == MIN('payload_version field',
+> >> > + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
+> >> > + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
+> >> > + * struct in returned 'payload_version' field.
+> >> > + *
+> >> > + * Libndctl on receiving the envelope back from papr_scm again checks the
+> >> > + * 'payload_version' field and based on it use the appropriate version dsm
+> >> > + * struct to parse the results.
+> >> > + *
+> >> > + * Backward Compatibility:
+> >> > + *
+> >> > + * Above scheme of exchanging different versioned PDSM struct between libndctl
+> >> > + * and papr_scm should provide backward compatibility until following two
+> >> > + * assumptions/conditions when defining new PDSM structs hold:
+> >> > + *
+> >> > + * Let T(X) = { set of attributes in PDSM struct 'T' versioned X }
+> >> > + *
+> >> > + * 1. T(X) is a proper subset of T(Y) if Y > X.
+> >> > + *    i.e Each new version of PDSM struct should retain existing struct
+> >> > + *    attributes from previous version
+> >> > + *
+> >> > + * 2. If an entity (libndctl or papr_scm) supports a PDSM struct T(X) then
+> >> > + *    it should also support T(1), T(2)...T(X - 1).
+> >> > + *    i.e When adding support for new version of a PDSM struct, libndctl
+> >> > + *    and papr_scm should retain support of the existing PDSM struct
+> >> > + *    version they support.
+> >> 
+> >> Please see this thread for an example why versions are a bad idea in UAPIs:
+> >> 
+> >> https://lkml.org/lkml/2020/3/26/213
+> >> 
+> >> While the use of version is different in that thread the fundamental issues are
+> >> the same.  You end up with some weird matrix of supported features and
+> >> structure definitions.  For example, you are opening up the possibility of
+> >> changing structures with a different version for no good reason.
+> >> 
+> >> Also having the user query with version Z and get back version X (older) is
+> >> odd.  Generally if the kernel does not know about a feature (ie version Z of
+> >> the structure) it should return -EINVAL and let the user figure out what to do.
+> >> The user may just give up or they could try a different query.
+> >> 
+> >> > + */
+> >> > +
+> >> > +/* PDSM-header + payload expected with ND_CMD_CALL ioctl from libnvdimm */
+> >> > +struct nd_pdsm_cmd_pkg {
+> >> > +	struct nd_cmd_pkg hdr;	/* Package header containing sub-cmd */
+> >> > +	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
+> >> > +	__u16 reserved[5];	/* Ignored and to be used in future */
+> >> 
+> >> How do you know when reserved is used for something else in the future?  Is
+> >> reserved guaranteed (and checked by the code) to be 0?
+> >> 
+> >> > +	__u16 payload_version;	/* In/Out: version of the payload */
+> >> 
+> >> Why is payload_version after reserved?
+> >> 
+> >> > +	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
+> >> > +} __packed;
+> >> > +
+> >> > +/*
+> >> > + * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
+> >> > + * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
+> >> > + */
+> >> > +enum papr_pdsm {
+> >> > +	PAPR_PDSM_MIN = 0x0,
+> >> > +	PAPR_PDSM_MAX,
+> >> > +};
+> >> > +
+> >> > +/* Convert a libnvdimm nd_cmd_pkg to pdsm specific pkg */
+> >> > +static inline struct nd_pdsm_cmd_pkg *nd_to_pdsm_cmd_pkg(struct nd_cmd_pkg *cmd)
+> >> > +{
+> >> > +	return (struct nd_pdsm_cmd_pkg *) cmd;
+> >> > +}
+> >> > +
+> >> > +/* Return the payload pointer for a given pcmd */
+> >> > +static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
+> >> > +{
+> >> > +	if (pcmd->hdr.nd_size_in == 0 && pcmd->hdr.nd_size_out == 0)
+> >> > +		return NULL;
+> >> > +	else
+> >> > +		return (void *)(pcmd->payload);
+> >> > +}
+> >> > +
+> >> > +#endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
+> >> > diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> >> > index 149431594839..5e2237e7ec08 100644
+> >> > --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> >> > +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> >> > @@ -15,13 +15,15 @@
+> >> >  #include <linux/seq_buf.h>
+> >> >  
+> >> >  #include <asm/plpar_wrappers.h>
+> >> > +#include <asm/papr_pdsm.h>
+> >> >  
+> >> >  #define BIND_ANY_ADDR (~0ul)
+> >> >  
+> >> >  #define PAPR_SCM_DIMM_CMD_MASK \
+> >> >  	((1ul << ND_CMD_GET_CONFIG_SIZE) | \
+> >> >  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+> >> > -	 (1ul << ND_CMD_SET_CONFIG_DATA))
+> >> > +	 (1ul << ND_CMD_SET_CONFIG_DATA) | \
+> >> > +	 (1ul << ND_CMD_CALL))
+> >> >  
+> >> >  /* DIMM health bitmap bitmap indicators */
+> >> >  /* SCM device is unable to persist memory contents */
+> >> > @@ -350,16 +352,97 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
+> >> >  	return 0;
+> >> >  }
+> >> >  
+> >> > +/*
+> >> > + * Validate the inputs args to dimm-control function and return '0' if valid.
+> >> > + * This also does initial sanity validation to ND_CMD_CALL sub-command packages.
+> >> > + */
+> >> > +static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+> >> > +		       unsigned int buf_len)
+> >> > +{
+> >> > +	unsigned long cmd_mask = PAPR_SCM_DIMM_CMD_MASK;
+> >> > +	struct nd_pdsm_cmd_pkg *pkg = nd_to_pdsm_cmd_pkg(buf);
+> >> > +	struct papr_scm_priv *p;
+> >> > +
+> >> > +	/* Only dimm-specific calls are supported atm */
+> >> > +	if (!nvdimm)
+> >> > +		return -EINVAL;
+> >> > +
+> >> > +	/* get the provider date from struct nvdimm */
+> >> 
+> >> s/date/data
+> >> 
+> >> > +	p = nvdimm_provider_data(nvdimm);
+> >> > +
+> >> > +	if (!test_bit(cmd, &cmd_mask)) {
+> >> > +		dev_dbg(&p->pdev->dev, "Unsupported cmd=%u\n", cmd);
+> >> > +		return -EINVAL;
+> >> > +	} else if (cmd == ND_CMD_CALL) {
+> >> > +
+> >> > +		/* Verify the envelope package */
+> >> > +		if (!buf || buf_len < sizeof(struct nd_pdsm_cmd_pkg)) {
+> >> > +			dev_dbg(&p->pdev->dev, "Invalid pkg size=%u\n",
+> >> > +				buf_len);
+> >> > +			return -EINVAL;
+> >> > +		}
+> >> > +
+> >> > +		/* Verify that the PDSM family is valid */
+> >> > +		if (pkg->hdr.nd_family != NVDIMM_FAMILY_PAPR) {
+> >> > +			dev_dbg(&p->pdev->dev, "Invalid pkg family=0x%llx\n",
+> >> > +				pkg->hdr.nd_family);
+> >> > +			return -EINVAL;
+> >> > +
+> >> > +		}
+> >> > +
+> >> > +		/* We except a payload with all PDSM commands */
+> >> > +		if (pdsm_cmd_to_payload(pkg) == NULL) {
+> >> > +			dev_dbg(&p->pdev->dev,
+> >> > +				"Empty payload for sub-command=0x%llx\n",
+> >> > +				pkg->hdr.nd_command);
+> >> > +			return -EINVAL;
+> >> > +		}
+> >> > +	}
+> >> > +
+> >> > +	/* Command looks valid */
+> >> 
+> >> I assume the first command to be implemented also checks the { nd_command,
+> >> payload_version, payload length } for correctness?
+> >> 
+> >> > +	return 0;
+> >> > +}
+> >> > +
+> >> > +static int papr_scm_service_pdsm(struct papr_scm_priv *p,
+> >> > +				struct nd_pdsm_cmd_pkg *call_pkg)
+> >> > +{
+> >> > +	/* unknown subcommands return error in packages */
+> >> > +	if (call_pkg->hdr.nd_command <= PAPR_PDSM_MIN ||
+> >> > +	    call_pkg->hdr.nd_command >= PAPR_PDSM_MAX) {
+> >> > +		dev_dbg(&p->pdev->dev, "Invalid PDSM request 0x%llx\n",
+> >> > +			call_pkg->hdr.nd_command);
+> >> > +		call_pkg->cmd_status = -EINVAL;
+> >> > +		return 0;
+> >> > +	}
+> >> > +
+> >> > +	/* Depending on the DSM command call appropriate service routine */
+> >> > +	switch (call_pkg->hdr.nd_command) {
+> >> > +	default:
+> >> > +		dev_dbg(&p->pdev->dev, "Unsupported PDSM request 0x%llx\n",
+> >> > +			call_pkg->hdr.nd_command);
+> >> > +		call_pkg->cmd_status = -ENOENT;
+> >> > +		return 0;
+> >> > +	}
+> >> > +}
+> >> > +
+> >> >  static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+> >> >  			  struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+> >> >  			  unsigned int buf_len, int *cmd_rc)
+> >> >  {
+> >> >  	struct nd_cmd_get_config_size *get_size_hdr;
+> >> >  	struct papr_scm_priv *p;
+> >> > +	struct nd_pdsm_cmd_pkg *call_pkg = NULL;
+> >> > +	int rc;
+> >> >  
+> >> > -	/* Only dimm-specific calls are supported atm */
+> >> > -	if (!nvdimm)
+> >> > -		return -EINVAL;
+> >> > +	/* Use a local variable in case cmd_rc pointer is NULL */
+> >> > +	if (cmd_rc == NULL)
+> >> > +		cmd_rc = &rc;
+> >> 
+> >> Why is this needed?  AFAICT The caller of papr_scm_ndctl does not specify null
+> >> and you did not change it.
+> >> 
+> >> > +
+> >> > +	*cmd_rc = is_cmd_valid(nvdimm, cmd, buf, buf_len);
+> >> > +	if (*cmd_rc) {
+> >> > +		pr_debug("Invalid cmd=0x%x. Err=%d\n", cmd, *cmd_rc);
+> >> > +		return *cmd_rc;
+> >> > +	}
+> >> >  
+> >> >  	p = nvdimm_provider_data(nvdimm);
+> >> >  
+> >> > @@ -381,13 +464,19 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+> >> >  		*cmd_rc = papr_scm_meta_set(p, buf);
+> >> >  		break;
+> >> >  
+> >> > +	case ND_CMD_CALL:
+> >> > +		call_pkg = nd_to_pdsm_cmd_pkg(buf);
+> >> > +		*cmd_rc = papr_scm_service_pdsm(p, call_pkg);
+> >> > +		break;
+> >> > +
+> >> >  	default:
+> >> > -		return -EINVAL;
+> >> > +		dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
+> >> > +		*cmd_rc = -EINVAL;
+> >> 
+> >> Is this change related?  If there is a bug where there is a caller of
+> >> papr_scm_ndctl() with cmd_rc == NULL this should be a separate patch to fix
+> >> that issue.
+> >> 
+> >> Ira
+> >> 
+> >> >  	}
+> >> >  
+> >> >  	dev_dbg(&p->pdev->dev, "returned with cmd_rc = %d\n", *cmd_rc);
+> >> >  
+> >> > -	return 0;
+> >> > +	return *cmd_rc;
+> >> >  }
+> >> >  
+> >> >  static ssize_t flags_show(struct device *dev,
+> >> > diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
+> >> > index de5d90212409..0e09dc5cec19 100644
+> >> > --- a/include/uapi/linux/ndctl.h
+> >> > +++ b/include/uapi/linux/ndctl.h
+> >> > @@ -244,6 +244,7 @@ struct nd_cmd_pkg {
+> >> >  #define NVDIMM_FAMILY_HPE2 2
+> >> >  #define NVDIMM_FAMILY_MSFT 3
+> >> >  #define NVDIMM_FAMILY_HYPERV 4
+> >> > +#define NVDIMM_FAMILY_PAPR 5
+> >> >  
+> >> >  #define ND_IOCTL_CALL			_IOWR(ND_IOCTL, ND_CMD_CALL,\
+> >> >  					struct nd_cmd_pkg)
+> >> > -- 
+> >> > 2.26.2
+> >> > 
+> >> _______________________________________________
+> >> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
+> >> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
 > 
-> Although the range for unsharing is obviously reversed, so I'd suggest
-> not trying to make "dup_fd()" take the exact range into account.
-> 
-> More like just making __close_range() do basically something like
-> 
->         rcu_read_lock();
->         cur_max = files_fdtable(files)->max_fds;
->         rcu_read_unlock();
-> 
->         if (flags & CLOSE_RANGE_UNSHARE) {
->                 unsigned int max_unshare_fd = ~0u;
->                 if (cur_max >= max_fd)
->                         max_unshare_fd = fd;
->                 unshare_fd(max_unsgare_fd);
->         }
-> 
->         .. do the rest of __close_range() here ..
-> 
-> and all that "max_unsgare_fd" would do would be to limit the top end
-> of the file descriptor table unsharing: we'd still do the exact range
-> handling in __close_range() itself.
-> 
-> Because teaching unshare_fd() and dup_fd() about anything more complex
-> than the above doesn't sound worth it, but adding a way to just avoid
-> the unnecessary copy of any high file descriptors sounds simple
-> enough.
-
-Ok, here's what I have. (I think in your example above cur_max and
-max_fd are switched or I might have missed your point completely.) I was
-a little in doubt whether capping dup_fd() between NR_OPEN_DEFAULT and
-open_files was a sane thing to do but I think it is. Torture testing
-this with a proper test-suite and with all debugging options enabled
-didn't yet find any obvious issues. Does the below look somewhat sane?:
-
-From 4ee3fdac02f3cd70e31669e35d3f494913f3fd3f Mon Sep 17 00:00:00 2001
-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date: Wed, 3 Jun 2020 21:48:55 +0200
-Subject: [PATCH 1/2] close_range: add CLOSE_RANGE_UNSHARE
-
-One of the use-cases of close_range() is to drop file descriptors just before
-execve(). This would usually be expressed in the sequence:
-
-unshare(CLONE_FILES);
-close_range(3, ~0U);
-
-as pointed out by Linus it might be desirable to have this be a part of
-close_range() itself under a new flag CLOSE_RANGE_UNSHARE.
-
-This expands {dup,unshare)_fd() to take a max_fds argument that indicates the
-maximum number of file descriptors to copy from the old struct files. When the
-user requests that all file descriptors are supposed to be closed via
-close_range(min, max) then we can cap via unshare_fd(min) and hence don't need
-to do any of the heavy fput() work for everything above min.
-
-The patch makes it so that if CLOSE_RANGE_UNSHARE is requested and we do in
-fact currently share our file descriptor table we create a new private copy.
-We then close all fds in the requested range and finally after we're done we
-install the new fd table.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- fs/file.c                        | 65 ++++++++++++++++++++++++++++----
- fs/open.c                        |  5 +--
- include/linux/fdtable.h          |  8 ++--
- include/uapi/linux/close_range.h |  9 +++++
- kernel/fork.c                    | 11 +++---
- 5 files changed, 79 insertions(+), 19 deletions(-)
- create mode 100644 include/uapi/linux/close_range.h
-
-diff --git a/fs/file.c b/fs/file.c
-index e260bfe687d1..718356ed6682 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -19,6 +19,7 @@
- #include <linux/bitops.h>
- #include <linux/spinlock.h>
- #include <linux/rcupdate.h>
-+#include <linux/close_range.h>
- 
- unsigned int sysctl_nr_open __read_mostly = 1024*1024;
- unsigned int sysctl_nr_open_min = BITS_PER_LONG;
-@@ -265,12 +266,22 @@ static unsigned int count_open_files(struct fdtable *fdt)
- 	return i;
- }
- 
-+static unsigned int sane_fdtable_size(struct fdtable *fdt, unsigned int max_fds)
-+{
-+	unsigned int count;
-+
-+	count = count_open_files(fdt);
-+	if (max_fds < NR_OPEN_DEFAULT)
-+		max_fds = NR_OPEN_DEFAULT;
-+	return min(count, max_fds);
-+}
-+
- /*
-  * Allocate a new files structure and copy contents from the
-  * passed in files structure.
-  * errorp will be valid only when the returned files_struct is NULL.
-  */
--struct files_struct *dup_fd(struct files_struct *oldf, int *errorp)
-+struct files_struct *dup_fd(struct files_struct *oldf, unsigned int max_fds, int *errorp)
- {
- 	struct files_struct *newf;
- 	struct file **old_fds, **new_fds;
-@@ -297,7 +308,7 @@ struct files_struct *dup_fd(struct files_struct *oldf, int *errorp)
- 
- 	spin_lock(&oldf->file_lock);
- 	old_fdt = files_fdtable(oldf);
--	open_files = count_open_files(old_fdt);
-+	open_files = sane_fdtable_size(old_fdt, max_fds);
- 
- 	/*
- 	 * Check whether we need to allocate a larger fd array and fd set.
-@@ -328,7 +339,7 @@ struct files_struct *dup_fd(struct files_struct *oldf, int *errorp)
- 		 */
- 		spin_lock(&oldf->file_lock);
- 		old_fdt = files_fdtable(oldf);
--		open_files = count_open_files(old_fdt);
-+		open_files = sane_fdtable_size(old_fdt, max_fds);
- 	}
- 
- 	copy_fd_bitmaps(new_fdt, old_fdt, open_files);
-@@ -665,30 +676,70 @@ EXPORT_SYMBOL(__close_fd); /* for ksys_close() */
-  * This closes a range of file descriptors. All file descriptors
-  * from @fd up to and including @max_fd are closed.
-  */
--int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-+int __close_range(unsigned fd, unsigned max_fd, unsigned int flags)
- {
- 	unsigned int cur_max;
-+	struct task_struct *me = current;
-+	struct files_struct *cur_fds = me->files, *fds = NULL;
-+
-+	if (flags & ~CLOSE_RANGE_UNSHARE)
-+		return -EINVAL;
- 
- 	if (fd > max_fd)
- 		return -EINVAL;
- 
- 	rcu_read_lock();
--	cur_max = files_fdtable(files)->max_fds;
-+	cur_max = files_fdtable(cur_fds)->max_fds;
- 	rcu_read_unlock();
- 
-+	if (flags & CLOSE_RANGE_UNSHARE) {
-+		int ret;
-+		unsigned int max_unshare_fds = NR_OPEN_MAX;
-+
-+		/*
-+		 * If the requested range is greater than the current maximum,
-+		 * we're closing everything so only copy all file descriptors
-+		 * beneath the lowest file descriptor.
-+		 */
-+		if ((max_fd + 1) >= cur_max)
-+			max_unshare_fds = fd;
-+
-+		ret = unshare_fd(CLONE_FILES, max_unshare_fds, &fds);
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * We used to share our file descriptor table, and have now
-+		 * created a private one, make sure we're using it below.
-+		 */
-+		if (fds)
-+			swap(cur_fds, fds);
-+	}
-+
- 	/* cap to last valid index into fdtable */
- 	max_fd = min(max_fd, (cur_max - 1));
- 	while (fd <= max_fd) {
- 		struct file *file;
- 
--		file = pick_file(files, fd++);
-+		file = pick_file(cur_fds, fd++);
- 		if (!file)
- 			continue;
- 
--		filp_close(file, files);
-+		filp_close(file, cur_fds);
- 		cond_resched();
- 	}
- 
-+	if (fds) {
-+		/*
-+		 * We're done closing the files we were supposed to. Time to install
-+		 * the new file descriptor table and drop the old one.
-+		 */
-+		task_lock(me);
-+		me->files = cur_fds;
-+		task_unlock(me);
-+		put_files_struct(fds);
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/fs/open.c b/fs/open.c
-index 87e076e9e127..28c561734ece 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1293,10 +1293,7 @@ SYSCALL_DEFINE1(close, unsigned int, fd)
- SYSCALL_DEFINE3(close_range, unsigned int, fd, unsigned int, max_fd,
- 		unsigned int, flags)
- {
--	if (flags)
--		return -EINVAL;
--
--	return __close_range(current->files, fd, max_fd);
-+	return __close_range(fd, max_fd, flags);
- }
- 
- /*
-diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
-index fcd07181a365..a32bf47c593e 100644
---- a/include/linux/fdtable.h
-+++ b/include/linux/fdtable.h
-@@ -22,6 +22,7 @@
-  * as this is the granularity returned by copy_fdset().
-  */
- #define NR_OPEN_DEFAULT BITS_PER_LONG
-+#define NR_OPEN_MAX ~0U
- 
- struct fdtable {
- 	unsigned int max_fds;
-@@ -109,7 +110,7 @@ struct files_struct *get_files_struct(struct task_struct *);
- void put_files_struct(struct files_struct *fs);
- void reset_files_struct(struct files_struct *);
- int unshare_files(struct files_struct **);
--struct files_struct *dup_fd(struct files_struct *, int *) __latent_entropy;
-+struct files_struct *dup_fd(struct files_struct *, unsigned, int *) __latent_entropy;
- void do_close_on_exec(struct files_struct *);
- int iterate_fd(struct files_struct *, unsigned,
- 		int (*)(const void *, struct file *, unsigned),
-@@ -121,9 +122,10 @@ extern void __fd_install(struct files_struct *files,
- 		      unsigned int fd, struct file *file);
- extern int __close_fd(struct files_struct *files,
- 		      unsigned int fd);
--extern int __close_range(struct files_struct *files, unsigned int fd,
--			 unsigned int max_fd);
-+extern int __close_range(unsigned int fd, unsigned int max_fd, unsigned int flags);
- extern int __close_fd_get_file(unsigned int fd, struct file **res);
-+extern int unshare_fd(unsigned long unshare_flags, unsigned int max_fds,
-+		      struct files_struct **new_fdp);
- 
- extern struct kmem_cache *files_cachep;
- 
-diff --git a/include/uapi/linux/close_range.h b/include/uapi/linux/close_range.h
-new file mode 100644
-index 000000000000..6928a9fdee3c
---- /dev/null
-+++ b/include/uapi/linux/close_range.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_LINUX_CLOSE_RANGE_H
-+#define _UAPI_LINUX_CLOSE_RANGE_H
-+
-+/* Unshare the file descriptor table before closing file descriptors. */
-+#define CLOSE_RANGE_UNSHARE	(1U << 1)
-+
-+#endif /* _UAPI_LINUX_CLOSE_RANGE_H */
-+
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 48ed22774efa..836976aa7ab9 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1466,7 +1466,7 @@ static int copy_files(unsigned long clone_flags, struct task_struct *tsk)
- 		goto out;
- 	}
- 
--	newf = dup_fd(oldf, &error);
-+	newf = dup_fd(oldf, NR_OPEN_MAX, &error);
- 	if (!newf)
- 		goto out;
- 
-@@ -2894,14 +2894,15 @@ static int unshare_fs(unsigned long unshare_flags, struct fs_struct **new_fsp)
- /*
-  * Unshare file descriptor table if it is being shared
-  */
--static int unshare_fd(unsigned long unshare_flags, struct files_struct **new_fdp)
-+int unshare_fd(unsigned long unshare_flags, unsigned int max_fds,
-+	       struct files_struct **new_fdp)
- {
- 	struct files_struct *fd = current->files;
- 	int error = 0;
- 
- 	if ((unshare_flags & CLONE_FILES) &&
- 	    (fd && atomic_read(&fd->count) > 1)) {
--		*new_fdp = dup_fd(fd, &error);
-+		*new_fdp = dup_fd(fd, max_fds, &error);
- 		if (!*new_fdp)
- 			return error;
- 	}
-@@ -2961,7 +2962,7 @@ int ksys_unshare(unsigned long unshare_flags)
- 	err = unshare_fs(unshare_flags, &new_fs);
- 	if (err)
- 		goto bad_unshare_out;
--	err = unshare_fd(unshare_flags, &new_fd);
-+	err = unshare_fd(unshare_flags, NR_OPEN_MAX, &new_fd);
- 	if (err)
- 		goto bad_unshare_cleanup_fs;
- 	err = unshare_userns(unshare_flags, &new_cred);
-@@ -3050,7 +3051,7 @@ int unshare_files(struct files_struct **displaced)
- 	struct files_struct *copy = NULL;
- 	int error;
- 
--	error = unshare_fd(CLONE_FILES, &copy);
-+	error = unshare_fd(CLONE_FILES, NR_OPEN_MAX, &copy);
- 	if (error || !copy) {
- 		*displaced = NULL;
- 		return error;
--- 
-2.27.0
-
+> -- 
+> Cheers
+> ~ Vaibhav
