@@ -2,121 +2,223 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31120C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD9C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D904206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aWWyn6ih"
+	by mail.kernel.org (Postfix) with ESMTP id 4C1A620679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591183378;
+	bh=ehvrNQX6FKPSKoJdIOQhPL6tv5lcYmRRF/iDa8/fY3A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NT3n8JTJTR28DAKzxvZEXjkiO8SMCllycCXgNlJQ9vc6HsfiIRYvNXUjWirTqJdf2
+	 a2FWpC8iIEMpSSq7KdUnNqvJVvjW4SYsSA5VtWIiOrGPsf6ylZq98Sm4SfbjafBeFf
+	 /mbqeZJk2PQmBYif0cyohruyho+wBtccyxY53YVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgFCLWx (ORCPT
+        id S1726080AbgFCLW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:22:53 -0400
-Received: from ozlabs.org ([203.11.71.1]:57759 "EHLO ozlabs.org"
+        Wed, 3 Jun 2020 07:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCLWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:22:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725917AbgFCLW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:22:56 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cRNB58fsz9sRK;
-        Wed,  3 Jun 2020 21:22:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591183370;
-        bh=8uSxzzWPus6eu0r5MlutBwAM2qOnvyL5C2jrEEV17FE=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 10BBF20679;
+        Wed,  3 Jun 2020 11:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591183375;
+        bh=ehvrNQX6FKPSKoJdIOQhPL6tv5lcYmRRF/iDa8/fY3A=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aWWyn6ihIIoGNhlmDd6H7sJc7d/GYg1rEGChg8XCBScHIb6jLhKf8UQcTc5SFPF8B
-         Zc7hsbKrVH492dz7X+1ZYpaQqYLPCwhvEFhXn48Fof5TeuRjNLkD8DA8CsLCSKB3rF
-         mR55z+DounleFCPRCraqBPK3k62VhTCpepPv12QPZcXb8dsVSyb90srYxKbFA0JyRt
-         81COqvO8FtoWVhaahKMx1Lwb1tHph6MSbYLcX59lHR6qV5obU2+VcatCke1ZQBaOuc
-         49AYwABTtwkKXAHXp33cW9Rwlbw2m5G5Vd8dt2erPhH5vnkdGflM+dJ9Nz574Hfk62
-         lvwRE56Xsf6Ow==
-Date:   Wed, 3 Jun 2020 21:22:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: ARCH=arm64 build breakage for Kbuild for-next branch
-Message-ID: <20200603212250.69feb53b@canb.auug.org.au>
-In-Reply-To: <20200603142404.33123d7d@canb.auug.org.au>
-References: <CAK7LNAT_rgoDQPgDB2cTvwmXrQv2mFH1ysuhvWxp2HnVMd0W7Q@mail.gmail.com>
-        <20200603142404.33123d7d@canb.auug.org.au>
+        b=ynKH/9EW4Vbv+8Ojz1LiRoNZIcvkSWbouyA5BfTwx5gp5BZvof7dRxSb4HXOOlNKw
+         VduNFjgv0zIv3AckfNAF6bZazPaphHDprV77c74Xydh3NWvwjCDWmuzjimG7eN5jba
+         3nOmwuAei0WpdB6S+2yJHfhZBI/DKyYAPQ4iztPY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jgRTx-00HQWC-IY; Wed, 03 Jun 2020 12:22:53 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cBciKtCFp0OIoiyBGlNwe.K";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jun 2020 12:22:53 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+In-Reply-To: <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cBciKtCFp0OIoiyBGlNwe.K
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-06-03 09:54, Kunihiko Hayashi wrote:
+> The misc interrupts consisting of PME, AER, and Link event, is handled
+> by INTx handler, however, these interrupts should be also handled by
+> MSI handler.
+> 
+> This adds the function uniphier_pcie_misc_isr() that handles misc
+> intterupts, which is called from both INTx and MSI handlers.
 
-Hi all,
+interrupts
 
-On Wed, 3 Jun 2020 14:24:04 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Wed, 3 Jun 2020 13:11:59 +0900 Masahiro Yamada <masahiroy@kernel.org> =
-wrote:
-> >=20
-> > If you pull the latest kbuild for-next branch,
-> > ARCH=3Darm64 will fail to build.
-> >=20
-> > I will fix it soon.
-> >=20
-> > For today's linux-next, you can patch
-> > as follows.
-> > (or, you can use the old branch)
-> >=20
-> >=20
-> > diff --git a/Makefile b/Makefile
-> > index f80c4ff93ec9..fbb4b95ae648 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1074,7 +1074,7 @@ build-dirs        :=3D $(vmlinux-dirs)
-> >  clean-dirs     :=3D $(vmlinux-alldirs)
-> >=20
-> >  # Externally visible symbols (used by link-vmlinux.sh)
-> > -KBUILD_VMLINUX_OBJS :=3D $(head-y) $(addsuffix built-in.a, $(core-y))
-> > +KBUILD_VMLINUX_OBJS :=3D $(head-y) $(patsubst %/,%/built-in.a, $(core-=
-y))
-> >  KBUILD_VMLINUX_OBJS +=3D $(addsuffix built-in.a, $(filter %/, $(libs-y=
-)))
-> >  ifdef CONFIG_MODULES
-> >  KBUILD_VMLINUX_OBJS +=3D $(patsubst %/, %/lib.a, $(filter %/, $(libs-y=
-))) =20
->=20
-> OK, thanks, I will apply that at some point, since I have already
-> merged your tree.
+> This function detects PME and AER interrupts with the status register,
+> and invoke PME and AER drivers related to INTx or MSI.
+> 
+> And this sets the mask for misc interrupts from INTx if MSI is enabled
+> and sets the mask for misc interrupts from MSI if MSI is disabled.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 53 
+> +++++++++++++++++++++++-------
+>  1 file changed, 42 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c
+> b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index a5401a0..a8dda39 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -44,7 +44,9 @@
+>  #define PCL_SYS_AUX_PWR_DET		BIT(8)
+> 
+>  #define PCL_RCV_INT			0x8108
+> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie 
+> *pci)
+> 
+>  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>  {
+> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+> +	u32 val;
+> +
+> +	val = PCL_RCV_INT_ALL_ENABLE;
+> +	if (pci_msi_enabled())
+> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+> +	else
+> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+> +
+> +	writel(val, priv->base + PCL_RCV_INT);
+>  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>  }
+> 
+> @@ -231,28 +241,48 @@ static const struct irq_domain_ops
+> uniphier_intx_domain_ops = {
+>  	.map = uniphier_pcie_intx_map,
+>  };
+> 
+> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
+>  {
+> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	unsigned long reg;
+> -	u32 val, bit, virq;
+> +	u32 val, virq;
+> 
+> -	/* INT for debug */
+>  	val = readl(priv->base + PCL_RCV_INT);
+> 
+>  	if (val & PCL_CFG_BW_MGT_STATUS)
+>  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+> +
+>  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> -		dev_dbg(pci->dev, "Root Error\n");
+> -	if (val & PCL_CFG_PME_MSI_STATUS)
+> -		dev_dbg(pci->dev, "PME Interrupt\n");
+> +
+> +	if (pci_msi_enabled()) {
 
-And then I forgot, sorry.  I assume it will be fixed tomorrow.
+This checks whether the kernel supports MSIs. Not that they are
+enabled in your controller. Is that really what you want to do?
 
---=20
-Cheers,
-Stephen Rothwell
+> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
+> +			dev_dbg(pci->dev, "Root Error Status\n");
+> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+> +			generic_handle_irq(virq);
+> +		}
+> +
+> +		if (val & PCL_CFG_PME_MSI_STATUS) {
+> +			dev_dbg(pci->dev, "PME Interrupt\n");
+> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+> +			generic_handle_irq(virq);
+> +		}
 
---Sig_/cBciKtCFp0OIoiyBGlNwe.K
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+These two cases do the exact same thing, calling the same interrupt.
+What is the point of dealing with them independently?
 
------BEGIN PGP SIGNATURE-----
+> +	}
+> 
+>  	writel(val, priv->base + PCL_RCV_INT);
+> +}
+> +
+> +static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned long reg;
+> +	u32 val, bit, virq;
+> +
+> +	/* misc interrupt */
+> +	uniphier_pcie_misc_isr(pp);
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XiAoACgkQAVBC80lX
-0GzHtQgAkznUzjiD/EXRvERR3mezHb9xSY0/NtQ511uFdc7cNANutqCQqbnL8xCY
-FRAzIvnbeQDCYieBjb8BWcNMj37j2KkBMbQMnsooDxa8iofFwRt2WWDFtSzFXCaD
-XbY1MvCTBqUM26DsploHRAXWLeLXk6+rEJGgmEKSQjF6iiAAf83yRJQP5y2meOEw
-eIGykNstUQJvsKJT+j6KvUyMuvcTCkGXjPgQSVnEH+PhWoK9M7VWvASlfpWncrR8
-PQoQwRNiG0CIIXP0WKGkOc4A5yQGnjajdPQzXYzx5kDGDtAs14ciIpA+YXJyGRKQ
-8PIvofk+LjavLWpp3cbo7a4A8/bzBg==
-=JgD9
------END PGP SIGNATURE-----
+This is a chained handler called outside of a chained_irq_enter/exit
+block. It isn't acceptable.
 
---Sig_/cBciKtCFp0OIoiyBGlNwe.K--
+> 
+>  	/* INTx */
+>  	chained_irq_enter(chip, desc);
+> @@ -330,6 +360,7 @@ static int uniphier_pcie_host_init(struct pcie_port 
+> *pp)
+> 
+>  static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
+>  	.host_init = uniphier_pcie_host_init,
+> +	.msi_host_isr = uniphier_pcie_misc_isr,
+>  };
+> 
+>  static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
