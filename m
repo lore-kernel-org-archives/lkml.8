@@ -2,99 +2,73 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E305BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4994F2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YRIPHSuK"
+	by mail.kernel.org (Postfix) with ESMTP id C536C2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgFCUxT (ORCPT
+        id S1726287AbgFCUxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:53:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43904 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgFCUxS (ORCPT
+        Wed, 3 Jun 2020 16:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgFCUxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:53:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053Kqd8j098636;
-        Wed, 3 Jun 2020 20:53:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=tB6kyVXSO/xYelpfB8+t582Lm8vN6eEHdsj2aRaz8lg=;
- b=YRIPHSuKdiaN05sKUeXyU2HR/sTRQrJBJRw4ykaAhB1BG0bBpEWL6s4nnAyWz9Va9MxJ
- gL13OEYpHKUMgZ3h+CSWxUj8oQA86YQ8f/ygbrDwZO8j3cERD6h8UIUDk56uO2xI9Xbn
- ah2tWyeTVYZEYJod0/t+plGku3EwY7LzbNXmz3tuuLCFTgphDYCM9ax8vTy68wAY9bhE
- KQ1L0xsoj4q17igL3RSnPstEfw2vzOjZf2KkX4EwxhXFHLAVlD6XwpCtWRNdq4U81dHi
- 2zQkNGA5QrfVaZ1DmgdfOfIPpTTVRZmWMqbJWsUcYlquaKmB/P1t7dXxmOQGwqmqVKcy tA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31bfembbny-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 20:53:16 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053KlSLb152521;
-        Wed, 3 Jun 2020 20:53:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 31ej0yb9xr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 20:53:15 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053KrDtR015005;
-        Wed, 3 Jun 2020 20:53:14 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jun 2020 13:53:13 -0700
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Don.Brace@microchip.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        don.brace@microsemi.com, linux-scsi@vger.kernel.org
-Subject: Re: [PATCHES] uaccess hpsa
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq18sh398t7.fsf@ca-mkp.ca.oracle.com>
-References: <20200528234025.GT23230@ZenIV.linux.org.uk>
-        <20200529233923.GL23230@ZenIV.linux.org.uk>
-        <SN6PR11MB2848F6299FBA22C75DF05218E1880@SN6PR11MB2848.namprd11.prod.outlook.com>
-        <20200603191742.GW23230@ZenIV.linux.org.uk>
-Date:   Wed, 03 Jun 2020 16:53:11 -0400
-In-Reply-To: <20200603191742.GW23230@ZenIV.linux.org.uk> (Al Viro's message of
-        "Wed, 3 Jun 2020 20:17:42 +0100")
+        Wed, 3 Jun 2020 16:53:36 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59775C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 13:53:36 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jgaOC-002fGO-7d; Wed, 03 Jun 2020 20:53:32 +0000
+Date:   Wed, 3 Jun 2020 21:53:32 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [git pull] misc uaccess stuff
+Message-ID: <20200603205332.GC23230@ZenIV.linux.org.uk>
+References: <20200603192306.GX23230@ZenIV.linux.org.uk>
+ <20200603204439.GA2649647@ubuntu-n2-xlarge-x86>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=1
- spamscore=0 mlxlogscore=904 phishscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
- mlxlogscore=946 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030159
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603204439.GA2649647@ubuntu-n2-xlarge-x86>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 03, 2020 at 01:44:39PM -0700, Nathan Chancellor wrote:
+> > ----------------------------------------------------------------
+> > Al Viro (9):
+> >       pselect6() and friends: take handling the combined 6th/7th args into helper
+> >       binfmt_elf: don't bother with __{put,copy_to}_user()
+> >       binfmt_elf_fdpic: don't use __... uaccess primitives
+> 
+> This patch breaks arm32:
+> 
+> $ make -sj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- allyesconfig fs/binfmt_elf_fdpic.o
+> ...
+> In file included from ./include/linux/sched/task.h:11,
+>                  from ./include/linux/sched/signal.h:9,
+>                  from ./include/linux/rcuwait.h:6,
+>                  from ./include/linux/percpu-rwsem.h:7,
+>                  from ./include/linux/fs.h:34,
+>                  from fs/binfmt_elf_fdpic.c:11:
+> ./include/linux/uaccess.h:149:1: note: declared here
+>   149 | copy_to_user(void __user *to, const void *from, unsigned long n)
+>       | ^~~~~~~~~~~~
+> fs/binfmt_elf_fdpic.c:612:7: error: too few arguments to function 'copy_to_user'
+>   612 |   if (copy_to_user(ent + nr, &v))    \
+>       |       ^~~~~~~~~~~~
+> fs/binfmt_elf_fdpic.c:659:2: note: in expansion of macro 'NEW_AUX_ENT'
+>   659 |  NEW_AUX_ENT(AT_EXECFN, bprm->exec);
+>       |  ^~~~~~~~~~~
 
-Hi Al!
-
-> OK...  Acked-by/Tested-by added, branch re-pushed (commits are otherwise
-> identical).  Which tree would you prefer that to go through - vfs.git,
-> scsi.git, something else?
-
-I don't have anything queued for 5.8 for hpsa so there shouldn't be any
-conflicts if it goes through vfs.git. But I'm perfectly happy to take
-the changes through SCSI if that's your preference.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Linus, consider that pull request withdrawn for now, please.  My apologies -
+I'll push a fixed variant and resend after a week of having it sit in -next.
