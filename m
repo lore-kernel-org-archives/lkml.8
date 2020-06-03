@@ -2,197 +2,143 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3989C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE25C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBB02077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D832067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cpR8WdgQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OUe25Cg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725853AbgFCEnp (ORCPT
+        id S1725876AbgFCErI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 00:43:45 -0400
-Received: from ozlabs.org ([203.11.71.1]:52363 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgFCEnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 00:43:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cGWb6Brxz9sT5;
-        Wed,  3 Jun 2020 14:43:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591159422;
-        bh=Mk3mlNv5ncjMLLmKa1F7y9YLv1Gi+SeM3+erHH5trio=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cpR8WdgQzum7TOFZtXLbCCSqO6L1UaymSQb9jRQmDcimAYX/KXKGMyk7cQ7D9mB1t
-         ROi2kgNkAHo4r7jL8g/tD2wejcZ/hIT8vY4yHWgC7jHxy8Tyjj5GgizviLQYjgXSI1
-         BgjZlMflmlr0hx9nF/YiujeGq9phRitNYcu4+ob8WjcRs/lioUqpVkt6niawHtnyzL
-         vVwt/DAyUPWvaeDyfHK5cJnUARXgzOPlo9udCIC2N2wRocVR6cwxxAfNDDV/YJCe/8
-         0hxCO/6I+O/sfLg9zp4r3YnVWLaXg0s9304IqLdw+g8yRMQaaCE0ASjOKzziK7bPrU
-         oJsDqGd9D8USw==
-Date:   Wed, 3 Jun 2020 14:43:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Balbir Singh <sblbir@amazon.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the tip
- tree
-Message-ID: <20200603144339.108a09bf@canb.auug.org.au>
-In-Reply-To: <20200525210443.0904d583@canb.auug.org.au>
-References: <20200525210443.0904d583@canb.auug.org.au>
+        Wed, 3 Jun 2020 00:47:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCErH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 00:47:07 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1A4C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 21:47:07 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so1018483ljn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 21:47:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5HyznCRSqZKzp8yxYccefdnyUnHkOKLPSiD7FrX1pVE=;
+        b=OUe25Cg22WDYpRQ3XCaRcJ8nvIFDL++1wJ/8vhdCEGylPavhoKCvOcfB8UqmXCEEzm
+         QAaJcNA0prtyQ4Ns5VW0t1iHhGEm4e2XLP+ankfK8QmKgzY5kgO00Chd5xwIoaDWSLdk
+         Eia05lSaRZaSnrPlDc2RZ0iEM0bykCtNo2IGVdBBeP4tgWzqnItxIFYExBPCFbYjxos7
+         OAl9WiwYvn8Aq2u1ZqRqWMmS/j/WO1Rf6RhsDH4VRnz3uEyFQqv3epIy+2b7loQ5ejTq
+         v3D/h2pdRkV/2t6joCyzshZ5JXZm658VhLGhQADOK0CoMox9NFKdr35dzQ2+wAUqMZIQ
+         FrCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5HyznCRSqZKzp8yxYccefdnyUnHkOKLPSiD7FrX1pVE=;
+        b=suIU/QamLA3Z2PdGpx+QTvCEVUgJDUQ6c2suekQNj5zkBUXeItnv9G+xAq+RWIvZly
+         1QzB1Oa3592C100OyIiGLMGbg3u4n1Pz4ygg+Ua2JZvFrZlfqP4ht/DC3I3ywSKuGU47
+         FhhGzSn32zFSIGR6h7MhIvhEJreEoRC04BZB3GPtRnPTYO0nAhcVFHI4mZwvCNeaJuhu
+         MNtP8jQJxeA8TK2i3gv9WAEkRaH/eVLc96jkQP6OI/0th6hctHeXzxBPaLPmOgF+65N8
+         h91mNxOgEP9YZ55HM20I2da4INcpa/UBVoSr5DPJz7+14WbD6WCt7C4Y4mnrviuYEVL0
+         YLeg==
+X-Gm-Message-State: AOAM532nK1XE3JzI9DwqP/sfdsUYZJD7ebtF/vsGcvpApQjZ98ayx/76
+        x5RYLCcuwSR6c8NaXp+iPC/3oITMFyrXf+EQBYQRYg==
+X-Google-Smtp-Source: ABdhPJzX/QPYO+IFkLwCC/pcn+l34ZzpqPaDG1GSY3dO4wqzcrCQkLqFUew2QLYvZN8DZ75w1+s67PXQw6+A7EJ7zd0=
+X-Received: by 2002:a05:651c:1103:: with SMTP id d3mr1171214ljo.110.1591159625236;
+ Tue, 02 Jun 2020 21:47:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/r2psUgh4iv3Rv.ZFfZy8EE+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1590751607-29676-1-git-send-email-sumit.garg@linaro.org>
+ <1590751607-29676-2-git-send-email-sumit.garg@linaro.org> <CAD=FV=WVdRcvfR-O-A2809AqFggqhJmvrTSo9qafxq=DgSbLrw@mail.gmail.com>
+In-Reply-To: <CAD=FV=WVdRcvfR-O-A2809AqFggqhJmvrTSo9qafxq=DgSbLrw@mail.gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Wed, 3 Jun 2020 10:16:53 +0530
+Message-ID: <CAFA6WYM0=WaFd7uUYaTje+22oVmG1fCBOYAz8UUmB2z6qcK=6g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] kdb: Re-factor kdb_printf() message write code
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/r2psUgh4iv3Rv.ZFfZy8EE+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 25 May 2020 21:04:43 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Wed, 3 Jun 2020 at 03:02, Doug Anderson <dianders@chromium.org> wrote:
 >
-> Today's linux-next merge of the akpm-current tree got a conflict in:
->=20
->   arch/x86/mm/tlb.c
->=20
-> between commit:
->=20
->   83ce56f712af ("x86/mm: Refactor cond_ibpb() to support other use cases")
->=20
-> from the tip tree and commit:
->=20
->   36c8e34d03a1 ("x86/mm: remove vmalloc faulting")
->=20
-> from the akpm-current tree.
->=20
-> diff --cc arch/x86/mm/tlb.c
-> index c8524c506ab0,f3fe261e5936..000000000000
-> --- a/arch/x86/mm/tlb.c
-> +++ b/arch/x86/mm/tlb.c
-> @@@ -345,48 -161,16 +345,20 @@@ void switch_mm(struct mm_struct *prev,=20
->   	local_irq_restore(flags);
->   }
->  =20
-> - static void sync_current_stack_to_mm(struct mm_struct *mm)
-> - {
-> - 	unsigned long sp =3D current_stack_pointer;
-> - 	pgd_t *pgd =3D pgd_offset(mm, sp);
-> -=20
-> - 	if (pgtable_l5_enabled()) {
-> - 		if (unlikely(pgd_none(*pgd))) {
-> - 			pgd_t *pgd_ref =3D pgd_offset_k(sp);
-> -=20
-> - 			set_pgd(pgd, *pgd_ref);
-> - 		}
-> - 	} else {
-> - 		/*
-> - 		 * "pgd" is faked.  The top level entries are "p4d"s, so sync
-> - 		 * the p4d.  This compiles to approximately the same code as
-> - 		 * the 5-level case.
-> - 		 */
-> - 		p4d_t *p4d =3D p4d_offset(pgd, sp);
-> -=20
-> - 		if (unlikely(p4d_none(*p4d))) {
-> - 			pgd_t *pgd_ref =3D pgd_offset_k(sp);
-> - 			p4d_t *p4d_ref =3D p4d_offset(pgd_ref, sp);
-> -=20
-> - 			set_p4d(p4d, *p4d_ref);
-> - 		}
-> - 	}
-> - }
-> -=20
->  -static inline unsigned long mm_mangle_tif_spec_ib(struct task_struct *n=
-ext)
->  +static inline unsigned long mm_mangle_tif_spec_bits(struct task_struct =
-*next)
->   {
->   	unsigned long next_tif =3D task_thread_info(next)->flags;
->  -	unsigned long ibpb =3D (next_tif >> TIF_SPEC_IB) & LAST_USER_MM_IBPB;
->  +	unsigned long spec_bits =3D (next_tif >> TIF_SPEC_IB) & LAST_USER_MM_S=
-PEC_MASK;
->  =20
->  -	return (unsigned long)next->mm | ibpb;
->  +	BUILD_BUG_ON(TIF_SPEC_L1D_FLUSH !=3D TIF_SPEC_IB + 1);
->  +
->  +	return (unsigned long)next->mm | spec_bits;
->   }
->  =20
->  -static void cond_ibpb(struct task_struct *next)
->  +static void cond_mitigation(struct task_struct *next)
->   {
->  +	unsigned long prev_mm, next_mm;
->  +
->   	if (!next || !next->mm)
->   		return;
->  =20
-> @@@ -587,20 -343,12 +559,11 @@@ void switch_mm_irqs_off(struct mm_struc
->   		need_flush =3D true;
->   	} else {
->   		/*
->  -		 * Avoid user/user BTB poisoning by flushing the branch
->  -		 * predictor when switching between processes. This stops
->  -		 * one process from doing Spectre-v2 attacks on another.
->  +		 * Apply process to process speculation vulnerability
->  +		 * mitigations if applicable.
->   		 */
->  -		cond_ibpb(tsk);
->  +		cond_mitigation(tsk);
->  =20
-> - 		if (IS_ENABLED(CONFIG_VMAP_STACK)) {
-> - 			/*
-> - 			 * If our current stack is in vmalloc space and isn't
-> - 			 * mapped in the new pgd, we'll double-fault.  Forcibly
-> - 			 * map it.
-> - 			 */
-> - 			sync_current_stack_to_mm(next);
-> - 		}
-> -=20
->   		/*
->   		 * Stop remote flushes for the previous mm.
->   		 * Skip kernel threads; we never send init_mm TLB flushing IPIs,
+> Hi,
+>
+> On Fri, May 29, 2020 at 4:27 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+> >
+> > Re-factor kdb_printf() message write code in order to avoid duplication
+> > of code and thereby increase readability.
+> >
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > ---
+> >  kernel/debug/kdb/kdb_io.c | 61 +++++++++++++++++++++++++----------------------
+> >  1 file changed, 32 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> > index 924bc92..e46f33e 100644
+> > --- a/kernel/debug/kdb/kdb_io.c
+> > +++ b/kernel/debug/kdb/kdb_io.c
+> > @@ -542,6 +542,33 @@ static int kdb_search_string(char *searched, char *searchfor)
+> >         return 0;
+> >  }
+> >
+> > +static void kdb_io_write(char *cp, int len)
+>
+> nit: "const char *" just to make it obvious that we don't modify the string?
+>
+>
+> > +{
+> > +       if (len == 0)
+> > +               return;
+>
+> Remove the above check.  It's double-overkill.  Not only did you just
+> check in kdb_msg_write() but also the while loop below will do a
+> "no-op" just fine even without your check.
+>
 
-This is now a conflict between commit
+I will get rid of kdb_io_write() as per Daniel's comment on patch #4.
 
-  94709049fb84 ("Merge branch 'akpm' (patches from Andrew)")
+>
+> > +
+> > +       while (len--) {
+> > +               dbg_io_ops->write_char(*cp);
+> > +               cp++;
+> > +       }
+> > +}
+> > +
+> > +static void kdb_msg_write(char *msg, int msg_len)
+>
+> nit: "const char *" just to make it obvious that we don't modify the string?
+>
 
-from Linus' tree and the above tip tree commit.
+Okay.
 
---=20
-Cheers,
-Stephen Rothwell
+>
+> Other than those small things, this looks nice to me.  Feel free to
+> add my Reviewed-by tag once small things are fixed.
+>
 
---Sig_/r2psUgh4iv3Rv.ZFfZy8EE+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks.
 
------BEGIN PGP SIGNATURE-----
+-Sumit
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XKnsACgkQAVBC80lX
-0GzenQgAn49b+i0imIshyXLFEfA/7vLb5kpFJ8JH22d73HtwAmZPR34pfaEES47R
-3HLFukzA24FYLWf+L2Wc4L7WTVjVTL/JAZ0bcHezYHchojO2ePTcNuXghK9aBsB3
-aYoqg6lbnCqxcxlC3SN5P8Sw+rynlpH7g3Kq3xG6l9kd69Sxs4NCcIdr3o3j6AvW
-bz78pmpMQUFiE/AavZsjTK0zAkJqsbfHn0stNmzobcmY3GOe27SsLDNsBfHF/lBe
-6ukIRRTHb/jkhpREkaYy1v/U+QUtDNGNl13Koomjo+nndtbdJXyTO+fSmr3R3Atq
-0Izx87mjoVbFFs6yHqig37SbC6mvtQ==
-=KNZW
------END PGP SIGNATURE-----
-
---Sig_/r2psUgh4iv3Rv.ZFfZy8EE+--
+>
+> -Doug
