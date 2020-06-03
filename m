@@ -2,75 +2,98 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB04C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D678C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCD320734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAB52068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgFCJGm (ORCPT
+        id S1726218AbgFCJLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgFCJGm (ORCPT
+        Wed, 3 Jun 2020 05:11:21 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:13487 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725355AbgFCJLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:06:42 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772C0C05BD43;
-        Wed,  3 Jun 2020 02:06:41 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7798D28B; Wed,  3 Jun 2020 11:06:39 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 11:06:37 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 13/75] x86/boot/compressed/64: Add IDT Infrastructure
-Message-ID: <20200603090637.GA16171@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-14-joro@8bytes.org>
- <20200504105445.GE15046@zn.tnic>
- <20200504112859.GH8135@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504112859.GH8135@suse.de>
+        Wed, 3 Jun 2020 05:11:21 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jun 2020 14:40:19 +0530
+Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Jun 2020 14:39:51 +0530
+Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
+        id 02D105046; Wed,  3 Jun 2020 14:39:50 +0530 (IST)
+From:   Pradeep P V K <ppvk@codeaurora.org>
+To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
+        sibis@codeaurora.org, matthias@chromium.org,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: [PATCH V1 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+Date:   Wed,  3 Jun 2020 14:39:36 +0530
+Message-Id: <1591175376-2374-3-git-send-email-ppvk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
+References: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 01:28:59PM +0200, Joerg Roedel wrote:
-> On Mon, May 04, 2020 at 12:54:45PM +0200, Borislav Petkov wrote:
-> > On Tue, Apr 28, 2020 at 05:16:23PM +0200, Joerg Roedel wrote:
-> > > +#include "../../entry/calling.h"
-> > 
-> > Leftover from something? Commenting it out doesn't break the build here.
-> 
-> Yes, probably a leftover from when I tried to use the PT_REGS macros
-> there. I'll remove it.
+Add interconnect bandwidth scaling supported strings for qcom-sdhci
+controller.
 
-Turns out this include is still needed to get ORIG_RAX defined. I'll
-leave it in place.
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index b8e1d2b..3b602fd 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -54,6 +54,21 @@ Required properties:
+ - qcom,dll-config: Chipset and Platform specific value. Use this field to
+ 	specify the DLL_CONFIG register value as per Hardware Programming Guide.
+ 
++Optional Properties:
++* Following bus parameters are required for interconnect bandwidth scaling:
++- interconnects: Pairs of phandles and interconnect provider specifier
++		 to denote the edge source and destination ports of
++		 the interconnect path.
++
++- interconnect-names: For sdhc, we have two main paths.
++		1. Data path : sdhc to ddr
++		2. Config path : cpu to sdhc
++		For Data interconnect path the name supposed to be
++		is "sdhc-ddr" and for config interconnect path it is
++		"cpu-sdhc".
++		Please refer to Documentation/devicetree/bindings/
++		interconnect/ for more details.
++
+ Example:
+ 
+ 	sdhc_1: sdhci@f9824900 {
+@@ -71,6 +86,9 @@ Example:
+ 
+ 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+ 		clock-names = "core", "iface";
++		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
++				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
++		interconnect-names = "sdhc-ddr","cpu-sdhc";
+ 
+ 		qcom,dll-config = <0x000f642c>;
+ 		qcom,ddr-config = <0x80040868>;
+-- 
+1.9.1
 
-	Joerg
