@@ -2,91 +2,171 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5349C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9681920674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD512074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qRc63U1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFCHf1 (ORCPT
+        id S1726054AbgFCHhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:35:27 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44523 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCHf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:35:26 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e5so1100573ote.11;
-        Wed, 03 Jun 2020 00:35:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D7JMkOvhZUqwiu+SF/Awh2jlIp2xHt9TluszajmhLw4=;
-        b=kw2QWv8B31u0abvbBHAvVs+9AZQcphbQzmdggdkyBoukg2I+NjHn9JFdubXGeH7PdC
-         ShWyq/eOUuF5V1pkdbJ3MRSzEI5D543rkl3Nvja/r0eT1tdIHL9H6rcjVekpQ+qnwb7W
-         co3KVXKu5jzrclX1IkHDHrYbEywKI6S4Tl7opMaUEEk4NFXj73S6C4ywWVA/4QP7m6Sv
-         OTNGmMlLtkZtXgx18t7WFjeX1rJ5S/GX6EIEvWBcA/aKaNWKZQsJ0XpCNGYL02vxvxRK
-         Ijh9WFwIRzzM+J43Ge9ms3RIoUmNTD5KLwoSxXq6/sa8aSM5aEzoJyi1VrJeXPJ+NygV
-         U1CQ==
-X-Gm-Message-State: AOAM5324SFNUF7dx7uNhbCsDt0geOsHpHwXeMncOqIytbmGMlLIuXwyG
-        zUvAr+BSu/1IIRUZcQh8ez9J7PhLuBJfk2V/cxcVxA==
-X-Google-Smtp-Source: ABdhPJwU2+fB3PiD4AxJMNargOcVzctUQtjcagMYjySGTXjUm3Tf3KsLK/TZQKrzdMIs7+K/adcy9MbWExNzVqyZpcM=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr2278620otp.250.1591169724039;
- Wed, 03 Jun 2020 00:35:24 -0700 (PDT)
+        Wed, 3 Jun 2020 03:37:15 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:61954 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbgFCHhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:37:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591169833; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=aJvFtRy1el1NP+Z5+87GQ+m2nk+T28gjost9JU7AaP0=;
+ b=qRc63U1EH5D471YJ50iO7V9AwCUorCNv3EzewUIP/9lYrrIqvMIOCsEnebg8ugZvVWqBeC/F
+ Dvsg+Ix2FMEncSE3LQA0s9tHQJMkljPPM8kbNfp1Zj23iDAieu1UF2XgJWF6k++bv8dIJfnb
+ 38ZZ3kWu2KTbCglluH6UBP9duB4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ed75326cb04586933e89806 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 07:37:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 94CBFC43395; Wed,  3 Jun 2020 07:37:09 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: guptap)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D600BC433CA;
+        Wed,  3 Jun 2020 07:37:08 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200531104715.2512247-1-glaubitz@physik.fu-berlin.de> <b6271c7a-1eaf-61d9-9eb6-061aa8a13ac8@physik.fu-berlin.de>
-In-Reply-To: <b6271c7a-1eaf-61d9-9eb6-061aa8a13ac8@physik.fu-berlin.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 3 Jun 2020 09:35:12 +0200
-Message-ID: <CAMuHMdV-Par79SYe75HzJsEd2cwEDhGPK+Nj0zUD8eAy9aDj1A@mail.gmail.com>
-Subject: Re: [PATCH v2] sh: Implement __get_user_u64() required for 64-bit get_user()
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jun 2020 13:07:08 +0530
+From:   guptap@codeaurora.org
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     mhocko@suse.com, owner-linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] iommu/dma: limit iova free size to unmmaped iova
+In-Reply-To: <9b5f8501-6e6e-0cd2-7f98-7cfea13051d7@arm.com>
+References: <20200521113004.12438-1-guptap@codeaurora.org>
+ <7aaa8dcc-6a47-f256-431d-2a1b034b4076@arm.com>
+ <90662ef3123dbf2e93f9718ee5cc14a7@codeaurora.org>
+ <2d873ab9-ebb9-3c2d-f129-55a036ab47d0@arm.com>
+ <4ba082d3bb965524157704ea1ffb1ff4@codeaurora.org>
+ <9b5f8501-6e6e-0cd2-7f98-7cfea13051d7@arm.com>
+Message-ID: <4b6a864674a9231b3ac35e5ce0c7292f@codeaurora.org>
+X-Sender: guptap@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+On 2020-06-02 18:37, Robin Murphy wrote:
+> On 2020-05-26 08:19, guptap@codeaurora.org wrote:
+>> On 2020-05-22 14:54, Robin Murphy wrote:
+>>> On 2020-05-22 07:25, guptap@codeaurora.org wrote:
+>>>> On 2020-05-22 01:46, Robin Murphy wrote:
+>>>>> On 2020-05-21 12:30, Prakash Gupta wrote:
+>> Sorry for delayed response, it was a long weekend.
+>> I agree that invalid DMA API call can result in unexpected issues and 
+>> client
+>> should fix it, but then the present behavior makes it difficult to 
+>> catch cases
+>> when driver is making wrong DMA API calls. When invalid iova pfn is 
+>> passed it
+>> doesn't fail then and there, though DMA layer is aware of iova being 
+>> invalid. It
+>> fails much after that in the context of an valid map/unmap, with 
+>> BUG_ON().
+>> 
+>> Downgrading BUG_ON() to WARN_ON() in iova_magazine_free_pfns() will 
+>> not help
+>> much as invalid iova will cause NULL pointer dereference.
+> 
+> Obviously I didn't mean a literal s/BUG/WARN/ substitution - some
+> additional control flow to actually handle the error case was implied.
+> 
+> I'll write up the patch myself, since it's easier than further 
+> debating.
+> 
 
-On Wed, Jun 3, 2020 at 9:20 AM John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
-> On 5/31/20 12:47 PM, John Paul Adrian Glaubitz wrote:
-> >  Changes since v1:
-> >  - Replace single mov instruction for exception handling
-> >    in case of invalid load
->
-> Yutaka Niibe has had a look at my patch and he says, we might have to add
-> an entry for the fault handling of the upper word.
->
-> Quote:
->
-> > (1) I think that there is possibility that the second access to user
-> > space fails (while the first access succeeds).  IIUC, it's good have
-> > an entry in __ex_tables for the second access too, like:
-> >     ".long 1b+2, 3b\n\t"
-> > I don't know if the expression "1b+2" is correct, my intention is
-> > detecting the failure in the seccond access.
+I think it will address the issue I am facing as well. I will wait for 
+your patch.
 
-So just add another numeric label, like is done on m68k.
+>> I see no reason why DMA layer wants to free an iova for which unmapped 
+>> failed.
+>> IMHO queuing an invalid iova (which already failed unmap) to rcache 
+>> which
+>> eventually going to crash the system looks like iommu-dma layer issue.
+> 
+> What if the unmap fails because the address range is already entirely
+> unmapped? Freeing the IOVA (or at least attempting to) would be
+> logically appropriate in that case. In fact some IOMMU drivers might
+> not even consider that a failure, so the DMA layer may not even be
+> aware that it's been handed a bogus unallocated address.
+> 
+> The point is that unmapping *doesn't* fail under normal and correct
+> operation, so the DMA layer should not expect to have to handle it.
+> Even if it does happen, that's a highly exceptional case that the DMA
+> layer cannot recover from by itself; at best it can just push the
+> problem elsewhere. It's pretty hard to justify doing extra work to
+> simply move an exceptional problem around without really addressing
+> it.
+> 
 
-Gr{oetje,eeting}s,
+iommu_unmap() expects that all areas within unmap size are mapped. 
+infact It
+abandons further unmap if it find any chunk not mapped.  So if an IOMMU
+implementation is not returning failure for already unmapped area,
+then it's prone to issue where DMA API reuse the IOVA, which is already 
+mapped.
 
-                        Geert
+In this case where iommu implementation returns error for already 
+unmapped area,
+currently there is no way to distinguish an unmap failure due to range 
+already
+unmapped or say while partially unmapping a section map, memory 
+allocation fails
+and thus unmap returns failure.
+In second case, we will free the iova even with mapping present. And 
+subsequent
+dma mapping will keep on failing if it uses this freed iova. For managed 
+iova
+both unmap/map should be done with dma APIs, it should be safe to expect 
+if a
+range is unmapped with DMA APIs corresponding iova is also freed, so 
+there
+shouldn't be a real need to free iova where unmap fails due to range 
+already
+entirely unmapped.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> And in this particular case, personally I would *much* rather see
+> warnings spewing from both the pagetable and IOVA code as early as
+> possible to clearly indicate that the DMA layer itself has been thrown
+> out of sync, than just have warnings that might represent some other
+> source of pagetable corruption (or at worst, depending on the
+> pagetable code, no warnings at all and only have dma_map_*() calls
+> quietly start failing much, much later due to all the IOVA space
+> having been leaked by bad unmaps).
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I am not sure how useful is this freed iova if corresponding mappings 
+are not
+unmapped. We won't be able to use those iova. The subsequent iommu_map 
+will fail
+if using this freed iova. So it's important to ensure we only free iova 
+which is
+unmapped successfully.
+
+Thanks,
+Prakash
