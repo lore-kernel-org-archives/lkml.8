@@ -2,254 +2,142 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22605C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD8D2072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RxwRIyfD"
+	by mail.kernel.org (Postfix) with ESMTP id 0C5AB2074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgFCFku (ORCPT
+        id S1725883AbgFCFlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCFku (ORCPT
+        Wed, 3 Jun 2020 01:41:18 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:34341 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCFlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:40:50 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCECC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 22:40:48 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id q14so1061029qtr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 22:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BGjC9hEQA1RR/riJGwSmJT9ELHQ3fhF1Tg4h6hxErB8=;
-        b=RxwRIyfDNLvjYG+kEHCJcCiHEf2SAfoDGWZHb18yU/XycrDCxTGWC1FGHfOv63oioc
-         depbopH7hI+U+cdOLFdEOAQ7pi84ZfaJD80GDS25Q7t+4cvHeCO/95lSGN0/eC6bGkj2
-         xJaJiPI4AOh07/pM3Q9dn3y8bxc+5zf6kN/CGWEr2af4Yyo8Nd8vMj5JNXbx+sUtsuBR
-         yvGWG8/3HBJkLC7jqK0qlBje1xaGZaOBCSxoFEOd94kxmNtp55SfBQoGRu9MlSWGwDkV
-         5LSmBI0ylJ4QgzOQnRIIecDC4oRNOn5MVQGnfRFCUGRovDIPhdwLd74SXkk/VA5JQ4pY
-         O14Q==
+        Wed, 3 Jun 2020 01:41:18 -0400
+Received: by mail-il1-f197.google.com with SMTP id u204so728753ilc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 22:41:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BGjC9hEQA1RR/riJGwSmJT9ELHQ3fhF1Tg4h6hxErB8=;
-        b=nHzaCwJCU3cD/0ThlExammgmekUCk1Wz1XOTdI76pzr1fo+ntQMl1olPCcVgzo7sbQ
-         8qW9Y6fTlMKOk37chmhGIxeqnjmzGKWC4KhZJJePYUE5yDiYBkMrvrqKiIJA7vjLuq2h
-         Xw1XCY8yp1Ee3DQAU/Ni5y7W5WnPy0dWyh5EMRnVoVQnyrmkBJwgsG28HqM3wrsD2Vfm
-         XCIRyBvwaFYTs01uSglcV4Fgs347+WTwi+ogAODLfqssQTyNl0u7Q5ziEko9kr17K9HK
-         Wue7v0Bs2b9tkCaghRadGeTzZaLJzLR3QDTyXMjTvoP2tbN+29xnfr4d3qtBXybOnoPz
-         X4mQ==
-X-Gm-Message-State: AOAM533isPCT4r3a4zYKNztQVoPJ+/Mcavks/ba9NZmPhqVMQ+ntJeu1
-        agWNlrR9NuluI7DBUPQi+WbDf/dfHX8uZTJR6Qg=
-X-Google-Smtp-Source: ABdhPJyWDX1lz6zBSzm27sfpv5XtJ+G6/lhPGhhnMNgZ//wPrXSdNqyKz9wWjZYbM1c3fufK8HFN/2gHAIBqvsXsIxU=
-X-Received: by 2002:ac8:44da:: with SMTP id b26mr31368255qto.232.1591162847600;
- Tue, 02 Jun 2020 22:40:47 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=7PaEP4t/B3kjXAbvlDlHJVPzwZvbdoEtutPTrhsFWoQ=;
+        b=l/qzk+RQo/nY60sVd1ASIxZleoBrY2PGPoJtKm4qd2lA3x9CMpmQ5tyCeGOxR1DQHy
+         lGh1SWOeq5HX1MY6xIV/2mBiMDEPnk/PQAh4mzNN3pA7ZTWmBQDu/jOC/1Je2fxl1Avf
+         aUhxilSxjecfuf8uEDNXz/o7AilToZ/0qp4B3Egs+EbFiK+Zhdgmb/ml5xlV1qXODCQ1
+         wqiYSsKWsX01sdA1RlB+f/azPDTJntuwVzvhJ5iaZ0ZNOYbxtgDy31kJTQsWOTIQsQjT
+         Cj7K9AlCXLlhZI7+YENBTtlwwZzqgBbZNWOkfPgJWEwn4XxeUMzl2sCVodwrG+wLonSN
+         ZlQA==
+X-Gm-Message-State: AOAM5308mcFPRfzE3e84T80La5arcxEp+jy8PCo9Us/9suFqfTauZ1uy
+        /2RvPfk/RGh6O1fPyNzFGr8vQOLC3ehpjhql4tg4vIjlIDGc
+X-Google-Smtp-Source: ABdhPJw8f0fUZU9WLJrKfj4Zf3cfsWMIJgeIP97nKn/peVLTrc3yEoIobmLcvScJqjw+IkFqoqIl2uHaHfiJNbTCmdjDBo/kMwho
 MIME-Version: 1.0
-References: <20200520232525.798933-6-hannes@cmpxchg.org> <CAAmzW4MMLw=4BHRtt=g8BHpQLTaSmhG03Ct6WMjmDxVnOkNQYA@mail.gmail.com>
- <20200527134333.GF6781@cmpxchg.org> <CAAmzW4NW+cv7VnNApWKJr4r9=QKaufK3y5apyNXo-M-y=q0dgg@mail.gmail.com>
- <20200528170155.GA69521@cmpxchg.org> <CAAmzW4NEPZRWL5PBXEWwg9kBOL9fYUNqTTzh3WRDWbaSPLv=CQ@mail.gmail.com>
- <20200529151228.GA92892@cmpxchg.org> <CAAmzW4Pccc4UcBThhKyqbtY=kK83Fz7k4vYR4eJN4te2E25=_A@mail.gmail.com>
- <20200601155615.GA131075@cmpxchg.org> <CAAmzW4NDVznjOsW1Vgg1P+0vSQarE1ziY=MN5S5f70pQiOPn-Q@mail.gmail.com>
- <20200602164726.GA225032@cmpxchg.org>
-In-Reply-To: <20200602164726.GA225032@cmpxchg.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Wed, 3 Jun 2020 14:40:40 +0900
-Message-ID: <CAAmzW4P0HZw-K1jHogpCevDCfsSfm2SRSXYwUqznoDBNWa_NUQ@mail.gmail.com>
-Subject: Re: [PATCH 05/14] mm: workingset: let cache workingset challenge anon
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+X-Received: by 2002:a02:810:: with SMTP id 16mr28697375jac.17.1591162876898;
+ Tue, 02 Jun 2020 22:41:16 -0700 (PDT)
+Date:   Tue, 02 Jun 2020 22:41:16 -0700
+In-Reply-To: <000000000000bbd09005a6fdc6cc@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000eb4b905a7277a7d@google.com>
+Subject: Re: WARNING in snd_usbmidi_submit_urb/usb_submit_urb
+From:   syzbot <syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, balbi@kernel.org,
+        gregkh@linuxfoundation.org, ingrassia@epigenesys.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 3=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 1:48, Jo=
-hannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Tue, Jun 02, 2020 at 11:34:17AM +0900, Joonsoo Kim wrote:
-> > 2020=EB=85=84 6=EC=9B=94 2=EC=9D=BC (=ED=99=94) =EC=98=A4=EC=A0=84 12:5=
-6, Johannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
-> > > On Mon, Jun 01, 2020 at 03:14:24PM +0900, Joonsoo Kim wrote:
-> > > > But, I still think that modified refault activation equation isn't
-> > > > safe. The next
-> > > > problem I found is related to the scan ratio limit patch ("limit th=
-e range of
-> > > > LRU type balancing") on this series. See the below example.
-> > > >
-> > > > anon: Hot (X M)
-> > > > file: Hot (200 M) / dummy (200 M)
-> > > > P: 1200 M (3 parts, each one 400 M, P1, P2, P3)
-> > > > Access Pattern: A -> F(H) -> P1 -> A -> F(H) -> P2 -> ... ->
-> > > >
-> > > > Without this patch, A and F(H) are kept on the memory and look like
-> > > > it's correct.
-> > > >
-> > > > With this patch and below fix, refault equation for Pn would be:
-> > > >
-> > > > Refault dist of Pn =3D 1200 (from file non-resident) + 1200 * anon =
-scan
-> > > > ratio (from anon non-resident)
-> > > > anon + active file =3D X + 200
-> > > > 1200 + 1200 * anon scan ratio (0.5 ~ 2) < X + 200
-> > >
-> > > That doesn't look quite right to me. The anon part of the refault
-> > > distance is driven by X, so the left-hand of this formula contains X
-> > > as well.
-> > >
-> > > 1000 file (1200M reuse distance, 200M in-core size) + F(H) reactivati=
-ons + X * scan ratio < X + 1000
-> >
-> > As I said before, there is no X on left-hand of this formula. To
-> > access all Pn and
-> > re-access P1, we need 1200M file list scan and reclaim. More scan isn't=
- needed.
-> > With your patch "limit the range of LRU type balancing", scan ratio
-> > between file/anon
-> > list is limited to 0.5 ~ 2.0, so, maximum anon scan would be 1200 M *
-> > 2.0, that is,
-> > 2400 M and not bounded by X. That means that file list cannot be
-> > stable with some X.
->
-> Oh, no X on the left because you're talking about the number of pages
-> scanned until the first refaults, which is fixed - so why are we still
-> interpreting the refault distance against a variable anon size X?
+syzbot has found a reproducer for the following crash on:
 
-Looks like I was confused again. Your formula is correct and mine is
-wrong. My mistake is I thought that your patch "limit the range of LRU
-type balancing"
-which makes scan *ratio* 2:1 leads to actual scan *count* ratio
-between anon/file to 2:1.
-But, now I realized that 2:1 is just scan ratio and actual scan
-*count* ratio could be far
-larger with certain list size. It would be X * scan ratio in above example =
-so my
-explanation is wrong and you are right.
+HEAD commit:    1ee08de1 Merge tag 'for-5.8/io_uring-2020-06-01' of git://..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f9e516100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b46ebd806238a886
+dashboard link: https://syzkaller.appspot.com/bug?extid=5f1d24c49c1d2c427497
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1667dcca100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13f9e516100000
 
-Sorry for making a trouble.
+The bug was bisected to:
 
-> Well, that's misleading. We compare against anon because part of the
-> cache is already encoded in the refault distance. What we're really
-> checking is access distance against total amount of available RAM.
->
-> Consider this. We want to activate pages where
->
->         access_distance <=3D RAM
->
-> and our measure of access distance is:
->
->         access_distance =3D refault_distance + inactive_file
->
-> So the comparison becomes:
->
->         refault_distance + inactive_file < RAM
->
-> which we simplify to:
->
->         refault_distance < active_file + anon
->
-> There is a certain threshold for X simply because there is a certain
-> threshold for RAM beyond which we need to start activating. X cannot
-> be arbitrary, it must be X + cache filling up memory - after all we
-> have page reclaim evicting pages.
->
-> Again, this isn't new. In the current code, we activate when:
->
->         refault_distance < active_file
->
-> which is
->
->         access_distance <=3D RAM - anon
->
-> You can see, whether things are stable or not always depends on the
-> existing workingset size. It's just a proxy for how much total RAM we
-> have potentially available to the refaulting page.
->
-> > If my lastly found example is a correct example (your confirm is requir=
-ed),
-> > it is also related to the correctness issue since cold pages causes
-> > eviction of the hot pages repeatedly.
->
-> I think your example is correct, but it benefits from the VM
-> arbitrarily making an assumption that has a 50/50 shot of being true.
->
-> You and I know which pages are hot and which are cold because you
-> designed the example.
->
-> All the VM sees is this:
->
-> - We have an established workingset that has previously shown an
->   access distance <=3D RAM and therefor was activated.
->
-> - We now have another set that also appears to have an access distance
->   <=3D RAM. The only way to know for sure, however, is sample the
->   established workingset and compare the relative access frequencies.
->
-> Currently, we just assume the incoming pages are colder. Clearly
-> that's beneficial when it's true. Clearly that can be totally wrong.
->
-> We must allow a fair comparison between these two sets.
->
-> For cache, that's already the case - that's why I brought up the
-> cache-only example: if refault distances are 50M and you have 60M of
-> active cache, we activate all refaults and force an even competition
-> between the established workingset and the new pages.
->
-> Whether we can protect active file when anon needs to shrink first and
-> can't (the activate/iocost split) that's a different question. But I'm
-> no longer so sure after looking into it further.
->
-> First, we would need two different refault distances: either we
-> consider anon age and need to compare to active_file + anon, or we
-> don't and compare to active_file only. We cannot mix willy nilly,
-> because the metrics wouldn't be comparable. We don't have the space to
-> store two different eviction timestamps, nor could we afford to cut
-> the precision in half.
->
-> Second, the additional page flag required to implement it.
->
-> Third, it's somewhat moot because we still have the same behavior when
-> active_file would need to shrink and can't. There can't be a stable
-> state as long as refault distances <=3D active_file.
->
-> > In this case, they (without patch, with patch) all have some correctnes=
-s
-> > issue so we need to judge which one is better in terms of overall impac=
-t.
-> > I don't have strong opinion about it so it's up to you to decide the wa=
-y to go.
->
-> If my patch was simply changing the default assumption on which pages
-> are hot and which are cold, I would agree with you - the pros would be
-> equal to the cons, one way wouldn't be more correct than the other.
->
-> But that isn't what my patch is doing. What it does is get rid of the
-> assumption, to actually sample and compare the access frequencies when
-> there isn't enough data to make an informed decision.
->
-> That's a net improvement.
+commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
+Author: Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon Feb 24 16:13:03 2020 +0000
 
-Okay. Now I think that this patch has a net improvement.
+    usb: gadget: add raw-gadget interface
 
-Acked-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164afcf2100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=154afcf2100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=114afcf2100000
 
-Thanks.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5f1d24c49c1d2c427497@syzkaller.appspotmail.com
+Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+
+------------[ cut here ]------------
+URB 0000000044767a7f submitted while active
+WARNING: CPU: 1 PID: 9186 at drivers/usb/core/urb.c:363 usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:363
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9186 Comm: syz-executor730 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:105 [inline]
+ fixup_bug arch/x86/kernel/traps.c:100 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:197
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:216
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:363
+Code: 89 de e8 c2 16 66 fc 84 db 0f 85 42 f6 ff ff e8 85 15 66 fc 4c 89 fe 48 c7 c7 40 b3 ab 88 c6 05 98 27 78 05 01 e8 57 29 37 fc <0f> 0b e9 20 f6 ff ff c7 44 24 14 01 00 00 00 e9 d7 f6 ff ff 41 bd
+RSP: 0018:ffffc90007dc72b0 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815cd4c7 RDI: fffff52000fb8e48
+RBP: dffffc0000000000 R08: ffff888095b144c0 R09: ffffed1015ce45f1
+R10: ffff8880ae722f83 R11: ffffed1015ce45f0 R12: 0000000000000cc0
+R13: 00000000fffffff0 R14: ffff888095974000 R15: ffff88809fa06600
+ snd_usbmidi_submit_urb+0x19/0x60 sound/usb/midi.c:194
+ snd_usbmidi_input_start_ep sound/usb/midi.c:2313 [inline]
+ snd_usbmidi_input_start.part.0+0xbe/0x1c0 sound/usb/midi.c:2329
+ snd_usbmidi_input_start sound/usb/midi.c:1119 [inline]
+ substream_open.isra.0+0x505/0x830 sound/usb/midi.c:1119
+ open_substream+0x42e/0x880 sound/core/rawmidi.c:299
+ rawmidi_open_priv+0x2e8/0x6e0 sound/core/rawmidi.c:342
+ snd_rawmidi_kernel_open+0x1b5/0x270 sound/core/rawmidi.c:382
+ midisynth_subscribe+0xf2/0x330 sound/core/seq/seq_midi.c:170
+ subscribe_port sound/core/seq/seq_ports.c:412 [inline]
+ check_and_subscribe_port+0x5b5/0x800 sound/core/seq/seq_ports.c:495
+ snd_seq_port_connect+0x2e4/0x510 sound/core/seq/seq_ports.c:564
+ snd_seq_ioctl_subscribe_port+0x1df/0x310 sound/core/seq/seq_clientmgr.c:1484
+ snd_seq_kernel_client_ctl+0xeb/0x130 sound/core/seq/seq_clientmgr.c:2353
+ snd_seq_oss_midi_open+0x3cb/0x640 sound/core/seq/oss/seq_oss_midi.c:364
+ snd_seq_oss_synth_setup_midi+0x123/0x520 sound/core/seq/oss/seq_oss_synth.c:269
+ snd_seq_oss_open+0x7fa/0x980 sound/core/seq/oss/seq_oss_init.c:261
+ odev_open+0x6c/0x90 sound/core/seq/oss/seq_oss.c:125
+ soundcore_open+0x446/0x600 sound/sound_core.c:593
+ chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+ do_dentry_open+0x546/0x1340 fs/open.c:828
+ do_open fs/namei.c:3229 [inline]
+ path_openat+0x1e59/0x27d0 fs/namei.c:3346
+ do_filp_open+0x192/0x260 fs/namei.c:3373
+ do_sys_openat2+0x585/0x7d0 fs/open.c:1179
+ do_sys_open+0xc3/0x140 fs/open.c:1195
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
