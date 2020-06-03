@@ -2,302 +2,136 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840D120679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kjWK618B"
+	by mail.kernel.org (Postfix) with ESMTP id 6D3C820738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgFCO7R (ORCPT
+        id S1726086AbgFCPCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgFCO7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:59:16 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FB0C08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 07:59:15 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id z18so3095680lji.12
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X3gULNc5o6rDWFlyFYtI7qphk+pGj3+0r/jIrUq0xCg=;
-        b=kjWK618BvweQ6tbdxhKUdH3+E3jEV3i2X3hL3t3KPt8TtrOS7Dpy72DTP0xDdQrDCG
-         np00IKlPluZEp7slLTcE/05nUU15vi+h7PSNwxitCV6YMJPLXDzAnWpaOEx4azPnF1ye
-         5GJ0sD+izd0JEmY4+DOOwY/vtGy7wlrBc3PzmHGM0Diz+u1Q1rP3Rgydi3IBzUeKdzJr
-         H3QnjUC1ooFXv79Tnq9eRzR1qu9dDr9IPm9pI5uqTgeZgVtcYvCvQpqYMc3UbBe3k3/M
-         ZCpmsVgeek0ueEQTJmDipKDkLgFz2G/JGJFqNeBOypkgNn1l3t407VUrtpmdtF4o7DSr
-         g90g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X3gULNc5o6rDWFlyFYtI7qphk+pGj3+0r/jIrUq0xCg=;
-        b=pcahCZFVJWUMm+ikSFrAeIWdmlC0sYN60yiAq33yNgUy//fEpAQSatKvtvxFhDsAq9
-         gO8oXK9rTNdV+oZZXQVeO8l9PHQyeJzjAPBZnwMBco+SZz1DvVciquEqe0V4CVR4AR8m
-         cBz7BTjqKBWti+0Y4NHczCpuR58ZHscqf67GDoJdbMwLir7gE9wk+BFExCFtfrIZjQEV
-         rZlbAGtsM/qBih1iWloof2IynALorCV8WoZFZMwnEluqNKznPYnIh8+CXhjydPOU4WdR
-         jRnJWveMFpkTqEDFhb1wvXfGB+TzqXTCqGyqNqYprwdr0NrIy0gLXFrguvEKcBm20nFw
-         SWtg==
-X-Gm-Message-State: AOAM530Dgz1q+Y2MTJXN3iD2YOJJ/SeMj+trG9v3A7NsflpUTRaWomO1
-        QwRe3WxPK8OXTow1ZBfogXgW8d4ymCyCZVqVx+I/CA==
-X-Google-Smtp-Source: ABdhPJwLZn/G+w0RRGpk174MhHzR9IiVw4lvU3596knATh5HEXTsFJAT5vymUluEm4CL6dTS+rZDSnIIW1hhcbY2EyY=
-X-Received: by 2002:a2e:b8d4:: with SMTP id s20mr2329628ljp.177.1591196353337;
- Wed, 03 Jun 2020 07:59:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200511154053.7822-1-qais.yousef@arm.com> <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net> <20200529100806.GA3070@suse.de>
- <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com> <87v9k84knx.derkling@matbug.net>
- <20200603101022.GG3070@suse.de>
-In-Reply-To: <20200603101022.GG3070@suse.de>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 3 Jun 2020 16:59:00 +0200
-Message-ID: <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org,
+        Wed, 3 Jun 2020 11:02:12 -0400
+Received: from vps-vb.mhejs.net ([37.28.154.113]:56762 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbgFCPCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:02:11 -0400
+X-Greylist: delayed 1529 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 11:02:10 EDT
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLS1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.93.0.4)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1jgUVT-0008RG-22; Wed, 03 Jun 2020 16:36:39 +0200
+Subject: Re: [PATCH v12 0/8] [media] Add analog mode support for Medion
+ MD95700
+To:     Lukas Straub <lukasstraub2@web.de>
+Cc:     Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Walls <awalls@md.metrocast.net>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+References: <cover.1556554056.git.mail@maciej.szmigiero.name>
+ <20200603163326.2550376b@luklap>
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Autocrypt: addr=mail@maciej.szmigiero.name; prefer-encrypt=mutual; keydata=
+ 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 sg==
+Message-ID: <4e45c57c-5774-5e00-4122-d74f4635444f@maciej.szmigiero.name>
+Date:   Wed, 3 Jun 2020 16:36:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200603163326.2550376b@luklap>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 12:10, Mel Gorman <mgorman@suse.de> wrote:
->
-> On Wed, Jun 03, 2020 at 10:29:22AM +0200, Patrick Bellasi wrote:
-> >
-> > Hi Dietmar,
-> > thanks for sharing these numbers.
-> >
-> > On Tue, Jun 02, 2020 at 18:46:00 +0200, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote...
-> >
-> > [...]
-> >
-> > > I ran these tests on 'Ubuntu 18.04 Desktop' on Intel E5-2690 v2
-> > > (2 sockets * 10 cores * 2 threads) with powersave governor as:
-> > >
-> > > $ numactl -N 0 ./run-mmtests.sh XXX
-> >
-> > Great setup, it's worth to rule out all possible noise source (freq
-> > scaling, thermal throttling, NUMA scheduler, etc.).
->
-> config-network-netperf-cross-socket will do the binding of the server
-> and client to two CPUs that are on one socket. However, it does not take
-> care to avoid HT siblings although that could be implemented. The same
-> configuration should limit the CPU to C1. It does not change the governor
-> but all that would take is adding "cpupower frequency-set -g performance"
-> to the end of the configuration.
->
-> > Wondering if disabling HT can also help here in reducing results "noise"?
-> >
-> > > w/ config-network-netperf-unbound.
-> > >
-> > > Running w/o 'numactl -N 0' gives slightly worse results.
-> > >
-> > > without-clamp      : CONFIG_UCLAMP_TASK is not set
-> > > with-clamp         : CONFIG_UCLAMP_TASK=y,
-> > >                      CONFIG_UCLAMP_TASK_GROUP is not set
-> > > with-clamp-tskgrp  : CONFIG_UCLAMP_TASK=y,
-> > >                      CONFIG_UCLAMP_TASK_GROUP=y
-> > >
-> > >
-> > > netperf-udp
-> > >                                 ./5.7.0-rc7            ./5.7.0-rc7            ./5.7.0-rc7
-> > >                               without-clamp             with-clamp      with-clamp-tskgrp
-> >
-> > Can you please specify how to read the following scores? I give it a run
-> > to my local netperf and it reports Throughput, thous I would expect the
-> > higher the better... but... this seems something different.
-> >
-> > > Hmean     send-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-> > > Hmean     send-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-> > > Hmean     send-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-> > > Hmean     send-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-> > > Hmean     send-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.96 *   1.24%*
-> > > Hmean     send-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-> > > Hmean     send-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-> > > Hmean     send-8192     14961.77 (   0.00%)    14418.92 *  -3.63%*    14908.36 *  -0.36%*
-> > > Hmean     send-16384    25799.50 (   0.00%)    25025.64 *  -3.00%*    25831.20 *   0.12%*
-> >
-> > If I read it as the lower the score the better, all the above results
-> > tell us that with-clamp is even better, while with-clamp-tskgrp
-> > is not that much worst.
-> >
->
-> The figures are throughput to taking the first line
->
-> without-clamp           153.62
-> with-clamp              151.80 (worse, so the percentage difference is negative)
-> with-clamp-tskgrp       155.60 (better so the percentage different is positive)
->
-> > The other way around (the higher the score the better) would look odd
-> > since we definitively add in more code and complexity when uclamp has
-> > the TG support enabled we would not expect better scores.
-> >
->
-> Netperf for small differences is very fickle as small differences in timing
-> or code layout can make a difference. Boot-to-boot variance can also be
-> an issue and bisection is generally unreliable. In this case, I relied on
-> the perf annotation and differences in ftrace function_graph to determine
-> that uclamp was introducing enough overhead to be considered a problem.
+On 03.06.2020 16:33, Lukas Straub wrote:
+> On Mon, 29 Apr 2019 18:16:51 +0200
+> "Maciej S. Szmigiero" <mail@maciej.szmigiero.name> wrote:
+> 
+>> This series adds support for analog part of Medion 95700 in the cxusb
+>> driver.
+>>
+(..)
+> Hi,
+> Any status on this?
 
-When I want to stress the fast path i usually use "perf bench sched pipe -T "
-The tip/sched/core on my arm octo core gives the following results for
-20 iterations of perf bench sched pipe -T -l 50000
+It has been merged already a year ago.
 
-all uclamp config disabled  50035.4(+/- 0.334%)
-all uclamp config enabled  48749.8(+/- 0.339%)   -2.64%
+> Regards,
+> Lukas Straub
+> 
 
-It's quite easy to reproduce and probably easier to study the impact
-
->
-> > > Hmean     recv-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-> > > Hmean     recv-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-> > > Hmean     recv-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-> > > Hmean     recv-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-> > > Hmean     recv-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.95 *   1.24%*
-> > > Hmean     recv-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-> > > Hmean     recv-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-> > > Hmean     recv-8192     14961.61 (   0.00%)    14418.88 *  -3.63%*    14908.30 *  -0.36%*
-> > > Hmean     recv-16384    25799.39 (   0.00%)    25025.49 *  -3.00%*    25831.00 *   0.12%*
-> > >
-> > > netperf-tcp
-> > >
-> > > Hmean     64              818.65 (   0.00%)      812.98 *  -0.69%*      826.17 *   0.92%*
-> > > Hmean     128            1569.55 (   0.00%)     1555.79 *  -0.88%*     1586.94 *   1.11%*
-> > > Hmean     256            2952.86 (   0.00%)     2915.07 *  -1.28%*     2968.15 *   0.52%*
-> > > Hmean     1024          10425.91 (   0.00%)    10296.68 *  -1.24%*    10418.38 *  -0.07%*
-> > > Hmean     2048          17454.51 (   0.00%)    17369.57 *  -0.49%*    17419.24 *  -0.20%*
-> > > Hmean     3312          22509.95 (   0.00%)    22229.69 *  -1.25%*    22373.32 *  -0.61%*
-> > > Hmean     4096          25033.23 (   0.00%)    24859.59 *  -0.69%*    24912.50 *  -0.48%*
-> > > Hmean     8192          32080.51 (   0.00%)    31744.51 *  -1.05%*    31800.45 *  -0.87%*
-> > > Hmean     16384         36531.86 (   0.00%)    37064.68 *   1.46%*    37397.71 *   2.37%*
-> > >
-> > > The diffs are smaller than on openSUSE Leap 15.1 and some of the
-> > > uclamp taskgroup results are better?
-> > >
-> > > With this test setup we now can play with the uclamp code in
-> > > enqueue_task() and dequeue_task().
-> > >
-> > > ---
-> > >
-> > > W/ config-network-netperf-unbound (only netperf-udp and buffer size 64):
-> > >
-> > > $ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp/perf.data | grep activate_task
-> > >
-> > > # Event 'cycles:ppp'
-> > > #
-> > > # Baseline  Delta Abs  Shared Object            Symbol
-> > >
-> > >      0.02%     +0.54%  [kernel.vmlinux]         [k] activate_task
-> > >      0.02%     +0.38%  [kernel.vmlinux]         [k] deactivate_task
-> > >
-> > > $ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp-tskgrp/perf.data | grep activate_task
-> > >
-> > >      0.02%     +0.35%  [kernel.vmlinux]         [k] activate_task
-> > >      0.02%     +0.34%  [kernel.vmlinux]         [k] deactivate_task
-> >
-> > These data makes more sense to me, AFAIR we measured <1% impact in the
-> > wakeup path using cycletest.
-> >
->
-> 1% doesn't sound like a lot but UDP_STREAM is an example of a load with
-> a *lot* of wakeups so even though the impact on each individual wakeup
-> is small, it builds up.
->
-> > I would also suggest to always report the overheads for
-> >   __update_load_avg_cfs_rq()
-> > as a reference point. We use that code quite a lot in the wakeup path
-> > and it's a good proxy for relative comparisons.
-> >
-> >
-> > > I still see 20 out of 90 tests with the warning message that the
-> > > desired confidence was not achieved though.
-> >
-> > Where the 90 comes from? From the above table we run 9 sizes for
-> > {udp-send, udp-recv, tcp} and 3 kernels. Should not give us 81 results?
-> >
-> > Maybe the Warning are generated only when a test has to be repeated?
->
-> The warning is issued when it could not get a reliable result within the
-> iterations allowed.
->
-> > > "
-> > > !!! WARNING
-> > > !!! Desired confidence was not achieved within the specified iterations.
-> > > !!! This implies that there was variability in the test environment that
-> > > !!! must be investigated before going further.
-> > > !!! Confidence intervals: Throughput      : 6.727% <-- more than 5% !!!
-> > > !!!                       Local CPU util  : 0.000%
-> > > !!!                       Remote CPU util : 0.000%
-> > > "
-> > >
-> > > mmtests seems to run netperf with the following '-I' and 'i' parameter
-> > > hardcoded: 'netperf -t UDP_STREAM -i 3,3 -I 95,5'
-> >
-> > This means that we compute a score's (average +-2.5%) with a 95% confidence.
-> >
-> > Does not that means that every +-2.5% difference in the results
-> > above should be considered in the noise?
-> >
->
-> Usually yes but the impact is small enough to be within noise but
-> still detectable. Where we get hurt is when there are multiple problems
-> introduced where each contribute overhead that is within the noise but when
-> all added together there is a regression outside the noise. Uclamp is not
-> special in this respect, it just happens to be the current focus.  We met
-> this type of problem before with PSI that was resolved by e0c274472d5d
-> ("psi: make disabling/enabling easier for vendor kernels").
->
-> > I would say that it could be useful to run with more iterations
-> > and, given the small numbers we are looking at (apparently we are
-> > scared by a 1% overhead), we should better use a more aggressive CI.
-> >
-> > What about something like:
-> >
-> >    netperf -t UDP_STREAM -i 3,30 -I 99,1
-> >
-> > ?
-> >
->
-> You could but the runtime of netperf will be variable, it will not be
-> guaranteed to give consistent results and it may mask the true variability
-> of the workload. While we could debate which is a valid approach, I
-> think it makes sense to minimise the overhead of uclamp when it's not
-> configured even if that means putting it behind a static branch that is
-> enabled via a command-line parameter or a Kconfig that specifies whether
-> it's on or off by default.
->
-> --
-> Mel Gorman
-> SUSE Labs
+Maciej
