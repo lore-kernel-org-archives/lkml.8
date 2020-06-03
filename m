@@ -2,100 +2,98 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A172C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2867FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3588820738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rajZp/2F"
+	by mail.kernel.org (Postfix) with ESMTP id 0614320679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgFCOGh (ORCPT
+        id S1726086AbgFCOGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:06:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgFCOGh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:06:37 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A150FC08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 07:06:36 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id c17so2860371lji.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qCMwwfFVZYEgkxVHE4dr/ePj/4wKMJeH+gSl8PNTdQ8=;
-        b=rajZp/2FMkFBLZKKhWrLhHNA0z3IMa4+LHyq+6HtrwYdZa7bMZs89B0ydUprvhVTMW
-         KEKQshm/OMlJQdZQsaMjBesgJ8nfpLso6BaChvnWRxA/SLNbIVRw8WOUSXqqNgNN6fKl
-         gwcT3gV9vLPw90c+ndl5XydNRYAJuU2PCJfTUmAj9lgqfMscLp0tU3sEQbGkemQgcN2u
-         meK6uON74NY4cB3xIBWzWD8r7iS8hBriNISR0XB6/1u78kfp6OlgqbZlg8TDY0txReZg
-         CmZbSl7+DSxgiz9BaTIYrKGJMqFl3vsWV62y3AOk9WZPxb67rqJ5yxZMVx9IGFhAadXZ
-         36yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qCMwwfFVZYEgkxVHE4dr/ePj/4wKMJeH+gSl8PNTdQ8=;
-        b=W7eFM4vEHEy2lGxXpCoqkGZtz2c0wU0OJswYD3i3+jgdRVyieEW3VuUkQQD8n8fpsz
-         kVg/oTlQp68tyB0HWFgFlTaVyxpR8qB/dt/mW0Tj+YRCgCUiBnqQCCNrmc2WJmaPuAme
-         iNPyneuECfoWI4VTQnPd3z22EpN3B5eZPcN6nnxgA4u8Mueoqe/7TTAwDae2o5j+xOpe
-         4a8pxgSrrD74AAgBcZ1LADtZ+T2x/VmKs2w2nLB4eeoMYttpZoUWMWEyxTzOmzV0vo8a
-         zxcWgDL1nP0Ia80gI2UGprNpa3Ge3t/xMYkr3uVI/fVvylIXjcBeapXs+ka/pzbOZ7Jn
-         XgBA==
-X-Gm-Message-State: AOAM53249LUmluM8rUbPacx9z7viYFfm7R40S1pAiGWsaDlNDtkWmHWt
-        lOKd35xSDkuFM4hJHBBovU2k2tQx3en/0/T8vE8=
-X-Google-Smtp-Source: ABdhPJxkNsshI1Wyne7bYH2cEMfBvSBO8Nsf/gU0fZJn/CX4xVlDlCZOi/h129nksJLvuygXdlNRPfsvgpTqAaI02/Q=
-X-Received: by 2002:a05:651c:11c7:: with SMTP id z7mr2275345ljo.29.1591193195076;
- Wed, 03 Jun 2020 07:06:35 -0700 (PDT)
+        Wed, 3 Jun 2020 10:06:44 -0400
+Received: from muru.com ([72.249.23.125]:56886 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725833AbgFCOGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 10:06:43 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B20A1809C;
+        Wed,  3 Jun 2020 14:07:32 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 07:06:39 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+Message-ID: <20200603140639.GG37466@atomide.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
 MIME-Version: 1.0
-References: <20200602184409.22142-1-elver@google.com> <20200602184409.22142-2-elver@google.com>
- <CAKwvOdkXVcZa5UwnoZqX7_FytabYn2ZRi=zQy_DyzduVmyQNMA@mail.gmail.com>
-In-Reply-To: <CAKwvOdkXVcZa5UwnoZqX7_FytabYn2ZRi=zQy_DyzduVmyQNMA@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 3 Jun 2020 16:06:23 +0200
-Message-ID: <CANiq72=iNHeLc3aqt0NrykucHsTPwmBfnsyaay3VYnEhV9T5ag@mail.gmail.com>
-Subject: Re: [PATCH -tip 2/2] compiler_types.h: Add __no_sanitize_{address,undefined}
- to noinstr
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 8:49 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> Currently most of our compiler attribute detection is done in
-> include/linux/compiler_attributes.h; I think this should be handled
-> there. +Miguel Ojeda
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [200603 12:34]:
+> Hi Tony,
+> 
+> On 31/05/2020 22:39, Tony Lindgren wrote:
+> > When booting without legacy platform data, we no longer have omap_device
+> > calling PM runtime suspend for us on suspend. This causes the driver
+> > context not be saved as we have no suspend and resume functions defined.
+> > 
+> > Let's fix the issue by switching over to use UNIVERSAL_DEV_PM_OPS as it
+> > will call the existing PM runtime suspend functions on suspend.
+> 
+> I don't think we can use UNIVERSAL_DEV_PM_OPS, as we can't disable DSS
+> modules in any order, but things have to be shut down in orderly manner.
 
-Thanks a lot for the CC Nick! Marco is right, since this attribute is
-different per-compiler, we don't want them in `compiler_attributes.h`
-(for the moment -- we'll see if they end up with the same
-syntax/behavior in the future).
+OK. I presume you talk about the order of dss child devices here.
 
-Acked-by:  Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> omapdrm hasn't relied on omap_device calling runtime suspend for us (I
+> didn't know it does that). We have system suspend hooks in omap_drv.c:
 
-Cheers,
-Miguel
+We had omap_device sort of brute forcing things to idle on suspend
+which only really works for interconnect target modules with one
+device in them.
+
+> SIMPLE_DEV_PM_OPS(omapdrm_pm_ops, omap_drm_suspend, omap_drm_resume)
+> 
+> omap_drm_suspend() is supposed to turn off the displays, which then cause
+> dispc_runtime_put (and other runtime_puts) to be called, which result in
+> dispc_runtime_suspend (and other runtime PM suspends).
+
+OK thanks for explaining, I missed that part.
+
+> So... For some reason that's no longer happening? I need to try to find a
+> board with which suspend/resume works (without DSS)...
+
+Yes it seems something has changed. When diffing the dmesg debug output
+on suspend and resume, context save and restore functions are no longer
+called as the PM runtime suspend and resume functions are no longer
+called on suspend and resume.
+
+I'll drop this patch, and will be applying the rest of the series to
+fixes if no objections.
+
+Thanks,
+
+Tony
