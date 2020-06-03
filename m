@@ -2,105 +2,167 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394C420678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556112053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LiuEXiDd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ugFBxxmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgFCSS4 (ORCPT
+        id S1726087AbgFCSUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:18:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50392 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725955AbgFCSS4 (ORCPT
+        Wed, 3 Jun 2020 14:20:31 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48696 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725926AbgFCSUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:18:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591208334;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UkKBC6zpB37rxDLDIC+RaxGcnQKeK/Foj3RIordPx/Y=;
-        b=LiuEXiDdo7nIMLuNKxS3UVUSAHM0dMvzeoJAbiJtyqH6zbT3hipQMAoN7hMvhHym/wGtiC
-        +mxySf+wJTVyHg8xKh5saQlls9TgR/WVDAoGngLSLdHwSg46lOfoeDeGsJgxzKIxJYeekj
-        jzgqiz+HPzLrHBUvrDMHVJAu4J65MXQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-fmXhd4wzOWqUKzKBFaBrEg-1; Wed, 03 Jun 2020 14:18:50 -0400
-X-MC-Unique: fmXhd4wzOWqUKzKBFaBrEg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 3 Jun 2020 14:20:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591208429; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=w6HeEmRM3pXLn2ekFS+/1eTGwOSBEOg/dSAacEoqx8k=;
+ b=ugFBxxmQebbJpnB5HA4O4/wdeKZvTMgrvWnYYKWWFwtV8Rzfk0XPktEy94pkIwqWmgVGblL1
+ vaXzA7uTIB3yszE1vocTMCpWmv2knSRnkJ6FKhHfhSn37EyNlIrAW3wJlgCeYsjo53Vw6SYt
+ 37o6jVRb3rO2yq0CwWZsCgHZFqk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5ed7e9e82738686126fb37dc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 18:20:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E3DF9C43391; Wed,  3 Jun 2020 18:20:23 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB86C1005510;
-        Wed,  3 Jun 2020 18:18:49 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 92BF061169;
-        Wed,  3 Jun 2020 18:18:46 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 14:18:45 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hannes Reinecke <hare@suse.de>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] dm zoned: fix memory leak of newly allocated zone
- on xa_insert failure
-Message-ID: <20200603181845.GA20491@redhat.com>
-References: <20200603160254.142222-1-colin.king@canonical.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35F91C433C6;
+        Wed,  3 Jun 2020 18:20:23 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603160254.142222-1-colin.king@canonical.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jun 2020 23:50:23 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 08/10] clk: qcom: Add graphics clock controller driver for
+ SM8250
+In-Reply-To: <20200603180943.GX11847@yoga>
+References: <20200524210615.17035-1-jonathan@marek.ca>
+ <20200524210615.17035-9-jonathan@marek.ca>
+ <c4d43cf01b6d014fdc2258abb94eb2c5@codeaurora.org>
+ <20200529011127.GJ279327@builder.lan>
+ <dbcb5c24f8888d6b0cfc63a80e310319@codeaurora.org>
+ <20200603180943.GX11847@yoga>
+Message-ID: <7b2620cf98dc915307d2a29f05eca454@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03 2020 at 12:02pm -0400,
-Colin King <colin.king@canonical.com> wrote:
+Hi Bjorn,
 
-> From: Colin Ian King <colin.king@canonical.com>
+On 2020-06-03 23:39, Bjorn Andersson wrote:
+> On Thu 28 May 23:56 PDT 2020, Sai Prakash Ranjan wrote:
 > 
-> Currently if an xa_insert fails then there is a memory lead of the
-> recently allocated zone object. Fix this by kfree'ing zone before
-> returning on the error return path.
+>> Hi Bjorn,
+>> 
+>> On 2020-05-29 06:41, Bjorn Andersson wrote:
+>> > On Mon 25 May 02:47 PDT 2020, Sai Prakash Ranjan wrote:
+>> >
+>> > > Hi Jonathan,
+>> > >
+>> > > On 2020-05-25 02:36, Jonathan Marek wrote:
+>> > > > Add support for the graphics clock controller found on SM8250
+>> > > > based devices. This would allow graphics drivers to probe and
+>> > > > control their clocks.
+>> > > >
+>> > > > This is copied from the downstream kernel, adapted for upstream.
+>> > > > For example, GDSCs have been added.
+>> > > >
+>> > > > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> > >
+>> > > Since this is taken from downstream, maintain the original author's
+>> > > signed-off and add yourself as the co-developer if you have done
+>> > > any modifications. Same applies to all other patches.
+>> > >
+>> >
+>> > I disagree with this.
+>> >
+>> > As expressed in the commit message, this patch is based on the
+>> > downstream driver, not the individual patch.  As such, the _patch_ is
+>> > prepared by Jonathan and by his Signed-off-by certifies the origin of
+>> > the contribution per section 11.a or 11.b of submitting-patches.rst.
+>> >
+>> 
+>> I lost at the downstream driver vs the individual patch here. So the
+>> downstream driver is also an individual patch right or did I get
+>> something completely wrong.
+>> 
 > 
-> Addresses-Coverity: ("Resource leak")
-> Fixes: 1a311efa3916 ("dm zoned: convert to xarray")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/md/dm-zoned-metadata.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> The downstream driver is the result of a series of patches, by various
+> people, whom all use their Signed-off-by to denote that what they add 
+> is
+> conforming to the given license and that they have permission to
+> contribute to the project.
 > 
-> diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
-> index b23ff090c056..130b5a6d9f12 100644
-> --- a/drivers/md/dm-zoned-metadata.c
-> +++ b/drivers/md/dm-zoned-metadata.c
-> @@ -313,8 +313,10 @@ static struct dm_zone *dmz_insert(struct dmz_metadata *zmd,
->  	if (!zone)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	if (xa_insert(&zmd->zones, zone_id, zone, GFP_KERNEL))
-> +	if (xa_insert(&zmd->zones, zone_id, zone, GFP_KERNEL)) {
-> +		kfree(zone);
->  		return ERR_PTR(-EBUSY);
-> +	}
->  
->  	INIT_LIST_HEAD(&zone->link);
->  	atomic_set(&zone->refcount, 0);
-> -- 
-> 2.25.1
+>> So if someone prepares a patch and includes a commit description
+>> saying it is taken from downstream, does it mean he is the author
+>> of that patch?
+> 
+> No, but I think the wording here is wrong. The patch is not taken from
+> downstream, it's based on downstream code.
+> 
+>> Shouldn't the author be included in  "From: Author"
+>> and his signed-off appear first before the submitter's(also a 
+>> contributor)
+>> signed-off?
+> 
+> It should, in the case that what is contributed is the forwarding of a
+> patch found somewhere.
+> 
+> But as I said before, Jonathan does through his S-o-b state that his
+> patch is based on previous work that is covered under appropriate open
+> source license and that he has the right under that license to
+> contribute said work.
+> 
+> As such, his patch is meeting the requirements.
+> 
+> 
+> The other part is how to give credit to authors of the original work,
+> Jonathan does that by stating that it's based on work in the downstream
+> kernel - which is quite typical to how it's done.
+> 
+>> Or is it because these clock data is auto generated and it
+>> doesnt really matter?
+>> 
+> 
+> No. The author and s-o-b relates to license compliance, as such the
+> person who committed the auto generated work will sign off that the
+> content is license compliant and he/she is allowed to contribute it to
+> the project.
 > 
 
-Thanks, I folded this in.
+Thanks for these nice explanations.
 
+Regards,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
