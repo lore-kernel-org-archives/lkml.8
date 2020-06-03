@@ -2,77 +2,65 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41414C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D99C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D99C2065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C19620734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgFCJmW (ORCPT
+        id S1726756AbgFCJmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:42:22 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43412 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgFCJmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:42:22 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL955cNdeqAQ9AA--.3197S2;
-        Wed, 03 Jun 2020 17:42:17 +0800 (CST)
-From:   Bibo Mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Do not flush tlb when setting pmd entry
-Date:   Wed,  3 Jun 2020 17:42:13 +0800
-Message-Id: <1591177333-17833-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9DxL955cNdeqAQ9AA--.3197S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKr17uryxCF15Zw1xuF47twb_yoWxtFc_J3
-        W2y398GryYqrsrt3yrWFZ5JFyDuayDuF18CrsFvryYy3s5Aa1kXayjqryjyr45XrWIvrWr
-        Gr98Zr909F17tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb7xYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY6wZUUUUU=
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Wed, 3 Jun 2020 05:42:32 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:38821 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbgFCJmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:42:32 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2710627|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.65995-0.00341976-0.33663;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03302;MF=frank@allwinnertech.com;NM=1;PH=DW;RN=14;RT=14;SR=0;TI=W4_5899425_DEFAULT_0A9326FD_1591177348188_o7001c552e;
+Received: from WS-web (frank@allwinnertech.com[W4_5899425_DEFAULT_0A9326FD_1591177348188_o7001c552e]) by e02c03276.eu6 at Wed, 03 Jun 2020 17:42:28 +0800
+Date:   Wed, 03 Jun 2020 17:42:28 +0800
+From:   "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
+To:     "Maxime Ripard" <maxime@cerno.tech>
+Cc:     "wens" <wens@csie.org>, "robh+dt" <robh+dt@kernel.org>,
+        "mturquette" <mturquette@baylibre.com>, "sboyd" <sboyd@kernel.org>,
+        "linus.walleij" <linus.walleij@linaro.org>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        "=?UTF-8?B?6buE54OB55Sf?=" <huangshuosheng@allwinnertech.com>,
+        "tiny.windzz" <tiny.windzz@gmail.com>,
+        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
+        "devicetree" <devicetree@vger.kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "linux-clk" <linux-clk@vger.kernel.org>,
+        "linux-gpio" <linux-gpio@vger.kernel.org>
+Reply-To: "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
+Message-ID: <d7d6ee84-bfbb-4fef-9ed8-1f7045494594.frank@allwinnertech.com>
+Subject: =?UTF-8?B?5Zue5aSN77yaW1BBVENIIDEvNF0gY2xrOiBzdW54aS1uZzogYWRkIHN1cHBvcnQgZm9yIHRo?=
+  =?UTF-8?B?ZSBBbGx3aW5uZXIgQTEwMCBDQ1U=?=
+X-Mailer: [Alimail-Mailagent revision 4][W4_5899425][DEFAULT][Chrome]
+MIME-Version: 1.0
+References: <20200522030743.10204-1-frank@allwinnertech.com> <20200522030743.10204-2-frank@allwinnertech.com>,<20200522151403.7ovbdza2o3cjrb7a@gilmour.lan>
+In-Reply-To: <20200522151403.7ovbdza2o3cjrb7a@gilmour.lan>
+x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU2LjAuMjkyNC44NyBTYWZhcmkvNTM3LjM2TM
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function set_pmd_at is to set pmd entry, if tlb entry need to
-be flushed, there exists pmdp_huge_clear_flush alike function
-before set_pmd_at is called. So it is not necessary to call
-flush_tlb_all in this function.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/mips/mm/pgtable-64.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/mips/mm/pgtable-64.c b/arch/mips/mm/pgtable-64.c
-index 6fd6e96..a236752 100644
---- a/arch/mips/mm/pgtable-64.c
-+++ b/arch/mips/mm/pgtable-64.c
-@@ -101,7 +101,6 @@ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
- 		pmd_t *pmdp, pmd_t pmd)
- {
- 	*pmdp = pmd;
--	flush_tlb_all();
- }
- 
- void __init pagetable_init(void)
--- 
-1.8.3.1
-
+Pj4gKyAvKiBFbmFibGUgdGhlIGxvY2sgYml0cyBvbiBhbGwgUExMcyAqLwo+PiArIGZvciAoaSA9
+IDA7IGkgPCBBUlJBWV9TSVpFKHBsbF9yZWdzKTsgaSsrKSB7Cj4+ICsgIHZhbCA9IHJlYWRsKHJl
+ZyArIHBsbF9yZWdzW2ldKTsKPj4gKyAgdmFsIHw9IEJJVCgyOSk7Cj4KPkhhdmluZyBhIGRlZmlu
+ZSBmb3IgdGhhdCB3b3VsZCBiZSBuaWNlIGhlcmUKPgo+PiArICB3cml0ZWwodmFsLCByZWcgKyBw
+bGxfcmVnc1tpXSk7Cj4+ICsgfQo+PiArCj4+ICsgLyoKPj4gKyAgKiBJbiBvcmRlciB0byBwYXNz
+IHRoZSBFTUkgY2VydGlmaWNhdGlvbiwgdGhlIFNETSBmdW5jdGlvbiBvZgo+PiArICAqIHRoZSBw
+ZXJpcGhlcmFsIDEgYnVzIGlzIGVuYWJsZWQsIGFuZCB0aGUgZnJlcXVlbmN5IGlzIHN0aWxsCj4+
+ICsgICogY2FsY3VsYXRlZCB1c2luZyB0aGUgcHJldmlvdXMgZGl2aXNpb24gZmFjdG9yLgo+PiAr
+ICAqLwo+PiArIHdyaXRlbCgweGQxMzAzMzMzLCByZWcgKyBTVU41MElfQTEwMF9QTExfUEVSSVBI
+MV9QQVRURVJOMF9SRUcpOwo+Cj5TYW1lIGhlcmUKCkhhdmluZyBhIGRlZmluZT8gSSBkb27igJl0
+IHF1aXRlIHVuZGVyc3RhbmQgd2hhdCB5b3UgbWVhbiwgCmNhbiB5b3UgZ2l2ZSBtZSBhbiBleGFt
+cGxlPwoKTUJSLApZYW5ndGFv
