@@ -2,147 +2,156 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6799C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E524D206A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7494E20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:49:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="YW115lvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgFCQsu (ORCPT
+        id S1726184AbgFCQtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgFCQsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:48:50 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFA4C08C5C0;
-        Wed,  3 Jun 2020 09:48:50 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id EAA6A87A0; Wed,  3 Jun 2020 12:48:49 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 12:48:49 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: unable to handle kernel paging request in rb_erase
-Message-ID: <20200603164849.GB2035@fieldses.org>
-References: <0000000000005016dd05a5e6b308@google.com>
- <20200603043435.13820-1-hdanton@sina.com>
- <20200603144326.GA2035@fieldses.org>
+        Wed, 3 Jun 2020 12:49:23 -0400
+Received: from mout.web.de ([212.227.15.4]:55943 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgFCQtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 12:49:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591202915;
+        bh=TE+7YlXa9CphjYQj4lBe/p+j6I9U+M1rVqU01v24P/I=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=YW115lvVNjR2jH9PLPfr1gZboxWOjIZBDQDmtKgYy+sjA/VBrvDxQrR2U15hdkoc6
+         PD6S9apWwMiBjuczMvlrlcvWpFIB2w+EBetf+MPiQNSIAAbewjMtV2AwcwzXmk1vRt
+         WG5lpTO8krttpvNOjquegXL4Hv4F1EzU2Sk/N3XQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.82.231]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LkVZr-1j8ZnE01xz-00cMPm; Wed, 03
+ Jun 2020 18:48:35 +0200
+To:     Chuhong Yuan <hslester96@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-geode@lists.infradead.org
+Cc:     Andrew Morton <akpm@osdl.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Adrian Bunk <bunk@stusta.de>,
+        Andres Salomon <dilinger@queued.net>,
+        David Vrabel <dvrabel@arcom.com>,
+        James Simmons <jsimmons@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fbdev: geocode: Add the missed pci_disable_device() in
+ gx1fb_map_video_memory()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <4bec4498-05a2-9ec5-8b91-7934d05ded68@web.de>
+Date:   Wed, 3 Jun 2020 18:48:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603144326.GA2035@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:EQx1HmrmztYYs1gNBf9Qss7JOHw/RMkgoVB+L6NgVpS/+umFR/V
+ MqMloFUD4fENWisJD03digB1Ju+ZMlhJD9vGuOucOmA78rqfpmpaYg8JSXCSOsqseFRJw5j
+ kvTEp+xDjsO9b8zCvad69DU5gpE+8arabzKrGusQgPTqFA3q8F9/8Hx756DSi2a2aqpx+O6
+ QT03R4NWxvy/jHuzuVXcA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BHwkEzjKZuU=:Ou1ujXjeipDwFFpp8brFCZ
+ Sn87Zf9YXuFMwrWPXsc8RQzXwX3WPO/UD/uMwK0/e/QV8tZfsFzZTQbn4AMhoqTjXpM36gogX
+ 3NkP2mvdP9PCdHbe1bBrO6O8aqnIFJPS5bEuqq4BjhRhIRReNoDJXuH6oocC3+wULOOsPxd0P
+ NyeWORfBsB3Xz1bltJE24cGz6yABOY78iHE1pXTsU5oTW2602v3NJnBw8x9RUur1e7jXF93g1
+ KM8vuUkHdsiukesfuKpys4YnS2Nz03ww8AiOZ0UJkBn9f17yZCJo29kmRYe907soFdO4XolMo
+ NWc03y6Zkq4U6zwSS0FS6a/Cx94N7LZj9OMCg6xU4zxwKY8LcTDZ5lsWENKMhHIwewTUZLwIF
+ h0RlJdg3b3iQUvZ6mHGinnC8lcS0NZwciTqfSMkU0UGbWzHN0FUo235agQm9qqtWrJenFUyaz
+ dkSrG8WUNOKVcfmpRQT2xHx+AURlue20QS9eeKYUF0Cbs1g9kAq15QAvYYgTr5mcZ+MJHp5f8
+ 4shQaEAR1B4vAl5nDezR+HJ5jUqeqaFvBtzb42HlEGIcmBL/s8Iro0dG8JIbiPk9RNYNft6y4
+ xVDGcvbi7tBcvMWk567d6yQPxyjfjjBixcMD4dTbcdHutQDBZR7QqYNI6wURF5jfo7SKsD+u2
+ CnE6znCg3wedhPPCw9X9SfZhzT4iCsExmR+nvRsEtC/x4EaLrvedymQfq+D9TlrMX9CGb/prO
+ FRpb4ELaKV00vfPWTJFbz+sKM49fRiT/oZvEFFSuj8BuJVp2OYtAaUD2BkGZd2Uw/tNLGjbzT
+ EgRLXvvcFSsDFEUuPO+99Dyz2B1dDadsfRTq3LWPSj5cxETzA+LFQ/NIn+WUzlPkqDXONH4Xp
+ oMp5YdnkOBocwWc+//inFZXhaalgEEzKRbdVKyBe9A2214Tl2SzZMktn2s5JanuwnvYRKFMWP
+ xhMhiOtBj1gv3zfuNVEFDGM7rrPLZudlE5Yuz2Ycywo0FE1SNcGP2nlnMjJZGUzEHntMRcupB
+ kqmZcCdD6Ri6pATkZMcqa6xepiy3hWzxNStqGGFRkdL6F5+khJWlNWVStUkmi38CnY4TLLm6N
+ y9s6mB4r5TMYwpJadeEKIS7UVgmYi/6ijBKu+IRq3ValdHuEqPiqnjOfAF54trMi0Fu9KfRhT
+ mLjdtHYXqkE1vpWOsHr1SIvHphcmtZRdawQXDGftMuD5VbDaCx62KZuK5IoBTsJGjsMya/TUN
+ Hx6zdj+t6Ft7QOvUj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 10:43:26AM -0400, J. Bruce Fields wrote:
-> On Wed, Jun 03, 2020 at 12:34:35PM +0800, Hillf Danton wrote:
-> > 
-> > On Tue, 2 Jun 2020 17:55:17 -0400 "J. Bruce Fields" wrote:
-> > > 
-> > > As far as I know, this one's still unresolved.  I can't see the bug from
-> > > code inspection, and we don't have a reproducer.  If anyone else sees
-> > > this or has an idea what might be going wrong, I'd be interested.--b.
-> > 
-> > It's a PF reported in the syz-executor.3 context (PID: 8682 on CPU:1),
-> > meanwhile there's another at 
-> > 
-> >  https://lore.kernel.org/lkml/20200603011425.GA13019@fieldses.org/T/#t
-> >  Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
-> > 
-> > in the kworker context, and one of the quick questions is, is it needed
-> > to serialize the two players, say, using a mutex?
-> 
-> nfsd_reply_cache_shutdown() doesn't take any locks.  All the data
-> structures it's tearing down are per-network-namespace, and it's assumed
-> all the users of that structure are gone by the time we get here.
-> 
-> I wonder if that assumption's correct.  Looking at nfsd_exit_net()....
-> 
-> nfsd_reply_cache_shutdown() is one of the first things we do, so I think
-> we're depending on the assumption that the interfaces in that network
-> namespace, and anything referencing associated sockets (in particular,
-> any associated in-progress rpc's), must be gone before our net exit
-> method is called.
-> 
-> I wonder if that's a good assumption.
+> Add the missed function call to fix the bug.
 
-I think that assumption must be the problem.
+=E2=80=A6
+> +++ b/drivers/video/fbdev/geode/gx1fb_core.c
+> @@ -208,29 +208,44 @@  static int gx1fb_map_video_memory(struct fb_info =
+*info, struct pci_dev *dev)
+=E2=80=A6
+>  	return 0;
+> +
+> +err:
+> +	pci_disable_device(dev);
+> +	return ret;
+>  }
+=E2=80=A6
 
-That would explain why the crashes are happening in nfsd_exit_net as
-opposed to somewhere else, and why we're only seeing them since
-3ba75830ce17 "nfsd4: drc containerization".
+I suggest to use more descriptive labels so that the exception handling
+can be improved accordingly.
 
-I wonder what *is* safe to assume when the net exit method is called?
+ 	return 0;
++
++e_nomem:
++	ret =3D -ENOMEM;
++disable_device:
++	pci_disable_device(dev);
++	return ret;
+ }
 
---b.
 
-> 
-> --b.
-> 
-> > 
-> > 
-> > > On Sun, May 17, 2020 at 11:59:12PM -0700, syzbot wrote:
-> > > > Hello,
-> > > > 
-> > > > syzbot found the following crash on:
-> > > > 
-> > > > HEAD commit:    9b1f2cbd Merge tag 'clk-fixes-for-linus' of git://git.kern..
-> > > > git tree:       upstream
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15dfdeaa100000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0e37e9d19bded16b8ab9
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > 
-> > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > 
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com
-> > > > 
-> > > > BUG: unable to handle page fault for address: ffff887ffffffff0
-> > > > #PF: supervisor read access in kernel mode
-> > > > #PF: error_code(0x0000) - not-present page
-> > > > PGD 0 P4D 0 
-> > > > Oops: 0000 [#1] PREEMPT SMP KASAN
-> > > > CPU: 1 PID: 8682 Comm: syz-executor.3 Not tainted 5.7.0-rc5-syzkaller #0
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > > RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
-> > > > RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
-> > > > Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
-> > > > RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
-> > > > RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
-> > > > RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
-> > > > RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
-> > > > R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
-> > > > R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
-> > > > FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
-> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > Call Trace:
-> > > >  nfsd_reply_cache_free_locked+0x198/0x380 fs/nfsd/nfscache.c:127
-> > > >  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
-> > > >  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
-> > > >  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
-> > > >  setup_net+0x50c/0x860 net/core/net_namespace.c:364
-> > > >  copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
-> > > >  create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:108
-> > > >  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:229
-> > > >  ksys_unshare+0x43d/0x8e0 kernel/fork.c:2970
-> > > >  __do_sys_unshare kernel/fork.c:3038 [inline]
-> > > >  __se_sys_unshare kernel/fork.c:3036 [inline]
-> > > >  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3036
-> > > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> > > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+Regards,
+Markus
