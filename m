@@ -2,106 +2,200 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E868AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB31F2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BCD2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="gk244yjd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n4OmWpRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgFCRmu (ORCPT
+        id S1726316AbgFCRoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58200 "EHLO
+        Wed, 3 Jun 2020 13:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbgFCRmq (ORCPT
+        with ESMTP id S1726071AbgFCRo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:42:46 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BACC08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:33:31 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id j12so1856693lfh.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:33:31 -0700 (PDT)
+        Wed, 3 Jun 2020 13:44:29 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984DEC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:44:29 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e9so2213768pgo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:44:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RiYI0t+KrBvaJgMcqUi2332VvHKyX88P2wlQysjVLXM=;
-        b=gk244yjdaq9AeMPc0x74cYRwy2EEkQH/A2o2vAvYivtoPifzXZ4zIPTJxNnt6AEms3
-         lnpu4id+cI4xfoV50YJ3gBY/KHwO5czVFEAW3yZvg2XLVI0C+9X1+Ckei58TxH5yrgfU
-         PF13oW+pEFgFc9YI47rXwqVQRStTEWiZL8fC7FVTh8rSr0KJdluA2FI89xLVmbfQ+NEW
-         wlgPHeXOEVwRUcFUMyqo37mmdKmoeKXeGMAoiKXHwA/4WYa5strDvITPRW9Rem2vUDvL
-         zNBIpLEJlrIhR0I1My/Ub2bW9Sw0qyMOt/HBDths765G9kyJoGaQBb+35SazRc8zZLjg
-         m+LA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jq/XMCu8C1tBnhihgN8ovqZ4K39bLgFUtiV401gBtko=;
+        b=n4OmWpRd0KqGc/av3cLu3mkKaDuyVkxfyBJv0Wou/E6+ulN06HRx90pStlf/XT8Fxm
+         fLLo06uUWRUfGVUrvhykXlwLhVhqwSdEmnyYjAOyVBi0HcCG+gUJwRVsSEF10Ag01ocY
+         K9HpjUho6PLw14i3tEynLMyHPLH1DE5/cRKRl7xTFIZoSUcWbknjFI9GPcFDUztUmlHK
+         FQYJvgMFS+wV8csnxqHRm1j8HL3N39hm2Ep2XqT5bMw/QBRtrMBVos08vA3n0/pp8VBy
+         o0hyo3J/r0Y4aftMlIInLxhJCtOq6ihq6WdXPODi6c/PAV3+soEvVNYIJlnoMUix3M9R
+         rO2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RiYI0t+KrBvaJgMcqUi2332VvHKyX88P2wlQysjVLXM=;
-        b=WhNf2uH+FRGKAwHj9wPL56tx6nFivDR9FFoGBVMYulRijweWUJ8dZYea3IpxhRL+T9
-         fLdE6w0yQlhiEU1pGSPQ8z0QcHG/JgJQimPhyShrEyM4MTfqgncOVLE2q6JWYi589rVg
-         b0VER97T8t8vqF30E7YTqfcq1b6TAvln1OCVKGTce2ZXi0j75zKrhVCmVAFAPoSOWbLf
-         /DYEEVYAyprLdBdZekx4Wvglg1bWlOCSU4sus4L6SS6HF0v3jrFiDul56iq0JI0+23fL
-         g6YW/VEUYFtjvrJ35XyIXwv+JMlgIpCE3LbdBp6XOd1TBrv86N+3xsUyghC+SQVu8mnN
-         MJ3g==
-X-Gm-Message-State: AOAM532PYzQGfnHrXu8DGJyBVeYMyO1G1T4a1n+wkf3rDUTgUOti0Zoo
-        Gk5E3r+s7i+A8qzkinWP+RfsWQ==
-X-Google-Smtp-Source: ABdhPJxlDbpPhvBO2HwzpUWB+mZRWd3ea7bAmLgctD4jOZItUkkhqH0olCiHDFJagt7e80KPbSXkjA==
-X-Received: by 2002:ac2:489a:: with SMTP id x26mr297287lfc.111.1591205609563;
-        Wed, 03 Jun 2020 10:33:29 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:448d:774a:2057:6699:2c75:847d? ([2a00:1fa0:448d:774a:2057:6699:2c75:847d])
-        by smtp.gmail.com with ESMTPSA id q8sm815921lfo.13.2020.06.03.10.33.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 10:33:28 -0700 (PDT)
-Subject: Re: [PATCH v3] usb: host: xhci-mtk: avoid runtime suspend when
- removing hcd
-To:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        stable@vger.kernel.org
-Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <ebd32a2b-c4ba-8891-b13e-f6c641a94276@linux.intel.com>
- <1591189767-21988-1-git-send-email-macpaul.lin@mediatek.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <b2f3aa9f-a592-0e8c-f897-f5d885fb9740@cogentembedded.com>
-Date:   Wed, 3 Jun 2020 20:33:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jq/XMCu8C1tBnhihgN8ovqZ4K39bLgFUtiV401gBtko=;
+        b=Xfpsl71vgtwkhzN1NfGR6RYlOjci6L0Hd1lTWn3lQO7Cv440mNYvWfQdsaj/lSoxYZ
+         PXYTctW5Mx7sRvq9SasJcQHIgwBQ6DtBeq5nrVGA2SktSl/ync3/luoVWS0D49SCXly6
+         UXdObu3hfMZA+63EBxrixqO4XUsrcRFCUaTAMNNwA07lccUdfMNugDZ15EZ6MWh27Lrd
+         lsLQ4P+mYEPGpxmP8rq5d4QdryUPyj9r9B4RC/yMzWo3PL/Umdk2QFRttEbNbrEo8KSE
+         I2vtbcsRTvfM379uC+HnxaYfgLss1QEUKuGovs+CoD0hhmw/NQPegcoQv/RzAL80zTCO
+         lwtw==
+X-Gm-Message-State: AOAM531LktyznISNN0Kd8ctMB0Jn2QX8QEuVJoTz/Vl3rZ/FcOc3rTef
+        phB28s7KgFjCUkAwZ0Zx7uEmIhzv2og=
+X-Google-Smtp-Source: ABdhPJzdyI4/XC8yusU4a6nrAdgweku9ER1s7t/uGLDl/DV7BBjH+O2YCLYp+G3uOF/1M+P7fOJY/Q==
+X-Received: by 2002:aa7:8dc7:: with SMTP id j7mr245043pfr.169.1591206268980;
+        Wed, 03 Jun 2020 10:44:28 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id m12sm3153473pjs.41.2020.06.03.10.44.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 10:44:28 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 11:44:26 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+Message-ID: <20200603174426.GA23165@xps15>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <20200601212858.GB24287@xps15>
+ <6d759cc28628ea72767c1304883630eb@codeaurora.org>
+ <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
+ <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
+ <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
+ <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org>
+ <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
+ <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1591189767-21988-1-git-send-email-macpaul.lin@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a5a6a6d-b86d-df45-cf91-7081e70d88a3@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
-
-On 03.06.2020 16:09, Macpaul Lin wrote:
-
-> When runtime suspend was enabled, runtime suspend might happened
-
-    Happen.
-
-> when xhci is removing hcd. This might cause kernel panic when hcd
-> has been freed but runtime pm suspend related handle need to
-> reference it.
+On Wed, Jun 03, 2020 at 02:34:10PM +0100, Robin Murphy wrote:
+> On 2020-06-03 14:22, Mike Leach wrote:
+> > Hi Sai,
+> > 
+> > On Wed, 3 Jun 2020 at 13:14, Sai Prakash Ranjan
+> > <saiprakash.ranjan@codeaurora.org> wrote:
+> > > 
+> > > Hi Mike,
+> > > 
+> > > On 2020-06-03 16:57, Mike Leach wrote:
+> > > > Hi,
+> > > > 
+> > > > On Wed, 3 Jun 2020 at 11:24, Sai Prakash Ranjan
+> > > > <saiprakash.ranjan@codeaurora.org> wrote:
+> > > > > 
+> > > > > Hi Mike,
+> > > > > 
+> > > > > Thanks again for looking at this.
+> > > > > 
+> > > > > On 2020-06-03 03:42, Mike Leach wrote:
+> > > > > [...]
+> > > > > 
+> > > > > > > 
+> > > > > > > SMMU/IOMMU won't be able to do much here as it is the client's
+> > > > > > > responsiblity to
+> > > > > > > properly shutdown and SMMU device link just makes sure that
+> > > > > > > SMMU(supplier) shutdown is
+> > > > > > > called only after its consumers shutdown callbacks are called.
+> > > > > > 
+> > > > > > I think this use case can be handled slightly differently than the
+> > > > > > general requirements for modular CoreSight drivers.
+> > > > > > 
+> > > > > > What is needed here is a way of stopping the underlying ETR hardware
+> > > > > > from issuing data to the SMMU, until the entire device has been shut
+> > > > > > down, in a way that does not remove the driver, breaking existing
+> > > > > > references and causing a system crash.
+> > > > > > 
+> > > > > > We could introduce a new mode to the ETR driver - e.g.
+> > > > > > CS_MODE_SHUTDOWN.
+> > > > > > 
+> > > > > > At the end of the block tmc_shutdown(struct amba_device *adev), set
+> > > > > > drvdata->mode to CS_MODE_SHUTDOWN & remove the coresight_unregister().
+> > > > > > This new mode can be used to  prevent the underlying hardware from
+> > > > > > being able to restart until the device is re-powered.
+> > > > > > 
+> > > > > > This mode can be detected in the code that enables / disables the ETR
+> > > > > > and handled appropriately (updates to tmc_enable_etr_sink and
+> > > > > > tmc_disable_etr_sink).
+> > > > > > This mode will persist until the device is re-started - but because we
+> > > > > > are on the device shutdown path this is not an issue.
+> > > > > > 
+> > > > > > This should leave the CoreSight infrastructure stable until the
+> > > > > > drivers are shut down normally as part of the device power down
+> > > > > > process.
+> > > > > > 
+> > > > > 
+> > > > > Sounds good to me, but if the coresight_unregister() is the trouble
+> > > > > point
+> > > > > causing these crashes, then can't we just remove that from
+> > > > > tmc_shutdown()
+> > > > > callback? This would be like maintaining the same behaviour as now
+> > > > > where
+> > > > > on reboot/shutdown we basically don't do anything except for disabling
+> > > > > ETR.
+> > > > 
+> > > > No - the new mode prevents race conditions where the thread shutting
+> > > > down the SMMU does the ETR shutdown, but then another thread happens
+> > > > to be trying to start trace and restarts the ETR.
+> > > > It also prevents the condition Mathieu discussed where a thread might
+> > > > be attempting to shutdown trace - this could try to disable the
+> > > > hardware again re-releasing resources/ re-flushing and waiting for
+> > > > stop.
+> > > > 
+> > > 
+> > > I do not think there will a race between SMMU shutdown and ETR shutdown.
+> > > Driver core takes care of calling SMMU shutdown after its consumer
+> > > shutdown callbacks via device link, otherwise there would already be
+> > > bugs in all other client drivers.
+> > > 
+> > 
+> > I am not saying there could be a race between tmc_shutdowm and
+> > Smmu_shutdown - there may be a case if the coresight_disable_path
+> > sequence is running and gets to the point of disabling the ETR after
+> > the SMMU callback has disabled it.
 > 
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-[...]
+> I'm confused now - there is no "SMMU callback", we're talking about the
+> system-wide cleanup from kernel_shutdown_prepare() or
+> kernel_restart_prepare(). As far as I'm aware userspace should be long gone
+> by that point, so although trace may have been left running, the chance of
+> racing against other driver operations seems pretty unlikely.
 
-MBR, Sergei
+Robin has a point - user space is long gone at this time.  As such the first 
+question to ask is what kind of CS session was running at the time the system
+was shutting down.  Was it a perf session of a sysfs session?
+
+I'm guessing it was a sysfs session because user space has been blown away a
+while back and part of that process should have killed all perf sessions.
+
+If I am correct then simply switching off the ETR HW in the shutdown() amba bus
+callback should be fine - otherwise Mike's approach is mandatory.  There is 
+also the exchange between Robin and Sai about removing the SMMU shutdown
+callback, but that thread is still incomplete. 
+
+Thanks,
+Mathieu
+
+> 
+> Robin.
