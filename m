@@ -2,139 +2,399 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A836C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F039C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE3262074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BnoTwQqr"
+	by mail.kernel.org (Postfix) with ESMTP id 7EC792074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgFCIBR (ORCPT
+        id S1726210AbgFCIBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:01:17 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62375 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725275AbgFCIBQ (ORCPT
+        Wed, 3 Jun 2020 04:01:32 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50031 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCIBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:01:16 -0400
-X-UUID: 4ca35eb9f2224bd58242cb8ba52937b9-20200603
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=07Kpr56aB3PFy6IWckMxSvdLdNklg9y3xgmgR9sXxKc=;
-        b=BnoTwQqrI6c5pqUfBu6bW3IvXyHAyvA2720ByQBW2kMzuPTryV1OGWaGW6EPN/d+JDnayq5Aq++yoKmI5BFbYVhUO3hzR4KoXB9ig3nXUowlX/lB/GGbYbOOpPbvfTXCkU4HuBmzJu/JXrzBmjs763u2UubjwrzS2u0vValEcJk=;
-X-UUID: 4ca35eb9f2224bd58242cb8ba52937b9-20200603
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 172606472; Wed, 03 Jun 2020 15:54:18 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 3 Jun 2020 15:54:16 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 3 Jun 2020 15:54:16 +0800
-Message-ID: <1591170857.19414.5.camel@mtkswgap22>
-Subject: Re: Security Random Number Generator support
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>,
-        Julius Werner <jwerner@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 3 Jun 2020 15:54:17 +0800
-In-Reply-To: <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-         <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
-         <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
-         <1591169342.4878.9.camel@mtkswgap22>
-         <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 3 Jun 2020 04:01:31 -0400
+X-Originating-IP: 90.112.45.105
+Received: from debian.home (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 387A5240004;
+        Wed,  3 Jun 2020 08:01:19 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Zong Li <zong.li@sifive.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v4 1/4] riscv: Move kernel mapping to vmalloc zone
+Date:   Wed,  3 Jun 2020 04:00:07 -0400
+Message-Id: <20200603080010.13366-2-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200603080010.13366-1-alex@ghiti.fr>
+References: <20200603080010.13366-1-alex@ghiti.fr>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTAzIGF0IDA4OjQwICswMTAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+
-IE9uIDIwMjAtMDYtMDMgMDg6MjksIE5lYWwgTGl1IHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAyMC0w
-Ni0wMiBhdCAyMTowMiArMDgwMCwgTWFyYyBaeW5naWVyIHdyb3RlOg0KPiA+PiBPbiAyMDIwLTA2
-LTAyIDEzOjE0LCBBcmQgQmllc2hldXZlbCB3cm90ZToNCj4gPj4gPiBPbiBUdWUsIDIgSnVuIDIw
-MjAgYXQgMTA6MTUsIE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+
-PiA+Pg0KPiA+PiA+PiBUaGVzZSBwYXRjaCBzZXJpZXMgaW50cm9kdWNlIGEgc2VjdXJpdHkgcmFu
-ZG9tIG51bWJlciBnZW5lcmF0b3INCj4gPj4gPj4gd2hpY2ggcHJvdmlkZXMgYSBnZW5lcmljIGlu
-dGVyZmFjZSB0byBnZXQgaGFyZHdhcmUgcm5kIGZyb20gU2VjdXJlDQo+ID4+ID4+IHN0YXRlLiBU
-aGUgU2VjdXJlIHN0YXRlIGNhbiBiZSBBcm0gVHJ1c3RlZCBGaXJtd2FyZShBVEYpLCBUcnVzdGVk
-DQo+ID4+ID4+IEV4ZWN1dGlvbiBFbnZpcm9ubWVudChURUUpLCBvciBldmVuIEVMMiBoeXBlcnZp
-c29yLg0KPiA+PiA+Pg0KPiA+PiA+PiBQYXRjaCAjMS4uMiBhZGRzIHNlYy1ybmcga2VybmVsIGRy
-aXZlciBmb3IgVHJ1c3R6b25lIGJhc2VkIFNvQ3MuDQo+ID4+ID4+IEZvciBzZWN1cml0eSBhd2Fy
-ZW5lc3MgU29DcyBvbiBBUk12OCB3aXRoIFRydXN0Wm9uZSBlbmFibGVkLA0KPiA+PiA+PiBwZXJp
-cGhlcmFscyBsaWtlIGVudHJvcHkgc291cmNlcyBpcyBub3QgYWNjZXNzaWJsZSBmcm9tIG5vcm1h
-bCB3b3JsZA0KPiA+PiA+PiAobGludXgpIGFuZCByYXRoZXIgYWNjZXNzaWJsZSBmcm9tIHNlY3Vy
-ZSB3b3JsZCAoSFlQL0FURi9URUUpIG9ubHkuDQo+ID4+ID4+IFRoaXMgZHJpdmVyIGFpbXMgdG8g
-cHJvdmlkZSBhIGdlbmVyaWMgaW50ZXJmYWNlIHRvIEFybSBUcnVzdGVkDQo+ID4+ID4+IEZpcm13
-YXJlIG9yIEh5cGVydmlzb3Igcm5nIHNlcnZpY2UuDQo+ID4+ID4+DQo+ID4+ID4+DQo+ID4+ID4+
-IGNoYW5nZXMgc2luY2UgdjE6DQo+ID4+ID4+IC0gcmVuYW1lIG10Njd4eC1ybmcgdG8gbXRrLXNl
-Yy1ybmcgc2luY2UgYWxsIE1lZGlhVGVrIEFSTXY4IFNvQ3MgY2FuDQo+ID4+ID4+IHJldXNlDQo+
-ID4+ID4+ICAgdGhpcyBkcml2ZXIuDQo+ID4+ID4+ICAgLSByZWZpbmUgY29kaW5nIHN0eWxlIGFu
-ZCB1bm5lY2Vzc2FyeSBjaGVjay4NCj4gPj4gPj4NCj4gPj4gPj4gICBjaGFuZ2VzIHNpbmNlIHYy
-Og0KPiA+PiA+PiAgIC0gcmVtb3ZlIHVudXNlZCBjb21tZW50cy4NCj4gPj4gPj4gICAtIHJlbW92
-ZSByZWR1bmRhbnQgdmFyaWFibGUuDQo+ID4+ID4+DQo+ID4+ID4+ICAgY2hhbmdlcyBzaW5jZSB2
-MzoNCj4gPj4gPj4gICAtIGFkZCBkdC1iaW5kaW5ncyBmb3IgTWVkaWFUZWsgcm5nIHdpdGggVHJ1
-c3Rab25lIGVuYWJsZWQuDQo+ID4+ID4+ICAgLSByZXZpc2UgSFdSTkcgU01DIGNhbGwgZmlkLg0K
-PiA+PiA+Pg0KPiA+PiA+PiAgIGNoYW5nZXMgc2luY2UgdjQ6DQo+ID4+ID4+ICAgLSBtb3ZlIGJp
-bmRpbmdzIHRvIHRoZSBhcm0vZmlybXdhcmUgZGlyZWN0b3J5Lg0KPiA+PiA+PiAgIC0gcmV2aXNl
-IGRyaXZlciBpbml0IGZsb3cgdG8gY2hlY2sgbW9yZSBwcm9wZXJ0eS4NCj4gPj4gPj4NCj4gPj4g
-Pj4gICBjaGFuZ2VzIHNpbmNlIHY1Og0KPiA+PiA+PiAgIC0gcmVmYWN0b3IgdG8gbW9yZSBnZW5l
-cmljIHNlY3VyaXR5IHJuZyBkcml2ZXIgd2hpY2gNCj4gPj4gPj4gICAgIGlzIG5vdCBwbGF0Zm9y
-bSBzcGVjaWZpYy4NCj4gPj4gPj4NCj4gPj4gPj4gKioqIEJMVVJCIEhFUkUgKioqDQo+ID4+ID4+
-DQo+ID4+ID4+IE5lYWwgTGl1ICgyKToNCj4gPj4gPj4gICBkdC1iaW5kaW5nczogcm5nOiBhZGQg
-YmluZGluZ3MgZm9yIHNlYy1ybmcNCj4gPj4gPj4gICBod3JuZzogYWRkIHNlYy1ybmcgZHJpdmVy
-DQo+ID4+ID4+DQo+ID4+ID4NCj4gPj4gPiBUaGVyZSBpcyBubyByZWFzb24gdG8gbW9kZWwgYSBT
-TUMgY2FsbCBhcyBhIGRyaXZlciwgYW5kIHJlcHJlc2VudCBpdA0KPiA+PiA+IHZpYSBhIERUIG5v
-ZGUgbGlrZSB0aGlzLg0KPiA+PiANCj4gPj4gKzEuDQo+ID4+IA0KPiA+PiA+IEl0IHdvdWxkIGJl
-IG11Y2ggYmV0dGVyIGlmIHRoaXMgU01DIGludGVyZmFjZSBpcyBtYWRlIHRydWx5IGdlbmVyaWMs
-DQo+ID4+ID4gYW5kIHdpcmVkIGludG8gdGhlIGFyY2hfZ2V0X3JhbmRvbSgpIGludGVyZmFjZSwg
-d2hpY2ggY2FuIGJlIHVzZWQgbXVjaA0KPiA+PiA+IGVhcmxpZXIuDQo+ID4+IA0KPiA+PiBXYXNu
-J3QgdGhlcmUgYSBwbGFuIHRvIHN0YW5kYXJkaXplIGEgU01DIGNhbGwgdG8gcnVsZSB0aGVtIGFs
-bD8NCj4gPj4gDQo+ID4+ICAgICAgICAgIE0uDQo+ID4gDQo+ID4gQ291bGQgeW91IGdpdmUgdXMg
-YSBoaW50IGhvdyB0byBtYWtlIHRoaXMgU01DIGludGVyZmFjZSBtb3JlIGdlbmVyaWMgaW4NCj4g
-PiBhZGRpdGlvbiB0byBteSBhcHByb2FjaD8NCj4gPiBUaGVyZSBpcyBubyAoZWFzeSkgd2F5IHRv
-IGdldCBwbGF0Zm9ybS1pbmRlcGVuZGVudCBTTUMgZnVuY3Rpb24gSUQsDQo+ID4gd2hpY2ggaXMg
-d2h5IHdlIGVuY29kZSBpdCBpbnRvIGRldmljZSB0cmVlLCBhbmQgcHJvdmlkZSBhIGdlbmVyaWMN
-Cj4gPiBkcml2ZXIuIEluIHRoaXMgd2F5LCBkaWZmZXJlbnQgZGV2aWNlcyBjYW4gYmUgbWFwcGVk
-IGFuZCB0aGVuIGdldA0KPiA+IGRpZmZlcmVudCBmdW5jdGlvbiBJRCBpbnRlcm5hbGx5Lg0KPiAN
-Cj4gVGhlIGlkZWEgaXMgc2ltcGx5IHRvIGhhdmUgKm9uZSogc2luZ2xlIElEIHRoYXQgY2F0ZXJz
-IGZvciBhbGwNCj4gaW1wbGVtZW50YXRpb25zLCBqdXN0IGxpa2Ugd2UgZGlkIGZvciBQU0NJIGF0
-IHRoZSB0aW1lLiBUaGlzDQo+IHJlcXVpcmVzIEFSTSB0byBlZGljdCBhIHN0YW5kYXJkLCB3aGlj
-aCBpcyB3aGF0IEkgd2FzIHJlZmVycmluZw0KPiB0byBhYm92ZS4NCj4gDQo+IFRoZXJlIGlzIHpl
-cm8gYmVuZWZpdCBpbiBoYXZpbmcgYSBwbGF0Zm9ybS1kZXBlbmRlbnQgSUQuIEl0IGp1c3QNCj4g
-cG9pbnRsZXNzbHkgaW5jcmVhc2VzIGNvbXBsZXhpdHksIGFuZCBtZWFucyB3ZSBjYW5ub3QgdXNl
-IHRoZSBSTkcNCj4gYmVmb3JlIHRoZSBmaXJtd2FyZSB0YWJsZXMgYXJlIGF2YWlsYWJsZSAoeWVz
-LCB3ZSBuZWVkIGl0IHRoYXQNCj4gZWFybHkpLg0KPiANCj4gICAgICAgICAgTS4NCg0KRG8geW91
-IGtub3cgd2hpY2ggQVJNIGV4cGVydCBjb3VsZCBlZGljdCB0aGlzIHN0YW5kYXJkPw0KT3IgaXMg
-dGhlcmUgYW55IGNoYW5jZSB0aGF0IHdlIGNhbiBtYWtlIG9uZT8gQW5kIGJlIHJldmlld2VkIGJ5
-DQptYWludGFpbmVycz8NCg0KDQo=
+This is a preparatory patch for relocatable kernel.
+
+The kernel used to be linked at PAGE_OFFSET address and used to be loaded
+physically at the beginning of the main memory. Therefore, we could use
+the linear mapping for the kernel mapping.
+
+But the relocated kernel base address will be different from PAGE_OFFSET
+and since in the linear mapping, two different virtual addresses cannot
+point to the same physical address, the kernel mapping needs to lie outside
+the linear mapping.
+
+In addition, because modules and BPF must be close to the kernel (inside
++-2GB window), the kernel is placed at the end of the vmalloc zone minus
+2GB, which leaves room for modules and BPF. The kernel could not be
+placed at the beginning of the vmalloc zone since other vmalloc
+allocations from the kernel could get all the +-2GB window around the
+kernel which would prevent new modules and BPF programs to be loaded.
+
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/riscv/boot/loader.lds.S     |  3 +-
+ arch/riscv/include/asm/page.h    | 10 +++++-
+ arch/riscv/include/asm/pgtable.h | 38 ++++++++++++++-------
+ arch/riscv/kernel/head.S         |  3 +-
+ arch/riscv/kernel/module.c       |  4 +--
+ arch/riscv/kernel/vmlinux.lds.S  |  3 +-
+ arch/riscv/mm/init.c             | 58 +++++++++++++++++++++++++-------
+ arch/riscv/mm/physaddr.c         |  2 +-
+ 8 files changed, 88 insertions(+), 33 deletions(-)
+
+diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
+index 47a5003c2e28..62d94696a19c 100644
+--- a/arch/riscv/boot/loader.lds.S
++++ b/arch/riscv/boot/loader.lds.S
+@@ -1,13 +1,14 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ 
+ #include <asm/page.h>
++#include <asm/pgtable.h>
+ 
+ OUTPUT_ARCH(riscv)
+ ENTRY(_start)
+ 
+ SECTIONS
+ {
+-	. = PAGE_OFFSET;
++	. = KERNEL_LINK_ADDR;
+ 
+ 	.payload : {
+ 		*(.payload)
+diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+index 2d50f76efe48..48bb09b6a9b7 100644
+--- a/arch/riscv/include/asm/page.h
++++ b/arch/riscv/include/asm/page.h
+@@ -90,18 +90,26 @@ typedef struct page *pgtable_t;
+ 
+ #ifdef CONFIG_MMU
+ extern unsigned long va_pa_offset;
++extern unsigned long va_kernel_pa_offset;
+ extern unsigned long pfn_base;
+ #define ARCH_PFN_OFFSET		(pfn_base)
+ #else
+ #define va_pa_offset		0
++#define va_kernel_pa_offset	0
+ #define ARCH_PFN_OFFSET		(PAGE_OFFSET >> PAGE_SHIFT)
+ #endif /* CONFIG_MMU */
+ 
+ extern unsigned long max_low_pfn;
+ extern unsigned long min_low_pfn;
++extern unsigned long kernel_virt_addr;
+ 
+ #define __pa_to_va_nodebug(x)	((void *)((unsigned long) (x) + va_pa_offset))
+-#define __va_to_pa_nodebug(x)	((unsigned long)(x) - va_pa_offset)
++#define linear_mapping_va_to_pa(x)	((unsigned long)(x) - va_pa_offset)
++#define kernel_mapping_va_to_pa(x)	\
++	((unsigned long)(x) - va_kernel_pa_offset)
++#define __va_to_pa_nodebug(x)		\
++	(((x) >= PAGE_OFFSET) ?		\
++		linear_mapping_va_to_pa(x) : kernel_mapping_va_to_pa(x))
+ 
+ #ifdef CONFIG_DEBUG_VIRTUAL
+ extern phys_addr_t __virt_to_phys(unsigned long x);
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 35b60035b6b0..94ef3b49dfb6 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -11,23 +11,29 @@
+ 
+ #include <asm/pgtable-bits.h>
+ 
+-#ifndef __ASSEMBLY__
+-
+-/* Page Upper Directory not used in RISC-V */
+-#include <asm-generic/pgtable-nopud.h>
+-#include <asm/page.h>
+-#include <asm/tlbflush.h>
+-#include <linux/mm_types.h>
+-
+-#ifdef CONFIG_MMU
++#ifndef CONFIG_MMU
++#define KERNEL_VIRT_ADDR	PAGE_OFFSET
++#define KERNEL_LINK_ADDR	PAGE_OFFSET
++#else
++/*
++ * Leave 2GB for modules and BPF that must lie within a 2GB range around
++ * the kernel.
++ */
++#define KERNEL_VIRT_ADDR	(VMALLOC_END - SZ_2G + 1)
++#define KERNEL_LINK_ADDR	KERNEL_VIRT_ADDR
+ 
+ #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+ #define VMALLOC_END      (PAGE_OFFSET - 1)
+ #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+ 
+ #define BPF_JIT_REGION_SIZE	(SZ_128M)
+-#define BPF_JIT_REGION_START	(PAGE_OFFSET - BPF_JIT_REGION_SIZE)
+-#define BPF_JIT_REGION_END	(VMALLOC_END)
++#define BPF_JIT_REGION_START	PFN_ALIGN((unsigned long)&_end)
++#define BPF_JIT_REGION_END	(BPF_JIT_REGION_START + BPF_JIT_REGION_SIZE)
++
++#ifdef CONFIG_64BIT
++#define VMALLOC_MODULE_START	BPF_JIT_REGION_END
++#define VMALLOC_MODULE_END	(((unsigned long)&_start & PAGE_MASK) + SZ_2G)
++#endif
+ 
+ /*
+  * Roughly size the vmemmap space to be large enough to fit enough
+@@ -57,9 +63,16 @@
+ #define FIXADDR_SIZE     PGDIR_SIZE
+ #endif
+ #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+-
+ #endif
+ 
++#ifndef __ASSEMBLY__
++
++/* Page Upper Directory not used in RISC-V */
++#include <asm-generic/pgtable-nopud.h>
++#include <asm/page.h>
++#include <asm/tlbflush.h>
++#include <linux/mm_types.h>
++
+ #ifdef CONFIG_64BIT
+ #include <asm/pgtable-64.h>
+ #else
+@@ -483,6 +496,7 @@ static inline void __kernel_map_pages(struct page *page, int numpages, int enabl
+ 
+ #define kern_addr_valid(addr)   (1) /* FIXME */
+ 
++extern char _start[];
+ extern void *dtb_early_va;
+ void setup_bootmem(void);
+ void paging_init(void);
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index 98a406474e7d..8f5bb7731327 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -49,7 +49,8 @@ ENTRY(_start)
+ #ifdef CONFIG_MMU
+ relocate:
+ 	/* Relocate return address */
+-	li a1, PAGE_OFFSET
++	la a1, kernel_virt_addr
++	REG_L a1, 0(a1)
+ 	la a2, _start
+ 	sub a1, a1, a2
+ 	add ra, ra, a1
+diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+index 8bbe5dbe1341..1a8fbe05accf 100644
+--- a/arch/riscv/kernel/module.c
++++ b/arch/riscv/kernel/module.c
+@@ -392,12 +392,10 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+ }
+ 
+ #if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
+-#define VMALLOC_MODULE_START \
+-	 max(PFN_ALIGN((unsigned long)&_end - SZ_2G), VMALLOC_START)
+ void *module_alloc(unsigned long size)
+ {
+ 	return __vmalloc_node_range(size, 1, VMALLOC_MODULE_START,
+-				    VMALLOC_END, GFP_KERNEL,
++				    VMALLOC_MODULE_END, GFP_KERNEL,
+ 				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
+ 				    __builtin_return_address(0));
+ }
+diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+index 0339b6bbe11a..a9abde62909f 100644
+--- a/arch/riscv/kernel/vmlinux.lds.S
++++ b/arch/riscv/kernel/vmlinux.lds.S
+@@ -4,7 +4,8 @@
+  * Copyright (C) 2017 SiFive
+  */
+ 
+-#define LOAD_OFFSET PAGE_OFFSET
++#include <asm/pgtable.h>
++#define LOAD_OFFSET KERNEL_LINK_ADDR
+ #include <asm/vmlinux.lds.h>
+ #include <asm/page.h>
+ #include <asm/cache.h>
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 736de6c8739f..37be2eb45e58 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -22,6 +22,9 @@
+ 
+ #include "../kernel/head.h"
+ 
++unsigned long kernel_virt_addr = KERNEL_VIRT_ADDR;
++EXPORT_SYMBOL(kernel_virt_addr);
++
+ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+ 							__page_aligned_bss;
+ EXPORT_SYMBOL(empty_zero_page);
+@@ -178,8 +181,12 @@ void __init setup_bootmem(void)
+ }
+ 
+ #ifdef CONFIG_MMU
++/* Offset between linear mapping virtual address and kernel load address */
+ unsigned long va_pa_offset;
+ EXPORT_SYMBOL(va_pa_offset);
++/* Offset between kernel mapping virtual address and kernel load address */
++unsigned long va_kernel_pa_offset;
++EXPORT_SYMBOL(va_kernel_pa_offset);
+ unsigned long pfn_base;
+ EXPORT_SYMBOL(pfn_base);
+ 
+@@ -271,7 +278,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
+ 	if (mmu_enabled)
+ 		return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+ 
+-	pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
++	pmd_num = (va - kernel_virt_addr) >> PGDIR_SHIFT;
+ 	BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+ 	return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+ }
+@@ -372,14 +379,30 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
+ #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
+ #endif
+ 
++static uintptr_t load_pa, load_sz;
++
++void create_kernel_page_table(pgd_t *pgdir, uintptr_t map_size)
++{
++	uintptr_t va, end_va;
++
++	end_va = kernel_virt_addr + load_sz;
++	for (va = kernel_virt_addr; va < end_va; va += map_size)
++		create_pgd_mapping(pgdir, va,
++				   load_pa + (va - kernel_virt_addr),
++				   map_size, PAGE_KERNEL_EXEC);
++}
++
+ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+ {
+ 	uintptr_t va, end_va;
+-	uintptr_t load_pa = (uintptr_t)(&_start);
+-	uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
+ 	uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
+ 
++	load_pa = (uintptr_t)(&_start);
++	load_sz = (uintptr_t)(&_end) - load_pa;
++
+ 	va_pa_offset = PAGE_OFFSET - load_pa;
++	va_kernel_pa_offset = kernel_virt_addr - load_pa;
++
+ 	pfn_base = PFN_DOWN(load_pa);
+ 
+ 	/*
+@@ -402,26 +425,22 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+ 	create_pmd_mapping(fixmap_pmd, FIXADDR_START,
+ 			   (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
+ 	/* Setup trampoline PGD and PMD */
+-	create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
++	create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+ 			   (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
+-	create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
++	create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
+ 			   load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
+ #else
+ 	/* Setup trampoline PGD */
+-	create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
++	create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+ 			   load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
+ #endif
+ 
+ 	/*
+-	 * Setup early PGD covering entire kernel which will allows
++	 * Setup early PGD covering entire kernel which will allow
+ 	 * us to reach paging_init(). We map all memory banks later
+ 	 * in setup_vm_final() below.
+ 	 */
+-	end_va = PAGE_OFFSET + load_sz;
+-	for (va = PAGE_OFFSET; va < end_va; va += map_size)
+-		create_pgd_mapping(early_pg_dir, va,
+-				   load_pa + (va - PAGE_OFFSET),
+-				   map_size, PAGE_KERNEL_EXEC);
++	create_kernel_page_table(early_pg_dir, map_size);
+ 
+ 	/* Create fixed mapping for early FDT parsing */
+ 	end_va = __fix_to_virt(FIX_FDT) + FIX_FDT_SIZE;
+@@ -441,6 +460,7 @@ static void __init setup_vm_final(void)
+ 	uintptr_t va, map_size;
+ 	phys_addr_t pa, start, end;
+ 	struct memblock_region *reg;
++	static struct vm_struct vm_kernel = { 0 };
+ 
+ 	/* Set mmu_enabled flag */
+ 	mmu_enabled = true;
+@@ -467,10 +487,22 @@ static void __init setup_vm_final(void)
+ 		for (pa = start; pa < end; pa += map_size) {
+ 			va = (uintptr_t)__va(pa);
+ 			create_pgd_mapping(swapper_pg_dir, va, pa,
+-					   map_size, PAGE_KERNEL_EXEC);
++					   map_size, PAGE_KERNEL);
+ 		}
+ 	}
+ 
++	/* Map the kernel */
++	create_kernel_page_table(swapper_pg_dir, PMD_SIZE);
++
++	/* Reserve the vmalloc area occupied by the kernel */
++	vm_kernel.addr = (void *)kernel_virt_addr;
++	vm_kernel.phys_addr = load_pa;
++	vm_kernel.size = (load_sz + PMD_SIZE - 1) & ~(PMD_SIZE - 1);
++	vm_kernel.flags = VM_MAP | VM_NO_GUARD;
++	vm_kernel.caller = __builtin_return_address(0);
++
++	vm_area_add_early(&vm_kernel);
++
+ 	/* Clear fixmap PTE and PMD mappings */
+ 	clear_fixmap(FIX_PTE);
+ 	clear_fixmap(FIX_PMD);
+diff --git a/arch/riscv/mm/physaddr.c b/arch/riscv/mm/physaddr.c
+index e8e4dcd39fed..35703d5ef5fd 100644
+--- a/arch/riscv/mm/physaddr.c
++++ b/arch/riscv/mm/physaddr.c
+@@ -23,7 +23,7 @@ EXPORT_SYMBOL(__virt_to_phys);
+ 
+ phys_addr_t __phys_addr_symbol(unsigned long x)
+ {
+-	unsigned long kernel_start = (unsigned long)PAGE_OFFSET;
++	unsigned long kernel_start = (unsigned long)kernel_virt_addr;
+ 	unsigned long kernel_end = (unsigned long)_end;
+ 
+ 	/*
+-- 
+2.20.1
 
