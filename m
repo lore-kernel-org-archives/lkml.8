@@ -2,279 +2,128 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9789C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D73120679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1179120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ezFtzoSs"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="riGjhQjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgFCHMf (ORCPT
+        id S1725992AbgFCHMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:12:35 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:28944 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCHMd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:12:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591168351; x=1622704351;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=o9kMtIF4hhyMhNfu/gnd15i7ewOp6U8GIDeuJ5OchYM=;
-  b=ezFtzoSsxeZ1cowQAYNojdh+34b7t24iJVeSPTS2daLaYZ9vbLz904Q8
-   HaTFmgKHSdYel+FxrdsNVSwgNRkTtKSsNq/CeT0m/glz5Cm3hMwpDm/j2
-   nBQsz5/TNfqIqjXv0VMsY2x9+ZyK1zqU57zasenDyO27oSegRynAdLzSS
-   Y=;
-IronPort-SDR: r5MJze7nqBCxmBem1BxZDicYV2yHGuc2oGwGHfqfHTkJAY/QszGy6lcLL96AHbTmcH63oho3FY
- bS/C2w9tIW1w==
-X-IronPort-AV: E=Sophos;i="5.73,467,1583193600"; 
-   d="scan'208";a="34199363"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 03 Jun 2020 07:12:15 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id 1B684A27B7;
-        Wed,  3 Jun 2020 07:12:13 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 07:12:12 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 07:11:55 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v10 0/8] Implement Data Access Monitoring-based Memory Operation Schemes
-Date:   Wed, 3 Jun 2020 09:11:30 +0200
-Message-ID: <20200603071138.8152-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 03:12:44 -0400
+Received: from mail-eopbgr1410102.outbound.protection.outlook.com ([40.107.141.102]:11578
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725906AbgFCHMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:12:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LyD2rQMMCGHBISb9JE8xHE2KC575McwZ9N1NN5UymL6fiBkBrOHwxe35k5zPxfo/5aIQN5Z8184IHcDQC4dD7Oshw/vDaoh7Xh0q9uE+0aR9yQ/nI4ol8rF3ud/QZxyE9aaSLhp0Vm4pwSgDfAYhsmexd+SB2qXNkM8qC1XZ+umNyVtfT3YcK0MVaXHeq7xanFLACU5rD7bzPCj3upXOdwnxlzVj/PTS7tTM96y6B6z5yfxEDa+KAZt6B0VFFL7e7k0Do3riXGcAMnXduTVYbXzDv0doSc/DfQqZS2eKRBap+pA3G8EG/jjIAu5QjXJ+gxQoZQ/H8eMV38FXBkYntQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O09FNg/QqNJrwOLxIKRxY3BV76E3fGrDBgibyPwoOdk=;
+ b=ME+i222c1YgG96HWJe05cjQ0H5HvV4wkJtcp4rLAQdAhdypkLSV5Y1uK/VtgYeROIZrwvJwqa9dA8pdUGpKcST9adrIIvwguVkBVkuFopq1e6tdU7FW0mRD3Ib78Hk2GFPjvUGo4Ij+f57IwHWSD4Wguu7/lyZqpG9r+9BOU1h6AF3pu3o4o1PBPqKW5z3oqTtKKbwyjAHjfvHZXMlxboUy9hxwenbr9PWfT60U1k7M1Yab7zj2q9Lzf90q10iw1ppJeouet+TnDDtLI+bVQmdsp5E5k/gxER+wKlS9QraDsdEl3VZljVNUEeLla7PyYE7VK8T0VzU71GFPYFUNRWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O09FNg/QqNJrwOLxIKRxY3BV76E3fGrDBgibyPwoOdk=;
+ b=riGjhQjNWAkUnEJa+5xOXj+1ECekmXcCd3dJoAoEIqgoG6S+r7SgKaDYvNvq6nD7tr8gU0Jp8DxLwJ29xq09QdpNux6QLCBSxasLm5rVFy9jXkkmLMr5EuoYL/FX0HV7IERFrox7tSnKAwhrIxS7RHedCV3I3dS1Fr037Lil6sE=
+Received: from TYXPR01MB1503.jpnprd01.prod.outlook.com (2603:1096:403:e::12)
+ by TYXPR01MB1678.jpnprd01.prod.outlook.com (2603:1096:403:d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Wed, 3 Jun
+ 2020 07:12:35 +0000
+Received: from TYXPR01MB1503.jpnprd01.prod.outlook.com
+ ([fe80::6508:8e66:164c:3dbe]) by TYXPR01MB1503.jpnprd01.prod.outlook.com
+ ([fe80::6508:8e66:164c:3dbe%7]) with mapi id 15.20.3045.018; Wed, 3 Jun 2020
+ 07:12:35 +0000
+From:   "Tada, Kenta (Sony)" <Kenta.Tada@sony.com>
+To:     "x86@kernel.org" <x86@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86/speculation: Check whether speculation is force disabled
+Thread-Topic: [PATCH] x86/speculation: Check whether speculation is force
+ disabled
+Thread-Index: AdY5cwNjHOfD1WXzRFK+VbW3aFu0Zg==
+Date:   Wed, 3 Jun 2020 07:12:35 +0000
+Message-ID: <TYXPR01MB150318D484EE220452A5085AF5880@TYXPR01MB1503.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=sony.com;
+x-originating-ip: [211.125.130.20]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9ebe35a2-59c5-4618-7bd5-08d8078d7dd7
+x-ms-traffictypediagnostic: TYXPR01MB1678:
+x-microsoft-antispam-prvs: <TYXPR01MB1678E327AB0D99515C7E1B0AF5880@TYXPR01MB1678.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:123;
+x-forefront-prvs: 04238CD941
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7gDe2BEBA1HJwKT6egZ80gxkK4A9hl/tn+mO9DdjTFp6pw8+KcrJO2QFmhc6kwRVaXgsmJ/dbdDx6seyTlESxWnOKikA+3ikpViahNyvA+txsWCJKzVdxxUB2k0C0oNNoz/DnkYq6/Mvb7Zq47wl5aFThTwcBQ4hNZ+t9HQjaXg2Mp/eWFtGiQvA4NYSXmLEmOsZbY9V6YiAAtHnQyMpYB+/qUJUHnnKH3t7CAjWBLWeJuHZyYdG8Z2le2Qo6Uw7+lV3nZ6/qsvn2/DoEAKniZh+hOF5zFDWlqPO2A4DtXoqPoo8BfscPt5HGyBV38exn3BZW9nedpDBBmknny1RevjMfR4r2P7g3+z16Qb2DlDRsBQt/Sa7vX5xYbO+6JlX
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYXPR01MB1503.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(66556008)(66476007)(110136005)(66946007)(64756008)(55016002)(33656002)(6506007)(2906002)(7696005)(83380400001)(8936002)(76116006)(316002)(478600001)(9686003)(5660300002)(26005)(66446008)(4326008)(71200400001)(186003)(7416002)(52536014)(86362001)(8676002)(4744005)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: URXSkhegMhrY7Ej2xT4K2iJZ1p9MBY2LGJ3RVhhQUXG88eSVPJBnwccziljGCkHGm+OcQ9C8PbGv7O/3ca07nJuLFHQS0ySgtiuIS9bay45g/f4aMI4meEpOqNjlss2H4pMBr9GRSw/BtUQCQSGg032cu9tsHt98Svti6mjT3PVwH6OvE7i2wkyMpCCw2dHdl0LqO6o/n31CB9Dc68Q/YX1LvM64MqDOj/UoookM9RCTi3JSyahP+vai54zieq8MzS2pWWhS5mrgdfO/Gxv1SLUo7ugXjIsyYXV70XxLvwcqz79pwdnhmSvijLYYQrkwb3wnnhqCw2bNi3U7xC3YP43Zk0z5lUJN4adsVYn6787x8M6MTLXJs7cJ1G/Y8+9Ln+o1GlPv0nIaWqY0MIS+89TAKKWOy6F3/fL3q3l2J0dVwXDmvF61Y5p2osug2Sfale/Ao9R76M2Xomi2cp93mnJvii+4/NjEpQy41n7X9xVeMydpoSxvy8hyV0SWC8vA
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D10UWB003.ant.amazon.com (10.43.161.106) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ebe35a2-59c5-4618-7bd5-08d8078d7dd7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 07:12:35.4423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NUg8kDVeYbj3EtuMYv6e+WVoeOo3thMAu77IosszDLNEEEp5o0FqUGigLPdeBfCWvckh9ds/gYBNcqX1EeAnLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1678
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Once PR_SPEC_FORCE_DISABLE is set, users cannot set PR_SPEC_ENABLE.
+This commit checks whether PR_SPEC_FORCE_DISABLE was previously set.
 
-DAMON[1] can be used as a primitive for data access awared memory management
-optimizations.  For that, users who want such optimizations should run DAMON,
-read the monitoring results, analyze it, plan a new memory management scheme,
-and apply the new scheme by themselves.  Such efforts will be inevitable for
-some complicated optimizations.
+Signed-off-by: Kenta Tada <Kenta.Tada@sony.com>
+---
+ arch/x86/kernel/cpu/bugs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-However, in many other cases, the users would simply want the system to apply a
-memory management action to a memory region of a specific size having a
-specific access frequency for a specific time.  For example, "page out a memory
-region larger than 100 MiB keeping only rare accesses more than 2 minutes", or
-"Do not use THP for a memory region larger than 2 MiB rarely accessed for more
-than 1 seconds".
-
-This RFC patchset makes DAMON to handle such data access monitoring-based
-operation schemes.  With this change, users can do the data access aware
-optimizations by simply specifying their schemes to DAMON.
-
-[1] https://lore.kernel.org/linux-mm/20200525091512.30391-1-sjpark@amazon.com/
-
-
-Evaluations
-===========
-
-We evaluated DAMON's overhead, monitoring quality and usefulness using 25
-realistic workloads on my QEMU/KVM based virtual machine running a kernel that
-RFC v9 of this patchset is applied.
-
-DAMON is lightweight.  It increases system memory usage by only -0.39% and
-consumes less than 1% CPU time in most case.  It slows target workloads down by
-only 0.63%.
-
-DAMON is accurate and useful for memory management optimizations.  An
-experimental DAMON-based operation scheme for THP, 'ethp', removes 69.43% of
-THP memory overheads while preserving 37.11% of THP speedup.  Another
-experimental DAMON-based 'proactive reclamation' implementation, 'prcl',
-reduces 89.30% of residential sets and 22.40% of system memory footprint while
-incurring only 1.98% runtime overhead in the best case (parsec3/freqmine).
-
-NOTE that the experimentail THP optimization and proactive reclamation are not
-for production, just only for proof of concepts.
-
-Please refer to the official document[1] or "Documentation/admin-guide/mm: Add
-a document for DAMON" patch in the latest DAMON patchset for detailed
-evaluation setup and results.
-
-[1] https://damonitor.github.io/doc/html/latest-damos
-
-
-More Information
-================
-
-We prepared a showcase web site[1] that you can get more information.  There
-are
-
-- the official documentations[2],
-- the heatmap format dynamic access pattern of various realistic workloads for
-  heap area[3], mmap()-ed area[4], and stack[5] area,
-- the dynamic working set size distribution[6] and chronological working set
-  size changes[7], and
-- the latest performance test results[8].
-
-[1] https://damonitor.github.io/_index
-[2] https://damonitor.github.io/doc/html/latest-damos
-[3] https://damonitor.github.io/test/result/visual/latest/heatmap.0.html
-[4] https://damonitor.github.io/test/result/visual/latest/heatmap.1.html
-[5] https://damonitor.github.io/test/result/visual/latest/heatmap.2.html
-[6] https://damonitor.github.io/test/result/visual/latest/wss_sz.html
-[7] https://damonitor.github.io/test/result/visual/latest/wss_time.html
-[8] https://damonitor.github.io/test/result/perf/latest/html/index.html
-
-
-Baseline and Complete Git Tree
-==============================
-
-
-The patches are based on the v5.6 plus v14 DAMON patchset[1] and Minchan's
-``do_madvise()`` patch[2], which retrieved from linux-next/master and slightly
-modified for backporting on v5.7.  You can also clone the complete git tree:
-
-    $ git clone git://github.com/sjp38/linux -b damos/rfc/v10
-
-The web is also available:
-https://github.com/sjp38/linux/releases/tag/damos/rfc/v10
-
-There are a couple of trees for entire DAMON patchset series that future
-features are included.  The first one[3] contains the changes for latest
-release, while the other one[4] contains the changes for next release.
-
-[1] https://lore.kernel.org/linux-mm/20200602130125.20467-1-sjpark@amazon.com/
-[2] https://lore.kernel.org/linux-mm/20200302193630.68771-2-minchan@kernel.org/
-[3] https://github.com/sjp38/linux/tree/damon/master
-[4] https://github.com/sjp38/linux/tree/damon/next
-
-
-Sequence Of Patches
-===================
-
-The 1st patch allows DAMON to reuse ``madvise()`` code for the actions.  The
-2nd patch accounts age of each region.  The 3rd patch implements the handling
-of the schemes in DAMON and exports a kernel space programming interface for
-it.  The 4th patch implements a debugfs interface for the privileged people and
-user programs.  The 5th patch implements schemes statistics feature for easier
-tuning of the schemes and runtime access pattern analysis.  The 6th patche adds
-selftests for these changes, and the 7th patch adds human friendly schemes
-support to the user space tool for DAMON.  Finally, the 8th patch documents
-this new feature in the document.
-
-
-Patch History
-=============
-
-Changes from RFC v9
-(https://lore.kernel.org/linux-mm/20200526075702.27339-1-sjpark@amazon.com/)
- - Rebase on v5.7
- - Fix wrong comments and documents for schemes apply conditions
-
-Changes from RFC v8
-(https://lore.kernel.org/linux-mm/20200512115343.27699-1-sjpark@amazon.com/)
- - Rewrite the document (Stefan Nuernberger)
- - Make 'damon_for_each_*' argument order consistent (Leonard Foerster)
- - Implement statistics for schemes
- - Avoid races between debugfs readers and writers
- - Reset age for only significant access frequency changes
- - Add kernel-doc comments in damon.h
-
-Changes from RFC v7
-(https://lore.kernel.org/linux-mm/20200429124540.32232-1-sjpark@amazon.com/)
- - Rebase on DAMON v11 patchset
- - Add documentation
-
-Changes from RFC v6
-(https://lore.kernel.org/linux-mm/20200407100007.3894-1-sjpark@amazon.com/)
- - Rebase on DAMON v9 patchset
- - Cleanup code and fix typos (Stefan Nuernberger)
-
-Changes from RFC v5
-(https://lore.kernel.org/linux-mm/20200330115042.17431-1-sjpark@amazon.com/)
- - Rebase on DAMON v8 patchset
- - Update test results
- - Fix DAMON userspace tool crash on signal handling
- - Fix checkpatch warnings
-
-Changes from RFC v4
-(https://lore.kernel.org/linux-mm/20200303121406.20954-1-sjpark@amazon.com/)
- - Handle CONFIG_ADVISE_SYSCALL
- - Clean up code (Jonathan Cameron)
- - Update test results
- - Rebase on v5.6 + DAMON v7
-
-Changes from RFC v3
-(https://lore.kernel.org/linux-mm/20200225102300.23895-1-sjpark@amazon.com/)
- - Add Reviewed-by from Brendan Higgins
- - Code cleanup: Modularize madvise() call
- - Fix a trivial bug in the wrapper python script
- - Add more stable and detailed evaluation results with updated ETHP scheme
-
-Changes from RFC v2
-(https://lore.kernel.org/linux-mm/20200218085309.18346-1-sjpark@amazon.com/)
- - Fix aging mechanism for more better 'old region' selection
- - Add more kunittests and kselftests for this patchset
- - Support more human friedly description and application of 'schemes'
-
-Changes from RFC v1
-(https://lore.kernel.org/linux-mm/20200210150921.32482-1-sjpark@amazon.com/)
- - Properly adjust age accounting related properties after splitting, merging,
-   and action applying
-
-SeongJae Park (8):
-  mm/madvise: Export do_madvise() to external GPL modules
-  mm/damon: Account age of target regions
-  mm/damon: Implement data access monitoring-based operation schemes
-  mm/damon/schemes: Implement a debugfs interface
-  mm/damon/schemes: Implement statistics feature
-  mm/damon/selftests: Add 'schemes' debugfs tests
-  damon/tools: Support more human friendly 'schemes' control
-  Documentation/admin-guide/mm: Document DAMON-based operation schemes
-
- Documentation/admin-guide/mm/damon/guide.rst  |  35 ++
- Documentation/admin-guide/mm/damon/usage.rst  | 127 +++++-
- include/linux/damon.h                         |  66 ++++
- mm/damon.c                                    | 361 +++++++++++++++++-
- mm/madvise.c                                  |   1 +
- tools/damon/_convert_damos.py                 | 128 +++++++
- tools/damon/_damon.py                         | 143 +++++++
- tools/damon/damo                              |   7 +
- tools/damon/record.py                         | 135 +------
- tools/damon/schemes.py                        | 105 +++++
- .../testing/selftests/damon/debugfs_attrs.sh  |  29 ++
- 11 files changed, 994 insertions(+), 143 deletions(-)
- create mode 100755 tools/damon/_convert_damos.py
- create mode 100644 tools/damon/_damon.py
- create mode 100644 tools/damon/schemes.py
-
--- 
-2.17.1
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index ed54b3b21c39..678ace157035 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1173,6 +1173,9 @@ static int ib_prctl_set(struct task_struct *task, uns=
+igned long ctrl)
+ 		if (spectre_v2_user =3D=3D SPECTRE_V2_USER_STRICT ||
+ 		    spectre_v2_user =3D=3D SPECTRE_V2_USER_STRICT_PREFERRED)
+ 			return -EPERM;
++		/* If speculation is force disabled, enable is not allowed */
++		if (task_spec_ib_force_disable(task))
++			return -EPERM;
+ 		task_clear_spec_ib_disable(task);
+ 		task_update_spec_tif(task);
+ 		break;
+--=20
+2.20.1
 
