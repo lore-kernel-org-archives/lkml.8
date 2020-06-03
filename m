@@ -2,155 +2,132 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C19C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E15C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDAF320734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3152220734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mx++0jGu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WQeFHF/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgFCUWe (ORCPT
+        id S1726235AbgFCUWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54630 "EHLO
+        Wed, 3 Jun 2020 16:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgFCUWb (ORCPT
+        with ESMTP id S1725992AbgFCUWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:22:31 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3700C08C5C3
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 13:22:31 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v24so1208821plo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 13:22:31 -0700 (PDT)
+        Wed, 3 Jun 2020 16:22:52 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA228C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 13:22:51 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m18so4432289ljo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 13:22:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tHrX3xlB9/Ck6H2yHXMw9M9lpn5geMEW0VlHI1L3+6M=;
-        b=mx++0jGuKtq64dlZhGQxV4EMmbblVr3vosFddkncf2n9aCP4dV+FU25/P+2RTCzXSR
-         YQ98u8pItXN34A5TDOzhJGSTUnIRve7DSOCaGMvh1OTRbsHmNUffHrJqGaD+YlUWfIj1
-         pv4yunKEVA1YaL10TpVE6Vm6ExgZIowgbBetA=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TdJhFCab8uJbiEhFxUjAlbMPrdQ9UFlBb1YuICowIK0=;
+        b=WQeFHF/ZgKrYrtKK3ugO8ESs1dBYe1gXckTRhAQoY9XDa1svQ74qxvkpvxwr2n4f39
+         oVKaNGdm1Z7ac8KvCz/iWXEDfpEB4gAqXDxX7moTQmXBqLsW4Q28VXasJ3QHr+x+9k6w
+         0J5sOAEfQ7MB+Tlp4pQGvGRrXW0QxvZrwtPzgXES/1f7jhgQ000EOTu9aNBi85s7rPv9
+         CUmB0o9cF+t5FcGZNqiHLphRWI0bxXTIC21pvn6uPEchxXIopZGQ6RbAUL4kHDiyz8Kl
+         Px88Hy9Scudt/wo3hnds48/MvCfUt/6hv39R1rbfSFs+ijsozDXe2hX6t+BlFd3bBmCK
+         Kr3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tHrX3xlB9/Ck6H2yHXMw9M9lpn5geMEW0VlHI1L3+6M=;
-        b=jHQJKu34JlCtNa95BuzqxfyJ4JB5l94qfwwFs8AvE0T0n7+MuFayPkm3HLLSXeoOct
-         bVU8mdjGBZysy6lhkJeum7h0vI3OYjRnvc1sBYrCPsMzuFD1iPo7nbaom85clTeGT3rz
-         pCWY2h6Etiqd8cyWUMTAe8p5lT8jksbrQZuk203ZbX9ZbLmVfb/Y0808eLF7SIDzN6zO
-         JQK+0GllQyOxJhZf4GeuLEJUcAMs0g/VBKGiodTPmLxW8YpM0EDKXqmOEo7mz6vr7iCP
-         SlVhfGzoT92AVdZBULk9DknrNlIw2OqwsHoD5okmwgalRjTw+P9ayHK3P6D42KKP2/K2
-         F4kg==
-X-Gm-Message-State: AOAM531eZmHfpaBfV6kCzh5nEbIK7mbuUgsVc6dLRXn8Yvn/A03GhcMW
-        9fFbMVgAwKsZhiaPysmDE2c/IQ==
-X-Google-Smtp-Source: ABdhPJyVklrVljdEltZISIFzjaihtRWbnMPEiSVoHCB6853zxT3xI88f3BAugbnZpcsG02Di/gcNag==
-X-Received: by 2002:a17:90a:6886:: with SMTP id a6mr2041876pjd.170.1591215751071;
-        Wed, 03 Jun 2020 13:22:31 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id b19sm2492180pfi.65.2020.06.03.13.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 13:22:30 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
-Cc:     len.brown@intel.com, chromeos-bluetooth-upstreaming@chromium.org,
-        linux-pm@vger.kernel.org, rafael@kernel.org,
-        todd.e.brandt@linux.intel.com, rui.zhang@intel.com,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH] Bluetooth: Allow suspend even when preparation has failed
-Date:   Wed,  3 Jun 2020 13:21:52 -0700
-Message-Id: <20200603132148.1.I0ec31d716619532fc007eac081e827a204ba03de@changeid>
-X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TdJhFCab8uJbiEhFxUjAlbMPrdQ9UFlBb1YuICowIK0=;
+        b=hLVbZNWtuAdxcW4u+U0mb5OIIQ8VCdWee58DqQuubebiQ9lKWgMgkcyMynOG1G2ZdN
+         UH3DL1BdCExnCyef1djhWNYCBegO5RagBIP2ylHswW2z4x/Mj18SXvdW4/E/wBrWRM8+
+         e+wfdOiYm/pXB60wbt66R1WLg5LiSgBN98CXp37iPZjDYc8pkO53DUKglB8zUiCpaR3m
+         nZ3w1/R508MTctCnmOkxE+CWPPk2b23y6mVV2zNS/PEQFdQCa3cOKh+NYDuIr0GordpH
+         EKw1nEQl7KEzQNqMdwWZbg7KzP4IUXADf20t5QrmOP1r9/ZRwRJIojIia/mQx1kpBWIE
+         vUFA==
+X-Gm-Message-State: AOAM5337Xa/xS4V2V6RYIKgNvIstK+whLHHVBRERFTEyhYllHKLVYUeW
+        ns4ZYXRQy7mo3nxp/xOR/T7BMJXGBNUxf9GJoqAdhg==
+X-Google-Smtp-Source: ABdhPJzutiDgyldEVmudvzNme5c1g+PhEmOWmXPCnvCNWJ3N1arSFbjXm30FGIP8+eQu/XZ62XHKL/G7FmwhdefqyC0=
+X-Received: by 2002:a2e:b8d4:: with SMTP id s20mr457085ljp.177.1591215770110;
+ Wed, 03 Jun 2020 13:22:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200603173150.GB1551@shell.armlinux.org.uk> <jhjh7vshvwl.mognet@arm.com>
+ <20200603184500.GC1551@shell.armlinux.org.uk> <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com>
+ <20200603195853.GD1551@shell.armlinux.org.uk>
+In-Reply-To: <20200603195853.GD1551@shell.armlinux.org.uk>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 3 Jun 2020 22:22:38 +0200
+Message-ID: <CAKfTPtAweyV44Dqv1vXm83aLy2PhaWBUnxro-ct=KVhr4XWGwA@mail.gmail.com>
+Subject: Re: v5.7: new core kernel option missing help text
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is preferable to allow suspend even when Bluetooth has problems
-preparing for sleep. When Bluetooth fails to finish preparing for
-suspend, log the error and allow the suspend notifier to continue
-instead.
+On Wed, 3 Jun 2020 at 21:59, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Wed, Jun 03, 2020 at 09:24:56PM +0200, Vincent Guittot wrote:
+> > On Wed, 3 Jun 2020 at 20:45, Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > > It's a start.  I'm still wondering whether I should answer yes or no
+> > > for the platforms I'm building for.
+> > >
+> > > So far, all I've found is:
+> > >
+> > > arch/arm/include/asm/topology.h:#define arch_scale_thermal_pressure topology_get_thermal_pressure
+> > >
+> > > which really doesn't tell me anything about this.  So I'm still in
+> > > the dark.
+> > >
+> > > I guess topology_get_thermal_pressure is provided by something in
+> > > drivers/ which will be conditional on some driver or something.
+> >
+> > You need cpufreq_cooling device to make it useful and only for SMP
+> > I don't think that this should not be user configurable because even
+> > with the description above, it is not easy to choose.
+> > This should be set by the driver that implement the feature which is
+> > only cpufreq cooling device for now it
+>
+> As I have CONFIG_CPU_FREQ_THERMAL=y in my config, I'm guessing (and it's
+> only a guess) that I should say y to SCHED_THERMAL_PRESSURE ?
 
-To also make it clearer why suspend failed, change bt_dev_dbg to
-bt_dev_err when handling the suspend timeout.
+yes, you're right
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-To verify this is properly working, I added an additional change to
-hci_suspend_wait_event to always return -16. This validates that suspend
-continues even when an error has occurred during the suspend
-preparation.
+>
+> > > > +     help
+> > > > +       This option allows the scheduler to be aware of CPU thermal throttling
+> > > > +       (i.e. thermal pressure), providing arch_scale_thermal_pressure() is
+> > > > +       implemented.
+>
+> Is this feature documented in terms of what it does?  Do I assume that
+> as the thermal trip points start tripping, that has an influence on
+> the scheduler?  Or is it the case that the scheduler is wanting to
+> know when the cpu frequency changes?
 
-Example on Chromebook:
-[   55.834524] PM: Syncing filesystems ... done.
-[   55.841930] PM: Preparing system for sleep (s2idle)
-[   55.940492] Bluetooth: hci_core.c:hci_suspend_notifier() hci0: Suspend notifier action (3) failed: -16
-[   55.940497] Freezing user space processes ... (elapsed 0.001 seconds) done.
-[   55.941692] OOM killer disabled.
-[   55.941693] Freezing remaining freezable tasks ... (elapsed 0.000 seconds) done.
-[   55.942632] PM: Suspending system (s2idle)
+When the thermal trip points start tripping, we take into account the
+decrease of the compute capacity of the CU. This reduced capacity is
+used instead of max capacity when we balance the tasks between CPUs.
 
-I ran this through a suspend_stress_test in the following scenarios:
-* Peer classic device connected: 50+ suspends
-* No devices connected: 100 suspends
-* With the above test case returning -EBUSY: 50 suspends
+A similar mechanism is used to account the time "stolen" by IRQ or
+RT/DL tasks to CFS tasks
 
-I also ran this through our automated testing for suspend and wake on
-BT from suspend continues to work.
+>
+> Grepping for "thermal" in Documentation/scheduler brings up nothing.
 
+John Mathew sent a patch to add documentation:
+https://lkml.org/lkml/2020/5/14/290
 
- net/bluetooth/hci_core.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index dbe2d79f233fba..54da48441423e0 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3289,10 +3289,10 @@ static int hci_suspend_wait_event(struct hci_dev *hdev)
- 				     WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
- 
- 	if (ret == 0) {
--		bt_dev_dbg(hdev, "Timed out waiting for suspend");
-+		bt_dev_err(hdev, "Timed out waiting for suspend events");
- 		for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
- 			if (test_bit(i, hdev->suspend_tasks))
--				bt_dev_dbg(hdev, "Bit %d is set", i);
-+				bt_dev_err(hdev, "Suspend timeout bit: %d", i);
- 			clear_bit(i, hdev->suspend_tasks);
- 		}
- 
-@@ -3360,12 +3360,15 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
- 		ret = hci_change_suspend_state(hdev, BT_RUNNING);
- 	}
- 
--	/* If suspend failed, restore it to running */
--	if (ret && action == PM_SUSPEND_PREPARE)
--		hci_change_suspend_state(hdev, BT_RUNNING);
--
- done:
--	return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
-+	/* We always allow suspend even if suspend preparation failed and
-+	 * attempt to recover in resume.
-+	 */
-+	if (ret)
-+		bt_dev_err(hdev, "Suspend notifier action (%x) failed: %d",
-+			   action, ret);
-+
-+	return NOTIFY_STOP;
- }
- 
- /* Alloc HCI device */
--- 
-2.27.0.rc2.251.g90737beb825-goog
-
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
