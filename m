@@ -2,173 +2,168 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B306C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 412F62072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xy2oKhR+"
+	by mail.kernel.org (Postfix) with ESMTP id EBB6D2072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591156545;
+	bh=FiUhhNdnCIUsVkjQis8NSHn7BUnltL4V+761roaOZCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T6fVwk9B4oGDVPBTGwT1Rk4+xFKAyh79o58CZpz/krcxPAT5MeOVOWCc6GzkD3UGQ
+	 T13Bf/z5qkSIQ7tPS/xwadayvA9A5BauP9b6C/NfUPa+JB35TkuqcxvbxF24ocK7Ze
+	 AsTzKGJ5RCMK6NJX21dYL4bD9/pUXpw/kQESG84g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgFCDvY (ORCPT
+        id S1726060AbgFCDzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 23:51:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55354 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFCDvY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 23:51:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0533mFXx106894;
-        Wed, 3 Jun 2020 03:51:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=SJ6Xy9EhhO1mahYBwFQo6lySQegNoTnkZHQ5lceiC3E=;
- b=xy2oKhR+YdTN8HSbkhjBP4oL+y1wFKDBlnPtTuMd9vJlp3hpHCGBcZysDPWuD/W3vKUU
- fZWsx4SU9zretsUJgXDt8Bzd6tDDnlcmsysQ54jIQzWSOXFgh/KoGpM9z0KaSTt2sYmO
- 40JzzBJvgfodLJrI4EBHpipih7Kjrt2RtnX0Ja2h5h5+RYAkRmOqY/t7BXliXfqIdL0w
- F/p9eleUj3wEu4V2yRk30Nd6t4SflCR3IuoISPSZ1N9kkaDojRDtUrBgiEkZgflr2N3s
- C+D2e9ywJT+60c0u65NjgXCsli6rzg+E0QFDhsKyfKD8ZtOC7FfdM0JeaGpddaKgICyj nA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31dkrum2ds-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 03:51:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0533hwFj115116;
-        Wed, 3 Jun 2020 03:49:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31c25que0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 03:49:06 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0533n2ma024413;
-        Wed, 3 Jun 2020 03:49:02 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 20:49:02 -0700
-Date:   Tue, 2 Jun 2020 20:49:00 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
-Cc:     ira.weiny@intel.com, fstests@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] xfs/XXX: Add xfs/XXX
-Message-ID: <20200603034900.GZ8230@magnolia>
-References: <20200413054419.1560503-1-ira.weiny@intel.com>
- <20200413163025.GB6742@magnolia>
- <5ED61324.6010300@cn.fujitsu.com>
- <20200602181444.GD8230@magnolia>
- <5ED7033D.7020009@cn.fujitsu.com>
+        Tue, 2 Jun 2020 23:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbgFCDzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 23:55:44 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871A920674;
+        Wed,  3 Jun 2020 03:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591156542;
+        bh=FiUhhNdnCIUsVkjQis8NSHn7BUnltL4V+761roaOZCA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uB/6aBreDvLnfol9tpFO3hQGPvpNvZXnqaN/IFEeyU3qFpEsnxz1n4H6IcmWYxg1I
+         1ED28OvxAO3sME/Pne5ky5YwoD9Ha+t9bFItspkUCFr9MzyYCsp45HH8pcfcIqFz5s
+         AtdWKj6nRZsA3I8w+AzZR+KoUjXRwfrGgb2RD7JQ=
+Date:   Tue, 2 Jun 2020 20:55:41 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com>
+Subject: Re: memory leak in crypto_create_tfm
+Message-ID: <20200603035541.GB50072@sol.localdomain>
+References: <0000000000002a280b05a725cd93@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5ED7033D.7020009@cn.fujitsu.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030027
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=1 malwarescore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030027
+In-Reply-To: <0000000000002a280b05a725cd93@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 09:56:13AM +0800, Xiao Yang wrote:
-> On 2020/6/3 2:14, Darrick J. Wong wrote:
-> > On Tue, Jun 02, 2020 at 04:51:48PM +0800, Xiao Yang wrote:
-> > > On 2020/4/14 0:30, Darrick J. Wong wrote:
-> > > > This might be a good time to introduce a few new helpers:
-> > > > 
-> > > > _require_scratch_dax ("Does $SCRATCH_DEV support DAX?")
-> > > > _require_scratch_dax_mountopt ("Does the fs support the DAX mount options?")
-> > > > _require_scratch_daX_iflag ("Does the fs support FS_XFLAG_DAX?")
-> > > Hi Darrick,
-> > > 
-> > > Now, I am trying to introduce these new helpers and have some questions:
-> > > 1) There are five testcases related to old dax implementation, should we
-> > > only convert them to new dax implementation or make them compatible with old
-> > > and new dax implementation?
-> > 
-> > What is the 'old' DAX implementation?  ext2 XIP?
-> Hi Darrick,
-> 
-> Thanks for your quick feedback.
-> 
-> Right, the 'old' DAX implementation means old dax mount option(i.e. -o dax)
-> 
-> Compare new and old dax mount option on ext4 and xfs, is the following logic
-> right?
-> -o dax=always == -o dax
-> -o dax=never == without dax
-> -o dax=inode == nothing
+Probably a bug in crypto/drbg.c.  Stephan, can you take a look?
 
-No.  -o dax=always is the same as -o dax.
-dax=inode was and still is the behavior you got with no option at all.
--o dax=never is a new option.
-
-> Of course, we should uses new option if ext4/xfs supports new dax mount
-> option on distros.  But should we fallback to use old option if ext4/xfs
-> doesn't support new dax mount option on some old distros?
-> btw:
-> it seems hard for testcases to use two different sets of mount options(i.e.
-> old and new) so do you have any suggestion?
-
-Try dax=never, it should work on any type of storage device if the
-kernel implements the "new" mount options at all.
-
---D
-
-> > 
-> > > 2) I think _require_xfs_io_command "chattr" "x" is enough to check if fs
-> > > supports FS_XFLAG_DAX.  Is it necessary to add _require_scratch_dax_iflag()?
-> > > like this:
-> > > _require_scratch_dax_iflag()
-> > > {
-> > > 	_require_xfs_io_command "chattr" "x"
-> > > }
-> > 
-> > I suggested that list based on the major control knobs that will be
-> > visible to userspace programs.  Even if this is just a one-line helper,
-> > its name is useful for recognizing which of those knobs we're looking
-> > for.
-> > 
-> > Yes, you could probably save a trivial amount of time by skipping one
-> > iteration of bash function calling, but now everyone has to remember
-> > that the xfs_io chattr "x" flag means the dax inode flag, and not
-> > confuse it for chmod +x or something else.
+On Tue, Jun 02, 2020 at 08:41:21PM -0700, syzbot wrote:
+> Hello,
 > 
-> Got it, thanks for your detailed explanation.
+> syzbot found the following crash on:
 > 
-> Best Regards,
-> Xiao Yang
-> > 
-> > --D
-> > 
-> > > Best Regards,
-> > > Xiao Yang
-> > > 
-> > > 
-> > 
-> > 
-> > .
-> > 
+> HEAD commit:    19409891 Merge tag 'pnp-5.8-rc1' of git://git.kernel.org/p..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13165aa6100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6d41e63a2c7e0715
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2e635807decef724a1fa
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f00ef2100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170f2ef2100000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com
+> 
+> executing program
+> executing program
+> BUG: memory leak
+> unreferenced object 0xffff8881175bc480 (size 64):
+>   comm "syz-executor064", pid 6388, jiffies 4294941622 (age 13.280s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     e0 7e 56 84 ff ff ff ff 00 00 00 00 00 00 00 00  .~V.............
+>   backtrace:
+>     [<0000000029c7602f>] kmalloc include/linux/slab.h:560 [inline]
+>     [<0000000029c7602f>] kzalloc include/linux/slab.h:669 [inline]
+>     [<0000000029c7602f>] crypto_create_tfm+0x31/0x100 crypto/api.c:448
+>     [<00000000bec8cbdb>] crypto_alloc_tfm+0x79/0x1a0 crypto/api.c:527
+>     [<000000002f9791ba>] drbg_prepare_hrng crypto/drbg.c:1509 [inline]
+>     [<000000002f9791ba>] drbg_instantiate crypto/drbg.c:1587 [inline]
+>     [<000000002f9791ba>] drbg_kcapi_seed+0x432/0x6a9 crypto/drbg.c:1980
+>     [<0000000041302bb8>] crypto_rng_reset+0x35/0x1a0 crypto/rng.c:53
+>     [<000000004758c3c4>] alg_setkey crypto/af_alg.c:222 [inline]
+>     [<000000004758c3c4>] alg_setsockopt+0x149/0x190 crypto/af_alg.c:255
+>     [<000000008bc4b5cb>] __sys_setsockopt+0x112/0x230 net/socket.c:2132
+>     [<00000000cfbf30da>] __do_sys_setsockopt net/socket.c:2148 [inline]
+>     [<00000000cfbf30da>] __se_sys_setsockopt net/socket.c:2145 [inline]
+>     [<00000000cfbf30da>] __x64_sys_setsockopt+0x22/0x30 net/socket.c:2145
+>     [<00000000fc9c2183>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+>     [<0000000040e080a1>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> BUG: memory leak
+> unreferenced object 0xffff8881175bc040 (size 64):
+>   comm "syz-executor064", pid 6389, jiffies 4294942172 (age 7.780s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     e0 7e 56 84 ff ff ff ff 00 00 00 00 00 00 00 00  .~V.............
+>   backtrace:
+>     [<0000000029c7602f>] kmalloc include/linux/slab.h:560 [inline]
+>     [<0000000029c7602f>] kzalloc include/linux/slab.h:669 [inline]
+>     [<0000000029c7602f>] crypto_create_tfm+0x31/0x100 crypto/api.c:448
+>     [<00000000bec8cbdb>] crypto_alloc_tfm+0x79/0x1a0 crypto/api.c:527
+>     [<000000002f9791ba>] drbg_prepare_hrng crypto/drbg.c:1509 [inline]
+>     [<000000002f9791ba>] drbg_instantiate crypto/drbg.c:1587 [inline]
+>     [<000000002f9791ba>] drbg_kcapi_seed+0x432/0x6a9 crypto/drbg.c:1980
+>     [<0000000041302bb8>] crypto_rng_reset+0x35/0x1a0 crypto/rng.c:53
+>     [<000000004758c3c4>] alg_setkey crypto/af_alg.c:222 [inline]
+>     [<000000004758c3c4>] alg_setsockopt+0x149/0x190 crypto/af_alg.c:255
+>     [<000000008bc4b5cb>] __sys_setsockopt+0x112/0x230 net/socket.c:2132
+>     [<00000000cfbf30da>] __do_sys_setsockopt net/socket.c:2148 [inline]
+>     [<00000000cfbf30da>] __se_sys_setsockopt net/socket.c:2145 [inline]
+>     [<00000000cfbf30da>] __x64_sys_setsockopt+0x22/0x30 net/socket.c:2145
+>     [<00000000fc9c2183>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+>     [<0000000040e080a1>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> BUG: memory leak
+> unreferenced object 0xffff88811b3ca080 (size 96):
+>   comm "syz-executor064", pid 6389, jiffies 4294942172 (age 7.780s)
+>   hex dump (first 32 bytes):
+>     89 c7 08 cb 8a 12 10 6e 00 00 00 00 00 00 00 00  .......n........
+>     71 51 5a c2 1b 00 00 00 35 7d 00 00 00 00 00 00  qQZ.....5}......
+>   backtrace:
+>     [<000000008ec3eca0>] jent_entropy_collector_alloc+0x1b/0xf8 crypto/jitterentropy.c:662
+>     [<0000000026ed401a>] jent_kcapi_init+0x17/0x40 crypto/jitterentropy-kcapi.c:119
+>     [<00000000be7d6b06>] crypto_create_tfm+0x89/0x100 crypto/api.c:459
+>     [<00000000bec8cbdb>] crypto_alloc_tfm+0x79/0x1a0 crypto/api.c:527
+>     [<000000002f9791ba>] drbg_prepare_hrng crypto/drbg.c:1509 [inline]
+>     [<000000002f9791ba>] drbg_instantiate crypto/drbg.c:1587 [inline]
+>     [<000000002f9791ba>] drbg_kcapi_seed+0x432/0x6a9 crypto/drbg.c:1980
+>     [<0000000041302bb8>] crypto_rng_reset+0x35/0x1a0 crypto/rng.c:53
+>     [<000000004758c3c4>] alg_setkey crypto/af_alg.c:222 [inline]
+>     [<000000004758c3c4>] alg_setsockopt+0x149/0x190 crypto/af_alg.c:255
+>     [<000000008bc4b5cb>] __sys_setsockopt+0x112/0x230 net/socket.c:2132
+>     [<00000000cfbf30da>] __do_sys_setsockopt net/socket.c:2148 [inline]
+>     [<00000000cfbf30da>] __se_sys_setsockopt net/socket.c:2145 [inline]
+>     [<00000000cfbf30da>] __x64_sys_setsockopt+0x22/0x30 net/socket.c:2145
+>     [<00000000fc9c2183>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+>     [<0000000040e080a1>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 > 
 > 
 > 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000002a280b05a725cd93%40google.com.
