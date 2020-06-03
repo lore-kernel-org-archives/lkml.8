@@ -2,42 +2,78 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7755BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C695C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C6720734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B332077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUUV7Qba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgFCWCx (ORCPT
+        id S1726802AbgFCWDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 18:02:53 -0400
-Received: from muru.com ([72.249.23.125]:56922 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbgFCWCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 18:02:49 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 72D84809C;
-        Wed,  3 Jun 2020 22:03:38 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Merlijn Wajer <merlijn@wizzup.org>
-Subject: [PATCH] bus: ti-sysc: Increase max softreset wait
-Date:   Wed,  3 Jun 2020 15:02:42 -0700
-Message-Id: <20200603220242.24165-1-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 3 Jun 2020 18:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbgFCWDs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 18:03:48 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1822C08C5C0;
+        Wed,  3 Jun 2020 15:03:47 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id n23so4741336ljh.7;
+        Wed, 03 Jun 2020 15:03:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=H+XTLQsKZQTaS9x71LzVKV5AjJXygW6lHQ5XJHRgP84=;
+        b=dUUV7Qbai/yDpIobYnOkyFTEKHStSfOTL7JXeJnkrMY43Tl9uo52DQH9zRrvUzx/w3
+         GSZGZ/WndxwyE4L03kLVW7iMNw5BGG66juvXScuxw+cwNGWAD0o9Pzf5Wa4C05LE+kz3
+         6edGMjmh6RHvltFZxAgm+XvnXFZAPos/2Eipstk8yrbceVQhvIuHmHF5KAZRo6fz4rm9
+         a+2BjnmwdwcQCkd8sQjxHLCuOBx8wG4RwUG+hU+8BFkjaGnKrIUhXCoNxb1yxFazlnPl
+         p18p+lmGavi7O1UfJ8w0C8LpyeWAMLu8UCXLK4Wb5OZ2OHpbkW8UcrS6MlvrQTRI2RUN
+         1QqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=H+XTLQsKZQTaS9x71LzVKV5AjJXygW6lHQ5XJHRgP84=;
+        b=BUqyLVlE1JmjTO/HIx/bbnySSBLTt2A9LNpgshzWELQkv8KmI5nBwkN36TVeeUYSaY
+         IzQ/2k3gDwDgfssQqBn9Izv0VHICd2cbFKBs4OLflBkDNOOKfhlEjYqLSwtpgNmS30KV
+         4aMP317bP31klVgwqlvCTgBknLHE3Wk3KSI9MF1AnpTyqrFYC/ltgWBzvjZF9wiZ+zy+
+         A/H8kFLG+tv/YjMWEYoTJPsDWCFgFn1YTiaOjdd92iq0f6qj+cj75vQ/BPHIG9/BpE/c
+         Ijzjhp3Af4441ZmA3Nyv9dl+Q0rPsNaNH/oeeKK0SwGHTxBcHu+ye4AdpqvMdGFUCSY6
+         hYMQ==
+X-Gm-Message-State: AOAM530BP1XttWRNUjh4c/aBWmOo1Fpp4emWEf18aH+UOoeTUyk0s9gZ
+        FwrKiREeQmZ0oWMrPVvcF9HDqVayVAA=
+X-Google-Smtp-Source: ABdhPJyP9AiP4JeY72sPHecrHeTUQlgX6Z1xUv01fOjjXP/M4bAb8Ix7LABoB5UKJcg/KxXYvkwJZg==
+X-Received: by 2002:a2e:8ec1:: with SMTP id e1mr573114ljl.23.1591221826167;
+        Wed, 03 Jun 2020 15:03:46 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
+        by smtp.gmail.com with ESMTPSA id c7sm794800ljj.109.2020.06.03.15.03.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 15:03:45 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     rikard.falkeborn@gmail.com
+Cc:     akpm@linux-foundation.org, andy.shevchenko@gmail.com,
+        arnd@arndb.de, emil.l.velikov@gmail.com, keescook@chromium.org,
+        linus.walleij@linaro.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syednwaris@gmail.com,
+        vilhelm.gray@gmail.com, yamada.masahiro@socionext.com,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] linux/bits.h: fix unsigned less than zero warnings
+Date:   Thu,  4 Jun 2020 00:02:26 +0200
+Message-Id: <20200603220226.916269-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200603215314.GA916134@rikard>
+References: <20200603215314.GA916134@rikard>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,27 +81,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise we can get "OCP softreset timed out" warnings occasionally
-at least for i2c2 on omap4 now that we check the OCP softreset completed
-bit on enable.
+When calling the GENMASK and GENMASK_ULL macros with zero lower bit and
+an unsigned unknown high bit, some gcc versions warn due to the
+comparisons of the high and low bit in GENMASK_INPUT_CHECK.
 
-Reported-by: Merlijn Wajer <merlijn@wizzup.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+To silence the warnings, cast the inputs to int before doing the
+comparisons. The only valid inputs to GENMASK() and GENMASK_ULL() are
+are 0 to 31 or 63. Anything outside this is undefined due to the shifts
+in GENMASK()/GENMASK_ULL(). Therefore, casting the inputs to int do not
+change the values for valid known inputs. For unknown values, the check
+does not change anything since it's a compile-time check only.
+
+As an example of the warning, kindly reported by the kbuild test robot:
+
+from drivers/mfd/atmel-smc.c:11:
+drivers/mfd/atmel-smc.c: In function 'atmel_smc_cs_encode_ncycles':
+include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+|                            ^
+include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
+16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+|                                                              ^
+include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
+39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+|   ^~~~~~~~~~~~~~~~~~~
+>> drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro 'GENMASK'
+49 |  unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+|                         ^~~~~~~
+
+Fixes: 295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Emil Velikov <emil.l.velikov@gmail.com>
+Reported-by: Syed Nayyar Waris <syednwaris@gmail.com>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/bus/ti-sysc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/bits.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -29,7 +29,7 @@
- 
- #define SOC_FLAG(match, flag)	{ .machine = match, .data = (void *)(flag), }
- 
--#define MAX_MODULE_SOFTRESET_WAIT		10000
-+#define MAX_MODULE_SOFTRESET_WAIT		20000
- 
- enum sysc_soc {
- 	SOC_UNKNOWN,
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 4671fbf28842..293d1ee71a48 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -21,9 +21,10 @@
+ #if !defined(__ASSEMBLY__) && \
+ 	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
+ #include <linux/build_bug.h>
++/* Avoid Wtype-limits warnings by casting the inputs to int */
+ #define GENMASK_INPUT_CHECK(h, l) \
+ 	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+-		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++		__builtin_constant_p((int)(l) > (int)(h)), (int)(l) > (int)(h), 0)))
+ #else
+ /*
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
 -- 
-2.26.2
+2.27.0
+
