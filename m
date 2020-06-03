@@ -2,63 +2,116 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57839C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F78C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5EC2068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA46206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:41:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bX+6Mu19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgFCQgg convert rfc822-to-8bit (ORCPT
+        id S1726138AbgFCQk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:36:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47976 "EHLO
+        Wed, 3 Jun 2020 12:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgFCQgg (ORCPT
+        with ESMTP id S1725904AbgFCQk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:36:36 -0400
-Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1C5C08C5C0;
-        Wed,  3 Jun 2020 09:36:35 -0700 (PDT)
-Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
-        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jgWNR-0003Jg-IX; Wed, 03 Jun 2020 18:36:29 +0200
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] lan743x: Added fixed link and RGMII support / debugging
-From:   Roelof Berg <rberg@berg-solutions.de>
-In-Reply-To: <20200603155927.GC869823@lunn.ch>
-Date:   Wed, 3 Jun 2020 18:36:28 +0200
-Cc:     David Miller <davem@davemloft.net>,
-        Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9D950C93-921D-4D50-84C5-A566726B7AA5@berg-solutions.de>
-References: <20200529193003.3717-1-rberg@berg-solutions.de>
- <20200601.115136.1314501977250032604.davem@davemloft.net>
- <D784BC1B-D14C-4FE4-8FD8-76BEBE60A39D@berg-solutions.de>
- <20200603155927.GC869823@lunn.ch>
-To:     Andrew Lunn <andrew@lunn.ch>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1591202195;2365ddb7;
-X-HE-SMSGID: 1jgWNR-0003Jg-IX
+        Wed, 3 Jun 2020 12:40:59 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0623DC08C5C0;
+        Wed,  3 Jun 2020 09:40:58 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a127so1940528pfa.12;
+        Wed, 03 Jun 2020 09:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zSsRjQVeqzJlkafl/aYe8wKiajVfX5PGUdsv//gCtIc=;
+        b=bX+6Mu192lu/2h8881PNWPLVXQ3zIwZ6R9xI32RBvGsT6XZ9z0MTWynTG9bb4G/e15
+         S7vfIBLpXOnyc5xNijc5OCFEQH5AGXD3vNXubqDR4H8KL06gLp+QTH3WQs6IK9cYatTQ
+         kyjd8ZwsInHMPYJ6/dqasLi/MSYJQrbpRcranAO3LWYr0iUk057YYB/O6pYuGN+0ewSi
+         a9HBpGDmfqzdUvt6N2DBmpMs+Nw6Zh8mS/D8qVE6bR3OFgCLiHtJX6CrCeHrYzdE0Tqm
+         /pHN9h9XH23momKxov4QZi9WYMneXeUEMuVSnyHvg9laiEa4hQfQw+5P2ZD4ndDUE6Fc
+         3B6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zSsRjQVeqzJlkafl/aYe8wKiajVfX5PGUdsv//gCtIc=;
+        b=BSfo0v9gMmocYXIKhpSAahnCG6RhmX/EMFjAMEET4gFSJ+6MxDKDn0btEtg/Z2ZtXD
+         ZtsgHbygcKCylNpu7Cu2yhXGcJWCBWZf1OwVdrsEwan+xZxRKutB2wGNvjnv1bESzqn/
+         p8qoJfj2B+b8K39ZNbgcZ+cXT1Nn961tXvfp0uyZUS4U2viAp0Tdb8tTYDcQqBbKY6AL
+         qJGoYRevtj+vO4lQKrE6vZU53WpfHIaxJeYyTs3Ys67TQY6U/0o3Bbx3r0UhG5vcj9ma
+         yQEl1IBTyZZDECosiwIpolKnNzrHewr6279ki4fyRioTQH8e65GEA4XbV5JIAF9yeMeL
+         4Nfg==
+X-Gm-Message-State: AOAM531S9UhoqPuQJ58MhgxIEcrJHo7gGo10v9/oeL/hwLeZLMnAOMST
+        J8geipCcnKbpMTLe0UeCGKw=
+X-Google-Smtp-Source: ABdhPJyAqM9NRasAmW/5DFt/1B7CD8A1GjXPL0PjhxkT2A5C6GdDP7OINYr0jjP8Ffvwg6T0HGl+sQ==
+X-Received: by 2002:a17:90a:642:: with SMTP id q2mr732481pje.71.1591202458251;
+        Wed, 03 Jun 2020 09:40:58 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id b14sm2086360pgb.32.2020.06.03.09.40.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 09:40:57 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Lubomir Rintel <lkundrak@v3.sk>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] media: marvell-ccic: Add missed v4l2_async_notifier_cleanup()
+Date:   Thu,  4 Jun 2020 00:40:48 +0800
+Message-Id: <20200603164048.2101106-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If I find a fix, would I need to submit a delta patch (to our last one) or a full patch ?
+mccic_register() forgets to cleanup the notifier in its error handler.
+mccic_shutdown() also misses calling v4l2_async_notifier_cleanup().
+Add the missed calls to fix them.
 
-Thanks.
+Fixes: 3eefe36cc00c ("media: marvell-ccic: use async notifier to get the sensor")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Also add v4l2_async_notifier_cleanup() for mccic_shutdown().
+  - Modify description.
 
-> So lets try to fix it.
-> 
->    Thanks
-> 	Andrew
-> 
+ drivers/media/platform/marvell-ccic/mcam-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index 09775b6624c6..326e79b8531c 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -1940,6 +1940,7 @@ int mccic_register(struct mcam_camera *cam)
+ out:
+ 	v4l2_async_notifier_unregister(&cam->notifier);
+ 	v4l2_device_unregister(&cam->v4l2_dev);
++	v4l2_async_notifier_cleanup(&cam->notifier);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mccic_register);
+@@ -1961,6 +1962,7 @@ void mccic_shutdown(struct mcam_camera *cam)
+ 	v4l2_ctrl_handler_free(&cam->ctrl_handler);
+ 	v4l2_async_notifier_unregister(&cam->notifier);
+ 	v4l2_device_unregister(&cam->v4l2_dev);
++	v4l2_async_notifier_cleanup(&cam->notifier);
+ }
+ EXPORT_SYMBOL_GPL(mccic_shutdown);
+ 
+-- 
+2.26.2
 
