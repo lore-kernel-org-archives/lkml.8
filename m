@@ -4,94 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1101FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B713AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA2DB20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9494C20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:11:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Elf09EBn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gyta87TF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aWqv3ou5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgFCMJw (ORCPT
+        id S1726126AbgFCMLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:09:52 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:51543 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725833AbgFCMJv (ORCPT
+        Wed, 3 Jun 2020 08:11:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgFCMLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:09:51 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 2F5095CA;
-        Wed,  3 Jun 2020 08:09:50 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Wed, 03 Jun 2020 08:09:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=KIKPwr659s7Oluc5bDuXmKZTOFH2ir7
-        8GgHPyhXlIZc=; b=Elf09EBnIyTSWDhQ48lesKGzcvJGb/O8t5MQPBJzfZtMi5H
-        gdYUQAdjsMyJBbdJvK7QcKtkRu/9mcw5hrgALETEUKgoQFvnP1tRePNq5VJ7Ox3C
-        Q1zviSRRxUQisq7ClS0/SkwiwIYjDXiz1eNT1+dK8Av6alKe2q3CQNZfsoiNLAIU
-        KnmKQpej81CKVf8PvlYYPNwer81R6wrSZFFLXBUZZEOcBm7BCfJaccXRRYdmkhu/
-        69TFXmjx/q63LgXBrEaaXZ4wdR781UWoKxtlq9x1vnK9WseDqJV1/7dka8P6xTJJ
-        oeMBcapzTCzz8tcXwEaNlhiU881by1mY3Rb7yug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KIKPwr
-        659s7Oluc5bDuXmKZTOFH2ir78GgHPyhXlIZc=; b=gyta87TFekwgf1F9TE8IV+
-        pmDMKZBNwj8zSekLpqjiu2XLxND0uSmu1XgWE6gN0XNaRGCC7VGupI+gfQXzBqXr
-        XRVgd8wwwkoIohhxGTNZ3O19PxvthljmDwwKMJ6FLs6Q7u/HiRMItqhGCLjo5OPE
-        Qhtmo8CC/3w6IGQyELAb5vIHnDpIpoDfNx7xucrGXBL+OHBZ09RI6Ay2sGGAg1bJ
-        XUpYZoIKUFeUjLvbXSAd6miCw2TaEuDSdd7mocw/4ey75OllSvO4q7qtJZx6qdI6
-        DhvOHf/kthQHqvllM1jC3sfe/5lG+VJcQyeW3oqBWvagQ/SE78R4aaN8uK9CxOJQ
-        ==
-X-ME-Sender: <xms:DJPXXjsfTE0V4mVwgmr-5qMIfKlamoetIs0bPQfjlVXSIoK9xbuQ3g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefledgfeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
-    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:DJPXXkdq0okIZuqh_Z4AdVGrGGKJ3jx-ZKssyq8hhnRkNn3quPjDOw>
-    <xmx:DJPXXmxi5zyqZjOF21Tf_w5Kn7Y5baOJhzlHp88i-8M60NWlga2LeA>
-    <xmx:DJPXXiNcZXnetn9-91o7OhxsuDBpwk3tJ3l3L2jpQUoZt-ZbeOMmrA>
-    <xmx:DZPXXvYF5KcAY5I_hT4vAuaGvLOxges-cHvobaLhZUnXnjNxnw3QWw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 21674E00A9; Wed,  3 Jun 2020 08:09:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-dev0-519-g0f677ba-fm-20200601.001-g0f677ba6
-Mime-Version: 1.0
-Message-Id: <443d4707-2344-4356-bafb-ca235687dccd@www.fastmail.com>
-In-Reply-To: <20200603120526.16178-1-colin.king@canonical.com>
-References: <20200603120526.16178-1-colin.king@canonical.com>
-Date:   Wed, 03 Jun 2020 21:39:26 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Colin King" <colin.king@canonical.com>,
-        "Jeremy Kerr" <jk@ozlabs.org>, "Joel Stanley" <joel@jms.id.au>,
-        "Alistair Popple" <alistair@popple.id.au>,
-        "Eddie James" <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH]_fsi:_master-ast-cf:_fix_spelling_mistake_"firwmare?=
- =?UTF-8?Q?"_->_"firmware"?=
-Content-Type: text/plain
+        Wed, 3 Jun 2020 08:11:12 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B31BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 05:11:11 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a25so2415516ljp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 05:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YfIwoVqhINbM8JX02JQVBFl5UwDmm1K0R0OAHvfku4E=;
+        b=aWqv3ou5Qov3U3msHumGanAGhQDq5piVnxaH/XWJmipKJsOeWVNQIztptBeNCtMWG6
+         99b3l7r9pG46qUjWpv+WoQs+yVkeYL+OHYfJzjhbwlgDHanfANKMk5J6k2xrDF0jApcs
+         ITr+QKkVRhH2NduIS0rGnMoa1juq/PSUMUe+/Vobm+ot+3yv1cd8yFBR8RpnGpZzbD/i
+         KGvscj/DzzzJcfsZ/B2RW2XxwxgRgDyru1kGkFLZGIOB4klILxvqMmjRjUexshZjeou7
+         IWTl2Oef6qF/8FD3/+nq6Ege6qhULB4qLz6/BgG3qQflgRe1nkZ+ZiOB0fEUutqZ2TNb
+         CrWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YfIwoVqhINbM8JX02JQVBFl5UwDmm1K0R0OAHvfku4E=;
+        b=faLcbsJYw+Au3TKewdDE41WlAEs1OexcdiGqI6sV3LDNlw3SYW0CoqoO3SiPkp6OLg
+         3aB5G6PfEEHuL2RiktLvwNG2MmwTMNKMryTXstaJtBuNSOHBB7ateWbpZuqgN489RgMD
+         SSX6cRd7xXd6UCfKIxUlkV4Ga7ry2T1Uo7MxflUQ/BrA1AsdAux4IcGUqvmvp5NanBMh
+         TOmzLhDBe9gATCkNBaCc780voE5l8+Hr7kmSEf2XXHf/uNMdHmKKXHFtcNUtbMABYYw8
+         gaFcg2AWxjwNDPG5eYH7Q4EntsH/FKKFafIqvukmHEMdVC95g9xKqMzaZXWpdFlVd8vW
+         wawQ==
+X-Gm-Message-State: AOAM533E7w2edM3UUfjGPy4kXJQ7Tw9GgprXDi5qgqPDlD800isKrkOA
+        y2Xm8//JG/Sn9VhwDYykTEs5EZzaoemcpHrtnZ3E6w==
+X-Google-Smtp-Source: ABdhPJwGPqax4Ku+Y+HnI5jIvzA/eJkmp5Pc0XM9c3bmnH0a+2++YRcBgL324sT+NutIXiJsU51+xCLtJmEUSqS/sw4=
+X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr1798631ljo.338.1591186270117;
+ Wed, 03 Jun 2020 05:11:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200513145935.22493-1-benjamin.gaignard@st.com> <20200513145935.22493-15-benjamin.gaignard@st.com>
+In-Reply-To: <20200513145935.22493-15-benjamin.gaignard@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jun 2020 14:10:59 +0200
+Message-ID: <CACRpkdYu2As27M60ogUoLfX1z=XZSCSx5qTLwm5ADdf9Jy7HGQ@mail.gmail.com>
+Subject: Re: [PATCH 14/15] dt-bindings: pinctrl: stm32: Add missing interrupts property
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 5:00 PM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
 
+> Driver use interrupt-parent field so update the bindings to allow it.
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-On Wed, 3 Jun 2020, at 21:35, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a dev_err error message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Patch applied.
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Yours,
+Linus Walleij
