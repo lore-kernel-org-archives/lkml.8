@@ -2,220 +2,85 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5798C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52A3720659
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591175719;
-	bh=n8VF0zVyDnNAMcnVYVFliRQ1fhlSG6GeTCUk2fBuLec=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JbpGjHqms6kX/YDO7Ns7loGUziId1JegWMUnABrt8RUhtl+VZFEz0AeOViyoJlr7M
-	 2HLC8fzcPXFR0/yjHe3apUkZ+k/Q7Bxxa4V5whfss9Lm40MfucoA259IqhK0TNx/VW
-	 ptqwMIS/3W87tAPe7nNAhBRrXmJD5wAUlLDLFVV0=
+	by mail.kernel.org (Postfix) with ESMTP id BCF1520734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgFCJPS (ORCPT
+        id S1726527AbgFCJP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:15:18 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:56023 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgFCJPR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:15:17 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0539Esbh002122;
-        Wed, 3 Jun 2020 18:14:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0539Esbh002122
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591175695;
-        bh=WkoRi0qcjL+OLowdteLADl1qLtuJ/HWKEwgYQ6avQCU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dYypLwI5VjQUrI5LksJCjHXku7K8+GfBch/gpzjz8Bc1ZMIJ2A88Pu/iPLwGSCTC2
-         nwRqUpQypKZh01nqso6TX1Jv1fZ8AMvyr6JOSDVB2Hch82w3M6gRHh50183kBDjprR
-         RdLXcvOW8hdDnzK6cqIN1WU0UnczU6yiMzixRAhMvEnhSaz/IjT21SN6tECnUK1ePW
-         dIgKI/YoN6s58Z7ewLX5mdZ7GAa3EVrf5HM+vhtpD+ektPrIT8KqUXl/rAOnhXAXz6
-         0yjV5aGTDXCOvN8LqOqVyjXS5oSGxeQs+GBtgpbfcUTAWjr2LHNluSZtzgugtOycIl
-         JiakT9Wi2zDpA==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id g44so267083uae.12;
-        Wed, 03 Jun 2020 02:14:54 -0700 (PDT)
-X-Gm-Message-State: AOAM530q7+vWyRGbG55k1s51fffcsNT/YsW3iHYuwrFmQKQQmGPHZ3aP
-        270P2MJ8EIUktstArK18ZPOkNZmBeK+F5tyM7Zc=
-X-Google-Smtp-Source: ABdhPJxqjJvbzrt0CAQOlW8LZFKbwA7XaE4Gc9qWM6Yt1XDz6danBHRdw4t3FweVQDQxJj8eB0foP/gnapLgrxtEAX4=
-X-Received: by 2002:a9f:3791:: with SMTP id q17mr82429uaq.95.1591175693496;
- Wed, 03 Jun 2020 02:14:53 -0700 (PDT)
+        Wed, 3 Jun 2020 05:15:27 -0400
+Received: from smtp.asem.it ([151.1.184.197]:54582 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725355AbgFCJP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:15:26 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000293951.MSG 
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 11:15:19 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 3 Jun
+ 2020 11:15:17 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Wed, 3 Jun 2020 11:15:17 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v1] dt-bindings: leds: fix macro names for pca955x
+Date:   Wed, 3 Jun 2020 11:15:16 +0200
+Message-ID: <20200603091516.31907-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200603053313.3863761-1-masahiroy@kernel.org>
- <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com>
- <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
- <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com>
- <CAK7LNARLUeuiu3Y1cFqT7550MaF8fnBmMTZxKEG0Cy3vpxVkMQ@mail.gmail.com> <CAMj1kXFKuMoYW8Sj=DHeYBSkWyeu+QgP9=fgET83K5D=-DsJ7Q@mail.gmail.com>
-In-Reply-To: <CAMj1kXFKuMoYW8Sj=DHeYBSkWyeu+QgP9=fgET83K5D=-DsJ7Q@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 3 Jun 2020 18:14:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR3YqmSWh_GkXdP+2tb83sOpySeXVi-kP=1eehcD5097Q@mail.gmail.com>
-Message-ID: <CAK7LNAR3YqmSWh_GkXdP+2tb83sOpySeXVi-kP=1eehcD5097Q@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090207.5ED76A26.004C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 6:02 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 3 Jun 2020 at 10:59, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > On Wed, Jun 3, 2020 at 5:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Wed, 3 Jun 2020 at 10:36, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > >
-> > > > On Wed, Jun 3, 2020 at 3:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, 3 Jun 2020 at 07:34, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > > > >
-> > > > > > Documentation/kbuild/makefiles.rst says:
-> > > > > >
-> > > > > >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
-> > > > > >
-> > > > > > I want to disallow lib-y outside of them.
-> > > > > >
-> > > > >
-> > > > > Why?
-> > > >
-> > > >
-> > > > Because I plan to remove lib-y entirely at some point.
-> > > >
-> > > > lib-y is not so useful to shrink the image size because:
-> > > >
-> > > >   - An object in lib.a can be omitted only when no symbol
-> > > >     in that object is referenced.  This rarely happens.
-> > > >
-> > > >   -  lib-y objects are often exported by nature
-> > > >      because lib-y is a collection of utility functions.
-> > > >      Even if no in-tree user, we always need to keep them
-> > > >      because EXPORT_SYMBOL() is the interface to modules.
-> > > >
-> > > >
-> > > > When I worked on commit 7273ad2b08f8ac9563579d16a3cf528857b26f49,
-> > > > I made some research.
-> > > >
-> > > > The benefit of lib-y is just 362 byte for x86_64_defconfig.
-> > > > ( Before: 26578002, After: 26578364)
-> > > >
-> > > > My hope is lib-y will be replaced by dead-code elimination or
-> > > > ultimately by LTO.
-> > > >
-> > > > drivers/firmware/efi/libstub/Makefile
-> > > > is the only Makefile that breaks the rule:
-> > > > "Use of lib-y is normally restricted to `lib/` and `arch/*/lib`"
-> > > >
-> > > >
-> > > >
-> > > >
-> > > > >
-> > > > > > Add a custom rule to build lib.a, which is linked to the decompressor
-> > > > > > for ARCH=x86, ARCH=arm.
-> > > > > >
-> > > > > > For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
-> > > > > > way.
-> > > > > >
-> > > > >
-> > > > > The code works perfectly fine as is, and I don't see what is
-> > > > > fundamentally wrong with using static libraries outside of lib/ and
-> > > > > arch/*/lib.
-> > > >
-> > > > The intended usage of lib-y is to hook lib.a
-> > > > to scripts/vmlinux.sh via KBUILD_VMLINUX_LIBS.
-> > > >
-> > > > This Makefile is just what you found to work.
-> > > >
-> > > >
-> > > > >
-> > > > > Also, I would like this code to still be incorporated as a static
-> > > > > library into arm64 as well, so that only pieces that are actually
-> > > > > needed are incorporated into the final image.
-> > > >
-> > > > No.
-> > > > It is not working like that because you set
-> > > > lib.a to core-y.
-> > > >
-> > > > All objects in core-y are always linked to vmlinux.
-> > > >
-> > >
-> > > The lib.a file is passed to the linker as a static library, so it will
-> > > only grab what it needs.
-> > >
-> > > For instance, if you build arm64 from mainline today, the
-> > > efi_relocate_kernel will not be in the final image, even though it is
-> > > built as part of libstub
-> >
-> >
-> > I built today's mainline kernel
-> > (d6f9469a03d832dcd17041ed67774ffb5f3e73b3).
-> >
-> >
-> > I see it in vmlinux.
-> >
-> >
-> > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  defconfig
-> > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  -j24
-> >     ...
-> > $ aarch64-linux-gnu-nm  -n  vmlinux | grep  efi_relocate_kernel
-> > ffff8000114afb90 t __efistub_efi_relocate_kernel
-> >
->
-> That is strange. I tested this before, and it worked.
->
-> Did anything change recently in the way the linker is invoked?
+The documentation reports the wrong macro names
+related to the pca9532 instead of the pca955x
 
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-Nothing recently.
+v1: add "Acked-by: Rob Herring <robh@kernel.org>"
 
-This is obvious result because
-drivers/firmware/efi/libstub/lib.a
-is passed after ----whole-archive flag.
+ Documentation/devicetree/bindings/leds/leds-pca955x.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
-I guess the following commit is it,
-but it is already 3 years ago.
-
-
-
-commit 799c43415442414b1032580c47684cb709dfed6d (HEAD)
-Author: Nicholas Piggin <npiggin@gmail.com>
-Date:   Fri Jun 9 15:24:17 2017 +1000
-
-    kbuild: thin archives make default for all archs
-
-    Make thin archives build the default, but keep the config option
-    to allow exemptions if any breakage can't be quickly solved.
-
-    Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
-
-
-
-
-
-
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+index 7984efb767b4..7a5830f8d5ab 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+@@ -26,9 +26,9 @@ LED sub-node properties:
+ 		from 0 to 15 for the pca9552
+ 		from 0 to  3 for the pca9553
+ - type: (optional) either
+-	PCA9532_TYPE_NONE
+-	PCA9532_TYPE_LED
+-	PCA9532_TYPE_GPIO
++	PCA955X_TYPE_NONE
++	PCA955X_TYPE_LED
++	PCA955X_TYPE_GPIO
+ 	see dt-bindings/leds/leds-pca955x.h (default to LED)
+ - label : (optional)
+ 	see Documentation/devicetree/bindings/leds/common.txt
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
