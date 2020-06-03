@@ -6,75 +6,63 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2103FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF20C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C2B2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686E820878
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgFCKQc (ORCPT
+        id S1726755AbgFCKSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:16:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53970 "EHLO mx2.suse.de"
+        Wed, 3 Jun 2020 06:18:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:59584 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCKQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:16:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 732DCAC2C;
-        Wed,  3 Jun 2020 10:16:33 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 12:16:28 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] crash: add VMCOREINFO macro for anonymous structs
-Message-ID: <20200603101627.GE14855@linux-b0ei>
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-2-john.ogness@linutronix.de>
+        id S1726393AbgFCKR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:17:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E101131B;
+        Wed,  3 Jun 2020 03:17:57 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59CE13F305;
+        Wed,  3 Jun 2020 03:17:56 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 11:17:53 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        guohanjun@huawei.com, ionela.voinescu@arm.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+Message-ID: <20200603101753.GC7259@bogus>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+ <20200603075200.hbyofgcyiwocl565@vireshk-i7>
+ <20200603100727.GB7259@bogus>
+ <20200603101010.alijrfmte2c6xv5c@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200501094010.17694-2-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200603101010.alijrfmte2c6xv5c@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-05-01 11:46:08, John Ogness wrote:
-> Some structs are not named and are only available via their typedef.
-> Add a VMCOREINFO macro to export field offsets for such structs.
+On Wed, Jun 03, 2020 at 03:40:10PM +0530, Viresh Kumar wrote:
+> On 03-06-20, 11:07, Sudeep Holla wrote:
+> > But I have another question. If we can detect that CPPC on some platforms
+> > rely on CPU registers(I assume FFH registers here and not system/io/...
+> > type of GAS registers), can we set dvfs_on_any_cpu(can't recall exact
+> > flag name) to false if not already done to prevent such issues. Or I am
+> > talking non-sense as it may be applicable only for _set operation and
+>
+>           Yes, non-sense :)
+>
 
-Honestly, I did not get the meaning until I looked at the sample
-usage added by the 2nd patch.
+Thanks for confirming 👍.
 
-The term "anonymous structures" has another meaning in C++. It is
-used for structures without any name that are defined inside a named
-structure.
-
-Something like this might be better:
-
-"crash: Add VMCOREINFO macro to define offset in a struct declared by typedef
-
- The existing macro VMCOREINFO_OFFSET() can't be used for structures
- declared via typedef because "struct" is not part of type definition.
-
- Create another macro for this purpose."
-
-
-Anyway, thanks a lot for the prototype of crash implementation.
-I am happy that it is possible.
-
-Best Regards,
-Petr
-
-PS: It might take few more days until I send some feedback for the
-other patches. They are a bit more complex ;-)
+--
+Regards,
+Sudeep
