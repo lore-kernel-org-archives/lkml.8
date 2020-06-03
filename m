@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF858C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2006BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEF520678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC0E20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgFCGVx (ORCPT
+        id S1726109AbgFCGWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:21:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55926 "EHLO huawei.com"
+        Wed, 3 Jun 2020 02:22:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55902 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725992AbgFCGVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:21:37 -0400
+        id S1725985AbgFCGVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:21:35 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6ECA491E2447AFE10F18;
+        by Forcepoint Email with ESMTP id 5E94BA54E25950125C75;
         Wed,  3 Jun 2020 14:21:33 +0800 (CST)
 Received: from localhost.localdomain (10.175.118.36) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 3 Jun 2020 14:21:23 +0800
+ 14.3.487.0; Wed, 3 Jun 2020 14:21:24 +0800
 From:   Luo bin <luobin9@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <luoxianjun@huawei.com>, <chiqijun@huawei.com>,
         <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: [PATCH net-next 2/5] hinic: add support to set and get irq coalesce
-Date:   Wed, 3 Jun 2020 14:20:12 +0800
-Message-ID: <20200603062015.12640-3-luobin9@huawei.com>
+Subject: [PATCH net-next 4/5] hinic: add support to identify physical device
+Date:   Wed, 3 Jun 2020 14:20:14 +0800
+Message-ID: <20200603062015.12640-5-luobin9@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200603062015.12640-1-luobin9@huawei.com>
 References: <20200603062015.12640-1-luobin9@huawei.com>
@@ -45,689 +45,264 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support to set TX/RX irq coalesce params with ethtool -C and
-get these params with ethtool -c.
+add support to identify physical device by flashing an LED
+attached to it with ethtool -p cmd.
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_dev.h |   8 +
- .../net/ethernet/huawei/hinic/hinic_ethtool.c | 294 ++++++++++++++++++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  62 ++++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  21 ++
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |   3 +
- .../net/ethernet/huawei/hinic/hinic_main.c    |  56 ++++
- drivers/net/ethernet/huawei/hinic/hinic_rx.c  |  19 +-
- drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  19 ++
- 8 files changed, 481 insertions(+), 1 deletion(-)
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 41 ++++++++++++++
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  2 +
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  1 +
+ .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |  4 +-
+ .../net/ethernet/huawei/hinic/hinic_port.c    | 55 +++++++++++++++++++
+ .../net/ethernet/huawei/hinic/hinic_port.h    | 35 ++++++++++++
+ .../net/ethernet/huawei/hinic/hinic_sriov.c   |  4 +-
+ 7 files changed, 139 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-index 48b40be3e84d..75d6dee948f5 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-@@ -49,6 +49,12 @@ enum hinic_rss_hash_type {
- 	HINIC_RSS_HASH_ENGINE_TYPE_MAX,
- };
- 
-+struct hinic_intr_coal_info {
-+	u8	pending_limt;
-+	u8	coalesce_timer_cfg;
-+	u8	resend_timer_cfg;
-+};
-+
- struct hinic_dev {
- 	struct net_device               *netdev;
- 	struct hinic_hwdev              *hwdev;
-@@ -82,6 +88,8 @@ struct hinic_dev {
- 	struct hinic_rss_type		rss_type;
- 	u8				*rss_hkey_user;
- 	s32				*rss_indir_user;
-+	struct hinic_intr_coal_info	*rx_intr_coalesce;
-+	struct hinic_intr_coal_info	*tx_intr_coalesce;
- 	struct hinic_sriov_info sriov_info;
- };
- 
 diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index a21078a6f5b1..753fc36f926c 100644
+index 5d6278cf74ad..61a5c59532b8 100644
 --- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
 +++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -49,6 +49,30 @@
- #define ETHTOOL_ADD_ADVERTISED_LINK_MODE(ecmd, mode)	\
- 				((ecmd)->advertising |= ADVERTISED_##mode)
- 
-+#define COALESCE_PENDING_LIMIT_UNIT	8
-+#define	COALESCE_TIMER_CFG_UNIT		9
-+#define COALESCE_ALL_QUEUE		0xFFFF
-+#define COALESCE_MAX_PENDING_LIMIT	(255 * COALESCE_PENDING_LIMIT_UNIT)
-+#define COALESCE_MAX_TIMER_CFG		(255 * COALESCE_TIMER_CFG_UNIT)
-+#define OBJ_STR_MAX_LEN			32
-+
-+#define CHECK_COALESCE_ALIGN(coal, item, unit)				\
-+do {									\
-+	if ((coal)->item % (unit))					\
-+		netif_warn(nic_dev, drv, netdev,			\
-+			   "%s in %d units, change to %d\n",		\
-+			   #item, (unit), (((coal)->item / (unit)) * (unit)));\
-+} while (0)
-+
-+#define CHECK_COALESCE_CHANGED(coal, item, unit, ori_val, obj_str)	\
-+do {									\
-+	if (((coal)->item / (unit)) != (ori_val))			\
-+		netif_info(nic_dev, drv, netdev,			\
-+			   "Change %s from %d to %d %s\n",		\
-+			   #item, (ori_val) * (unit),			\
-+			   (((coal)->item / (unit)) * (unit)), (obj_str));\
-+} while (0)
-+
- struct hw2ethtool_link_mode {
- 	enum ethtool_link_mode_bit_indices link_mode_bit;
- 	u32 speed;
-@@ -614,6 +638,258 @@ static int hinic_set_ringparam(struct net_device *netdev,
- 	return 0;
+@@ -1759,6 +1759,46 @@ static void hinic_diag_test(struct net_device *netdev,
+ 		netif_carrier_on(netdev);
  }
  
-+static int __hinic_get_coalesce(struct net_device *netdev,
-+				struct ethtool_coalesce *coal, u16 queue)
++static int hinic_set_phys_id(struct net_device *netdev,
++			     enum ethtool_phys_id_state state)
 +{
 +	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_intr_coal_info *rx_intr_coal_info;
-+	struct hinic_intr_coal_info *tx_intr_coal_info;
++	int err = 0;
++	u8 port;
 +
-+	if (queue == COALESCE_ALL_QUEUE) {
-+		/* get tx/rx irq0 as default parameters */
-+		rx_intr_coal_info = &nic_dev->rx_intr_coalesce[0];
-+		tx_intr_coal_info = &nic_dev->tx_intr_coalesce[0];
-+	} else {
-+		if (queue >= nic_dev->num_qps) {
++	port = nic_dev->hwdev->port_id;
++
++	switch (state) {
++	case ETHTOOL_ID_ACTIVE:
++		err = hinic_set_led_status(nic_dev->hwdev, port,
++					   HINIC_LED_TYPE_LINK,
++					   HINIC_LED_MODE_FORCE_2HZ);
++		if (err)
 +			netif_err(nic_dev, drv, netdev,
-+				  "Invalid queue_id: %d\n", queue);
-+			return -EINVAL;
-+		}
-+		rx_intr_coal_info = &nic_dev->rx_intr_coalesce[queue];
-+		tx_intr_coal_info = &nic_dev->tx_intr_coalesce[queue];
-+	}
++				  "Set LED blinking in 2HZ failed\n");
++		else
++			netif_info(nic_dev, drv, netdev,
++				   "Set LED blinking in 2HZ success\n");
++		break;
 +
-+	/* coalesce_timer is in unit of 9us */
-+	coal->rx_coalesce_usecs = rx_intr_coal_info->coalesce_timer_cfg *
-+			COALESCE_TIMER_CFG_UNIT;
-+	/* coalesced_frames is in unit of 8 */
-+	coal->rx_max_coalesced_frames = rx_intr_coal_info->pending_limt *
-+			COALESCE_PENDING_LIMIT_UNIT;
-+	coal->tx_coalesce_usecs = tx_intr_coal_info->coalesce_timer_cfg *
-+			COALESCE_TIMER_CFG_UNIT;
-+	coal->tx_max_coalesced_frames = tx_intr_coal_info->pending_limt *
-+			COALESCE_PENDING_LIMIT_UNIT;
++	case ETHTOOL_ID_INACTIVE:
++		err = hinic_reset_led_status(nic_dev->hwdev, port);
++		if (err)
++			netif_err(nic_dev, drv, netdev,
++				  "Reset LED to original status failed\n");
++		else
++			netif_info(nic_dev, drv, netdev,
++				   "Reset LED to original status success\n");
 +
-+	return 0;
-+}
++		break;
 +
-+static int is_coalesce_exceed_limit(struct net_device *netdev,
-+				    const struct ethtool_coalesce *coal)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+
-+	if (coal->rx_coalesce_usecs > COALESCE_MAX_TIMER_CFG) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Rx_coalesce_usecs out of range[%d-%d]\n", 0,
-+			  COALESCE_MAX_TIMER_CFG);
++	default:
 +		return -EOPNOTSUPP;
 +	}
-+
-+	if (coal->rx_max_coalesced_frames > COALESCE_MAX_PENDING_LIMIT) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Rx_max_coalesced_frames out of range[%d-%d]\n", 0,
-+			  COALESCE_MAX_PENDING_LIMIT);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (coal->tx_coalesce_usecs > COALESCE_MAX_TIMER_CFG) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Tx_coalesce_usecs out of range[%d-%d]\n", 0,
-+			  COALESCE_MAX_TIMER_CFG);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (coal->tx_max_coalesced_frames > COALESCE_MAX_PENDING_LIMIT) {
-+		netif_err(nic_dev, drv, netdev,
-+			  "Tx_max_coalesced_frames out of range[%d-%d]\n", 0,
-+			  COALESCE_MAX_PENDING_LIMIT);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int set_queue_coalesce(struct hinic_dev *nic_dev, u16 q_id,
-+			      struct hinic_intr_coal_info *coal,
-+			      bool set_rx_coal)
-+{
-+	struct hinic_intr_coal_info *intr_coal = NULL;
-+	struct hinic_msix_config interrupt_info = {0};
-+	struct net_device *netdev = nic_dev->netdev;
-+	u16 msix_idx;
-+	int err;
-+
-+	intr_coal = set_rx_coal ? &nic_dev->rx_intr_coalesce[q_id] :
-+		    &nic_dev->tx_intr_coalesce[q_id];
-+
-+	intr_coal->coalesce_timer_cfg = coal->coalesce_timer_cfg;
-+	intr_coal->pending_limt = coal->pending_limt;
-+
-+	/* netdev not running or qp not in using,
-+	 * don't need to set coalesce to hw
-+	 */
-+	if (!(nic_dev->flags & HINIC_INTF_UP) ||
-+	    q_id >= nic_dev->num_qps)
-+		return 0;
-+
-+	msix_idx = set_rx_coal ? nic_dev->rxqs[q_id].rq->msix_entry :
-+		   nic_dev->txqs[q_id].sq->msix_entry;
-+	interrupt_info.msix_index = msix_idx;
-+	interrupt_info.coalesce_timer_cnt = intr_coal->coalesce_timer_cfg;
-+	interrupt_info.pending_cnt = intr_coal->pending_limt;
-+	interrupt_info.resend_timer_cnt = intr_coal->resend_timer_cfg;
-+
-+	err = hinic_set_interrupt_cfg(nic_dev->hwdev, &interrupt_info);
-+	if (err)
-+		netif_warn(nic_dev, drv, netdev,
-+			   "Failed to set %s queue%d coalesce",
-+			   set_rx_coal ? "rx" : "tx", q_id);
 +
 +	return err;
 +}
 +
-+static int __set_hw_coal_param(struct hinic_dev *nic_dev,
-+			       struct hinic_intr_coal_info *intr_coal,
-+			       u16 queue, bool set_rx_coal)
-+{
-+	int err;
-+	u16 i;
-+
-+	if (queue == COALESCE_ALL_QUEUE) {
-+		for (i = 0; i < nic_dev->max_qps; i++) {
-+			err = set_queue_coalesce(nic_dev, i, intr_coal,
-+						 set_rx_coal);
-+			if (err)
-+				return err;
-+		}
-+	} else {
-+		if (queue >= nic_dev->num_qps) {
-+			netif_err(nic_dev, drv, nic_dev->netdev,
-+				  "Invalid queue_id: %d\n", queue);
-+			return -EINVAL;
-+		}
-+		err = set_queue_coalesce(nic_dev, queue, intr_coal,
-+					 set_rx_coal);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __hinic_set_coalesce(struct net_device *netdev,
-+				struct ethtool_coalesce *coal, u16 queue)
-+{
-+	struct hinic_intr_coal_info *ori_rx_intr_coal = NULL;
-+	struct hinic_intr_coal_info *ori_tx_intr_coal = NULL;
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_intr_coal_info rx_intr_coal = {0};
-+	struct hinic_intr_coal_info tx_intr_coal = {0};
-+	char obj_str[OBJ_STR_MAX_LEN] = {0};
-+	bool set_rx_coal = false;
-+	bool set_tx_coal = false;
-+	int err;
-+
-+	err = is_coalesce_exceed_limit(netdev, coal);
-+	if (err)
-+		return err;
-+
-+	CHECK_COALESCE_ALIGN(coal, rx_coalesce_usecs, COALESCE_TIMER_CFG_UNIT);
-+	CHECK_COALESCE_ALIGN(coal, rx_max_coalesced_frames,
-+			     COALESCE_PENDING_LIMIT_UNIT);
-+	CHECK_COALESCE_ALIGN(coal, tx_coalesce_usecs, COALESCE_TIMER_CFG_UNIT);
-+	CHECK_COALESCE_ALIGN(coal, tx_max_coalesced_frames,
-+			     COALESCE_PENDING_LIMIT_UNIT);
-+
-+	if (coal->rx_coalesce_usecs || coal->rx_max_coalesced_frames) {
-+		rx_intr_coal.coalesce_timer_cfg =
-+		(u8)(coal->rx_coalesce_usecs / COALESCE_TIMER_CFG_UNIT);
-+		rx_intr_coal.pending_limt = (u8)(coal->rx_max_coalesced_frames /
-+				COALESCE_PENDING_LIMIT_UNIT);
-+		set_rx_coal = true;
-+	}
-+
-+	if (coal->tx_coalesce_usecs || coal->tx_max_coalesced_frames) {
-+		tx_intr_coal.coalesce_timer_cfg =
-+		(u8)(coal->tx_coalesce_usecs / COALESCE_TIMER_CFG_UNIT);
-+		tx_intr_coal.pending_limt = (u8)(coal->tx_max_coalesced_frames /
-+		COALESCE_PENDING_LIMIT_UNIT);
-+		set_tx_coal = true;
-+	}
-+
-+	if (queue == COALESCE_ALL_QUEUE) {
-+		ori_rx_intr_coal = &nic_dev->rx_intr_coalesce[0];
-+		ori_tx_intr_coal = &nic_dev->tx_intr_coalesce[0];
-+		err = snprintf(obj_str, OBJ_STR_MAX_LEN, "for netdev");
-+	} else {
-+		ori_rx_intr_coal = &nic_dev->rx_intr_coalesce[queue];
-+		ori_tx_intr_coal = &nic_dev->tx_intr_coalesce[queue];
-+		err = snprintf(obj_str, OBJ_STR_MAX_LEN, "for queue %d", queue);
-+	}
-+	if (err <= 0 || err >= OBJ_STR_MAX_LEN) {
-+		netif_err(nic_dev, drv, netdev, "Failed to snprintf string, function return(%d) and dest_len(%d)\n",
-+			  err, OBJ_STR_MAX_LEN);
-+		return -EFAULT;
-+	}
-+
-+	CHECK_COALESCE_CHANGED(coal, rx_coalesce_usecs, COALESCE_TIMER_CFG_UNIT,
-+			       ori_rx_intr_coal->coalesce_timer_cfg, obj_str);
-+	CHECK_COALESCE_CHANGED(coal, rx_max_coalesced_frames,
-+			       COALESCE_PENDING_LIMIT_UNIT,
-+			       ori_rx_intr_coal->pending_limt, obj_str);
-+	CHECK_COALESCE_CHANGED(coal, tx_coalesce_usecs, COALESCE_TIMER_CFG_UNIT,
-+			       ori_tx_intr_coal->coalesce_timer_cfg, obj_str);
-+	CHECK_COALESCE_CHANGED(coal, tx_max_coalesced_frames,
-+			       COALESCE_PENDING_LIMIT_UNIT,
-+			       ori_tx_intr_coal->pending_limt, obj_str);
-+
-+	/* setting coalesce timer or pending limit to zero will disable
-+	 * coalesce
-+	 */
-+	if (set_rx_coal && (!rx_intr_coal.coalesce_timer_cfg ||
-+			    !rx_intr_coal.pending_limt))
-+		netif_warn(nic_dev, drv, netdev, "RX coalesce will be disabled\n");
-+	if (set_tx_coal && (!tx_intr_coal.coalesce_timer_cfg ||
-+			    !tx_intr_coal.pending_limt))
-+		netif_warn(nic_dev, drv, netdev, "TX coalesce will be disabled\n");
-+
-+	if (set_rx_coal) {
-+		err = __set_hw_coal_param(nic_dev, &rx_intr_coal, queue, true);
-+		if (err)
-+			return err;
-+	}
-+	if (set_tx_coal) {
-+		err = __set_hw_coal_param(nic_dev, &tx_intr_coal, queue, false);
-+		if (err)
-+			return err;
-+	}
-+	return 0;
-+}
-+
-+static int hinic_get_coalesce(struct net_device *netdev,
-+			      struct ethtool_coalesce *coal)
-+{
-+	return __hinic_get_coalesce(netdev, coal, COALESCE_ALL_QUEUE);
-+}
-+
-+static int hinic_set_coalesce(struct net_device *netdev,
-+			      struct ethtool_coalesce *coal)
-+{
-+	return __hinic_set_coalesce(netdev, coal, COALESCE_ALL_QUEUE);
-+}
-+
-+static int hinic_get_per_queue_coalesce(struct net_device *netdev, u32 queue,
-+					struct ethtool_coalesce *coal)
-+{
-+	return __hinic_get_coalesce(netdev, coal, queue);
-+}
-+
-+static int hinic_set_per_queue_coalesce(struct net_device *netdev, u32 queue,
-+					struct ethtool_coalesce *coal)
-+{
-+	return __hinic_set_coalesce(netdev, coal, queue);
-+}
-+
- static void hinic_get_pauseparam(struct net_device *netdev,
- 				 struct ethtool_pauseparam *pause)
- {
-@@ -1307,12 +1583,21 @@ static void hinic_get_strings(struct net_device *netdev,
- }
- 
  static const struct ethtool_ops hinic_ethtool_ops = {
-+	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
-+				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
-+				     ETHTOOL_COALESCE_TX_USECS |
-+				     ETHTOOL_COALESCE_TX_MAX_FRAMES,
-+
- 	.get_link_ksettings = hinic_get_link_ksettings,
- 	.set_link_ksettings = hinic_set_link_ksettings,
- 	.get_drvinfo = hinic_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
- 	.get_ringparam = hinic_get_ringparam,
- 	.set_ringparam = hinic_set_ringparam,
-+	.get_coalesce = hinic_get_coalesce,
-+	.set_coalesce = hinic_set_coalesce,
-+	.get_per_queue_coalesce = hinic_get_per_queue_coalesce,
-+	.set_per_queue_coalesce = hinic_set_per_queue_coalesce,
- 	.get_pauseparam = hinic_get_pauseparam,
- 	.set_pauseparam = hinic_set_pauseparam,
- 	.get_channels = hinic_get_channels,
-@@ -1329,11 +1614,20 @@ static const struct ethtool_ops hinic_ethtool_ops = {
+ 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
+ 				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
+@@ -1789,6 +1829,7 @@ static const struct ethtool_ops hinic_ethtool_ops = {
+ 	.get_ethtool_stats = hinic_get_ethtool_stats,
+ 	.get_strings = hinic_get_strings,
+ 	.self_test = hinic_diag_test,
++	.set_phys_id = hinic_set_phys_id,
  };
  
  static const struct ethtool_ops hinicvf_ethtool_ops = {
-+	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
-+				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
-+				     ETHTOOL_COALESCE_TX_USECS |
-+				     ETHTOOL_COALESCE_TX_MAX_FRAMES,
-+
- 	.get_link_ksettings = hinic_get_link_ksettings,
- 	.get_drvinfo = hinic_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
- 	.get_ringparam = hinic_get_ringparam,
- 	.set_ringparam = hinic_set_ringparam,
-+	.get_coalesce = hinic_get_coalesce,
-+	.set_coalesce = hinic_set_coalesce,
-+	.get_per_queue_coalesce = hinic_get_per_queue_coalesce,
-+	.set_per_queue_coalesce = hinic_set_per_queue_coalesce,
- 	.get_channels = hinic_get_channels,
- 	.set_channels = hinic_set_channels,
- 	.get_rxnfc = hinic_get_rxnfc,
 diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 747d50b841ba..4de50e4ba4df 100644
+index 4de50e4ba4df..45c137827a16 100644
 --- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
 +++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -705,6 +705,68 @@ static int hinic_l2nic_reset(struct hinic_hwdev *hwdev)
+@@ -83,6 +83,8 @@ static int parse_capability(struct hinic_hwdev *hwdev,
+ 		nic_cap->max_vf_qps = dev_cap->max_vf_sqs + 1;
+ 	}
+ 
++	hwdev->port_id = dev_cap->port_id;
++
  	return 0;
  }
  
-+int hinic_get_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info)
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+index c92c39a50b81..01fe94f2d4bc 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+@@ -312,6 +312,7 @@ struct hinic_hwdev {
+ 	struct hinic_mbox_func_to_func  *func_to_func;
+ 
+ 	struct hinic_cap                nic_cap;
++	u8				port_id;
+ };
+ 
+ struct hinic_nic_cb {
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
+index a3349ae30ff3..919d2c6ffc35 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
+@@ -81,7 +81,9 @@ enum hinic_comm_cmd {
+ 	HINIC_COMM_CMD_MSI_CTRL_REG_WR_BY_UP,
+ 	HINIC_COMM_CMD_MSI_CTRL_REG_RD_BY_UP,
+ 
+-	HINIC_COMM_CMD_L2NIC_RESET		= 0x4b,
++	HINIC_COMM_CMD_SET_LED_STATUS	= 0x4a,
++
++	HINIC_COMM_CMD_L2NIC_RESET	= 0x4b,
+ 
+ 	HINIC_COMM_CMD_PAGESIZE_SET	= 0x50,
+ 
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+index 53ea2740ba9f..fc99d9f6799a 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+@@ -1271,3 +1271,58 @@ int hinic_set_loopback_mode(struct hinic_hwdev *hwdev, u32 mode, u32 enable)
+ 
+ 	return 0;
+ }
++
++static int _set_led_status(struct hinic_hwdev *hwdev, u8 port,
++			   enum hinic_led_type type,
++			   enum hinic_led_mode mode, u8 reset)
 +{
-+	u16 out_size = sizeof(*interrupt_info);
++	struct hinic_led_info led_info = {0};
++	u16 out_size = sizeof(led_info);
 +	struct hinic_pfhwdev *pfhwdev;
 +	int err;
 +
-+	if (!hwdev || !interrupt_info)
-+		return -EINVAL;
-+
 +	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
 +
-+	interrupt_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
++	led_info.port = port;
++	led_info.reset = reset;
++
++	led_info.type = type;
++	led_info.mode = mode;
 +
 +	err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
-+				HINIC_COMM_CMD_MSI_CTRL_REG_RD_BY_UP,
-+				interrupt_info, sizeof(*interrupt_info),
-+				interrupt_info, &out_size, HINIC_MGMT_MSG_SYNC);
-+	if (err || !out_size || interrupt_info->status) {
-+		dev_err(&hwdev->hwif->pdev->dev, "Failed to get interrupt config, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, interrupt_info->status, out_size);
++				HINIC_COMM_CMD_SET_LED_STATUS,
++				&led_info, sizeof(led_info),
++				&led_info, &out_size, HINIC_MGMT_MSG_SYNC);
++	if (err || led_info.status || !out_size) {
++		dev_err(&hwdev->hwif->pdev->dev, "Failed to set led status, err: %d, status: 0x%x, out size: 0x%x\n",
++			err, led_info.status, out_size);
 +		return -EIO;
 +	}
 +
 +	return 0;
 +}
 +
-+int hinic_set_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info)
++int hinic_set_led_status(struct hinic_hwdev *hwdev, u8 port,
++			 enum hinic_led_type type, enum hinic_led_mode mode)
 +{
-+	u16 out_size = sizeof(*interrupt_info);
-+	struct hinic_msix_config temp_info;
-+	struct hinic_pfhwdev *pfhwdev;
++	if (!hwdev)
++		return -EINVAL;
++
++	return _set_led_status(hwdev, port, type, mode, 0);
++}
++
++int hinic_reset_led_status(struct hinic_hwdev *hwdev, u8 port)
++{
 +	int err;
 +
 +	if (!hwdev)
 +		return -EINVAL;
 +
-+	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
-+
-+	interrupt_info->func_id = HINIC_HWIF_FUNC_IDX(hwdev->hwif);
-+
-+	err = hinic_get_interrupt_cfg(hwdev, &temp_info);
++	err = _set_led_status(hwdev, port, HINIC_LED_TYPE_INVALID,
++			      HINIC_LED_MODE_INVALID, 1);
 +	if (err)
-+		return -EINVAL;
++		dev_err(&hwdev->hwif->pdev->dev,
++			"Failed to reset led status\n");
 +
-+	interrupt_info->lli_credit_cnt = temp_info.lli_timer_cnt;
-+	interrupt_info->lli_timer_cnt = temp_info.lli_timer_cnt;
-+
-+	err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
-+				HINIC_COMM_CMD_MSI_CTRL_REG_WR_BY_UP,
-+				interrupt_info, sizeof(*interrupt_info),
-+				interrupt_info, &out_size, HINIC_MGMT_MSG_SYNC);
-+	if (err || !out_size || interrupt_info->status) {
-+		dev_err(&hwdev->hwif->pdev->dev, "Failed to get interrupt config, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, interrupt_info->status, out_size);
-+		return -EIO;
-+	}
-+
-+	return 0;
++	return err;
 +}
-+
- /**
-  * hinic_init_hwdev - Initialize the NIC HW
-  * @pdev: the NIC pci device
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index cc776ca2d737..ed3cc154ce18 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -285,6 +285,21 @@ struct hinic_cmd_l2nic_reset {
- 	u16	reset_flag;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
+index b21956d7232e..5c916875f295 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
+@@ -666,6 +666,17 @@ struct hinic_port_loopback {
+ 	u32	en;
  };
  
-+struct hinic_msix_config {
++struct hinic_led_info {
 +	u8	status;
 +	u8	version;
 +	u8	rsvd0[6];
 +
-+	u16	func_id;
-+	u16	msix_index;
-+	u8	pending_cnt;
-+	u8	coalesce_timer_cnt;
-+	u8	lli_timer_cnt;
-+	u8	lli_credit_cnt;
-+	u8	resend_timer_cnt;
-+	u8	rsvd1[3];
++	u8	port;
++	u8	type;
++	u8	mode;
++	u8	reset;
 +};
 +
- struct hinic_hwdev {
- 	struct hinic_hwif               *hwif;
- 	struct msix_entry               *msix_entries;
-@@ -378,4 +393,10 @@ int hinic_hwdev_hw_ci_addr_set(struct hinic_hwdev *hwdev, struct hinic_sq *sq,
- void hinic_hwdev_set_msix_state(struct hinic_hwdev *hwdev, u16 msix_index,
- 				enum hinic_msix_state flag);
+ int hinic_port_add_mac(struct hinic_dev *nic_dev, const u8 *addr,
+ 		       u16 vlan_id);
  
-+int hinic_get_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info);
+@@ -765,6 +776,30 @@ int hinic_dcb_set_pfc(struct hinic_hwdev *hwdev, u8 pfc_en, u8 pfc_bitmap);
+ 
+ int hinic_set_loopback_mode(struct hinic_hwdev *hwdev, u32 mode, u32 enable);
+ 
++enum hinic_led_mode {
++	HINIC_LED_MODE_ON,
++	HINIC_LED_MODE_OFF,
++	HINIC_LED_MODE_FORCE_1HZ,
++	HINIC_LED_MODE_FORCE_2HZ,
++	HINIC_LED_MODE_FORCE_4HZ,
++	HINIC_LED_MODE_1HZ,
++	HINIC_LED_MODE_2HZ,
++	HINIC_LED_MODE_4HZ,
++	HINIC_LED_MODE_INVALID,
++};
 +
-+int hinic_set_interrupt_cfg(struct hinic_hwdev *hwdev,
-+			    struct hinic_msix_config *interrupt_info);
++enum hinic_led_type {
++	HINIC_LED_TYPE_LINK,
++	HINIC_LED_TYPE_LOW_SPEED,
++	HINIC_LED_TYPE_HIGH_SPEED,
++	HINIC_LED_TYPE_INVALID,
++};
 +
- #endif
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-index c2b142c08b0e..a3349ae30ff3 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.h
-@@ -78,6 +78,9 @@ enum hinic_comm_cmd {
- 
- 	HINIC_COMM_CMD_CEQ_CTRL_REG_WR_BY_UP = 0x33,
- 
-+	HINIC_COMM_CMD_MSI_CTRL_REG_WR_BY_UP,
-+	HINIC_COMM_CMD_MSI_CTRL_REG_RD_BY_UP,
++int hinic_reset_led_status(struct hinic_hwdev *hwdev, u8 port);
 +
- 	HINIC_COMM_CMD_L2NIC_RESET		= 0x4b,
- 
- 	HINIC_COMM_CMD_PAGESIZE_SET	= 0x50,
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index e69edb01fd9b..e328effd12d2 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -69,6 +69,10 @@ MODULE_PARM_DESC(rx_weight, "Number Rx packets for NAPI budget (default=64)");
- 
- #define HINIC_WAIT_SRIOV_CFG_TIMEOUT	15000
- 
-+#define HINIC_DEAULT_TXRX_MSIX_PENDING_LIMIT		2
-+#define HINIC_DEAULT_TXRX_MSIX_COALESC_TIMER_CFG	32
-+#define HINIC_DEAULT_TXRX_MSIX_RESEND_TIMER_CFG		7
++int hinic_set_led_status(struct hinic_hwdev *hwdev, u8 port,
++			 enum hinic_led_type type, enum hinic_led_mode mode);
 +
- static int change_mac_addr(struct net_device *netdev, const u8 *addr);
+ int hinic_open(struct net_device *netdev);
  
- static int set_features(struct hinic_dev *nic_dev,
-@@ -1008,6 +1012,48 @@ static int set_features(struct hinic_dev *nic_dev,
- 	return hinic_dcb_set_pfc(nic_dev->hwdev, 0, 0);
- }
+ int hinic_close(struct net_device *netdev);
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
+index efab2dd2c889..f5c7c1f48542 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
+@@ -383,7 +383,7 @@ static int hinic_del_vf_mac_msg_handler(void *hwdev, u16 vf_id,
  
-+static int hinic_init_intr_coalesce(struct hinic_dev *nic_dev)
-+{
-+	u64 size;
-+	u16 i;
-+
-+	size = sizeof(struct hinic_intr_coal_info) * nic_dev->max_qps;
-+	nic_dev->rx_intr_coalesce = kzalloc(size, GFP_KERNEL);
-+	if (!nic_dev->rx_intr_coalesce) {
-+		dev_err(&nic_dev->hwdev->hwif->pdev->dev, "Failed to alloc rx intr coalesce\n");
-+		return -ENOMEM;
-+	}
-+	nic_dev->tx_intr_coalesce = kzalloc(size, GFP_KERNEL);
-+	if (!nic_dev->tx_intr_coalesce) {
-+		kfree(nic_dev->rx_intr_coalesce);
-+		dev_err(&nic_dev->hwdev->hwif->pdev->dev, "Failed to alloc tx intr coalesce\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < nic_dev->max_qps; i++) {
-+		nic_dev->rx_intr_coalesce[i].pending_limt =
-+			HINIC_DEAULT_TXRX_MSIX_PENDING_LIMIT;
-+		nic_dev->rx_intr_coalesce[i].coalesce_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_COALESC_TIMER_CFG;
-+		nic_dev->rx_intr_coalesce[i].resend_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_RESEND_TIMER_CFG;
-+		nic_dev->tx_intr_coalesce[i].pending_limt =
-+			HINIC_DEAULT_TXRX_MSIX_PENDING_LIMIT;
-+		nic_dev->tx_intr_coalesce[i].coalesce_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_COALESC_TIMER_CFG;
-+		nic_dev->tx_intr_coalesce[i].resend_timer_cfg =
-+			HINIC_DEAULT_TXRX_MSIX_RESEND_TIMER_CFG;
-+	}
-+
-+	return 0;
-+}
-+
-+static void hinic_free_intr_coalesce(struct hinic_dev *nic_dev)
-+{
-+	kfree(nic_dev->tx_intr_coalesce);
-+	kfree(nic_dev->rx_intr_coalesce);
-+}
-+
- /**
-  * nic_dev_init - Initialize the NIC device
-  * @pdev: the NIC pci device
-@@ -1144,8 +1190,16 @@ static int nic_dev_init(struct pci_dev *pdev)
- 		goto err_reg_netdev;
- 	}
+ 	nic_io = &hw_dev->func_to_io;
+ 	vf_info = nic_io->vf_infos + HW_VF_ID_TO_OS(vf_id);
+-	if (vf_info->pf_set_mac  && is_valid_ether_addr(mac_in->mac) &&
++	if (vf_info->pf_set_mac && is_valid_ether_addr(mac_in->mac) &&
+ 	    !memcmp(vf_info->vf_mac_addr, mac_in->mac, ETH_ALEN)) {
+ 		dev_warn(&hw_dev->hwif->pdev->dev, "PF has already set VF mac.\n");
+ 		mac_out->status = HINIC_PF_SET_VF_ALREADY;
+@@ -905,7 +905,6 @@ int hinic_ndo_set_vf_spoofchk(struct net_device *netdev, int vf, bool setting)
  
-+	err = hinic_init_intr_coalesce(nic_dev);
-+	if (err) {
-+		netif_err(nic_dev, drv, netdev, "Failed to init_intr_coalesce\n");
-+		goto err_init_intr;
-+	}
-+
- 	return 0;
+ 	err = hinic_set_vf_spoofchk(sriov_info->hwdev,
+ 				    OS_VF_ID_TO_HW(vf), setting);
+-
+ 	if (!err) {
+ 		netif_info(nic_dev, drv, netdev, "Set VF %d spoofchk %s successfully\n",
+ 			   vf, setting ? "on" : "off");
+@@ -1020,6 +1019,7 @@ static int cfg_mbx_pf_proc_vf_msg(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
+ 	dev_cap->max_vf = cap->max_vf;
+ 	dev_cap->max_sqs = cap->max_vf_qps;
+ 	dev_cap->max_rqs = cap->max_vf_qps;
++	dev_cap->port_id = dev->port_id;
  
-+err_init_intr:
-+	unregister_netdev(netdev);
- err_reg_netdev:
- err_set_features:
- 	hinic_hwdev_cb_unregister(nic_dev->hwdev,
-@@ -1258,6 +1312,8 @@ static void hinic_remove(struct pci_dev *pdev)
- 		hinic_pci_sriov_disable(pdev);
- 	}
+ 	*out_size = sizeof(*dev_cap);
  
-+	hinic_free_intr_coalesce(nic_dev);
-+
- 	unregister_netdev(netdev);
- 
- 	hinic_port_del_mac(nic_dev, netdev->dev_addr, 0);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-index af20d0dd6de7..c9a65a1f0347 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-@@ -478,11 +478,15 @@ static irqreturn_t rx_irq(int irq, void *data)
- static int rx_request_irq(struct hinic_rxq *rxq)
- {
- 	struct hinic_dev *nic_dev = netdev_priv(rxq->netdev);
-+	struct hinic_msix_config interrupt_info = {0};
-+	struct hinic_intr_coal_info *intr_coal = NULL;
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 	struct hinic_rq *rq = rxq->rq;
- 	struct hinic_qp *qp;
- 	int err;
- 
-+	qp = container_of(rq, struct hinic_qp, rq);
-+
- 	rx_add_napi(rxq);
- 
- 	hinic_hwdev_msix_set(hwdev, rq->msix_entry,
-@@ -490,13 +494,26 @@ static int rx_request_irq(struct hinic_rxq *rxq)
- 			     RX_IRQ_NO_LLI_TIMER, RX_IRQ_NO_CREDIT,
- 			     RX_IRQ_NO_RESEND_TIMER);
- 
-+	intr_coal = &nic_dev->rx_intr_coalesce[qp->q_id];
-+	interrupt_info.msix_index = rq->msix_entry;
-+	interrupt_info.coalesce_timer_cnt = intr_coal->coalesce_timer_cfg;
-+	interrupt_info.pending_cnt = intr_coal->pending_limt;
-+	interrupt_info.resend_timer_cnt = intr_coal->resend_timer_cfg;
-+
-+	err = hinic_set_interrupt_cfg(hwdev, &interrupt_info);
-+	if (err) {
-+		netif_err(nic_dev, drv, rxq->netdev,
-+			  "Failed to set RX interrupt coalescing attribute\n");
-+		rx_del_napi(rxq);
-+		return err;
-+	}
-+
- 	err = request_irq(rq->irq, rx_irq, 0, rxq->irq_name, rxq);
- 	if (err) {
- 		rx_del_napi(rxq);
- 		return err;
- 	}
- 
--	qp = container_of(rq, struct hinic_qp, rq);
- 	cpumask_set_cpu(qp->q_id % num_online_cpus(), &rq->affinity_mask);
- 	return irq_set_affinity_hint(rq->irq, &rq->affinity_mask);
- }
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index 4c66a0bc1b28..0f6d27f29de5 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -718,12 +718,17 @@ static irqreturn_t tx_irq(int irq, void *data)
- static int tx_request_irq(struct hinic_txq *txq)
- {
- 	struct hinic_dev *nic_dev = netdev_priv(txq->netdev);
-+	struct hinic_msix_config interrupt_info = {0};
-+	struct hinic_intr_coal_info *intr_coal = NULL;
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 	struct hinic_hwif *hwif = hwdev->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
- 	struct hinic_sq *sq = txq->sq;
-+	struct hinic_qp *qp;
- 	int err;
- 
-+	qp = container_of(sq, struct hinic_qp, sq);
-+
- 	tx_napi_add(txq, nic_dev->tx_weight);
- 
- 	hinic_hwdev_msix_set(nic_dev->hwdev, sq->msix_entry,
-@@ -731,6 +736,20 @@ static int tx_request_irq(struct hinic_txq *txq)
- 			     TX_IRQ_NO_LLI_TIMER, TX_IRQ_NO_CREDIT,
- 			     TX_IRQ_NO_RESEND_TIMER);
- 
-+	intr_coal = &nic_dev->tx_intr_coalesce[qp->q_id];
-+	interrupt_info.msix_index = sq->msix_entry;
-+	interrupt_info.coalesce_timer_cnt = intr_coal->coalesce_timer_cfg;
-+	interrupt_info.pending_cnt = intr_coal->pending_limt;
-+	interrupt_info.resend_timer_cnt = intr_coal->resend_timer_cfg;
-+
-+	err = hinic_set_interrupt_cfg(hwdev, &interrupt_info);
-+	if (err) {
-+		netif_err(nic_dev, drv, txq->netdev,
-+			  "Failed to set TX interrupt coalescing attribute\n");
-+		tx_napi_del(txq);
-+		return err;
-+	}
-+
- 	err = request_irq(sq->irq, tx_irq, 0, txq->irq_name, txq);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to request Tx irq\n");
 -- 
 2.17.1
 
