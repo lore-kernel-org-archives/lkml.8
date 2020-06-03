@@ -2,96 +2,92 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5062067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16EFD2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ShRdjmyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgFCIOS (ORCPT
+        id S1726238AbgFCIPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:14:18 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:47821 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgFCIOR (ORCPT
+        Wed, 3 Jun 2020 04:15:03 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.217]:16762 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCIPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:14:17 -0400
-Received: from debian.home (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 14EA020000A;
-        Wed,  3 Jun 2020 08:14:13 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Zong Li <zong.li@sifive.com>, Anup Patel <anup@brainfault.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v2 3/8] riscv: Simplify MAXPHYSMEM config
-Date:   Wed,  3 Jun 2020 04:10:59 -0400
-Message-Id: <20200603081104.14004-4-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200603081104.14004-1-alex@ghiti.fr>
-References: <20200603081104.14004-1-alex@ghiti.fr>
+        Wed, 3 Jun 2020 04:15:02 -0400
+X-Greylist: delayed 354 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 04:15:02 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1591172101;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=SMtbScWM+JGPqXIY91ce2dI3CfZP51GyTspyQruYuIs=;
+        b=ShRdjmyA0jM/NQOZ6A8bKp3VH12GfnI5Uz+EvmBAy6OHGQYa/zU3TFcnbwAuRzknCr
+        KoUZwWxpJ+JkQo380VKPk6Cd94DE60dxnPK2hN1Uvrr5N69bgmmNhRudB2OIRt0eMUzn
+        IQgJyHRme1xyVKbzFZENheiORGgxWPKlzghiSlqrBzfU28uxJ1lj9XowjnjIrAc8w1fu
+        mBKVu6kbTFZnsoAmPPMSSfVa5YPKiIzBW91iP7LadFZp8qX5oNnOhFeTx2hH7TbV6a53
+        TSjQD4hIAQhtqj4WhDVLqtcViaNksqFy0gkaZZUcXNolaL8Yw+yWIy5BYCl4KLKV4KTQ
+        U9+A==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaJPSf9iic"
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.9.1 DYNA|AUTH)
+        with ESMTPSA id I05374w5388v0vu
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 3 Jun 2020 10:08:57 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com>
+Subject: [PATCH] crypto: DRBG - always try to free Jitter RNG instance
+Date:   Wed, 03 Jun 2020 10:08:56 +0200
+Message-ID: <2583872.mvXUDI8C0e@positron.chronox.de>
+In-Reply-To: <0000000000002a280b05a725cd93@google.com>
+References: <0000000000002a280b05a725cd93@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Either the user specifies maximum physical memory size of 2GB or the
-user lives with the system constraint which is 1/4th of maximum
-addressable memory in Sv39 MMU mode (i.e. 128GB) for now.
+The Jitter RNG is unconditionally allocated as a seed source follwoing
+the patch 97f2650e5040. Thus, the instance must always be deallocated.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Reviewed-by: Anup Patel <anup@brainfault.org>
+Reported-by: syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com
+Fixes: 97f2650e5040 ("crypto: drbg - always seeded with SP800-90B ...")
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
 ---
- arch/riscv/Kconfig | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+ crypto/drbg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 64b25a90d60f..e167f16131f4 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -106,7 +106,7 @@ config PAGE_OFFSET
- 	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
- 	default 0x80000000 if 64BIT && !MMU
- 	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
--	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
-+	default 0xffffffe000000000 if 64BIT && !MAXPHYSMEM_2GB
- 
- config ARCH_FLATMEM_ENABLE
- 	def_bool y
-@@ -223,19 +223,11 @@ config MODULE_SECTIONS
- 	bool
- 	select HAVE_MOD_ARCH_SPECIFIC
- 
--choice
--	prompt "Maximum Physical Memory"
--	default MAXPHYSMEM_2GB if 32BIT
--	default MAXPHYSMEM_2GB if 64BIT && CMODEL_MEDLOW
--	default MAXPHYSMEM_128GB if 64BIT && CMODEL_MEDANY
--
--	config MAXPHYSMEM_2GB
--		bool "2GiB"
--	config MAXPHYSMEM_128GB
--		depends on 64BIT && CMODEL_MEDANY
--		bool "128GiB"
--endchoice
--
-+config MAXPHYSMEM_2GB
-+	bool "Maximum Physical Memory 2GiB"
-+	default y if 32BIT
-+	default y if 64BIT && CMODEL_MEDLOW
-+	default n
- 
- config SMP
- 	bool "Symmetric Multi-Processing"
+diff --git a/crypto/drbg.c b/crypto/drbg.c
+index 37526eb8c5d5..33d28016da2d 100644
+--- a/crypto/drbg.c
++++ b/crypto/drbg.c
+@@ -1631,6 +1631,9 @@ static int drbg_uninstantiate(struct drbg_state *drbg)
+ 	if (drbg->random_ready.func) {
+ 		del_random_ready_callback(&drbg->random_ready);
+ 		cancel_work_sync(&drbg->seed_work);
++	}
++
++	if (drbg->jent) {
+ 		crypto_free_rng(drbg->jent);
+ 		drbg->jent = NULL;
+ 	}
 -- 
-2.20.1
+2.26.2
+
+
+
 
