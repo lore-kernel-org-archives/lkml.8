@@ -2,79 +2,81 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E00C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97138C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9632074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C59C20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgFCKkY (ORCPT
+        id S1725983AbgFCKlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:40:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:59786 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgFCKkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:40:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A86331B;
-        Wed,  3 Jun 2020 03:40:23 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.118])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 152D53F305;
-        Wed,  3 Jun 2020 03:40:20 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 11:40:17 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
-        guohanjun@huawei.com, ionela.voinescu@arm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-Message-ID: <20200603104017.GD7259@bogus>
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
- <20200603075200.hbyofgcyiwocl565@vireshk-i7>
- <20200603100727.GB7259@bogus>
- <20200603101010.alijrfmte2c6xv5c@vireshk-i7>
- <20200603101753.GC7259@bogus>
- <20200603102159.hzctwiqiukwhrpo7@vireshk-i7>
+        Wed, 3 Jun 2020 06:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgFCKlA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:41:00 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A33BC08C5C0;
+        Wed,  3 Jun 2020 03:41:00 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id AEA5728B; Wed,  3 Jun 2020 12:40:56 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 12:40:55 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 24/75] x86/boot/compressed/64: Unmap GHCB page before
+ booting the kernel
+Message-ID: <20200603104055.GB20099@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-25-joro@8bytes.org>
+ <20200513111340.GD4025@zn.tnic>
+ <20200513113011.GG18353@8bytes.org>
+ <20200513114633.GE4025@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200603102159.hzctwiqiukwhrpo7@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200513114633.GE4025@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:51:59PM +0530, Viresh Kumar wrote:
-> On 03-06-20, 11:17, Sudeep Holla wrote:
-> > On Wed, Jun 03, 2020 at 03:40:10PM +0530, Viresh Kumar wrote:
-> > > On 03-06-20, 11:07, Sudeep Holla wrote:
-> > > > But I have another question. If we can detect that CPPC on some platforms
-> > > > rely on CPU registers(I assume FFH registers here and not system/io/...
-> > > > type of GAS registers), can we set dvfs_on_any_cpu(can't recall exact
-> > > > flag name) to false if not already done to prevent such issues. Or I am
-> > > > talking non-sense as it may be applicable only for _set operation and
-> > >
-> > >           Yes, non-sense :)
-> > >
-> >
-> > Thanks for confirming 👍.
->
-> Hehe.
->
-> So, do you agree that we better do the read from the CPUs themselves ?
->
+On Wed, May 13, 2020 at 01:46:33PM +0200, Borislav Petkov wrote:
+> On Wed, May 13, 2020 at 01:30:11PM +0200, Joerg Roedel wrote:
+> > Yeah, I had this this way in v2, but changed it upon you request[1] :)
+> 
+> Yeah, I was wondering why this isn't a separate function - you like them
+> so much. :-P
+> 
+> > [1] https://lore.kernel.org/lkml/20200402114941.GA9352@zn.tnic/
+> 
+> But that one didn't have the ghcb_fault check. Maybe it was being added
+> later... :)
 
-Yes if that is fine. I thought waking up the core was not a good solution
-in terms of power, but I have no objection for that as well as return 0
-as IMO it aligns with the AMU counters when CPU is idle.
+Yes, it was :)
 
---
-Regards,
-Sudeep
+I changed it back, first in the patch adding the page-fault handler and
+also updated this patch.
+
+
+	Joerg
