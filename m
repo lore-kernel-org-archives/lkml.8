@@ -2,32 +2,33 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59316C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE030C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 385272072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34C520772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725952AbgFCCJ1 (ORCPT
+        id S1725981AbgFCCJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:09:27 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58962 "EHLO inva021.nxp.com"
+        Tue, 2 Jun 2020 22:09:31 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:40234 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgFCCJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:09:27 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E4EC20004C;
-        Wed,  3 Jun 2020 04:09:25 +0200 (CEST)
+        id S1725910AbgFCCJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:09:29 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E693B1A0079;
+        Wed,  3 Jun 2020 04:09:26 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E05B8200025;
-        Wed,  3 Jun 2020 04:09:19 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 42EEE1A0EEA;
+        Wed,  3 Jun 2020 04:09:21 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B291140296;
-        Wed,  3 Jun 2020 10:09:12 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0FBA040299;
+        Wed,  3 Jun 2020 10:09:13 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     aisheng.dong@nxp.com, robh+dt@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -35,39 +36,105 @@ To:     aisheng.dong@nxp.com, robh+dt@kernel.org, shawnguo@kernel.org,
         linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 0/3] Convert i.MX/MXS I2C/LPI2C binding doc to json-schema
-Date:   Wed,  3 Jun 2020 09:58:52 +0800
-Message-Id: <1591149535-342-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: i2c: Convert imx lpi2c to json-schema
+Date:   Wed,  3 Jun 2020 09:58:53 +0800
+Message-Id: <1591149535-342-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591149535-342-1-git-send-email-Anson.Huang@nxp.com>
+References: <1591149535-342-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coverts i.MX/MXS I2C.LPI2C binding doc to json-schema, some examples are
-too old, update them based on latest DT file, also add more compatible
-based on supported SoCs.
+Convert the i.MX LPI2C binding to DT schema format using json-schema
 
-Anson Huang (3):
-  dt-bindings: i2c: Convert imx lpi2c to json-schema
-  dt-bindings: i2c: Convert mxs i2c to json-schema
-  dt-bindings: i2c: Convert imx i2c to json-schema
-
- .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt      |  20 ----
- .../devicetree/bindings/i2c/i2c-imx-lpi2c.yaml     |  45 ++++++++
- Documentation/devicetree/bindings/i2c/i2c-imx.txt  |  49 ---------
- Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 118 +++++++++++++++++++++
- Documentation/devicetree/bindings/i2c/i2c-mxs.txt  |  25 -----
- Documentation/devicetree/bindings/i2c/i2c-mxs.yaml |  55 ++++++++++
- 6 files changed, 218 insertions(+), 94 deletions(-)
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt      | 20 ----------
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.yaml     | 45 ++++++++++++++++++++++
+ 2 files changed, 45 insertions(+), 20 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.yaml
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+deleted file mode 100644
+index f0c072f..0000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-* Freescale Low Power Inter IC (LPI2C) for i.MX
+-
+-Required properties:
+-- compatible :
+-  - "fsl,imx7ulp-lpi2c" for LPI2C compatible with the one integrated on i.MX7ULP soc
+-  - "fsl,imx8qxp-lpi2c" for LPI2C compatible with the one integrated on i.MX8QXP soc
+-  - "fsl,imx8qm-lpi2c" for LPI2C compatible with the one integrated on i.MX8QM soc
+-- reg : address and length of the lpi2c master registers
+-- interrupts : lpi2c interrupt
+-- clocks : lpi2c clock specifier
+-
+-Examples:
+-
+-lpi2c7: lpi2c7@40a50000 {
+-	compatible = "fsl,imx7ulp-lpi2c";
+-	reg = <0x40A50000 0x10000>;
+-	interrupt-parent = <&intc>;
+-	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks IMX7ULP_CLK_LPI2C7>;
+-};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+new file mode 100644
+index 0000000..3c0be0c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/i2c-imx-lpi2c.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Low Power Inter IC (LPI2C) for i.MX
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx7ulp-lpi2c
++      - fsl,imx8qxp-lpi2c
++      - fsl,imx8qm-lpi2c
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx7ulp-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    lpi2c7@40a50000 {
++        compatible = "fsl,imx7ulp-lpi2c";
++        reg = <0x40A50000 0x10000>;
++        interrupt-parent = <&intc>;
++        interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX7ULP_CLK_LPI2C7>;
++    };
 -- 
 2.7.4
 
