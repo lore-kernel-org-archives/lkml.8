@@ -2,102 +2,179 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A05C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A91F20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72AE020678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:22:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0RIydBKR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uRBfH3yT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbgFCNV5 (ORCPT
+        id S1726015AbgFCNWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:21:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34926 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgFCNV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:21:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=kq7XlYCYEvDPrzu5OEp1VNG25HMp75SUwW8RLaDeDds=; b=0RIydBKRLRzJCLHAX6Qlhaj13F
-        WWj4KSywK7CM6GMMs3NmnwVUJaVyTYQbhm7S47EVT05BJS13vifLWmh15qdWLyC8ixoqQLV/HUmn4
-        NcqQmQD5Vxu+ytgHqySPCWPmJ2YG2Wj2fPUMiZFYVZpp55VBDbgL8ZeahawTwd98icUU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jgTL1-0043W9-Ev; Wed, 03 Jun 2020 15:21:47 +0200
-Date:   Wed, 3 Jun 2020 15:21:47 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
- 1000BaseX/2500BaseX ports
-Message-ID: <20200603132147.GW869823@lunn.ch>
-References: <20200528135608.GU1551@shell.armlinux.org.uk>
- <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
- <20200528144805.GW1551@shell.armlinux.org.uk>
- <20200528204312.df9089425162a22e89669cf1@suse.de>
- <20200528220420.GY1551@shell.armlinux.org.uk>
- <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
- <20200529145928.GF869823@lunn.ch>
- <20200529175225.a3be1b4faaa0408e165435ad@suse.de>
- <20200529163340.GI869823@lunn.ch>
- <20200602225016.GX1551@shell.armlinux.org.uk>
+        Wed, 3 Jun 2020 09:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbgFCNWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:22:33 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75639C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:22:33 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o15so2115263ejm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 06:22:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JPwX4c4qU1Ibpfzn0AFffCVAQ4RDh1hSQFVaf4E4RKA=;
+        b=uRBfH3yTtpCBYHHYqQw4B8u3acTPULDVQmRyZV1n6qGJuxks8v0rTqgXHPStIYYK1c
+         N1rci9Zu9HZjsvIYicNlpOOnfBcUi+zs64OWNQwbegqFLg0w/F21FAtX/id2CiMthsJG
+         IRW7xP9h9ez3MFslB17v9wycKadkDxXQcmNWzm72cLT31qCgnjt/fp0XWgPeoO81xINU
+         Q0R/HsMG+7kVTVru2RvbGMitHKBUoUj1JBBUwzBI0MrUdpyfXLslhP5y1lqu+tKA0KPZ
+         0vG0Muh4/YN4F6c9YSPxSVHnVMdKdbm07Bx2Tr6Ma/NBOqe+lTKepYWYWX48jQcg5joO
+         hjWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JPwX4c4qU1Ibpfzn0AFffCVAQ4RDh1hSQFVaf4E4RKA=;
+        b=EBxLmS/pzGr1xk9hhs6mUh6IeVZW6X6NNuwvg9kjJe0JGgy1jo+es4waIkqUMBVh25
+         mmGC6zBQAu8vbTBMbA4VskVUK9vFypdCJRbQhIJYHxF+CBQNt2bNeE3xo4ow0y221zEG
+         oYMuUToOFW67oJd/ON3cB8jEWuasFnIZnWEy1FwXlp+c6z35yYJAJZjCyAOefpusfLtU
+         ikdfkFjW6qltQBUW4EdKkclXEdeBAvOYmPXoD3E67lziGKTczJL9KVYAOFl7Fl6Lm+jQ
+         +zFmZVLjmFleP31B+9XJJWpTAI4LfWY4CXDq3qm7OOLKP611nX7MdUj2eSi8qQC1fOxC
+         ClYA==
+X-Gm-Message-State: AOAM531gTzdhLgUW81GnD4/QoWmM7V44PQsa/7LZI0J8KGRbnIBSN4Fo
+        jmZn5TzhsCU/V7riXNF7by/8kF7rdX9KP2fzfTPw1w==
+X-Google-Smtp-Source: ABdhPJy9GE7o2d5AINznqj2b0Dcu519109HaN+lBlE9eMUrNUbmd11s0xZ0qXKihtY+PyNILSWGbMMX9VHcpqTDjQ3s=
+X-Received: by 2002:a17:907:9484:: with SMTP id dm4mr29506933ejc.56.1591190552082;
+ Wed, 03 Jun 2020 06:22:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602225016.GX1551@shell.armlinux.org.uk>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <20200601212858.GB24287@xps15> <6d759cc28628ea72767c1304883630eb@codeaurora.org>
+ <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
+ <f0357072de96970b641bbd0da98c1d61@codeaurora.org> <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
+ <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org>
+In-Reply-To: <4a09cd2e054836d85f2e024ca4435e91@codeaurora.org>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Wed, 3 Jun 2020 14:22:21 +0100
+Message-ID: <CAJ9a7VgCFeHNbY_9Gwvu6uT9MFBeY=_GCaN4N1dwmm+iNpfJOw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>, robin.murphy@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 11:50:17PM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, May 29, 2020 at 06:33:40PM +0200, Andrew Lunn wrote:
-> > Given the current code, you cannot. Now we understand the
-> > requirements, we can come up with some ideas how to do this properly.
-> 
-> Okay, I've been a little quiet because of sorting out the ARM tree
-> for merging with Linus (now done) and I've been working on a solution
-> to this problem.
-> 
-> The good news is, I have an implementation in phylink to use the sync
-> status reported from a PCS, and to appropriately enable sync status
-> reporting.  I'm quite nervous about having that enabled as a matter of
-> routine as I've seen some Marvell hardware end up with interrupt storms
-> from it - presumably due to noise pickup on the serdes lines being
-> interpreted as an intermittently valid signal.
+Hi Sai,
 
-Hi Russell
+On Wed, 3 Jun 2020 at 13:14, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Mike,
+>
+> On 2020-06-03 16:57, Mike Leach wrote:
+> > Hi,
+> >
+> > On Wed, 3 Jun 2020 at 11:24, Sai Prakash Ranjan
+> > <saiprakash.ranjan@codeaurora.org> wrote:
+> >>
+> >> Hi Mike,
+> >>
+> >> Thanks again for looking at this.
+> >>
+> >> On 2020-06-03 03:42, Mike Leach wrote:
+> >> [...]
+> >>
+> >> >>
+> >> >> SMMU/IOMMU won't be able to do much here as it is the client's
+> >> >> responsiblity to
+> >> >> properly shutdown and SMMU device link just makes sure that
+> >> >> SMMU(supplier) shutdown is
+> >> >> called only after its consumers shutdown callbacks are called.
+> >> >
+> >> > I think this use case can be handled slightly differently than the
+> >> > general requirements for modular CoreSight drivers.
+> >> >
+> >> > What is needed here is a way of stopping the underlying ETR hardware
+> >> > from issuing data to the SMMU, until the entire device has been shut
+> >> > down, in a way that does not remove the driver, breaking existing
+> >> > references and causing a system crash.
+> >> >
+> >> > We could introduce a new mode to the ETR driver - e.g.
+> >> > CS_MODE_SHUTDOWN.
+> >> >
+> >> > At the end of the block tmc_shutdown(struct amba_device *adev), set
+> >> > drvdata->mode to CS_MODE_SHUTDOWN & remove the coresight_unregister().
+> >> > This new mode can be used to  prevent the underlying hardware from
+> >> > being able to restart until the device is re-powered.
+> >> >
+> >> > This mode can be detected in the code that enables / disables the ETR
+> >> > and handled appropriately (updates to tmc_enable_etr_sink and
+> >> > tmc_disable_etr_sink).
+> >> > This mode will persist until the device is re-started - but because we
+> >> > are on the device shutdown path this is not an issue.
+> >> >
+> >> > This should leave the CoreSight infrastructure stable until the
+> >> > drivers are shut down normally as part of the device power down
+> >> > process.
+> >> >
+> >>
+> >> Sounds good to me, but if the coresight_unregister() is the trouble
+> >> point
+> >> causing these crashes, then can't we just remove that from
+> >> tmc_shutdown()
+> >> callback? This would be like maintaining the same behaviour as now
+> >> where
+> >> on reboot/shutdown we basically don't do anything except for disabling
+> >> ETR.
+> >
+> > No - the new mode prevents race conditions where the thread shutting
+> > down the SMMU does the ETR shutdown, but then another thread happens
+> > to be trying to start trace and restarts the ETR.
+> > It also prevents the condition Mathieu discussed where a thread might
+> > be attempting to shutdown trace - this could try to disable the
+> > hardware again re-releasing resources/ re-flushing and waiting for
+> > stop.
+> >
+>
+> I do not think there will a race between SMMU shutdown and ETR shutdown.
+> Driver core takes care of calling SMMU shutdown after its consumer
+> shutdown callbacks via device link, otherwise there would already be
+> bugs in all other client drivers.
+>
 
-I have seen similar with an SFP without link. I think squelch is
-optional, so noise gets passed through, which is enough to get and
-loose sync.
+I am not saying there could be a race between tmc_shutdowm and
+Smmu_shutdown - there may be a case if the coresight_disable_path
+sequence is running and gets to the point of disabling the ETR after
+the SMMU callback has disabled it.
 
-I think we probably need to only enable the interrupt when the LOS
-signal indicates there is at least some power coming into the SFP.
+Mike
 
-> However, I think we need to think about:
-> 1) how we classify Thomas' problem - does it count as a regression
->    given that support for his platform is not part of mainline, and
->    the use of in-band-status in his unreviewed DT is clearly incorrect?
+> Thanks,
+> Sai
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
 
-I would say no, it is not a regression.
 
-> 2) if we deem it to be a regression, then how do we intend to solve
->    this for stable kernels?
 
-I think this new code should go into net-next, when it opens. I
-suspect it is going to be a big change, once we consider LOS.
-
-	Andrew
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
