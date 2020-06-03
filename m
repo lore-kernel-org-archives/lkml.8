@@ -2,99 +2,155 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB8020734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591178072;
-	bh=oeMBR71zS+pMyX9v0fj7F0CkiuWzgIrRNVOKUGSXlBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZavJf3xrI5UmPbq0ZI5suHt0NEu/BbzL5a1Tg0Hpg2C/MgyDk1cvvZnNuDvO7cD9U
-	 EIR7P9sG4i49U/GIdxfxi7K3aUIUI/nxCqe/rSQbOnylmaoRjKsKzl9HnyDNxcoV5C
-	 JT+Ndg312sIK+KAFABQDwNNLhhUVssH2AQPUrJL4=
+	by mail.kernel.org (Postfix) with ESMTP id 6F23020734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pUCWTJtR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgFCJyc (ORCPT
+        id S1726708AbgFCJyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60500 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 05:54:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33114 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCJyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:54:31 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1725854AbgFCJyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:54:33 -0400
+Received: from zn.tnic (p200300ec2f0b2300d541c55e36baf562.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2300:d541:c55e:36ba:f562])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A49206A2;
-        Wed,  3 Jun 2020 09:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591178071;
-        bh=oeMBR71zS+pMyX9v0fj7F0CkiuWzgIrRNVOKUGSXlBw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1j09JU8SfYxzcB1rwjgcwH0ZOPQVPHj6TI+nzcBNAFm7EjL8s1ouPqNgoWrY3gs+d
-         n3350osjIgPNmYoinUdlA5il9X6PZJBitrjbEk1CvbaLGLPLWEZaKleJOO3XhfRSXB
-         aan+nEcRRWKKhwD80fElz3jqPv1xqeZKSWnzM5lA=
-Date:   Wed, 3 Jun 2020 10:54:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Luigi Semenzato <semenzato@chromium.org>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        NeilBrown <neilb@suse.de>, Yang Shi <yang.shi@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Kiss <daniel.kiss@arm.com>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 66CAB1EC02CF;
+        Wed,  3 Jun 2020 11:54:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591178071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bSC5v9pq6HGi+3XtTAaeKewohWX8QeHbDID0hOwG0pY=;
+        b=pUCWTJtRDBixL1/rL2J71p2JHm64P1CBHO/NNH00XF5+OWmSZlJj9GLIdiFdwhbHnX2pZo
+        bXBLABD3QW9lvT9++tK9YYmUj+a23sMwG/rk+KEtxVIZE6lh+Eg+hw94jVOfh1CpdIWyzO
+        9QBaI53KU5J74sP9JTJoBhekViVGObE=
+Date:   Wed, 3 Jun 2020 11:54:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/2] docs: fs: proc.rst: fix a warning due to a merge
- conflict
-Message-ID: <20200603095428.GA5327@sirena.org.uk>
-References: <cover.1591137229.git.mchehab+huawei@kernel.org>
- <28c4f4c5c66c0fd7cbce83fe11963ea6154f1d47.1591137229.git.mchehab+huawei@kernel.org>
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 73/75] x86/sev-es: Support CPU offline/online
+Message-ID: <20200603095426.GA19711@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-74-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <28c4f4c5c66c0fd7cbce83fe11963ea6154f1d47.1591137229.git.mchehab+huawei@kernel.org>
-X-Cookie: Your supervisor is thinking about you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200428151725.31091-74-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 28, 2020 at 05:17:23PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Add a play_dead handler when running under SEV-ES. This is needed
+> because the hypervisor can't deliver an SIPI request to restart the AP.
+> Instead the kernel has to issue a VMGEXIT to halt the VCPU. When the
+> hypervisor would deliver and SIPI is wakes up the VCPU instead.
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That last sentence needs fixing.
 
-On Wed, Jun 03, 2020 at 12:38:14AM +0200, Mauro Carvalho Chehab wrote:
-> Changeset 424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
-> added a new parameter to a table. This causes Sphinx warnings,
-> because there's now an extra "-" at the wrong place:
+Also, that explanation belongs as comment over sev_es_ap_hlt_loop()
+because commit messages are not that easy to find.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/include/uapi/asm/svm.h |  1 +
+>  arch/x86/kernel/sev-es.c        | 58 +++++++++++++++++++++++++++++++++
+>  2 files changed, 59 insertions(+)
+> 
+> diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+> index a19ce9681ec2..20a05839dd9a 100644
+> --- a/arch/x86/include/uapi/asm/svm.h
+> +++ b/arch/x86/include/uapi/asm/svm.h
+> @@ -84,6 +84,7 @@
+>  /* SEV-ES software-defined VMGEXIT events */
+>  #define SVM_VMGEXIT_MMIO_READ			0x80000001
+>  #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
+> +#define SVM_VMGEXIT_AP_HLT_LOOP			0x80000004
+>  #define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
+>  #define		SVM_VMGEXIT_SET_AP_JUMP_TABLE			0
+>  #define		SVM_VMGEXIT_GET_AP_JUMP_TABLE			1
+> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+> index 28725c38e6fb..00a5d0483730 100644
+> --- a/arch/x86/kernel/sev-es.c
+> +++ b/arch/x86/kernel/sev-es.c
+> @@ -32,6 +32,8 @@
+>  #include <asm/processor.h>
+>  #include <asm/traps.h>
+>  #include <asm/svm.h>
+> +#include <asm/smp.h>
+> +#include <asm/cpu.h>
+>  
+>  #define DR7_RESET_VALUE        0x400
+>  
+> @@ -448,6 +450,60 @@ static bool __init sev_es_setup_ghcb(void)
+>  	return true;
+>  }
+>  
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +static void sev_es_ap_hlt_loop(void)
+> +{
+> +	struct ghcb_state state;
+> +	struct ghcb *ghcb;
+> +
+> +	ghcb = sev_es_get_ghcb(&state);
+> +
+> +	while (true) {
+> +		vc_ghcb_invalidate(ghcb);
+> +		ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_HLT_LOOP);
+> +		ghcb_set_sw_exit_info_1(ghcb, 0);
+> +		ghcb_set_sw_exit_info_2(ghcb, 0);
+> +
+> +		sev_es_wr_ghcb_msr(__pa(ghcb));
+> +		VMGEXIT();
+> +
+> +		/* Wakup Signal? */
 
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
+		  "Wakeup"
 
------BEGIN PGP SIGNATURE-----
+> +		if (ghcb_is_valid_sw_exit_info_2(ghcb) &&
+> +		    ghcb->save.sw_exit_info_2 != 0)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Xc1AACgkQJNaLcl1U
-h9CkuAf7BQEahHNY2RtCJ0oStk4GzPzgDuhtsL9o2vxq/A5/CNTfmJ6l3lwIzV6p
-RTSoNwkaoN8gXO+tYG14vho8aO4FKLeJKZLUHbwbJkcLDdtDO5uDIH0/Kq2pwJOM
-fB6OEiVinHkdFwCmeOClv51/2hX0QzfJpzEo0AsPiOryDA+Rbv/KvuKk/W69lZw/
-E0unmZ9MEH7Dq6zssY/Q+ORvpaSmu7MnbUnRpHDmjtqavrnYfCVnZWUF+GhyjO1E
-Z9W9iD3N/pIpvUInOfhkGsFjKxZtwX+tKVoYJ3B5/gFjg05wrJXNKqY0Z5CmLsgw
-s7dSHPu0BPmIpaCy/6HTAsu5jtgynQ==
-=XRbF
------END PGP SIGNATURE-----
+No need for the "!= 0".
 
---GvXjxJ+pjyke8COw--
+> +			break;
+> +	}
+> +
+> +	sev_es_put_ghcb(&state);
+> +}
+
+...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
