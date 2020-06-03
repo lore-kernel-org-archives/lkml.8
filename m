@@ -2,156 +2,127 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1424BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCE92072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF912074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mL6sYzK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbgFCDlZ (ORCPT
+        id S1725959AbgFCDm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 23:41:25 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:43386 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgFCDlX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 23:41:23 -0400
-Received: by mail-il1-f199.google.com with SMTP id e5so287286ill.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 20:41:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gXY/ZYEP3SmrwbBJcl7C6Xw3GUvmdoWZklMcqyQfDr4=;
-        b=N3PtzmbMuiq2gOfIoJNPH6hkh/eS9WA9barU3S2h4jwgNZOI3c565JY2rhf+GjJD1O
-         jPeQEoSXw/pR4u66eCZ8bALIY3KxoS0hSj5xdF+/JlLIi/53HE047INwdXi8W5odjh1V
-         /WeVvZd34dtPfgvkx4fEAdMyD2gpd3KD0FwNNlYm1dcERX9xvn22GJdyTAN/JQo+TEhR
-         yUo39hcbU2Y+jvJB6ziVOVqm7br0x/MGMPlbtz3lfHFL/VCvy+2NeYlp0JcpVgE9Zgyy
-         UACRAmrxbGxvxi5NtIq+HWZGk2ndCGsT4Z8r1a/EaOtvH6MJbYxkZwQT0CHjWpqgdaEN
-         8q+A==
-X-Gm-Message-State: AOAM531XWLyEWGG7vgnnAyI+fF5EKRdPnBUfcgDY26ea565dCA5cHydo
-        GX/iEEMl4fB1YvwmR2IhYpEUz912s7DJoaIXv0D/B/UD1Lum
-X-Google-Smtp-Source: ABdhPJxq0CtdjSAJeiL8/yVeyj9mc4ScvfYBmPSicxFf2BLe4pWWyJTMypz7bJatLdWpslCO4PVKgv07dKbKcCnMcQu200HJZv1f
+        Tue, 2 Jun 2020 23:42:57 -0400
+Received: from mail-eopbgr50079.outbound.protection.outlook.com ([40.107.5.79]:42883
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725876AbgFCDm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 23:42:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sij2O4qOCXpze/TInIvYP9ys9PwmUGqZx/CQFb/ZK6Rv8mADq8Q4splecyZvcjcBT+UBS/ExtB41lgej1LonEHBfhk57ufGGMsCvsjskLe0j6xW+XiUfLtqXLlKyaMFDLYNayKX22fsiYq9yKKYa1CqdT9o/OZjQQL7ZrnhoF06MU6U03TTDbXCE1FZsnFUPs0dNSClsfNsB4/YwzwqFIio5KU8oNtKI0SI1YOPnK6qGnU47fYMv0+9JZ0Ip8W7JdckYy/WOuqMAhSMO2Vvzs0qpT+gwNMPloaEvrI2k6+jdJKKNs/PqC+q+0MX+68xymEVDxXoXNuhPAm5pLwVQLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sxt6snazwSZaOkz+/3Uy5F1S9PEdTwIuBbF6fdmRRJM=;
+ b=Hpk7aEwERF/VHkbJbJ0StVQV+t4Jaz0CW3WElW6m8Xhjbb4vi585kpr4IBWcCXkVrHngPbWA8Ggs2OnEk32KKP6+r8Wdu0yifcKmySHK7DdEOHAF9gdNC0stqW+aqgfy2iaNGtpgNSgfCTpnvukWbR2by7nMt5pzQ0f4mv2g4/cbwQ8519ejX0fj03NHht2aqKSldwZw12KidfaHP+i8kax7bV5VkcPehw1p/6PaWVP01rC3gRGQx//R0096KcuDWrH8TFBC9PRHmunXanQfta3ls+wa1XGsfVhogDbkjnHhyQpq4BhaAdEd0KLtS6/sp4/bwYD7SfmJ6stnW5p5dA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sxt6snazwSZaOkz+/3Uy5F1S9PEdTwIuBbF6fdmRRJM=;
+ b=mL6sYzK1GzxLaLv/WMrYnu2vwCzvOXHj2HIJmXbCQjHnS073XJNms81w3P7pyUawX+TeF+9VAzpf9ouGbRBUa0LXlGfdFivg+xvHupBHnwd5VFlEEZJAjPsNyZpAaYAKjzC8PDQVfCXRbebfNGAvFNlaW3Ib9HNr2espxLv25ks=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2854.eurprd04.prod.outlook.com (2603:10a6:4:94::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Wed, 3 Jun
+ 2020 03:42:53 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 03:42:53 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, aisheng.dong@nxp.com
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux@rempel-privat.de,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        qiangqing.zhang@nxp.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 0/3] firmware: imx: fix/update cm4 and add resource check 
+Date:   Wed,  3 Jun 2020 11:32:20 +0800
+Message-Id: <1591155143-25972-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0198.apcprd06.prod.outlook.com (2603:1096:4:1::30)
+ To DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
 MIME-Version: 1.0
-X-Received: by 2002:a92:9603:: with SMTP id g3mr2273048ilh.204.1591155681272;
- Tue, 02 Jun 2020 20:41:21 -0700 (PDT)
-Date:   Tue, 02 Jun 2020 20:41:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002a280b05a725cd93@google.com>
-Subject: memory leak in crypto_create_tfm
-From:   syzbot <syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0198.apcprd06.prod.outlook.com (2603:1096:4:1::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.18 via Frontend Transport; Wed, 3 Jun 2020 03:42:49 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 399fcaad-5cc5-48d0-dd76-08d8077031e2
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2854:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB28544E81F591EDC40AAD1D0588880@DB6PR0402MB2854.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 04238CD941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dqSpCCmACce3Xv9cnk38eJZCTeQ6Vx5EhSMliXQH/N/3tM5RqmmwkV6Gqi9MJG+AIoJQYMFeGcTjdo3NIsflQNn7sWnxMTihJp42uOaVmhKUrTqklThpkSGOB9QE64DQT+6AR7CKpXoRfNoosq5PBVMioCVDDt/eYIiC4UegAjEtZVSsYWAXU32ZgVwrqDZAAQ60MFUDFc5q6O3QSGU3e+Ap1bMKNGfdg6kpT/oHCrmEAb5g3dHJQ3rRmF7xEA9DOLS5GguUYXJWIOABjxh1KcBw04TNz8zbGhcVVfmCdszVgf/hquu+wpgYeQKednfFCzEHlzUEpgck96dAnstmlw1h2VVjwQ+kq6MECKh7urP/TXtFWDMQwgafN+LgS4xDLVdiAmvnpm//6VgcZPg0Y5zRuIy8nnEYQ2OdbB5L6SPQKoZo/QbnRpSKwJtUOh+fUfelhtU8F6oXhUOTZv58Sg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(136003)(366004)(346002)(966005)(6506007)(478600001)(186003)(6486002)(36756003)(5660300002)(26005)(66476007)(15650500001)(66946007)(66556008)(83380400001)(4744005)(4743002)(2616005)(52116002)(8936002)(16526019)(9686003)(316002)(2906002)(956004)(6512007)(69590400007)(4326008)(8676002)(6666004)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ae3afJGUIoMeY+sOc8Ncj8pbDMSi7aiQYD+WPV33UqHad2ctTRy4KTYq8Zec1ou4Vcr2w2bhmK1bhmJRnzMYjF67vudc+10AtDnujRGDvJ5gfiVMXRvg+9i3NvLO94ME9bU7xLyoUSmGUZwT9s6l0sDVIrSo45ly8gc18Rs/D58gFfYaH0Lj2chFie+TjcwmOOCJ2DbkwAEhQZQpDoTeP7xWViqYiukhygl6rR+MV3OSVRe1BttKEQayg0u9PwSSqmS3wGMZd5zPmgkL8uVsOPtQoQZ4dzg2/WTEj4XclzTkPVnq4MAbj3pWLdaz1bwphb1m46EpiVkwgsBw7v3wszV3SBNRj20Lm+w7/TKQlEk5LFYTGBibVIVVhGdokcikGqXWU7Y06+bLki+SNjpeUmatvixdbmq5CKfVGI3do6g1ccLIIMJ2zJFlP2THKlm0GIMN/wS/4LmggtP/L1X1Wh4VuhQvSiU1YxRZjgrZdcs=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 399fcaad-5cc5-48d0-dd76-08d8077031e2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 03:42:53.1006
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LYrU5JxqGY+K/rpyyzsHt7kx5nxFSnmg0JM7h+lpsJl2yIE2jeHEevpxs/YWEAguFRPO2LPpsrXMkYiMA9WFRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2854
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Peng Fan <peng.fan@nxp.com>
 
-syzbot found the following crash on:
+V2:
+ Add R-b tag
+ Drop patch 3/4 from V1
+ Add comments and update Copyright for patch 2/3
+ keep code consistency in Patch 3/3
 
-HEAD commit:    19409891 Merge tag 'pnp-5.8-rc1' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13165aa6100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6d41e63a2c7e0715
-dashboard link: https://syzkaller.appspot.com/bug?extid=2e635807decef724a1fa
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f00ef2100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170f2ef2100000
+V1:
+ https://patchwork.kernel.org/cover/11505045/
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com
-
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff8881175bc480 (size 64):
-  comm "syz-executor064", pid 6388, jiffies 4294941622 (age 13.280s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    e0 7e 56 84 ff ff ff ff 00 00 00 00 00 00 00 00  .~V.............
-  backtrace:
-    [<0000000029c7602f>] kmalloc include/linux/slab.h:560 [inline]
-    [<0000000029c7602f>] kzalloc include/linux/slab.h:669 [inline]
-    [<0000000029c7602f>] crypto_create_tfm+0x31/0x100 crypto/api.c:448
-    [<00000000bec8cbdb>] crypto_alloc_tfm+0x79/0x1a0 crypto/api.c:527
-    [<000000002f9791ba>] drbg_prepare_hrng crypto/drbg.c:1509 [inline]
-    [<000000002f9791ba>] drbg_instantiate crypto/drbg.c:1587 [inline]
-    [<000000002f9791ba>] drbg_kcapi_seed+0x432/0x6a9 crypto/drbg.c:1980
-    [<0000000041302bb8>] crypto_rng_reset+0x35/0x1a0 crypto/rng.c:53
-    [<000000004758c3c4>] alg_setkey crypto/af_alg.c:222 [inline]
-    [<000000004758c3c4>] alg_setsockopt+0x149/0x190 crypto/af_alg.c:255
-    [<000000008bc4b5cb>] __sys_setsockopt+0x112/0x230 net/socket.c:2132
-    [<00000000cfbf30da>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<00000000cfbf30da>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<00000000cfbf30da>] __x64_sys_setsockopt+0x22/0x30 net/socket.c:2145
-    [<00000000fc9c2183>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<0000000040e080a1>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881175bc040 (size 64):
-  comm "syz-executor064", pid 6389, jiffies 4294942172 (age 7.780s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    e0 7e 56 84 ff ff ff ff 00 00 00 00 00 00 00 00  .~V.............
-  backtrace:
-    [<0000000029c7602f>] kmalloc include/linux/slab.h:560 [inline]
-    [<0000000029c7602f>] kzalloc include/linux/slab.h:669 [inline]
-    [<0000000029c7602f>] crypto_create_tfm+0x31/0x100 crypto/api.c:448
-    [<00000000bec8cbdb>] crypto_alloc_tfm+0x79/0x1a0 crypto/api.c:527
-    [<000000002f9791ba>] drbg_prepare_hrng crypto/drbg.c:1509 [inline]
-    [<000000002f9791ba>] drbg_instantiate crypto/drbg.c:1587 [inline]
-    [<000000002f9791ba>] drbg_kcapi_seed+0x432/0x6a9 crypto/drbg.c:1980
-    [<0000000041302bb8>] crypto_rng_reset+0x35/0x1a0 crypto/rng.c:53
-    [<000000004758c3c4>] alg_setkey crypto/af_alg.c:222 [inline]
-    [<000000004758c3c4>] alg_setsockopt+0x149/0x190 crypto/af_alg.c:255
-    [<000000008bc4b5cb>] __sys_setsockopt+0x112/0x230 net/socket.c:2132
-    [<00000000cfbf30da>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<00000000cfbf30da>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<00000000cfbf30da>] __x64_sys_setsockopt+0x22/0x30 net/socket.c:2145
-    [<00000000fc9c2183>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<0000000040e080a1>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811b3ca080 (size 96):
-  comm "syz-executor064", pid 6389, jiffies 4294942172 (age 7.780s)
-  hex dump (first 32 bytes):
-    89 c7 08 cb 8a 12 10 6e 00 00 00 00 00 00 00 00  .......n........
-    71 51 5a c2 1b 00 00 00 35 7d 00 00 00 00 00 00  qQZ.....5}......
-  backtrace:
-    [<000000008ec3eca0>] jent_entropy_collector_alloc+0x1b/0xf8 crypto/jitterentropy.c:662
-    [<0000000026ed401a>] jent_kcapi_init+0x17/0x40 crypto/jitterentropy-kcapi.c:119
-    [<00000000be7d6b06>] crypto_create_tfm+0x89/0x100 crypto/api.c:459
-    [<00000000bec8cbdb>] crypto_alloc_tfm+0x79/0x1a0 crypto/api.c:527
-    [<000000002f9791ba>] drbg_prepare_hrng crypto/drbg.c:1509 [inline]
-    [<000000002f9791ba>] drbg_instantiate crypto/drbg.c:1587 [inline]
-    [<000000002f9791ba>] drbg_kcapi_seed+0x432/0x6a9 crypto/drbg.c:1980
-    [<0000000041302bb8>] crypto_rng_reset+0x35/0x1a0 crypto/rng.c:53
-    [<000000004758c3c4>] alg_setkey crypto/af_alg.c:222 [inline]
-    [<000000004758c3c4>] alg_setsockopt+0x149/0x190 crypto/af_alg.c:255
-    [<000000008bc4b5cb>] __sys_setsockopt+0x112/0x230 net/socket.c:2132
-    [<00000000cfbf30da>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<00000000cfbf30da>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<00000000cfbf30da>] __x64_sys_setsockopt+0x22/0x30 net/socket.c:2145
-    [<00000000fc9c2183>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<0000000040e080a1>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Fix cm40 power domain, update to add more cm4 resources
+Add resource owner check, to not register if not owned by Linux.
 
 
+Peng Fan (3):
+  firmware: imx: scu-pd: fix cm40 power domain
+  firmware: imx: add resource management api
+  firmware: imx: scu-pd: add more cm4 resources
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/firmware/imx/Makefile       |  2 +-
+ drivers/firmware/imx/rm.c           | 45 ++++++++++++++++++++++++
+ drivers/firmware/imx/scu-pd.c       | 14 ++++++--
+ include/linux/firmware/imx/sci.h    |  1 +
+ include/linux/firmware/imx/svc/rm.h | 69 +++++++++++++++++++++++++++++++++++++
+ 5 files changed, 128 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/firmware/imx/rm.c
+ create mode 100644 include/linux/firmware/imx/svc/rm.h
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+2.16.4
+
