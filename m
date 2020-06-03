@@ -2,100 +2,72 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2013BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D6A20734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:01:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p/NlZ884"
+	by mail.kernel.org (Postfix) with ESMTP id F1FA120734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgFCWBt (ORCPT
+        id S1726746AbgFCWCt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 18:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41672 "EHLO
+        Wed, 3 Jun 2020 18:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgFCWBs (ORCPT
+        with ESMTP id S1725922AbgFCWCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 18:01:48 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A17C08C5C0;
-        Wed,  3 Jun 2020 15:01:48 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cjYQ5x93z9sSJ;
-        Thu,  4 Jun 2020 08:01:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591221707;
-        bh=iwpqfiMGr37dLvcr3M7VNBtDautVKQ5f7NSqlAtZjKM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p/NlZ884MCoMZ9jq9I4Xz9gA2Mg4WQ/Azz1rk/80+BGAn0J8FC40mb56vMhD+qg/3
-         POS2MfD71jeAm/Tw4xjRlsMb/Z+t2dx/B5hzKfLRNYVRXcAuUIlHU8XZfvXO+yszy9
-         DTBfgZ5KGb+qwWrK0SN+Yekb/9HqJ/93TDCEjn1HG0mcnRlf3AHS1+LuJWUWfnBEaM
-         kaVDwdknc80NALiojZceB7J7C7V0LMjpdq+0HBbRQR+VHCodJpLxD+WBOZquRArV/D
-         khOV6jtpQMJYboMhRTr8mL1vdHtdl+U63+7UJ/TsYTtEw21GujrIqs9NBSMV+QW9uY
-         Ak5wOzknvlvVg==
-Date:   Thu, 4 Jun 2020 08:01:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commits in the amdgpu
- tree
-Message-ID: <20200604080146.15ec455d@canb.auug.org.au>
-In-Reply-To: <CADnq5_P0SCBUE=zmg0Bezp=6C7x32-T4DW0+iSsJmrYtaB=sJg@mail.gmail.com>
-References: <20200604073544.1ef1e38a@canb.auug.org.au>
-        <CADnq5_P0SCBUE=zmg0Bezp=6C7x32-T4DW0+iSsJmrYtaB=sJg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/OpRpw96UTqB2/IYLNRoyOEn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 3 Jun 2020 18:02:49 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1059AC08C5C0;
+        Wed,  3 Jun 2020 15:02:49 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jgbTB-0003Qr-6b; Thu, 04 Jun 2020 00:02:45 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] lan743x: Added fixed link and RGMII support / debugging
+From:   Roelof Berg <rberg@berg-solutions.de>
+In-Reply-To: <20200603180615.GB971209@lunn.ch>
+Date:   Thu, 4 Jun 2020 00:02:44 +0200
+Cc:     David Miller <davem@davemloft.net>,
+        Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <EAE302D7-D2C8-40C5-81DC-E8CC008CE3D2@berg-solutions.de>
+References: <20200529193003.3717-1-rberg@berg-solutions.de>
+ <20200601.115136.1314501977250032604.davem@davemloft.net>
+ <D784BC1B-D14C-4FE4-8FD8-76BEBE60A39D@berg-solutions.de>
+ <20200603155927.GC869823@lunn.ch>
+ <42337EA1-C7D1-46C6-815F-C619B27A4E77@berg-solutions.de>
+ <20200603180615.GB971209@lunn.ch>
+To:     Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1591221769;7a04ee88;
+X-HE-SMSGID: 1jgbTB-0003Qr-6b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/OpRpw96UTqB2/IYLNRoyOEn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Thanks, I found the cause, the delta patch is submitted. Lan7430 runs now in different speeds, also ‚hot swap‘ between different speeds works well. Normal mode and fixed-phy mode coexist properly.
 
-Hi Alex,
+So, I guess we’re done :) However, I’ll spend some more time testing to ensure we’re really safe.
 
-On Wed, 3 Jun 2020 17:44:31 -0400 Alex Deucher <alexdeucher@gmail.com> wrot=
-e:
->
-> On Wed, Jun 3, 2020 at 5:35 PM Stephen Rothwell <sfr@canb.auug.org.au> wr=
-ote:
-> >
-> > Is all this new stuff really destined for v5.8? =20
->=20
-> No.  5.9.
+(I’m sending this e-mail through a Microchip Lan7430 by the way :)
 
-Then it should not be in linux-next until after v5.8-rc1 is released.
+Roelof Berg
 
---=20
-Cheers,
-Stephen Rothwell
+> 
+> Adding #define DEBUG to the top of drivers/net/phy/phy.c will get you
+> some debug info.
+> 
+> […]
 
---Sig_/OpRpw96UTqB2/IYLNRoyOEn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>    Andrew
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YHcoACgkQAVBC80lX
-0GxNigf+L80orgMLD265grnHap7WS/SrlMflDW1clF55MK8pmZ772Hwxdk1UywCF
-Tl4X/vNufFwKVltuYJsQAUd05YaL9cr00bCFUXoTIkhqr/3TfT6juUEdmQxjpQhW
-0xLAYvHJ/srUekNZPi2po1DLy1xAbZ/WRrujzDCSDkH0IfLtqzfq3H7v25wV5JeG
-cFRZH/5IzTT/a/0P2nKXzn5/kLEOrvHiB+P9zsjniR9cl50y9SDDKZXQBOv1TnsM
-WsbDBi395eAaYGiLSOQVnSLGWOfhkExGkieC6e9Evk3ePyF1ptfvOrfyGR+YU/GF
-THQPlnm+rYZ/Cw+TZQuVvirkeowqqg==
-=LA3R
------END PGP SIGNATURE-----
-
---Sig_/OpRpw96UTqB2/IYLNRoyOEn--
