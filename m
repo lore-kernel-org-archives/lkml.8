@@ -2,172 +2,152 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00220C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC522C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C262067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CCA207D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:14:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TBNU0htz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgFCLNY (ORCPT
+        id S1726082AbgFCLOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:13:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50603 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgFCLNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:13:24 -0400
-IronPort-SDR: fdaDDy6Zkvf5Zwsa0jBnNVl2y9JTjk1OKqEnxkED21pb+G3RXSlnkJuNhsvK6r+6NPPWTgEiGx
- nKGnX6riwuiQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 04:13:22 -0700
-IronPort-SDR: rLJ+wzd6YmUAaZuaP8xbJW2vGaJtEviBy5312HzuHTvFsnLVuV6nyJXxwRR02/GUgZQVsvFMAN
- H34DBEO7Hibw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="269042364"
-Received: from lkp-server01.sh.intel.com (HELO dad89584b564) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 03 Jun 2020 04:13:21 -0700
-Received: from kbuild by dad89584b564 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jgRKi-00007Z-Pm; Wed, 03 Jun 2020 11:13:20 +0000
-Date:   Wed, 03 Jun 2020 19:13:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/test] BUILD SUCCESS
- f5978744fd874b7775e73958d64f3e0b2082957b
-Message-ID: <5ed785ca.ghCYKBzvQH+wTPpj%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 3 Jun 2020 07:14:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31157 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725936AbgFCLOV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:14:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591182859;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=66+2fJmyMEeOm+RfdaX0dEV8FbowH6WPfR+JgsoWFaY=;
+        b=TBNU0htzL4T+BmdndP5/nCKIe0+PWjr97ZMgRxt6V1D21MbVrRcG1l7LiCKVhX0O0WOJrv
+        GyzU8OU5n6V4BeFbiY9sEpirA3Bkk3UjCNwwnQE2rbBaaIWBoBpXpxga7KLUH8ILOWULWz
+        Ywtqn8vjmig3ub0t9obE2ml3aKTG0IY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-wSwlmBnYPY-5MfGjfcSRLw-1; Wed, 03 Jun 2020 07:14:17 -0400
+X-MC-Unique: wSwlmBnYPY-5MfGjfcSRLw-1
+Received: by mail-ej1-f71.google.com with SMTP id w12so641187ejf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 04:14:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=66+2fJmyMEeOm+RfdaX0dEV8FbowH6WPfR+JgsoWFaY=;
+        b=FbdcSQqtA551MLx1m+y7TBGr6xfJmzyOmzMDrrjFMcMMQglwMEEilRsV6kFNCf45Wc
+         0q5SD4ZEI5wzU9WYS15/LOburMWAnNzMIgkjkFwdod8WFmO4112i6pq+zYrxc+LP/DlU
+         wEMTtNOL0LTubSKOT1teVra4fhlEmKauCRvdhH1TQboEps1aixFJVVFxL/JVvBfbwAIU
+         T8llMENGLoQ2w18R4s4plEagTjCLVXb/lp7YwumtTBQXaZELI28pFACRfOwqjTv7zeas
+         BT6tYQCv6P2/U0UwfABJ2A4AQUrKc03qAn+dbkmPxNfgscWIXaD3dBWDHYg8Ai4yKYj4
+         GjPQ==
+X-Gm-Message-State: AOAM533A/6DTowsmXsWqUzqFFtFkSthNuy3+OfuIJUYb8G+fYf5DHplp
+        AvV8daF/0WW7oG3WyZR2P0MHlwHwuaCGKaY7Wr2APCy8impWHSyBsg/NsVMNcUBLIdWYyEdFXMF
+        k5Tt3Nx9F5I9SBhKwNhcgDitV
+X-Received: by 2002:a17:906:560b:: with SMTP id f11mr12470102ejq.11.1591182856241;
+        Wed, 03 Jun 2020 04:14:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwmmkDjbCjAIUFgF6xHVnWC41NZMGs2xGfwkhaV1dIKlp/faLOhnX0X4W/6u4Q/Xq0ZFu5mvQ==
+X-Received: by 2002:a17:906:560b:: with SMTP id f11mr12470075ejq.11.1591182856011;
+        Wed, 03 Jun 2020 04:14:16 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id us3sm962679ejb.31.2020.06.03.04.14.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 04:14:15 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     "Huang\, Kai" <kai.huang@intel.com>
+Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        "wad\@chromium.org" <wad@chromium.org>,
+        "Kleen\, Andi" <andi.kleen@intel.com>,
+        "luto\@kernel.org" <luto@kernel.org>,
+        "aarcange\@redhat.com" <aarcange@redhat.com>,
+        "keescook\@chromium.org" <keescook@chromium.org>,
+        "dave.hansen\@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "wanpengli\@tencent.com" <wanpengli@tencent.com>,
+        "kirill.shutemov\@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "joro\@8bytes.org" <joro@8bytes.org>,
+        "peterz\@infradead.org" <peterz@infradead.org>,
+        "jmattson\@google.com" <jmattson@google.com>,
+        "Edgecombe\, Rick P" <rick.p.edgecombe@intel.com>,
+        "rientjes\@google.com" <rientjes@google.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "kirill\@shutemov.name" <kirill@shutemov.name>,
+        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>
+Subject: Re: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
+In-Reply-To: <0cd53be8abede7e82a68c32b1d8b0e4ca6f24a05.camel@intel.com>
+References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com> <20200522125214.31348-3-kirill.shutemov@linux.intel.com> <87d06s83is.fsf@vitty.brq.redhat.com> <20200525151525.qmfvzxbl7sq46cdq@box> <20200527050350.GK31696@linux.intel.com> <87eer56abe.fsf@vitty.brq.redhat.com> <0cd53be8abede7e82a68c32b1d8b0e4ca6f24a05.camel@intel.com>
+Date:   Wed, 03 Jun 2020 13:14:13 +0200
+Message-ID: <87r1uwflkq.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/test
-branch HEAD: f5978744fd874b7775e73958d64f3e0b2082957b  torture:  Remove qemu dependency on EFI firmware
+"Huang, Kai" <kai.huang@intel.com> writes:
 
-elapsed time: 481m
+> On Wed, 2020-05-27 at 10:39 +0200, Vitaly Kuznetsov wrote:
+>> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+>> 
+>> > On Mon, May 25, 2020 at 06:15:25PM +0300, Kirill A. Shutemov wrote:
+>> > > On Mon, May 25, 2020 at 04:58:51PM +0200, Vitaly Kuznetsov wrote:
+>> > > > > @@ -727,6 +734,15 @@ static void __init kvm_init_platform(void)
+>> > > > >  {
+>> > > > >  	kvmclock_init();
+>> > > > >  	x86_platform.apic_post_init = kvm_apic_init;
+>> > > > > +
+>> > > > > +	if (kvm_para_has_feature(KVM_FEATURE_MEM_PROTECTED)) {
+>> > > > > +		if (kvm_hypercall0(KVM_HC_ENABLE_MEM_PROTECTED)) {
+>> > > > > +			pr_err("Failed to enable KVM memory
+>> > > > > protection\n");
+>> > > > > +			return;
+>> > > > > +		}
+>> > > > > +
+>> > > > > +		mem_protected = true;
+>> > > > > +	}
+>> > > > >  }
+>> > > > 
+>> > > > Personally, I'd prefer to do this via setting a bit in a KVM-specific
+>> > > > MSR instead. The benefit is that the guest doesn't need to remember if
+>> > > > it enabled the feature or not, it can always read the config msr. May
+>> > > > come handy for e.g. kexec/kdump.
+>> > > 
+>> > > I think we would need to remember it anyway. Accessing MSR is somewhat
+>> > > expensive. But, okay, I can rework it MSR if needed.
+>> > 
+>> > I think Vitaly is talking about the case where the kernel can't easily get
+>> > at its cached state, e.g. after booting into a new kernel.  The kernel would
+>> > still have an X86_FEATURE bit or whatever, providing a virtual MSR would be
+>> > purely for rare slow paths.
+>> > 
+>> > That being said, a hypercall plus CPUID bit might be better, e.g. that'd
+>> > allow the guest to query the state without risking a #GP.
+>> 
+>> We have rdmsr_safe() for that! :-) MSR (and hypercall to that matter)
+>> should have an associated CPUID feature bit of course.
+>> 
+>> Yes, hypercall + CPUID would do but normally we treat CPUID data as
+>> static and in this case we'll make it a dynamically flipping
+>> bit. Especially if we introduce 'KVM_HC_DISABLE_MEM_PROTECTED' later.
+>
+> Not sure why is KVM_HC_DISABLE_MEM_PROTECTED needed?
+>
 
-configs tested: 105
-configs skipped: 3
+I didn't put much thought in it but we may need it to support 'kexec'
+case when no reboot is performed but we either need to pass  the data
+about which regions are protected from old kernel to the new one or
+'unprotect exerything'.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+-- 
+Vitaly
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arc                              allyesconfig
-ia64                                defconfig
-arm                      pxa255-idp_defconfig
-mips                        vocore2_defconfig
-powerpc                           allnoconfig
-arm                         nhk8815_defconfig
-powerpc                 mpc8272_ads_defconfig
-arm                         s5pv210_defconfig
-arm                       multi_v4t_defconfig
-sh                        edosk7705_defconfig
-arm                              alldefconfig
-sh                          rsk7203_defconfig
-powerpc                     pq2fads_defconfig
-powerpc                     mpc83xx_defconfig
-sh                            migor_defconfig
-s390                          debug_defconfig
-arm                         axm55xx_defconfig
-um                             i386_defconfig
-m68k                          sun3x_defconfig
-arm                           efm32_defconfig
-powerpc                    mvme5100_defconfig
-mips                      bmips_stb_defconfig
-h8300                               defconfig
-sh                          rsk7264_defconfig
-sh                          kfr2r09_defconfig
-m68k                       m5208evb_defconfig
-c6x                         dsk6455_defconfig
-m68k                            mac_defconfig
-m68k                          multi_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
