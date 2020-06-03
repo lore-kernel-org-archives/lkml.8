@@ -2,117 +2,146 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB57C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5000D206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A68206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Nw3geqRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgFCMw6 (ORCPT
+        id S1725981AbgFCMzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:52:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60598 "EHLO mga02.intel.com"
+        Wed, 3 Jun 2020 08:55:08 -0400
+Received: from mout.gmx.net ([212.227.15.19]:42605 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgFCMw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:52:58 -0400
-IronPort-SDR: W8sT9l4vLhx0faDrhVWwsdnWzwe2gz3vNjZbcovkYnXg4k8VIl9LqW7oWmx01kyYF0GuNSTYZq
- VqQJX55/U/TA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 05:52:57 -0700
-IronPort-SDR: sFZ3MGew3Vqfg9eamgBCc3HZUf9hTlBph9ic9x/Et2eMKwG9uEY2c/EnJVD04Lwl6aoesmawG+
- zI6f1fKxsxhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="312599731"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Jun 2020 05:52:57 -0700
-Received: from [10.249.225.188] (abudanko-mobl.ccr.corp.intel.com [10.249.225.188])
-        by linux.intel.com (Postfix) with ESMTP id 10E4E5800E3;
-        Wed,  3 Jun 2020 05:52:54 -0700 (PDT)
-Subject: Re: [PATCH v6 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     "Hunter, Adrian" <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
- <40643542-6676-e0bc-2d10-165dfde41e29@linux.intel.com>
- <33c91520-7040-bd6b-b176-004ddbec2a63@intel.com>
- <b04311d6-b1c6-d625-b227-9ae4f4370626@linux.intel.com>
- <eb31a2a4-ab3b-54a7-2d5a-51457f78394e@intel.com>
- <363DA0ED52042842948283D2FC38E464B4151F86@IRSMSX106.ger.corp.intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <40d44cd8-ecdb-53c9-99f8-1737e04c84ff@linux.intel.com>
-Date:   Wed, 3 Jun 2020 15:52:53 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1725833AbgFCMzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:55:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1591188902;
+        bh=jKHhJmHxQkXdYjjqXk9mEhOE3xfXnWx+KSdbHS6fj9k=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Nw3geqRI9a2dEmwRZaSG+M1BrwTX5m93sKawmElLm+jte52w8YiIywgQTpXbprPvJ
+         cGz90uNtZNHIjn+JhYJnJfeS1OWbKFriy+1EcwYx94GRrnX1rEyRwELoK/X+YmmLpr
+         5hIjcKt75xNvId0e6KWo1PEpSC/TaQ2cUTXRTZtg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [93.196.61.25] ([93.196.61.25]) by
+ msvc-mesg-gmx023.server.lan (via HTTP); Wed, 3 Jun 2020 14:55:02 +0200
 MIME-Version: 1.0
-In-Reply-To: <363DA0ED52042842948283D2FC38E464B4151F86@IRSMSX106.ger.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-ID: <trinity-27e19b3a-887a-4609-b127-16a3c9d5b804-1591188902362@msvc-mesg-gmx023>
+From:   crustyaw@gmx.de
+To:     AGeissler <Andreas.Geissler@duagon.com>
+Cc:     Andreas.Geissler@duagon.com, jth@kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] MAINTAINERS: Update maintainer entries for MEN
+ HW
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 3 Jun 2020 14:55:02 +0200
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200603071049.7309-1-Andreas.Geissler@duagon.com>
+References: <20200603071049.7309-1-Andreas.Geissler@duagon.com>
+X-Provags-ID: V03:K1:OZfTRwHrlU11uSF3KVx9NPRSy7XybGFpzC3kWTJHMLWe29Ht6TEVfwahibQrZYvYnwTeV
+ 4N6ZzC8lVY89trycprO9xsI9jXTIZF9VESpaIqixRoQXX7/WI8MyiSHuqVi1neTAieIJCcO0ay57
+ 0mbY2XHmeRWYKGGKMy5HonvdgWsOLNe0LaYEnmfZNspYDXY0gVo77dqOWax84p1+kg4JwPwzczTx
+ 1KLtVar+o8m0jkbPE6wNqEIqQc0NiQrb5jvsBGc0STdXoXVDaPACCucQTnMVyCOsoUf5lyi9KKHC
+ q2U5Ptf8Tn2RbArqX6z/7U8
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YGZGAXjeuk4=:1AKlQFaMul5WI5hg6WhVrF
+ vaqOBANniwkEUkJ5Ffx1i7QKEYjHINiJnBYArHrdo5h51p7T0dAzE29MUITsWx4b1cQWa9Wng
+ pz/CJiGMSdf+uZFBHeb2BD4QZCphghXnxH2Zf1A6euMAotN9vEzh1Ibo9coQeetiDbJ35/Z6m
+ W+ZClg0L3r18D+R4FJgbWLJqWFsZbTKvN1ovMvacvPAhgXoTrPlBbHMNrLdnAhKqLSiXfPpgH
+ ri1sqvfvhgZaou//Vyheo02U+QLmKrNhEcSEoKvNRQWc87eXUSLGDFjACUatuPplJyRrtO83n
+ fq3CrKyf38JkW2gWwx9ctHOp9FIYLvv5mLdcz3ePmOJ9c9xMlsAkr/+8h//ySrXq450ND16V1
+ Pov97CaW8z9kAKBowllgpQtAEzFhfoSMtDosFOjjmUxmF0oaSc70kKJ3m89P7mO4Gw3B9QUSi
+ LbT345ftw/kO87qveclg3fmXCpC9zm8GtvpeqQx0l2iBYJrYXtA3APbTthzKdLtapswrbq1Nl
+ Q/BFbxaPyChtQ0VtvV/com1ywZ6cU1XSbZ8kSHXk3YUzLgPKzlOiWchuJ5wrg9rj+eYS78KSz
+ rWAxdwYK1Cwe7YD8JONkjKB76jvEuypIM8vH6W8KqIzSJYQWWtSApZ0Y+HTA0QFvygy2F2ldl
+ LWGPKyckyu/vs4vzhQ5wLNxsWRsAeREAqufK2CiDRy7b7jRZ2t8I3VjO0VQ5JKajZ+jQTB1QC
+ NMxtP0cH0lLztiX4gYFY0a/2qVR3YYmdE0Wb/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Acker-by: Andreas Werner <crustyaw@gmx=2Ede>
 
-On 03.06.2020 15:30, Hunter, Adrian wrote:
-> 
-> 
->> -----Original Message-----
->> From: Hunter, Adrian <adrian.hunter@intel.com>
->> Sent: Wednesday, June 3, 2020 3:24 PM
->> To: Alexey Budankov <alexey.budankov@linux.intel.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>; Jiri Olsa
->> <jolsa@redhat.com>; Namhyung Kim <namhyung@kernel.org>; Alexander
->> Shishkin <alexander.shishkin@linux.intel.com>; Peter Zijlstra
->> <peterz@infradead.org>; Ingo Molnar <mingo@redhat.com>; Andi Kleen
->> <ak@linux.intel.com>; linux-kernel <linux-kernel@vger.kernel.org>
->> Subject: Re: [PATCH v6 01/13] tools/libperf: introduce notion of static polled
->> file descriptors
->>
->> On 3/06/20 3:01 pm, Alexey Budankov wrote:
->>> Hi,
->>>
->>> On 03.06.2020 14:38, Adrian Hunter wrote:
->>>> On 1/06/20 11:05 pm, Alexey Budankov wrote:
->>>>>
->>>>> Implement adding of file descriptors by fdarray__add_stat() to
->>>>> fix-sized (currently 1) stat_entries array located at struct fdarray.
->>>>> Append added file descriptors to the array used by poll() syscall
->>>>> during fdarray__poll() call. Copy poll() result of the added
->>>>> descriptors from the array back to the storage for separate analysis.
->>>>
->>>> Why not instead call evlist__add_pollfd() before other fds are added,
->>>> so the fda->entries[] position is always fixed. Then this patch is not
->> needed.
->>>
->>> It then will block event consumption loop, at least in record mode,
->>> due to change sin initial assumptions behind fdarray__filter(). So
->>> extension of the API with 'static' fds looks safer w.r.t. possible
->>> functional regressions at the same time extending the API with ability
->>> to atomically wait for (poll()) not only event fds but also any other fds
->> during monitoring.
->>
->> So make fdarray__filter() return the number of filterable fds remaining.
->>
-> 
-> 
-> Or perhaps simpler, compare the return value to the number of fds that are known not to be filterable
+Gesendet mit der GMX Mail App
 
-Well, various implementations are for sure possible but the proposed design
-avoids implicit code assumptions and dependency on API calls order as in API
-implementation as in client code and that is why it's been proposed this way.
+Am 03=2E06=2E20 um 09:10 schrieb AGeissler
+
+> =EF=BB=BF[resend; because of missing cc]
+>=20
+> Remove Andreas Werner as Maintainer of the F21 BMC driver, as he is no
+> longer with the company and add Andreas Geissler as additional
+> Maintainer for all MEN Hardware=2E
+>=20
+> Acked-by: Johannes Thumshirn <jth@kernel=2Eorg>
+> Acked-by: Andreas Werner <crustyaw@gmx=2Ede>
+> Signed-off-by: AGeissler <Andreas=2EGeissler@duagon=2Ecom>
+> ---
+>  MAINTAINERS | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 68cd1b966b45=2E=2Eb3b45d2e9c8a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11044,19 +11044,21 @@ F:	include/uapi/mtd/
+> =20
+>  MEN A21 WATCHDOG DRIVER
+>  M:	Johannes Thumshirn <morbidrsa@gmail=2Ecom>
+> +M:	Andreas Geissler <andreas=2Egeissler@duagon=2Ecom>
+>  L:	linux-watchdog@vger=2Ekernel=2Eorg
+>  S:	Maintained
+>  F:	drivers/watchdog/mena21_wdt=2Ec
+> =20
+>  MEN CHAMELEON BUS (mcb)
+>  M:	Johannes Thumshirn <morbidrsa@gmail=2Ecom>
+> +M:	Andreas Geissler <andreas=2Egeissler@duagon=2Ecom>
+>  S:	Maintained
+>  F:	Documentation/driver-api/men-chameleon-bus=2Erst
+>  F:	drivers/mcb/
+>  F:	include/linux/mcb=2Eh
+> =20
+>  MEN F21BMC (Board Management Controller)
+> -M:	Andreas Werner <andreas=2Ewerner@men=2Ede>
+> +M:	Andreas Geissler <andreas=2Egeissler@duagon=2Ecom>
+>  S:	Supported
+>  F:	Documentation/hwmon/menf21bmc=2Erst
+>  F:	drivers/hwmon/menf21bmc_hwmon=2Ec
+> @@ -11066,10 +11068,18 @@ F:	drivers/watchdog/menf21bmc_wdt=2Ec
+> =20
+>  MEN Z069 WATCHDOG DRIVER
+>  M:	Johannes Thumshirn <jth@kernel=2Eorg>
+> +M:	Andreas Geissler <andreas=2Egeissler@duagon=2Ecom>
+>  L:	linux-watchdog@vger=2Ekernel=2Eorg
+>  S:	Maintained
+>  F:	drivers/watchdog/menz69_wdt=2Ec
+> =20
+> +MEN Z135 UART DRIVER
+> +M:	Johannes Thumshirn <jth@kernel=2Eorg>
+> +M:	Andreas Geissler <andreas=2Egeissler@duagon=2Ecom>
+> +L:	linux-serial@vger=2Ekernel=2Eorg
+> +S:	Maintained
+> +F:	drivers/tty/serial/men_z135_uart=2Ec
+> +
+>  MESON AO CEC DRIVER FOR AMLOGIC SOCS
+>  M:	Neil Armstrong <narmstrong@baylibre=2Ecom>
+>  L:	linux-media@vger=2Ekernel=2Eorg
+>=20
+> base-commit: d6f9469a03d832dcd17041ed67774ffb5f3e73b3
+> --=20
+> 2=2E16=2E4
+>=20
+>=20
+> MEN Mikro Elektronik GmbH
+> Neuwieder Stra=C3=9Fe 1-7 90411 N=C3=BCrnberg
+> Gesch=C3=A4ftsf=C3=BChrer: Dr=2E Michael Goldbach - Matthias Kamolz - Yi=
+lmaz Kocak - Handelsregister AG N=C3=BCrnberg HRB 5540
+>=20
+>=20
+
