@@ -2,125 +2,105 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F79C2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA58B2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:48:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T4ujYaIx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OKD32b0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgFCVqm (ORCPT
+        id S1726480AbgFCVsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 17:46:42 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25272 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725922AbgFCVql (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 17:46:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591220800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j8irI2YP3QxKXjo5qFTtbAZdDKv971AUeB+9+HvcfEc=;
-        b=T4ujYaIxCBrIxRdQ20oKPF7vLdf4QlN3wnULA8D5DrnTq+/HzRt0x3ef5w6J9/q43AEkJT
-        UlZCAlI/IRu8/u1paGHWDmqTohSEifkTKC17tZkNGWyd18KqRFcW6nFHj2u3+ZHy7z0WEl
-        61DO10pVTI0zddEyDMeKmeyINScvxfM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177-QvVLwQMmN6OODyKajwOZpA-1; Wed, 03 Jun 2020 17:46:36 -0400
-X-MC-Unique: QvVLwQMmN6OODyKajwOZpA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 3 Jun 2020 17:48:50 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43363 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbgFCVsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 17:48:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A84A91B18BC3;
-        Wed,  3 Jun 2020 21:46:34 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-118-25.rdu2.redhat.com [10.10.118.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5327B60BE1;
-        Wed,  3 Jun 2020 21:46:34 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id D1478220C5A; Wed,  3 Jun 2020 17:46:33 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 17:46:33 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     glider@google.com
-Cc:     miklos@szeredi.hu, linux-unionfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        royyang@google.com, stable@vger.kernel.org
-Subject: Re: [PATCH] ovl: explicitly initialize error in ovl_copy_xattr()
-Message-ID: <20200603214633.GF48122@redhat.com>
-References: <20200603174714.192027-1-glider@google.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cjGR38NZz9sSJ;
+        Thu,  4 Jun 2020 07:48:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591220928;
+        bh=T4bo35WdUqV5VF8W6ZD/6TvXPrnECWNs35AYdJWcIW8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OKD32b0nIfo1QggonsfprSpHb0QBCyir0t+iattslSw78rIFoTMEh36FiBaP2+Od5
+         WTs6uQ9WXRyLJAMTi3zwaAd6LqQF8bSJL1lEQHOQ8ZGKwDZTuvRJuWdu7efpHAxLjZ
+         ezApjD7ttkud7fW45tg2mNoGOBJShsZjDliyaLTiJNLcCfP8IRDXx/ysxtTU5qpTuV
+         D3/GFKjyzK20cfXU0UisSP9weIcxhG5aCM3I0JOdlKVC0kWPfgOGi3a8o/QNhg2UNN
+         kfw7m+NCSK+MPwGiJSKqj1a32AwzaJ65E56rNWK0k12n0JRJ2y8HlnrZoGFGQprPrZ
+         FUjnWwhWK+RGQ==
+Date:   Thu, 4 Jun 2020 07:48:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing/doc: Fix ascii-art in histogram-design.rst
+Message-ID: <20200604074846.43c6a4f3@canb.auug.org.au>
+In-Reply-To: <69c291c76964642a417e5dd170d183ba6b552010.camel@kernel.org>
+References: <69c291c76964642a417e5dd170d183ba6b552010.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603174714.192027-1-glider@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: multipart/signed; boundary="Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 07:47:14PM +0200, glider@google.com wrote:
-> Under certain circumstances (we found this out running Docker on a
-> Clang-built kernel with CONFIG_INIT_STACK_ALL) ovl_copy_xattr() may
-> return uninitialized value of |error| from ovl_copy_xattr().
+--Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If we are returning uninitialized value of error, doesn't that mean
-that somewhere in the function we are returning without setting error.
-And that probably means that's a bug and we should fix it?
+Hi Tom,
 
-I am wondering if this is triggered by loop finishing because all
-the xattr on the file are ovl_is_private_xattr(). In that case, we
-will come out of the loop without setting error. This is in fact
-success and we should return 0 instead of some random error?
-
-Thanks
-Vivek
-
-
-> It is then returned by ovl_create() to lookup_open(), which casts it to
-> an invalid dentry pointer, that can be further read or written by the
-> lookup_open() callers.
-> 
-> Signed-off-by: Alexander Potapenko <glider@google.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Roy Yang <royyang@google.com>
-> Cc: <stable@vger.kernel.org> # 4.1
-> 
+On Wed, 03 Jun 2020 10:21:24 -0500 Tom Zanussi <zanussi@kernel.org> wrote:
+>
+> This fixes the Sphinx parallel build error when building htmldocs:
+>=20
+>   docutils.utils.SystemMessage: /home/sfr/next/next/Documentation/trace/h=
+istogram-design.rst:219: (SEVERE/4) Unexpected section title.
+>=20
+> It also fixes a bunch of other warnings I noticed when fixing the
+> above, caused by mixing ascii-art and text.
+>=20
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 > ---
-> 
-> It's unclear to me whether error should be initially 0 or some error
-> code (both seem to work), but I thought returning an error makes sense,
-> as the situation wasn't anticipated by the code authors.
-> 
-> The bug seem to date back to at least v4.1 where the annotation has been
-> introduced (i.e. the compilers started noticing error could be used
-> before being initialized). I hovever didn't try to prove that the
-> problem is actually reproducible on such ancient kernels. We've seen it
-> on a real machine running v4.4 as well.
-> ---
->  fs/overlayfs/copy_up.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-> index 9709cf22cab3..428d43e2d016 100644
-> --- a/fs/overlayfs/copy_up.c
-> +++ b/fs/overlayfs/copy_up.c
-> @@ -47,7 +47,7 @@ int ovl_copy_xattr(struct dentry *old, struct dentry *new)
->  {
->  	ssize_t list_size, size, value_size = 0;
->  	char *buf, *name, *value = NULL;
-> -	int uninitialized_var(error);
-> +	int error = -EINVAL;
->  	size_t slen;
->  
->  	if (!(old->d_inode->i_opflags & IOP_XATTR) ||
-> -- 
-> 2.27.0.rc2.251.g90737beb825-goog
-> 
+>  Documentation/trace/histogram-design.rst | 48 ++++++++++++------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
 
+Fixes the errors for me.
+
+Tested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YGr4ACgkQAVBC80lX
+0Gxd4Af+I2BgE4qmpExhvJ9+Gwf89s/UsvTnwzNEwUHmoGVGcAf42j9+MEYIgcvu
+/5x1y2BdE+BQBujYj1dkIH2+9p75p5/GkLSPJPcgYgY2cSA9DEAdI5QZN0zNJykC
+7r4IMahoDE4+y1iulObGP+pjUC9d/agFyqgp6iA4F2r5Q5Wnavlc39/p+kT7KBbp
+VHZ7uGOezuuc/LtALvxzC5JcDoqZKq2Q8M5R8WKuPo2KNErUeQPa0qKj1UiDekG7
+gpC6zpL4YIwAhl0iHQgI2THv6GG0vCPBqiLEcShgDL0OOtcKkmmVqYVZAWVGfr3u
+bprVxGKyYq7fSeiz9Ld13KEgC8DWYQ==
+=zfxr
+-----END PGP SIGNATURE-----
+
+--Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ--
