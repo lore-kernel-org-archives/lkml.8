@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0779AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D00C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB26720674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2842F20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591167713;
-	bh=X6b/gWynMj6O0LBu5lg93RyXNZhB8+OyiX4pPl3hTxc=;
+	s=default; t=1591167718;
+	bh=aO/eNnWMPoyWWYFwMjUCvhFtUVjC34oKmnoqH7DxW3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=owNu87KfHSNO5Rek234SN1oJ3GlEJQmjAwYfyIRU6FBrCn0xU2fCA2SFBUfm7SEwL
-	 1rUzcvuT4IIzqxICU7Ni1Jy1kz3t8D+bMRbaw8d+aqArM68jDaa8vnhSOXNANIQ4eQ
-	 vzhqL7oYpwCfbv5HrLgZFpIE1vB38GJ1vxr+4CuU=
+	b=xtLgi1lHB2OddPA/Qn/Lf9Gbcz+m1QsO5XZs2q/mJKyw8XHU4+AoJYruZnIvgmz/6
+	 AUzlGRofXDyCaZ+U5d9JB4ohIoOZI9Dfp0OG8VheUcrWzvZag28mWjgZ+3RaDRvwB1
+	 IQP6LI50xXb2fQiodygQDuc45Iq4KtSN0cfeDce0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgFCHBI (ORCPT
+        id S1726321AbgFCHB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43086 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 03:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgFCHBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:01:06 -0400
+        id S1726122AbgFCHBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:01:08 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B85E2068D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 835BF207DF;
         Wed,  3 Jun 2020 07:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1591167665;
-        bh=X6b/gWynMj6O0LBu5lg93RyXNZhB8+OyiX4pPl3hTxc=;
+        bh=aO/eNnWMPoyWWYFwMjUCvhFtUVjC34oKmnoqH7DxW3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hm2I/uQnEbenI4pv9BwcBiwMDwyP/m8TuPtpk+K4tDvBJkxjQbmh1Nql44CdXSGfq
-         qXUr1Qrp6zL8b2Zo+7sWMHElYFZWtw1pp6jVp+Hlw63GkMK5XpcCyGYsuZ8X52ZDl0
-         TwbagmK7gz4rqwepI+/IrzXVy4nTvsJRmrtfpd1k=
+        b=CPnyLGeBL0dBvrkg14aURykBWp5d6YaIuipGjum+Q+/ZFjGJuUDHU1CC5aF0KQ+td
+         J+R3WvTjsgTxskgnhYwrymzTZ7wi1Lp8k1yUv99c2n+kh6+oppWv60qsk8IKpqT/yE
+         pTxZPmfzWjr2qlscVrntkUJuxB7yZI4daIwo9qkA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jgNOZ-004j8Q-BX; Wed, 03 Jun 2020 09:01:03 +0200
+        id 1jgNOZ-004j8f-GZ; Wed, 03 Jun 2020 09:01:03 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Media Mailing List <linux-media@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/15] media: atomisp: remove some unused defines from *mamoiada_params.h
-Date:   Wed,  3 Jun 2020 09:00:52 +0200
-Message-Id: <58f2e1d429aaa2d77fbcd96694368b7b7e15d963.1591167358.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 09/15] media: atomisp: don't set hpll_freq twice with different values
+Date:   Wed,  3 Jun 2020 09:00:55 +0200
+Message-Id: <1ae1868ee95529ce2a2fa4ae3390b3f77219c5a0.1591167358.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1591167358.git.mchehab+huawei@kernel.org>
 References: <cover.1591167358.git.mchehab+huawei@kernel.org>
@@ -61,107 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some parameters that are different between
-isp2400 and isp2401. None of those are actually used.
+The logic which sets the hpll_freq for BYT sets hpll_freq
+to 1600MHz, but ignores it, and sets it again after reading
+from-device-specific EFI vars (this time, using a default
+of 2000MHz).
 
-So, get rid of them.
+Remove the first set, as this will be overriden anyway.
+
+While here, do minor adjustments on comments and on a
+printk message.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../hrt/isp2400_mamoiada_params.h             | 20 +------------------
- .../atomisp/pci/isp2401_mamoiada_params.h     | 20 +------------------
- 2 files changed, 2 insertions(+), 38 deletions(-)
+ drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h b/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h
-index 4a2345c38b8c..e18e5f3576df 100644
---- a/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h
-+++ b/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h
-@@ -16,11 +16,6 @@
- /* Version */
- #define RTL_VERSION
- 
--/* Cell name  */
--#define ISP_CELL_TYPE                          isp2400_mamoiada
--#define ISP_VMEM                               simd_vmem
--#define _HRT_ISP_VMEM                          isp2400_mamoiada_simd_vmem
--
- /* instruction pipeline depth */
- #define ISP_BRANCHDELAY                        5
- 
-@@ -154,12 +149,6 @@
- 
- #define ISP_VEC_ALIGN                          ISP_VMEM_ALIGN
- 
--/* HRT specific vector support */
--#define isp2400_mamoiada_vector_alignment         ISP_VEC_ALIGN
--#define isp2400_mamoiada_vector_elem_bits         ISP_VMEM_ELEMBITS
--#define isp2400_mamoiada_vector_elem_precision    ISP_VMEM_ELEM_PRECISION
--#define isp2400_mamoiada_vector_num_elems         ISP_VEC_NELEMS
--
- /* register file sizes */
- #define ISP_RF0_SIZE        64
- #define ISP_RF1_SIZE        16
-@@ -173,14 +162,7 @@
- #define ISP_RF9_SIZE        16
- #define ISP_RF10_SIZE       16
- #define ISP_RF11_SIZE       16
--#define ISP_VRF1_SIZE       24
--#define ISP_VRF2_SIZE       24
--#define ISP_VRF3_SIZE       24
--#define ISP_VRF4_SIZE       24
--#define ISP_VRF5_SIZE       24
--#define ISP_VRF6_SIZE       24
--#define ISP_VRF7_SIZE       24
--#define ISP_VRF8_SIZE       24
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+index c7f6b621ef3f..64e2386f328f 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+@@ -1659,10 +1659,12 @@ static int atomisp_pci_probe(struct pci_dev *dev,
+ 		 * resolution accordingly.
+ 		 */
+ 		isp->dfs = &dfs_config_byt;
+-		isp->hpll_freq = HPLL_FREQ_1600MHZ;
+-		/* HPLL frequency is known to be device-specific, but we don't
 +
- #define ISP_SRF1_SIZE       4
- #define ISP_SRF2_SIZE       64
- #define ISP_SRF3_SIZE       64
-diff --git a/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h b/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
-index 03d3329cd228..e18e5f3576df 100644
---- a/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
-+++ b/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
-@@ -16,11 +16,6 @@
- /* Version */
- #define RTL_VERSION
++		/*
++		 * HPLL frequency is known to be device-specific, but we don't
+ 		 * have specs yet for exactly how it varies.  Default to
+-		 * BYT-CR but let provisioning set it via EFI variable */
++		 * BYT-CR but let provisioning set it via EFI variable
++		 */
+ 		isp->hpll_freq = gmin_get_var_int(&dev->dev, false, "HpllFreq",
+ 						  HPLL_FREQ_2000MHZ);
  
--/* Cell name  */
--#define ISP_CELL_TYPE                          isp2401_mamoiada
--#define ISP_VMEM                               simd_vmem
--#define _HRT_ISP_VMEM                          isp2401_mamoiada_simd_vmem
--
- /* instruction pipeline depth */
- #define ISP_BRANCHDELAY                        5
- 
-@@ -154,12 +149,6 @@
- 
- #define ISP_VEC_ALIGN                          ISP_VMEM_ALIGN
- 
--/* HRT specific vector support */
--#define isp2401_mamoiada_vector_alignment         ISP_VEC_ALIGN
--#define isp2401_mamoiada_vector_elem_bits         ISP_VMEM_ELEMBITS
--#define isp2401_mamoiada_vector_elem_precision    ISP_VMEM_ELEM_PRECISION
--#define isp2401_mamoiada_vector_num_elems         ISP_VEC_NELEMS
--
- /* register file sizes */
- #define ISP_RF0_SIZE        64
- #define ISP_RF1_SIZE        16
-@@ -173,14 +162,7 @@
- #define ISP_RF9_SIZE        16
- #define ISP_RF10_SIZE       16
- #define ISP_RF11_SIZE       16
--#define ISP_VRF1_SIZE       32
--#define ISP_VRF2_SIZE       32
--#define ISP_VRF3_SIZE       32
--#define ISP_VRF4_SIZE       32
--#define ISP_VRF5_SIZE       32
--#define ISP_VRF6_SIZE       32
--#define ISP_VRF7_SIZE       32
--#define ISP_VRF8_SIZE       32
-+
- #define ISP_SRF1_SIZE       4
- #define ISP_SRF2_SIZE       64
- #define ISP_SRF3_SIZE       64
+@@ -1714,7 +1716,7 @@ static int atomisp_pci_probe(struct pci_dev *dev,
+ 		default:
+ 			isp->hpll_freq = HPLL_FREQ_1600MHZ;
+ 			dev_warn(isp->dev,
+-				 "read HPLL from cck failed.default 1600MHz.\n");
++				 "read HPLL from cck failed. Default to 1600 MHz.\n");
+ 		}
+ 		break;
+ 	default:
 -- 
 2.26.2
 
