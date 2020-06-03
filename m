@@ -2,150 +2,78 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA4AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDECC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA8ED20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70712081A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RFveqadg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xyx6QhV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgFCLw6 (ORCPT
+        id S1725943AbgFCLxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:52:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:60625 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgFCLw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:52:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591185176; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=MnbKsVV2ZlEOXvNHx0ywcuIwpzxoe8YLhIo5hyVFXgA=;
- b=RFveqadglnwH28+oG5NBEmUwYYevijOpDVt0MfRiSa8Vjaj8D2WanmmKu7usK703pqqIqGQc
- VaTUxM5sIJKdY3AoWxcuBg2qNc20ZaKz8hMmRdYyoEgIGc8dR8zg5hR60RPTJ70+quaSIuyS
- CvJQo5Dh88JnGg5XzbQlJosZifo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5ed78f1709c3530d12a3ef5d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 11:52:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CA11BC43395; Wed,  3 Jun 2020 11:52:55 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF534C433CA;
-        Wed,  3 Jun 2020 11:52:54 +0000 (UTC)
+        Wed, 3 Jun 2020 07:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgFCLxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:53:19 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83082C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6dSbjU+bvaFDAnNBse6Pi1hys7CEx2MawD7Uu/P7pQc=; b=Xyx6QhV1nepOxjq4scyPIozmi2
+        5+4XykSBy6qFHAI51EIika+DdQ4++PKzIVwxNOexe1BHpBeqGl3f9NRdgb8MpdYd+Gn9gwQK4vKk2
+        auFSgg3imtALNSaygFpNHDPhfcrQIJFzL5JaykMVTnE0Ynkmg83G8ixRyK0743X7sWaphu2g7v1sH
+        V6hCE33AS6hbzapWbpLYpKczHi0BeeRBkipzCkGO0odli+33fW6jPV5kSJ7bFLrMiaYnx95dbRNmt
+        jTYNJOJEVk7QQVDUZYoQ2PEEo0k8rn82GqFxA80FtjxUUvE/HlC0KYjcZdefWYjG02EYt3aYTcpLq
+        EvrL3gfA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgRxI-0005YM-Jr; Wed, 03 Jun 2020 11:53:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCE8E301ABC;
+        Wed,  3 Jun 2020 13:53:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BC18920707D43; Wed,  3 Jun 2020 13:53:10 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 13:53:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] sched: Remove some redundancy
+Message-ID: <20200603115310.GH2604@hirez.programming.kicks-ass.net>
+References: <20200603080304.16548-1-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 17:22:54 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
-        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V1 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
- support
-In-Reply-To: <1591175376-2374-2-git-send-email-ppvk@codeaurora.org>
-References: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
- <1591175376-2374-2-git-send-email-ppvk@codeaurora.org>
-Message-ID: <29826613b412e4f4db4289e292a1fe57@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603080304.16548-1-dietmar.eggemann@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Pradeep,
-Thanks for the patch.
+On Wed, Jun 03, 2020 at 10:03:00AM +0200, Dietmar Eggemann wrote:
+> Remove redundant functions, parameters and macros from the task
+> scheduler code.
+> 
+> Dietmar Eggemann (4):
+>   sched/pelt: Remove redundant cap_scale() definition
+>   sched/core: Remove redundant 'preempt' param from
+>     sched_class->yield_to_task()
+>   sched/idle,stop: Remove .get_rr_interval from sched_class
+>   sched/fair: Remove unused 'sd' parameter from scale_rt_capacity()
 
-On 2020-06-03 14:39, Pradeep P V K wrote:
-> Interconnect bandwidth scaling support is now added as a
-> part of OPP [1]. So, make sure interconnect driver is ready
-> before handling interconnect scaling.
-> 
-> This change is based on
-> [1] [Patch v8] Introduce OPP bandwidth bindings
-> (https://lkml.org/lkml/2020/5/12/493)
-> 
-> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
-> for dev_pm_opp_of_add_table()
-> (https://lkml.org/lkml/2020/5/5/491)
-> 
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> ---
->  drivers/mmc/host/sdhci-msm.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c 
-> b/drivers/mmc/host/sdhci-msm.c
-> index b277dd7..bf95484 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -14,6 +14,7 @@
->  #include <linux/slab.h>
->  #include <linux/iopoll.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/interconnect.h>
-> 
->  #include "sdhci-pltfm.h"
->  #include "cqhci.h"
-> @@ -1999,6 +2000,7 @@ static int sdhci_msm_probe(struct platform_device 
-> *pdev)
->  	struct sdhci_pltfm_host *pltfm_host;
->  	struct sdhci_msm_host *msm_host;
->  	struct clk *clk;
-> +	struct icc_path *sdhc_path;
->  	int ret;
->  	u16 host_version, core_minor;
->  	u32 core_version, config;
-> @@ -2070,6 +2072,20 @@ static int sdhci_msm_probe(struct 
-> platform_device *pdev)
->  	}
->  	msm_host->bulk_clks[0].clk = clk;
-> 
-> +	/* Make sure that ICC driver is ready for interconnect bandwdith
-> +	 * scaling before registering the device for OPP.
-> +	 */
-> +	sdhc_path = of_icc_get(&pdev->dev, NULL);
-> +	ret = PTR_ERR_OR_ZERO(sdhc_path);
-> +	if (ret) {
-> +		if (ret == -EPROBE_DEFER)
-> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
-> +		else
-> +			dev_err(&pdev->dev, "failed to get icc path:%d\n", ret);
-> +		goto bus_clk_disable;
-> +	}
-> +	icc_put(sdhc_path);
-
-ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
-
-since there are multiple paths
-described in the bindings you
-should use ^^ instead and you
-can drop temporary path as well.
-
-> +
->  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
->  	if (IS_ERR(msm_host->opp_table)) {
->  		ret = PTR_ERR(msm_host->opp_table);
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Thanks!
