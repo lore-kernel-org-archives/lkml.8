@@ -2,117 +2,81 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E23C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B19C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1DC20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C61206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbgFCDGU (ORCPT
+        id S1725937AbgFCDH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 23:06:20 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34993 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgFCDGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 23:06:19 -0400
-IronPort-SDR: AjGQqh1WdhFzHeEY1Gi3a77mNLLDPxiw7qXlQAmja8s7P7JEJTL7RZpF+CqiNwPjHndtam5YHf
- qFomRA0fxgoQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 20:06:19 -0700
-IronPort-SDR: kQGo9vkFlnDBIQYvOoljkfa5J3ViwwscSUL3naiprSsgOqwFTQnkcrWC7mft4x4MHHjTWelYTs
- M3qlIXkapL8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
-   d="scan'208";a="470969634"
-Received: from yuguoshi-mobl.ccr.corp.intel.com (HELO [10.255.28.20]) ([10.255.28.20])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Jun 2020 20:06:16 -0700
-Subject: Re: [LKP] Re: 28307d938f ("percpu: make pcpu_alloc() aware of current
- gfp .."): BUG: kernel reboot-without-warning in boot stage
-To:     Filipe Manana <fdmanana@suse.com>,
-        kernel test robot <lkp@intel.com>
-Cc:     LKP <lkp@lists.01.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        "Linus, Torvalds," <torvalds@linux-foundation.org>
-References: <5ed0b6ea.QaEVKYBGHpcVDpW8%lkp@intel.com>
- <21fb7dbf-1fd2-cfcb-860e-c342ae0c310e@suse.com>
- <a1e41149-a3b3-4a19-7001-9b47d8b66555@intel.com>
- <0405917f-dc4f-f32c-0aeb-043742fc4d6e@suse.com>
-From:   Li Zhijian <zhijianx.li@intel.com>
-Message-ID: <1527ee5c-4e2f-7b4a-9ba4-b37d5f7c0258@intel.com>
-Date:   Wed, 3 Jun 2020 11:05:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Tue, 2 Jun 2020 23:07:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5843 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbgFCDH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 23:07:26 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C6B78AF30E882D5A8F0C;
+        Wed,  3 Jun 2020 11:07:23 +0800 (CST)
+Received: from huawei.com (10.175.102.37) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
+ 11:07:16 +0800
+From:   Li Bin <huawei.libin@huawei.com>
+To:     <acme@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <liwei391@huawei.com>, <xiexiuqi@huawei.com>,
+        <huawei.libin@huawei.com>
+Subject: [PATCH] perf svghelper: fix memory leak in svg_build_topology_map
+Date:   Wed, 3 Jun 2020 11:00:58 +0800
+Message-ID: <1591153258-59840-1-git-send-email-huawei.libin@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <0405917f-dc4f-f32c-0aeb-043742fc4d6e@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix leak of memory pointed to by t.sib_thr and t.sib_core in
+svg_build_topology_map in the non-error path.
 
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+---
+ tools/perf/util/svghelper.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 6/2/20 8:18 PM, Filipe Manana wrote:
-> On 02/06/20 05:37, Li Zhijian wrote:
->> Hi Filipe,
->>
->> LKP checked blow dmesg as the indicator in this problem
->>
->>>> [    0.144174] RAMDISK: [mem 0x7fa2e000-0x7fffffff]
->>>> [    0.144559] ACPI: Early table checksum verification disabled
->>>> [    0.144985] ACPI: RSDP 0x00000000000F5850 000014 (v00 BOCHS )
->>>> [    0.145424] ACPI: RSDT 0x00000000BFFE15C9 000030 (v01 BOCHS
->>>> BXPCRSDT 00000001 BXPC 00000001)
->>>> [    0.146051] ACPI: FACP 0x00000000BFFE149D 000074 (v01 BOCHS
->>>> BXPCFACP 00000001 BXPC 00000001)
->>>> BUG: kernel reboot-without-warning in boot stage
->>>>
->> And i have reproduced it with script in attachment. this issue is gone
->> when i reverted this commit 28307d938f
->>
->> Please note that
->> - i reproduced it with kernel compiled by gcc-5
->> - i failed to reproduce it in kernel compiled by gcc-7 so far
-> Odd.
-
-Indeed !
-
-i tested gcc-5 gcc-6 gcc-7, only gcc-5 triggered this issue, kernel 
-built with gcc6 and gcc-7 works well
-
-lizhijian@shao2-debian:~$ gcc-6 --version
-gcc-6 (Debian 6.5.0-2) 6.5.0 20181026
-Copyright (C) 2017 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-lizhijian@shao2-debian:~$ gcc-5 --version
-gcc-5 (Debian 5.5.0-12) 5.5.0 20171010
-Copyright (C) 2015 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-lizhijian@shao2-debian:~$ gcc-7 --version
-gcc-7 (Debian 7.5.0-3) 7.5.0
-Copyright (C) 2017 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-Thanks
-Zhijian
-
-> Here I tested with:
->
-> $ gcc --version
-> gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
-> Copyright (C) 2016 Free Software Foundation, Inc.
->
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 96f941e..d50955f 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -754,6 +754,7 @@ int svg_build_topology_map(struct perf_env *env)
+ 	int i, nr_cpus;
+ 	struct topology t;
+ 	char *sib_core, *sib_thr;
++	int ret = -1;
+ 
+ 	nr_cpus = min(env->nr_cpus_online, MAX_NR_CPUS);
+ 
+@@ -798,12 +799,11 @@ int svg_build_topology_map(struct perf_env *env)
+ 		topology_map[i] = -1;
+ 
+ 	scan_core_topology(topology_map, &t, nr_cpus);
+-
+-	return 0;
++	ret = 0;
+ 
+ exit:
+ 	zfree(&t.sib_core);
+ 	zfree(&t.sib_thr);
+ 
+-	return -1;
++	return ret;
+ }
+-- 
+1.7.12.4
 
