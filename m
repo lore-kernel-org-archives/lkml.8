@@ -2,155 +2,417 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20801C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDDD520679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F0A20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="S0ktNZZw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTwrUdKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFCLaH (ORCPT
+        id S1726118AbgFCLbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:30:07 -0400
-Received: from mail-bn8nam11on2133.outbound.protection.outlook.com ([40.107.236.133]:22438
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725833AbgFCLaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:30:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iV7aQhbGpEpGzWIlD7btyK7f1ebXbWGpaDP+ym4aK2c8Gj5UU0bGY/bSdH8fDIHBnNAz0BS9pvvFS/P3kERljO7hLOkM/k/omuCndVRJPYqpBebFuu2XQprUn+xHgUsieKnBg/z0FdVZwIy5CKXekmPzDEPP8V6WDw78IrCm2rXIwSs3LVeQZ7fJrvW6DDG/9ayvoYWNjGuuurgCbrR6mCyP9da+ZiF0BlR5hL07IFUUaK4XPd2IUxDUR2IaCM5Ew9OIcy994dX1G66SPgRsnourFAFJxPrjmMNta7zQ6zDY2U98AwxrEcCTG4YXSZR7Zw+R9JPpHC8c9DKoSciSFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c6diLltNI7WqqFVBoZjTQGoYyjFGgxEBUrA0J0afqmY=;
- b=WRquCLcTfSjMjYgKYqZET52rH94HrfsURfTpGjOiIEqxkgv9qyJdtuvT9kMcdVvemoqKiWBP80aUZKQN0jxMPXDYusH0tpxe+YCfTme9uW29sfwWq7nDz24SwCyctoC09KaYsKRgKQPqtHtMhXbHQh8SjoJIUFGXZ+E3gla4ne+daOhcX9uYYZWVpM3R+PnIg/eF94HkmxPKW2bREOauX9TEsDtz0Lear5SoIxnB+w+9ZtHMA/w1MUIew61xaN2Uh0lNT1MBuLYOMl7I4z1+rfR5FG40SwjrlUvqMZK3RcvCHo+RPY7pfFRj+7a3OwpaKnySfXd6C4b2K+6umpwBLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
- header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
- arc=none
+        Wed, 3 Jun 2020 07:31:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCLba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:31:30 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D53FAC08C5C0;
+        Wed,  3 Jun 2020 04:31:30 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id n2so711237pld.13;
+        Wed, 03 Jun 2020 04:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=maximintegrated.onmicrosoft.com;
- s=selector2-maximintegrated-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c6diLltNI7WqqFVBoZjTQGoYyjFGgxEBUrA0J0afqmY=;
- b=S0ktNZZwRdST1twkX88QOvvxgODvYemJ7BKBguBmjORLtb1dVJdxkvINIT8eF3ODlbYxizlVH7c89QvYX59nh/JnVBRNWaCoIFrEZ5gcO8sUrO/G66Y+on2SzL8WNJR6vGdjjbLGFecfoUyWWTEX6lOA9pZu1L+cCE9I6sIeKig=
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
- by MWHPR11MB1726.namprd11.prod.outlook.com (2603:10b6:300:23::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 3 Jun
- 2020 11:30:02 +0000
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 11:30:02 +0000
-From:   Steve Lee <SteveS.Lee@maximintegrated.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "ckeepax@opensource.cirrus.com" <ckeepax@opensource.cirrus.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "rf@opensource.wolfsonmicro.com" <rf@opensource.wolfsonmicro.com>,
-        "shumingf@realtek.com" <shumingf@realtek.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "jack.yu@realtek.com" <jack.yu@realtek.com>,
-        "nuno.sa@analog.com" <nuno.sa@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "ryan.lee.maxim@gmail.com" <ryan.lee.maxim@gmail.com>,
-        Ryan Lee <RyanS.Lee@maximintegrated.com>,
-        "steves.lee.maxim@gmail.com" <steves.lee.maxim@gmail.com>
-Subject: RE: [PATCH] ASoC: max98390: Fix potential crash during param fw
- loading
-Thread-Topic: [PATCH] ASoC: max98390: Fix potential crash during param fw
- loading
-Thread-Index: AQHWOZjok5hm+3ydWEypvnQMZosX1ajGv8wAgAABMyA=
-Date:   Wed, 3 Jun 2020 11:30:02 +0000
-Message-ID: <MWHPR11MB204724AEA2415929253525E492880@MWHPR11MB2047.namprd11.prod.outlook.com>
-References: <20200603111819.5824-1-steves.lee@maximintegrated.com>
- <s5hzh9kcrzb.wl-tiwai@suse.de>
-In-Reply-To: <s5hzh9kcrzb.wl-tiwai@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none
- header.from=maximintegrated.com;
-x-originating-ip: [211.35.184.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bbdef38d-8173-4df2-85a0-08d807b174cb
-x-ms-traffictypediagnostic: MWHPR11MB1726:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1726EBC751E1C804DD8B2D8D92880@MWHPR11MB1726.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1107;
-x-forefront-prvs: 04238CD941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VoavqXsLKpowzGNevrLDt5aeN2Gy1b7Z3dmKj+s+EoN56pCaz+eNDZHUxK1w9+R7ZqUDd0/cLLp92skR6MkGd2ztDn8ukQsELCKK03TCMmFecYfQyobu+flPCE9tk0VIlXuFZs3jzeedng1I/uQICrRs/7DeA1cG1IrLHGVIihGaaA6CCrJcj9XtXdCuYGesSi9sSIpAxV8f7xbf6LTxducYPSnB2gOo8FjIJmYOYm8Xfu+qwxNqu07+kpLMlEnNxxKWCnVoz9D91lw4uNMPX/oFuQDsx5hzIqMdCDc/8HQJBNhcCy7psE1OMvJeN+BG
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(136003)(376002)(346002)(8936002)(316002)(7696005)(8676002)(53546011)(6506007)(6916009)(55016002)(66446008)(71200400001)(4326008)(64756008)(5660300002)(52536014)(76116006)(33656002)(66476007)(66556008)(66946007)(86362001)(26005)(7416002)(9686003)(2906002)(186003)(83380400001)(54906003)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: C8DBCaXblOBHEfUIwohOl0VWi1VLhsLGHOFP3T1JjAIxCZNf/KbU2fLA3nm8uiG53/+1xQaXgz40JoYQ05KbjMQ8Gtq5HBW12PzZtfwPTKD+I4ATtriWBHBUuMV1x2FT/tew1UUa4U+t2Mrh293Yh356PTghjrYOUTPy3GvsJ5J3yglEBxqoWhNazQiayxf2xoACvTlIcUQCRJJwGsWMt8QHzDcp9VwESpi1NDdGItKgNBgVmEbUtZLNOOIJKAJJkMPqNtzsGGmUpvhX3BXS0blf8gX1sUFORjGrVOc2w5eP6qkbIZVy24+KbGMea5r6uB/7MfASPrrPvZaUeiJIZa5X0QdHmC0p4E6Z9SqeD4si5Iedq2G0nJq0etvkRbVl8TbKEKIx+zbhaExBdgFJ08p2lBYEvcq0Fqe7M7NlSsB7Ao80F549wKCBjOw38FO5MLyovc5TLYdblhxnFVBzyXKoeQc4EjuFyVMsiKmPWQPWoIC032u0pZ9EOr3RGIP4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+xFlDvoG0AmfCW8wMKz/KMDzzf1YjObBJ8SSaeH+Sx0=;
+        b=bTwrUdKtsEx2sGVQqdprdHxxq4WAEk412NGMINUIVYkHkzkt/iaz2Uv7t1gR7ZK8xx
+         8QjbP7jF6Q4f5li0hIaYqathRyFQaiCFbjpeIUGdFqqhJiS/OyzLVDbiXKcwU/NvQIRp
+         RJZhhyV3Yny/0gc0bxKC6g3hFRPdfPiJC9TVmLmnVn8+ipZXYHrnlznoj7i6xdoERWVM
+         R08L6hrLsJAHzdKBxQOLykYg225t0Vp5mVoGlHkIVObKi6o8bCGVL3IUkCN58q6/yCMk
+         l81j9YQxzlDb0RcSwHrn/0eXgX7vNDNdYJLmQ26YnGWMAl1qmpyk0SI2n/zAtJ5kgOlD
+         1MIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+xFlDvoG0AmfCW8wMKz/KMDzzf1YjObBJ8SSaeH+Sx0=;
+        b=L/iOhf8ObJywAM6NOGlqrQtL8DM/UIhC6krB6m3ujfwsQzAUDZJzgNTiS2/3jo8r8Z
+         wMucFxjimEboGbuBG/vidmmanzl9gelHAhm6vKW/CU+Ixi9Udj/owu5iHJsHlAbA6/VM
+         Mbww1njq7mRhfrONuID/Rmw4cGMuajmZirARAkaLJQr2hzgZ8Lkbu6ApyYKEKwovKYNt
+         ELef27bRz3ydo4zYJYX1mJmfrielB6e+gSahN9aI7Gvc07wuwApMTnczfu9EuOvo0LEX
+         mN4M7voUcJFkwW6bt9Ojhv71e4+W+FhAlH29af+xUp6d8FTO+5XUCLFCbuxKPnC+KCij
+         Anqg==
+X-Gm-Message-State: AOAM531Y1noj/YIwqP0GveTv7UtTNSSkFgTOAYSUf+iBz78Ax7FO/pYl
+        jVT9gb9OdEoGtbOL4omffOXC2/Y2CElzRaGmpOI=
+X-Google-Smtp-Source: ABdhPJyD2KN/CrU9g5JWDifzcsEYdD16jlgXuo4/GzQA/4aABjLh/ffxbd9fUPOMVcEjCG2jeB/rrIAatf06jhKBIhw=
+X-Received: by 2002:a17:902:ea8a:: with SMTP id x10mr29376674plb.255.1591183890172;
+ Wed, 03 Jun 2020 04:31:30 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: maximintegrated.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbdef38d-8173-4df2-85a0-08d807b174cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 11:30:02.0547
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fbd909df-ea69-4788-a554-f24b7854ad03
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z2APJKQKVhifXvDwe7ZDQ6sxWXc4MaZQlfnPeyokLx5OdX3L2G5yw75VB6buphIKnrktWrlTT5zCLNrb4mZcNWKKUkJHHJvPazy3h858yeM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1726
+References: <20200603084441.33952-1-tomasz.duszynski@octakon.com> <20200603084441.33952-4-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200603084441.33952-4-tomasz.duszynski@octakon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 3 Jun 2020 14:31:18 +0300
+Message-ID: <CAHp75Vcs6+NtY8OPX_gTAa_7fpqH6=3LCfaxJ=6gu0LGRqcBUA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] iio: chemical: scd30: add serial interface driver
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Wednesday, June 3, 2020 8:24 PM
-> To: Steve Lee <SteveS.Lee@maximintegrated.com>
-> Cc: lgirdwood@gmail.com; broonie@kernel.org; perex@perex.cz;
-> tiwai@suse.com; ckeepax@opensource.cirrus.com; geert@linux-m68k.org;
-> rf@opensource.wolfsonmicro.com; shumingf@realtek.com;
-> srinivas.kandagatla@linaro.org; krzk@kernel.org; dmurphy@ti.com;
-> jack.yu@realtek.com; nuno.sa@analog.com; linux-kernel@vger.kernel.org;
-> alsa-devel@alsa-project.org; ryan.lee.maxim@gmail.com; Ryan Lee
-> <RyanS.Lee@maximintegrated.com>; steves.lee.maxim@gmail.com
-> Subject: Re: [PATCH] ASoC: max98390: Fix potential crash during param fw
-> loading
->=20
-> EXTERNAL EMAIL
->=20
->=20
->=20
-> On Wed, 03 Jun 2020 13:18:19 +0200,
-> Steve Lee wrote:
-> >
-> > @@ -847,7 +861,6 @@ static int max98390_probe(struct snd_soc_component
-> *component)
-> >
-> >       /* Dsm Setting */
-> >       regmap_write(max98390->regmap, DSM_VOL_CTRL, 0x94);
-> > -     regmap_write(max98390->regmap, DSMIG_EN, 0x19);
->=20
-> Is this change intentional?
-> It wasn't mentioned in the patch description.
+On Wed, Jun 3, 2020 at 11:47 AM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> Add serial interface driver for the SCD30 sensor.
 
- It should be another change. I will re-send the patch.
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
->=20
->=20
-> thanks,
->=20
-> Takashi
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> ---
+>  MAINTAINERS                         |   1 +
+>  drivers/iio/chemical/Kconfig        |  11 ++
+>  drivers/iio/chemical/Makefile       |   1 +
+>  drivers/iio/chemical/scd30_serial.c | 263 ++++++++++++++++++++++++++++
+>  4 files changed, 276 insertions(+)
+>  create mode 100644 drivers/iio/chemical/scd30_serial.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 13aed3473b7e..5db4b446c8ba 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15143,6 +15143,7 @@ S:      Maintained
+>  F:     drivers/iio/chemical/scd30.h
+>  F:     drivers/iio/chemical/scd30_core.c
+>  F:     drivers/iio/chemical/scd30_i2c.c
+> +F:     drivers/iio/chemical/scd30_serial.c
+>
+>  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
+>  M:     Tomasz Duszynski <tduszyns@gmail.com>
+> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+> index 970d34888c2e..10bb431bc3ce 100644
+> --- a/drivers/iio/chemical/Kconfig
+> +++ b/drivers/iio/chemical/Kconfig
+> @@ -107,6 +107,17 @@ config SCD30_I2C
+>           To compile this driver as a module, choose M here: the module will
+>           be called scd30_i2c.
+>
+> +config SCD30_SERIAL
+> +       tristate "SCD30 carbon dioxide sensor serial driver"
+> +       depends on SCD30_CORE && SERIAL_DEV_BUS
+> +       select CRC16
+> +       help
+> +         Say Y here to build support for the Sensirion SCD30 serial interface
+> +         driver.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called scd30_serial.
+> +
+>  config SENSIRION_SGP30
+>         tristate "Sensirion SGPxx gas sensors"
+>         depends on I2C
+> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+> index 0966ca34e34b..fef63dd5bf92 100644
+> --- a/drivers/iio/chemical/Makefile
+> +++ b/drivers/iio/chemical/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_IAQCORE)         += ams-iaq-core.o
+>  obj-$(CONFIG_PMS7003) += pms7003.o
+>  obj-$(CONFIG_SCD30_CORE) += scd30_core.o
+>  obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
+> +obj-$(CONFIG_SCD30_SERIAL) += scd30_serial.o
+>  obj-$(CONFIG_SENSIRION_SGP30)  += sgp30.o
+>  obj-$(CONFIG_SPS30) += sps30.o
+>  obj-$(CONFIG_VZ89X)            += vz89x.o
+> diff --git a/drivers/iio/chemical/scd30_serial.c b/drivers/iio/chemical/scd30_serial.c
+> new file mode 100644
+> index 000000000000..06f85eb1a4dd
+> --- /dev/null
+> +++ b/drivers/iio/chemical/scd30_serial.c
+> @@ -0,0 +1,263 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Sensirion SCD30 carbon dioxide sensor serial driver
+> + *
+> + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> + */
+> +#include <linux/crc16.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/serdev.h>
+> +#include <linux/string.h>
+> +#include <linux/types.h>
+> +#include <asm/unaligned.h>
+> +
+> +#include "scd30.h"
+> +
+> +#define SCD30_SERDEV_ADDR 0x61
+> +#define SCD30_SERDEV_WRITE 0x06
+> +#define SCD30_SERDEV_READ 0x03
+> +#define SCD30_SERDEV_MAX_BUF_SIZE 17
+> +#define SCD30_SERDEV_RX_HEADER_SIZE 3
+> +#define SCD30_SERDEV_CRC_SIZE 2
+> +#define SCD30_SERDEV_TIMEOUT msecs_to_jiffies(200)
+> +
+> +struct scd30_serdev_priv {
+> +       struct completion meas_ready;
+> +       char *buf;
+> +       int num_expected;
+> +       int num;
+> +};
+> +
+> +static u16 scd30_serdev_cmd_lookup_tbl[] = {
+> +       [CMD_START_MEAS] = 0x0036,
+> +       [CMD_STOP_MEAS] = 0x0037,
+> +       [CMD_MEAS_INTERVAL] = 0x0025,
+> +       [CMD_MEAS_READY] = 0x0027,
+> +       [CMD_READ_MEAS] = 0x0028,
+> +       [CMD_ASC] = 0x003a,
+> +       [CMD_FRC] = 0x0039,
+> +       [CMD_TEMP_OFFSET] = 0x003b,
+> +       [CMD_FW_VERSION] = 0x0020,
+> +       [CMD_RESET] = 0x0034,
+> +};
+> +
+> +static u16 scd30_serdev_calc_crc(const char *buf, int size)
+> +{
+> +       return crc16(0xffff, buf, size);
+> +}
+> +
+> +static int scd30_serdev_xfer(struct scd30_state *state, char *txbuf, int txsize,
+> +                            char *rxbuf, int rxsize)
+> +{
+> +       struct serdev_device *serdev = to_serdev_device(state->dev);
+> +       struct scd30_serdev_priv *priv = state->priv;
+> +       int ret;
+> +
+> +       priv->buf = rxbuf;
+> +       priv->num_expected = rxsize;
+> +       priv->num = 0;
+> +
+> +       ret = serdev_device_write(serdev, txbuf, txsize, SCD30_SERDEV_TIMEOUT);
+> +       if (ret < 0)
+> +               return ret;
+> +       if (ret != txsize)
+> +               return -EIO;
+> +
+> +       ret = wait_for_completion_interruptible_timeout(&priv->meas_ready, SCD30_SERDEV_TIMEOUT);
+> +       if (ret < 0)
+> +               return ret;
+> +       if (!ret)
+> +               return -ETIMEDOUT;
+> +
+> +       return 0;
+> +}
+> +
+> +static int scd30_serdev_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
+> +                               void *response, int size)
+> +{
+> +       /*
+> +        * Communication over serial line is based on modbus protocol (or rather
+> +        * its variation called modbus over serial to be precise). Upon
+> +        * receiving a request device should reply with response.
+> +        *
+> +        * Frame below represents a request message. Each field takes
+> +        * exactly one byte.
+> +        *
+> +        * +------+------+-----+-----+-------+-------+-----+-----+
+> +        * | dev  | op   | reg | reg | byte1 | byte0 | crc | crc |
+> +        * | addr | code | msb | lsb |       |       | lsb | msb |
+> +        * +------+------+-----+-----+-------+-------+-----+-----+
+> +        *
+> +        * The message device replies with depends on the 'op code' field from
+> +        * the request. In case it was set to SCD30_SERDEV_WRITE sensor should
+> +        * reply with unchanged request. Otherwise 'op code' was set to
+> +        * SCD30_SERDEV_READ and response looks like the one below. As with
+> +        * request, each field takes one byte.
+> +        *
+> +        * +------+------+--------+-------+-----+-------+-----+-----+
+> +        * | dev  | op   | num of | byte0 | ... | byteN | crc | crc |
+> +        * | addr | code | bytes  |       |     |       | lsb | msb |
+> +        * +------+------+--------+-------+-----+-------+-----+-----+
+> +        */
+> +       char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR },
+> +            rxbuf[SCD30_SERDEV_MAX_BUF_SIZE];
+> +       int ret, rxsize, txsize = 2;
+> +       char *rsp = response;
+> +       u16 crc;
+> +
+> +       put_unaligned_be16(scd30_serdev_cmd_lookup_tbl[cmd], txbuf + txsize);
+> +       txsize += 2;
+> +
+> +       if (rsp) {
+> +               txbuf[1] = SCD30_SERDEV_READ;
+> +               if (cmd == CMD_READ_MEAS)
+> +                       /* number of u16 words to read */
+> +                       put_unaligned_be16(size / 2, txbuf + txsize);
+> +               else
+> +                       put_unaligned_be16(0x0001, txbuf + txsize);
+> +               txsize += 2;
+> +               crc = scd30_serdev_calc_crc(txbuf, txsize);
+> +               put_unaligned_le16(crc, txbuf + txsize);
+> +               txsize += 2;
+> +               rxsize = SCD30_SERDEV_RX_HEADER_SIZE + size + SCD30_SERDEV_CRC_SIZE;
+> +       } else {
+> +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
+> +                       arg = 0x0001;
+> +
+> +               txbuf[1] = SCD30_SERDEV_WRITE;
+> +               put_unaligned_be16(arg, txbuf + txsize);
+> +               txsize += 2;
+> +               crc = scd30_serdev_calc_crc(txbuf, txsize);
+> +               put_unaligned_le16(crc, txbuf + txsize);
+> +               txsize += 2;
+> +               rxsize = txsize;
+> +       }
+> +
+> +       ret = scd30_serdev_xfer(state, txbuf, txsize, rxbuf, rxsize);
+> +       if (ret)
+> +               return ret;
+> +
+> +       switch (txbuf[1]) {
+> +       case SCD30_SERDEV_WRITE:
+> +               if (memcmp(txbuf, rxbuf, txsize)) {
+> +                       dev_err(state->dev, "wrong message received\n");
+> +                       return -EIO;
+> +               }
+> +               break;
+> +       case SCD30_SERDEV_READ:
+> +               if (rxbuf[2] != (rxsize - SCD30_SERDEV_RX_HEADER_SIZE - SCD30_SERDEV_CRC_SIZE)) {
+> +                       dev_err(state->dev, "received data size does not match header\n");
+> +                       return -EIO;
+> +               }
+> +
+> +               rxsize -= SCD30_SERDEV_CRC_SIZE;
+> +               crc = get_unaligned_le16(rxbuf + rxsize);
+> +               if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
+> +                       dev_err(state->dev, "data integrity check failed\n");
+> +                       return -EIO;
+> +               }
+> +
+> +               rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
+> +               memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
+> +               break;
+> +       default:
+> +               dev_err(state->dev, "received unknown op code\n");
+> +               return -EIO;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int scd30_serdev_receive_buf(struct serdev_device *serdev,
+> +                                   const unsigned char *buf, size_t size)
+> +{
+> +       struct iio_dev *indio_dev = dev_get_drvdata(&serdev->dev);
+> +       struct scd30_serdev_priv *priv;
+> +       struct scd30_state *state;
+> +       int num;
+> +
+> +       if (!indio_dev)
+> +               return 0;
+> +
+> +       state = iio_priv(indio_dev);
+> +       priv = state->priv;
+> +
+> +       /* just in case sensor puts some unexpected bytes on the bus */
+> +       if (!priv->buf)
+> +               return 0;
+> +
+> +       if (priv->num + size >= priv->num_expected)
+> +               num = priv->num_expected - priv->num;
+> +       else
+> +               num = size;
+> +
+> +       memcpy(priv->buf + priv->num, buf, num);
+> +       priv->num += num;
+> +
+> +       if (priv->num == priv->num_expected) {
+> +               priv->buf = NULL;
+> +               complete(&priv->meas_ready);
+> +       }
+> +
+> +       return num;
+> +}
+> +
+> +static const struct serdev_device_ops scd30_serdev_ops = {
+> +       .receive_buf = scd30_serdev_receive_buf,
+> +       .write_wakeup = serdev_device_write_wakeup,
+> +};
+> +
+> +static int scd30_serdev_probe(struct serdev_device *serdev)
+> +{
+> +       struct device *dev = &serdev->dev;
+> +       struct scd30_serdev_priv *priv;
+> +       int irq, ret;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       init_completion(&priv->meas_ready);
+> +       serdev_device_set_client_ops(serdev, &scd30_serdev_ops);
+> +
+> +       ret = devm_serdev_device_open(dev, serdev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       serdev_device_set_baudrate(serdev, 19200);
+> +       serdev_device_set_flow_control(serdev, false);
+> +
+> +       ret = serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
+> +       if (ret)
+> +               return ret;
+> +
+> +       irq = fwnode_irq_get(dev_fwnode(dev), 0);
+> +
+> +       return scd30_probe(dev, irq, KBUILD_MODNAME, priv, scd30_serdev_command);
+> +}
+> +
+> +static const struct of_device_id scd30_serdev_of_match[] = {
+> +       { .compatible = "sensirion,scd30" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, scd30_serdev_of_match);
+> +
+> +static struct serdev_device_driver scd30_serdev_driver = {
+> +       .driver = {
+> +               .name = KBUILD_MODNAME,
+> +               .of_match_table = scd30_serdev_of_match,
+> +               .pm = &scd30_pm_ops,
+> +       },
+> +       .probe = scd30_serdev_probe,
+> +};
+> +module_serdev_device_driver(scd30_serdev_driver);
+> +
+> +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor serial driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.27.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
