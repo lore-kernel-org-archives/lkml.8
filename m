@@ -2,184 +2,134 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A63AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A93720678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5A220825
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rxJ5wnqm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KQSJhsWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgFCF5z (ORCPT
+        id S1725909AbgFCGCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgFCF5z (ORCPT
+        Wed, 3 Jun 2020 02:02:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35356 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725823AbgFCGCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:57:55 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C774C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 22:57:54 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id w15so515120lfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 22:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JpeVz17nK62n2I7lJsMjpjJeta8RNunq13H2fFv481U=;
-        b=rxJ5wnqmdp0ElBh95sbYZD2C0ERDuJhqALLPdI3Uf6ID1QWL1A7TjOgB+zjd4HSTXM
-         BqlNiWSveZ2HCUVCwcNH9x/sf3TvRJbb3TLdDI+4uVMNoxgJfpzNTOSRx6aQeMPWl47t
-         1ul7+8Twj9LfQe0Wl3phhIWRw8MEkGexykWzlUu4M7QLPoxg1eHVhWBHsR3+NscOJdle
-         8Y4OsDnKweo43BTM41ZdiZdr/bTFXaNJ43IZgMVUuv5dQTg927u5jvrJxIe/U3rCg9B6
-         sG9df7Z69Jz54oyzAFq9h4q4CSs1szIdLSM9Y50ZrUsx4yV8PjEg3LOOcEn6ETLfwoBk
-         2UMg==
+        Wed, 3 Jun 2020 02:02:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591164126;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o6jcKEk2mcNih81oO7ze2OIDsY31roMJVUEa+DK3JW4=;
+        b=KQSJhsWbuJxwK8sR+YKrV5au+UwrU4/bluQFJ1JHjhq/prhUAzF+UpJC5T0BJne+Ldt2eM
+        cHCC2P5P+TNCjZuty4GkzoQ2fs5A4B7yn3j1AlWNFdk7ARsXzc93EChCnVtGkteNJLCEQQ
+        FRgW1CmPGPOWhUCk9PlmL8UYhV38NCI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-491-3rHZStFCO0Kx-cPVcdM1OA-1; Wed, 03 Jun 2020 02:02:02 -0400
+X-MC-Unique: 3rHZStFCO0Kx-cPVcdM1OA-1
+Received: by mail-wm1-f70.google.com with SMTP id g84so455313wmf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 23:02:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JpeVz17nK62n2I7lJsMjpjJeta8RNunq13H2fFv481U=;
-        b=dWhPW9jNNq/fuXSFpy3h2LC0ji8QlXNJh67IupJixA5+fYLUt30NQM1PRlkBvn2F4e
-         lPu2pI+RnflXTthuapzPz5R3F/CjJQ3DMCYFfzAAqTcyMxIK+EshHZaBLsIW5Un1Bc/Z
-         cdtyxNyz5/+qrIpjkbyc/S5lDzNaNi61cLF/1QMNbAcKNLVIJk3X/rkSDdilFMXehllS
-         SNZF1D9YzvBVJ3RVjo1h+i7ExfIBUHUSqVJ5Z/FdK1pmZW+lZaW0QKMQ0haus7zrYAJg
-         9u7tku7Irop4Y4O9d5KGNnTS5DYIXhtNqtY3Je56tHywwFBCaOG6USOVx18T5c28vQte
-         OEzg==
-X-Gm-Message-State: AOAM533Wwyh2ZqZjdv3+JkuPCx0kKGX1AeOJqHXFekHvhK5kXhr9dKcV
-        KcJoYWlA+w8IG9/dzXxhAHX0FRXo/JszUDwQBltNXlpMAlNtPQ==
-X-Google-Smtp-Source: ABdhPJxyH9UCojipPIpjPD3fz4YC4gZFpOn5JiS7xpx0NKM4c9VqB1kxuxEJapZkWwubv5077IsNALkuU0PLpE6lVV4=
-X-Received: by 2002:a19:8453:: with SMTP id g80mr1527341lfd.167.1591163872565;
- Tue, 02 Jun 2020 22:57:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o6jcKEk2mcNih81oO7ze2OIDsY31roMJVUEa+DK3JW4=;
+        b=IEtNkoLzQFsFi7Bw/qKCa2HLBmsSfb4TrGxZ286rmXiTZDDPZIQWJEwQc4EcIqgh5h
+         qBRzNvhDPv3bfupapvk7YcttoD0J8eh8qYK8OrunItBLDp9A/+mD1YuVVq53Fg2W2KtY
+         WuY9HAz3LI5TkvR2P2MS2/IpXs0/gLUWFuWLTjO9ou4mEBjE3hmAO8bviYFflv2eGwjA
+         ZJzns1IIY28IDF6c7IHMnUGNymMhU6pnbQ7+6kATofG+x05l3vmP59sCoR5Pg/+CMATe
+         5A6hrAWvphVJTaMyWcqhh+2zJxe4jlzXvANtDF+zTBcGgbAfhS8/mj3atDtNb95gOOVV
+         E+Pw==
+X-Gm-Message-State: AOAM530krBliWr9++ADTUQl25A1buebP8gEcPgrJLZyfa5H7sFA+2tad
+        Y/gEX5XfB+E7vmlmrau6D6eaMaX2MNDlwOewEoML5pgg9qLOSN0sAI3QDF4Ad73wCXer6+/3XIA
+        J5kWC2fE6Q1mXpGJ/moHlQGxD
+X-Received: by 2002:a1c:f003:: with SMTP id a3mr7045174wmb.119.1591164121029;
+        Tue, 02 Jun 2020 23:02:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxXl+sofUHZk+VbvLWmhyqHx7h7DWb02lQ/P8NQ7EV8iW/Kg++HMCXfoH3XtMI929I9Wym9Mw==
+X-Received: by 2002:a1c:f003:: with SMTP id a3mr7045163wmb.119.1591164120841;
+        Tue, 02 Jun 2020 23:02:00 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id k16sm1608442wrp.66.2020.06.02.23.01.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 23:02:00 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 02:01:58 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jason Wang <jasowang@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Message-ID: <20200603014944-mutt-send-email-mst@kernel.org>
+References: <20200602084257.134555-1-mst@redhat.com>
+ <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
+ <20200602163306.GM23230@ZenIV.linux.org.uk>
+ <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
+ <20200602162931-mutt-send-email-mst@kernel.org>
+ <CAHk-=wgYu+qk15_NpUZXwbetEU5eiWppJ=Z_A6dCSCWKxCfDfw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200602101901.374486405@linuxfoundation.org>
-In-Reply-To: <20200602101901.374486405@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 3 Jun 2020 11:27:41 +0530
-Message-ID: <CA+G9fYvGFL5-PtfxrSuOMVmM0Xni8mKZnNWt+=J+OT-wmK8YFQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/92] 4.19.126-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgYu+qk15_NpUZXwbetEU5eiWppJ=Z_A6dCSCWKxCfDfw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 15:54, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.126 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 04 Jun 2020 10:16:52 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.126-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Jun 02, 2020 at 01:43:20PM -0700, Linus Torvalds wrote:
+> On Tue, Jun 2, 2020 at 1:33 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > Hmm are you sure we can drop it? access_ok is done in the context
+> > of the process. Access itself in the context of a kernel thread
+> > that borrows the same mm. IIUC if the process can be 32 bit
+> > while the kernel is 64 bit, access_ok in the context of the
+> > kernel thread will not DTRT.
+> 
+> You're historically expected to just "set_fs()" when you do use_mm().
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Right and we do that, but that still sets the segment according to the
+current thread's flags, right?
 
-Summary
-------------------------------------------------------------------------
+E.g. I see:
 
-kernel: 4.19.126-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 80718197a8a3f9c3b222375e5d1de8adf5422000
-git describe: v4.19.125-93-g80718197a8a3
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.125-93-g80718197a8a3
+#define USER_DS         MAKE_MM_SEG(TASK_SIZE_MAX)
 
-No regressions (compared to build v4.19.125)
+and
 
-No fixes (compared to build v4.19.125)
+#define TASK_SIZE               (test_thread_flag(TIF_ADDR32) ? \
+                                        IA32_PAGE_OFFSET : TASK_SIZE_MAX)
 
-Ran 26389 total tests in the following environments and test suites.
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
+so if this is run from a kernel thread on a 64 bit kernel, we get
+TASK_SIZE_MAX even if we got the pointer from a 32 bit userspace
+address.
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-io-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+
+> Then we fixed it in commit...
+> 
+> Oh, when I look for it, I notice that it still hasn't gotten merged.
+> It's still pending, see
+> 
+>   https://lore.kernel.org/lkml/20200416053158.586887-4-hch@lst.de/
+> 
+> for the current thing.
+> 
+>               Linus
+
+
+Maybe kthread_use_mm should also get the fs, not just mm.
+Then we can just use access_ok directly before the access.
+
+
+-- 
+MST
+
