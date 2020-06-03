@@ -2,141 +2,146 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A03C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75463C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE9820679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55392206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:35:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0xFI8Ix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgFCOeO (ORCPT
+        id S1726167AbgFCOfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
+        Wed, 3 Jun 2020 10:35:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgFCOeN (ORCPT
+        with ESMTP id S1725986AbgFCOfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:34:13 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC207C08C5C0;
-        Wed,  3 Jun 2020 07:34:13 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jgUSu-0001eH-D8; Wed, 03 Jun 2020 16:34:00 +0200
-Date:   Wed, 3 Jun 2020 16:33:58 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
- a seqcount
-Message-ID: <20200603143358.GA1121436@debian-buster-darwi.lab.linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-2-a.darwish@linutronix.de>
- <33cec6a9-2f6e-3d3c-99ac-9b2a3304ec26@gmail.com>
- <20200520064246.GA353513@debian-buster-darwi.lab.linutronix.de>
- <1498089b-08bd-d776-1570-d8b34463c702@gmail.com>
+        Wed, 3 Jun 2020 10:35:03 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6148DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 07:35:03 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id u17so1191576ybi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DE4Qdo45tnQcrOP8BGlsXcR06aBEw4ALNvR7nQhQdtw=;
+        b=s0xFI8Ixf1kEV+hot6DqwXAV1qRq58bZb6yVrWkiEy0SorN9zNWefznQLZQGcbGkOW
+         +TD+U7tKHzloGnDAQ0eLYRu0PxsAUSN74VBQvS2PXS3otizdVG7pTfK672vYG7sevN8P
+         YkOPceSwGvAOfSEcbOnYSg5E3/hup3mVwIMPOf9cJgPPmmF9hp6d0VKAV2+XEi7kgIhA
+         5+PCdUf4TTdj6hl+TcdyFXdkd8ZGO1iNfB4+Dav8qMSdqzAggucZO5BVEFq/3w+tyguK
+         t8ZMNMm+zg8k/glrglTudCCh9/RCO/WWUqsWcXD05vRfhOZp2HSC80AIBz0bv+OKQJ4B
+         tnmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DE4Qdo45tnQcrOP8BGlsXcR06aBEw4ALNvR7nQhQdtw=;
+        b=CniT3nU0FdD0+xE9VPRaRYP8drUr1DNYFRMkL+Smp8hZkNCQzt8IPfERVPLH+PiI2w
+         GVE8qQ7pUSifFQ8M7huIEShe21JtFp28jn3McSZl7AzAM8pO5fmnb5n5rNkGGlQWajn4
+         EwvJaNIS/ouMwQCHHtv5XNgWHziqff6FSnnwHqFbsEaUMlVxt8LXEEbNIgmy5X3SDXCt
+         2MzaTa2/NE63cm4jHqjtBVVJ65bMo4KlEPtR1INl7ZqEv5Fi4OLpx9DsT/RNygvDBlFN
+         zc8ShfWzfuZrMM/3ftf803JGbIu5PeoyRHUfs09p5V/06dAEX53/evW57dzFoC6jHvos
+         T+1Q==
+X-Gm-Message-State: AOAM530GVUzVK939P8rXKOgA7yizW96d6IS+tS64TlSclWOcbXiHC64y
+        5GDQulo9PxVVUSPgUjygvNf69PKjPC31Dc/VeUeXiw==
+X-Google-Smtp-Source: ABdhPJzLcTXLNWzPmCqKZlvAAqM/oxUtHizdLhJ5MKn/rIKB0VDXPkLIVu1557Zs4dycNGv/fBSQj6i2PE4CEjX6Hl0=
+X-Received: by 2002:a25:3851:: with SMTP id f78mr340459yba.212.1591194902581;
+ Wed, 03 Jun 2020 07:35:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1498089b-08bd-d776-1570-d8b34463c702@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1591183888-11101-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1591183888-11101-1-git-send-email-sumit.garg@linaro.org>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Wed, 3 Jun 2020 17:34:51 +0300
+Message-ID: <CAD8XO3Z-JvCYxqbbeGRmjc-KskpykrcfWEGKH9eO6mvG7zHc6Q@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: tee: Document TEE kernel interface
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Jens Wiklander <jens.wiklander@linaro.org>, corbet@lwn.net,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        op-tee@lists.trustedfirmware.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:51:27AM -0700, Eric Dumazet wrote:
->
-> On 5/19/20 11:42 PM, Ahmed S. Darwish wrote:
-> > Hello Eric,
-> >
-> > On Tue, May 19, 2020 at 07:01:38PM -0700, Eric Dumazet wrote:
-> >>
-> >> On 5/19/20 2:45 PM, Ahmed S. Darwish wrote:
-> >>> Sequence counters write paths are critical sections that must never be
-> >>> preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
-> >>>
-> >>> Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
-> >>> netdev name retrieval.") handled a deadlock, observed with
-> >>> CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
-> >>> infinitely spinning: it got scheduled after the seqcount write side
-> >>> blocked inside its own critical section.
-> >>>
-> >>> To fix that deadlock, among other issues, the commit added a
-> >>> cond_resched() inside the read side section. While this will get the
-> >>> non-preemptible kernel eventually unstuck, the seqcount reader is fully
-> >>> exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
-> >>>
-> >>> The fix is also still broken: if the seqcount reader belongs to a
-> >>> real-time scheduling policy, it can spin forever and the kernel will
-> >>> livelock.
-> >>>
-> >>> Disabling preemption over the seqcount write side critical section will
-> >>> not work: inside it are a number of GFP_KERNEL allocations and mutex
-> >>> locking through the drivers/base/ :: device_rename() call chain.
-> >>>
-> >>> From all the above, replace the seqcount with a rwsem.
-> >>>
-> >>> Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
-> >>> Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
-> >>> Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
-> >>> Cc: <stable@vger.kernel.org>
-> >>> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-> >>> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> >>> ---
-> >>>  net/core/dev.c | 30 ++++++++++++------------------
-> >>>  1 file changed, 12 insertions(+), 18 deletions(-)
-> >>>
-> >>
-> >> Seems fine to me, assuming rwsem prevent starvation of the writer.
-> >>
-> >
-> > Thanks for the review.
-> >
-> > AFAIK, due to 5cfd92e12e13 ("locking/rwsem: Adaptive disabling of reader
-> > optimistic spinning"), using a rwsem shouldn't lead to writer starvation
-> > in the contended case.
->
-> Hmm this was in linux-5.3, so very recent stuff.
->
-> Has this patch been backported to stable releases ?
->
-> With all the Fixes: tags you added, stable teams will backport this
-> networking patch to all stable versions.
->
-> Do we have a way to tune a dedicare rwsem to 'give preference to the
-> (unique in this case) writer" over a myriad of potential readers ?
->
+Hello Sumit,
 
-I was wrong in referencing the commit 5cfd92e12e13 above.
+if this doc is for driver developers it might be useful to add some
+code examples how to register drivers on tee bus.
 
-Before and after that commit, once a rwsem writer is blocking, all
-subsequent readers will block until that writer makes progress.
+Best regards,
+Maxim.
 
-Given that behavior, and that the read section is already quite short, I
-don't think there's any danger incurred on writers here.
-
-(a v2 will be sent shortly, fixing the error found Dan/kbuild-bot.)
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
+On Wed, 3 Jun 2020 at 14:31, Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Update documentation with TEE bus infrastructure which provides an
+> interface for kernel client drivers to communicate with corresponding
+> Trusted Application.
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  Documentation/tee.txt | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/Documentation/tee.txt b/Documentation/tee.txt
+> index c8fad81..428d3b5 100644
+> --- a/Documentation/tee.txt
+> +++ b/Documentation/tee.txt
+> @@ -53,6 +53,28 @@ clients, forward them to the TEE and send back the results. In the case of
+>  supplicants the communication goes in the other direction, the TEE sends
+>  requests to the supplicant which then sends back the result.
+>
+> +The TEE kernel interface
+> +========================
+> +
+> +Kernel provides a TEE bus infrastructure where a Trusted Application is
+> +represented as a device identified via Universally Unique Identifier (UUID) and
+> +client drivers register a table of supported device UUIDs.
+> +
+> +TEE bus infrastructure registers following APIs:
+> +-  match(): iterates over the client driver UUID table to find a corresponding
+> +   match for device UUID. If a match is found, then this particular device is
+> +   probed via corresponding probe API registered by the client driver. This
+> +   process happens whenever a device or a client driver is registered with TEE
+> +   bus.
+> +-  uevent(): notifies user-space (udev) whenever a new device is registered on
+> +   TEE bus for auto-loading of modularized client drivers.
+> +
+> +TEE bus device enumeration is specific to underlying TEE implementation, so it
+> +is left open for TEE drivers to provide corresponding implementation.
+> +
+> +Then TEE client driver can talk to a matched Trusted Application using APIs
+> +listed in include/linux/tee_drv.h.
+> +
+>  OP-TEE driver
+>  =============
+>
+> @@ -112,6 +134,14 @@ kernel are handled by the kernel driver. Other RPC messages will be forwarded to
+>  tee-supplicant without further involvement of the driver, except switching
+>  shared memory buffer representation.
+>
+> +OP-TEE device enumeration
+> +-------------------------
+> +
+> +OP-TEE provides a pseudo Trusted Application: drivers/tee/optee/device.c in
+> +order to support device enumeration. In other words, OP-TEE driver invokes this
+> +application to retrieve a list of Trusted Applications which can be registered
+> +as devices on the TEE bus.
+> +
+>  AMD-TEE driver
+>  ==============
+>
+> --
+> 2.7.4
+>
