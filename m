@@ -2,140 +2,111 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D175C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222AD206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TEUfUx2Z";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TEUfUx2Z"
+	by mail.kernel.org (Postfix) with ESMTP id 1B5D02067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgFCAEr (ORCPT
+        id S1728285AbgFCAIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 20:04:47 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51486 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726267AbgFCAEq (ORCPT
+        Tue, 2 Jun 2020 20:08:25 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57956 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFCAIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 20:04:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id AA5FC8EE268;
-        Tue,  2 Jun 2020 17:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591142685;
-        bh=ZiKQ/cfbDn9jWGCX3Ai/Ywhy9oUSWUU+Sx8hFK1S17w=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TEUfUx2ZCDy9g/gjgK89K6I67X3Z+lnqDLnB0x2CXvoavcMKSq4/mi9BZeDEz5wxb
-         NxZSPp30B+wjkKkl3OTVd3xR7HvenUjESNFOJwkp9+TFRGdxfLEbfp27EYQKh7iuNI
-         W0J7ZAtIcaTrZAMAWnQBK7a76cjBsHgac8VNiw38=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iHPO3SLpc0WE; Tue,  2 Jun 2020 17:04:45 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E35A58EE0F8;
-        Tue,  2 Jun 2020 17:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591142685;
-        bh=ZiKQ/cfbDn9jWGCX3Ai/Ywhy9oUSWUU+Sx8hFK1S17w=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TEUfUx2ZCDy9g/gjgK89K6I67X3Z+lnqDLnB0x2CXvoavcMKSq4/mi9BZeDEz5wxb
-         NxZSPp30B+wjkKkl3OTVd3xR7HvenUjESNFOJwkp9+TFRGdxfLEbfp27EYQKh7iuNI
-         W0J7ZAtIcaTrZAMAWnQBK7a76cjBsHgac8VNiw38=
-Message-ID: <1591142683.16819.44.camel@HansenPartnership.com>
-Subject: Re: kobject_init_and_add is easy to misuse
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Wang Hai <wanghai38@huawei.com>, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Tue, 02 Jun 2020 17:04:43 -0700
-In-Reply-To: <1591134670.16819.18.camel@HansenPartnership.com>
-References: <20200602115033.1054-1-wanghai38@huawei.com>
-         <20200602121035.GL19604@bombadil.infradead.org>
-         <1591111514.4253.32.camel@HansenPartnership.com>
-         <20200602173603.GB3579519@kroah.com>
-         <1591127656.16819.7.camel@HansenPartnership.com>
-         <20200602200756.GA3933938@kroah.com>
-         <1591134670.16819.18.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jun 2020 20:08:24 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 947248030835;
+        Wed,  3 Jun 2020 00:08:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id crSB_BARp40X; Wed,  3 Jun 2020 03:08:22 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] hwmon: bt1-pvt: Define Temp- and Volt-to-N poly as maybe-unused
+Date:   Wed, 3 Jun 2020 03:07:53 +0300
+Message-ID: <20200603000753.391-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200602091219.24404-1-Sergey.Semin@baikalelectronics.ru>
+References: 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-02 at 14:51 -0700, James Bottomley wrote:
-> On Tue, 2020-06-02 at 22:07 +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jun 02, 2020 at 12:54:16PM -0700, James Bottomley wrote:
-> 
-> [...]
-> > > I think the only way we can make the failure semantics consistent
-> > > is to have the kobject_init() ones (so kfree on failure).  That
-> > > means for the add part, the function would have to unwind
-> > > everything it did from init on so kfree() is still an option.  If
-> > > people agree, then I can produce the patch ... it's just the
-> > > current drive to transform everyone who's doing kfree() into
-> > > kobject_put() would become wrong ...
-> > 
-> > Everyone should be putting their kfree into the kobject release
-> > anyway, right?
-> 
-> No, that's the problem ... for a static kobject you can't free it;
-> and the release path may make assumption which aren't valid depending
-> on the kobject state.
-> 
-> > Anyway, let's see your patch before I start to object further :)
-> 
-> My first thought was "what?  I got suckered into creating a patch",
-> thanks ;-)  But now I look, all the error paths do unwind back to the
-> initial state, so kfree() on error looks to be completely correct.
+Clang-based kernel building with W=1 warns that some static const
+variables are unused:
 
-Actually, I spoke too soon.  I did another analysis of the syzkaller
-flow in b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject") and it turns out there is a single piece
-of state that's not correctly unwound: the kobj->name which, thanks to
-additions after kobject_init_and_add() was created, is now allocated
-via kmalloc if it's not a rodata string and is always and freed in
-kobject_cleanup via kfree_const().  This problem can be fixed by
-unwinding the name allocation at the end of kobject_init_and_add() ...
-or it could be unwound in kobject_add_varg, which would also make
-kobject_add() unwind correctly.
+drivers/hwmon/bt1-pvt.c:67:30: warning: unused variable 'poly_temp_to_N' [-Wunused-const-variable]
+static const struct pvt_poly poly_temp_to_N = {
+                             ^
+drivers/hwmon/bt1-pvt.c:99:30: warning: unused variable 'poly_volt_to_N' [-Wunused-const-variable]
+static const struct pvt_poly poly_volt_to_N = {
+                             ^
 
-The unwind step is to kfree_const(kobj->name); kobj->name = NULL; so it
-won't interfere if the kobject_put() is called instead of a simple
-kfree.
+Indeed these polynomials are utilized only when the PVT sensor alarms are
+enabled. In that case they are used to convert the temperature and
+voltage alarm limits from normal quantities (Volts and degree Celsius) to
+the sensor data representation N = [0, 1023]. Otherwise when alarms are
+disabled the driver only does the detected data conversion to the human
+readable form and doesn't need that polynomials defined. So let's mark the
+Temp-to-N and Volt-to-N polynomials with __maybe_unused attribute.
 
-Would you prefer the unwind in kobject_init_and_add() like the patch
-below or in kobject_add_varg()?
+Note gcc with W=1 doesn't notice the problem.
 
-
-James
+Fixes: 87976ce2825d ("hwmon: Add Baikal-T1 PVT sensor driver")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 
 ---
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 65fa7bf70c57..9991baf43d27 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -472,6 +472,10 @@ int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,
- 	va_start(args, fmt);
- 	retval = kobject_add_varg(kobj, parent, fmt, args);
- 	va_end(args);
-+	if (retval && kobj->name) {
-+		kfree_const(kobj->name);
-+		kobj->name = NULL;
-+	}
- 
- 	return retval;
- }
+Link: https://lore.kernel.org/linux-hwmon/20200602091219.24404-1-Sergey.Semin@baikalelectronics.ru
+Changelog v2:
+- Repalce if-defs with __maybe_unused attribute.
+---
+ drivers/hwmon/bt1-pvt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hwmon/bt1-pvt.c b/drivers/hwmon/bt1-pvt.c
+index 1a9772fb1f73..8709b3f54086 100644
+--- a/drivers/hwmon/bt1-pvt.c
++++ b/drivers/hwmon/bt1-pvt.c
+@@ -64,7 +64,7 @@ static const struct pvt_sensor_info pvt_info[] = {
+  *     48380,
+  * where T = [-48380, 147438] mC and N = [0, 1023].
+  */
+-static const struct pvt_poly poly_temp_to_N = {
++static const struct pvt_poly __maybe_unused poly_temp_to_N = {
+ 	.total_divider = 10000,
+ 	.terms = {
+ 		{4, 18322, 10000, 10000},
+@@ -96,7 +96,7 @@ static const struct pvt_poly poly_N_to_temp = {
+  * N = (18658e-3*V - 11572) / 10,
+  * V = N * 10^5 / 18658 + 11572 * 10^4 / 18658.
+  */
+-static const struct pvt_poly poly_volt_to_N = {
++static const struct pvt_poly __maybe_unused poly_volt_to_N = {
+ 	.total_divider = 10,
+ 	.terms = {
+ 		{1, 18658, 1000, 1},
+-- 
+2.26.2
+
