@@ -2,194 +2,144 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F718C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED489207D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591187916;
-	bh=9TAs3kovCOp49StugaJDwW26f68FyxP8s4u8wXeTsyc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ULQvv/EcZ1Zb2UR1ALT8kcFm5O0ZgIwzPYiCOz3OIizKR6dR5+r1xOya7i3yQr5T0
-	 7lWhTgdPS305vSRAK3kX0BSLqr5vUDtnCwF8zcU6mRZd7jzGrbSezhP+KUzwQWjgrE
-	 dLKaOFetVnfvF+rLrbhhFsP0rKstcTxta5J/gsKY=
+	by mail.kernel.org (Postfix) with ESMTP id 60F8720678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hegUAZBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbgFCMif (ORCPT
+        id S1726077AbgFCMjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:38:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCMif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:38:35 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12D68207D5;
-        Wed,  3 Jun 2020 12:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591187914;
-        bh=9TAs3kovCOp49StugaJDwW26f68FyxP8s4u8wXeTsyc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V0cy5RUUQxeDya2DbgWmDXFKYoNx1owkehgW32U5oOm1qlFJPitn4TiWF2IqYWXp0
-         OrmvHYwsfqMhs+AXo3dB0Td8xGEnuWWHt3jt2hFgHYkW/t1IoJweMxNryr+YE41kn6
-         eiYi37+XDxEdchjys4cqSfWxaMJYv4/UbHJmNVsg=
-Received: by mail-oi1-f170.google.com with SMTP id k4so105492oik.2;
-        Wed, 03 Jun 2020 05:38:34 -0700 (PDT)
-X-Gm-Message-State: AOAM532M5PwKhJuNq6dtVP1mWiu0LnDSFpfpg622LeVgtB3hT88yOMri
-        uVCLcY2ZDdzyVrolaOuTRsZ25rbV5RH3Usjtr4k=
-X-Google-Smtp-Source: ABdhPJxtoYgDu0K4hQ/beI7ls97pxWTLrikuATkPMFvqSUZJ8+uG5ukk2YbSZjvygee3oBbPbOCR4FLmeAX5v/Xwtz8=
-X-Received: by 2002:aca:b707:: with SMTP id h7mr6391080oif.174.1591187913409;
- Wed, 03 Jun 2020 05:38:33 -0700 (PDT)
+        Wed, 3 Jun 2020 08:39:33 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55287 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725833AbgFCMjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:39:32 -0400
+X-UUID: 1993c3ddeb4148aa96669f9c1f46b448-20200603
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yGhEBSj32ppLHggwGolq9ctveMSRJ1bICjDVz+fhRnY=;
+        b=hegUAZBRX2s60lSecAyLBURD/bAzfG67+p2avShJo+0B4ctRdAv243tcJNqGCY4nACX96hujB458lAOTelcceeGRE0seBkA3ed2eTPmVy8khTI38enrjDpJv5jQmLZzn3WfZDEdyWcbZGipcbKOfTqwEq8KCEvl2CoNHafIfEdU=;
+X-UUID: 1993c3ddeb4148aa96669f9c1f46b448-20200603
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1683903012; Wed, 03 Jun 2020 20:39:26 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 3 Jun 2020 20:39:21 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 3 Jun 2020 20:39:23 +0800
+Message-ID: <1591187964.23525.61.camel@mtkswgap22>
+Subject: Re: [PATCH] sound: usb: pcm: fix incorrect power state when playing
+ sound after PM_AUTO suspend
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Takashi Iwai <tiwai@suse.de>
+CC:     <alsa-devel@alsa-project.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Johan Hovold <johan@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        <linux-mediatek@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Szabolcs =?UTF-8?Q?Sz=C5=91ke?= <szszoke.code@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>, <stable@vger.kernel.org>
+Date:   Wed, 3 Jun 2020 20:39:24 +0800
+In-Reply-To: <s5h367cfsga.wl-tiwai@suse.de>
+References: <s5hpnahhbz8.wl-tiwai@suse.de>
+         <1591153515.23525.50.camel@mtkswgap22> <s5heeqwfyti.wl-tiwai@suse.de>
+         <s5hblm0fxl0.wl-tiwai@suse.de> <s5h367cfsga.wl-tiwai@suse.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-References: <20200603210603.1fcf63ed@canb.auug.org.au> <ba1f622a-6866-2a58-706b-045e8a0d9012@huawei.com>
- <20200603221341.0705a2f9@canb.auug.org.au> <20200603222026.4cf661e0@canb.auug.org.au>
-In-Reply-To: <20200603222026.4cf661e0@canb.auug.org.au>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 3 Jun 2020 14:38:22 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFes_Q2r8o-7bNYoYzz0OLSy+h70fBd6-Vse=3syJDptg@mail.gmail.com>
-Message-ID: <CAMj1kXFes_Q2r8o-7bNYoYzz0OLSy+h70fBd6-Vse=3syJDptg@mail.gmail.com>
-Subject: Re: arm64 build issue and mainline crash (was Re: linux-next: Tree
- for Jun 3)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 14:20, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Just resending to get past the infradead.org mail filters (hopefully).
->
-> On Wed, 3 Jun 2020 22:13:41 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi John,
-> >
-> > On Wed, 3 Jun 2020 12:45:18 +0100 John Garry <john.garry@huawei.com> wrote:
-> > >
-> > > On 03/06/2020 12:06, Stephen Rothwell wrote:
-> > >
-> > > JFYI, I am finding the vanilla defconfig build broken for arm64:
-> > >
-> > > LD      vmlinux.o
-> > >
-> > >
-> > > /home/john/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-ld:
-> > > cannot find ./drivers/firmware/efi/libstub/lib.abuilt-in.a: No such file
-> > > or directory
-> > > make[1]: *** [vmlinux] Error 1
-> > >
-> > >
-> > > make: *** [__sub-make] Error 2
-> > >
-> > >
-> > > john@htsatcamb-server:~/linux-next$
-> > >
-> > > In addition, the reason I was testing this was because Linus' master
-> > > (d6f9469a03d8 Merge tag 'erofs-for-5.8-rc1' of
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs) was crashing:
-> > >
-> > > [ 5.368948] loop: module loaded
-> > > [ 5.372113] Unable to handle kernel paging request at virtual address
-> > > fffff9ffcfec4000
-> > > [ 5.380067] Mem abort info:
-> > > [ 5.382865]ESR = 0x96000044
-> > > [ 5.385927]EC = 0x25: DABT (current EL), IL = 32 bits
-> > > [ 5.391260]SET = 0, FnV = 0
-> > > [ 5.394319]EA = 0, S1PTW = 0
-> > > [ 5.397467] Data abort info:
-> > > [ 5.400354]ISV = 0, ISS = 0x00000044
-> > > [ 5.404203]CM = 0, WnR = 1
-> > > [ 5.407178] swapper pgtable: 4k pages, 48-bit VAs, pgdp=000000002f3f1000
-> > > [ 5.413909] [fffff9ffcfec4000] pgd=0000000000000000
-> > > [ 5.418807] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-> > > [ 5.424399] Modules linked in:
-> > > [ 5.427462] CPU: 11 PID: 1 Comm: swapper/0 Not tainted
-> > > 5.7.0-05047-gd6f9469a03d8 #388
-> > > [ 5.435325] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05
-> > > IT21 Nemo 2.0 RC0 04/18/2018
-> > > [ 5.444499] pstate: 40000005 (nZcv daif -PAN -UAO BTYPE=--)
-> > > [ 5.450098] pc : __memset+0x16c/0x1c0
-> > > [ 5.453770] lr : pcpu_alloc+0x1a0/0x668
-> > > [ 5.457615] sp : ffff800011d3bbd0
-> > > [ 5.460936] x29: ffff800011d3bbd0 x28: ffff001fb5495180
-> > > [ 5.466267] x27: 0000000000000001 x26: 0000000000000100
-> > > [ 5.471597] x25: 0000000000000001 x24: 0000000000000001
-> > > [ 5.476928] x23: ffff80001135e9a0 x22: ffff80001196a200
-> > > [ 5.482259] x21: ffff80001196a360 x20: 0000000000000000
-> > > [ 5.487590] x19: 0000000000000000 x18: fffffe107e6fdb08
-> > > [ 5.492920] x17: 000000000000003f x16: 0000000000000000
-> > > [ 5.498251] x15: ffff001ffbffee00 x14: 0000000000000002
-> > > [ 5.503581] x13: 0000000000000000 x12: 000000000000003f
-> > > [ 5.508912] x11: 0000000000000040 x10: 0000000000000040
-> > > [ 5.514243] x9 : 0000000000000000 x8 : fffff9ffcfec4000
-> > > [ 5.519573] x7 : 0000000000000000 x6 : 000000000000003f
-> > > [ 5.524904] x5 : 0000000000000040 x4 : 0000000000000000
-> > > [ 5.530234] x3 : 0000000000000004 x2 : 00000000000000c0
-> > > [ 5.535565] x1 : 0000000000000000 x0 : fffff9ffcfec4000
-> > > [ 5.540896] Call trace:
-> > > [ 5.543344]  __memset+0x16c/0x1c0
-> > > [ 5.546666]  __alloc_percpu+0x14/0x1c
-> > > [ 5.550338]  alloc_workqueue+0x164/0x42c
-> > > [ 5.554273]  init+0x24/0xa4
-> > > [ 5.557071]  do_one_initcall+0x50/0x194
-> > > [ 5.560917]  kernel_init_freeable+0x1e4/0x250
-> > > [ 5.565288]  kernel_init+0x10/0x104
-> > > [ 5.568785]  ret_from_fork+0x10/0x18
-> > > [ 5.572372] Code: 91010108 54ffff4a 8b040108 cb050042 (d50b7428)
-> > > [ 5.578568] ---[ end trace 63c299bbe9b8ea9e ]---
-> > > [ 5.583205] Kernel panic - not syncing: Attempted to kill init!
-> > > exitcode=0x0000000b
-> > > [ 5.590903] SMP: stopping secondary CPUs
-> > > [ 5.594846] Kernel Offset: 0xf0000 from 0xffff800010000000
-> > > [ 5.600350] PHYS_OFFSET: 0x0
-> > > [ 5.603235] CPU features: 0x240022,20806008
-> > > [ 5.607430] Memory Limit: none
-> > > [ 5.610500] ---[ end Kernel panic - not syncing: Attempted to kill init!
-> > > exitcode=0x0000000b ]---
-> > >
-> > > I'll check that when I get a chance. Maybe all just transient.
-> >
-> > Yeah, I forgot to add a patch to make arm64 build again (it will be in
-> > linux-next tomorrow).  If you want to apply it to your tree, here is
-> > what I was given:
-> >
-> > diff --git a/Makefile b/Makefile
-> > index f80c4ff93ec9..fbb4b95ae648 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1074,7 +1074,7 @@ build-dirs        := $(vmlinux-dirs)
-> >  clean-dirs     := $(vmlinux-alldirs)
-> >
-> >  # Externally visible symbols (used by link-vmlinux.sh)
-> > -KBUILD_VMLINUX_OBJS := $(head-y) $(addsuffix built-in.a, $(core-y))
-> > +KBUILD_VMLINUX_OBJS := $(head-y) $(patsubst %/,%/built-in.a, $(core-y))
-> >  KBUILD_VMLINUX_OBJS += $(addsuffix built-in.a, $(filter %/, $(libs-y)))
-> >  ifdef CONFIG_MODULES
-> >  KBUILD_VMLINUX_OBJS += $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
->
+T24gV2VkLCAyMDIwLTA2LTAzIGF0IDEwOjQ1ICswMjAwLCBUYWthc2hpIEl3YWkgd3JvdGU6DQo+
+IE9uIFdlZCwgMDMgSnVuIDIwMjAgMDg6NTQ6NTEgKzAyMDAsDQo+IFRha2FzaGkgSXdhaSB3cm90
+ZToNCj4gPiANCj4gPiBPbiBXZWQsIDAzIEp1biAyMDIwIDA4OjI4OjA5ICswMjAwLA0KPiA+IFRh
+a2FzaGkgSXdhaSB3cm90ZToNCj4gPiA+IA0KPiA+ID4gQW5kLCB0aGUgbW9zdCBzdXNwaWNpb3Vz
+IGNhc2UgaXMgdGhlIGxhc3Qgb25lLA0KPiA+ID4gY2hpcC0+bnVtX3N1c3BlbmRlZC1pbnRmLiAg
+SXQgbWVhbnMgdGhhdCB0aGUgZGV2aWNlIGhhcyBtdWx0aXBsZQ0KPiA+ID4gVVNCIGludGVyZmFj
+ZXMgYW5kIHRoZXkgd2VudCB0byBzdXNwZW5kLCB3aGlsZSB0aGUgcmVzdW1lIGlzbid0DQo+ID4g
+PiBwZXJmb3JtZWQgZm9yIHRoZSBhbGwgc3VzcGVuZGVkIGludGVyZmFjZXMgaW4gcmV0dXJuLg0K
+PiA+IA0KPiA+IElmIHRoaXMgaXMgdGhlIGNhdXNlLCBhIHBhdGNoIGxpa2UgYmVsb3cgbWlnaHQg
+aGVscC4NCj4gPiBJdCBnZXRzL3B1dHMgdGhlIGFsbCBhc3NpZ25lZCBpbnRlcmZhY2VkIGluc3Rl
+YWQgb2Ygb25seSB0aGUgcHJpbWFyeQ0KPiA+IG9uZS4NCj4gDQo+IC4uLiBhbmQgY29uc2lkZXJp
+bmcgb2YgdGhlIHByb2JsZW0gYWdhaW4sIHJhdGhlciB0aGUgcGF0Y2ggYmVsb3cgbWlnaHQNCj4g
+YmUgdGhlIHJpZ2h0IGFuc3dlci4gIE5vdyB0aGUgZHJpdmVyIHRyaWVzIHRvIHJlbWVtYmVyIGF0
+IHdoaWNoIHN0YXRlDQo+IGl0IGVudGVyZWQgaW50byB0aGUgc3lzdGVtLXN1c3BlbmQuICBVcG9u
+IHJlc3VtZSwgaW4gcmV0dXJuLCB3aGVuIHRoZQ0KPiBzdGF0ZSByZWFjaGVzIGJhY2sgdG8gdGhh
+dCBwb2ludCwgc2V0IHRoZSBjYXJkIHN0YXRlIHRvIEQwLg0KPiANCj4gVGhlIHByZXZpb3VzIHBh
+dGNoIGNhbiBiZSBhcHBsaWVkIG9uIHRoZSB0b3AsIHRvbywgYW5kIGl0IG1pZ2h0IGJlDQo+IHdv
+cnRoIHRvIGFwcGx5IGJvdGguDQo+IA0KPiBMZXQgbWUga25vdyBpZiBhbnkgb2YgdGhvc2UgYWN0
+dWFsbHkgaGVscHMuDQo+IA0KPiANCj4gVGFrYXNoaQ0KDQpUaGFua3MgZm9yIHlvdXIgcmVzcG9u
+c2Ugc28gcXVpY2tseS4NCkkndmUganVzdCB0ZXN0IHRoaXMgcGF0Y2ggc2luY2UgaXQgbG9va3Mg
+bGlrZSBlbm91Z2ggZm9yIHRoZSBpc3N1ZS4NCg0KVGhpcyBwYXRjaCB3b3JrZWQgc2luY2UgdGhl
+IGZsYWcgc3lzdGVtX3N1c3BlbmQgd2lsbCBiZSBzZXQgYXQgdGhlIHNhbWUNCnRpbWUgd2hlbiBw
+b3dlciBzdGF0ZSBoYXMgYmVlbiBjaGFuZ2VkLiBJIGhhdmUgMiBpbnRlcmZhY2Ugd2l0aCB0aGUg
+aGVhZA0Kc2V0LiBCdXQgYWN0dWFsbHkgdGhlIHByb2JsZW0gaGFwcGVuZWQgd2hlbiBwcmltYXJ5
+IG9uZSBpcyBzdXNwZW5kZWQuDQpTbyBJIGRpZG4ndCB0ZXN0IHRoZSBlYXJsaWVyIHBhdGNoICJz
+dXNwZW5kIGFsbCBpbnRlcmZhY2UgaW5zdGVhZCBvZg0Kb25seSB0aGUgcHJpbWFyeSBvbmUuIg0K
+DQpXaWxsIHlvdSByZXNlbmQgdGhpcyBwYXRjaCBvZmZpY2lhbGx5IGxhdGVyPyBJIHRoaW5rIHRo
+aXMgc29sdXRpb24gaXMNCnJlcXVpcmVkIHRvIHNlbmQgdG8gc3RhYmxlLCB0b28uIEl0J3MgYmV0
+dGVyIHRvIGhhdmUgaXQgZm9yIG90aGVyIHN0YWJsZQ0Ka2VybmVsIHZlcnNpb25zIGluY2x1ZGUg
+YW5kcm9pZCdzLg0KDQo+IC0tLQ0KPiBkaWZmIC0tZ2l0IGEvc291bmQvdXNiL2NhcmQuYyBiL3Nv
+dW5kL3VzYi9jYXJkLmMNCj4gLS0tIGEvc291bmQvdXNiL2NhcmQuYw0KPiArKysgYi9zb3VuZC91
+c2IvY2FyZC5jDQo+IEBAIC04NDMsOSArODQzLDYgQEAgc3RhdGljIGludCB1c2JfYXVkaW9fc3Vz
+cGVuZChzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwgcG1fbWVzc2FnZV90IG1lc3NhZ2UpDQo+
+ICAJaWYgKGNoaXAgPT0gKHZvaWQgKiktMUwpDQo+ICAJCXJldHVybiAwOw0KPiAgDQo+IC0JY2hp
+cC0+YXV0b3N1c3BlbmRlZCA9ICEhUE1TR19JU19BVVRPKG1lc3NhZ2UpOw0KPiAtCWlmICghY2hp
+cC0+YXV0b3N1c3BlbmRlZCkNCj4gLQkJc25kX3Bvd2VyX2NoYW5nZV9zdGF0ZShjaGlwLT5jYXJk
+LCBTTkRSVl9DVExfUE9XRVJfRDNob3QpOw0KPiAgCWlmICghY2hpcC0+bnVtX3N1c3BlbmRlZF9p
+bnRmKyspIHsNCj4gIAkJbGlzdF9mb3JfZWFjaF9lbnRyeShhcywgJmNoaXAtPnBjbV9saXN0LCBs
+aXN0KSB7DQo+ICAJCQlzbmRfdXNiX3BjbV9zdXNwZW5kKGFzKTsNCj4gQEAgLTg1OCw2ICs4NTUs
+MTEgQEAgc3RhdGljIGludCB1c2JfYXVkaW9fc3VzcGVuZChzdHJ1Y3QgdXNiX2ludGVyZmFjZSAq
+aW50ZiwgcG1fbWVzc2FnZV90IG1lc3NhZ2UpDQo+ICAJCQlzbmRfdXNiX21peGVyX3N1c3BlbmQo
+bWl4ZXIpOw0KPiAgCX0NCj4gIA0KPiArCWlmICghUE1TR19JU19BVVRPKG1lc3NhZ2UpICYmICFj
+aGlwLT5zeXN0ZW1fc3VzcGVuZCkgew0KPiArCQlzbmRfcG93ZXJfY2hhbmdlX3N0YXRlKGNoaXAt
+PmNhcmQsIFNORFJWX0NUTF9QT1dFUl9EM2hvdCk7DQo+ICsJCWNoaXAtPnN5c3RlbV9zdXNwZW5k
+ID0gY2hpcC0+bnVtX3N1c3BlbmRlZF9pbnRmOw0KPiArCX0NCj4gKw0KPiAgCXJldHVybiAwOw0K
+PiAgfQ0KPiAgDQo+IEBAIC04NzEsMTAgKzg3MywxMCBAQCBzdGF0aWMgaW50IF9fdXNiX2F1ZGlv
+X3Jlc3VtZShzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwgYm9vbCByZXNldF9yZXN1bWUpDQo+
+ICANCj4gIAlpZiAoY2hpcCA9PSAodm9pZCAqKS0xTCkNCj4gIAkJcmV0dXJuIDA7DQo+IC0JaWYg
+KC0tY2hpcC0+bnVtX3N1c3BlbmRlZF9pbnRmKQ0KPiAtCQlyZXR1cm4gMDsNCj4gIA0KPiAgCWF0
+b21pY19pbmMoJmNoaXAtPmFjdGl2ZSk7IC8qIGF2b2lkIGF1dG9wbSAqLw0KPiArCWlmIChjaGlw
+LT5udW1fc3VzcGVuZGVkX2ludGYgPiAxKQ0KPiArCQlnb3RvIG91dDsNCj4gIA0KPiAgCWxpc3Rf
+Zm9yX2VhY2hfZW50cnkoYXMsICZjaGlwLT5wY21fbGlzdCwgbGlzdCkgew0KPiAgCQllcnIgPSBz
+bmRfdXNiX3BjbV9yZXN1bWUoYXMpOw0KPiBAQCAtODk2LDkgKzg5OCwxMiBAQCBzdGF0aWMgaW50
+IF9fdXNiX2F1ZGlvX3Jlc3VtZShzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwgYm9vbCByZXNl
+dF9yZXN1bWUpDQo+ICAJCXNuZF91c2JtaWRpX3Jlc3VtZShwKTsNCj4gIAl9DQo+ICANCj4gLQlp
+ZiAoIWNoaXAtPmF1dG9zdXNwZW5kZWQpDQo+ICsgb3V0Og0KPiArCWlmIChjaGlwLT5udW1fc3Vz
+cGVuZGVkX2ludGYgPT0gY2hpcC0+c3lzdGVtX3N1c3BlbmQpIHsNCj4gIAkJc25kX3Bvd2VyX2No
+YW5nZV9zdGF0ZShjaGlwLT5jYXJkLCBTTkRSVl9DVExfUE9XRVJfRDApOw0KPiAtCWNoaXAtPmF1
+dG9zdXNwZW5kZWQgPSAwOw0KPiArCQljaGlwLT5zeXN0ZW1fc3VzcGVuZCA9IDA7DQo+ICsJfQ0K
+PiArCWNoaXAtPm51bV9zdXNwZW5kZWRfaW50Zi0tOw0KPiAgDQo+ICBlcnJfb3V0Og0KPiAgCWF0
+b21pY19kZWMoJmNoaXAtPmFjdGl2ZSk7IC8qIGFsbG93IGF1dG9wbSBhZnRlciB0aGlzIHBvaW50
+ICovDQo+IGRpZmYgLS1naXQgYS9zb3VuZC91c2IvdXNiYXVkaW8uaCBiL3NvdW5kL3VzYi91c2Jh
+dWRpby5oDQo+IGluZGV4IDFjODkyYzdmMTRkNy4uZTBlYmZiMjVmYmQ1IDEwMDY0NA0KPiAtLS0g
+YS9zb3VuZC91c2IvdXNiYXVkaW8uaA0KPiArKysgYi9zb3VuZC91c2IvdXNiYXVkaW8uaA0KPiBA
+QCAtMjYsNyArMjYsNyBAQCBzdHJ1Y3Qgc25kX3VzYl9hdWRpbyB7DQo+ICAJc3RydWN0IHVzYl9p
+bnRlcmZhY2UgKnBtX2ludGY7DQo+ICAJdTMyIHVzYl9pZDsNCj4gIAlzdHJ1Y3QgbXV0ZXggbXV0
+ZXg7DQo+IC0JdW5zaWduZWQgaW50IGF1dG9zdXNwZW5kZWQ6MTsJDQo+ICsJdW5zaWduZWQgaW50
+IHN5c3RlbV9zdXNwZW5kOw0KPiAgCWF0b21pY190IGFjdGl2ZTsNCj4gIAlhdG9taWNfdCBzaHV0
+ZG93bjsNCj4gIAlhdG9taWNfdCB1c2FnZV9jb3VudDsNCj4gDQo+IF9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQoNClRoYW5rIHlvdSB2ZXJ5IG11Y2ghDQoN
+CkJlc3QgcmVnYXJkcywNCk1hY3BhdWwgTGluDQoNCg0K
 
-
-9203be13ef5bfd1fcf39f7b7fe94597d2d2a0eb4 is the first bad commit
-commit 9203be13ef5bfd1fcf39f7b7fe94597d2d2a0eb4
-Author: Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon Jun 1 14:56:59 2020 +0900
-
-    kbuild: refactor KBUILD_VMLINUX_{OBJS,LIBS} calculation
-
-    Do not overwrite core-y or drivers-y. Remove libs-y1 and libs-y2.
-
-    Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
