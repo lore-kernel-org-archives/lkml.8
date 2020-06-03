@@ -2,153 +2,113 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84ED3207D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PH4RhJZS"
+	by mail.kernel.org (Postfix) with ESMTP id D4D30207DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591201164;
+	bh=Il/dfMErTkgBJ//mL+aSFts5I77rJqeGGDX9gvP1YLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xq3Yv4Z+XmSgJqhkf24KEIPpzGbDZJyEabs0HLmMe8cC1XRafms1bYAshYUti4qkR
+	 odjXKrb7yCclh3Y1sKoUNn8PHW1dLxHDIVZfXaFeiOHh95Fw28UYDw3w/wIlCdafQS
+	 kjwcM8wbHm7ibrtBJq7nDfatfQ2CqOG7Azdk70is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgFCQQ5 (ORCPT
+        id S1726083AbgFCQTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:16:57 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22051 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbgFCQQ5 (ORCPT
+        Wed, 3 Jun 2020 12:19:24 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41582 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgFCQTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:16:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591201015;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=vSikr6xbZnA95Bp36UZKiXnO9Jo/eUqwqwA+BJtCOpw=;
-        b=PH4RhJZS0n8+ybtjgry9wxpC44rezSI0u9o9LJMYxKfiGLSN+Ib3Umw0seQ7rEDW3eSkOu
-        Ju/LYhudp0UQbBAM/zZjQ0SIfCQbmDx92qPNSZssu7pBlK8Gle1y4ueoHTY0IXDDw3lkMO
-        ZF9gGwkW/n0newOtjqlPiR/ELecn6b8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-CtZO5kMvNKqSkjcTLFuRrA-1; Wed, 03 Jun 2020 12:16:51 -0400
-X-MC-Unique: CtZO5kMvNKqSkjcTLFuRrA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C974A1005510;
-        Wed,  3 Jun 2020 16:16:49 +0000 (UTC)
-Received: from [10.36.113.192] (ovpn-113-192.ams2.redhat.com [10.36.113.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E306160BF4;
-        Wed,  3 Jun 2020 16:16:47 +0000 (UTC)
-Subject: Re: [PATCH] mm/memblock: export max_pfn for kernel modules
-To:     Miles Chen <miles.chen@mediatek.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-References: <20200603161132.2441-1-miles.chen@mediatek.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <23a9a2cc-3461-52bb-4285-b063a01bd7c6@redhat.com>
-Date:   Wed, 3 Jun 2020 18:16:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 3 Jun 2020 12:19:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id o5so2887508iow.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 09:19:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rC5bE9KFvxDnJlcIiTlWdbXRmbn0P+2nI1r3gG1LMao=;
+        b=KWtwKLq5k5yduwYU0+awVZBJ+eRqkZ8R6W23tXhMGaOE249AqVqS3VrYXxAobTuF2R
+         On04wu3dN2WOoYn00MFXTfFJ1zYm60+ayjrIzBjlmAxC4+YZlC37pdo6tZ7OAJczFTCc
+         w89bi0Ub8Fm3oXgRWrnFswkkdxgenf/fpPB0uYeKRDVykKWKgAiOV91WpiU7wJy0V1kk
+         Q/I4pC0i3ORI5zCURJPWpIazXKZR/k2daiq3j2ZS9XsN7KSoegIFdte+RtGqeGakNQwl
+         7Mr6ZzvdLGuGURcJ5GfRlwoe7wJkgnk686zWw1WznY/dOatIxZK+xyJXfpRiIIxI9Nle
+         f6dA==
+X-Gm-Message-State: AOAM531/kFxGxCsCizHcasQGy7J5MBij32vOW8ktW8CAxGkGKnyU45uX
+        kET0FUrfqPF14FgFRc/PAA==
+X-Google-Smtp-Source: ABdhPJxDBsDsagU3oxTW3qm0z17Idaq7Nb0AnTWkfF+zJ7waFaMp+/uD70MJ/TrnJ77YA1pde9s1WA==
+X-Received: by 2002:a5d:8613:: with SMTP id f19mr438310iol.173.1591201162738;
+        Wed, 03 Jun 2020 09:19:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id i78sm1248407ile.87.2020.06.03.09.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 09:19:22 -0700 (PDT)
+Received: (nullmailer pid 1478226 invoked by uid 1000);
+        Wed, 03 Jun 2020 16:19:19 -0000
+Date:   Wed, 3 Jun 2020 10:19:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Raphael Gault <raphael.gault@arm.com>, mark.rutland@arm.com,
+        raph.gault+kdev@gmail.com, peterz@infradead.org,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, acme@kernel.org, mingo@redhat.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/7] perf: arm64: Add test to check userspace access
+ to hardware counters.
+Message-ID: <20200603161919.GA1364927@bogus>
+References: <20190822144220.27860-1-raphael.gault@arm.com>
+ <20190822144220.27860-2-raphael.gault@arm.com>
+ <20190827191755.00007a57@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200603161132.2441-1-miles.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827191755.00007a57@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.06.20 18:11, Miles Chen wrote:
-> max_pfn is uesd to get the highest pfn in the system. Drivers like
-> drivers/iommu/mtk_iommu.c checks max_pfn to see if it should enable
-> its "4GB mode".
+On Tue, Aug 27, 2019 at 07:17:55PM +0800, Jonathan Cameron wrote:
+> On Thu, 22 Aug 2019 15:42:14 +0100
+> Raphael Gault <raphael.gault@arm.com> wrote:
 > 
-> This patch exports the max_pfn symbol, so we can build the driver as
-> a kernel module.
-
-Please add that change to the respective user patch (and cc MM-people
-for that patch), so we have the actual user right along the change and
-can figure out if this is the right thing to do.
-
+> > This test relies on the fact that the PMU registers are accessible
+> > from userspace. It then uses the perf_event_mmap_page to retrieve
+> > the counter index and access the underlying register.
+> > 
+> > This test uses sched_setaffinity(2) in order to run on all CPU and thus
+> > check the behaviour of the PMU of all cpus in a big.LITTLE environment.
+> > 
+> > Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 > 
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-> ---
->  mm/memblock.c | 1 +
->  1 file changed, 1 insertion(+)
+> Hi Raphael,
 > 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index c79ba6f9920c..3b2b21ecebb6 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -99,6 +99,7 @@ EXPORT_SYMBOL(contig_page_data);
->  unsigned long max_low_pfn;
->  unsigned long min_low_pfn;
->  unsigned long max_pfn;
-> +EXPORT_SYMBOL(max_pfn);
->  unsigned long long max_possible_pfn;
->  
->  static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock;
-> 
+> I just tested this on 1620 and it works fairly nicely with one exception...
 
+I'm working on reviving this series.
 
--- 
-Thanks,
+> The test will run and generate garbage numbers if the rest of the
+> series isn't yet applied to the kernel.  Is there anything we can do
+> to prevent that?
 
-David / dhildenb
+I've added a check that user access is enabled which should prevent 
+that. It also validates pmc_width is set which was missing in this 
+series.
 
+> It's a slightly silly complaint, but this also take a while compared to all 
+> the other tests if you have lots of cores, so maybe a slightly shorter
+> test?
+
+I'm not sure what the value of running on every core was supposed to be. 
+If we want to check big.LITTLE, then the test should detect that and 
+pass if user access is disabled on all cores. If we're not on 
+big.LITTLE, then I don't see the point in this test running on every 
+core.
+
+Rob
