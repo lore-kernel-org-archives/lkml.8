@@ -2,75 +2,93 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA71C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19825C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22EBC2068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hZc5RWi2"
+	by mail.kernel.org (Postfix) with ESMTP id 079762068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgFCSGU (ORCPT
+        id S1726604AbgFCSGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:06:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35308 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgFCSGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:06:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=RTd4cybYUcbTjHhAV3/c/LY8bqCfpTYji+h/c0zkD1E=; b=hZc5RWi2EvmHgKSunhM+aQhNqy
-        XMJrsqQuj2IoQ30HVJlKzuLxoQgcuJM3sl4KOfb9mXuqCbHiszKYQ322JF25igmLCXQwfI4Xz5/Vm
-        a88vyDaWo2XdYFwXXlOSL6B2HwEXG0lMr/CIl+VnQu29YPU7YRrK91NUOh/+Yn49Yd18=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jgXmJ-0044i4-ND; Wed, 03 Jun 2020 20:06:15 +0200
-Date:   Wed, 3 Jun 2020 20:06:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Roelof Berg <rberg@berg-solutions.de>
-Cc:     David Miller <davem@davemloft.net>,
-        Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lan743x: Added fixed link and RGMII support / debugging
-Message-ID: <20200603180615.GB971209@lunn.ch>
-References: <20200529193003.3717-1-rberg@berg-solutions.de>
- <20200601.115136.1314501977250032604.davem@davemloft.net>
- <D784BC1B-D14C-4FE4-8FD8-76BEBE60A39D@berg-solutions.de>
- <20200603155927.GC869823@lunn.ch>
- <42337EA1-C7D1-46C6-815F-C619B27A4E77@berg-solutions.de>
+        Wed, 3 Jun 2020 14:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgFCSGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:06:32 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953C3C08C5C0;
+        Wed,  3 Jun 2020 11:06:32 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jgXmS-0006Fc-UQ; Wed, 03 Jun 2020 20:06:25 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 61FC21C0081;
+        Wed,  3 Jun 2020 20:06:24 +0200 (CEST)
+Date:   Wed, 03 Jun 2020 18:06:24 -0000
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu: Add Sapphire Rapids CPU model number
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200603173352.15506-1-tony.luck@intel.com>
+References: <20200603173352.15506-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42337EA1-C7D1-46C6-815F-C619B27A4E77@berg-solutions.de>
+Message-ID: <159120758418.17951.785237576937442165.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 06:33:28PM +0200, Roelof Berg wrote:
-> Ok, let's proceed :) The code runs well, dmesg looks good, ip addr shows me a link up, speed/duplex looks ok. But it does not transfer any data.
-> 
-> Debugging steps (A/B versions):
-> - Check clocks with oscilloscope (10/100/1000)
-> - Dump actual register settings
-> - Trace Phy-Phy autonegotiation and ensure that our patch catches up the result
+The following commit has been merged into the x86/urgent branch of tip:
 
-Adding #define DEBUG to the top of drivers/net/phy/phy.c will get you
-some debug info.
+Commit-ID:     be25d1b5ea6a3a3ecbb5474e2ae8e32d2ba055ea
+Gitweb:        https://git.kernel.org/tip/be25d1b5ea6a3a3ecbb5474e2ae8e32d2ba055ea
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Wed, 03 Jun 2020 10:33:52 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 03 Jun 2020 19:53:41 +02:00
 
-What PHY is being used?
-Is it using RGMII?
+x86/cpu: Add Sapphire Rapids CPU model number
 
-If it looks like the PHY and the MAC are happy, just that frames are
-not being transferred between them, it could be RGMII delays.
+Latest edition (039) of "Intel Architecture Instruction Set Extensions
+and Future Features Programming Reference" includes three new CPU model
+numbers. Linux already has the two Ice Lake server ones. Add the new
+model number for Sapphire Rapids.
 
-    Andrew
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200603173352.15506-1-tony.luck@intel.com
+---
+ arch/x86/include/asm/intel-family.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 8f1e94f..a338a6d 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -89,6 +89,8 @@
+ #define INTEL_FAM6_COMETLAKE		0xA5
+ #define INTEL_FAM6_COMETLAKE_L		0xA6
+ 
++#define INTEL_FAM6_SAPPHIRERAPIDS_X	0x8F
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
