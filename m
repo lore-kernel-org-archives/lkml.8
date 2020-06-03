@@ -2,83 +2,165 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB9C20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1FA206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgFCPLH convert rfc822-to-8bit (ORCPT
+        id S1726233AbgFCPL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgFCPLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:11:05 -0400
-Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A44B6C08C5C0;
-        Wed,  3 Jun 2020 08:11:04 -0700 (PDT)
-Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
-        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jgV2Y-0000Ec-QM; Wed, 03 Jun 2020 17:10:50 +0200
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] lan743x: Added fixed link and RGMII support / Options for
- proceeding ?
-From:   Roelof Berg <rberg@berg-solutions.de>
-In-Reply-To: <08FC216E-BBCA-40E6-8251-FA1EB3EF9F99@berg-solutions.de>
-Date:   Wed, 3 Jun 2020 17:10:49 +0200
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <95EAD2D0-1996-49FF-9C03-DC5AD4000E71@berg-solutions.de>
-References: <20200529193003.3717-1-rberg@berg-solutions.de>
- <08FC216E-BBCA-40E6-8251-FA1EB3EF9F99@berg-solutions.de>
-To:     "rberg@berg-solutions.de" <rberg@berg-solutions.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1591197064;d2a39fce;
-X-HE-SMSGID: 1jgV2Y-0000Ec-QM
+        Wed, 3 Jun 2020 11:11:56 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2273 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725930AbgFCPLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:11:53 -0400
+Received: from lhreml738-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 02C85582F77A874555B4;
+        Wed,  3 Jun 2020 16:11:51 +0100 (IST)
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ lhreml738-chm.china.huawei.com (10.201.108.188) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Wed, 3 Jun 2020 16:11:50 +0100
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Wed, 3 Jun 2020 17:11:49 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <tiwai@suse.de>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH 2/2] ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()
+Date:   Wed, 3 Jun 2020 17:08:21 +0200
+Message-ID: <20200603150821.8607-2-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200603150821.8607-1-roberto.sassu@huawei.com>
+References: <20200603150821.8607-1-roberto.sassu@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
+ fraeml714-chm.china.huawei.com (10.206.15.33)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+If the template field 'd' is chosen and the digest to be added to the
+measurement entry was not calculated with SHA1 or MD5, it is
+recalculated with SHA1, by using the passed file descriptor. However, this
+cannot be done for boot_aggregate, because there is no file descriptor.
 
-we need to decide how to continue with the lan743x patch for fixed phy support. Thanks everyone for the valuable time.
+This patch adds a call to ima_calc_boot_aggregate() in
+ima_eventdigest_init(), so that the digest can be recalculated also for the
+boot_aggregate entry.
 
-Summary of the development steps so far:
-The patch initially had low influence on the installed base, but lacked some compatibility to Linux best practices. During the review process we found improvement potential. We decided to make the patch more similar to the majority of Linux drivers, by avoiding a special autodetection silicon feature that is unique. However, now, with more test hardware available, this road becomes more difficult than we initially assumed.
+Cc: stable@vger.kernel.org # 3.13.x
+Fixes: 3ce1217d6cd5d ("ima: define template fields library and new helpers")
+Reported-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ security/integrity/ima/ima.h              |  3 ++-
+ security/integrity/ima/ima_crypto.c       |  6 +++---
+ security/integrity/ima/ima_init.c         |  2 +-
+ security/integrity/ima/ima_template_lib.c | 18 ++++++++++++++++++
+ 4 files changed, 24 insertions(+), 5 deletions(-)
 
-Would it be ok to split the topics into two distinct patches ?
-
-Topic a: New feature: Add fixed link and RGMII support in a minimal invasive way. (Including fixing a reboot-issue that the last patch fixed.)
-
-Topic b: Refactor old driver: Understand, and if possible remove, the silicon’s Mac-Phy auto-negotiation feature.
-
-Maybe splitting distinct features into distinct patches is the most defensive approach, now that device testing disconfirmed our promising approach ?
-
-Thanks everyone for cooperating on this feature,
-Roelof
-
-
-> Roelof Berg <rberg@berg-solutions.de>:
-> 
-> Testing note [...]
-> - Different from prior approaches it affects the installed base. So we need some more testing (with hardware I don’t have available yet) and I’m in contact with Microchip already.
-> 
-> Thanks for guiding us to a proper solution,
-> Roelof Berg
-> 
->> . The automatic speed and duplex detection of the lan743x silicon
->> between mac and phy is disabled.
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 02796473238b..df93ac258e01 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -57,6 +57,7 @@ extern int ima_hash_algo_idx __ro_after_init;
+ extern int ima_extra_slots __ro_after_init;
+ extern int ima_appraise;
+ extern struct tpm_chip *ima_tpm_chip;
++extern const char boot_aggregate_name[];
+ 
+ /* IMA event related data */
+ struct ima_event_data {
+@@ -144,7 +145,7 @@ int ima_calc_buffer_hash(const void *buf, loff_t len,
+ 			 struct ima_digest_data *hash);
+ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+ 			      struct ima_template_entry *entry);
+-int __init ima_calc_boot_aggregate(struct ima_digest_data *hash);
++int ima_calc_boot_aggregate(struct ima_digest_data *hash);
+ void ima_add_violation(struct file *file, const unsigned char *filename,
+ 		       struct integrity_iint_cache *iint,
+ 		       const char *op, const char *cause);
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index f3a7f4eb1fc1..ba5cc3264240 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -806,8 +806,8 @@ static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
+  * hash algorithm for reading the TPM PCRs as for calculating the boot
+  * aggregate digest as stored in the measurement list.
+  */
+-static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+-					      struct crypto_shash *tfm)
++static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
++				       struct crypto_shash *tfm)
+ {
+ 	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
+ 	int rc;
+@@ -835,7 +835,7 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+ 	return rc;
+ }
+ 
+-int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
++int ima_calc_boot_aggregate(struct ima_digest_data *hash)
+ {
+ 	struct crypto_shash *tfm;
+ 	u16 crypto_id, alg_id;
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index fc1e1002b48d..4902fe7bd570 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -19,7 +19,7 @@
+ #include "ima.h"
+ 
+ /* name for boot aggregate entry */
+-static const char boot_aggregate_name[] = "boot_aggregate";
++const char boot_aggregate_name[] = "boot_aggregate";
+ struct tpm_chip *ima_tpm_chip;
+ 
+ /* Add the boot aggregate to the IMA measurement list and extend
+diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+index 9cd1e50f3ccc..635c6ac05050 100644
+--- a/security/integrity/ima/ima_template_lib.c
++++ b/security/integrity/ima/ima_template_lib.c
+@@ -286,6 +286,24 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
+ 		goto out;
+ 	}
+ 
++	if ((const char *)event_data->filename == boot_aggregate_name) {
++		if (ima_tpm_chip) {
++			hash.hdr.algo = HASH_ALGO_SHA1;
++			result = ima_calc_boot_aggregate(&hash.hdr);
++
++			/* algo can change depending on available PCR banks */
++			if (!result && hash.hdr.algo != HASH_ALGO_SHA1)
++				result = -EINVAL;
++
++			if (result < 0)
++				memset(&hash, 0, sizeof(hash));
++		}
++
++		cur_digest = hash.hdr.digest;
++		cur_digestsize = hash_digest_size[HASH_ALGO_SHA1];
++		goto out;
++	}
++
+ 	if (!event_data->file)	/* missing info to re-calculate the digest */
+ 		return -EINVAL;
+ 
+-- 
+2.17.1
 
