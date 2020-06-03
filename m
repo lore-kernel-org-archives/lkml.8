@@ -2,117 +2,139 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0126EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D82C02077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0A62067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nhVTSB5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgFCKHI (ORCPT
+        id S1726785AbgFCKH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:07:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46456 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725854AbgFCKHH (ORCPT
+        Wed, 3 Jun 2020 06:07:29 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43406 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbgFCKH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:07:07 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 053A3CKf015509;
-        Wed, 3 Jun 2020 06:06:57 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31e3w5t93y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 06:06:56 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 053A4WIX021346;
-        Wed, 3 Jun 2020 06:06:56 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31e3w5t93f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 06:06:56 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 053A02EZ018295;
-        Wed, 3 Jun 2020 10:06:54 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 31bf47ysjb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 10:06:54 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 053A6qVo45350920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Jun 2020 10:06:52 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 43E3552059;
-        Wed,  3 Jun 2020 10:06:52 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.36.151])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BE4A452054;
-        Wed,  3 Jun 2020 10:06:49 +0000 (GMT)
-Subject: Re: linux-next test error: BUG: using smp_processor_id() in
- preemptible [ADDR] code: syz-fuzzer/6792
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com>,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-References: <20200602145256.9236-1-hdanton@sina.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Wed, 3 Jun 2020 15:36:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 3 Jun 2020 06:07:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591178848; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=uyzsI0JW6ZqWgRjfRioirvwF2C7h2JnRAHdFXXPljts=;
+ b=nhVTSB5ybpO8RoJvH6Vwv2fEnQSzpCs+jXlDfuDB4IJzdTs87+7MTqls/dnq6rnv0vnNcFwo
+ Z5HT6r1LUmMh2tBGS3S2uM9TFE9iQ2xm6kiy0qhrc7X/UZX5ovnugnCWYcUVdX9oEKq2VJeh
+ gzg36FXRcqVXnVEo8sj5jUeIBSg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5ed7764f09c3530d1278f8ad (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 10:07:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AD5D4C4339C; Wed,  3 Jun 2020 10:07:11 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: govinds)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB560C433CA;
+        Wed,  3 Jun 2020 10:07:10 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200602145256.9236-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20200603100649.BE4A452054@d06av21.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-03_06:2020-06-02,2020-06-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- phishscore=0 clxscore=1015 adultscore=0 cotscore=-2147483648
- suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006030074
+Date:   Wed, 03 Jun 2020 15:37:10 +0530
+From:   govinds@codeaurora.org
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rakesh Pillai <pillair@qti.qualcomm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        ath10k <ath10k@lists.infradead.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH] wireless: ath10k: Return early in
+ ath10k_qmi_event_server_exit() to avoid hard crash on reboot
+In-Reply-To: <20200603002715.GA5349@Mani-XPS-13-9360>
+References: <20200602052533.15048-1-john.stultz@linaro.org>
+ <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com>
+ <CALAqxLVA1ZQjwEdbX5KGbSyLnMBAzm9PoN_Ta_Z7rBf4w3GOvQ@mail.gmail.com>
+ <CA+ASDXPddgOvEX___unx7N2YsQctsZN+1vkwPbi8Ab_zfwFfzw@mail.gmail.com>
+ <20200603002715.GA5349@Mani-XPS-13-9360>
+Message-ID: <4e0642b9882c41f4c10963b265bf6d9f@codeaurora.org>
+X-Sender: govinds@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mani,
 
-
-On 6/2/20 8:22 PM, Hillf Danton wrote:
+On 2020-06-03 05:57, Manivannan Sadhasivam wrote:
+> On Tue, Jun 02, 2020 at 01:04:26PM -0700, Brian Norris wrote:
+>> On Tue, Jun 2, 2020 at 12:40 PM John Stultz <john.stultz@linaro.org> 
+>> wrote:
+>> > On Tue, Jun 2, 2020 at 12:16 PM Brian Norris <briannorris@chromium.org> wrote:
+>> > > On Mon, Jun 1, 2020 at 10:25 PM John Stultz <john.stultz@linaro.org> wrote:
+>> > > >
+>> > > > Ever since 5.7-rc1, if we call
+>> > > > ath10k_qmi_remove_msa_permission(), the db845c hard crashes on
+>> > > > reboot, resulting in the device getting stuck in the usb crash
+>> > > > debug mode and not coming back up wihthout a hard power off.
+>> > > >
+>> > > > This hack avoids the issue by returning early in
+>> > > > ath10k_qmi_event_server_exit().
+>> > > >
+>> > > > A better solution is very much desired!
+>> > >
+>> > > Any chance you can bisect what caused this? There are a lot of
+>> > > non-ath10k pieces involved in this stuff.
+>> >
+>> > Amit had spent some work on chasing it down to the in kernel qrtr-ns
+>> > work, and reported it here:
+>> >   https://lists.infradead.org/pipermail/ath10k/2020-April/014970.html
+>> >
+>> > But that discussion seemingly stalled out, so I came up with this hack
+>> > to workaround it for us.
+>> 
+>> If I'm reading it right, then that means we should revert this stuff
+>> from v5.7-rc1:
+>> 
+>> 0c2204a4ad71 net: qrtr: Migrate nameservice to kernel from userspace
+>> 
+>> At least, until people can resolve the tail end of that thread. New
+>> features (ath11k, etc.) are not a reason to break existing features
+>> (ath10k/wcn3990).
 > 
-> Tue, 02 Jun 2020 04:20:16 -0700
->> syzbot found the following crash on:
->>
->> HEAD commit:    0e21d462 Add linux-next specific files for 20200602
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=127233ee100000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=ecc1aef35f550ee3
->> dashboard link: https://syzkaller.appspot.com/bug?extid=82f324bb69744c5f6969
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com
->>
->> BUG: using smp_processor_id() in preemptible [00000000] code: syz-fuzzer/6792
->> caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+> I don't agree with this. If you read through the replies to the bug 
+> report,
+> it is clear that NS migration uncovered a corner case or even a bug. So 
+> we
+> should try to fix that indeed.
 > 
-> Fix 42f56b7a4a7d ("ext4: mballoc: introduce pcpu seqcnt for freeing PA
-> to improve ENOSPC handling") by redefining discard_pa_seq to be a simple
-> regular sequence counter to axe the need of percpu operation.
+> Govind: Did you get chance to work on fixing this issue?
+> 
 
-Why remove percpu seqcnt? IIUC, percpu are much better in case of a 
-multi-threaded use case which could run and allocate blocks in parallel.
-Whereas a updating a simple variable across different cpus may lead to 
-cacheline bouncing problem.
-Since in this case we can very well have a use case of multiple threads 
-trying to allocate blocks at the same time, so why change this to a 
-simple seqcnt from percpu seqcnt?
+I have done basic testing by moving msa map/unmap from qmi service 
+callbacks to init/de-init path.
+I will send patch for review.
+Reason for del_server needs to investigated from rproc side.
 
--ritesh
+> Thanks,
+> Mani
+> 
+>> 
+>> Brian
+
+Thanks,
+Govind
