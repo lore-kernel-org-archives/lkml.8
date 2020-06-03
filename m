@@ -2,237 +2,164 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0835AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC16207ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwNfjjxS"
+	by mail.kernel.org (Postfix) with ESMTP id E60122068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgFCGyx (ORCPT
+        id S1726186AbgFCGy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:54:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgFCGyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:54:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB73C05BD43;
-        Tue,  2 Jun 2020 23:54:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id p5so1050706wrw.9;
-        Tue, 02 Jun 2020 23:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iUBsdEKJAkfjHMo0uDdBH4dW4uh7o5mZZx0Dc9KTBTk=;
-        b=AwNfjjxS1cUD55/h3hOFycmoypbBI5X42YF3aEolsLoOBplbESjY1f12w174bq7K14
-         uzbbtQb+IbyDyQi9SllYzG2/Qw5+QRPMfty5hRTW0/c392B7NG0iMGO3qxnV8UP8qYU/
-         xYyQ2K85Q0IS+XVwwqLaqWZzIxHp+zgkrHe5BnexKPewHtWaBDXv3JrSrtCK9s8KxPui
-         /ELfDJrRtJGUcsEbeW9q11mKZQ76f94zBLYMMOOFdtYDnui8UAnXmmbrBNQCrzCeG6Gt
-         b1E8Zfo6d8LNgebsyC/3C1hjsAqmhcMhGifsS6Z5SmE49JihAMcSbsMHioH03fGWDP7I
-         h9xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iUBsdEKJAkfjHMo0uDdBH4dW4uh7o5mZZx0Dc9KTBTk=;
-        b=FPvoJhJsc5datV9lNKxiqTL6a3thq6qIJWA05U3DXWxKdkGFKDt/TRxuLa0L4wbRHr
-         KKFz/cWJ/Wkpf1/FUXxmX5zcpIEjnfGuLpDCypEFifT7jhokSVev0Nnc7feA3qapvHLB
-         0a7rHCJdUk8lNpFRBJo+dolTVlEIDrIF1vSyj9BFlDy0AAL35ASS73IQIt4QUYSzuE4r
-         2k6pRJUvYdqAsP06DJTTmwY+MHoiRhP9dDfvOEF8EGfzBj3nX7G4uhJmMpRaIFbDGvCs
-         x1OroMsswmcD/JboOK5vKyPrr3acc7ZDF/drSMYehnb5MJnIkzSPNlLwve7e/5xMpcKY
-         4yrQ==
-X-Gm-Message-State: AOAM531PtcMqX+eIsQ3i7uwHWqbYnb387e55v/66ZA+rN+LR/FWtxF5z
-        XuGgWRgsfLc/LA5Qgr+SRpg=
-X-Google-Smtp-Source: ABdhPJzcGV71nUSVwGdwK4D4aesXZdcFTXhroW1sMX+bF3SzZMFFR6bPKV/wD7lQn77gMkS415BE7Q==
-X-Received: by 2002:adf:9d8e:: with SMTP id p14mr28717754wre.236.1591167290482;
-        Tue, 02 Jun 2020 23:54:50 -0700 (PDT)
-Received: from ubuntu18_2.cisco.com ([173.38.220.42])
-        by smtp.gmail.com with ESMTPSA id r7sm1494357wmb.32.2020.06.02.23.54.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 23:54:49 -0700 (PDT)
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, ahabdels@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, yuehaibing@huawei.com, eric.dumazet@gmail.com,
-        david.lebrun@uclouvain.be
-Subject: [net] seg6: fix seg6_validate_srh() to avoid slab-out-of-bounds
-Date:   Wed,  3 Jun 2020 06:54:42 +0000
-Message-Id: <20200603065442.2745-1-ahabdels@gmail.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 3 Jun 2020 02:54:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38324 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgFCGyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:54:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 46BC7ABCF;
+        Wed,  3 Jun 2020 06:54:55 +0000 (UTC)
+Date:   Wed, 03 Jun 2020 08:54:51 +0200
+Message-ID: <s5hblm0fxl0.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Johan Hovold <johan@kernel.org>,
+        Hui Wang <hui.wang@canonical.com>,
+        Szabolcs =?UTF-8?B?U3rFkWtl?= <szszoke.code@gmail.com>,
+        <alsa-devel@alsa-project.org>, <linux-usb@vger.kernel.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] sound: usb: pcm: fix incorrect power state when playing sound after PM_AUTO suspend
+In-Reply-To: <s5heeqwfyti.wl-tiwai@suse.de>
+References: <s5hpnahhbz8.wl-tiwai@suse.de>
+        <1591153515.23525.50.camel@mtkswgap22>
+        <s5heeqwfyti.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The seg6_validate_srh() is used to validate SRH for three cases:
+On Wed, 03 Jun 2020 08:28:09 +0200,
+Takashi Iwai wrote:
+> 
+> And, the most suspicious case is the last one,
+> chip->num_suspended-intf.  It means that the device has multiple
+> USB interfaces and they went to suspend, while the resume isn't
+> performed for the all suspended interfaces in return.
 
-case1: SRH of data-plane SRv6 packets to be processed by the Linux kernel.
-Case2: SRH of the netlink message received  from user-space (iproute2)
-Case3: SRH injected into packets through setsockopt
+If this is the cause, a patch like below might help.
+It gets/puts the all assigned interfaced instead of only the primary
+one.
 
-In case1, the SRH can be encoded in the Reduced way (i.e., first SID is
-carried in DA only and not represented as SID in the SRH) and the
-seg6_validate_srh() now handles this case correctly.
 
-In case2 and case3, the SRH shouldn’t be encoded in the Reduced way
-otherwise we lose the first segment (i.e., the first hop).
+Takashi
 
-The current implementation of the seg6_validate_srh() allow SRH of case2
-and case3 to be encoded in the Reduced way. This leads a slab-out-of-bounds
-problem.
-
-This patch verifies SRH of case1, case2 and case3. Allowing case1 to be
-reduced while preventing SRH of case2 and case3 from being reduced .
-
-Reported-by: syzbot+e8c028b62439eac42073@syzkaller.appspotmail.com
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Fixes: 0cb7498f234e ("seg6: fix SRH processing to comply with RFC8754")
-Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
 ---
- include/net/seg6.h       |  2 +-
- net/core/filter.c        |  2 +-
- net/ipv6/ipv6_sockglue.c |  2 +-
- net/ipv6/seg6.c          | 16 ++++++++++------
- net/ipv6/seg6_iptunnel.c |  2 +-
- net/ipv6/seg6_local.c    |  6 +++---
- 6 files changed, 17 insertions(+), 13 deletions(-)
-
-diff --git a/include/net/seg6.h b/include/net/seg6.h
-index 640724b35273..9d19c15e8545 100644
---- a/include/net/seg6.h
-+++ b/include/net/seg6.h
-@@ -57,7 +57,7 @@ extern void seg6_iptunnel_exit(void);
- extern int seg6_local_init(void);
- extern void seg6_local_exit(void);
- 
--extern bool seg6_validate_srh(struct ipv6_sr_hdr *srh, int len);
-+extern bool seg6_validate_srh(struct ipv6_sr_hdr *srh, int len, bool reduced);
- extern int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh,
- 			     int proto);
- extern int seg6_do_srh_inline(struct sk_buff *skb, struct ipv6_sr_hdr *osrh);
-diff --git a/net/core/filter.c b/net/core/filter.c
-index ae82bcb03124..472bdb75849f 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5012,7 +5012,7 @@ static int bpf_push_seg6_encap(struct sk_buff *skb, u32 type, void *hdr, u32 len
- 	int err;
- 	struct ipv6_sr_hdr *srh = (struct ipv6_sr_hdr *)hdr;
- 
--	if (!seg6_validate_srh(srh, len))
-+	if (!seg6_validate_srh(srh, len, false))
- 		return -EINVAL;
- 
- 	switch (type) {
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 2c843ff5e3a9..20576e87a5f7 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -493,7 +493,7 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 				struct ipv6_sr_hdr *srh = (struct ipv6_sr_hdr *)
- 							  opt->srcrt;
- 
--				if (!seg6_validate_srh(srh, optlen))
-+				if (!seg6_validate_srh(srh, optlen, false))
- 					goto sticky_done;
- 				break;
- 			}
-diff --git a/net/ipv6/seg6.c b/net/ipv6/seg6.c
-index 37b434293bda..cd43e831de3e 100644
---- a/net/ipv6/seg6.c
-+++ b/net/ipv6/seg6.c
-@@ -25,7 +25,7 @@
- #include <net/seg6_hmac.h>
- #endif
- 
--bool seg6_validate_srh(struct ipv6_sr_hdr *srh, int len)
-+bool seg6_validate_srh(struct ipv6_sr_hdr *srh, int len, bool reduced)
- {
- 	unsigned int tlv_offset;
- 	int max_last_entry;
-@@ -37,13 +37,17 @@ bool seg6_validate_srh(struct ipv6_sr_hdr *srh, int len)
- 	if (((srh->hdrlen + 1) << 3) != len)
- 		return false;
- 
--	max_last_entry = (srh->hdrlen / 2) - 1;
--
--	if (srh->first_segment > max_last_entry)
-+	if (!reduced && srh->segments_left > srh->first_segment) {
- 		return false;
-+	} else {
-+		max_last_entry = (srh->hdrlen / 2) - 1;
- 
--	if (srh->segments_left > srh->first_segment + 1)
--		return false;
-+		if (srh->first_segment > max_last_entry)
-+			return false;
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -634,7 +634,6 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 								   id, &chip);
+ 					if (err < 0)
+ 						goto __error;
+-					chip->pm_intf = intf;
+ 					break;
+ 				} else if (vid[i] != -1 || pid[i] != -1) {
+ 					dev_info(&dev->dev,
+@@ -651,6 +650,13 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 			goto __error;
+ 		}
+ 	}
 +
-+		if (srh->segments_left > srh->first_segment + 1)
-+			return false;
++	if (chip->num_interfaces >= MAX_CARD_INTERFACES) {
++		dev_info(&dev->dev, "Too many interfaces assigned to the single USB-audio card\n");
++		err = -EINVAL;
++		goto __error;
 +	}
++
+ 	dev_set_drvdata(&dev->dev, chip);
  
- 	tlv_offset = sizeof(*srh) + ((srh->first_segment + 1) << 4);
- 
-diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
-index c7cbfeae94f5..e0e9f48ab14f 100644
---- a/net/ipv6/seg6_iptunnel.c
-+++ b/net/ipv6/seg6_iptunnel.c
-@@ -426,7 +426,7 @@ static int seg6_build_state(struct net *net, struct nlattr *nla,
+ 	/*
+@@ -703,6 +709,7 @@ static int usb_audio_probe(struct usb_interface *intf,
  	}
  
- 	/* verify that SRH is consistent */
--	if (!seg6_validate_srh(tuninfo->srh, tuninfo_len - sizeof(*tuninfo)))
-+	if (!seg6_validate_srh(tuninfo->srh, tuninfo_len - sizeof(*tuninfo), false))
- 		return -EINVAL;
+ 	usb_chip[chip->index] = chip;
++	chip->intf[chip->num_interfaces] = intf;
+ 	chip->num_interfaces++;
+ 	usb_set_intfdata(intf, chip);
+ 	atomic_dec(&chip->active);
+@@ -818,19 +825,36 @@ void snd_usb_unlock_shutdown(struct snd_usb_audio *chip)
  
- 	newts = lwtunnel_state_alloc(tuninfo_len + sizeof(*slwt));
-diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
-index 52493423f329..eba23279912d 100644
---- a/net/ipv6/seg6_local.c
-+++ b/net/ipv6/seg6_local.c
-@@ -87,7 +87,7 @@ static struct ipv6_sr_hdr *get_srh(struct sk_buff *skb)
- 	 */
- 	srh = (struct ipv6_sr_hdr *)(skb->data + srhoff);
+ int snd_usb_autoresume(struct snd_usb_audio *chip)
+ {
++	int i, err;
++
+ 	if (atomic_read(&chip->shutdown))
+ 		return -EIO;
+-	if (atomic_inc_return(&chip->active) == 1)
+-		return usb_autopm_get_interface(chip->pm_intf);
++	if (atomic_inc_return(&chip->active) != 1)
++		return 0;
++
++	for (i = 0; i < chip->num_interfaces; i++) {
++		err = usb_autopm_get_interface(chip->intf[i]);
++		if (err < 0) {
++			/* rollback */
++			while (--i >= 0)
++				usb_autopm_put_interface(chip->intf[i]);
++			return err;
++		}
++	}
+ 	return 0;
+ }
  
--	if (!seg6_validate_srh(srh, len))
-+	if (!seg6_validate_srh(srh, len, true))
- 		return NULL;
+ void snd_usb_autosuspend(struct snd_usb_audio *chip)
+ {
++	int i;
++
+ 	if (atomic_read(&chip->shutdown))
+ 		return;
+-	if (atomic_dec_and_test(&chip->active))
+-		usb_autopm_put_interface(chip->pm_intf);
++	if (!atomic_dec_and_test(&chip->active))
++		return;
++
++	for (i = 0; i < chip->num_interfaces; i++)
++		usb_autopm_put_interface(chip->intf[i]);
+ }
  
- 	return srh;
-@@ -495,7 +495,7 @@ bool seg6_bpf_has_valid_srh(struct sk_buff *skb)
- 			return false;
+ static int usb_audio_suspend(struct usb_interface *intf, pm_message_t message)
+diff --git a/sound/usb/usbaudio.h b/sound/usb/usbaudio.h
+--- a/sound/usb/usbaudio.h
++++ b/sound/usb/usbaudio.h
+@@ -19,11 +19,13 @@
+ struct media_device;
+ struct media_intf_devnode;
  
- 		srh->hdrlen = (u8)(srh_state->hdrlen >> 3);
--		if (!seg6_validate_srh(srh, (srh->hdrlen + 1) << 3))
-+		if (!seg6_validate_srh(srh, (srh->hdrlen + 1) << 3, true))
- 			return false;
- 
- 		srh_state->valid = true;
-@@ -670,7 +670,7 @@ static int parse_nla_srh(struct nlattr **attrs, struct seg6_local_lwt *slwt)
- 	if (len < sizeof(*srh) + sizeof(struct in6_addr))
- 		return -EINVAL;
- 
--	if (!seg6_validate_srh(srh, len))
-+	if (!seg6_validate_srh(srh, len, false))
- 		return -EINVAL;
- 
- 	slwt->srh = kmemdup(srh, len, GFP_KERNEL);
--- 
-2.17.1
-
++#define MAX_CARD_INTERFACES	16
++
+ struct snd_usb_audio {
+ 	int index;
+ 	struct usb_device *dev;
+ 	struct snd_card *card;
+-	struct usb_interface *pm_intf;
++	struct usb_interface *intf[MAX_CARD_INTERFACES];
+ 	u32 usb_id;
+ 	struct mutex mutex;
+ 	unsigned int autosuspended:1;	
