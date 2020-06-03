@@ -2,137 +2,248 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2682C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CDD2074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591211129;
-	bh=Q/m5m0oN16XVkE9B8qyre3sjNLjlsvtMr3faOM5/GEY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bg5MWQEpmYWgSrezB7aCvClpqfD/uczDzvBx0cHKl6HvRwEvZKwf/45r9zgwv3lT7
-	 Gxl5UvHH/cMFf4WuxSvzmS71/O8G0Effb8gAy3x19lUX6iYEPKjtRp+SQSfcFaE533
-	 NiChgCu8c+hADBBSVjmLejbXmbZSqdddDKZcxbyQ=
+	by mail.kernel.org (Postfix) with ESMTP id 830BE2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:09:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZTkVR2x8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgFCTF2 (ORCPT
+        id S1726032AbgFCTJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgFCTFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:05:25 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2BA820663;
-        Wed,  3 Jun 2020 19:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591211124;
-        bh=Q/m5m0oN16XVkE9B8qyre3sjNLjlsvtMr3faOM5/GEY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=r0JH+r6+eneNzPkKh10OQRnG/QlntwU5Ile5RdgUbb4S95xZcMJwqqczR44dEoW5/
-         dXJbJhSARnLrJiGeqA21ANe/57CLpUdIlqiMBG6WT4nQbXPfCWGsOTxjBMHqOIWaG6
-         YrNwC3X4+y9pXx6gFBNVV3K2D741HNKSuj4FGwes=
-Date:   Wed, 3 Jun 2020 12:05:22 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        James Morse <james.morse@arm.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v4 08/14] powerpc: add support for folded p4d page
- tables
-Message-Id: <20200603120522.7646d56a23088416a7d3fc1a@linux-foundation.org>
-In-Reply-To: <20200414153455.21744-9-rppt@kernel.org>
-References: <20200414153455.21744-1-rppt@kernel.org>
-        <20200414153455.21744-9-rppt@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Jun 2020 15:09:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgFCTJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 15:09:47 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037DAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:09:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id h185so2230386pfg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 12:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b9J/QiNIqpGtAFKkXggLRfzQjqDQ5mfigXOY5FAlXiM=;
+        b=ZTkVR2x8kUrn+0mo5IyL7Bxo4O7mmo1f3P4NPtAmiiLd1EjAwxJfirJDUPcMpGZ/jU
+         VJS8VVcWOdLakx+zAOBYDRVJ4hmnGlPvzAOTjH/Au5XMfMbqOJR6fBeJSpHImlA8kWWj
+         MBTYVbdEvtStupaj5eSzvSMkFb07Aoeuj9t9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b9J/QiNIqpGtAFKkXggLRfzQjqDQ5mfigXOY5FAlXiM=;
+        b=NxHMD6zu+yvHXUljEkqQaEtGF+giLWhg+KlqHM1N5XDT2j8WE8++pxaHhOIxnvT6TR
+         MeVR4pPob9JVogpakT6VTTu3G9BsHhx0Go8rybGatcNjUjSTZNl+CCKs1GUr4Hq7dHB/
+         /i1eYZNH2uPs8pkl+kT/j3+gBt7HCedKoOt1O04w3K27YSJBVC0r+BMkvSha0XKgRQ38
+         /hEl9C8q2jjP8z/fz+k4uec6csggTQTi7bnCPHKzhxLwAKC1SOgAFXsoV+uGbpkRSmdF
+         ImOUX8kD4oezEZvqVe4Did/qSME60ccRqAt+Y4eZgaJoXJzNUFIAQp+oqD+I+mU0MPHs
+         gc+Q==
+X-Gm-Message-State: AOAM532TEv7SRbLpq5QF+yctsAX4FxKxXfHlliCOxI1LAOoogFDh5+Mk
+        SWq7cxJ6dEIBdkRl/Qd6eLZuBQ==
+X-Google-Smtp-Source: ABdhPJw34TkFUaPPCiTDSQTGWE4UdRAQj+6e0F2fDqqbUTEhn0buXYNqap8uLXUdL5nWeSyNWZfY7Q==
+X-Received: by 2002:a63:df48:: with SMTP id h8mr95867pgj.411.1591211386235;
+        Wed, 03 Jun 2020 12:09:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n189sm418318pfn.108.2020.06.03.12.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 12:09:45 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 12:09:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: seccomp feature development
+Message-ID: <202005181630.60E58CA0C5@keescook>
+References: <202005181120.971232B7B@keescook>
+ <CAG48ez1LrQvR2RHD5-ZCEihL4YT1tVgoAJfGYo+M3QukumX=OQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1LrQvR2RHD5-ZCEihL4YT1tVgoAJfGYo+M3QukumX=OQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 18:34:49 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+[trying to get back to this thread -- I've been distracted]
 
-> Implement primitives necessary for the 4th level folding, add walks of p4d
-> level where appropriate and replace 5level-fixup.h with pgtable-nop4d.h.
+On Tue, May 19, 2020 at 12:39:39AM +0200, Jann Horn wrote:
+> On Mon, May 18, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
+> > ## deep argument inspection
+> >
+> > Background: seccomp users would like to write filters that traverse
+> > the user pointers passed into many syscalls, but seccomp can't do this
+> > dereference for a variety of reasons (mostly involving race conditions and
+> > rearchitecting the entire kernel syscall and copy_from_user() code flows).
+> 
+> Also, other than for syscall entry, it might be worth thinking about
+> whether we want to have a special hook into seccomp for io_uring.
+> io_uring is growing support for more and more syscalls, including
+> things like openat2, connect, sendmsg, splice and so on, and that list
+> is probably just going to grow in the future. If people start wanting
+> to use io_uring in software with seccomp filters, it might be
+> necessary to come up with some mechanism to prevent io_uring from
+> permitting access to almost everything else...
 
-A bunch of new material just landed in linux-next/powerpc.
+/me perks up. Oh my, I hadn't been paying attention -- I thought this
+was strictly for I/O ... like it's named. I will go read up.
 
-The timing is awkward!  I trust this will be going into mainline during
-this merge window?  If not, please drop it and repull after -rc1.
+> [...]
+> > The argument caching bit is, I think, rather mechanical in nature since
+> > it's all "just" internal to the kernel: seccomp can likely adjust how it
+> > allocates seccomp_data (maybe going so far as to have it split across two
+> > pages with the syscall argument struct always starting on the 2nd page
+> > boundary), and copying the EA struct into that page, which will be both
+> > used by the filter and by the syscall.
+> 
+> We could also do the same kind of thing the eBPF verifier does in
+> convert_ctx_accesses(), and rewrite the context accesses to actually
+> go through two different pointers depending on the (constant) offset
+> into seccomp_data.
 
-arch/powerpc/mm/ptdump/ptdump.c:walk_pagetables() was a problem. 
-Here's what I ended up with - please check.
+Ah, as in "for seccomp_data accesses, add offset $foo and for EA struct
+add offset $bar"? Yeah, though my preference is to avoid rewriting the
+filters as much as possible. But yes, that's a good point about not
+requiring them be strictly contiguous.
 
-static void walk_pagetables(struct pg_state *st)
-{
-	unsigned int i;
-	unsigned long addr = st->start_address & PGDIR_MASK;
-	pgd_t *pgd = pgd_offset_k(addr);
+> > I imagine state tracking ("is
+> > there a cached EA?", "what is the address of seccomp_data?", "what is
+> > the address of the EA?") can be associated with the thread struct.
+> 
+> You probably mean the task struct?
 
-	/*
-	 * Traverse the linux pagetable structure and dump pages that are in
-	 * the hash pagetable.
-	 */
-	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
-		p4d_t *p4d = p4d_offset(pgd, 0);
+Yup; think-o.
 
-		if (pgd_none(*pgd) || pgd_is_leaf(*pgd))
-			note_page(st, addr, 1, p4d_val(*p4d), PGDIR_SIZE);
-		else if (is_hugepd(__hugepd(p4d_val(*p4d))))
-			walk_hugepd(st, (hugepd_t *)pgd, addr, PGDIR_SHIFT, 1);
-		else
-			/* pgd exists */
-			walk_pud(st, p4d, addr);
-	}
-}
+> > ## syscall bitmasks
+> 
+> YES PLEASE
 
-Mike's series "mm: consolidate definitions of page table accessors"
-took quite a lot of damage as well.  Patches which needed rework as a
-result of this were:
+I've got a working PoC for this now. It's sneaky.
 
-powerpc-add-support-for-folded-p4d-page-tables-fix.patch
-mm-introduce-include-linux-pgtableh.patch
-mm-reorder-includes-after-introduction-of-linux-pgtableh.patch
-mm-pgtable-add-shortcuts-for-accessing-kernel-pmd-and-pte.patch
-mm-pgtable-add-shortcuts-for-accessing-kernel-pmd-and-pte-fix-2.patch
-mm-consolidate-pte_index-and-pte_offset_-definitions.patch
-mm-consolidate-pmd_index-and-pmd_offset-definitions.patch
-mm-consolidate-pud_index-and-pud_offset-definitions.patch
-mm-consolidate-pgd_index-and-pgd_offset_k-definitions.patch
+> Other options:
+>  - add a "load from read-only memory" opcode and permit specifying the
+> data that should be in that memory when loading the filter
 
+I think you've mentioned something like this before to me, but can you
+remind me the details? If you mean RO userspace memory, don't we still
+run the risk of racing mprotect, etc?
+
+>  - make the seccomp API take an array of (syscall-number,
+> instruction-offset) tuples, and start evaluation of the filter at an
+> offset if it's one of those syscalls
+
+To avoid making cBPF changes, yeah, perhaps have a way to add per-syscall
+filters.
+
+> One more thing that would be really nice: Is there a way we can have
+> 64-bit registers in our seccomp filters? At the moment, every
+> comparison has to turn into three ALU ops, which is pretty messy;
+> libseccomp got that wrong (<https://crbug.com/project-zero/1769>), and
+> it contributes to the horrific code Chrome's BPF generator creates.
+> Here's some pseudocode from my hacky BPF disassembler, which shows
+> pretty much just the filter code for filtering getpriority() and
+> setpriority() in a Chrome renderer, with tons of useless dead code:
+> 
+> 0139         if args[0].high == 0x00000000: [true +3, false +0]
+> 013e           if args[0].low != 0x00000000: [true +157, false +0] -> ret TRAP
+> 0140           if args[1].high == 0x00000000: [true +3, false +0]
+> 0145             if args[1].low == 0x00000000: [true +149, false +0]
+> -> ret ALLOW (syscalls: getpriority, setpriority)
+> 0147             if args[1].high == 0x00000000: [true +3, false +0]
+> 014c               if args[1].low == 0x00000001: [true +142, false
+> +141] -> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da               ret ERRNO
+> 0148             if args[1].high != 0xffffffff: [true +142, false +0]
+> -> ret TRAP
+> 014a             if args[1].low NO-COMMON-BITS 0x80000000: [true +140,
+> false +0] -> ret TRAP
+> 014c             if args[1].low == 0x00000001: [true +142, false +141]
+> -> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da             ret ERRNO
+> 0141           if args[1].high != 0xffffffff: [true +149, false +0] -> ret TRAP
+> 0143           if args[1].low NO-COMMON-BITS 0x80000000: [true +147,
+> false +0] -> ret TRAP
+> 0145           if args[1].low == 0x00000000: [true +149, false +0] ->
+> ret ALLOW (syscalls: getpriority, setpriority)
+> 0147           if args[1].high == 0x00000000: [true +3, false +0]
+> 014c             if args[1].low == 0x00000001: [true +142, false +141]
+> -> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da             ret ERRNO
+> 0148           if args[1].high != 0xffffffff: [true +142, false +0] -> ret TRAP
+> 014a           if args[1].low NO-COMMON-BITS 0x80000000: [true +140,
+> false +0] -> ret TRAP
+> 014c           if args[1].low == 0x00000001: [true +142, false +141]
+> -> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da           ret ERRNO
+> 013a         if args[0].high != 0xffffffff: [true +156, false +0] -> ret TRAP
+> 013c         if args[0].low NO-COMMON-BITS 0x80000000: [true +154,
+> false +0] -> ret TRAP
+> 013e         if args[0].low != 0x00000000: [true +157, false +0] -> ret TRAP
+> 0140         if args[1].high == 0x00000000: [true +3, false +0]
+> 0145           if args[1].low == 0x00000000: [true +149, false +0] ->
+> ret ALLOW (syscalls: getpriority, setpriority)
+> 0147           if args[1].high == 0x00000000: [true +3, false +0]
+> 014c             if args[1].low == 0x00000001: [true +142, false +141]
+> -> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da             ret ERRNO
+> 0148           if args[1].high != 0xffffffff: [true +142, false +0] -> ret TRAP
+> 014a           if args[1].low NO-COMMON-BITS 0x80000000: [true +140,
+> false +0] -> ret TRAP
+> 014c           if args[1].low == 0x00000001: [true +142, false +141]
+> -> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da           ret ERRNO
+> 0141         if args[1].high != 0xffffffff: [true +149, false +0] -> ret TRAP
+> 0143         if args[1].low NO-COMMON-BITS 0x80000000: [true +147,
+> false +0] -> ret TRAP
+> 0145         if args[1].low == 0x00000000: [true +149, false +0] ->
+> ret ALLOW (syscalls: getpriority, setpriority)
+> 0147         if args[1].high == 0x00000000: [true +3, false +0]
+> 014c           if args[1].low == 0x00000001: [true +142, false +141]
+> -> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da           ret ERRNO
+> 0148         if args[1].high != 0xffffffff: [true +142, false +0] -> ret TRAP
+> 014a         if args[1].low NO-COMMON-BITS 0x80000000: [true +140,
+> false +0] -> ret TRAP
+> 014c         if args[1].low == 0x00000001: [true +142, false +141] ->
+> ret ALLOW (syscalls: getpriority, setpriority)
+> 01da         ret ERRNO
+> 
+> which is generated by this little snippet of C++ code:
+> 
+> ResultExpr RestrictGetSetpriority(pid_t target_pid) {
+>   const Arg<int> which(0);
+>   const Arg<int> who(1);
+>   return If(which == PRIO_PROCESS,
+>             Switch(who).CASES((0, target_pid), Allow()).Default(Error(EPERM)))
+>       .Else(CrashSIGSYS());
+> }
+
+What would this look like in eBPF?
+
+> On anything other than 32-bit MIPS, 32-bit powerpc and 32-bit sparc,
+> we're actually already using the eBPF backend infrastructure... so
+> maybe it would be an option to keep enforcing basically the same rules
+> that we currently have for cBPF, but use the eBPF instruction format?
+
+Yeah, I think this might be a good idea just for the reduction in
+complexity for these things. The "unpriv BPF" problem needs to be solved
+for this still, though, yes?
+
+-- 
+Kees Cook
