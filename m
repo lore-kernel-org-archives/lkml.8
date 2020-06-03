@@ -2,90 +2,94 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC345C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE69C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926AB2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C464F2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bbY2Dpz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgFCKJC (ORCPT
+        id S1726735AbgFCKKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:09:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:45858 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgFCKJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:09:01 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4CD7E28B; Wed,  3 Jun 2020 12:08:59 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 12:08:57 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 23/75] x86/boot/compressed/64: Setup GHCB Based VC
- Exception handler
-Message-ID: <20200603100857.GA20099@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-24-joro@8bytes.org>
- <20200511200709.GE25861@zn.tnic>
+        Wed, 3 Jun 2020 06:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgFCKKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:10:14 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039BBC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 03:10:14 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id z64so1316293pfb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 03:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NMA8UswHoR10ZkKb/xOBjfFah7opSPUF3++8T+IfxFs=;
+        b=bbY2Dpz1nYTTpJmtv4MB4qZePaCtWdI2q0cWL16Ks+j0wZKR8/5Ks5hu4TPVUai1sr
+         RYBRPO4yT9Wwkur4+WZRMT1CZ3rIvVrNEiparBSnRiDOx4HgDLldQ26qvGo2mgR+70MW
+         +qD6UM9LZC1GqAPuvv3Om2jH99di6UMYJtvICVhDyQ4cVkXchRRpGdZhQT+FMPbg0Vif
+         oDnFjOudHWJwuHzUq18DbSfR/TV442MJ2N/xa6Ch/Uj4O27wgsOLZVlTXb2zyu5hALVQ
+         c7WL7a9RDlgB9qnUGHusQ+Ygqo9gzRZVMX/faO5lc1xArPgKQdwoA24EsDHFVvKxrTDp
+         QyyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NMA8UswHoR10ZkKb/xOBjfFah7opSPUF3++8T+IfxFs=;
+        b=OrazwTabj3Y88IygtC+FaCTK1WL+dV2slDyc4euOh34HYSIjo+TuJw83AX5HHVCZcQ
+         nStlomE2sBK7p+FxfD/C8IdQ8QUClxs3J6Dw50pRq9YLK9iSfyE4ufHT/o6htBuk19UX
+         tHFKjwcx1hJxmdnMhmgrIz8ELfYuwjT9S15+si/rACIFeYNDckJecm27vbYDdnW5bVKH
+         QIzb5BATnitC12zIexhiLDqttpILBQMXHjERzKWkCZYtWMEt3WfYLmFEYZp9jhlNfjCT
+         rblaMw+ZB8RHwp0kmsl5hk/yqSDCL7YCBJ6isfy1qEZDgxCLNAtIs5kl72zTIRUX6cfo
+         hrxA==
+X-Gm-Message-State: AOAM530XfS149jKbu4QFkZEVrBtxX+LTCq+/gq7wvVuUyH7URD0VW86+
+        ZauaDxoUeuL1PhPYxftcmUYR1A==
+X-Google-Smtp-Source: ABdhPJxkZFOpVSUQKBvnC0ohU+GJ++eICExvZmctfWCbjff/g0JyLwrXZZFZxU+HAISkO3HyZGHNww==
+X-Received: by 2002:aa7:96d7:: with SMTP id h23mr14182341pfq.320.1591179013326;
+        Wed, 03 Jun 2020 03:10:13 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id w6sm1947722pjy.15.2020.06.03.03.10.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jun 2020 03:10:12 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 15:40:10 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        guohanjun@huawei.com, ionela.voinescu@arm.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+Message-ID: <20200603101010.alijrfmte2c6xv5c@vireshk-i7>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+ <20200603075200.hbyofgcyiwocl565@vireshk-i7>
+ <20200603100727.GB7259@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511200709.GE25861@zn.tnic>
+In-Reply-To: <20200603100727.GB7259@bogus>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:07:09PM +0200, Borislav Petkov wrote:
-> On Tue, Apr 28, 2020 at 05:16:33PM +0200, Joerg Roedel wrote:
-> > @@ -63,3 +175,45 @@ void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
-> >  	while (true)
-> >  		asm volatile("hlt\n");
-> >  }
-> > +
-> > +static enum es_result vc_insn_string_read(struct es_em_ctxt *ctxt,
-> > +					  void *src, char *buf,
-> > +					  unsigned int data_size,
-> > +					  unsigned int count,
-> > +					  bool backwards)
-> > +{
-> > +	int i, b = backwards ? -1 : 1;
-> > +	enum es_result ret = ES_OK;
-> > +
-> > +	for (i = 0; i < count; i++) {
-> > +		void *s = src + (i * data_size * b);
-> > +		char *d = buf + (i * data_size);
-> 
-> >From a previous review:
-> 
-> Where are we checking whether that count is not exceeding @buf or
-> similar discrepancies?
+On 03-06-20, 11:07, Sudeep Holla wrote:
+> But I have another question. If we can detect that CPPC on some platforms
+> rely on CPU registers(I assume FFH registers here and not system/io/...
+> type of GAS registers), can we set dvfs_on_any_cpu(can't recall exact
+> flag name) to false if not already done to prevent such issues. Or I am
+> talking non-sense as it may be applicable only for _set operation and
 
-These two functions are only called from vc_handle_ioio() and buf always
-points to ghcb->shared_buffer.
+          Yes, non-sense :)
 
-In general, the caller has to make sure that sizeof(*buf) is at least
-data_size*count, and handle_ioio() calculates count based on the size of
-*buf.
+> not _get.
 
-
-	Joerg
+-- 
+viresh
