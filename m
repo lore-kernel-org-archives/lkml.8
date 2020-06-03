@@ -2,149 +2,135 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3288FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10ED320738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6816520678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgFCL7x (ORCPT
+        id S1726084AbgFCMAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:59:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36296 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCL7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:59:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 94970AC7F;
-        Wed,  3 Jun 2020 11:59:53 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 13:59:46 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, jason.wessel@windriver.com,
-        dianders@chromium.org, sergey.senozhatsky@gmail.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] kdb: Switch to use safer dbg_io_ops over console
- APIs
-Message-ID: <20200603115944.GF14855@linux-b0ei>
-References: <1591168935-6382-1-git-send-email-sumit.garg@linaro.org>
- <1591168935-6382-5-git-send-email-sumit.garg@linaro.org>
- <20200603082503.GD14855@linux-b0ei>
- <20200603091830.azwneja736lvqo4n@holly.lan>
+        Wed, 3 Jun 2020 08:00:42 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2270 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725833AbgFCMAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:00:41 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 8ED93C327E73F3D3C7B3;
+        Wed,  3 Jun 2020 13:00:40 +0100 (IST)
+Received: from [127.0.0.1] (10.47.0.59) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 3 Jun 2020
+ 13:00:39 +0100
+Subject: Re: [PATCH 1/1] blk-mq: get ctx in order to handle BLK_MQ_S_INACTIVE
+ in blk_mq_get_tag()
+To:     Dongli Zhang <dongli.zhang@oracle.com>,
+        <linux-block@vger.kernel.org>
+CC:     <axboe@kernel.dk>, <hare@suse.de>, <dwagner@suse.de>,
+        <ming.lei@redhat.com>, <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200602061749.32029-1-dongli.zhang@oracle.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2114e1a8-253b-9ad7-0991-afc15df365bd@huawei.com>
+Date:   Wed, 3 Jun 2020 12:59:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603091830.azwneja736lvqo4n@holly.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200602061749.32029-1-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.0.59]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-06-03 10:18:30, Daniel Thompson wrote:
-> On Wed, Jun 03, 2020 at 10:25:04AM +0200, Petr Mladek wrote:
-> > On Wed 2020-06-03 12:52:15, Sumit Garg wrote:
-> > > In kgdb context, calling console handlers aren't safe due to locks used
-> > > in those handlers which could in turn lead to a deadlock. Although, using
-> > > oops_in_progress increases the chance to bypass locks in most console
-> > > handlers but it might not be sufficient enough in case a console uses
-> > > more locks (VT/TTY is good example).
-> > > 
-> > > Currently when a driver provides both polling I/O and a console then kdb
-> > > will output using the console. We can increase robustness by using the
-> > > currently active polling I/O driver (which should be lockless) instead
-> > > of the corresponding console. For several common cases (e.g. an
-> > > embedded system with a single serial port that is used both for console
-> > > output and debugger I/O) this will result in no console handler being
-> > > used.
-> > > 
-> > > In order to achieve this we need to reverse the order of preference to
-> > > use dbg_io_ops (uses polling I/O mode) over console APIs. So we just
-> > > store "struct console" that represents debugger I/O in dbg_io_ops and
-> > > while emitting kdb messages, skip console that matches dbg_io_ops
-> > > console in order to avoid duplicate messages. After this change,
-> > > "is_console" param becomes redundant and hence removed.
-> > > 
-> > > diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> > > index 4139698..6e182aa 100644
-> > > --- a/drivers/tty/serial/kgdboc.c
-> > > +++ b/drivers/tty/serial/kgdboc.c
-> > > @@ -558,6 +557,7 @@ static int __init kgdboc_earlycon_init(char *opt)
-> > >  	}
-> > >  
-> > >  	earlycon = con;
-> > > +	kgdboc_earlycon_io_ops.cons = con;
-> > >  	pr_info("Going to register kgdb with earlycon '%s'\n", con->name);
-> > >  	if (kgdb_register_io_module(&kgdboc_earlycon_io_ops) != 0) {
-> > >  		earlycon = NULL;
-> > 
-> > Should we clear kgdboc_earlycon_io_ops.cons here when
-> > kgdb_register_io_module() failed?
-> > 
-> > > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> > > index c62d764..529116b 100644
-> > > --- a/include/linux/kgdb.h
-> > > +++ b/include/linux/kgdb.h
-> > > @@ -276,8 +276,7 @@ struct kgdb_arch {
-> > >   * the I/O driver.
-> > >   * @post_exception: Pointer to a function that will do any cleanup work
-> > >   * for the I/O driver.
-> > > - * @is_console: 1 if the end device is a console 0 if the I/O device is
-> > > - * not a console
-> > > + * @cons: valid if the I/O device is a console; else NULL.
-> > >   */
-> > >  struct kgdb_io {
-> > >  	const char		*name;
-> > > @@ -288,7 +287,7 @@ struct kgdb_io {
-> > >  	void			(*deinit) (void);
-> > >  	void			(*pre_exception) (void);
-> > >  	void			(*post_exception) (void);
-> > > -	int			is_console;
-> > > +	struct console		*cons;
-> > 
-> > Nit: I would call it "con". The trailing 's' makes me feel that that the
-> >      variable points to an array or list of consoles.
+On 02/06/2020 07:17, Dongli Zhang wrote:
+> When scheduler is set, we hit below page fault when we offline cpu.
 > 
-> How strongly do you feel about it?
+> [ 1061.007725] BUG: kernel NULL pointer dereference, address: 0000000000000040
+> [ 1061.008710] #PF: supervisor read access in kernel mode
+> [ 1061.009492] #PF: error_code(0x0000) - not-present page
+> [ 1061.010241] PGD 0 P4D 0
+> [ 1061.010614] Oops: 0000 [#1] SMP PTI
+> [ 1061.011130] CPU: 0 PID: 122 Comm: kworker/0:1H Not tainted 5.7.0-rc7+ #2'
+> ... ...
+> [ 1061.013760] Workqueue: kblockd blk_mq_run_work_fn
+> [ 1061.014446] RIP: 0010:blk_mq_put_tag+0xf/0x30
+> ... ...
+> [ 1061.017726] RSP: 0018:ffffa5c18037fc70 EFLAGS: 00010287
+> [ 1061.018475] RAX: 0000000000000000 RBX: ffffa5c18037fcf0 RCX: 0000000000000004
+> [ 1061.019507] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff911535dc1180
+> ... ...
+> [ 1061.028454] Call Trace:
+> [ 1061.029307]  blk_mq_get_tag+0x26e/0x280
+> [ 1061.029866]  ? wait_woken+0x80/0x80
+> [ 1061.030378]  blk_mq_get_driver_tag+0x99/0x110
+> [ 1061.031009]  blk_mq_dispatch_rq_list+0x107/0x5e0
+> [ 1061.031672]  ? elv_rb_del+0x1a/0x30
+> [ 1061.032178]  blk_mq_do_dispatch_sched+0xe2/0x130
+> [ 1061.032844]  __blk_mq_sched_dispatch_requests+0xcc/0x150
+> [ 1061.033638]  blk_mq_sched_dispatch_requests+0x2b/0x50
+> [ 1061.034239]  __blk_mq_run_hw_queue+0x75/0x110
+> [ 1061.034867]  process_one_work+0x15c/0x370
+> [ 1061.035450]  worker_thread+0x44/0x3d0
+> [ 1061.035980]  kthread+0xf3/0x130
+> [ 1061.036440]  ? max_active_store+0x80/0x80
+> [ 1061.037018]  ? kthread_bind+0x10/0x10
+> [ 1061.037554]  ret_from_fork+0x35/0x40
+> [ 1061.038073] Modules linked in:
+> [ 1061.038543] CR2: 0000000000000040
+> [ 1061.038962] ---[ end trace d20e1df7d028e69f ]---
+> 
+> This is because blk_mq_get_driver_tag() would be used to allocate tag once
+> scheduler (e.g., mq-deadline) is set. 
 
-I do not have strong opinion about it.
+I tried mq-deadline and I did not see this. Anyway else special or 
+specific about your test?
 
-> I'd probably agree with you except that the uart subsystem, which is by
-> far the most prolific supplier of consoles for kgdb to use, calls
-> pointers to single consoles "cons" so I'd prefer to be aligned on
-> terminology.
+However, I see other issues for that (setting the scheduler), that being 
+scsi timeouts when I start running IO and hotplugging CPUs. I should 
+have tested the scheduler != none previously for "blk-mq: improvement 
+CPU hotplug (simplified version) " series ...
 
-You made me curious ;-) I tried to find what names are used for
-struct console variables.
+I'll check Ming's patch "[PATCH] blk-mq: don't fail driver tag 
+allocation because of inactive hctx" for that.
 
-$linux> git grep "struct console \*c" | sed -e "s/^.*\(struct console[[:blank:]]*\*c[a-z]*\).*$/\1/" | sort | uniq -c
-     26 struct console *c
-    181 struct console *co
-     68 struct console *con
-      7 struct console *cons
-     28 struct console *console
-      1 struct console *cs
+Thanks,
+John
 
-and from tty subdirectory:
+However, in order to handle
+> BLK_MQ_S_INACTIVE in blk_mq_get_tag(), we need to set data->ctx for
+> blk_mq_put_tag().
+> 
+> Fixes: bf0beec0607db3c6 ("blk-mq: drain I/O when all CPUs in a hctx are offline")
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+> This is based on for-next because currently the pull request for v5.8 is
+> not picked by mainline.
+> 
+>   block/blk-mq.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 9a36ac1c1fa1..8bf6c06a86c1 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1056,6 +1056,7 @@ bool blk_mq_get_driver_tag(struct request *rq)
+>   {
+>   	struct blk_mq_alloc_data data = {
+>   		.q = rq->q,
+> +		.ctx = rq->mq_ctx,
+>   		.hctx = rq->mq_hctx,
+>   		.flags = BLK_MQ_REQ_NOWAIT,
+>   		.cmd_flags = rq->cmd_flags,
+> 
 
-linux/drivers/tty> git grep "struct console \*c" | sed -e "s/^.*\(struct console[[:blank:]]*\*c[a-z]*\).*$/\1/" | sort | uniq -c
-      8 struct console *c
-    136 struct console *co
-     35 struct console *con
-      4 struct console *cons
-     10 struct console *console
-      1 struct console *cs
-
-
-Anyway, feel free to use whatever you want. I prefer "con".
-But "cons" still looks better than "co" ;-)
-
-Best Regards,
-Petr
