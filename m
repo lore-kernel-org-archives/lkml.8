@@ -2,149 +2,518 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D03320679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AC320734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MYnw2Ywd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgFCJsJ (ORCPT
+        id S1726625AbgFCJsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:48:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:12471 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCJsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:48:09 -0400
-IronPort-SDR: vRUeNr66CzYmMLVANaRq0+HxetS9c7KwSVlWVVLI0kYRKFRYF9iI3mBJrrbFb5zGb/Z7Qc0nRX
- 6h0rak4bR2yQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 02:48:08 -0700
-IronPort-SDR: BkwBQ/BHqe1tonku3ksMYgxt4OD8StANvjvo9vJtQJn4ihY0f+YLmjOugXm+LeJNDB1EUNFCrz
- wef8VnH/rkew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="378049486"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Jun 2020 02:48:04 -0700
-Date:   Wed, 3 Jun 2020 17:48:04 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Konstantin Khlebnikov <koct9i@gmail.com>
-Subject: Re: [PATCH v4 3/4] mm/util.c: remove the VM_WARN_ONCE for
- vm_committed_as underflow check
-Message-ID: <20200603094804.GB89848@shbuild999.sh.intel.com>
-References: <E1703973-38C1-4AFB-94D1-E79DDC6853EE@lca.pw>
+        Wed, 3 Jun 2020 05:48:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54597 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725854AbgFCJsV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:48:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591177698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Blty4RVM0OxHJL/NHjqx9UuA9b/L4at0MlN2/CeoZr4=;
+        b=MYnw2YwdyknB1GWqmKws5KWjmaevCrIot0emc1daeUTCvkoCLgxRm6kUGU2bx8Axh/wsdu
+        SXqslWyMwNdECAbvzrmM8FpK0XB3lngNqSMUBRBxRhflSPEIz+myK4ffvEzLlXNqO3O+j0
+        bTC9FxSYBEJSDU/Ruf/Dlu0iF9U+P8Y=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-410yL_2MPnGrv1Pzhrsm8w-1; Wed, 03 Jun 2020 05:48:16 -0400
+X-MC-Unique: 410yL_2MPnGrv1Pzhrsm8w-1
+Received: by mail-wr1-f71.google.com with SMTP id c14so872152wrm.15
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 02:48:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Blty4RVM0OxHJL/NHjqx9UuA9b/L4at0MlN2/CeoZr4=;
+        b=FQCmwys8uaFXrgWLV8jZJ2vaNvBzqOf4fXrmg1WZfWT0asvwousAmXrDlqdCID+Zk0
+         yWNiINL3UQLaNnKWx2QKKDNYDZhsmtN5zgm9c24dE0qOrQcMFMfiTN58oi/dJEAccOAU
+         5teJUCtDWfNlGeAbUVmRsuuTZS5BVmLC9JEN8XsTe1FlvSJFtrvwWYNjjWS+aVMmCl8/
+         9z7W40DS5BMT0xjyrrULfqCfVIy39Hhr3hluHaaZf6bYAD0c+RCujDcZFtRiVaQOJ7EZ
+         0L6sZjEauE0x6/jC7YSLt6mnHsnBWlih7kN50CJcpmehYYHlyI5JFi+wb7zSFzezbb4w
+         rM4Q==
+X-Gm-Message-State: AOAM531+HOuZjI82G1gdNxeWZhR1FPr9DHdW+zIy+qELiMIYl1ly1oFa
+        0+kna2qSelGQp9Lf7l0KQQGsUlsJgz9TWnVp1Wul8MZCXPYCcTzQotPWfJODKLIrsWEtAR22UJD
+        bSYt0oAQ2FUAnSmZek7UcRnGi
+X-Received: by 2002:a1c:9cd4:: with SMTP id f203mr8439983wme.26.1591177695446;
+        Wed, 03 Jun 2020 02:48:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzyfygPXTzT3jlnnMIv3AVTzzWqChecsI6GLyTj6JKK3NwUH3ya9JANLBbS0lchM4XLuAkjDw==
+X-Received: by 2002:a1c:9cd4:: with SMTP id f203mr8439923wme.26.1591177694742;
+        Wed, 03 Jun 2020 02:48:14 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id d18sm2487469wrn.34.2020.06.03.02.48.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 02:48:13 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 05:48:11 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH RFC 01/13] vhost: option to fetch descriptors through an
+ independent struct
+Message-ID: <20200603045825-mutt-send-email-mst@kernel.org>
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-2-mst@redhat.com>
+ <e35e5df9-7e36-227e-7981-232a62b06607@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <E1703973-38C1-4AFB-94D1-E79DDC6853EE@lca.pw>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <e35e5df9-7e36-227e-7981-232a62b06607@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 12:02:22AM -0400, Qian Cai wrote:
+On Wed, Jun 03, 2020 at 03:13:56PM +0800, Jason Wang wrote:
+> 
+> On 2020/6/2 下午9:05, Michael S. Tsirkin wrote:
+> > The idea is to support multiple ring formats by converting
+> > to a format-independent array of descriptors.
+> > 
+> > This costs extra cycles, but we gain in ability
+> > to fetch a batch of descriptors in one go, which
+> > is good for code cache locality.
+> > 
+> > When used, this causes a minor performance degradation,
+> > it's been kept as simple as possible for ease of review.
+> > A follow-up patch gets us back the performance by adding batching.
+> > 
+> > To simplify benchmarking, I kept the old code around so one can switch
+> > back and forth between old and new code. This will go away in the final
+> > submission.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+> > Link: https://lore.kernel.org/r/20200401183118.8334-2-eperezma@redhat.com
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> >   drivers/vhost/vhost.c | 297 +++++++++++++++++++++++++++++++++++++++++-
+> >   drivers/vhost/vhost.h |  16 +++
+> >   2 files changed, 312 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index 96d9871fa0cb..105fc97af2c8 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -298,6 +298,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+> >   			   struct vhost_virtqueue *vq)
+> >   {
+> >   	vq->num = 1;
+> > +	vq->ndescs = 0;
+> >   	vq->desc = NULL;
+> >   	vq->avail = NULL;
+> >   	vq->used = NULL;
+> > @@ -368,6 +369,9 @@ static int vhost_worker(void *data)
+> >   static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+> >   {
+> > +	kfree(vq->descs);
+> > +	vq->descs = NULL;
+> > +	vq->max_descs = 0;
+> >   	kfree(vq->indirect);
+> >   	vq->indirect = NULL;
+> >   	kfree(vq->log);
+> > @@ -384,6 +388,10 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+> >   	for (i = 0; i < dev->nvqs; ++i) {
+> >   		vq = dev->vqs[i];
+> > +		vq->max_descs = dev->iov_limit;
+> > +		vq->descs = kmalloc_array(vq->max_descs,
+> > +					  sizeof(*vq->descs),
+> > +					  GFP_KERNEL);
+> >   		vq->indirect = kmalloc_array(UIO_MAXIOV,
+> >   					     sizeof(*vq->indirect),
+> >   					     GFP_KERNEL);
+> > @@ -391,7 +399,7 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+> >   					GFP_KERNEL);
+> >   		vq->heads = kmalloc_array(dev->iov_limit, sizeof(*vq->heads),
+> >   					  GFP_KERNEL);
+> > -		if (!vq->indirect || !vq->log || !vq->heads)
+> > +		if (!vq->indirect || !vq->log || !vq->heads || !vq->descs)
+> >   			goto err_nomem;
+> >   	}
+> >   	return 0;
+> > @@ -2277,6 +2285,293 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+> >   }
+> >   EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
+> > +static struct vhost_desc *peek_split_desc(struct vhost_virtqueue *vq)
+> > +{
+> > +	BUG_ON(!vq->ndescs);
+> > +	return &vq->descs[vq->ndescs - 1];
+> > +}
+> > +
+> > +static void pop_split_desc(struct vhost_virtqueue *vq)
+> > +{
+> > +	BUG_ON(!vq->ndescs);
+> > +	--vq->ndescs;
+> > +}
+> > +
+> > +#define VHOST_DESC_FLAGS (VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE | \
+> > +			  VRING_DESC_F_NEXT)
+> > +static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc, u16 id)
+> > +{
+> > +	struct vhost_desc *h;
+> > +
+> > +	if (unlikely(vq->ndescs >= vq->max_descs))
+> > +		return -EINVAL;
+> > +	h = &vq->descs[vq->ndescs++];
+> > +	h->addr = vhost64_to_cpu(vq, desc->addr);
+> > +	h->len = vhost32_to_cpu(vq, desc->len);
+> > +	h->flags = vhost16_to_cpu(vq, desc->flags) & VHOST_DESC_FLAGS;
+> > +	h->id = id;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int fetch_indirect_descs(struct vhost_virtqueue *vq,
+> > +				struct vhost_desc *indirect,
+> > +				u16 head)
+> > +{
+> > +	struct vring_desc desc;
+> > +	unsigned int i = 0, count, found = 0;
+> > +	u32 len = indirect->len;
+> > +	struct iov_iter from;
+> > +	int ret;
+> > +
+> > +	/* Sanity check */
+> > +	if (unlikely(len % sizeof desc)) {
+> > +		vq_err(vq, "Invalid length in indirect descriptor: "
+> > +		       "len 0x%llx not multiple of 0x%zx\n",
+> > +		       (unsigned long long)len,
+> > +		       sizeof desc);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	ret = translate_desc(vq, indirect->addr, len, vq->indirect,
+> > +			     UIO_MAXIOV, VHOST_ACCESS_RO);
+> > +	if (unlikely(ret < 0)) {
+> > +		if (ret != -EAGAIN)
+> > +			vq_err(vq, "Translation failure %d in indirect.\n", ret);
+> > +		return ret;
+> > +	}
+> > +	iov_iter_init(&from, READ, vq->indirect, ret, len);
+> > +
+> > +	/* We will use the result as an address to read from, so most
+> > +	 * architectures only need a compiler barrier here. */
+> > +	read_barrier_depends();
+> > +
+> > +	count = len / sizeof desc;
+> > +	/* Buffers are chained via a 16 bit next field, so
+> > +	 * we can have at most 2^16 of these. */
+> > +	if (unlikely(count > USHRT_MAX + 1)) {
+> > +		vq_err(vq, "Indirect buffer length too big: %d\n",
+> > +		       indirect->len);
+> > +		return -E2BIG;
+> > +	}
+> > +	if (unlikely(vq->ndescs + count > vq->max_descs)) {
+> > +		vq_err(vq, "Too many indirect + direct descs: %d + %d\n",
+> > +		       vq->ndescs, indirect->len);
+> > +		return -E2BIG;
+> > +	}
+> > +
+> > +	do {
+> > +		if (unlikely(++found > count)) {
+> > +			vq_err(vq, "Loop detected: last one at %u "
+> > +			       "indirect size %u\n",
+> > +			       i, count);
+> > +			return -EINVAL;
+> > +		}
+> > +		if (unlikely(!copy_from_iter_full(&desc, sizeof(desc), &from))) {
+> > +			vq_err(vq, "Failed indirect descriptor: idx %d, %zx\n",
+> > +			       i, (size_t)indirect->addr + i * sizeof desc);
+> > +			return -EINVAL;
+> > +		}
+> > +		if (unlikely(desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_INDIRECT))) {
+> > +			vq_err(vq, "Nested indirect descriptor: idx %d, %zx\n",
+> > +			       i, (size_t)indirect->addr + i * sizeof desc);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		push_split_desc(vq, &desc, head);
 > 
 > 
-> > On Jun 1, 2020, at 11:37 PM, Feng Tang <feng.tang@intel.com> wrote:
-> > 
-> > I re-run the same benchmark with v5.7 and 5.7+remove_warning kernels,
-> > the overall performance change is trivial (which is expected)
-> > 
-> >   1330147            +0.1%    1331032        will-it-scale.72.processes
-> > 
-> > But the perf stats of "self" shows big change for __vm_enough_memory() 
-> > 
-> >      0.27            -0.3        0.00        pp.self.__vm_enough_memory
-> > 
-> > I post the full compare result in the end.
+> The error is ignored.
+
+See above:
+
+     	if (unlikely(vq->ndescs + count > vq->max_descs)) 
+
+So it can't fail here, we never fetch unless there's space.
+
+I guess we can add a WARN_ON here.
+
 > 
-> I don’t really see what that means exactly, but I suppose the warning is there for so long and no one seems notice much trouble (or benefit) because of it, so I think you will probably need to come up with a proper justification to explain why it is a trouble now, and how your patchset suddenly start to trigger the warning as well as why it is no better way but to suffer this debuggability regression (probably tiny but still).
+> > +	} while ((i = next_desc(vq, &desc)) != -1);
+> > +	return 0;
+> > +}
+> > +
+> > +static int fetch_descs(struct vhost_virtqueue *vq)
+> > +{
+> > +	unsigned int i, head, found = 0;
+> > +	struct vhost_desc *last;
+> > +	struct vring_desc desc;
+> > +	__virtio16 avail_idx;
+> > +	__virtio16 ring_head;
+> > +	u16 last_avail_idx;
+> > +	int ret;
+> > +
+> > +	/* Check it isn't doing very strange things with descriptor numbers. */
+> > +	last_avail_idx = vq->last_avail_idx;
+> > +
+> > +	if (vq->avail_idx == vq->last_avail_idx) {
+> > +		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+> > +			vq_err(vq, "Failed to access avail idx at %p\n",
+> > +				&vq->avail->idx);
+> > +			return -EFAULT;
+> > +		}
+> > +		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
+> > +
+> > +		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
+> > +			vq_err(vq, "Guest moved used index from %u to %u",
+> > +				last_avail_idx, vq->avail_idx);
+> > +			return -EFAULT;
+> > +		}
+> > +
+> > +		/* If there's nothing new since last we looked, return
+> > +		 * invalid.
+> > +		 */
+> > +		if (vq->avail_idx == last_avail_idx)
+> > +			return vq->num;
+> > +
+> > +		/* Only get avail ring entries after they have been
+> > +		 * exposed by guest.
+> > +		 */
+> > +		smp_rmb();
+> > +	}
+> > +
+> > +	/* Grab the next descriptor number they're advertising */
+> > +	if (unlikely(vhost_get_avail_head(vq, &ring_head, last_avail_idx))) {
+> > +		vq_err(vq, "Failed to read head: idx %d address %p\n",
+> > +		       last_avail_idx,
+> > +		       &vq->avail->ring[last_avail_idx % vq->num]);
+> > +		return -EFAULT;
+> > +	}
+> > +
+> > +	head = vhost16_to_cpu(vq, ring_head);
+> > +
+> > +	/* If their number is silly, that's an error. */
+> > +	if (unlikely(head >= vq->num)) {
+> > +		vq_err(vq, "Guest says index %u > %u is available",
+> > +		       head, vq->num);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	i = head;
+> > +	do {
+> > +		if (unlikely(i >= vq->num)) {
+> > +			vq_err(vq, "Desc index is %u > %u, head = %u",
+> > +			       i, vq->num, head);
+> > +			return -EINVAL;
+> > +		}
+> > +		if (unlikely(++found > vq->num)) {
+> > +			vq_err(vq, "Loop detected: last one at %u "
+> > +			       "vq size %u head %u\n",
+> > +			       i, vq->num, head);
+> > +			return -EINVAL;
+> > +		}
+> > +		ret = vhost_get_desc(vq, &desc, i);
+> > +		if (unlikely(ret)) {
+> > +			vq_err(vq, "Failed to get descriptor: idx %d addr %p\n",
+> > +			       i, vq->desc + i);
+> > +			return -EFAULT;
+> > +		}
+> > +		ret = push_split_desc(vq, &desc, head);
+> > +		if (unlikely(ret)) {
+> > +			vq_err(vq, "Failed to save descriptor: idx %d\n", i);
+> > +			return -EINVAL;
+> > +		}
+> > +	} while ((i = next_desc(vq, &desc)) != -1);
+> > +
+> > +	last = peek_split_desc(vq);
+> > +	if (unlikely(last->flags & VRING_DESC_F_INDIRECT)) {
+> > +		pop_split_desc(vq);
+> > +		ret = fetch_indirect_descs(vq, last, head);
+> 
+> 
+> Note that this means we don't supported chained indirect descriptors which
+> complies the spec but we support this in vhost_get_vq_desc().
 
-Thanks for the suggestion, and I updated the commit log.
+Well the spec says:
+	A driver MUST NOT set both VIRTQ_DESC_F_INDIRECT and VIRTQ_DESC_F_NEXT in flags.
+
+Did I miss anything?
 
 
-From 1633da8228bd3d0dcbbd8df982977ad4594962a1 Mon Sep 17 00:00:00 2001
-From: Feng Tang <feng.tang@intel.com>
-Date: Fri, 29 May 2020 08:48:48 +0800
-Subject: [PATCH] mm/util.c: remove the VM_WARN_ONCE for vm_committed_as
- underflow check
 
-This check was added by 82f71ae4a2b8 ("mm: catch memory commitment underflow")
-in 2014 to have a safety check for issues which have been fixed.
-And there has been few report caught by it, as described in its
-commit log:
 
-: This shouldn't happen any more - the previous two patches fixed
-: the committed_as underflow issues.
-
-But it was really found by Qian Cai when he used the LTP memory
-stress suite to test a RFC patchset, which tries to improve scalability
-of per-cpu counter 'vm_committed_as', by chosing a bigger 'batch' number
-for loose overcommit policies (OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS),
-while keeping current number for OVERCOMMIT_NEVER.
-
-With that patchset, when system firstly uses a loose policy, the
-'vm_committed_as' count could be a big negative value, as its big 'batch'
-number allows a big deviation, then when the policy is changed to
-OVERCOMMIT_NEVER, the 'batch' will be decreased to a much smaller value,
-thus hits this WARN check.
-
-To mitigate this, one proposed solution is to queue work on all online
-CPUs to do a local sync for 'vm_committed_as' when changing policy to
-OVERCOMMIT_NEVER, plus some global syncing to garante the case won't
-be hit.
-
-But this solution is costy and slow, given this check hasn't shown real
-trouble or benefit, simply drop it from one hot path of MM. And perf
-stats does show some tiny saving for removing it.
-
-Reported-by: Qian Cai <cai@lca.pw> 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Cc: Konstantin Khlebnikov <koct9i@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Andi Kleen <andi.kleen@intel.com>
----
- mm/util.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/mm/util.c b/mm/util.c
-index 9b3be03..c63c8e4 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -814,14 +814,6 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
- {
- 	long allowed;
- 
--	/*
--	 * A transient decrease in the value is unlikely, so no need
--	 * READ_ONCE() for vm_committed_as.count.
--	 */
--	VM_WARN_ONCE(data_race(percpu_counter_read(&vm_committed_as) <
--			-(s64)vm_committed_as_batch * num_online_cpus()),
--			"memory commitment underflow");
--
- 	vm_acct_memory(pages);
- 
- 	/*
--- 
-2.7.4
-
+> We probably need either fail early or just support that.
+> 
+> Thanks
+> 
+> 
+> > +		if (unlikely(ret < 0)) {
+> > +			if (ret != -EAGAIN)
+> > +				vq_err(vq, "Failure detected "
+> > +				       "in indirect descriptor at idx %d\n", head);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	/* Assume notifications from guest are disabled at this point,
+> > +	 * if they aren't we would need to update avail_event index. */
+> > +	BUG_ON(!(vq->used_flags & VRING_USED_F_NO_NOTIFY));
+> > +
+> > +	/* On success, increment avail index. */
+> > +	vq->last_avail_idx++;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/* This looks in the virtqueue and for the first available buffer, and converts
+> > + * it to an iovec for convenient access.  Since descriptors consist of some
+> > + * number of output then some number of input descriptors, it's actually two
+> > + * iovecs, but we pack them into one and note how many of each there were.
+> > + *
+> > + * This function returns the descriptor number found, or vq->num (which is
+> > + * never a valid descriptor number) if none was found.  A negative code is
+> > + * returned on error. */
+> > +int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+> > +		      struct iovec iov[], unsigned int iov_size,
+> > +		      unsigned int *out_num, unsigned int *in_num,
+> > +		      struct vhost_log *log, unsigned int *log_num)
+> > +{
+> > +	int ret = fetch_descs(vq);
+> > +	int i;
+> > +
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Now convert to IOV */
+> > +	/* When we start there are none of either input nor output. */
+> > +	*out_num = *in_num = 0;
+> > +	if (unlikely(log))
+> > +		*log_num = 0;
+> > +
+> > +	for (i = 0; i < vq->ndescs; ++i) {
+> > +		unsigned iov_count = *in_num + *out_num;
+> > +		struct vhost_desc *desc = &vq->descs[i];
+> > +		int access;
+> > +
+> > +		if (desc->flags & ~VHOST_DESC_FLAGS) {
+> > +			vq_err(vq, "Unexpected flags: 0x%x at descriptor id 0x%x\n",
+> > +			       desc->flags, desc->id);
+> > +			ret = -EINVAL;
+> > +			goto err;
+> > +		}
+> > +		if (desc->flags & VRING_DESC_F_WRITE)
+> > +			access = VHOST_ACCESS_WO;
+> > +		else
+> > +			access = VHOST_ACCESS_RO;
+> > +		ret = translate_desc(vq, desc->addr,
+> > +				     desc->len, iov + iov_count,
+> > +				     iov_size - iov_count, access);
+> > +		if (unlikely(ret < 0)) {
+> > +			if (ret != -EAGAIN)
+> > +				vq_err(vq, "Translation failure %d descriptor idx %d\n",
+> > +					ret, i);
+> > +			goto err;
+> > +		}
+> > +		if (access == VHOST_ACCESS_WO) {
+> > +			/* If this is an input descriptor,
+> > +			 * increment that count. */
+> > +			*in_num += ret;
+> > +			if (unlikely(log && ret)) {
+> > +				log[*log_num].addr = desc->addr;
+> > +				log[*log_num].len = desc->len;
+> > +				++*log_num;
+> > +			}
+> > +		} else {
+> > +			/* If it's an output descriptor, they're all supposed
+> > +			 * to come before any input descriptors. */
+> > +			if (unlikely(*in_num)) {
+> > +				vq_err(vq, "Descriptor has out after in: "
+> > +				       "idx %d\n", i);
+> > +				ret = -EINVAL;
+> > +				goto err;
+> > +			}
+> > +			*out_num += ret;
+> > +		}
+> > +
+> > +		ret = desc->id;
+> > +	}
+> > +
+> > +	vq->ndescs = 0;
+> > +
+> > +	return ret;
+> > +
+> > +err:
+> > +	vhost_discard_vq_desc(vq, 1);
+> > +	vq->ndescs = 0;
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(vhost_get_vq_desc_batch);
+> > +
+> >   /* Reverse the effect of vhost_get_vq_desc. Useful for error handling. */
+> >   void vhost_discard_vq_desc(struct vhost_virtqueue *vq, int n)
+> >   {
+> > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > index 60cab4c78229..0976a2853935 100644
+> > --- a/drivers/vhost/vhost.h
+> > +++ b/drivers/vhost/vhost.h
+> > @@ -60,6 +60,13 @@ enum vhost_uaddr_type {
+> >   	VHOST_NUM_ADDRS = 3,
+> >   };
+> > +struct vhost_desc {
+> > +	u64 addr;
+> > +	u32 len;
+> > +	u16 flags; /* VRING_DESC_F_WRITE, VRING_DESC_F_NEXT */
+> > +	u16 id;
+> > +};
+> > +
+> >   /* The virtqueue structure describes a queue attached to a device. */
+> >   struct vhost_virtqueue {
+> >   	struct vhost_dev *dev;
+> > @@ -71,6 +78,11 @@ struct vhost_virtqueue {
+> >   	vring_avail_t __user *avail;
+> >   	vring_used_t __user *used;
+> >   	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+> > +
+> > +	struct vhost_desc *descs;
+> > +	int ndescs;
+> > +	int max_descs;
+> > +
+> >   	struct file *kick;
+> >   	struct eventfd_ctx *call_ctx;
+> >   	struct eventfd_ctx *error_ctx;
+> > @@ -175,6 +187,10 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+> >   bool vhost_vq_access_ok(struct vhost_virtqueue *vq);
+> >   bool vhost_log_access_ok(struct vhost_dev *);
+> > +int vhost_get_vq_desc_batch(struct vhost_virtqueue *,
+> > +		      struct iovec iov[], unsigned int iov_count,
+> > +		      unsigned int *out_num, unsigned int *in_num,
+> > +		      struct vhost_log *log, unsigned int *log_num);
+> >   int vhost_get_vq_desc(struct vhost_virtqueue *,
+> >   		      struct iovec iov[], unsigned int iov_count,
+> >   		      unsigned int *out_num, unsigned int *in_num,
 
