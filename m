@@ -2,69 +2,62 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2648C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFC020663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591146612;
-	bh=ZTQHt+zCCq3szqCcZ4aTjWGaCX3dob9j2wXUNRYrp8s=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=RZpIWEP3us0XhrUMi8Udb7MH1PD2ecED5tEhj1v+jEQ1OzXfvAJK61EhKuSZOSJJ5
-	 encpHAQLq6RNEiO/IhwhR77pV4yBElp5c7/Bnyhql0ebGpATr89WktVzecJPGrzPCq
-	 UrjzFLZAPBqnUk38g62/ZFMv6Z3rzmA742oD9doQ=
+	by mail.kernel.org (Postfix) with ESMTP id E68E020663
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgFCBKL (ORCPT
+        id S1728347AbgFCBLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
+        Tue, 2 Jun 2020 21:11:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:56913 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFCBKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:10:09 -0400
-Subject: Re: [GIT PULL][Security] lockdown: Allow unprivileged users to see
- lockdown status
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591146609;
-        bh=ZTQHt+zCCq3szqCcZ4aTjWGaCX3dob9j2wXUNRYrp8s=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=IoiZEjqqfonXQb/DIJNO+HBH4wnN8tjjFGsBdck4t7zDlHBMGaKjMSteQiuMHK5uC
-         ZNAU7rdVI+4Jf1xYhNOyepyvPpcBn/+RltxEfFMscayGgRL3mP2PF054ruoJSw7KQj
-         I+lX7i+d98UF3st2qjUTsHqh5ZIjrmikj3lQKyAE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <alpine.LRH.2.21.2006021212490.12446@namei.org>
-References: <alpine.LRH.2.21.2006021212490.12446@namei.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <alpine.LRH.2.21.2006021212490.12446@namei.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git
- next-general
-X-PR-Tracked-Commit-Id: 60cf7c5ed5f7087c4de87a7676b8c82d96fd166c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 56f2e3b7d819f4fa44857ba81aa6870f18714ea0
-Message-Id: <159114660931.11472.12724747665819133584.pr-tracker-bot@kernel.org>
-Date:   Wed, 03 Jun 2020 01:10:09 +0000
-To:     James Morris <jmorris@namei.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+        id S1726112AbgFCBLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 21:11:03 -0400
+IronPort-SDR: tN39wWCFx+LpszOWJ+ipem7WIQlYiyLQdAB3X+qc0sRsp52cKEeNo494p76WJLAyHMnsxYrbp1
+ DR3LJ4XD8GIQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 18:11:02 -0700
+IronPort-SDR: 1A5GzQdoUcCXCdwGiIkBOBkikTrv6NL0nVW4C178usULtgGkjC1QVLXCKIyIJjpPmX+UsH2K/U
+ KgHmd3h3Hb/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
+   d="scan'208";a="258477860"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Jun 2020 18:10:59 -0700
+Date:   Tue, 2 Jun 2020 18:10:59 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] KVM: X86: Split kvm_update_cpuid()
+Message-ID: <20200603011059.GB24169@linux.intel.com>
+References: <20200529085545.29242-1-xiaoyao.li@intel.com>
+ <20200529085545.29242-5-xiaoyao.li@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529085545.29242-5-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 2 Jun 2020 12:15:04 +1000 (AEST):
+On Fri, May 29, 2020 at 04:55:43PM +0800, Xiaoyao Li wrote:
+> Split the part of updating KVM states from kvm_update_cpuid(), and put
+> it into a new kvm_update_state_based_on_cpuid(). So it's clear that
+> kvm_update_cpuid() is to update guest CPUID settings, while
+> kvm_update_state_based_on_cpuid() is to update KVM states based on the
+> updated CPUID settings.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-general
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/56f2e3b7d819f4fa44857ba81aa6870f18714ea0
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+What about kvm_update_vcpu_model()?  "state" isn't necessarily correct
+either.
