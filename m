@@ -6,65 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F93EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0732067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6332067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 22:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591223411;
-	bh=mBMUz/upXT1Rm2DIZiASRqtA4m6wu5qmMfoDC6Hz4Lk=;
+	s=default; t=1591223413;
+	bh=qza1y5S5jCJj8fMOxen3UeHeSefmu5V/P0j1Rv4v+p4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xJkmzsCAXuNYrwS+RZuY819Mk3rT+4BLftoYn7gOzjv+z89nhmV7xb4iecE2/le1+
-	 mMx5mAKUG096A03aFIE6NlwWNCjlt2N3kXL/paNp1EA2sllLElqPTcifGaHOjw7fnm
-	 ea+J7rwEQ0ZhJ4QZzaDJZSkoheKygrEYoxU9VCMo=
+	b=U/YPpIQC/LBgo7Ks8MXanIMD0pF1LSLfEE0UreVKOuoIfvVQ4TGIswh+s6E8uaOv7
+	 bJBErp9vsJ7/xIulAXWLOy2JMomt8iuDpmfxgkW8sIBfsvivxn6EEUg1FYbPqkt3Zf
+	 lPvZO/+oLHvB1wCP0m1fBTdzg0BKO9JMRpAEg2k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgFCWaJ (ORCPT
+        id S1728061AbgFCWaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 18:30:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58804 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 18:30:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgFCWaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 18:30:08 -0400
-Subject: Re: [GIT PULL] Hyper-V commits for 5.8
+        id S1726935AbgFCWaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 18:30:09 -0400
+Subject: Re: [GIT PULL] First batch of KVM changes for Linux 5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591223407;
-        bh=mBMUz/upXT1Rm2DIZiASRqtA4m6wu5qmMfoDC6Hz4Lk=;
+        s=default; t=1591223408;
+        bh=qza1y5S5jCJj8fMOxen3UeHeSefmu5V/P0j1Rv4v+p4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=kqOIIETPImHZ3Nov76Qetdsj+G5yaK/vjVqQ8pGQ76SbGjAZRab28bBB+BkxORFbT
-         zCHQwBOOvUOWL9a7iz7fcJhY3A4Ow7D++hiDeUPj7rnXg+r8j+38BhEvxIDOBavksx
-         fZWxoXMIQnjsVuj9mifkS24p1iLXM5hDLZKwLh4Y=
+        b=F5HMycCORm/Fr3U+s+ZXGVu6SIcC+H8MRcXxMvK0IBSVHQMuSBPBnUxpwJ8ZSS1hY
+         qeBQUdEYv17Pl+zVOxr6xgIB7VM/zGyp1ceJ5Vg6xdHxYXxVNPVsddWisRAY7p8y4h
+         x1m8Q9cHUXnVDvymw3hZ296JVtY1lP2mxl/I8CCk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200602174752.u67tmpxojt5dv655@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200602174752.u67tmpxojt5dv655@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+In-Reply-To: <20200603173857.1345-1-pbonzini@redhat.com>
+References: <20200603173857.1345-1-pbonzini@redhat.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200602174752.u67tmpxojt5dv655@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
- tags/hyperv-next-signed
-X-PR-Tracked-Commit-Id: afaa33da08abd10be8978781d7c99a9e67d2bbff
+X-PR-Tracked-Message-Id: <20200603173857.1345-1-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
+ tags/for-linus
+X-PR-Tracked-Commit-Id: 13ffbd8db1dd43d63d086517872a4e702a6bf309
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6b2591c21273ebf65c13dae5d260ce88f0f197dd
-Message-Id: <159122340776.21404.18224584718474512131.pr-tracker-bot@kernel.org>
-Date:   Wed, 03 Jun 2020 22:30:07 +0000
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 039aeb9deb9291f3b19c375a8bc6fa7f768996cc
+Message-Id: <159122340855.21404.14460273079755710845.pr-tracker-bot@kernel.org>
+Date:   Wed, 03 Jun 2020 22:30:08 +0000
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 2 Jun 2020 17:47:52 +0000:
+The pull request you sent on Wed,  3 Jun 2020 13:38:57 -0400:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6b2591c21273ebf65c13dae5d260ce88f0f197dd
+https://git.kernel.org/torvalds/c/039aeb9deb9291f3b19c375a8bc6fa7f768996cc
 
 Thank you!
 
