@@ -2,293 +2,155 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0513C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20801C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC5462081A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDD520679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiYRKNXT"
+	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="S0ktNZZw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbgFCL3t (ORCPT
+        id S1726096AbgFCLaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgFCL3s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:29:48 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC46C08C5C0;
-        Wed,  3 Jun 2020 04:29:48 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y18so726178plr.4;
-        Wed, 03 Jun 2020 04:29:48 -0700 (PDT)
+        Wed, 3 Jun 2020 07:30:07 -0400
+Received: from mail-bn8nam11on2133.outbound.protection.outlook.com ([40.107.236.133]:22438
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725833AbgFCLaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:30:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iV7aQhbGpEpGzWIlD7btyK7f1ebXbWGpaDP+ym4aK2c8Gj5UU0bGY/bSdH8fDIHBnNAz0BS9pvvFS/P3kERljO7hLOkM/k/omuCndVRJPYqpBebFuu2XQprUn+xHgUsieKnBg/z0FdVZwIy5CKXekmPzDEPP8V6WDw78IrCm2rXIwSs3LVeQZ7fJrvW6DDG/9ayvoYWNjGuuurgCbrR6mCyP9da+ZiF0BlR5hL07IFUUaK4XPd2IUxDUR2IaCM5Ew9OIcy994dX1G66SPgRsnourFAFJxPrjmMNta7zQ6zDY2U98AwxrEcCTG4YXSZR7Zw+R9JPpHC8c9DKoSciSFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c6diLltNI7WqqFVBoZjTQGoYyjFGgxEBUrA0J0afqmY=;
+ b=WRquCLcTfSjMjYgKYqZET52rH94HrfsURfTpGjOiIEqxkgv9qyJdtuvT9kMcdVvemoqKiWBP80aUZKQN0jxMPXDYusH0tpxe+YCfTme9uW29sfwWq7nDz24SwCyctoC09KaYsKRgKQPqtHtMhXbHQh8SjoJIUFGXZ+E3gla4ne+daOhcX9uYYZWVpM3R+PnIg/eF94HkmxPKW2bREOauX9TEsDtz0Lear5SoIxnB+w+9ZtHMA/w1MUIew61xaN2Uh0lNT1MBuLYOMl7I4z1+rfR5FG40SwjrlUvqMZK3RcvCHo+RPY7pfFRj+7a3OwpaKnySfXd6C4b2K+6umpwBLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
+ header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
+ arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SYDjEnMgktBuo6DQ1R8FXp/4FpW7wh5KhHgaA/MCrC0=;
-        b=kiYRKNXTleel/idLEGZwK9UEaeJLEnR5m/VKB1rPaL47Lyah3lhtvoJ6Fbo/6xwr6r
-         aj6DJ1QrVIRXuz9eLzn+aqmIcvrk4Z1aUYmjJDY20gZ6JltKfzQmAH5/t8ALSfzsbITc
-         j+wY1PnYh+SZDsUCADDL4giBHXvWvdKee6dPnom0a4kuRLpKjR129MVb1S4EAMMfb06z
-         fklytk5YoIBI7Bw6zjTeGqgHxTZBNhElpM6k9BZXqJvfVUaBEgA/TcyiUS/Moyvkz/6o
-         s87fCtXg3kgAVI5q2EW0bUHS9m9YNzKK2N2icdzmZPwNNFSr4yF1FD1C9CppIpwDXqke
-         m8cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SYDjEnMgktBuo6DQ1R8FXp/4FpW7wh5KhHgaA/MCrC0=;
-        b=uoeSL0Yg67Iq1hql6rlUF6ESUEmHiceDKhwTtB1NNXmNGY3EuZp+BaDZMtgerhqXGL
-         wRSgnzkJAfr0lI7CGEmzDeZgPFhff3usY/HkK+hzKSwYIPKDvhRKDTLTY6de9pKgSHex
-         NXT38qJV9n0hm16in8JtZsGD5oFk+pIvzJ9oGObvZchS1S0xR+iFWrGP7xGoqA4PrhS7
-         qzN+ylr1W2vxyxnNg+Ggc0IakQP4GUGJ/wBdZ7meAHVrIZVpfR8oY2+eDtDz0uDkBd/T
-         6Atppxk8OwQvgBAodETuklmTRhfQ5/r9Vp3t0e23hD3AqL8alW1PrAskIlWWqaWoX3LX
-         HlYQ==
-X-Gm-Message-State: AOAM531OgWSHvej0V2URVM/p/fg5gQybjohFkeba+zDLkgGO+1Ss8mY7
-        63ykOlCH3aDVX/pPTr0MaKnolnjM+QFSRNiyarg=
-X-Google-Smtp-Source: ABdhPJwdso2nwPBvupIiAPgeIIBx0RbV4afBtdZXGJS6P6Gf51Z77H3U4cd6KGmw0Vzf1gImBRVZTGkAQRoBzZweINg=
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr29919248plt.18.1591183788151;
- Wed, 03 Jun 2020 04:29:48 -0700 (PDT)
+ d=maximintegrated.onmicrosoft.com;
+ s=selector2-maximintegrated-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c6diLltNI7WqqFVBoZjTQGoYyjFGgxEBUrA0J0afqmY=;
+ b=S0ktNZZwRdST1twkX88QOvvxgODvYemJ7BKBguBmjORLtb1dVJdxkvINIT8eF3ODlbYxizlVH7c89QvYX59nh/JnVBRNWaCoIFrEZ5gcO8sUrO/G66Y+on2SzL8WNJR6vGdjjbLGFecfoUyWWTEX6lOA9pZu1L+cCE9I6sIeKig=
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
+ by MWHPR11MB1726.namprd11.prod.outlook.com (2603:10b6:300:23::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 3 Jun
+ 2020 11:30:02 +0000
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 11:30:02 +0000
+From:   Steve Lee <SteveS.Lee@maximintegrated.com>
+To:     Takashi Iwai <tiwai@suse.de>
+CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "ckeepax@opensource.cirrus.com" <ckeepax@opensource.cirrus.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "rf@opensource.wolfsonmicro.com" <rf@opensource.wolfsonmicro.com>,
+        "shumingf@realtek.com" <shumingf@realtek.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "jack.yu@realtek.com" <jack.yu@realtek.com>,
+        "nuno.sa@analog.com" <nuno.sa@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "ryan.lee.maxim@gmail.com" <ryan.lee.maxim@gmail.com>,
+        Ryan Lee <RyanS.Lee@maximintegrated.com>,
+        "steves.lee.maxim@gmail.com" <steves.lee.maxim@gmail.com>
+Subject: RE: [PATCH] ASoC: max98390: Fix potential crash during param fw
+ loading
+Thread-Topic: [PATCH] ASoC: max98390: Fix potential crash during param fw
+ loading
+Thread-Index: AQHWOZjok5hm+3ydWEypvnQMZosX1ajGv8wAgAABMyA=
+Date:   Wed, 3 Jun 2020 11:30:02 +0000
+Message-ID: <MWHPR11MB204724AEA2415929253525E492880@MWHPR11MB2047.namprd11.prod.outlook.com>
+References: <20200603111819.5824-1-steves.lee@maximintegrated.com>
+ <s5hzh9kcrzb.wl-tiwai@suse.de>
+In-Reply-To: <s5hzh9kcrzb.wl-tiwai@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none
+ header.from=maximintegrated.com;
+x-originating-ip: [211.35.184.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bbdef38d-8173-4df2-85a0-08d807b174cb
+x-ms-traffictypediagnostic: MWHPR11MB1726:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB1726EBC751E1C804DD8B2D8D92880@MWHPR11MB1726.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1107;
+x-forefront-prvs: 04238CD941
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VoavqXsLKpowzGNevrLDt5aeN2Gy1b7Z3dmKj+s+EoN56pCaz+eNDZHUxK1w9+R7ZqUDd0/cLLp92skR6MkGd2ztDn8ukQsELCKK03TCMmFecYfQyobu+flPCE9tk0VIlXuFZs3jzeedng1I/uQICrRs/7DeA1cG1IrLHGVIihGaaA6CCrJcj9XtXdCuYGesSi9sSIpAxV8f7xbf6LTxducYPSnB2gOo8FjIJmYOYm8Xfu+qwxNqu07+kpLMlEnNxxKWCnVoz9D91lw4uNMPX/oFuQDsx5hzIqMdCDc/8HQJBNhcCy7psE1OMvJeN+BG
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(136003)(376002)(346002)(8936002)(316002)(7696005)(8676002)(53546011)(6506007)(6916009)(55016002)(66446008)(71200400001)(4326008)(64756008)(5660300002)(52536014)(76116006)(33656002)(66476007)(66556008)(66946007)(86362001)(26005)(7416002)(9686003)(2906002)(186003)(83380400001)(54906003)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: C8DBCaXblOBHEfUIwohOl0VWi1VLhsLGHOFP3T1JjAIxCZNf/KbU2fLA3nm8uiG53/+1xQaXgz40JoYQ05KbjMQ8Gtq5HBW12PzZtfwPTKD+I4ATtriWBHBUuMV1x2FT/tew1UUa4U+t2Mrh293Yh356PTghjrYOUTPy3GvsJ5J3yglEBxqoWhNazQiayxf2xoACvTlIcUQCRJJwGsWMt8QHzDcp9VwESpi1NDdGItKgNBgVmEbUtZLNOOIJKAJJkMPqNtzsGGmUpvhX3BXS0blf8gX1sUFORjGrVOc2w5eP6qkbIZVy24+KbGMea5r6uB/7MfASPrrPvZaUeiJIZa5X0QdHmC0p4E6Z9SqeD4si5Iedq2G0nJq0etvkRbVl8TbKEKIx+zbhaExBdgFJ08p2lBYEvcq0Fqe7M7NlSsB7Ao80F549wKCBjOw38FO5MLyovc5TLYdblhxnFVBzyXKoeQc4EjuFyVMsiKmPWQPWoIC032u0pZ9EOr3RGIP4
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200603084441.33952-1-tomasz.duszynski@octakon.com> <20200603084441.33952-3-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200603084441.33952-3-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 3 Jun 2020 14:29:36 +0300
-Message-ID: <CAHp75VfF2KXS8NtPGqCRm3SA_pxz5-XmSSu7b_ytRP6TjaE5xw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] iio: chemical: scd30: add I2C interface driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: maximintegrated.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbdef38d-8173-4df2-85a0-08d807b174cb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 11:30:02.0547
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: fbd909df-ea69-4788-a554-f24b7854ad03
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z2APJKQKVhifXvDwe7ZDQ6sxWXc4MaZQlfnPeyokLx5OdX3L2G5yw75VB6buphIKnrktWrlTT5zCLNrb4mZcNWKKUkJHHJvPazy3h858yeM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 11:47 AM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
->
-> Add I2C interface driver for the SCD30 sensor.
->
+> -----Original Message-----
+> From: Takashi Iwai <tiwai@suse.de>
+> Sent: Wednesday, June 3, 2020 8:24 PM
+> To: Steve Lee <SteveS.Lee@maximintegrated.com>
+> Cc: lgirdwood@gmail.com; broonie@kernel.org; perex@perex.cz;
+> tiwai@suse.com; ckeepax@opensource.cirrus.com; geert@linux-m68k.org;
+> rf@opensource.wolfsonmicro.com; shumingf@realtek.com;
+> srinivas.kandagatla@linaro.org; krzk@kernel.org; dmurphy@ti.com;
+> jack.yu@realtek.com; nuno.sa@analog.com; linux-kernel@vger.kernel.org;
+> alsa-devel@alsa-project.org; ryan.lee.maxim@gmail.com; Ryan Lee
+> <RyanS.Lee@maximintegrated.com>; steves.lee.maxim@gmail.com
+> Subject: Re: [PATCH] ASoC: max98390: Fix potential crash during param fw
+> loading
+>=20
+> EXTERNAL EMAIL
+>=20
+>=20
+>=20
+> On Wed, 03 Jun 2020 13:18:19 +0200,
+> Steve Lee wrote:
+> >
+> > @@ -847,7 +861,6 @@ static int max98390_probe(struct snd_soc_component
+> *component)
+> >
+> >       /* Dsm Setting */
+> >       regmap_write(max98390->regmap, DSM_VOL_CTRL, 0x94);
+> > -     regmap_write(max98390->regmap, DSMIG_EN, 0x19);
+>=20
+> Is this change intentional?
+> It wasn't mentioned in the patch description.
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+ It should be another change. I will re-send the patch.
 
-> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> ---
->  MAINTAINERS                      |   1 +
->  drivers/iio/chemical/Kconfig     |  11 +++
->  drivers/iio/chemical/Makefile    |   1 +
->  drivers/iio/chemical/scd30_i2c.c | 139 +++++++++++++++++++++++++++++++
->  4 files changed, 152 insertions(+)
->  create mode 100644 drivers/iio/chemical/scd30_i2c.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 41a509cca6f1..13aed3473b7e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15142,6 +15142,7 @@ M:      Tomasz Duszynski <tomasz.duszynski@octakon.com>
->  S:     Maintained
->  F:     drivers/iio/chemical/scd30.h
->  F:     drivers/iio/chemical/scd30_core.c
-> +F:     drivers/iio/chemical/scd30_i2c.c
->
->  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
->  M:     Tomasz Duszynski <tduszyns@gmail.com>
-> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-> index 99e852b67e55..970d34888c2e 100644
-> --- a/drivers/iio/chemical/Kconfig
-> +++ b/drivers/iio/chemical/Kconfig
-> @@ -96,6 +96,17 @@ config SCD30_CORE
->           To compile this driver as a module, choose M here: the module will
->           be called scd30_core.
->
-> +config SCD30_I2C
-> +       tristate "SCD30 carbon dioxide sensor I2C driver"
-> +       depends on SCD30_CORE && I2C
-> +       select CRC8
-> +       help
-> +         Say Y here to build support for the Sensirion SCD30 I2C interface
-> +         driver.
-> +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called scd30_i2c.
-> +
->  config SENSIRION_SGP30
->         tristate "Sensirion SGPxx gas sensors"
->         depends on I2C
-> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-> index c9804b041ecd..0966ca34e34b 100644
-> --- a/drivers/iio/chemical/Makefile
-> +++ b/drivers/iio/chemical/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_CCS811)          += ccs811.o
->  obj-$(CONFIG_IAQCORE)          += ams-iaq-core.o
->  obj-$(CONFIG_PMS7003) += pms7003.o
->  obj-$(CONFIG_SCD30_CORE) += scd30_core.o
-> +obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
->  obj-$(CONFIG_SENSIRION_SGP30)  += sgp30.o
->  obj-$(CONFIG_SPS30) += sps30.o
->  obj-$(CONFIG_VZ89X)            += vz89x.o
-> diff --git a/drivers/iio/chemical/scd30_i2c.c b/drivers/iio/chemical/scd30_i2c.c
-> new file mode 100644
-> index 000000000000..875892a070ee
-> --- /dev/null
-> +++ b/drivers/iio/chemical/scd30_i2c.c
-> @@ -0,0 +1,139 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Sensirion SCD30 carbon dioxide sensor i2c driver
-> + *
-> + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> + *
-> + * I2C slave address: 0x61
-> + */
-> +#include <linux/crc8.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/types.h>
-> +#include <asm/unaligned.h>
-> +
-> +#include "scd30.h"
-> +
-> +#define SCD30_I2C_MAX_BUF_SIZE 18
-> +#define SCD30_I2C_CRC8_POLYNOMIAL 0x31
-> +
-> +static u16 scd30_i2c_cmd_lookup_tbl[] = {
-> +       [CMD_START_MEAS] = 0x0010,
-> +       [CMD_STOP_MEAS] = 0x0104,
-> +       [CMD_MEAS_INTERVAL] = 0x4600,
-> +       [CMD_MEAS_READY] = 0x0202,
-> +       [CMD_READ_MEAS] = 0x0300,
-> +       [CMD_ASC] = 0x5306,
-> +       [CMD_FRC] = 0x5204,
-> +       [CMD_TEMP_OFFSET] = 0x5403,
-> +       [CMD_FW_VERSION] = 0xd100,
-> +       [CMD_RESET] = 0xd304,
-> +};
-> +
-> +DECLARE_CRC8_TABLE(scd30_i2c_crc8_tbl);
-> +
-> +static int scd30_i2c_xfer(struct scd30_state *state, char *txbuf, int txsize,
-> +                         char *rxbuf, int rxsize)
-> +{
-> +       struct i2c_client *client = to_i2c_client(state->dev);
-> +       int ret;
-> +
-> +       /*
-> +        * repeated start is not supported hence instead of sending two i2c
-> +        * messages in a row we send one by one
-> +        */
-> +       ret = i2c_master_send(client, txbuf, txsize);
-> +       if (ret < 0)
-> +               return ret;
-> +       if (ret != txsize)
-> +               return -EIO;
-> +
-> +       if (!rxbuf)
-> +               return 0;
-> +
-> +       ret = i2c_master_recv(client, rxbuf, rxsize);
-> +       if (ret < 0)
-> +               return ret;
-> +       if (ret != rxsize)
-> +               return -EIO;
-> +
-> +       return 0;
-> +}
-> +
-> +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
-> +                            void *response, int size)
-> +{
-> +       char buf[SCD30_I2C_MAX_BUF_SIZE];
-> +       char *rsp = response;
-> +       int i, ret;
-> +       char crc;
-> +
-> +       put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
-> +       i = 2;
-> +
-> +       if (rsp) {
-> +               /* each two bytes are followed by a crc8 */
-> +               size += size / 2;
-> +       } else {
-> +               put_unaligned_be16(arg, buf + i);
-> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> +               i += 2;
-> +               buf[i] = crc;
-> +               i += 1;
-> +
-> +               /* commands below don't take an argument */
-> +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
-> +                       i -= 3;
-> +       }
-> +
-> +       ret = scd30_i2c_xfer(state, buf, i, buf, size);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* validate received data and strip off crc bytes */
-> +       for (i = 0; i < size; i += 3) {
-> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> +               if (crc != buf[i + 2]) {
-> +                       dev_err(state->dev, "data integrity check failed\n");
-> +                       return -EIO;
-> +               }
-> +
-> +               *rsp++ = buf[i];
-> +               *rsp++ = buf[i + 1];
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int scd30_i2c_probe(struct i2c_client *client)
-> +{
-> +       if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-> +               return -EOPNOTSUPP;
-> +
-> +       crc8_populate_msb(scd30_i2c_crc8_tbl, SCD30_I2C_CRC8_POLYNOMIAL);
-> +
-> +       return scd30_probe(&client->dev, client->irq, client->name, NULL, scd30_i2c_command);
-> +}
-> +
-> +static const struct of_device_id scd30_i2c_of_match[] = {
-> +       { .compatible = "sensirion,scd30" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, scd30_i2c_of_match);
-> +
-> +static struct i2c_driver scd30_i2c_driver = {
-> +       .driver = {
-> +               .name = KBUILD_MODNAME,
-> +               .of_match_table = scd30_i2c_of_match,
-> +               .pm = &scd30_pm_ops,
-> +       },
-> +       .probe_new = scd30_i2c_probe,
-> +};
-> +module_i2c_driver(scd30_i2c_driver);
-> +
-> +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
-> +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor i2c driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.27.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+>=20
+>=20
+> thanks,
+>=20
+> Takashi
