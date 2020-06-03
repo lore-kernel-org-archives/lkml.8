@@ -2,222 +2,109 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1DD2072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09CB2072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="W1A7WEkZ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m3Zqlia+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgFCBb1 (ORCPT
+        id S1728341AbgFCBcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:31:27 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:64383 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFCBb0 (ORCPT
+        Tue, 2 Jun 2020 21:32:41 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42540 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgFCBck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:31:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591147884; x=1622683884;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=S2p34hkF8KncHXYVWfs0HOgL2x0mI/Af6z43FivWpOU=;
-  b=W1A7WEkZhHIytOahtvsPwVVIp/rwteLpjjGDDiS0Dtn5zrAbnwqfDCTz
-   1KHI3b4ffVAcpAEE06oLymh9A6Hb9V++Viv2vWNYtcyukpy2pLjn21IXE
-   Prb4DzZUjNUEUzeaQKxAuuAa9yJW2BbPTqvHPgYyDR58sJ1of73OvzRJQ
-   Q=;
-IronPort-SDR: rlNdDuL0+Pcn7wbRF2AC53SUW8bUUrImXlqDpizjGd4jw0gFqKfEbtAcEiz+3xuXxuVtvvAGgE
- rdyF+ohBHpUw==
-X-IronPort-AV: E=Sophos;i="5.73,466,1583193600"; 
-   d="scan'208";a="34097626"
-Subject: Re: [GIT PULL] x86/mm changes for v5.8
-Thread-Topic: [GIT PULL] x86/mm changes for v5.8
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 03 Jun 2020 01:31:07 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id E9CEDA21A5;
-        Wed,  3 Jun 2020 01:31:05 +0000 (UTC)
-Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 01:31:05 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 01:31:04 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Wed, 3 Jun 2020 01:31:05 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Thread-Index: AQHWOTG5gmd4DdUrwk2Zwf2I6d8ayajF+LIAgAAiNIA=
-Date:   Wed, 3 Jun 2020 01:31:05 +0000
-Message-ID: <9710330d4fa99d720f6ec8f6af2eae26115d27a5.camel@amazon.com>
-References: <20200601170102.GA1346815@gmail.com>
-         <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
-         <20200602073350.GA481221@gmail.com>
-         <b159ba4c53fcf04cc4eb747c45e1d4d2d83310a3.camel@kernel.crashing.org>
-         <871rmxgw4d.fsf@nanos.tec.linutronix.de>
-         <CAHk-=wgOFnMW-EgymmrTyqTPLrpGJrUJ_wBzehMpyT=SO4-JRQ@mail.gmail.com>
-         <105f5a87b689eab38baf4d51d03e9f9707e74c66.camel@amazon.com>
-         <CAHk-=whC4PUhErcoDhCbTOdmPPy-Pj8j9ytsdcyz9TorOb4KUw@mail.gmail.com>
-In-Reply-To: <CAHk-=whC4PUhErcoDhCbTOdmPPy-Pj8j9ytsdcyz9TorOb4KUw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.140]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <410A38A839E9C94A98A09E4591DBBDAA@amazon.com>
-Content-Transfer-Encoding: base64
+        Tue, 2 Jun 2020 21:32:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0531SNAq088939;
+        Wed, 3 Jun 2020 01:31:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=/VqIWsQJCRuNm9QmFUcI5MVBJ1+PNqJu4INvjofmiUE=;
+ b=m3Zqlia+iNC+L6X8DHaZCHC9LA0LD1IjtCpDbc6ORaq9XTlcgcOlr+zZ8Cuc1dqLcZwb
+ b1p62qaWXJ4lXP0MT1k+e7LSaVE2AUlk9xItH3sHNkvGqKoaLbqb9N+CeNYqYIFNms/b
+ F/6NNo/5AFjN/nW/RPEZ3OtvmvOToXOsKmKAETmteOm1HuGFUgc6zp3F0NL5yE+GOeKC
+ oHTqocGvXkt+sol6rEsBPAYF6tBtm/fd5iPRdXTXV0UUHFaW1hddE6qiYoldx+8lSKgf
+ QX2dJHx/3tYd/yk3Z84QvPcO1xQGPuN8Jhe/BqoK0zJxm4/aOb7y7XsKkr+TwUoW0ixm Bw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31bewqxshk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 03 Jun 2020 01:31:40 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0531Rv5j057807;
+        Wed, 3 Jun 2020 01:31:39 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31c25qjttn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Jun 2020 01:31:39 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0531VaN2022948;
+        Wed, 3 Jun 2020 01:31:37 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jun 2020 18:31:36 -0700
+To:     kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+Cc:     xiakaixu1987@gmail.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoming Gao <newtongao@tencent.com>
+Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused
+ by JBOD
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com>
+References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
+Date:   Tue, 02 Jun 2020 21:31:33 -0400
+In-Reply-To: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
+        (xiakaixu's message of "Thu, 28 May 2020 15:31:55 +0800")
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006030008
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=1 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006030008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTAyIGF0IDE2OjI4IC0wNzAwLCBMaW51cyBUb3J2YWxkcyB3cm90ZToN
-Cj4gQ0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3Jn
-YW5pemF0aW9uLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3Mg
-eW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
-Cj4gDQo+IA0KPiANCj4gT24gVHVlLCBKdW4gMiwgMjAyMCBhdCA0OjAxIFBNIFNpbmdoLCBCYWxi
-aXIgPHNibGJpckBhbWF6b24uY29tPiB3cm90ZToNCj4gPiANCj4gPiA+ICAgICAgKGMpIGFuZCBp
-ZiBJIHJlYWQgdGhlIGNvZGUgY29ycmVjdGx5LCB0cnlpbmcgdG8gZmx1c2ggdGhlIEwxRCQgb24N
-Cj4gPiA+IG5vbi1pbnRlbCB3aXRob3V0IHRoZSBIVyBzdXBwb3J0LCBpdCBjYXVzZXMgYSBXQVJO
-X09OX09OQ0UoKSEgV1RGPw0KPiA+IA0KPiA+IFRoYXQgaXMgbm90IGNvcnJlY3QsIHRoZSBmdW5j
-dGlvbiBvbmx5IGNvbXBsYWlucyBpZiB3ZSBkbyBhIHNvZnR3YXJlIGZhbGxiYWNrDQo+ID4gZmx1
-c2ggd2l0aG91dCBhbGxvY2F0aW5nIHRoZSBmbHVzaCBwYWdlcy4NCj4gDQo+IFJpZ2h0Lg0KPiAN
-Cj4gQW5kIGlmIHlvdSdyZSBub3Qgb24gSW50ZWwsIHRoZW4gdGhhdCBhbGxvY2F0aW9uIHdvdWxk
-IG5ldmVyIGhhdmUgYmVlbg0KPiBkb25lLCBzaW5jZSB0aGUgYWxsb2NhdGlvbiBmdW5jdGlvbiBy
-ZXR1cm5zIGFuIGVycm9yIGZvciBub24taW50ZWwNCj4gc3lzdGVtcy4NCj4gDQo+ID4gVGhhdCBm
-dW5jdGlvbiBpcyBub3QgZXhwb3NlZCB3aXRob3V0DQo+ID4gdGhlIHVzZXIgdXNpbmcgdGhlIHBy
-Y3RsKCkgQVBJLCB3aGljaCBhbGxvY2F0ZXMgdGhvc2UgZmx1c2ggcGFnZXMuDQo+IA0KPiBTZWUg
-YWJvdmU6IGl0IGRvZXNuJ3QgYWN0dWFsbHkgYWxsb2NhdGUgdGhvc2UgcGFnZXMgb24gYW55dGhp
-bmcgYnV0IGludGVsIENQVSdzLg0KPiANCj4gVGhhdCBzYWlkLCBsb29raW5nIGRlZXBlciwgaXQg
-dGhlbiBkb2VzIGxvb2sgbGlrZSBhDQo+IGwxZF9mbHVzaF9pbml0X29uY2UoKSBmYWlsdXJlIHdp
-bGwgYWxzbyBjYXVzZSB0aGUgY29kZSB0byBhdm9pZA0KPiBzZXR0aW5nIHRoZSBUSUZfU1BFQ19M
-MURfRkxVU0ggYml0LCBzbyBub24taW50ZWwgQ1BVJ3Mgd2lsbCBuZXZlciBjYWxsDQo+IHRoZSBh
-Y3R1YWwgZmx1c2hpbmcgcm91dGluZXMsIGFuZCB0aHVzIG5ldmVyIGhpdCB0aGUgV0FSTl9PTi4g
-T2suDQo+IA0KPiA+ID4gICgyKSB0aGUgSFcgY2FzZSBpcyBkb25lIGZvciBhbnkgdmVuZG9yLCBp
-ZiBpdCByZXBvcnRzIHRoZSAiSSBoYXZlIHRoZSBNU1IiDQo+ID4gDQo+ID4gTm8gbDFkX2ZsdXNo
-X2luaXRfb25jZSgpIGZhaWxzIGZvciB1c2VycyBvcHRpbmcgaW4gdmlhIHRoZSBwcmN0bCgpLCBp
-dA0KPiA+IHN1Y2NlZWRzIGZvciB1c2VycyBvZiBMMVRGLg0KPiANCj4gWWVhaCwgYWdhaW4gaXQg
-bG9va3MgbGlrZSB0aGlzIGFsbCBpcyBiYXNpY2FsbHkganVzdCBhIGhhY2sgZm9yIEludGVsIENQ
-VSdzLg0KPiANCj4gSXQgc2hvdWxkIG5ldmVyIGhhdmUgYmVlbiBjb25kaXRpb25hbCBvbiAiZG8g
-dGhpcyBvbiBJbnRlbCIuDQo+IA0KPiBJdCBzaG91bGQgaGF2ZSBiZWVuIGNvbmRpdGlvbmFsIG9u
-IHRoZSBMMVRGIGJ1Zy4NCj4gDQo+IFllcywgdGhlcmUncyBjZXJ0YWlubHkgb3ZlcmxhcCB0aGVy
-ZSwgYnV0IGl0J3Mgbm90IGNvbXBsZXRlLg0KPiANCj4gPiA+ICAoMykgdGhlIFZNWCBzdXBwb3J0
-IGNlcnRhaW5seSBoYXMgdmFyaW91cyBzYW5pdHkgY2hlY2tzIGxpa2UgIm9oLCBDUFUNCj4gPiA+
-IGRvZXNuJ3QgaGF2ZSBYODZfQlVHX0wxVEYsIHRoZW4gSSB3b24ndCBkbyB0aGlzIGV2ZW4gaWYg
-dGhlcmUgd2FzIHNvbWUNCj4gPiA+IGtlcm5lbCBjb21tYW5kIGxpbmUgdG8gc2F5IEkgc2hvdWxk
-Ii4gQnV0IHRoZSBuZXcgcHJjdHJsIGRvZXNuJ3QgaGF2ZQ0KPiA+ID4gYW55dGhpbmcgbGlrZSB0
-aGF0LiBJdCBqdXN0IGVuYWJsZXMgdGhhdCBMMUQkIHRoaW5nIG1pbmRsZXNzbHksDQo+ID4gPiB0
-aGlua2luZyB0aGF0IHVzZXItbGFuZCBzb2Z0d2FyZSBzb21laG93IGtub3dzIHdoYXQgaXQncyBk
-b2luZy4gQlMuDQo+ID4gDQo+ID4gU28geW91J2QgbGlrZSB0byBzZWUgYSBkb3VibGUgb3B0LWlu
-Pw0KPiANCj4gSSdkIGxpa2UgaXQgdG8gYmUgZ2F0ZWQgb24gYmVpbmcgc2FuZSBieSBkZWZhdWx0
-LCB0b2dldGhlciB3aXRoIHNvbWUNCj4gc3lzdGVtIG9wdGlvbiBsaWtlIHdlIGhhdmUgZm9yIHBy
-ZXR0eSBtdWNoIGFsbCB0aGUgbWl0aWdhdGlvbnMuDQo+IA0KPiA+ICAgICBVbmZvcnVuYXRlbHkg
-dGhlcmUgaXMgbm8gZ2F0aW5nDQo+ID4gb2YgdGhlIGJ1ZyBhbmQgSSB0cmllZCB0byBtYWtlIGl0
-IGdlbmVyaWMgLSBjbGVhcmx5IGNhbGxpbmcgaXQgb3B0LWluDQo+ID4gZmx1c2hpbmcgZm9yIHRo
-ZSBwYXJhbm9pZCwgZm9yIHRob3NlIHdobyByZWFsbHkgY2FyZSBhYm91dCBDVkUtMjAyMC0wNTUw
-Lg0KPiANCj4gTm8sIHlvdSBkaWRuJ3QgbWFrZSBpdCBnZW5lcmljIGF0IGFsbCAtIHlvdSBtYWRl
-IGl0IGRlcGVuZCBvbg0KPiBYODZfVkVORE9SX0lOVEVMIGluc3RlYWQuDQo+IA0KPiBTbyBub3cg
-dGhlIGxvZ2ljIGlzICJvbiBJbnRlbCwgZG8gdGhpcyB0aGluZyB3aGV0aGVyIGl0IG1ha2VzIHNl
-bnNlIG9yDQo+IG5vdCwgb24gb3RoZXIgdmVuZG9ycywgbmV2ZXIgZG8gaXQgd2hldGhlciBpdCBf
-d291bGRfIG1ha2Ugc2Vuc2Ugb3INCj4gbm90Ii4NCj4gDQo+IFRoYXQgdG8gbWUgaXMgbm90IHNl
-bnNpYmxlLiBJIGp1c3QgZG9uJ3Qgc2VlIHRoZSBsb2dpYy4NCj4gDQo+IFRoaXMgZmVhdHVyZSBz
-aG91bGQgbmV2ZXIgYmUgZW5hYmxlZCB1bmxlc3MgWDg2X0JVR19MMVRGIGlzIG9uLCBhcyBmYXIN
-Cj4gYXMgSSBjYW4gdGVsbC4NCj4gDQo+IEFuZCBpdCBzaG91bGQgbmV2ZXIgYmUgZW5hYmxlZCBp
-ZiBTTVQgaXMgb24uDQo+IA0KPiBBdCB0aGF0IHBvaW50LCBpdCBhdCBsZWFzdCBzdGFydHMgbWFr
-aW5nIHNlbnNlLiBNYXliZSB3ZSBkb24ndCBuZWVkDQo+IGFueSBmdXJ0aGVyIGFkbWluIG9wdGlv
-bnMgYXQgdGhhdCBwb2ludC4NCj4gDQo+ID4gV291bGQgdGhpcyBtYWtlIHlvdSBoYXBwaWVyPw0K
-PiA+IA0KPiA+IDEuIFJlbW92ZSBTVyBmYWxsYmFjayBmbHVzaA0KPiA+IDIuIEltcGxlbWVudCBh
-IGRvdWJsZSBvcHQtaW4gKENBUF9TWVNfQURNSU4gZm9yIHRoZSBwcmN0bCBvciBhDQo+ID4gICAg
-c3lzdGVtIHdpZGUgZGlzYWJsZSk/DQo+ID4gMy4gRW5zdXJlIHRoZSBmbHVzaCBoYXBwZW5zIG9u
-bHkgd2hlbiB0aGUgY3VycmVudCBjb3JlIGhhcw0KPiA+ICAgIFNNVCBkaXNhYmxlZA0KPiANCj4g
-SSB0aGluayB0aGF0ICgzKSBjYXNlIHNob3VsZCBiYXNpY2FsbHkgYmUgIlg4Nl9CVUdfTDFURiAm
-JiAhU01UIi4gVGhhdA0KPiBzaG91bGQgYmFzaWNhbGx5IGJlIHRoZSBkZWZhdWx0IHNldHRpbmcg
-Zm9yIHRoaXMuDQo+IA0KPiBUaGUgKDIpIHRoaW5nIEkgd291bGQgcHJlZmVyIHRvIGp1c3QgYmUg
-dGhlIHNhbWUga2luZCBvZiB0aGluZyB3ZSBkbw0KPiBmb3IgYWxsIHRoZSBvdGhlciBtaXRpZ2F0
-aW9uczogaGF2ZSBhIGtlcm5lbCBjb21tYW5kIGxpbmUgdG8gb3ZlcnJpZGUNCj4gdGhlIGRlZmF1
-bHRzLg0KPiANCj4gVGhlIFNXIGZhbGxiYWNrIHJpZ2h0IG5vdyBmZWVscyB3cm9uZyB0byBtZS4g
-SXQgZG9lcyBzZWVtIHRvIGJlIHZlcnkNCj4gbWljcm9hcmNoaXRlY3R1cmUtc3BlY2lmaWMgYW5k
-IEknZCByZWFsbHkgbGlrZSB0byB1bmRlcnN0YW5kIHRoZQ0KPiByZWFzb24gZm9yIHRoZSBtYWdp
-YyBUTEIgZmlsbGluZy4gQXQgdGhlIHNhbWUgdGltZSwgaWYgdGhlIGZlYXR1cmUgaXMNCj4gYXQg
-bGVhc3QgZW5hYmxlZCB1bmRlciBzYW5lIGFuZCB1bmRlcnN0YW5kYWJsZSBjaXJjdW1zdGFuY2Vz
-LCBhbmQNCj4gcGVvcGxlIGhhdmUgYSB3YXkgdG8gdHVybiBpdCBvZmYsIG1heWJlIEkgZG9uJ3Qg
-Y2FyZSB0b28gbXVjaC4NCj4NCg0KSSBjb29rZWQgdXAgYSBxdWljayBwYXRjaCAoeWV0IHVudGVz
-dGVkIHBhdGNoLCB3aGljaCBsZWF2ZXMgdGhlIGN1cnJlbnQNCnJlZmFjdG9yaW5nIGFzIGlzKSBm
-b3IgY29tbWVudHMuIFRoaXMgc2hvdWxkIGhvcGVmdWxseSBhZGRyZXNzIHlvdXIgY29uY2VybnMu
-DQpUaGlzIGlzIG5vdCB0aGUgZmluYWwgcGF0Y2gsIGp1c3QgdGhlIGFwcHJvYWNoIGZvciB0aGUg
-bGluZSBvZiB0aGlua2luZw0Kc28gZmFyLg0KDQoNCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJu
-ZWwvY3B1L2J1Z3MuYyBiL2FyY2gveDg2L2tlcm5lbC9jcHUvYnVncy5jDQppbmRleCBhNTgzNjBj
-OGU2ZTguLjk4OGE5ZDBjMzFlYyAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcHUvYnVn
-cy5jDQorKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L2J1Z3MuYw0KQEAgLTI5Myw2ICsyOTMsMTMg
-QEAgZW51bSB0YWFfbWl0aWdhdGlvbnMgew0KIAlUQUFfTUlUSUdBVElPTl9UU1hfRElTQUJMRUQs
-DQogfTsNCiANCitlbnVtIGwxZF9mbHVzaF9vdXRfbWl0aWdhdGlvbnMgew0KKwlMMURfRkxVU0hf
-T1VUX09GRiwNCisJTDFEX0ZMVVNIX09VVF9PTiwNCit9Ow0KKw0KK3N0YXRpYyBlbnVtIGwxZF9m
-bHVzaF9vdXRfbWl0aWdhdGlvbnMgbDFkX2ZsdXNoX291dF9taXRpZ2F0aW9uIF9fcm9fYWZ0ZXJf
-aW5pdCA9IEwxRF9GTFVTSF9PVVRfT047DQorDQogLyogRGVmYXVsdCBtaXRpZ2F0aW9uIGZvciBU
-QUEtYWZmZWN0ZWQgQ1BVcyAqLw0KIHN0YXRpYyBlbnVtIHRhYV9taXRpZ2F0aW9ucyB0YWFfbWl0
-aWdhdGlvbiBfX3JvX2FmdGVyX2luaXQgPSBUQUFfTUlUSUdBVElPTl9WRVJXOw0KIHN0YXRpYyBi
-b29sIHRhYV9ub3NtdCBfX3JvX2FmdGVyX2luaXQ7DQpAQCAtMzc2LDYgKzM4MywxOCBAQCBzdGF0
-aWMgdm9pZCBfX2luaXQgdGFhX3NlbGVjdF9taXRpZ2F0aW9uKHZvaWQpDQogCXByX2luZm8oIiVz
-XG4iLCB0YWFfc3RyaW5nc1t0YWFfbWl0aWdhdGlvbl0pOw0KIH0NCiANCitzdGF0aWMgaW50IF9f
-aW5pdCBsMWRfZmx1c2hfb3V0X3BhcnNlX2NtZGxpbmUoY2hhciAqc3RyKQ0KK3sNCisJaWYgKCFi
-b290X2NwdV9oYXNfYnVnKFg4Nl9CVUdfTDFURikpDQorCQlyZXR1cm4gMDsNCisNCisJaWYgKCFz
-dHJjbXAoc3RyLCAib2ZmIikpDQorCQlsMWRfZmx1c2hfb3V0X21pdGlnYXRpb24gPSBMMURfRkxV
-U0hfT1VUX09GRjsNCisNCisJcmV0dXJuIDA7DQorfQ0KK2Vhcmx5X3BhcmFtKCJsMWRfZmx1c2hf
-b3V0IiwgbDFkX2ZsdXNoX291dF9wYXJzZV9jbWRsaW5lKTsNCisNCiBzdGF0aWMgaW50IF9faW5p
-dCB0c3hfYXN5bmNfYWJvcnRfcGFyc2VfY21kbGluZShjaGFyICpzdHIpDQogew0KIAlpZiAoIWJv
-b3RfY3B1X2hhc19idWcoWDg2X0JVR19UQUEpKQ0KQEAgLTExMjMsNiArMTE0MiwxMCBAQCBzdGF0
-aWMgdm9pZCB0YXNrX3VwZGF0ZV9zcGVjX3RpZihzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRzaykNCiAN
-CiBzdGF0aWMgaW50IGwxZF9mbHVzaF9vdXRfcHJjdGxfc2V0KHN0cnVjdCB0YXNrX3N0cnVjdCAq
-dGFzaywgdW5zaWduZWQgbG9uZyBjdHJsKQ0KIHsNCisNCisJaWYgKGwxZF9mbHVzaF9vdXRfbWl0
-aWdhdGlvbiA9PSBMMURfRkxVU0hfT1VUX09GRikNCisJCXJldHVybiAtRVBFUk07DQorDQogCXN3
-aXRjaCAoY3RybCkgew0KIAljYXNlIFBSX1NQRUNfRU5BQkxFOg0KIAkJcmV0dXJuIGVuYWJsZV9s
-MWRfZmx1c2hfZm9yX3Rhc2sodGFzayk7DQpAQCAtMTI0MCw2ICsxMjYzLDkgQEAgc3RhdGljIGlu
-dCBsMWRfZmx1c2hfb3V0X3ByY3RsX2dldChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2spDQogew0K
-IAlpbnQgcmV0Ow0KIA0KKwlpZiAobDFkX2ZsdXNoX291dF9taXRpZ2F0aW9uID09IEwxRF9GTFVT
-SF9PVVRfT0ZGKQ0KKwkJcmV0dXJuIFBSX1NQRUNfRk9SQ0VfRElTQUJMRTsNCisNCiAJcmV0ID0g
-dGVzdF90aV90aHJlYWRfZmxhZygmdGFzay0+dGhyZWFkX2luZm8sIFRJRl9TUEVDX0wxRF9GTFVT
-SCk7DQogCWlmIChyZXQpDQogCQlyZXR1cm4gUFJfU1BFQ19QUkNUTCB8IFBSX1NQRUNfRU5BQkxF
-Ow0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9sMWRfZmx1c2guYyBiL2FyY2gveDg2L2tl
-cm5lbC9sMWRfZmx1c2guYw0KaW5kZXggNDY2MmY5MGZhMzIxLi4wYjg5OGMxYjc2Y2QgMTAwNjQ0
-DQotLS0gYS9hcmNoL3g4Ni9rZXJuZWwvbDFkX2ZsdXNoLmMNCisrKyBiL2FyY2gveDg2L2tlcm5l
-bC9sMWRfZmx1c2guYw0KQEAgLTg5LDkgKzg5LDYgQEAgaW50IGwxZF9mbHVzaF9pbml0X29uY2Uo
-dm9pZCkNCiB7DQogCWludCByZXQgPSAwOw0KIA0KLQlpZiAoYm9vdF9jcHVfZGF0YS54ODZfdmVu
-ZG9yICE9IFg4Nl9WRU5ET1JfSU5URUwpDQotCQlyZXR1cm4gLUVOT1RTVVBQOw0KLQ0KIAlpZiAo
-c3RhdGljX2NwdV9oYXMoWDg2X0ZFQVRVUkVfRkxVU0hfTDFEKSB8fCBsMWRfZmx1c2hfcGFnZXMp
-DQogCQlyZXR1cm4gcmV0Ow0KIA0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L21tL3RsYi5jIGIvYXJj
-aC94ODYvbW0vdGxiLmMNCmluZGV4IGZmMWZmOGM4MzQ1Mi4uZGRhYjgxNjZhNDc0IDEwMDY0NA0K
-LS0tIGEvYXJjaC94ODYvbW0vdGxiLmMNCisrKyBiL2FyY2gveDg2L21tL3RsYi5jDQpAQCAtMzIw
-LDEyICszMjAsMjkgQEAgRVhQT1JUX1NZTUJPTF9HUEwobGVhdmVfbW0pOw0KIA0KIGludCBlbmFi
-bGVfbDFkX2ZsdXNoX2Zvcl90YXNrKHN0cnVjdCB0YXNrX3N0cnVjdCAqdHNrKQ0KIHsNCi0JaW50
-IHJldCA9IGwxZF9mbHVzaF9pbml0X29uY2UoKTsNCisJaW50IGNwdSA9IGdldF9jcHUoKTsNCisJ
-aW50IHJldDsNCisNCisJLyoNCisJICogRG8gbm90IGVuYWJsZSBMMURfRkxVU0hfT1VUIGlmDQor
-CSAqIGEuIFRoZSBjdXJyZW50IGNvcmUgaGFzIFNNVCBlbmFibGVkDQorCSAqIGIuIFRoZSBDUFUg
-aXMgbm90IGFmZmVjdGVkIGJ5IHRoZSBMMVRGIGJ1Zw0KKwkgKiBjLiBUaGUgQ1BVIGRvZXMgbm90
-IGhhdmUgTDFEIEZMVVNIIGZlYXR1cmUgc3VwcG9ydA0KKwkgKi8NCisJaWYgKChjcHVtYXNrX3dl
-aWdodCh0b3BvbG9neV9zaWJsaW5nX2NwdW1hc2soY3B1KSkgIT0gMSkgfHwNCisJCQkhYm9vdF9j
-cHVfaGFzX2J1ZyhYODZfQlVHX0wxVEYpIHx8DQorCQkJIXN0YXRpY19jcHVfaGFzKFg4Nl9GRUFU
-VVJFX0ZMVVNIX0wxRCkpIHsNCisJCXJldCA9IC1FSU5WQUw7DQorCQlnb3RvIGRvbmU7DQorCX0N
-CiANCisJcmV0ID0gbDFkX2ZsdXNoX2luaXRfb25jZSgpOw0KIAlpZiAocmV0IDwgMCkNCi0JCXJl
-dHVybiByZXQ7DQorCQlnb3RvIGRvbmU7DQogDQogCXNldF90aV90aHJlYWRfZmxhZygmdHNrLT50
-aHJlYWRfaW5mbywgVElGX1NQRUNfTDFEX0ZMVVNIKTsNCitkb25lOg0KKwlwdXRfY3B1KCk7DQog
-CXJldHVybiByZXQ7DQogfQ0KIA0KDQo=
+
+> when kernel crash, and kexec into kdump kernel, megaraid_sas will hung
+> and print follow error logs
+>
+> 24.1485901 sd 0:0:G:0: [sda 1 tag809 BRCfl Debug mfi stat 0x2(1, data len requested/conpleted 0X100
+> 0/0x0)]
+> 24.1867171 sd 0:0:G :9: [sda I tag861 BRCfl Debug mfft stat 0x2d, data len reques ted/conp1e Led 0X100
+> 0/0x0]
+> 24.2054191 sd 0:O:6:O: [sda 1 tag861 FAILED Result: hustbyte=DIDGK drioerbyte-DRIUCR SENSE]
+> 24.2549711 bik_update_ request ! 1/0 error , dev sda, sector 937782912 op 0x0:(READ) flags 0x0 phys_seg 1 prio class
+> 21.2752791 buffer_io_error 2 callbacks suppressed
+> 21.2752731 Duffer IO error an dev sda, logical block 117212064, async page read
+>
+> this bug is caused by commit '59db5a931bbe73f ("scsi: megaraid_sas:
+> Handle sequence JBOD map failure at driver level ")' and can be fixed
+> by not set JOB when reset_devices on
+
+Broadcom: Please review.
+
+Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
