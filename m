@@ -2,115 +2,202 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44742C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568E520679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298ED20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgFCOFq (ORCPT
+        id S1726026AbgFCOGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:05:46 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:43349 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgFCOFp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:05:45 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MOzfO-1jLeqa1ICq-00POF2 for <linux-kernel@vger.kernel.org>; Wed, 03 Jun
- 2020 16:05:44 +0200
-Received: by mail-lj1-f172.google.com with SMTP id n24so2852961lji.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:05:44 -0700 (PDT)
-X-Gm-Message-State: AOAM531PNcYiJTYS4EqmmRmU93oIV0/jiWZ9uTu++4QBaxG7YYQlw4yg
-        xsY7YxWJkFKk+00XUI57v076ffivkw0CpzEeYbQ=
-X-Google-Smtp-Source: ABdhPJw9qs12iRvzkgPmHY8aOZeCRrpbIbW1QfyJC7R+9YgSABJCJMnrNREoyL5SNjuejmVOGOhvU5KnoORQoAGCH20=
-X-Received: by 2002:a2e:9192:: with SMTP id f18mr2334489ljg.383.1591193143649;
- Wed, 03 Jun 2020 07:05:43 -0700 (PDT)
+        Wed, 3 Jun 2020 10:06:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33584 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725833AbgFCOGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 10:06:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id ADD0EDE030222471F283;
+        Wed,  3 Jun 2020 22:06:19 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.10) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
+ 22:06:09 +0800
+Subject: Re: Question: livepatch failed for new fork() task stack unreliable
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
+        <cj.chengjian@huawei.com>, <mingo@redhat.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>,
+        <mbenes@suse.cz>, <devel@etsukata.com>, <viro@zeniv.linux.org.uk>,
+        <esyr@redhat.com>
+References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
+ <20200529174433.wpkknhypx2bmjika@treble>
+ <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
+ <20200601180538.o5agg5trbdssqken@treble>
+ <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
+ <20200602131450.oydrydelpdaval4h@treble>
+From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Message-ID: <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
+Date:   Wed, 3 Jun 2020 22:06:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
-In-Reply-To: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 3 Jun 2020 16:05:27 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2o-_JcLBsF-8JozRv_i3n18r7ZEBBBmzvTVaXpt8HQpg@mail.gmail.com>
-Message-ID: <CAK8P3a2o-_JcLBsF-8JozRv_i3n18r7ZEBBBmzvTVaXpt8HQpg@mail.gmail.com>
-Subject: Re: headers_install builds break on a lot of targets?
-To:     Rob Landley <rob@landley.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rich Felker <dalias@libc.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:cBpTzGMX1rOvmCkWLXRufYfRZAPBR1sOg0pyxD1MorXfBbuV9rj
- J/AwrENwWJdiCZxGyhaJq0QF+zBYH11rLJgv0t8vf5mpPkqN8B4CuRJLAUxGR/6aEfIMI1t
- ZBBOJyDDmqAOCss4SwBbbmTx9wTHoIFBw56+7bgsvHl0W3OY34i+G8v+55aqGlWZIYwJzOb
- MKcyLzekSVtW8E3M4Np1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fzlHmOYXcs8=:1YxdYCNiin9tN3gK7Y1Xac
- gH+1G/F9nB1wNL/EzWN+1LArEQMW5mcwYroqqXzjQkeb7tDJ/GurYrfyZiYFUUCLxeiwurlvq
- 3KGsk2lOwiBM7v8B+6GPIkMhJvCuzjOcrt8N7j5tek86fMK629Ucokd7I2jAHFyE7IPJNU69b
- aT3I12OhMl8xLUc/ulg3hXd20KDJKfndrvphlhCcREipjZ0s5WkdzxC7w1xW/i4FfigRvEszP
- feCosFzbyEm2Y+V+MdhUnlFhjPeCZUh5Jum4PlUpv6+J/SM21vNws/XGydv7aSdHuJ+7lAZBS
- mZeNdwcOMlYcWt3YBIJpbrTHYhS1vrKfqP73EOpmEWxAfEtwc7K0qP0IMagP2FomzU9B4sDRI
- bd0YWCGVIE7Abj6DJw29UAksRUCOArMqBiaCXkRiHqBC53wHPQgMUUiJs5Qg/Tmd5R+gxO9sq
- eUAo8sWulLhpbb3keYtAvc1Q8xqUJu7g0I0Z/rXx4IKbk1eOIHSow9UKebdts7lSe1Jbr7kiq
- 6zrz4zO07euAz8Kk6t+yJ3HK0cfQRl03p6SseaQiftgJsFj5w+ctEKLLxdD+cw1pjGRe8nkhx
- Qhq/kqloWWmQcq5OFWR2wB+dYGHm4uvn0CCT2qK0h4j+7evy/2ZBww1/1OdlGs3dPEzRhfTd3
- VMH7fYU+hezoj8PYUMDjcg7ckQNPfL42IO6o7+Agps6k6lJNct4IKZBdjZGV4DyQPOgZvLmvB
- XiHwwjlB9AWpvMc6Omk3NfARIJhpgpp8nrHUbOjwTTnlvxRf0C49shzWNtPIeMGovV1Z4hMOz
- e6eXChaSaQ55xs4JlIWxRW1+fAj87TwuxiPJGpM+DerIbIQo5M=
+In-Reply-To: <20200602131450.oydrydelpdaval4h@treble>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.10]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 3:49 PM Rob Landley <rob@landley.net> wrote:
->
-> The headers_install_all target got removed last year (commit f3c8d4c7a728 and
-> would someone like to update Documentation/kbuild/headers_install.txt which
-> still describes it?)
->
-> The musl-libc maintainer is using a forked hand-hacked kernel header package in
-> his toolchain build project (https://github.com/richfelker/musl-cross-make), and
-> he said the reason for it is:
->
->   http://lists.landley.net/pipermail/toybox-landley.net/2020-March/011536.html
->
->   Because downloading 100 MB of kernel source and extracting it to a far
->   larger tree just to get the headers isn't really fun.
->
-> And I thought "that's why headers_install_all existed", and noticed the target
-> being removed, so I tried my hand at a small shell script vesion:
->
->   for i in $(echo arch/*/ | sed 's@arch/\([^/]*\)/@\1@g')
->   do
->     echo $i
->     X="$PWD/fruitbasket/$i"
->     mkdir -p "$X"
->     make ARCH=$i distclean defconfig headers_install \
->       INSTALL_HDR_PATH="$PWD/fruitbasket/$i" > /dev/null
->   done
->
-> On the bright side, the resulting fruitbasket.tar.xz is 1.5 megabytes. The
-> downside is I have no idea how broken the resulting header files are after this
-> error-fest:
 
-I think the problem is that you can no longer run 'make defconfig ARCH=foo'
-without passing  a CROSS_COMPILE=${ARCH}-linux-gnu- argument pointing
-to a valid toolchain target triple.
+在 2020/6/2 21:14, Josh Poimboeuf 写道:
+> On Tue, Jun 02, 2020 at 09:22:30AM +0800, Wangshaobo (bobo) wrote:
+>> so i think this question is related to ORC unwinder, could i ask if you have
+>> strategy or plan to avoid this problem ?
+> I suspect something like this would fix it (untested):
+>
+> diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+> index 6ad43fc44556..8cf95ded1410 100644
+> --- a/arch/x86/kernel/stacktrace.c
+> +++ b/arch/x86/kernel/stacktrace.c
+> @@ -50,7 +50,7 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+>   		if (regs) {
+>   			/* Success path for user tasks */
+>   			if (user_mode(regs))
+> -				return 0;
+> +				break;
+>   
+>   			/*
+>   			 * Kernel mode registers on the stack indicate an
+> @@ -81,10 +81,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+>   	if (unwind_error(&state))
+>   		return -EINVAL;
+>   
+> -	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
+> -	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
+> -		return -EINVAL;
+> -
+>   	return 0;
+>   }
+>   
+> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+> index 7f969b2d240f..d7396431261a 100644
+> --- a/arch/x86/kernel/unwind_orc.c
+> +++ b/arch/x86/kernel/unwind_orc.c
+> @@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
+>   		state->sp = sp;
+>   		state->regs = NULL;
+>   		state->prev_regs = NULL;
+> -		state->signal = false;
+> +		state->signal = ((void *)state->ip == ret_from_fork);
+>   		break;
+>   
+>   	case ORC_TYPE_REGS:
 
-You can use the cross-compilers from
-https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/10.1.0/
-to do this if you need kernel headers for an architecture that you have no
-cross-compilers for, but they are build against glibc and won't run on
-a musl based host, or anything other than x86-64, arm64 or ppc64le
-that I built for.
+what a awesome job, thanks a lot, Josh
 
-I don't know if you can just run 'make headers_install' without configuring
-first, or if that is something that can be easily changed if it doesn't already
-work.
+Today I test your fix, but arch_stack_walk_reliable() still return 
+failed sometimes, I
 
-       Arnd
+found one of three scenarios mentioned failed:
+
+
+1. user task (just fork) but not been scheduled
+
+     test FAILED
+
+     it is because unwind_next_frame() get the first frame, this time 
+state->signal is false, and then return
+
+     failed in the same place for ret_from_fork has not executed at all.
+
+
+2. user task (just fork) start excuting ret_from_fork() till 
+schedule_tail but not UNWIND_HINT_REGS
+
+     test condition :loop fork() in current  system
+
+     result : SUCCESS,
+
+     it looks like this modification works for my perspective :
+
+	-	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
+	-	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
+	-		return -EINVAL;
+   but is this possible to miss one invalid judgement condition ? (1)
+
+3. call_usermodehelper_exec_async
+
+     test condition :loop call call_usermodehelper() in a module selfmade.
+
+     result : SUCCESS,
+
+    it looks state->signal==true works when unwind_next_frame() gets the 
+end ret_from_fork() frame,
+
+    but i don't know how does it work, i am confused by this sentences, 
+how does the comment means sibling calls and
+
+     calls to noreturn functions? (2)
+
+             /*
+              * Find the orc_entry associated with the text address.
+              *
+              * Decrement call return addresses by one so they work for 
+sibling
+              * calls and calls to noreturn functions.
+              */
+             orc = orc_find(state->signal ? state->ip : state->ip - 1);
+             if (!orc) {
+
+
+So i slightly modify your code, i move  state->signal = ((void 
+*)state->ip == ret_from_fork) to unwind_start()
+
+and render unwind_next_frame() remain the same as before:
+
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index e9cc182aa97e..ecce5051e8fd 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -620,6 +620,7 @@ void __unwind_start(struct unwind_state *state, 
+struct task_struct *task,
+                 state->sp = task->thread.sp;
+                 state->bp = READ_ONCE_NOCHECK(frame->bp);
+                 state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
++              state->signal = ((void *)state->ip == ret_from_fork);
+         }
+
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 7f969b2d240f..d7396431261a 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
+  		state->sp = sp;
+  		state->regs = NULL;
+  		state->prev_regs = NULL;
+-		state->signal = ((void *)state->ip == ret_from_fork);
++		state->signal = false;
+  		break;
+
+
+After modification all the three scenarios are captured and no longer 
+return failed,  but i don't know
+
+how does it affect the scenarios 3, because current frame->ret_addr(the 
+first frame) is not ret_from_fork,
+
+it should return failed as scenarios1, but it didn't , i really want to 
+know the reason. (3)
+
+
+thanks again
+
+Wang ShaoBo
+
+
