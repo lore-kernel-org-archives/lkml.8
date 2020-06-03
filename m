@@ -2,223 +2,251 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE19C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1A620679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A174F20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591183378;
-	bh=ehvrNQX6FKPSKoJdIOQhPL6tv5lcYmRRF/iDa8/fY3A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NT3n8JTJTR28DAKzxvZEXjkiO8SMCllycCXgNlJQ9vc6HsfiIRYvNXUjWirTqJdf2
-	 a2FWpC8iIEMpSSq7KdUnNqvJVvjW4SYsSA5VtWIiOrGPsf6ylZq98Sm4SfbjafBeFf
-	 /mbqeZJk2PQmBYif0cyohruyho+wBtccyxY53YVg=
+	s=default; t=1591183405;
+	bh=mUiQCxCjveQjocKRX2wVLUAAYi0sMoyuGnMp+j0Eubw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fjodAQzNod7ssNRBZGHY/IDXxUK78NM/wOTwgtXENOdKSEHcmtCL3ZN7/GE7riCZy
+	 dkMbS4HQbSLQqWExO5/2uQPfH6OKBGtsjiH/66a1R8PIKfDPSvMvl4fFox8Tfl5d4M
+	 gtXBUG/q2JZmNTETVcGVKJEu/3IrakObVd4Wv9wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgFCLW5 (ORCPT
+        id S1726093AbgFCLXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbgFCLW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:22:56 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10BBF20679;
-        Wed,  3 Jun 2020 11:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591183375;
-        bh=ehvrNQX6FKPSKoJdIOQhPL6tv5lcYmRRF/iDa8/fY3A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ynKH/9EW4Vbv+8Ojz1LiRoNZIcvkSWbouyA5BfTwx5gp5BZvof7dRxSb4HXOOlNKw
-         VduNFjgv0zIv3AckfNAF6bZazPaphHDprV77c74Xydh3NWvwjCDWmuzjimG7eN5jba
-         3nOmwuAei0WpdB6S+2yJHfhZBI/DKyYAPQ4iztPY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jgRTx-00HQWC-IY; Wed, 03 Jun 2020 12:22:53 +0100
+        Wed, 3 Jun 2020 07:23:25 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:43038 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgFCLXY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:23:24 -0400
+X-Greylist: delayed 20948 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 07:23:22 EDT
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 053BN7w1017145;
+        Wed, 3 Jun 2020 20:23:08 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 053BN7w1017145
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1591183388;
+        bh=xjRCifcSCtm0rrzAoDGYByWsSKjvtSoXdERdT8toBEA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=F2d5LUtktqMzfbhWZOP7Lm2J3Hvl0Ltg7C0RSlrjhnowuIIQoQ5sNAzk4pJdUPt4J
+         QX6TiObzeoVq9AiskuvUBVy7/uZGka2XRVtKpU3SGexvBs2s7phSDFQcmihtyPzbqI
+         spy1IqvX++M97ARBlmNVZ0DuHWbi0C5iu7jI3BscFawBbSB0r6ZCXotxi7MxdE/nXc
+         cu3jmQ1bTXg6cD76j4jb7K0vMhKK6hZROmEM23gRRSPk1Rh59vHs9ixxqI9xHuvy8Q
+         PAxsndZLFN3h/kJ2qDXJyeo700LrNAhPJwwHtRLm+KuWDARVup20SKGV+g8xXtmt90
+         refORrn4IwAhw==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id w20so714995uaa.2;
+        Wed, 03 Jun 2020 04:23:07 -0700 (PDT)
+X-Gm-Message-State: AOAM532o86d7dohfR3RxrMwxgmu7MXPwUlHUxyIN51Dq9sjKJ39ugAXd
+        zhsM190vXFj09Q8tN/nb9Mv7ENimiD9vSaUdV0E=
+X-Google-Smtp-Source: ABdhPJwM2bnRdGpy1EPn6Efl/rptchM35rdOn8jA4NCkq5d1S8uIE7q2Gpun2IB6EFvGLZVxNpl6kJ0r2Fg7nnWTl1U=
+X-Received: by 2002:a9f:2204:: with SMTP id 4mr21662596uad.40.1591183386891;
+ Wed, 03 Jun 2020 04:23:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 12:22:53 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-In-Reply-To: <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200603053313.3863761-1-masahiroy@kernel.org>
+ <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com>
+ <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
+ <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com>
+ <CAK7LNARLUeuiu3Y1cFqT7550MaF8fnBmMTZxKEG0Cy3vpxVkMQ@mail.gmail.com>
+ <CAMj1kXFKuMoYW8Sj=DHeYBSkWyeu+QgP9=fgET83K5D=-DsJ7Q@mail.gmail.com>
+ <CAK7LNAR3YqmSWh_GkXdP+2tb83sOpySeXVi-kP=1eehcD5097Q@mail.gmail.com> <CAMj1kXHcRuQXPej9_H_jnno516BnuFrPRqzp1+6xN-odckEMJg@mail.gmail.com>
+In-Reply-To: <CAMj1kXHcRuQXPej9_H_jnno516BnuFrPRqzp1+6xN-odckEMJg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 3 Jun 2020 20:22:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ_YMfjucip8eFBod1TBMUqGgnYebBeP22dZ4J7ZsFXeg@mail.gmail.com>
+Message-ID: <CAK7LNAQ_YMfjucip8eFBod1TBMUqGgnYebBeP22dZ4J7ZsFXeg@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-03 09:54, Kunihiko Hayashi wrote:
-> The misc interrupts consisting of PME, AER, and Link event, is handled
-> by INTx handler, however, these interrupts should be also handled by
-> MSI handler.
-> 
-> This adds the function uniphier_pcie_misc_isr() that handles misc
-> intterupts, which is called from both INTx and MSI handlers.
+On Wed, Jun 3, 2020 at 6:16 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Wed, 3 Jun 2020 at 11:15, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > On Wed, Jun 3, 2020 at 6:02 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > On Wed, 3 Jun 2020 at 10:59, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > >
+> > > > On Wed, Jun 3, 2020 at 5:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, 3 Jun 2020 at 10:36, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > > >
+> > > > > > On Wed, Jun 3, 2020 at 3:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Wed, 3 Jun 2020 at 07:34, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > Documentation/kbuild/makefiles.rst says:
+> > > > > > > >
+> > > > > > > >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+> > > > > > > >
+> > > > > > > > I want to disallow lib-y outside of them.
+> > > > > > > >
+> > > > > > >
+> > > > > > > Why?
+> > > > > >
+> > > > > >
+> > > > > > Because I plan to remove lib-y entirely at some point.
+> > > > > >
+> > > > > > lib-y is not so useful to shrink the image size because:
+> > > > > >
+> > > > > >   - An object in lib.a can be omitted only when no symbol
+> > > > > >     in that object is referenced.  This rarely happens.
+> > > > > >
+> > > > > >   -  lib-y objects are often exported by nature
+> > > > > >      because lib-y is a collection of utility functions.
+> > > > > >      Even if no in-tree user, we always need to keep them
+> > > > > >      because EXPORT_SYMBOL() is the interface to modules.
+> > > > > >
+> > > > > >
+> > > > > > When I worked on commit 7273ad2b08f8ac9563579d16a3cf528857b26f49,
+> > > > > > I made some research.
+> > > > > >
+> > > > > > The benefit of lib-y is just 362 byte for x86_64_defconfig.
+> > > > > > ( Before: 26578002, After: 26578364)
+> > > > > >
+> > > > > > My hope is lib-y will be replaced by dead-code elimination or
+> > > > > > ultimately by LTO.
+> > > > > >
+> > > > > > drivers/firmware/efi/libstub/Makefile
+> > > > > > is the only Makefile that breaks the rule:
+> > > > > > "Use of lib-y is normally restricted to `lib/` and `arch/*/lib`"
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > > Add a custom rule to build lib.a, which is linked to the decompressor
+> > > > > > > > for ARCH=x86, ARCH=arm.
+> > > > > > > >
+> > > > > > > > For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
+> > > > > > > > way.
+> > > > > > > >
+> > > > > > >
+> > > > > > > The code works perfectly fine as is, and I don't see what is
+> > > > > > > fundamentally wrong with using static libraries outside of lib/ and
+> > > > > > > arch/*/lib.
+> > > > > >
+> > > > > > The intended usage of lib-y is to hook lib.a
+> > > > > > to scripts/vmlinux.sh via KBUILD_VMLINUX_LIBS.
+> > > > > >
+> > > > > > This Makefile is just what you found to work.
+> > > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > Also, I would like this code to still be incorporated as a static
+> > > > > > > library into arm64 as well, so that only pieces that are actually
+> > > > > > > needed are incorporated into the final image.
+> > > > > >
+> > > > > > No.
+> > > > > > It is not working like that because you set
+> > > > > > lib.a to core-y.
+> > > > > >
+> > > > > > All objects in core-y are always linked to vmlinux.
+> > > > > >
+> > > > >
+> > > > > The lib.a file is passed to the linker as a static library, so it will
+> > > > > only grab what it needs.
+> > > > >
+> > > > > For instance, if you build arm64 from mainline today, the
+> > > > > efi_relocate_kernel will not be in the final image, even though it is
+> > > > > built as part of libstub
+> > > >
+> > > >
+> > > > I built today's mainline kernel
+> > > > (d6f9469a03d832dcd17041ed67774ffb5f3e73b3).
+> > > >
+> > > >
+> > > > I see it in vmlinux.
+> > > >
+> > > >
+> > > > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  defconfig
+> > > > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  -j24
+> > > >     ...
+> > > > $ aarch64-linux-gnu-nm  -n  vmlinux | grep  efi_relocate_kernel
+> > > > ffff8000114afb90 t __efistub_efi_relocate_kernel
+> > > >
+> > >
+> > > That is strange. I tested this before, and it worked.
+> > >
+> > > Did anything change recently in the way the linker is invoked?
+> >
+> >
+> > Nothing recently.
+> >
+> > This is obvious result because
+> > drivers/firmware/efi/libstub/lib.a
+> > is passed after ----whole-archive flag.
+> >
+> >
+> > I guess the following commit is it,
+> > but it is already 3 years ago.
+> >
+>
+> Right.
+>
+> So that means there is no point at all in using static libraries, no?
+> Or does --whole-archive still allow duplicate definitions like static
+> libraries do usually?
 
-interrupts
 
-> This function detects PME and AER interrupts with the status register,
-> and invoke PME and AER drivers related to INTx or MSI.
-> 
-> And this sets the mask for misc interrupts from INTx if MSI is enabled
-> and sets the mask for misc interrupts from MSI if MSI is disabled.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 53 
-> +++++++++++++++++++++++-------
->  1 file changed, 42 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c
-> b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index a5401a0..a8dda39 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -44,7 +44,9 @@
->  #define PCL_SYS_AUX_PWR_DET		BIT(8)
-> 
->  #define PCL_RCV_INT			0x8108
-> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
->  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
-> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
->  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
->  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
->  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
-> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie 
-> *pci)
-> 
->  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->  {
-> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
-> +	u32 val;
-> +
-> +	val = PCL_RCV_INT_ALL_ENABLE;
-> +	if (pci_msi_enabled())
-> +		val |= PCL_RCV_INT_ALL_INT_MASK;
-> +	else
-> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
-> +
-> +	writel(val, priv->base + PCL_RCV_INT);
->  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->  }
-> 
-> @@ -231,28 +241,48 @@ static const struct irq_domain_ops
-> uniphier_intx_domain_ops = {
->  	.map = uniphier_pcie_intx_map,
->  };
-> 
-> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
->  {
-> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> -	struct irq_chip *chip = irq_desc_get_chip(desc);
-> -	unsigned long reg;
-> -	u32 val, bit, virq;
-> +	u32 val, virq;
-> 
-> -	/* INT for debug */
->  	val = readl(priv->base + PCL_RCV_INT);
-> 
->  	if (val & PCL_CFG_BW_MGT_STATUS)
->  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
-> +
->  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
-> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> -		dev_dbg(pci->dev, "Root Error\n");
-> -	if (val & PCL_CFG_PME_MSI_STATUS)
-> -		dev_dbg(pci->dev, "PME Interrupt\n");
-> +
-> +	if (pci_msi_enabled()) {
+--whole-archive literally links the whole of the archive.
+If there are duplicate definitions, the linking fails
+due to multiple definition.
+So, --whole-archive is similar to linking .o files
+in this regard.
 
-This checks whether the kernel supports MSIs. Not that they are
-enabled in your controller. Is that really what you want to do?
 
-> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
-> +			dev_dbg(pci->dev, "Root Error Status\n");
-> +			virq = irq_linear_revmap(pp->irq_domain, 0);
-> +			generic_handle_irq(virq);
-> +		}
-> +
-> +		if (val & PCL_CFG_PME_MSI_STATUS) {
-> +			dev_dbg(pci->dev, "PME Interrupt\n");
-> +			virq = irq_linear_revmap(pp->irq_domain, 0);
-> +			generic_handle_irq(virq);
-> +		}
+There is a point for arm and x86 because
+the decompressor link does not use --whole-archive.
 
-These two cases do the exact same thing, calling the same interrupt.
-What is the point of dealing with them independently?
+As for arm64, there is no point,
+but you can pass lib.a after --no-whole-archive
+by the following patch.
 
-> +	}
-> 
->  	writel(val, priv->base + PCL_RCV_INT);
-> +}
-> +
-> +static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	unsigned long reg;
-> +	u32 val, bit, virq;
-> +
-> +	/* misc interrupt */
-> +	uniphier_pcie_misc_isr(pp);
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 650e1185c190..48a6afa774fc 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -145,7 +145,7 @@ export      TEXT_OFFSET
 
-This is a chained handler called outside of a chained_irq_enter/exit
-block. It isn't acceptable.
+ core-y         += arch/arm64/
+ libs-y         := arch/arm64/lib/ $(libs-y)
+-core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
++libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
 
-> 
->  	/* INTx */
->  	chained_irq_enter(chip, desc);
-> @@ -330,6 +360,7 @@ static int uniphier_pcie_host_init(struct pcie_port 
-> *pp)
-> 
->  static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
->  	.host_init = uniphier_pcie_host_init,
-> +	.msi_host_isr = uniphier_pcie_misc_isr,
->  };
-> 
->  static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
+ # Default target when executing plain make
+ boot           := arch/arm64/boot
 
-Thanks,
 
-         M.
+
+Then, _efistub_efi_low_alloc_above
+and __efistub_efi_relocate_kernel will be dropped.
+
+
+If you like the static library
+do you want me to send v2?
+
+
 -- 
-Jazz is not dead. It just smells funny...
+Best Regards
+Masahiro Yamada
