@@ -2,122 +2,151 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLACK,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F15C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2427C20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8912B20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="haKqXX/i"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mI5aPFlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgFCLvk (ORCPT
+        id S1726144AbgFCLv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60054 "EHLO
+        Wed, 3 Jun 2020 07:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbgFCLvj (ORCPT
+        with ESMTP id S1725881AbgFCLv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:51:39 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F01C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:51:39 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b27so1761515qka.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 04:51:39 -0700 (PDT)
+        Wed, 3 Jun 2020 07:51:57 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF449C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:51:57 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 9so2314564ljc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 04:51:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=p3JkaxTmMlZLLkeQQN6ZFxzpqnMYEmIMbzLG9f6v4/M=;
-        b=haKqXX/i+YsukbXMZduXbqPo+wBKycl/Mi30C7aBDdi599sSY0v0Rz8Lf/CilruOa0
-         D6KRRNztwatGP+TopP8TqKiICqVzPeeCy7xgU9Oq7o3q5qEvyoXycv9IMM2jtwDRl8Aw
-         gAk6uoRtvarwcd0l4B6ybqjQ2KXDBp9iibjH6CF7G218cpEYX0To/4kS+lHCm+KyZbaG
-         NNNlLkwd65xH1qZYVS4ISg826m/Kh99hT+aIR04dlRJkhLidZOyzEGe4kM4SgnIqcHxL
-         SQRuo6N88H7NYZlHswxVpRgyAfXeLPoOOzkeXUuZqD/+8GhJBzkFvfuyhi3xc+ISWz1V
-         W5SA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZdBB5hfXeMUbxEadj8HyXcRzRwZM+PPwSB4AAz3DRGw=;
+        b=mI5aPFlm4k8KFAD/9YB1eDbVdeziZR/ErHPbp/wRCC8wXXF+CZyztaQ4Kk/vvYyuBJ
+         HozI4UzdsNGaqHg4MJhQmWRdoOvBD5r5yexuyUa3ee5i2E2ZwGKIFPP1wy5iCV97459W
+         fT9k1KSus2StCFqzxCGTAqFVk1HXRXWRXSbnF8FBqrv+JuDh0KzhFwnq6CLrwH2iN9E0
+         wza4bf3IOPqxJCvH+mtlBd4SCduGmeCciSI4X4oeaVDYAdsLCH1enJG/8vd1vH3f3JEu
+         ZG4XXt/RJzF5PgH9pftNeFs0E/agvaR6f3P3h9TIV3dguN8ypGKrwWmhoZnZvS6VVhAA
+         Faew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=p3JkaxTmMlZLLkeQQN6ZFxzpqnMYEmIMbzLG9f6v4/M=;
-        b=GgUdqJVSwhYOcilHdT5aZNCaeV7X+5cMiMAK99kofYareyeKJJDN2g2Qj5yHzArc3E
-         kexOAvt5mdgwsOn+8pmNXyeJu5komO10ipjhoLDuA9JdZGaX1R4tpCq7Z9X93WDUEmPG
-         B22PsuKLxt3aYmZqDgVMxkUbeUh/7uneSQ881emmGT9xfUtXKcBjnmrSBYhfl8VuST2w
-         fzjziC5uPI8AJkTJTJgWU16f1ir+kYPljg7twpHzAhjVDlUnjgeZoeHgpEphmD26Yp8P
-         SjWs+ybL89I6djrHuVw5xnsxu08PbD7Eq+CKTh/pXhXm6FJ4/p251X0ybkWHSBYxuJwK
-         qtOQ==
-X-Gm-Message-State: AOAM533rm2i8BvLN/IZgymabIUCtgsBYQephcMus1eHXidwzFtPgq2dx
-        z5+aL8mqNACwOw8V8yj5QRR9nQ==
-X-Google-Smtp-Source: ABdhPJwk/SmqAG3iXoZQtpd8HUJHu650VSPi72o1ZPzZwxWg5ZRcHkkTSKs7KEzQXYPpOPGI59thfw==
-X-Received: by 2002:a37:61d6:: with SMTP id v205mr27176221qkb.447.1591185098571;
-        Wed, 03 Jun 2020 04:51:38 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i71sm1325426qke.75.2020.06.03.04.51.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 04:51:37 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4 3/4] mm/util.c: remove the VM_WARN_ONCE for vm_committed_as underflow check
-Date:   Wed, 3 Jun 2020 07:51:37 -0400
-Message-Id: <B26ADCE5-796F-46C6-8445-2D877B881B58@lca.pw>
-References: <20200603094804.GB89848@shbuild999.sh.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Konstantin Khlebnikov <koct9i@gmail.com>
-In-Reply-To: <20200603094804.GB89848@shbuild999.sh.intel.com>
-To:     Feng Tang <feng.tang@intel.com>
-X-Mailer: iPhone Mail (17F80)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZdBB5hfXeMUbxEadj8HyXcRzRwZM+PPwSB4AAz3DRGw=;
+        b=kxCj8w7WohjFRzXkdalDv2aYJtOxuJYJ0veRadwFFlrlGVPV6+ZQO18ZxlmzfNjncO
+         wKX4TO7PuA55bw6Ybd4dw0KI1GkZYR6O5o3mofJsLdehkoWzvGTsL5FoSNhvJIcdx/0K
+         NsPk2H05h0DyTW7zn+6Bz8kIMHPGBlJqXY9XozEdBPNC2HqwXTQl6KoqJicgEgsHgsFE
+         pKpTTfOMkjzHJwb6/8OYgeiastW8kUngrCJgljbM03XNZmk9CUDFeY0NgnMzm/VbULCM
+         9M8nhaGlKFNkDfOyvEZSD1JG4gFuKUeZ2c+ftOR7Dqwf5WPy+MVcV4/hSXCU350IUBgR
+         z87Q==
+X-Gm-Message-State: AOAM530KTa8fYqKrES9YQNKavMGKmertl3XFWk+YlWG2FUrmyNL4uecX
+        JaUEyusOVfXZ6SSw+SQVtJDh5Ffxmh4B4RzlFBLn2w==
+X-Google-Smtp-Source: ABdhPJyf5ID0wFLZrpBtkoD4Bbg02jpPZv24wGHOaCOu5JUKLGvhg2+QXOqH5CyRdbH2HtcXK+IXsJLgkB9JGLk0PJM=
+X-Received: by 2002:a2e:8554:: with SMTP id u20mr1865102ljj.188.1591185115803;
+ Wed, 03 Jun 2020 04:51:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520> <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com> <20200603060751.GA465970@kroah.com>
+In-Reply-To: <20200603060751.GA465970@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Wed, 3 Jun 2020 04:51:18 -0700
+Message-ID: <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+>
+> > Thanks for the pointer! I'm still looking at the details yet, but a
+> > quick look (usb_dev_authorized()) seems to suggest that this API is
+> > "device based". The multiple levels of "authorized" seem to take shape
+> > from either how it is wired or from userspace choice. Once authorized,
+> > USB device or interface is authorized to be used by *anyone* (can be
+> > attached to any drivers). Do I understand it right that it does not
+> > differentiate between drivers?
+>
+> Yes, and that is what you should do, don't fixate on drivers.  Users
+> know how to control and manage devices.  Us kernel developers are
+> responsible for writing solid drivers and getting them merged into the
+> kernel tree and maintaining them over time.  Drivers in the kernel
+> should always be trusted, ...
 
-> On Jun 3, 2020, at 5:48 AM, Feng Tang <feng.tang@intel.com> wrote:
->=20
-> This check was added by 82f71ae4a2b8 ("mm: catch memory commitment underfl=
-ow")
-> in 2014 to have a safety check for issues which have been fixed.
-> And there has been few report caught by it, as described in its
-> commit log:
->=20
-> : This shouldn't happen any more - the previous two patches fixed
-> : the committed_as underflow issues.
->=20
-> But it was really found by Qian Cai when he used the LTP memory
-> stress suite to test a RFC patchset, which tries to improve scalability
-> of per-cpu counter 'vm_committed_as', by chosing a bigger 'batch' number
-> for loose overcommit policies (OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS),
-> while keeping current number for OVERCOMMIT_NEVER.
->=20
-> With that patchset, when system firstly uses a loose policy, the
-> 'vm_committed_as' count could be a big negative value, as its big 'batch'
-> number allows a big deviation, then when the policy is changed to
-> OVERCOMMIT_NEVER, the 'batch' will be decreased to a much smaller value,
-> thus hits this WARN check.
->=20
-> To mitigate this, one proposed solution is to queue work on all online
-> CPUs to do a local sync for 'vm_committed_as' when changing policy to
-> OVERCOMMIT_NEVER, plus some global syncing to garante the case won't
-> be hit.
->=20
-> But this solution is costy and slow, given this check hasn't shown real
-> trouble or benefit, simply drop it from one hot path of MM. And perf
-> stats does show some tiny saving for removing it.
+1) Yes, I agree that this would be ideal, and this should be our
+mission. I should clarify that I may have used the wrong term
+"Trusted/Certified drivers". I didn't really mean that the drivers may
+be malicious by intent. What I really meant is that a driver may have
+an attack surface, which is a vulnerability that may be exploited.
+Realistically speaking, finding vulnerabilities in drivers, creating
+attacks to exploit them, and fixing them is a never ending cat and
+mouse game. At Least "identifying the vulnerabilities" part is better
+performed by security folks rather than driver writers. Earlier in the
+thread I had mentioned certain studies/projects that identified and
+exploited such vulnerabilities in the drivers. I should have used the
+term "Vetted Drivers" maybe to convey the intent better - drivers that
+have been vetted by a security focussed team (admin). What I'm
+advocating here is an administrator's right to control the drivers
+that he wants to allow for external ports on his systems.
 
-The text looks more reasonable than the previous one.
+2) In addition to the problem of driver negligences / vulnerabilities
+to be exploited, we ran into another problem with the "whitelist
+devices only" approach. We did start with the "device based" approach
+only initially - but quickly realized that anything we use to
+whitelist an external device can only be based on the info provided by
+*that device* itself. So until we have devices that exchange
+certificates with kernel [1], it is easy for a malicious device to
+spoof a whitelisted device (by presenting the same VID:DID or any
+other data that is used by us to whitelist it).
 
-Reviewed-by: Qian Cai <cai@lca.pw>=
+[1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
+
+I hope that helps somewhat clarify how / why we reached here?
+
+Thanks & Best Regards,
+
+Rajat
+
+> thanks,
+>
+> greg k-h
