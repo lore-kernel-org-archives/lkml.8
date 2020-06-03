@@ -2,172 +2,95 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8287C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9814DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E262067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:15:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NoBQ97te"
+	by mail.kernel.org (Postfix) with ESMTP id 6B14D20734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591143376;
+	bh=NaQrqvbJtsvnfeHmNpXGsKPAF5utzImNGStlY5KnIt4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nknwY1E85sxspCp0gX/UXDxb5nMBwOexwrDxzCwWIJp/ykBgUMV0cu7ZIOvdK1WNe
+	 /6keVWfJW0Hv7cUXZ+7N1aUb5jovVB8A1BTzWB7ADTDKqY60H3Xm9jvj78/zPSBk89
+	 rI8xRtQWmE/b+sPYeCikB/9VgfROMbrTPtBVfwNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgFCAPx (ORCPT
+        id S1728392AbgFCAQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 20:15:53 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54074 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFCAPx (ORCPT
+        Tue, 2 Jun 2020 20:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgFCAQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 20:15:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0530CX4A179866;
-        Wed, 3 Jun 2020 00:15:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=XpvZ9y5bmE7ucbmocB95E/AWCXmiOoV+z0bmuLh/XqA=;
- b=NoBQ97teGkUvEqj/aXe/3b5BNDQSyjb/nUweHFQ90dyh/5qi7drsTZnAeZTw2y1mKasR
- 1QyAYXCUcwEAOWGtJzrhKhyYGpKNBtctqMKCiqyzNzAEWVArVslEsNGU9aKV9JdVy+z5
- 7pVpnRCC6IbBWQbVu4S3qFGgOlXvzNPBI7+fKA/xe4cKxqTn2HcdIU6AKLzsn7sfb0b4
- QM87q/jaeVJBVg3BPGMX+DP7ymJFb/HgZKpj3kZW5G6T8wFZo3l97apGzkERtfhuNnbx
- nuwiak9ntJip/Dhw4+fK27sZovrGYbxbDywZrNyzq7u3up4yddp08rJ7QDhSENuqfpvB PA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31dkrukm8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 00:15:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0530E0CX039237;
-        Wed, 3 Jun 2020 00:15:45 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31dju2axpp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 00:15:45 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0530FhiV021622;
-        Wed, 3 Jun 2020 00:15:43 GMT
-Received: from [10.39.242.67] (/10.39.242.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jun 2020 17:15:43 -0700
-Subject: Re: [PATCH 00/10] fix swiotlb-xen for RPi4
-To:     Stefano Stabellini <sstabellini@kernel.org>, jgross@suse.com,
-        konrad.wilk@oracle.com
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        tamas@tklengyel.com, roman@zededa.com
-References: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
- <alpine.DEB.2.21.2006021447340.6774@sstabellini-ThinkPad-T480s>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- xsFNBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
- PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
- MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
- C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
- d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
- woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
- FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
- SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
- Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
- 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABzTNCb3JpcyBPc3Ry
- b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT7CwXgEEwECACIFAlH8
- CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
- 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
- JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
- VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
- jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
- qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
- tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
- kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
- m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
- nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
- hWwveNeRTkxh+2x1Qb3GT46uzsFNBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
- Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
- yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
- kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
- KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
- BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
- gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
- XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
- 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
- kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
- SQARAQABwsFfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
- jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
- 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
- PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
- u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
- qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
- t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
- ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
- Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
- 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
- Jg6OxFYd01z+a+oL
-Message-ID: <206125bc-6f84-47e6-a419-2313ec333d52@oracle.com>
-Date:   Tue, 2 Jun 2020 20:15:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 20:16:15 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE94C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 17:16:14 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n24so445129lji.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 17:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P8hJYQ+rT235Ea6JWRxsMjDChbaKBs3WgPV6XuNeVEM=;
+        b=AqPBITwj3FjR7rqIyNNFayXEwz1gK6Yyxnoa/T4EKJ6pNVfWvXrETDdXLt5zGbypPK
+         Uz5MZjGmT81Mr2dIdb/mJYnX6zyDZyBsOEhOF7n8VpU8U5lBryFrpixulJ/sw0Cnyoqx
+         74HvIbDUSSYZE2PXXHNiTP3+ZHPNGyk9AGJ8U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P8hJYQ+rT235Ea6JWRxsMjDChbaKBs3WgPV6XuNeVEM=;
+        b=Z5epzN1wz5V+GuY41sSXCGEkHI8e+P6JvHMP0VYfxpGH8F7xdbQ1nZ4mgPXEuPIfwd
+         NJOqxDvAAwOnVplY/laiU/CiX1lMc8DWgzvHGLfhcwAzPh32pjF0IGMn1H1xtx8WbzvQ
+         lNBGrw8gZqdttusRNRHpk8073oTp1Qz1nTdlQM/wgJdosturTIzg9iEygM9JhimQDLj2
+         Kl6OEw0bUgs77G1VpgynDJSY0Cj7JYwf/K1vyEBGbkvGSspAzVLY3Ve6rd+In0miB/ps
+         rpbuKlSCGhUq4jlKhfRjQE4UKSn0QdUrEF0LeRU/z+cFKtbozkc6biI/GT7+tD4rN4l2
+         OA6A==
+X-Gm-Message-State: AOAM530cBuERao0mBIUWFSBtsKYEWy/iCefy1aIhwoG+4tcDTBlXcRHy
+        BIkzWKXw4DXAzpZKtNw7OHKhmFItcWY=
+X-Google-Smtp-Source: ABdhPJxeDcnONiYriAQ80KIUMsWBSmLfFXMoeqowSdZ1RD9b29Imj+vgUKkr+t3jjhZXIMO1d51IRg==
+X-Received: by 2002:a2e:90d1:: with SMTP id o17mr724671ljg.206.1591143372771;
+        Tue, 02 Jun 2020 17:16:12 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id 66sm170802lfk.54.2020.06.02.17.16.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2020 17:16:12 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id z9so428242ljh.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 17:16:11 -0700 (PDT)
+X-Received: by 2002:a2e:b5d7:: with SMTP id g23mr681936ljn.70.1591143371526;
+ Tue, 02 Jun 2020 17:16:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2006021447340.6774@sstabellini-ThinkPad-T480s>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020167
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1011
- adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006020167
+References: <CAHC9VhQqnAG5DxvoQKa643d06rDTVtHVFEj5arCsHwyoamCckA@mail.gmail.com>
+In-Reply-To: <CAHC9VhQqnAG5DxvoQKa643d06rDTVtHVFEj5arCsHwyoamCckA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 2 Jun 2020 17:15:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgzabBsjeGyjE9jHDiLT+CbCYhkLq8xUyWemue2zohrew@mail.gmail.com>
+Message-ID: <CAHk-=wgzabBsjeGyjE9jHDiLT+CbCYhkLq8xUyWemue2zohrew@mail.gmail.com>
+Subject: Re: [GIT PULL] Audit patches for v5.8
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     linux-audit@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/2/20 5:51 PM, Stefano Stabellini wrote:
-> I would like to ask the maintainers, Juergen, Boris, Konrad, whether you
-> have any more feedback before I send v2 of the series.
-
-
-I think I only had one comment and that's all. Most were from Julien.
-
-
--boris
-
-
+On Mon, Jun 1, 2020 at 5:49 PM Paul Moore <paul@paul-moore.com> wrote:
 >
-> Cheers,
->
-> Stefano
->
->
-> On Wed, 20 May 2020, Stefano Stabellini wrote:
->> Hi all,
->>
->> This series is a collection of fixes to get Linux running on the RPi4 as
->> dom0.
->>
->> Conceptually there are only two significant changes:
->>
->> - make sure not to call virt_to_page on vmalloc virt addresses (patch
->>   #1)
->> - use phys_to_dma and dma_to_phys to translate phys to/from dma
->>   addresses (all other patches)
->>
->> In particular in regards to the second part, the RPi4 is the first
->> board where Xen can run that has the property that dma addresses are
->> different from physical addresses, and swiotlb-xen was written with the
->> assumption that phys addr == dma addr.
->>
->> This series adds the phys_to_dma and dma_to_phys calls to make it work.
->>
->>
->> Cheers,
->>
->> Stefano
->>
+>       Unfortunately I just noticed
+> that one of the commit subject lines is truncated - sorry about that,
+> it's my fault not Richard's - but since the important part is there
+> ("add subj creds to NETFILTER_CFG") I opted to leave it as-is and not
+> disrupt the git log.  If you would rather have the subject line fixed,
+> let me know and I'll correct it.
 
+It looks a bit odd, but not worth the churn of fixing up. Thanks, pulled,
+
+                  Linus
