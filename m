@@ -2,134 +2,124 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54DA22211
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECED3207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bn8KmNKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgFCXEg (ORCPT
+        id S1726774AbgFCXFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:04:36 -0400
-Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:49154 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725876AbgFCXEg (ORCPT
+        Wed, 3 Jun 2020 19:05:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44130 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725876AbgFCXFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:04:36 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 45F56837F24D;
-        Wed,  3 Jun 2020 23:04:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: basin86_280ffd426d92
-X-Filterd-Recvd-Size: 3564
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  3 Jun 2020 23:04:32 +0000 (UTC)
-Message-ID: <b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com>
-Subject: Re: [PATCH] pwm: Add missing "CONFIG_" prefix
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Date:   Wed, 03 Jun 2020 16:04:31 -0700
-In-Reply-To: <202006031539.4198EA6@keescook>
-References: <202006031539.4198EA6@keescook>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 3 Jun 2020 19:05:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591225499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c2487rGs+TC6tntrEqOtDUOH3rYGvUESRfM9RkW9d4E=;
+        b=Bn8KmNKpIdye9HjL5OEYsjXsu6wN7WARwnKLgdVpBO47eOOirdyiPRBdb7vOzmnbzw+CPX
+        rvXrnUaHQn432zJMDrZFFuuFllD19pwvrO2FzbpDxiitxNNUXSfyLEIxIQ44S21a1+PDU4
+        TRjlxbfGHO3e0HGSHS6+I1Ce0ObVXR4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-72-GFLXoTvkOEe6eS8rzLIuTA-1; Wed, 03 Jun 2020 19:04:55 -0400
+X-MC-Unique: GFLXoTvkOEe6eS8rzLIuTA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34090800685;
+        Wed,  3 Jun 2020 23:04:54 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 56C657B5E1;
+        Wed,  3 Jun 2020 23:04:53 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 17:04:52 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
+ VFIO_IRQ_TYPE_REMAP_BAR_REGION
+Message-ID: <20200603170452.7f172baf@x1.home>
+In-Reply-To: <20200603014058.GA12300@joy-OptiPlex-7040>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+        <20200518025245.14425-1-yan.y.zhao@intel.com>
+        <20200529154547.19a6685f@x1.home>
+        <20200601065726.GA5906@joy-OptiPlex-7040>
+        <20200601104307.259b0fe1@x1.home>
+        <20200602082858.GA8915@joy-OptiPlex-7040>
+        <20200602133435.1ab650c5@x1.home>
+        <20200603014058.GA12300@joy-OptiPlex-7040>
+Organization: Red Hat
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-03 at 15:40 -0700, Kees Cook wrote:
-> The IS_ENABLED() use was missing the CONFIG_ prefix which would have
-> lead to skipping this code.
-> 
-> Fixes: 3ad1f3a33286 ("pwm: Implement some checks for lowlevel drivers")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/pwm/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 9973c442b455..6b3cbc0490c6 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -121,7 +121,7 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
->  		pwm->chip->ops->get_state(pwm->chip, pwm, &pwm->state);
->  		trace_pwm_get(pwm, &pwm->state);
->  
-> -		if (IS_ENABLED(PWM_DEBUG))
-> +		if (IS_ENABLED(CONFIG_PWM_DEBUG))
->  			pwm->last = pwm->state;
->  	}
->  
-> -- 
-> 2.25.1
-> 
+On Tue, 2 Jun 2020 21:40:58 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-more odd uses (mostly in comments)
+> On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:
+> > I'm not at all happy with this.  Why do we need to hide the migration
+> > sparse mmap from the user until migration time?  What if instead we
+> > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
+> > where the existing capability is the normal runtime sparse setup and
+> > the user is required to use this new one prior to enabled device_state
+> > with _SAVING.  The vendor driver could then simply track mmap vmas to
+> > the region and refuse to change device_state if there are outstanding
+> > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
+> > required, no new irqfds, an incremental change to the protocol,
+> > backwards compatible to the extent that a vendor driver requiring this
+> > will automatically fail migration.
+> >   
+> right. looks we need to use this approach to solve the problem.
+> thanks for your guide.
+> so I'll abandon the current remap irq way for dirty tracking during live
+> migration.
+> but anyway, it demos how to customize irq_types in vendor drivers.
+> then, what do you think about patches 1-5?
 
-$ git grep -P -oh '\bIS_ENABLED\s*\(\s*\w+\s*\)'| \
-  sed -r 's/\s+//g'| \
-  grep -v '(CONFIG_' | \
-  sort | uniq -c | sort -rn
-      7 IS_ENABLED(DEBUG)
-      4 IS_ENABLED(DRM_I915_SELFTEST)
-      4 IS_ENABLED(cfg)
-      2 IS_ENABLED(opt_name)
-      2 IS_ENABLED(DEBUG_PRINT_TRIE_GRAPHVIZ)
-      2 IS_ENABLED(config)
-      2 IS_ENABLED(cond)
-      2 IS_ENABLED(__BIG_ENDIAN)
-      1 IS_ENABLED(x)
-      1 IS_ENABLED(STRICT_KERNEL_RWX)
-      1 IS_ENABLED(PWM_DEBUG)
-      1 IS_ENABLED(option)
-      1 IS_ENABLED(ETHTOOL_NETLINK)
-      1 IS_ENABLED(DEBUG_RANDOM_TRIE)
-      1 IS_ENABLED(DEBUG_CHACHA20POLY1305_SLOW_CHUNK_TEST)
+In broad strokes, I don't think we've found the right solution yet.  I
+really question whether it's supportable to parcel out vfio-pci like
+this and I don't know how I'd support unraveling whether we have a bug
+in vfio-pci, the vendor driver, or how the vendor driver is making use
+of vfio-pci.
 
-STRICT_KERNEL_RWX is misused here in ppc
+Let me also ask, why does any of this need to be in the kernel?  We
+spend 5 patches slicing up vfio-pci so that we can register a vendor
+driver and have that vendor driver call into vfio-pci as it sees fit.
+We have two patches creating device specific interrupts and a BAR
+remapping scheme that we've decided we don't need.  That brings us to
+the actual i40e vendor driver, where the first patch is simply making
+the vendor driver work like vfio-pci already does, the second patch is
+handling the migration region, and the third patch is implementing the
+BAR remapping IRQ that we decided we don't need.  It's difficult to
+actually find the small bit of code that's required to support
+migration outside of just dealing with the protocol we've defined to
+expose this from the kernel.  So why are we trying to do this in the
+kernel?  We have quirk support in QEMU, we can easily flip
+MemoryRegions on and off, etc.  What access to the device outside of
+what vfio-pci provides to the user, and therefore QEMU, is necessary to
+implement this migration support for i40e VFs?  Is this just an
+exercise in making use of the migration interface?  Thanks,
 
----
-
-Fix pr_warn without newline too.
-
- arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 51e3c15f7aff..dd60c5f2b991 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -660,11 +660,10 @@ static void __init htab_init_page_sizes(void)
- 		 * Pick a size for the linear mapping. Currently, we only
- 		 * support 16M, 1M and 4K which is the default
- 		 */
--		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
-+		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
- 		    (unsigned long)_stext % 0x1000000) {
- 			if (mmu_psize_defs[MMU_PAGE_16M].shift)
--				pr_warn("Kernel not 16M aligned, "
--					"disabling 16M linear map alignment");
-+				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
- 			aligned = false;
- 		}
- 
-
-
+Alex
 
