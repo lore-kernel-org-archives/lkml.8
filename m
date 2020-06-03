@@ -2,163 +2,112 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF12C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D29E720678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7CD20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:26:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HUgxPLCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgFCGYM (ORCPT
+        id S1726041AbgFCG0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:24:12 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:54202 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgFCGYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:24:04 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 14A571A0F6F;
-        Wed,  3 Jun 2020 08:24:02 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 02B271A00B2;
-        Wed,  3 Jun 2020 08:23:57 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A8D28402E8;
-        Wed,  3 Jun 2020 14:23:50 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     broonie@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        marex@denx.de, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] dt-bindings: spi: Convert imx lpspi to json-schema
-Date:   Wed,  3 Jun 2020 14:13:29 +0800
-Message-Id: <1591164809-13964-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591164809-13964-1-git-send-email-Anson.Huang@nxp.com>
-References: <1591164809-13964-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 3 Jun 2020 02:26:04 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46664 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgFCG0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:26:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591165561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=W9gnWO3EugB5fOJdsC5D6jCryswD8dlMs+CpQYmUgaY=;
+        b=HUgxPLCU6WnGK0LMkoSYx48M7MGp+z/gdL24d6IoOIPji/FKxsmjknTX/o6n7WcUEFDnIy
+        vQfNsi3CJgtcuKDJ/OYpmiO/fROY50Eq9l5mCrrO32CQ0coVfeOQd8I12kKUo5BjhE6sS6
+        V5CfSZoi8Ee9MV4cIp0+Ar/AatbWRiE=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-wYH1NXpyNXmIeDLZwULIkw-1; Wed, 03 Jun 2020 02:26:00 -0400
+X-MC-Unique: wYH1NXpyNXmIeDLZwULIkw-1
+Received: by mail-wm1-f69.google.com with SMTP id f62so406614wme.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 23:26:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W9gnWO3EugB5fOJdsC5D6jCryswD8dlMs+CpQYmUgaY=;
+        b=qUrDC8kbEaKgXNxTs+/nqJ6i5G1tvVKQ5OpWK7HS244zRUGDPmKXtJNUpXsKTWEWaW
+         +0nB/Gw6v8JA0K8ori0Q/i+aIDlVkQNEv04xag/kAPyNR9JkVdASPdznjjyB1ouABAJv
+         kYwrpfruk42C6MGylP7SM7vgF2GECKAw3U+0+FAhtqVIkwoGiRR+y70xLsRPIjZnywzD
+         37j/bZ7VPEeMP/AdSppjmsA+9Dwqkv1p9tjRK7oVWWleLxxp2Rmc1o7SqQiv4sP+Gqv7
+         qug/TKeUsnv5TV7lscRCTpdODlR2ilZaZOmLR04m0BOXw926PATSbaiE6Ay1L0ypj1tO
+         bwYQ==
+X-Gm-Message-State: AOAM532ItOSWK7wX0+PaSVAv5uPShLfqVZGQkDgdGT0GETfMhScE/xuM
+        0K4RU4MHfP42ZEbALaRWwffsZKWpSlwR71JHhrO4M6g9l1cDqGTdNvRVFRGh3lPwQ+cTWSIHOb3
+        SJ4ZxLOxjuYdWWmKsnNeI8PRJ
+X-Received: by 2002:adf:f64e:: with SMTP id x14mr30741023wrp.426.1591165559060;
+        Tue, 02 Jun 2020 23:25:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy1i5xHd6fc3nWnTFZOzvGSSo6xaM9/6SXCQM6Yg/CKeNgxi2/7C9Q2o+55R5dUbq2NQc+Szw==
+X-Received: by 2002:adf:f64e:: with SMTP id x14mr30741013wrp.426.1591165558867;
+        Tue, 02 Jun 2020 23:25:58 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id s5sm1394880wme.37.2020.06.02.23.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 23:25:58 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 02:25:56 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Message-ID: <20200603020325-mutt-send-email-mst@kernel.org>
+References: <20200602084257.134555-1-mst@redhat.com>
+ <20200603014815.GR23230@ZenIV.linux.org.uk>
+ <3358ae96-abb6-6be9-346a-0e971cb84dcd@redhat.com>
+ <20200603041849.GT23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603041849.GT23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX LPSPI binding to DT schema format using json-schema
+On Wed, Jun 03, 2020 at 05:18:49AM +0100, Al Viro wrote:
+> On Wed, Jun 03, 2020 at 11:57:11AM +0800, Jason Wang wrote:
+> 
+> > > How widely do you hope to stretch the user_access areas, anyway?
+> > 
+> > 
+> > To have best performance for small packets like 64B, if possible, we want to
+> > disable STAC not only for the metadata access done by vhost accessors but
+> > also the data access via iov iterator.
+> 
+> If you want to try and convince Linus to go for that, make sure to Cc
+> me on that thread.  Always liked quality flame...
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/spi/spi-fsl-lpspi.txt      | 29 -----------
- .../devicetree/bindings/spi/spi-fsl-lpspi.yaml     | 60 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+), 29 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
+It's not about iov the way I see it.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
-deleted file mode 100644
-index e71b81a..0000000
---- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--* Freescale Low Power SPI (LPSPI) for i.MX
--
--Required properties:
--- compatible :
--  - "fsl,imx7ulp-spi" for LPSPI compatible with the one integrated on i.MX7ULP soc
--  - "fsl,imx8qxp-spi" for LPSPI compatible with the one integrated on i.MX8QXP soc
--- reg : address and length of the lpspi master registers
--- interrupt-parent : core interrupt controller
--- interrupts : lpspi interrupt
--- clocks : lpspi clock specifier. Its number and order need to correspond to the
--	   value in clock-names.
--- clock-names : Corresponding to per clock and ipg clock in "clocks"
--		respectively. In i.MX7ULP, it only has per clk, so use CLK_DUMMY
--		to fill the "ipg" blank.
--- spi-slave : spi slave mode support. In slave mode, add this attribute without
--	      value. In master mode, remove it.
--
--Examples:
--
--lpspi2: lpspi@40290000 {
--	compatible = "fsl,imx7ulp-spi";
--	reg = <0x40290000 0x10000>;
--	interrupt-parent = <&intc>;
--	interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&clks IMX7ULP_CLK_LPSPI2>,
--		 <&clks IMX7ULP_CLK_DUMMY>;
--	clock-names = "per", "ipg";
--	spi-slave;
--};
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-new file mode 100644
-index 0000000..d18e2b0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-fsl-lpspi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Low Power SPI (LPSPI) for i.MX
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+allOf:
-+  - $ref: "/schemas/spi/spi-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx7ulp-spi
-+      - fsl,imx8qxp-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: SoC SPI per clock
-+      - description: SoC SPI ipg clock
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: per
-+      - const: ipg
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx7ulp-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    spi@40290000 {
-+        compatible = "fsl,imx7ulp-spi";
-+        reg = <0x40290000 0x10000>;
-+        interrupt-parent = <&intc>;
-+        interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clks IMX7ULP_CLK_LPSPI2>,
-+                 <&clks IMX7ULP_CLK_DUMMY>;
-+        clock-names = "per", "ipg";
-+        spi-slave;
-+    };
+It's a more fine-grained version of "nosmap".
+
+Right now you basically want nosmap if you are running
+a workload that does 100 byte reads/writes of userspace memory
+all the time.
+
+Which isn't so bad, I'm not sure how much security does smap add at all.
+Were there any exploits that it blocked ever since it was introduced?
+
+But in any case, it would be nice to also have an option to make it
+possible to disable smap e.g. just for vhost. Not because vhost is
+so secure, but simply because user wants this tradeoff.
+
 -- 
-2.7.4
+MST
 
