@@ -2,211 +2,127 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E60C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9ED20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E3C20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgFCLqe (ORCPT
+        id S1726074AbgFCLrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:46:34 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2269 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgFCLqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:46:34 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 2A19753E00645E3BBB16;
-        Wed,  3 Jun 2020 12:46:30 +0100 (IST)
-Received: from [127.0.0.1] (10.47.0.59) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 3 Jun 2020
- 12:46:29 +0100
-Subject: arm64 build issue and mainline crash (was Re: linux-next: Tree for
- Jun 3)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200603210603.1fcf63ed@canb.auug.org.au>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ba1f622a-6866-2a58-706b-045e8a0d9012@huawei.com>
-Date:   Wed, 3 Jun 2020 12:45:18 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20200603210603.1fcf63ed@canb.auug.org.au>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.0.59]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Wed, 3 Jun 2020 07:47:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22263 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgFCLrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:47:04 -0400
+IronPort-SDR: HITp9jl9xSJ5UeC+NQR2AvX2PnId09dVx489JQ3VTnwU0HxMba2nYr/bCtH6r7kcr8kPR/vtZD
+ o/edV3lePYrA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 04:47:04 -0700
+IronPort-SDR: uYU61oDyq4QGHj7sT3RCcYyexZOkUVa8y3ZV/s5uFfyOaQcSN03bFI21QQadqmd8GUBr4scAva
+ 2SMgjHolQI2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
+   d="scan'208";a="257426382"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Jun 2020 04:47:00 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Kelvin Cao <kelvin.cao@microchip.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 03/15] PCI: Use PCI_IRQ_MSI_TYPES where appropriate
+Date:   Wed,  3 Jun 2020 13:46:48 +0200
+Message-Id: <20200603114652.12954-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
+References: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06/2020 12:06, Stephen Rothwell wrote:
+Seeing as there is shorthand available to use when asking for any type
+of interrupt, or any type of message signalled interrupt, leverage it.
 
-JFYI, I am finding the vanilla defconfig build broken for arm64:
+Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/pci/msi.c               | 3 +--
+ drivers/pci/pcie/portdrv_core.c | 4 ++--
+ drivers/pci/switch/switchtec.c  | 3 +--
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
-LD      vmlinux.o 
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 443cc324b196..9db9ce5dddb3 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -1231,8 +1231,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 		}
+ 	}
  
-
-/home/john/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-ld: 
-cannot find ./drivers/firmware/efi/libstub/lib.abuilt-in.a: No such file 
-or directory
-make[1]: *** [vmlinux] Error 1 
+-	if (msix_vecs == -ENOSPC ||
+-	    (flags & (PCI_IRQ_MSI | PCI_IRQ_MSIX)) == PCI_IRQ_MSIX)
++	if (msix_vecs == -ENOSPC || (flags & PCI_IRQ_MSI_TYPES) == PCI_IRQ_MSIX)
+ 		return msix_vecs;
+ 	return msi_vecs;
+ }
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 50a9522ab07d..2a38a918ba12 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -105,7 +105,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
  
-
-make: *** [__sub-make] Error 2 
+ 	/* Allocate the maximum possible number of MSI/MSI-X vectors */
+ 	nr_entries = pci_alloc_irq_vectors(dev, 1, PCIE_PORT_MAX_MSI_ENTRIES,
+-			PCI_IRQ_MSIX | PCI_IRQ_MSI);
++			PCI_IRQ_MSI_TYPES);
+ 	if (nr_entries < 0)
+ 		return nr_entries;
  
-
-john@htsatcamb-server:~/linux-next$
-
-In addition, the reason I was testing this was because Linus' master 
-(d6f9469a03d8 Merge tag 'erofs-for-5.8-rc1' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs) was crashing:
-
-[ 5.368948] loop: module loaded
-[ 5.372113] Unable to handle kernel paging request at virtual address 
-fffff9ffcfec4000
-[ 5.380067] Mem abort info:
-[ 5.382865]ESR = 0x96000044
-[ 5.385927]EC = 0x25: DABT (current EL), IL = 32 bits
-[ 5.391260]SET = 0, FnV = 0
-[ 5.394319]EA = 0, S1PTW = 0
-[ 5.397467] Data abort info:
-[ 5.400354]ISV = 0, ISS = 0x00000044
-[ 5.404203]CM = 0, WnR = 1
-[ 5.407178] swapper pgtable: 4k pages, 48-bit VAs, pgdp=000000002f3f1000
-[ 5.413909] [fffff9ffcfec4000] pgd=0000000000000000
-[ 5.418807] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-[ 5.424399] Modules linked in:
-[ 5.427462] CPU: 11 PID: 1 Comm: swapper/0 Not tainted 
-5.7.0-05047-gd6f9469a03d8 #388
-[ 5.435325] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 
-IT21 Nemo 2.0 RC0 04/18/2018
-[ 5.444499] pstate: 40000005 (nZcv daif -PAN -UAO BTYPE=--)
-[ 5.450098] pc : __memset+0x16c/0x1c0
-[ 5.453770] lr : pcpu_alloc+0x1a0/0x668
-[ 5.457615] sp : ffff800011d3bbd0
-[ 5.460936] x29: ffff800011d3bbd0 x28: ffff001fb5495180
-[ 5.466267] x27: 0000000000000001 x26: 0000000000000100
-[ 5.471597] x25: 0000000000000001 x24: 0000000000000001
-[ 5.476928] x23: ffff80001135e9a0 x22: ffff80001196a200
-[ 5.482259] x21: ffff80001196a360 x20: 0000000000000000
-[ 5.487590] x19: 0000000000000000 x18: fffffe107e6fdb08
-[ 5.492920] x17: 000000000000003f x16: 0000000000000000
-[ 5.498251] x15: ffff001ffbffee00 x14: 0000000000000002
-[ 5.503581] x13: 0000000000000000 x12: 000000000000003f
-[ 5.508912] x11: 0000000000000040 x10: 0000000000000040
-[ 5.514243] x9 : 0000000000000000 x8 : fffff9ffcfec4000
-[ 5.519573] x7 : 0000000000000000 x6 : 000000000000003f
-[ 5.524904] x5 : 0000000000000040 x4 : 0000000000000000
-[ 5.530234] x3 : 0000000000000004 x2 : 00000000000000c0
-[ 5.535565] x1 : 0000000000000000 x0 : fffff9ffcfec4000
-[ 5.540896] Call trace:
-[ 5.543344]  __memset+0x16c/0x1c0
-[ 5.546666]  __alloc_percpu+0x14/0x1c
-[ 5.550338]  alloc_workqueue+0x164/0x42c
-[ 5.554273]  init+0x24/0xa4
-[ 5.557071]  do_one_initcall+0x50/0x194
-[ 5.560917]  kernel_init_freeable+0x1e4/0x250
-[ 5.565288]  kernel_init+0x10/0x104
-[ 5.568785]  ret_from_fork+0x10/0x18
-[ 5.572372] Code: 91010108 54ffff4a 8b040108 cb050042 (d50b7428)
-[ 5.578568] ---[ end trace 63c299bbe9b8ea9e ]---
-[ 5.583205] Kernel panic - not syncing: Attempted to kill init! 
-exitcode=0x0000000b
-[ 5.590903] SMP: stopping secondary CPUs
-[ 5.594846] Kernel Offset: 0xf0000 from 0xffff800010000000
-[ 5.600350] PHYS_OFFSET: 0x0
-[ 5.603235] CPU features: 0x240022,20806008
-[ 5.607430] Memory Limit: none
-[ 5.610500] ---[ end Kernel panic - not syncing: Attempted to kill init! 
-exitcode=0x0000000b ]---
-
-I'll check that when I get a chance. Maybe all just transient.
-
-Thanks
-
-
-> Hi all,
-> 
-> News: The merge window has opened, so please do *not* add v5.9 material
-> to your linux-next included branches until after v5.8-rc1 has been
-> released.
-> 
-> Changes since 20200602:
-> 
-> New tree: sh-rf
-> 
-> My fixes tree contains:
-> 
->    4cb4bfffe2c1 ("device_cgroup: Fix RCU list debugging warning")
-> 
-> The drm-intel-fixes tree gained a conflict against Linus' tree.
-> 
-> The overlayfs tree gained a build failure for which I applied a patch.
-> 
-> The v4l-dvb-next tree gained a conflict against the v4l-dvb tree and a
-> build failure so I used the version from next-20200602.
-> 
-> The drm-msm tree lost its build failure.
-> 
-> The akpm-current tree gained a conflict against Linus' tree.
-> 
-> The akpm tree lost its build failure and gained conflicts against the
-> kselftest and powerpc trees.
-> 
-> Non-merge commits (relative to Linus' tree): 10845
->   11211 files changed, 689281 insertions(+), 199935 deletions(-)
-> 
-> ----------------------------------------------------------------------------
-> 
-> I have created today's linux-next tree at
-> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-> are tracking the linux-next tree using git, you should not use "git pull"
-> to do so as that will try to merge the new linux-next release with the
-> old one.  You should use "git fetch" and checkout or reset to the new
-> master.
-> 
-> You can see which trees have been included by looking in the Next/Trees
-> file in the source.  There are also quilt-import.log and merge.log
-> files in the Next directory.  Between each merge, the tree was built
-> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-> multi_v7_defconfig for arm and a native build of tools/perf. After
-> the final fixups (if any), I do an x86_64 modules_install followed by
-> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-> and sparc64 defconfig and htmldocs. And finally, a simple boot test
-> of the powerpc pseries_le_defconfig kernel in qemu (with and without
-> kvm enabled).
-> 
-> Below is a summary of the state of the merge.
-> 
-> I am currently merging 325 trees (counting Linus' and 82 trees of bug
-> fix patches pending for the current merge release).
-> 
-> Stats about the size of the tree over time can be seen at
-> http://neuling.org/linux-next-size.html .
-> 
-> Status of my local build tests will be at
-> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-> advice about cross compilers/configs that work, we are always open to add
-> more builds.
-> 
-> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-> Gortmaker for triage and bug fixes.
-> 
+@@ -131,7 +131,7 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
+ 		pci_free_irq_vectors(dev);
+ 
+ 		nr_entries = pci_alloc_irq_vectors(dev, nvec, nvec,
+-				PCI_IRQ_MSIX | PCI_IRQ_MSI);
++				PCI_IRQ_MSI_TYPES);
+ 		if (nr_entries < 0)
+ 			return nr_entries;
+ 	}
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index e69cac84b605..11fbe9c6b201 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1442,8 +1442,7 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
+ 		nirqs = 4;
+ 
+ 	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, nirqs,
+-				      PCI_IRQ_MSIX | PCI_IRQ_MSI |
+-				      PCI_IRQ_VIRTUAL);
++				      PCI_IRQ_MSI_TYPES | PCI_IRQ_VIRTUAL);
+ 	if (nvecs < 0)
+ 		return nvecs;
+ 
+-- 
+2.17.2
 
