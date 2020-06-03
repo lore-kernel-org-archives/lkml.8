@@ -2,270 +2,215 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C17C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868B12067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2792067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:13:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="E3FpMLtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgFCUMK (ORCPT
+        id S1726151AbgFCUNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:12:10 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:52493 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCUMJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:12:09 -0400
-Received: from [192.168.1.164] ([37.4.249.202]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MyK5K-1ikVxz42Wq-00yktF; Wed, 03 Jun 2020 22:11:28 +0200
-Subject: Re: [PATCH v3 105/105] ARM: dts: bcm2711: Enable the display pipeline
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <587d6e4a529a8d807a5c0bae583dd432d77064d6.1590594512.git-series.maxime@cerno.tech>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
- CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
- bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
- TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
- NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
- MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
- by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
- MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
- VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
- aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
- OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
- bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
- Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
- ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
- bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
- dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
- QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
- UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
- SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
- VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
- akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
- NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
- RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
- QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
- ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
- cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
- R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
- aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
- NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
- SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
- TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
- TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
- NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
- YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
- SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
- KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
- ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
- VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
- SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
- d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
- UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
- c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
- a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
- anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
- WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
- Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
- QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
- Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
- K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
- aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
- dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
- TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
- SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
- U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
- VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
- OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
- Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
- eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
- MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
- SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
- Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
- WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
- Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
- OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
- TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
- eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
- WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
- cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
- QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
- Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
- RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
- SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
- cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
- dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
- RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
- SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
- WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
- VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
- am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
- OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
- L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
- aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
- cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
- WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
- MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
- RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
- RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
- TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
- SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
- M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
- VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
- MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
- bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
- NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
- ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
- Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
- eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
- QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
- TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
- dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
- S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
- VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
- QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
- ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
- UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
- SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
- UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
- N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
- dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
- MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
- d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
- WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
- MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
- MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
- TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
- NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
- MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
- RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
- VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
- WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
- ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
- SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
- MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
- M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
- dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
- CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
- VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
- bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
- LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
-Message-ID: <cbfeb8cf-ed56-bba9-6067-ca0206d54573@i2se.com>
-Date:   Wed, 3 Jun 2020 22:11:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <587d6e4a529a8d807a5c0bae583dd432d77064d6.1590594512.git-series.maxime@cerno.tech>
+        Wed, 3 Jun 2020 16:13:51 -0400
+Received: from mail-eopbgr140041.outbound.protection.outlook.com ([40.107.14.41]:2575
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725821AbgFCUNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:13:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gqGtEZUotHwvImq6gQMI3bB586y0d8XYDAoWHH5j9iuGiI4yKNllKbIzDlMJ3wYfANfh9J5ChldxpEs2dkcq7a2TZYGerUhuDEBdDaGdIFOJQBKm4jey3PqQ3tjafiFopkwXHP5YAG51ZupTkb6SehgqCi4z3Awga7YaJC5Tq1ZE5d/OhCQClUq3DsMkNoofcsoSMs3RaBUSnwsrIfisFkQEQlsYEXeJ20KaHG5Dc7Itc1m8/JLYtKcke/tIMtHs+BBGSK/efP/Zxsbdxg4IaWPXA1oEm1sGqqhvZnolKIvxKPL54gbMuvixg0AuIB5QvHcbpZ33jZrARRZ8+Of71w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vHcRcr+afO3Qs4zkkCgV2ucA9xp7mBMigCKrn5AqN6o=;
+ b=O2+zSbkbIjR1CKIHPp0oI/W2sCJl1R8ZP+G9zjtE1hJk+RBuQfpJ+ASOlpOW1DIg+VuWXjsTFI/5kcCbOHfYm3cp+oGvOfPFHzW5rphVqlFTmjMopCbX93DCvi7l2DRkOBCK7oi2wCbGhojsEsoty+YhPWZIDorgOCZp/syKYCEUgSatbGP6pVypHt20HQMj9d1IwNRm7/kzcM9/ChZeMtfu4R4WYLEMZnqpCNCjSdhsJAh98kmoiwNYLcd0Uce0fqSWCG77BhlXHEnpOB2mICQz7Y/goeisaCKuhKdf9N6oxZxxQMIpw48kSOCSV97JberlGYTBYFzZdijJe3gr5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vHcRcr+afO3Qs4zkkCgV2ucA9xp7mBMigCKrn5AqN6o=;
+ b=E3FpMLtUev+f/kmt5loMM0plKCCsHXTI9j1Hex4VL2qlgEggRj0vQIL6apZDlXL7o34oRY0PRkye5kwVSB8FQFzPi2Wp3/qGejrR04BBh1Abe1AQF23sPIDDXx5zfT28uuYfjDhZarNX6DvugQYMXqIu2AdSpmcUdaYeCMU7shA=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB4461.eurprd05.prod.outlook.com (2603:10a6:803:40::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Wed, 3 Jun
+ 2020 20:13:46 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 20:13:45 +0000
+Date:   Wed, 3 Jun 2020 17:13:37 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dave Airlie <airlied@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [git pull] drm for 5.8-rc1
+Message-ID: <20200603201337.GA225528@ziepe.ca>
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:9eaud/WWCAeoi/8fKX9wOB4syrwwNtj7/Dikv4S6MAmei5SHuSK
- Fvq1MAsdbaKUADXSKuIaykePLmxTd1ZYQ3j908KRPwEqyiT61Da5aleRrDI0t3BTV6NDmB4
- G/qjoc2XNa69D0mmWeaLhfFv/2MCT5coLpdJQjHySdcQUON4g/eBhe+FBdsb5mMYlMBkwH7
- alWKeI33cOCk66BoT2zmA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5J9sq1+Gvkg=:4/LckhcHbECw3d426rroNH
- uUYHlrZ32g0q7oofc3oqFG5EHEtAnrnhBrVyVkSrOGdUyXCgrukfwXy09GlX7b4/3tryhiPAx
- v5flSRkvWvwhLSajUf1O3aX41NWeqPA8wknDWzbusd3RgEYRoQu8epH4VwPTBtrC9/75DiU4j
- NcSJguIVrCcLeFTmLJF4r/JfMUfHr5QDr5QBjhWMN5N2Vn7C0y6ix1pYO2SQQaDXDNJsG+Quh
- djUnx3ktQtirTEZZLOPE7RsiqYX4VSk2kDNdPs3l9nrS14rGQPPF2l7EoE5G2EQ6Bss6f2Q55
- rbE9987iuaN2HDauffJdImazpAz4wnLty6xWL/6kOS3a4v39oQ0SNeOnRNPEekImrCUcUN4CY
- lQFELPNYUsyp8v1rHnpqugDCHXo3IwRlqH/9vNMKHgi/SRr5xnDyCtPIFx6OD1NOTF+ZlYi+x
- RyCPvz64J8QesglfNy9EQixS2O0ZMgDQY1Ii34Popgode5qqwJwn7Kdhz9e+L/x50PsKiyBbe
- KSKTk4oue82dfbnpg88/C/kq/ivfRsRcOZVhKRq7n4Y1QEiPZltELeBmI+QGEJSwStKq5BbiL
- m47LRG5dPIJB2tQoBZxN6wXQkcgA97K3fWfS4vKztmUYsu5zosiO7yJIkqk0YODiFrcrqnFun
- ZLUZwmFf3YupVM3NjVf3WTMij+vzDWTudlVJDBTsc3GC89RERlK/dLzSnRBYY3XwEW9mYg6hW
- c+W94V/DnP4z+40aSugMI9SVle2uSIZD1s00Lkxj/iKly/Dtu2G/fSykApHYwSJ5qbQ7wOh60
- sv4WVyG6Umwz5ZjTMvYTx0AyE0GnVyEf+a+ihRC+b/jsHvQQh8Fu3HNx+C5iDPX1/1HM8WH
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+X-ClientProxiedBy: MN2PR15CA0053.namprd15.prod.outlook.com
+ (2603:10b6:208:237::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (193.47.165.251) by MN2PR15CA0053.namprd15.prod.outlook.com (2603:10b6:208:237::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Wed, 3 Jun 2020 20:13:45 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jgZlZ-000wuT-6Q; Wed, 03 Jun 2020 17:13:37 -0300
+X-Originating-IP: [193.47.165.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f854f429-4ea0-4ca5-cc45-08d807fa9e55
+X-MS-TrafficTypeDiagnostic: VI1PR05MB4461:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB44610C9D5D320520E5B5FBFBCF880@VI1PR05MB4461.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:989;
+X-Forefront-PRVS: 04238CD941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f7dphUCF79o5P+QCoLjy8doT0f0iiQy1x2gNSgGeD3z0AfJw+uOvlFDJy2dewrV/1+cRlsJhU1aafVmtohsv2+MkiJR/SYwlBR0vmk9sKytRCqQP+aw+qsqNUo6CViq4cY82wGOM92cPz2sxIulNI2Q8rmpbG0/tPJOxIvngG2CjDytB/3k1JfxO3fdampgVxjF8C/MgeWrNG114baeCGh9YsimvPbm+Z6k1Fw3fHyDQYugPq/93dT0oEiYGFjf1PQudYpgp/Tqr1V2oaACVMVKPZbt9s+ET0YxLRiPXWK6dirXb+nlcB2OC6+jt18GkodgCe7GEal8DzSEwvfTN5tVoFJoGrCjwx8zdgsQTD+FsiAHZCMsmYOswH+Pbc43lbkL6zISNElzrscmaoion1e5oRUbnUzcLaxcB5VjM2iGjoBN9gKp5tat6upsyPTaQ9jT+0ljLx1lxRJLv2iZI0w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(376002)(136003)(396003)(39860400002)(2906002)(8936002)(316002)(33656002)(426003)(86362001)(8676002)(4326008)(9686003)(26005)(66574014)(186003)(36756003)(9746002)(9786002)(66476007)(110136005)(478600001)(54906003)(83380400001)(1076003)(66556008)(66946007)(966005)(5660300002)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: W3awLMfh4boklwVoIALszg/zdG91lmylg4OehcXuP6cc2zocxUaLNUMpv44KDEe4PxJfFJGgHC+6CSbteicxWG+xWc50eNDNEoeJc0gCerUXslsHxT9cVO9rUWCfobQfKECP2zbgifoXpfstn8Hb9EPYf/wZnydBEaNgUBjyexoG2Up75Eb0NY318pgi46LtmRMKLdaKx53QfWMriFSEiktJGdMndg8DVGnlDD5eCRbw3ZEyHjXLhl4gSEHcZ5yXMGHM0decYH1Wx0xW/IAoCPUc0hQwShWdJjEFhM/HGk/wK6YgnxJ+I8HtuoUZqc15sJDQk65n9hihb1wmnYcKt/gvUxjC35ILhDmZXYBuvrECmamDHuJtScJInRidjgUlZbG1SzUthPH1dbKjokd1ahC8og9atxpIW1JQL0gjqoL15uQF8QYW3ggEgo0jZa/9sLJGZqvLWs+oP6XlUZ6HaEf77z97r015QKmq3WmtujFufdZ7h7MSYajgg3lt5mpz
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f854f429-4ea0-4ca5-cc45-08d807fa9e55
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 20:13:45.7343
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uUv08PUESsfMQo9YK2C7zLjPWDkGYJHYLLE9MFM3/ZeLOLOrMt5m0VI4dsjM9WR2e8RcdCBs4mKW3ltjp2K/nw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4461
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On Tue, Jun 02, 2020 at 04:06:32PM +1000, Dave Airlie wrote:
+> Hi Linus,
+> 
+> This is the main drm pull request for 5.8-rc1.
+> 
+> Highlights:
+> Core DRM had a lot of refactoring around managed drm resources to make
+> drivers simpler.
+> Intel Tigerlake support is on by default
+> amdgpu now support p2p PCI buffer sharing and encrypted GPU memory
 
-Am 27.05.20 um 17:49 schrieb Maxime Ripard:
-> Now that all the drivers have been adjusted for it, let's bring in the
-> necessary device tree changes.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  46 +++++++++++-
->  arch/arm/boot/dts/bcm2711.dtsi        | 115 ++++++++++++++++++++++++++-
->  2 files changed, 160 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> index 222d7825e1ab..c4a650ea4e21 100644
-> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> @@ -231,3 +231,49 @@
->  &vchiq {
->  	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
->  };
-> +
-> +&vc4 {
-> +	status = "okay";
-> +};
-> +
-> +&pixelvalve0 {
-> +	status = "okay";
-> +};
-> +
-> +&pixelvalve1 {
-> +	status = "okay";
-> +};
-> +
-> +&pixelvalve2 {
-> +	status = "okay";
-> +};
-> +
-> +&pixelvalve4 {
-> +	status = "okay";
-> +};
-> +
-> +&vec {
-> +	status = "disabled";
-> +};
-> +
-> +&hdmi0 {
-> +	clocks = <&firmware_clocks 13>, <&dvp 0>;
-> +	status = "okay";
-> +};
-> +
-> +&ddc0 {
-> +	status = "okay";
-> +};
-> +
-> +&hdmi1 {
-> +	clocks = <&firmware_clocks 13>, <&dvp 1>;
-> +	status = "okay";
-> +};
-> +
-> +&ddc1 {
-> +	status = "okay";
-> +};
-> +
-> +&hvs {
-> +	clocks = <&firmware_clocks 4>;
-> +};
+Christoph Hellwig basically NAK'd this approach, why is it getting
+merged all of a sudden??
 
-it would be nice to have these references in alphabetical order.
+https://lore.kernel.org/intel-gfx/20200311152838.GA24280@infradead.org/
 
-Regards
+Are we now OK with this same approach open coded in a driver?
 
+This wasn't Cc'd to the usual people doing work in this PCI P2P area??
+
+See
+
+commit f44ffd677fb3562ac0a1ff9c8ae52672be741f00
+Author: Christian König <christian.koenig@amd.com>
+Date:   Fri Mar 23 16:56:37 2018 +0100
+
+    drm/amdgpu: add support for exporting VRAM using DMA-buf v3
+    
+    We should be able to do this now after checking all the prerequisites.
+    
+    v2: fix entrie count in the sgt
+    v3: manually construct the sg
+    
+    Signed-off-by: Christian König <christian.koenig@amd.com>
+    Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+    Acked-by: Sumit Semwal <sumit.semwal@linaro.org>
+    Link: https://patchwork.freedesktop.org/patch/359295
+
+[..]
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+index 82a3299e53c042..128a667ed8fa0d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+@@ -22,6 +22,7 @@
+  * Authors: Christian König
+  */
+ 
++#include <linux/dma-mapping.h>
+ #include "amdgpu.h"
+ #include "amdgpu_vm.h"
+ #include "amdgpu_atomfirmware.h"
+@@ -458,6 +459,104 @@ static void amdgpu_vram_mgr_del(struct ttm_mem_type_manager *man,
+ 	mem->mm_node = NULL;
+ }
+ 
++/**
++ * amdgpu_vram_mgr_alloc_sgt - allocate and fill a sg table
++ *
++ * @adev: amdgpu device pointer
++ * @mem: TTM memory object
++ * @dev: the other device
++ * @dir: dma direction
++ * @sgt: resulting sg table
++ *
++ * Allocate and fill a sg table from a VRAM allocation.
++ */
++int amdgpu_vram_mgr_alloc_sgt(struct amdgpu_device *adev,
++			      struct ttm_mem_reg *mem,
++			      struct device *dev,
++			      enum dma_data_direction dir,
++			      struct sg_table **sgt)
++{
++	struct drm_mm_node *node;
++	struct scatterlist *sg;
++	int num_entries = 0;
++	unsigned int pages;
++	int i, r;
++
++	*sgt = kmalloc(sizeof(*sg), GFP_KERNEL);
++	if (!*sgt)
++		return -ENOMEM;
++
++	for (pages = mem->num_pages, node = mem->mm_node;
++	     pages; pages -= node->size, ++node)
++		++num_entries;
++
++	r = sg_alloc_table(*sgt, num_entries, GFP_KERNEL);
++	if (r)
++		goto error_free;
++
++	for_each_sg((*sgt)->sgl, sg, num_entries, i)
++		sg->length = 0;
++
++	node = mem->mm_node;
++	for_each_sg((*sgt)->sgl, sg, num_entries, i) {
++		phys_addr_t phys = (node->start << PAGE_SHIFT) +
++			adev->gmc.aper_base;
++		size_t size = node->size << PAGE_SHIFT;
++		dma_addr_t addr;
++
++		++node;
++		addr = dma_map_resource(dev, phys, size, dir,
++					DMA_ATTR_SKIP_CPU_SYNC);
++		r = dma_mapping_error(dev, addr);
++		if (r)
++			goto error_unmap;
++
++		sg_set_page(sg, NULL, size, 0);
++		sg_dma_address(sg) = addr;
++		sg_dma_len(sg) = size;
+                ^^^^^^^^^^^^^^
+  
+Jason
