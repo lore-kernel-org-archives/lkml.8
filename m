@@ -2,85 +2,149 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D51C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 701C020734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D03320679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgFCJol (ORCPT
+        id S1726419AbgFCJsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:44:41 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:42018 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725854AbgFCJok (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:44:40 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1363638|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0250509-0.000374926-0.974574;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=frank@allwinnertech.com;NM=1;PH=DW;RN=14;RT=14;SR=0;TI=W4_5899425_DEFAULT_0AC2668F_1591177476445_o7001c856;
-Received: from WS-web (frank@allwinnertech.com[W4_5899425_DEFAULT_0AC2668F_1591177476445_o7001c856]) by e01l07394.eu6 at Wed, 03 Jun 2020 17:44:36 +0800
-Date:   Wed, 03 Jun 2020 17:44:36 +0800
-From:   "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-To:     "Maxime Ripard" <maxime@cerno.tech>
-Cc:     "wens" <wens@csie.org>, "robh+dt" <robh+dt@kernel.org>,
-        "mturquette" <mturquette@baylibre.com>, "sboyd" <sboyd@kernel.org>,
-        "linus.walleij" <linus.walleij@linaro.org>,
-        "p.zabel" <p.zabel@pengutronix.de>,
-        "=?UTF-8?B?6buE54OB55Sf?=" <huangshuosheng@allwinnertech.com>,
-        "tiny.windzz" <tiny.windzz@gmail.com>,
-        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
-        "devicetree" <devicetree@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "linux-clk" <linux-clk@vger.kernel.org>,
-        "linux-gpio" <linux-gpio@vger.kernel.org>
-Reply-To: "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-Message-ID: <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
-Subject: =?UTF-8?B?5Zue5aSN77yaW1BBVENIIDIvNF0gcGluY3RybDogc3VueGk6IGFkZCBzdXBwb3J0IGZvciB0?=
-  =?UTF-8?B?aGUgQWxsd2lubmVyIEExMDAgcGluIGNvbnRyb2xsZXI=?=
-X-Mailer: [Alimail-Mailagent revision 4][W4_5899425][DEFAULT][Chrome]
+        Wed, 3 Jun 2020 05:48:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:12471 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgFCJsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:48:09 -0400
+IronPort-SDR: vRUeNr66CzYmMLVANaRq0+HxetS9c7KwSVlWVVLI0kYRKFRYF9iI3mBJrrbFb5zGb/Z7Qc0nRX
+ 6h0rak4bR2yQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 02:48:08 -0700
+IronPort-SDR: BkwBQ/BHqe1tonku3ksMYgxt4OD8StANvjvo9vJtQJn4ihY0f+YLmjOugXm+LeJNDB1EUNFCrz
+ wef8VnH/rkew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
+   d="scan'208";a="378049486"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Jun 2020 02:48:04 -0700
+Date:   Wed, 3 Jun 2020 17:48:04 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Konstantin Khlebnikov <koct9i@gmail.com>
+Subject: Re: [PATCH v4 3/4] mm/util.c: remove the VM_WARN_ONCE for
+ vm_committed_as underflow check
+Message-ID: <20200603094804.GB89848@shbuild999.sh.intel.com>
+References: <E1703973-38C1-4AFB-94D1-E79DDC6853EE@lca.pw>
 MIME-Version: 1.0
-References: <20200522030743.10204-1-frank@allwinnertech.com> <20200522030743.10204-3-frank@allwinnertech.com>,<20200522152803.twvfvuhd6ztunvll@gilmour.lan>
-In-Reply-To: <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
-x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU2LjAuMjkyNC44NyBTYWZhcmkvNTM3LjM2TM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E1703973-38C1-4AFB-94D1-E79DDC6853EE@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gKyBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oRiwgMCksCj4+ICsgIFNVTlhJX0ZVTkNU
-SU9OKDB4MCwgImdwaW9faW4iKSwKPj4gKyAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQi
-KSwKPj4gKyAgU1VOWElfRlVOQ1RJT04oMHgyLCAibW1jMCIpLCAgLyogRDEgKi8KPj4gKyAgU1VO
-WElfRlVOQ1RJT04oMHgzLCAianRhZyIpLCAgLyogTVMxICovCj4+ICsgIFNVTlhJX0ZVTkNUSU9O
-KDB4NCwgImp0YWciKSwgIC8qIE1TX0dQVSAqLwo+Cj5XZSBzaG91bGQgdXNlIGFub3RoZXIgbmFt
-ZSBoZXJlLCBzaW5jZSB0aGUgY29kZSB3aWxsIGp1c3QgcGljayB0aGUgZmlyc3Qgb25lIGFuZAo+
-aWdub3JlIHRoZSBzZWNvbmQuIFdoYXQgYWJvdXQganRhZy1ncHU/CgpUaGUgdW5kZXJzY29yZXMg
-YXJlIHVzZWQgaW4gZnJvbnQsIHNvIGNoYW5naW5nIGl0IHRvIGp0YWdfZ3B1IG1heSBiZSBtb3Jl
-IGNvbnNpc3RlbnQuCgo+PiArIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihCLCA3KSwKPj4g
-KyAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLAo+PiArICBTVU5YSV9GVU5DVElPTigw
-eDEsICJncGlvX291dCIpLAo+PiArICBTVU5YSV9GVU5DVElPTigweDIsICJzcGRpZiIpLCAgLyog
-RElOICovCj4+ICsgIFNVTlhJX0ZVTkNUSU9OKDB4MywgImkyczAiKSwgIC8qIERPVVQwICovCj4+
-ICsgIFNVTlhJX0ZVTkNUSU9OKDB4NCwgImkyczAiKSwgIC8qIERJTjEgKi8KPgo+SSBndWVzcyB0
-aGUgc2Vjb25kIG9uZSB3b3VsZCBiZSBpMnMxPwoKTm8sIGVhY2ggaTJzIG1heSBoYXZlIG1hbnkg
-aW5wdXRzIGFuZCBvdXRwdXRzLiAKCiBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oSCwgMTkp
-LAogICAgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwKICAgICAgICAgICAgICBTVU5Y
-SV9GVU5DVElPTigweDEsICJncGlvX291dCIpLAogICAgICAgICAgICAgIFNVTlhJX0ZVTkNUSU9O
-KDB4MiwgImNpcjAiKSwgICAgICAgICAgLyogSU4gKi8KICAgICAgICAgICAgICBTVU5YSV9GVU5D
-VElPTigweDMsICJpMnMzX2RvdXQzIiksICAgICAgIC8qIERPVVQzICovCiAgICAgICAgICAgICAg
-U1VOWElfRlVOQ1RJT04oMHg0LCAiaTJzM19kaW4zIiksICAgICAgIC8qIERJTjMgKi8KICAgICAg
-ICAgICAgICBTVU5YSV9GVU5DVElPTigweDUsICJsZWRjIiksCiAgICAgICAgICAgICAgU1VOWElf
-RlVOQ1RJT05fSVJRX0JBTksoMHg2LCA2LCAxOSkpLAoKQ29uc2lkZXJpbmcgdGhhdCB0aGUgc2Ft
-ZSBwaW4gaGFzIG11bHRpcGxlIHNhbWUgZnVuY3Rpb25zLCAKc28gYWRkIGEgc3VmZml4LCBsaWtl
-IGkyczNfZG91dDMgYW5kIGkyczNfZGluMz8gICAKCk9yIHNwZWNpZnkgbXV4c2VsIGluIHRoZSBk
-ZXZpY2UgdHJlZSBtYXkgYmUgYW5vdGhlciBzb2x1dGlvbi4KCj4+ICsgU1VOWElfUElOKFNVTlhJ
-X1BJTkNUUkxfUElOKEgsIDIpLAo+PiArICBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiks
-Cj4+ICsgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+ICsgIFNVTlhJX0ZVTkNU
-SU9OKDB4MiwgImkyYzEiKSwgIC8qIFNDSyAqLwo+PiArICBTVU5YSV9GVU5DVElPTigweDMsICJj
-cHUiKSwgIC8qIENVUl9XICovCj4KPldoYXQgaXMgImNwdSIgc3VwcG9zZWQgdG8gYmU/CgpBcyBm
-YXIgYXMgSSBrbm93LCB0aGlzIGlzIGEgZnVuY3Rpb24gdGhhdCBoYXMgbmV2ZXIgYmVlbiB1c2Vk
-LgpUaGUgaGFyZHdhcmUgZ3V5IHNhaWQgdGhhdCBpdCBjYW4gYmUgdXNlZCB0byBjb250cm9sIHRo
-ZSBDUFUgdG8gcmVkdWNlIHRoZSBjdXJyZW50LgoKVGh4LApZYW5ndGFv
+On Tue, Jun 02, 2020 at 12:02:22AM -0400, Qian Cai wrote:
+> 
+> 
+> > On Jun 1, 2020, at 11:37 PM, Feng Tang <feng.tang@intel.com> wrote:
+> > 
+> > I re-run the same benchmark with v5.7 and 5.7+remove_warning kernels,
+> > the overall performance change is trivial (which is expected)
+> > 
+> >   1330147            +0.1%    1331032        will-it-scale.72.processes
+> > 
+> > But the perf stats of "self" shows big change for __vm_enough_memory() 
+> > 
+> >      0.27            -0.3        0.00        pp.self.__vm_enough_memory
+> > 
+> > I post the full compare result in the end.
+> 
+> I don’t really see what that means exactly, but I suppose the warning is there for so long and no one seems notice much trouble (or benefit) because of it, so I think you will probably need to come up with a proper justification to explain why it is a trouble now, and how your patchset suddenly start to trigger the warning as well as why it is no better way but to suffer this debuggability regression (probably tiny but still).
+
+Thanks for the suggestion, and I updated the commit log.
+
+
+From 1633da8228bd3d0dcbbd8df982977ad4594962a1 Mon Sep 17 00:00:00 2001
+From: Feng Tang <feng.tang@intel.com>
+Date: Fri, 29 May 2020 08:48:48 +0800
+Subject: [PATCH] mm/util.c: remove the VM_WARN_ONCE for vm_committed_as
+ underflow check
+
+This check was added by 82f71ae4a2b8 ("mm: catch memory commitment underflow")
+in 2014 to have a safety check for issues which have been fixed.
+And there has been few report caught by it, as described in its
+commit log:
+
+: This shouldn't happen any more - the previous two patches fixed
+: the committed_as underflow issues.
+
+But it was really found by Qian Cai when he used the LTP memory
+stress suite to test a RFC patchset, which tries to improve scalability
+of per-cpu counter 'vm_committed_as', by chosing a bigger 'batch' number
+for loose overcommit policies (OVERCOMMIT_ALWAYS and OVERCOMMIT_GUESS),
+while keeping current number for OVERCOMMIT_NEVER.
+
+With that patchset, when system firstly uses a loose policy, the
+'vm_committed_as' count could be a big negative value, as its big 'batch'
+number allows a big deviation, then when the policy is changed to
+OVERCOMMIT_NEVER, the 'batch' will be decreased to a much smaller value,
+thus hits this WARN check.
+
+To mitigate this, one proposed solution is to queue work on all online
+CPUs to do a local sync for 'vm_committed_as' when changing policy to
+OVERCOMMIT_NEVER, plus some global syncing to garante the case won't
+be hit.
+
+But this solution is costy and slow, given this check hasn't shown real
+trouble or benefit, simply drop it from one hot path of MM. And perf
+stats does show some tiny saving for removing it.
+
+Reported-by: Qian Cai <cai@lca.pw> 
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Cc: Konstantin Khlebnikov <koct9i@gmail.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Andi Kleen <andi.kleen@intel.com>
+---
+ mm/util.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/mm/util.c b/mm/util.c
+index 9b3be03..c63c8e4 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -814,14 +814,6 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
+ {
+ 	long allowed;
+ 
+-	/*
+-	 * A transient decrease in the value is unlikely, so no need
+-	 * READ_ONCE() for vm_committed_as.count.
+-	 */
+-	VM_WARN_ONCE(data_race(percpu_counter_read(&vm_committed_as) <
+-			-(s64)vm_committed_as_batch * num_online_cpus()),
+-			"memory commitment underflow");
+-
+ 	vm_acct_memory(pages);
+ 
+ 	/*
+-- 
+2.7.4
+
+
