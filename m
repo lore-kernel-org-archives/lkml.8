@@ -2,194 +2,183 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F6F206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EF220772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:20:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="Mk4s1Wyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgFCLRu (ORCPT
+        id S1725993AbgFCLUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:17:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60678 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCLRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:17:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 415EFAC40;
-        Wed,  3 Jun 2020 11:17:50 +0000 (UTC)
-Subject: Re: [PATCH] mm: thp: Add new kernel parameters
- transparent_hugepage_defrag/khugepaged_defrag
-To:     Gavin Guo <gavin.guo@canonical.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-References: <20200603065049.11598-1-gavin.guo@canonical.com>
-Cc:     "Eric W . Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <14faa6c7-6701-7a8e-3e88-4febee20f56e@suse.cz>
-Date:   Wed, 3 Jun 2020 13:17:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 3 Jun 2020 07:20:03 -0400
+Received: from mail-bn8nam11on2105.outbound.protection.outlook.com ([40.107.236.105]:60416
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725855AbgFCLUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:20:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d9WFNOFGIkzH2XKW01JJNjhMi42p9x9TCuCMTigsfOuNYPeUHA2bcEBAaez3ZrgHwnsKPAsNFs/+wetdRr5t+vEEE68RMeYhCiBZElqFoqAfFqdCr1virVzHaDnroxBtIWdSKs1WY5QcopKzxzYKfM+IApDJswrapAiWtLc49kIMAIrI0M5pWUcA15WQ6s9k6rBDgI0rKRP3n8nTY+IGz0s8+y/I5/ijHI5m1gjCIdJhcKwGIXHzej099BiLAza5o2KcCuXMMCfALsOLc2bHcWqS2hNGjLMAiLj0qNmHCefKysUPSxiwvDC3KCeqYdJPifRxCiCVaU2M3L3ROw8clQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LjX8VQD+jctlrG8l7aqjtLnxT6soI54fC8+//7+YG48=;
+ b=c6SfLKf68bGRO1QTjbJ9A5pOYTHqDb+CXdlKonZC1G7x4YU8j6S/O3CKxSL4fNeazsMgmp1wb6AStfNfr8IutJutUxoSOjrhmKKMhYw5owArB9QHLlDHSENR/qUizkbLj1ctsgOYHM5GkSHojZwJc74oJWMsrcgLnZVLFrm7WfqqskVAkkNExsdzFRB1uDsh/aLwScVEcMJzewm5yMaF+6RMlkI5+6t99NKBUTHSjh5hkp1rPJSxqUWEVwwLmvEeU/AgJxo77xktYKHNm+Eo8lAmnyRujZWCGfqaPMo+7OUxUyB0jD6vLPeEThwlVNKNfjwfFpOPVXPFC6Ehof9uAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
+ header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=maximintegrated.onmicrosoft.com;
+ s=selector2-maximintegrated-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LjX8VQD+jctlrG8l7aqjtLnxT6soI54fC8+//7+YG48=;
+ b=Mk4s1WyjR2jdCQ/NcduMan2pqtaftxTZ515gnf7ACDfb9OFAxSjoCTuomZOON4wXMow9v+tI9SGEamvfAe6dPbHaCnbpi8tnOnBZaYkJkuXU/HBEfq/VXPRJFpHwOl9N6gRt9hnln0XybIQR+KcGssiWQCjY5FgzJWLZQB71ujE=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none
+ header.from=maximintegrated.com;
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
+ by MWHPR11MB1358.namprd11.prod.outlook.com (2603:10b6:300:23::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 3 Jun
+ 2020 11:19:56 +0000
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 11:19:55 +0000
+From:   Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
+        nuno.sa@analog.com, steves.lee@maximintegrated.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
+        steves.lee.maxim@gmail.com
+Subject: [PATCH] ASoC: max98390: Fix potential crash during param fw loading
+Date:   Wed,  3 Jun 2020 20:18:19 +0900
+Message-Id: <20200603111819.5824-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SLXP216CA0003.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:6::13) To MWHPR11MB2047.namprd11.prod.outlook.com
+ (2603:10b6:300:2a::12)
 MIME-Version: 1.0
-In-Reply-To: <20200603065049.11598-1-gavin.guo@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (2001:2d8:959:1878:d447:7247:839:5c8e) by SLXP216CA0003.KORP216.PROD.OUTLOOK.COM (2603:1096:100:6::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Wed, 3 Jun 2020 11:19:50 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:2d8:959:1878:d447:7247:839:5c8e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c1ecc515-676d-467a-9ea9-08d807b00b02
+X-MS-TrafficTypeDiagnostic: MWHPR11MB1358:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR11MB1358C076C158F9EEEC86F60792880@MWHPR11MB1358.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:530;
+X-Forefront-PRVS: 04238CD941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0CLVN+va7wh1wtqAMXZl6fS7ZvQxvJmSZQzrdHQNjxmWuo/W7HWDSQvw2ADoZqYgS8wQvML78W/EP5I335/ZYXMSLqzdLeoRVKkkQ31cfWYbC4ayTbUbudPxkRAde61vTBPo3fKxihyEXKmOJA2v6brPNltgltIOVqViK5SPnI49T3SPXaqZdjO0v54zCA7Usze5MVvsUorh0Pml6fNMb8qladcYaHjE6lyl67ZCMuUSggcrdclvB6pzuRNEMaaE/qLY+3qDZlkxnTw+B+wP9zIauqe6XINpVXXzpZBQ/y+bdqO+flC1VFe/hw2R4OJ1/KXg8APR6Bx26Fbx20nAnOV5xdTh8GA9cNiCmm3EqOi0y+gFkILXJcn2bE0RdPzF0vJ6CXw0uRroKpbyYFwpSw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(366004)(39860400002)(346002)(396003)(1076003)(6486002)(478600001)(2906002)(52116002)(5660300002)(86362001)(66556008)(36756003)(66476007)(66946007)(6506007)(4326008)(186003)(16526019)(8936002)(8676002)(316002)(2616005)(6512007)(69590400007)(83380400001)(7416002)(6666004)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Lxyz6lvW6eEI4CWWQ5W2UWMopIWJ6WlPwR4/004n0K+Mo7bmvYjtrZu4OuMBgtkpZ4+VC4abA+NgWum5QkG2F2IJJyJmH9yVDlNy0mr4bjfEzVypQXolctncr8zLWBhOTdHBv/WyS7D+DzdLSEzPXp2zOHHE8FppRXE4FYSLRcjj18oPEJEAhptwS5H3lQi9OZGA/+ewLJuWuaYti+WLUppdCrvJhGdZDCyhsxDzO1n5XgCk2N9kX2I+/EDCeE5EYl6vTFjYh5VLpyOO3r9Ep8O3CjVFuXGGfbMRIAETB1U6JEidfToFSXMPwyVNy1U8T9G/FdSMwpiKGDuBMA7ZUlZ6grJLNG4MmxmetovDO2YL4VEG5Cv6Rsj3Yqu51v/QvFJemVM+DoP2N39iFQ4f+aj5iHhf0G49eBSVwhNBUEk1zlYp6nyjvFmfiOCUZtzmelb90C6TIM4QQNyZZK2Wess5fdsirRw77zHUjB7eI0jli9a0wkiil5l5lp8iT/nII3S95yTJ6UKRf4V3Ea0eRiJ8D8L1r4vFNzguuoDr3Kc=
+X-OriginatorOrg: maximintegrated.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1ecc515-676d-467a-9ea9-08d807b00b02
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 11:19:55.7652
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zeQ5Etwq5qNringcihOYET0rxymsWuGinl0uisJZOUrPuY4fol+JUJhRRtlB6zKcqkds6mCAxA3wsQo+bvbLBD0sbCmUCTTSV80JVkYRj8o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1358
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ malformed firmware file can cause out-of-bound access and crash
+ during dsm_param bin loading.
+  - add MIN/MAX param size to avoid out-of-bound access.
+  - read start addr and size of param and check bound.
 
-On 6/3/20 8:50 AM, Gavin Guo wrote:
-> There is no way to set up the defrag options in boot time. And it's
-> useful to set it up by default instead of making it work by a
-> systemd/upstart service or put the command to set up defrag inside
-> /etc/rc.local.
-> 
-> Signed-off-by: Gavin Guo <gavin.guo@canonical.com>
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
+ sound/soc/codecs/max98390.c | 23 ++++++++++++++++++-----
+ sound/soc/codecs/max98390.h |  3 ++-
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
-Well, maybe isntead of adding these handlers, we could extend the new boot
-parameter sysctl support (handling procfs /proc/sys/) to sysfs (/sys) as well,
-as Eric already suggested? [1]
-
-[1] https://lore.kernel.org/linux-api/87bloj2skm.fsf@x220.int.ebiederm.org/
-
-> ---
->  .../admin-guide/kernel-parameters.txt         | 18 ++++++++
->  mm/huge_memory.c                              | 43 +++++++++++++++++++
->  mm/khugepaged.c                               | 21 +++++++++
->  3 files changed, 82 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 6253849afac2..a9fd020d78db 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2149,6 +2149,16 @@
->  	kgdbwait	[KGDB] Stop kernel execution and enter the
->  			kernel debugger at the earliest opportunity.
->  
-> +	khugepaged_defrag=
-> +			[KNL]
-> +			Format: { "0" | "1" }
-> +			0 - disable the defrag
-> +			1 - enable the defrag
-> +			Control the defrag efforts when generating the
-> +			transparent hugepages through khugepaged.
-> +			See Documentation/admin-guide/mm/transhuge.rst
-> +			for more details.
-> +
->  	kmac=		[MIPS] korina ethernet MAC address.
->  			Configure the RouterBoard 532 series on-chip
->  			Ethernet adapter MAC address.
-> @@ -5146,6 +5156,14 @@
->  			See Documentation/admin-guide/mm/transhuge.rst
->  			for more details.
->  
-> +	transparent_hugepage_defrag=
-> +			[KNL]
-> +			Format: [always|defer|defer+madvise|madvise|never]
-> +			Control the defrag efforts when generating the
-> +			transparent hugepages.
-> +			See Documentation/admin-guide/mm/transhuge.rst
-> +			for more details.
-> +
->  	tsc=		Disable clocksource stability checks for TSC.
->  			Format: <string>
->  			[x86] reliable: mark tsc clocksource as reliable, this
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 8091b780cd7a..86b20a3a1aac 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -481,6 +481,49 @@ static int __init setup_transparent_hugepage(char *str)
->  }
->  __setup("transparent_hugepage=", setup_transparent_hugepage);
->  
-> +static int __init setup_transparent_hugepage_defrag(char *str)
-> +{
-> +	int ret = 0;
-> +	if (!str)
-> +		goto out;
-> +	if (!strcmp(str, "always")) {
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
-> +		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
-> +		ret = 1;
-> +	} else if (!strcmp(str, "defer+madvise")) {
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
-> +		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
-> +		ret = 1;
-> +	} else if (!strcmp(str, "defer")) {
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
-> +		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
-> +		ret = 1;
-> +	} else if (!strcmp(str, "madvise")) {
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
-> +		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
-> +		ret = 1;
-> +	} else if (!strcmp(str, "never")) {
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
-> +		ret = 1;
-> +	}
-> +out:
-> +	if (!ret)
-> +		pr_warn("transparent_hugepage_defrag= cannot parse, ignored\n");
-> +	return ret;
-> +}
-> +__setup("transparent_hugepage_defrag=", setup_transparent_hugepage_defrag);
-> +
->  pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
->  {
->  	if (likely(vma->vm_flags & VM_WRITE))
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index b043c40a21d4..39bbf2107a23 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -394,6 +394,27 @@ int __init khugepaged_init(void)
->  	return 0;
->  }
->  
-> +static int __init setup_khugepaged_defrag(char *str)
-> +{
-> +	int ret = 0;
-> +	if (!str)
-> +		goto out;
-> +	if (!strcmp(str, "0")) {
-> +		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KHUGEPAGED_FLAG,
-> +			  &transparent_hugepage_flags);
-> +		ret = 1;
-> +	} else if (!strcmp(str, "1")) {
-> +		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KHUGEPAGED_FLAG,
-> +			&transparent_hugepage_flags);
-> +		ret = 1;
-> +	}
-> +out:
-> +	if (!ret)
-> +		pr_warn("khugepaged_defrag= cannot parse, ignored\n");
-> +	return ret;
-> +}
-> +__setup("khugepaged_defrag=", setup_khugepaged_defrag);
-> +
->  void __init khugepaged_destroy(void)
->  {
->  	kmem_cache_destroy(mm_slot_cache);
-> 
+diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
+index be7cd0aeb6a6..8c7db568fe64 100644
+--- a/sound/soc/codecs/max98390.c
++++ b/sound/soc/codecs/max98390.c
+@@ -754,6 +754,7 @@ static struct snd_soc_dai_driver max98390_dai[] = {
+ static int max98390_dsm_init(struct snd_soc_component *component)
+ {
+ 	int ret;
++	int param_size, param_start_addr;
+ 	char filename[128];
+ 	const char *vendor, *product;
+ 	struct max98390_priv *max98390 =
+@@ -780,14 +781,27 @@ static int max98390_dsm_init(struct snd_soc_component *component)
+ 	dev_dbg(component->dev,
+ 		"max98390: param fw size %zd\n",
+ 		fw->size);
++	if (fw->size < MAX98390_DSM_PARAM_MIN_SIZE) {
++		dev_err(component->dev,
++			"param fw is invalid.\n");
++		goto err_alloc;
++	}
+ 	dsm_param = (char *)fw->data;
++	param_start_addr = (dsm_param[0] & 0xff) | (dsm_param[1] & 0xff) << 8;
++	param_size = (dsm_param[2] & 0xff) | (dsm_param[3] & 0xff) << 8;
++	if (param_size > MAX98390_DSM_PARAM_MAX_SIZE ||
++		param_start_addr < DSM_STBASS_HPF_B0_BYTE0) {
++		dev_err(component->dev,
++			"param fw is invalid.\n");
++		goto err_alloc;
++	}
+ 	dsm_param += MAX98390_DSM_PAYLOAD_OFFSET;
+-	regmap_bulk_write(max98390->regmap, DSM_EQ_BQ1_B0_BYTE0,
+-		dsm_param,
+-		fw->size - MAX98390_DSM_PAYLOAD_OFFSET);
+-	release_firmware(fw);
++	regmap_bulk_write(max98390->regmap, param_start_addr,
++		dsm_param, param_size);
+ 	regmap_write(max98390->regmap, MAX98390_R23E1_DSP_GLOBAL_EN, 0x01);
+ 
++err_alloc:
++	release_firmware(fw);
+ err:
+ 	return ret;
+ }
+@@ -847,7 +861,6 @@ static int max98390_probe(struct snd_soc_component *component)
+ 
+ 	/* Dsm Setting */
+ 	regmap_write(max98390->regmap, DSM_VOL_CTRL, 0x94);
+-	regmap_write(max98390->regmap, DSMIG_EN, 0x19);
+ 	regmap_write(max98390->regmap, MAX98390_R203A_AMP_EN, 0x80);
+ 	if (max98390->ref_rdc_value) {
+ 		regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE0,
+diff --git a/sound/soc/codecs/max98390.h b/sound/soc/codecs/max98390.h
+index f59cb114d957..5f444e7779b0 100644
+--- a/sound/soc/codecs/max98390.h
++++ b/sound/soc/codecs/max98390.h
+@@ -650,7 +650,8 @@
+ 
+ /* DSM register offset */
+ #define MAX98390_DSM_PAYLOAD_OFFSET 16
+-#define MAX98390_DSM_PAYLOAD_OFFSET_2 495
++#define MAX98390_DSM_PARAM_MAX_SIZE 770
++#define MAX98390_DSM_PARAM_MIN_SIZE 670
+ 
+ struct max98390_priv {
+ 	struct regmap *regmap;
+-- 
+2.17.1
 
