@@ -2,189 +2,293 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0513C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C4820679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5462081A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:29:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vixa1y6m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiYRKNXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgFCL1X (ORCPT
+        id S1726041AbgFCL3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56250 "EHLO
+        Wed, 3 Jun 2020 07:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbgFCL1X (ORCPT
+        with ESMTP id S1725833AbgFCL3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:27:23 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E38BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:27:22 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y13so1784226eju.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 04:27:22 -0700 (PDT)
+        Wed, 3 Jun 2020 07:29:48 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC46C08C5C0;
+        Wed,  3 Jun 2020 04:29:48 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y18so726178plr.4;
+        Wed, 03 Jun 2020 04:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qhM8iRgNfKXTRDBRqXeuzDbN65/0jN44+ax6ZdEs4fk=;
-        b=Vixa1y6m9+WDzkngcpJBP+uAE5NShW65DCij0lq7OcG/MUuNdYYkyg1QTZToihhT2h
-         62WrnM1VQkR8J8Zlwc3XwLcHKw4Wxujx2qeAmz+Apd4N6O0cOdsS44QWo6N7sTUzy8jI
-         GdSmwrGsPhaLF+XWO/ILT0EgywDUg4Oi5+orh/bizrEbd4H52R7ZwvnpjZH5uO3DTSRz
-         2PAmM+4mvxz2qZz4Z4mkO9HUh2Ta/JvtIXtnXjT9c0Q9IUk2LPxIlk79ZjYBLzxwahC8
-         MHGfCdvrX7hEZmC40QL/ApzYDUBgY4/N43TQJPLJ75cLtoqhhuzwTSTrl2B3T3P42qKU
-         ftCQ==
+        bh=SYDjEnMgktBuo6DQ1R8FXp/4FpW7wh5KhHgaA/MCrC0=;
+        b=kiYRKNXTleel/idLEGZwK9UEaeJLEnR5m/VKB1rPaL47Lyah3lhtvoJ6Fbo/6xwr6r
+         aj6DJ1QrVIRXuz9eLzn+aqmIcvrk4Z1aUYmjJDY20gZ6JltKfzQmAH5/t8ALSfzsbITc
+         j+wY1PnYh+SZDsUCADDL4giBHXvWvdKee6dPnom0a4kuRLpKjR129MVb1S4EAMMfb06z
+         fklytk5YoIBI7Bw6zjTeGqgHxTZBNhElpM6k9BZXqJvfVUaBEgA/TcyiUS/Moyvkz/6o
+         s87fCtXg3kgAVI5q2EW0bUHS9m9YNzKK2N2icdzmZPwNNFSr4yF1FD1C9CppIpwDXqke
+         m8cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qhM8iRgNfKXTRDBRqXeuzDbN65/0jN44+ax6ZdEs4fk=;
-        b=F4u3qcWtOJavMQpqoTbAMFMBehJJaeGmOyNp2HljB4r+wXi8kWIBYW9bcCnqAp33Xd
-         Uql3bSNnhtYVqDLb6Qsb6enGE2d4BUfA/Xzqj0mLgaJxg6igKJm6owRJ5rJMGX2FsTEG
-         hBjAJ+njI94oNvkqtLaY95E3fKeAt3LzwahwvAV5V4O3L2fLnMj5CAoLdgi+Pk9JxNvj
-         YEHQFTZ/8+K2+tc7AGDU0bB9+a5oVr5GAbFbEJ/JT1BqRXfHS2yOBqI34qXBcpYvcLPv
-         a03Im2IJqORcdzzVYyfXnFuMzBDV86ye1qXpzbYmMBbc9q0nKCSt54BjHqHhvmBddZtx
-         hAsA==
-X-Gm-Message-State: AOAM532ftcw4mnmCljnZ1NgzPP8bE0E+boxYpZI5FtBWVeN0Vkl1wiZo
-        QFQPsFjKDi8Cw8YEKIMUi5K6oAXE8R45tXfxDrCAbg==
-X-Google-Smtp-Source: ABdhPJwzV9kd/HCF1oD01x9Grj16lQwV3iVe8y14F3DJkr+IwzeR9WEmSBci4EZtlieIwAtnoimTUdsNubGx8NTIJtk=
-X-Received: by 2002:a17:907:9d8:: with SMTP id bx24mr26823421ejc.517.1591183641240;
- Wed, 03 Jun 2020 04:27:21 -0700 (PDT)
+        bh=SYDjEnMgktBuo6DQ1R8FXp/4FpW7wh5KhHgaA/MCrC0=;
+        b=uoeSL0Yg67Iq1hql6rlUF6ESUEmHiceDKhwTtB1NNXmNGY3EuZp+BaDZMtgerhqXGL
+         wRSgnzkJAfr0lI7CGEmzDeZgPFhff3usY/HkK+hzKSwYIPKDvhRKDTLTY6de9pKgSHex
+         NXT38qJV9n0hm16in8JtZsGD5oFk+pIvzJ9oGObvZchS1S0xR+iFWrGP7xGoqA4PrhS7
+         qzN+ylr1W2vxyxnNg+Ggc0IakQP4GUGJ/wBdZ7meAHVrIZVpfR8oY2+eDtDz0uDkBd/T
+         6Atppxk8OwQvgBAodETuklmTRhfQ5/r9Vp3t0e23hD3AqL8alW1PrAskIlWWqaWoX3LX
+         HlYQ==
+X-Gm-Message-State: AOAM531OgWSHvej0V2URVM/p/fg5gQybjohFkeba+zDLkgGO+1Ss8mY7
+        63ykOlCH3aDVX/pPTr0MaKnolnjM+QFSRNiyarg=
+X-Google-Smtp-Source: ABdhPJwdso2nwPBvupIiAPgeIIBx0RbV4afBtdZXGJS6P6Gf51Z77H3U4cd6KGmw0Vzf1gImBRVZTGkAQRoBzZweINg=
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr29919248plt.18.1591183788151;
+ Wed, 03 Jun 2020 04:29:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15> <6d759cc28628ea72767c1304883630eb@codeaurora.org>
- <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com> <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
-In-Reply-To: <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 3 Jun 2020 12:27:10 +0100
-Message-ID: <CAJ9a7Vj9STJw4jBxWU_9wHftj4Q7+k8o1nTc8tr21KjYi0RkpQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+References: <20200603084441.33952-1-tomasz.duszynski@octakon.com> <20200603084441.33952-3-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200603084441.33952-3-tomasz.duszynski@octakon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 3 Jun 2020 14:29:36 +0300
+Message-ID: <CAHp75VfF2KXS8NtPGqCRm3SA_pxz5-XmSSu7b_ytRP6TjaE5xw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] iio: chemical: scd30: add I2C interface driver
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, robin.murphy@arm.com
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald <pmeerw@pmeerw.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 3, 2020 at 11:47 AM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> Add I2C interface driver for the SCD30 sensor.
+>
 
-On Wed, 3 Jun 2020 at 11:24, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Mike,
->
-> Thanks again for looking at this.
->
-> On 2020-06-03 03:42, Mike Leach wrote:
-> [...]
->
-> >>
-> >> SMMU/IOMMU won't be able to do much here as it is the client's
-> >> responsiblity to
-> >> properly shutdown and SMMU device link just makes sure that
-> >> SMMU(supplier) shutdown is
-> >> called only after its consumers shutdown callbacks are called.
-> >
-> > I think this use case can be handled slightly differently than the
-> > general requirements for modular CoreSight drivers.
-> >
-> > What is needed here is a way of stopping the underlying ETR hardware
-> > from issuing data to the SMMU, until the entire device has been shut
-> > down, in a way that does not remove the driver, breaking existing
-> > references and causing a system crash.
-> >
-> > We could introduce a new mode to the ETR driver - e.g.
-> > CS_MODE_SHUTDOWN.
-> >
-> > At the end of the block tmc_shutdown(struct amba_device *adev), set
-> > drvdata->mode to CS_MODE_SHUTDOWN & remove the coresight_unregister().
-> > This new mode can be used to  prevent the underlying hardware from
-> > being able to restart until the device is re-powered.
-> >
-> > This mode can be detected in the code that enables / disables the ETR
-> > and handled appropriately (updates to tmc_enable_etr_sink and
-> > tmc_disable_etr_sink).
-> > This mode will persist until the device is re-started - but because we
-> > are on the device shutdown path this is not an issue.
-> >
-> > This should leave the CoreSight infrastructure stable until the
-> > drivers are shut down normally as part of the device power down
-> > process.
-> >
->
-> Sounds good to me, but if the coresight_unregister() is the trouble
-> point
-> causing these crashes, then can't we just remove that from
-> tmc_shutdown()
-> callback? This would be like maintaining the same behaviour as now where
-> on reboot/shutdown we basically don't do anything except for disabling
-> ETR.
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-No - the new mode prevents race conditions where the thread shutting
-down the SMMU does the ETR shutdown, but then another thread happens
-to be trying to start trace and restarts the ETR.
-It also prevents the condition Mathieu discussed where a thread might
-be attempting to shutdown trace - this could try to disable the
-hardware again re-releasing resources/ re-flushing and waiting for
-stop.
-
-Regards
-
-Mike
-
-> This way, we do not have to introduce any new mode as well. To be exact,
-> in
-> tmc_shutdown() we just disable ETR and then return without unregistering
-> which should not cause any issues since this is shutdown not the remove
-> callback which is a requirement for making coresight modular like below:
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> ---
+>  MAINTAINERS                      |   1 +
+>  drivers/iio/chemical/Kconfig     |  11 +++
+>  drivers/iio/chemical/Makefile    |   1 +
+>  drivers/iio/chemical/scd30_i2c.c | 139 +++++++++++++++++++++++++++++++
+>  4 files changed, 152 insertions(+)
+>  create mode 100644 drivers/iio/chemical/scd30_i2c.c
 >
-> static void tmc_shutdown(struct amba_device *adev)
->   {
->           unsigned long flags;
->           struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 41a509cca6f1..13aed3473b7e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15142,6 +15142,7 @@ M:      Tomasz Duszynski <tomasz.duszynski@octakon.com>
+>  S:     Maintained
+>  F:     drivers/iio/chemical/scd30.h
+>  F:     drivers/iio/chemical/scd30_core.c
+> +F:     drivers/iio/chemical/scd30_i2c.c
 >
->           spin_lock_irqsave(&drvdata->spinlock, flags);
+>  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
+>  M:     Tomasz Duszynski <tduszyns@gmail.com>
+> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+> index 99e852b67e55..970d34888c2e 100644
+> --- a/drivers/iio/chemical/Kconfig
+> +++ b/drivers/iio/chemical/Kconfig
+> @@ -96,6 +96,17 @@ config SCD30_CORE
+>           To compile this driver as a module, choose M here: the module will
+>           be called scd30_core.
 >
->           if (drvdata->mode == CS_MODE_DISABLED)
->                   goto out;
->
->           if (drvdata->config_type == TMC_CONFIG_TYPE_ETR)
->                   tmc_etr_disable_hw(drvdata);
->
->           /*
->            * We do not care about coresight unregister here unlike remove
->            * callback which is required for making coresight modular
-> since
->            * the system is going down after this.
->            */
->   out:
->           spin_unlock_irqrestore(&drvdata->spinlock, flags);
->   } from disabling the ETR again - potentially freeing up memory twice.
->
->
-> Thanks,
-> Sai
->
+> +config SCD30_I2C
+> +       tristate "SCD30 carbon dioxide sensor I2C driver"
+> +       depends on SCD30_CORE && I2C
+> +       select CRC8
+> +       help
+> +         Say Y here to build support for the Sensirion SCD30 I2C interface
+> +         driver.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called scd30_i2c.
+> +
+>  config SENSIRION_SGP30
+>         tristate "Sensirion SGPxx gas sensors"
+>         depends on I2C
+> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+> index c9804b041ecd..0966ca34e34b 100644
+> --- a/drivers/iio/chemical/Makefile
+> +++ b/drivers/iio/chemical/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_CCS811)          += ccs811.o
+>  obj-$(CONFIG_IAQCORE)          += ams-iaq-core.o
+>  obj-$(CONFIG_PMS7003) += pms7003.o
+>  obj-$(CONFIG_SCD30_CORE) += scd30_core.o
+> +obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
+>  obj-$(CONFIG_SENSIRION_SGP30)  += sgp30.o
+>  obj-$(CONFIG_SPS30) += sps30.o
+>  obj-$(CONFIG_VZ89X)            += vz89x.o
+> diff --git a/drivers/iio/chemical/scd30_i2c.c b/drivers/iio/chemical/scd30_i2c.c
+> new file mode 100644
+> index 000000000000..875892a070ee
+> --- /dev/null
+> +++ b/drivers/iio/chemical/scd30_i2c.c
+> @@ -0,0 +1,139 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Sensirion SCD30 carbon dioxide sensor i2c driver
+> + *
+> + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> + *
+> + * I2C slave address: 0x61
+> + */
+> +#include <linux/crc8.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/types.h>
+> +#include <asm/unaligned.h>
+> +
+> +#include "scd30.h"
+> +
+> +#define SCD30_I2C_MAX_BUF_SIZE 18
+> +#define SCD30_I2C_CRC8_POLYNOMIAL 0x31
+> +
+> +static u16 scd30_i2c_cmd_lookup_tbl[] = {
+> +       [CMD_START_MEAS] = 0x0010,
+> +       [CMD_STOP_MEAS] = 0x0104,
+> +       [CMD_MEAS_INTERVAL] = 0x4600,
+> +       [CMD_MEAS_READY] = 0x0202,
+> +       [CMD_READ_MEAS] = 0x0300,
+> +       [CMD_ASC] = 0x5306,
+> +       [CMD_FRC] = 0x5204,
+> +       [CMD_TEMP_OFFSET] = 0x5403,
+> +       [CMD_FW_VERSION] = 0xd100,
+> +       [CMD_RESET] = 0xd304,
+> +};
+> +
+> +DECLARE_CRC8_TABLE(scd30_i2c_crc8_tbl);
+> +
+> +static int scd30_i2c_xfer(struct scd30_state *state, char *txbuf, int txsize,
+> +                         char *rxbuf, int rxsize)
+> +{
+> +       struct i2c_client *client = to_i2c_client(state->dev);
+> +       int ret;
+> +
+> +       /*
+> +        * repeated start is not supported hence instead of sending two i2c
+> +        * messages in a row we send one by one
+> +        */
+> +       ret = i2c_master_send(client, txbuf, txsize);
+> +       if (ret < 0)
+> +               return ret;
+> +       if (ret != txsize)
+> +               return -EIO;
+> +
+> +       if (!rxbuf)
+> +               return 0;
+> +
+> +       ret = i2c_master_recv(client, rxbuf, rxsize);
+> +       if (ret < 0)
+> +               return ret;
+> +       if (ret != rxsize)
+> +               return -EIO;
+> +
+> +       return 0;
+> +}
+> +
+> +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
+> +                            void *response, int size)
+> +{
+> +       char buf[SCD30_I2C_MAX_BUF_SIZE];
+> +       char *rsp = response;
+> +       int i, ret;
+> +       char crc;
+> +
+> +       put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
+> +       i = 2;
+> +
+> +       if (rsp) {
+> +               /* each two bytes are followed by a crc8 */
+> +               size += size / 2;
+> +       } else {
+> +               put_unaligned_be16(arg, buf + i);
+> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> +               i += 2;
+> +               buf[i] = crc;
+> +               i += 1;
+> +
+> +               /* commands below don't take an argument */
+> +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
+> +                       i -= 3;
+> +       }
+> +
+> +       ret = scd30_i2c_xfer(state, buf, i, buf, size);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* validate received data and strip off crc bytes */
+> +       for (i = 0; i < size; i += 3) {
+> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> +               if (crc != buf[i + 2]) {
+> +                       dev_err(state->dev, "data integrity check failed\n");
+> +                       return -EIO;
+> +               }
+> +
+> +               *rsp++ = buf[i];
+> +               *rsp++ = buf[i + 1];
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int scd30_i2c_probe(struct i2c_client *client)
+> +{
+> +       if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+> +               return -EOPNOTSUPP;
+> +
+> +       crc8_populate_msb(scd30_i2c_crc8_tbl, SCD30_I2C_CRC8_POLYNOMIAL);
+> +
+> +       return scd30_probe(&client->dev, client->irq, client->name, NULL, scd30_i2c_command);
+> +}
+> +
+> +static const struct of_device_id scd30_i2c_of_match[] = {
+> +       { .compatible = "sensirion,scd30" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, scd30_i2c_of_match);
+> +
+> +static struct i2c_driver scd30_i2c_driver = {
+> +       .driver = {
+> +               .name = KBUILD_MODNAME,
+> +               .of_match_table = scd30_i2c_of_match,
+> +               .pm = &scd30_pm_ops,
+> +       },
+> +       .probe_new = scd30_i2c_probe,
+> +};
+> +module_i2c_driver(scd30_i2c_driver);
+> +
+> +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor i2c driver");
+> +MODULE_LICENSE("GPL v2");
 > --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
-
+> 2.27.0
+>
 
 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+With Best Regards,
+Andy Shevchenko
