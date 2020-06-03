@@ -2,122 +2,150 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C56C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF8620679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7844E2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjvdkIGn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X829y22a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgFCRmf (ORCPT
+        id S1726321AbgFCRmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58170 "EHLO
+        Wed, 3 Jun 2020 13:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgFCRmf (ORCPT
+        with ESMTP id S1726061AbgFCRmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:42:35 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FBC3C08C5D1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:42:35 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f3so2055675pfd.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:42:35 -0700 (PDT)
+        Wed, 3 Jun 2020 13:42:46 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3208C08C5C6
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:36:20 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t7so1063427plr.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 10:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=11EqLqigawu5AuEW1gFIrsexclHL8DCzdN7DBjvUYqA=;
-        b=FjvdkIGnkijqmFETxqkZf5cAQNGKa8CDBDXF341jBrf8KsuUMNBzJ29u/nR6jxPLo4
-         NiRWSZCxY3INhSncwcwGBs6uJcXk3VO2LUAjvY+bypo+TwXm5kjCMoUmsMcNefMAopvf
-         y2hkLrMDXaiYxZE4t+TNnzG75E8fNRxWptRgs6pYZhmQCbfGFpXXa0TU/yMAF9g/pU30
-         WatGmVvuokLk4Pn6dw4TACOawdbu7wjZWRpOAhOhiFS+OTMDm+/I6XkxHh8iTPqzed4N
-         3lNZzWqg7uuRHCAnNwAO359O9bioWtq2WciiPOqUNQm3sPq2KvFC4ZsB8QA3qOR3tRzQ
-         hlNQ==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=ylVKXMXoSHWxEfuprMtTy+ptfQH8F9MdYoQU37bFUNc=;
+        b=X829y22aorlO5+Du+MvNj8VULQUMImlRc6xjM+s9r8nWu/Mvpz3brR7ktjNpVrS/qS
+         c3IxPLMp50QFAk4JbZGm0JkHoLEj69/UAZ4NFoAl+ElHknCqhTWatOLZLvQ8AbtbDX3z
+         8sGKtZdcUt7n3AkgwohwgKQql80SaxCE3GTvI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=11EqLqigawu5AuEW1gFIrsexclHL8DCzdN7DBjvUYqA=;
-        b=fGM5mSciZ2wiqFG1NTNHrE863LeyK+i6liI4KqWRyvjd1oHrABSbY15ckPR67UbDsN
-         YwLJ+gw/16KuEyp+ieAdOQQdwpsBD/VwcA7OBm4Ex8ZWEa8OXkYNtzPPFOY9s/cRy+D9
-         hyR/u7XZQ46YOzYGgsldBTBYtO88yQTeBjR1QZyQydcFnLX4IwRPvALeje2nPgPI1R3/
-         /s5v7tQ/Es70elZRFq2fMds/c6PZ5OE4hcLRTRZD5ZiEITe/xQ3z5pM6PEpboy/ye8VH
-         y6d+IpqApEBHPfHkkL0Z/kDFQ0PzbiHC/YIpk8TFT/1aMmgRlXDoxeoRiDbvr0rmYIu8
-         /2ww==
-X-Gm-Message-State: AOAM532x05bmjt5ZWz+ZmosLedNY9+F8r1aNhQscMb6QLCRm9WihD6vp
-        Qd7kaTRJCPV37YOBHpiliyc=
-X-Google-Smtp-Source: ABdhPJzyIQBGa1ntOKSqo1SvAnBFrCrm6S7cNpV+bs4hx8uQCJMs5mKCao88L4qsI/tdDw36VJZWCA==
-X-Received: by 2002:aa7:9431:: with SMTP id y17mr238635pfo.33.1591206154354;
-        Wed, 03 Jun 2020 10:42:34 -0700 (PDT)
-Received: from gmail.com ([192.55.55.41])
-        by smtp.gmail.com with ESMTPSA id nl8sm3772210pjb.13.2020.06.03.10.42.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jun 2020 10:42:33 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 23:12:25 +0530
-From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        devel@driverdev.osuosl.org, alsa-devel@alsa-project.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
-Subject: Re: [RESEND PATCH v1 6/6] staging: greybus: audio: Enable GB codec,
- audio module compilation.
-Message-ID: <20200603174222.GB21465@gmail.com>
-References: <cover.1591040859.git.vaibhav.sr@gmail.com>
- <77cfc355b87ee21636430f787764700de1983f38.1591040859.git.vaibhav.sr@gmail.com>
- <20200602125715.GI30374@kadam>
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=ylVKXMXoSHWxEfuprMtTy+ptfQH8F9MdYoQU37bFUNc=;
+        b=CqSrMs+ygJTHRa4hXdIa4D+B2sRaRCl+sPcY7+gt6DZmg671HTceQfWQx0AdhIkNly
+         wKDzubSFH8gbR+EcauuHIpe7+GsCQ+cE19Ru4UsVPna/UdY1FHnO7NdHXCSnNBgn0ad5
+         KIAJpb8ZNWiwcE+N6yo2rS+hE0KH0Kk0lYerEbEW0MD8T30P+3WLUSd+g0vP41FH/DTR
+         Sa6+oTAOSB+fmjO8bLgXseKv/PYQdmwPQQOcB9vRsgASE0svqFGjySpjh0I3pkeMH56q
+         XmFfnPPFsyTtJHhXR8kTwd4dxRp974OsWdupAChVlXYFvjFyGi0ZvbkCLtidONU6A+jt
+         Fp8A==
+X-Gm-Message-State: AOAM5324maTHNcVZJTA+d6dEH7pepisUnFkBrLNwL2EIUmOpAcphMVr1
+        +UyxYSE79FcXzBHRV50fbfOJXA==
+X-Google-Smtp-Source: ABdhPJzPNTYLHirFN1uXJ/hKbGPbDvfxX70mtZPZJ+nOvN+YGavJ90efgc+PB2Z8D+2TUOVWgjt5DA==
+X-Received: by 2002:a17:902:465:: with SMTP id 92mr844330ple.227.1591205780260;
+        Wed, 03 Jun 2020 10:36:20 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w5sm2376042pfn.22.2020.06.03.10.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 10:36:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602125715.GI30374@kadam>
-User-Agent: Mutt/1.10.1+3 (f9293d646485) (2018-09-22)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Date:   Wed, 03 Jun 2020 10:36:18 -0700
+Message-ID: <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:57:15PM +0300, Dan Carpenter wrote:
-> On Tue, Jun 02, 2020 at 10:51:15AM +0530, Vaibhav Agarwal wrote:
-> > Currently, GB codec and audio module is conditionally compiled based on
-> > GREYBUS_AUDIO_MSM8994. However, audio module is not dependent on MSM8994
-> > platform and can be used generically with any platform that follows
-> > GB Audio class specification.
-> > 
-> > Also, GB codec driver corresponds to dummy codec represented by I2S port
-> > available on Toshiba AP Bridge. Added config option for the same in
-> > kconfig file and accordingly updated Makefile.
-> > 
-> 
-> This commit message was a bit confusing to me.  Just say:
-> 
-> "Currently you can't enable the Grey Bus Audio Codec because there is no
-> entry for it in the Kconfig file.  Originally the config name was going
-> to be AUDIO_MSM8994 but that's not correct because other types of
-> hardware are supported now.  I have chosen the name AUDIO_APB_CODEC
-> instead.  Also I had to update the dependencies for GREYBUS_AUDIO to
-> make the compile work."
-> 
-> Otherwise this looks fine.
+Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 1dfd024..d33ae86 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -76,8 +85,13 @@ struct dwc3_qcom {
+>         enum usb_dr_mode        mode;
+>         bool                    is_suspended;
+>         bool                    pm_suspended;
+> +       struct icc_path         *usb_ddr_icc_path;
+> +       struct icc_path         *apps_usb_icc_path;
+>  };
+> =20
+> +static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom);
+> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom);
 
-Thanks Dan for sharing your valuable feedback. I'll make the suggested 
-changes for the complete series in v2 patchset.
+Please get rid of these. We shouldn't need forward declarations.
 
-regards,
-vaibhav
+> +
+>  static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32=
+ val)
+>  {
+>         u32 reg;
+> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>         return 0;
+>  }
+> =20
+> +
+> +/**
+> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+> + * @qcom:                      Pointer to the concerned usb core.
+> + *
+> + */
+> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+> +{
+> +       struct device *dev =3D qcom->dev;
+> +       int ret;
+> +
+> +       if (!device_is_bound(&qcom->dwc3->dev))
+> +               return -EPROBE_DEFER;
 
-> 
-> regards,
-> dan carpenter
-> 
+How is this supposed to work? I see that this was added in an earlier
+revision of this patch series but there isn't any mention of why
+device_is_bound() is used here. It would be great if there was a comment
+detailing why this is necessary. It sounds like maximum_speed is
+important?
+
+Furthermore, dwc3_qcom_interconnect_init() is called by
+dwc3_qcom_probe() which is the function that registers the device for
+qcom->dwc3->dev. If that device doesn't probe between the time it is
+registered by dwc3_qcom_probe() and this function is called then we'll
+fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
+qcom->dwc3->dev device from the platform bus because we call
+of_platform_depopulate() on the error path of dwc3_qcom_probe().
+
+So isn't this whole thing racy and can potentially lead us to a driver
+probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
+and we're trying to time it just right so that driver for dwc3 binds
+before we setup interconnects? I don't know if dwc3 can communicate to
+the wrapper but that would be more of a direct way to do this. Or maybe
+the wrapper should try to read the DT property for maximum speed and
+fallback to a worst case high bandwidth value if it can't figure it out
+itself without help from dwc3 core.
