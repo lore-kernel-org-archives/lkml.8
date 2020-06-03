@@ -2,146 +2,116 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAC3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE21C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F87C20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E42920738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AdVqigCX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cn6HxHR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgFCQYL (ORCPT
+        id S1726231AbgFCQYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:24:11 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47840 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgFCQYL (ORCPT
+        Wed, 3 Jun 2020 12:24:24 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44245 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726210AbgFCQYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:24:11 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053GGTF4010338;
-        Wed, 3 Jun 2020 16:23:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=PaPbtInXwCDIAc2IoG+7wf0xKv2XiaYkTrHhHA9qwlg=;
- b=AdVqigCX3BRvbGFZJWiZlBVeIX38Y0sQ6wAdQXMOyDfZYxVhm1oqYFDOIUC4gOGum/zX
- KoQEiPv0BjzCpygk5dAb3K6bExqw3OdhT+Wv+kUxx0v6Pj5N+zCUUVp0S6z1IDRhHMlh
- OjUqOCxKtVxaqZqX2N9U1pNqCIGZ5Q/ugsbLqTJ9/sh3UQzc6I/sKKLv2uR7RU78IxUs
- LJK13S0B7zB8Q7vHk5N7GFkY1szuQn5XJpjByRYvs7ZVePMxuyLBymWjx0kgxEqqW2NH
- 0gjv+NLrgy0a4dCxJKuaEJ8erP3Zrrz3xhxoIHbJkKmnD7ZdFvHItGJXykuUC7H2Qfou 5g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31bfema66g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 16:23:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053GI3Pb011584;
-        Wed, 3 Jun 2020 16:23:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31dju3gg6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 16:23:52 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053GNlPo032435;
-        Wed, 3 Jun 2020 16:23:50 GMT
-Received: from [10.159.230.80] (/10.159.230.80)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jun 2020 09:23:47 -0700
-Subject: Re: [PATCH 1/1] blk-mq: get ctx in order to handle BLK_MQ_S_INACTIVE
- in blk_mq_get_tag()
-To:     John Garry <john.garry@huawei.com>, linux-block@vger.kernel.org
-Cc:     axboe@kernel.dk, hare@suse.de, dwagner@suse.de,
-        ming.lei@redhat.com, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-References: <20200602061749.32029-1-dongli.zhang@oracle.com>
- <2114e1a8-253b-9ad7-0991-afc15df365bd@huawei.com>
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <39dd930b-839d-5d74-afb6-5a8bb1d2f0da@oracle.com>
-Date:   Wed, 3 Jun 2020 09:23:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 3 Jun 2020 12:24:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591201462;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=K/e5rx/iSdIPyyr6wHaDjY9+WjqdNoTwnBgR1lFZZNw=;
+        b=cn6HxHR/pDsnhIMBNnmS6ah+9MtFOWWsmypvfrje2CrKTu50/AzFRQMyGwX5ASxNskDmJt
+        aSxop4wmNTDB9V4VDdJWY+u7SJMQBQgmnKpR/BKHxTbBxW+PmbRcbXG4mkKJfzZYGUBCRx
+        dioW0IiTI+HjHaN6FqwL1HnQboVVxC8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-8L99PjuHMAmWPrd2pPycnA-1; Wed, 03 Jun 2020 12:24:20 -0400
+X-MC-Unique: 8L99PjuHMAmWPrd2pPycnA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2FE1EC1B1;
+        Wed,  3 Jun 2020 16:24:17 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-113-67.ams2.redhat.com [10.36.113.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2CF2B19C71;
+        Wed,  3 Jun 2020 16:24:07 +0000 (UTC)
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?UTF-8?q?Micha=C5=82=20C=C5=82api=C5=84ski?= 
+        <mclapinski@google.com>, Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Adrian Reber <areber@redhat.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 0/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
+Date:   Wed,  3 Jun 2020 18:23:25 +0200
+Message-Id: <20200603162328.854164-1-areber@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <2114e1a8-253b-9ad7-0991-afc15df365bd@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030129
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+This is v2 of the 'Introduce CAP_CHECKPOINT_RESTORE' patchset. The
+difference from v1 are:
 
-On 6/3/20 4:59 AM, John Garry wrote:
-> On 02/06/2020 07:17, Dongli Zhang wrote:
->> When scheduler is set, we hit below page fault when we offline cpu.
->>
->> [ 1061.007725] BUG: kernel NULL pointer dereference, address: 0000000000000040
->> [ 1061.008710] #PF: supervisor read access in kernel mode
->> [ 1061.009492] #PF: error_code(0x0000) - not-present page
->> [ 1061.010241] PGD 0 P4D 0
->> [ 1061.010614] Oops: 0000 [#1] SMP PTI
->> [ 1061.011130] CPU: 0 PID: 122 Comm: kworker/0:1H Not tainted 5.7.0-rc7+ #2'
->> ... ...
->> [ 1061.013760] Workqueue: kblockd blk_mq_run_work_fn
->> [ 1061.014446] RIP: 0010:blk_mq_put_tag+0xf/0x30
->> ... ...
->> [ 1061.017726] RSP: 0018:ffffa5c18037fc70 EFLAGS: 00010287
->> [ 1061.018475] RAX: 0000000000000000 RBX: ffffa5c18037fcf0 RCX: 0000000000000004
->> [ 1061.019507] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff911535dc1180
->> ... ...
->> [ 1061.028454] Call Trace:
->> [ 1061.029307]  blk_mq_get_tag+0x26e/0x280
->> [ 1061.029866]  ? wait_woken+0x80/0x80
->> [ 1061.030378]  blk_mq_get_driver_tag+0x99/0x110
->> [ 1061.031009]  blk_mq_dispatch_rq_list+0x107/0x5e0
->> [ 1061.031672]  ? elv_rb_del+0x1a/0x30
->> [ 1061.032178]  blk_mq_do_dispatch_sched+0xe2/0x130
->> [ 1061.032844]  __blk_mq_sched_dispatch_requests+0xcc/0x150
->> [ 1061.033638]  blk_mq_sched_dispatch_requests+0x2b/0x50
->> [ 1061.034239]  __blk_mq_run_hw_queue+0x75/0x110
->> [ 1061.034867]  process_one_work+0x15c/0x370
->> [ 1061.035450]  worker_thread+0x44/0x3d0
->> [ 1061.035980]  kthread+0xf3/0x130
->> [ 1061.036440]  ? max_active_store+0x80/0x80
->> [ 1061.037018]  ? kthread_bind+0x10/0x10
->> [ 1061.037554]  ret_from_fork+0x35/0x40
->> [ 1061.038073] Modules linked in:
->> [ 1061.038543] CR2: 0000000000000040
->> [ 1061.038962] ---[ end trace d20e1df7d028e69f ]---
->>
->> This is because blk_mq_get_driver_tag() would be used to allocate tag once
->> scheduler (e.g., mq-deadline) is set. 
-> 
-> I tried mq-deadline and I did not see this. Anyway else special or specific
-> about your test?
-> 
+ * Renamed CAP_RESTORE to CAP_CHECKPOINT_RESTORE
+ * Added a test
+ * Added details about CRIU's use of map_files
+ * Allow changing /proc/self/exe link with CAP_CHECKPOINT_RESTORE
 
-I think you just hit the issue as mentioned in another thread.
+The biggest difference is that the patchset now provides all the
+changes, which are necessary to use CRIU to checkpoint and restore a
+process as non-root if CAP_CHECKPOINT_RESTORE is set.
 
-To reproduce the issue reproduce to hit the condition that:
+Adrian Reber (2):
+  capabilities: Introduce CAP_CHECKPOINT_RESTORE
+  selftests: add clone3() CAP_CHECKPOINT_RESTORE test
 
-1. blk_mq_hctx_notify_offline() BLK_MQ_S_INACTIVE with the barrier ...
+Nicolas Viennot (1):
+  prctl: Allow ptrace capable processes to change exe_fd
 
-... while ...
+ fs/proc/base.c                                |   8 +-
+ include/linux/capability.h                    |   6 +
+ include/uapi/linux/capability.h               |   9 +-
+ kernel/pid.c                                  |   2 +-
+ kernel/pid_namespace.c                        |   2 +-
+ kernel/sys.c                                  |  21 +-
+ security/selinux/include/classmap.h           |   5 +-
+ tools/testing/selftests/clone3/Makefile       |   4 +-
+ .../clone3/clone3_cap_checkpoint_restore.c    | 203 ++++++++++++++++++
+ 9 files changed, 245 insertions(+), 15 deletions(-)
+ create mode 100644 tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
 
-2. blk_mq_get_tag() gets the tag but BLK_MQ_S_INACTIVE is already set.
-Therefore, it would put the tag to release it.
 
-Dongli Zhang
+base-commit: 48f99181fc118d82dc8bf6c7221ad1c654cb8bc2
+-- 
+2.26.2
+
