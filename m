@@ -2,120 +2,68 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE78C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC8120663
+	by mail.kernel.org (Postfix) with ESMTP id E350A20678
 	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7IB3cqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgFCMFh (ORCPT
+        id S1726261AbgFCMFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:05:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25518 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725859AbgFCMFg (ORCPT
+        Wed, 3 Jun 2020 08:05:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48256 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgFCMFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:05:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591185935;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=veNBN0nIrJ2QwM6/V0a3q4/qqOsViBBqoFiGJMYOieg=;
-        b=T7IB3cqKd6n/NsYeq/p1KtgdLQjmAVNqDfvvTV0rTuztiovAUErMCgngJM7ll2rCnHBUVv
-        XzfzB7I3bwH3ge/PwuMsUuegNlbnS98dMMsoCsqNal5J/+EyWGPlzCrSKgpPF8NnMGsNZL
-        BjhguNsBzgku4dHz/9ncO69Zh+gJDII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-510-XQuSdKH3OeaDMD3LRIVwnw-1; Wed, 03 Jun 2020 08:05:31 -0400
-X-MC-Unique: XQuSdKH3OeaDMD3LRIVwnw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5713461;
-        Wed,  3 Jun 2020 12:05:28 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-181.ams2.redhat.com [10.36.112.181])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E79B15C220;
-        Wed,  3 Jun 2020 12:05:22 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup and thread creation (v20)
-References: <20200527185130.5604-1-mathieu.desnoyers@efficios.com>
-        <20200527185130.5604-2-mathieu.desnoyers@efficios.com>
-Date:   Wed, 03 Jun 2020 14:05:21 +0200
-In-Reply-To: <20200527185130.5604-2-mathieu.desnoyers@efficios.com> (Mathieu
-        Desnoyers's message of "Wed, 27 May 2020 14:51:28 -0400")
-Message-ID: <87d06gxsla.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Wed, 3 Jun 2020 08:05:37 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jgS98-00045d-8Y; Wed, 03 Jun 2020 12:05:26 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jeremy Kerr <jk@ozlabs.org>, Joel Stanley <joel@jms.id.au>,
+        Alistar Popple <alistair@popple.id.au>,
+        Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fsi: master-ast-cf: fix spelling mistake "firwmare" -> "firmware"
+Date:   Wed,  3 Jun 2020 13:05:26 +0100
+Message-Id: <20200603120526.16178-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+From: Colin Ian King <colin.king@canonical.com>
 
-> +#ifdef __cplusplus
-> +# if  __cplusplus >=3D 201103L
-> +#  define __rseq_static_assert(expr, diagnostic) static_assert (expr, di=
-agnostic)
-> +#  define __rseq_alignof(type)                   alignof (type)
-> +#  define __rseq_alignas(x)                      alignas (x)
-> +#  define __rseq_tls_storage_class               thread_local
-> +# endif
-> +#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
-> +# define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr, d=
-iagnostic)
-> +# define __rseq_alignof(type)                    _Alignof (type)
-> +# define __rseq_alignas(x)                       _Alignas (x)
-> +# define __rseq_tls_storage_class                _Thread_local
-> +#endif
+There is a spelling mistake in a dev_err error message. Fix it.
 
-This does not seem to work.  I get this with GCC 9:
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/fsi/fsi-master-ast-cf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In file included from /tmp/cih_test_gsrKbC.cc:8:0:
-../sysdeps/unix/sysv/linux/sys/rseq.h:42:50: error: attribute ignored [-Wer=
-ror=3Dattributes]
- #  define __rseq_alignas(x)                      alignas (x)
-                                                  ^
-../sysdeps/unix/sysv/linux/sys/rseq.h:122:14: note: in expansion of macro =
-=E2=80=98__rseq_alignas=E2=80=99
-     uint32_t __rseq_alignas (32) version;
-              ^
-
-In any case, these changes really have to go into the UAPI header first.
-Only the __thread handling should remain.  Otherwise, we'll have a tough
-situation on our hands changing the UAPI header, without introducing
-macro definition conflicts.  I'd suggest to stick to the aligned
-attribute for the time being, like the current UAPI headers.
-
-The resut looks okay to me.
-
-I'm still waiting for feedback from other maintainers whether the level
-of documentation and testing is appropriate.
-
-Thanks,
-Florian
+diff --git a/drivers/fsi/fsi-master-ast-cf.c b/drivers/fsi/fsi-master-ast-cf.c
+index 04d10ea8d343..85d9be38b32b 100644
+--- a/drivers/fsi/fsi-master-ast-cf.c
++++ b/drivers/fsi/fsi-master-ast-cf.c
+@@ -838,7 +838,7 @@ static int load_copro_firmware(struct fsi_master_acf *master)
+ 	rc = request_firmware(&fw, FW_FILE_NAME, master->dev);
+ 	if (rc) {
+ 		dev_err(
+-			master->dev, "Error %d to load firwmare '%s' !\n",
++			master->dev, "Error %d to load firmware '%s' !\n",
+ 			rc, FW_FILE_NAME);
+ 		return rc;
+ 	}
+-- 
+2.25.1
 
