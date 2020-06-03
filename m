@@ -2,108 +2,176 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31497C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24D722068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="InFJWA+n"
+	by mail.kernel.org (Postfix) with ESMTP id 1B46F207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgFCJSB (ORCPT
+        id S1726625AbgFCJSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 3 Jun 2020 05:18:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44651 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbgFCJSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Jun 2020 05:18:01 -0400
-Received: from mail-db8eur05on2080.outbound.protection.outlook.com ([40.107.20.80]:6059
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725355AbgFCJSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:18:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RD9pHFxfb/1hg8bCIbLKXz0K11SEAXl57IGSjC5yx87xfGPhAMC0DolJ6hjtMTR3mOhK6elyoBYsIbY8EwiCEudns+Y8/Dj98+GxLQ+OtxUg65AYMni1j2da0aOdMzlRzUqBwrgZQiSzW+EwUFB6OXGavwK1zmVSckqpRZRtNveOs7M73F/huZXZfNi7OXl8GfZ5YITkExNOeXYleAxFKH67FS3mq4MA9KG7ZEzWrCWVq3/yRiNTkvLfWpXAgTt1qeDNdnmYIEt2G+tcnmDDrQE5jRQzXx/JCu0p56O8VzKcGTQWZfS9XXWo015ryVsKx1POsqUDTOk7D0B03p27lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0FUJ+C1pApJOANztQdzPKoiwSUVWKnZ1i6xErXLDM5s=;
- b=hjS4K586ZdJ19DcOHlbThxa6SNREjmB8z4IQHTdSRjIzvJotShE1KWL8KCCSuUAkttkzGoFWGeyJZ6HiIM08maWNDXtjZV5c1YFgQFcNj7zi9ZPF234Ouwdlde0mZ3VG0hMFoeDDZmRJd3QAdBn+QrgDi53i5R2KKkQSTkyVpKn9H3iN8ZAWjPySZAGwBR+zbR91bBx/vAyviC4sFFMaKq0p0sAp+ekgKCfx8HH+bm7A9gBStQtDEQvsRKbw5OrYoE6SOW4jsNlm05YxFGyUtIpwPGawEf8xdfJ5KTwiYLCtowlgGZ0UDsjT/7p7hvoSDxRMIHjeF95XxvTSAqcmZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0FUJ+C1pApJOANztQdzPKoiwSUVWKnZ1i6xErXLDM5s=;
- b=InFJWA+n9Ov7YiO/BvF8nQmFxZw2dRXF3jk+gt49Y6r2MQl41yHO89Tv174wkjWzUp4FsepRRlwkNVmhbOdNKBs2cisO9xqHgVqwctzCF/6CS/pyiK/QPOoyKOIeDT8sJ2Ff8T/l1OjDjCrDEAy1H2iIZew2kAs9RcjO/ZEy3sw=
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
- by VI1PR04MB4094.eurprd04.prod.outlook.com (2603:10a6:803:43::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 3 Jun
- 2020 09:17:56 +0000
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 09:17:56 +0000
-From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
-To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
-CC:     "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        Hemantkumar Suthar <shemant@marvell.com>,
-        Rakesh Parmar <rakeshp@marvell.com>,
-        Zhaoyang Liu <liuzy@marvell.com>, Cathy Luo <cluo@marvell.com>
-Subject: RE: [EXT] [PATCH 0/4] marvell: Fix firmware filenames for
- sd8977/sd8997 chipsets
-Thread-Topic: [EXT] [PATCH 0/4] marvell: Fix firmware filenames for
- sd8977/sd8997 chipsets
-Thread-Index: AQHWOYAualKOSbAU1kKfAkawWcwZ0qjGnFZQ
-Date:   Wed, 3 Jun 2020 09:17:56 +0000
-Message-ID: <VI1PR04MB4366E635AE42AF40300D8BBE8F880@VI1PR04MB4366.eurprd04.prod.outlook.com>
-References: <20200603082229.15043-1-pali@kernel.org>
-In-Reply-To: <20200603082229.15043-1-pali@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [103.54.18.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5e9dcf77-eb74-4826-4b04-08d8079f00e8
-x-ms-traffictypediagnostic: VI1PR04MB4094:
-x-microsoft-antispam-prvs: <VI1PR04MB4094EC62DEFAB66589A23F0C8F880@VI1PR04MB4094.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 04238CD941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KcJ3JYH9p5axl++HemRB5EMJ/vn55fMXFTeboSIsr0vg6ssfxisYew+95XH5/i9H5kZ7el0KrGvTP6SSwJVdk9iCDOBXsEKOXj86NRxOhtn1ASVUiHm7XgjjCjMj+rmLxV0Zp38rXR7o5XuJRzG1jeVqDwrSz7HowKHOjMqw2CxSzHRwIzOzyndNq0EhmLXRisKMeBM8D0qW5OsH9bv5aoYkGYrCHpeMDSVTjix4MSRqcRDM6oYgMt83+GpK7UNNm+I2SiRyN0f6uFbl7Yx2qtDS6MxtkrClUnkWyix4wih6SXccUYqy5dXqDYqL9oSFCaB9cLZqH9edAIpA/HLj2w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(33656002)(2906002)(66946007)(478600001)(8936002)(64756008)(66556008)(76116006)(86362001)(66446008)(8676002)(54906003)(316002)(66476007)(110136005)(7416002)(7696005)(9686003)(55016002)(5660300002)(558084003)(44832011)(4326008)(186003)(26005)(52536014)(71200400001)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: VIydxggsplQaYa0xsCict369iZh4zTjOHTCuy2Xm1No8Hzk++3iuOKO9Br4JW+Ikc7a5xmmldtGU0p50M3OWCLbjwpKS0e8Ts46drSvbuhJdnC7+Xgd/T2pp3wlRPvI9nfGYBoaHkjQvIwFQTojZF8ik/M3Cgshx2UWbj7/P3F/F6k1DZR3X09neUQ8B/BrI6JS1qIef0ucTyn9BmJT92vHzYjiwxR1w84TQBh5MGpwiNQ/mdl+8Hl+Ckgv+Xug+pH3E5C9sCietEBlr2YxyjNACS9ceIigqEk26+wMTISp84Mcf6udTHIhInGUCovi9gFgQ/T5hvtLEClM+h105hd/cfFyjsYQ9J0pdq4xcGsoi9UFi991QUSaCUIpQ0lEVLVGn+qavLYe7h5HVUj0LLUNzU0gi6uML/6nR+5/Y/ZVxgO1FBDHflr4KRhffUtphKElXxHBiLlzulU/7/i5Jr3wSPir1Yyx+TaXg36gS53w=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+IronPort-SDR: VNF3EFgQRKIPfkDwrbR0n3HJIuN1o2IfhURCP6bII/+GL5Z/fmM2xTTaNdXiw/vhu90nL/ascx
+ unZQJTsoZiEA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 02:18:00 -0700
+IronPort-SDR: lcV0hIJtkR4mv0VBdYlE+o3u2RojrAHcL55zTPoXsiBstjpzJxUiksp7xvLjh/8A2ZqUF1s/R+
+ I33+2Prd+WiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
+   d="scan'208";a="471064857"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 03 Jun 2020 02:17:58 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jgPX8-00Aaqv-1X; Wed, 03 Jun 2020 12:18:02 +0300
+Date:   Wed, 3 Jun 2020 12:18:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2] lib: test get_count_order/long in test_bitops.c
+Message-ID: <20200603091802.GN2428291@smile.fi.intel.com>
+References: <20200602223728.32722-1-richard.weiyang@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e9dcf77-eb74-4826-4b04-08d8079f00e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 09:17:56.8523
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J4QWI62N5DaNhws2wso7irfu+Mw9wYVj/LMI7JN8mYWwXWKpasRUw4l06fim7A6u0mjgFP/mPyi2fasvUO8NPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4094
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602223728.32722-1-richard.weiyang@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGFsaSwNCg0KPiBUaGlzIHBhdGNoIHNlcmllcyBmaXhlcyBtd2lmaWV4IGFuZCBidG1ydmwg
-ZHJpdmVycyB0byBsb2FkIGZpcm13YXJlIGZvcg0KPiBzZDg5NzcgYW5kIHNkODk5NyBjaGlwc2V0
-cyBmcm9tIGNvcnJlY3QgZmlsZW5hbWUuDQoNClRoYW5rcyB5b3UgZm9yIHRoZSBjaGFuZ2VzLCBJ
-IHdpbGwgYWNrIGVhY2ggcGF0Y2g7DQoNClJlZ2FyZHMsDQpHYW5hcGF0aGkNCg0K
+On Tue, Jun 02, 2020 at 10:37:28PM +0000, Wei Yang wrote:
+> Add some test for get_count_order/long in test_bitops.c.
+
+Thanks! LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Note, we can have as many MODULE_AUTHOR() lines as we want.
+
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> 
+> ---
+> v2: merge the test into test_bitops.c
+> ---
+>  lib/Kconfig.debug | 10 +++++-----
+>  lib/test_bitops.c | 40 ++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 43 insertions(+), 7 deletions(-)
+> 
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index f80d5609798f..512111a72e34 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1987,15 +1987,15 @@ config TEST_LKM
+>  	  If unsure, say N.
+>  
+>  config TEST_BITOPS
+> -	tristate "Test module for compilation of clear_bit/set_bit operations"
+> +	tristate "Test module for compilation of bitops operations"
+>  	depends on m
+>  	help
+>  	  This builds the "test_bitops" module that is much like the
+>  	  TEST_LKM module except that it does a basic exercise of the
+> -	  clear_bit and set_bit macros to make sure there are no compiler
+> -	  warnings from C=1 sparse checker or -Wextra compilations. It has
+> -	  no dependencies and doesn't run or load unless explicitly requested
+> -	  by name.  for example: modprobe test_bitops.
+> +	  set/clear_bit macros and get_count_order/long to make sure there are
+> +	  no compiler warnings from C=1 sparse checker or -Wextra
+> +	  compilations. It has no dependencies and doesn't run or load unless
+> +	  explicitly requested by name.  for example: modprobe test_bitops.
+>  
+>  	  If unsure, say N.
+>  
+> diff --git a/lib/test_bitops.c b/lib/test_bitops.c
+> index fd50b3ae4a14..702d5973a5b6 100644
+> --- a/lib/test_bitops.c
+> +++ b/lib/test_bitops.c
+> @@ -9,7 +9,11 @@
+>  #include <linux/module.h>
+>  #include <linux/printk.h>
+>  
+> -/* a tiny module only meant to test set/clear_bit */
+> +/* a tiny module only meant to test
+> + *
+> + *   set/clear_bit
+> + *   get_count_order/long
+> + */
+>  
+>  /* use an enum because thats the most common BITMAP usage */
+>  enum bitops_fun {
+> @@ -24,6 +28,26 @@ enum bitops_fun {
+>  
+>  static DECLARE_BITMAP(g_bitmap, BITOPS_LENGTH);
+>  
+> +unsigned int order_comb[][2] = {
+> +	{0x00000003,  2},
+> +	{0x00000004,  2},
+> +	{0x00001fff, 13},
+> +	{0x00002000, 13},
+> +	{0x50000000, 31},
+> +	{0x80000000, 31},
+> +	{0x80003000, 32},
+> +};
+> +
+> +unsigned long order_comb_long[][2] = {
+> +	{0x0000000300000000, 34},
+> +	{0x0000000400000000, 34},
+> +	{0x00001fff00000000, 45},
+> +	{0x0000200000000000, 45},
+> +	{0x5000000000000000, 63},
+> +	{0x8000000000000000, 63},
+> +	{0x8000300000000000, 64},
+> +};
+> +
+>  static int __init test_bitops_startup(void)
+>  {
+>  	pr_warn("Loaded test module\n");
+> @@ -32,6 +56,18 @@ static int __init test_bitops_startup(void)
+>  	set_bit(BITOPS_11, g_bitmap);
+>  	set_bit(BITOPS_31, g_bitmap);
+>  	set_bit(BITOPS_88, g_bitmap);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+> +		if (order_comb[i][1] != get_count_order(order_comb[i][0]))
+> +			pr_warn("get_count_order wrong for %x\n",
+> +				       order_comb[i][0]); }
+> +
+> +	for (i = 0; i < ARRAY_SIZE(order_comb_long); i++) {
+> +		if (order_comb_long[i][1] !=
+> +			       get_count_order_long(order_comb_long[i][0]))
+> +			pr_warn("get_count_order_long wrong for %lx\n",
+> +				       order_comb_long[i][0]); }
+> +
+>  	return 0;
+>  }
+>  
+> @@ -55,6 +91,6 @@ static void __exit test_bitops_unstartup(void)
+>  module_init(test_bitops_startup);
+>  module_exit(test_bitops_unstartup);
+>  
+> -MODULE_AUTHOR("Jesse Brandeburg <jesse.brandeburg@intel.com>");
+> +MODULE_AUTHOR("Jesse Brandeburg <jesse.brandeburg@intel.com>, Wei Yang <richard.weiyang@gmail.com>");
+>  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("Bit testing module");
+> -- 
+> 2.23.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
