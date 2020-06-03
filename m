@@ -2,156 +2,116 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ABAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F9920663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCF220663
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ax87zDA2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbgFCCCP (ORCPT
+        id S1725930AbgFCCCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:02:15 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:53636 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725777AbgFCCCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:02:15 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2l4BNdeXuE8AA--.2735S3;
-        Wed, 03 Jun 2020 10:01:30 +0800 (CST)
-Subject: Re: [PATCH 1/2] perf tools: check libasan and libubsan in
- Makefile.config
-To:     Jiri Olsa <jolsa@redhat.com>
-References: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
- <20200602141551.GC1169993@krava>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <35e55bec-1f8a-0e8f-798b-bab51ad30797@loongson.cn>
-Date:   Wed, 3 Jun 2020 10:01:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 2 Jun 2020 22:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbgFCCCT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:02:19 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4CAC08C5C0;
+        Tue,  2 Jun 2020 19:02:19 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cBxM6yJFz9sRR;
+        Wed,  3 Jun 2020 12:02:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591149736;
+        bh=vhVIoWfRSqSXFrzE3g6qmYx7HtBU/h0jRCqrvADViUo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ax87zDA2OMU9bhGi7CX2giGqfJNRR4ffm4/mCm+/r4zM4WTK4ZIlQQVm4drgGDQV+
+         KbJKZ47lVS/axmNhj/9uGtK+wp3RTDRY/YjZ+wpMgWVm8votFb3NqT4HooByZ82Qhv
+         72aJfQc7Ste0xwseybcO/7Xrh1/l8Nm6KOeq0j6CzD4CLs3a1jHOUaI2UJtga6Jwdk
+         z7d6kSY/KndFdKNmOIauZI2wC6qSYT09z/rew8HKknjKs0HcbV/9pav0Es5Us8lDUm
+         92dHV8oQgaM0Ii3zbCld6TmJDPHF16/6BtLs3nMXpYcfsA7KeU5D7PvgNbRMi0K8CZ
+         dt6PFgEQd2NLg==
+Date:   Wed, 3 Jun 2020 12:02:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: linux-next: manual merge of the rcu tree with the powerpc tree
+Message-ID: <20200603120215.758ec1f0@canb.auug.org.au>
+In-Reply-To: <20200519172316.3b37cbae@canb.auug.org.au>
+References: <20200519172316.3b37cbae@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200602141551.GC1169993@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxr2l4BNdeXuE8AA--.2735S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr1DCw13ZF1rWF4fAFWxtFb_yoW5Aw45pw
-        4fCa1DtaykJrW8Xa1kAFW8WF4rKrs7tFWjqFy5t347Ar4fGwsFyrs0vFW5WFy7Xw48Ja12
-        va4xWa47K3yUAw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-        Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-        zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-        C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
-        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VUbPEf7UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: multipart/signed; boundary="Sig_/re/4mt4BnHhc__uwjuL5lI1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/02/2020 10:15 PM, Jiri Olsa wrote:
-> On Tue, Jun 02, 2020 at 12:15:03PM +0800, Tiezhu Yang wrote:
->> When build perf with ASan or UBSan, if libasan or libubsan can not find,
->> the feature-glibc is 0 and there exists the following error log which is
->> wrong, because we can find gnu/libc-version.h in /usr/include, glibc-devel
->> is also installed.
->>
->> [yangtiezhu@linux perf]$ make DEBUG=1 EXTRA_CFLAGS='-fno-omit-frame-pointer -fsanitize=address'
->>    BUILD:   Doing 'make -j4' parallel build
->>    HOSTCC   fixdep.o
->>    HOSTLD   fixdep-in.o
->>    LINK     fixdep
->> <stdin>:1:0: warning: -fsanitize=address and -fsanitize=kernel-address are not supported for this target
->> <stdin>:1:0: warning: -fsanitize=address not supported for this target
->>
->> Auto-detecting system features:
->> ...                         dwarf: [ OFF ]
->> ...            dwarf_getlocations: [ OFF ]
->> ...                         glibc: [ OFF ]
->> ...                          gtk2: [ OFF ]
->> ...                      libaudit: [ OFF ]
->> ...                        libbfd: [ OFF ]
->> ...                        libcap: [ OFF ]
->> ...                        libelf: [ OFF ]
->> ...                       libnuma: [ OFF ]
->> ...        numa_num_possible_cpus: [ OFF ]
->> ...                       libperl: [ OFF ]
->> ...                     libpython: [ OFF ]
->> ...                     libcrypto: [ OFF ]
->> ...                     libunwind: [ OFF ]
->> ...            libdw-dwarf-unwind: [ OFF ]
->> ...                          zlib: [ OFF ]
->> ...                          lzma: [ OFF ]
->> ...                     get_cpuid: [ OFF ]
->> ...                           bpf: [ OFF ]
->> ...                        libaio: [ OFF ]
->> ...                       libzstd: [ OFF ]
->> ...        disassembler-four-args: [ OFF ]
->>
->> Makefile.config:393: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
->> Makefile.perf:224: recipe for target 'sub-make' failed
->> make[1]: *** [sub-make] Error 2
->> Makefile:69: recipe for target 'all' failed
->> make: *** [all] Error 2
->> [yangtiezhu@linux perf]$ ls /usr/include/gnu/libc-version.h
->> /usr/include/gnu/libc-version.h
->>
->> After install libasan and libubsan, the feature-glibc is 1 and the build
->> process is success, so the cause is related with libasan or libubsan, we
->> should check them and print an error log to reflect the reality.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   tools/perf/Makefile.config | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->> index 12a8204..b699d21 100644
->> --- a/tools/perf/Makefile.config
->> +++ b/tools/perf/Makefile.config
->> @@ -387,6 +387,12 @@ else
->>         NO_LIBBPF := 1
->>         NO_JVMTI := 1
->>       else
->> +      ifneq ($(shell ldconfig -p | grep libasan >/dev/null 2>&1; echo $$?), 0)
->> +        msg := $(error No libasan found, please install libasan);
->> +      endif
->> +      ifneq ($(shell ldconfig -p | grep libubsan >/dev/null 2>&1; echo $$?), 0)
->> +        msg := $(error No libubsan found, please install libubsan);
->> +      endif
-> hum, would it be better to have check for this in tools/build/features?
+--Sig_/re/4mt4BnHhc__uwjuL5lI1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jiri,
+Hi all,
 
-Thanks for your suggestion.
-
-Do you mean that it is better to add this check at the end of file
-tools/build/Makefile.feature?
-
+On Tue, 19 May 2020 17:23:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> jirka
->
->>         ifneq ($(filter s% -static%,$(LDFLAGS),),)
->>           msg := $(error No static glibc found, please install glibc-static);
->>         else
->> -- 
->> 2.1.0
->>
+> Hi all,
+>=20
+> Today's linux-next merge of the rcu tree got a conflict in:
+>=20
+>   arch/powerpc/kernel/traps.c
+>=20
+> between commit:
+>=20
+>   116ac378bb3f ("powerpc/64s: machine check interrupt update NMI accounti=
+ng")
+>=20
+> from the powerpc tree and commit:
+>=20
+>   187416eeb388 ("hardirq/nmi: Allow nested nmi_enter()")
+>=20
+> from the rcu tree.
 
+This is now a conflict between commit
+
+  69ea03b56ed2 ("hardirq/nmi: Allow nested nmi_enter()")
+
+=46rom Linus tree and the above powerpc tree commit.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/re/4mt4BnHhc__uwjuL5lI1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XBKcACgkQAVBC80lX
+0Gz/Wgf+L+rFqD4u+L0Kv5bqDMacIs7hXXsLQI+vN7E4C2cx1LcZiI9aWrRDpUTK
+uUO5eVIwczW5tvq91C04sT7F6jrApts2PS2hbCwqPM+ZjWTI4SNO5yHopOrWKzUW
+RfV7+lCLfE+SwDlA+ZbzJotktvIL6gpUEBRpiMcSe7ka3iAiarcywWzgo/vhQ4J9
+I3oQUZiMblqFr653oSSYxwb7omI2TU3aAgV8Aheh8OmZktW90UfyYhJjoh6DYulQ
+r+qCwBkQ+MpYcRTOklfrOt9N96sJy1WuNP6bCw34/jd8L/d44loxB4YLO18igyAE
+biuCnndxOIm1utVMy+mR6g83z8twsA==
+=sOc/
+-----END PGP SIGNATURE-----
+
+--Sig_/re/4mt4BnHhc__uwjuL5lI1--
