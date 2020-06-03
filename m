@@ -2,145 +2,92 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48CEC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD97EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF8420734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B808C20734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:15:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ph7P4DBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgFCVOT (ORCPT
+        id S1726410AbgFCVP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 17:14:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59440 "EHLO mga14.intel.com"
+        Wed, 3 Jun 2020 17:15:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22343 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgFCVOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 17:14:18 -0400
-IronPort-SDR: 5ek801NqabKPt2D00nTDtDS1IuU/CQO1cyXfRunp9aTg1iaLs8ubkRYPzwaTDg5EFLjGQnjv9C
- edr5/mzdO1zQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 14:14:16 -0700
-IronPort-SDR: /+lphg5mhpEEZkBRitWFLPKo3DT2QNviSG1HWZMRFsCRphzo4Njn3WjwLxNQkn0kQpJrJnSBuZ
- Bg3bhJF0orwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,469,1583222400"; 
-   d="scan'208";a="294107077"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Jun 2020 14:14:16 -0700
-Date:   Wed, 3 Jun 2020 14:14:16 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Message-ID: <20200603211416.GA1740285@iweiny-DESK2.sc.intel.com>
-References: <20200507150004.1423069-8-ira.weiny@intel.com>
- <20200518184843.3029640-1-ira.weiny@intel.com>
- <20200519165422.GA5838@roeck-us.net>
- <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
- <20200519194215.GA71941@roeck-us.net>
- <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
- <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
- <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
- <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        id S1725922AbgFCVP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 17:15:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591218928; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=jzafB20T6C2cr0oApSpYxxZ+yVZaB2ioyr2SdddTzko=; b=ph7P4DBVtBg5enFBtWEm9inzNxZLdWB9Mxt8z1kNvTcNt8F2W6j9QGK9/UkFv+zIXpwvGmFF
+ TpEIuRmJCt3OVEBIZDX7DkDkB0NLt3EWLpAwOl2kEaBF7Rhm8dVfDFxYoImMrKCA6iQs36uM
+ 4g2O888rHuj49oMLCqqsMRmRJzM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ed812e52dd9e15ae3706638 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 21:15:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 79BDCC43387; Wed,  3 Jun 2020 21:15:16 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4228DC433CB;
+        Wed,  3 Jun 2020 21:15:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4228DC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iommu/arm-smmu: Mark qcom_smmu_client_of_match as possibly unused
+Date:   Wed,  3 Jun 2020 15:15:07 -0600
+Message-Id: <20200603211507.27756-1-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:57:36PM -0700, Andrew Morton wrote:
-> On Thu, 21 May 2020 10:42:50 -0700 Ira Weiny <ira.weiny@intel.com> wrote:
-> 
-> > > > 
-> > > > Actually it occurs to me that the patch consolidating kmap_prot is odd for
-> > > > sparc 32 bit...
-> > > > 
-> > > > Its a long shot but could you try reverting this patch?
-> > > > 
-> > > > 4ea7d2419e3f kmap: consolidate kmap_prot definitions
-> > > > 
-> > > 
-> > > That is not easy to revert, unfortunately, due to several follow-up patches.
-> > 
-> > I have gotten your sparc tests to run and they all pass...
-> > 
-> > 08:10:34 > ../linux-build-test/rootfs/sparc/run-qemu-sparc.sh 
-> > Build reference: v5.7-rc4-17-g852b6f2edc0f
-> > 
-> > Building sparc32:SPARCClassic:nosmp:scsi:hd ... running ......... passed
-> > Building sparc32:SPARCbook:nosmp:scsi:cd ... running ......... passed
-> > Building sparc32:LX:nosmp:noapc:scsi:hd ... running ......... passed
-> > Building sparc32:SS-4:nosmp:initrd ... running ......... passed
-> > Building sparc32:SS-5:nosmp:scsi:hd ... running ......... passed
-> > Building sparc32:SS-10:nosmp:scsi:cd ... running ......... passed
-> > Building sparc32:SS-20:nosmp:scsi:hd ... running ......... passed
-> > Building sparc32:SS-600MP:nosmp:scsi:hd ... running ......... passed
-> > Building sparc32:Voyager:nosmp:noapc:scsi:hd ... running ......... passed
-> > Building sparc32:SS-4:smp:scsi:hd ... running ......... passed
-> > Building sparc32:SS-5:smp:scsi:cd ... running ......... passed
-> > Building sparc32:SS-10:smp:scsi:hd ... running ......... passed
-> > Building sparc32:SS-20:smp:scsi:hd ... running ......... passed
-> > Building sparc32:SS-600MP:smp:scsi:hd ... running ......... passed
-> > Building sparc32:Voyager:smp:noapc:scsi:hd ... running ......... passed
-> > 
-> > Is there another test I need to run?
-> 
-> This all petered out, but as I understand it, this patchset still might
-> have issues on various architectures.
-> 
-> Can folks please provide an update on the testing status?
+When CONFIG_OF=n of_match_device() gets pre-processed out of existence
+leaving qcom-smmu_client_of_match unused. Mark it as possibly unused to
+keep the compiler from warning in that case.
 
-I believe the tests were failing for Guenter due to another patch set...[1]
+Fixes: 0e764a01015d ("iommu/arm-smmu: Allow client devices to select direct mapping")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-My tests with just this series are working.
+ drivers/iommu/arm-smmu-qcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-From my understanding the other failures were unrelated.[2]
-
-	<quote Mike Rapoport>
-	I've checked the patch above on top of the mmots which already has
-	Ira's patches and it booted fine. I've used sparc32_defconfig to build
-	the kernel and qemu-system-sparc with default machine and CPU.
-	</quote>
-
-Mike, am I wrong?  Do you think the kmap() patches are still causing issues?
-
-Ira
-
-[1] https://lore.kernel.org/lkml/2807E5FD2F6FDA4886F6618EAC48510E92EAB1DE@CRSMSX101.amr.corp.intel.com/
-[2] https://lore.kernel.org/lkml/20200520195110.GH1118872@kernel.org/
+diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+index cf01d0215a39..063b4388b0ff 100644
+--- a/drivers/iommu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -12,7 +12,7 @@ struct qcom_smmu {
+ 	struct arm_smmu_device smmu;
+ };
+ 
+-static const struct of_device_id qcom_smmu_client_of_match[] = {
++static const struct __maybe_unused of_device_id qcom_smmu_client_of_match[] = {
+ 	{ .compatible = "qcom,adreno" },
+ 	{ .compatible = "qcom,mdp4" },
+ 	{ .compatible = "qcom,mdss" },
+-- 
+2.17.1
 
