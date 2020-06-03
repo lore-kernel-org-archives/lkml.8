@@ -2,128 +2,63 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76123C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED88A206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591173668;
-	bh=RgZUtVxKnCtVw5YOAOf1+p20ZhLDrmdlW/NiubsGS4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e89212+npIALWHeGqKVhTN6n57kHdIEaNPWKTWMRzZGwF3BCzxFpm+vCiUVc4M/Mz
-	 knbvFDg+rz115TMvGUKYc8QSsrDu48/Xf2MceWPkq1A3Fh7IRfai2KNwMbOR9fjbsU
-	 /Vlmn3fMXJmBRMDmjQpFaenhURXPl5zUCerHBsbQ=
+	by mail.kernel.org (Postfix) with ESMTP id 551BF206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgFCIlF (ORCPT
+        id S1726236AbgFCImC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:41:05 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38363 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgFCIlF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:41:05 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 202so789914lfe.5;
-        Wed, 03 Jun 2020 01:41:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y3+NZ002fR5cwFINbc/o3dpUhIJL9xPazQ2yRYvAcPI=;
-        b=hCKGaV93HEyfanQW2nAnEjNxbwDsgSYdkTODol6+PNwAyo+kuNPDUKiMhE80mpiu9o
-         zubbOA8qpI5QX647m0BK2AAWL2lLBQm7rYvJmni8wTFJcbW/j6/1sAT4blQrmczyWa21
-         PkFK/71ER6yi7IGo/HTGm+WmsJ9hVxb2jo4JUWEfKWbEmTqsb1ydZB/F5t96HyhSFqER
-         QoFFj2ZwrQbFgNU3p4BAFtONiYu36xAAAerV4jGEKj6ZMWvp209JFnOkw368Of8RLXku
-         WIXRMe7s/7BCS8M+TwOQUYOerldFaRTirFNp8LhCOdFqd2+oO6al5lxUaKw6hRKBvqH6
-         4jhw==
-X-Gm-Message-State: AOAM532MKL7xWBuCjQZLzHVIGx2++6Fs35TJgQGSNcVTihnQuXFP0jbB
-        aJ2N+y6DsKs3nMgmICIQOfI=
-X-Google-Smtp-Source: ABdhPJzoycNz0b42LjEGhqRPhb5Q3Xac6OiJOYqR8aXp9vwMshAsFIyQ9VYMEqnoKBUzsU0ot5PTsA==
-X-Received: by 2002:a19:434e:: with SMTP id m14mr1905473lfj.40.1591173662210;
-        Wed, 03 Jun 2020 01:41:02 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id w20sm298508lji.7.2020.06.03.01.41.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 01:41:01 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jgOx9-0002Ai-OO; Wed, 03 Jun 2020 10:40:51 +0200
-Date:   Wed, 3 Jun 2020 10:40:51 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Safonov <0x7f454c46@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/4] serial: core: fix broken sysrq port unlock
-Message-ID: <20200603084051.GJ19480@localhost>
-References: <20200602140058.3656-1-johan@kernel.org>
- <20200602140058.3656-3-johan@kernel.org>
- <CAHp75VeXYn46wQ5EXkk_MOQ49ybtyTeoQS6BS1X9DkC6hbeF-w@mail.gmail.com>
- <b016ad68-124a-5c98-f49b-f7286d995223@gmail.com>
+        Wed, 3 Jun 2020 04:42:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5780 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725355AbgFCImC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:42:02 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E0C7CDB02565211492AB;
+        Wed,  3 Jun 2020 16:41:58 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.202.66) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 3 Jun 2020 16:41:49 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <akpm@linux-foundation.org>, <mike.kravetz@oracle.com>
+CC:     <guro@fb.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        Barry Song <song.bao.hua@hisilicon.com>
+Subject: [PATCH 0/2] mm: fix the names of general cma and hugetlb cma
+Date:   Wed, 3 Jun 2020 20:40:23 +1200
+Message-ID: <20200603084025.62740-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b016ad68-124a-5c98-f49b-f7286d995223@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.202.66]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:34:16PM +0100, Dmitry Safonov wrote:
-> On 6/2/20 3:48 PM, Andy Shevchenko wrote:
-> > On Tue, Jun 2, 2020 at 5:03 PM Johan Hovold <johan@kernel.org> wrote:
-> >>
-> >> Commit d6e1935819db ("serial: core: Allow processing sysrq at port
-> >> unlock time") worked around a circular locking dependency by adding
-> >> helpers used to defer sysrq processing to when the port lock was
-> >> released.
-> >>
-> >> A later commit unfortunately converted these inline helpers to exported
-> >> functions despite the fact that the unlock helper was restoring irq
-> >> flags, something which needs to be done in the same function that saved
-> >> them (e.g. on SPARC).
-> > 
-> > I'm not familiar with sparc, can you elaborate a bit what is ABI /
-> > architecture lock implementation background?
-> 
-> I remember that was a limitation a while ago to save/restore flags from
-> the same function. Though, I vaguely remember the reason.
-> I don't see this limitation in Documentation/*
+the current code of CMA can only work when users pass a const string as name
+parameter. we need to fix the way to handle names in CMA.
+On the other hand, to avoid name conflicts after enabling CMA_DEBUGFS, each
+hugetlb should get a different CMA name.
 
-It's described in both LDD3 and LKD, which is possibly where I first
-picked it up too (admittedly a long time ago).
+Barry Song (2):
+  mm: cma: fix the name of CMA areas
+  mm: hugetlb: fix the name of hugetlb CMA
 
-> Google suggests that it's related to storage location:
-> https://stackoverflow.com/a/34279032
+ mm/cma.c     | 13 ++++++-------
+ mm/cma.h     |  4 +++-
+ mm/hugetlb.c |  4 +++-
+ 3 files changed, 12 insertions(+), 9 deletions(-)
 
-No, that was never the issue.
+-- 
+2.23.0
 
-SPARC includes the current register window in those flags, which at
-least had to be restored in the same stack frame.
 
-> Looking into arch/sparc I also can't catch if it's still a limitation.
-
-Yeah, looking closer at the current implementation it seems this is no
-longer an issue on SPARC.
-
-> Also, looking around, xa_unlock_irqrestore() is called not from the same
-> function. Maybe this issue is in history?
-
-xa_unlock_irqrestore() is just a macro for spin_unlock_irqsave() it
-seems, so not a counter example.
-
-> Also, some comments would be nice near functions in the header.
-
-Agreed. Let me respin this and either merge this with the next patch or
-at least amend the commit message.
-
-Johan
