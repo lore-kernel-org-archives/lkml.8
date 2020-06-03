@@ -2,106 +2,90 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1353C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC1492074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Gn3OMcFw"
+	by mail.kernel.org (Postfix) with ESMTP id DB3A72074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgFCJTT (ORCPT
+        id S1726793AbgFCJTe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:19:19 -0400
-Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:2820
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725881AbgFCJTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:19:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YhzuerhW71NiJ+wn5OQVIuXurDcCBq6OMeIBk1E/hfIw0tprxsMFxOCvxxvnfmyEIHoQ9MX6EelGXiNECd/MKZzoR/ItK5tI+alZm+iu/H/QHWSw59jIepx9L9clnVJXCI+NyMjzWyCt9XQnUmQsq0ih8tuKBHOILxaxT2vXlw6p9SEyzXazt3gAHm8FzSWVxuZ17Uxfil6hYCCDUx6IOmOh9a7kO0+CxYTzducZeq773KrK+tFrW9rp9BENJMjYViPDuDd8CW5FW+m4bLCBR9QZr4sqprxhLeaPxCf4JU3wib45e38F8E1n/rsGd+LSMdaucwtQ8WmGqNz6ItzAIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X8SYUhiaGRf3gliqgDPh+9KTtHYELGZpzrQRlk9zyqo=;
- b=JCCHq+cH8BT4QQrvZ2wtbdY/YeDjQv/J4Ldw/fa+4M5i+rPdgP/evlXwYRPV/VJmrjoonjTt5GpNEL7aZud8IWWVPNPdlm4WtuBoc5mDmQ0TehXBewBPoLrBWG8EeRpa+NM/YVOs/60BVnbYzzyW7kpeWHtsinoK9JcvQN0petu49092rfYAACQpy1MQmtzUTU/QKdWWJFHBqpIe2MMmKLF9ZE6jkiwb5dXO05tyIEP52BEcBAjAPYYYpOvOpny3qkarCh0QMjde5tqAN8DLy659vr1Ojyzh1jjoVn5mrmUDMq5q0za0OcVPZZZYwjVymseWpcjloKzIaPKjO/depw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X8SYUhiaGRf3gliqgDPh+9KTtHYELGZpzrQRlk9zyqo=;
- b=Gn3OMcFwnRAwRVXz6KuGrH2WlXcjsiOGsmurC6Vz315p9f2Yd7ery9J+TSqtOSY+R7NDzbZubppOxR8DO6mc4ooiKeEzkHBxUXK7wL+2fKBohZkJTbqb2sEyPfLPYxXlixONevnUMEBoJ3x083QTtty8dHhXN/WvutN0h88DdWw=
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
- by VI1PR04MB5854.eurprd04.prod.outlook.com (2603:10a6:803:e2::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 3 Jun
- 2020 09:19:14 +0000
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 09:19:14 +0000
-From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
-To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
-CC:     "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        Hemantkumar Suthar <shemant@marvell.com>,
-        Rakesh Parmar <rakeshp@marvell.com>,
-        Zhaoyang Liu <liuzy@marvell.com>, Cathy Luo <cluo@marvell.com>
-Subject: RE: [EXT] [PATCH 4/4] btmrvl: Fix firmware filename for sd8997
- chipset
-Thread-Topic: [EXT] [PATCH 4/4] btmrvl: Fix firmware filename for sd8997
- chipset
-Thread-Index: AQHWOYA00kkEwUYYGE6UTNGbj3DPb6jGnRVQ
-Date:   Wed, 3 Jun 2020 09:19:14 +0000
-Message-ID: <VI1PR04MB43665C2835DFEDB7B4107EF28F880@VI1PR04MB4366.eurprd04.prod.outlook.com>
-References: <20200603082229.15043-1-pali@kernel.org>
- <20200603082229.15043-5-pali@kernel.org>
-In-Reply-To: <20200603082229.15043-5-pali@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [103.54.18.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0e1b0208-79e5-4599-5913-08d8079f2f59
-x-ms-traffictypediagnostic: VI1PR04MB5854:
-x-microsoft-antispam-prvs: <VI1PR04MB58540F89F07A83FFFE588A218F880@VI1PR04MB5854.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 04238CD941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CTDmzqR3bGmbh0Pxk91R9rqTvj9RdkFYs4vInT3N11pMskgNPWqxcgZIR1/5bltXx6K1xWeS/znP85KhKr9xPBrykfH3hjJnhBQIHY0Qf+3DahIKXXS3kTml3boEnCSmBvYaORNtrgmDN76t7zmlhuapoPel68+G1JKAIewC2/B4iPoj0/KGG7MtNLq5R32f072kC9NPgkOQj5YNBfPnMTwANHgT7lZIbqydkjqK3JNdZNYRxKVZB0lFNHlss9GWuz3OSS/BsmnCXggmmfryN/kkFxpasOr0MCBjHqcDFICTW1nE6XBb+5Xl5fEVOERa7Dp/uZz1vcjwBr2LY67gnA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(396003)(346002)(366004)(478600001)(4326008)(44832011)(86362001)(6506007)(66446008)(8676002)(2906002)(5660300002)(19618925003)(66476007)(26005)(33656002)(8936002)(52536014)(55016002)(66946007)(76116006)(4270600006)(64756008)(66556008)(186003)(558084003)(7696005)(9686003)(54906003)(316002)(7416002)(71200400001)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: hrqcy71IVjsFIrU0BFd81CQRJp22QKEbPko83X3B0FY2ji44nNH+j+mRR8YHDxN0Vs1aOTl+xCTywwabItgscjrzsPZEsNCkvW2jncRKs2rAbNME7uNqgJBGV+G1+jLZhB73iSW32+JLKWmcF3IyVczYbo+tANhUP4S6Wrz9bA59VcSP78CrYiN7JjipmtMOgVONLDz3C6fSTeRoE+sLTkA6jSIz2qBrLng5U7Qf71hCpfwGLHQCZcJTCrOiPjtpy9QWDggc2EY5oUngWf9h0PO7Qh/jOipntHCBfjCV9+nuRWm2GbrrC5qxLAfkz9pycupBxkGfOe3lmp4HzZXiJ0l6P5LrTmsXKm/bjWFI7bBouk8CgdgSK1nAO8JrZvEbvrc6sY+kfjZWrpW/bb1Fmg7WJ+LL4k2JnuR5pFRc5s0DWjFaBh7kdopW7U9Az78VDuFzbsB8rbyoSTEUk30LOio0x1ox1EDSbzO7wsQDKxo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 3 Jun 2020 05:19:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbgFCJTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:19:33 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D2F6C05BD43;
+        Wed,  3 Jun 2020 02:19:33 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jgPYW-0005nE-T5; Wed, 03 Jun 2020 11:19:29 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6A4061C0081;
+        Wed,  3 Jun 2020 11:19:28 +0200 (CEST)
+Date:   Wed, 03 Jun 2020 09:19:28 -0000
+From:   "tip-bot2 for Kefeng Wang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/urgent] rcuperf: Fix printk format warning
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e1b0208-79e5-4599-5913-08d8079f2f59
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 09:19:14.6985
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8lobjbzSIfpd0FNGTZroSVvbWlFUVacLsvGjdrH+NdkQImAkBN9IT5R9kZdXbBZuB5bLajKJBiBMRCEtqSlqfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5854
+Message-ID: <159117596821.17951.14565757458666669715.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWNrZWQtYnk6IEdhbmFwYXRoaSBCaGF0IDxnYW5hcGF0aGkuYmhhdEBueHAuY29tPg0K
+The following commit has been merged into the core/urgent branch of tip:
+
+Commit-ID:     b3e2d20973db3ec87a6dd2fee0c88d3c2e7c2f61
+Gitweb:        https://git.kernel.org/tip/b3e2d20973db3ec87a6dd2fee0c88d3c2e7c2f61
+Author:        Kefeng Wang <wangkefeng.wang@huawei.com>
+AuthorDate:    Fri, 17 Apr 2020 12:02:45 +08:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Tue, 02 Jun 2020 08:41:37 -07:00
+
+rcuperf: Fix printk format warning
+
+Using "%zu" to fix following warning,
+kernel/rcu/rcuperf.c: In function ‘kfree_perf_init’:
+include/linux/kern_levels.h:5:18: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘unsigned int’ [-Wformat=]
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/rcuperf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 16dd1e6..9eb39c2 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -723,7 +723,7 @@ kfree_perf_init(void)
+ 		schedule_timeout_uninterruptible(1);
+ 	}
+ 
+-	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
++	pr_alert("kfree object size=%zu\n", kfree_mult * sizeof(struct kfree_obj));
+ 
+ 	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
+ 			       GFP_KERNEL);
