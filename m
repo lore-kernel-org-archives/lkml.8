@@ -4,134 +4,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E851EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F572068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85862068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbgFCGKZ (ORCPT
+        id S1725944AbgFCGL5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:10:25 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:35386 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbgFCGKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:10:24 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9+9Ptde2PM8AA--.844S2;
-        Wed, 03 Jun 2020 14:10:06 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2] tools build: Check libasan and libubsan in Makefile.feature
-Date:   Wed,  3 Jun 2020 14:10:04 +0800
-Message-Id: <1591164604-20806-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxn9+9Ptde2PM8AA--.844S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFW7XF4fZw1DKw1kJw1kXwb_yoW5GrW7pw
-        4SkrWDtrWfXrWxZr18CF4rWr1rGFZ2qayjgan8J3sFyrn8Gw42yr4Fya4YqFy7Jw18Xay3
-        u34xWFWIgw4UAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
-        AwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUFhF3UUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 3 Jun 2020 02:11:57 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.115]:24220 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725810AbgFCGL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:11:56 -0400
+Received: from [100.113.4.218] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-b.eu-central-1.aws.symcld.net id 52/3E-52160-92F37DE5; Wed, 03 Jun 2020 06:11:53 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRWlGSWpSXmKPExsUS8J9toq6G/fU
+  4g5knjSyaF69ns7i8aw6bA5PH/rlr2D0+b5ILYIpizcxLyq9IYM34f/gAY8FGgYqTj46zNzDu
+  4Oti5OIQEmhglFjyeCJzFyMnh4SAn8TFrVMYIRKrGSXurl3OBOHsY5Q4+6uHCaSKTUBX4vviz
+  6wgtoiAgsTVn7/ZQGxmAW+Jp7+2AtkcHMICThLNd5RBwiwCKhLL7r5lB7F5Bewldu6cwA6xTF
+  7i1/PPYIuFBDQkDnduhYuvPbqFBWSMhECcxJc7phCtghInZz6BCltLTNycCFGtJjF/cRcjhM0
+  p8f7DByaQEmYBTYn1u/Qh7tKWWLbwNfMERpFZSAbNQqiahaRqASPzKkbLpKLM9IyS3MTMHF1D
+  AwNdQ0NjXXNdI2NDvcQq3SS91FLd5NS8kqJEoKxeYnmxXnFlbnJOil5easkmRmC0pBSyP9/Bu
+  OrNB71DjJIcTEqivO57r8UJ8SXlp1RmJBZnxBeV5qQWH2KU4eBQkuAVsb0eJyRYlJqeWpGWmQ
+  OMXJi0BAePkgjvcxugNG9xQWJucWY6ROoUo6KUOK8dSJ8ASCKjNA+uDZYsLjHKSgnzMjIwMAj
+  xFKQW5WaWoMq/YhTnYFQS5pW0A5rCk5lXAjf9FdBiJqDF9n3XQBaXJCKkpBqYmlPz15rlVh/o
+  CNnRvv7z/KB1i+RYdgQ/S22PmVb+cfnM/ou3Dyr/ff/V+Fg2U28ut/rVwJqwaW6itm6zFUrfv
+  pQKKrZQVHxT/Cr3Q0TMbZZjUtVndmzUT5ribF2c8O34r0TDvHQhiahrF5W26F6+7+A1f826tP
+  xZc6v72XbqrAtZWbyp0u/H4pXO32bumvWBLeXqjW81NSxhv+dalLp90X3AIxp2ddWyjJS5RnN
+  S7e8aa1Stjtkt8O9nuUHKkvW2khYlP/yOPtNo9eK6mP1gXVlNdOlr/xWi+xTiZm631TVweaS9
+  8e0buS6vDxd2HMlQvrvxWkHm2axzQi8WxH64kdo7ScCu+fmvC6ssJr8XUGIpzkg01GIuKk4EA
+  E3gJpGRAwAA
+X-Env-Sender: Andreas.Geissler@duagon.com
+X-Msg-Ref: server-18.tower-239.messagelabs.com!1591164711!4249372!1
+X-Originating-IP: [80.255.6.145]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 1230 invoked from network); 3 Jun 2020 06:11:52 -0000
+Received: from unknown (HELO keys.men.de) (80.255.6.145)
+  by server-18.tower-239.messagelabs.com with AES128-SHA encrypted SMTP; 3 Jun 2020 06:11:52 -0000
+Received: from MEN-EX01.intra.men.de ([192.168.1.1])
+  by keys.men.de (PGP Universal service);
+  Wed, 03 Jun 2020 08:11:52 +0200
+X-PGP-Universal: processed;
+        by keys.men.de on Wed, 03 Jun 2020 08:11:52 +0200
+Received: from MEN-EX01.intra.men.de (192.168.1.1) by MEN-EX01.intra.men.de
+ (192.168.1.1) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 3 Jun
+ 2020 08:11:51 +0200
+Received: from build1.dev.men.de (10.64.0.100) by MEN-EX01.intra.men.de
+ (192.168.1.1) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
+ Transport; Wed, 3 Jun 2020 08:11:51 +0200
+From:   AGeissler <Andreas.Geissler@duagon.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        AGeissler <Andreas.Geissler@duagon.com>
+Subject: [PATCH] MAINTAINERS: Update maintainer entries for MEN HW
+Date:   Wed, 3 Jun 2020 08:11:42 +0200
+Message-ID: <20200603061142.4000-1-Andreas.Geissler@duagon.com>
+X-Mailer: git-send-email 2.16.4
+X-Originating-IP: [10.64.0.100]
+X-ClientProxiedBy: MEN-EX01.intra.men.de (192.168.1.1) To
+ MEN-EX01.intra.men.de (192.168.1.1)
+MIME-Version: 1.0
+X-EXCLAIMER-MD-CONFIG: e4841e51-7998-49c0-ba41-8b8a0e2d8962
+X-EXCLAIMER-MD-BIFURCATION-INSTANCE: 0
+X-Loop: 2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When build perf with ASan or UBSan, if libasan or libubsan can not find,
-the feature-glibc is 0 and there exists the following error log which is
-wrong, because we can find gnu/libc-version.h in /usr/include, glibc-devel
-is also installed.
+﻿Remove Andreas Werner as Maintainer of the F21 BMC driver, as he is no
+longer with the company and add Andreas Geissler as additional
+Maintainer for all MEN Hardware.
 
-[yangtiezhu@linux perf]$ make DEBUG=1 EXTRA_CFLAGS='-fno-omit-frame-pointer -fsanitize=address'
-  BUILD:   Doing 'make -j4' parallel build
-  HOSTCC   fixdep.o
-  HOSTLD   fixdep-in.o
-  LINK     fixdep
-<stdin>:1:0: warning: -fsanitize=address and -fsanitize=kernel-address are not supported for this target
-<stdin>:1:0: warning: -fsanitize=address not supported for this target
-
-Auto-detecting system features:
-...                         dwarf: [ OFF ]
-...            dwarf_getlocations: [ OFF ]
-...                         glibc: [ OFF ]
-...                          gtk2: [ OFF ]
-...                      libaudit: [ OFF ]
-...                        libbfd: [ OFF ]
-...                        libcap: [ OFF ]
-...                        libelf: [ OFF ]
-...                       libnuma: [ OFF ]
-...        numa_num_possible_cpus: [ OFF ]
-...                       libperl: [ OFF ]
-...                     libpython: [ OFF ]
-...                     libcrypto: [ OFF ]
-...                     libunwind: [ OFF ]
-...            libdw-dwarf-unwind: [ OFF ]
-...                          zlib: [ OFF ]
-...                          lzma: [ OFF ]
-...                     get_cpuid: [ OFF ]
-...                           bpf: [ OFF ]
-...                        libaio: [ OFF ]
-...                       libzstd: [ OFF ]
-...        disassembler-four-args: [ OFF ]
-
-Makefile.config:393: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-Makefile.perf:224: recipe for target 'sub-make' failed
-make[1]: *** [sub-make] Error 2
-Makefile:69: recipe for target 'all' failed
-make: *** [all] Error 2
-[yangtiezhu@linux perf]$ ls /usr/include/gnu/libc-version.h
-/usr/include/gnu/libc-version.h
-
-After install libasan and libubsan, the feature-glibc is 1 and the build
-process is success, so the cause is related with libasan or libubsan, we
-should check them and print an error log to reflect the reality.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Acked-by: Johannes Thumshirn <jth@kernel.org>
+Acked-by: Andreas Werner <crustyaw@gmx.de>
+Signed-off-by: AGeissler <Andreas.Geissler@duagon.com>
 ---
+ MAINTAINERS | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-v2:
-  - Check libasan and libubsan in tools/build/Makefile.feature
-  - Modify the patch subject
-
- tools/build/Makefile.feature | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 3abd431..e147c17 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -252,3 +252,10 @@ ifeq ($(feature_verbose),1)
-   $(foreach feat,$(TMP),$(call feature_print_status,$(feat),))
-   $(info )
- endif
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68cd1b966b45..b3b45d2e9c8a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11044,19 +11044,21 @@ F:	include/uapi/mtd/
+ 
+ MEN A21 WATCHDOG DRIVER
+ M:	Johannes Thumshirn <morbidrsa@gmail.com>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ L:	linux-watchdog@vger.kernel.org
+ S:	Maintained
+ F:	drivers/watchdog/mena21_wdt.c
+ 
+ MEN CHAMELEON BUS (mcb)
+ M:	Johannes Thumshirn <morbidrsa@gmail.com>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ S:	Maintained
+ F:	Documentation/driver-api/men-chameleon-bus.rst
+ F:	drivers/mcb/
+ F:	include/linux/mcb.h
+ 
+ MEN F21BMC (Board Management Controller)
+-M:	Andreas Werner <andreas.werner@men.de>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ S:	Supported
+ F:	Documentation/hwmon/menf21bmc.rst
+ F:	drivers/hwmon/menf21bmc_hwmon.c
+@@ -11066,10 +11068,18 @@ F:	drivers/watchdog/menf21bmc_wdt.c
+ 
+ MEN Z069 WATCHDOG DRIVER
+ M:	Johannes Thumshirn <jth@kernel.org>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ L:	linux-watchdog@vger.kernel.org
+ S:	Maintained
+ F:	drivers/watchdog/menz69_wdt.c
+ 
++MEN Z135 UART DRIVER
++M:	Johannes Thumshirn <jth@kernel.org>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
++L:	linux-serial@vger.kernel.org
++S:	Maintained
++F:	drivers/tty/serial/men_z135_uart.c
 +
-+ifneq ($(shell ldconfig -p | grep libasan >/dev/null 2>&1; echo $$?), 0)
-+  msg := $(error No libasan found, please install libasan);
-+endif
-+ifneq ($(shell ldconfig -p | grep libubsan >/dev/null 2>&1; echo $$?), 0)
-+  msg := $(error No libubsan found, please install libubsan);
-+endif
+ MESON AO CEC DRIVER FOR AMLOGIC SOCS
+ M:	Neil Armstrong <narmstrong@baylibre.com>
+ L:	linux-media@vger.kernel.org
+
+base-commit: d6f9469a03d832dcd17041ed67774ffb5f3e73b3
 -- 
-2.1.0
+2.16.4
+
+
+MEN Mikro Elektronik GmbH
+Neuwieder Straße 1-7 90411 Nürnberg
+Geschäftsführer: Dr. Michael Goldbach - Matthias Kamolz - Yilmaz Kocak - Handelsregister AG Nürnberg HRB 5540
 
