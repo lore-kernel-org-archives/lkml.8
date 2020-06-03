@@ -2,108 +2,102 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442AB20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FEB206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="p0AlNxI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgFCNk5 (ORCPT
+        id S1726046AbgFCNl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:40:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:33682 "EHLO foss.arm.com"
+        Wed, 3 Jun 2020 09:41:29 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34952 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgFCNk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:40:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B1C255D;
-        Wed,  3 Jun 2020 06:40:56 -0700 (PDT)
-Received: from [10.57.0.45] (unknown [10.57.0.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9B3C3F52E;
-        Wed,  3 Jun 2020 06:40:54 -0700 (PDT)
-Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
-        Stephen Boyd <swboyd@chromium.org>
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <20200601212858.GB24287@xps15> <bf7e8ac2-51b2-d9cb-9c4f-c311297accac@arm.com>
- <1549935cf69ac3a006f32eb278821027@codeaurora.org>
- <6c1a4fbd-98cb-a49c-0ced-1318d5d5e7c8@arm.com>
- <7fe5762b5cb8f87e988232922d06c55d@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <68444180-3ebe-8988-493a-fdd1dff994b6@arm.com>
-Date:   Wed, 3 Jun 2020 14:40:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1725834AbgFCNl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:41:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=CyFG2ru7bk1mj/fhXW2oMAxCVTuoHvvxgw+JJUxkA58=; b=p0AlNxI8ltu2LoKOPfJIcRx66u
+        XgYz2RIKrNkdlAQ63W7em0FJIEhS88woZHuRJhCxfwfoZfE2f0NSs1M5TtcfAoTN+oSTv0UpfdUhz
+        QA86WONXgj7Wt5FrBW4CRnXAwvSiX0zdC3pank2nedQ7lWk8qWuUchiUuGjDpF3oYOF8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jgTdx-0043cL-Io; Wed, 03 Jun 2020 15:41:21 +0200
+Date:   Wed, 3 Jun 2020 15:41:21 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: qca8k: Fix "Unexpected gfp" kernel
+ exception
+Message-ID: <20200603134121.GX869823@lunn.ch>
+References: <1591183899-24987-1-git-send-email-michal.vokac@ysoft.com>
 MIME-Version: 1.0
-In-Reply-To: <7fe5762b5cb8f87e988232922d06c55d@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1591183899-24987-1-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-03 13:26, Sai Prakash Ranjan wrote:
-> Hi Robin,
+On Wed, Jun 03, 2020 at 01:31:39PM +0200, Michal Vokáč wrote:
+> Commit 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+> replaced the dsa_switch_alloc helper by devm_kzalloc in all DSA
+> drivers. Unfortunately it introduced a typo in qca8k.c driver and
+> wrong argument is passed to the devm_kzalloc function.
 > 
-> On 2020-06-03 17:51, Robin Murphy wrote:
->> On 2020-06-03 13:00, Sai Prakash Ranjan wrote:
->>> Hi Robin, Mathieu
->>>
->>> On 2020-06-03 17:07, Robin Murphy wrote:
->>>> On 2020-06-01 22:28, Mathieu Poirier wrote:
->>>>> That being said I'm sure that dependencies on an IOMMU isn't a 
->>>>> problem confined
->>>>> to coresight. I am adding Robin Murphy, who added this commit [1], 
->>>>> to the thread
->>>>> in the hope that he can provide guidance on the right way to do this.
->>>>
->>>> Right, it's not specific to CoreSight, and it's not even specific to
->>>> IOMMUs really. In short, blame kexec ;)
->>>>
->>>
->>> Yes it is not specific to coresight, we are targeting this for all
->>> consumers/clients of SMMU(atleast on SC7180 SoC). We have display 
->>> throwing
->>> NoC/interconnect errors[1] during reboot after SMMU is disabled.
->>> This is also not specific to kexec either as you explained here [2] 
->>> about
->>> a case with display which is exacly what is happening in our system [1].
->>
->> Sure, but those instances are begging the question of why the SMMU is
->> disabled at reboot in the first place ;)
->>
+> This fix mitigates the following kernel exception:
 > 
-> That is what happens in SMMU shutdown callback right? It is the 
-> reboot/shutdown flow.
-
-Yes, that's where it happens, but my point is *why* it happens at all.
-
-hint: `git log --grep=shutdown drivers/iommu/`
-
-If we could assume the system is always about to be powered off or 
-reset, we wouldn't need to do anything to the SMMU either ;)
-
-Robin.
-
+>   Unexpected gfp: 0x6 (__GFP_HIGHMEM|GFP_DMA32). Fixing up to gfp: 0x101 (GFP_DMA|__GFP_ZERO). Fix your code!
+>   CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.5.9-yocto-ua #1
+>   Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+>   Workqueue: events deferred_probe_work_func
+>   [<c0014924>] (unwind_backtrace) from [<c00123bc>] (show_stack+0x10/0x14)
+>   [<c00123bc>] (show_stack) from [<c04c8fb4>] (dump_stack+0x90/0xa4)
+>   [<c04c8fb4>] (dump_stack) from [<c00e1b10>] (new_slab+0x20c/0x214)
+>   [<c00e1b10>] (new_slab) from [<c00e1cd0>] (___slab_alloc.constprop.0+0x1b8/0x540)
+>   [<c00e1cd0>] (___slab_alloc.constprop.0) from [<c00e2074>] (__slab_alloc.constprop.0+0x1c/0x24)
+>   [<c00e2074>] (__slab_alloc.constprop.0) from [<c00e4538>] (__kmalloc_track_caller+0x1b0/0x298)
+>   [<c00e4538>] (__kmalloc_track_caller) from [<c02cccac>] (devm_kmalloc+0x24/0x70)
+>   [<c02cccac>] (devm_kmalloc) from [<c030d888>] (qca8k_sw_probe+0x94/0x1ac)
+>   [<c030d888>] (qca8k_sw_probe) from [<c0304788>] (mdio_probe+0x30/0x54)
+>   [<c0304788>] (mdio_probe) from [<c02c93bc>] (really_probe+0x1e0/0x348)
+>   [<c02c93bc>] (really_probe) from [<c02c9884>] (driver_probe_device+0x60/0x16c)
+>   [<c02c9884>] (driver_probe_device) from [<c02c7fb0>] (bus_for_each_drv+0x70/0x94)
+>   [<c02c7fb0>] (bus_for_each_drv) from [<c02c9708>] (__device_attach+0xb4/0x11c)
+>   [<c02c9708>] (__device_attach) from [<c02c8148>] (bus_probe_device+0x84/0x8c)
+>   [<c02c8148>] (bus_probe_device) from [<c02c8cec>] (deferred_probe_work_func+0x64/0x90)
+>   [<c02c8cec>] (deferred_probe_work_func) from [<c0033c14>] (process_one_work+0x1d4/0x41c)
+>   [<c0033c14>] (process_one_work) from [<c00340a4>] (worker_thread+0x248/0x528)
+>   [<c00340a4>] (worker_thread) from [<c0039148>] (kthread+0x124/0x150)
+>   [<c0039148>] (kthread) from [<c00090d8>] (ret_from_fork+0x14/0x3c)
+>   Exception stack(0xee1b5fb0 to 0xee1b5ff8)
+>   5fa0:                                     00000000 00000000 00000000 00000000
+>   5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>   5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>   qca8k 2188000.ethernet-1:0a: Using legacy PHYLIB callbacks. Please migrate to PHYLINK!
+>   qca8k 2188000.ethernet-1:0a eth2 (uninitialized): PHY [2188000.ethernet-1:01] driver [Generic PHY]
+>   qca8k 2188000.ethernet-1:0a eth1 (uninitialized): PHY [2188000.ethernet-1:02] driver [Generic PHY]
 > 
->     arm_smmu_device_shutdown()
->      platform_drv_shutdown()
->       device_shutdown()
->        kernel_restart_prepare()
->         kernel_restart()
-> 
-> Thanks,
-> Sai
-> 
+> Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
