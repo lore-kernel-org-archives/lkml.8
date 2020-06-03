@@ -2,80 +2,82 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14966C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8672C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B6F207D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE098207D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgFCCUk (ORCPT
+        id S1725975AbgFCCWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:20:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56266 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgFCCUh (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:20:37 -0400
-IronPort-SDR: D8qdFwugUyplzsf1d1sJQ017MUqdNTHXQm5dxYNlLgtjgO56ZS8iF8rGZ/uYafU7pc7VUdhdFs
- 6CE1c8NRI5AQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 19:20:36 -0700
-IronPort-SDR: qUWPpwL+GNS9ShkA8gnkiQ3wv6ZmVLaikZGSo7rEqFhPZnZ82QVlTSDQSvDRK/GlrHX8r4usEI
- 8g0y+HU5QKMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
-   d="scan'208";a="293792544"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Jun 2020 19:20:33 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH 0/2] Update CascadelakeX and SkylakeX events list
-Date:   Wed,  3 Jun 2020 10:18:16 +0800
-Message-Id: <20200603021818.27028-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jun 2020 22:22:08 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:60592 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725789AbgFCCWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:22:07 -0400
+Received: by ajax-webmail-mail-app2 (Coremail) ; Wed, 3 Jun 2020 10:21:47
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.72.4]
+Date:   Wed, 3 Jun 2020 10:21:47 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Dan Carpenter" <dan.carpenter@oracle.com>
+Cc:     "Markus Elfring" <Markus.Elfring@web.de>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        "David Airlie" <airlied@linux.ie>, "Kangjie Lu" <kjlu@umn.edu>
+Subject: Re: Re: [PATCH] drm/nouveau/clk/gm20b: Fix memory leak in
+ gm20b_clk_new()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200602153900.GW22511@kadam>
+References: <dd729c13-fbc8-22e7-7d8e-e3e126f66943@web.de>
+ <40d8fb01.db721.17269d3d620.Coremail.dinghao.liu@zju.edu.cn>
+ <20200602102955.GZ30374@kadam>
+ <65e3d2b7-b0ad-f387-b8fe-d83ea816a0f6@web.de>
+ <20200602153900.GW22511@kadam>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Message-ID: <5d580094.f274c.17277fc124e.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: by_KCgDnX5c8Cddeg0ppAA--.16819W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgkABlZdtOb8QgABsr
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGvS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
+        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
+        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
+        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
+        JwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14v_Gr1lV2xY6xkI7II2jI8vz4vEwIxGrwCS07
+        vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC
+        6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14
+        v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE14v2
+        6r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42xK8V
+        AvwI8IcIk0rVWrZr1j6s0DMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2
+        z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset updates CascadelakeX events to v1.08 and
-updates SkylakeX events to v1.21.
-
-The events have been tested on CascadelakeX and SkylakeX
-servers with latest perf/core branch.
-
-Jin Yao (2):
-  perf vendor events: Update CascadelakeX events to v1.08
-  perf vendor events: Update SkylakeX events to v1.21
-
- .../arch/x86/cascadelakex/cache.json          |   28 +-
- .../arch/x86/cascadelakex/clx-metrics.json    |  153 +-
- .../arch/x86/cascadelakex/frontend.json       |   34 +
- .../arch/x86/cascadelakex/memory.json         |  704 ++---
- .../arch/x86/cascadelakex/other.json          | 1100 ++++----
- .../arch/x86/cascadelakex/pipeline.json       |   10 -
- .../arch/x86/cascadelakex/uncore-other.json   |   21 +
- .../pmu-events/arch/x86/skylakex/cache.json   | 2348 +++++++++--------
- .../arch/x86/skylakex/floating-point.json     |   96 +-
- .../arch/x86/skylakex/frontend.json           |  656 ++---
- .../pmu-events/arch/x86/skylakex/memory.json  | 1977 +++++++-------
- .../pmu-events/arch/x86/skylakex/other.json   |  172 +-
- .../arch/x86/skylakex/pipeline.json           | 1206 +++++----
- .../arch/x86/skylakex/skx-metrics.json        |  141 +-
- .../arch/x86/skylakex/uncore-memory.json      |   26 +-
- .../arch/x86/skylakex/uncore-other.json       |  730 ++++-
- .../arch/x86/skylakex/virtual-memory.json     |  358 +--
- 17 files changed, 5198 insertions(+), 4562 deletions(-)
-
--- 
-2.17.1
-
+Cj4gT24gVHVlLCBKdW4gMDIsIDIwMjAgYXQgMDE6MTA6MzRQTSArMDIwMCwgTWFya3VzIEVsZnJp
+bmcgd3JvdGU6Cj4gPiA+IFRoZSBvcmlnaW5hbCBwYXRjaCB3YXMgYmFzaWNhbGx5IGZpbmUuCj4g
+PiAKPiA+IEkgcHJvcG9zZSB0byByZWNvbnNpZGVyIHRoZSBpbnRlcnByZXRhdGlvbiBvZiB0aGUg
+c29mdHdhcmUgc2l0dWF0aW9uIG9uY2UgbW9yZS4KPiA+IAo+ID4gKiBTaG91bGQgdGhlIGFsbG9j
+YXRlZCBjbG9jayBvYmplY3QgYmUga2VwdCB1c2FibGUgZXZlbiBhZnRlcgo+ID4gICBhIHN1Y2Nl
+c3NmdWwgcmV0dXJuIGZyb20gdGhpcyBmdW5jdGlvbj8KPiAKPiBIZWguICBZb3UncmUgcmlnaHQu
+ICBUaGUgcGF0Y2ggaXMgZnJlZWluZyAiY2xrIiBvbiB0aGUgc3VjY2VzcyBwYXRoIHNvCj4gdGhh
+dCBkb2Vzbid0IHdvcmsuCj4gCgpCZW4gaGFzIGV4cGxhaW5lZCB0aGlzIHByb2JsZW06Cmh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjQ5NTkyLwpTaW5jZSB0aGUgY2Fs
+bGVyIHdpbGwgY2hlY2sgInBjbGsiIG9uIGZhaWx1cmUsIHdlIGRvbid0IG5lZWQgdG8gZnJlZQoi
+Y2xrIiBpbiBnbTIwYl9jbGtfbmV3KCkgYW5kIEkgdGhpbmsgdGhpcyBwYXRjaCBpcyBubyBsb25n
+ZXIgbmVlZGVkLgoKUmVnYXJkcywKRGluZ2hhbw==
