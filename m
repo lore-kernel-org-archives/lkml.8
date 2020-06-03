@@ -2,119 +2,67 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8898C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F29DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C127C20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXPSGu7M"
+	by mail.kernel.org (Postfix) with ESMTP id E903C206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbgFCGg4 (ORCPT
+        id S1726144AbgFCGhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:36:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42979 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgFCGg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:36:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591166214;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+HalrrKqGSueBtKvKRmc8aT/zyVC01O0BQfWrn8xLcA=;
-        b=cXPSGu7MuhZVSqHUkDhPf7ZumLZNUW41Jg3B+o9oIPWiym44xXAwyUZkhVFhjvMvHMTWi2
-        vNaVJ/qo7eeKCZ+n4TpWAzDmKZRktLv3VPoo4WqwdD5qWukHoQt9Kb8OMNAHNTaJ4bX8z5
-        v1MIJUrY+Y9Nb/r22nQjSaYvgkGehWw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-222-gsJph4ZZOvOZ7HA47Jx5pg-1; Wed, 03 Jun 2020 02:36:53 -0400
-X-MC-Unique: gsJph4ZZOvOZ7HA47Jx5pg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 286A3107ACF9;
-        Wed,  3 Jun 2020 06:36:52 +0000 (UTC)
-Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 245EE61984;
-        Wed,  3 Jun 2020 06:36:47 +0000 (UTC)
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <3358ae96-abb6-6be9-346a-0e971cb84dcd@redhat.com>
- <20200603041849.GT23230@ZenIV.linux.org.uk>
- <3e723db8-0d55-fae6-288e-9d95905592db@redhat.com>
- <20200603013600-mutt-send-email-mst@kernel.org>
- <b7de29fa-33f2-bbc1-08dc-d73b28e3ded5@redhat.com>
- <20200603022935-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f0573536-e6cc-3f68-5beb-a53c8e1d0620@redhat.com>
-Date:   Wed, 3 Jun 2020 14:36:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 02:37:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58916 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725956AbgFCGhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:37:00 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 423E1ED8987522C55550;
+        Wed,  3 Jun 2020 14:36:58 +0800 (CST)
+Received: from huawei.com (10.67.174.156) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
+ 14:36:49 +0800
+From:   Chen Tao <chentao107@huawei.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <chentao107@huawei.com>
+Subject: [PATCH -next] mm/page_alloc.c: Add missing line breaks
+Date:   Wed, 3 Jun 2020 14:35:46 +0800
+Message-ID: <20200603063547.235825-1-chentao107@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20200603022935-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.156]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add missing line breaks on pr_warn().
 
-On 2020/6/3 下午2:30, Michael S. Tsirkin wrote:
-> On Wed, Jun 03, 2020 at 02:23:08PM +0800, Jason Wang wrote:
->>> BTW now I re-read it I don't understand __vhost_get_user_slow:
->>>
->>>
->>> static void __user *__vhost_get_user_slow(struct vhost_virtqueue *vq,
->>>                                             void __user *addr, unsigned int size,
->>>                                             int type)
->>> {
->>>           int ret;
->>>
->>>           ret = translate_desc(vq, (u64)(uintptr_t)addr, size, vq->iotlb_iov,
->>>                                ARRAY_SIZE(vq->iotlb_iov),
->>>                                VHOST_ACCESS_RO);
->>>
->>> ..
->>> }
->>>
->>> how does this work? how can we cast a pointer to guest address without
->>> adding any offsets?
->>
->> I'm not sure I get you here. What kind of offset did you mean?
->>
->> Thanks
-> OK so points:
->
-> 1. type argument seems unused. Right?
+Signed-off-by: Chen Tao <chentao107@huawei.com>
+---
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Yes, we can remove that.
-
-
-> 2. Second argument to translate_desc is a GPA, isn't it?
-
-
-No, it's IOVA, this function will be called only when IOTLB is enabled.
-
-Thanks
-
-
->     Here we cast a userspace address to this type. What if it
->     matches a valid GPA by mistake?
->
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index cef05d3a23f5..0b0f05e1e49e 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7123,7 +7123,7 @@ static void __init find_zone_movable_pfns_for_nodes(void)
+ 		}
+ 
+ 		if (mem_below_4gb_not_mirrored)
+-			pr_warn("This configuration results in unmirrored kernel memory.");
++			pr_warn("This configuration results in unmirrored kernel memory.\n");
+ 
+ 		goto out2;
+ 	}
+-- 
+2.22.0
 
