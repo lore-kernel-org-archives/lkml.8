@@ -2,147 +2,133 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DECCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD8920663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WeVBCx2l"
+	by mail.kernel.org (Postfix) with ESMTP id 3471520734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgFCBxt (ORCPT
+        id S1725877AbgFCB42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgFCBxs (ORCPT
+        Tue, 2 Jun 2020 21:56:28 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:65353 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725777AbgFCB41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:53:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C51EC08C5C0;
-        Tue,  2 Jun 2020 18:53:48 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 9so661114ljc.8;
-        Tue, 02 Jun 2020 18:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IXyjPldssMSiKQfQfztOYSdzyap64t/hNOEyR2JogWw=;
-        b=WeVBCx2lg1qJ7F+AQmKynH1A1/xigy0hdupKSIWoP0EEn4ZGyZOWgjAAtRGmNj49B6
-         SV3pWh6UdxPQ5VGk2B8nx5sIHxWVNx7rwFC3qDn9q/B3CxzCYtw6D3392XQq29QOb+UM
-         aZanPp6wPMSn/4yjMI6hUwq71SzOWkxZhANcQhPWhscJoYvCwYokySFMr2+0APVb1y5A
-         cDx2tZI4WqyzXcf1yz0+d4m/49lLeTrcrPYpuKjWGZ0a3Hh3T4b0L9f84jUdzn9KBcMg
-         86gtO4loxVFOq8gI4dYURUTSTxjrC21djPZgbDTkadBp95cR7N0yObmgwp0tYW03cuVi
-         pU9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IXyjPldssMSiKQfQfztOYSdzyap64t/hNOEyR2JogWw=;
-        b=AXXlUA2Tcgk7la3bC7VZ+UtX114llcw1VqTPJlSrohUu/3rHoXqlG6YORfdM9P+vvT
-         VqYrnbg72yUMAnFGUWbPu/MM5wiLTPNoyrhrKIiRV1Yf2qkbRtZKF/py28qLHZzn3ieL
-         X+DejbocAmY3JduSpmMaABExHMnDoh0yFlaCE1ksdSnO1RCBsx4afsGs8Jg5Z3gc3b1t
-         0ncZ3yM/g4cHJKeJ1nCthzPcvtZ+ds25Tlq0q/pGsPMabsDincVD1p/fjSZMoPp3njjC
-         ImhOjyzSpaG0NCCOojYJdkVdY6defFof2oudH88rvj/PzqowLwQzTYWmzZ8swkH5PBPG
-         ViKQ==
-X-Gm-Message-State: AOAM531N8coQ7spIORfdQhM+A2dem/tJmEkzls9vvpqPU540J1ce+MTW
-        14xwrUOjXqXdpSiAb7VgA+rvD6jJjW+iPXvJs5w=
-X-Google-Smtp-Source: ABdhPJw2l88MIgoIzyzG/zupAyXhrcRHDI7kwii+k2JxyBRYPdhoq3fWyN0Bk2oFbUH5kOid2r/P61MIPiyeygTlSNE=
-X-Received: by 2002:a2e:b611:: with SMTP id r17mr829195ljn.321.1591149226574;
- Tue, 02 Jun 2020 18:53:46 -0700 (PDT)
+        Tue, 2 Jun 2020 21:56:27 -0400
+X-IronPort-AV: E=Sophos;i="5.73,466,1583164800"; 
+   d="scan'208";a="93708776"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 03 Jun 2020 09:56:23 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id A46C150A996E;
+        Wed,  3 Jun 2020 09:56:18 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 3 Jun 2020 09:56:16 +0800
+Message-ID: <5ED7033D.7020009@cn.fujitsu.com>
+Date:   Wed, 3 Jun 2020 09:56:13 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-References: <20200602080425.93712-1-kerneljasonxing@gmail.com> <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
-In-Reply-To: <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
-From:   Jason Xing <kerneljasonxing@gmail.com>
-Date:   Wed, 3 Jun 2020 09:53:10 +0800
-Message-ID: <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
-Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
-        Shujin Li <lishujin@kuaishou.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+CC:     <ira.weiny@intel.com>, <fstests@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, <linux-ext4@vger.kernel.org>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] xfs/XXX: Add xfs/XXX
+References: <20200413054419.1560503-1-ira.weiny@intel.com> <20200413163025.GB6742@magnolia> <5ED61324.6010300@cn.fujitsu.com> <20200602181444.GD8230@magnolia>
+In-Reply-To: <20200602181444.GD8230@magnolia>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: A46C150A996E.ACF0C
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On 2020/6/3 2:14, Darrick J. Wong wrote:
+> On Tue, Jun 02, 2020 at 04:51:48PM +0800, Xiao Yang wrote:
+>> On 2020/4/14 0:30, Darrick J. Wong wrote:
+>>> This might be a good time to introduce a few new helpers:
+>>>
+>>> _require_scratch_dax ("Does $SCRATCH_DEV support DAX?")
+>>> _require_scratch_dax_mountopt ("Does the fs support the DAX mount options?")
+>>> _require_scratch_daX_iflag ("Does the fs support FS_XFLAG_DAX?")
+>> Hi Darrick,
+>>
+>> Now, I am trying to introduce these new helpers and have some questions:
+>> 1) There are five testcases related to old dax implementation, should we
+>> only convert them to new dax implementation or make them compatible with old
+>> and new dax implementation?
+>
+> What is the 'old' DAX implementation?  ext2 XIP?
+Hi Darrick,
 
-I'm sorry that I didn't write enough clearly. We're running the
-pristine 4.19.125 linux kernel (the latest LTS version) and have been
-haunted by such an issue. This patch is high-important, I think. So
-I'm going to resend this email with the [patch 4.19] on the headline
-and cc Greg.
+Thanks for your quick feedback.
 
-Thanks,
-Jason
+Right, the 'old' DAX implementation means old dax mount option(i.e. -o dax)
 
-On Tue, Jun 2, 2020 at 9:05 PM Eric Dumazet <edumazet@google.com> wrote:
+Compare new and old dax mount option on ext4 and xfs, is the following 
+logic right?
+-o dax=always == -o dax
+-o dax=never == without dax
+-o dax=inode == nothing
+
+Of course, we should uses new option if ext4/xfs supports new dax mount 
+option on distros.  But should we fallback to use old option if ext4/xfs 
+doesn't support new dax mount option on some old distros?
+btw:
+it seems hard for testcases to use two different sets of mount 
+options(i.e. old and new) so do you have any suggestion?
+
 >
-> On Tue, Jun 2, 2020 at 1:05 AM <kerneljasonxing@gmail.com> wrote:
-> >
-> > From: Jason Xing <kerneljasonxing@gmail.com>
-> >
-> > TCP socks cannot be released because of the sock_hold() increasing the
-> > sk_refcnt in the manner of tcp_internal_pacing() when RTO happens.
-> > Therefore, this situation could increase the slab memory and then trigger
-> > the OOM if the machine has beening running for a long time. This issue,
-> > however, can happen on some machine only running a few days.
-> >
-> > We add one exception case to avoid unneeded use of sock_hold if the
-> > pacing_timer is enqueued.
-> >
-> > Reproduce procedure:
-> > 0) cat /proc/slabinfo | grep TCP
-> > 1) switch net.ipv4.tcp_congestion_control to bbr
-> > 2) using wrk tool something like that to send packages
-> > 3) using tc to increase the delay in the dev to simulate the busy case.
-> > 4) cat /proc/slabinfo | grep TCP
-> > 5) kill the wrk command and observe the number of objects and slabs in TCP.
-> > 6) at last, you could notice that the number would not decrease.
-> >
-> > Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
-> > Signed-off-by: liweishi <liweishi@kuaishou.com>
-> > Signed-off-by: Shujin Li <lishujin@kuaishou.com>
-> > ---
-> >  net/ipv4/tcp_output.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> > index cc4ba42..5cf63d9 100644
-> > --- a/net/ipv4/tcp_output.c
-> > +++ b/net/ipv4/tcp_output.c
-> > @@ -969,7 +969,8 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
-> >         u64 len_ns;
-> >         u32 rate;
-> >
-> > -       if (!tcp_needs_internal_pacing(sk))
-> > +       if (!tcp_needs_internal_pacing(sk) ||
-> > +           hrtimer_is_queued(&tcp_sk(sk)->pacing_timer))
-> >                 return;
-> >         rate = sk->sk_pacing_rate;
-> >         if (!rate || rate == ~0U)
-> > --
-> > 1.8.3.1
-> >
+>> 2) I think _require_xfs_io_command "chattr" "x" is enough to check if fs
+>> supports FS_XFLAG_DAX.  Is it necessary to add _require_scratch_dax_iflag()?
+>> like this:
+>> _require_scratch_dax_iflag()
+>> {
+>> 	_require_xfs_io_command "chattr" "x"
+>> }
 >
-> Hi Jason.
+> I suggested that list based on the major control knobs that will be
+> visible to userspace programs.  Even if this is just a one-line helper,
+> its name is useful for recognizing which of those knobs we're looking
+> for.
 >
-> Please do not send patches that do not apply to current upstream trees.
+> Yes, you could probably save a trivial amount of time by skipping one
+> iteration of bash function calling, but now everyone has to remember
+> that the xfs_io chattr "x" flag means the dax inode flag, and not
+> confuse it for chmod +x or something else.
+
+Got it, thanks for your detailed explanation.
+
+Best Regards,
+Xiao Yang
 >
-> Instead, backport to your kernels the needed fixes.
+> --D
 >
-> I suspect that you are not using a pristine linux kernel, but some
-> heavily modified one and something went wrong in your backports.
-> Do not ask us to spend time finding what went wrong.
+>> Best Regards,
+>> Xiao Yang
+>>
+>>
 >
-> Thank you.
+>
+> .
+>
+
+
+
