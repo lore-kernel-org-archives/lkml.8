@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0779AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23AFF20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB26720674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591167707;
-	bh=82rWhY70VDMp6r+w208SPFzpIRfRwkocD+byesNur7M=;
+	s=default; t=1591167713;
+	bh=X6b/gWynMj6O0LBu5lg93RyXNZhB8+OyiX4pPl3hTxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFiu1ZX/LDpgAp/vKRdvzbNWz67dI73Pvgo5pX0LXdjKYlPQsnxwvMGVluf3S6gop
-	 C5v/YCHrftwl28ovsEQ5CkijkqUVHDt6TyN+j236fLHgHLj3HS0HaX24ytRmC0aiFu
-	 xKpKK6xfCOxHUBHAzDyBxd8Um8J9Qrvk7nk6lt2M=
+	b=owNu87KfHSNO5Rek234SN1oJ3GlEJQmjAwYfyIRU6FBrCn0xU2fCA2SFBUfm7SEwL
+	 1rUzcvuT4IIzqxICU7Ni1Jy1kz3t8D+bMRbaw8d+aqArM68jDaa8vnhSOXNANIQ4eQ
+	 vzhqL7oYpwCfbv5HrLgZFpIE1vB38GJ1vxr+4CuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgFCHBq (ORCPT
+        id S1726148AbgFCHBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgFCHBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Jun 2020 03:01:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFCHBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:01:06 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 802BF206E6;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B85E2068D;
         Wed,  3 Jun 2020 07:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1591167665;
-        bh=82rWhY70VDMp6r+w208SPFzpIRfRwkocD+byesNur7M=;
+        bh=X6b/gWynMj6O0LBu5lg93RyXNZhB8+OyiX4pPl3hTxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lXN/9JNk3vOobT+lUb5Pmbam4kwVpbyuZvYww4tA5Hmwq/SOjHBmEiKTznq7lcBVx
-         rUgW3JYB0/MZgfO0mWl2W1n2wdf4jbBwg7+16E8bxlEIpp8KPaToJxyQO0xJLtYrmb
-         o73ut3UERGeJ753MhZOwTMz2f/y2pCD2iYxkf+xE=
+        b=Hm2I/uQnEbenI4pv9BwcBiwMDwyP/m8TuPtpk+K4tDvBJkxjQbmh1Nql44CdXSGfq
+         qXUr1Qrp6zL8b2Zo+7sWMHElYFZWtw1pp6jVp+Hlw63GkMK5XpcCyGYsuZ8X52ZDl0
+         TwbagmK7gz4rqwepI+/IrzXVy4nTvsJRmrtfpd1k=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jgNOZ-004j88-50; Wed, 03 Jun 2020 09:01:03 +0200
+        id 1jgNOZ-004j8Q-BX; Wed, 03 Jun 2020 09:01:03 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Media Mailing List <linux-media@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/15] media: atomisp: do some cleanup at irq_local.h
-Date:   Wed,  3 Jun 2020 09:00:48 +0200
-Message-Id: <4a452db7a606920d3a855322579accd8d21bda27.1591167358.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 06/15] media: atomisp: remove some unused defines from *mamoiada_params.h
+Date:   Wed,  3 Jun 2020 09:00:52 +0200
+Message-Id: <58f2e1d429aaa2d77fbcd96694368b7b7e15d963.1591167358.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1591167358.git.mchehab+huawei@kernel.org>
 References: <cover.1591167358.git.mchehab+huawei@kernel.org>
@@ -61,279 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Get rid of typedefs;
-- Get rid of a duplicated enum type with different names for
-  ISP2400 and ISP2401;
-- adjust indentation on the touched code.
+There are some parameters that are different between
+isp2400 and isp2401. None of those are actually used.
+
+So, get rid of them.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../pci/hive_isp_css_common/host/irq.c        | 29 +++++++++----------
- .../pci/hive_isp_css_common/host/irq_local.h  | 17 +++--------
- .../hive_isp_css_include/host/irq_public.h    | 16 +++++-----
- .../pci/runtime/debug/src/ia_css_debug.c      |  2 +-
- drivers/staging/media/atomisp/pci/sh_css.c    | 10 +++----
- 5 files changed, 30 insertions(+), 44 deletions(-)
+ .../hrt/isp2400_mamoiada_params.h             | 20 +------------------
+ .../atomisp/pci/isp2401_mamoiada_params.h     | 20 +------------------
+ 2 files changed, 2 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq.c b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq.c
-index 8b72a40f9ad1..11448ca00a35 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq.c
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq.c
-@@ -29,9 +29,8 @@ static inline void irq_wait_for_write_complete(
- static inline bool any_irq_channel_enabled(
-     const irq_ID_t				ID);
+diff --git a/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h b/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h
+index 4a2345c38b8c..e18e5f3576df 100644
+--- a/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h
++++ b/drivers/staging/media/atomisp/pci/css_2400_system/hrt/isp2400_mamoiada_params.h
+@@ -16,11 +16,6 @@
+ /* Version */
+ #define RTL_VERSION
  
--static inline irq_ID_t virq_get_irq_id(
--    const virq_id_t		irq_ID,
--    unsigned int		*channel_ID);
-+static inline irq_ID_t virq_get_irq_id(const enum virq_id irq_ID,
-+				       unsigned int *channel_ID);
- 
- #ifndef __INLINE_IRQ__
- #include "irq_private.h"
-@@ -52,7 +51,7 @@ static unsigned short IRQ_N_ID_OFFSET[N_IRQ_ID + 1] = {
- 	IRQ_END_OFFSET
- };
- 
--static virq_id_t IRQ_NESTING_ID[N_IRQ_ID] = {
-+static enum virq_id IRQ_NESTING_ID[N_IRQ_ID] = {
- 	N_virq_id,
- 	virq_ifmt,
- 	virq_isys,
-@@ -228,9 +227,8 @@ void irq_raise(
- 	return;
- }
- 
--void irq_controller_get_state(
--    const irq_ID_t				ID,
--    irq_controller_state_t		*state)
-+void irq_controller_get_state(const irq_ID_t ID,
-+			      struct irq_controller_state *state)
- {
- 	assert(ID < N_IRQ_ID);
- 	assert(state);
-@@ -257,7 +255,7 @@ bool any_virq_signal(void)
- }
- 
- void cnd_virq_enable_channel(
--    const virq_id_t				irq_ID,
-+    const enum virq_id				irq_ID,
-     const bool					en)
- {
- 	irq_ID_t		i;
-@@ -297,8 +295,8 @@ void virq_clear_all(void)
- 	return;
- }
- 
--enum hrt_isp_css_irq_status virq_get_channel_signals(
--    virq_info_t					*irq_info)
-+enum hrt_isp_css_irq_status
-+virq_get_channel_signals(struct virq_info *irq_info)
- {
- 	enum hrt_isp_css_irq_status irq_status = hrt_isp_css_irq_status_error;
- 	irq_ID_t ID;
-@@ -327,8 +325,7 @@ enum hrt_isp_css_irq_status virq_get_channel_signals(
- 	return irq_status;
- }
- 
--void virq_clear_info(
--    virq_info_t					*irq_info)
-+void virq_clear_info(struct virq_info *irq_info)
- {
- 	irq_ID_t ID;
- 
-@@ -341,7 +338,7 @@ void virq_clear_info(
- }
- 
- enum hrt_isp_css_irq_status virq_get_channel_id(
--    virq_id_t					*irq_id)
-+    enum virq_id					*irq_id)
- {
- 	unsigned int irq_status = irq_reg_load(IRQ0_ID,
- 					       _HRT_IRQ_CONTROLLER_STATUS_REG_IDX);
-@@ -368,7 +365,7 @@ enum hrt_isp_css_irq_status virq_get_channel_id(
- 
- 	/* Check whether we have an IRQ on one of the nested devices */
- 	for (ID = N_IRQ_ID - 1 ; ID > (irq_ID_t)0; ID--) {
--		if (IRQ_NESTING_ID[ID] == (virq_id_t)idx) {
-+		if (IRQ_NESTING_ID[ID] == (enum virq_id)idx) {
- 			break;
- 		}
- 	}
-@@ -405,7 +402,7 @@ enum hrt_isp_css_irq_status virq_get_channel_id(
- 
- 	idx += IRQ_N_ID_OFFSET[ID];
- 	if (irq_id)
--		*irq_id = (virq_id_t)idx;
-+		*irq_id = (enum virq_id)idx;
- 
- 	return status;
- }
-@@ -433,7 +430,7 @@ static inline bool any_irq_channel_enabled(
- }
- 
- static inline irq_ID_t virq_get_irq_id(
--    const virq_id_t		irq_ID,
-+    const enum virq_id		irq_ID,
-     unsigned int		*channel_ID)
- {
- 	irq_ID_t ID;
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq_local.h b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq_local.h
-index 345d41c1d39f..6a25345ae88e 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq_local.h
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/irq_local.h
-@@ -43,10 +43,7 @@
- #define	IRQ2_ID_N_CHANNEL	HIVE_ISYS_IRQ_NUM_BITS
- #define	IRQ3_ID_N_CHANNEL	HIVE_ISEL_IRQ_NUM_IRQS
- 
--typedef struct virq_info_s					virq_info_t;
--typedef struct irq_controller_state_s		irq_controller_state_t;
+-/* Cell name  */
+-#define ISP_CELL_TYPE                          isp2400_mamoiada
+-#define ISP_VMEM                               simd_vmem
+-#define _HRT_ISP_VMEM                          isp2400_mamoiada_simd_vmem
 -
--typedef enum {
-+enum virq_id {
- 	virq_gpio_pin_0            = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_GPIO_PIN_0_BIT_ID,
- 	virq_gpio_pin_1            = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_GPIO_PIN_1_BIT_ID,
- 	virq_gpio_pin_2            = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_GPIO_PIN_2_BIT_ID,
-@@ -67,13 +64,7 @@ typedef enum {
- 	virq_sp_stream_mon         = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_SP_STREAM_MON_BIT_ID,
- 	virq_isp_stream_mon        = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_ISP_STREAM_MON_BIT_ID,
- 	virq_mod_stream_mon        = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_MOD_STREAM_MON_BIT_ID,
--#if defined(IS_ISP_2400_MAMOIADA_SYSTEM)
- 	virq_isp_pmem_error        = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_ISP_PMEM_ERROR_BIT_ID,
--#elif defined(IS_ISP_2401_MAMOIADA_SYSTEM)
--	virq_isys_2401             = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_ISP_PMEM_ERROR_BIT_ID,
--#else
--#error "irq_local.h: 2400_SYSTEM must be one of {2400, 2401 }"
--#endif
- 	virq_isp_bamem_error       = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_ISP_BAMEM_ERROR_BIT_ID,
- 	virq_isp_dmem_error        = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_ISP_DMEM_ERROR_BIT_ID,
- 	virq_sp_icache_mem_error   = IRQ0_ID_OFFSET + HIVE_GP_DEV_IRQ_SP_ICACHE_MEM_ERROR_BIT_ID,
-@@ -118,13 +109,13 @@ typedef enum {
- 	virq_isel_eol              = IRQ3_ID_OFFSET + HIVE_ISEL_IRQ_SYNC_GEN_EOL_BIT_ID,
+ /* instruction pipeline depth */
+ #define ISP_BRANCHDELAY                        5
  
- 	N_virq_id                  = IRQ_END_OFFSET
--} virq_id_t;
-+};
+@@ -154,12 +149,6 @@
  
--struct virq_info_s {
-+struct virq_info {
- 	hrt_data		irq_status_reg[N_IRQ_ID];
- };
+ #define ISP_VEC_ALIGN                          ISP_VMEM_ALIGN
  
--struct irq_controller_state_s {
-+struct irq_controller_state {
- 	unsigned int	irq_edge;
- 	unsigned int	irq_mask;
- 	unsigned int	irq_status;
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/irq_public.h b/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/irq_public.h
-index bc3ad3dcf6d1..d335e7b0a76e 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/irq_public.h
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/irq_public.h
-@@ -26,9 +26,8 @@
+-/* HRT specific vector support */
+-#define isp2400_mamoiada_vector_alignment         ISP_VEC_ALIGN
+-#define isp2400_mamoiada_vector_elem_bits         ISP_VMEM_ELEMBITS
+-#define isp2400_mamoiada_vector_elem_precision    ISP_VMEM_ELEM_PRECISION
+-#define isp2400_mamoiada_vector_num_elems         ISP_VEC_NELEMS
+-
+ /* register file sizes */
+ #define ISP_RF0_SIZE        64
+ #define ISP_RF1_SIZE        16
+@@ -173,14 +162,7 @@
+ #define ISP_RF9_SIZE        16
+ #define ISP_RF10_SIZE       16
+ #define ISP_RF11_SIZE       16
+-#define ISP_VRF1_SIZE       24
+-#define ISP_VRF2_SIZE       24
+-#define ISP_VRF3_SIZE       24
+-#define ISP_VRF4_SIZE       24
+-#define ISP_VRF5_SIZE       24
+-#define ISP_VRF6_SIZE       24
+-#define ISP_VRF7_SIZE       24
+-#define ISP_VRF8_SIZE       24
++
+ #define ISP_SRF1_SIZE       4
+ #define ISP_SRF2_SIZE       64
+ #define ISP_SRF3_SIZE       64
+diff --git a/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h b/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
+index 03d3329cd228..e18e5f3576df 100644
+--- a/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
++++ b/drivers/staging/media/atomisp/pci/isp2401_mamoiada_params.h
+@@ -16,11 +16,6 @@
+ /* Version */
+ #define RTL_VERSION
  
-  \return none, state = IRQ[ID].state
-  */
--void irq_controller_get_state(
--    const irq_ID_t				ID,
--    irq_controller_state_t		*state);
-+void irq_controller_get_state(const irq_ID_t ID,
-+			      struct irq_controller_state *state);
+-/* Cell name  */
+-#define ISP_CELL_TYPE                          isp2401_mamoiada
+-#define ISP_VMEM                               simd_vmem
+-#define _HRT_ISP_VMEM                          isp2401_mamoiada_simd_vmem
+-
+ /* instruction pipeline depth */
+ #define ISP_BRANCHDELAY                        5
  
- /*! Write to a control register of IRQ[ID]
+@@ -154,12 +149,6 @@
  
-@@ -137,7 +136,7 @@ bool any_virq_signal(void);
-  \return none, VIRQ.channel[irq_ID].enable = en
-  */
- void cnd_virq_enable_channel(
--    const virq_id_t				irq_ID,
-+    const enum virq_id				irq_ID,
-     const bool					en);
+ #define ISP_VEC_ALIGN                          ISP_VMEM_ALIGN
  
- /*! Clear the state of all IRQ channels of the virtual super IRQ
-@@ -152,8 +151,7 @@ void virq_clear_all(void);
- 
-  \return none
-  */
--void virq_clear_info(
--    virq_info_t					*irq_info);
-+void virq_clear_info(struct virq_info *irq_info);
- 
- /*! Return the ID of a signalling IRQ channel of the virtual super IRQ
- 
-@@ -166,7 +164,7 @@ void virq_clear_info(
-  \return state(IRQ[...])
-  */
- enum hrt_isp_css_irq_status virq_get_channel_id(
--    virq_id_t					*irq_id);
-+    enum virq_id					*irq_id);
- 
- /*! Return the IDs of all signaling IRQ channels of the virtual super IRQ
- 
-@@ -179,7 +177,7 @@ enum hrt_isp_css_irq_status virq_get_channel_id(
- 
-  \return (error(state(IRQ[...]))
-  */
--enum hrt_isp_css_irq_status virq_get_channel_signals(
--    virq_info_t					*irq_info);
-+enum hrt_isp_css_irq_status
-+virq_get_channel_signals(struct virq_info *irq_info);
- 
- #endif /* __IRQ_PUBLIC_H_INCLUDED__ */
-diff --git a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-index e367c5e0fc5a..49836016559f 100644
---- a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-+++ b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-@@ -2228,7 +2228,7 @@ void ia_css_debug_dump_debug_info(const char *context)
- 	ia_css_debug_dump_isys_state();
- 
- 	{
--		irq_controller_state_t state;
-+		struct irq_controller_state state;
- 
- 		irq_controller_get_state(IRQ2_ID, &state);
- 
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index 9815c87ca6f3..a722b886b2f5 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -1546,16 +1546,16 @@ enable_interrupts(enum ia_css_irq_type irq_type)
- 
- 	/* Enable SW interrupt 0, this is used to signal ISYS events */
- 	cnd_virq_enable_channel(
--	    (virq_id_t)(IRQ_SW_CHANNEL0_ID + IRQ_SW_CHANNEL_OFFSET),
-+	    (enum virq_id)(IRQ_SW_CHANNEL0_ID + IRQ_SW_CHANNEL_OFFSET),
- 	    true);
- 	/* Enable SW interrupt 1, this is used to signal PSYS events */
- 	cnd_virq_enable_channel(
--	    (virq_id_t)(IRQ_SW_CHANNEL1_ID + IRQ_SW_CHANNEL_OFFSET),
-+	    (enum virq_id)(IRQ_SW_CHANNEL1_ID + IRQ_SW_CHANNEL_OFFSET),
- 	    true);
- #if !defined(HAS_IRQ_MAP_VERSION_2)
- 	/* IRQ_SW_CHANNEL2_ID does not exist on 240x systems */
- 	cnd_virq_enable_channel(
--	    (virq_id_t)(IRQ_SW_CHANNEL2_ID + IRQ_SW_CHANNEL_OFFSET),
-+	    (enum virq_id)(IRQ_SW_CHANNEL2_ID + IRQ_SW_CHANNEL_OFFSET),
- 	    true);
- 	virq_clear_all();
- #endif
-@@ -2549,7 +2549,7 @@ ia_css_uninit(void)
- int ia_css_irq_translate(
-     unsigned int *irq_infos)
- {
--	virq_id_t	irq;
-+	enum virq_id	irq;
- 	enum hrt_isp_css_irq_status status = hrt_isp_css_irq_status_more_irqs;
- 	unsigned int infos = 0;
- 
-@@ -2622,7 +2622,7 @@ int ia_css_irq_enable(
-     enum ia_css_irq_info info,
-     bool enable)
- {
--	virq_id_t	irq = N_virq_id;
-+	enum virq_id	irq = N_virq_id;
- 
- 	IA_CSS_ENTER("info=%d, enable=%d", info, enable);
- 
+-/* HRT specific vector support */
+-#define isp2401_mamoiada_vector_alignment         ISP_VEC_ALIGN
+-#define isp2401_mamoiada_vector_elem_bits         ISP_VMEM_ELEMBITS
+-#define isp2401_mamoiada_vector_elem_precision    ISP_VMEM_ELEM_PRECISION
+-#define isp2401_mamoiada_vector_num_elems         ISP_VEC_NELEMS
+-
+ /* register file sizes */
+ #define ISP_RF0_SIZE        64
+ #define ISP_RF1_SIZE        16
+@@ -173,14 +162,7 @@
+ #define ISP_RF9_SIZE        16
+ #define ISP_RF10_SIZE       16
+ #define ISP_RF11_SIZE       16
+-#define ISP_VRF1_SIZE       32
+-#define ISP_VRF2_SIZE       32
+-#define ISP_VRF3_SIZE       32
+-#define ISP_VRF4_SIZE       32
+-#define ISP_VRF5_SIZE       32
+-#define ISP_VRF6_SIZE       32
+-#define ISP_VRF7_SIZE       32
+-#define ISP_VRF8_SIZE       32
++
+ #define ISP_SRF1_SIZE       4
+ #define ISP_SRF2_SIZE       64
+ #define ISP_SRF3_SIZE       64
 -- 
 2.26.2
 
