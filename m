@@ -2,154 +2,96 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0972FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35897C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C0C20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F86E207DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="diAPk9Nz"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Tn0Ou57h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgFCIYQ (ORCPT
+        id S1725275AbgFCIZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55922 "EHLO
+        Wed, 3 Jun 2020 04:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgFCIYP (ORCPT
+        with ESMTP id S1725854AbgFCIZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:24:15 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB50C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 01:24:14 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f5so1041309wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 01:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qRRViGgr/XMXuK899gyJpd+glkMI9g3TUAqhc5bIdms=;
-        b=diAPk9NzqmTTMCUpwWl/9I43wRC0s9YisBeaJ3i/Ao27NvMQV2tq0o/amb5EsgN5Dc
-         m7UOzOkQ1IcJFbc/rP+zbfrn4e78xzB8fxvBTJwqpUCIS+KXHxZzWv0fJ8aqglCSFuUF
-         PsgSO47gzy0i41trTDnIz8ohkR0xLziwSCsy0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=qRRViGgr/XMXuK899gyJpd+glkMI9g3TUAqhc5bIdms=;
-        b=azicj/RUidtys10FpCIWmF0qrzDurus3e70Pe9T45W0QU6B2mM5431X1wCW1zZuGQG
-         d/VP2/ou0Cpw5I+d7axXkJUjXDAUAvI+SjTpqeKeC8+Na8BPAXz7i0Un7PDNKpG0Ujax
-         MOlAHbqkiuEgkOCBHjFXKIgBq2aCEgc1Noz6sRGsNX/ayIPpBwAbd3Br/OQBU0+ddhEb
-         zW8nlOps1wwHnW7WjEi0Zmetv0C9iCXXisjN6z29xwmAr1vR6RBynX7j1PT4v0azOO/F
-         UmhW4bgey+59VZ1u8YyKElmgFsOu5lwpXAkFdkvkX1y2NT8EtIkBmIEQC2yUOxfmhRr2
-         BSVQ==
-X-Gm-Message-State: AOAM530WyzrexH8uwkcH+Gi0bYs9LmizmmehIROGBzKMM4RGC9hjcYdE
-        8A9v4pEla+5LA24CofoXG44hHg==
-X-Google-Smtp-Source: ABdhPJwF05tJg2U8YAuUBqkP69xy0KO/yd1uPSYB+TFlsp2LQxAA+L8XZMe3ryw0UOWY+kevnffgNw==
-X-Received: by 2002:a05:600c:1:: with SMTP id g1mr7447279wmc.142.1591172653407;
-        Wed, 03 Jun 2020 01:24:13 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id p10sm2318468wra.78.2020.06.03.01.24.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 01:24:12 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 10:24:11 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jeykumar Sankaran <jsanka@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Steve Cohen <cohens@codeaurora.org>, seanpaul@chromium.org
-Subject: Re: [PATCH] drm/connector: notify userspace on hotplug after
- register complete
-Message-ID: <20200603082411.GI20149@phenom.ffwll.local>
-Mail-Followup-To: Jeykumar Sankaran <jsanka@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Steve Cohen <cohens@codeaurora.org>, seanpaul@chromium.org
-References: <1591155451-10393-1-git-send-email-jsanka@codeaurora.org>
+        Wed, 3 Jun 2020 04:25:07 -0400
+X-Greylist: delayed 157670 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 03 Jun 2020 01:25:07 PDT
+Received: from forwardcorp1p.mail.yandex.net (forwardcorp1p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b6:217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2D0C05BD43;
+        Wed,  3 Jun 2020 01:25:07 -0700 (PDT)
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 2525C2E1577;
+        Wed,  3 Jun 2020 11:25:04 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id e8ZNCm3DrZ-P1B8bnrV;
+        Wed, 03 Jun 2020 11:25:04 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1591172704; bh=bjcO2fjrffTG2/nSxMZQKpT6zNR/iSjneL2Z3vT4BSg=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=Tn0Ou57hNqHtw9FxJ6+f56M9geYlxT2UVy6IyaPCgoHdTgOZnDykC0Ky7rxfK/tZp
+         tK3yIcV2O+cxidL7svN/T4SjiqEVN6uIwGMQIC4rjlhHaSGJASAiQn1DqQxb+Ok3QC
+         6AZc4dXW8k8R51yHQeNOscnayt7bsck0NEgJaCOM=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:7216::1:b])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id YEeyNlG2dn-P1WmCXdR;
+        Wed, 03 Jun 2020 11:25:01 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC 1/3] block: add flag 'nowait_requests' into queue
+ limits
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, linux-raid@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+References: <159101473169.180989.12175693728191972447.stgit@buzz>
+ <159101502963.180989.6228080995222059011.stgit@buzz>
+ <20200603045822.GA17137@infradead.org>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <2a58bc7a-0aad-3f40-cb8e-db9cb88f9df4@yandex-team.ru>
+Date:   Wed, 3 Jun 2020 11:24:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591155451-10393-1-git-send-email-jsanka@codeaurora.org>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+In-Reply-To: <20200603045822.GA17137@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 08:37:31PM -0700, Jeykumar Sankaran wrote:
-> drm connector notifies userspace on hotplug event prematurely before
-> late_register and mode_object register completes. This leads to a race
-> between userspace and kernel on updating the IDR list. So, move the
-> notification to end of connector register.
+On 03/06/2020 07.58, Christoph Hellwig wrote:
+> On Mon, Jun 01, 2020 at 03:37:09PM +0300, Konstantin Khlebnikov wrote:
+>> Add flag for marking bio-based queues which support REQ_NOWAIT.
+>> Set for all request based (mq) devices.
+>>
+>> Stacking device should set it after blk_set_stacking_limits() if method
+>> make_request() itself doesn't delay requests or handles REQ_NOWAIT.
 > 
-> Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
-> Signed-off-by: Steve Cohen <cohens@codeaurora.org>
-
-Hm on the unregister side we don't have the race, there we remove
-everything and then send out the uevent. But there the uevent is also
-generated in a separate step, so I wonder whether we shouldn't do the same
-for register for symmetry ...
-
-Anyway this looks good, nice catch, I'll add cc: stable and merge.
--Daniel
-
-> ---
->  drivers/gpu/drm/drm_connector.c | 5 +++++
->  drivers/gpu/drm/drm_sysfs.c     | 3 ---
->  2 files changed, 5 insertions(+), 3 deletions(-)
+> I don't think this belongs into the queue limits.  For example a
+> stacking driver that always defers requests to a workqueue can support
+> REQ_NOWAIT entirely independent of the underlying devices.  I think
+> this just needs to be a simple queue flag.
 > 
-> diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-> index b1099e1..d877ddc 100644
-> --- a/drivers/gpu/drm/drm_connector.c
-> +++ b/drivers/gpu/drm/drm_connector.c
-> @@ -27,6 +27,7 @@
->  #include <drm/drm_print.h>
->  #include <drm/drm_drv.h>
->  #include <drm/drm_file.h>
-> +#include <drm/drm_sysfs.h>
->  
->  #include <linux/uaccess.h>
->  
-> @@ -523,6 +524,10 @@ int drm_connector_register(struct drm_connector *connector)
->  	drm_mode_object_register(connector->dev, &connector->base);
->  
->  	connector->registration_state = DRM_CONNECTOR_REGISTERED;
-> +
-> +	/* Let userspace know we have a new connector */
-> +	drm_sysfs_hotplug_event(connector->dev);
-> +
->  	goto unlock;
->  
->  err_debugfs:
-> diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
-> index 939f003..f0336c8 100644
-> --- a/drivers/gpu/drm/drm_sysfs.c
-> +++ b/drivers/gpu/drm/drm_sysfs.c
-> @@ -291,9 +291,6 @@ int drm_sysfs_connector_add(struct drm_connector *connector)
->  		return PTR_ERR(connector->kdev);
->  	}
->  
-> -	/* Let userspace know we have a new connector */
-> -	drm_sysfs_hotplug_event(dev);
-> -
->  	if (connector->ddc)
->  		return sysfs_create_link(&connector->kdev->kobj,
->  				 &connector->ddc->dev.kobj, "ddc");
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+For O_DIRECT I/O REQ_NOWAIT not just about non-blocking submition.
+It also provides instant feedback about contention. Like ECN from network.
+This feedback is useful for rate-control and balancing load between replicas.
+
+If upper layer simply remaps and forwards requests below then to forward
+contention all layers of stacked device should support this feature.
+That's why I've put it as flag into limits - to reuse limits stacking.
+
+If any layer defers request, then it should somehow limit size of backlog
+at the same time to provide sane behaviour for REQ_NOWAIT regardless of
+behaviour lower devices. So, then it could simply set that flag in limits.
+
+Also I want to add handing into blk-qos/throttler - never delay REQ_NOWAIT.
