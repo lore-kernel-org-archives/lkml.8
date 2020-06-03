@@ -2,130 +2,178 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C602BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49E4920678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52C3207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bv2NGZRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgFCHse (ORCPT
+        id S1726011AbgFCHuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:48:34 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40416 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCHsd (ORCPT
+        Wed, 3 Jun 2020 03:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgFCHuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:48:33 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jgO8S-0008I8-SH; Wed, 03 Jun 2020 07:48:29 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     axboe@kernel.dk
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] libata: Use per port sync for detach
-Date:   Wed,  3 Jun 2020 15:48:19 +0800
-Message-Id: <20200603074819.21639-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 03:50:20 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF181C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 00:50:19 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 202so702285lfe.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 00:50:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RI6iXB0qMqr3xlMnwnNSpUiS3SZYn3+NS4HUs4hvuFk=;
+        b=Bv2NGZRkizy50GG012REDa+Ac6WD7Cdlhp9SBQUZne2ONByEmjbrF1ObuaG8BusUuc
+         tT4fFF6bOT7sbpGB8srbSU8sAzLauoqfKgAnHEMe+Njoiq8cN8L4/OILOwpNPvXxVoRH
+         Pnb1931Hl0DGZD17DmZWdVQg3OicSRvDhOV3hpc3knBMfWL7aYPz7QcGjsOC6+dIYy1Z
+         BBA8Nzqwm/A2HE/lLI5xIt/BnG1w3KfdtF35Eoo4b/oIXYE9IQp3jdFlXdXmLTzZjFuK
+         x6SKMLDcFQfsamwJtMSktvo/Ma8v/iZmfw/yQqiVXjsUKZjmCLRSvusNarN0vntWMQ8c
+         P4bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RI6iXB0qMqr3xlMnwnNSpUiS3SZYn3+NS4HUs4hvuFk=;
+        b=ON1BQmMu/OKsaZM2hfl7l1h38PqAx6KdPyWwDYRUyYCn1bVwCOmP5jY6pOoATE9OQu
+         5Jll306Rq/nkVH+hSpSDXdqiKMWkjZAQRjUZzTPPcNQTLb8+JQdYqLTu6Hev1TQPG7ze
+         3+xKfS6rg4JjT57pk+HAQBwNF1wpvvLAnJNStht+mrIzKplMiLmq+hi/rqmrdc+Vxlvf
+         v5fZ9mzD7XgzysJmUNzHnfma/llig0O1tYdlg2kA3Ar3RQ7cPgC8scshS6AMPoilzA3L
+         KS5JCl1Rgxuk5Xjv16JVe7rgbpni7HmcDa8EFwzUenUuvyGwmVS159IKIqaj61bJqfjU
+         +xdg==
+X-Gm-Message-State: AOAM531Dx3fmwNT7Tkyr30KwFjLlworlZ+Kqf/8j+vaPMpiv4nfheP96
+        WJFRbhgWwd6l/Ph1Je2hNkYElXZm6dIK81VZ75vF2g==
+X-Google-Smtp-Source: ABdhPJwQ86B8yTe/9il9L6LnfiUJTL8erQbgj0KU1+oMuQ+QlImP1yxiL4f9rbdAdwNQf8DKbxDu0Dm6tMQQyCoUlhY=
+X-Received: by 2002:a19:5013:: with SMTP id e19mr1725514lfb.95.1591170618304;
+ Wed, 03 Jun 2020 00:50:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200527151613.16083-1-benjamin.gaignard@st.com>
+ <jhjpnahizkm.mognet@arm.com> <f95ce45f-7a1c-0feb-afa8-203ddb500f2f@st.com>
+ <jhjo8q1io9o.mognet@arm.com> <1b0ace18-e7f8-0b75-f6fe-968a269626b0@st.com>
+In-Reply-To: <1b0ace18-e7f8-0b75-f6fe-968a269626b0@st.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 3 Jun 2020 09:50:06 +0200
+Message-ID: <CAKfTPtCbM-w_0VrTB5tsSM5PKRtC44f3sSmAR=U=P3e3KQ+cMw@mail.gmail.com>
+Subject: Re: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
-detach") may cause system freeze during suspend.
+On Wed, 3 Jun 2020 at 09:34, Benjamin GAIGNARD <benjamin.gaignard@st.com> wrote:
+>
+>
+>
+> On 6/2/20 3:35 PM, Valentin Schneider wrote:
+> > On 02/06/20 12:37, Benjamin GAIGNARD wrote:
+> >> On 6/2/20 11:31 AM, Valentin Schneider wrote:
+> >>>> @@ -99,6 +100,8 @@ enum state {
+> >>>>
+> >>>>    #define OVERRUN_ERROR_THRESHOLD 3
+> >>>>
+> >>>> +#define DCMI_MIN_FREQ     650000 /* in KHz */
+> >>>> +
+> >>> This assumes the handling part is guaranteed to always run on the same CPU
+> >>> with the same performance profile (regardless of the platform). If that's
+> >>> not guaranteed, it feels like you'd want this to be configurable in some
+> >>> way.
+> >> Yes I could add a st,stm32-dcmi-min-frequency (in KHz) parameter the
+> >> device tree node.
+> >>
+> > Something like that - I'm not sure how well this fits with the DT
+> > landscape, as you could argue it isn't really a description of the
+> > hardware, more of a description of the performance expectations of the
+> > software. I won't really argue here.
+> >
+> >>>>    struct dcmi_graph_entity {
+> >>>>         struct v4l2_async_subdev asd;
+> >>>>
+> >>> [...]
+> >>>> @@ -2020,6 +2042,8 @@ static int dcmi_probe(struct platform_device *pdev)
+> >>>>                 goto err_cleanup;
+> >>>>         }
+> >>>>
+> >>>> +  dcmi->policy = cpufreq_cpu_get(0);
+> >>>> +
+> >>> Ideally you'd want to fetch the policy of the CPU your IRQ (and handling
+> >>> thread) is affined to; The only compatible DTS I found describes a single
+> >>> A7, which is somewhat limited in the affinity area...
+> >> If I move this code just before start streaming and use get_cpu(), would
+> >> it works ?
+> >>
+> > AFAIA streaming_start() is not necessarily executing on the same CPU as the
+> > one that will handle the interrupt. I was thinking you could use the IRQ's
+> > effective affinity as a hint of which CPU(s) to boost, i.e. something like:
+> >
+> > ---
+> >      struct cpumask_var_t visited;
+> >      struct irq_data *d = irq_get_irq_data(irq);
+> >
+> >      err = alloc_cpumask_var(visited, GFP_KERNEL);
+> >      /* ... */
+> >      for_each_cpu(cpu, irq_data_get_effective_affinity_mask(d)) {
+> >              /* check if not already spanned */
+> >              if (cpumask_test_cpu(cpu, visited))
+> >                      continue;
+> >
+> >              policy = cpufreq_cpu_get(cpu);
+> >              cpumask_or(visited, visited, policy->cpus);
+> >              /* do the boost for that policy here */
+> >              /* ... */
+> >              cpufreq_cpu_put(policy);
+> >      }
+> > ---
+> >
+> > That of course falls apart when hotplug gets involved, and the effective
+> > affinity changes... There's irq_set_affinity_notifier() out there, but it
+> > seems it's only about the affinity, not the effective_affinity, I'm not
+> > sure how valid it would be to query the effective_affinity in that
+> > notifier.
+> If I wait to be in the irq it will be too late so I think I will do a
+> loop over all possible CPUs
+> before start the streaming to change the policies.
 
-Using async_synchronize_full() in PM callbacks is wrong, since async
-callbacks that are already scheduled may wait for not-yet-scheduled
-callbacks, causes a circular dependency.
+Can't you use irq_get_affinity_mask  and loop over it ?
 
-Instead of using big hammer like async_synchronize_full(), use async
-cookie to make sure port probe are synced, without affecting other
-scheduled PM callbacks.
+Also You should better use freq_qos_add/remove_request during probe
+and remove of the driver and use freq_qos_update_request in
+dcmi_start/stop_streaming to set/unset your constraint.
 
-Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
-BugLink: https://bugs.launchpad.net/bugs/1867983
-Suggested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
- - Move the comment to properly align with the code.
-
-v2:
- - Sync up to cookie + 1.
- - Squash the synchronization into the same loop.
-
- drivers/ata/libata-core.c | 11 +++++------
- include/linux/libata.h    |  3 +++
- 2 files changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 69361ec43db5..b1cd4d97bc2a 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -42,7 +42,6 @@
- #include <linux/workqueue.h>
- #include <linux/scatterlist.h>
- #include <linux/io.h>
--#include <linux/async.h>
- #include <linux/log2.h>
- #include <linux/slab.h>
- #include <linux/glob.h>
-@@ -5778,7 +5777,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
- 	/* perform each probe asynchronously */
- 	for (i = 0; i < host->n_ports; i++) {
- 		struct ata_port *ap = host->ports[i];
--		async_schedule(async_port_probe, ap);
-+		ap->cookie = async_schedule(async_port_probe, ap);
- 	}
- 
- 	return 0;
-@@ -5920,11 +5919,11 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
--	/* Ensure ata_port probe has completed */
--	async_synchronize_full();
--
--	for (i = 0; i < host->n_ports; i++)
-+	for (i = 0; i < host->n_ports; i++) {
-+		/* Ensure ata_port probe has completed */
-+		async_synchronize_cookie(host->ports[i]->cookie + 1);
- 		ata_port_detach(host->ports[i]);
-+	}
- 
- 	/* the host is dead now, dissociate ACPI */
- 	ata_acpi_dissociate(host);
-diff --git a/include/linux/libata.h b/include/linux/libata.h
-index af832852e620..8a4843704d28 100644
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -22,6 +22,7 @@
- #include <linux/acpi.h>
- #include <linux/cdrom.h>
- #include <linux/sched.h>
-+#include <linux/async.h>
- 
- /*
-  * Define if arch has non-standard setup.  This is a _PCI_ standard
-@@ -872,6 +873,8 @@ struct ata_port {
- 	struct timer_list	fastdrain_timer;
- 	unsigned long		fastdrain_cnt;
- 
-+	async_cookie_t		cookie;
-+
- 	int			em_message_type;
- 	void			*private_data;
- 
--- 
-2.17.1
-
+>
+> >
+> >> Benjamin
+> >>>>         dev_info(&pdev->dev, "Probe done\n");
+> >>>>
+> >>>>         platform_set_drvdata(pdev, dcmi);
+> >>>> @@ -2049,6 +2073,9 @@ static int dcmi_remove(struct platform_device *pdev)
+> >>>>
+> >>>>         pm_runtime_disable(&pdev->dev);
+> >>>>
+> >>>> +  if (dcmi->policy)
+> >>>> +          cpufreq_cpu_put(dcmi->policy);
+> >>>> +
+> >>>>         v4l2_async_notifier_unregister(&dcmi->notifier);
+> >>>>         v4l2_async_notifier_cleanup(&dcmi->notifier);
+> >>>>         media_entity_cleanup(&dcmi->vdev->entity);
