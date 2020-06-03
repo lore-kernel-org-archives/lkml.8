@@ -2,128 +2,142 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B305120678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0059B20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WDEAYzj5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KL8A8kt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgFCMbz (ORCPT
+        id S1726167AbgFCMcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgFCMby (ORCPT
+        Wed, 3 Jun 2020 08:32:12 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60198 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbgFCMcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:31:54 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D164CC08C5C0;
-        Wed,  3 Jun 2020 05:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TOhmvnzlmGigE1Miw3N6/6ONIbwSf6YuZAt+1vAhyXM=; b=WDEAYzj5IU60fkR/zEsX7YNtO
-        YgVYYqu33onIdA26p4VUvN7E0Cg3z5u8zPdGgmbUEARPWtRBBi9g0ZAFdmahzE+F4GuKObKfyXYp8
-        7K+t50vIQ4W4/HewyO4Q2Ay55AVLF80mtaHCoVOdmi6dU9i/+3kAxACS7YC93lhs+YfE8ZaRaCkoB
-        KCi3ISwD0kFpDH6EadSuA/vnhN9nlfbIofGCvWtov1RK06E+NDhqu5cVuOGZrqi4OsWT8PBHd73hu
-        2vjvl2+gxuMKjRaGhXghQrq1Gskz0eMuJP+aNMcPi7CuGASM0tQpBRky786bQSmisdC33vMgSRIca
-        yZcrbr3vg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:48860)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jgSYY-0005QV-NX; Wed, 03 Jun 2020 13:31:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jgSYT-0005OK-CV; Wed, 03 Jun 2020 13:31:37 +0100
-Date:   Wed, 3 Jun 2020 13:31:37 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
- 1000BaseX/2500BaseX ports
-Message-ID: <20200603123137.GZ1551@shell.armlinux.org.uk>
-References: <20200528135608.GU1551@shell.armlinux.org.uk>
- <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
- <20200528144805.GW1551@shell.armlinux.org.uk>
- <20200528204312.df9089425162a22e89669cf1@suse.de>
- <20200528220420.GY1551@shell.armlinux.org.uk>
- <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
- <20200529145928.GF869823@lunn.ch>
- <20200529175225.a3be1b4faaa0408e165435ad@suse.de>
- <20200529163340.GI869823@lunn.ch>
- <20200602225016.GX1551@shell.armlinux.org.uk>
+        Wed, 3 Jun 2020 08:32:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591187530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YaIXrhQbCH4bOWY70sdfxk9KltjJZfTXRyPX6JUjwhI=;
+        b=KL8A8kt9SUa1Jf95fcNJ3YtEsu57qqs0JpxbOCVOqjB9pJ3cWn51VXwsRbrgnAvw0+XgSw
+        wsycYTobgZL6sWWOZT0CbdruCC9FZ19gBabdkUq4iNnYrifW0nBSpaMvVJsiFHp3+jBnPB
+        ALDsLcj2Lgaam3TxgqG1iGYkQ7Qg+ME=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-6-ZyHJupl8MjmPPQZToStXDA-1; Wed, 03 Jun 2020 08:32:05 -0400
+X-MC-Unique: ZyHJupl8MjmPPQZToStXDA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 757FE9116D;
+        Wed,  3 Jun 2020 12:32:03 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-181.ams2.redhat.com [10.36.112.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E33278EFF;
+        Wed,  3 Jun 2020 12:31:56 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup and thread creation (v20)
+References: <20200527185130.5604-1-mathieu.desnoyers@efficios.com>
+        <20200527185130.5604-2-mathieu.desnoyers@efficios.com>
+        <87d06gxsla.fsf@oldenburg2.str.redhat.com>
+        <1953500643.51064.1591186963416.JavaMail.zimbra@efficios.com>
+Date:   Wed, 03 Jun 2020 14:31:54 +0200
+In-Reply-To: <1953500643.51064.1591186963416.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Wed, 3 Jun 2020 08:22:43 -0400
+        (EDT)")
+Message-ID: <87r1uwwcsl.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602225016.GX1551@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 11:50:16PM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, May 29, 2020 at 06:33:40PM +0200, Andrew Lunn wrote:
-> > Given the current code, you cannot. Now we understand the
-> > requirements, we can come up with some ideas how to do this properly.
-> 
-> Okay, I've been a little quiet because of sorting out the ARM tree
-> for merging with Linus (now done) and I've been working on a solution
-> to this problem.
-> 
-> The good news is, I have an implementation in phylink to use the sync
-> status reported from a PCS, and to appropriately enable sync status
-> reporting.  I'm quite nervous about having that enabled as a matter of
-> routine as I've seen some Marvell hardware end up with interrupt storms
-> from it - presumably due to noise pickup on the serdes lines being
-> interpreted as an intermittently valid signal.
+* Mathieu Desnoyers:
 
-Yes, as expected - though not quite a storm - I'm seeing:
+> ----- On Jun 3, 2020, at 8:05 AM, Florian Weimer fweimer@redhat.com wrote:
+>
+>> * Mathieu Desnoyers:
+>>=20
+>>> +#ifdef __cplusplus
+>>> +# if  __cplusplus >=3D 201103L
+>>> +#  define __rseq_static_assert(expr, diagnostic) static_assert (expr,
+>>> diagnostic)
+>>> +#  define __rseq_alignof(type)                   alignof (type)
+>>> +#  define __rseq_alignas(x)                      alignas (x)
+>>> +#  define __rseq_tls_storage_class               thread_local
+>>> +# endif
+>>> +#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
+>>> +# define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr,
+>>> diagnostic)
+>>> +# define __rseq_alignof(type)                    _Alignof (type)
+>>> +# define __rseq_alignas(x)                       _Alignas (x)
+>>> +# define __rseq_tls_storage_class                _Thread_local
+>>> +#endif
+>>=20
+>> This does not seem to work.  I get this with GCC 9:
+>>=20
+>> In file included from /tmp/cih_test_gsrKbC.cc:8:0:
+>> ../sysdeps/unix/sysv/linux/sys/rseq.h:42:50: error: attribute ignored
+>> [-Werror=3Dattributes]
+>> #  define __rseq_alignas(x)                      alignas (x)
+>>                                                  ^
+>> ../sysdeps/unix/sysv/linux/sys/rseq.h:122:14: note: in expansion of macro
+>> =E2=80=98__rseq_alignas=E2=80=99
+>>     uint32_t __rseq_alignas (32) version;
+>>              ^
+>
+> Is that when compiling C or C++ code ? If it's C code, I would expect
+> "_Alignas" to be used, not "alignas".
+>
+> Which exact version of gcc do you use ?
 
-[root@buildroot ~]# dmesg |grep 'eno2:' | wc -l
-1604
-[root@buildroot ~]# dmesg |grep 'eno2: mac link down' | wc -l
-1598
-[root@buildroot ~]# cat /proc/uptime
-68868.10 137231.62
+C++ code.  CXX was set to this compiler at configure time:
 
-Similar happens with mvpp2 hardware - for Marvell's older mvpp2x driver,
-I had to disable the AN bypass bit:
+gcc version 9.3.1 20200408 (Red Hat 9.3.1-2) (GCC)=20
 
-    net: marvell: mvpp2x: avoid link status flood
+>> In any case, these changes really have to go into the UAPI header first.
+>> Only the __thread handling should remain.  Otherwise, we'll have a tough
+>> situation on our hands changing the UAPI header, without introducing
+>> macro definition conflicts.  I'd suggest to stick to the aligned
+>> attribute for the time being, like the current UAPI headers.
+>
+> OK. Should I do that in a separate patch, or you do it on top of my patch=
+set,
+> or should I re-spin another round of the series ?
 
-    eth2 on the Macchiatobin board floods the system with link status
-    interrupts whilethe link is down.  This appears to be caused by the
-    AN bypass logic causing spurious link status change interrupts,
-    despite the port status register indicating that the link remains
-    down.
+I think the initial commit should mirror the current UAPI header
+contents.
 
-    Avoid this by not setting the AN bypass bit for SGMII links.
+Keep the macros for the UAPI patch though. 8-)  We can pick up these
+changes once they have been merged into Linux.
 
-    Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Thanks,
+Florian
 
-So, it looks like a different approach will be needed, since having a
-system flooded with unnecessary interrupts is obviously bad.  This
-isn't limited to just Marvell mvneta and mvpp2, I think Chris at ZII
-has reported a similar behaviour on his boards with noise inducing
-serdes sync/link events.
-
-Hmm.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
