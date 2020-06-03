@@ -2,116 +2,98 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB098C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2162072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rd3qwk1J"
+	by mail.kernel.org (Postfix) with ESMTP id AC15A2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 04:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbgFCEYI (ORCPT
+        id S1725951AbgFCEhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 00:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCEYI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 00:24:08 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B61C05BD43;
-        Tue,  2 Jun 2020 21:24:07 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cG511KFFz9sT5;
-        Wed,  3 Jun 2020 14:24:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591158245;
-        bh=r0R8fDB5G7w0Tlxan8H0hYX05CazfC4S0A+8TedrTBk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Rd3qwk1JOaET7JxrE4UItomv49lEW3TyEk5Rmz2qyGprbi5tUjQ18KT0UZ86/S//o
-         lzeNzWCYtv9h2EDGCkz4xLAnHPmMfPsVT8LHqdgzch5hp0cwYWzVjymaxYaLax6OIm
-         pGaIQN0Hi75UnHEmaxFrjqoOLkkj2HGEp89EO/OOhCLyQKgMueBkCZwHMmqt8eyT+a
-         RV7/xPIl1eMr44w6FxTDjf8eGCzxYJRGktWmOvWe7saUmm4ixsKU7p1pEFVl6byG8b
-         sOrU5vCZ5fLNb/40sOLbt9LvphXPlHUDHfMrh8MX8xRAQST/ZL8/XM7Jbzng94cewW
-         /FLBjVUf0d4Ig==
-Date:   Wed, 3 Jun 2020 14:24:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: ARCH=arm64 build breakage for Kbuild for-next branch
-Message-ID: <20200603142404.33123d7d@canb.auug.org.au>
-In-Reply-To: <CAK7LNAT_rgoDQPgDB2cTvwmXrQv2mFH1ysuhvWxp2HnVMd0W7Q@mail.gmail.com>
-References: <CAK7LNAT_rgoDQPgDB2cTvwmXrQv2mFH1ysuhvWxp2HnVMd0W7Q@mail.gmail.com>
+        Wed, 3 Jun 2020 00:37:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:57058 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFCEhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 00:37:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B630231B;
+        Tue,  2 Jun 2020 21:37:34 -0700 (PDT)
+Received: from [10.163.77.218] (unknown [10.163.77.218])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E92843F305;
+        Tue,  2 Jun 2020 21:37:31 -0700 (PDT)
+Subject: Re: [PATCH] mm/vmstat: Add events for PMD based THP migration without
+ split
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Cc:     linux-mm@kvack.org, hughd@google.com,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Zi Yan <ziy@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+References: <1590118444-21601-1-git-send-email-anshuman.khandual@arm.com>
+ <20200601165736.qw5kwwknxltk7bv6@ca-dmjordan1.us.oracle.com>
+ <0a936ec7-f44f-1d72-915f-f5758d25fd72@nvidia.com>
+ <1e71d815-5359-3ebe-5d2b-5a3b54b63b51@arm.com>
+ <274be3bf-2206-5e98-8114-1d91fac472c9@nvidia.com>
+ <20200602145208.qucum52lwslhiqff@ca-dmjordan1.us.oracle.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <db50792c-ced5-a59d-0d94-e1520cf53715@arm.com>
+Date:   Wed, 3 Jun 2020 10:06:31 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3Zi8rxl9_RJnvHIR2Xal4Sa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200602145208.qucum52lwslhiqff@ca-dmjordan1.us.oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3Zi8rxl9_RJnvHIR2Xal4Sa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Masahiro,
 
-On Wed, 3 Jun 2020 13:11:59 +0900 Masahiro Yamada <masahiroy@kernel.org> wr=
-ote:
->=20
-> If you pull the latest kbuild for-next branch,
-> ARCH=3Darm64 will fail to build.
->=20
-> I will fix it soon.
->=20
-> For today's linux-next, you can patch
-> as follows.
-> (or, you can use the old branch)
->=20
->=20
-> diff --git a/Makefile b/Makefile
-> index f80c4ff93ec9..fbb4b95ae648 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1074,7 +1074,7 @@ build-dirs        :=3D $(vmlinux-dirs)
->  clean-dirs     :=3D $(vmlinux-alldirs)
->=20
->  # Externally visible symbols (used by link-vmlinux.sh)
-> -KBUILD_VMLINUX_OBJS :=3D $(head-y) $(addsuffix built-in.a, $(core-y))
-> +KBUILD_VMLINUX_OBJS :=3D $(head-y) $(patsubst %/,%/built-in.a, $(core-y))
->  KBUILD_VMLINUX_OBJS +=3D $(addsuffix built-in.a, $(filter %/, $(libs-y)))
->  ifdef CONFIG_MODULES
->  KBUILD_VMLINUX_OBJS +=3D $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
+On 06/02/2020 08:22 PM, Daniel Jordan wrote:
+> On Mon, Jun 01, 2020 at 09:48:09PM -0700, John Hubbard wrote:
+>> However, the fact that this is under discussion hints at the need for a
+>> bit of documentation help. What do you think about adding some notes about
+>> all of this to, say, Documentation/vm/page_migration.rst ?
+> 
+> Yes, that would be good.  I understand the intent better now but still think
+> the 'failure' event could be misinterpreted as outright failure instead of
+> splitting followed by successfully moving the constituent pages.
 
-OK, thanks, I will apply that at some point, since I have already
-merged your tree.
+Does this look okay and sufficient ?
 
---=20
-Cheers,
-Stephen Rothwell
+--- a/Documentation/vm/page_migration.rst
++++ b/Documentation/vm/page_migration.rst
+@@ -253,5 +253,20 @@ which are function pointers of struct address_space_operations.
+      PG_isolated is alias with PG_reclaim flag so driver shouldn't use the flag
+      for own purpose.
+ 
++Quantifying Migration
++=====================
++Following events can be used to quantify page migration.
++
++- PGMIGRATE_SUCCESS
++- PGMIGRATE_FAIL
++- THP_MIGRATION_SUCCESS
++- THP_MIGRATION_FAILURE
++
++THP_MIGRATION_FAILURE in particular represents an event when a THP could not be
++migrated as a single entity following an allocation failure and ended up getting
++split into constituent normal pages before being retried. This event, along with
++PGMIGRATE_SUCCESS and PGMIGRATE_FAIL will help in quantifying and analyzing THP
++migration events including both success and failure cases.
++
 
---Sig_/3Zi8rxl9_RJnvHIR2Xal4Sa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+> 
+> It might help to clarify in the changelog as well.
+> 
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XJeQACgkQAVBC80lX
-0GzUbggAkU/kt74T6bUPKK+eofowxA+Kn0iM6h19munVmEu91EtXbQk1+BVhzB1U
-Nc39JXnpDQtNP+Zw9E3L/NNriIj7pJZpRQrD+ER0i2w7GUtn7ZhuqhgvD2T8bwV4
-BVBx3+boUwab72mPbvU8ZeaMnFkVqyYz9Y1fwx5QqWmZzfmzfcJq5G/iKd5yab7z
-inzNPGWJIqkGOZSGzOjqsWc450TbL+ewYGVyQDFvW2a+P60pqMZ0WeFffy1u8Pqo
-MR8YisqJNTIYkPbXP6TPJI0Vxy4w830TKB9Yb8tQlm5sYSVCnMd+5xAUAa4tY9iH
-CnoNJbs+6i7xE9FIJ5MqSrmKCcBmUg==
-=1GnE
------END PGP SIGNATURE-----
-
---Sig_/3Zi8rxl9_RJnvHIR2Xal4Sa--
+Sure, will update the commit message accordingly.
