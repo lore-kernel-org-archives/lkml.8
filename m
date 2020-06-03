@@ -2,176 +2,216 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98701C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA84C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78DD120772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="NHBEkAf0"
+	by mail.kernel.org (Postfix) with ESMTP id 9C9BF20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgFCMki (ORCPT
+        id S1726097AbgFCMlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:40:38 -0400
-Received: from mail.efficios.com ([167.114.26.124]:51486 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFCMkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:40:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 71F302BB79F;
-        Wed,  3 Jun 2020 08:40:36 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 3MTX8YOqECMC; Wed,  3 Jun 2020 08:40:36 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id DB8C22BB837;
-        Wed,  3 Jun 2020 08:40:35 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com DB8C22BB837
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1591188035;
-        bh=tdVcg6FxclbpF6m/wOI5+gTqoQhEW5W4oGGbMXKYC5s=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=NHBEkAf0UWCZbLu47mhXvGP6VQy8e2zvUtp+Rxu1hq0uN9nR9TzxQ4yhFBayOdR8c
-         1E6Dbkj52x9/M3jIQHIm3c8gaA21dNCwnBKJzE5d5VYPaWbNPR4eldW1xUnYFISPUA
-         Y8pX7c7Vb1Pd7lcrAmlddG1bpsiBkMVgs4h0PjeNlR6/vHG8WxWhQ83SfypSEyY+XH
-         sCKUk1LlvldMET5Tznop/M9X44bD91z4eF31EtJfa+Sq63Dd9+Vha5Vjat74q67Eji
-         QSa17wOFFt05yUqwNEJz7XpqyhCOSKuS/JT2Rd7w8uPmh3SGobLJAk7iEw3hEicYAU
-         HJjXdRuKRyihg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Dauf4AVm1gGn; Wed,  3 Jun 2020 08:40:35 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id C474B2BB831;
-        Wed,  3 Jun 2020 08:40:35 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 08:40:35 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
+        Wed, 3 Jun 2020 08:41:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:32924 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbgFCMlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:41:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2877B31B;
+        Wed,  3 Jun 2020 05:41:18 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 719823F305;
+        Wed,  3 Jun 2020 05:41:15 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 13:41:13 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Paul <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1895296081.51093.1591188035688.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87r1uwwcsl.fsf@oldenburg2.str.redhat.com>
-References: <20200527185130.5604-1-mathieu.desnoyers@efficios.com> <20200527185130.5604-2-mathieu.desnoyers@efficios.com> <87d06gxsla.fsf@oldenburg2.str.redhat.com> <1953500643.51064.1591186963416.JavaMail.zimbra@efficios.com> <87r1uwwcsl.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
- and thread creation (v20)
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200603124112.w5stb7v2z3kzcze3@e107158-lin.cambridge.arm.com>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200529100806.GA3070@suse.de>
+ <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
+ <20200603094036.GF3070@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v20)
-Thread-Index: fhLu40I3uZTnsOzd9ZO4uj6ygvG/5A==
+Content-Disposition: inline
+In-Reply-To: <20200603094036.GF3070@suse.de>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/03/20 10:40, Mel Gorman wrote:
+> On Tue, Jun 02, 2020 at 06:46:00PM +0200, Dietmar Eggemann wrote:
+> > On 29.05.20 12:08, Mel Gorman wrote:
+> > > On Thu, May 28, 2020 at 06:11:12PM +0200, Peter Zijlstra wrote:
+> > >>> FWIW, I think you're referring to Mel's notice in OSPM regarding the overhead.
+> > >>> Trying to see what goes on in there.
+> > >>
+> > >> Indeed, that one. The fact that regular distros cannot enable this
+> > >> feature due to performance overhead is unfortunate. It means there is a
+> > >> lot less potential for this stuff.
+> > > 
+> > > During that talk, I was a vague about the cost, admitted I had not looked
+> > > too closely at mainline performance and had since deleted the data given
+> > > that the problem was first spotted in early April. If I heard someone
+> > > else making statements like I did at the talk, I would consider it a bit
+> > > vague, potentially FUD, possibly wrong and worth rechecking myself. In
+> > > terms of distributions "cannot enable this", we could but I was unwilling
+> > > to pay the cost for a feature no one has asked for yet. If they had, I
+> > > would endevour to put it behind static branches and disable it by default
+> > > (like what happened for PSI). I was contacted offlist about my comments
+> > > at OSPM and gathered new data to respond properly. For the record, here
+> > > is an editted version of my response;
+> > 
+> > [...]
+> > 
+> > I ran these tests on 'Ubuntu 18.04 Desktop' on Intel E5-2690 v2
+> > (2 sockets * 10 cores * 2 threads) with powersave governor as:
+> > 
+> > $ numactl -N 0 ./run-mmtests.sh XXX
+> > 
+> > w/ config-network-netperf-unbound.
+> > 
+> > Running w/o 'numactl -N 0' gives slightly worse results.
+> > 
+> > without-clamp      : CONFIG_UCLAMP_TASK is not set
+> > with-clamp         : CONFIG_UCLAMP_TASK=y,
+> >                      CONFIG_UCLAMP_TASK_GROUP is not set
+> > with-clamp-tskgrp  : CONFIG_UCLAMP_TASK=y,
+> >                      CONFIG_UCLAMP_TASK_GROUP=y
+> > 
+> > 
+> > netperf-udp
+> >                                 ./5.7.0-rc7            ./5.7.0-rc7            ./5.7.0-rc7
+> >                               without-clamp             with-clamp      with-clamp-tskgrp
+> > 
+> > Hmean     send-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
+> > Hmean     send-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
+> > Hmean     send-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
+> > Hmean     send-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
+> > Hmean     send-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.96 *   1.24%*
+> > Hmean     send-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
+> > Hmean     send-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
+> > Hmean     send-8192     14961.77 (   0.00%)    14418.92 *  -3.63%*    14908.36 *  -0.36%*
+> > Hmean     send-16384    25799.50 (   0.00%)    25025.64 *  -3.00%*    25831.20 *   0.12%*
+> > Hmean     recv-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
+> > Hmean     recv-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
+> > Hmean     recv-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
+> > Hmean     recv-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
+> > Hmean     recv-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.95 *   1.24%*
+> > Hmean     recv-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
+> > Hmean     recv-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
+> > Hmean     recv-8192     14961.61 (   0.00%)    14418.88 *  -3.63%*    14908.30 *  -0.36%*
+> > Hmean     recv-16384    25799.39 (   0.00%)    25025.49 *  -3.00%*    25831.00 *   0.12%*
+> > 
+> > netperf-tcp
+> >  
+> > Hmean     64              818.65 (   0.00%)      812.98 *  -0.69%*      826.17 *   0.92%*
+> > Hmean     128            1569.55 (   0.00%)     1555.79 *  -0.88%*     1586.94 *   1.11%*
+> > Hmean     256            2952.86 (   0.00%)     2915.07 *  -1.28%*     2968.15 *   0.52%*
+> > Hmean     1024          10425.91 (   0.00%)    10296.68 *  -1.24%*    10418.38 *  -0.07%*
+> > Hmean     2048          17454.51 (   0.00%)    17369.57 *  -0.49%*    17419.24 *  -0.20%*
+> > Hmean     3312          22509.95 (   0.00%)    22229.69 *  -1.25%*    22373.32 *  -0.61%*
+> > Hmean     4096          25033.23 (   0.00%)    24859.59 *  -0.69%*    24912.50 *  -0.48%*
+> > Hmean     8192          32080.51 (   0.00%)    31744.51 *  -1.05%*    31800.45 *  -0.87%*
+> > Hmean     16384         36531.86 (   0.00%)    37064.68 *   1.46%*    37397.71 *   2.37%*
+> > 
+> > The diffs are smaller than on openSUSE Leap 15.1 and some of the
+> > uclamp taskgroup results are better?
+> > 
+> 
+> I don't see the stddev and coeff but these look close to borderline.
+> Sure, they are marked with a * so it passed a significant test but it's
+> still a very marginal difference for netperf. It's possible that the
+> systemd configurations differ in some way that is significant for uclamp
+> but I don't know what that is.
 
+Hmm so what you're saying is that Dietmar didn't reproduce the same problem
+you're observing? I was hoping to use that to dig more into it.
 
------ On Jun 3, 2020, at 8:31 AM, Florian Weimer fweimer@redhat.com wrote:
+> 
+> > With this test setup we now can play with the uclamp code in
+> > enqueue_task() and dequeue_task().
+> > 
+> 
+> That is still true. An annotated perf profile should tell you if the
+> uclamp code is being heavily used or if it's bailing early but it's also
+> possible that uclamp overhead is not a big deal on your particular
+> machine.
+> 
+> The possibility that either the distribution, the machine or both are
+> critical for detecting a problem with uclamp may explain why any overhead
+> was missed. Even if it is marginal, it still makes sense to minimise the
+> amount of uclamp code that is executed if no limit is specified for tasks.
 
-> * Mathieu Desnoyers:
->=20
->> ----- On Jun 3, 2020, at 8:05 AM, Florian Weimer fweimer@redhat.com wrot=
-e:
->>
->>> * Mathieu Desnoyers:
->>>=20
->>>> +#ifdef __cplusplus
->>>> +# if  __cplusplus >=3D 201103L
->>>> +#  define __rseq_static_assert(expr, diagnostic) static_assert (expr,
->>>> diagnostic)
->>>> +#  define __rseq_alignof(type)                   alignof (type)
->>>> +#  define __rseq_alignas(x)                      alignas (x)
->>>> +#  define __rseq_tls_storage_class               thread_local
->>>> +# endif
->>>> +#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
->>>> +# define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr=
-,
->>>> diagnostic)
->>>> +# define __rseq_alignof(type)                    _Alignof (type)
->>>> +# define __rseq_alignas(x)                       _Alignas (x)
->>>> +# define __rseq_tls_storage_class                _Thread_local
->>>> +#endif
->>>=20
->>> This does not seem to work.  I get this with GCC 9:
->>>=20
->>> In file included from /tmp/cih_test_gsrKbC.cc:8:0:
->>> ../sysdeps/unix/sysv/linux/sys/rseq.h:42:50: error: attribute ignored
->>> [-Werror=3Dattributes]
->>> #  define __rseq_alignas(x)                      alignas (x)
->>>                                                  ^
->>> ../sysdeps/unix/sysv/linux/sys/rseq.h:122:14: note: in expansion of mac=
-ro
->>> =E2=80=98__rseq_alignas=E2=80=99
->>>     uint32_t __rseq_alignas (32) version;
->>>              ^
->>
->> Is that when compiling C or C++ code ? If it's C code, I would expect
->> "_Alignas" to be used, not "alignas".
->>
->> Which exact version of gcc do you use ?
->=20
-> C++ code.  CXX was set to this compiler at configure time:
->=20
-> gcc version 9.3.1 20200408 (Red Hat 9.3.1-2) (GCC)
+So one speculation I have that might be causing the problem is that the
+accesses of struct uclamp_rq are causing bad cache behavior in your case. Your
+mmtest description of the netperf says that it is sensitive to cacheline
+bouncing.
 
-I think I found the culprit: it should be:
+Looking at struct rq, the uclamp_rq is spanning 2 cachelines
 
-__rseq_alignas (32) uint32_t version;
+ 29954         /* --- cacheline 1 boundary (64 bytes) --- */
+ 29955         struct uclamp_rq           uclamp[2];            /*    64    96 */
+ 29956         /* --- cacheline 2 boundary (128 bytes) was 32 bytes ago --- */
+ 29957         unsigned int               uclamp_flags;         /*   160     4 */
+ 29958
+ 29959         /* XXX 28 bytes hole, try to pack */
+ 29960
 
-rather than the other way around.
+Reducing sturct uclamp_bucket to use unsigned int instead of unsigned long
+helps putting it all in a single cacheline
 
->=20
->>> In any case, these changes really have to go into the UAPI header first=
-.
->>> Only the __thread handling should remain.  Otherwise, we'll have a toug=
-h
->>> situation on our hands changing the UAPI header, without introducing
->>> macro definition conflicts.  I'd suggest to stick to the aligned
->>> attribute for the time being, like the current UAPI headers.
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index db3a57675ccf..63b5397a1708 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -833,8 +833,8 @@ extern void rto_push_irq_work_func(struct irq_work *work);
+  * clamp value.
+  */
+ struct uclamp_bucket {
+-       unsigned long value : bits_per(SCHED_CAPACITY_SCALE);
+-       unsigned long tasks : BITS_PER_LONG - bits_per(SCHED_CAPACITY_SCALE);
++       unsigned int value : bits_per(SCHED_CAPACITY_SCALE);
++       unsigned int tasks : 32 - bits_per(SCHED_CAPACITY_SCALE);
+ };
 
-OK, so I just remove the __rseq_alignas for now and use "aligned()" instead
-like the UAPI header. I plan to keep the other macros for now.
+ /*
 
->>
->> OK. Should I do that in a separate patch, or you do it on top of my patc=
-hset,
->> or should I re-spin another round of the series ?
->=20
-> I think the initial commit should mirror the current UAPI header
-> contents.
->=20
-> Keep the macros for the UAPI patch though. 8-)  We can pick up these
-> changes once they have been merged into Linux.
+ 29954         /* --- cacheline 1 boundary (64 bytes) --- */
+ 29955         struct uclamp_rq           uclamp[2];            /*    64    48 */
+ 29956         unsigned int               uclamp_flags;         /*   112     4 */
+ 29957
 
-OK,
+Is it something worth experimenting with?
 
-Thanks!
+Thanks
 
-Mathieu
-
->=20
-> Thanks,
-> Florian
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+--
+Qais Yousef
