@@ -2,105 +2,118 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C50C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA58B2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C302A2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OKD32b0n"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MIByWuDG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgFCVsu (ORCPT
+        id S1726529AbgFCVtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 17:48:50 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43363 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgFCVsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 17:48:50 -0400
+        Wed, 3 Jun 2020 17:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgFCVtb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 17:49:31 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75570C08C5C0;
+        Wed,  3 Jun 2020 14:49:31 -0700 (PDT)
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cjGR38NZz9sSJ;
-        Thu,  4 Jun 2020 07:48:47 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cjHF4t95z9sSJ;
+        Thu,  4 Jun 2020 07:49:29 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591220928;
-        bh=T4bo35WdUqV5VF8W6ZD/6TvXPrnECWNs35AYdJWcIW8=;
+        s=201702; t=1591220969;
+        bh=XKBgp2L0GUOLSIg/boLMt9j4CLVhXJp35jPh8omNObQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OKD32b0nIfo1QggonsfprSpHb0QBCyir0t+iattslSw78rIFoTMEh36FiBaP2+Od5
-         WTs6uQ9WXRyLJAMTi3zwaAd6LqQF8bSJL1lEQHOQ8ZGKwDZTuvRJuWdu7efpHAxLjZ
-         ezApjD7ttkud7fW45tg2mNoGOBJShsZjDliyaLTiJNLcCfP8IRDXx/ysxtTU5qpTuV
-         D3/GFKjyzK20cfXU0UisSP9weIcxhG5aCM3I0JOdlKVC0kWPfgOGi3a8o/QNhg2UNN
-         kfw7m+NCSK+MPwGiJSKqj1a32AwzaJ65E56rNWK0k12n0JRJ2y8HlnrZoGFGQprPrZ
-         FUjnWwhWK+RGQ==
-Date:   Thu, 4 Jun 2020 07:48:46 +1000
+        b=MIByWuDG8NxSAxHilcOm18JB7UA/swZnhC+zVQYYkIHfz5VGwY8SeBJnMSu3l8yZC
+         f7VlbqBeWxu3PXtEjNSy34uFhWUgm+bYMFr9JI4AIAi7GiKFCs7SWE050MX7EGmyFO
+         SiWjKH7kcKP/NJ5kbNzhkygdAweCeWH/aDggUQC0xVzj48iLWfEIRX0dlvA7C1g+oK
+         Q3vdrjsYqp9x5doxBGPW71oLIoL6Vu4DntH+OAee9LZllO2E4ETQjjfky4jyxBFp4l
+         GiILLHGuZWehO9q6iOAPhvPISbFkToZUyKHBYk0qYKx3RmJL+mOWhpKZl4ABiCfzV/
+         Ro6Z0sthMNUPQ==
+Date:   Thu, 4 Jun 2020 07:49:28 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing/doc: Fix ascii-art in histogram-design.rst
-Message-ID: <20200604074846.43c6a4f3@canb.auug.org.au>
-In-Reply-To: <69c291c76964642a417e5dd170d183ba6b552010.camel@kernel.org>
-References: <69c291c76964642a417e5dd170d183ba6b552010.camel@kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: linux-next: build failure after merge of the ftrace tree
+Message-ID: <20200604074928.41aac4b5@canb.auug.org.au>
+In-Reply-To: <20200603113058.11895c24@gandalf.local.home>
+References: <20200603174253.60deace5@canb.auug.org.au>
+        <20200603112223.3adc3451@gandalf.local.home>
+        <af08615d0ce87b7c920a0ac6a5389834a0504cb7.camel@kernel.org>
+        <20200603113058.11895c24@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ";
+Content-Type: multipart/signed; boundary="Sig_/1=jckIQ6GodOgy9MkQ79wLt";
  protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ
+--Sig_/1=jckIQ6GodOgy9MkQ79wLt
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tom,
+Hi Steven,
 
-On Wed, 03 Jun 2020 10:21:24 -0500 Tom Zanussi <zanussi@kernel.org> wrote:
+On Wed, 3 Jun 2020 11:30:58 -0400 Steven Rostedt <rostedt@goodmis.org> wrot=
+e:
 >
-> This fixes the Sphinx parallel build error when building htmldocs:
+> On Wed, 03 Jun 2020 10:24:36 -0500
+> Tom Zanussi <zanussi@kernel.org> wrote:
 >=20
->   docutils.utils.SystemMessage: /home/sfr/next/next/Documentation/trace/h=
-istogram-design.rst:219: (SEVERE/4) Unexpected section title.
+> > > It appears to be the ascii art that is causing the issue. I have no
+> > > idea
+> > > how to fix it. If someone has a patch they would like to submit, I
+> > > will
+> > > take it before I push it off to Linus.
+> > >=20
+> > > -- Steve   =20
+> >=20
+> > I just sent you/posted a patch to fix this.  Should be in your inbox
+> > already. =20
 >=20
-> It also fixes a bunch of other warnings I noticed when fixing the
-> above, caused by mixing ascii-art and text.
+> Thanks Tom!
 >=20
-> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  Documentation/trace/histogram-design.rst | 48 ++++++++++++------------
->  1 file changed, 24 insertions(+), 24 deletions(-)
+> Stephen,
+>=20
+> Can you test if this fixes the issue for you? If so, I'll add it push it =
+to
+> my for-next branch.
 
-Fixes the errors for me.
-
-Tested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+See my ack on the patch.
 
 --=20
 Cheers,
 Stephen Rothwell
 
---Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ
+--Sig_/1=jckIQ6GodOgy9MkQ79wLt
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YGr4ACgkQAVBC80lX
-0Gxd4Af+I2BgE4qmpExhvJ9+Gwf89s/UsvTnwzNEwUHmoGVGcAf42j9+MEYIgcvu
-/5x1y2BdE+BQBujYj1dkIH2+9p75p5/GkLSPJPcgYgY2cSA9DEAdI5QZN0zNJykC
-7r4IMahoDE4+y1iulObGP+pjUC9d/agFyqgp6iA4F2r5Q5Wnavlc39/p+kT7KBbp
-VHZ7uGOezuuc/LtALvxzC5JcDoqZKq2Q8M5R8WKuPo2KNErUeQPa0qKj1UiDekG7
-gpC6zpL4YIwAhl0iHQgI2THv6GG0vCPBqiLEcShgDL0OOtcKkmmVqYVZAWVGfr3u
-bprVxGKyYq7fSeiz9Ld13KEgC8DWYQ==
-=zfxr
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YGugACgkQAVBC80lX
+0Gxx5gf6AzOmB3c6Punfr7TY5SDcqUZpvf2M0CflHIn/rqMgVDc/g8aR7HVYZwOZ
+KLdgbvv3WqdetJ9bEU3gmjqmaebwjhl2pw184JrhQ3YYZViQVHWJl9/ubjGAE3nn
+huQfrSk92J3d/EiRC2zDjMMP5wPTWMnD7Z8OLwgM3xOf6KAW8dWk4CapuKBhc1aY
+D2hxVuU6jf588nmyYDVQeqI7Y5j6Gra2T12Nzk2WCw2R7F4u5nbbZCpGP7X6EPQV
+izbWW7cxhyuRjcdoNoyhYq5yDWeOa9E+Dx7aBTWGoVWPWS9xTRMEPQwoPMyGd7A5
+FS9Zqd1IG6bCY6Og+szV5RkVWgWkYw==
+=3X58
 -----END PGP SIGNATURE-----
 
---Sig_/IGCYWjj8U1LGZVbUr+ZkPkJ--
+--Sig_/1=jckIQ6GodOgy9MkQ79wLt--
