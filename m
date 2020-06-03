@@ -2,343 +2,868 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9771BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6427920674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1984E20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 03:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0boUgOb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o3lGh33A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgFCDzt (ORCPT
+        id S1726109AbgFCD5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 23:55:49 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24057 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725955AbgFCDzq (ORCPT
+        Tue, 2 Jun 2020 23:57:08 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:63993 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726051AbgFCD5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 23:55:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591156542;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OI1Pzb/ZEA+lNKk17JqTdFeEZPsgpHoTg1L5tY54W60=;
-        b=A0boUgObGqUnML+v9SiC/7cGin3A0YPTbk21wjqIYeacWRrs4jUqCyuMMZjI/N6oOj3BmL
-        GwsTcd/bFsRriDLEzFS3Hg84iUEp7Ml0vr5bZjVQlu8hAJ2vYIYYH5qQtLU0K4RzYv2MtF
-        Z/y/BHm0ooaumyHhykCMBMnGeIlWlGQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-DGClsiANP4-TcZUpIBvfJA-1; Tue, 02 Jun 2020 23:55:40 -0400
-X-MC-Unique: DGClsiANP4-TcZUpIBvfJA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2113107ACCD;
-        Wed,  3 Jun 2020 03:55:37 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0452F5D9CC;
-        Wed,  3 Jun 2020 03:55:28 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 21:55:28 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Zeng, Xin" <xin.zeng@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200602215528.7a1008f0@x1.home>
-In-Reply-To: <20200603031948.GB12300@joy-OptiPlex-7040>
-References: <20200426013628.GC12879@joy-OptiPlex-7040>
-        <20200427153743.GK2923@work-vm>
-        <20200428005429.GJ12879@joy-OptiPlex-7040>
-        <20200428141437.GG2794@work-vm>
-        <20200429072616.GL12879@joy-OptiPlex-7040>
-        <20200429082201.GA2834@work-vm>
-        <20200429093555.GM12879@joy-OptiPlex-7040>
-        <20200429094844.GE2834@work-vm>
-        <20200430003949.GN12879@joy-OptiPlex-7040>
-        <20200602165527.34137955@x1.home>
-        <20200603031948.GB12300@joy-OptiPlex-7040>
-Organization: Red Hat
+        Tue, 2 Jun 2020 23:57:07 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200603035700epoutp0306f5cdae48109609f2a6037ac69b1fc6~U7IQkKPWN1950619506epoutp03N
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 03:57:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200603035700epoutp0306f5cdae48109609f2a6037ac69b1fc6~U7IQkKPWN1950619506epoutp03N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591156620;
+        bh=8mbrRZ+aKoiBm6wNE73H4aQyF8Ea+3953BH8mvDBFtY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=o3lGh33AgVg2vRfb13AiA1EEel7HaLwpUzTqQNo7ha9iVlfqfIu99J08S7fzlq39t
+         toQF5ZRklYFiR+osjfAluULrw6a6v8SMlh6MPGQ7nznjkbvCNRLCbkBEfawUPwOdWI
+         iEtzyZkd6NxyLHAicXZHuK/xrA6wDVu21PRUIbSQ=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200603035700epcas1p3b9a32324cdc1c3e83f2e2d9651d0aa6b~U7IQDmA4a1249512495epcas1p3i;
+        Wed,  3 Jun 2020 03:57:00 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 49cFTj6WlXzMqYkb; Wed,  3 Jun
+        2020 03:56:57 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A7.67.28581.98F17DE5; Wed,  3 Jun 2020 12:56:57 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200603035657epcas1p42d49b2423e6089bb3c98705bb0ef59b2~U7INhIgyC0233302333epcas1p4m;
+        Wed,  3 Jun 2020 03:56:57 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200603035657epsmtrp24489a0c5231150876e479735b6c985d5~U7INgSTDj3104631046epsmtrp2J;
+        Wed,  3 Jun 2020 03:56:57 +0000 (GMT)
+X-AuditID: b6c32a38-2cdff70000006fa5-af-5ed71f899d37
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        78.A1.08303.98F17DE5; Wed,  3 Jun 2020 12:56:57 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200603035656epsmtip134f9842b83ad55649061982208625e8d~U7INIeOdi2502325023epsmtip1Q;
+        Wed,  3 Jun 2020 03:56:56 +0000 (GMT)
+Subject: Re: [PATCH 06/12] PM / devfreq: Add cpu based scaling support to
+ passive_governor
+To:     "andrew-sh.cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <d0bc8877-6d41-f54e-1c4c-2fadbb9dcd0b@samsung.com>
+Date:   Wed, 3 Jun 2020 13:07:29 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1591098190.30729.15.camel@mtksdaap41>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPJsWRmVeSWpSXmKPExsWy7bCmnm6n/PU4g5vvjSy2r3/BajH14RM2
+        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
+        j7NMFmdOX2K1aN17hN3i37WNLBbXFr5ntZh+V8hi41cPB2GPNfPWMHpc7utl8tg56y67x6ZV
+        nWwed67tYfPYvKTeo+XkfhaPLVfbWTz6tqxi9Dh+YzuTx+dNcgHcUdk2GamJKalFCql5yfkp
+        mXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUDPKSmUJeaUAoUCEouLlfTtbIry
+        S0tSFTLyi0tslVILUnIKLAv0ihNzi0vz0vWS83OtDA0MjEyBChOyM17MjSrYdICx4t70pawN
+        jMdnMHYxcnJICJhITFm5ir2LkYtDSGAHo8TdaxehnE+MEqevf4VyPjNK7H15mBWm5eOR5UwQ
+        iV2MEmubJrGAJIQE3jNKPL8mBWILC8RIvNnbzwxiiwA17Jg5mxGkgVmgj1Xi+po3YJPYBLQk
+        9r+4wQZi8wsoSlz98RjsKF4BO4mLJ6exg9gsAioSpy/9AbNFBcIkTm5rgaoRlDg58wnYYk4B
+        Y4kZpzeAxZkFxCVuPZnPBGHLS2x/O4cZ4ur5nBJ/W7ghbBeJnjMLob4Rlnh1fAs7hC0l8fnd
+        XjYIu1pi5ckjbCBHSwh0MEps2X8BqsFYYv/SyUALOIAWaEqs36UPEVaU2Pl7LtQNfBLvvvaw
+        gpRICPBKdLQJQZQoS1x+cJcJwpaUWNzeyTaBUWkWkm9mIflgFpIPZiEsW8DIsopRLLWgODc9
+        tdiwwAQ5ujcxglO+lsUOxrlvP+gdYmTiYDzEKMHBrCTCayV7LU6INyWxsiq1KD++qDQntfgQ
+        oykwfCcyS4km5wOzTl5JvKGpkbGxsYWJoZmpoaGSOO9JqwtxQgLpiSWp2ampBalFMH1MHJxS
+        DUyarKd/i8r0hJxkehXI8bM5POQzj/91yxOnNBZO25zjedsn8TiH2p1FJm3tOxYtVXh7Xlhq
+        +SqRAP2Wa189pdQl90/qkOC+3PShjjtE55DBHl3FaTHfr/qeE3dKnRYidIiRy9Qm7qWd6Cnn
+        WasE8/juiVW8UWuo4jJfz9IcET033FonhVXVS2hWwGYJzWdfGYImyrvcLznyL256wubrlrkX
+        JP0T2Truih/Kuf/yAJ9fh3p5r06z6U93s0uxr27VaVw6fp1/5oJea5G2FRxvdGR9DqQFfzOp
+        ln2d4b5cfXrFLl+NrZNezJyn9uJlw43ZP/rD895s2G+6Zs0dpQQL5981R5P6vF7wLV+tusHm
+        lxJLcUaioRZzUXEiAOjbrwyCBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsWy7bCSnG6n/PU4gz+veC22r3/BajH14RM2
+        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
+        j7NMFmdOX2K1aN17hN3i37WNLBbXFr5ntZh+V8hi41cPB2GPNfPWMHpc7utl8tg56y67x6ZV
+        nWwed67tYfPYvKTeo+XkfhaPLVfbWTz6tqxi9Dh+YzuTx+dNcgHcUVw2Kak5mWWpRfp2CVwZ
+        L+ZGFWw6wFhxb/pS1gbG4zMYuxg5OSQETCQ+HlnO1MXIxSEksINRYuP5SUwQCUmJaRePMncx
+        cgDZwhKHDxdD1LxllHi6awdYjbBAjMSbvf3MILYI0KAdM2czghQxC0xgleg58JQNomM1k8SL
+        V1tYQarYBLQk9r+4wQZi8wsoSlz98RjsDF4BO4mLJ6exg9gsAioSpy/9AbNFBcIkdi55zARR
+        IyhxcuYTFhCbU8BYYsbpDWC9zALqEn/mXWKGsMUlbj2ZzwRhy0tsfzuHeQKj8Cwk7bOQtMxC
+        0jILScsCRpZVjJKpBcW56bnFhgVGeanlesWJucWleel6yfm5mxjB8a+ltYNxz6oPeocYmTgY
+        DzFKcDArifBayV6LE+JNSaysSi3Kjy8qzUktPsQozcGiJM77ddbCOCGB9MSS1OzU1ILUIpgs
+        EwenVAOT02KFpKgAmZVFYv2zPn8pv8nEXGquk9CifuXPIUbv5mSmWbmsjFPV/8y6brqu0W77
+        523rHzRee/69LyNSpfSa6MoKaTHrJsMFn/qY32+dZVXclvXARKN2zYW6i9Ff+T7tD/rCFl2w
+        UfSw1Czu98J2TCGrp76dY/r5YnBU07bLXlqLXmZ/fRFtmBrKr9H2LfNXYKy3p7fgvU7xCSvF
+        1su9PKszMbTT29jva2bgju/sa4UD/sZcOXPbvWW7lmDLjgYezvmMIvY3RJT33XtsP+/+CVWL
+        e69POr7kzNas7CthWvXa39JUiMMx7/G6vLTo96YF227KSuUciFGaen5jmvB1EabbHpOL5hj5
+        7pLYdUOJpTgj0VCLuag4EQCKQHbCbgMAAA==
+X-CMS-MailID: 20200603035657epcas1p42d49b2423e6089bb3c98705bb0ef59b2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520034335epcas1p45a321a1a878fb7cd7b9c9ada0a474ef7
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+        <CGME20200520034335epcas1p45a321a1a878fb7cd7b9c9ada0a474ef7@epcas1p4.samsung.com>
+        <20200520034307.20435-7-andrew-sh.cheng@mediatek.com>
+        <64b81eea-641c-811d-9830-718b28db4188@samsung.com>
+        <1591098190.30729.15.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 23:19:48 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+Hi Andrew-sh.Cheng,
 
-> On Tue, Jun 02, 2020 at 04:55:27PM -0600, Alex Williamson wrote:
-> > On Wed, 29 Apr 2020 20:39:50 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Wed, Apr 29, 2020 at 05:48:44PM +0800, Dr. David Alan Gilbert wrote:
-> > > <snip>  
-> > > > > > > > > > > > > > > > An mdev type is meant to define a software compatible interface, so in
-> > > > > > > > > > > > > > > > the case of mdev->mdev migration, doesn't migrating to a different type
-> > > > > > > > > > > > > > > > fail the most basic of compatibility tests that we expect userspace to
-> > > > > > > > > > > > > > > > perform?  IOW, if two mdev types are migration compatible, it seems a
-> > > > > > > > > > > > > > > > prerequisite to that is that they provide the same software interface,
-> > > > > > > > > > > > > > > > which means they should be the same mdev type.
-> > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > In the hybrid cases of mdev->phys or phys->mdev, how does a    
-> > > > > > > > > > > > > > > management    
-> > > > > > > > > > > > > > > > tool begin to even guess what might be compatible?  Are we expecting
-> > > > > > > > > > > > > > > > libvirt to probe ever device with this attribute in the system?  Is
-> > > > > > > > > > > > > > > > there going to be a new class hierarchy created to enumerate all
-> > > > > > > > > > > > > > > > possible migrate-able devices?
-> > > > > > > > > > > > > > > >    
-> > > > > > > > > > > > > > > yes, management tool needs to guess and test migration compatible
-> > > > > > > > > > > > > > > between two devices. But I think it's not the problem only for
-> > > > > > > > > > > > > > > mdev->phys or phys->mdev. even for mdev->mdev, management tool needs
-> > > > > > > > > > > > > > > to
-> > > > > > > > > > > > > > > first assume that the two mdevs have the same type of parent devices
-> > > > > > > > > > > > > > > (e.g.their pciids are equal). otherwise, it's still enumerating
-> > > > > > > > > > > > > > > possibilities.
-> > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > > on the other hand, for two mdevs,
-> > > > > > > > > > > > > > > mdev1 from pdev1, its mdev_type is 1/2 of pdev1;
-> > > > > > > > > > > > > > > mdev2 from pdev2, its mdev_type is 1/4 of pdev2;
-> > > > > > > > > > > > > > > if pdev2 is exactly 2 times of pdev1, why not allow migration between
-> > > > > > > > > > > > > > > mdev1 <-> mdev2.    
-> > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > How could the manage tool figure out that 1/2 of pdev1 is equivalent 
-> > > > > > > > > > > > > > to 1/4 of pdev2? If we really want to allow such thing happen, the best
-> > > > > > > > > > > > > > choice is to report the same mdev type on both pdev1 and pdev2.    
-> > > > > > > > > > > > > I think that's exactly the value of this migration_version interface.
-> > > > > > > > > > > > > the management tool can take advantage of this interface to know if two
-> > > > > > > > > > > > > devices are migration compatible, no matter they are mdevs, non-mdevs,
-> > > > > > > > > > > > > or mix.
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > > as I know, (please correct me if not right), current libvirt still
-> > > > > > > > > > > > > requires manually generating mdev devices, and it just duplicates src vm
-> > > > > > > > > > > > > configuration to the target vm.
-> > > > > > > > > > > > > for libvirt, currently it's always phys->phys and mdev->mdev (and of the
-> > > > > > > > > > > > > same mdev type).
-> > > > > > > > > > > > > But it does not justify that hybrid cases should not be allowed. otherwise,
-> > > > > > > > > > > > > why do we need to introduce this migration_version interface and leave
-> > > > > > > > > > > > > the judgement of migration compatibility to vendor driver? why not simply
-> > > > > > > > > > > > > set the criteria to something like "pciids of parent devices are equal,
-> > > > > > > > > > > > > and mdev types are equal" ?
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > >     
-> > > > > > > > > > > > > > btw mdev<->phys just brings trouble to upper stack as Alex pointed out.     
-> > > > > > > > > > > > > could you help me understand why it will bring trouble to upper stack?
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > > I think it just needs to read src migration_version under src dev node,
-> > > > > > > > > > > > > and test it in target migration version under target dev node. 
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > > after all, through this interface we just help the upper layer
-> > > > > > > > > > > > > knowing available options through reading and testing, and they decide
-> > > > > > > > > > > > > to use it or not.
-> > > > > > > > > > > > >     
-> > > > > > > > > > > > > > Can we simplify the requirement by allowing only mdev<->mdev and 
-> > > > > > > > > > > > > > phys<->phys migration? If an customer does want to migrate between a 
-> > > > > > > > > > > > > > mdev and phys, he could wrap physical device into a wrapped mdev 
-> > > > > > > > > > > > > > instance (with the same type as the source mdev) instead of using vendor 
-> > > > > > > > > > > > > > ops. Doing so does add some burden but if mdev<->phys is not dominant 
-> > > > > > > > > > > > > > usage then such tradeoff might be worthywhile...
-> > > > > > > > > > > > > >    
-> > > > > > > > > > > > > If the interfaces for phys<->phys and mdev<->mdev are consistent, it makes no
-> > > > > > > > > > > > > difference to phys<->mdev, right?
-> > > > > > > > > > > > > I think the vendor string for a mdev device is something like:
-> > > > > > > > > > > > > "Parent PCIID + mdev type + software version", and
-> > > > > > > > > > > > > that for a phys device is something like:
-> > > > > > > > > > > > > "PCIID + software version".
-> > > > > > > > > > > > > as long as we don't migrate between devices from different vendors, it's
-> > > > > > > > > > > > > easy for vendor driver to tell if a phys device is migration compatible
-> > > > > > > > > > > > > to a mdev device according it supports it or not.    
-> > > > > > > > > > > > 
-> > > > > > > > > > > > It surprises me that the PCIID matching is a requirement; I'd assumed
-> > > > > > > > > > > > with this clever mdev name setup that you could migrate between two
-> > > > > > > > > > > > different models in a series, or to a newer model, as long as they
-> > > > > > > > > > > > both supported the same mdev view.
-> > > > > > > > > > > >     
-> > > > > > > > > > > hi Dave
-> > > > > > > > > > > the migration_version string is transparent to userspace, and is
-> > > > > > > > > > > completely defined by vendor driver.
-> > > > > > > > > > > I put it there just as an example of how vendor driver may implement it.
-> > > > > > > > > > > e.g.
-> > > > > > > > > > > the src migration_version string is "src PCIID + src software version", 
-> > > > > > > > > > > then when this string is write to target migration_version node,
-> > > > > > > > > > > the vendor driver in the target device will compare it with its own
-> > > > > > > > > > > device info and software version.
-> > > > > > > > > > > If different models are allowed, the write just succeeds even
-> > > > > > > > > > > PCIIDs in src and target are different.
-> > > > > > > > > > > 
-> > > > > > > > > > > so, it is the vendor driver to define whether two devices are able to
-> > > > > > > > > > > migrate, no matter their PCIIDs, mdev types, software versions..., which
-> > > > > > > > > > > provides vendor driver full flexibility.
-> > > > > > > > > > > 
-> > > > > > > > > > > do you think it's good?    
-> > > > > > > > > > 
-> > > > > > > > > > Yeh that's OK; I guess it's going to need to have a big table in their
-> > > > > > > > > > with all the PCIIDs in.
-> > > > > > > > > > The alternative would be to abstract it a little; e.g. to say it's
-> > > > > > > > > > an Intel-gpu-core-v4  and then it would be less worried about the exact
-> > > > > > > > > > clock speed etc - but yes you might be right htat PCIIDs might be best
-> > > > > > > > > > for checking for quirks.
-> > > > > > > > > >    
-> > > > > > > > > glad that you are agreed with it:)
-> > > > > > > > > I think the vendor driver still can choose a way to abstract a little
-> > > > > > > > > (e.g. Intel-gpu-core-v4...) if they think it's better. In that case, the
-> > > > > > > > > migration_string would be something like "Intel-gpu-core-v4 + instance
-> > > > > > > > > number + software version".
-> > > > > > > > > IOW, they can choose anything they think appropriate to identify migration
-> > > > > > > > > compatibility of a device.
-> > > > > > > > > But Alex is right, we have to prevent namespace overlapping. So I think
-> > > > > > > > > we need to ensure src and target devices are from the same vendors.
-> > > > > > > > > or, any other ideas?    
-> > > > > > > > 
-> > > > > > > > That's why I kept the 'Intel' in that example; or PCI vendor ID; I was    
-> > > > > > > Yes, it's a good idea!
-> > > > > > > could we add a line in the doc saying that
-> > > > > > > it is the vendor driver to add a unique string to avoid namespace
-> > > > > > > collision?    
-> > > > > > 
-> > > > > > So why don't we split the difference; lets say that it should start with
-> > > > > > the hex PCI Vendor ID.
-> > > > > >    
-> > > > > The problem is for mdev devices, if the parent devices are not PCI devices, 
-> > > > > they don't have PCI vendor IDs.    
-> > > > 
-> > > > Hmm it would be best not to invent a whole new way of giving unique
-> > > > idenitifiers for vendors if we can.
-> > > >     
-> > > what about leveraging the flags in vfio device info ?
-> > > 
-> > > #define VFIO_DEVICE_FLAGS_RESET (1 << 0)        /* Device supports reset */
-> > > #define VFIO_DEVICE_FLAGS_PCI   (1 << 1)        /* vfio-pci device */
-> > > #define VFIO_DEVICE_FLAGS_PLATFORM (1 << 2)     /* vfio-platform device */
-> > > #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)        /* vfio-amba device */
-> > > #define VFIO_DEVICE_FLAGS_CCW   (1 << 4)        /* vfio-ccw device */
-> > > #define VFIO_DEVICE_FLAGS_AP    (1 << 5)        /* vfio-ap device */
-> > > 
-> > > Then for migration_version string,
-> > > The first 64 bits are for device type, the second 64 bits are for device id.
-> > > e.g.
-> > > for PCI devices, it could be
-> > > VFIO_DEVICE_FLAGS_PCI + PCI ID.
-> > > 
-> > > Currently in the doc, we only define PCI devices to use PCI ID as the second
-> > > 64 bits. In future, if other types of devices want to support migration,
-> > > they can define their own parts of device id. e.g. use ACPI ID as the
-> > > second 64-bit...
-> > > 
-> > > sounds good?  
-> > 
-> > [dead thread resurrection alert]
-> > 
-> > Not really.  We're deep into territory that we were trying to avoid.
-> > We had previously defined the version string as opaque (not
-> > transparent) specifically because we did not want userspace to make
-> > assumptions about compatibility based on the content of the string.  It
-> > was 100% left to the vendor driver to determine compatibility.  The
-> > mdev type was the full extent of the first level filter that userspace
-> > could use to narrow the set of potentially compatible devices.  If we
-> > remove that due to physical device migration support, I'm not sure how
-> > we simplify the problem for userspace.
-> > 
-> > We need to step away from PCI IDs and parent devices.  We're not
-> > designing a solution that only works for PCI, there's no guarantee that
-> > parent devices are similar or even from the same vendor.
-> > 
-> > Does the mdev type sufficiently solve the problem for mdev devices?  If
-> > so, then what can we learn from it and how can we apply an equivalence
-> > to physical devices?  For example, should a vfio bus driver (vfio-pci
-> > or vfio-mdev) expose vfio_migration_type and vfio_migration_version
-> > attributes under the device in sysfs where the _type provides the first
-> > level, user transparent, matching string (ex. mdev type for mdev
-> > devices) while the _version provides the user opaque, vendor known
-> > compatibility test?
-> > 
-> > This pushes the problem out to the drivers where we can perhaps
-> > incorporate the module name to avoid collisions.  For example Yan's
-> > vendor extension proposal makes use of vfio-pci with extension modules
-> > loaded via an alias incorporating the PCI vendor and device ID.  So
-> > vfio-pci might use a type of "vfio-pci:$ALIAS".
-> > 
-> > It's still a bit messy that someone needs to go evaluate all these
-> > types between devices that exist and mdev devices that might exist if
-> > created, but I don't have any good ideas to resolve that (maybe a new
-> > class hierarchy?).  Thanks,  
-> 
-> hi Alex
-> 
-> yes, with the same mdev_type, user still has to enumerate all parent
-> devices and test between the supported mdev_types to know whether two mdev
-> devices are compatible.
-> maybe this is not a problem? in reality, it is the administrator that
-> specifies two devices and the management tool feedbacks compatibility
-> result. management tool is not required to pre-test and setup the
-> compatibility map beforehand.
+Do you know that why cannot show the patches sent from you on mailing list?
 
-That's exactly the purpose of this interface though is to give the
-management tools some indication that a migration has a chance of
-working.
- 
-> If so, then the only problem left is namespace collision. 
-> given that the migration_version nodes is exported by vendor driver,
-> maybe it can also embed its module name in the migration version string,
-> like "i915" in "i915-GVTg_V5_8", as you suggested above.
+Even if you sent them to linux-pm mailing list, I cannot find
+your patches on linux-pm's patchwork[1] and others.
+[1] https://patchwork.kernel.org/project/linux-pm/list/
 
-No, we've already decided that the version string is opaque, the user
-is not to attempt to infer anything from it.  That's why I've suggested
-another attribute in sysfs that does present type information that a
-user can compare.  Thanks,
+Could you find you patch on mailing list?
+Do you use git send-email when you send these patches?
 
-Alex
+I used the thunderbird tool and gmail for reading the patches.
+When I tried to read the original source of this patch,
+it looks like that the body of patch is encoded.
+I cannot read the plain text of patch body.
+- When gmail, use 'Show original'
+- When thunderbird, use 'More -> View Source'
 
-> with module name as the first mandatory field in version string and
-> skipping the enumeration/testing problem, we can happyly unify migration
-> across mdev and phys devices. e.g. it is possible to migrate between
-> VFs in sriov and mdevs in siov to achieve backwards compatibility.
+If I'm missing something to check this patch,
+please let me know. I'll fix my environment.
+It is strange situation on my case.
+
+
+On 6/2/20 8:43 PM, andrew-sh.cheng wrote:
+> On Thu, 2020-05-28 at 15:14 +0900, Chanwoo Choi wrote:
+>> Hi Andrew-sh.Cheng,
+>>
+>> Thanks for your posting. I like this approach absolutely.
+>> I think that it is necessary. When I developed the embedded product,
+>> I needed this feature always. 
+>>
+>> I add the comments on below.
+>>
+>>
+>> And the following email is not valid. So, I dropped this email
+>> from Cc list.
+>> Saravana Kannan <skannan@codeaurora.org>
+>>
+>>
+>> On 5/20/20 12:43 PM, Andrew-sh.Cheng wrote:
+>>> From: Saravana Kannan <skannan@codeaurora.org>
+>>>
+>>> Many CPU architectures have caches that can scale independent of the
+>>> CPUs. Frequency scaling of the caches is necessary to make sure that the
+>>> cache is not a performance bottleneck that leads to poor performance and
+>>> power. The same idea applies for RAM/DDR.
+>>>
+>>> To achieve this, this patch adds support for cpu based scaling to the
+>>> passive governor. This is accomplished by taking the current frequency
+>>> of each CPU frequency domain and then adjust the frequency of the cache
+>>> (or any devfreq device) based on the frequency of the CPUs. It listens
+>>> to CPU frequency transition notifiers to keep itself up to date on the
+>>> current CPU frequency.
+>>>
+>>> To decide the frequency of the device, the governor does one of the
+>>> following:
+>>> * Derives the optimal devfreq device opp from required-opps property of
+>>>   the parent cpu opp_table.
+>>>
+>>> * Scales the device frequency in proportion to the CPU frequency. So, if
+>>>   the CPUs are running at their max frequency, the device runs at its
+>>>   max frequency. If the CPUs are running at their min frequency, the
+>>>   device runs at its min frequency. It is interpolated for frequencies
+>>>   in between.
+>>>
+>>> Andrew-sh.Cheng change
+>>> dev_pm_opp_xlate_opp to dev_pm_opp_xlate_required_opp devfreq->max_freq
+>>> to devfreq->user_min_freq_req.data.freq.qos->min_freq.target_value
+>>> for kernel-5.7
+>>>
+>>> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>>> [Sibi: Integrated cpu-freqmap governor into passive_governor]
+>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>>> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+>>> ---
+>>>  drivers/devfreq/Kconfig            |   2 +
+>>>  drivers/devfreq/governor_passive.c | 278 ++++++++++++++++++++++++++++++++++---
+>>>  include/linux/devfreq.h            |  40 +++++-
+>>>  3 files changed, 299 insertions(+), 21 deletions(-)
+>>>
+>>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>>> index 0b1df12e0f21..d9067950af6a 100644
+>>> --- a/drivers/devfreq/Kconfig
+>>> +++ b/drivers/devfreq/Kconfig
+>>> @@ -73,6 +73,8 @@ config DEVFREQ_GOV_PASSIVE
+>>>  	  device. This governor does not change the frequency by itself
+>>>  	  through sysfs entries. The passive governor recommends that
+>>>  	  devfreq device uses the OPP table to get the frequency/voltage.
+>>> +	  Alternatively the governor can also be chosen to scale based on
+>>> +	  the online CPUs current frequency.
+>>>  
+>>>  comment "DEVFREQ Drivers"
+>>>  
+>>> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+>>> index 2d67d6c12dce..7dcda02a5bb7 100644
+>>> --- a/drivers/devfreq/governor_passive.c
+>>> +++ b/drivers/devfreq/governor_passive.c
+>>> @@ -8,11 +8,89 @@
+>>>   */
+>>>  
+>>>  #include <linux/module.h>
+>>> +#include <linux/cpu.h>
+>>> +#include <linux/cpufreq.h>
+>>> +#include <linux/cpumask.h>
+>>>  #include <linux/device.h>
+>>>  #include <linux/devfreq.h>
+>>> +#include <linux/slab.h>
+>>>  #include "governor.h"
+>>>  
+>>> -static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>>> +static unsigned int xlate_cpufreq_to_devfreq(struct devfreq_passive_data *data,
+>>
+>> Need to change 'unsigned int' to 'unsigned long'
+> Get it.
+
+If you add the blank line before/after of your reply,
+it is better to catch your reply. Please add the blank line for me.
+
+>> .
+>>
+>>> +					     unsigned int cpu)
+>>> +{
+>>> +	unsigned int cpu_min, cpu_max, dev_min, dev_max, cpu_percent, max_state;
+>>
+>> Better to define them separately as following and then need to rename
+>> the variable. Usually, use the 'min_freq' and 'max_freq' word for
+>> the minimum/maximum frequency.
+>>
+>> 	unsigned int cpu_min_freq, cpu_max_freq, cpu_curr_freq, cpu_percent;
+>> 	unsigned long dev_min_freq, dev_max_freq, dev_max_state,
+>>
+>> The devfreq used 'unsigned long'. The cpufreq used 'unsigned long'
+>> and 'unsigned int'. You need to handle them properly.
+> Get it.
+> For cpu_freq, I separate it into "unsigned long cpu_curr_freq" and
+> "unsigned int cpu_curr_freq_khz"
+>>
+>>
+>>> +	struct devfreq_cpu_state *cpu_state = data->cpu_state[cpu];
+>>> +	struct devfreq *devfreq = (struct devfreq *)data->this;
+>>> +	unsigned long *freq_table = devfreq->profile->freq_table;
+>>
+>> In this function, use 'cpu' work for cpufreq and use 'dev' for devfreq.
+>> So, I think 'dev_freq_table' is proper name instead of 'freq_table'
+>> for the readability.
+>>
+>> 	freq_table -> dev_freq_table
+>>
+>>> +	struct dev_pm_opp *opp = NULL, *cpu_opp = NULL;
+>>
+>> In the get_target_freq_with_devfreq(), use 'p_opp' indicating
+>> the OPP of parent device. For the consistency, I think that
+>> use 'p_opp' instead of 'cpu_opp'. 
+>>
+>>> +	unsigned long cpu_freq, freq;
+>>
+>> Define the 'cpu_freq' on above with cpu_min_freq/cpu_max_freq definition.
+>> 	cpu_freq -> cpu_curr_freq.
+> Get it.
+> Will modify them for readability.
+>>
+>>> +
+>>> +	if (!cpu_state || cpu_state->first_cpu != cpu ||
+>>> +	    !cpu_state->opp_table || !devfreq->opp_table)
+>>> +		return 0;
+>>> +
+>>> +	cpu_freq = cpu_state->freq * 1000;
+>>> +	cpu_opp = devfreq_recommended_opp(cpu_state->dev, &cpu_freq, 0);
+>>> +	if (IS_ERR(cpu_opp))
+>>> +		return 0;
+>>> +
+>>> +	opp = dev_pm_opp_xlate_required_opp(cpu_state->opp_table,
+>>> +					    devfreq->opp_table, cpu_opp);
+>>> +	dev_pm_opp_put(cpu_opp);
+>>> +
+>>> +	if (!IS_ERR(opp)) {
+>>> +		freq = dev_pm_opp_get_freq(opp);
+>>> +		dev_pm_opp_put(opp);
+>>
+>> Better to add the 'out' goto statement.
+>> If you use 'goto out', you can reduce the one indentation
+>> without 'else' statement.
+> Get it.
+>> 	
+>>
+>>> +	} else {
+>>
+>> As I commented, when dev_pm_opp_xlate_required_opp() return successfully
+>> , use 'goto out'. We can remove 'else' and then reduce the unneeded indentation.
+>>
+>>
+>>> +		/* Use Interpolation if required opps is not available */
+>>> +		cpu_min = cpu_state->min_freq;
+>>> +		cpu_max = cpu_state->max_freq;
+>>> +		cpu_freq = cpu_state->freq;
+>>> +
+>>> +		if (freq_table) {
+>>> +			/* Get minimum frequency according to sorting order */
+>>> +			max_state = freq_table[devfreq->profile->max_state - 1];
+>>> +			if (freq_table[0] < max_state) {
+>>> +				dev_min = freq_table[0];
+>>> +				dev_max = max_state;
+>>> +			} else {
+>>> +				dev_min = max_state;
+>>> +				dev_max = freq_table[0];
+>>> +			}
+>>> +		} else {
+>>> +			if (devfreq->user_max_freq_req.data.freq.qos->max_freq.target_value
+>>> +			    <= devfreq->user_min_freq_req.data.freq.qos->min_freq.target_value)
+>>> +				return 0;
+>>> +			dev_min =
+>>> +			devfreq->user_min_freq_req.data.freq.qos->min_freq.target_value;
+>>> +			dev_max =
+>>> +			devfreq->user_max_freq_req.data.freq.qos->max_freq.target_value;
+>>
+>> I think it is not proper to access the variable of pm_qos structure directly.
+>> Instead of direct access, you have to use the exported PM QoS function such as
+>> - pm_qos_read_value(devfreq->dev.parent, DEV_PM_QOS_MIN_FREQUENCY);
+>> - pm_qos_read_value(devfreq->dev.parent, DEV_PM_QOS_MAX_FREQUENCY);
+> Get it.
+>>
+>>> +		}
+>>> +		cpu_percent = ((cpu_freq - cpu_min) * 100) / cpu_max - cpu_min;
+>>> +		freq = dev_min + mult_frac(dev_max - dev_min, cpu_percent, 100);
+>>> +	}
+>>
+>>
+>> I think that you better to add 'out' jump label as following:
+>>
+>> out:
+>>
+>>> +
+>>> +	return freq;
+>>> +}
+>>> +
+>>> +static int get_target_freq_with_cpufreq(struct devfreq *devfreq,
+>>> +					unsigned long *freq)
+>>> +{
+>>> +	struct devfreq_passive_data *p_data =
+>>> +				(struct devfreq_passive_data *)devfreq->data;
+>>> +	unsigned int cpu, target_freq = 0;
+>>
+>> Need to define 'target_freq' with 'unsigned long' type.
+> Get it.
+>>
+>>> +
+>>> +	for_each_online_cpu(cpu)
+>>> +		target_freq = max(target_freq,
+>>> +				  xlate_cpufreq_to_devfreq(p_data, cpu));
+>>> +
+>>> +	*freq = target_freq;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int get_target_freq_with_devfreq(struct devfreq *devfreq,
+>>>  					unsigned long *freq)
+>>>  {
+>>>  	struct devfreq_passive_data *p_data
+>>> @@ -23,16 +101,6 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>>>  	int i, count, ret = 0;
+>>>  
+>>>  	/*
+>>> -	 * If the devfreq device with passive governor has the specific method
+>>> -	 * to determine the next frequency, should use the get_target_freq()
+>>> -	 * of struct devfreq_passive_data.
+>>> -	 */
+>>> -	if (p_data->get_target_freq) {
+>>> -		ret = p_data->get_target_freq(devfreq, freq);
+>>> -		goto out;
+>>> -	}
+>>> -
+>>> -	/*
+>>>  	 * If the parent and passive devfreq device uses the OPP table,
+>>>  	 * get the next frequency by using the OPP table.
+>>>  	 */
+>>> @@ -102,6 +170,37 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>>>  	return ret;
+>>>  }
+>>>  
+>>> +static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>>> +					   unsigned long *freq)
+>>> +{
+>>> +	struct devfreq_passive_data *p_data =
+>>> +				(struct devfreq_passive_data *)devfreq->data;
+>>> +	int ret;
+>>> +
+>>> +	/*
+>>> +	 * If the devfreq device with passive governor has the specific method
+>>> +	 * to determine the next frequency, should use the get_target_freq()
+>>> +	 * of struct devfreq_passive_data.
+>>> +	 */
+>>> +	if (p_data->get_target_freq)
+>>> +		return p_data->get_target_freq(devfreq, freq);
+>>> +
+>>> +	switch (p_data->parent_type) {
+>>> +	case DEVFREQ_PARENT_DEV:
+>>> +		ret = get_target_freq_with_devfreq(devfreq, freq);
+>>> +		break;
+>>> +	case CPUFREQ_PARENT_DEV:
+>>> +		ret = get_target_freq_with_cpufreq(devfreq, freq);
+>>> +		break;
+>>> +	default:
+>>> +		ret = -EINVAL;
+>>> +		dev_err(&devfreq->dev, "Invalid parent type\n");
+>>> +		break;
+>>> +	}
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>>  static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+>>>  {
+>>>  	int ret;
+>>> @@ -156,6 +255,140 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
+>>>  	return NOTIFY_DONE;
+>>>  }
+>>>  
+>>> +static int cpufreq_passive_notifier_call(struct notifier_block *nb,
+>>> +					 unsigned long event, void *ptr)
+>>> +{
+>>> +	struct devfreq_passive_data *data =
+>>> +			container_of(nb, struct devfreq_passive_data, nb);
+>>> +	struct devfreq *devfreq = (struct devfreq *)data->this;
+>>> +	struct devfreq_cpu_state *cpu_state;
+>>> +	struct cpufreq_freqs *freq = ptr;
+>>
+>> How about changing 'freq' to 'cpu_freqs'?
+>>
+>> In the drivers/cpufreq/cpufreq.c, use 'freqs' name indicating
+>> the instance of 'struct cpufreq_freqs'. And in order to
+>> identfy, how about adding 'cpu_' prefix for variable name?
+>>
+>>> +	unsigned int current_freq;
+>>
+>> Need to define curr_freq with 'unsigned long' type
+>> and better to use 'curr_freq' variable name.
+> It is good to change current_freq to curr_freq, but why should it us
+> 'unsigned long'?
+> I think it is 'unsigned int'.
+
+I think that 'curr_freq' is proper. Yes, it is 'unsigned int'.
+When you changing the cpu frequency to device frequency,
+recommend to handle them between unsigned int and unsigned long.
+
+>>
+>>> +	int ret;
+>>> +
+>>> +	if (event != CPUFREQ_POSTCHANGE || !freq ||
+>>> +	    !data->cpu_state[freq->policy->cpu])
+>>> +		return 0;
+>>> +
+>>> +	cpu_state = data->cpu_state[freq->policy->cpu];
+>>> +	if (cpu_state->freq == freq->new)
+>>> +		return 0;
+>>> +
+>>> +	/* Backup current freq and pre-update cpu state freq*/
+>>> +	current_freq = cpu_state->freq;
+>>> +	cpu_state->freq = freq->new;
+>>> +
+>>> +	mutex_lock(&devfreq->lock);
+>>> +	ret = update_devfreq(devfreq);
+>>> +	mutex_unlock(&devfreq->lock);
+>>> +	if (ret) {
+>>> +		cpu_state->freq = current_freq;
+>>> +		dev_err(&devfreq->dev, "Couldn't update the frequency.\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int cpufreq_passive_register(struct devfreq_passive_data **p_data)
+>>> +{
+>>> +	struct devfreq_passive_data *data = *p_data;
+>>> +	struct devfreq *devfreq = (struct devfreq *)data->this;
+>>> +	struct device *dev = devfreq->dev.parent;
+>>> +	struct opp_table *opp_table = NULL;
+>>> +	struct devfreq_cpu_state *state;
+>>
+>> For the readability, I thinkt 'cpu_state' is proper instead of 'state'.
+> Get it.
+>>
+>>> +	struct cpufreq_policy *policy;
+>>> +	struct device *cpu_dev;
+>>> +	unsigned int cpu;
+>>> +	int ret;
+>>> +
+>>> +	get_online_cpus();
+>>
+>> Add blank line.
+> Get it.
+>>
+>>> +	data->nb.notifier_call = cpufreq_passive_notifier_call;
+>>> +	ret = cpufreq_register_notifier(&data->nb,
+>>> +					CPUFREQ_TRANSITION_NOTIFIER);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Couldn't register cpufreq notifier.\n");
+>>> +		data->nb.notifier_call = NULL;
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	/* Populate devfreq_cpu_state */
+>>> +	for_each_online_cpu(cpu) {
+>>> +		if (data->cpu_state[cpu])
+>>> +			continue;
+>>> +
+>>> +		policy = cpufreq_cpu_get(cpu);
+>>
+>> cpufreq_cpu_get() might return 'NULL'. I think you need to handle
+>> return value as following:
+>>
+>> 		if (!policy) {
+>> 			ret = -EINVAL;
+>> 			goto out;
+>> 		} else if (PTR_ERR(policy) == -EPROBE_DEFER) {
+>> 			goto out;
+>> 		} else if (IS_ERR(policy) {
+>> 			ret = PTR_ERR(policy);
+>> 			dev_err(dev, "Couldn't get the cpufreq_poliy.\n");
+>> 			goto out;
+>> 		}
+>>
+>> If cpufreq_cpu_get() return successfully, to do next.
+>> It reduces the one indentaion.
+>>
+>>
+> Get it.
+>>
+>>> +		if (policy) {
+>>> +			state = kzalloc(sizeof(*state), GFP_KERNEL);
+>>> +			if (!state) {
+>>> +				ret = -ENOMEM;
+>>> +				goto out;
+>>> +			}
+>>> +
+>>> +			cpu_dev = get_cpu_device(cpu);
+>>> +			if (!cpu_dev) {
+>>> +				dev_err(dev, "Couldn't get cpu device.\n");
+>>> +				ret = -ENODEV;
+>>> +				goto out;
+>>> +			}
+>>> +
+>>> +			opp_table = dev_pm_opp_get_opp_table(cpu_dev);
+>>> +			if (IS_ERR(devfreq->opp_table)) {
+>>> +				ret = PTR_ERR(opp_table);
+>>> +				goto out;
+>>> +			}
+>>> +
+>>> +			state->dev = cpu_dev;
+>>> +			state->opp_table = opp_table;
+>>> +			state->first_cpu = cpumask_first(policy->related_cpus);
+>>> +			state->freq = policy->cur;
+>>> +			state->min_freq = policy->cpuinfo.min_freq;
+>>> +			state->max_freq = policy->cpuinfo.max_freq;
+>>> +			data->cpu_state[cpu] = state;
+>>
+>> Add blank line.
+>>
+>>> +			cpufreq_cpu_put(policy);
+>>> +		} else {
+>>> +			ret = -EPROBE_DEFER;
+>>> +			goto out;
+>>> +		}
+>>> +	}
+>>
+>> Add blank line.
+> Get it.
+>>> +out:
+>>> +	put_online_cpus();
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	/* Update devfreq */
+>>> +	mutex_lock(&devfreq->lock);
+>>> +	ret = update_devfreq(devfreq);
+>>> +	mutex_unlock(&devfreq->lock);
+>>> +	if (ret)
+>>> +		dev_err(dev, "Couldn't update the frequency.\n");
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int cpufreq_passive_unregister(struct devfreq_passive_data **p_data)
+>>> +{
+>>> +	struct devfreq_passive_data *data = *p_data;
+>>> +	struct devfreq_cpu_state *cpu_state;
+>>> +	int cpu;
+>>> +
+>>> +	if (data->nb.notifier_call)
+>>> +		cpufreq_unregister_notifier(&data->nb,
+>>> +					    CPUFREQ_TRANSITION_NOTIFIER);
+>>> +
+>>> +	for_each_possible_cpu(cpu) {
+>>> +		cpu_state = data->cpu_state[cpu];
+>>> +		if (cpu_state) {
+>>> +			if (cpu_state->opp_table)
+>>> +				dev_pm_opp_put_opp_table(cpu_state->opp_table);
+>>> +			kfree(cpu_state);
+>>> +			cpu_state = NULL;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>>>  				unsigned int event, void *data)
+>>>  {
+>>> @@ -165,7 +398,7 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>>>  	struct notifier_block *nb = &p_data->nb;
+>>>  	int ret = 0;
+>>>  
+>>> -	if (!parent)
+>>> +	if (p_data->parent_type == DEVFREQ_PARENT_DEV && !parent)
+>>>  		return -EPROBE_DEFER;
+>>
+>> If you modify the devfreq_passive_event_handler() as following,
+>> you can move this condition for DEVFREQ_PARENT_DEV into 
+>> (register|unregister)_parent_dev_notifier.
+>>
+>> 	switch (event) {                                                                                  
+>> 	case DEVFREQ_GOV_START:                                               
+>> 		ret = register_parent_dev_notifier(p_data);
+>> 		break;
+>> 	case DEVFREQ_GOV_STOP:                                             
+>> 		ret = unregister_parent_dev_notifier(p_data);
+>> 		break;
+>> 	default: 
+>> 		ret = -EINVAL;
+>> 		break;
+>> 	}
+>>                                                                                               
+>> 	return ret;
+>>
+> Get it.
+>>>  
+>>>  	switch (event) {
+>>> @@ -173,13 +406,24 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>>>  		if (!p_data->this)
+>>>  			p_data->this = devfreq;
+>>>  
+>>> -		nb->notifier_call = devfreq_passive_notifier_call;
+>>> -		ret = devfreq_register_notifier(parent, nb,
+>>> -					DEVFREQ_TRANSITION_NOTIFIER);
+>>> +		if (p_data->parent_type == DEVFREQ_PARENT_DEV) {
+>>> +			nb->notifier_call = devfreq_passive_notifier_call;
+>>> +			ret = devfreq_register_notifier(parent, nb,
+>>> +						DEVFREQ_TRANSITION_NOTIFIER);
+>>> +		} else if (p_data->parent_type == CPUFREQ_PARENT_DEV) {
+>>> +			ret = cpufreq_passive_register(&p_data);
+>>
+>> I think that we better to collect the code related to notifier registration
+>> into one function like devfreq_pass_register_notifier() instead of
+>> cpufreq_passive_register() as following: I think it is more simple and readable.
+>>
+>> If you have more proper function name of register_parent_dev_notifier,
+>> please give your opinion.
+>>
+>> 	int register_parent_dev_notifier(struct devfreq_passive_data **p_data)
+>> 		switch (p_data->parent_type) {
+>> 		case DEVFREQ_PARENT_DEV:
+>> 			nb->notifier_call = devfreq_passive_notifier_call;
+>> 			ret = devfreq_register_notifier(parent, nb,
+>> 			break;
+>> 		case CPUFREQ_PARENT_DEV:
+>> 			cpufreq_register_notifier(...)
+>> 			...
+>> 			break;
+>> 		}
+> Not fully understanding.
+> Do you mean expanding cpufreq_passive_register()?
+
+Yes and rename it for both cpufreq and devfreq.
+
+> I think leave it in function will be with clean for this code segment.
+
+I want that one function handle the notifier register
+for both cpufreq and devfreq so that we make it more simply as following:
+On the step hanling the governor event, don't need to consider
+the type of parent device of devfreq deivce with this style.
+
+	case DEVFREQ_GOV_START:
+		ret = register_notifier(...);
+		break;
+	case DEVFREQ_GOV_STOP:
+		ret = unregister_notifier(...);
+		break;
+
 > 
-> Thanks
-> Yan
-> 
-> 
-> 
-> >   
+>> 		
+>>
+>>> +		} else {
+>>> +			ret = -EINVAL;
+>>> +		}
+>>>  		break;
+>>>  	case DEVFREQ_GOV_STOP:
+>>> -		WARN_ON(devfreq_unregister_notifier(parent, nb,
+>>> -					DEVFREQ_TRANSITION_NOTIFIER));
+>>> +		if (p_data->parent_type == DEVFREQ_PARENT_DEV)
+>>> +			WARN_ON(devfreq_unregister_notifier(parent, nb,
+>>> +						DEVFREQ_TRANSITION_NOTIFIER));
+>>> +		else if (p_data->parent_type == CPUFREQ_PARENT_DEV)
+>>> +			cpufreq_passive_unregister(&p_data);
+>>> +		else
+>>> +			ret = -EINVAL;
+>>
+>> ditto. unregister_parent_dev_notifier(struct devfreq_passive_data **p_data)
+> Get it.
+
+ditto. As I aboved commented.
+
+>>
+>>>  		break;
+>>>  	default:
+>>>  		break;
+>>> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+>>> index a4b19d593151..04ce576fd6f1 100644
+>>> --- a/include/linux/devfreq.h
+>>> +++ b/include/linux/devfreq.h
+>>> @@ -278,6 +278,32 @@ struct devfreq_simple_ondemand_data {
+>>>  
+>>>  #if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+>>>  /**
+>>> + * struct devfreq_cpu_state - holds the per-cpu state
+>>> + * @freq:	the current frequency of the cpu.
+>>> + * @min_freq:	the min frequency of the cpu.
+>>> + * @max_freq:	the max frequency of the cpu.
+>>> + * @first_cpu:	the cpumask of the first cpu of a policy.
+>>> + * @dev:	reference to cpu device.
+>>> + * @opp_table:	reference to cpu opp table.
+>>> + *
+>>> + * This structure stores the required cpu_state of a cpu.
+>>> + * This is auto-populated by the governor.
+>>> + */
+>>> +struct devfreq_cpu_state {> +	unsigned int freq;
+>>
+>> It is better to change from 'freq' to 'curr_freq'
+>> for more correct expression.
+> Get it.
+>>
+>>> +	unsigned int min_freq;
+>>> +	unsigned int max_freq;
+>>> +	unsigned int first_cpu;
+>>> +	struct device *dev;
+>>
+>> How about changing the name 'dev' to 'cpu_dev'?
+> Okay.
+>>
+>>
+>>> +	struct opp_table *opp_table;
+>>> +};
+>>
+>> devfreq_cpu_state is only handled by within driver/devfreq/governor_passive.c.
+>>
+>> So, you can move it into drivers/devfreq/governor_passive.c
+>> and just add the definition into include/linux/devfreq.h as following:
+>> It is able to prevent the access of variable of 'struct devfreq_cpu_state'
+>> outside.
+>>
+>> 	struct devfreq_cpu_state;
+> Get it.
+>>
+>>> +
+>>> +enum devfreq_parent_dev_type {
+>>> +	DEVFREQ_PARENT_DEV,
+>>> +	CPUFREQ_PARENT_DEV,
+>>> +};
+>>> +
+>>> +/**
+>>>   * struct devfreq_passive_data - ``void *data`` fed to struct devfreq
+>>>   *	and devfreq_add_device
+>>>   * @parent:	the devfreq instance of parent device.
+>>> @@ -288,13 +314,15 @@ struct devfreq_simple_ondemand_data {
+>>>   *			using governors except for passive governor.
+>>>   *			If the devfreq device has the specific method to decide
+>>>   *			the next frequency, should use this callback.
+>>> - * @this:	the devfreq instance of own device.
+>>> - * @nb:		the notifier block for DEVFREQ_TRANSITION_NOTIFIER list
+>>> + * @parent_type		parent type of the device
+>>
+>> Need to add ':' at the end of word. -> "parent_type:".
+>>
+>>> + * @this:		the devfreq instance of own device.
+>>> + * @nb:			the notifier block for DEVFREQ_TRANSITION_NOTIFIER list
+>>
+>> I knew that you make them with same indentation.
+>> But, actually, it is not related to this patch like clean-up code.
+>> Even if it is not pretty, you better to don't touch 'this' and 'nb' indentaion.
+> Get it.
+>>
+>>> + * @cpu_state:		the state min/max/current frequency of all online cpu's
+>>>   *
+>>>   * The devfreq_passive_data have to set the devfreq instance of parent
+>>>   * device with governors except for the passive governor. But, don't need to
+>>> - * initialize the 'this' and 'nb' field because the devfreq core will handle
+>>> - * them.
+>>> + * initialize the 'this', 'nb' and 'cpu_state' field because the devfreq core
+>>> + * will handle them.
+>>>   */
+>>>  struct devfreq_passive_data {
+>>>  	/* Should set the devfreq instance of parent device */
+>>> @@ -303,9 +331,13 @@ struct devfreq_passive_data {
+>>>  	/* Optional callback to decide the next frequency of passvice device */
+>>>  	int (*get_target_freq)(struct devfreq *this, unsigned long *freq);
+>>>  
+>>> +	/* Should set the type of parent device */
+>>> +	enum devfreq_parent_dev_type parent_type;
+>>> +
+>>>  	/* For passive governor's internal use. Don't need to set them */
+>>>  	struct devfreq *this;
+>>>  	struct notifier_block nb;
+>>> +	struct devfreq_cpu_state *cpu_state[NR_CPUS];
+>>>  };
+>>>  #endif
+>>>  
+>>>
+>>
+>>
 > 
 
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
