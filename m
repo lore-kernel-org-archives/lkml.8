@@ -2,127 +2,370 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18303C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F962C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16C120738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5503E20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591152061;
-	bh=hMTZ0FxqVIqwxc4DoXgBc2TMxu3MOb8j4MrnOnw+cJY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A07rpZmK/0kXk0DHI+Fk2yMdNXwImar0I5N0FNr1fKxmJFDC5TdgIaTQfNupCW8LQ
-	 TJavQVFB+FyHYINzidSEWRlEoDDCDZP/RPqfRHUSo8hpLb+P4qz0cFufdPR3Bzy/3F
-	 NvYvOv99z70QUYXrmqgWq/PIwxwVVDHqgeLss65U=
+	s=default; t=1591152067;
+	bh=cCvjXgEn1Ohxz3CL94eI0Vlyg5ZV4NvxnRLMdRBBZKY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mWPld/Nha/ZXJ6hxBqamoqirqYDG7WcWoOkNmBaSzD4syCZfGu+uMjR6dW+qG1R5u
+	 +gmxiQWLz48yj7peNQtcr9tpUxGRL0JWBVdt1GoOPM+6Zw1v9tE6CK7AftdSIKQ4of
+	 liUC0cgFNoARICIJzGOA0YGDQt8lDyZmbZ0SLH1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgFCCk7 (ORCPT
+        id S1726057AbgFCClG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFCCk5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:40:57 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61182C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 19:40:56 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m18so770160ljo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 19:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zTgMCCg/n7vIKmnl7JnJOYWZtJtsVV/Gf24uT9lr2Aw=;
-        b=QcTPtcnEFRe4wGMNruzjSvrdchyjYkSAIk5hEnLYVqjEeoZ4zrQs/W1xUpzehhnR8c
-         P327F8+VJu1M6lTDNEqANb4RW5ovuuGTM3+tD1GzoEYxzJget2it2p/ORrwwDG6+0K97
-         N/TKfXmUqCnobORfjbBlOHbJDMbbld37vZe0A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zTgMCCg/n7vIKmnl7JnJOYWZtJtsVV/Gf24uT9lr2Aw=;
-        b=fRApITz354Hm6e2RkJ/GxWDJrx0aB1Z1z0M01VQRLZMX1rZFOKWX586oQwmOGSaSJO
-         IqL68HFXG5JBELQ8KsV2FXBTf8QU6qvfrMV4OGnL3lf2d+HYZnNDKEPgRdSsgKo9Bsi4
-         IFZIhRtBycNzwSo6uKfxBFrLx7LpKhlZmAk5bcfe0mMr04aaA6EIePNlvUJDRsJ+hA65
-         ZSO+7yPUYYJB02IxWPOPEYstx3VamXjwzBJ7jShz6xou5fmlZc9lxtuf+ktoBFH579UJ
-         7uYxIplJaXIncmZgYW/VjhXiuXac21h0SPK4lz5pEBS2INd3DwQascSpG7/ZoZDRzI73
-         zzjg==
-X-Gm-Message-State: AOAM531p25cZmK+tGaG+Rm/UaZNaWDjz2VKt+YSWfh2/lXzgyhT6oLlw
-        7uPRrJk4cKCL5Aq+rj0EY9ud+3PMIGo=
-X-Google-Smtp-Source: ABdhPJxZLK0SP7nyASnDV2y4o/1AkBbu7ur2neuonZm3gDg072PWBzxANyfNUpWHoPQ71cifCc24zQ==
-X-Received: by 2002:a2e:9081:: with SMTP id l1mr980156ljg.81.1591152053712;
-        Tue, 02 Jun 2020 19:40:53 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id t4sm164364ljo.36.2020.06.02.19.40.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 19:40:52 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id h188so317217lfd.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 19:40:51 -0700 (PDT)
-X-Received: by 2002:a05:6512:62:: with SMTP id i2mr1173928lfo.152.1591152051293;
- Tue, 02 Jun 2020 19:40:51 -0700 (PDT)
+        Tue, 2 Jun 2020 22:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgFCClF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:41:05 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A5620663;
+        Wed,  3 Jun 2020 02:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591152063;
+        bh=cCvjXgEn1Ohxz3CL94eI0Vlyg5ZV4NvxnRLMdRBBZKY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KxJq4A8fSlJGPI8d9MIkyItvDyidqyBTiOCdMuxxiSiv8W7p3Ya//2pwqGJfAL1f/
+         6pgkMnIRSh5M9ebwCca+sQKygYb4QN5w+3NiERUZD8M8IgjCIlnXVbGH7CrX9nFhnV
+         AUtnI0DNFQ3r9rVwG51FWjeZEELPndPMXQo0tK18=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v3 6/7] selftests/ftrace: Support ":tracer" suffix for requires
+Date:   Wed,  3 Jun 2020 11:40:59 +0900
+Message-Id: <159115205909.70027.12620980780191282115.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159115200085.70027.6141550347953439240.stgit@devnote2>
+References: <159115200085.70027.6141550347953439240.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <20200602162644.GE8204@magnolia>
-In-Reply-To: <20200602162644.GE8204@magnolia>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 2 Jun 2020 19:40:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgeiqB0TH_V2uTd2CX2hks+3TW344j73ftJFjqUteTxXA@mail.gmail.com>
-Message-ID: <CAHk-=wgeiqB0TH_V2uTd2CX2hks+3TW344j73ftJFjqUteTxXA@mail.gmail.com>
-Subject: Re: [GIT PULL] xfs: new code for 5.8 (now with fixed To line)
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 9:26 AM Darrick J. Wong <djwong@kernel.org> wrote:
->
-> fs/xfs/xfs_log_recover.c                           | 2561 ++------------------
->  102 files changed, 4244 insertions(+), 4817 deletions(-)
+Add ":tracer" suffix support for the requires list, so that
+the testcase can list up the required tracer (e.g. function)
+to the requires list.
 
-Interestingly, the changes to that xfs_log_recover.c file really seem
-to break the default git diff algorithm (the linear-space Myers'
-algorithm)
+For example, if the testcase requires function_graph tracer,
+it can write requires list as below instead of checking
+available_tracers.
 
-The default settings give me
+# requires: function_graph:tracer
 
- fs/xfs/xfs_log_recover.c                           | 2801 ++------------------
- 102 files changed, 4366 insertions(+), 4939 deletions(-)
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+---
+ Changes in v3:
+  - Update template according to the previous change in the series.
+---
+ .../ftrace/test.d/ftrace/fgraph-filter-stack.tc    |    7 +------
+ .../ftrace/test.d/ftrace/fgraph-filter.tc          |    7 +------
+ .../ftrace/test.d/ftrace/func-filter-glob.tc       |    7 +------
+ .../test.d/ftrace/func-filter-notrace-pid.tc       |    7 +------
+ .../ftrace/test.d/ftrace/func-filter-pid.tc        |    7 +------
+ .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |    6 +-----
+ .../ftrace/test.d/ftrace/func_profiler.tc          |    6 +-----
+ tools/testing/selftests/ftrace/test.d/functions    |   10 ++++++++--
+ .../ftrace/test.d/kprobe/kprobe_ftrace.tc          |    4 +---
+ .../ftrace/test.d/preemptirq/irqsoff_tracer.tc     |    4 +---
+ tools/testing/selftests/ftrace/test.d/template     |    3 ++-
+ .../selftests/ftrace/test.d/tracer/wakeup.tc       |    6 +-----
+ .../selftests/ftrace/test.d/tracer/wakeup_rt.tc    |    6 +-----
+ 13 files changed, 21 insertions(+), 59 deletions(-)
 
-which is not very close to yours. With the extra effort "--minimal" I get
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter-stack.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter-stack.tc
+index 62af263fa75e..cf3ea42b12b0 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter-stack.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter-stack.tc
+@@ -1,16 +1,11 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: ftrace - function graph filters with stack tracer
+-# requires: stack_trace set_ftrace_filter
++# requires: stack_trace set_ftrace_filter function_graph:tracer
+ 
+ # Make sure that function graph filtering works, and is not
+ # affected by other tracers enabled (like stack tracer)
+ 
+-if ! grep -q function_graph available_tracers; then
+-    echo "no function graph tracer configured"
+-    exit_unsupported
+-fi
+-
+ do_reset() {
+     if [ -e /proc/sys/kernel/stack_tracer_enabled ]; then
+ 	    echo 0 > /proc/sys/kernel/stack_tracer_enabled
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter.tc
+index 56a86a2fc8ba..b3ccdaec2a61 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-filter.tc
+@@ -1,15 +1,10 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: ftrace - function graph filters
+-# requires: set_ftrace_filter
++# requires: set_ftrace_filter function_graph:tracer
+ 
+ # Make sure that function graph filtering works
+ 
+-if ! grep -q function_graph available_tracers; then
+-    echo "no function graph tracer configured"
+-    exit_unsupported
+-fi
+-
+ fail() { # msg
+     echo $1
+     exit_fail
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+index ac3e4d35f181..4b994b6df5ac 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+@@ -1,15 +1,10 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: ftrace - function glob filters
+-# requires: set_ftrace_filter
++# requires: set_ftrace_filter function:tracer
+ 
+ # Make sure that function glob matching filter works.
+ 
+-if ! grep -q function available_tracers; then
+-    echo "no function tracer configured"
+-    exit_unsupported
+-fi
+-
+ disable_tracing
+ clear_trace
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-notrace-pid.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-notrace-pid.tc
+index b7e18d30104a..acb17ce543d2 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-notrace-pid.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-notrace-pid.tc
+@@ -1,16 +1,11 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: ftrace - function pid notrace filters
+-# requires: set_ftrace_notrace_pid set_ftrace_filter
++# requires: set_ftrace_notrace_pid set_ftrace_filter function:tracer
+ # flags: instance
+ 
+ # Make sure that function pid matching filter with notrace works.
+ 
+-if ! grep -q function available_tracers; then
+-    echo "no function tracer configured"
+-    exit_unsupported
+-fi
+-
+ do_function_fork=1
+ 
+ if [ ! -f options/function-fork ]; then
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+index 53ec48a92f39..9f0a9687c773 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+@@ -1,17 +1,12 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: ftrace - function pid filters
+-# requires: set_ftrace_pid set_ftrace_filter
++# requires: set_ftrace_pid set_ftrace_filter function:tracer
+ # flags: instance
+ 
+ # Make sure that function pid matching filter works.
+ # Also test it on an instance directory
+ 
+-if ! grep -q function available_tracers; then
+-    echo "no function tracer configured"
+-    exit_unsupported
+-fi
+-
+ do_function_fork=1
+ 
+ if [ ! -f options/function-fork ]; then
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
+index 71fa3f49e35e..0c6cf7725110 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
+@@ -1,6 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: ftrace - function trace with cpumask
++# requires: function:tracer
+ 
+ if ! which nproc ; then
+   nproc() {
+@@ -15,11 +16,6 @@ if [ $NP -eq 1 ] ;then
+   exit_unresolved
+ fi
+ 
+-if ! grep -q "function" available_tracers ; then
+-  echo "Function trace is not enabled"
+-  exit_unsupported
+-fi
+-
+ ORIG_CPUMASK=`cat tracing_cpumask`
+ 
+ do_reset() {
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_profiler.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_profiler.tc
+index 8b487daaaf68..1dbd766c0cd2 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func_profiler.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_profiler.tc
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: ftrace - function profiler with function tracing
+-# requires: function_profile_enabled set_ftrace_filter
++# requires: function_profile_enabled set_ftrace_filter function_graph:tracer
+ 
+ # There was a bug after a rewrite of the ftrace infrastructure that
+ # caused the function_profiler not to be able to run with the function
+@@ -14,10 +14,6 @@
+ # This test triggers those bugs on those kernels.
+ #
+ # We need function_graph and profiling to to run this test
+-if ! grep -q function_graph available_tracers; then
+-    echo "no function graph tracer configured"
+-    exit_unsupported;
+-fi
+ 
+ fail() { # mesg
+     echo $1
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index cd2756c77ed9..35de6bc9613b 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -106,9 +106,15 @@ initialize_ftrace() { # Reset ftrace to initial-state
+     enable_tracing
+ }
+ 
+-check_requires() { # Check required files
++check_requires() { # Check required files and tracers
+     for i in $* ; do
+-        if [ ! -e $i ]; then
++        t=${i%:tracer}
++        if [ $t != $i ]; then
++            if ! grep -wq $t available_tracers ; then
++                echo "Required tracer $t is not configured."
++                exit_unsupported
++            fi
++        elif [ ! -e $i ]; then
+             echo "Required feature interface $i doesn't exist."
+             exit_unsupported
+         fi
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc
+index 9a983df5ae17..81d8b58c03bc 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc
+@@ -1,9 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: Kprobe dynamic event with function tracer
+-# requires: kprobe_events stack_trace_filter
+-
+-grep "function" available_tracers || exit_unsupported # this is configurable
++# requires: kprobe_events stack_trace_filter function:tracer
+ 
+ # prepare
+ echo nop > current_tracer
+diff --git a/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc b/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
+index 2b82c80edf69..22bff122b933 100644
+--- a/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
++++ b/tools/testing/selftests/ftrace/test.d/preemptirq/irqsoff_tracer.tc
+@@ -1,6 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: test for the preemptirqsoff tracer
++# requires: preemptoff:tracer irqsoff:tracer
+ 
+ MOD=preemptirq_delay_test
+ 
+@@ -27,9 +28,6 @@ unres() { #msg
+ modprobe $MOD || unres "$MOD module not available"
+ rmmod $MOD
+ 
+-grep -q "preemptoff" available_tracers || unsup "preemptoff tracer not enabled"
+-grep -q "irqsoff" available_tracers || unsup "irqsoff tracer not enabled"
+-
+ reset_tracer
+ 
+ # Simulate preemptoff section for half a second couple of times
+diff --git a/tools/testing/selftests/ftrace/test.d/template b/tools/testing/selftests/ftrace/test.d/template
+index 611423c4e75f..b1c2f1920897 100644
+--- a/tools/testing/selftests/ftrace/test.d/template
++++ b/tools/testing/selftests/ftrace/test.d/template
+@@ -1,7 +1,8 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: %HERE DESCRIBE WHAT THIS DOES%
+-# requires: %HERE LIST THE REQUIRED FILES%
++# requires: %HERE LIST THE REQUIRED FILES OR TRACERS%
++# The required tracer needs :tracer suffix, e.g. function:tracer
+ # you have to add ".tc" extention for your testcase file
+ # Note that all tests are run with "errexit" option.
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/tracer/wakeup.tc b/tools/testing/selftests/ftrace/test.d/tracer/wakeup.tc
+index b0893d7edda3..11be10e1bf96 100644
+--- a/tools/testing/selftests/ftrace/test.d/tracer/wakeup.tc
++++ b/tools/testing/selftests/ftrace/test.d/tracer/wakeup.tc
+@@ -1,17 +1,13 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: Test wakeup tracer
++# requires: wakeup:tracer
+ 
+ if ! which chrt ; then
+   echo "chrt is not found. This test requires nice command."
+   exit_unresolved
+ fi
+ 
+-if ! grep -wq "wakeup" available_tracers ; then
+-  echo "wakeup tracer is not supported"
+-  exit_unsupported
+-fi
+-
+ echo wakeup > current_tracer
+ echo 1 > tracing_on
+ echo 0 > tracing_max_latency
+diff --git a/tools/testing/selftests/ftrace/test.d/tracer/wakeup_rt.tc b/tools/testing/selftests/ftrace/test.d/tracer/wakeup_rt.tc
+index b9b6669a623b..3a77198b3c69 100644
+--- a/tools/testing/selftests/ftrace/test.d/tracer/wakeup_rt.tc
++++ b/tools/testing/selftests/ftrace/test.d/tracer/wakeup_rt.tc
+@@ -1,17 +1,13 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: Test wakeup RT tracer
++# requires: wakeup_rt:tracer
+ 
+ if ! which chrt ; then
+   echo "chrt is not found. This test requires chrt command."
+   exit_unresolved
+ fi
+ 
+-if ! grep -wq "wakeup_rt" available_tracers ; then
+-  echo "wakeup_rt tracer is not supported"
+-  exit_unsupported
+-fi
+-
+ echo wakeup_rt > current_tracer
+ echo 1 > tracing_on
+ echo 0 > tracing_max_latency
 
- fs/xfs/xfs_log_recover.c                           | 2561 ++------------------
- 102 files changed, 4246 insertions(+), 4819 deletions(-)
-
-but based on your output, I suspect you used "--patience", which gives that
-
- fs/xfs/xfs_log_recover.c                           | 2561 ++------------------
- 102 files changed, 4244 insertions(+), 4817 deletions(-)
-
-output (the difference there wrt minimal came from
-fs/xfs/libxfs/xfs_symlink_remote.c).
-
-I'm used to seeing small differences in the line counts due to
-different diff heuristics, but that 250 line difference for
-"--patience" is more than you usually get.
-
-None of this matters, and I'm not at all suggesting you change any of
-your workflow.
-
-I'm just commenting because I was going "why am I not getting a
-matching diffstat", and while I'm used to seeing small differences
-from diff algorithms, that 240 line-count change was really a lot more
-than I normally encounter.
-
-                      Linus
