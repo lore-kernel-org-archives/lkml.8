@@ -2,164 +2,114 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD30AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF4E204EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A033A20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bo/9NYZy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhDZIgQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFCTf1 (ORCPT
+        id S1726151AbgFCTg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:35:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30857 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725821AbgFCTf0 (ORCPT
+        Wed, 3 Jun 2020 15:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgFCTg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:35:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591212924;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kdPkXIXWB+u8KkGNeY7ldFSPiBFDc8t2oJd3Oo4z+zQ=;
-        b=bo/9NYZyWr1QkhghbLRT7lloJppf0+kfSyKzavFDNaafZu6NwI3zsV75eaPILNS2rMSg+w
-        5JI8nN50bVyV44dsVvd0XIBspJGY3AOdGIp6B2iQuAmHyiTjqhmwFRTliFDDW5bB0wbsLw
-        xhS+kaRnxo87NpDjXLtWC2JhmKcP/7s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-FCnJiB9dPhCWcsrWi1vtNA-1; Wed, 03 Jun 2020 15:35:22 -0400
-X-MC-Unique: FCnJiB9dPhCWcsrWi1vtNA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 360A8800685;
-        Wed,  3 Jun 2020 19:35:21 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-173.rdu2.redhat.com [10.10.115.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C2F628926B;
-        Wed,  3 Jun 2020 19:35:20 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 399F6220C5A; Wed,  3 Jun 2020 15:35:20 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 15:35:20 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] KVM: x86: extend struct kvm_vcpu_pv_apf_data
- with token info
-Message-ID: <20200603193520.GB48122@redhat.com>
-References: <20200525144125.143875-1-vkuznets@redhat.com>
- <20200525144125.143875-3-vkuznets@redhat.com>
- <20200526182745.GA114395@redhat.com>
- <875zcg4fi9.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zcg4fi9.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Wed, 3 Jun 2020 15:36:57 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48ABBC08C5C0;
+        Wed,  3 Jun 2020 12:36:57 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id l6so3749950ilo.2;
+        Wed, 03 Jun 2020 12:36:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dIAMuCC/A5PYohN0KXICQjv0ipT40UQi12lhKqfFpJg=;
+        b=EhDZIgQUvtrVrX2ZzQDg0eOdeeEkvuoFE2dur2qomJ21YzFSR0zSu+QXLEie+QcWcI
+         pqtiRkz0H+cuDyQ7YndIF05da+Uys1LWhKYpHa1/BAQkpxvAUQYuqXR2QNg4ST5lkWjU
+         9eTM1MGOQQps6R7rkQUn9PJ8RWxhNIUrSXrAvF1Y54VrRe/WxXMjTUA6/eEklUBoJY79
+         tDBNgLnsoaVHFh3lWGZIWv1e+ktDp52tXFkcBjGINC6k3FMwLIO9srj7HwNBAG7A44wx
+         kZvMrd/1VaWheADlWPfTFeNq/dy3U19Gi2bSjlTSury3yuen+OXHF6ZOmYfpc8FkI66X
+         iFOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dIAMuCC/A5PYohN0KXICQjv0ipT40UQi12lhKqfFpJg=;
+        b=NqpQ59RFnJfaNAba8bFpJpcOkHEa7VZTlXwTDGL8wSD2JaP3p726uJbs4zfiYBWDZh
+         mpm+ys+ABW9ecxBuQcxehSsHaf0xudkGl+lR+jyfgbRTWZUvq8RtfGP5KB6V2aMW0Nbi
+         xdq8fNmDKs24epK6wnNAbEzv5yeZdM6bmNZpRS3YzvHoWgYM5hHu/7vL2A9peu6dzDVD
+         MQUO1ibiixABSk6AlcPoYKT+OfqLdeI2wDhHxydRokgFOaOhuDyPGfyCa++RhUUlRWKN
+         6eom8iHj+kmgU8jqLTWg6/0YOQamHGyIHjUWmy6G9g20kgQxzdpVyNKAoIqOBrjh7V/R
+         ft7g==
+X-Gm-Message-State: AOAM533JLIdrz+uWvrV738ze5EI5rrQz8gnYst0AhdDiJXnfyPleex43
+        X4LpAID6jeTiZw93Aip6S6c=
+X-Google-Smtp-Source: ABdhPJyXUGwqgUh5G3Ykal7smWbXFaRo45kJz9GNEN8Kg5jD5/5LxA9AaMhMWGkRoSpvtuiq4hihOA==
+X-Received: by 2002:a92:9e5a:: with SMTP id q87mr1083431ili.84.1591213016646;
+        Wed, 03 Jun 2020 12:36:56 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id s71sm256585ilc.32.2020.06.03.12.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 12:36:55 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] dmaengine: stm32-dmamux: fix pm_runtime_get_sync fialure cases
+Date:   Wed,  3 Jun 2020 14:36:48 -0500
+Message-Id: <20200603193648.19190-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 10:42:38AM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> 
-> > On Mon, May 25, 2020 at 04:41:17PM +0200, Vitaly Kuznetsov wrote:
-> >> 
-> >
-> > [..]
-> >> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> >> index 0a6b35353fc7..c195f63c1086 100644
-> >> --- a/arch/x86/include/asm/kvm_host.h
-> >> +++ b/arch/x86/include/asm/kvm_host.h
-> >> @@ -767,7 +767,7 @@ struct kvm_vcpu_arch {
-> >>  		u64 msr_val;
-> >>  		u32 id;
-> >>  		bool send_user_only;
-> >> -		u32 host_apf_reason;
-> >> +		u32 host_apf_flags;
-> >
-> > Hi Vitaly,
-> >
-> > What is host_apf_reason used for. Looks like it is somehow used in
-> > context of nested guests. I hope by now you have been able to figure
-> > it out.
-> >
-> > Is it somehow the case of that L2 guest takes a page fault exit
-> > and then L0 injects this event in L1 using exception. I have been
-> > trying to read this code but can't wrap my head around it.
-> >
-> > I am still concerned about the case of nested kvm. We have discussed
-> > apf mechanism but never touched nested part of it. Given we are
-> > touching code in nested kvm part, want to make sure it is not broken
-> > in new design.
-> >
-> 
-> Sorry I missed this.
-> 
-> I think we've touched nested topic a bit already:
-> https://lore.kernel.org/kvm/87lfluwfi0.fsf@vitty.brq.redhat.com/
-> 
-> But let me try to explain the whole thing and maybe someone will point
-> out what I'm missing.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put_sync if
+pm_runtime_get_sync fails.
 
-Hi Vitaly,
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/dma/stm32-dmamux.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Sorry, I got busy in some other things. Got back to it now. Thanks for
-the explanation. I think I understand it up to some extent now.
-
-Vivek
-
-> 
-> The problem being solved: L2 guest is running and it is hitting a page
-> which is not present *in L0* and instead of pausing *L1* vCPU completely
-> we want to let L1 know about the problem so it can run something else
-> (e.g. another guest or just another application).
-> 
-> What's different between this and 'normal' APF case. When L2 guest is
-> running, the CPU (physical) is in 'guest' mode so we can't inject #PF
-> there. Actually, we can but L2 may get confused and we're not even sure
-> it's L2's fault, that L2 supported APF and so on. We want to make L1
-> deal with the issue.
-> 
-> How does it work then. We inject #PF and L1 sees it as #PF VMEXIT. It
-> needs to know about APF (thus KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT) but
-> the handling is exactly the same as do_pagefault(): L1's
-> kvm_handle_page_fault() checkes APF area (shared between L0 and L1) and
-> either pauses a task or resumes a previously paused one. This can be a
-> L2 guest or something else.
-> 
-> What is 'host_apf_reason'. It is a copy of 'reason' field from 'struct
-> kvm_vcpu_pv_apf_data' which we read upon #PF VMEXIT. It indicates that
-> the #PF VMEXIT is synthetic.
-> 
-> How does it work with the patchset: 'page not present' case remains the
-> same. 'page ready' case now goes through interrupts so it may not get
-> handled immediately. External interrupts will be handled by L0 in host
-> mode (when L2 is not running). For the 'page ready' case L1 hypervisor
-> doesn't need any special handling, kvm_async_pf_intr() irq handler will
-> work correctly.
-> 
-> I've smoke tested this with VMX and nothing immediately blew up.
-> 
-> -- 
-> Vitaly
-> 
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index 12f7637e13a1..ab250d7eed29 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -140,6 +140,7 @@ static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0) {
+ 		spin_unlock_irqrestore(&dmamux->lock, flags);
++		pm_runtime_put_sync(&pdev->dev);
+ 		goto error;
+ 	}
+ 	spin_unlock_irqrestore(&dmamux->lock, flags);
+@@ -340,8 +341,10 @@ static int stm32_dmamux_suspend(struct device *dev)
+ 	int i, ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_sync(dev);
+ 		return ret;
++	}
+ 
+ 	for (i = 0; i < stm32_dmamux->dma_requests; i++)
+ 		stm32_dmamux->ccr[i] = stm32_dmamux_read(stm32_dmamux->iomem,
+-- 
+2.17.1
 
