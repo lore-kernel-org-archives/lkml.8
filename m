@@ -2,123 +2,105 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA100C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C40C520678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fm+zQzqM"
+	by mail.kernel.org (Postfix) with ESMTP id 7DBD7206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbgFCFTE (ORCPT
+        id S1725939AbgFCFUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:19:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35185 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725823AbgFCFTE (ORCPT
+        Wed, 3 Jun 2020 01:20:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCFUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:19:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591161543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=U4y5ym32341HQo9X5npUFfOgiDvZZD5UKodHu1egMPM=;
-        b=fm+zQzqMfl+l/RfKgX1oojkd1a7xulycB6Tt140yYBAMId0WoZt8hygAAFCMoNkhY1QXK1
-        T3o1F+P5amKVQjrsbX3o9TDYPxe0yG3wwfsPpmPzTZB7VRNuNphjYvtBLygZ62bacH24Mb
-        gOLht/FL9E95M2pmcXToS1dwBlJ/o5U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-yh5avZzhNiCbBSHTL9WXfw-1; Wed, 03 Jun 2020 01:19:01 -0400
-X-MC-Unique: yh5avZzhNiCbBSHTL9WXfw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B09239347;
-        Wed,  3 Jun 2020 05:19:00 +0000 (UTC)
-Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E2B019C4F;
-        Wed,  3 Jun 2020 05:18:56 +0000 (UTC)
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <3358ae96-abb6-6be9-346a-0e971cb84dcd@redhat.com>
- <20200603041849.GT23230@ZenIV.linux.org.uk>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <3e723db8-0d55-fae6-288e-9d95905592db@redhat.com>
-Date:   Wed, 3 Jun 2020 13:18:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 01:20:04 -0400
+Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7E6C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 22:20:03 -0700 (PDT)
+Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
+        by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jpa@lakka.kapsi.fi>)
+        id 1jgLoY-0003XD-TX; Wed, 03 Jun 2020 08:19:47 +0300
+Received: from jpa by lakka.kapsi.fi with local (Exim 4.92)
+        (envelope-from <jpa@lakka.kapsi.fi>)
+        id 1jgLoY-000616-Qw; Wed, 03 Jun 2020 08:19:46 +0300
+Date:   Wed, 3 Jun 2020 08:19:46 +0300
+From:   Petteri Aimonen <jpa@git.mail.kapsi.fi>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Shuah Khan <shuah@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arch/x86: reset MXCSR to default in kernel_fpu_begin()
+Message-ID: <20200603051946.GF17423@lakka.kapsi.fi>
+References: <8b1f0bfa-79b0-74e4-0241-8b2a94491807@linuxfoundation.org>
+ <C6F6F6E4-CBD8-4E72-812B-99F008ECAA4F@amacapital.net>
+ <b4629042-21c7-2b38-4c3f-44f9be469cca@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200603041849.GT23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4629042-21c7-2b38-4c3f-44f9be469cca@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Rspam-Score: 1.2 (+)
+X-Rspam-Report: Action: no action
+ Symbol: RCVD_TLS_LAST(0.00)
+ Symbol: ARC_NA(0.00)
+ Symbol: FROM_HAS_DN(0.00)
+ Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: DMARC_NA(0.00)
+ Symbol: AUTH_NA(1.00)
+ Symbol: TO_DN_ALL(0.00)
+ Symbol: RCPT_COUNT_SEVEN(0.00)
+ Symbol: NEURAL_HAM(-0.00)
+ Symbol: R_SPF_NA(0.00)
+ Symbol: FORGED_SENDER(0.30)
+ Symbol: R_DKIM_NA(0.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: ASN(0.00)
+ Symbol: FROM_NEQ_ENVFROM(0.00)
+ Symbol: RCVD_COUNT_TWO(0.00)
+ Message-ID: 20200603051946.GF17423@lakka.kapsi.fi
+X-Rspam-Bar: +
+X-SA-Exim-Connect-IP: 2001:67c:1be8::11
+X-SA-Exim-Mail-From: jpa@lakka.kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 2020/6/3 下午12:18, Al Viro wrote:
-> On Wed, Jun 03, 2020 at 11:57:11AM +0800, Jason Wang wrote:
->
->>> How widely do you hope to stretch the user_access areas, anyway?
->>
->> To have best performance for small packets like 64B, if possible, we want to
->> disable STAC not only for the metadata access done by vhost accessors but
->> also the data access via iov iterator.
-> If you want to try and convince Linus to go for that, make sure to Cc
-> me on that thread.  Always liked quality flame...
->
-> The same goes for interval tree lookups with uaccess allowed.  IOW, I _really_
-> doubt that it's a good idea.
+> Is it correct to assume the stuff checked differs from test to test
+> and done in user-space.
+> 
+> > undo_evil_state();
+> 
+> Is it correct to assume undoing evil differs from test to test
+> and done in user-space, provide it can be done from userspace.
 
+Yes, currently the test works like:
 
-I see. We are just seeking an approach to perform better in order to 
-compete with userspace dpdk backends.
+do_test_setup();
+read_from_debugfs_file();
+check_results();
 
-I tried another approach of using direct mapping + mmu notifier [1] but 
-the synchronization with MMU notifier is not easy to perform well.
+and the middle step stays the same. But of course in general case there 
+could be argument passing etc, even though the test for this issue 
+doesn't need them.
 
-[1] https://patchwork.kernel.org/patch/11133009/
+Myself I don't see the problem with just adding a file under debugfs and 
+bind to its read.
 
-
->
->>> Incidentally, who had come up with the name __vhost_get_user?
->>> Makes for lovey WTF moment for readers - esp. in vhost_put_user()...
->>
->> I think the confusion comes since it does not accept userspace pointer (when
->> IOTLB is enabled).
->>
->> How about renaming it as vhost_read()/vhost_write() ?
-> Huh?
->
-> __vhost_get_user() is IOTLB remapping of userland pointer.  It does not access
-> userland memory.  Neither for read, nor for write.  It is used by vhost_get_user()
-> and vhost_put_user().
->
-> Why would you want to rename it into vhost_read _or_ vhost_write, and in any case,
-> how do you give one function two names?  IDGI...
-
-
-I get you know, I thought you're concerning the names of 
-vhost_get_user()/vhost_put_user() but actually __vhost_get_user().
-
-Maybe something like __vhost_fetch_uaddr() is better.
-
-Thanks
-
-
->
-
+--
+Petteri
