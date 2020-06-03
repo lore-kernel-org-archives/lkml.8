@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C72EC2068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793092068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgFCRuh (ORCPT
+        id S1726496AbgFCRum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59446 "EHLO
+        Wed, 3 Jun 2020 13:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgFCRuf (ORCPT
+        with ESMTP id S1726166AbgFCRue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:50:35 -0400
+        Wed, 3 Jun 2020 13:50:34 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C16C08C5C2;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28351C08C5C1;
         Wed,  3 Jun 2020 10:50:34 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jgXX5-0005yE-HD; Wed, 03 Jun 2020 19:50:31 +0200
+        id 1jgXX5-0005xq-34; Wed, 03 Jun 2020 19:50:31 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 23D671C032F;
-        Wed,  3 Jun 2020 19:50:31 +0200 (CEST)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A1CB11C0081;
+        Wed,  3 Jun 2020 19:50:30 +0200 (CEST)
 Date:   Wed, 03 Jun 2020 17:50:30 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry: __always_inline arch_atomic_* for noinstr
+Subject: [tip: x86/entry] x86/entry: Re-order #DB handler to avoid *SAN
+ instrumentation
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200603114052.070166551@infradead.org>
-References: <20200603114052.070166551@infradead.org>
+In-Reply-To: <20200603114052.127756554@infradead.org>
+References: <20200603114052.127756554@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159120663098.17951.4504058893590117947.tip-bot2@tip-bot2>
+Message-ID: <159120663051.17951.17347906616397144665.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,87 +60,137 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     c74809a9760f0d0c80ebe4e6ddcc9aebba9d90bc
-Gitweb:        https://git.kernel.org/tip/c74809a9760f0d0c80ebe4e6ddcc9aebba9d90bc
+Commit-ID:     6452aaf182a1deb9fda63754cf8e92353c5f49fd
+Gitweb:        https://git.kernel.org/tip/6452aaf182a1deb9fda63754cf8e92353c5f49fd
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 03 Jun 2020 13:40:19 +02:00
+AuthorDate:    Wed, 03 Jun 2020 13:40:20 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 03 Jun 2020 16:35:37 +02:00
 
-x86/entry: __always_inline arch_atomic_* for noinstr
+x86/entry: Re-order #DB handler to avoid *SAN instrumentation
 
-vmlinux.o: warning: objtool: rcu_dynticks_eqs_exit()+0x33: call to arch_atomic_and.constprop.0() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_debug()+0xbb: call to clear_ti_thread_flag.constprop.0() leaves .noinstr.text section
+vmlinux.o: warning: objtool: noist_exc_debug()+0x55: call to clear_ti_thread_flag.constprop.0() leaves .noinstr.text section
+
+Rework things so that handle_debug() looses the noinstr and move the
+clear_thread_flag() into that.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200603114052.070166551@infradead.org
+Link: https://lkml.kernel.org/r/20200603114052.127756554@infradead.org
 
 ---
- arch/x86/include/asm/atomic.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/kernel/traps.c | 55 +++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 28 deletions(-)
 
-diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
-index a9ae588..bf35e47 100644
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -205,13 +205,13 @@ static __always_inline bool arch_atomic_try_cmpxchg(atomic_t *v, int *old, int n
- }
- #define arch_atomic_try_cmpxchg arch_atomic_try_cmpxchg
- 
--static inline int arch_atomic_xchg(atomic_t *v, int new)
-+static __always_inline int arch_atomic_xchg(atomic_t *v, int new)
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 5566fe5..7febae3 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -775,26 +775,44 @@ static __always_inline void debug_exit(unsigned long dr7)
+  *
+  * May run on IST stack.
+  */
+-static void noinstr handle_debug(struct pt_regs *regs, unsigned long dr6,
+-				 bool user_icebp)
++static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
  {
- 	return arch_xchg(&v->counter, new);
+ 	struct task_struct *tsk = current;
++	bool user_icebp;
+ 	int si_code;
+ 
++	/*
++	 * The SDM says "The processor clears the BTF flag when it
++	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
++	 * TIF_BLOCKSTEP in sync with the hardware BTF flag.
++	 */
++	clear_thread_flag(TIF_BLOCKSTEP);
++
++	/*
++	 * If DR6 is zero, no point in trying to handle it. The kernel is
++	 * not using INT1.
++	 */
++	if (!user && !dr6)
++		return;
++
++	/*
++	 * If dr6 has no reason to give us about the origin of this trap,
++	 * then it's very likely the result of an icebp/int01 trap.
++	 * User wants a sigtrap for that.
++	 */
++	user_icebp = user && !dr6;
++
+ 	/* Store the virtualized DR6 value */
+ 	tsk->thread.debugreg6 = dr6;
+ 
+-	instrumentation_begin();
+ #ifdef CONFIG_KPROBES
+ 	if (kprobe_debug_handler(regs)) {
+-		instrumentation_end();
+ 		return;
+ 	}
+ #endif
+ 
+ 	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, 0,
+ 		       SIGTRAP) == NOTIFY_STOP) {
+-		instrumentation_end();
+ 		return;
+ 	}
+ 
+@@ -825,7 +843,6 @@ static void noinstr handle_debug(struct pt_regs *regs, unsigned long dr6,
+ 
+ out:
+ 	cond_local_irq_disable(regs);
+-	instrumentation_end();
  }
- #define arch_atomic_xchg arch_atomic_xchg
  
--static inline void arch_atomic_and(int i, atomic_t *v)
-+static __always_inline void arch_atomic_and(int i, atomic_t *v)
+ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+@@ -834,14 +851,6 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 	nmi_enter();
+ 	instrumentation_begin();
+ 	trace_hardirqs_off_finish();
+-	instrumentation_end();
+-
+-	/*
+-	 * The SDM says "The processor clears the BTF flag when it
+-	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
+-	 * TIF_BLOCKSTEP in sync with the hardware BTF flag.
+-	 */
+-	clear_thread_flag(TIF_BLOCKSTEP);
+ 
+ 	/*
+ 	 * Catch SYSENTER with TF set and clear DR_STEP. If this hit a
+@@ -850,14 +859,8 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 	if ((dr6 & DR_STEP) && is_sysenter_singlestep(regs))
+ 		dr6 &= ~DR_STEP;
+ 
+-	/*
+-	 * If DR6 is zero, no point in trying to handle it. The kernel is
+-	 * not using INT1.
+-	 */
+-	if (dr6)
+-		handle_debug(regs, dr6, false);
++	handle_debug(regs, dr6, false);
+ 
+-	instrumentation_begin();
+ 	if (regs->flags & X86_EFLAGS_IF)
+ 		trace_hardirqs_on_prepare();
+ 	instrumentation_end();
+@@ -868,14 +871,10 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
+ 					   unsigned long dr6)
  {
- 	asm volatile(LOCK_PREFIX "andl %1,%0"
- 			: "+m" (v->counter)
-@@ -219,7 +219,7 @@ static inline void arch_atomic_and(int i, atomic_t *v)
- 			: "memory");
+ 	idtentry_enter_user(regs);
+-	clear_thread_flag(TIF_BLOCKSTEP);
++	instrumentation_begin();
+ 
+-	/*
+-	 * If dr6 has no reason to give us about the origin of this trap,
+-	 * then it's very likely the result of an icebp/int01 trap.
+-	 * User wants a sigtrap for that.
+-	 */
+-	handle_debug(regs, dr6, !dr6);
++	handle_debug(regs, dr6, true);
++	instrumentation_end();
+ 	idtentry_exit_user(regs);
  }
- 
--static inline int arch_atomic_fetch_and(int i, atomic_t *v)
-+static __always_inline int arch_atomic_fetch_and(int i, atomic_t *v)
- {
- 	int val = arch_atomic_read(v);
- 
-@@ -229,7 +229,7 @@ static inline int arch_atomic_fetch_and(int i, atomic_t *v)
- }
- #define arch_atomic_fetch_and arch_atomic_fetch_and
- 
--static inline void arch_atomic_or(int i, atomic_t *v)
-+static __always_inline void arch_atomic_or(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "orl %1,%0"
- 			: "+m" (v->counter)
-@@ -237,7 +237,7 @@ static inline void arch_atomic_or(int i, atomic_t *v)
- 			: "memory");
- }
- 
--static inline int arch_atomic_fetch_or(int i, atomic_t *v)
-+static __always_inline int arch_atomic_fetch_or(int i, atomic_t *v)
- {
- 	int val = arch_atomic_read(v);
- 
-@@ -247,7 +247,7 @@ static inline int arch_atomic_fetch_or(int i, atomic_t *v)
- }
- #define arch_atomic_fetch_or arch_atomic_fetch_or
- 
--static inline void arch_atomic_xor(int i, atomic_t *v)
-+static __always_inline void arch_atomic_xor(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "xorl %1,%0"
- 			: "+m" (v->counter)
-@@ -255,7 +255,7 @@ static inline void arch_atomic_xor(int i, atomic_t *v)
- 			: "memory");
- }
- 
--static inline int arch_atomic_fetch_xor(int i, atomic_t *v)
-+static __always_inline int arch_atomic_fetch_xor(int i, atomic_t *v)
- {
- 	int val = arch_atomic_read(v);
  
