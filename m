@@ -2,119 +2,200 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7EC2068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323372068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591175743;
-	bh=zEsxwfRIv6BHg3ZiFueCDxPNQo1lm3dm4VsCJKMvT4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ipGB0DroJUMJUiRVYdQvb/v00F8nTjyOQkZvpXAki2D56Y6ohUPdNNP1eCE/jSgYV
-	 Ej6xgmipeySUNeg5CnfUlo7nv2+JXa4lebSaSg/S2shwIVV/jyCKNU13DS9brSMcPx
-	 c9gXJSeVa1N9xTx5NP321XufjA/5UMdey+CcYRjo=
+	s=default; t=1591175815;
+	bh=pJayPSRc4UZIbyAtgs2YD2peTONAnMhdYWQv46y0DUc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wwh+Z+x1ZWO0//VY/jtcisEwJnCvhYtlUvZ+Sj850yGKuWrC0eJ5k7o3cgkrOIm6k
+	 rfA46wX7pZSBpf2cVs2JqHCygf8ghGvFQ3DootYNOcfn+4SIa7wUWMk+R4xeqNa3GU
+	 HOH3Zawo6wmhZiBs1Tko/iu5zOwJqjy4qnJmbZds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgFCJPn (ORCPT
+        id S1726390AbgFCJQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:15:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgFCJPm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:15:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3040FC05BD43
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 02:15:42 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c3so1485556wru.12
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 02:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Mwc3ZexQv1BQCIyLF810tRXJ05J59ALeCn9xJog8DSk=;
-        b=AL3Ra2X4A/kvjmkLqqiHbOLDHLr2cepfcVdtsEcRnSL2Bkk7RIRfns0FmZpJAsYI3J
-         XUf3/3rr8W1BTdrcgtf+d3e2prgueOlEnIWqxsdiZp+W2sBXt/euU95gxX621RJcVybP
-         qsammWILeExjhRmiynLL0S5snrBqgtzk5txciQMRYz+/9NBzKe0foUWqAvEnl1NWlhxC
-         pTEYA/zf3r9MWW00ko8iRPf6g+ZQDQ8HXeuGB01z5otjBKoTMGa5s8TXMw2BaeY/Rcrg
-         gOf25D9zzF3is4+1aEdyWk312KCVS7P5imu1KroQcvq2LSTIknYBPdIWNLBkDWTc2wxS
-         yRYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Mwc3ZexQv1BQCIyLF810tRXJ05J59ALeCn9xJog8DSk=;
-        b=AILHOKR2xAkkWQyH1aKpBz7BEViH9q4GyDWnQGyigLQ5RzWdAASyUhRCgU9g+DhrPi
-         ElkkyVuOonj/wqkQCccehl8sjiD0MStgLcsaRthR5TBF1Rd2BV7WnI8/IQYTRtWSRoto
-         4MYI1JAxncUcdwSDW30Zzu/6Xa+HEWBWKHMORNV6h0qASZ5gNEJIceZ6x+TsxUTkZHq9
-         HBSrxAXs/GwrPSyDhS/gk6XxR1tRYsAMogmbj3O5KHwARxYB4oaLv0xvPthXEffDgzVc
-         9Xl9/w/YDtGdDkubokuxwiB9I2EcON4xc8RgdYisVAabwIKRcLOrssv6ACAUQKwdKhZD
-         nirQ==
-X-Gm-Message-State: AOAM533kKbgRiUuimuSvblNbypdw2hzY4H3Ngib1mVbTtrYWe69bknlB
-        f7EoXi61ro+FMhX3lKKNXf0=
-X-Google-Smtp-Source: ABdhPJwxUTaE2KdNw7Dcl1oe2+BGRbpUAAWMxmoIrtmJK2nJHg717Z1nq0BmFKPc7UogRD7X3ZntcQ==
-X-Received: by 2002:a5d:4fc4:: with SMTP id h4mr29283400wrw.49.1591175740911;
-        Wed, 03 Jun 2020 02:15:40 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id c16sm2391972wrx.4.2020.06.03.02.15.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 02:15:39 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 11:15:38 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     tglx@linutronix.de, geert@linux-m68k.org,
-        wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL rcu/urgent] Fix printk format warning
-Message-ID: <20200603091538.GA1360377@gmail.com>
-References: <20200602155631.GA1638@paulmck-ThinkPad-P72>
+        Wed, 3 Jun 2020 05:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbgFCJQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:16:54 -0400
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20EE82068D;
+        Wed,  3 Jun 2020 09:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591175813;
+        bh=pJayPSRc4UZIbyAtgs2YD2peTONAnMhdYWQv46y0DUc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Kb3tf7IIyLLZa25SuvdAgFe9n6XYJ/QfTAQ2D1AJtVHl8sIFSHXnv5/otU8WBzjaj
+         JqsYjCW4QGfqsxeTUFZ/cv4/gQNZLNFtK5jBu7K0R7U6gXhXAnIf/sxGE0ODcF/MNv
+         QOK7aBmFInK/FbcgPLO+H5jUq35xcWET1A5k8go8=
+Received: by mail-oi1-f182.google.com with SMTP id s21so1176264oic.9;
+        Wed, 03 Jun 2020 02:16:53 -0700 (PDT)
+X-Gm-Message-State: AOAM531q+AQjjfTF6ASfIzQdzh4S5rLnHExrheNoeLKNSXdiI7XwsIfS
+        OLsKtIOHck+amrVJ58H/pdHqaW11a83vYzVcUSs=
+X-Google-Smtp-Source: ABdhPJzFay6mwWSXAypV9UB/IeKJoznfkdYj8L8BU5RJz2xKHIKKe/qgCb0ME1df0N9Vc2L3q4uQZwyxOf/CjP/CbWE=
+X-Received: by 2002:aca:6144:: with SMTP id v65mr5530033oib.33.1591175812489;
+ Wed, 03 Jun 2020 02:16:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602155631.GA1638@paulmck-ThinkPad-P72>
+References: <20200603053313.3863761-1-masahiroy@kernel.org>
+ <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com>
+ <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
+ <CAMj1kXFxmgQ=YzmLNnMO-2gibSGQ1=tXBd07ntqCYYU122zEUw@mail.gmail.com>
+ <CAK7LNARLUeuiu3Y1cFqT7550MaF8fnBmMTZxKEG0Cy3vpxVkMQ@mail.gmail.com>
+ <CAMj1kXFKuMoYW8Sj=DHeYBSkWyeu+QgP9=fgET83K5D=-DsJ7Q@mail.gmail.com> <CAK7LNAR3YqmSWh_GkXdP+2tb83sOpySeXVi-kP=1eehcD5097Q@mail.gmail.com>
+In-Reply-To: <CAK7LNAR3YqmSWh_GkXdP+2tb83sOpySeXVi-kP=1eehcD5097Q@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 3 Jun 2020 11:16:41 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHcRuQXPej9_H_jnno516BnuFrPRqzp1+6xN-odckEMJg@mail.gmail.com>
+Message-ID: <CAMj1kXHcRuQXPej9_H_jnno516BnuFrPRqzp1+6xN-odckEMJg@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 3 Jun 2020 at 11:15, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Wed, Jun 3, 2020 at 6:02 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Wed, 3 Jun 2020 at 10:59, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > On Wed, Jun 3, 2020 at 5:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >
+> > > > On Wed, 3 Jun 2020 at 10:36, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, Jun 3, 2020 at 3:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > >
+> > > > > > On Wed, 3 Jun 2020 at 07:34, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > > > >
+> > > > > > > Documentation/kbuild/makefiles.rst says:
+> > > > > > >
+> > > > > > >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+> > > > > > >
+> > > > > > > I want to disallow lib-y outside of them.
+> > > > > > >
+> > > > > >
+> > > > > > Why?
+> > > > >
+> > > > >
+> > > > > Because I plan to remove lib-y entirely at some point.
+> > > > >
+> > > > > lib-y is not so useful to shrink the image size because:
+> > > > >
+> > > > >   - An object in lib.a can be omitted only when no symbol
+> > > > >     in that object is referenced.  This rarely happens.
+> > > > >
+> > > > >   -  lib-y objects are often exported by nature
+> > > > >      because lib-y is a collection of utility functions.
+> > > > >      Even if no in-tree user, we always need to keep them
+> > > > >      because EXPORT_SYMBOL() is the interface to modules.
+> > > > >
+> > > > >
+> > > > > When I worked on commit 7273ad2b08f8ac9563579d16a3cf528857b26f49,
+> > > > > I made some research.
+> > > > >
+> > > > > The benefit of lib-y is just 362 byte for x86_64_defconfig.
+> > > > > ( Before: 26578002, After: 26578364)
+> > > > >
+> > > > > My hope is lib-y will be replaced by dead-code elimination or
+> > > > > ultimately by LTO.
+> > > > >
+> > > > > drivers/firmware/efi/libstub/Makefile
+> > > > > is the only Makefile that breaks the rule:
+> > > > > "Use of lib-y is normally restricted to `lib/` and `arch/*/lib`"
+> > > > >
+> > > > >
+> > > > >
+> > > > >
+> > > > > >
+> > > > > > > Add a custom rule to build lib.a, which is linked to the decompressor
+> > > > > > > for ARCH=x86, ARCH=arm.
+> > > > > > >
+> > > > > > > For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
+> > > > > > > way.
+> > > > > > >
+> > > > > >
+> > > > > > The code works perfectly fine as is, and I don't see what is
+> > > > > > fundamentally wrong with using static libraries outside of lib/ and
+> > > > > > arch/*/lib.
+> > > > >
+> > > > > The intended usage of lib-y is to hook lib.a
+> > > > > to scripts/vmlinux.sh via KBUILD_VMLINUX_LIBS.
+> > > > >
+> > > > > This Makefile is just what you found to work.
+> > > > >
+> > > > >
+> > > > > >
+> > > > > > Also, I would like this code to still be incorporated as a static
+> > > > > > library into arm64 as well, so that only pieces that are actually
+> > > > > > needed are incorporated into the final image.
+> > > > >
+> > > > > No.
+> > > > > It is not working like that because you set
+> > > > > lib.a to core-y.
+> > > > >
+> > > > > All objects in core-y are always linked to vmlinux.
+> > > > >
+> > > >
+> > > > The lib.a file is passed to the linker as a static library, so it will
+> > > > only grab what it needs.
+> > > >
+> > > > For instance, if you build arm64 from mainline today, the
+> > > > efi_relocate_kernel will not be in the final image, even though it is
+> > > > built as part of libstub
+> > >
+> > >
+> > > I built today's mainline kernel
+> > > (d6f9469a03d832dcd17041ed67774ffb5f3e73b3).
+> > >
+> > >
+> > > I see it in vmlinux.
+> > >
+> > >
+> > > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  defconfig
+> > > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  -j24
+> > >     ...
+> > > $ aarch64-linux-gnu-nm  -n  vmlinux | grep  efi_relocate_kernel
+> > > ffff8000114afb90 t __efistub_efi_relocate_kernel
+> > >
+> >
+> > That is strange. I tested this before, and it worked.
+> >
+> > Did anything change recently in the way the linker is invoked?
+>
+>
+> Nothing recently.
+>
+> This is obvious result because
+> drivers/firmware/efi/libstub/lib.a
+> is passed after ----whole-archive flag.
+>
+>
+> I guess the following commit is it,
+> but it is already 3 years ago.
+>
 
-* Paul E. McKenney <paulmck@kernel.org> wrote:
+Right.
 
-> Hello!
-> 
-> This pull request contains a single commit that fixes a printk() format
-> error that appears on 32-bit architectures.  This could be argued to
-> be a minor bug, but it is a regression from this week's merge window,
-> and is in code that is never used in production.  Therefore the risk of
-> adding this late in process is quite low, more than worth it to fix the
-> irritation/confusion that the bug can cause.
-> 
-> And a big "Thank you!!!" to Geert (CCed) for bringing this to my
-> attention, as it has slipped through the cracks earlier.
-> 
-> The following changes since commit b1fcf9b83c4149c63d1e0c699e85f93cbe28e211:
-> 
->   rcu: Provide __rcu_is_watching() (2020-05-19 15:51:21 +0200)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git urgent-for-mingo
-> 
-> for you to fetch changes up to b3e2d20973db3ec87a6dd2fee0c88d3c2e7c2f61:
-> 
->   rcuperf: Fix printk format warning (2020-06-02 08:41:37 -0700)
-> 
-> ----------------------------------------------------------------
-> Kefeng Wang (1):
->       rcuperf: Fix printk format warning
-> 
->  kernel/rcu/rcuperf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Pulled into tip:core/urgent, thanks Paul!
-
-	Ingo
+So that means there is no point at all in using static libraries, no?
+Or does --whole-archive still allow duplicate definitions like static
+libraries do usually?
