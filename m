@@ -2,197 +2,88 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAD9206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9B02077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Vcepx1yB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1Ua/0RH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgFCHQB (ORCPT
+        id S1726188AbgFCHQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:16:01 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:62996 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgFCHQB (ORCPT
+        Wed, 3 Jun 2020 03:16:07 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58209 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbgFCHQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:16:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591168560; x=1622704560;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=ep+MdSv8eQP3ckds5U0F+W6+o9V8F3cfwHm67gssntY=;
-  b=Vcepx1yBDHSEF9Nra5pbbvgxUKETwg24H3ZmGkkXQh2sN8gcTZ6FiR01
-   yhOVQcXp9poIuUIEgjOa1i4pvxNMuLvoJz036nQP9TcOvio9txvmvRLj3
-   L2w/pufkDfVId00j/DPtDQkoRw0v/fj/GySVfksdlowtWtJoq7+ULQPQD
-   c=;
-IronPort-SDR: KjSI6WhbtiAd87PusXIS49PaAJPWCoIBu+1+a9ZWxF2V5uyIbiF9K6dnsnVCVzKw13MB4P3Q8M
- t/xJORm2aYzg==
-X-IronPort-AV: E=Sophos;i="5.73,467,1583193600"; 
-   d="scan'208";a="48089333"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 03 Jun 2020 07:15:56 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 8BB75A21DB;
-        Wed,  3 Jun 2020 07:15:44 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 07:15:43 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 3 Jun 2020 07:15:27 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v10 5/8] mm/damon/schemes: Implement statistics feature
-Date:   Wed, 3 Jun 2020 09:11:35 +0200
-Message-ID: <20200603071138.8152-6-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200603071138.8152-1-sjpark@amazon.com>
-References: <20200603071138.8152-1-sjpark@amazon.com>
+        Wed, 3 Jun 2020 03:16:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591168566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=exf763iaQhedfc3bldxc9coywh4msA7jsItB1rYI+1c=;
+        b=N1Ua/0RH7kwpaahXknjY7txWpoSAD2FLW4eqGsLhi59ymPG5vcl9GMJAGd/EFJ7l95sYIV
+        ZJGOvFNgw+DMzIbZ6JiUb4Jt01js2UCg9zLssEWwekjlu7KKKjD231L29nsdJlUMzbH3Kq
+        vpc/DCnsOOBOoZon6CmGNyapIGlAJig=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-K5_nyCUBMC-JhoimIte_3Q-1; Wed, 03 Jun 2020 03:16:04 -0400
+X-MC-Unique: K5_nyCUBMC-JhoimIte_3Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F8EB107ACCA;
+        Wed,  3 Jun 2020 07:16:03 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 33F8911A9F5;
+        Wed,  3 Jun 2020 07:15:55 +0000 (UTC)
+Subject: Re: [PATCH RFC 02/13] vhost: use batched version by default
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-3-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <9dc9fb1b-c9d0-7c67-8297-f8a7dcc4c79e@redhat.com>
+Date:   Wed, 3 Jun 2020 15:15:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D10UWB003.ant.amazon.com (10.43.161.106) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200602130543.578420-3-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
 
-To tune the DAMON-based operation schemes, knowing how many and how
-large regions are affected by each of the schemes will be helful.  Those
-stats could be used for not only the tuning, but also monitoring of the
-working set size and the number of regions, if the scheme does not
-change the program behavior too much.
+On 2020/6/2 下午9:05, Michael S. Tsirkin wrote:
+> As testing shows no performance change, switch to that now.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+> Link: https://lore.kernel.org/r/20200401183118.8334-3-eperezma@redhat.com
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   drivers/vhost/vhost.c | 251 +-----------------------------------------
+>   drivers/vhost/vhost.h |   4 -
+>   2 files changed, 2 insertions(+), 253 deletions(-)
 
-For the reason, this commit implements the statistics for the schemes.
-The total number and size of the regions that each scheme is applied are
-exported to users via '->stat_count' and '->stat_sz' of 'struct damos'.
-Admins can also check the number by reading 'schemes' debugfs file.  The
-last two integers now represents the stats.  To allow collecting the
-stats without changing the program behavior, this commit also adds new
-scheme action, 'DAMOS_STAT'.  Note that 'DAMOS_STAT' is not only making
-no memory operation actions, but also does not reset the age of regions.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |  6 ++++++
- mm/damon.c            | 13 ++++++++++---
- 2 files changed, 16 insertions(+), 3 deletions(-)
+Since we don't have a way to switch back, it's better to remove "by 
+default" in the title.
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 842a01e80c6e..e77256cf30dd 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -64,6 +64,7 @@ struct damon_task {
-  * @DAMOS_PAGEOUT:	Call ``madvise()`` for the region with MADV_PAGEOUT.
-  * @DAMOS_HUGEPAGE:	Call ``madvise()`` for the region with MADV_HUGEPAGE.
-  * @DAMOS_NOHUGEPAGE:	Call ``madvise()`` for the region with MADV_NOHUGEPAGE.
-+ * @DAMOS_STAT:		Do nothing but count the stat.
-  * @DAMOS_ACTION_LEN:	Number of supported actions.
-  */
- enum damos_action {
-@@ -72,6 +73,7 @@ enum damos_action {
- 	DAMOS_PAGEOUT,
- 	DAMOS_HUGEPAGE,
- 	DAMOS_NOHUGEPAGE,
-+	DAMOS_STAT,		/* Do nothing but only record the stat */
- 	DAMOS_ACTION_LEN,
- };
- 
-@@ -84,6 +86,8 @@ enum damos_action {
-  * @min_age_region:	Minimum age of target regions.
-  * @max_age_region:	Maximum age of target regions.
-  * @action:		&damo_action to be applied to the target regions.
-+ * @stat_count:		Total number of regions that this scheme is applied.
-+ * @stat_sz:		Total size of regions that this scheme is applied.
-  * @list:		List head for siblings.
-  *
-  * For each aggregation interval, DAMON applies @action to monitoring target
-@@ -98,6 +102,8 @@ struct damos {
- 	unsigned int min_age_region;
- 	unsigned int max_age_region;
- 	enum damos_action action;
-+	unsigned long stat_count;
-+	unsigned long stat_sz;
- 	struct list_head list;
- };
- 
-diff --git a/mm/damon.c b/mm/damon.c
-index 909599e6e5bc..ea6a8b6886b8 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -191,6 +191,8 @@ static struct damos *damon_new_scheme(
- 	scheme->min_age_region = min_age_region;
- 	scheme->max_age_region = max_age_region;
- 	scheme->action = action;
-+	scheme->stat_count = 0;
-+	scheme->stat_sz = 0;
- 	INIT_LIST_HEAD(&scheme->list);
- 
- 	return scheme;
-@@ -771,6 +773,8 @@ static int damos_do_action(struct damon_task *task, struct damon_region *r,
- 	case DAMOS_NOHUGEPAGE:
- 		madv_action = MADV_NOHUGEPAGE;
- 		break;
-+	case DAMOS_STAT:
-+		return 0;
- 	default:
- 		pr_warn("Wrong action %d\n", action);
- 		return -EINVAL;
-@@ -798,8 +802,11 @@ static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
- 				(s->max_age_region &&
- 				 s->max_age_region < r->age))
- 			continue;
-+		s->stat_count++;
-+		s->stat_sz += sz;
- 		damos_do_action(t, r, s->action);
--		r->age = 0;
-+		if (s->action != DAMOS_STAT)
-+			r->age = 0;
- 	}
- }
- 
-@@ -1384,11 +1391,11 @@ static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
- 
- 	damon_for_each_scheme(s, c) {
- 		rc = snprintf(&buf[written], len - written,
--				"%u %u %u %u %u %u %d\n",
-+				"%u %u %u %u %u %u %d %lu %lu\n",
- 				s->min_sz_region, s->max_sz_region,
- 				s->min_nr_accesses, s->max_nr_accesses,
- 				s->min_age_region, s->max_age_region,
--				s->action);
-+				s->action, s->stat_count, s->stat_sz);
- 		if (!rc)
- 			return -ENOMEM;
- 
--- 
-2.17.1
+Thanks
 
