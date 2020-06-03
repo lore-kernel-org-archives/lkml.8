@@ -2,135 +2,117 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCE1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A641EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5530020678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9532088E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="W+i4FzBG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHb999op"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgFCMCz (ORCPT
+        id S1726460AbgFCMC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:02:55 -0400
-Received: from mail.efficios.com ([167.114.26.124]:40482 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgFCMCc (ORCPT
+        Wed, 3 Jun 2020 08:02:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgFCMCb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:02:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 880F02BB2C4;
-        Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id r4H48SY884UJ; Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 1E87D2BAFE5;
-        Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1E87D2BAFE5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1591185750;
-        bh=+JKPy8/uTulfEKGfTa48iFeivNq9W046I9r49e09eUQ=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=W+i4FzBG6FaeGRj1qjA0mh/fgtIJIpBs6kM5tDLuyGZPPXFlg+4269AvVYw0paMuH
-         NwgGZZ3nKkpFdflm/6SC9W43bFhORw8B1BeIV7rxr9lU748kTBoNN7lCNQd2ZNldAU
-         PEIeX/4zBWwQJ0voSluU+anjpCdt5mLeTANE/pLhpRR8kjR6MlqysUFLM9wAdWdYcC
-         0kAnfkEVrXLCZ5NzcRahk9a+eoXXGbx+6YhP6pn/vn9EBXOUdl1iiOE5t2qzSWtf1v
-         6kSeW27DZMe7LpfaoAtDtw+bJOZVHUcWIyAE/0BCUbRyg9D9YMuycT9TdUKu2wWVP/
-         keTgvqWaC6f+A==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4_rRzo5zUasU; Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 0E7732BADF5;
-        Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 08:02:29 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     lttng-dev@lists.lttng.org,
-        diamon-discuss@lists.linuxfoundation.org,
-        linux-trace-users@vger.kernel.org, lwn@lwn.net,
-        linux-kernel@vger.kernel.org
-Message-ID: <683437825.51033.1591185749972.JavaMail.zimbra@efficios.com>
-Subject: [RELEASE] LTTng-modules 2.12.1 and 2.11.4 (Linux kernel tracer)
+        Wed, 3 Jun 2020 08:02:31 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C701C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 05:02:31 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id m18so397738vkk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 05:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=amz3ptynYvAUbH138IEG0LpKVjBvo8sPz/3+J+n07a8=;
+        b=vHb999opMIzMza943w3iNjuwx1RH0ULq9DdNFIBNl056bXrXRIJUZCp5ljes0uQYaC
+         309fs8zXNrFuwkmvoCWzKa6rp8w9ceaeFZctOEppExt9mu/tjfs7uxgg3XwTDj17BaCx
+         zuOP9aqU7YiYeUOCR996/cgXzMGIUJiha2Iugh6txTnHMKIbNmP2nYml5bi2zGfpnI95
+         6X/rnhb1zqoT6HuDf6UsdUfLNnVViv0Xht5/UFu06NY4SkwuEPWX8Znuko1EjeNchIYA
+         KD8cWO+wMbh8V0jruPN2A13TRw4dm2Ic+XZt97mUzktOTdnbRmf0ISYUUE7SfY5RQfax
+         Pztg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=amz3ptynYvAUbH138IEG0LpKVjBvo8sPz/3+J+n07a8=;
+        b=p2D3ENfcCG+uGmk6FvrG5889M5taJvUUFAJiVb2saDzdsOAdmnn+YmylAo4EBYmu19
+         H4ZaFj3EioA6LNSFeHAmYpEAZ0e8wEyMwIsQxJDaEfZrWtIE87tCTpba/Xiw3+W/PDcW
+         UYcJwCwJrsmUx+7ZOrOzLDWoqwdPGXnCVjDApVyKVnuYVaL/x7v286aL5FPDr6n6LLAD
+         55Vlq9AxX+fs8bM7l8pUttm+Svo7IaK6LW0LY84Hcr2LwWsDbp5DDBEJKaqSrdt0ky21
+         8aZ2kWTzN1TZKg94nn2MW217XXfTTS9+kuI5iBBp8k2Wke/55EE86hHcrtxjrOA0wgCw
+         qtzg==
+X-Gm-Message-State: AOAM5313BrQetF40qv/R4EV/IByhEHOS+3gjBb6TDP6+gw1qkROr0tGj
+        qMPTg1VByrckTCqUfdkxY+GqWM/8u7aGqojWiDKrQw==
+X-Google-Smtp-Source: ABdhPJxDaY9hHU9C9cqqrvDdwtLQXU+4TVbmTzqYFpSK6jRNSb3vAPXpIT+DTQmUBmYd1hclvqBGerS3oaC4/gGhIBw=
+X-Received: by 2002:a05:6122:34:: with SMTP id q20mr7714782vkd.66.1591185750265;
+ Wed, 03 Jun 2020 05:02:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Index: z3mfQAh1bM5mt5rP3eYWZhqbj4/DQA==
-Thread-Topic: LTTng-modules 2.12.1 and 2.11.4 (Linux kernel tracer)
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+ <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+ <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
+ <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
+ <CAL+tcoDn_=T--uB0CRymfTGvD022PPDk5Yw2yCxvqOOpZ4G_dQ@mail.gmail.com>
+ <CANn89i+dPu9=qJowhRVm9d3CesY4p+zzJ0HGiCMc_yJxux6pow@mail.gmail.com>
+ <CAL+tcoC2+vYoFbujkLCF7P3evfirNSBQtJ9bPFHiU2FGOnBo+A@mail.gmail.com> <CANn89iJfLM2Hz69d9qOZoRKwzzCCpgVRZ1zbTTbg4vGvSAEZ-w@mail.gmail.com>
+In-Reply-To: <CANn89iJfLM2Hz69d9qOZoRKwzzCCpgVRZ1zbTTbg4vGvSAEZ-w@mail.gmail.com>
+From:   Neal Cardwell <ncardwell@google.com>
+Date:   Wed, 3 Jun 2020 08:02:13 -0400
+Message-ID: <CADVnQy=RJfmzHR15DyWdydFAqSqVmFhaW4_cgYYAgnixEa5DNQ@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Jason Xing <kerneljasonxing@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 3, 2020 at 1:44 AM Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Tue, Jun 2, 2020 at 10:05 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
+> >
+> > Hi Eric,
+> >
+> > I'm still trying to understand what you're saying before. Would this
+> > be better as following:
+> > 1) discard the tcp_internal_pacing() function.
+> > 2) remove where the tcp_internal_pacing() is called in the
+> > __tcp_transmit_skb() function.
+> >
+> > If we do so, we could avoid 'too late to give up pacing'. Meanwhile,
+> > should we introduce the tcp_wstamp_ns socket field as commit
+> > (864e5c090749) does?
+> >
+>
+> Please do not top-post on netdev mailing list.
+>
+>
+> I basically suggested double-checking which point in TCP could end up
+> calling tcp_internal_pacing()
+> while the timer was already armed.
+>
+> I guess this is mtu probing.
 
-This is a release announcement of the LTTng kernel tracer for both
-maintained LTTng stable branches. The main change integrated within
-the new versions 2.12.1 and 2.11.4 is support for the newly released
-5.7 Linux kernel.
+Perhaps this could also happen from some of the retransmission code
+paths that don't use tcp_xmit_retransmit_queue()? Perhaps
+tcp_retransmit_timer() (RTO) and  tcp_send_loss_probe() TLP? It seems
+they could indirectly cause a call to __tcp_transmit_skb() and thus
+tcp_internal_pacing() without first checking if the pacing timer was
+already armed?
 
-If you followed the news lately [1], you will notice that LTTng had to
-work-around a change which un-exports kallsyms symbols, making those
-inaccessible to GPL modules, which was integrated within Linux 5.7. As a
-matter of fact, LTTng happens to use kallsyms in some cases to access
-symbols otherwise not visible to GPL kernel modules.
-
-Just to underline the amount of effort that was put into trying to do
-the right thing, here is an explanation of the alternative approaches
-that were attempted before going for a work-around using kprobes
-(taken from commit message of lttng-modules
-commit a65765406b0 "Unbreak LTTng for kernel 5.7"):
-
-    Linux commit 0bd476e6c67190b5eb7b6e105c8db8ff61103281 ("kallsyms:
-    unexport kallsyms_lookup_name() and kallsyms_on_each_symbol()") breaks
-    LTTng-modules by removing symbols used by the LTTng-modules out-of-tree
-    tracer.
-    
-    I pointed this out when the change was originally considered before the
-    5.7 merge window. This generated some discussion but it did not lead to
-    any concrete proposal to fix the issue. [2]
-    
-    The commit has been merged in the 5.7 merge window. At that point, as
-    maintainer of LTTng, I immediately raised a flag about this issue,
-    proposing an alternative approach to solve this: expose the few symbols
-    needed by LTTng to GPL modules. This was NACKed on the ground that the
-    Linux kernel cannot export GPL symbols when there are no in-tree
-    users. [3]
-    
-    Steven Rostedt has shown interest in merging LTTng-modules upstream.
-    LTTng-modules being LGPL, this is very much doable. I have prepared a
-    tree of LTTng-modules "for upstreaming" and sent it to him privately so
-    he can review it. Even if in an ideal scenario LTTng-modules is merged
-    for the following merge window, it leaves LTTng-modules broken on the
-    5.7 kernel.
-    
-    In order to ensure that the LTTng-modules kernel tracer continues working
-    for my end users on kernels 5.7 onwards, as a very last resort, this is
-    with great reluctance that I created this fix for LTTng modules. It
-    basically uses kprobes to lookup the kallsyms_lookup_name symbol, and
-    continues using kallsyms_lookup_name as before.
-
-Steven Rostedt has started looking into lttng-modules, but currently lacks time
-to look into it further. Understandably, this 15 years old project is larger than
-he initially expected. Let's hope we receive concrete feedback on how we can
-improve LTTng to make it acceptable for integration into Linux.
-
-Thanks,
-
-Mathieu
-
-[1] https://lwn.net/Articles/817988/
-[2] https://lore.kernel.org/r/20200302192811.n6o5645rsib44vco@localhost
-[3] https://lore.kernel.org/r/20200409193543.18115-1-mathieu.desnoyers@efficios.com
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+neal
