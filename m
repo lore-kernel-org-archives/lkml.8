@@ -2,129 +2,130 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD6402081A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71DEE20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTM3zxQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbgFCRAU (ORCPT
+        id S1726206AbgFCRBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:00:20 -0400
-Received: from mga06.intel.com ([134.134.136.31]:53260 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgFCRAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:00:18 -0400
-IronPort-SDR: 6g0urmMDxlevPpXxA0YVEKiSqyfFw57LKIiUGO3bvZAF8DmVCaexnY1lz5M8TKykNjEKTniOEJ
- hx7yCQmqibAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 10:00:17 -0700
-IronPort-SDR: nHx2z2msyOw8QxBH6B4KKm8vReGfEqeX+xjzqGcmFuJSU+sJTAWKEOWof2IWMvv3suXUvojTJg
- YZA4IHh1t3fQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,468,1583222400"; 
-   d="scan'208";a="312659773"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Jun 2020 10:00:16 -0700
-Received: from [10.249.225.188] (abudanko-mobl.ccr.corp.intel.com [10.249.225.188])
-        by linux.intel.com (Postfix) with ESMTP id CDC875800E3;
-        Wed,  3 Jun 2020 10:00:13 -0700 (PDT)
-Subject: Re: [PATCH v6 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
- <40643542-6676-e0bc-2d10-165dfde41e29@linux.intel.com>
- <33c91520-7040-bd6b-b176-004ddbec2a63@intel.com>
- <b04311d6-b1c6-d625-b227-9ae4f4370626@linux.intel.com>
- <eb31a2a4-ab3b-54a7-2d5a-51457f78394e@intel.com>
- <363DA0ED52042842948283D2FC38E464B4151F86@IRSMSX106.ger.corp.intel.com>
- <40d44cd8-ecdb-53c9-99f8-1737e04c84ff@linux.intel.com>
- <2d264b14-7f60-9d43-2d52-3709c7295c4a@intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <5a01eace-e502-c78c-7ab8-a298b0e18c08@linux.intel.com>
-Date:   Wed, 3 Jun 2020 20:00:12 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 3 Jun 2020 13:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgFCRBj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 13:01:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E06C08C5C0;
+        Wed,  3 Jun 2020 10:01:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a25so3680186ljp.3;
+        Wed, 03 Jun 2020 10:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2iLycb4I4u+ClXUUA0CCDPb6E6bGBrDChBPF7DQKh5s=;
+        b=aTM3zxQdEXzyvTbG2wnsmyG5Ljh4kC5rX2FcLRM6yHZ9CsgexrRB/bG1xtfJfa65A9
+         tsuDK3j0xyJTbGyH04PSRBc940UT0MSX3j3Xe+ctCJQMgKojjCOxd1XLmqH5ScZEks84
+         m4YCGcEeD9yUDlJ47GdTrkDrj2a8lmTVqNf9eP4QeJb6pOjR64QQILWyFFVmk3gNQgik
+         qCJJ0inXRDzPrrokm1ZjCjdg/Ve/bUmhUKBdeHV60tsuFclZjzehk+uWop6vHPnRhhLT
+         hpu4HnylpXg3otqK3GBX0ovRt295MjpmsFRrfrwoX3e67peU3xc+oCRxmQ83jwZ1y6EB
+         4Q+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2iLycb4I4u+ClXUUA0CCDPb6E6bGBrDChBPF7DQKh5s=;
+        b=mA0SNDny3lSdU5ZshxMmdcKkI7XRczGS87YqrgZHa8CbQJd5AI3l20UO1URCN6DX+n
+         3lHoGoEDT6bUusbF72AsiDww9LcE9xkeDX0AZlrWrJBNdaujiknZRuUGPAIKVhFqsIel
+         mvSWD337IaL2uDqyPvlFnYFIKLMJmOp0b8VDxVc6QnHtwwdrFIFAUUHfSmIn+ZnSpS/A
+         ofkyWOhq+f2xiBpJ/LwYHBNGE2/m4kkpBq5savpNiM6irp3xbRCMFjxmObwV3EJxrKxg
+         69nDbZjEpfkZ/Ph+RwCZ8yx12DLrTy+Vj29ujmXtxA7BSgcZ7gjLsICx38r41y2axcai
+         JRyQ==
+X-Gm-Message-State: AOAM532D29PgTYaRQMv8BYcWVDd2evlAyUawt29V7eTBNukn9RJxB1kf
+        JEgcPLPMFHDoVAyDgy+5B7g=
+X-Google-Smtp-Source: ABdhPJz9gyMboago8Er/iKySN0pf2TCLhXajvZU/DCrvcaHiJNcLnfsThNWvM3P5mHq0O1RvGu2jcg==
+X-Received: by 2002:a2e:9816:: with SMTP id a22mr87688ljj.129.1591203697862;
+        Wed, 03 Jun 2020 10:01:37 -0700 (PDT)
+Received: from grain.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id b15sm784577lfa.74.2020.06.03.10.01.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 10:01:36 -0700 (PDT)
+Received: by grain.localdomain (Postfix, from userid 1000)
+        id F2B391A0089; Wed,  3 Jun 2020 20:01:35 +0300 (MSK)
+Date:   Wed, 3 Jun 2020 20:01:35 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
+Message-ID: <20200603170135.GD568636@grain>
+References: <20200603162328.854164-1-areber@redhat.com>
+ <20200603162328.854164-2-areber@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <2d264b14-7f60-9d43-2d52-3709c7295c4a@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603162328.854164-2-areber@redhat.com>
+User-Agent: Mutt/1.13.4 (2020-02-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 03, 2020 at 06:23:26PM +0200, Adrian Reber wrote:
+...
+>  
+>  /*
+> - * Only allow CAP_SYS_ADMIN to follow the links, due to concerns about how the
+> - * symlinks may be used to bypass permissions on ancestor directories in the
+> - * path to the file in question.
+> + * Only allow CAP_SYS_ADMIN and CAP_CHECKPOINT_RESTORE to follow the links, due
+> + * to concerns about how the symlinks may be used to bypass permissions on
+> + * ancestor directories in the path to the file in question.
+>   */
+>  static const char *
+>  proc_map_files_get_link(struct dentry *dentry,
+>  			struct inode *inode,
+>  		        struct delayed_call *done)
+>  {
+> -	if (!capable(CAP_SYS_ADMIN))
+> +	if (!(capable(CAP_SYS_ADMIN) || capable(CAP_CHECKPOINT_RESTORE)))
+>  		return ERR_PTR(-EPERM);
 
-On 03.06.2020 18:53, Adrian Hunter wrote:
-> On 3/06/20 3:52 pm, Alexey Budankov wrote:
->>
->> On 03.06.2020 15:30, Hunter, Adrian wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: Hunter, Adrian <adrian.hunter@intel.com>
->>>> Sent: Wednesday, June 3, 2020 3:24 PM
->>>> To: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>; Jiri Olsa
->>>> <jolsa@redhat.com>; Namhyung Kim <namhyung@kernel.org>; Alexander
->>>> Shishkin <alexander.shishkin@linux.intel.com>; Peter Zijlstra
->>>> <peterz@infradead.org>; Ingo Molnar <mingo@redhat.com>; Andi Kleen
->>>> <ak@linux.intel.com>; linux-kernel <linux-kernel@vger.kernel.org>
->>>> Subject: Re: [PATCH v6 01/13] tools/libperf: introduce notion of static polled
->>>> file descriptors
->>>>
->>>> On 3/06/20 3:01 pm, Alexey Budankov wrote:
->>>>> Hi,
->>>>>
->>>>> On 03.06.2020 14:38, Adrian Hunter wrote:
->>>>>> On 1/06/20 11:05 pm, Alexey Budankov wrote:
->>>>>>>
->>>>>>> Implement adding of file descriptors by fdarray__add_stat() to
->>>>>>> fix-sized (currently 1) stat_entries array located at struct fdarray.
->>>>>>> Append added file descriptors to the array used by poll() syscall
->>>>>>> during fdarray__poll() call. Copy poll() result of the added
->>>>>>> descriptors from the array back to the storage for separate analysis.
->>>>>>
->>>>>> Why not instead call evlist__add_pollfd() before other fds are added,
->>>>>> so the fda->entries[] position is always fixed. Then this patch is not
->>>> needed.
->>>>>
->>>>> It then will block event consumption loop, at least in record mode,
->>>>> due to change sin initial assumptions behind fdarray__filter(). So
->>>>> extension of the API with 'static' fds looks safer w.r.t. possible
->>>>> functional regressions at the same time extending the API with ability
->>>>> to atomically wait for (poll()) not only event fds but also any other fds
->>>> during monitoring.
->>>>
->>>> So make fdarray__filter() return the number of filterable fds remaining.
->>>>
->>>
->>>
->>> Or perhaps simpler, compare the return value to the number of fds that are known not to be filterable
->>
->> Well, various implementations are for sure possible but the proposed design
->> avoids implicit code assumptions and dependency on API calls order as in API
->> implementation as in client code and that is why it's been proposed this way.
->>
-> 
-> The dependencies are confined one function, namely __cmd_record(), it is
-> simpler, and avoids the inelegant changes to fdarray__poll().
+You know, I'm still not sure if we need this capable() check at all since
+we have proc_fd_access_allowed() called but anyway can we please make this
+if() condition more explicit
 
-As far the changes don't cause regressions and serve their purpose well
-they are acceptable.
+	if (!capable(CAP_SYS_ADMIN) && !capable(CAP_CHECKPOINT_RESTORE))
+		return ERR_PTR(-EPERM);
+
+though I won't insist. And I'll reread the series a bit later once I've
+some spare time to.
