@@ -2,138 +2,137 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A92EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9486BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E58F52067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751DE2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:25:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UXa9VETT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WWEC1jxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgFCTYD (ORCPT
+        id S1726147AbgFCTZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
+        Wed, 3 Jun 2020 15:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgFCTYC (ORCPT
+        with ESMTP id S1725821AbgFCTZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:24:02 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455BFC08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:24:01 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x13so3594664wrv.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 12:24:01 -0700 (PDT)
+        Wed, 3 Jun 2020 15:25:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 512F5C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:25:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b6so4253582ljj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 12:25:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eKmZFODxU/V1iE906T8Ef11jEu4sRvf6rW5JJEx9JQQ=;
-        b=UXa9VETTQawjhSxj5nM4Agh4SuVLfZUM4nVsTXhDxHn9yFXnREMQcZHfCjFaa9fwgq
-         bHQyRdjqyJtlIooe0p9xhkBnY4sVBygZA1PIoXK8WuNoMtu81VJxPRvBgO4carCzyP4S
-         smzbFIgNE70FDiBofuMgkmpqGVV9OAfWwhWPf5ldMwrj/aEKrRKDbycFQk/SSjBufiaQ
-         U/lMESMtiJnqmAlnxxkvwN6LVHowWRR9O6Wo615JHFMKXdpOfVNoL/nbhJLDZqoTBq5D
-         qXKqwOl40cVDnqhf4hv0+6vL8PXKpiS7cgdzmqEreFJUJZgCzaVj0wzApm35HvPkZWn7
-         53vw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QoZ95HcH7BjHDOWUdMqlDLSFVCikU3SwfVIEJuTPDf0=;
+        b=WWEC1jxWNpJpAejhnUE2mvgpUkvyhAOl4+lQSMH1zlIOjsbqDJbiNKF7V/EPVHRcrc
+         SBR2iZXswhh9euDXazMcNAFZAVXz9BkZ8hyWCZ9BULZdx/7V+es6QNR7XSxHgtrnkudW
+         yu0yZBZ14zoftRC1wLl7+QVUlH5X5AqsYGWaaRIF3U67l4NwzrQOBxfgcCJqcKJ9ivI8
+         jKfeGaXHEV6n0ynof3ELjbWZLkWZJGd9iBqc2q3W2z5l11K1tGiBTsQfNm/yE3N+oYv3
+         3HNtpSWRJ9+LZ0pqjSAY9KkRgFbKqpMzu60gBeuKwRiE/YdzwfeKxP0460Xgujgj1Or/
+         46yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eKmZFODxU/V1iE906T8Ef11jEu4sRvf6rW5JJEx9JQQ=;
-        b=LqSkqH8UIAMoFj0X1n97zwzqdOG488TrzVlPKzdhwhuBVvVn4JrfRni0BwozLQS841
-         LMjrdgRC24ru8DExV7NOkqAnGGFwoN1gsG7nP4yXKC5i2pjhNY/OPZdTUY4/dlxBLGlK
-         33sWpagX4ncVAeFZOEOkYqrnLh04Tu7gqcGcfdOGdESyq7eJVjxjTaZbhXN0i4TM/W1v
-         KLix1ELxhvFtzMe/0sdoT10aemey5Xw4mXJunrwkXI/a2qpELlBZZ0ui0lgY8fRQEiI+
-         JBKu53Z5Xl86PbVlAq8Pep7geBQX8htwbAoDPulLEGvKB/Lg927fNtMc407OSOEWmgtI
-         THLw==
-X-Gm-Message-State: AOAM533ol8YKLlRc8l9SB0teeKDXxFCZFTHWT32HZ9jP+w1DzHBc/uvV
-        ufTdMf9EjAASi/W9CSWTlwLtrA==
-X-Google-Smtp-Source: ABdhPJwUVTOFpofE2C3k3f+UFBTdrMS7aFklqZgR7nOCOKaMeOPcUFbCTX3L6GOWSrdfPPMMa4Na9Q==
-X-Received: by 2002:a5d:4008:: with SMTP id n8mr892040wrp.82.1591212239832;
-        Wed, 03 Jun 2020 12:23:59 -0700 (PDT)
-Received: from google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id z25sm4131038wmf.10.2020.06.03.12.23.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 12:23:59 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 21:23:53 +0200
-From:   Marco Elver <elver@google.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-Message-ID: <20200603192353.GA180529@google.com>
-References: <20200513124021.GB20278@willie-the-truck>
- <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513165008.GA24836@willie-the-truck>
- <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
- <20200513174747.GB24836@willie-the-truck>
- <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
- <20200513212520.GC28594@willie-the-truck>
- <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
- <20200514110537.GC4280@willie-the-truck>
- <20200603185220.GA20613@zn.tnic>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QoZ95HcH7BjHDOWUdMqlDLSFVCikU3SwfVIEJuTPDf0=;
+        b=fRRROcWizBO03tJ7jBFRsYsCicQ854sMGPimMzHGolnyu/A0maV/3rWZrP6SPS+rUs
+         IsrCtA8MqdDqko62F22yFJqgx+2suzbr8t4qNmc/GkWdRhW5QmZqddBhzhMHpJETwRxA
+         VpsDaXpLNpCeSAurq7Gu1ZbOO/XiIgccRsa62Kyk2h1V43FPhNb5fzW56u1yskovDstf
+         gMPvBBt4KCLZBEKbD3fO1sdCXSfxU/SIhSFdvyafqezVc7o2R7qPhVuqVPWGS5dHilY7
+         rlJhRZLRRBVPlLiRdG0j+SA43g5GMOy4U4a1Zf7aVuVBlBb5m3ILKMIGO/ijk4FV0A3g
+         7iNw==
+X-Gm-Message-State: AOAM5324FPGBCrTv8mIpm8t1R8vpEL9vCaxo4qhbuF5L6bjaxoMwbDKC
+        LTaMoNk4StDqabHvOyu/Upm1TTRefGgYoJYz0MuGmw==
+X-Google-Smtp-Source: ABdhPJyjY9bI6wp93Q+GZLTCJltJ7vuNMf3HKAZ499wjKUG7VYCT5Z5DqEFkxPros8eq8FLUCsH8Gx9omgFLqXQeLMs=
+X-Received: by 2002:a2e:541e:: with SMTP id i30mr341995ljb.156.1591212307735;
+ Wed, 03 Jun 2020 12:25:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603185220.GA20613@zn.tnic>
-User-Agent: Mutt/1.13.2 (2019-12-18)
+References: <20200603173150.GB1551@shell.armlinux.org.uk> <jhjh7vshvwl.mognet@arm.com>
+ <20200603184500.GC1551@shell.armlinux.org.uk>
+In-Reply-To: <20200603184500.GC1551@shell.armlinux.org.uk>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 3 Jun 2020 21:24:56 +0200
+Message-ID: <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com>
+Subject: Re: v5.7: new core kernel option missing help text
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 3 Jun 2020 at 20:45, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Wed, Jun 03, 2020 at 07:00:26PM +0100, Valentin Schneider wrote:
+> >
+> > On 03/06/20 18:31, Russell King - ARM Linux admin wrote:
+> > > Hi,
+> > >
+> > > A new kernel configuration option ("SCHED_THERMAL_PRESSURE") was
+> > > recently added, but has no help text. This is most unhelpful when
+> > > trying to configure the kernel, since one does not know what the
+> > > effect of answering yes or no to this option would be.
+> > >
+> > > Please supply a proper help text when adding core kernel options
+> > > so that people can make an informed decision when answering the
+> > > prompt, rather than just guessing.
+> > >
+> >
+> > Right; does the below look good enough?
+>
+> It's a start.  I'm still wondering whether I should answer yes or no
+> for the platforms I'm building for.
+>
+> So far, all I've found is:
+>
+> arch/arm/include/asm/topology.h:#define arch_scale_thermal_pressure topology_get_thermal_pressure
+>
+> which really doesn't tell me anything about this.  So I'm still in
+> the dark.
+>
+> I guess topology_get_thermal_pressure is provided by something in
+> drivers/ which will be conditional on some driver or something.
 
+You need cpufreq_cooling device to make it useful and only for SMP
+I don't think that this should not be user configurable because even
+with the description above, it is not easy to choose.
+This should be set by the driver that implement the feature which is
+only cpufreq cooling device for now it
 
-On Wed, 03 Jun 2020, Borislav Petkov wrote:
-
-> On Thu, May 14, 2020 at 12:05:38PM +0100, Will Deacon wrote:
-> > Talking off-list, Clang >= 7 is pretty reasonable wrt inlining decisions
-> > and the behaviour for __always_inline is:
-> > 
-> >   * An __always_inline function inlined into a __no_sanitize function is
-> >     not instrumented
-> >   * An __always_inline function inlined into an instrumented function is
-> >     instrumented
-> >   * You can't mark a function as both __always_inline __no_sanitize, because
-> >     __no_sanitize functions are never inlined
-> > 
-> > GCC, on the other hand, may still inline __no_sanitize functions and then
-> > subsequently instrument them.
-> 
-> Yeah, about that: I've been looking for a way to trigger this so that
-> I can show preprocessed source to gcc people. So do you guys have a
-> .config or somesuch I can try?
-
-For example take this:
-
-	int x;
-
-	static inline __attribute__((no_sanitize_thread)) void do_not_sanitize(void) {
-	  x++;
-	}
-
-	void sanitize_this(void) {
-	  do_not_sanitize();
-	}
-
-Then
-
-	gcc-10 -O3 -fsanitize=thread -o example.o -c example.c
-	objdump -D example.o
-
-will show that do_not_sanitize() was inlined into sanitize_this() and is
-instrumented. (With Clang this doesn't happen.)
-
-Hope this is enough.
-
-Thanks,
--- Marco
+>
+> >
+> > ---
+> > diff --git a/init/Kconfig b/init/Kconfig
+> > index 74a5ac65644f..f40cf852d00a 100644
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -441,6 +441,10 @@ config HAVE_SCHED_AVG_IRQ
+> >  config SCHED_THERMAL_PRESSURE
+> >         bool "Enable periodic averaging of thermal pressure"
+> >         depends on SMP
+> > +     help
+> > +       This option allows the scheduler to be aware of CPU thermal throttling
+> > +       (i.e. thermal pressure), providing arch_scale_thermal_pressure() is
+> > +       implemented.
+> >
+> >  config BSD_PROCESS_ACCT
+> >         bool "BSD Process Accounting"
+> > ---
+> >
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
