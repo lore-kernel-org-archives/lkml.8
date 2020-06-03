@@ -2,102 +2,74 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26086C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82D6520870
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591197879;
-	bh=wYhSFD9Khcc0Z3mpqxy4+CiNsLPVPcf8WqMe+UPsLC8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=T5DJtjeSxglKUiUBOxDqFSvxzTHS2lt7tyv/7H4qYH6+iWf9lol/IM6f0C2ppwK4h
-	 RKFXKqbfYFTjGVUjcov9/A7G6wKMfOcxI68bArzT27FUo2ZLHS6RO3bm3shjpdQltv
-	 RCX8QbtbcbJ+BdEmPR4Ri/2D9KNA7Rypo3Oh7okQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1159C20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgFCPYi (ORCPT
+        id S1726118AbgFCPYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:24:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 11:24:43 -0400
+Received: from 8bytes.org ([81.169.241.247]:46066 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgFCPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:24:38 -0400
-Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9328206A2;
-        Wed,  3 Jun 2020 15:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591197878;
-        bh=wYhSFD9Khcc0Z3mpqxy4+CiNsLPVPcf8WqMe+UPsLC8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ERkS2pLmp6VM8p5BRD0VinxXrkbvVSPIGRdqKX7nRekXAl0RJYTIgfotZGeiJWSxA
-         5PQxfRgNoFaPNC1SFuXplrT4vXmJxvdLREX/1UU63tNq9In+eFzN5j1dVfvYbbktHx
-         Q3LZ+9KbtRSp+7EppzCQ3/XWYBUP9T9FEGNjB5gs=
-Message-ID: <af08615d0ce87b7c920a0ac6a5389834a0504cb7.camel@kernel.org>
-Subject: Re: linux-next: build failure after merge of the ftrace tree
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Date:   Wed, 03 Jun 2020 10:24:36 -0500
-In-Reply-To: <20200603112223.3adc3451@gandalf.local.home>
-References: <20200603174253.60deace5@canb.auug.org.au>
-         <20200603112223.3adc3451@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725867AbgFCPYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:24:39 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A9A2028B; Wed,  3 Jun 2020 17:24:37 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 17:24:36 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 38/75] x86/sev-es: Add SEV-ES Feature Detection
+Message-ID: <20200603152436.GA17841@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-39-joro@8bytes.org>
+ <20200520083916.GB1457@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520083916.GB1457@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-
-On Wed, 2020-06-03 at 11:22 -0400, Steven Rostedt wrote:
-> On Wed, 3 Jun 2020 17:42:53 +1000
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Wed, May 20, 2020 at 10:39:16AM +0200, Borislav Petkov wrote:
+> On Tue, Apr 28, 2020 at 05:16:48PM +0200, Joerg Roedel wrote:
+> > +bool sev_es_active(void)
+> > +{
+> > +	return !!(sev_status & MSR_AMD64_SEV_ES_ENABLED);
+> > +}
+> > +EXPORT_SYMBOL_GPL(sev_es_active);
 > 
-> > Hi all,
-> > 
-> > After merging the ftrace tree, today's linux-next build (htmldocs)
-> > failed like this:
-> > 
-> > 
-> > Sphinx parallel build error:
-> > docutils.utils.SystemMessage:
-> > /home/sfr/next/next/Documentation/trace/histogram-design.rst:219:
-> > (SEVERE/4) Unexpected section title.
-> > 
-> > .
-> > .
-> > 
-> > Caused by commit
-> > 
-> >   16b585fe7192 ("tracing: Add histogram-design document")
-> > 
-> > I am running a slightly out of date version os sphynx (2.4.3) ...
-> > 
-> 
-> It appears to be the ascii art that is causing the issue. I have no
-> idea
-> how to fix it. If someone has a patch they would like to submit, I
-> will
-> take it before I push it off to Linus.
-> 
-> -- Steve
+> I don't see this being used in modules anywhere in the patchset. Or am I
+> missing something?
 
-I just sent you/posted a patch to fix this.  Should be in your inbox
-already.
+It is used in several places, for example do do_nmi() to conditionally
+re-open the NMI window in SEV-ES guests. But there are other uses too,
+like int sev_es_efi_map_ghcbs() or in sev_es_init_vc_handling() to opt
+out if not running as an SEV-ES guest.
 
-Thanks,
 
-Tom
+	Joerg
 
