@@ -2,140 +2,107 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F34FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D04820674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DBB2087D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:43:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHwY0sL6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oBxMVUoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgFCLmy (ORCPT
+        id S1726385AbgFCLnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
+        Wed, 3 Jun 2020 07:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgFCLmr (ORCPT
+        with ESMTP id S1726197AbgFCLmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:42:47 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2493C08C5C4
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:42:46 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j10so1996155wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 04:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L3uwm8GKhOaqpoZ0YGgbFzd1wKVWSSHIAlOR+KHduXk=;
-        b=qHwY0sL6MjgOfAS8/Jg15PLIDIl+0xDJXebfzbSeGl77uFAAkGwTrhJGvtoEV8yCFQ
-         uQqYKe/hGqiHMVUhvdCS3WbLDa0ruXpuTd5G1VDg2QXRE4RbDOPBSAP/znisL0NU4zVa
-         BpCMGAzPFeBcOdesoja9rolr5FvYCsuXbks6gt7Vif890nJvHG8zyqo78y4/Ohp6c5ye
-         d8uM42cunpL2/No9RMeiKejypbM/ZnJh1svSxrMypFsb+9OrscztyeEl5mDS1o0BOnL7
-         9XZz3UDbVkN1FJBYJuTs0JweChbdtwClFLsWZbOrQlE92+n3nnT5ZCsYTALnBez9RcUl
-         oJww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L3uwm8GKhOaqpoZ0YGgbFzd1wKVWSSHIAlOR+KHduXk=;
-        b=muOzciUBlCTBRrweUDATTBHjxbJ7FRSrL/M8+YVCNUVDmxInjWy4ZxylS+hQJPoCqi
-         H1ESpiMVUJxATsi+uHHJw5J1JFKnMrCs3IciHZd5WvUnsO7wnueo2uoos+mpkSu1MY7v
-         Dg9im4ov/ATHQSsI6WkK7DL1hbj0XVIRuK54WGwVZZ4HfhVSB9WHTEu8eZv5nThQI1Rw
-         Z1vP7SJ5xMknIIQpK3OPYTEqTHZC9TFKuhncvqShAL8OotzDwQ7jCyYnaew9u/RZuYLd
-         aou0sk8Ir5H0rEZ6Nkso12zA763ZsQ+CWqg/0JH9mFUH0ng17sM5vKaLb22KvmnfssNQ
-         r8mg==
-X-Gm-Message-State: AOAM533Y16sK9fuPy5+5mPrLEn6LVDku2mty64t225VHfz+c/gaUqP4R
-        JII49r6Pfx7f0FboRpw8mvnXGg==
-X-Google-Smtp-Source: ABdhPJx2JYmj3kQlas2NeFsHxLhERdjRzWJtW534D05ClC6owgvaZ0fayMzFXCD3mkbt6TOctSu4bw==
-X-Received: by 2002:a05:6000:1192:: with SMTP id g18mr32264160wrx.326.1591184565225;
-        Wed, 03 Jun 2020 04:42:45 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id c206sm2137559wmf.36.2020.06.03.04.42.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 04:42:44 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 12:42:42 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 4/4] kdb: Switch to use safer dbg_io_ops over console
- APIs
-Message-ID: <20200603114242.khv5yi5yweq3e2jz@holly.lan>
-References: <1591168935-6382-1-git-send-email-sumit.garg@linaro.org>
- <1591168935-6382-5-git-send-email-sumit.garg@linaro.org>
- <20200603082503.GD14855@linux-b0ei>
- <CAFA6WYMHtXzW-VLJYhC_-7w5+1NgM8PYrNXv=-2g_GKdOO+sNQ@mail.gmail.com>
+        Wed, 3 Jun 2020 07:42:50 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC3DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=yPkPZ4WAEN9GaKTtWJwMN7uBHheFrK3ZxdnYRFtfdVY=; b=oBxMVUoKGJnkIbDA7cVfxLp/u2
+        LXo1oISDtMlx6Hd1HloXuPETyTK6om9nVkaxK7j/vCbFB8AfkWhaVXI1NkmsCtKyJsW/yZFi0egae
+        0S6M1rV8QKYwH54ykncdjcDoQ7CXq+MIgDAaJjKWlgc2P6EtMGNsE1okepLmP9chSkhpL1/hkvZFj
+        Ot3eChvTGZdwQNHe9R1zLPmWWtlLyK0VBoA6ipDXBvoa36eOeF43kiFu6hH2rwlEVatIQHWTbK6/P
+        J/ZxWlvvqdFqyxxhCot4WXG3ucfoEPeVRENDtZc8j34w0E84uwI63HJrXabqCEQ+h69bxIBpitvc0
+        msUYZi8w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgRmr-0005oV-F1; Wed, 03 Jun 2020 11:42:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 080FC306E56;
+        Wed,  3 Jun 2020 13:42:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id BB489209DB0D8; Wed,  3 Jun 2020 13:42:23 +0200 (CEST)
+Message-ID: <20200603114052.185201076@infradead.org>
+User-Agent: quilt/0.66
+Date:   Wed, 03 Jun 2020 13:40:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     tglx@linutronix.de
+Cc:     x86@kernel.org, elver@google.com, paulmck@kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, will@kernel.org, dvyukov@google.com,
+        glider@google.com, andreyknvl@google.com
+Subject: [PATCH 7/9] lockdep: __always_inline more for noinstr
+References: <20200603114014.152292216@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYMHtXzW-VLJYhC_-7w5+1NgM8PYrNXv=-2g_GKdOO+sNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:02:02PM +0530, Sumit Garg wrote:
-> On Wed, 3 Jun 2020 at 13:55, Petr Mladek <pmladek@suse.com> wrote:
-> >
-> > On Wed 2020-06-03 12:52:15, Sumit Garg wrote:
-> > > In kgdb context, calling console handlers aren't safe due to locks used
-> > > in those handlers which could in turn lead to a deadlock. Although, using
-> > > oops_in_progress increases the chance to bypass locks in most console
-> > > handlers but it might not be sufficient enough in case a console uses
-> > > more locks (VT/TTY is good example).
-> > >
-> > > Currently when a driver provides both polling I/O and a console then kdb
-> > > will output using the console. We can increase robustness by using the
-> > > currently active polling I/O driver (which should be lockless) instead
-> > > of the corresponding console. For several common cases (e.g. an
-> > > embedded system with a single serial port that is used both for console
-> > > output and debugger I/O) this will result in no console handler being
-> > > used.
-> > >
-> > > In order to achieve this we need to reverse the order of preference to
-> > > use dbg_io_ops (uses polling I/O mode) over console APIs. So we just
-> > > store "struct console" that represents debugger I/O in dbg_io_ops and
-> > > while emitting kdb messages, skip console that matches dbg_io_ops
-> > > console in order to avoid duplicate messages. After this change,
-> > > "is_console" param becomes redundant and hence removed.
-> > >
-> > > diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> > > index 4139698..6e182aa 100644
-> > > --- a/drivers/tty/serial/kgdboc.c
-> > > +++ b/drivers/tty/serial/kgdboc.c
-> > > @@ -558,6 +557,7 @@ static int __init kgdboc_earlycon_init(char *opt)
-> > >       }
-> > >
-> > >       earlycon = con;
-> > > +     kgdboc_earlycon_io_ops.cons = con;
-> > >       pr_info("Going to register kgdb with earlycon '%s'\n", con->name);
-> > >       if (kgdb_register_io_module(&kgdboc_earlycon_io_ops) != 0) {
-> > >               earlycon = NULL;
-> >
-> > Should we clear kgdboc_earlycon_io_ops.cons here when
-> > kgdb_register_io_module() failed?
-> >
-> 
-> AFAIK, kgdboc_earlycon_io_ops won't be used at any later stage in case
-> registration fails. So IMO, it would be a redundant assignment unless
-> I missed something.
+vmlinux.o: warning: objtool: debug_locks_off()+0xd: call to __debug_locks_off() leaves .noinstr.text section
+vmlinux.o: warning: objtool: match_held_lock()+0x6a: call to look_up_lock_class.isra.0() leaves .noinstr.text section
+vmlinux.o: warning: objtool: lock_is_held_type()+0x90: call to lockdep_recursion_finish() leaves .noinstr.text section
 
-Or, putting it another way, earlycon is a redundant (albeit better
-maintained) copy of kgdboc_earlycon_io_ops.cons. So I think the best
-thing to do is entirely replace earlycon with
-kgdboc_earlycon_io_ops.cons and then properly set it to NULL!
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ include/linux/debug_locks.h |    2 +-
+ kernel/locking/lockdep.c    |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+--- a/include/linux/debug_locks.h
++++ b/include/linux/debug_locks.h
+@@ -12,7 +12,7 @@ extern int debug_locks __read_mostly;
+ extern int debug_locks_silent __read_mostly;
+ 
+ 
+-static inline int __debug_locks_off(void)
++static __always_inline int __debug_locks_off(void)
+ {
+ 	return xchg(&debug_locks, 0);
+ }
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -393,7 +393,7 @@ void lockdep_init_task(struct task_struc
+ 	task->lockdep_recursion = 0;
+ }
+ 
+-static inline void lockdep_recursion_finish(void)
++static __always_inline void lockdep_recursion_finish(void)
+ {
+ 	if (WARN_ON_ONCE(--current->lockdep_recursion))
+ 		current->lockdep_recursion = 0;
+@@ -801,7 +801,7 @@ static int count_matching_names(struct l
+ }
+ 
+ /* used from NMI context -- must be lockless */
+-static inline struct lock_class *
++static __always_inline struct lock_class *
+ look_up_lock_class(const struct lockdep_map *lock, unsigned int subclass)
+ {
+ 	struct lockdep_subclass_key *key;
 
 
-Daniel.
