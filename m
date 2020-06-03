@@ -2,198 +2,344 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6264C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE142065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591162457;
-	bh=2J4PNSQo+EMPpKpVUEWImjPF5uGuv2PW0A8egppWV6E=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rGUm7FpG336IX6c1aC4e3e3F0zwJbzKlc5DYImgDt92JVd2e0yr+uW61sHVytMftm
-	 rMaEiGcOUBY2q8qTBlHLfJBoZXqUM525bHHm3Mx6Snt6Z9dJvEbEfwn/OkUgUTeVG8
-	 rVxUu4xr+AjG9MHeYf06o7qchQpWsPAuF9/aGbIo=
+	by mail.kernel.org (Postfix) with ESMTP id E84DF2065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725859AbgFCFeR (ORCPT
+        id S1725910AbgFCFer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:34:17 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:58893 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCFeQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:34:16 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 0535XFsW027699;
-        Wed, 3 Jun 2020 14:33:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 0535XFsW027699
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591162396;
-        bh=S2qfYJl3VVPFJgaHLte7Yupybv6BYwId2vGPrugcKrQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KFtphBTePXst6vLqPvuK1CfhDSFYJXLl4lAEN0Mj2Q43jXBw/1aEgdlQj8imyBzd2
-         7OvaxoOGDIGpPo4+iVt7uSk9HzDt8mfOC9raDIn9nYTDiFQGnC49YtZ9vYFn13BhbS
-         CSW6i52tokICX16L+d7hBZH6H9a4ptUzVI29ax5NspZuhuuCsWOtFR2Idq+oMly2Kt
-         2qkP1QohWQAWh9+4hX/Se6s4elEet6KU3BvusbemSO2dGse+xf9tpfMhMbtM1GBFJc
-         GZbTtpiXDkA3kz+stcKzwweokDo00NoXZv0pyEgxY69HuSxKreymadDKM/FeuD+fjV
-         lI4Unna+N38XQ==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
-Date:   Wed,  3 Jun 2020 14:33:13 +0900
-Message-Id: <20200603053313.3863761-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 3 Jun 2020 01:34:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:18127 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFCFeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 01:34:46 -0400
+IronPort-SDR: 7tzKAxv2pS5LZ68YCHXreA9cR6FKKeEHQUXFVqh+m/ySwJCet1p5BOUgYJHTcXxKr0YrD1qdob
+ S7K9MIdDPbxQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 22:34:46 -0700
+IronPort-SDR: 483U21jx8KO+QWDS9X5vWzru0qrdzDoj7ZJQ+OUq3Pe4F4k7hbRyhjQomEinEma20r19lUV0Fe
+ gfKjpsYmZK1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
+   d="scan'208";a="257887594"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga007.jf.intel.com with ESMTP; 02 Jun 2020 22:34:38 -0700
+Date:   Wed, 3 Jun 2020 01:24:43 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Zeng, Xin" <xin.zeng@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200603052443.GC12300@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200428005429.GJ12879@joy-OptiPlex-7040>
+ <20200428141437.GG2794@work-vm>
+ <20200429072616.GL12879@joy-OptiPlex-7040>
+ <20200429082201.GA2834@work-vm>
+ <20200429093555.GM12879@joy-OptiPlex-7040>
+ <20200429094844.GE2834@work-vm>
+ <20200430003949.GN12879@joy-OptiPlex-7040>
+ <20200602165527.34137955@x1.home>
+ <20200603031948.GB12300@joy-OptiPlex-7040>
+ <20200602215528.7a1008f0@x1.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602215528.7a1008f0@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation/kbuild/makefiles.rst says:
+On Tue, Jun 02, 2020 at 09:55:28PM -0600, Alex Williamson wrote:
+> On Tue, 2 Jun 2020 23:19:48 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > On Tue, Jun 02, 2020 at 04:55:27PM -0600, Alex Williamson wrote:
+> > > On Wed, 29 Apr 2020 20:39:50 -0400
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > On Wed, Apr 29, 2020 at 05:48:44PM +0800, Dr. David Alan Gilbert wrote:
+> > > > <snip>  
+> > > > > > > > > > > > > > > > > An mdev type is meant to define a software compatible interface, so in
+> > > > > > > > > > > > > > > > > the case of mdev->mdev migration, doesn't migrating to a different type
+> > > > > > > > > > > > > > > > > fail the most basic of compatibility tests that we expect userspace to
+> > > > > > > > > > > > > > > > > perform?  IOW, if two mdev types are migration compatible, it seems a
+> > > > > > > > > > > > > > > > > prerequisite to that is that they provide the same software interface,
+> > > > > > > > > > > > > > > > > which means they should be the same mdev type.
+> > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > In the hybrid cases of mdev->phys or phys->mdev, how does a    
+> > > > > > > > > > > > > > > > management    
+> > > > > > > > > > > > > > > > > tool begin to even guess what might be compatible?  Are we expecting
+> > > > > > > > > > > > > > > > > libvirt to probe ever device with this attribute in the system?  Is
+> > > > > > > > > > > > > > > > > there going to be a new class hierarchy created to enumerate all
+> > > > > > > > > > > > > > > > > possible migrate-able devices?
+> > > > > > > > > > > > > > > > >    
+> > > > > > > > > > > > > > > > yes, management tool needs to guess and test migration compatible
+> > > > > > > > > > > > > > > > between two devices. But I think it's not the problem only for
+> > > > > > > > > > > > > > > > mdev->phys or phys->mdev. even for mdev->mdev, management tool needs
+> > > > > > > > > > > > > > > > to
+> > > > > > > > > > > > > > > > first assume that the two mdevs have the same type of parent devices
+> > > > > > > > > > > > > > > > (e.g.their pciids are equal). otherwise, it's still enumerating
+> > > > > > > > > > > > > > > > possibilities.
+> > > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > > on the other hand, for two mdevs,
+> > > > > > > > > > > > > > > > mdev1 from pdev1, its mdev_type is 1/2 of pdev1;
+> > > > > > > > > > > > > > > > mdev2 from pdev2, its mdev_type is 1/4 of pdev2;
+> > > > > > > > > > > > > > > > if pdev2 is exactly 2 times of pdev1, why not allow migration between
+> > > > > > > > > > > > > > > > mdev1 <-> mdev2.    
+> > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > How could the manage tool figure out that 1/2 of pdev1 is equivalent 
+> > > > > > > > > > > > > > > to 1/4 of pdev2? If we really want to allow such thing happen, the best
+> > > > > > > > > > > > > > > choice is to report the same mdev type on both pdev1 and pdev2.    
+> > > > > > > > > > > > > > I think that's exactly the value of this migration_version interface.
+> > > > > > > > > > > > > > the management tool can take advantage of this interface to know if two
+> > > > > > > > > > > > > > devices are migration compatible, no matter they are mdevs, non-mdevs,
+> > > > > > > > > > > > > > or mix.
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > as I know, (please correct me if not right), current libvirt still
+> > > > > > > > > > > > > > requires manually generating mdev devices, and it just duplicates src vm
+> > > > > > > > > > > > > > configuration to the target vm.
+> > > > > > > > > > > > > > for libvirt, currently it's always phys->phys and mdev->mdev (and of the
+> > > > > > > > > > > > > > same mdev type).
+> > > > > > > > > > > > > > But it does not justify that hybrid cases should not be allowed. otherwise,
+> > > > > > > > > > > > > > why do we need to introduce this migration_version interface and leave
+> > > > > > > > > > > > > > the judgement of migration compatibility to vendor driver? why not simply
+> > > > > > > > > > > > > > set the criteria to something like "pciids of parent devices are equal,
+> > > > > > > > > > > > > > and mdev types are equal" ?
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > >     
+> > > > > > > > > > > > > > > btw mdev<->phys just brings trouble to upper stack as Alex pointed out.     
+> > > > > > > > > > > > > > could you help me understand why it will bring trouble to upper stack?
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > I think it just needs to read src migration_version under src dev node,
+> > > > > > > > > > > > > > and test it in target migration version under target dev node. 
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > after all, through this interface we just help the upper layer
+> > > > > > > > > > > > > > knowing available options through reading and testing, and they decide
+> > > > > > > > > > > > > > to use it or not.
+> > > > > > > > > > > > > >     
+> > > > > > > > > > > > > > > Can we simplify the requirement by allowing only mdev<->mdev and 
+> > > > > > > > > > > > > > > phys<->phys migration? If an customer does want to migrate between a 
+> > > > > > > > > > > > > > > mdev and phys, he could wrap physical device into a wrapped mdev 
+> > > > > > > > > > > > > > > instance (with the same type as the source mdev) instead of using vendor 
+> > > > > > > > > > > > > > > ops. Doing so does add some burden but if mdev<->phys is not dominant 
+> > > > > > > > > > > > > > > usage then such tradeoff might be worthywhile...
+> > > > > > > > > > > > > > >    
+> > > > > > > > > > > > > > If the interfaces for phys<->phys and mdev<->mdev are consistent, it makes no
+> > > > > > > > > > > > > > difference to phys<->mdev, right?
+> > > > > > > > > > > > > > I think the vendor string for a mdev device is something like:
+> > > > > > > > > > > > > > "Parent PCIID + mdev type + software version", and
+> > > > > > > > > > > > > > that for a phys device is something like:
+> > > > > > > > > > > > > > "PCIID + software version".
+> > > > > > > > > > > > > > as long as we don't migrate between devices from different vendors, it's
+> > > > > > > > > > > > > > easy for vendor driver to tell if a phys device is migration compatible
+> > > > > > > > > > > > > > to a mdev device according it supports it or not.    
+> > > > > > > > > > > > > 
+> > > > > > > > > > > > > It surprises me that the PCIID matching is a requirement; I'd assumed
+> > > > > > > > > > > > > with this clever mdev name setup that you could migrate between two
+> > > > > > > > > > > > > different models in a series, or to a newer model, as long as they
+> > > > > > > > > > > > > both supported the same mdev view.
+> > > > > > > > > > > > >     
+> > > > > > > > > > > > hi Dave
+> > > > > > > > > > > > the migration_version string is transparent to userspace, and is
+> > > > > > > > > > > > completely defined by vendor driver.
+> > > > > > > > > > > > I put it there just as an example of how vendor driver may implement it.
+> > > > > > > > > > > > e.g.
+> > > > > > > > > > > > the src migration_version string is "src PCIID + src software version", 
+> > > > > > > > > > > > then when this string is write to target migration_version node,
+> > > > > > > > > > > > the vendor driver in the target device will compare it with its own
+> > > > > > > > > > > > device info and software version.
+> > > > > > > > > > > > If different models are allowed, the write just succeeds even
+> > > > > > > > > > > > PCIIDs in src and target are different.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > so, it is the vendor driver to define whether two devices are able to
+> > > > > > > > > > > > migrate, no matter their PCIIDs, mdev types, software versions..., which
+> > > > > > > > > > > > provides vendor driver full flexibility.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > do you think it's good?    
+> > > > > > > > > > > 
+> > > > > > > > > > > Yeh that's OK; I guess it's going to need to have a big table in their
+> > > > > > > > > > > with all the PCIIDs in.
+> > > > > > > > > > > The alternative would be to abstract it a little; e.g. to say it's
+> > > > > > > > > > > an Intel-gpu-core-v4  and then it would be less worried about the exact
+> > > > > > > > > > > clock speed etc - but yes you might be right htat PCIIDs might be best
+> > > > > > > > > > > for checking for quirks.
+> > > > > > > > > > >    
+> > > > > > > > > > glad that you are agreed with it:)
+> > > > > > > > > > I think the vendor driver still can choose a way to abstract a little
+> > > > > > > > > > (e.g. Intel-gpu-core-v4...) if they think it's better. In that case, the
+> > > > > > > > > > migration_string would be something like "Intel-gpu-core-v4 + instance
+> > > > > > > > > > number + software version".
+> > > > > > > > > > IOW, they can choose anything they think appropriate to identify migration
+> > > > > > > > > > compatibility of a device.
+> > > > > > > > > > But Alex is right, we have to prevent namespace overlapping. So I think
+> > > > > > > > > > we need to ensure src and target devices are from the same vendors.
+> > > > > > > > > > or, any other ideas?    
+> > > > > > > > > 
+> > > > > > > > > That's why I kept the 'Intel' in that example; or PCI vendor ID; I was    
+> > > > > > > > Yes, it's a good idea!
+> > > > > > > > could we add a line in the doc saying that
+> > > > > > > > it is the vendor driver to add a unique string to avoid namespace
+> > > > > > > > collision?    
+> > > > > > > 
+> > > > > > > So why don't we split the difference; lets say that it should start with
+> > > > > > > the hex PCI Vendor ID.
+> > > > > > >    
+> > > > > > The problem is for mdev devices, if the parent devices are not PCI devices, 
+> > > > > > they don't have PCI vendor IDs.    
+> > > > > 
+> > > > > Hmm it would be best not to invent a whole new way of giving unique
+> > > > > idenitifiers for vendors if we can.
+> > > > >     
+> > > > what about leveraging the flags in vfio device info ?
+> > > > 
+> > > > #define VFIO_DEVICE_FLAGS_RESET (1 << 0)        /* Device supports reset */
+> > > > #define VFIO_DEVICE_FLAGS_PCI   (1 << 1)        /* vfio-pci device */
+> > > > #define VFIO_DEVICE_FLAGS_PLATFORM (1 << 2)     /* vfio-platform device */
+> > > > #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)        /* vfio-amba device */
+> > > > #define VFIO_DEVICE_FLAGS_CCW   (1 << 4)        /* vfio-ccw device */
+> > > > #define VFIO_DEVICE_FLAGS_AP    (1 << 5)        /* vfio-ap device */
+> > > > 
+> > > > Then for migration_version string,
+> > > > The first 64 bits are for device type, the second 64 bits are for device id.
+> > > > e.g.
+> > > > for PCI devices, it could be
+> > > > VFIO_DEVICE_FLAGS_PCI + PCI ID.
+> > > > 
+> > > > Currently in the doc, we only define PCI devices to use PCI ID as the second
+> > > > 64 bits. In future, if other types of devices want to support migration,
+> > > > they can define their own parts of device id. e.g. use ACPI ID as the
+> > > > second 64-bit...
+> > > > 
+> > > > sounds good?  
+> > > 
+> > > [dead thread resurrection alert]
+> > > 
+> > > Not really.  We're deep into territory that we were trying to avoid.
+> > > We had previously defined the version string as opaque (not
+> > > transparent) specifically because we did not want userspace to make
+> > > assumptions about compatibility based on the content of the string.  It
+> > > was 100% left to the vendor driver to determine compatibility.  The
+> > > mdev type was the full extent of the first level filter that userspace
+> > > could use to narrow the set of potentially compatible devices.  If we
+> > > remove that due to physical device migration support, I'm not sure how
+> > > we simplify the problem for userspace.
+> > > 
+> > > We need to step away from PCI IDs and parent devices.  We're not
+> > > designing a solution that only works for PCI, there's no guarantee that
+> > > parent devices are similar or even from the same vendor.
+> > > 
+> > > Does the mdev type sufficiently solve the problem for mdev devices?  If
+> > > so, then what can we learn from it and how can we apply an equivalence
+> > > to physical devices?  For example, should a vfio bus driver (vfio-pci
+> > > or vfio-mdev) expose vfio_migration_type and vfio_migration_version
+> > > attributes under the device in sysfs where the _type provides the first
+> > > level, user transparent, matching string (ex. mdev type for mdev
+> > > devices) while the _version provides the user opaque, vendor known
+> > > compatibility test?
+> > > 
+> > > This pushes the problem out to the drivers where we can perhaps
+> > > incorporate the module name to avoid collisions.  For example Yan's
+> > > vendor extension proposal makes use of vfio-pci with extension modules
+> > > loaded via an alias incorporating the PCI vendor and device ID.  So
+> > > vfio-pci might use a type of "vfio-pci:$ALIAS".
+> > > 
+> > > It's still a bit messy that someone needs to go evaluate all these
+> > > types between devices that exist and mdev devices that might exist if
+> > > created, but I don't have any good ideas to resolve that (maybe a new
+> > > class hierarchy?).  Thanks,  
+> > 
+> > hi Alex
+> > 
+> > yes, with the same mdev_type, user still has to enumerate all parent
+> > devices and test between the supported mdev_types to know whether two mdev
+> > devices are compatible.
+> > maybe this is not a problem? in reality, it is the administrator that
+> > specifies two devices and the management tool feedbacks compatibility
+> > result. management tool is not required to pre-test and setup the
+> > compatibility map beforehand.
+> 
+> That's exactly the purpose of this interface though is to give the
+> management tools some indication that a migration has a chance of
+> working.
+>  
+> > If so, then the only problem left is namespace collision. 
+> > given that the migration_version nodes is exported by vendor driver,
+> > maybe it can also embed its module name in the migration version string,
+> > like "i915" in "i915-GVTg_V5_8", as you suggested above.
+> 
+> No, we've already decided that the version string is opaque, the user
+> is not to attempt to infer anything from it.  That's why I've suggested
+> another attribute in sysfs that does present type information that a
+> user can compare.  Thanks,
+> 
+> Alex
+>
+ok. got it.
+one more thing I want to confirm is that do you think it's a necessary
+restriction that "The mdev devices are of the same type" ?
+could mdev and phys devices both expose "vfio_migration_type" and
+"vfio_migration_version" under device sysfs so that it may not be
+confined in mdev_type? (e.g. when aggregator is enabled, though two
+mdevs are of the same mdev_type, they are not actually compatible; and
+two mdevs are compatible though their mdev_type is not equal.) 
 
-  Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+for mdev devices, we could still expose vfio_migration_version
+attribute under mdev_type for detection before mdev generated.
 
-I want to disallow lib-y outside of them.
-
-Add a custom rule to build lib.a, which is linked to the decompressor
-for ARCH=x86, ARCH=arm.
-
-For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
-way.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- arch/arm64/Makefile                   |  1 -
- drivers/firmware/efi/Makefile         |  2 +-
- drivers/firmware/efi/libstub/Makefile | 51 +++++++++++++++------------
- 3 files changed, 30 insertions(+), 24 deletions(-)
-
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 650e1185c190..ab79b20efc8d 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -145,7 +145,6 @@ export	TEXT_OFFSET
- 
- core-y		+= arch/arm64/
- libs-y		:= arch/arm64/lib/ $(libs-y)
--core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
- 
- # Default target when executing plain make
- boot		:= arch/arm64/boot
-diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-index 7a216984552b..317a05cd388b 100644
---- a/drivers/firmware/efi/Makefile
-+++ b/drivers/firmware/efi/Makefile
-@@ -20,7 +20,7 @@ obj-$(CONFIG_EFI_VARS_PSTORE)		+= efi-pstore.o
- obj-$(CONFIG_UEFI_CPER)			+= cper.o
- obj-$(CONFIG_EFI_RUNTIME_MAP)		+= runtime-map.o
- obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)	+= runtime-wrappers.o
--subdir-$(CONFIG_EFI_STUB)		+= libstub
-+obj-$(CONFIG_EFI_STUB)			+= libstub/
- obj-$(CONFIG_EFI_FAKE_MEMMAP)		+= fake_map.o
- obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)	+= efibc.o
- obj-$(CONFIG_EFI_TEST)			+= test/
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index cce4a7436052..e4e9b17fa3b2 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -44,7 +44,7 @@ OBJECT_FILES_NON_STANDARD	:= y
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
- KCOV_INSTRUMENT			:= n
- 
--lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
-+stub-obj-y			:= efi-stub-helper.o gop.o secureboot.o tpm.o \
- 				   file.o mem.o random.o randomalloc.o pci.o \
- 				   skip_spaces.o lib-cmdline.o lib-ctype.o \
- 				   alignedmem.o relocate.o vsprintf.o
-@@ -55,15 +55,19 @@ efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
- $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
--lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o fdt.o string.o \
-+stub-obj-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o fdt.o string.o \
- 				   $(patsubst %.c,lib-%.o,$(efi-deps-y))
- 
--lib-$(CONFIG_ARM)		+= arm32-stub.o
--lib-$(CONFIG_ARM64)		+= arm64-stub.o
--lib-$(CONFIG_X86)		+= x86-stub.o
-+stub-obj-$(CONFIG_ARM)		+= arm32-stub.o
-+stub-obj-$(CONFIG_ARM64)	+= arm64-stub.o
-+stub-obj-$(CONFIG_X86)		+= x86-stub.o
- CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- 
-+targets				+= $(stub-obj-y)
-+stub-obj-y			:= $(patsubst %.o,%.stub.o, $(stub-obj-y))
-+targets				+= $(stub-obj-y)
-+
- #
- # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
- # .bss section, so the .bss section of the EFI stub needs to be included in the
-@@ -83,23 +87,6 @@ STUBCOPY_FLAGS-$(CONFIG_ARM)	+= --rename-section .data=.data.efistub	\
- 				   --rename-section .bss=.bss.efistub,load,alloc
- STUBCOPY_RELOC-$(CONFIG_ARM)	:= R_ARM_ABS
- 
--#
--# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
--# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
--# So let's apply the __init annotations at the section level, by prefixing
--# the section names directly. This will ensure that even all the inline string
--# literals are covered.
--# The fact that the stub and the kernel proper are essentially the same binary
--# also means that we need to be extra careful to make sure that the stub does
--# not rely on any absolute symbol references, considering that the virtual
--# kernel mapping that the linker uses is not active yet when the stub is
--# executing. So build all C dependencies of the EFI stub into libstub, and do
--# a verification pass to see if any absolute relocations exist in any of the
--# object files.
--#
--extra-y				:= $(lib-y)
--lib-y				:= $(patsubst %.o,%.stub.o,$(lib-y))
--
- STUBCOPY_FLAGS-$(CONFIG_ARM64)	+= --prefix-alloc-sections=.init \
- 				   --prefix-symbols=__efistub_
- STUBCOPY_RELOC-$(CONFIG_ARM64)	:= R_AARCH64_ABS
-@@ -121,3 +108,23 @@ quiet_cmd_stubcopy = STUBCPY $@
- 		/bin/false;						\
- 	fi;								\
- 	$(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
-+
-+# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
-+# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
-+# So let's apply the __init annotations at the section level, by prefixing
-+# the section names directly. This will ensure that even all the inline string
-+# literals are covered.
-+# The fact that the stub and the kernel proper are essentially the same binary
-+# also means that we need to be extra careful to make sure that the stub does
-+# not rely on any absolute symbol references, considering that the virtual
-+# kernel mapping that the linker uses is not active yet when the stub is
-+# executing. So build all C dependencies of the EFI stub into libstub, and do
-+# a verification pass to see if any absolute relocations exist in any of the
-+# object files.
-+#
-+obj-$(CONFIG_ARM64)		+= $(stub-obj-y)
-+extra-$(CONFIG_ARM)		+= lib.a
-+extra-$(CONFIG_X86)		+= lib.a
-+
-+$(obj)/lib.a: $(addprefix $(obj)/, $(stub-obj-y)) FORCE
-+	$(call if_changed,ar)
--- 
-2.25.1
-
+Thanks
+Yan
+> > with module name as the first mandatory field in version string and
+> > skipping the enumeration/testing problem, we can happyly unify migration
+> > across mdev and phys devices. e.g. it is possible to migrate between
+> > VFs in sriov and mdevs in siov to achieve backwards compatibility.
+> > 
+> > Thanks
+> > Yan
+> > 
+> > 
+> > 
+> > >   
+> > 
+> 
