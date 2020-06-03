@@ -2,98 +2,127 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9876C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868F120878
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:09:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J5KdTTMG"
+	by mail.kernel.org (Postfix) with ESMTP id D7BCA2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591182729;
+	bh=YzOMemc162MmX21grMM2woz3galEvoPugqrE5a3TFD8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YCuf+3i+nkgHK0Zb6uvKtd211Qoata7sXyWBZa4klvQ0Bvqo12zCcpDTXtY01znEJ
+	 EJgVACTUMX3NkHkCd9Cg6hig3CAnE/aflU2QhIeyBNCd/WdP8nJ4bgdcSfEaDtW9LE
+	 LG8ksyj96fDHVogla5JZiOKjmKL7WYpmt44G1aB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbgFCLJw (ORCPT
+        id S1726047AbgFCLMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgFCLJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:09:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 437C1C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 04:09:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cDGghqfSCuNlVaGtMZhIDjeMAkusS7gi8giksB3q3O0=; b=J5KdTTMGxUlDBP1135itwZXJyH
-        nhrPghOmZliajNwZJ24DM8OaSR6lYwC3lvHRfkQTOOJhKQb1iNMR7sbqshHsMRSESFp/9gR9a+WVc
-        Eo0FD1D2/Ez6Zat3T0xAOpXwXlVYAU7Lsc2S+2xhhAIljPcTb9XNln4ryuTYN6lG00vQ2RPV6BUTV
-        9Q6R2LjVjx0zmPy/sLZ4NW88Zb/MGCezUuMoBGhFcmVscVSTljHvOU6VotPbPkHVgEn4JEUSJmAe0
-        GOH5g7WfbNFBZsQKLGJgd9eNsGICyZvPvBBZEpXdv5XY2LBkwpP+B5l4HNiWsbcFEJ0ZIo2q2YeA6
-        P1BqHEwg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgRH7-0005t7-6k; Wed, 03 Jun 2020 11:09:37 +0000
-Date:   Wed, 3 Jun 2020 04:09:37 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, hughd@google.com,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/vmstat: Add events for PMD based THP migration
- without split
-Message-ID: <20200603110937.GP19604@bombadil.infradead.org>
-References: <1590118444-21601-1-git-send-email-anshuman.khandual@arm.com>
- <20200602150141.GN19604@bombadil.infradead.org>
- <2d4634ce-9167-6ca6-fb91-f3c671fff672@arm.com>
- <20200603025729.GO19604@bombadil.infradead.org>
- <280304c7-882b-cb2f-55bf-87b2e2f28711@arm.com>
+        Wed, 3 Jun 2020 07:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725833AbgFCLMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:12:08 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57EA8206C3;
+        Wed,  3 Jun 2020 11:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591182727;
+        bh=YzOMemc162MmX21grMM2woz3galEvoPugqrE5a3TFD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VCecdmeYHrqT5gcinE0svjjnWovDvj6uzuTznngJAf93O0LV5n1J9DoWLJtEk9vv6
+         0JAbXLvW79Wb3/N+75QFT30BcC7kfKT3VMjSG/UnSS7QAUN3pVQpc6LlZXKzk03LyZ
+         ZetdVU8f9I1Kxws4imoEVWR93RtBzxSkFBKnQEO4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jgRJV-00HQNN-OT; Wed, 03 Jun 2020 12:12:05 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <280304c7-882b-cb2f-55bf-87b2e2f28711@arm.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jun 2020 12:12:05 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Julius Werner <jwerner@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD?= =?UTF-8?Q?=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        mark.rutland@arm.com, Jose.Marinho@arm.com
+Subject: Re: Security Random Number Generator support
+In-Reply-To: <1591170857.19414.5.camel@mtkswgap22>
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+ <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+ <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
+ <1591169342.4878.9.camel@mtkswgap22>
+ <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
+ <1591170857.19414.5.camel@mtkswgap22>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <e56f0f8da7fdc836e073a37c9baeda77@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: neal.liu@mediatek.com, jwerner@google.com, ardb@kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, Crystal.Guo@mediatek.com, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, Jose.Marinho@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 10:28:41AM +0530, Anshuman Khandual wrote:
-> On 06/03/2020 08:27 AM, Matthew Wilcox wrote:
-> > On Wed, Jun 03, 2020 at 06:56:57AM +0530, Anshuman Khandual wrote:
-> >> On 06/02/2020 08:31 PM, Matthew Wilcox wrote:
-> >>> On Fri, May 22, 2020 at 09:04:04AM +0530, Anshuman Khandual wrote:
-> >>>> This adds the following two new VM events which will help in validating PMD
-> >>>> based THP migration without split. Statistics reported through these events
-> >>>> will help in performance debugging.
-> >>>>
-> >>>> 1. THP_PMD_MIGRATION_SUCCESS
-> >>>> 2. THP_PMD_MIGRATION_FAILURE
-> >>>
-> >>> There's nothing actually PMD specific about these events, is there?
-> >>> If we have a THP of a non-PMD size, you'd want that reported through the
-> >>> same statistic, wouldn't you?
-> >>
-> >> Yes, there is nothing PMD specific here and we would use the same statistics
-> >> for non-PMD size THP migration (if any) as well. But is THP migration really
-> >> supported for non-PMD sizes ? CONFIG_ARCH_ENABLE_THP_MIGRATION depends upon
-> >> CONFIG_TRANSPARENT_HUGEPAGE without being specific or denying about possible
-> >> PUD level support. Fair enough, will drop the PMD from the events and their
-> >> functions.
-> > 
-> > I guess you haven't read my large pages patchset?
-> 
-> I believe you are referring this "[PATCH v5 00/39] Large pages in the page cache"
-> (https://lkml.org/lkml/2020/5/28/1755). Unfortunately, I have not been following
-> the series. But is there something else in particular that needs to be taken care
-> of as well ?
+On 2020-06-03 08:54, Neal Liu wrote:
+> On Wed, 2020-06-03 at 08:40 +0100, Marc Zyngier wrote:
+>> On 2020-06-03 08:29, Neal Liu wrote:
 
-I don't think so, but I haven't looked at the migration path at all.
-I'm hoping it "just works", but experience with the rest of the mm has
-taught me there's probably an assumption in there that THP => PMD that
-will need to be fixed.  I'm not currently testing on a NUMA machine, and
-I'm still debugging other paths.
+[...]
+
+>> > Could you give us a hint how to make this SMC interface more generic in
+>> > addition to my approach?
+>> > There is no (easy) way to get platform-independent SMC function ID,
+>> > which is why we encode it into device tree, and provide a generic
+>> > driver. In this way, different devices can be mapped and then get
+>> > different function ID internally.
+>> 
+>> The idea is simply to have *one* single ID that caters for all
+>> implementations, just like we did for PSCI at the time. This
+>> requires ARM to edict a standard, which is what I was referring
+>> to above.
+>> 
+>> There is zero benefit in having a platform-dependent ID. It just
+>> pointlessly increases complexity, and means we cannot use the RNG
+>> before the firmware tables are available (yes, we need it that
+>> early).
+>> 
+>>          M.
+> 
+> Do you know which ARM expert could edict this standard?
+> Or is there any chance that we can make one? And be reviewed by
+> maintainers?
+
+Sudeep already mentioned Jose's effort to offer a standard.
+Hopefully he will *soon* be able to give us something that can be
+implemented everywhere (firmware, kernel, but also hypervisors),
+as the need exists across the whole stack.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
