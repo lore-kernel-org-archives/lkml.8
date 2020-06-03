@@ -2,116 +2,108 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80319205CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41AC52074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vAIl4e4h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Wh/2nlbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgFCTuR (ORCPT
+        id S1726088AbgFCT7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
+        Wed, 3 Jun 2020 15:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgFCTuR (ORCPT
+        with ESMTP id S1725922AbgFCT7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:50:17 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F145C08C5C0;
-        Wed,  3 Jun 2020 12:50:17 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id s88so55623pjb.5;
-        Wed, 03 Jun 2020 12:50:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=7XFgyV44I0lW+W/V50iJVD640G0FdtEv8nJXk2ZIvpk=;
-        b=vAIl4e4ht+P8wL0EOggqGErvUs+YKpvv8ClDf8DV8ahjk/2LhFr51G7k2rcRUWCUJt
-         oJgDjYzyUiX3uAd/J02JdMmmPmuatW0OwKbqSos5klLTfr2wC5Nh6b1xMhGIesZSkwbK
-         CdlfndLz2thEnbEuCYPf8F9/FfW3c+3K28ZtxgNMwppJ7VxcybEn9n8S1p8oH34gCtyZ
-         R7dakjRhtUHP8CEzEol4KOaGY50wPVK4TU6Ao6rKCgoJeGAgzr4yt4g1Qpr1q5iOt6rI
-         nquCMBsQKIikiG+uNIwZpNI2ODSrZRR0lW3jGoqjEXLxSoFDM39Q3S5BH6EILbEl1aUa
-         FrgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=7XFgyV44I0lW+W/V50iJVD640G0FdtEv8nJXk2ZIvpk=;
-        b=M1iaPJGf06GHvpDVZw/aW7Qo6YASzEvc6nBEV5Tnt3jLK1VlyMvGMA0TQoMBxTAgPK
-         +VViKHnkukyP4Axov6XUKGs4HSB+Fr0i4e0hVMzYBWb0SCK4M3i5QtViJFWyvHCNC3VS
-         y15L6VkSITKmnclBacXeYNGOSNEvGUU2w7YGDe07wum1O4KrxHS0VYbOsucUHdru+KPv
-         g5FujIcBlpdLQwtkGnfplzg93YfFnZQTqEvWeN60UgrgYx7GI4oWD79VjXBPWvqV8z1h
-         447v3VVgL5WNglYW+MkKlnNCsptHygWp+X13Dv6Fg3s+ALQ0TDRzWr4V2dgUrEOaJO2p
-         ul4Q==
-X-Gm-Message-State: AOAM532wi/WD6Nh9J7qXOTnlQVCIRxPy/N4AVUlmEh4GCXXykXqTbMUc
-        0DrLZl7ftpWm0QYoQ00rtdk0skFz
-X-Google-Smtp-Source: ABdhPJwNib3BJ/jcBxpmHWSBmm6zNwTtSuR79lF/gRHnIWtGZZiLrgUgElCjPYpmutoIeLVwSfoJuA==
-X-Received: by 2002:a17:90a:65c4:: with SMTP id i4mr1630234pjs.5.1591213816861;
-        Wed, 03 Jun 2020 12:50:16 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l25sm2189310pgn.19.2020.06.03.12.50.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jun 2020 12:50:16 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 12:50:15 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 05/14] ia64: csum_partial_copy_nocheck(): don't
- abuse csum_partial_copy_from_user()
-Message-ID: <20200603195015.GA3364@roeck-us.net>
+        Wed, 3 Jun 2020 15:59:04 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDABC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tg8mNhsE0qlps5ciALLkNONY+9bvqdzo03558zZho/4=; b=Wh/2nlbRDwoeC9J0ac3xyk/Jk
+        zQty8vNNDayaTgr5QL1Xvauoyc93BcKurh2nK51uQqfprOqyUVUfoXXIOgnlFizlapzncHwENxKAp
+        48NUwyvSWDRNdpi/K/7btTTyXaEmO/CVluzeLa1uYicu0Qg/S7tJqOevW0d+S3jky8khAgqAhAARe
+        It3hNKj7C5OahkvOvhB1SXbhV6dqZZyM4KeKmXAbIbIh0Bb4S0gNeY27dUSvqw8TNp6WmhMtXPEKD
+        2u7VQX77SBjmniwTjflfdwgnLUhW5/aw+JmNV4kp6QNUC3RtgrK73RAM/lOSnJ+DceYynFWPNj1zB
+        dOiWsf49A==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:48984)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jgZXM-0006E7-IL; Wed, 03 Jun 2020 20:58:56 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jgZXJ-0005fr-Uq; Wed, 03 Jun 2020 20:58:53 +0100
+Date:   Wed, 3 Jun 2020 20:58:53 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: v5.7: new core kernel option missing help text
+Message-ID: <20200603195853.GD1551@shell.armlinux.org.uk>
+References: <20200603173150.GB1551@shell.armlinux.org.uk>
+ <jhjh7vshvwl.mognet@arm.com>
+ <20200603184500.GC1551@shell.armlinux.org.uk>
+ <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 08:10:38PM +0100, Al Viro wrote:
-> On Wed, Jun 03, 2020 at 08:37:14AM -0700, Guenter Roeck wrote:
-> > On Fri, Mar 27, 2020 at 11:31:08PM +0000, Al Viro wrote:
-> > > From: Al Viro <viro@zeniv.linux.org.uk>
-> > > 
-> > > Just inline the call and use memcpy() instead of __copy_from_user() and
-> > > note that the tail is precisely ia64 csum_partial().
-> > > 
-> > > Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> > 
-> > This patch results in:
-> > 
-> > arch/ia64/lib/csum_partial_copy.c: In function 'csum_partial_copy_nocheck':
-> > arch/ia64/lib/csum_partial_copy.c:110:9: error: implicit declaration of function 'csum_partial'
-> > 
-> > for ia64:{defconfig, allnoconfig, tinyconfig}.
+On Wed, Jun 03, 2020 at 09:24:56PM +0200, Vincent Guittot wrote:
+> On Wed, 3 Jun 2020 at 20:45, Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > It's a start.  I'm still wondering whether I should answer yes or no
+> > for the platforms I'm building for.
+> >
+> > So far, all I've found is:
+> >
+> > arch/arm/include/asm/topology.h:#define arch_scale_thermal_pressure topology_get_thermal_pressure
+> >
+> > which really doesn't tell me anything about this.  So I'm still in
+> > the dark.
+> >
+> > I guess topology_get_thermal_pressure is provided by something in
+> > drivers/ which will be conditional on some driver or something.
 > 
-> Argh...
-> 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> You need cpufreq_cooling device to make it useful and only for SMP
+> I don't think that this should not be user configurable because even
+> with the description above, it is not easy to choose.
+> This should be set by the driver that implement the feature which is
+> only cpufreq cooling device for now it
 
-Yes, that does the trick.
+As I have CONFIG_CPU_FREQ_THERMAL=y in my config, I'm guessing (and it's
+only a guess) that I should say y to SCHED_THERMAL_PRESSURE ?
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+> > > +     help
+> > > +       This option allows the scheduler to be aware of CPU thermal throttling
+> > > +       (i.e. thermal pressure), providing arch_scale_thermal_pressure() is
+> > > +       implemented.
 
-> ---
-> diff --git a/arch/ia64/lib/csum_partial_copy.c b/arch/ia64/lib/csum_partial_copy.c
-> index 5d147a33d648..6e82e0be8040 100644
-> --- a/arch/ia64/lib/csum_partial_copy.c
-> +++ b/arch/ia64/lib/csum_partial_copy.c
-> @@ -12,7 +12,7 @@
->  #include <linux/types.h>
->  #include <linux/string.h>
->  
-> -#include <linux/uaccess.h>
-> +#include <net/checksum.h>
->  
->  /*
->   * XXX Fixme: those 2 inlines are meant for debugging and will go away
+Is this feature documented in terms of what it does?  Do I assume that
+as the thermal trip points start tripping, that has an influence on
+the scheduler?  Or is it the case that the scheduler is wanting to
+know when the cpu frequency changes?
+
+Grepping for "thermal" in Documentation/scheduler brings up nothing.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
