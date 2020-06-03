@@ -2,126 +2,69 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B37D205CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6867A206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgFCPaY (ORCPT
+        id S1726144AbgFCPbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:30:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgFCPaX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:30:23 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2473FC08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 08:30:23 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jgVLM-0002kF-Ta; Wed, 03 Jun 2020 17:30:17 +0200
-Date:   Wed, 3 Jun 2020 17:30:15 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 07/25] lockdep: Add preemption disabled assertion API
-Message-ID: <20200603153015.GA1122494@debian-buster-darwi.lab.linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-8-a.darwish@linutronix.de>
- <20200522175503.GQ325280@hirez.programming.kicks-ass.net>
- <20200523145942.vjk3z6pbj6yicqa4@linutronix.de>
- <20200523224132.GD2483@worktop.programming.kicks-ass.net>
- <20200525102241.GF325303@hirez.programming.kicks-ass.net>
- <20200526005231.GA377571@debian-buster-darwi.lab.linutronix.de>
- <20200526081350.GI317569@hirez.programming.kicks-ass.net>
+        Wed, 3 Jun 2020 11:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbgFCPbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:31:00 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C6FB205CB;
+        Wed,  3 Jun 2020 15:30:59 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 11:30:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: linux-next: build failure after merge of the ftrace tree
+Message-ID: <20200603113058.11895c24@gandalf.local.home>
+In-Reply-To: <af08615d0ce87b7c920a0ac6a5389834a0504cb7.camel@kernel.org>
+References: <20200603174253.60deace5@canb.auug.org.au>
+        <20200603112223.3adc3451@gandalf.local.home>
+        <af08615d0ce87b7c920a0ac6a5389834a0504cb7.camel@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526081350.GI317569@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:13:50AM +0200, Peter Zijlstra wrote:
-> On Tue, May 26, 2020 at 02:52:31AM +0200, Ahmed S. Darwish wrote:
-> > Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > > +#define lockdep_assert_irqs_enabled()					\
-> > > +do {									\
-> > > +	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirqs_enabled));	\
-> > > +} while (0)
-> > >
-> >
-> > Given that lockdep_off() is defined at lockdep.c as:
-> >
-> >   void lockdep_off(void)
-> >   {
-> >         current->lockdep_recursion += LOCKDEP_OFF;
-> >   }
-> >
-> > This would imply that all of the macros:
-> >
-> >   - lockdep_assert_irqs_enabled()
-> >   - lockdep_assert_irqs_disabled()
-> >   - lockdep_assert_in_irq()
-> >   - lockdep_assert_preemption_disabled()
-> >   - lockdep_assert_preemption_enabled()
-> >
-> > will do the lockdep checks *even if* lockdep_off() was called.
-> >
-> > This doesn't sound right. Even if all of the above macros call sites
-> > didn't care about lockdep_off()/on(), it is semantically incoherent.
->
-> lockdep_off() is an abomination and really should not exist.
->
-> That dm-cache-target.c thing, for example, is atrocious shite that will
-> explode on -rt. Whoever wrote that needs a 'medal'.
->
-> People using it deserve all the pain they get.
->
-> Also; IRQ state _should_ be tracked irrespective of tracking lock
-> dependencies -- I see that that currently isn't entirely the case, lemme
-> go fix that.
->
+On Wed, 03 Jun 2020 10:24:36 -0500
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-Since the lockdep/x86 series:
+> > It appears to be the ascii art that is causing the issue. I have no
+> > idea
+> > how to fix it. If someone has a patch they would like to submit, I
+> > will
+> > take it before I push it off to Linus.
+> > 
+> > -- Steve  
+> 
+> I just sent you/posted a patch to fix this.  Should be in your inbox
+> already.
 
-  https://lkml.kernel.org/r/20200529212728.795169701@infradead.org
-  https://lkml.kernel.org/r/20200529213550.683440625@infradead.org
+Thanks Tom!
 
-are pending and quite big, I'll drop patch #7 and patch #8 from this
-series, and post a seqlock v2.
+Stephen,
 
-This way, this seqlock series can move forward.
+Can you test if this fixes the issue for you? If so, I'll add it push it to
+my for-next branch.
 
-Patches #7 and #8 are an "add-on" debugging feature anyway. They're
-quite important of course, evident by the number of buggy call sites
-they've found, but they don't affect the rest of the seqlock series in
-any way.
-
-Once the lockdep/x86 series above get merged, I can easily rebase and
-post paches #7 and #8 again.
-
-Thanks a lot,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
+-- Steve
