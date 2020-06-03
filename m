@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F02207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810CF20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591152025;
-	bh=VfQvDWSn/f05Fb8HRvfqUjtKhARLcQsB2AaWUbTXdcg=;
+	s=default; t=1591152034;
+	bh=galU+TbrEMo5WB4a5HGyMfhGT2sAl6XMZu1G4GrtAEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwJWQCkeXWjSyTOFv2xEe7N+/TZOE2cxjA6cxFMNDBIhBanIc2Jq65FVeIuNm1yWV
-	 C9YzQ/d1J4uqupRjsWPthUYVczbw+HbFmwVKRc4sRmxiljmN1wfxYQx4gZPZ4rxG3y
-	 sfE1yGOz9WYpUfEjja+0+kXlBPuU3aOTtFkR2zYw=
+	b=HFQKz5yKGwLMOCtD2Bg9niBIjCgBVwTibutILCWYbgEPYvJXkiw3up3QrHKqUl7VB
+	 o9jyQ/CK8Kks/JuD0lNh4r3dj1aQ7ItV4D5ar/NcKyVD3WcTFdKWlkPVTKJrnHDCO5
+	 FcS67YDo8LSfEHQFam1DGxjUNReQVx8qpDOQtpU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgFCCkY (ORCPT
+        id S1725967AbgFCCke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39950 "EHLO mail.kernel.org"
+        Tue, 2 Jun 2020 22:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgFCCkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:40:23 -0400
+        id S1725823AbgFCCkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:40:33 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A388820757;
-        Wed,  3 Jun 2020 02:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A9D207D0;
+        Wed,  3 Jun 2020 02:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591152023;
-        bh=VfQvDWSn/f05Fb8HRvfqUjtKhARLcQsB2AaWUbTXdcg=;
+        s=default; t=1591152032;
+        bh=galU+TbrEMo5WB4a5HGyMfhGT2sAl6XMZu1G4GrtAEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APbAt4lv8UAhUkXxGDy9cCxDUNYDGAbXQvNcC5W6fmeWT902i7cUE55sB+HF3tW6X
-         woVqdp4QTGuK47xf2y87vjc1V51KVC1oohIouxz+4mFiEwva+PE/0FYnIUWuWJhOJ8
-         xFgz+vZ0XGA7gLIL/HZXbM4MLeo7p54Rdg2nnUKU=
+        b=RjB6Bkr4JWWY2VmsQVplBrRR8O7YyqKy9fYq5NbDWi6n80P1H02dqkpMZ0YGiOqAQ
+         /sn346e0Q9kdcTrHSREvA/XT97dbDPQ6JqwlTAcnob7si0qxqSyZc8ZTbKF1nVKWho
+         GxgN/W4wsuaSuaP9jxflIfjz4XPvjL83qSV+vRjY=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Shuah Khan <skhan@linuxfoundation.org>,
         Steven Rostedt <rostedt@goodmis.org>
@@ -46,9 +46,9 @@ Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         Shuah Khan <shuah@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v3 2/7] selftests/ftrace: Return unsupported for the unconfigured features
-Date:   Wed,  3 Jun 2020 11:40:19 +0900
-Message-Id: <159115201908.70027.9721176218630572669.stgit@devnote2>
+Subject: [PATCH v3 3/7] selftests/ftrace: Add "requires:" list support
+Date:   Wed,  3 Jun 2020 11:40:28 +0900
+Message-Id: <159115202852.70027.5148306109647589587.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <159115200085.70027.6141550347953439240.stgit@devnote2>
 References: <159115200085.70027.6141550347953439240.stgit@devnote2>
@@ -61,44 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As same as other test cases, return unsupported if kprobe_events
-or argument access feature are not found.
+Introduce "requires:" list to check required ftrace interface
+for each test. This will simplify the interface checking code
+and unify the error message. Another good point is, it can
+skip the ftrace initializing.
 
-There can be a new arch which does not port those features yet,
-and an older kernel which doesn't support it.
-Those can not enable the features.
+Note that this requires list must be written as a shell
+comment.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Reviewed-by: Tom Zanussi <zanussi@kernel.org>
 ---
- .../ftrace/test.d/direct/kprobe-direct.tc          |    2 +-
- .../ftrace/test.d/kprobe/kprobe_args_user.tc       |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Changes in v3:
+  - Fixes a comment in template file.
+---
+ tools/testing/selftests/ftrace/ftracetest       |    8 +++++++-
+ tools/testing/selftests/ftrace/test.d/functions |    9 +++++++++
+ tools/testing/selftests/ftrace/test.d/template  |    1 +
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-index 801ecb63e84c..e95b744b23e4 100644
---- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-+++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-@@ -10,7 +10,7 @@ fi
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index d3f6652311ef..cdf7940b6610 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -267,6 +267,11 @@ testcase() { # testfile
+   prlog -n "[$CASENO]$INSTANCE$desc"
+ }
  
- if [ ! -f kprobe_events ]; then
- 	echo "No kprobe_events file -please build CONFIG_KPROBE_EVENTS"
--	exit_unresolved;
-+	exit_unsupported;
- fi
++checkreq() { # testfile
++  requires=`grep "^#[ \t]*requires:" $1 | cut -f2- -d:`
++  check_requires $requires
++}
++
+ test_on_instance() { # testfile
+   grep -q "^#[ \t]*flags:.*instance" $1
+ }
+@@ -356,7 +361,8 @@ trap 'SIG_RESULT=$XFAIL' $SIG_XFAIL
  
- echo "Let the module run a little"
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-index 0f60087583d8..b41471f301ab 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-@@ -4,7 +4,7 @@
+ __run_test() { # testfile
+   # setup PID and PPID, $$ is not updated.
+-  (cd $TRACING_DIR; read PID _ < /proc/self/stat; set -e; set -x; initialize_ftrace; . $1)
++  (cd $TRACING_DIR; read PID _ < /proc/self/stat; set -e; set -x;
++   checkreq $1; initialize_ftrace; . $1)
+   [ $? -ne 0 ] && kill -s $SIG_FAIL $SIG_PID
+ }
  
- [ -f kprobe_events ] || exit_unsupported # this is configurable
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index 697c77ef2e2b..5100eb1ada0f 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -113,6 +113,15 @@ initialize_ftrace() { # Reset ftrace to initial-state
+     enable_tracing
+ }
  
--grep -q '\$arg<N>' README || exit_unresolved # depends on arch
-+grep -q '\$arg<N>' README || exit_unsupported # depends on arch
- grep -A10 "fetcharg:" README | grep -q 'ustring' || exit_unsupported
- grep -A10 "fetcharg:" README | grep -q '\[u\]<offset>' || exit_unsupported
++check_requires() { # Check required files
++    for i in $* ; do
++        if [ ! -e $i ]; then
++            echo "Required feature interface $i doesn't exist."
++            exit_unsupported
++        fi
++    done
++}
++
+ LOCALHOST=127.0.0.1
+ 
+ yield() {
+diff --git a/tools/testing/selftests/ftrace/test.d/template b/tools/testing/selftests/ftrace/test.d/template
+index e1a5d14c4eaf..611423c4e75f 100644
+--- a/tools/testing/selftests/ftrace/test.d/template
++++ b/tools/testing/selftests/ftrace/test.d/template
+@@ -1,6 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: %HERE DESCRIBE WHAT THIS DOES%
++# requires: %HERE LIST THE REQUIRED FILES%
+ # you have to add ".tc" extention for your testcase file
+ # Note that all tests are run with "errexit" option.
  
 
