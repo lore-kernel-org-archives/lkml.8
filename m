@@ -2,133 +2,486 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6853C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D480C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA103206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B4620772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:49:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="oWieoJ9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgFCNsV convert rfc822-to-8bit (ORCPT
+        id S1726116AbgFCNto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:48:21 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:34629 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725866AbgFCNsU (ORCPT
+        Wed, 3 Jun 2020 09:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgFCNtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:48:20 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U-TwqSa_1591192068;
-Received: from 30.39.27.85(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0U-TwqSa_1591192068)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 03 Jun 2020 21:47:49 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
-From:   changhuaixin <changhuaixin@linux.alibaba.com>
-In-Reply-To: <20200601173840.3f36m6l4fsu5bill@treble>
-Date:   Wed, 3 Jun 2020 21:47:47 +0800
-Cc:     changhuaixin <changhuaixin@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        bp@alien8.de, hpa@zytor.com, luto@amacapital.net,
-        michal.lkml@markovi.net, mingo@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, x86@kernel.org, yamada.masahiro@socionext.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <037BCC2F-FEF5-40AB-8F7B-7A966073113C@linux.alibaba.com>
-References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
- <20200522182815.ezanmvbemhzq2fmm@treble>
- <482837A8-E9D9-4229-B7B1-8E14403FB2AC@linux.alibaba.com>
- <20200601173840.3f36m6l4fsu5bill@treble>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 3 Jun 2020 09:49:43 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16156C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:49:43 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id x17so512441oog.6
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 06:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=N6v536SMiOWMhGN6JyICuGQTuvhKxJSrwWcgV9sXx+M=;
+        b=oWieoJ9Yb6YF7DgNOok4BCXy7VvDS591AErvb2sJOw2Y4EZZHp3kXO1Nz1Vu3E2oQP
+         laCxPxEAloWhf7nUTOqujCVaF/7pdSxXVIrZCK+7E1zrzjY2iwZo7vF5THmUgObHGFYw
+         as9/bVHCYK1w3GSI/gNLcnWoa8GqVcG57yVAUxMH7vXyTVFliI2bIMAcgJzHIkhZZEnR
+         TiZQMtzEM6kCjBcjlY0JpA2+TWLHIswDFwet2V6ZNaY18fo5tVLoLyXfDy781kA+lkPz
+         kDW++F0trV0anAgXPJ0X5Hqre5PbWxJL+XNM10Tdae1oYfg7oMJHW7Ywj7GxAZgt9t/Z
+         8Apg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=N6v536SMiOWMhGN6JyICuGQTuvhKxJSrwWcgV9sXx+M=;
+        b=tnZpMqMybkOXGDpOSZVCAUwDHgHLTPehlyKytbETwUnB7wrD/hgMZIYvru3hSnXaqX
+         +Oz3wndLlxuAJTs8V3+H0GBXuqgJPD2CvaRZ7PHImp/Zy4BAI72TDT3PMxF4+vuGDXyK
+         3oMiqOk6xmidekPofxAoDZDFFxHrVYbWcAfWLCo8f3C84ACCtcSdyk+D/mKGv2cYSPrs
+         nQ4hRC3/dU1a4cAWqcWG9xJHzXQJzzX1yAmnMCU8T9UhbMbGH4n8iQspI2DOj95jTVNF
+         NDzRTs7+lOTJ/75ebPWI3R80wbj/J3o89uqO/6grTpmCXQcVf7EsxAuu9rp+y5XDNcoi
+         55QQ==
+X-Gm-Message-State: AOAM533CCqdcBpcUt+CuDStj+8KgyzHZip7f5Wz29NNi7DBWBehos1Sn
+        B3vE6gSVg5CKd5qYESRt0cOfTYxWAAU=
+X-Google-Smtp-Source: ABdhPJwcu+vwfzcby/uBrQ4OuuNvlX/fYoXh9d/p5MlKCAraEPvpNsCT/aazy4zT5GVK5w4qwCVEhg==
+X-Received: by 2002:a4a:3559:: with SMTP id w25mr86424oog.6.1591192182142;
+        Wed, 03 Jun 2020 06:49:42 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id i10sm588007oie.42.2020.06.03.06.49.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 06:49:41 -0700 (PDT)
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>, arnd@arndb.de,
+        yamada.masahiro@socionext.com, Rich Felker <dalias@libc.org>
+From:   Rob Landley <rob@landley.net>
+Subject: headers_install builds break on a lot of targets?
+Message-ID: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
+Date:   Wed, 3 Jun 2020 08:49:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The headers_install_all target got removed last year (commit f3c8d4c7a728 and
+would someone like to update Documentation/kbuild/headers_install.txt which
+still describes it?)
 
+The musl-libc maintainer is using a forked hand-hacked kernel header package in
+his toolchain build project (https://github.com/richfelker/musl-cross-make), and
+he said the reason for it is:
 
-> On Jun 2, 2020, at 1:38 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> 
-> On Sun, May 31, 2020 at 01:26:54PM +0800, changhuaixin wrote:
->>   It turned out to be an alignment problem. If sh_size of previous section
->>   orc_unwind is not 4-byte aligned, sh_offset of the following orc_lookup
->>   section is not 4-byte aligned too. However, the VMA of section orc_lookup
->>   is aligned to the nearest 4-byte. Thus, the orc_lookup section means two
->>   different ares for scripts/sorttable tool and kernel.
->> 
->>   Sections headers look like this when it happens:
->> 
->>   12 .orc_unwind_ip 00172124  ffffffff82573b28  0000000002573b28  01773b28
->>    2**0
->>                    CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
->>   13 .orc_unwind   0022b1b6  ffffffff826e5c4c  00000000026e5c4c  018e5c4c
->>    2**0
->>                    CONTENTS, ALLOC, LOAD, READONLY, DATA
->>   14 .orc_lookup   0003003c  ffffffff82910e04  0000000002910e04  01b10e02
->>    2**0
->>                    ALLOC
->>   15 .vvar         00001000  ffffffff82941000  0000000002941000  01b41000
->>    2**4
->>                    CONTENTS, ALLOC, LOAD, DATA
->> 
->>   Sorttable tool uses the are starting with offset 0x01b10e02 for 0x0003003c
->>   bytes. While kernel use the area starting with VMA at  0xffffffff82910e04
->>   for 0x0003003c bytes, meaning that each entry in this table used by kernel
->>   is actually 2 bytes behind the corresponding entry set from sorttable
->>   tool.
->> 
->>   Any suggestion on fixing this？
-> 
-> The VMA and LMA are both 4-byte aligned.  The file offset alignment
-> (0x01b10e02) shouldn't matter.
-> 
-> Actually it looks like the problem is that the section doesn't have
-> CONTENTS, so it's just loaded as a BSS section (all zeros).  The section
-> needs to be type SHT_PROGBITS instead of SHT_NOBITS.
-> 
-> $ readelf -S vmlinux |grep orc_lookup
->  [16] .orc_lookup       NOBITS           ffffffff82b68418  01d68418
-> 
-> I tried to fix it with
-> 
-> diff --git a/scripts/sorttable.h b/scripts/sorttable.h
-> index a36c76c17be4..76adb1fb88f8 100644
-> --- a/scripts/sorttable.h
-> +++ b/scripts/sorttable.h
-> @@ -341,6 +341,7 @@ static int do_sort(Elf_Ehdr *ehdr,
-> 			param.lookup_table_size = s->sh_size;
-> 			param.orc_lookup_table = (unsigned int *)
-> 				((void *)ehdr + s->sh_offset);
-> +			w(SHT_PROGBITS, &s->sh_type);
-> 		}
-> 		if (!strcmp(secstrings + idx, ".text")) {
-> 			param.text_size = s->sh_size;
-> 
-> 
-> But that makes kallsyms unhappy, so I guess we need to do it from the
-> linker script where .orc_lookup is created.
-> 
-> Linker script doesn't seem to allow manual specification of the section
-> type, so this is the best I could come up with:
-> 
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index db600ef218d7..49f4f5bc6165 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -826,6 +826,8 @@
-> 		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
-> 			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
-> 		orc_lookup_end = .;					\
-> +		/* HACK: force SHT_PROGBITS so sorttable can edit: */	\
-> +		BYTE(1);						\
-> 	}
-> #else
-> #define ORC_UNWIND_TABLE
+  http://lists.landley.net/pipermail/toybox-landley.net/2020-March/011536.html
 
-Thanks! It works.
+  Because downloading 100 MB of kernel source and extracting it to a far
+  larger tree just to get the headers isn't really fun.
 
+And I thought "that's why headers_install_all existed", and noticed the target
+being removed, so I tried my hand at a small shell script vesion:
 
+  for i in $(echo arch/*/ | sed 's@arch/\([^/]*\)/@\1@g')
+  do
+    echo $i
+    X="$PWD/fruitbasket/$i"
+    mkdir -p "$X"
+    make ARCH=$i distclean defconfig headers_install \
+      INSTALL_HDR_PATH="$PWD/fruitbasket/$i" > /dev/null
+  done
+
+On the bright side, the resulting fruitbasket.tar.xz is 1.5 megabytes. The
+downside is I have no idea how broken the resulting header files are after this
+error-fest:
+
+alpha
+arc
+gcc: error: unrecognized command line option ‘-mmedium-calls’
+gcc: error: unrecognized command line option ‘-mno-sdata’; did you mean
+‘-fno-stats’?
+gcc: error: unrecognized command line option ‘-mmedium-calls’
+gcc: error: unrecognized command line option ‘-mno-sdata’; did you mean
+‘-fno-stats’?
+arm
+arm64
+c6x
+csky
+h8300
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mint32’; did you mean ‘-fintfc’?
+hexagon
+gcc: error: unrecognized command line option ‘-G0’
+gcc: error: unrecognized command line option ‘-G0’
+gcc: error: unrecognized command line option ‘-G0’
+ia64
+./arch/ia64/scripts/check-segrel.S: Assembler messages:
+./arch/ia64/scripts/check-segrel.S:2: Error: unknown pseudo-op: `.rodata'
+./arch/ia64/scripts/check-segrel.S:3: Error: no such instruction: `data4
+@segrel(start)'
+objdump: '/tmp/out17279': No such file
+objdump: section '.rodata' mentioned in a -j option, but not found in any input file
+./arch/ia64/scripts/toolchain-flags: 20: [: !=: unexpected operator
+./arch/ia64/scripts/check-text-align.S: Assembler messages:
+./arch/ia64/scripts/check-text-align.S:2: Error: unknown pseudo-op: `.proc'
+./arch/ia64/scripts/check-text-align.S:3: Error: unknown pseudo-op: `.prologue'
+./arch/ia64/scripts/check-text-align.S:4: Error: unknown pseudo-op: `.save'
+./arch/ia64/scripts/check-text-align.S:7: Error: unknown pseudo-op: `.endp'
+readelf: Error: '/tmp/out17279': No such file
+./arch/ia64/scripts/check-gas-asm.S: Assembler messages:
+./arch/ia64/scripts/check-gas-asm.S:1: Error: junk at end of line, first
+unrecognized character is `['
+./arch/ia64/scripts/check-gas-asm.S:2: Error: unknown pseudo-op: `.xdata4'
+objdump: '/tmp/out17306.o': No such file
+objdump: section '.data' mentioned in a -j option, but not found in any input file
+./arch/ia64/scripts/check-gas: 11: [: !=: unexpected operator
+./arch/ia64/scripts/check-segrel.S: Assembler messages:
+./arch/ia64/scripts/check-segrel.S:2: Error: unknown pseudo-op: `.rodata'
+./arch/ia64/scripts/check-segrel.S:3: Error: no such instruction: `data4
+@segrel(start)'
+objdump: '/tmp/out19677': No such file
+objdump: section '.rodata' mentioned in a -j option, but not found in any input file
+./arch/ia64/scripts/toolchain-flags: 20: [: !=: unexpected operator
+./arch/ia64/scripts/check-text-align.S: Assembler messages:
+./arch/ia64/scripts/check-text-align.S:2: Error: unknown pseudo-op: `.proc'
+./arch/ia64/scripts/check-text-align.S:3: Error: unknown pseudo-op: `.prologue'
+./arch/ia64/scripts/check-text-align.S:4: Error: unknown pseudo-op: `.save'
+./arch/ia64/scripts/check-text-align.S:7: Error: unknown pseudo-op: `.endp'
+readelf: Error: '/tmp/out19677': No such file
+./arch/ia64/scripts/check-gas-asm.S: Assembler messages:
+./arch/ia64/scripts/check-gas-asm.S:1: Error: junk at end of line, first
+unrecognized character is `['
+./arch/ia64/scripts/check-gas-asm.S:2: Error: unknown pseudo-op: `.xdata4'
+objdump: '/tmp/out19705.o': No such file
+objdump: section '.data' mentioned in a -j option, but not found in any input file
+./arch/ia64/scripts/check-gas: 11: [: !=: unexpected operator
+./arch/ia64/scripts/check-segrel.S: Assembler messages:
+./arch/ia64/scripts/check-segrel.S:2: Error: unknown pseudo-op: `.rodata'
+./arch/ia64/scripts/check-segrel.S:3: Error: no such instruction: `data4
+@segrel(start)'
+objdump: '/tmp/out19983': No such file
+objdump: section '.rodata' mentioned in a -j option, but not found in any input file
+./arch/ia64/scripts/toolchain-flags: 20: [: !=: unexpected operator
+./arch/ia64/scripts/check-text-align.S: Assembler messages:
+./arch/ia64/scripts/check-text-align.S:2: Error: unknown pseudo-op: `.proc'
+./arch/ia64/scripts/check-text-align.S:3: Error: unknown pseudo-op: `.prologue'
+./arch/ia64/scripts/check-text-align.S:4: Error: unknown pseudo-op: `.save'
+./arch/ia64/scripts/check-text-align.S:7: Error: unknown pseudo-op: `.endp'
+readelf: Error: '/tmp/out19983': No such file
+./arch/ia64/scripts/check-gas-asm.S: Assembler messages:
+./arch/ia64/scripts/check-gas-asm.S:1: Error: junk at end of line, first
+unrecognized character is `['
+./arch/ia64/scripts/check-gas-asm.S:2: Error: unknown pseudo-op: `.xdata4'
+objdump: '/tmp/out20014.o': No such file
+objdump: section '.data' mentioned in a -j option, but not found in any input file
+./arch/ia64/scripts/check-gas: 11: [: !=: unexpected operator
+m68k
+microblaze
+mips
+nds32
+nios2
+openrisc
+parisc
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: unrecognized command line option ‘-mno-space-regs’; did you mean
+‘-fno-make-deps’?
+gcc: error: unrecognized command line option ‘-mfast-indirect-calls’; did you
+mean ‘-fno-indirect-classes’?
+gcc: error: unrecognized command line option ‘-mdisable-fpregs’; did you mean
+‘-fdisable-’?
+powerpc
+riscv
+s390
+sh
+sparc
+um
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+Makefile:1230: *** Headers not exportable for the um architecture.  Stop.
+make: *** [__build_one_by_one] Error 2
+unicore32
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+gcc: error: missing argument to ‘-Wframe-larger-than=’
+x86
+xtensa
+gcc: error: unrecognized command line option ‘-mlongcalls’
+gcc: error: unrecognized command line option ‘-mtext-section-literals’; did you
+mean ‘-fext-numeric-literals’?
+gcc: error: unrecognized command line option ‘-mlongcalls’
+gcc: error: unrecognized command line option ‘-mtext-section-literals’; did you
+mean ‘-fext-numeric-literals’?
+gcc: error: unrecognized command line option ‘-mlongcalls’
+gcc: error: unrecognized command line option ‘-mtext-section-literals’; did you
+mean ‘-fext-numeric-literals’?
