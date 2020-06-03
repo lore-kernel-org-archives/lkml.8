@@ -2,163 +2,227 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1789DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF8920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01802074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbw38p2a"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S9m8oly8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgFCGpW (ORCPT
+        id S1726057AbgFCGsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgFCGpU (ORCPT
+        Wed, 3 Jun 2020 02:48:55 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:49339 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgFCGsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:45:20 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8920EC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 23:45:20 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a127so937622pfa.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 23:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uLhvVHc2quwQoGKg/SkeLM5Cyty3lJxhEEs1YioNG6g=;
-        b=rbw38p2aa4lFLWcGblsb0QQU83Mo9aL1otVX4dMde4VR4fGp8r/yHaEeEf96uJXxkR
-         DzRe9H3wpRKmSCTyk8yc5UYr8ZvJ1yHM824ALWTOA4pOUir6GaQTlu0mVnEfUKpN6Z0x
-         2jBA/t6C+F43bIV0eMFB6E2deawjwdNz1oEcocQFZttqXgzfr0e5Cf5sXbjqAJMn7Zbr
-         Hpsd5vMn3BviukoguU3ab7I9zr+t0JXBJouCBWxvbjd4WmrklSRTNeRmvZRJbHxYHt8C
-         GCAU8xXG0EtT3uPoRaQgyokTZ47w9K4D9IH4TJhDbSQv9++W6gKHa6Bquz8ZGrWdn0bB
-         b2ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uLhvVHc2quwQoGKg/SkeLM5Cyty3lJxhEEs1YioNG6g=;
-        b=E/+FoOd8UMYwO8gP1/qIwzbI+No8nuJpLb2a2aQEpZDW/mxGYpN11UjDKCGJ9AarUJ
-         G6DX0cvwageSmGUz3nrZzsSAW98+LW5BVYYgdywoW3AdpKqxNB3gFEIBVdch8pcvGq1g
-         tnmXKmLM5djAWZfgHKmiycD/8Zm5oqmfnGaWYM3iFZEqOSEKrDQE72POkPnkhQh4dRvJ
-         +jIBTN2QOeva1b63u9EwdlIBavHyktLk6Ub1DdYhzpv2IGMfFFi4U+LfBr3J41L5h0Fr
-         BdnWmCyzm/BTv7vfdpMDEPEcobI+5Yre5Q2r+dUN+YXWsVGMRSOdh1SuDij5+R0djeQO
-         3YbQ==
-X-Gm-Message-State: AOAM532txgoHEFp+4piezVfZ1usNffVJy0gfr+piNyd1RKsXFSx4chyY
-        O0ADe8YIskGy4WBa0SVC91w=
-X-Google-Smtp-Source: ABdhPJyfwd1s2KK/Xbds/vdRyuFHlajzEvfofWmv6yb6TaftFifRQWn+m7Iy2507WQvOT1Kpj4YkGg==
-X-Received: by 2002:a65:4c8a:: with SMTP id m10mr26833343pgt.138.1591166719984;
-        Tue, 02 Jun 2020 23:45:19 -0700 (PDT)
-Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id gm11sm1074720pjb.9.2020.06.02.23.45.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jun 2020 23:45:18 -0700 (PDT)
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     geert+renesas@glider.be, peter_hong@fintek.com.tw,
-        linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: [PATCH 1/1] driver core: Fix unbalance probe_count in really_probe()
-Date:   Wed,  3 Jun 2020 14:45:09 +0800
-Message-Id: <20200603064509.32736-1-hpeter+linux_kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 02:48:55 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200603064852euoutp01b76024116df891734a1c254ee3cd4e21~U9eUWRZR10461104611euoutp01J
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:48:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200603064852euoutp01b76024116df891734a1c254ee3cd4e21~U9eUWRZR10461104611euoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591166932;
+        bh=FP+oHu1ZKPLgzkpn+WtVvYWahse9lDSc5c8CXSXoDuw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=S9m8oly8sddS6EL39ylPOAAFBMBUeOfjtsBwFUT5jFOX9bda35LST2qRRsYbydW61
+         pB6aQQY0akz9+DlEZTF6yTtcytgre3kFerWzsxLcMYta/kfoERGYXeX9tkjhRFsWE2
+         goZ6uCQpThD71RZ1jDXUMqGXjeCqjVXnvrFmcfoQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200603064852eucas1p1bd0bcfd345341dce68a296375fb0a791~U9eUHWNvv2442224422eucas1p1u;
+        Wed,  3 Jun 2020 06:48:52 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B0.F8.60679.4D747DE5; Wed,  3
+        Jun 2020 07:48:52 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b~U9eTepbYJ0363103631eucas1p2T;
+        Wed,  3 Jun 2020 06:48:51 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200603064851eusmtrp2e11aa2f6a4bf3a04b87301913d7ca40f~U9eTd6Xir1776517765eusmtrp2U;
+        Wed,  3 Jun 2020 06:48:51 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-b8-5ed747d48e40
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 23.F1.08375.3D747DE5; Wed,  3
+        Jun 2020 07:48:51 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200603064851eusmtip24519b279e7936764c77c01632cbc1b25~U9eTCtPhA0725207252eusmtip2j;
+        Wed,  3 Jun 2020 06:48:51 +0000 (GMT)
+Subject: Re: [PATCHv5 3/5] ext4: mballoc: Introduce pcpu seqcnt for freeing
+ PA to improve ENOSPC handling
+To:     Ritesh Harjani <riteshh@linux.ibm.com>, linux-ext4@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <aa4f7629-02ff-e49b-e9c0-5ef4a1deee90@samsung.com>
+Date:   Wed, 3 Jun 2020 08:48:51 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <7f254686903b87c419d798742fd9a1be34f0657b.1589955723.git.riteshh@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djPc7pX3K/HGZz5zmFx8aC/xfPlixkt
+        Zs67w2axZ+9JFovLu+awWbx6fIvdorXnJ7sDu8eERQcYPZrOHGX2WL/lKovH501yASxRXDYp
+        qTmZZalF+nYJXBk/vz5lLDinXfF78RzmBsbNKl2MnBwSAiYSF6/dY+9i5OIQEljBKHHocDsz
+        hPOFUWLxyXNsEM5nRommvzMZYVpWd+9nhUgsZ5S4vOEsVMt7Rokvd04yg1QJC2RLrNi6kwnE
+        FhFwk1iz9wwTSBGzwHpGiSd314ONYhMwlOh628UGYvMK2En8P/kQrJlFQEVi+cPDLCC2qECs
+        RM/9V8wQNYISJ2c+AYtzCsRITPzSCdbLLCAv0bx1NjOELS5x68l8JohT17FLPOiIg7BdJB7t
+        m80OYQtLvDq+BcqWkfi/cz7YcRICzYwSD8+tZYdweoB+a5oB9bS1xJ1zv4C2cQBt0JRYv0sf
+        Iuwo8W3pNrCwhACfxI23ghA38ElM2jadGSLMK9HRJgRRrSYx6/g6uLUHL1xinsCoNAvJZ7OQ
+        fDMLyTezEPYuYGRZxSieWlqcm55abJSXWq5XnJhbXJqXrpecn7uJEZh6Tv87/mUH464/SYcY
+        BTgYlXh4DQyvxQmxJpYVV+YeYpTgYFYS4XU6ezpOiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/x
+        opexQgLpiSWp2ampBalFMFkmDk6pBkbOzHNlatlqUyo3tzBeMd9rzL2R32XPso88FlV7ZnU8
+        YZ8gbdIb0bx4zs3C0yfXL2ubmNU1O/qRzGW3T74TnlQt/eWQua0z9kxK2xeb5rPPUn7LKJY7
+        cKc7y+gxvuhyvr/CXdciTfTk3Fm2sbMPnhAX558c0GXblvwwdEnAgVVJE5u3aUiZKSmxFGck
+        GmoxFxUnAgBNLVKtOQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsVy+t/xe7qX3a/HGcx7qW5x8aC/xfPlixkt
+        Zs67w2axZ+9JFovLu+awWbx6fIvdorXnJ7sDu8eERQcYPZrOHGX2WL/lKovH501yASxRejZF
+        +aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehk/vz5lLDin
+        XfF78RzmBsbNKl2MnBwSAiYSq7v3s3YxcnEICSxllFgy6zwzREJG4uS0BlYIW1jiz7UuNoii
+        t4wSE1afZwdJCAtkS8zaegesSETATWLN3jNMIEXMAhsZJQ7MuMgM0dHFKHFv8lFGkCo2AUOJ
+        rrcgozg5eAXsJP6ffAi2jkVARWL5w8MsILaoQKxE9+If7BA1ghInZz4Bi3MKxEhM/NIJ1sss
+        YCYxbzNEL7OAvETz1tlQtrjErSfzmSYwCs1C0j4LScssJC2zkLQsYGRZxSiSWlqcm55bbKhX
+        nJhbXJqXrpecn7uJERht24793LyD8dLG4EOMAhyMSjy8BobX4oRYE8uKK3MPMUpwMCuJ8Dqd
+        PR0nxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnARJBXEm9oamhuYWlobmxubGahJM7bIXAw
+        RkggPbEkNTs1tSC1CKaPiYNTqoGxPGEmS866/GufAqpuXDl32sE0IKRJZVKt4KGFR/7PCppo
+        VSotzMRVEzK5N4uZNaqe95yWxv5ZL0Tznq3ludPEccnXofHJY07bz6XS3wpnzVNb2N64SjSJ
+        bfHM+Dn/9k2/0G3EuT/zdJXpu7CjD4PuFrs1lj8tvs17i3t35beJWZv/n6uPXvFMiaU4I9FQ
+        i7moOBEA4qcxKMwCAAA=
+X-CMS-MailID: 20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b
+References: <cover.1589955723.git.riteshh@linux.ibm.com>
+        <7f254686903b87c419d798742fd9a1be34f0657b.1589955723.git.riteshh@linux.ibm.com>
+        <CGME20200603064851eucas1p2e435089fbdf4de1d1fa3fb051c2f3d7b@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In previous patch, using return -EBUSY in really_probe() instead WARN_ON()
-only. The following is the partial code.
+Hi Ritesh,
 
-	...
-	atomic_inc(&probe_count);
-	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
-		 drv->bus->name, __func__, drv->name, dev_name(dev));
-	if (!list_empty(&dev->devres_head)) {
-		dev_crit(dev, "Resources present before probing\n");
-		return -EBUSY;
-	}
-	...
+On 20.05.2020 08:40, Ritesh Harjani wrote:
+> There could be a race in function ext4_mb_discard_group_preallocations()
+> where the 1st thread may iterate through group's bb_prealloc_list and
+> remove all the PAs and add to function's local list head.
+> Now if the 2nd thread comes in to discard the group preallocations,
+> it will see that the group->bb_prealloc_list is empty and will return 0.
+>
+> Consider for a case where we have less number of groups
+> (for e.g. just group 0),
+> this may even return an -ENOSPC error from ext4_mb_new_blocks()
+> (where we call for ext4_mb_discard_group_preallocations()).
+> But that is wrong, since 2nd thread should have waited for 1st thread
+> to release all the PAs and should have retried for allocation.
+> Since 1st thread was anyway going to discard the PAs.
+>
+> The algorithm using this percpu seq counter goes below:
+> 1. We sample the percpu discard_pa_seq counter before trying for block
+>     allocation in ext4_mb_new_blocks().
+> 2. We increment this percpu discard_pa_seq counter when we either allocate
+>     or free these blocks i.e. while marking those blocks as used/free in
+>     mb_mark_used()/mb_free_blocks().
+> 3. We also increment this percpu seq counter when we successfully identify
+>     that the bb_prealloc_list is not empty and hence proceed for discarding
+>     of those PAs inside ext4_mb_discard_group_preallocations().
+>
+> Now to make sure that the regular fast path of block allocation is not
+> affected, as a small optimization we only sample the percpu seq counter
+> on that cpu. Only when the block allocation fails and when freed blocks
+> found were 0, that is when we sample percpu seq counter for all cpus using
+> below function ext4_get_discard_pa_seq_sum(). This happens after making
+> sure that all the PAs on grp->bb_prealloc_list got freed or if it's empty.
+>
+> It can be well argued that why don't just check for grp->bb_free to
+> see if there are any free blocks to be allocated. So here are the two
+> concerns which were discussed:-
+>
+> 1. If for some reason the blocks available in the group are not
+>     appropriate for allocation logic (say for e.g.
+>     EXT4_MB_HINT_GOAL_ONLY, although this is not yet implemented), then
+>     the retry logic may result into infinte looping since grp->bb_free is
+>     non-zero.
+>
+> 2. Also before preallocation was clubbed with block allocation with the
+>     same ext4_lock_group() held, there were lot of races where grp->bb_free
+>     could not be reliably relied upon.
+> Due to above, this patch considers discard_pa_seq logic to determine if
+> we should retry for block allocation. Say if there are are n threads
+> trying for block allocation and none of those could allocate or discard
+> any of the blocks, then all of those n threads will fail the block
+> allocation and return -ENOSPC error. (Since the seq counter for all of
+> those will match as no block allocation/discard was done during that
+> duration).
+>
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
 
-When the devres_head is not empty, this code will return -EBUSY to prevent
-resource conflict, but it forgot to balance probe_count. We can move the
-increasement code below the resource checking.
+This patch landed in yesterday's linux-next and causes following 
+WARNING/BUG on various Samsung Exynos-based boards:
 
-	...
-	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
-		 drv->bus->name, __func__, drv->name, dev_name(dev));
-	if (!list_empty(&dev->devres_head)) {
-		dev_crit(dev, "Resources present before probing\n");
-		return -EBUSY;
-	}
-	atomic_inc(&probe_count);
-	...
+  BUG: using smp_processor_id() in preemptible [00000000] code: logsave/552
+  caller is ext4_mb_new_blocks+0x404/0x1300
+  CPU: 3 PID: 552 Comm: logsave Tainted: G        W 5.7.0-next-20200602 #4
+  Hardware name: Samsung Exynos (Flattened Device Tree)
+  [<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
+  [<c010d250>] (show_stack) from [<c05185fc>] (dump_stack+0xbc/0xe8)
+  [<c05185fc>] (dump_stack) from [<c0ab689c>] 
+(check_preemption_disabled+0xec/0xf0)
+  [<c0ab689c>] (check_preemption_disabled) from [<c03a7b38>] 
+(ext4_mb_new_blocks+0x404/0x1300)
+  [<c03a7b38>] (ext4_mb_new_blocks) from [<c03780f4>] 
+(ext4_ext_map_blocks+0xc7c/0x10f4)
+  [<c03780f4>] (ext4_ext_map_blocks) from [<c03902b4>] 
+(ext4_map_blocks+0x118/0x5a0)
+  [<c03902b4>] (ext4_map_blocks) from [<c0394524>] 
+(mpage_map_and_submit_extent+0x134/0x9c0)
+  [<c0394524>] (mpage_map_and_submit_extent) from [<c03958c8>] 
+(ext4_writepages+0xb18/0xcb0)
+  [<c03958c8>] (ext4_writepages) from [<c02588ec>] (do_writepages+0x20/0x94)
+  [<c02588ec>] (do_writepages) from [<c024c688>] 
+(__filemap_fdatawrite_range+0xac/0xcc)
+  [<c024c688>] (__filemap_fdatawrite_range) from [<c024c700>] 
+(filemap_flush+0x28/0x30)
+  [<c024c700>] (filemap_flush) from [<c037eedc>] 
+(ext4_release_file+0x70/0xac)
+  [<c037eedc>] (ext4_release_file) from [<c02c3310>] (__fput+0xc4/0x234)
+  [<c02c3310>] (__fput) from [<c014eb74>] (task_work_run+0x88/0xcc)
+  [<c014eb74>] (task_work_run) from [<c010ca40>] 
+(do_work_pending+0x52c/0x5cc)
+  [<c010ca40>] (do_work_pending) from [<c0100094>] 
+(slow_work_pending+0xc/0x20)
+  Exception stack(0xec9c1fb0 to 0xec9c1ff8)
+  1fa0:                                     00000000 0044969c 0000006c 
+00000000
+  1fc0: 00000001 0045a014 00000241 00000006 00000000 be91abb4 be91abb0 
+0000000c
+  1fe0: 00459fd4 be91ab90 00448ed4 b6e43444 60000050 00000003
 
-The original code will cause lots motherboard freeze in reboot/shutdown
-with systemd message "Reached target Reboot" or "Reached target Shutdown"
-with serial8250 platform driver. e.g. AOPEN DE6200. The conflict boot
-dmesg below:
+Please let me know how I can help debugging this issue. The above log is 
+from linux-next 20200602 compiled from exynos_defconfig running on ARM 
+32bit Samsung Exynos4412-based Odroid U3 board, however I don't think 
+this is Exynos specific issue. Probably I've observed it, because 
+exynos_defconfig has most of the debugging options enabled.
 
-	Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
-	00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 921600) is a 16550A
-	00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 921600) is a 16550A
-	00:05: ttyS2 at I/O 0x3e8 (irq = 5, base_baud = 921600) is a 16550A
-	serial8250: ttyS3 at I/O 0x2e8 (irq = 3, base_baud = 921600) is a 16550A
+ > ...
 
-Reboot/Shutdown will freeze in wait_for_device_probe(), message as
-following:
-	INFQ: task systemd-shutdown: 1 blocked for more than 120 seconds.
-	Not tainted 5.7.0-rc7-tty-next+ #241
-	"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-	Call Trace:
-	  __schedule+0x3d2/0x700
-	  ? printk+0x52/0x6e
-	  schedule+0x4f/0xc0
-	  wait_for_device_probe+0xbb/0xl40
-	  ? wait_woken+0x80/0x80
-	  device_shutdown+0xl5/0xle0
-	  kernel_power_off+0x35/0x70
-	  __do_sys_reboot+0xla0/0x220
-	  ? do_sigtimedwait+0xld0/0x210
-	  ? do.writev+0x6a/0xll0
-	  ? do.writev+0x6a/0xll0
-	  ? sigprocmask+0x6f/Oxa0
-	  __64_sys_reboot+0xle/0x20
-	  do_syscall_64+0x57/0xlb0
-
-Fixes: 7c35e699c88b ("driver core: Print device when resources present in really_probe()")
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
----
- drivers/base/dd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 9a1d940342ac..5173b0766a26 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -487,7 +487,6 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	if (ret)
- 		return ret;
- 
--	atomic_inc(&probe_count);
- 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
- 		 drv->bus->name, __func__, drv->name, dev_name(dev));
- 	if (!list_empty(&dev->devres_head)) {
-@@ -495,6 +494,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 		return -EBUSY;
- 	}
- 
-+	atomic_inc(&probe_count);
-+
- re_probe:
- 	dev->driver = drv;
- 
+Best regards
 -- 
-2.17.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
