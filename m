@@ -2,125 +2,141 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE71EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B58A320734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4B120659
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VUpMlsS8"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="IrVDJRYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgFCXeB (ORCPT
+        id S1726644AbgFCXfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
+        Wed, 3 Jun 2020 19:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgFCXcQ (ORCPT
+        with ESMTP id S1726022AbgFCXfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:32:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3806C08C5C5
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:32:14 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b16so2466715pfi.13
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:32:14 -0700 (PDT)
+        Wed, 3 Jun 2020 19:35:15 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1264C08C5C2
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:35:14 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id y13so4044288eju.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mP7HDY2ZN5ivM9lomEi6uc16BWfE9HMAWk/tyOctczk=;
-        b=VUpMlsS8luWYC3XyHHaZc+nRVPBUhMgVRgY7r6ereTmxJ2CV63CmoY9G8LrGOkuSTQ
-         K47uNjixFZ1fYU9L0oHIXbtPGyL3X2bOpWgIhpXRvnlBLqW0qd3WjT492H4d1foUpJxP
-         H25ReL/ps5emEFx5QusYD9+rH0F1unUcjPs5k=
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4W+pwBV/mV37XypbafarSnoIpb157MO7R0Lt+xMM2XY=;
+        b=IrVDJRYBvShwaz9jFI1Vg8hoNLNLP8LAt3BGU3N4cSS1dFwNh596fdNHNruj/106sE
+         KaI75eZ69dRttV4MoxtGRt5SIEoAgrvFosoCHmeMOj0MSop1p32uWtrURygHuy8Ale7L
+         uefIOZAFLT+aeyv9zWUcFHlYSTpdUDMeJYE0v9dDPPZQaCaFuFqltHL3laGRipjMLOaV
+         VhV7aDpO9DsZypYp3owSl8jm1L4H1HlwtD76StMd+H4sbmj8NEpH8Pl5A6mDVk26qrdr
+         KOuS4CE29fM87rjTLr0H3LAZAEewxRL5Qk2yc33IMUrhKHQMrmMhg8suhNHcg/D48OTI
+         taIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mP7HDY2ZN5ivM9lomEi6uc16BWfE9HMAWk/tyOctczk=;
-        b=jHgH2jx4+phSG1XEP9Qn1wSxplsWkorodqwx/n4a1nFTjkS3Zd3Uhcl7fkBed1EbTh
-         ebuinkbNWR8jSgGBVUMwJRVTYDbbQF69szo8FuNNZn6L7OnW2slA8CYAVwfV1lsdqkii
-         z+fortgkuvXSh9udoji7u4sbrtl8oQ86dNKCOKcnDyj+3Slz92ckJjyXxUy3pCRo+run
-         /EEZg4Rm7H3GrJ+lu/zVUnVi/DYXkp5/hfOb+/HA83aAuvv9fYOj8Gb0zyHbUoLpo4e8
-         tnaWFS62YwGRADViM9IrEfpK4Pwl5Zdzv3yS4q0wkLeX8vOx8kDkw21qVb2jxJyOKxL0
-         AIhg==
-X-Gm-Message-State: AOAM530zPKqLHPM75cyeP3pvkpsyVp9xeDeokKBuZh+Mc25ipK9ntX/U
-        jhtPhkEd7vwoKgZ7wB2yWEOCdg==
-X-Google-Smtp-Source: ABdhPJx7JrP50eeA2KfLnLeonR3ATTZL4fgn8xfVLKyPbfOSa9aQRBoHTRs7znIl54UHsuA1YKgyUQ==
-X-Received: by 2002:a63:6541:: with SMTP id z62mr1735576pgb.320.1591227133920;
-        Wed, 03 Jun 2020 16:32:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x77sm2799667pfc.4.2020.06.03.16.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 16:32:12 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mm@kvack.org, clang-built-linux@googlegroups.com
-Subject: [PATCH 04/10] rtlwifi: rtl8192cu: Remove uninitialized_var() usage
-Date:   Wed,  3 Jun 2020 16:31:57 -0700
-Message-Id: <20200603233203.1695403-5-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200603233203.1695403-1-keescook@chromium.org>
-References: <20200603233203.1695403-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4W+pwBV/mV37XypbafarSnoIpb157MO7R0Lt+xMM2XY=;
+        b=oRNVdeNh2yCPVnJji1iHZEUGuQ2rlV/5mJmAt8jX/2uEaJBvxlof1fr5BFpbj3gklG
+         GZTN4mlfIHzQ7zVQsiLhiYcgjyL1xpCvrtl8rRKAG/sB2xFq2Trkp8JYES1797lbAowK
+         WqXdZU6Djo0rFenHvklWUSdyUwkzL05lTVaVByfDArjoNIXaGGU330NhkZenXZQVR2ER
+         jFTszUpqEfv8rWTrfD6VM0Ud4R38miMjKBixh24Q3U6VrdXGv0LrpOO1hebRBvcUKPQc
+         VoqfuN9rCOpIWb1E4FbwChtzqLP5uwBq1WlU/88SpzO34ufq/kInkJnZLVx/x5lIPshO
+         dz7g==
+X-Gm-Message-State: AOAM533/UlkhGf0+HRlfKSBaawbOpYpPGpgkHzI1hqohfmTZpxz8+t5T
+        2TwL0ekXoQ1zW/0QpKa+/VBge622o+D+x5mJD3eT
+X-Google-Smtp-Source: ABdhPJwbAgFPcW4CnxOHA+T2vCRxymvldOOhJdNZSzkxO/F/g4D4h2BhGj5/BGVl+Eao8KqaCdecIrkORsqYCgYHREQ=
+X-Received: by 2002:a17:906:19d3:: with SMTP id h19mr1534177ejd.106.1591227313295;
+ Wed, 03 Jun 2020 16:35:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
+ <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
+In-Reply-To: <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 3 Jun 2020 19:35:02 -0400
+Message-ID: <CAHC9VhQN3TvY5ZTnPu76La89tkdnLXhrrbxWocv5F4ygVyG+-Q@mail.gmail.com>
+Subject: Re: [GIT PULL] SELinux patches for v5.8
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using uninitialized_var() is dangerous as it papers over real bugs[1]
-(or can in the future), and suppresses unrelated compiler warnings (e.g.
-"unused variable"). If the compiler thinks it is uninitialized, either
-simply initialize the variable or make compiler changes. As a precursor
-to removing[2] this[3] macro[4], just initialize this variable to NULL,
-and avoid sending garbage by returning.
+On Tue, Jun 2, 2020 at 8:31 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> Side note since you mention performance work: in the past when I've
+> looked at SELinux performance (generally as part of pathname lookup
+> etc VFS loads), the biggest cost by far was that all the SELinux data
+> structures take a ton of cache misses.
+>
+> Yes, some of the hashing shows up in the profiles, but _most_ of it
+> was loading the data from inode->i_security etc.
+>
+> And the reason seemed to be that every single inode ends up having a
+> separately allocated "struct inode_security_struct" (aka "isec"). Even
+> if the contents are often all exactly the same for a large set of
+> inodes that thus _could_ conceptually share the data.
+>
+> Now, it used to be - before being able to stack security layers -
+> SElinux would control that pointer, and it could have done some kind
+> of sharing scheme with copy-on-write behavior (the way we do 'struct
+> cred' for processes), and it would have caused a much smaller cache
+> footprint (and thus likely much fewer cache misses).
 
-[1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-[2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-[3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-[4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+I believe right about the time that Eric Paris was stepping away from
+SELinux he was working on a patchset that basically did what you
+describe: copy-on-write for the SELinux inode blobs (aka
+inode_security_struct, aka isec, etc.).  Unfortunately I don't believe
+that work was ever finished and the idea was lost many years ago in
+the maintainer shuffle; I was trying to figure out this whole
+"maintainer thing" and perhaps didn't push Eric to post those patches
+as much as I should have.  Although it's a big academic now with the
+LSM stacking work.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Most of my SELinux thoughts these days are around the correctness and
+robustness of the code, making sure we are testing as much as possible
+(related to the first point), and trying to catch changes in other
+subsystems which cause us breakage.  Not the most glamorous stuff, but
+it's important.  SELinux is lucky enough to have a few active kernel
+developers, and thankfully a couple of them appear to be looking at
+some of the performance issues.
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-index f070f25bb735..5b071b70bc08 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-@@ -592,7 +592,7 @@ static void _rtl92cu_init_chipn_one_out_ep_priority(struct ieee80211_hw *hw,
- 						    bool wmm_enable,
- 						    u8 queue_sel)
- {
--	u16 uninitialized_var(value);
-+	u16 value;
- 
- 	switch (queue_sel) {
- 	case TX_SELE_HQ:
-@@ -606,7 +606,7 @@ static void _rtl92cu_init_chipn_one_out_ep_priority(struct ieee80211_hw *hw,
- 		break;
- 	default:
- 		WARN_ON(1); /* Shall not reach here! */
--		break;
-+		return;
- 	}
- 	_rtl92c_init_chipn_reg_priority(hw, value, value, value, value,
- 					value, value);
+> These days, that sharing of the i_security pointer across different
+> security layers makes that sound really really painful.
+
+Yeah.  It's pretty much impossible now to do copy-on-write with the
+main security blobs due to the differing nature of the LSMs and the
+single, shared allocation for each blob.  I suppose if you wanted to
+attempt copy-on-write inside a LSM you could introduce another layer
+of pointers/allocation, but I'm not sure how much of an improvement
+that might be.
+
+Perhaps a bit more thought will produce a "eureka!" moment, but I'm
+not overly optimistic.
+
+> But I do wonder if anybody in selinux land (or general security
+> subsystem land) has been thinking of maybe at least having a "this
+> inode has no special labeling" marker that could possibly avoid having
+> all those extra allocations.
+
+I don't want to get into the "security people can't agree on anything"
+discussion, but I think for that to work all of the loaded LSMs would
+need to agree that they don't need to stash anything in the inode (or
+other object); which I think is pretty much impossible most of the
+time.  At least in the SELinux case, even if we were doing some sort
+of copy-on-write, we would need to keep a reference back to the inode
+security blob that does contain our needed info.
+
 -- 
-2.25.1
-
+paul moore
+www.paul-moore.com
