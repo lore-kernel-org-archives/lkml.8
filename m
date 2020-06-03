@@ -2,222 +2,147 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E053C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD00C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51935204EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9682065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vyc2OKuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgFCI33 (ORCPT
+        id S1726371AbgFCIaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:29:29 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35495 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCI33 (ORCPT
+        Wed, 3 Jun 2020 04:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgFCIaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:29:29 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q25so1066810wmj.0;
-        Wed, 03 Jun 2020 01:29:26 -0700 (PDT)
+        Wed, 3 Jun 2020 04:30:18 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB40AC05BD43
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 01:30:18 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o6so1299087pgh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 01:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=Vm2rNwbfPao4e2I5pWY0wiZoJOeGk4AhOiG6Z/5T/cc=;
+        b=Vyc2OKuhMNM+m3bEYlhMtN7QYParoLisO2XTS7OXJKQrXcq+BPboim9P6FyY+YoRbA
+         sYp2r1vYXikG7w0aowvM3H44/AQ3Vx6koCEgm7kIIXnOjWKXANkm8QvGVmVORe/A4RC3
+         RsAc4evczs7WiEQluUzli94TrYErfOP6VHrlf7wfeF9BF5b167vgEwvDvOGzoNXp80A2
+         dqZIFLvtbY8xCi8fn/K/KEGohyRHLVs8FBxB76Wpg7MZrdoq5WhvCh8tUnmfn5FDJ4re
+         QLLQS0X8QlyAh0z/JKkOVaKz6rnl4vyXhqPNWJLGQIF/dj6pe9vMq+w/EbqkEz2FUpM5
+         Wx0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:message-id:date:mime-version;
-        bh=I+vhTKpYAPlshcNSeSPucXhRElY2YCUAChm3OCWyRiQ=;
-        b=rpjBWmAlBvCFYGKH5AsQilvWZNyFKEdLc7wQbcBPl331vqpibvq9GxFiKpkE3CQIIB
-         g7DyqJqGlcxXCNtEKNhYY66RavFAiWTyh7h2vfvQCr6IDqrgwgshENI1cPxIJvsTcSGT
-         04HUAoR1aRSKC7Mi3LKaFEq2I3GvU6Sj4e2zNRxzEjX6yYxNyda2TEjwu9cdT3EOxeMM
-         +yX2M6gOhkllexmlH0ThfocKAGOj7aRuJT+1+8aRXa1XZp8H6+tnnPPiEEpgaI1YmtWy
-         XJnV5c1dYGEglgyPqCQIBUuv6KTdhUikvo22FxgH2rJHYf7yAkrYMaFROwk0PCFZfeNR
-         5wNQ==
-X-Gm-Message-State: AOAM531CAyY8Uz83NutxUygh7NxTU+OM/zvqUyai6n8Dp+/LbkGCPXVz
-        U8IwXGUIp8c3Ei9aF/KOCbpXO9pN
-X-Google-Smtp-Source: ABdhPJzvMh3euRizCMKz1isadTXsib5ORujZ3ARoD3BHZQ9tmzIz15FMc5DBwKbrMSSuA7MNqF3Q2A==
-X-Received: by 2002:a1c:7f44:: with SMTP id a65mr8089383wmd.53.1591172965400;
-        Wed, 03 Jun 2020 01:29:25 -0700 (PDT)
-Received: from darkstar ([51.154.17.58])
-        by smtp.gmail.com with ESMTPSA id l204sm1919788wmf.19.2020.06.03.01.29.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jun 2020 01:29:23 -0700 (PDT)
-References: <20200511154053.7822-1-qais.yousef@arm.com> <20200528132327.GB706460@hirez.programming.kicks-ass.net> <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com> <20200528161112.GI2483@worktop.programming.kicks-ass.net> <20200529100806.GA3070@suse.de> <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
-User-agent: mu4e 1.4.3; emacs 26.3
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Mel Gorman <mgorman@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
-In-reply-to: <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
-Message-ID: <87v9k84knx.derkling@matbug.net>
-Date:   Wed, 03 Jun 2020 10:29:22 +0200
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=Vm2rNwbfPao4e2I5pWY0wiZoJOeGk4AhOiG6Z/5T/cc=;
+        b=DeiF1N9ZI0YxVPL4MjIjbvGRdJ4Ii/GzZbpQl8T56bV2aMGbOejAWKncmCu7Vyu80Z
+         upPgjFMIYOXS+lMCLcP/QVL6B+bHT/iRFQv/0O01SvHF9uDd0iXvuNxccp83JJ34T8nZ
+         3NS12TRlRN0iFBq9ugbjsjxaZ3eCeReinyzTaHLKNTFogCfT8Ouip5XXOb7QN1EgmLx5
+         nCnPU3Fcr32f/wRIMYhM7J/I++kLItF6kGoof0wJyqYU5cFHzOaYFWR2VWt9BYj6Zmfo
+         qU4Nboa/a9Cngel9EIMsZE3wh4LAvl8O5q7L7V9wVgxjVtInI0OhZp0+0gg9Q0kv4Yw+
+         DwdA==
+X-Gm-Message-State: AOAM532J8Bu3BcXn1SDTlSD9LTgogOJv/NEypBFgu7my7SFvkmROpZv7
+        mMLdpBfaDT0autQTb6s1DOLtQoGTmA==
+X-Google-Smtp-Source: ABdhPJwtBYv4OfeBBiKv6vChqL7mdmvw08uaaouRRsDP2wtQ+XZeQo9VM+8C3RNZlD4J8wYKP3hEfg==
+X-Received: by 2002:a63:7353:: with SMTP id d19mr28852908pgn.239.1591173018031;
+        Wed, 03 Jun 2020 01:30:18 -0700 (PDT)
+Received: from ?IPv6:2409:4072:6e19:d568:fc3d:9e72:444d:f928? ([2409:4072:6e19:d568:fc3d:9e72:444d:f928])
+        by smtp.gmail.com with ESMTPSA id 207sm1240606pfw.190.2020.06.03.01.30.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jun 2020 01:30:17 -0700 (PDT)
+Date:   Wed, 03 Jun 2020 14:00:08 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1591119192-18538-7-git-send-email-amittomer25@gmail.com>
+References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com> <1591119192-18538-7-git-send-email-amittomer25@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 06/10] arm64: dts: actions: Add DMA Controller for S700
+To:     Amit Singh Tomar <amittomer25@gmail.com>, andre.przywara@arm.com,
+        afaerber@suse.de, vkoul@kernel.org, robh+dt@kernel.org
+CC:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Message-ID: <5B0DBC8E-36C3-4DC9-A5A4-043313C4C7FD@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Dietmar,
-thanks for sharing these numbers.
 
-On Tue, Jun 02, 2020 at 18:46:00 +0200, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote...
+On 2 June 2020 11:03:08 PM IST, Amit Singh Tomar <amittomer25@gmail=2Ecom>=
+ wrote:
+>This commit adds DAM controller present on Actions S700, it differs
 
-[...]
+DMA
 
-> I ran these tests on 'Ubuntu 18.04 Desktop' on Intel E5-2690 v2
-> (2 sockets * 10 cores * 2 threads) with powersave governor as:
+>from
+>S900 in terms of number of dma channels and requests=2E
 >
-> $ numactl -N 0 ./run-mmtests.sh XXX
-
-Great setup, it's worth to rule out all possible noise source (freq
-scaling, thermal throttling, NUMA scheduler, etc.).
-Wondering if disabling HT can also help here in reducing results "noise"?
-
-> w/ config-network-netperf-unbound.
+>Signed-off-by: Amit Singh Tomar <amittomer25@gmail=2Ecom>
+>---
+>Changes since v2:
+>	* added power-domain property as sps
+>          is enabled now and DMA needs it=2E
+>Changes since v1:
+>        * No Change=2E
+>Changes since RFC:
+>        * No Change=2E
+>---
+> arch/arm64/boot/dts/actions/s700=2Edtsi | 15 +++++++++++++++
+> 1 file changed, 15 insertions(+)
 >
-> Running w/o 'numactl -N 0' gives slightly worse results.
->
-> without-clamp      : CONFIG_UCLAMP_TASK is not set
-> with-clamp         : CONFIG_UCLAMP_TASK=y,
->                      CONFIG_UCLAMP_TASK_GROUP is not set
-> with-clamp-tskgrp  : CONFIG_UCLAMP_TASK=y,
->                      CONFIG_UCLAMP_TASK_GROUP=y
->
->
-> netperf-udp
->                                 ./5.7.0-rc7            ./5.7.0-rc7            ./5.7.0-rc7
->                               without-clamp             with-clamp      with-clamp-tskgrp
+>diff --git a/arch/arm64/boot/dts/actions/s700=2Edtsi
+>b/arch/arm64/boot/dts/actions/s700=2Edtsi
+>index f8eb72bb4125=2E=2E605594dd7a0e 100644
+>--- a/arch/arm64/boot/dts/actions/s700=2Edtsi
+>+++ b/arch/arm64/boot/dts/actions/s700=2Edtsi
+>@@ -6,6 +6,7 @@
+> #include <dt-bindings/clock/actions,s700-cmu=2Eh>
+> #include <dt-bindings/interrupt-controller/arm-gic=2Eh>
+> #include <dt-bindings/reset/actions,s700-reset=2Eh>
+>+#include <dt-bindings/power/owl-s700-powergate=2Eh>
 
-Can you please specify how to read the following scores? I give it a run
-to my local netperf and it reports Throughput, thous I would expect the
-higher the better... but... this seems something different.
+Sort this alphabetically=2E=20
 
-> Hmean     send-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-> Hmean     send-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-> Hmean     send-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-> Hmean     send-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-> Hmean     send-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.96 *   1.24%*
-> Hmean     send-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-> Hmean     send-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-> Hmean     send-8192     14961.77 (   0.00%)    14418.92 *  -3.63%*    14908.36 *  -0.36%*
-> Hmean     send-16384    25799.50 (   0.00%)    25025.64 *  -3.00%*    25831.20 *   0.12%*
+Thanks,=20
+Mani
 
-If I read it as the lower the score the better, all the above results
-tell us that with-clamp is even better, while with-clamp-tskgrp
-is not that much worst.
+>=20
+> / {
+> 	compatible =3D "actions,s700";
+>@@ -244,5 +245,19 @@
+> 				     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> 				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> 		};
+>+
+>+		dma: dma-controller@e0230000 {
+>+			compatible =3D "actions,s700-dma";
+>+			reg =3D <0x0 0xe0230000 0x0 0x1000>;
+>+			interrupts =3D <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+>+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+>+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+>+				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+>+			#dma-cells =3D <1>;
+>+			dma-channels =3D <10>;
+>+			dma-requests =3D <44>;
+>+			clocks =3D <&cmu CLK_DMAC>;
+>+			power-domains =3D <&sps S700_PD_DMA>;
+>+		};
+> 	};
+> };
 
-The other way around (the higher the score the better) would look odd
-since we definitively add in more code and complexity when uclamp has
-the TG support enabled we would not expect better scores.
-
-> Hmean     recv-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-> Hmean     recv-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-> Hmean     recv-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-> Hmean     recv-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-> Hmean     recv-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.95 *   1.24%*
-> Hmean     recv-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-> Hmean     recv-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-> Hmean     recv-8192     14961.61 (   0.00%)    14418.88 *  -3.63%*    14908.30 *  -0.36%*
-> Hmean     recv-16384    25799.39 (   0.00%)    25025.49 *  -3.00%*    25831.00 *   0.12%*
->
-> netperf-tcp
->  
-> Hmean     64              818.65 (   0.00%)      812.98 *  -0.69%*      826.17 *   0.92%*
-> Hmean     128            1569.55 (   0.00%)     1555.79 *  -0.88%*     1586.94 *   1.11%*
-> Hmean     256            2952.86 (   0.00%)     2915.07 *  -1.28%*     2968.15 *   0.52%*
-> Hmean     1024          10425.91 (   0.00%)    10296.68 *  -1.24%*    10418.38 *  -0.07%*
-> Hmean     2048          17454.51 (   0.00%)    17369.57 *  -0.49%*    17419.24 *  -0.20%*
-> Hmean     3312          22509.95 (   0.00%)    22229.69 *  -1.25%*    22373.32 *  -0.61%*
-> Hmean     4096          25033.23 (   0.00%)    24859.59 *  -0.69%*    24912.50 *  -0.48%*
-> Hmean     8192          32080.51 (   0.00%)    31744.51 *  -1.05%*    31800.45 *  -0.87%*
-> Hmean     16384         36531.86 (   0.00%)    37064.68 *   1.46%*    37397.71 *   2.37%*
->
-> The diffs are smaller than on openSUSE Leap 15.1 and some of the
-> uclamp taskgroup results are better?
->
-> With this test setup we now can play with the uclamp code in
-> enqueue_task() and dequeue_task().
->
-> ---
->
-> W/ config-network-netperf-unbound (only netperf-udp and buffer size 64):
->
-> $ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp/perf.data | grep activate_task
->
-> # Event 'cycles:ppp'
-> #
-> # Baseline  Delta Abs  Shared Object            Symbol
->
->      0.02%     +0.54%  [kernel.vmlinux]         [k] activate_task
->      0.02%     +0.38%  [kernel.vmlinux]         [k] deactivate_task
->
-> $ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp-tskgrp/perf.data | grep activate_task
->
->      0.02%     +0.35%  [kernel.vmlinux]         [k] activate_task
->      0.02%     +0.34%  [kernel.vmlinux]         [k] deactivate_task
-
-These data makes more sense to me, AFAIR we measured <1% impact in the
-wakeup path using cycletest.
-
-I would also suggest to always report the overheads for 
-  __update_load_avg_cfs_rq()
-as a reference point. We use that code quite a lot in the wakeup path
-and it's a good proxy for relative comparisons.
-
-
-> I still see 20 out of 90 tests with the warning message that the
-> desired confidence was not achieved though.
-
-Where the 90 comes from? From the above table we run 9 sizes for
-{udp-send, udp-recv, tcp} and 3 kernels. Should not give us 81 results?
-
-Maybe the Warning are generated only when a test has to be repeated?
-Thus, all the numbers above are granted to be within the specific CI?
-
-> "
-> !!! WARNING
-> !!! Desired confidence was not achieved within the specified iterations.
-> !!! This implies that there was variability in the test environment that
-> !!! must be investigated before going further.
-> !!! Confidence intervals: Throughput      : 6.727% <-- more than 5% !!!
-> !!!                       Local CPU util  : 0.000%
-> !!!                       Remote CPU util : 0.000%
-> "
->
-> mmtests seems to run netperf with the following '-I' and 'i' parameter
-> hardcoded: 'netperf -t UDP_STREAM -i 3,3 -I 95,5' 
-
-This means that we compute a score's (average +-2.5%) with a 95% confidence.
-
-Does not that means that every +-2.5% difference in the results
-above should be considered in the noise?
-
-I would say that it could be useful to run with more iterations
-and, given the small numbers we are looking at (apparently we are
-scared by a 1% overhead), we should better use a more aggressive CI.
-
-What about something like:
-
-   netperf -t UDP_STREAM -i 3,30 -I 99,1
-
-?
-
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
