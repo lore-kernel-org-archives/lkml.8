@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B08FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A99C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20817221FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFC52220D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gfsZlg9l"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ElHgxlfy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgFCXDW (ORCPT
+        id S1726062AbgFCXDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:03:22 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37028 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgFCXDU (ORCPT
+        Wed, 3 Jun 2020 19:03:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38654 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgFCXDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:03:20 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d10so2647629pgn.4
+        Wed, 3 Jun 2020 19:03:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u5so2641185pgn.5
         for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:03:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kC933bC/o6W3DoaIvvQnUEH+2IZYCDgVag7G5gA4fAo=;
-        b=gfsZlg9lLlGC+rjIyNrOwuLK/VTnbtcPSj0pwJ0/SjsftoMYjxNX8hu0nV8mnDoWPa
-         EC+tamBrD1GhBxfHcO0ZFZV3sE34HtdvoD9VGXayUB3r/eeYo4wvvrNebkl+MpozGIbd
-         zDDhA4cwfSTqKxchDdk8AlD0qwGEDJKVIdi0s=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ez/bvlepDduVIxHglwNwBFWJmOXjR008iaFnpJzBvrU=;
+        b=ElHgxlfyjmI7NpucOINNAzsvZ5SNoxnKGKnesGMsgq+IQV/BDLWGnfmdpJzmimiXXu
+         ZvbjRqNFBCupDLSbotVaavThprfaI9hOeZQFEefs91YYMupST4hZ86HLrYoqd/Wi7Brt
+         HKq8EBzLAbHemO26c3THGoxqcIuMiXxhsmFMk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kC933bC/o6W3DoaIvvQnUEH+2IZYCDgVag7G5gA4fAo=;
-        b=SyFrp1J/50vBa343ertjWiT8ldEN9Q3H2efBb8Si4gDO0SCDJm78TjXknuzIy2Xo4+
-         Xrzwovh9R4iNC9JOxC4cOuzg5SbPQ2sPbMVeSeNGKK0XKxhRKDFPc9g20ElyPHGo7Tdc
-         E2or2Qcm1cXbqM0evyr4eiKtEzpMk5LopM+3wKGw6JmOtHsd7tZWc6dBEGoaIgehz0qV
-         81gI5ZWVarSMToGpNAalyd3nBd9K7FfUpD/nby8CmngrCpTbAgV9ipBjgYE4Zsx9WRKm
-         3E9k2gOdmKCUA0IWxMNiUyoDVa0iDaA1MHNTx2js47FeNmS6Z79YfnVO5MPl14YJeHcD
-         qvsA==
-X-Gm-Message-State: AOAM532rrpvT2Wcb5hIYXKsGK8pny52mwh92qf1/50QpPwuD5LE1LsSS
-        MbbSGpeH8P6SsWcb+z2r/IK6CQ==
-X-Google-Smtp-Source: ABdhPJyH46TgKsE5dh1LaaDXvjQq4nmwyeffuTV76HmOuOI32eL0bFDQ/7fwLAKv6fbRK/niaPXoiA==
-X-Received: by 2002:a65:4903:: with SMTP id p3mr1593201pgs.318.1591225340505;
-        Wed, 03 Jun 2020 16:02:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ez/bvlepDduVIxHglwNwBFWJmOXjR008iaFnpJzBvrU=;
+        b=s8pygwymz0JM25aEnnWEMK4I/8K5pmVx6gNYRSvnOz95nHb3KZxpk1nCewr/3x+45b
+         Phgak2sIb5cm1/aN2EVaARyE+6+wazrYk+SKrNSkzYJ4+AkAdqBhtV2uN4TnyNDJD4rs
+         5yMZeZ599SyzIenngc2zl34T5gvHKLrV4X0wid1WRTHPLuf/iQrngque4TXlY8yMPXSP
+         XjTGeaGFAP52UeaaRZo3/NjX+CGNJdEbkoQ5Oj1yHFN5O2ZXk/B5BLAhVH8LO+xcBuZX
+         cR1fmB0AWtqJgcvQ4H5zeM45c9lyLbwxr4nku0zf0+wngI+vYQAAqshDqVDQoJSxIWDy
+         Ti6g==
+X-Gm-Message-State: AOAM5304zVUwPfsXvhQvwS7wQqMDyHONRkFVwiLB4jK6bx7wHD3kILYi
+        0vxzcbOKmbOQWA4kj/xJFBGyig==
+X-Google-Smtp-Source: ABdhPJzXfRYYgZFvZFZg1PG4JNnOp9p91vozXqd+fMmZBzV1SkYLmbUgwhnlA3AHb8tArt7NlPxYOg==
+X-Received: by 2002:a65:5206:: with SMTP id o6mr1568522pgp.16.1591225332425;
+        Wed, 03 Jun 2020 16:02:12 -0700 (PDT)
 Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
-        by smtp.gmail.com with ESMTPSA id b11sm2715999pfd.178.2020.06.03.16.02.18
+        by smtp.gmail.com with ESMTPSA id b11sm2715999pfd.178.2020.06.03.16.02.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jun 2020 16:02:19 -0700 (PDT)
+        Wed, 03 Jun 2020 16:02:11 -0700 (PDT)
 From:   Miao-chen Chou <mcchou@chromium.org>
 To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
 Cc:     Alain Michaud <alainm@chromium.org>,
@@ -66,12 +66,10 @@ Cc:     Alain Michaud <alainm@chromium.org>,
         Jakub Kicinski <kuba@kernel.org>,
         Johan Hedberg <johan.hedberg@gmail.com>,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v2 5/7] Bluetooth: Notify adv monitor added event
-Date:   Wed,  3 Jun 2020 16:01:48 -0700
-Message-Id: <20200603160058.v2.5.Idb2c6bf4deb8728c363c3938b1d33057e07ca9c9@changeid>
+Subject: [PATCH v2 1/7] Bluetooth: Add definitions for advertisement monitor features
+Date:   Wed,  3 Jun 2020 16:01:44 -0700
+Message-Id: <20200603160058.v2.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200603160058.v2.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
-References: <20200603160058.v2.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,78 +77,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This notifies management sockets on MGMT_EV_ADV_MONITOR_ADDED event.
-
-The following test was performed.
-- Start two btmgmt consoles, issue a btmgmt advmon-add command on one
-console and observe a MGMT_EV_ADV_MONITOR_ADDED event on the other
+This adds support for Advertisement Monitor API. Here are the commands
+and events added.
+- Read Advertisement Monitor Feature command
+- Add Advertisement Pattern Monitor command
+- Remove Advertisement Monitor command
+- Advertisement Monitor Added event
+- Advertisement Monitor Removed event
 
 Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
 ---
 
 Changes in v2: None
 
- net/bluetooth/mgmt.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ include/net/bluetooth/mgmt.h | 49 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index a43a1e6d17cf9..59a806f11a494 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -155,6 +155,7 @@ static const u16 mgmt_events[] = {
- 	MGMT_EV_EXT_INFO_CHANGED,
- 	MGMT_EV_PHY_CONFIGURATION_CHANGED,
- 	MGMT_EV_EXP_FEATURE_CHANGED,
-+	MGMT_EV_ADV_MONITOR_ADDED,
- };
+diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
+index 16e0d87bd8fae..df36c50d15f53 100644
+--- a/include/net/bluetooth/mgmt.h
++++ b/include/net/bluetooth/mgmt.h
+@@ -702,6 +702,45 @@ struct mgmt_rp_set_exp_feature {
+ 	__le32 flags;
+ } __packed;
  
- static const u16 mgmt_untrusted_commands[] = {
-@@ -3853,6 +3854,16 @@ static int set_exp_feature(struct sock *sk, struct hci_dev *hdev,
- 			       MGMT_STATUS_NOT_SUPPORTED);
- }
- 
-+static void mgmt_adv_monitor_added(struct sock *sk, struct hci_dev *hdev,
-+				   u16 handle)
-+{
-+	struct mgmt_ev_adv_monitor_added ev;
++#define MGMT_ADV_MONITOR_FEATURE_MASK_OR_PATTERNS    BIT(0)
 +
-+	ev.monitor_handle = handle;
++#define MGMT_OP_READ_ADV_MONITOR_FEATURES	0x004B
++#define MGMT_READ_ADV_MONITOR_FEATURES_SIZE	0
++struct mgmt_rp_read_adv_monitor_features {
++	__u32 supported_features;
++	__u32 enabled_features;
++	__u16 max_num_handles;
++	__u8 max_num_patterns;
++	__u16 num_handles;
++	__u16 handles[];
++}  __packed;
 +
-+	mgmt_event(MGMT_EV_ADV_MONITOR_ADDED, hdev, &ev, sizeof(ev), sk);
-+}
++struct mgmt_adv_pattern {
++	__u8 ad_type;
++	__u8 offset;
++	__u8 length;
++	__u8 value[31];
++} __packed;
 +
- static int read_adv_monitor_features(struct sock *sk, struct hci_dev *hdev,
- 				     void *data, u16 len)
- {
-@@ -3905,8 +3916,8 @@ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
- 	struct mgmt_rp_add_adv_patterns_monitor rp;
- 	struct adv_monitor *m = NULL;
- 	struct adv_pattern *p = NULL;
-+	unsigned int mp_cnt = 0, prev_adv_monitors_cnt;
- 	__u8 cp_ofst = 0, cp_len = 0;
--	unsigned int mp_cnt = 0;
- 	int err, i;
- 
- 	BT_DBG("request for %s", hdev->name);
-@@ -3970,6 +3981,8 @@ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
- 
- 	hci_dev_lock(hdev);
- 
-+	prev_adv_monitors_cnt = hdev->adv_monitors_cnt;
++#define MGMT_OP_ADD_ADV_PATTERNS_MONITOR	0x004C
++struct mgmt_cp_add_adv_patterns_monitor {
++	__u8 pattern_count;
++	struct mgmt_adv_pattern patterns[];
++} __packed;
++#define MGMT_ADD_ADV_PATTERNS_MONITOR_SIZE	1
++struct mgmt_rp_add_adv_patterns_monitor {
++	__u16 monitor_handle;
++} __packed;
 +
- 	err = hci_add_adv_monitor(hdev, m);
- 	if (err) {
- 		if (err == -ENOSPC) {
-@@ -3980,6 +3993,9 @@ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
- 		goto unlock;
- 	}
- 
-+	if (hdev->adv_monitors_cnt > prev_adv_monitors_cnt)
-+		mgmt_adv_monitor_added(sk, hdev, m->handle);
++#define MGMT_OP_REMOVE_ADV_MONITOR		0x004D
++struct mgmt_cp_remove_adv_monitor {
++	__u16 monitor_handle;
++} __packed;
++#define MGMT_REMOVE_ADV_MONITOR_SIZE		2
++struct mgmt_rp_remove_adv_monitor {
++	__u16 monitor_handle;
++} __packed;
 +
- 	hci_dev_unlock(hdev);
- 
- 	rp.monitor_handle = m->handle;
+ #define MGMT_EV_CMD_COMPLETE		0x0001
+ struct mgmt_ev_cmd_complete {
+ 	__le16	opcode;
+@@ -933,3 +972,13 @@ struct mgmt_ev_exp_feature_changed {
+ 	__u8	uuid[16];
+ 	__le32	flags;
+ } __packed;
++
++#define MGMT_EV_ADV_MONITOR_ADDED	0x0028
++struct mgmt_ev_adv_monitor_added {
++	__u16 monitor_handle;
++}  __packed;
++
++#define MGMT_EV_ADV_MONITOR_REMOVED	0x0029
++struct mgmt_ev_adv_monitor_removed {
++	__u16 monitor_handle;
++}  __packed;
 -- 
 2.26.2
 
