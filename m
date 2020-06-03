@@ -2,130 +2,104 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71DEE20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTM3zxQd"
+	by mail.kernel.org (Postfix) with ESMTP id 384E320738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgFCRBk (ORCPT
+        id S1726072AbgFCREE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgFCRBj (ORCPT
+        Wed, 3 Jun 2020 13:04:04 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:38448 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgFCREE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:01:39 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E06C08C5C0;
-        Wed,  3 Jun 2020 10:01:39 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a25so3680186ljp.3;
-        Wed, 03 Jun 2020 10:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2iLycb4I4u+ClXUUA0CCDPb6E6bGBrDChBPF7DQKh5s=;
-        b=aTM3zxQdEXzyvTbG2wnsmyG5Ljh4kC5rX2FcLRM6yHZ9CsgexrRB/bG1xtfJfa65A9
-         tsuDK3j0xyJTbGyH04PSRBc940UT0MSX3j3Xe+ctCJQMgKojjCOxd1XLmqH5ScZEks84
-         m4YCGcEeD9yUDlJ47GdTrkDrj2a8lmTVqNf9eP4QeJb6pOjR64QQILWyFFVmk3gNQgik
-         qCJJ0inXRDzPrrokm1ZjCjdg/Ve/bUmhUKBdeHV60tsuFclZjzehk+uWop6vHPnRhhLT
-         hpu4HnylpXg3otqK3GBX0ovRt295MjpmsFRrfrwoX3e67peU3xc+oCRxmQ83jwZ1y6EB
-         4Q+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2iLycb4I4u+ClXUUA0CCDPb6E6bGBrDChBPF7DQKh5s=;
-        b=mA0SNDny3lSdU5ZshxMmdcKkI7XRczGS87YqrgZHa8CbQJd5AI3l20UO1URCN6DX+n
-         3lHoGoEDT6bUusbF72AsiDww9LcE9xkeDX0AZlrWrJBNdaujiknZRuUGPAIKVhFqsIel
-         mvSWD337IaL2uDqyPvlFnYFIKLMJmOp0b8VDxVc6QnHtwwdrFIFAUUHfSmIn+ZnSpS/A
-         ofkyWOhq+f2xiBpJ/LwYHBNGE2/m4kkpBq5savpNiM6irp3xbRCMFjxmObwV3EJxrKxg
-         69nDbZjEpfkZ/Ph+RwCZ8yx12DLrTy+Vj29ujmXtxA7BSgcZ7gjLsICx38r41y2axcai
-         JRyQ==
-X-Gm-Message-State: AOAM532D29PgTYaRQMv8BYcWVDd2evlAyUawt29V7eTBNukn9RJxB1kf
-        JEgcPLPMFHDoVAyDgy+5B7g=
-X-Google-Smtp-Source: ABdhPJz9gyMboago8Er/iKySN0pf2TCLhXajvZU/DCrvcaHiJNcLnfsThNWvM3P5mHq0O1RvGu2jcg==
-X-Received: by 2002:a2e:9816:: with SMTP id a22mr87688ljj.129.1591203697862;
-        Wed, 03 Jun 2020 10:01:37 -0700 (PDT)
-Received: from grain.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id b15sm784577lfa.74.2020.06.03.10.01.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 10:01:36 -0700 (PDT)
-Received: by grain.localdomain (Postfix, from userid 1000)
-        id F2B391A0089; Wed,  3 Jun 2020 20:01:35 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 20:01:35 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
-Message-ID: <20200603170135.GD568636@grain>
-References: <20200603162328.854164-1-areber@redhat.com>
- <20200603162328.854164-2-areber@redhat.com>
+        Wed, 3 Jun 2020 13:04:04 -0400
+Date:   Wed, 3 Jun 2020 13:03:57 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Rob Landley <rob@landley.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>, arnd@arndb.de,
+        yamada.masahiro@socionext.com
+Subject: Re: headers_install builds break on a lot of targets?
+Message-ID: <20200603170357.GG1079@brightrain.aerifal.cx>
+References: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200603162328.854164-2-areber@redhat.com>
-User-Agent: Mutt/1.13.4 (2020-02-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 06:23:26PM +0200, Adrian Reber wrote:
-...
->  
->  /*
-> - * Only allow CAP_SYS_ADMIN to follow the links, due to concerns about how the
-> - * symlinks may be used to bypass permissions on ancestor directories in the
-> - * path to the file in question.
-> + * Only allow CAP_SYS_ADMIN and CAP_CHECKPOINT_RESTORE to follow the links, due
-> + * to concerns about how the symlinks may be used to bypass permissions on
-> + * ancestor directories in the path to the file in question.
->   */
->  static const char *
->  proc_map_files_get_link(struct dentry *dentry,
->  			struct inode *inode,
->  		        struct delayed_call *done)
->  {
-> -	if (!capable(CAP_SYS_ADMIN))
-> +	if (!(capable(CAP_SYS_ADMIN) || capable(CAP_CHECKPOINT_RESTORE)))
->  		return ERR_PTR(-EPERM);
+On Wed, Jun 03, 2020 at 08:49:54AM -0500, Rob Landley wrote:
+> The headers_install_all target got removed last year (commit f3c8d4c7a728 and
+> would someone like to update Documentation/kbuild/headers_install.txt which
+> still describes it?)
+> 
+> The musl-libc maintainer is using a forked hand-hacked kernel header package in
+> his toolchain build project (https://github.com/richfelker/musl-cross-make), and
+> he said the reason for it is:
 
-You know, I'm still not sure if we need this capable() check at all since
-we have proc_fd_access_allowed() called but anyway can we please make this
-if() condition more explicit
+These are provided by sabotage-linux, and are not entirely hand-hacked
+but have a documented and at least partly scripted process by which
+they're built:
 
-	if (!capable(CAP_SYS_ADMIN) && !capable(CAP_CHECKPOINT_RESTORE))
-		return ERR_PTR(-EPERM);
+https://github.com/sabotage-linux/kernel-headers
 
-though I won't insist. And I'll reread the series a bit later once I've
-some spare time to.
+There's no obligation to use them, but using them makes things easier.
+
+Note that, at the time the default was switched, there were no
+upstream kernel headers compatible with a time64 userspace yet, so
+whichever source you wanted to use required patching anyway.
+
+As of 5.6 I believe everything is upstream and we could add stock 5.6
+(or later) headers as a supported choice.
+
+>   http://lists.landley.net/pipermail/toybox-landley.net/2020-March/011536.html
+> 
+>   Because downloading 100 MB of kernel source and extracting it to a far
+>   larger tree just to get the headers isn't really fun.
+> 
+> And I thought "that's why headers_install_all existed", and noticed the target
+> being removed, so I tried my hand at a small shell script vesion:
+> 
+>   for i in $(echo arch/*/ | sed 's@arch/\([^/]*\)/@\1@g')
+>   do
+>     echo $i
+>     X="$PWD/fruitbasket/$i"
+>     mkdir -p "$X"
+>     make ARCH=$i distclean defconfig headers_install \
+>       INSTALL_HDR_PATH="$PWD/fruitbasket/$i" > /dev/null
+>   done
+> 
+> On the bright side, the resulting fruitbasket.tar.xz is 1.5 megabytes. The
+> downside is I have no idea how broken the resulting header files are after this
+> error-fest:
+> 
+> alpha
+> arc
+> gcc: error: unrecognized command line option ‘-mmedium-calls’
+> gcc: error: unrecognized command line option ‘-mno-sdata’; did you mean
+> ‘-fno-stats’?
+> gcc: error: unrecognized command line option ‘-mmedium-calls’
+> gcc: error: unrecognized command line option ‘-mno-sdata’; did you mean
+> ‘-fno-stats’?
+> [...]
+
+Uhg. Surely there should be some fix for whatever mistaken dep is
+behind this? Headers shouldn't actually depend on any config/compiler
+output, should they?? Or is that machinery somehow involved in
+generating the syscall lists and similar?
+
+Rich
+
+
