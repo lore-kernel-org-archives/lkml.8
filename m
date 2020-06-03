@@ -2,414 +2,135 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCE1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 561AF207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591185764;
-	bh=zEn/E923Tf/dYRGqhDsUrI9x1AA8Em1/0jM9fzqjQBc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ft6yOl/S6CNEnIRQmp/xWpY2T71/YYNGIwYLV6lz7doU2riHJ3+C89BH0A2eYBUmA
-	 mve0jepz5qFDQLVbMRgm7wLQ1JE9vrPSJTXiffGXcLy1oPPKoElN3W0ZIFVh4+ecmE
-	 sSk8f7MYQNEymh9Nr9Z4xjcssWsOvR+AMdWU9ymY=
+	by mail.kernel.org (Postfix) with ESMTP id 5530020678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:02:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="W+i4FzBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgFCMCn (ORCPT
+        id S1726422AbgFCMCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:02:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgFCMC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:02:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2AEA20738;
-        Wed,  3 Jun 2020 12:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591185744;
-        bh=zEn/E923Tf/dYRGqhDsUrI9x1AA8Em1/0jM9fzqjQBc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UMKARLSbqlCYz4yc738//eaa/Fs0YDb6HimxASWKMLNZBvQSDcil6akEjs99qIRKG
-         fIR8hfhxjHKZvlTr93DNciORewqn9a8Pkm5dwlf9l9UyGa0rrchbrpslGW7pQTZiRH
-         +gYlUt8FQhNf8/J7QYi7vXDM9/jRQ19Un2XYXG68=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.19.126
-Date:   Wed,  3 Jun 2020 14:02:20 +0200
-Message-Id: <15911857409077@kroah.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 3 Jun 2020 08:02:55 -0400
+Received: from mail.efficios.com ([167.114.26.124]:40482 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgFCMCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:02:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 880F02BB2C4;
+        Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id r4H48SY884UJ; Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 1E87D2BAFE5;
+        Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1E87D2BAFE5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1591185750;
+        bh=+JKPy8/uTulfEKGfTa48iFeivNq9W046I9r49e09eUQ=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=W+i4FzBG6FaeGRj1qjA0mh/fgtIJIpBs6kM5tDLuyGZPPXFlg+4269AvVYw0paMuH
+         NwgGZZ3nKkpFdflm/6SC9W43bFhORw8B1BeIV7rxr9lU748kTBoNN7lCNQd2ZNldAU
+         PEIeX/4zBWwQJ0voSluU+anjpCdt5mLeTANE/pLhpRR8kjR6MlqysUFLM9wAdWdYcC
+         0kAnfkEVrXLCZ5NzcRahk9a+eoXXGbx+6YhP6pn/vn9EBXOUdl1iiOE5t2qzSWtf1v
+         6kSeW27DZMe7LpfaoAtDtw+bJOZVHUcWIyAE/0BCUbRyg9D9YMuycT9TdUKu2wWVP/
+         keTgvqWaC6f+A==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4_rRzo5zUasU; Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 0E7732BADF5;
+        Wed,  3 Jun 2020 08:02:30 -0400 (EDT)
+Date:   Wed, 3 Jun 2020 08:02:29 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     lttng-dev@lists.lttng.org,
+        diamon-discuss@lists.linuxfoundation.org,
+        linux-trace-users@vger.kernel.org, lwn@lwn.net,
+        linux-kernel@vger.kernel.org
+Message-ID: <683437825.51033.1591185749972.JavaMail.zimbra@efficios.com>
+Subject: [RELEASE] LTTng-modules 2.12.1 and 2.11.4 (Linux kernel tracer)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Index: z3mfQAh1bM5mt5rP3eYWZhqbj4/DQA==
+Thread-Topic: LTTng-modules 2.12.1 and 2.11.4 (Linux kernel tracer)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.19.126 kernel.
-
-All users of the 4.19 kernel series must upgrade.
-
-The updated 4.19.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                            |    2 
- arch/arm/boot/compressed/vmlinux.lds.S              |    2 
- arch/arm/boot/dts/bcm-hr2.dtsi                      |    6 -
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts            |    2 
- arch/arm/boot/dts/imx6q-b450v3.dts                  |    7 -
- arch/arm/boot/dts/imx6q-b650v3.dts                  |    7 -
- arch/arm/boot/dts/imx6q-b850v3.dts                  |   11 -
- arch/arm/boot/dts/imx6q-bx50v3.dtsi                 |   15 ++
- arch/arm/boot/dts/rk3036.dtsi                       |    2 
- arch/arm/boot/dts/rk3228-evb.dts                    |    2 
- arch/arm/boot/dts/rk322x.dtsi                       |    6 -
- arch/arm/boot/dts/rk3xxx.dtsi                       |    2 
- arch/arm/include/asm/assembler.h                    |   83 --------------
- arch/arm/include/asm/uaccess-asm.h                  |  117 ++++++++++++++++++++
- arch/arm/include/asm/vfpmacros.h                    |    8 -
- arch/arm/kernel/entry-armv.S                        |   11 -
- arch/arm/kernel/entry-header.S                      |    9 -
- arch/arm/lib/bitops.h                               |    8 -
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts         |    2 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi            |    8 -
- arch/parisc/mm/init.c                               |    2 
- arch/riscv/kernel/stacktrace.c                      |    2 
- arch/x86/include/asm/dma.h                          |    2 
- arch/x86/kernel/fpu/xstate.c                        |   86 ++++++++------
- drivers/crypto/chelsio/chtls/chtls_io.c             |    2 
- drivers/gpio/gpio-exar.c                            |    7 -
- drivers/gpio/gpio-tegra.c                           |    1 
- drivers/infiniband/core/rdma_core.c                 |   19 ++-
- drivers/infiniband/hw/i40iw/i40iw_cm.c              |    8 -
- drivers/infiniband/hw/qib/qib_sysfs.c               |    9 -
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c      |    2 
- drivers/infiniband/ulp/ipoib/ipoib.h                |    4 
- drivers/infiniband/ulp/ipoib/ipoib_cm.c             |   15 +-
- drivers/infiniband/ulp/ipoib/ipoib_ib.c             |    9 +
- drivers/infiniband/ulp/ipoib/ipoib_main.c           |   10 +
- drivers/input/evdev.c                               |   19 ---
- drivers/input/joystick/xpad.c                       |   12 ++
- drivers/input/keyboard/dlink-dir685-touchkeys.c     |    2 
- drivers/input/rmi4/rmi_driver.c                     |    5 
- drivers/input/serio/i8042-x86ia64io.h               |    7 +
- drivers/input/touchscreen/usbtouchscreen.c          |    1 
- drivers/iommu/iommu.c                               |    2 
- drivers/mmc/core/block.c                            |    2 
- drivers/mmc/core/queue.c                            |   13 --
- drivers/net/bonding/bond_sysfs_slave.c              |    4 
- drivers/net/dsa/mt7530.c                            |    9 -
- drivers/net/dsa/mt7530.h                            |    1 
- drivers/net/ethernet/broadcom/bnxt/bnxt.c           |    2 
- drivers/net/ethernet/freescale/Kconfig              |    2 
- drivers/net/ethernet/freescale/dpaa/Kconfig         |    1 
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c      |    2 
- drivers/net/ethernet/mellanox/mlx4/fw.c             |    2 
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c       |   14 ++
- drivers/net/ethernet/mellanox/mlx5/core/en_tx.c     |    6 -
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c   |    6 +
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c      |   14 ++
- drivers/net/ethernet/mellanox/mlxsw/switchx2.c      |    8 +
- drivers/net/ethernet/microchip/encx24j600.c         |    5 
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c |    4 
- drivers/net/ethernet/sun/cassini.c                  |    3 
- drivers/net/usb/cdc_ether.c                         |   11 +
- drivers/net/usb/r8152.c                             |    1 
- drivers/usb/dwc3/dwc3-pci.c                         |    1 
- drivers/usb/gadget/legacy/inode.c                   |    3 
- fs/binfmt_elf.c                                     |    2 
- fs/cachefiles/rdwr.c                                |    2 
- fs/cifs/file.c                                      |    2 
- fs/gfs2/quota.c                                     |    3 
- fs/gfs2/quota.h                                     |    3 
- include/asm-generic/topology.h                      |    2 
- include/linux/mlx5/driver.h                         |    1 
- include/linux/mm.h                                  |   15 ++
- include/linux/netfilter/nf_conntrack_pptp.h         |    2 
- include/net/act_api.h                               |    3 
- include/rdma/uverbs_std_types.h                     |    2 
- include/uapi/linux/xfrm.h                           |    2 
- mm/vmalloc.c                                        |    2 
- net/ax25/af_ax25.c                                  |    6 -
- net/bridge/netfilter/nft_reject_bridge.c            |    6 +
- net/ceph/osd_client.c                               |    4 
- net/core/dev.c                                      |   20 ++-
- net/dsa/tag_mtk.c                                   |   15 ++
- net/ipv4/inet_connection_sock.c                     |   43 ++++---
- net/ipv4/ip_vti.c                                   |   75 ++++++------
- net/ipv4/ipip.c                                     |    2 
- net/ipv4/netfilter/nf_nat_pptp.c                    |    7 -
- net/ipv4/route.c                                    |   14 +-
- net/ipv6/esp6_offload.c                             |    9 +
- net/mac80211/mesh_hwmp.c                            |    7 +
- net/netfilter/ipset/ip_set_list_set.c               |    2 
- net/netfilter/nf_conntrack_pptp.c                   |   62 +++++-----
- net/netfilter/nfnetlink_cthelper.c                  |    3 
- net/qrtr/qrtr.c                                     |    2 
- net/sctp/sm_sideeffect.c                            |   14 +-
- net/sctp/sm_statefuns.c                             |    9 -
- net/xdp/xdp_umem.c                                  |    8 +
- net/xfrm/xfrm_input.c                               |    2 
- net/xfrm/xfrm_interface.c                           |   21 +++
- net/xfrm/xfrm_output.c                              |   15 +-
- net/xfrm/xfrm_policy.c                              |    7 -
- samples/bpf/lwt_len_hist_user.c                     |    2 
- security/commoncap.c                                |    1 
- sound/core/hwdep.c                                  |    4 
- sound/pci/hda/patch_realtek.c                       |   39 ++++--
- sound/usb/mixer.c                                   |    8 +
- sound/usb/mixer_maps.c                              |   24 ++++
- sound/usb/quirks-table.h                            |   26 ++++
- 107 files changed, 722 insertions(+), 426 deletions(-)
-
-Al Viro (1):
-      copy_xstate_to_kernel(): don't leave parts of destination uninitialized
-
-Alexander Dahl (1):
-      x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
-
-Alexander Potapenko (1):
-      fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
-
-Andrew Oakley (1):
-      ALSA: usb-audio: add mapping for ASRock TRX40 Creator
-
-Andy Shevchenko (1):
-      usb: dwc3: pci: Enable extcon driver for Intel Merrifield
-
-Antony Antony (1):
-      xfrm: fix error in comment
-
-Arnd Bergmann (2):
-      net: freescale: select CONFIG_FIXED_PHY where needed
-      include/asm-generic/topology.h: guard cpumask_of_node() macro argument
-
-Björn Töpel (1):
-      xsk: Add overflow check for u64 division, stored into u32
-
-Bob Peterson (1):
-      gfs2: move privileged user check to gfs2_quota_lock_check
-
-Boris Sukholitko (1):
-      __netif_receive_skb_core: pass skb by reference
-
-Brendan Shanks (1):
-      Input: evdev - call input_flush_device() on release(), not flush()
-
-Changming Liu (1):
-      ALSA: hwdep: fix a left shifting 1 by 31 UB bug
-
-Chris Chiu (1):
-      ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
-
-Christophe JAILLET (1):
-      Input: dlink-dir685-touchkeys - fix a typo in driver name
-
-Chuhong Yuan (1):
-      net: microchip: encx24j600: add missed kthread_stop
-
-DENG Qingfang (1):
-      net: dsa: mt7530: fix roaming from DSA user ports
-
-Denis V. Lunev (1):
-      IB/i40iw: Remove bogus call to netdev_master_upper_dev_get()
-
-Eric Dumazet (2):
-      ax25: fix setsockopt(SO_BINDTODEVICE)
-      crypto: chelsio/chtls: properly set tp->lsndtime
-
-Eric W. Biederman (1):
-      exec: Always set cap_ambient in cap_bprm_set_creds
-
-Evan Green (1):
-      Input: synaptics-rmi4 - really fix attn_data use-after-free
-
-Greg Kroah-Hartman (1):
-      Linux 4.19.126
-
-Hamish Martin (1):
-      ARM: dts: bcm: HR2: Fix PPI interrupt types
-
-Helge Deller (1):
-      parisc: Fix kernel panic in mem_init()
-
-James Hilliard (1):
-      Input: usbtouchscreen - add support for BonXeon TP
-
-Jason Gunthorpe (1):
-      RDMA/core: Fix double destruction of uobject
-
-Jere Leppänen (1):
-      sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
-
-Jeremy Sowden (1):
-      vti4: eliminated some duplicate code.
-
-Jerry Lee (1):
-      libceph: ignore pool overlay and cache logic on redirects
-
-Jiri Pirko (1):
-      mlxsw: spectrum: Fix use-after-free of split/unsplit/type_set in case reload fails
-
-Johan Jonker (5):
-      ARM: dts: rockchip: fix phy nodename for rk3228-evb
-      arm64: dts: rockchip: fix status for &gmac2phy in rk3328-evb.dts
-      arm64: dts: rockchip: swap interrupts interrupt-names rk3399 gpu node
-      ARM: dts: rockchip: swap clock-names of gpu nodes
-      ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
-
-Kaike Wan (1):
-      IB/qib: Call kobject_put() when kobject_init_and_add() fails
-
-Kailang Yang (1):
-      ALSA: hda/realtek - Add new codec supported for ALC287
-
-Kefeng Wang (1):
-      riscv: stacktrace: Fix undefined reference to `walk_stackframe'
-
-Kevin Locke (1):
-      Input: i8042 - add ThinkPad S230u to i8042 reset list
-
-Konstantin Khlebnikov (1):
-      mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
-
-Lei Xue (1):
-      cachefiles: Fix race between read_waiter and read_copier involving op->to_do
-
-Linus Lüssing (1):
-      mac80211: mesh: fix discovery timer re-arming issue / crash
-
-Liviu Dudau (1):
-      mm/vmalloc.c: don't dereference possible NULL pointer in __vunmap()
-
-Manivannan Sadhasivam (1):
-      net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
-
-Marc Payne (1):
-      r8152: support additional Microsoft Surface Ethernet Adapter variant
-
-Martin KaFai Lau (1):
-      net: inet_csk: Fix so_reuseport bind-address cache in tb->fast*
-
-Masahiro Yamada (1):
-      usb: gadget: legacy: fix redundant initialization warnings
-
-Matteo Croce (1):
-      samples: bpf: Fix build error
-
-Michael Braun (1):
-      netfilter: nft_reject_bridge: enable reject with bridge vlan
-
-Michael Chan (1):
-      bnxt_en: Fix accumulation of bp->net_stats_prev.
-
-Moshe Shemesh (2):
-      net/mlx5: Add command entry handling completion
-      net/mlx5e: Update netdev txq on completions during closure
-
-Neil Horman (1):
-      sctp: Don't add the shutdown timer if its already been added
-
-Nicolas Dichtel (1):
-      xfrm interface: fix oops when deleting a x-netns interface
-
-Pablo Neira Ayuso (3):
-      netfilter: nfnetlink_cthelper: unbreak userspace helper support
-      netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
-      netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
-
-Peng Hao (1):
-      mmc: block: Fix use-after-free issue for rpmb
-
-Phil Sutter (1):
-      netfilter: ipset: Fix subcounter update skip
-
-Qiushi Wu (6):
-      net: sun: fix missing release regions in cas_init_one().
-      net/mlx4_core: fix a memory leak bug.
-      RDMA/pvrdma: Fix missing pci disable in pvrdma_pci_probe()
-      iommu: Fix reference count leak in iommu_group_alloc.
-      qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
-      bonding: Fix reference count leak in bond_sysfs_slave_add.
-
-Robert Beckett (1):
-      ARM: dts/imx6q-bx50v3: Set display interface clock parents
-
-Roi Dayan (1):
-      net/mlx5: Annotate mutex destroy for root ns
-
-Roman Mashak (1):
-      net sched: fix reporting the first-time use timestamp
-
-Russell King (3):
-      ARM: uaccess: consolidate uaccess asm to asm/uaccess-asm.h
-      ARM: uaccess: integrate uaccess_save and uaccess_restore
-      ARM: uaccess: fix DACR mismatch with nested exceptions
-
-Sarthak Garg (1):
-      mmc: core: Fix recursive locking issue in CQE recovery path
-
-Stefan Agner (1):
-      ARM: 8843/1: use unified assembler in headers
-
-Stephen Warren (1):
-      gpio: tegra: mask GPIO IRQs during IRQ shutdown
-
-Steve French (1):
-      cifs: Fix null pointer check in cifs_read
-
-Takashi Iwai (3):
-      gpio: exar: Fix bad handling for ida_simple_get error path
-      ALSA: hda/realtek - Add a model for Thinkpad T570 without DAC workaround
-      ALSA: usb-audio: Quirks for Gigabyte TRX40 Aorus Master onboard audio
-
-Vadim Fedorenko (1):
-      net: ipip: fix wrong address family in init error path
-
-Valentine Fatiev (1):
-      IB/ipoib: Fix double free of skb in case of multicast traffic in CM mode
-
-Vincent Stehlé (1):
-      ARM: dts: bcm2835-rpi-zero-w: Fix led polarity
-
-Vladimir Oltean (1):
-      dpaa_eth: fix usage as DSA master, try 3
-
-Wei Yongjun (1):
-      Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
-
-Xin Long (6):
-      xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
-      xfrm: call xfrm_output_gso when inner_protocol is set in xfrm_output
-      xfrm: fix a warning in xfrm_policy_insert_list
-      xfrm: fix a NULL-ptr deref in xfrm_local_error
-      ip_vti: receive ipip packet by calling ip_tunnel_rcv
-      esp6: get the right proto for transport mode in esp6_gso_encap
-
-Yuqi Jin (1):
-      net: revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
-
-Łukasz Patron (1):
-      Input: xpad - add custom init packet for Xbox One S controllers
-
-Łukasz Stelmach (1):
-      ARM: 8970/1: decompressor: increase tag size
-
+Hi,
+
+This is a release announcement of the LTTng kernel tracer for both
+maintained LTTng stable branches. The main change integrated within
+the new versions 2.12.1 and 2.11.4 is support for the newly released
+5.7 Linux kernel.
+
+If you followed the news lately [1], you will notice that LTTng had to
+work-around a change which un-exports kallsyms symbols, making those
+inaccessible to GPL modules, which was integrated within Linux 5.7. As a
+matter of fact, LTTng happens to use kallsyms in some cases to access
+symbols otherwise not visible to GPL kernel modules.
+
+Just to underline the amount of effort that was put into trying to do
+the right thing, here is an explanation of the alternative approaches
+that were attempted before going for a work-around using kprobes
+(taken from commit message of lttng-modules
+commit a65765406b0 "Unbreak LTTng for kernel 5.7"):
+
+    Linux commit 0bd476e6c67190b5eb7b6e105c8db8ff61103281 ("kallsyms:
+    unexport kallsyms_lookup_name() and kallsyms_on_each_symbol()") breaks
+    LTTng-modules by removing symbols used by the LTTng-modules out-of-tree
+    tracer.
+    
+    I pointed this out when the change was originally considered before the
+    5.7 merge window. This generated some discussion but it did not lead to
+    any concrete proposal to fix the issue. [2]
+    
+    The commit has been merged in the 5.7 merge window. At that point, as
+    maintainer of LTTng, I immediately raised a flag about this issue,
+    proposing an alternative approach to solve this: expose the few symbols
+    needed by LTTng to GPL modules. This was NACKed on the ground that the
+    Linux kernel cannot export GPL symbols when there are no in-tree
+    users. [3]
+    
+    Steven Rostedt has shown interest in merging LTTng-modules upstream.
+    LTTng-modules being LGPL, this is very much doable. I have prepared a
+    tree of LTTng-modules "for upstreaming" and sent it to him privately so
+    he can review it. Even if in an ideal scenario LTTng-modules is merged
+    for the following merge window, it leaves LTTng-modules broken on the
+    5.7 kernel.
+    
+    In order to ensure that the LTTng-modules kernel tracer continues working
+    for my end users on kernels 5.7 onwards, as a very last resort, this is
+    with great reluctance that I created this fix for LTTng modules. It
+    basically uses kprobes to lookup the kallsyms_lookup_name symbol, and
+    continues using kallsyms_lookup_name as before.
+
+Steven Rostedt has started looking into lttng-modules, but currently lacks time
+to look into it further. Understandably, this 15 years old project is larger than
+he initially expected. Let's hope we receive concrete feedback on how we can
+improve LTTng to make it acceptable for integration into Linux.
+
+Thanks,
+
+Mathieu
+
+[1] https://lwn.net/Articles/817988/
+[2] https://lore.kernel.org/r/20200302192811.n6o5645rsib44vco@localhost
+[3] https://lore.kernel.org/r/20200409193543.18115-1-mathieu.desnoyers@efficios.com
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
