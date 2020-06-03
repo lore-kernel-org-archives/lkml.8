@@ -2,179 +2,192 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0087C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9676E20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA04120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="AZJBdQAF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aZM9QTK0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LeB0e7Ti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgFCNOm (ORCPT
+        id S1725936AbgFCNT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:14:42 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:52749 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725780AbgFCNOm (ORCPT
+        Wed, 3 Jun 2020 09:19:59 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47990 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgFCNT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:14:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C46285800EC;
-        Wed,  3 Jun 2020 09:14:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 03 Jun 2020 09:14:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=uBEy9uUD7V4GAl7MMeMnyKYCBfd
-        DWDfGigVzTdJ7tzc=; b=AZJBdQAFsN8T66EQzn9Wcc2vg3hMeiF1YfrI4otLU5j
-        ayEtj9wMzy2dK+q1oaJf6OukjRPqhbRv99XKj25bawwZklNTZX1Ee6D7+bWaoVrL
-        3qbmwjNTHNgpDYacDSpJ1Xnhlah2S/i5spzjfYus2ltM7X6HrKQttLQaC6ps+CYp
-        ZzZ12CTxUQnFhvSujxTT6GELZWvD1pA0fnw3dT6ZXvl4wz4/AvG/OvAFskt9hTDA
-        K5ulb5XTefMVA1D+XOb9CGZ69J+YRp3yucwDcbZljzjcVFISZSyzhBCJA0cecVFB
-        HllXzI7njY3EjSuXsWI8OLxzaqiSVsk6lTkApOb/1bw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=uBEy9u
-        UD7V4GAl7MMeMnyKYCBfdDWDfGigVzTdJ7tzc=; b=aZM9QTK0sS7GjkUa7QAJtL
-        Lejb+yRHv6mN8TcRQ6s5HfIQMv7rAHGpl3ILdyAA7SQSedj2uxpHpcF1qIDGnAiC
-        FCaLo63Rfk7X0vGZ1SeGjKBTnk0XAxk+3Dl7Q+o7OeWQOmFLMHDyVc7Bs5kDvFMw
-        FgFWe5daPiWtGGdRrwQf/qmzqwJzv31TIw2jM7JoCqq99UaIeQreLMcJAkDVyL7s
-        E69WDcZT+evmDPoas1hfwiN0uGjnzY0JDl2WtpftVp2Pxu+uit2sccOz1eimGDt1
-        zDm+Oe6ftv5dh+8q9cvK0UIV3RelzLCNX8nPnX78ayzXWlbOOQUuPOoGh/1esB7A
-        ==
-X-ME-Sender: <xms:PKLXXnOceDu38XUdEq9KYOvWcbXoNfhmu5vSIOn6HC2Cf6NQzLUfog>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefledggeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:PKLXXh8L5OqKPblO06XbnufxBIe_ltSiGcw1inOPsRCCRJ1ecgrhbg>
-    <xmx:PKLXXmTuCv8Z8mi2fWBhCVv-ktZMMlOIi8w27Wp2QH0joTkrpztzIg>
-    <xmx:PKLXXrvE6CqcWwKTZdVMTOy8CRvcvw-_mcxqJE15O2lZ4pZkkYiQtw>
-    <xmx:QKLXXhubcgixN5SkTq2hkByTgjNp12_KtQklGEPxsBV-MOx2LhFKUw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C1E8E3061CB6;
-        Wed,  3 Jun 2020 09:14:35 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 15:14:34 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Eric Anholt <eric@anholt.net>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
+        Wed, 3 Jun 2020 09:19:58 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053DIL4A074907;
+        Wed, 3 Jun 2020 13:19:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=vJVzFUNPiejU1nwqO/Bey5L0ZMoE0Xak08Mt948kHyE=;
+ b=LeB0e7TiNBWyj/htzuSmAUE6T8ZbLagHICmU64QfpoDtaLfNy+qwWvTCFDfW4v0mrO/Z
+ iglZkKWEMi3CaFH94RSv78DOEpe636k8rja+NMMraKgMZTF4GyGdAtRrfPKVPDz+YHMo
+ kUM4VYbopLt/tuFJ1p+38apSEyAG9rsZKqrNtW3ZfDJ6A3c4++tf5INeXUGRTsXcHEEu
+ klzeiq6tuCJ4LcCkfTo1mTG99JuQ/3Is1wdyw3so4ChY4LLsBuJx0H9ESNfYgXCFG4wj
+ iw62ZCDyLeeO6qwtSN5Mb1k19JTzx7p4W8DMcX98vmE7tAvd+7TVK9LK0E8vQFaA7HEK oQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31dkrup9hh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 03 Jun 2020 13:19:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053DI3sS127831;
+        Wed, 3 Jun 2020 13:19:14 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31dju37wwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Jun 2020 13:19:14 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053DItwl025765;
+        Wed, 3 Jun 2020 13:18:55 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Jun 2020 06:18:54 -0700
+Date:   Wed, 3 Jun 2020 16:18:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Liao Pingfang <liao.pingfang@zte.com.cn>,
+        linuxppc-dev@lists.ozlabs.org, Joe Perches <joe@perches.com>,
+        Allison Randal <allison@lohutok.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colin Cross <ccross@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Wang Liang <wang.liang82@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>,
         LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 032/105] drm/vc4: crtc: Enable and disable the PV in
- atomic_enable / disable
-Message-ID: <20200603131434.2gmofg7sf7luakje@gilmour>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
- <CADaigPU7c=1u47R9GzvGCH_Z2fywY1foGYEy=KbBikjUQpwUFg@mail.gmail.com>
- <20200602141228.7zbkob7bw3owajsq@gilmour>
- <CAPY8ntDZWJeu14mL5a0jqUWHFOEWm2OOBBkh4yjjP0oLU83UCQ@mail.gmail.com>
- <CADaigPUHPhdrt9JkTfaw0iT7Z8z3Si-v2VJ-s+dhnFQaDNkAaA@mail.gmail.com>
- <f0098c06-f892-cc1e-eb75-be48e40f705c@i2se.com>
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] powerpc/nvram: Replace kmalloc with kzalloc in the error
+ message
+Message-ID: <20200603131841.GB22511@kadam>
+References: <c3d22d89-9133-30aa-8270-c515df214963@web.de>
+ <87imgai394.fsf@mpe.ellerman.id.au>
+ <a3c158fa-3829-f38a-9202-8984b5ef5f21@web.de>
+ <87a71liucy.fsf@mpe.ellerman.id.au>
+ <20200602114158.GB30374@kadam>
+ <87tuzsgz2p.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="skfrnwv7a5sl4g3l"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f0098c06-f892-cc1e-eb75-be48e40f705c@i2se.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87tuzsgz2p.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006030105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006030105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 03, 2020 at 09:37:18PM +1000, Michael Ellerman wrote:
+> Dan Carpenter <dan.carpenter@oracle.com> writes:
+> > On Tue, Jun 02, 2020 at 09:23:57PM +1000, Michael Ellerman wrote:
+> >> Markus Elfring <Markus.Elfring@web.de> writes:
+> >> >>>> Please just remove the message instead, it's a tiny allocation that's
+> >> >>>> unlikely to ever fail, and the caller will print an error anyway.
+> >> >>>
+> >> >>> How do you think about to take another look at a previous update suggestion
+> >> >>> like the following?
+> >> >>>
+> >> >>> powerpc/nvram: Delete three error messages for a failed memory allocation
+> >> >>> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/00845261-8528-d011-d3b8-e9355a231d3a@users.sourceforge.net/
+> >> >>> https://lore.kernel.org/linuxppc-dev/00845261-8528-d011-d3b8-e9355a231d3a@users.sourceforge.net/
+> >> >>> https://lore.kernel.org/patchwork/patch/752720/
+> >> >>> https://lkml.org/lkml/2017/1/19/537
+> >> >>
+> >> >> That deleted the messages from nvram_scan_partitions(), but neither of
+> >> >> the callers of nvram_scan_paritions() check its return value or print
+> >> >> anything if it fails. So removing those messages would make those
+> >> >> failures silent which is not what we want.
+> >> >
+> >> > * How do you think about information like the following?
+> >> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=f359287765c04711ff54fbd11645271d8e5ff763#n883
+> >> > “…
+> >> > These generic allocation functions all emit a stack dump on failure when used
+> >> > without __GFP_NOWARN so there is no use in emitting an additional failure
+> >> > message when NULL is returned.
+> >> > …”
+> >> 
+> >> Are you sure that's actually true?
+> >> 
+> >> A quick look around in slub.c leads me to:
+> >> 
+> >> slab_out_of_memory(struct kmem_cache *s, gfp_t gfpflags, int nid)
+> >> {
+> >> #ifdef CONFIG_SLUB_DEBUG
+> >
+> > You first have to enable EXPERT mode before you can disable SLUB_DEBUG.
+> 
+> I see ~175 defconfigs with CONFIG_EXPERT=y, so that's not really a high
+> bar unfortunately.
+> 
+> And there's 38 defconfigs with SLUB_DEBUG=n.
+> 
+> So for kernels built with those defconfigs that documentation is plain
+> wrong and misleading.
+> 
+> And then there's SLOB which doesn't dump stack anywhere AFAICS.
+> 
+> In fact slab_out_of_memory() doesn't emit a stack dump either, it just
+> prints a bunch of slab related info!
+> 
+> > So that hopefully means you *really* want to save memory.  It doesn't
+> > make sense to add a bunch of memory wasting printks when the users want
+> > to go to extra lengths to conserve memory.
+> 
+> I agree that in many cases those printks are just a waste of space in
+> the source and the binary and should be removed.
+> 
+> But I dislike being told "these generic allocation functions all emit a
+> stack dump" only to find out that actually they don't, they print some
+> other debug info, and depending on config settings they actually don't
+> print _anything_.
 
---skfrnwv7a5sl4g3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Wait...  It *does* print a stack trace.  We must but looking at the
+wrong function.  Huh...  The stack trace comes from warn_alloc().  What
+happen is this:
 
-Hi Stefan,
+mm/slub.c
+  2673  
+  2674          freelist = new_slab_objects(s, gfpflags, node, &c);
+  2675  
+  2676          if (unlikely(!freelist)) {
+  2677                  slab_out_of_memory(s, gfpflags, node);
+  2678                  return NULL;
+  2679          }
+  2680  
 
-On Tue, Jun 02, 2020 at 10:03:13PM +0200, Stefan Wahren wrote:
-> Am 02.06.20 um 21:31 schrieb Eric Anholt:
-> > On Tue, Jun 2, 2020 at 8:02 AM Dave Stevenson
-> > <dave.stevenson@raspberrypi.com> wrote:
-> >> Hi Maxime and Eric
-> >>
-> >> On Tue, 2 Jun 2020 at 15:12, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>> Hi Eric
-> >>>
-> >>> On Wed, May 27, 2020 at 09:54:44AM -0700, Eric Anholt wrote:
-> >>>> On Wed, May 27, 2020 at 8:50 AM Maxime Ripard <maxime@cerno.tech> wr=
-ote:
-> >>>>> The VIDEN bit in the pixelvalve currently being used to enable or d=
-isable
-> >>>>> the pixelvalve seems to not be enough in some situations, which whi=
-ll end
-> >>>>> up with the pixelvalve stalling.
-> >>>>>
-> >>>>> In such a case, even re-enabling VIDEN doesn't bring it back and we=
- need to
-> >>>>> clear the FIFO. This can only be done if the pixelvalve is disabled=
- though.
-> >>>>>
-> >>>>> In order to overcome this, we can configure the pixelvalve during
-> >>>>> mode_set_no_fb, but only enable it in atomic_enable and flush the F=
-IFO
-> >>>>> there, and in atomic_disable disable the pixelvalve again.
-> >>>> What displays has this been tested with?  Getting this sequencing
-> >>>> right is so painful, and things like DSI are tricky to get to light
-> >>>> up.
-> >>> That FIFO is between the HVS and the HDMI PVs, so this was obviously
-> >>> tested against that. Dave also tested the DSI output IIRC, so we shou=
-ld
-> >>> be covered here.
-> >> DSI wasn't working on the first patch set that Maxime sent - I haven't
-> >> tested this one as yet but will do so.
-> >> DPI was working early on to both an Adafruit 800x480 DPI panel, and
-> >> via a VGA666 as VGA.
-> >> HDMI is obviously working.
-> >> VEC is being ignored now. The clock structure is more restricted than
-> >> earlier chips, so to get the required clocks for the VEC without using
-> >> fractional divides it compromises the clock that other parts of the
-> >> system can run at (IIRC including the ARM). That's why the VEC has to
-> >> be explicitly enabled for the firmware to enable it as the only
-> >> output. It's annoying, but that's just a restriction of the chip.
-> > I'm more concerned with "make sure we don't regress pre-pi4 with this
-> > series" than "pi4 displays all work from the beginning"
->=20
-> unfortuntely i can confirm this. With this patch series (using Maxime's
-> git repo with multi_v7_defconfig) my Raspberry Pi 3 B hangs up while
-> starting X (screen stays black, heartbeat stops, no more output at the
-> debug UART). AFAIR v2 didn't had this issue.
+The new_slab_objects() will call allocate_slab() which calls
+__alloc_pages_slowpath() which calls warn_alloc() on failure.
 
-Did it happen with a DSI display or something else?
+There are some error paths from alloc_pages() which look like they
+could return without the stack dump, but those are impossible paths from
+kmalloc or error injection.
 
-I've been trying to setup the DSI display on an RPi3 today, but noticed
-that it looks like there's a regression in next that prevents the HDMI
-driver to load entirely (without my patches).
+regards,
+dan carpenter
 
-Maxime
-
---skfrnwv7a5sl4g3l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXteiOgAKCRDj7w1vZxhR
-xbKWAQDYW0bIeRglf4HXhCDqUGdBhZA9ZXckJcF7Q9T+gYysFQEAyPKFFwR9N3NC
-f2tspYRw6I0x7UydBz+c6ib42l557wQ=
-=eXfr
------END PGP SIGNATURE-----
-
---skfrnwv7a5sl4g3l--
