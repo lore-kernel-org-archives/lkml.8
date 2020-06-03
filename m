@@ -2,92 +2,147 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C656DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC6AD20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F16F20674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:53:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DRiF0BIZ"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QGdyUPAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgFCSw3 (ORCPT
+        id S1726159AbgFCSxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:52:29 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54446 "EHLO mail.skyhub.de"
+        Wed, 3 Jun 2020 14:53:00 -0400
+Received: from mout.web.de ([212.227.15.4]:56215 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgFCSw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:52:29 -0400
-Received: from zn.tnic (p200300ec2f0b2300329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2300:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 36D0A1EC0136;
-        Wed,  3 Jun 2020 20:52:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591210348;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=LvxZ35mGfJQ6YYXayA/jTe4NV7Rrhjm8YI3+1Qt5HL4=;
-        b=DRiF0BIZXQSCuVHtt46FtPXxYHH4+sgx+/nDrLdh3hKZSBaYTzNqB0iKMhBgl3ZMpHP3yE
-        C6qf37ndrqFev6s2lSdID0UWQno6Sw9MCwVnzmR4E0V9Mfr5c7lF9VO0kBVYBMx673Fkcp
-        QBBZq6XNNRsBwvegkrZow5plJlcVdm8=
-Date:   Wed, 3 Jun 2020 20:52:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Will Deacon <will@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-Message-ID: <20200603185220.GA20613@zn.tnic>
-References: <20200513123243.GO2957@hirez.programming.kicks-ass.net>
- <20200513124021.GB20278@willie-the-truck>
- <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513165008.GA24836@willie-the-truck>
- <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
- <20200513174747.GB24836@willie-the-truck>
- <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
- <20200513212520.GC28594@willie-the-truck>
- <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
- <20200514110537.GC4280@willie-the-truck>
+        id S1725922AbgFCSw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:52:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591210349;
+        bh=7F6r5LW73SkyMamkRXQGUSJaJ9i1/pRDOcqL9DLIkyw=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=QGdyUPAfd6foz/CZDzljbLA14SrUEWVUN6zDbUNsWFS2e4nX7epgQ8I7Affu1mq4S
+         ebGx9doVhwYdyHJyzi/kH4Rtfx1cfrkh691c+Kym8ReqaswipXAnnSQrT5mRh4z/re
+         NfKjnc8tWXKAL5m77Kqa5RMferlPBKxi186uiMkQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.82.231]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MPrwQ-1jbagx1m5a-004yTy; Wed, 03
+ Jun 2020 20:52:29 +0200
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>, Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: stm32-mdma: call pm_runtime_put if
+ pm_runtime_get_sync fails
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Message-ID: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
+Date:   Wed, 3 Jun 2020 20:52:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200514110537.GC4280@willie-the-truck>
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LFgtFx/OT1Th7OxO55HEWjIgsKzljGMVBXU/JXtDSO9tpjt0k7M
+ M+FtRQ+E22ElXdA6HhwXbCrld+Re0WGcZDijbXI3xC2S43VLbuOvDanE8UQFqjHP3YDVCPd
+ +ZUuRHYZsNZgxppzcQ7Nlr+DwXxan/IHD1Rp6BEineinn6pQD5g4ofuxEn7He7yKRJKbr50
+ xqWnCyWFwPKNBj1IZiTOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SI3bB6ZYjLA=:8uJUY1dPEM52b/VyJBchLo
+ Ki2Qml/Wns2CVIny7eakOkRIj4RKfskUIbxvHQsCSTPNd1ZG6jT2XOWxAx/H0MvPpSDiVsasu
+ JwrlP6GMhWDUdHum+LPdzBXb61shRiHGmZMAejJynZOHvxi/reqie7V6mCmK+GKnr+ghGzkWu
+ RVX5TC4kKJ5gYlCWCSGc7Cztbpx4YfaHYyzByubcM2injH8TlA8qsuZYCbPbfMgF8fku3DWGA
+ u9qTluTwZ60Z5mt3Fd+dHid34Xe9mxm4wUV6bOfe9RARZzj265ziYpWYYJQlb/ET12fz6n8Pp
+ WBr5NueY8KleMZHQWnUX5Fkb4TPJF90eite0N4MU22ekpibwc57yBCI1sy35nx8HP42sgz9AF
+ W7iHt64LXH3AJpk9dP3QcDkxmh9Hp1kk0pMUSotAcqryL8sRV93eOjTOCyokvXlERPLG5vD83
+ Jm95IxK1WLsCafaF3y064Srmyt+IXfI0KtG0qtXFV+LwlVLzXHZSZTrRy+8b7OUF1A+T3XlcJ
+ /peK+VCQV5MudKFgmJDpoZV47UsHAdgE2BiyKdMuyqN7xhXa6dpmgoIt67uJLsi5wsa7bEfx3
+ cFC3iJpYYG3SNnB8ZvDwaFO3SK/BCJLHxwyAt/aYNZ4LQj/387N9ALQbAQOeBN9BP5YZCHiF2
+ xz48zhl3fe9UoOG3gE3nKFJ6cFiaKMsM5ZsntQbGhw5e8vrugDhuk36stg8R+SHxMUi7TDSID
+ /jFUOIKczakn7IA/vf21gY6vRbYvwzQ4dmj3mLBzxIQkyr3Kxhm/WcD0K6tU8oxWPRcZw2IGw
+ smv3duRz7fJMsq6LwZuMjjuIxTGnhlW09jfCHs60RDk+nI7In9IhqN2Z714hhxFUh5Zt5J3Z2
+ r8S4TTc/uOlSkO0uhLama6/QvjjNZ6lxqOYZrujFTjyj6mqN87QX1Tm9lSgpcJSLOC+mgg9qg
+ Qs1bgcH8WgB3r2ZNkRPBPiYItk7Op3mrEh5WgYTSoYiG31/g3A7FFnNGAkFNylvYv8Ij/9cZ7
+ Ltf34ciISsSO5wUmoENgKLN915DqPA2BqakeqZx6C8okOOd83TvooC1Jvtob8gBjXVofiAj3I
+ szC1a24ZAUOWMammB1VwEPfM+SYf4dPRBSV1bNyA68eEpoSM3muy2wmqpZQVWnp2TufPf47iS
+ mBF0fXKdWQNPRlTQIK25gCTMqJUHvDLU/eq+5VEYgHrvmVKV7nw3CJOMocBmOqOoDaqzmDhig
+ 5NtajeUM3ZIwbrs6w
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:05:38PM +0100, Will Deacon wrote:
-> Talking off-list, Clang >= 7 is pretty reasonable wrt inlining decisions
-> and the behaviour for __always_inline is:
-> 
->   * An __always_inline function inlined into a __no_sanitize function is
->     not instrumented
->   * An __always_inline function inlined into an instrumented function is
->     instrumented
->   * You can't mark a function as both __always_inline __no_sanitize, because
->     __no_sanitize functions are never inlined
-> 
-> GCC, on the other hand, may still inline __no_sanitize functions and then
-> subsequently instrument them.
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count. Call pm_runtime_put if
+> pm_runtime_get_sync fails.
 
-Yeah, about that: I've been looking for a way to trigger this so that
-I can show preprocessed source to gcc people. So do you guys have a
-.config or somesuch I can try?
+Is it appropriate to copy a sentence from the change description
+into the patch subject?
 
-Thx.
+How do you think about a wording variant like the following?
 
--- 
-Regards/Gruss,
-    Boris.
+   The PM runtime reference counter is generally incremented by a call of
+   the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D.
+   Thus call the function =E2=80=9Cpm_runtime_put=E2=80=9D also in two err=
+or cases
+   to keep the reference counting consistent.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
+
+Regards,
+Markus
