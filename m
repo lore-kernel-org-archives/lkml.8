@@ -2,99 +2,132 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4401C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B144C2072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B7D20757
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YgjDG2DO"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DBucrm9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725888AbgFCCHS (ORCPT
+        id S1725939AbgFCCHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54268 "EHLO
+        Tue, 2 Jun 2020 22:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgFCCHS (ORCPT
+        with ESMTP id S1725789AbgFCCHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:07:18 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E98C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 19:07:17 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s10so681344pgm.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 19:07:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=05oZ75W4PAkbEc2W7bJ8bzylCGe8tKmwbPUEdrxK2MI=;
-        b=YgjDG2DOa5fJsziE47TJOIqO8/01xtN5rj6XQhEyI58geqkjsw62uCrQ7ZmmhL1jkL
-         +kdgjXt7D4Aq84xaZGh0L81EUocGLPlyFYiHF2fvO1P9QWVrCSVyYbDEz9iL9hZEe4Ui
-         7YZAAfcJIdO1plU1NAB8hK7wr7/4flAHjNYD8hU0lNN7/8+Zkt4blJX442q/S/nA/vZh
-         ugEK+rcs2zZVVsFqei43wS/VJn57yAxbDa+HeKXRww6Cp4IUKjMn6uAQPi2N6jZB0j3A
-         bduC0KNOtfAW6NAb8ORPkEUhbnT2iM3J6BRWL+y5fs4WuBDMiQzfut9IcvNApvAQ/5b+
-         ACDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=05oZ75W4PAkbEc2W7bJ8bzylCGe8tKmwbPUEdrxK2MI=;
-        b=BTnF6RKtuwD07O1Q/MEwSZoBlx9gTOFB71XWY8NX4NIqpFbzC9y87dPzKWwmmsNx4X
-         JuyMiQm3YkTSPeDZRtjs0gkXV1zspxKp1rZthxs4AiLH/W87iynjinpEpaKPkn6kSIFl
-         I4YFTcOcoZJur948DROwES+DhKZ2jmGHRKCVftFFOTeW0pifEaJ7UkN69qm5CVGW2yuD
-         xUQkDVk/91QQztyAc1IGEsI5RTyqeVzpb1Y/swQMayZm2gokXtjLMtSJ4GQJgMTtTjLj
-         LoociHjWiyxFGNcYkZdsZfst9nnqJxbmNqR9dLuW6rwtCgXFShdaqIT4IKf1fUCBGhiY
-         VWuQ==
-X-Gm-Message-State: AOAM5332DfhQ9G+i1D1eyiEnMoHTdD1HJShC/erFO0GIWMw012fXtj+q
-        FrfugKhESHuOhoE+CFXTaEd1NjbXXJwGKA==
-X-Google-Smtp-Source: ABdhPJw+m9Bk6S9FVc4FjMyeOU0mdWCwQ/Z6Zb3KXA32gR56BP6UBcW9Kd3MbvhePimU1xOaEgMogA==
-X-Received: by 2002:a17:90a:d998:: with SMTP id d24mr2559305pjv.33.1591150036093;
-        Tue, 02 Jun 2020 19:07:16 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id k7sm216841pga.87.2020.06.02.19.07.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jun 2020 19:07:14 -0700 (PDT)
-Subject: Re: [GIT PULL] io_uring updates for 5.8-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <dacd50ff-f674-956b-18cd-9d30e2221b09@kernel.dk>
- <CAHk-=wjuAN_vgUN_TiPtzSpz2NX9XQq7-nJ1u=gHG=EKdRdrkA@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <237d782f-8163-dbc2-4505-ed5f88ce4362@kernel.dk>
-Date:   Tue, 2 Jun 2020 20:07:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 2 Jun 2020 22:07:54 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E602C08C5C0;
+        Tue,  2 Jun 2020 19:07:54 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cC3r1V72z9sSc;
+        Wed,  3 Jun 2020 12:07:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591150072;
+        bh=xuJUjo7+YelOU3llC+D80IQp+Ob0+zeNH9Y00+TBzq8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DBucrm9e9f6+ABOFi0eeIagnW9RiJMsh9GXYtLGZtCYal2MteBR1Y0LXeOfa0b2pA
+         LTNByuMyskgkxMZMPkZDmqkPJF/ubABjlqAiOCC+CsG0QESWukygyh1789Nl6NwV7w
+         q7oQIrKX6Y/nn+++rfZXmyPHTiuVX6YU0XFpxxYP7Q8ZP3Zav+kQpDadV1wCg+ecRi
+         h6MIkymt5dPnWnz11BcXx4urD2W05BSuHgOnrkmK/Xp4Z+n28TihUr3inQ2MbD/V7H
+         JIf7IP7wOSs7qA0Zdq2er+3nLGtV+Nmj33YTIMBdx+mVBurlDNlloJHnAYnS2WL/qr
+         9CWPJIpnN+wyw==
+Date:   Wed, 3 Jun 2020 12:07:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the
+ btrfs tree
+Message-ID: <20200603120751.5cc12744@canb.auug.org.au>
+In-Reply-To: <20200525211128.1cc8c00d@canb.auug.org.au>
+References: <20200525211128.1cc8c00d@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjuAN_vgUN_TiPtzSpz2NX9XQq7-nJ1u=gHG=EKdRdrkA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/cT2T2oAM0oRDooaP4vznsSt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/2/20 5:03 PM, Linus Torvalds wrote:
-> On Mon, Jun 1, 2020 at 10:55 AM Jens Axboe <axboe@kernel.dk> wrote:
->>
->>   git://git.kernel.dk/linux-block.git for-5.8/io_uring-2020-06-01
-> 
-> I'm not sure why pr-tracker-bot didn't like your io_uring pull request.
-> 
-> It replied to your two other pull requests, but not to this one. I'm
-> not seeing any hugely fundamental differences between this and the two
-> others..
+--Sig_/cT2T2oAM0oRDooaP4vznsSt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Pretty sure that happened last time too, but I don't know why. For
-the incremental ones after the merge window, it seemed to work fine...
+Hi all,
 
--- 
-Jens Axboe
+On Mon, 25 May 2020 21:11:28 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the akpm-current tree got a conflict in:
+>=20
+>   fs/btrfs/inode.c
+>=20
+> between commit:
+>=20
+>   f31e5f70919f ("btrfs: switch to iomap_dio_rw() for dio")
+>=20
+> from the btrfs tree and commit:
+>=20
+>   2167c1133b8b ("btrfs: convert from readpages to readahead")
+>=20
+> from the akpm-current tree.
+>=20
+> diff --cc fs/btrfs/inode.c
+> index fb95efeb63ed,8b3489f229c7..000000000000
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@@ -10075,8 -10538,8 +10060,8 @@@ static const struct address_space_opera
+>   	.readpage	=3D btrfs_readpage,
+>   	.writepage	=3D btrfs_writepage,
+>   	.writepages	=3D btrfs_writepages,
+> - 	.readpages	=3D btrfs_readpages,
+> + 	.readahead	=3D btrfs_readahead,
+>  -	.direct_IO	=3D btrfs_direct_IO,
+>  +	.direct_IO	=3D noop_direct_IO,
+>   	.invalidatepage =3D btrfs_invalidatepage,
+>   	.releasepage	=3D btrfs_releasepage,
+>   #ifdef CONFIG_MIGRATION
 
+This is now a conflict between commit
+
+  ba206a026ff4 ("btrfs: convert from readpages to readahead")
+
+from Linus' tree and commit
+
+  a43a67a2d715 ("btrfs: switch to iomap_dio_rw() for dio")
+
+from the btrfs tree.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/cT2T2oAM0oRDooaP4vznsSt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XBfcACgkQAVBC80lX
+0GwXpgf7BWVbLYzCGUc0tiK9692M42gzHZXfa//AnE/kyeHMFchJ/7Is1We+MLBg
+0O0fewPAvbOXbkSapFskQ6XSRfQelXykpO24o7ja93BbOXPVobRVSDPRaTg9uVbO
++B6viJkN0z8T9tZRMOOcu9ZvkbVSNE2tdT18PwLioFV8o2Sv/B/ZswBQnxm2JI1S
+E7rCzIZ1w5nVk4IPytvQDhKPShahtb/36RGI2r1A3ZYFmnnmH7+yRElnUbC7Y498
+6KWKWwS9sAO6tDyhbmj+urowN85ZyVTiQ11Phkti19goFGU9SCMCUk5QEp7YCYqi
+zxIALg2EAjI8Uc0SlbCP8LgbuB0+Kg==
+=5L+u
+-----END PGP SIGNATURE-----
+
+--Sig_/cT2T2oAM0oRDooaP4vznsSt--
