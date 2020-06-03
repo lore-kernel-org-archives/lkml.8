@@ -2,121 +2,147 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A68E20734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD8920663
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GQiPquiR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WeVBCx2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgFCBve (ORCPT
+        id S1726093AbgFCBxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:51:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33535 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbgFCBvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:51:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cBhx5rd9z9sT5;
-        Wed,  3 Jun 2020 11:51:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591149091;
-        bh=IXTHTQo8gDO7SUTW6DoR71nhmx/eHsJgQ/H+8J4HtFs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GQiPquiRjfonEs5XfrIIkpJ7OUyvGd3owEWInsOz3v4YojQVmInZYv5uJ4kJWc9hc
-         BcGLf6GdKEjYm626Ra4cjRvwulQmsgiabli+76FEC3yj16XWysLcpYUgII4+wxEvhb
-         jKCDY2dZPgsnk0D4lPTASXG6lr7Xi8G28Sg4vV0yOfguC5UGLcxqHu9KZaX02a2vdF
-         5bucn/9CUMH90NeQrIUqE3/2yxmKDdf1rsKxpp/82izPSH+ENzNgp/mwx2Sd70rMla
-         6PH/EboyMF3tTpd0LLdPhh5vkfUWdiHLkb6dlPFI727SMW3OBBPoBzYaDvAQsjc19h
-         LvbuhTqJvUjtA==
-Date:   Wed, 3 Jun 2020 11:51:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org
-Subject: linux-next: build failure after merge of the overlayfs tree
-Message-ID: <20200603115127.28b01992@canb.auug.org.au>
+        Tue, 2 Jun 2020 21:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgFCBxs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 21:53:48 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C51EC08C5C0;
+        Tue,  2 Jun 2020 18:53:48 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 9so661114ljc.8;
+        Tue, 02 Jun 2020 18:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IXyjPldssMSiKQfQfztOYSdzyap64t/hNOEyR2JogWw=;
+        b=WeVBCx2lg1qJ7F+AQmKynH1A1/xigy0hdupKSIWoP0EEn4ZGyZOWgjAAtRGmNj49B6
+         SV3pWh6UdxPQ5VGk2B8nx5sIHxWVNx7rwFC3qDn9q/B3CxzCYtw6D3392XQq29QOb+UM
+         aZanPp6wPMSn/4yjMI6hUwq71SzOWkxZhANcQhPWhscJoYvCwYokySFMr2+0APVb1y5A
+         cDx2tZI4WqyzXcf1yz0+d4m/49lLeTrcrPYpuKjWGZ0a3Hh3T4b0L9f84jUdzn9KBcMg
+         86gtO4loxVFOq8gI4dYURUTSTxjrC21djPZgbDTkadBp95cR7N0yObmgwp0tYW03cuVi
+         pU9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IXyjPldssMSiKQfQfztOYSdzyap64t/hNOEyR2JogWw=;
+        b=AXXlUA2Tcgk7la3bC7VZ+UtX114llcw1VqTPJlSrohUu/3rHoXqlG6YORfdM9P+vvT
+         VqYrnbg72yUMAnFGUWbPu/MM5wiLTPNoyrhrKIiRV1Yf2qkbRtZKF/py28qLHZzn3ieL
+         X+DejbocAmY3JduSpmMaABExHMnDoh0yFlaCE1ksdSnO1RCBsx4afsGs8Jg5Z3gc3b1t
+         0ncZ3yM/g4cHJKeJ1nCthzPcvtZ+ds25Tlq0q/pGsPMabsDincVD1p/fjSZMoPp3njjC
+         ImhOjyzSpaG0NCCOojYJdkVdY6defFof2oudH88rvj/PzqowLwQzTYWmzZ8swkH5PBPG
+         ViKQ==
+X-Gm-Message-State: AOAM531N8coQ7spIORfdQhM+A2dem/tJmEkzls9vvpqPU540J1ce+MTW
+        14xwrUOjXqXdpSiAb7VgA+rvD6jJjW+iPXvJs5w=
+X-Google-Smtp-Source: ABdhPJw2l88MIgoIzyzG/zupAyXhrcRHDI7kwii+k2JxyBRYPdhoq3fWyN0Bk2oFbUH5kOid2r/P61MIPiyeygTlSNE=
+X-Received: by 2002:a2e:b611:: with SMTP id r17mr829195ljn.321.1591149226574;
+ Tue, 02 Jun 2020 18:53:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/U+hxjZ8=pu2.z0OP9GUGsK3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com> <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+In-Reply-To: <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+From:   Jason Xing <kerneljasonxing@gmail.com>
+Date:   Wed, 3 Jun 2020 09:53:10 +0800
+Message-ID: <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/U+hxjZ8=pu2.z0OP9GUGsK3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Eric,
 
-Hi all,
+I'm sorry that I didn't write enough clearly. We're running the
+pristine 4.19.125 linux kernel (the latest LTS version) and have been
+haunted by such an issue. This patch is high-important, I think. So
+I'm going to resend this email with the [patch 4.19] on the headline
+and cc Greg.
 
-After merging the overlayfs tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Thanks,
+Jason
 
-ERROR: modpost: "security_file_ioctl" [fs/overlayfs/overlay.ko] undefined!
-
-Caused by commit
-
-  b5940870e166 ("ovl: call secutiry hook in ovl_real_ioctl()")
-
-I have applied this patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 3 Jun 2020 11:44:19 +1000
-Subject: [PATCH] export security_file_ioctl
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- security/security.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/security/security.c b/security/security.c
-index 51de970fbb1e..077ac86faacf 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1459,6 +1459,7 @@ int security_file_ioctl(struct file *file, unsigned i=
-nt cmd, unsigned long arg)
- {
- 	return call_int_hook(file_ioctl, 0, file, cmd, arg);
- }
-+EXPORT_SYMBOL_GPL(security_file_ioctl);
-=20
- static inline unsigned long mmap_prot(struct file *file, unsigned long pro=
-t)
- {
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/U+hxjZ8=pu2.z0OP9GUGsK3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XAh8ACgkQAVBC80lX
-0Gz9bwf/dL+jSQtXGVI6j6OZ9SMNBjPPIGl17qVT5JtvHuBoMyRRrJuCfcWdmC6r
-/o3NwyIA5NR0E0ZLt9Zak1o6nRuRq7t68onDAJ7CB5IG5N4bPdyvZXEtDHNzD+CB
-zLjgzE2xbvX5d5eMJzL4XVHd0GuR3GnErf+V3ucaCDPoVKGXJhQS9gOFMXRyEw75
-0K/ziimdRBG9Twtfo+sSaidszv+KHZELl1/pZLdAN9XujCSGFuFlZYju4OslszLB
-2K44N4Kkqg4PrAyD48eUH92z7whgy2lJ2m58JWCQEaYge83Fz9IYnnSNBvcZ/MnC
-s1cY5ZqfIlnLpzFXdTT3104up6v+pQ==
-=T6mB
------END PGP SIGNATURE-----
-
---Sig_/U+hxjZ8=pu2.z0OP9GUGsK3--
+On Tue, Jun 2, 2020 at 9:05 PM Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Tue, Jun 2, 2020 at 1:05 AM <kerneljasonxing@gmail.com> wrote:
+> >
+> > From: Jason Xing <kerneljasonxing@gmail.com>
+> >
+> > TCP socks cannot be released because of the sock_hold() increasing the
+> > sk_refcnt in the manner of tcp_internal_pacing() when RTO happens.
+> > Therefore, this situation could increase the slab memory and then trigger
+> > the OOM if the machine has beening running for a long time. This issue,
+> > however, can happen on some machine only running a few days.
+> >
+> > We add one exception case to avoid unneeded use of sock_hold if the
+> > pacing_timer is enqueued.
+> >
+> > Reproduce procedure:
+> > 0) cat /proc/slabinfo | grep TCP
+> > 1) switch net.ipv4.tcp_congestion_control to bbr
+> > 2) using wrk tool something like that to send packages
+> > 3) using tc to increase the delay in the dev to simulate the busy case.
+> > 4) cat /proc/slabinfo | grep TCP
+> > 5) kill the wrk command and observe the number of objects and slabs in TCP.
+> > 6) at last, you could notice that the number would not decrease.
+> >
+> > Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
+> > Signed-off-by: liweishi <liweishi@kuaishou.com>
+> > Signed-off-by: Shujin Li <lishujin@kuaishou.com>
+> > ---
+> >  net/ipv4/tcp_output.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > index cc4ba42..5cf63d9 100644
+> > --- a/net/ipv4/tcp_output.c
+> > +++ b/net/ipv4/tcp_output.c
+> > @@ -969,7 +969,8 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
+> >         u64 len_ns;
+> >         u32 rate;
+> >
+> > -       if (!tcp_needs_internal_pacing(sk))
+> > +       if (!tcp_needs_internal_pacing(sk) ||
+> > +           hrtimer_is_queued(&tcp_sk(sk)->pacing_timer))
+> >                 return;
+> >         rate = sk->sk_pacing_rate;
+> >         if (!rate || rate == ~0U)
+> > --
+> > 1.8.3.1
+> >
+>
+> Hi Jason.
+>
+> Please do not send patches that do not apply to current upstream trees.
+>
+> Instead, backport to your kernels the needed fixes.
+>
+> I suspect that you are not using a pristine linux kernel, but some
+> heavily modified one and something went wrong in your backports.
+> Do not ask us to spend time finding what went wrong.
+>
+> Thank you.
