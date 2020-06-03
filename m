@@ -2,96 +2,241 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79F21206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0A2206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Ja4tUseE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QT3wVAQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgFCH5d (ORCPT
+        id S1726159AbgFCH6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgFCH5c (ORCPT
+        Wed, 3 Jun 2020 03:58:39 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49399 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725877AbgFCH6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:57:32 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC176C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 00:57:31 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id l27so1159731ejc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 00:57:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lxoRuIh90rY9DpVRcvm+rLN9RzBy0erXS20mSlblvHI=;
-        b=Ja4tUseE5oHLTFvnmh3qPNnAmtzcyovPEbImgvQ/hRBAgqCpIpDcjHk/fM97tE/xN9
-         OqNUBt8hVl7yhh/wkauotUIdKegwmOnrmouSIFaBnvhknpg8yKvQJKw3OcibstjJKiiq
-         7hziOKpu4bDud3sN5GnkzClUO78xbHwf/2bCE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lxoRuIh90rY9DpVRcvm+rLN9RzBy0erXS20mSlblvHI=;
-        b=GS8dscrVqbEawafxx9JDzU2gUyVIR8ZEm4z+BLN4w3uD9dT63lmYNSjfb2Zp1jKyrN
-         SXFGs4sws9IO1Xf2pz2ZkDG3KYnK+NNzDCDDLPlameIbIbHyFzS4DvIvdAGU+uJLEtiD
-         rj60+y6HBODkmX+a/Srvjf3RnpN1nnjSPu9gixvzjwq7auy5G4atOJPFtUTjGVV3SReb
-         i9nJ143OIj+baB1mJnAi3C5/NLkuXNXaJAQsLDA50QU4hGIHwjTOITCCl4sDtqQIng5Z
-         acfUYJRi5ErZpy0WPDFjJF6tetNiyrAjEuXmIimvXvT5+nNpKwPdhv0N3i7fZpWcfhms
-         lgcA==
-X-Gm-Message-State: AOAM530W8SaesHKUDofirjPgK/rEloc0MJDKkmchW3ObXbuxiIpg3l6h
-        AW8H8aZR/5f7jU5Ian3OY0qJeagPAlymh+vk++lJYA==
-X-Google-Smtp-Source: ABdhPJxD5xkb6zLhUJCd3fhHmXYeT1hr5cgGs9sGjsJ6Md/Kn6iCgTNZaEUF0VvohBJxgk05tl+89MKWwtTL5k7x/rc=
-X-Received: by 2002:a17:906:f0c3:: with SMTP id dk3mr1568215ejb.202.1591171050552;
- Wed, 03 Jun 2020 00:57:30 -0700 (PDT)
+        Wed, 3 Jun 2020 03:58:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591171117;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6s4YwWjWSDJyEzvWoBd/i85+Sheo/GOp6+xMWZwy3wU=;
+        b=QT3wVAQs1deiYlEdDOl+maeqWVWvd8K8p9GWd/M2I+2IyduK4stQuAw/8gsC1ByjW9qsPp
+        9kEatIOEFXOTySAzFXc0YTgSp1iSVRNz4AhGlsys4ontYDQBhwM+kOrr3M56XTV68kjyGG
+        6bejlrye06UW2xnGREAq4xKqQLVvSQw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-9RybUihZM9iS6EvrhrYauA-1; Wed, 03 Jun 2020 03:58:35 -0400
+X-MC-Unique: 9RybUihZM9iS6EvrhrYauA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F08EE800685;
+        Wed,  3 Jun 2020 07:58:33 +0000 (UTC)
+Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 582B95C221;
+        Wed,  3 Jun 2020 07:58:28 +0000 (UTC)
+Subject: Re: [PATCH RFC 07/13] vhost: format-independent API for used buffers
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-8-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6d98f2cc-2084-cde0-c938-4ca01692adf9@redhat.com>
+Date:   Wed, 3 Jun 2020 15:58:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200603115127.28b01992@canb.auug.org.au>
-In-Reply-To: <20200603115127.28b01992@canb.auug.org.au>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 3 Jun 2020 09:57:19 +0200
-Message-ID: <CAJfpegv1RumBbb4egojmmgJKc7gfogXCzK8BQxzbQyKGXGLmwA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the overlayfs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200602130543.578420-8-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 3:51 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+
+On 2020/6/2 下午9:06, Michael S. Tsirkin wrote:
+> Add a new API that doesn't assume used ring, heads, etc.
+> For now, we keep the old APIs around to make it easier
+> to convert drivers.
 >
-> Hi all,
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   drivers/vhost/vhost.c | 52 ++++++++++++++++++++++++++++++++++---------
+>   drivers/vhost/vhost.h | 17 +++++++++++++-
+>   2 files changed, 58 insertions(+), 11 deletions(-)
 >
-> After merging the overlayfs tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> ERROR: modpost: "security_file_ioctl" [fs/overlayfs/overlay.ko] undefined!
->
-> Caused by commit
->
->   b5940870e166 ("ovl: call secutiry hook in ovl_real_ioctl()")
->
-> I have applied this patch for today.
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 3 Jun 2020 11:44:19 +1000
-> Subject: [PATCH] export security_file_ioctl
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index b4a6e44d56a8..be822f0c9428 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -2292,13 +2292,12 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+>    * number of output then some number of input descriptors, it's actually two
+>    * iovecs, but we pack them into one and note how many of each there were.
+>    *
+> - * This function returns the descriptor number found, or vq->num (which is
+> - * never a valid descriptor number) if none was found.  A negative code is
+> - * returned on error. */
+> -int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+> -		      struct iovec iov[], unsigned int iov_size,
+> -		      unsigned int *out_num, unsigned int *in_num,
+> -		      struct vhost_log *log, unsigned int *log_num)
+> + * This function returns a value > 0 if a descriptor was found, or 0 if none were found.
+> + * A negative code is returned on error. */
+> +int vhost_get_avail_buf(struct vhost_virtqueue *vq, struct vhost_buf *buf,
+> +			struct iovec iov[], unsigned int iov_size,
+> +			unsigned int *out_num, unsigned int *in_num,
+> +			struct vhost_log *log, unsigned int *log_num)
+>   {
+>   	int ret = fetch_descs(vq);
+>   	int i;
+> @@ -2311,6 +2310,8 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+>   	*out_num = *in_num = 0;
+>   	if (unlikely(log))
+>   		*log_num = 0;
+> +	buf->in_len = buf->out_len = 0;
+> +	buf->descs = 0;
+>   
+>   	for (i = vq->first_desc; i < vq->ndescs; ++i) {
+>   		unsigned iov_count = *in_num + *out_num;
+> @@ -2340,6 +2341,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+>   			/* If this is an input descriptor,
+>   			 * increment that count. */
+>   			*in_num += ret;
+> +			buf->in_len += desc->len;
+>   			if (unlikely(log && ret)) {
+>   				log[*log_num].addr = desc->addr;
+>   				log[*log_num].len = desc->len;
+> @@ -2355,9 +2357,11 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+>   				goto err;
+>   			}
+>   			*out_num += ret;
+> +			buf->out_len += desc->len;
+>   		}
+>   
+> -		ret = desc->id;
+> +		buf->id = desc->id;
+> +		++buf->descs;
+>   
+>   		if (!(desc->flags & VRING_DESC_F_NEXT))
+>   			break;
+> @@ -2365,7 +2369,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+>   
+>   	vq->first_desc = i + 1;
+>   
+> -	return ret;
+> +	return 1;
+>   
+>   err:
+>   	for (i = vq->first_desc; i < vq->ndescs; ++i)
+> @@ -2375,7 +2379,15 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+>   
+>   	return ret;
+>   }
+> -EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
+> +EXPORT_SYMBOL_GPL(vhost_get_avail_buf);
+> +
+> +/* Reverse the effect of vhost_get_avail_buf. Useful for error handling. */
+> +void vhost_discard_avail_bufs(struct vhost_virtqueue *vq,
+> +			      struct vhost_buf *buf, unsigned count)
+> +{
+> +	vhost_discard_vq_desc(vq, count);
+> +}
+> +EXPORT_SYMBOL_GPL(vhost_discard_avail_bufs);
+>   
+>   static int __vhost_add_used_n(struct vhost_virtqueue *vq,
+>   			    struct vring_used_elem *heads,
+> @@ -2459,6 +2471,26 @@ int vhost_add_used(struct vhost_virtqueue *vq, unsigned int head, int len)
+>   }
+>   EXPORT_SYMBOL_GPL(vhost_add_used);
+>   
+> +int vhost_put_used_buf(struct vhost_virtqueue *vq, struct vhost_buf *buf)
+> +{
+> +	return vhost_add_used(vq, buf->id, buf->in_len);
+> +}
+> +EXPORT_SYMBOL_GPL(vhost_put_used_buf);
+> +
+> +int vhost_put_used_n_bufs(struct vhost_virtqueue *vq,
+> +			  struct vhost_buf *bufs, unsigned count)
+> +{
+> +	unsigned i;
+> +
+> +	for (i = 0; i < count; ++i) {
+> +		vq->heads[i].id = cpu_to_vhost32(vq, bufs[i].id);
+> +		vq->heads[i].len = cpu_to_vhost32(vq, bufs[i].in_len);
+> +	}
+> +
+> +	return vhost_add_used_n(vq, vq->heads, count);
+> +}
+> +EXPORT_SYMBOL_GPL(vhost_put_used_n_bufs);
+> +
+>   static bool vhost_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
+>   {
+>   	__u16 old, new;
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index a67bda9792ec..6c10e99ff334 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -67,6 +67,13 @@ struct vhost_desc {
+>   	u16 id;
+>   };
+>   
+> +struct vhost_buf {
+> +	u32 out_len;
+> +	u32 in_len;
+> +	u16 descs;
+> +	u16 id;
+> +};
 
 
-Thanks, folded.
+So it looks to me the struct vhost_buf can work for both split ring and 
+packed ring.
 
-Miklos
+If this is true, we'd better make struct vhost_desc work for both.
+
+Thanks
+
+
+> +
+>   /* The virtqueue structure describes a queue attached to a device. */
+>   struct vhost_virtqueue {
+>   	struct vhost_dev *dev;
+> @@ -193,7 +200,12 @@ int vhost_get_vq_desc(struct vhost_virtqueue *,
+>   		      unsigned int *out_num, unsigned int *in_num,
+>   		      struct vhost_log *log, unsigned int *log_num);
+>   void vhost_discard_vq_desc(struct vhost_virtqueue *, int n);
+> -
+> +int vhost_get_avail_buf(struct vhost_virtqueue *, struct vhost_buf *buf,
+> +			struct iovec iov[], unsigned int iov_count,
+> +			unsigned int *out_num, unsigned int *in_num,
+> +			struct vhost_log *log, unsigned int *log_num);
+> +void vhost_discard_avail_bufs(struct vhost_virtqueue *,
+> +			      struct vhost_buf *, unsigned count);
+>   int vhost_vq_init_access(struct vhost_virtqueue *);
+>   int vhost_add_used(struct vhost_virtqueue *, unsigned int head, int len);
+>   int vhost_add_used_n(struct vhost_virtqueue *, struct vring_used_elem *heads,
+> @@ -202,6 +214,9 @@ void vhost_add_used_and_signal(struct vhost_dev *, struct vhost_virtqueue *,
+>   			       unsigned int id, int len);
+>   void vhost_add_used_and_signal_n(struct vhost_dev *, struct vhost_virtqueue *,
+>   			       struct vring_used_elem *heads, unsigned count);
+> +int vhost_put_used_buf(struct vhost_virtqueue *, struct vhost_buf *buf);
+> +int vhost_put_used_n_bufs(struct vhost_virtqueue *,
+> +			  struct vhost_buf *bufs, unsigned count);
+>   void vhost_signal(struct vhost_dev *, struct vhost_virtqueue *);
+>   void vhost_disable_notify(struct vhost_dev *, struct vhost_virtqueue *);
+>   bool vhost_vq_avail_empty(struct vhost_dev *, struct vhost_virtqueue *);
+
