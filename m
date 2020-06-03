@@ -2,131 +2,203 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 648B5206A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE33206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bVSWSttx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oqrUFNi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgFCNww (ORCPT
+        id S1726080AbgFCNzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50790 "EHLO
+        Wed, 3 Jun 2020 09:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgFCNww (ORCPT
+        with ESMTP id S1725916AbgFCNzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:52:52 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093A9C08C5C0;
-        Wed,  3 Jun 2020 06:52:52 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0b2300fc641046fe5d6605.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2300:fc64:1046:fe5d:6605])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 564F01EC0391;
-        Wed,  3 Jun 2020 15:52:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591192370;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=tupcOtxWYMxyJ3y62hq5YRNljYinVUxG6t+SPocYtUQ=;
-        b=bVSWSttxu5jfvdmiza7JUElW6ZgnEDEy503L18klnvJDHBqAFLRKLFLorzo3l9JD3hE/AG
-        JcBY5Xtx0hjaYuLe7GgEYnJBNH24lEGSm0BzmVbrGeL0PSW7+S9wgK6hN2JWEA0WFLJW+W
-        eMhJ0O4gIFfAOJ9bu9emst5EStRHHLE=
-Date:   Wed, 3 Jun 2020 15:52:44 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 75/75] x86/efi: Add GHCB mappings when SEV-ES is active
-Message-ID: <20200603135244.GD19711@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-76-joro@8bytes.org>
+        Wed, 3 Jun 2020 09:55:09 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA80C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:55:09 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id u17so1121860ybi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 06:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U8IeDiDoBVmA0QE3oVgedl+zceUqh62Dw2hpb3UyemU=;
+        b=oqrUFNi/IKLm8zr/JkoLEWltOameVg+otBORTPeyDT6K+1vL0RDgZ8MIs6JKhZNwiR
+         z/D8d1I15Y7tEVTunSpxsi7kWcXtbI6Vl8jBO4BTixPuDUkfVBiKGGyQdiOFGnJ+GZfU
+         Q36XNbxDsRzFvH26Hf9zP5Lwb7NrNCsohYHmmBUT+WSCWfhXaroWcs/tDjEn77mte5c4
+         AKhellf9UepiS6Kq2dFe0MMyIUi2jOHBgg3EKbXsOzIhPWfBN8iqEM3L4YPODQ0pU/OR
+         WX7gbyuqBzgHs6Qv0X45wC3efKl40NxhMzMBjvy6bCjibf3VOZWvtCogXFAevrgRU84o
+         +UtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U8IeDiDoBVmA0QE3oVgedl+zceUqh62Dw2hpb3UyemU=;
+        b=uBwMWAzpZVdHR0cmb8h+dZjVUAvI6ENJNrTLMWnqNMCt2iUszcqqPAWovIzMDVGvSc
+         m1oOAB/TZFRtlAlfs2tBglL+rUU+hWYCq+qq6iBWJYe9UiWrVT2saW5VHcXvMmnu4gsg
+         mJbggXpzbEFq0io1GjKNrZ6//IkpfbUM208RP9S+nrw4BhMYSAcDupCL+LGv8a46Zee9
+         uvyHVJPd+w2/iNurwNayKjJXze7W8CrfcKahX/IIg0o/Ki57n/s7QPD8/Rl6Dg5/f+01
+         OP4pVIbbHyEpixjl3sWJiAY/FRlqx23lVyBUB4dZPkrriC1swtwZ3SmtLSQMsQNI48z0
+         txlA==
+X-Gm-Message-State: AOAM530e5SZLn3vK5BeH72ByS7dKPP1Wxo0GuN/XyV69iUMZkSCvJEcF
+        R7bLl2/D2n+ITJPC8rAEeBEImEE41w/HFdVCxIryGg==
+X-Google-Smtp-Source: ABdhPJz9Qw7D5ixsrCkBdUq2WRhpgvzsiAYhD7jodKSpHZnJBlWjCCQ1goHrC+aPtsxXwhA3bm8Dvpk7aSzaaxpcE/0=
+X-Received: by 2002:a25:9a49:: with SMTP id r9mr1089ybo.520.1591192508483;
+ Wed, 03 Jun 2020 06:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-76-joro@8bytes.org>
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+ <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+ <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
+ <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
+ <CAL+tcoDn_=T--uB0CRymfTGvD022PPDk5Yw2yCxvqOOpZ4G_dQ@mail.gmail.com>
+ <CANn89i+dPu9=qJowhRVm9d3CesY4p+zzJ0HGiCMc_yJxux6pow@mail.gmail.com>
+ <CAL+tcoC2+vYoFbujkLCF7P3evfirNSBQtJ9bPFHiU2FGOnBo+A@mail.gmail.com>
+ <CANn89iJfLM2Hz69d9qOZoRKwzzCCpgVRZ1zbTTbg4vGvSAEZ-w@mail.gmail.com> <CADVnQy=RJfmzHR15DyWdydFAqSqVmFhaW4_cgYYAgnixEa5DNQ@mail.gmail.com>
+In-Reply-To: <CADVnQy=RJfmzHR15DyWdydFAqSqVmFhaW4_cgYYAgnixEa5DNQ@mail.gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 3 Jun 2020 06:54:56 -0700
+Message-ID: <CANn89i+7-wE4xr5D9DpH+N-xkL1SB8oVghCKgz+CT5eG1ODQhA@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     Neal Cardwell <ncardwell@google.com>
+Cc:     Jason Xing <kerneljasonxing@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:17:25PM +0200, Joerg Roedel wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> Calling down to EFI runtime services can result in the firmware performing
-> VMGEXIT calls. The firmware is likely to use the GHCB of the OS (e.g., for
-> setting EFI variables), so each GHCB in the system needs to be identity
-> mapped in the EFI page tables, as unencrypted, to avoid page faults.
+On Wed, Jun 3, 2020 at 5:02 AM Neal Cardwell <ncardwell@google.com> wrote:
+>
+> On Wed, Jun 3, 2020 at 1:44 AM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > On Tue, Jun 2, 2020 at 10:05 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
+> > >
+> > > Hi Eric,
+> > >
+> > > I'm still trying to understand what you're saying before. Would this
+> > > be better as following:
+> > > 1) discard the tcp_internal_pacing() function.
+> > > 2) remove where the tcp_internal_pacing() is called in the
+> > > __tcp_transmit_skb() function.
+> > >
+> > > If we do so, we could avoid 'too late to give up pacing'. Meanwhile,
+> > > should we introduce the tcp_wstamp_ns socket field as commit
+> > > (864e5c090749) does?
+> > >
+> >
+> > Please do not top-post on netdev mailing list.
+> >
+> >
+> > I basically suggested double-checking which point in TCP could end up
+> > calling tcp_internal_pacing()
+> > while the timer was already armed.
+> >
+> > I guess this is mtu probing.
+>
+> Perhaps this could also happen from some of the retransmission code
+> paths that don't use tcp_xmit_retransmit_queue()? Perhaps
+> tcp_retransmit_timer() (RTO) and  tcp_send_loss_probe() TLP? It seems
+> they could indirectly cause a call to __tcp_transmit_skb() and thus
+> tcp_internal_pacing() without first checking if the pacing timer was
+> already armed?
 
-...
+I feared this, (see recent commits about very low pacing rates) :/
 
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index eef6e2196ef4..3b62714723b5 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -422,6 +422,31 @@ int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
->  	return 0;
->  }
->  
+I am not sure we need to properly fix all these points for old
+kernels, since EDT model got rid of these problems.
 
-Trusting the firmware is never a good decision but we've established on
-IRC that *this* firmware is in OVMF and is going to be part of the guest
-measurement so if there's trouble we can always fix it, as opposed to
-the actual firmware in the chip.
+Maybe we can try to extend the timer.
 
-Please add some blurb above this function about it so that it is clear
-what kind of EFI firmware it is about here.
+Something like :
 
-> +int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
-> +{
-> +	struct sev_es_runtime_data *data;
-> +	unsigned long address, pflags;
-> +	int cpu;
-> +	u64 pfn;
-> +
-> +	if (!sev_es_active())
-> +		return 0;
-> +
-> +	pflags = _PAGE_NX | _PAGE_RW;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		data = per_cpu(runtime_data, cpu);
-> +
-> +		address = __pa(&data->ghcb_page);
-> +		pfn = address >> PAGE_SHIFT;
-> +
-> +		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags))
-> +			return 1;
-> +	}
-> +
-> +	return 0;
-> +}
 
-Thx.
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index cc4ba42052c21b206850594db6751810d8fc72b4..626b9f4f500f7e5270d8d59e6eb16dbfa3efbc7c
+100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -966,6 +966,8 @@ enum hrtimer_restart tcp_pace_kick(struct hrtimer *timer)
 
--- 
-Regards/Gruss,
-    Boris.
+ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
+ {
++       struct tcp_sock *tp = tcp_sk(sk);
++       ktime_t expire, now;
+        u64 len_ns;
+        u32 rate;
 
-https://people.kernel.org/tglx/notes-about-netiquette
+@@ -977,12 +979,29 @@ static void tcp_internal_pacing(struct sock *sk,
+const struct sk_buff *skb)
+
+        len_ns = (u64)skb->len * NSEC_PER_SEC;
+        do_div(len_ns, rate);
+-       hrtimer_start(&tcp_sk(sk)->pacing_timer,
+-                     ktime_add_ns(ktime_get(), len_ns),
++
++       now = ktime_get();
++       /* If hrtimer is already armed, then our caller has not
++        * used tcp_pacing_check().
++        */
++       if (unlikely(hrtimer_is_queued(&tp->pacing_timer))) {
++               expire = hrtimer_get_softexpires(&tp->pacing_timer);
++               if (ktime_after(expire, now))
++                       now = expire;
++               if (hrtimer_try_to_cancel(&tp->pacing_timer) == 1)
++                       __sock_put(sk);
++       }
++       hrtimer_start(&tp->pacing_timer, ktime_add_ns(now, len_ns),
+                      HRTIMER_MODE_ABS_PINNED_SOFT);
+        sock_hold(sk);
+ }
+
++static bool tcp_pacing_check(const struct sock *sk)
++{
++       return tcp_needs_internal_pacing(sk) &&
++              hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
++}
++
+ static void tcp_update_skb_after_send(struct tcp_sock *tp, struct sk_buff *skb)
+ {
+        skb->skb_mstamp = tp->tcp_mstamp;
+@@ -2117,6 +2136,9 @@ static int tcp_mtu_probe(struct sock *sk)
+        if (!tcp_can_coalesce_send_queue_head(sk, probe_size))
+                return -1;
+
++       if (tcp_pacing_check(sk))
++               return -1;
++
+        /* We're allowed to probe.  Build it now. */
+        nskb = sk_stream_alloc_skb(sk, probe_size, GFP_ATOMIC, false);
+        if (!nskb)
+@@ -2190,11 +2212,6 @@ static int tcp_mtu_probe(struct sock *sk)
+        return -1;
+ }
+
+-static bool tcp_pacing_check(const struct sock *sk)
+-{
+-       return tcp_needs_internal_pacing(sk) &&
+-              hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
+-}
+
+ /* TCP Small Queues :
+  * Control number of packets in qdisc/devices to two packets / or ~1 ms.
+
+
+
+>
+> neal
