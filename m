@@ -2,121 +2,197 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA67C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5962F20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086C620674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gQYalxlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgFCRGn (ORCPT
+        id S1726118AbgFCRNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:06:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44214 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725855AbgFCRGn (ORCPT
+        Wed, 3 Jun 2020 13:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbgFCRNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:06:43 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 053H5cOs013441;
-        Wed, 3 Jun 2020 13:06:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31dr8hybfb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 13:06:34 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 053H61kr019644;
-        Wed, 3 Jun 2020 13:06:34 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31dr8hybej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 13:06:33 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 053H1HIo026166;
-        Wed, 3 Jun 2020 17:06:31 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 31bf483e2w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 17:06:31 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 053H6SvZ852442
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Jun 2020 17:06:29 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E31EDA4057;
-        Wed,  3 Jun 2020 17:06:28 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4197BA404D;
-        Wed,  3 Jun 2020 17:06:27 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.145.63.43])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  3 Jun 2020 17:06:27 +0000 (GMT)
-Date:   Wed, 3 Jun 2020 20:06:24 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH] mm/memblock: export max_pfn for kernel modules
-Message-ID: <20200603170624.GA202648@linux.ibm.com>
-References: <20200603161132.2441-1-miles.chen@mediatek.com>
+        Wed, 3 Jun 2020 13:13:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19176C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=c0f9q7KFHLtUF97X4RtjWgNnpjq+ROwNailvfwoaSyI=; b=gQYalxlXRQuw6vvvJaM/uTx6jl
+        AecyrA1TLwvJsPpxhvxTNivdDreADthRBYzaR9j4LuGX45ZX2+zVvTAcCqHJOC4mDnb4A2rFDXvQo
+        d4ArrmaorfVmjVurNRmJ/MQ6BPrjHnmPLo+mydhsP+AOdhTbxVAVVBqmp/0tFomS74t+bGeINVa2I
+        cfVgqCA9d5mLrfq4Eqalq0xeyqXApoIhk+Umvd/yYhovi6xnZDuKyhju9mS/gYaf3I8sn+0SPN70M
+        VUrUdJYYyaBjSZ8ToWHM5yQC0uzLNyur8RCh1czRBCyVfl93vWXlxbiZTRSGzA+kqJVEIbGaMGeno
+        /kAci79Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgWx8-0001a4-TM; Wed, 03 Jun 2020 17:13:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 44AAC3006D0;
+        Wed,  3 Jun 2020 19:13:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3191120C23592; Wed,  3 Jun 2020 19:13:20 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 19:13:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     tglx@linutronix.de, x86@kernel.org, elver@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        will@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com
+Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
+Message-ID: <20200603171320.GE2570@hirez.programming.kicks-ass.net>
+References: <20200603114014.152292216@infradead.org>
+ <20200603114051.896465666@infradead.org>
+ <20200603164600.GQ29598@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603161132.2441-1-miles.chen@mediatek.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-03_13:2020-06-02,2020-06-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=1
- adultscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- malwarescore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006030133
+In-Reply-To: <20200603164600.GQ29598@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:11:32AM +0800, Miles Chen wrote:
-> max_pfn is uesd to get the highest pfn in the system. Drivers like
-> drivers/iommu/mtk_iommu.c checks max_pfn to see if it should enable
-> its "4GB mode".
+On Wed, Jun 03, 2020 at 09:46:00AM -0700, Paul E. McKenney wrote:
+
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -250,7 +250,7 @@ static noinstr void rcu_dynticks_eqs_ent
+> >  	 * next idle sojourn.
+> >  	 */
+> >  	rcu_dynticks_task_trace_enter();  // Before ->dynticks update!
+> > -	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+> > +	seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
 > 
-> This patch exports the max_pfn symbol, so we can build the driver as
-> a kernel module.
+> To preserve KCSAN's ability to see this, there would be something like
+> instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks)) prior
+> to the instrumentation_end() invoked before rcu_dynticks_eqs_enter()
+> in each of rcu_eqs_enter() and rcu_nmi_exit(), correct?
 
-You can use totalram_pages(), like e.g.
-drivers/media/platform/mtk-vpu/mtk_vpu.c:
+Yes.
 
-$ git grep -np totalram_pages drivers/media/
-drivers/media/platform/mtk-vpu/mtk_vpu.c=779=static int mtk_vpu_probe(struct platform_device *pdev)
-drivers/media/platform/mtk-vpu/mtk_vpu.c:861:   vpu->enable_4GB = !!(totalram_pages() > (SZ_2G >> PAGE_SHIFT));
-
-
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-> ---
->  mm/memblock.c | 1 +
->  1 file changed, 1 insertion(+)
+> >  	// RCU is no longer watching.  Better be in extended quiescent state!
+> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+> >  		     (seq & RCU_DYNTICK_CTRL_CTR));
+> > @@ -274,13 +274,13 @@ static noinstr void rcu_dynticks_eqs_exi
+> >  	 * and we also must force ordering with the next RCU read-side
+> >  	 * critical section.
+> >  	 */
+> > -	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+> > +	seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
 > 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index c79ba6f9920c..3b2b21ecebb6 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -99,6 +99,7 @@ EXPORT_SYMBOL(contig_page_data);
->  unsigned long max_low_pfn;
->  unsigned long min_low_pfn;
->  unsigned long max_pfn;
-> +EXPORT_SYMBOL(max_pfn);
->  unsigned long long max_possible_pfn;
->  
->  static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock;
-> -- 
-> 2.18.0
+> And same here, but after the instrumentation_begin() following
+> rcu_dynticks_eqs_exit() in both rcu_eqs_exit() and rcu_nmi_enter(),
+> correct?
 
--- 
-Sincerely yours,
-Mike.
+Yep.
+
+> >  	// RCU is now watching.  Better not be in an extended quiescent state!
+> >  	rcu_dynticks_task_trace_exit();  // After ->dynticks update!
+> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+> >  		     !(seq & RCU_DYNTICK_CTRL_CTR));
+> >  	if (seq & RCU_DYNTICK_CTRL_MASK) {
+> > -		atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
+> > +		arch_atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
+> 
+> This one is gone in -rcu.
+
+Good, because that would make things 'complicated' with the external
+instrumentation call. And is actually the reason I didn't even attempt
+it this time around.
+
+> >  		smp_mb__after_atomic(); /* _exit after clearing mask. */
+> >  	}
+> >  }
+> > @@ -313,7 +313,7 @@ static __always_inline bool rcu_dynticks
+> >  {
+> >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> >  
+> > -	return !(atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
+> > +	return !(arch_atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
+
+The above is actually instrumented by KCSAN, due to arch_atomic_read()
+being a READ_ONCE() and it now understanding volatile.
+
+> Also instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks)) as
+> follows:
+> 
+> o	rcu_nmi_exit(): After each following instrumentation_begin().
+
+Yes
+
+> o	In theory in rcu_irq_exit_preempt(), but as this generates code
+> 	only in lockdep builds, it might not be worth worrying about.
+> 
+> o	Ditto for rcu_irq_exit_check_preempt().
+> 
+> o	Ditto for __rcu_irq_enter_check_tick().
+
+Not these, afaict they're all the above arch_atomic_read(), which is
+instrumented due to volatile in these cases.
+
+> o	rcu_nmi_enter(): After each following instrumentation_begin().
+
+Yes
+
+> o	__rcu_is_watching() is itself noinstr:
+> 
+> 	o	idtentry_enter_cond_rcu(): After each following
+> 		instrumentation_begin().
+> 
+> o	rcu_is_watching(): Either before or after the call to
+> 	rcu_dynticks_curr_cpu_in_eqs().
+
+Something like that yes.
+
+> >  }
+> >  
+> >  /*
+> > @@ -692,6 +692,7 @@ noinstr void rcu_nmi_exit(void)
+> >  {
+> >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> >  
+> > +	instrumentation_begin();
+> >  	/*
+> >  	 * Check for ->dynticks_nmi_nesting underflow and bad ->dynticks.
+> >  	 * (We are exiting an NMI handler, so RCU better be paying attention
+> > @@ -705,7 +706,6 @@ noinstr void rcu_nmi_exit(void)
+> >  	 * leave it in non-RCU-idle state.
+> >  	 */
+> >  	if (rdp->dynticks_nmi_nesting != 1) {
+> > -		instrumentation_begin();
+> >  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
+> >  				  atomic_read(&rdp->dynticks));
+> >  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+> > @@ -714,7 +714,6 @@ noinstr void rcu_nmi_exit(void)
+> >  		return;
+> >  	}
+> >  
+> > -	instrumentation_begin();
+> >  	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+> >  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+> >  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+> 
+> This one looks to be having no effect on instrumentation of atomics, but
+> rather coalescing a pair of instrumentation_begin() into one.
+> 
+> Do I understand correctly?
+
+Almost, it puts the WARN_ON_ONCE()s under instrumentation_begin() too,
+and that makes a differnce, iirc it was the
+rcu_dynticks_curr_cpu_in_eqs() call that stood out. But that could've
+been before I switched it to arch_atomic_read(). In any case, I find
+this form a lot clearer.
