@@ -2,80 +2,164 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E66812067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF4E204EF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:35:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bo/9NYZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgFCTbj (ORCPT
+        id S1726096AbgFCTf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCTbj (ORCPT
+        Wed, 3 Jun 2020 15:35:27 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30857 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbgFCTf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:31:39 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9A7C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 12:31:38 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jgZ6l-002dSc-EA; Wed, 03 Jun 2020 19:31:27 +0000
-Date:   Wed, 3 Jun 2020 20:31:27 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [git pull] uaccess comedi compat
-Message-ID: <20200603193127.GZ23230@ZenIV.linux.org.uk>
+        Wed, 3 Jun 2020 15:35:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591212924;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kdPkXIXWB+u8KkGNeY7ldFSPiBFDc8t2oJd3Oo4z+zQ=;
+        b=bo/9NYZyWr1QkhghbLRT7lloJppf0+kfSyKzavFDNaafZu6NwI3zsV75eaPILNS2rMSg+w
+        5JI8nN50bVyV44dsVvd0XIBspJGY3AOdGIp6B2iQuAmHyiTjqhmwFRTliFDDW5bB0wbsLw
+        xhS+kaRnxo87NpDjXLtWC2JhmKcP/7s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-FCnJiB9dPhCWcsrWi1vtNA-1; Wed, 03 Jun 2020 15:35:22 -0400
+X-MC-Unique: FCnJiB9dPhCWcsrWi1vtNA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 360A8800685;
+        Wed,  3 Jun 2020 19:35:21 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-173.rdu2.redhat.com [10.10.115.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2F628926B;
+        Wed,  3 Jun 2020 19:35:20 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 399F6220C5A; Wed,  3 Jun 2020 15:35:20 -0400 (EDT)
+Date:   Wed, 3 Jun 2020 15:35:20 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/10] KVM: x86: extend struct kvm_vcpu_pv_apf_data
+ with token info
+Message-ID: <20200603193520.GB48122@redhat.com>
+References: <20200525144125.143875-1-vkuznets@redhat.com>
+ <20200525144125.143875-3-vkuznets@redhat.com>
+ <20200526182745.GA114395@redhat.com>
+ <875zcg4fi9.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <875zcg4fi9.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	comedi compat ioctls done saner (killing the single biggest pile
-of __get_user/__put_user outside of arch/* in process).
+On Thu, May 28, 2020 at 10:42:38AM +0200, Vitaly Kuznetsov wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
+> 
+> > On Mon, May 25, 2020 at 04:41:17PM +0200, Vitaly Kuznetsov wrote:
+> >> 
+> >
+> > [..]
+> >> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> >> index 0a6b35353fc7..c195f63c1086 100644
+> >> --- a/arch/x86/include/asm/kvm_host.h
+> >> +++ b/arch/x86/include/asm/kvm_host.h
+> >> @@ -767,7 +767,7 @@ struct kvm_vcpu_arch {
+> >>  		u64 msr_val;
+> >>  		u32 id;
+> >>  		bool send_user_only;
+> >> -		u32 host_apf_reason;
+> >> +		u32 host_apf_flags;
+> >
+> > Hi Vitaly,
+> >
+> > What is host_apf_reason used for. Looks like it is somehow used in
+> > context of nested guests. I hope by now you have been able to figure
+> > it out.
+> >
+> > Is it somehow the case of that L2 guest takes a page fault exit
+> > and then L0 injects this event in L1 using exception. I have been
+> > trying to read this code but can't wrap my head around it.
+> >
+> > I am still concerned about the case of nested kvm. We have discussed
+> > apf mechanism but never touched nested part of it. Given we are
+> > touching code in nested kvm part, want to make sure it is not broken
+> > in new design.
+> >
+> 
+> Sorry I missed this.
+> 
+> I think we've touched nested topic a bit already:
+> https://lore.kernel.org/kvm/87lfluwfi0.fsf@vitty.brq.redhat.com/
+> 
+> But let me try to explain the whole thing and maybe someone will point
+> out what I'm missing.
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Hi Vitaly,
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+Sorry, I got busy in some other things. Got back to it now. Thanks for
+the explanation. I think I understand it up to some extent now.
 
-are available in the git repository at:
+Vivek
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git uaccess.comedi
+> 
+> The problem being solved: L2 guest is running and it is hitting a page
+> which is not present *in L0* and instead of pausing *L1* vCPU completely
+> we want to let L1 know about the problem so it can run something else
+> (e.g. another guest or just another application).
+> 
+> What's different between this and 'normal' APF case. When L2 guest is
+> running, the CPU (physical) is in 'guest' mode so we can't inject #PF
+> there. Actually, we can but L2 may get confused and we're not even sure
+> it's L2's fault, that L2 supported APF and so on. We want to make L1
+> deal with the issue.
+> 
+> How does it work then. We inject #PF and L1 sees it as #PF VMEXIT. It
+> needs to know about APF (thus KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT) but
+> the handling is exactly the same as do_pagefault(): L1's
+> kvm_handle_page_fault() checkes APF area (shared between L0 and L1) and
+> either pauses a task or resumes a previously paused one. This can be a
+> L2 guest or something else.
+> 
+> What is 'host_apf_reason'. It is a copy of 'reason' field from 'struct
+> kvm_vcpu_pv_apf_data' which we read upon #PF VMEXIT. It indicates that
+> the #PF VMEXIT is synthetic.
+> 
+> How does it work with the patchset: 'page not present' case remains the
+> same. 'page ready' case now goes through interrupts so it may not get
+> handled immediately. External interrupts will be handled by L0 in host
+> mode (when L2 is not running). For the 'page ready' case L1 hypervisor
+> doesn't need any special handling, kvm_async_pf_intr() irq handler will
+> work correctly.
+> 
+> I've smoke tested this with VMX and nothing immediately blew up.
+> 
+> -- 
+> Vitaly
+> 
 
-for you to fetch changes up to bac42fb21259783cb748ae54227a5e755340a396:
-
-  comedi: get rid of compat_alloc_user_space() mess in COMEDI_CMD{,TEST} compat (2020-05-29 10:06:01 -0400)
-
-----------------------------------------------------------------
-Al Viro (10):
-      comedi: move compat ioctl handling to native fops
-      comedi: get rid of indirection via translated_ioctl()
-      comedi: get rid of compat_alloc_user_space() mess in COMEDI_CHANINFO compat
-      comedi: get rid of compat_alloc_user_space() mess in COMEDI_RANGEINFO compat
-      comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSN compat
-      comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSNLIST compat
-      comedi: lift copy_from_user() into callers of __comedi_get_user_cmd()
-      comedi: do_cmdtest_ioctl(): lift copyin/copyout into the caller
-      comedi: do_cmd_ioctl(): lift copyin/copyout into the caller
-      comedi: get rid of compat_alloc_user_space() mess in COMEDI_CMD{,TEST} compat
-
- drivers/staging/comedi/Makefile          |   1 -
- drivers/staging/comedi/comedi_compat32.c | 455 -------------------------
- drivers/staging/comedi/comedi_compat32.h |  28 --
- drivers/staging/comedi/comedi_fops.c     | 564 +++++++++++++++++++++++++------
- drivers/staging/comedi/comedi_internal.h |   2 +-
- drivers/staging/comedi/range.c           |  17 +-
- 6 files changed, 467 insertions(+), 600 deletions(-)
- delete mode 100644 drivers/staging/comedi/comedi_compat32.c
- delete mode 100644 drivers/staging/comedi/comedi_compat32.h
