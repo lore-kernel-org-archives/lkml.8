@@ -2,181 +2,138 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD3D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41F82053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OT5o7xlh"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="k1M4SV8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgFCSVv (ORCPT
+        id S1726114AbgFCSYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:21:51 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37292 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726181AbgFCSVq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:21:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591208504;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N8+QQPH2QujNnngMCvTYk2cn6MqYerfKhZLbvp5VGaU=;
-        b=OT5o7xlh1lSu9cQ3yAQAhPEFegycdY6OInp9R9cErhmZnXQqDyWNFEYURSlWmAucV7IjDu
-        Hg5FajKX3bAQfSp9kH7ekHl9Bx7bphxaD8JKZZeaYvd2dVM6Ku6GBoTJurEqzsjio8ZSFm
-        mZt+RnKGStoLh0oYHJzqFZk1cVNg1GE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-0t8LO991OQmcwyM40xm4Cw-1; Wed, 03 Jun 2020 14:21:42 -0400
-X-MC-Unique: 0t8LO991OQmcwyM40xm4Cw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAFEE107ACCA;
-        Wed,  3 Jun 2020 18:21:40 +0000 (UTC)
-Received: from dm.redhat.com (unknown [10.10.67.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C21DF5D9CD;
-        Wed,  3 Jun 2020 18:21:39 +0000 (UTC)
-From:   Yannick Cote <ycote@redhat.com>
-To:     live-patching@vger.kernel.org
-Cc:     linux-kselftest@vger.kernel.org, joe.lawrence@redhat.com,
-        linux-kernel@vger.kernel.org, pmladek@suse.com, mbenes@suse.cz,
-        kamalesh@linux.vnet.ibm.com
-Subject: [PATCH v2 4/4] selftests/livepatch: fix mem leaks in test-klp-shadow-vars
-Date:   Wed,  3 Jun 2020 14:20:58 -0400
-Message-Id: <20200603182058.109470-5-ycote@redhat.com>
-In-Reply-To: <20200603182058.109470-1-ycote@redhat.com>
-References: <20200603182058.109470-1-ycote@redhat.com>
+        Wed, 3 Jun 2020 14:24:33 -0400
+Received: from mout.web.de ([212.227.15.3]:43251 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgFCSYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:24:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591208668;
+        bh=ldlqw6fZ2enXKfh122KY8D+FZ5iAXrqszAST+HktABI=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=k1M4SV8U8dZ6dnEFARsuhm9rbuKfGaFZQ3l6XpGqmY58RSH1tpKBGcXIP7CHzk+Y0
+         /U78DFFe+YdSQ0auaRAJYiCt6Tg3Qb6LgR0DjzPIO48/ahDvEseqqXG7Spq7pkKA52
+         17HDDl+v3fpM8G8wGmNrA5CL68dgnS2VB8zB2hng=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.82.231]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mq182-1jB2jZ3Dda-00nDW3; Wed, 03
+ Jun 2020 20:24:27 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH] media: budget-core: Improve exception handling in
+ budget_register()
+To:     Chuhong Yuan <hslester96@gmail.com>, linux-media@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e3633733-8b83-d4ef-3256-e2b1117419f0@web.de>
+Date:   Wed, 3 Jun 2020 20:24:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0vjtfvANQVEJCxD5yAgbOpWL3kJVZCKugcQZ7ONucOtCa1DX6gt
+ ohLfaIWaaRAVwzKMk9SOrsAqRsDfqx4qoUKYwjBuNwLCRdGd1p4AbmsCrK+b9b3dXruatII
+ IWFV8ruy2JRqK1U0ad56Urqn/pxFHhbPbLG/XJ9C3gztuf/lHZqEiMSwkV8Cxp7brO8r1bF
+ HXJNmkj9mBo6UF6kU5tvg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ATTwrnndhE8=:mfINnM2ZJfzdQoP+cTzcU2
+ S6458htOCq+lTIfo4P23O20c4XbUruOe/rbbl8DGGxQ532TmhA3jrH8Wmnn3UU8c4Ri9AzlXs
+ LsoBg7e254Etf/iR51qk+dnS/LBqU9HYnI7fDs7gi91gd4GeWK873wYvSI7o3B3j4Dp05HtJP
+ SlPM80tWBy9YgAffv6mABmbZmWrwSLo1G83GRejOARnkkCUOJEcL91W33l6082RwoOdN8gF2H
+ p382pBrvUZL/2IFLvZvukH/LElY23yqtfTqhNk5Lkk6QFhakd3L18qLKY33VTh2cUp2frYQM2
+ 0ljZupw4M/SPivVik6z07IsbwcWd05ZRs/aa0lpQY+bITkJKuXoARGIewRStaIy7qhipEhqoC
+ rzPAHPoS88DD6xLbrkMAuUo/K79ZZX0e5U0QeVQGn/QL9483NCJMyBMOIkPzTVgd6CnpgDi98
+ +Ko4D+Voq4I3Fs+dTLEROkZ9eLSK6Vsr2Yx1aNbghndaA7dofayXddiTskOd8BuIwvbetTZng
+ KT1aJ2QqeD197C/Aoz6tTqLr3dqob3H656N3EauCnHrRnjVts3QY9mrsojRPuOzDywaRkvs9x
+ 5sLTq6QVEXVcFQOrT5qEvoTEbAuBKb3kB+J5lSwsZkKEN3B5xU+ftBLxPQIxbmmtOBmq+ew6F
+ xGFW5ol5vwg7T7QOB+tFBghtGm8K+ai0vtUxZEuN1C6tzY7vjtR5ApxTYBLdDunjRqTyXWAXU
+ wOlQBx0AzHcg2EWWjORo5mHu4tVr3j8LoP0/85hdFqi4RHIW/z+BBrxbU17mGVNKdl1i/Y035
+ V1E3g8vovhWBnEtgBpIL5So1QszSWLbtIw7xFn9emK15VLQt2jU/IJ60ldWnVSYSyFFAhFCfT
+ OKbyNDKy+mUAuYqdZPQ5mFuWLt8L0iD0uVM9a2Gc08MKSeedA4pd+1wjQ91ARwa36yblpT6xq
+ J4NrhS+AONjl4CPUbfyXovbQC3H4Qp/uraUaubLBv8H89DszRVOBCwKAFYrQsoOkCTMHpAZQ1
+ cfhhnsB7vV2sGHkf/jJsrO0XJkxgKfiZa1LjSVy5hV9B++H7+Ypo2fzJaFnS71qbcHZHPx+z7
+ ULu42IFiuzlHXAwaXJOI5hFvOGp+NXC3ZsAGliTVmjOLtTOMYjhIMuxJF5wFtiJ+giYyVsCg2
+ go0hZA0sQyX1epuLt2hOOJTcv8ANDl0q96oQSLC2OWaZcKXW6KVF7rZ0gzeDyD4bhrobZIBlb
+ 8dnOKgrm93xpTlQS8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some cases, when an error occurs during testing and the main test
-routine returns, a memory leak occurs via leaving previously registered
-shadow variables allocated in the kernel as well as shadow_ptr list
-elements. From now on, in case of error, remove all allocated shadow
-variables and shadow_ptr struct elements.
+> Add the missed undo functions for error handling to fix it.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Acked-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Yannick Cote <ycote@redhat.com>
----
- lib/livepatch/test_klp_shadow_vars.c | 43 ++++++++++++++++++++--------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+=E2=80=A6
+> +++ b/drivers/media/pci/ttpci/budget-core.c
+> @@ -369,20 +369,25 @@  static int budget_register(struct budget *budget)
+=E2=80=A6
+>  	return 0;
+> +
++err:
+> +	dvb_dmxdev_release(&budget->dmxdev);
+> +	dvb_dmx_release(&budget->demux);
+> +	return ret;
+>  }
+=E2=80=A6
 
-diff --git a/lib/livepatch/test_klp_shadow_vars.c b/lib/livepatch/test_klp_shadow_vars.c
-index a49265e56917..b99116490858 100644
---- a/lib/livepatch/test_klp_shadow_vars.c
-+++ b/lib/livepatch/test_klp_shadow_vars.c
-@@ -170,6 +170,7 @@ static int test_klp_shadow_vars_init(void)
- 	char *pndup[NUM_OBJS];
- 	int nfields2[NUM_OBJS], *pnfields2[NUM_OBJS], **sv2[NUM_OBJS];
- 	void **sv;
-+	int ret;
- 	int i;
- 
- 	ptr_id(NULL);
-@@ -196,31 +197,39 @@ static int test_klp_shadow_vars_init(void)
- 					sizeof(pnfields1[i]), GFP_KERNEL,
- 					shadow_ctor, &pnfields1[i]);
- 		}
--		if (!sv1[i])
--			return -ENOMEM;
-+		if (!sv1[i]) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
- 
- 		pnfields2[i] = &nfields2[i];
- 		ptr_id(pnfields2[i]);
- 		sv2[i] = shadow_alloc(&objs[i], SV_ID2, sizeof(pnfields2[i]),
- 					GFP_KERNEL, shadow_ctor, &pnfields2[i]);
--		if (!sv2[i])
--			return -ENOMEM;
-+		if (!sv2[i]) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
- 	}
- 
- 	/* pass 2: verify we find allocated svars and where they point to */
- 	for (i = 0; i < NUM_OBJS; i++) {
- 		/* check the "char" svar for all objects */
- 		sv = shadow_get(&objs[i], SV_ID1);
--		if (!sv)
--			return -EINVAL;
-+		if (!sv) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		if ((char **)sv == sv1[i] && *sv1[i] == pnfields1[i])
- 			pr_info("  got expected PTR%d -> PTR%d result\n",
- 				ptr_id(sv1[i]), ptr_id(*sv1[i]));
- 
- 		/* check the "int" svar for all objects */
- 		sv = shadow_get(&objs[i], SV_ID2);
--		if (!sv)
--			return -EINVAL;
-+		if (!sv) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		if ((int **)sv == sv2[i] && *sv2[i] == pnfields2[i])
- 			pr_info("  got expected PTR%d -> PTR%d result\n",
- 				ptr_id(sv2[i]), ptr_id(*sv2[i]));
-@@ -233,8 +242,10 @@ static int test_klp_shadow_vars_init(void)
- 
- 		sv = shadow_get_or_alloc(&objs[i], SV_ID1, sizeof(pndup[i]),
- 					GFP_KERNEL, shadow_ctor, &pndup[i]);
--		if (!sv)
--			return -EINVAL;
-+		if (!sv) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		if ((char **)sv == sv1[i] && *sv1[i] == pnfields1[i])
- 			pr_info("  got expected PTR%d -> PTR%d result\n",
- 					ptr_id(sv1[i]), ptr_id(*sv1[i]));
-@@ -251,8 +262,10 @@ static int test_klp_shadow_vars_init(void)
- 	/* pass 5: check we still find <objs[*], SV_ID2> svar pairs */
- 	for (i = 0; i < NUM_OBJS; i++) {
- 		sv = shadow_get(&objs[i], SV_ID2);	/* 'int' pairs */
--		if (!sv)
--			return -EINVAL;
-+		if (!sv) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		if ((int **)sv == sv2[i] && *sv2[i] == pnfields2[i])
- 			pr_info("  got expected PTR%d -> PTR%d result\n",
- 					ptr_id(sv2[i]), ptr_id(*sv2[i]));
-@@ -269,6 +282,12 @@ static int test_klp_shadow_vars_init(void)
- 	free_ptr_list();
- 
- 	return 0;
-+out:
-+	shadow_free_all(SV_ID1, NULL);		/* 'char' pairs */
-+	shadow_free_all(SV_ID2, NULL);		/* 'int' pairs */
-+	free_ptr_list();
-+
-+	return ret;
- }
- 
- static void test_klp_shadow_vars_exit(void)
--- 
-2.25.4
+Perhaps use the label =E2=80=9Crelease_dmxdev=E2=80=9D instead?
 
+Regards,
+Markus
