@@ -2,106 +2,106 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50323C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046442053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37964207DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sxXwEKx+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFCSb3 (ORCPT
+        id S1726024AbgFCScy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:31:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:36738 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgFCSb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:31:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 022D931B;
-        Wed,  3 Jun 2020 11:31:27 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.135])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 948313F305;
-        Wed,  3 Jun 2020 11:31:23 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 19:31:20 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
+        Wed, 3 Jun 2020 14:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgFCScy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:32:54 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E10C08C5C0;
+        Wed,  3 Jun 2020 11:32:54 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id h3so3486182ilh.13;
+        Wed, 03 Jun 2020 11:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dl45jHmMxgIYOcAGoeBLy9mbq13KTVnNRYfglexjaaE=;
+        b=sxXwEKx+yE5ycmbktRFVRkyspOiSKTBYdrt42Z5TdrxKcSSvFIH361s1G69YU+n8bQ
+         ujfYu74W0cDNv2/HVUn2SJL5Bc2tSjTTBv0U82vJ819S6ftPhZzu4m/9+jBuKzPU3UbB
+         hkUXIX5ib3KEAK15lR4SFmg705G+ulluROvVRJtNd9IkVB2Kxxbj4eOXQRD3elGKt6f/
+         3/E4X55YRd8+XFFLDmMETziBFzcQrshe+Z10j/G4HOYQhG/W9EEaggbeP+4/eeA4tqlt
+         Oq2eI4Ch2ZLWpteLW+HARxVKk4q9gQTk82JEyQpb6vr5uXwKXfXJno4Kp/8zY1WEi8vp
+         UzUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dl45jHmMxgIYOcAGoeBLy9mbq13KTVnNRYfglexjaaE=;
+        b=Qy7gQJ1OZ+8fKMO0y6+JIxRtikUPw9Ub2RcmMReEBRotCEYRQ+D/meMvMwmhFZ63y9
+         wo48AvCFuecCCDrY0CSEbw2CR7N6Hz0AtdCc1mduDukT15oc40OJ1eI5c1JejOr7yUKH
+         bmC6kGHnuGNpbE8klaqFh8CWrJDekTRRzOWcEcjPWyW1iGNZw0rjy3X4SXPbZ/by4f4n
+         93a9xzNuhPeTegF+dfWi/XZ7xNKut1DtOJt3vC8fDIjYuuL6lRamvjSW9S67blWMADLm
+         NRJ3ud/JYj3RamLNOth6UBouy4ig+c1/9mQiF8njNZSKlhnND8xvrF5sspTh8dtGyha1
+         Oc7g==
+X-Gm-Message-State: AOAM5314WLsIC7R7KfpICo2/aaexUWPheX+BvvLUnVMgRAPR95lAsB2N
+        iCrY914J4vkQiv/pozfw98UIxKRVXSjQINYV8DY=
+X-Google-Smtp-Source: ABdhPJzkVnkLgrwPfjugAq9hYe7HzuqLCdobQSiGG9ylo5BRV+8Cw2y7ecfxP1pak8MUWB2wjEYMRDNxI/VWlkYFcsU=
+X-Received: by 2002:a92:5e52:: with SMTP id s79mr752338ilb.33.1591209173348;
+ Wed, 03 Jun 2020 11:32:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200528192005.GA494874@bogus> <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7> <20200603180435.GB23722@bogus>
+In-Reply-To: <20200603180435.GB23722@bogus>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Wed, 3 Jun 2020 13:32:42 -0500
+Message-ID: <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+To:     Sudeep Holla <sudeep.holla@arm.com>
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Devicetree List <devicetree@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200603183120.GE23722@bogus>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200519012927.GT2165@builder.lan>
- <20200519034055.hfvifqz442yfduhg@vireshk-i7>
- <CABb+yY30nmbBUzYG62xGEbrr7107h_Edyq3jKPheZAQ0Cvr9Yg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY30nmbBUzYG62xGEbrr7107h_Edyq3jKPheZAQ0Cvr9Yg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:05:03PM -0500, Jassi Brar wrote:
-> On Mon, May 18, 2020 at 10:40 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Wed, Jun 3, 2020 at 1:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Fri, May 29, 2020 at 09:37:58AM +0530, Viresh Kumar wrote:
+> > On 28-05-20, 13:20, Rob Herring wrote:
+> > > Whether Linux
+> > > requires serializing mailbox accesses is a separate issue. On that side,
+> > > it seems silly to not allow driving the h/w in the most efficient way
+> > > possible.
 > >
-> > On 18-05-20, 18:29, Bjorn Andersson wrote:
-> > > On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
-> > > > This stuff has been doing rounds on the mailing list since several years
-> > > > now with no agreed conclusion by all the parties. And here is another
-> > > > attempt to get some feedback from everyone involved to close this once
-> > > > and for ever. Your comments will very much be appreciated.
-> > > >
-> > > > The ARM MHU is defined here in the TRM [1] for your reference, which
-> > > > states following:
-> > > >
-> > > >     "The MHU drives the signal using a 32-bit register, with all 32
-> > > >     bits logically ORed together. The MHU provides a set of
-> > > >     registers to enable software to set, clear, and check the status
-> > > >     of each of the bits of this register independently.  The use of
-> > > >     32 bits for each interrupt line enables software to provide more
-> > > >     information about the source of the interrupt. For example, each
-> > > >     bit of the register can be associated with a type of event that
-> > > >     can contribute to raising the interrupt."
-> > > >
-> > >
-> > > Does this mean that there are 32 different signals and they are all ORed
-> > > into the same interrupt line to trigger software action when something
-> > > happens?
-> > >
-> > > Or does it mean that this register is used to pass multi-bit information
-> > > and when any such information is passed an interrupt will be triggered?
-> > > If so, what does that information mean? How is it tied into other Linux
-> > > drivers/subsystems?
-> >
-> > I have started to believe the hardware is written badly at this point
-> > :)
-> >
-> H/W is actually fine :)   Its just that the driver is written to
-> _also_ support a platform (my original) that doesn't have shmem and
-> need to pass data via 32bit registers.
-> Frankly, I am not against the doorbell mode, I am against implementing
-> two modes in a driver. If it really helped (note the past tense) the
-> SCMI, we could implement the driver only in doorbell mode but
-> unfortunately SCMI would still be _broken_ for non-doorbell
-> controllers.
+> > That's exactly what we are trying to say. The hardware allows us to
+> > write all 32 bits in parallel, without any hardware issues, why
+> > shouldn't we do that ? The delay (which Sudeep will find out, he is
+> > facing issues with hardware access because of lockdown right now)
+>
+> OK, I was able to access the setup today. I couldn't reach a point
+> where I can do measurements as the system just became unusable with
+> one physical channel instead of 2 virtual channels as in my patches.
+>
+> My test was simple. Switch to schedutil and read sensors periodically
+> via sysfs.
+>
+>  arm-scmi firmware:scmi: message for 1 is not expected!
+>
+This sounds like you are not serialising requests on a shared channel.
+Can you please also share the patch?
 
-Should be fine as the specification is designed to work with only shmem
-for any data transfer and mailbox is just a signal mechanism. I won't
-be too worried about that.
-
---
-Regards,
-Sudeep
+Thanks.
