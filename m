@@ -2,363 +2,118 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE33920738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2AC20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+P9jvSg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WlP1G6Dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgFCQ0r (ORCPT
+        id S1726186AbgFCQ1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:26:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23587 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726096AbgFCQ0q (ORCPT
+        Wed, 3 Jun 2020 12:27:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37354 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgFCQ1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:26:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591201603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VR/lyH3hAkWvRnOyKOpFpQoG/xQdES4IuBlxKzO6BYk=;
-        b=V+P9jvSg7WKvDedgBtpsEasQjEZyNfHV828TKmGqJuQgRo0PQgBczFTvXXAywZsqIAfobu
-        +mfp0PeUkttepf5kmmu5jsmmgrwBkwU0OnDlzMZfxwf1yVPLVVCl83FdkeGFvqVoA1riPv
-        cdg90gUxf5/DQPOi6m9RiIYFEmsUJJw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-547l-tO0P2Kz3PgqDO75yA-1; Wed, 03 Jun 2020 12:26:41 -0400
-X-MC-Unique: 547l-tO0P2Kz3PgqDO75yA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5708461;
-        Wed,  3 Jun 2020 16:26:37 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E179F98FE5;
-        Wed,  3 Jun 2020 16:26:28 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 10:26:28 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Zeng, Xin" <xin.zeng@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200603102628.017e2896@x1.home>
-In-Reply-To: <20200603052443.GC12300@joy-OptiPlex-7040>
-References: <20200428005429.GJ12879@joy-OptiPlex-7040>
-        <20200428141437.GG2794@work-vm>
-        <20200429072616.GL12879@joy-OptiPlex-7040>
-        <20200429082201.GA2834@work-vm>
-        <20200429093555.GM12879@joy-OptiPlex-7040>
-        <20200429094844.GE2834@work-vm>
-        <20200430003949.GN12879@joy-OptiPlex-7040>
-        <20200602165527.34137955@x1.home>
-        <20200603031948.GB12300@joy-OptiPlex-7040>
-        <20200602215528.7a1008f0@x1.home>
-        <20200603052443.GC12300@joy-OptiPlex-7040>
-Organization: Red Hat
+        Wed, 3 Jun 2020 12:27:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053GI2gS193450;
+        Wed, 3 Jun 2020 16:27:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=FEiXZ6/Qhn4G0P2rQp5P3+kAxGftVnFrnRAG0wneIw0=;
+ b=WlP1G6DyVeO/jgOTJ/7fVztE3FeVU41h45IG2RMadceUApQyscs5yHZTUsxiukVdnNbm
+ 1eOpjPp4QYy3COXzRduidHMLf2RlgkUmuPVAeImwIqbHVm6W9StimgezyePuYs1q001W
+ ExOxG2VbuoG9HzbaJdi2gZDYDJSGTXMR7dE//aA580GoAKUq+BrHm0FFa2NyK0QIQa/5
+ Q3E2sixf99qlNWhbmJfB2dg+bGdX8S4ME96kGuvrm+WXDffHF8BdAJN+S5dbZPtvOUNI
+ reNit9d3DERBM65eIX8dt14SVeo08AmHF2PrLoEKNht/oacx5FnxdVHsjs1qke0Q1gzj Ig== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31bewr2am0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 03 Jun 2020 16:27:02 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053GJSt3142693;
+        Wed, 3 Jun 2020 16:27:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31c12r4qsj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Jun 2020 16:27:01 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 053GR18d006218;
+        Wed, 3 Jun 2020 16:27:01 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Jun 2020 09:27:00 -0700
+Date:   Wed, 3 Jun 2020 09:26:59 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Add the missed xfs_perag_put() for
+ xfs_ifree_cluster()
+Message-ID: <20200603162659.GA8230@magnolia>
+References: <20200603092707.1424619-1-hslester96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603092707.1424619-1-hslester96@gmail.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ adultscore=0 suspectscore=1 spamscore=0 bulkscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006030129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=1 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006030129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 01:24:43 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
-
-> On Tue, Jun 02, 2020 at 09:55:28PM -0600, Alex Williamson wrote:
-> > On Tue, 2 Jun 2020 23:19:48 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Tue, Jun 02, 2020 at 04:55:27PM -0600, Alex Williamson wrote:  
-> > > > On Wed, 29 Apr 2020 20:39:50 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >     
-> > > > > On Wed, Apr 29, 2020 at 05:48:44PM +0800, Dr. David Alan Gilbert wrote:
-> > > > > <snip>    
-> > > > > > > > > > > > > > > > > > An mdev type is meant to define a software compatible interface, so in
-> > > > > > > > > > > > > > > > > > the case of mdev->mdev migration, doesn't migrating to a different type
-> > > > > > > > > > > > > > > > > > fail the most basic of compatibility tests that we expect userspace to
-> > > > > > > > > > > > > > > > > > perform?  IOW, if two mdev types are migration compatible, it seems a
-> > > > > > > > > > > > > > > > > > prerequisite to that is that they provide the same software interface,
-> > > > > > > > > > > > > > > > > > which means they should be the same mdev type.
-> > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > In the hybrid cases of mdev->phys or phys->mdev, how does a      
-> > > > > > > > > > > > > > > > > management      
-> > > > > > > > > > > > > > > > > > tool begin to even guess what might be compatible?  Are we expecting
-> > > > > > > > > > > > > > > > > > libvirt to probe ever device with this attribute in the system?  Is
-> > > > > > > > > > > > > > > > > > there going to be a new class hierarchy created to enumerate all
-> > > > > > > > > > > > > > > > > > possible migrate-able devices?
-> > > > > > > > > > > > > > > > > >      
-> > > > > > > > > > > > > > > > > yes, management tool needs to guess and test migration compatible
-> > > > > > > > > > > > > > > > > between two devices. But I think it's not the problem only for
-> > > > > > > > > > > > > > > > > mdev->phys or phys->mdev. even for mdev->mdev, management tool needs
-> > > > > > > > > > > > > > > > > to
-> > > > > > > > > > > > > > > > > first assume that the two mdevs have the same type of parent devices
-> > > > > > > > > > > > > > > > > (e.g.their pciids are equal). otherwise, it's still enumerating
-> > > > > > > > > > > > > > > > > possibilities.
-> > > > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > > > > on the other hand, for two mdevs,
-> > > > > > > > > > > > > > > > > mdev1 from pdev1, its mdev_type is 1/2 of pdev1;
-> > > > > > > > > > > > > > > > > mdev2 from pdev2, its mdev_type is 1/4 of pdev2;
-> > > > > > > > > > > > > > > > > if pdev2 is exactly 2 times of pdev1, why not allow migration between
-> > > > > > > > > > > > > > > > > mdev1 <-> mdev2.      
-> > > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > > > How could the manage tool figure out that 1/2 of pdev1 is equivalent 
-> > > > > > > > > > > > > > > > to 1/4 of pdev2? If we really want to allow such thing happen, the best
-> > > > > > > > > > > > > > > > choice is to report the same mdev type on both pdev1 and pdev2.      
-> > > > > > > > > > > > > > > I think that's exactly the value of this migration_version interface.
-> > > > > > > > > > > > > > > the management tool can take advantage of this interface to know if two
-> > > > > > > > > > > > > > > devices are migration compatible, no matter they are mdevs, non-mdevs,
-> > > > > > > > > > > > > > > or mix.
-> > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > > as I know, (please correct me if not right), current libvirt still
-> > > > > > > > > > > > > > > requires manually generating mdev devices, and it just duplicates src vm
-> > > > > > > > > > > > > > > configuration to the target vm.
-> > > > > > > > > > > > > > > for libvirt, currently it's always phys->phys and mdev->mdev (and of the
-> > > > > > > > > > > > > > > same mdev type).
-> > > > > > > > > > > > > > > But it does not justify that hybrid cases should not be allowed. otherwise,
-> > > > > > > > > > > > > > > why do we need to introduce this migration_version interface and leave
-> > > > > > > > > > > > > > > the judgement of migration compatibility to vendor driver? why not simply
-> > > > > > > > > > > > > > > set the criteria to something like "pciids of parent devices are equal,
-> > > > > > > > > > > > > > > and mdev types are equal" ?
-> > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > >       
-> > > > > > > > > > > > > > > > btw mdev<->phys just brings trouble to upper stack as Alex pointed out.       
-> > > > > > > > > > > > > > > could you help me understand why it will bring trouble to upper stack?
-> > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > > I think it just needs to read src migration_version under src dev node,
-> > > > > > > > > > > > > > > and test it in target migration version under target dev node. 
-> > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > > after all, through this interface we just help the upper layer
-> > > > > > > > > > > > > > > knowing available options through reading and testing, and they decide
-> > > > > > > > > > > > > > > to use it or not.
-> > > > > > > > > > > > > > >       
-> > > > > > > > > > > > > > > > Can we simplify the requirement by allowing only mdev<->mdev and 
-> > > > > > > > > > > > > > > > phys<->phys migration? If an customer does want to migrate between a 
-> > > > > > > > > > > > > > > > mdev and phys, he could wrap physical device into a wrapped mdev 
-> > > > > > > > > > > > > > > > instance (with the same type as the source mdev) instead of using vendor 
-> > > > > > > > > > > > > > > > ops. Doing so does add some burden but if mdev<->phys is not dominant 
-> > > > > > > > > > > > > > > > usage then such tradeoff might be worthywhile...
-> > > > > > > > > > > > > > > >      
-> > > > > > > > > > > > > > > If the interfaces for phys<->phys and mdev<->mdev are consistent, it makes no
-> > > > > > > > > > > > > > > difference to phys<->mdev, right?
-> > > > > > > > > > > > > > > I think the vendor string for a mdev device is something like:
-> > > > > > > > > > > > > > > "Parent PCIID + mdev type + software version", and
-> > > > > > > > > > > > > > > that for a phys device is something like:
-> > > > > > > > > > > > > > > "PCIID + software version".
-> > > > > > > > > > > > > > > as long as we don't migrate between devices from different vendors, it's
-> > > > > > > > > > > > > > > easy for vendor driver to tell if a phys device is migration compatible
-> > > > > > > > > > > > > > > to a mdev device according it supports it or not.      
-> > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > It surprises me that the PCIID matching is a requirement; I'd assumed
-> > > > > > > > > > > > > > with this clever mdev name setup that you could migrate between two
-> > > > > > > > > > > > > > different models in a series, or to a newer model, as long as they
-> > > > > > > > > > > > > > both supported the same mdev view.
-> > > > > > > > > > > > > >       
-> > > > > > > > > > > > > hi Dave
-> > > > > > > > > > > > > the migration_version string is transparent to userspace, and is
-> > > > > > > > > > > > > completely defined by vendor driver.
-> > > > > > > > > > > > > I put it there just as an example of how vendor driver may implement it.
-> > > > > > > > > > > > > e.g.
-> > > > > > > > > > > > > the src migration_version string is "src PCIID + src software version", 
-> > > > > > > > > > > > > then when this string is write to target migration_version node,
-> > > > > > > > > > > > > the vendor driver in the target device will compare it with its own
-> > > > > > > > > > > > > device info and software version.
-> > > > > > > > > > > > > If different models are allowed, the write just succeeds even
-> > > > > > > > > > > > > PCIIDs in src and target are different.
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > > so, it is the vendor driver to define whether two devices are able to
-> > > > > > > > > > > > > migrate, no matter their PCIIDs, mdev types, software versions..., which
-> > > > > > > > > > > > > provides vendor driver full flexibility.
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > > do you think it's good?      
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Yeh that's OK; I guess it's going to need to have a big table in their
-> > > > > > > > > > > > with all the PCIIDs in.
-> > > > > > > > > > > > The alternative would be to abstract it a little; e.g. to say it's
-> > > > > > > > > > > > an Intel-gpu-core-v4  and then it would be less worried about the exact
-> > > > > > > > > > > > clock speed etc - but yes you might be right htat PCIIDs might be best
-> > > > > > > > > > > > for checking for quirks.
-> > > > > > > > > > > >      
-> > > > > > > > > > > glad that you are agreed with it:)
-> > > > > > > > > > > I think the vendor driver still can choose a way to abstract a little
-> > > > > > > > > > > (e.g. Intel-gpu-core-v4...) if they think it's better. In that case, the
-> > > > > > > > > > > migration_string would be something like "Intel-gpu-core-v4 + instance
-> > > > > > > > > > > number + software version".
-> > > > > > > > > > > IOW, they can choose anything they think appropriate to identify migration
-> > > > > > > > > > > compatibility of a device.
-> > > > > > > > > > > But Alex is right, we have to prevent namespace overlapping. So I think
-> > > > > > > > > > > we need to ensure src and target devices are from the same vendors.
-> > > > > > > > > > > or, any other ideas?      
-> > > > > > > > > > 
-> > > > > > > > > > That's why I kept the 'Intel' in that example; or PCI vendor ID; I was      
-> > > > > > > > > Yes, it's a good idea!
-> > > > > > > > > could we add a line in the doc saying that
-> > > > > > > > > it is the vendor driver to add a unique string to avoid namespace
-> > > > > > > > > collision?      
-> > > > > > > > 
-> > > > > > > > So why don't we split the difference; lets say that it should start with
-> > > > > > > > the hex PCI Vendor ID.
-> > > > > > > >      
-> > > > > > > The problem is for mdev devices, if the parent devices are not PCI devices, 
-> > > > > > > they don't have PCI vendor IDs.      
-> > > > > > 
-> > > > > > Hmm it would be best not to invent a whole new way of giving unique
-> > > > > > idenitifiers for vendors if we can.
-> > > > > >       
-> > > > > what about leveraging the flags in vfio device info ?
-> > > > > 
-> > > > > #define VFIO_DEVICE_FLAGS_RESET (1 << 0)        /* Device supports reset */
-> > > > > #define VFIO_DEVICE_FLAGS_PCI   (1 << 1)        /* vfio-pci device */
-> > > > > #define VFIO_DEVICE_FLAGS_PLATFORM (1 << 2)     /* vfio-platform device */
-> > > > > #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)        /* vfio-amba device */
-> > > > > #define VFIO_DEVICE_FLAGS_CCW   (1 << 4)        /* vfio-ccw device */
-> > > > > #define VFIO_DEVICE_FLAGS_AP    (1 << 5)        /* vfio-ap device */
-> > > > > 
-> > > > > Then for migration_version string,
-> > > > > The first 64 bits are for device type, the second 64 bits are for device id.
-> > > > > e.g.
-> > > > > for PCI devices, it could be
-> > > > > VFIO_DEVICE_FLAGS_PCI + PCI ID.
-> > > > > 
-> > > > > Currently in the doc, we only define PCI devices to use PCI ID as the second
-> > > > > 64 bits. In future, if other types of devices want to support migration,
-> > > > > they can define their own parts of device id. e.g. use ACPI ID as the
-> > > > > second 64-bit...
-> > > > > 
-> > > > > sounds good?    
-> > > > 
-> > > > [dead thread resurrection alert]
-> > > > 
-> > > > Not really.  We're deep into territory that we were trying to avoid.
-> > > > We had previously defined the version string as opaque (not
-> > > > transparent) specifically because we did not want userspace to make
-> > > > assumptions about compatibility based on the content of the string.  It
-> > > > was 100% left to the vendor driver to determine compatibility.  The
-> > > > mdev type was the full extent of the first level filter that userspace
-> > > > could use to narrow the set of potentially compatible devices.  If we
-> > > > remove that due to physical device migration support, I'm not sure how
-> > > > we simplify the problem for userspace.
-> > > > 
-> > > > We need to step away from PCI IDs and parent devices.  We're not
-> > > > designing a solution that only works for PCI, there's no guarantee that
-> > > > parent devices are similar or even from the same vendor.
-> > > > 
-> > > > Does the mdev type sufficiently solve the problem for mdev devices?  If
-> > > > so, then what can we learn from it and how can we apply an equivalence
-> > > > to physical devices?  For example, should a vfio bus driver (vfio-pci
-> > > > or vfio-mdev) expose vfio_migration_type and vfio_migration_version
-> > > > attributes under the device in sysfs where the _type provides the first
-> > > > level, user transparent, matching string (ex. mdev type for mdev
-> > > > devices) while the _version provides the user opaque, vendor known
-> > > > compatibility test?
-> > > > 
-> > > > This pushes the problem out to the drivers where we can perhaps
-> > > > incorporate the module name to avoid collisions.  For example Yan's
-> > > > vendor extension proposal makes use of vfio-pci with extension modules
-> > > > loaded via an alias incorporating the PCI vendor and device ID.  So
-> > > > vfio-pci might use a type of "vfio-pci:$ALIAS".
-> > > > 
-> > > > It's still a bit messy that someone needs to go evaluate all these
-> > > > types between devices that exist and mdev devices that might exist if
-> > > > created, but I don't have any good ideas to resolve that (maybe a new
-> > > > class hierarchy?).  Thanks,    
-> > > 
-> > > hi Alex
-> > > 
-> > > yes, with the same mdev_type, user still has to enumerate all parent
-> > > devices and test between the supported mdev_types to know whether two mdev
-> > > devices are compatible.
-> > > maybe this is not a problem? in reality, it is the administrator that
-> > > specifies two devices and the management tool feedbacks compatibility
-> > > result. management tool is not required to pre-test and setup the
-> > > compatibility map beforehand.  
-> > 
-> > That's exactly the purpose of this interface though is to give the
-> > management tools some indication that a migration has a chance of
-> > working.
-> >    
-> > > If so, then the only problem left is namespace collision. 
-> > > given that the migration_version nodes is exported by vendor driver,
-> > > maybe it can also embed its module name in the migration version string,
-> > > like "i915" in "i915-GVTg_V5_8", as you suggested above.  
-> > 
-> > No, we've already decided that the version string is opaque, the user
-> > is not to attempt to infer anything from it.  That's why I've suggested
-> > another attribute in sysfs that does present type information that a
-> > user can compare.  Thanks,
-> > 
-> > Alex
-> >  
-> ok. got it.
-> one more thing I want to confirm is that do you think it's a necessary
-> restriction that "The mdev devices are of the same type" ?
-> could mdev and phys devices both expose "vfio_migration_type" and
-> "vfio_migration_version" under device sysfs so that it may not be
-> confined in mdev_type? (e.g. when aggregator is enabled, though two
-> mdevs are of the same mdev_type, they are not actually compatible; and
-> two mdevs are compatible though their mdev_type is not equal.) 
+On Wed, Jun 03, 2020 at 05:27:07PM +0800, Chuhong Yuan wrote:
+> xfs_ifree_cluster() calls xfs_perag_get() at the beginning, but forgets to
+> call xfs_perag_put() in one failed path.
+> Add the missed function call to fix it.
 > 
-> for mdev devices, we could still expose vfio_migration_version
-> attribute under mdev_type for detection before mdev generated.
+> Fixes: ce92464c180b ("xfs: make xfs_trans_get_buf return an error code")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-I tried to simplify the problem a bit, but we keep going backwards.  If
-the requirement is that potentially any source device can migrate to any
-target device and we cannot provide any means other than writing an
-opaque source string into a version attribute on the target and
-evaluating the result to determine compatibility, then we're requiring
-userspace to do an exhaustive search to find a potential match.  That
-sucks.  We don't have an agreed proposal for aggregation and even this
-exhaustive search mechanism doesn't solve that problem, ex. the target
-type may be able to support a compatible aggregation, but the user
-might find after they've created the device that their aggregation was
-wrong and the resulting device doesn't even match the version
-compatibility of the parent type.  We're arguing our way into an
-unsolvable problem and unless we can simplify it, I'm afraid there's no
-solution, we're just going to have a bad interface for the user to test
-compatibility, which is not really acceptable.  Thanks,
+Yeah, that looks like a bug, will test.
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Alex
+--D
 
+> ---
+>  fs/xfs/xfs_inode.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index d1772786af29..8845faa8161a 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -2639,8 +2639,10 @@ xfs_ifree_cluster(
+>  		error = xfs_trans_get_buf(tp, mp->m_ddev_targp, blkno,
+>  				mp->m_bsize * igeo->blocks_per_cluster,
+>  				XBF_UNMAPPED, &bp);
+> -		if (error)
+> +		if (error) {
+> +			xfs_perag_put(pag);
+>  			return error;
+> +		}
+>  
+>  		/*
+>  		 * This buffer may not have been correctly initialised as we
+> -- 
+> 2.26.2
+> 
