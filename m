@@ -2,143 +2,121 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE52C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B87620734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A68E20734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GQiPquiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgFCBu7 (ORCPT
+        id S1726032AbgFCBve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:50:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21751 "EHLO mga17.intel.com"
+        Tue, 2 Jun 2020 21:51:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33535 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbgFCBu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:50:58 -0400
-IronPort-SDR: TwPbWURlaHIX3uYqKWMMhw8vxk5cWkTnTvJ9zG3pyITWd0hRlBQipWPtkxBbiiiIY74DjbDYFv
- BfeGgxqAoI+w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 18:50:57 -0700
-IronPort-SDR: j2Z7viKCmsJU1mmomZoW5W19MWXUDbXzOkZI2L6v04CNK37pFgWeML/DJI4IXGVojnfCED6FW9
- DszEeHsj77Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
-   d="scan'208";a="286862705"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 18:50:54 -0700
-Date:   Tue, 2 Jun 2020 21:40:58 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
- VFIO_IRQ_TYPE_REMAP_BAR_REGION
-Message-ID: <20200603014058.GA12300@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
- <20200518025245.14425-1-yan.y.zhao@intel.com>
- <20200529154547.19a6685f@x1.home>
- <20200601065726.GA5906@joy-OptiPlex-7040>
- <20200601104307.259b0fe1@x1.home>
- <20200602082858.GA8915@joy-OptiPlex-7040>
- <20200602133435.1ab650c5@x1.home>
+        id S1725927AbgFCBvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 21:51:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cBhx5rd9z9sT5;
+        Wed,  3 Jun 2020 11:51:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591149091;
+        bh=IXTHTQo8gDO7SUTW6DoR71nhmx/eHsJgQ/H+8J4HtFs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GQiPquiRjfonEs5XfrIIkpJ7OUyvGd3owEWInsOz3v4YojQVmInZYv5uJ4kJWc9hc
+         BcGLf6GdKEjYm626Ra4cjRvwulQmsgiabli+76FEC3yj16XWysLcpYUgII4+wxEvhb
+         jKCDY2dZPgsnk0D4lPTASXG6lr7Xi8G28Sg4vV0yOfguC5UGLcxqHu9KZaX02a2vdF
+         5bucn/9CUMH90NeQrIUqE3/2yxmKDdf1rsKxpp/82izPSH+ENzNgp/mwx2Sd70rMla
+         6PH/EboyMF3tTpd0LLdPhh5vkfUWdiHLkb6dlPFI727SMW3OBBPoBzYaDvAQsjc19h
+         LvbuhTqJvUjtA==
+Date:   Wed, 3 Jun 2020 11:51:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org
+Subject: linux-next: build failure after merge of the overlayfs tree
+Message-ID: <20200603115127.28b01992@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602133435.1ab650c5@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/U+hxjZ8=pu2.z0OP9GUGsK3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:
-> I'm not at all happy with this.  Why do we need to hide the migration
-> sparse mmap from the user until migration time?  What if instead we
-> introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
-> where the existing capability is the normal runtime sparse setup and
-> the user is required to use this new one prior to enabled device_state
-> with _SAVING.  The vendor driver could then simply track mmap vmas to
-> the region and refuse to change device_state if there are outstanding
-> mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
-> required, no new irqfds, an incremental change to the protocol,
-> backwards compatible to the extent that a vendor driver requiring this
-> will automatically fail migration.
-> 
-right. looks we need to use this approach to solve the problem.
-thanks for your guide.
-so I'll abandon the current remap irq way for dirty tracking during live
-migration.
-but anyway, it demos how to customize irq_types in vendor drivers.
-then, what do you think about patches 1-5?
+--Sig_/U+hxjZ8=pu2.z0OP9GUGsK3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > > What happens if the mmap re-evaluation occurs asynchronous to the
-> > > device_state write?  The vendor driver can track outstanding mmap vmas
-> > > to areas it's trying to revoke, so the vendor driver can know when
-> > > userspace has reached an acceptable state (assuming we require
-> > > userspace to munmap areas that are no longer valid).  We should also
-> > > consider what we can accomplish by invalidating user mmaps, ex. can we
-> > > fault them back in on a per-page basis and continue to mark them dirty
-> > > in the migration state, re-invalidating on each iteration until they've
-> > > finally been closed.   It seems the vendor driver needs to handle
-> > > incrementally closing each mmap anyway, there's no requirement to the
-> > > user to stop the device (ie. block all access), make these changes,
-> > > then restart the device.  So perhaps the vendor driver can "limp" along
-> > > until userspace completes the changes.  I think we can assume we are in
-> > > a cooperative environment here, userspace wants to perform a migration,
-> > > disabling direct access to some regions is for mediating those accesses
-> > > during migration, not for preventing the user from accessing something
-> > > they shouldn't have access to, userspace is only delaying the migration
-> > > or affecting the state of their device by not promptly participating in
-> > > the protocol.
-> > >   
-> > the problem is that the mmap re-evaluation has to be done before
-> > device_state is successfully set to SAVING. otherwise, the QEMU may
-> > have left save_setup stage and it's too late to start dirty tracking.
-> > And the reason for us to trap the BAR regions is not because there're
-> > dirty data in this region, it is because we want to know when the device
-> > registers mapped in the BARs are written, so we can do dirty page track
-> > of system memory in software way.
-> 
-> I think my proposal above resolves this.
->
-yes.
+Hi all,
 
-> > > Another problem I see though is what about p2p DMA?  If the vendor
-> > > driver invalidates an mmap we're removing it from both direct CPU as
-> > > well as DMA access via the IOMMU.  We can't signal to the guest OS that
-> > > a DMA channel they've been using is suddenly no longer valid.  Is QEMU
-> > > going to need to avoid ever IOMMU mapping device_ram for regions
-> > > subject to mmap invalidation?  That would introduce an undesirable need
-> > > to choose whether we want to support p2p or migration unless we had an
-> > > IOMMU that could provide dirty tracking via p2p, right?  Thanks,  
-> > 
-> > yes, if there are device memory mapped in the BARs to be remapped, p2p
-> > DMA would be affected. Perhaps it is what vendor driver should be aware
-> > of and know what it is doing before sending out the remap irq ?
-> > in i40e vf's case, the BAR 0 to be remapped is only for device registers,
-> > so is it still good?
-> 
-> No, we can't design the interface based on one vendor driver's
-> implementation of the interface or the requirements of a single device.
-> If we took the approach above where the user is provided both the
-> normal sparse mmap and the _SAVING sparse mmap, perhaps QEMU could
-> avoid DMA mapping portions that don't exist in the _SAVING version, at
-> least then the p2p DMA mappings would be consistent across the
-> transition.  QEMU might be able to combine the sparse mmap maps such
-> that it can easily drop ranges not present during _SAVING.  QEMU would
-> need to munmap() the dropped ranges rather than simply mark the
-> MemoryRegion disabled though for the vendor driver to have visibility
-> of the vm_ops.close callback.  Thanks,
->
-ok. got it! thanks you!
+After merging the overlayfs tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Yan
+ERROR: modpost: "security_file_ioctl" [fs/overlayfs/overlay.ko] undefined!
+
+Caused by commit
+
+  b5940870e166 ("ovl: call secutiry hook in ovl_real_ioctl()")
+
+I have applied this patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 3 Jun 2020 11:44:19 +1000
+Subject: [PATCH] export security_file_ioctl
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ security/security.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/security/security.c b/security/security.c
+index 51de970fbb1e..077ac86faacf 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1459,6 +1459,7 @@ int security_file_ioctl(struct file *file, unsigned i=
+nt cmd, unsigned long arg)
+ {
+ 	return call_int_hook(file_ioctl, 0, file, cmd, arg);
+ }
++EXPORT_SYMBOL_GPL(security_file_ioctl);
+=20
+ static inline unsigned long mmap_prot(struct file *file, unsigned long pro=
+t)
+ {
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/U+hxjZ8=pu2.z0OP9GUGsK3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XAh8ACgkQAVBC80lX
+0Gz9bwf/dL+jSQtXGVI6j6OZ9SMNBjPPIGl17qVT5JtvHuBoMyRRrJuCfcWdmC6r
+/o3NwyIA5NR0E0ZLt9Zak1o6nRuRq7t68onDAJ7CB5IG5N4bPdyvZXEtDHNzD+CB
+zLjgzE2xbvX5d5eMJzL4XVHd0GuR3GnErf+V3ucaCDPoVKGXJhQS9gOFMXRyEw75
+0K/ziimdRBG9Twtfo+sSaidszv+KHZELl1/pZLdAN9XujCSGFuFlZYju4OslszLB
+2K44N4Kkqg4PrAyD48eUH92z7whgy2lJ2m58JWCQEaYge83Fz9IYnnSNBvcZ/MnC
+s1cY5ZqfIlnLpzFXdTT3104up6v+pQ==
+=T6mB
+-----END PGP SIGNATURE-----
+
+--Sig_/U+hxjZ8=pu2.z0OP9GUGsK3--
