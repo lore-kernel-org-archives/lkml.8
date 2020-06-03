@@ -2,111 +2,166 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E96EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4804C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A319205CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B313E205CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="abDYLO2X"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ACXS2IXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgFCJfs (ORCPT
+        id S1726482AbgFCJkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:35:48 -0400
-Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:45688
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Wed, 3 Jun 2020 05:40:08 -0400
+Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:46051
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgFCJfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:35:48 -0400
+        id S1725854AbgFCJkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:40:08 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gCf1aGd7q5DdNiyQAdesHmiKFoEQnNf+jiiiTqvWTbsseFOVJq5L0qgGLjw3PK428UTNdKO4VRjNaHRVH3e5YR9rA1mX92ZWd+wNybsUrzZ/pD3k34gLIvxNZcN69NnZRm6AGzXdXVhvrVRYatlTSPMuQTSlsM4gk2gYRSytZu0pQQkNVtIc2zYqPOa2SrmttJzkUwaenEq47TQdibDHIPO8/Ckr2+a+GW7WorAS2QagaEvroerp6BFlw/3r68SXLyPNGCVHKhJA8m4wfQREegKYDUKWFU5WgHF8MIqP7ocA5wmHq4Mkd9mp29fjlXmwWgdjwQ1sb3MIgtCrKGu7rA==
+ b=aztJNJL/D2fgvn4taM6gQUOjKEFNU1ctl0ziAjJxc65Y7BH/Um3Q0YO5sqddLvvNA6R1dZ44+8Li05KJrGy744mdlFZGN7h3eHEpXbk29Z7651UVnzYk1/lml9v4YGfK0Ckld0em0avAkOLit01yRyC091KNIGEFIPw1ph8UhqC47LBrNY2736O1bbmeKP+4OSfUhgwMdajxJrPFlGZW/IsQhrRPu4g9AXMf7kjiQaI3IiDYgOA7fyHh8iUfX/xmkRXpCIhsUde6mdUcZs6o1uA4Gq4PYob0p99TqoFlQ1Th4G8JLg6c0iF03ANRN7Ta0LZmmxq0Modab30W4jGuUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bF2cGYEiw57DjTJG4k4WBraDParV5iPqlNSFppnyJyo=;
- b=jfZrT2u1eMZWYIC/8H37jp9qT/eVvBq0gOMJg69BRqZl5DCN5fXBuaHNtFRDZFiGmsaG1GsQsXp4sDM2yATCDYOu57Vs1DV1vKaBuxnwvzeh0RoPfx2jsMJMA7fl3Nubqu13d7aHMtp8f4Yb37Ar/JdS51IvFdBNuPKlRlZFKJ0MdY32CwlV+9X9s4frQl5kRWHYOzgKqBxbyeDP0Z4kRnKkTbenT6Ppzz0T4SH6IUvxX9ufECfNoDh8z5ymHHQcXwadIDfmK2b++aC/xL7txBqtoWezHBlkD5gSgvgH1tUCLd9ET9F20q6bjkyOpjQk7x5ZKh5HT/cFU6ABsLJwtA==
+ bh=fMEY2ra3VmJNtDhGs/eKIOXbVsOomvkoqWKOLXOIapQ=;
+ b=EjD1Wx7bU0RY0UAqHQbBEWCTm/zGBxJ/uQ29EYUZ/3DABSTSPVRhKOX5m6itD5B/p3lefEG+JvmTPlN5BsBeC5J+IEKViOFmkjgPJdKAZEC+JxT1En6deoGu6lsbiRMNjf9pNH57N+C2SaPfX1st14BpNn9A8YSWgsjJvZX49ciMyyGg4ge+yiAgPTqbsBHu8LYzEDqT79zJIwCVhKkC2TYYKuhFVO9zW2V1ezLfV+LK1ParXN5WbDxjjCt8Fu8V6w0P+hlgszUNoph49db+TPBEZNE9XUA3bx+4KTCnQtLKtzW+CNMOU1a+EQtJMuxyCq7KOUSe3tdFYM05RcW6qQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bF2cGYEiw57DjTJG4k4WBraDParV5iPqlNSFppnyJyo=;
- b=abDYLO2X/l9UQhk2iQcEsAhMvUsv9CY29JVEQb7Pnv+bUZRmfqvcz5qF6BfHIL78VxGcradMU5R5Tjw3oRcNICf7Tu86AI0K/N45DX80D4ZDY+JlIgxkBWzcAzF6xLe5uFjMhTWVe+aSsCHgNvc7wv7QkoOqwUllgHuRhsOKnj0=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
- by VI1PR04MB5022.eurprd04.prod.outlook.com (2603:10a6:803:5f::12) with
+ bh=fMEY2ra3VmJNtDhGs/eKIOXbVsOomvkoqWKOLXOIapQ=;
+ b=ACXS2IXLrAqd3BYvstNzD54vVT0ICxUlWzP8ElP5WWU6TlZw75L/n01C2KCnK0b5QQ+IaXdYLynm2thfUY/hX+KOd/FwdnKtpz8b4gK8Xltg92Rx05V7hKsi3OfzPs1RJg6xgcUOPWKgY6f+7YJ0+EH8jfLMG8xXHkBfxXm3x7Q=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2856.eurprd04.prod.outlook.com (2603:10a6:4:9a::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Wed, 3 Jun
- 2020 09:35:43 +0000
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd]) by VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd%4]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 09:35:43 +0000
-Subject: Re: [PATCH v2] crypto: caam/qi2 - add support for dpseci_reset()
-To:     "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200603084704.5895-1-andrei.botila@oss.nxp.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <40d8e2e6-a7c9-0132-3139-1a07a2024c18@nxp.com>
-Date:   Wed, 3 Jun 2020 12:35:40 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200603084704.5895-1-andrei.botila@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR03CA0060.eurprd03.prod.outlook.com (2603:10a6:208::37)
- To VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Wed, 3 Jun
+ 2020 09:40:03 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 09:40:03 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, aisheng.dong@nxp.com
+Cc:     kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] soc: imx: scu: use devm_kasprintf
+Date:   Wed,  3 Jun 2020 17:29:32 +0800
+Message-Id: <1591176572-9693-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0070.apcprd02.prod.outlook.com
+ (2603:1096:4:54::34) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR03CA0060.eurprd03.prod.outlook.com (2603:10a6:208::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Wed, 3 Jun 2020 09:35:42 +0000
-X-Originating-IP: [84.117.251.185]
+Received: from localhost.localdomain (119.31.174.66) by SG2PR02CA0070.apcprd02.prod.outlook.com (2603:1096:4:54::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3045.25 via Frontend Transport; Wed, 3 Jun 2020 09:40:00 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9721aa2b-a382-4517-c771-08d807a17ca3
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5022:
+X-MS-Office365-Filtering-Correlation-Id: 968e6474-ad19-4ef5-a439-08d807a21764
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2856:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB5022A9576CDF41AA3B15047498880@VI1PR04MB5022.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1051;
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB28560A4A78E4B58086F52AA488880@DB6PR0402MB2856.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:324;
 X-Forefront-PRVS: 04238CD941
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TPcaknMVSKimGv4sRJt2EcN4/abAi2I9S35wNn0IVUvqGLif/y+qH+q6qsbHVf919cpwrMOt+ocDX8fQsmE8iP7ddCfURVDIRWKDDFxGjvQYXnqb4Xj73CpBbpCkHvGzPEv96c3lDp1BAkUy5opZjLjPAmJ5GvQXqd4oP0IR+ZtrLIuwwuxx1n2J/YY0EqPMkR4D86VMD3oQshSWcBNcDFJ0k4y3s0JhRNn4FhcTMudOQcGMPZ9XyGwqYIofJ4ki1IIDxgv1PraXCG+leTmUS1SdbamYvK59Ik2KsvVFRO6naGGKIH+aMPLqaGoO6ZQQSkLcMrxPvtn9PW840a2Cw/sSzYIh193Np4Ja6EQGg6Kd/z0BAME1NCpIlV+wvBz4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(54906003)(31696002)(316002)(5660300002)(8676002)(110136005)(2906002)(66556008)(66476007)(6486002)(16576012)(36756003)(86362001)(8936002)(66946007)(956004)(2616005)(4744005)(16526019)(53546011)(31686004)(186003)(4326008)(52116002)(26005)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: x8ts5ZYYKjrlZ+ruNFe345MqGBdiYbtZdUzM06skMNl1pepG4G3sfZ4pKhrYBVMpaE5m2ezP3NTAc3uXhD0uu8BAKGAdHmSjL/WtOSizueIymycT6/G+hrkZzhifzLWtFLi7XmX+6SlHiQ2iTxP2QjYksm0uWuKXgF1RgucDRXeX7Xsk1Rbs0gN0JrMSrtXle1ktkvZ/6MwbFWiWXSdt8VsurvndIkRn12uLQm505dNr7RCMh6ENdY/fCZy9SqlorYP9ieKB9b4ylsibVlSpQkZXaUZ2S1PYGHb1uLi1yApcA0vyL0VZGeBDOz8aDuBt6IyYQ3ZeEv3Ep3cCCBe/VfWdsrXsKf0Tq8zQEFmR36e3iyrKCKMjV8SMBWO/Ves2FudnI88noMqTHvXE7h+W8aKxzjiHWibyrxLdvAr5WznpOrIoxSIPU1JCm+nK3iKI9AlihYp5fi9SHauui8uLL1UscLEgAQ0Uj77uToL9AExBP60lN3bboJGpn/4x632I
+X-Microsoft-Antispam-Message-Info: 12XAsF9tEZf4nQsGfd+jV9EykKeYnJw/fNUDp0drfiO+fW6ezIKiZawKl/VwD0pk87levIH8YiSYBqQxBiN4Tmj/KrxE96YXj6ItokC/72FXeZrVjnN3jjQazznsH+ci4UCSoNfp1ScPDCrM3S76JA2xrQZaz3hoOSqYe/Hzm+37TGtVB4JvdNAJnXczLDM7HM5NgM2OWtiDOCMf9M32axiMO68gIx34IK/hkdP4zlsUN8iAqL4KQ8p4Inu8beht9BTHbefaWxd5IJmD6RkWAySC4IuoreQgxaApSYVk03y48kVfOihsc/nQ0ACf2+ZxP4keuUs0xOJpS3iDI18DUU1b8F5atx7r/B3CZMscqaijM+s3NepA/SI3zgPWUs/6
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(396003)(39860400002)(136003)(316002)(5660300002)(8936002)(69590400007)(86362001)(83380400001)(6506007)(36756003)(478600001)(52116002)(66556008)(66946007)(8676002)(4326008)(66476007)(6512007)(9686003)(2616005)(186003)(26005)(16526019)(2906002)(956004)(6486002)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: LCE4Jv334FGUoRWjfS4gtftsAfbXAfT4aDGgtmNEKOyyHIZzkryruNoMQoc5qB5bt/qF60v7fr2VYqVbI5uITKJFLrgGLx/m2Z7xY0CpMEUye8gfAXeC7TJp2IdtStAHoATq6CqXnDdTZamqyz65lJrwKwkKkPLyUQsOV0sdE3bQuW44KVH5xwTV9Yt6AZe4xuV3mNP6sKOJ2Y9KhiMHPTv6BF2rv6Fu47THrNYt1z5u6g8ITMftWmuR2g4jLhfOnOCQZ0nOkbRPUtBO5POQqrdizan0r4T928bkmxw3Ublj/FbyTHbKSEHb0yk+ekhJYOJ5HwgigKUcR/hkwU9q6ApaJE0V0DPjDI9ivduEt59AD7NYG36D281lI6vArnDUfHOutiuA9ocm0uJvTgVlDOhUqf1761XLs7KX8Ba7HpG3lgUn4fQZ00rW4MJqXrZOKmikMCCt/nMu78sRRm6nblD6YVsusEugVgT6ft2WGMv5LQoeb5c0QngpIKqJgtAO
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9721aa2b-a382-4517-c771-08d807a17ca3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 09:35:43.6811
+X-MS-Exchange-CrossTenant-Network-Message-Id: 968e6474-ad19-4ef5-a439-08d807a21764
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 09:40:03.4002
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E0s7PaujA9HmmANZFRCJGHCkRbahuTW2DAU1J2lWUEEjY32ZU6r0Z5YmRr1N6+MKvKTxUCRsBCV3ZujJJItOWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5022
+X-MS-Exchange-CrossTenant-UserPrincipalName: ccq5Biz/yie/NneAkByHNAEBsvDwUTyx+XnNBD6zbkD4f6Z5BoA5snLGyXhCl2qTnU0EFJBAjTMgDAWZPnSwrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2856
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/2020 11:47 AM, Andrei Botila (OSS) wrote:
-> From: Andrei Botila <andrei.botila@nxp.com>
-> 
-> Add support for dpseci_reset() command for DPSECI objects.
-> For DPSECI DPAA2 objects with version lower than v5.4 reset command
-> was broken in MC f/w.
-> 
-> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-Thanks,
-Horia
+Use devm_kasprintf to simplify code
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/soc/imx/soc-imx-scu.c | 37 +++++++++++--------------------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
+index 20d37eaeb5f2..92448ca9a6f8 100644
+--- a/drivers/soc/imx/soc-imx-scu.c
++++ b/drivers/soc/imx/soc-imx-scu.c
+@@ -115,43 +115,28 @@ static int imx_scu_soc_probe(struct platform_device *pdev)
+ 
+ 	/* format soc_id value passed from SCU firmware */
+ 	val = id & 0x1f;
+-	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "0x%x", val);
++	soc_dev_attr->soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "0x%x", val);
+ 	if (!soc_dev_attr->soc_id)
+ 		return -ENOMEM;
+ 
+ 	/* format revision value passed from SCU firmware */
+ 	val = (id >> 5) & 0xf;
+ 	val = (((val >> 2) + 1) << 4) | (val & 0x3);
+-	soc_dev_attr->revision = kasprintf(GFP_KERNEL,
+-					   "%d.%d",
+-					   (val >> 4) & 0xf,
+-					   val & 0xf);
+-	if (!soc_dev_attr->revision) {
+-		ret = -ENOMEM;
+-		goto free_soc_id;
+-	}
++	soc_dev_attr->revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%d.%d",
++						(val >> 4) & 0xf, val & 0xf);
++	if (!soc_dev_attr->revision)
++		return -ENOMEM;
+ 
+-	soc_dev_attr->serial_number = kasprintf(GFP_KERNEL, "%016llX", uid);
+-	if (!soc_dev_attr->serial_number) {
+-		ret = -ENOMEM;
+-		goto free_revision;
+-	}
++	soc_dev_attr->serial_number = devm_kasprintf(&pdev->dev, GFP_KERNEL,
++						     "%016llX", uid);
++	if (!soc_dev_attr->serial_number)
++		return -ENOMEM;
+ 
+ 	soc_dev = soc_device_register(soc_dev_attr);
+-	if (IS_ERR(soc_dev)) {
+-		ret = PTR_ERR(soc_dev);
+-		goto free_serial_number;
+-	}
++	if (IS_ERR(soc_dev))
++		return PTR_ERR(soc_dev);
+ 
+ 	return 0;
+-
+-free_serial_number:
+-	kfree(soc_dev_attr->serial_number);
+-free_revision:
+-	kfree(soc_dev_attr->revision);
+-free_soc_id:
+-	kfree(soc_dev_attr->soc_id);
+-	return ret;
+ }
+ 
+ static struct platform_driver imx_scu_soc_driver = {
+-- 
+2.16.4
+
