@@ -2,63 +2,145 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76123C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E442C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 551BF206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1274B206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgFCImC (ORCPT
+        id S1726308AbgFCImL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:42:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5780 "EHLO huawei.com"
+        Wed, 3 Jun 2020 04:42:11 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2268 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725355AbgFCImC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:42:02 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E0C7CDB02565211492AB;
-        Wed,  3 Jun 2020 16:41:58 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.202.66) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 3 Jun 2020 16:41:49 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <akpm@linux-foundation.org>, <mike.kravetz@oracle.com>
-CC:     <guro@fb.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: [PATCH 0/2] mm: fix the names of general cma and hugetlb cma
-Date:   Wed, 3 Jun 2020 20:40:23 +1200
-Message-ID: <20200603084025.62740-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        id S1725355AbgFCImI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:42:08 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 6809DE24A9B570BF8335;
+        Wed,  3 Jun 2020 09:42:06 +0100 (IST)
+Received: from [127.0.0.1] (10.47.0.59) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 3 Jun 2020
+ 09:42:05 +0100
+Subject: Re: [PATCH v3] libata: Use per port sync for detach
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, <axboe@kernel.dk>
+CC:     "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200603074819.21639-1-kai.heng.feng@canonical.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b13888c3-d1f9-7e6e-d25e-0287b3d7ba9b@huawei.com>
+Date:   Wed, 3 Jun 2020 09:40:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.202.66]
+In-Reply-To: <20200603074819.21639-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.0.59]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the current code of CMA can only work when users pass a const string as name
-parameter. we need to fix the way to handle names in CMA.
-On the other hand, to avoid name conflicts after enabling CMA_DEBUGFS, each
-hugetlb should get a different CMA name.
+On 03/06/2020 08:48, Kai-Heng Feng wrote:
+> Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
+> detach") may cause system freeze during suspend.
+> 
+> Using async_synchronize_full() in PM callbacks is wrong, since async
+> callbacks that are already scheduled may wait for not-yet-scheduled
+> callbacks, causes a circular dependency.
+> 
+> Instead of using big hammer like async_synchronize_full(), use async
+> cookie to make sure port probe are synced, without affecting other
+> scheduled PM callbacks.
+> 
+> Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
+> BugLink: https://bugs.launchpad.net/bugs/1867983
+> Suggested-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Barry Song (2):
-  mm: cma: fix the name of CMA areas
-  mm: hugetlb: fix the name of hugetlb CMA
+thanks,
+Tested-by: John Garry <john.garry@huawei.com>
 
- mm/cma.c     | 13 ++++++-------
- mm/cma.h     |  4 +++-
- mm/hugetlb.c |  4 +++-
- 3 files changed, 12 insertions(+), 9 deletions(-)
-
--- 
-2.23.0
-
+> ---
+> v3:
+>   - Move the comment to properly align with the code.
+> 
+> v2:
+>   - Sync up to cookie + 1.
+>   - Squash the synchronization into the same loop.
+> 
+>   drivers/ata/libata-core.c | 11 +++++------
+>   include/linux/libata.h    |  3 +++
+>   2 files changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+> index 69361ec43db5..b1cd4d97bc2a 100644
+> --- a/drivers/ata/libata-core.c
+> +++ b/drivers/ata/libata-core.c
+> @@ -42,7 +42,6 @@
+>   #include <linux/workqueue.h>
+>   #include <linux/scatterlist.h>
+>   #include <linux/io.h>
+> -#include <linux/async.h>
+>   #include <linux/log2.h>
+>   #include <linux/slab.h>
+>   #include <linux/glob.h>
+> @@ -5778,7 +5777,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
+>   	/* perform each probe asynchronously */
+>   	for (i = 0; i < host->n_ports; i++) {
+>   		struct ata_port *ap = host->ports[i];
+> -		async_schedule(async_port_probe, ap);
+> +		ap->cookie = async_schedule(async_port_probe, ap);
+>   	}
+>   
+>   	return 0;
+> @@ -5920,11 +5919,11 @@ void ata_host_detach(struct ata_host *host)
+>   {
+>   	int i;
+>   
+> -	/* Ensure ata_port probe has completed */
+> -	async_synchronize_full();
+> -
+> -	for (i = 0; i < host->n_ports; i++)
+> +	for (i = 0; i < host->n_ports; i++) {
+> +		/* Ensure ata_port probe has completed */
+> +		async_synchronize_cookie(host->ports[i]->cookie + 1);
+>   		ata_port_detach(host->ports[i]);
+> +	}
+>   
+>   	/* the host is dead now, dissociate ACPI */
+>   	ata_acpi_dissociate(host);
+> diff --git a/include/linux/libata.h b/include/linux/libata.h
+> index af832852e620..8a4843704d28 100644
+> --- a/include/linux/libata.h
+> +++ b/include/linux/libata.h
+> @@ -22,6 +22,7 @@
+>   #include <linux/acpi.h>
+>   #include <linux/cdrom.h>
+>   #include <linux/sched.h>
+> +#include <linux/async.h>
+>   
+>   /*
+>    * Define if arch has non-standard setup.  This is a _PCI_ standard
+> @@ -872,6 +873,8 @@ struct ata_port {
+>   	struct timer_list	fastdrain_timer;
+>   	unsigned long		fastdrain_cnt;
+>   
+> +	async_cookie_t		cookie;
+> +
+>   	int			em_message_type;
+>   	void			*private_data;
+>   
+> 
 
