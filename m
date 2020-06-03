@@ -2,181 +2,159 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B511C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 603A020679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237762074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="itpaM7U5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d0cZpI9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgFCKY3 (ORCPT
+        id S1726936AbgFCKYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:24:29 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52807 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgFCKYZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:24:25 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200603102423euoutp012074f6250aa6c6d53655127040802b4c~VAafAtbp12817228172euoutp01l
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 10:24:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200603102423euoutp012074f6250aa6c6d53655127040802b4c~VAafAtbp12817228172euoutp01l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591179863;
-        bh=eDICBmLdfSReJ0IIZgbXl0S9aPELmh5Oc+cKhvrkRBQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=itpaM7U5QNM5cGBgSqU/gKdBa2wyNR9qSujdfoGuya2nSv8hhgZOUelUsfkVNwyXB
-         SuuGRBFjR1fyt2l1Udj9G0BpgNKu1h2XfS1kedBXu8fIrVy5ybICBdQGmWOy34sMsE
-         jD6VCm5KwZYs3a+sXGcsS/wGZyOt+xFdsywp9OU0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200603102423eucas1p2627b59b24daa069df127ed05ee3e4ece~VAaeuqMXm0341003410eucas1p2E;
-        Wed,  3 Jun 2020 10:24:23 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id FB.DD.61286.65A77DE5; Wed,  3
-        Jun 2020 11:24:23 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200603102422eucas1p109e0d0140e8fc61dc3e57957f2ccf700~VAaeUAeQt0910609106eucas1p1I;
-        Wed,  3 Jun 2020 10:24:22 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200603102422eusmtrp2ac3eef239fd6542e93825d5cf2456da4~VAaeTWRr-1914019140eusmtrp2e;
-        Wed,  3 Jun 2020 10:24:22 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-4c-5ed77a561226
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 42.81.07950.65A77DE5; Wed,  3
-        Jun 2020 11:24:22 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200603102421eusmtip1497219aabad721a8fb33142e00b9ba1e~VAadqRY3x3044930449eusmtip11;
-        Wed,  3 Jun 2020 10:24:21 +0000 (GMT)
-Subject: Re: [PATCHv5 1/1] ext4: mballoc: Use raw_cpu_ptr instead of
- this_cpu_ptr
-To:     Ritesh Harjani <riteshh@linux.ibm.com>, linux-ext4@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.com>,
-        tytso@mit.edu, linux-kernel@vger.kernel.org,
-        adilger.kernel@dilger.ca, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <ca794804-7d99-9837-2490-366a2eb97a94@samsung.com>
-Date:   Wed, 3 Jun 2020 12:24:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        Wed, 3 Jun 2020 06:24:40 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:10252 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgFCKYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:24:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591179871; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Fb+tt2vSov7DVf31htcsTqiqyyJapmcyXoiOnQlcHbc=;
+ b=d0cZpI9w1oqBUL9QdmDzA0fWpB5b+DtSsn2YdM4TQaD8XLtIfXvhLz4iZmv9aq0DVOxJ18cf
+ sd/ie3EIW7urY/WIanWWeHecODXhN9gmyqFLNBeLLh9mqJqWJttXBmD9rAT9Nr5MnGRm1kdG
+ q2EFnXt6Ogoyz577ZlUZVb7nxyk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ed77a524db551abde621318 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 10:24:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4A13FC433CB; Wed,  3 Jun 2020 10:24:18 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A84B2C433CA;
+        Wed,  3 Jun 2020 10:24:17 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200602134721.18211-1-riteshh@linux.ibm.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfSxVYRzuvec491DXXjfNb5RyF5saUWlnY5aPctZayxLTuHXlDPOR3eMj
-        xiZk3NnCWnJTvmaUpCGirGixO7orUjdruUZTdPPd0kLdeyj/Pc/v9zzv8z7vXpqQDpjZ0jEJ
-        SZwyQREnoyzItt5lrUtI+nu52/RVxCwt5pPMZF0NYsrufKSYp10akhnqLKeY7qo8xEyNj4iZ
-        R13DYmY6t5FkdK23CeZq4bL46Fb2ik5HsbktqezTYg3FFlU/R2z2wEuCbWodJtkygxO70Gx/
-        mj5n4RXJxcWkcMoD3hcsoufrXosTi6wvd7+Zo7LQClYhcxrwYWifzDVTIQtaiusRlNTMiwSy
-        iGCgdmSdLCBYXSwmVYg2Wdb0J41uKa5DoHpBCpoZBN/b34qMi+34DPwcWyCM2Bofh/tdA6aD
-        CHxdBFMNnSYRhd1BZVBRRizB3tD2ZdRkIPFe0DZ0mDQ7cDgUjk4RgsYKNGUTpBGbY0+omhk3
-        aQi8G9oN5YSAbWBkosIUBtggBm35EyQU9YdSfaVIwNthqq9VLOCdsNaxYchBMKZtFAukEMFQ
-        9s11tyd81P6ijP0J7AxNnQeEsQ90/L6BhGexBJ3BSriEJZS0lRLCWAL5eVJB7QTqvgf/Yrtf
-        DxJFSKbeVE29qY56Ux31/9xKRN5DNlwyHx/F8e4JXKorr4jnkxOiXC9eim9Gf/9Y/2rf/GO0
-        NBjRgzCNZNskbu7v5FIzRQqfFt+DgCZk1hLfV/1yqSRSkZbOKS+dVybHcXwPsqNJmY3kUPXX
-        cCmOUiRxsRyXyCk3tiLa3DYL2VZ987tW74BbQgPGB9mayAy3dr/G0QIvl+CwQ6F1/vLg7Fqd
-        ql4zzVH6iA+ZzmWOZwtFmuV0X4dP0go+yCrnhN+tYkdt4P4+Ty8727sHWzx6M2ID9ZMegVvs
-        93wOs1+JqT+lz1LuCjg2OevT0NSbF/Ls4Jy89GFB8I9Mr6DZI7Uyko9WuO8jlLziDzqBQ0tf
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsVy+t/xu7phVdfjDH7+ULT4+qWDxeL58sWM
-        FjPn3WGz2LP3JIvF5V1z2CwOLmxjtHj1+Ba7xda9V9ktXresZbG4sWUus0Vrz092B26Pxhs3
-        2DxaNpd77Jl4ks1jwqIDjB5NZ44ye6zfcpXFY+ZbNY/Pm+QCOKL0bIryS0tSFTLyi0tslaIN
-        LYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mj4tv8BeMEGk4uDFj2wNjH8Fuhg5
-        OCQETCT+P/DpYuTiEBJYyihx9dlNxi5GTqC4jMTJaQ2sELawxJ9rXWwQRW8ZJT797WcHSQgL
-        BEv8ePiZGcQWEXCTWLP3DBNIEbPAFCaJGTu2sYNsEBKwkri0Xhqkhk3AUKLrLcggTg5eATuJ
-        bS/ug/WyCKhInFu9kwnEFhWIlehe/IMdokZQ4uTMJywgNqeAtcTC94/BapgFzCTmbX7IDGHL
-        S2x/OwfKFpe49WQ+0wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLjfSKE3OLS/PS9ZLz
-        czcxAqN227GfW3Ywdr0LPsQowMGoxMNrYHgtTog1say4MvcQowQHs5IIr9PZ03FCvCmJlVWp
-        RfnxRaU5qcWHGE2BnpvILCWanA9MKHkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NT
-        C1KLYPqYODilGhjn/rHcF/jTl8FX0p8ruPBhkGSSrcXEz88t87lTlvbtrmRbwtmZI6l5xmvv
-        /8TY0A29isxnvklLmxVL3d98UpeLJ3nL91sqGkV16uGCa5a+2Ky075Hl6YexMic19RO/8hyb
-        6i7IXr9r1U67cJH0C+un1KRniM+yfZzx+r+BZOv2i7d/yYRvPqDEUpyRaKjFXFScCAA94j+O
-        8AIAAA==
-X-CMS-MailID: 20200603102422eucas1p109e0d0140e8fc61dc3e57957f2ccf700
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200603102422eucas1p109e0d0140e8fc61dc3e57957f2ccf700
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200603102422eucas1p109e0d0140e8fc61dc3e57957f2ccf700
-References: <20200602134721.18211-1-riteshh@linux.ibm.com>
-        <CGME20200603102422eucas1p109e0d0140e8fc61dc3e57957f2ccf700@eucas1p1.samsung.com>
+Date:   Wed, 03 Jun 2020 15:54:17 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>, robin.murphy@arm.com
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+In-Reply-To: <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+ <20200601212858.GB24287@xps15>
+ <6d759cc28628ea72767c1304883630eb@codeaurora.org>
+ <CAJ9a7VhMbdqVBHxEXGYxFkgPnnQqNnDAz=wkHP3s7Ntw0iLmKA@mail.gmail.com>
+Message-ID: <f0357072de96970b641bbd0da98c1d61@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ritesh,
+Hi Mike,
 
-On 02.06.2020 15:47, Ritesh Harjani wrote:
-> It doesn't really matter in ext4_mb_new_blocks() about whether the code
-> is rescheduled on any other cpu due to preemption. Because we care
-> about discard_pa_seq only when the block allocation fails and then too
-> we add the seq counter of all the cpus against the initial sampled one
-> to check if anyone has freed any blocks while we were doing allocation.
->
-> So just use raw_cpu_ptr instead of this_cpu_ptr to avoid this BUG.
->
-> BUG: using smp_processor_id() in preemptible [00000000] code: syz-fuzzer/6927
-> caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-> CPU: 1 PID: 6927 Comm: syz-fuzzer Not tainted 5.7.0-next-20200602-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x18f/0x20d lib/dump_stack.c:118
->   check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
->   ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
->   ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
->   ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
->   ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
->   ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
->   ext4_append+0x153/0x360 fs/ext4/namei.c:67
->   ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
->   ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
->   vfs_mkdir+0x419/0x690 fs/namei.c:3632
->   do_mkdirat+0x21e/0x280 fs/namei.c:3655
->   do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-> Reported-by: syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com
+Thanks again for looking at this.
 
-This fixes the warning observed on various Samsung Exynos SoC based 
-boards with linux-next 20200602.
+On 2020-06-03 03:42, Mike Leach wrote:
+[...]
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> 
+>> SMMU/IOMMU won't be able to do much here as it is the client's
+>> responsiblity to
+>> properly shutdown and SMMU device link just makes sure that
+>> SMMU(supplier) shutdown is
+>> called only after its consumers shutdown callbacks are called.
+> 
+> I think this use case can be handled slightly differently than the
+> general requirements for modular CoreSight drivers.
+> 
+> What is needed here is a way of stopping the underlying ETR hardware
+> from issuing data to the SMMU, until the entire device has been shut
+> down, in a way that does not remove the driver, breaking existing
+> references and causing a system crash.
+> 
+> We could introduce a new mode to the ETR driver - e.g. 
+> CS_MODE_SHUTDOWN.
+> 
+> At the end of the block tmc_shutdown(struct amba_device *adev), set
+> drvdata->mode to CS_MODE_SHUTDOWN & remove the coresight_unregister().
+> This new mode can be used to  prevent the underlying hardware from
+> being able to restart until the device is re-powered.
+> 
+> This mode can be detected in the code that enables / disables the ETR
+> and handled appropriately (updates to tmc_enable_etr_sink and
+> tmc_disable_etr_sink).
+> This mode will persist until the device is re-started - but because we
+> are on the device shutdown path this is not an issue.
+> 
+> This should leave the CoreSight infrastructure stable until the
+> drivers are shut down normally as part of the device power down
+> process.
+> 
 
-> ---
->   fs/ext4/mballoc.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index a9083113a8c0..b79b32dbe3ea 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -4708,7 +4708,7 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
->   	}
->   
->   	ac->ac_op = EXT4_MB_HISTORY_PREALLOC;
-> -	seq = *this_cpu_ptr(&discard_pa_seq);
-> +	seq = *raw_cpu_ptr(&discard_pa_seq);
->   	if (!ext4_mb_use_preallocated(ac)) {
->   		ac->ac_op = EXT4_MB_HISTORY_ALLOC;
->   		ext4_mb_normalize_request(ac, ar);
+Sounds good to me, but if the coresight_unregister() is the trouble 
+point
+causing these crashes, then can't we just remove that from 
+tmc_shutdown()
+callback? This would be like maintaining the same behaviour as now where
+on reboot/shutdown we basically don't do anything except for disabling 
+ETR.
+This way, we do not have to introduce any new mode as well. To be exact, 
+in
+tmc_shutdown() we just disable ETR and then return without unregistering
+which should not cause any issues since this is shutdown not the remove
+callback which is a requirement for making coresight modular like below:
 
-Best regards
+static void tmc_shutdown(struct amba_device *adev)
+  {
+          unsigned long flags;
+          struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
+
+          spin_lock_irqsave(&drvdata->spinlock, flags);
+
+          if (drvdata->mode == CS_MODE_DISABLED)
+                  goto out;
+
+          if (drvdata->config_type == TMC_CONFIG_TYPE_ETR)
+                  tmc_etr_disable_hw(drvdata);
+
+          /*
+           * We do not care about coresight unregister here unlike remove
+           * callback which is required for making coresight modular 
+since
+           * the system is going down after this.
+           */
+  out:
+          spin_unlock_irqrestore(&drvdata->spinlock, flags);
+  }
+
+
+Thanks,
+Sai
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
