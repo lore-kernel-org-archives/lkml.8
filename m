@@ -2,115 +2,134 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0700BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C70E320772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C208B20679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbgFCOmy (ORCPT
+        id S1726123AbgFCOn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:42:54 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:35854 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726077AbgFCOmx (ORCPT
+        Wed, 3 Jun 2020 10:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgFCOn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:42:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U-Tp0BC_1591195318;
-Received: from localhost(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0U-Tp0BC_1591195318)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 03 Jun 2020 22:41:58 +0800
-From:   Huaixin Chang <changhuaixin@linux.alibaba.com>
-To:     jpoimboe@redhat.com
-Cc:     bp@alien8.de, changhuaixin@linux.alibaba.com, hpa@zytor.com,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        luto@amacapital.net, michal.lkml@markovi.net, mingo@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org,
-        yamada.masahiro@socionext.com
-Subject: [PATCH 3/3] x86/unwind/orc: Simplify unwind_init() for x86 boot
-Date:   Wed,  3 Jun 2020 22:39:45 +0800
-Message-Id: <20200603143945.64248-4-changhuaixin@linux.alibaba.com>
-X-Mailer: git-send-email 2.14.4.44.g2045bb6
-In-Reply-To: <20200603143945.64248-1-changhuaixin@linux.alibaba.com>
-References: <20200601173840.3f36m6l4fsu5bill@treble>
- <20200603143945.64248-1-changhuaixin@linux.alibaba.com>
+        Wed, 3 Jun 2020 10:43:27 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00::f03c:91ff:fe50:41d6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794B0C08C5C0;
+        Wed,  3 Jun 2020 07:43:27 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 76F6A4EEA; Wed,  3 Jun 2020 10:43:26 -0400 (EDT)
+Date:   Wed, 3 Jun 2020 10:43:26 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: unable to handle kernel paging request in rb_erase
+Message-ID: <20200603144326.GA2035@fieldses.org>
+References: <0000000000005016dd05a5e6b308@google.com>
+ <20200603043435.13820-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603043435.13820-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orc fast lookup table is built by scripts/sorttable tool. All that
-is left is setting lookup_num_blocks.
+On Wed, Jun 03, 2020 at 12:34:35PM +0800, Hillf Danton wrote:
+> 
+> On Tue, 2 Jun 2020 17:55:17 -0400 "J. Bruce Fields" wrote:
+> > 
+> > As far as I know, this one's still unresolved.  I can't see the bug from
+> > code inspection, and we don't have a reproducer.  If anyone else sees
+> > this or has an idea what might be going wrong, I'd be interested.--b.
+> 
+> It's a PF reported in the syz-executor.3 context (PID: 8682 on CPU:1),
+> meanwhile there's another at 
+> 
+>  https://lore.kernel.org/lkml/20200603011425.GA13019@fieldses.org/T/#t
+>  Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
+> 
+> in the kworker context, and one of the quick questions is, is it needed
+> to serialize the two players, say, using a mutex?
 
-Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
----
- arch/x86/kernel/unwind_orc.c | 41 ++---------------------------------------
- 1 file changed, 2 insertions(+), 39 deletions(-)
+nfsd_reply_cache_shutdown() doesn't take any locks.  All the data
+structures it's tearing down are per-network-namespace, and it's assumed
+all the users of that structure are gone by the time we get here.
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2d240f..e4cf124c7a51 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -264,48 +264,11 @@ void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
- 
- void __init unwind_init(void)
- {
--	size_t orc_ip_size = (void *)__stop_orc_unwind_ip - (void *)__start_orc_unwind_ip;
--	size_t orc_size = (void *)__stop_orc_unwind - (void *)__start_orc_unwind;
--	size_t num_entries = orc_ip_size / sizeof(int);
--	struct orc_entry *orc;
--	int i;
--
--	if (!num_entries || orc_ip_size % sizeof(int) != 0 ||
--	    orc_size % sizeof(struct orc_entry) != 0 ||
--	    num_entries != orc_size / sizeof(struct orc_entry)) {
--		orc_warn("WARNING: Bad or missing .orc_unwind table.  Disabling unwinder.\n");
--		return;
--	}
--
- 	/*
--	 * Note, the orc_unwind and orc_unwind_ip tables were already
--	 * sorted at build time via the 'sorttable' tool.
--	 * It's ready for binary search straight away, no need to sort it.
-+	 * The fast lookup table is built via sorttable tool. Initialize
-+	 * lookup_num_blocks only.
- 	 */
--
--	/* Initialize the fast lookup table: */
- 	lookup_num_blocks = orc_lookup_end - orc_lookup;
--	for (i = 0; i < lookup_num_blocks-1; i++) {
--		orc = __orc_find(__start_orc_unwind_ip, __start_orc_unwind,
--				 num_entries,
--				 LOOKUP_START_IP + (LOOKUP_BLOCK_SIZE * i));
--		if (!orc) {
--			orc_warn("WARNING: Corrupt .orc_unwind table.  Disabling unwinder.\n");
--			return;
--		}
--
--		orc_lookup[i] = orc - __start_orc_unwind;
--	}
--
--	/* Initialize the ending block: */
--	orc = __orc_find(__start_orc_unwind_ip, __start_orc_unwind, num_entries,
--			 LOOKUP_STOP_IP);
--	if (!orc) {
--		orc_warn("WARNING: Corrupt .orc_unwind table.  Disabling unwinder.\n");
--		return;
--	}
--	orc_lookup[lookup_num_blocks-1] = orc - __start_orc_unwind;
--
- 	orc_init = true;
- }
- 
--- 
-2.14.4.44.g2045bb6
+I wonder if that assumption's correct.  Looking at nfsd_exit_net()....
 
+nfsd_reply_cache_shutdown() is one of the first things we do, so I think
+we're depending on the assumption that the interfaces in that network
+namespace, and anything referencing associated sockets (in particular,
+any associated in-progress rpc's), must be gone before our net exit
+method is called.
+
+I wonder if that's a good assumption.
+
+--b.
+
+> 
+> 
+> > On Sun, May 17, 2020 at 11:59:12PM -0700, syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following crash on:
+> > > 
+> > > HEAD commit:    9b1f2cbd Merge tag 'clk-fixes-for-linus' of git://git.kern..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=15dfdeaa100000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=0e37e9d19bded16b8ab9
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > 
+> > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com
+> > > 
+> > > BUG: unable to handle page fault for address: ffff887ffffffff0
+> > > #PF: supervisor read access in kernel mode
+> > > #PF: error_code(0x0000) - not-present page
+> > > PGD 0 P4D 0 
+> > > Oops: 0000 [#1] PREEMPT SMP KASAN
+> > > CPU: 1 PID: 8682 Comm: syz-executor.3 Not tainted 5.7.0-rc5-syzkaller #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
+> > > RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
+> > > Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
+> > > RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
+> > > RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
+> > > RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
+> > > RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
+> > > R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
+> > > R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
+> > > FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > Call Trace:
+> > >  nfsd_reply_cache_free_locked+0x198/0x380 fs/nfsd/nfscache.c:127
+> > >  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
+> > >  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
+> > >  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
+> > >  setup_net+0x50c/0x860 net/core/net_namespace.c:364
+> > >  copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
+> > >  create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:108
+> > >  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:229
+> > >  ksys_unshare+0x43d/0x8e0 kernel/fork.c:2970
+> > >  __do_sys_unshare kernel/fork.c:3038 [inline]
+> > >  __se_sys_unshare kernel/fork.c:3036 [inline]
+> > >  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3036
+> > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
