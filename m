@@ -2,95 +2,59 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31265C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85370C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3F820734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A412067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgFCIIb convert rfc822-to-8bit (ORCPT
+        id S1726364AbgFCII4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:08:31 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30513 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726099AbgFCIIa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:08:30 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-172-_4y6Z0HxOsCLflypv4x5zQ-1; Wed, 03 Jun 2020 09:08:17 +0100
-X-MC-Unique: _4y6Z0HxOsCLflypv4x5zQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 3 Jun 2020 09:08:17 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 3 Jun 2020 09:08:17 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     "'Michael S. Tsirkin'" <mst@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Subject: RE: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Thread-Topic: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Thread-Index: AQHWOR0GBiAzsIPf10apeP3ZClgqcqjFyCZAgAAGv4CAALncwA==
-Date:   Wed, 3 Jun 2020 08:08:17 +0000
-Message-ID: <a6d865f0dc7a427bb180cf451b8d470f@AcuMS.aculab.com>
-References: <20200602084257.134555-1-mst@redhat.com>
- <fc204429-7a6e-8214-a66f-bf2676018aae@redhat.com>
- <20200602163306.GM23230@ZenIV.linux.org.uk>
- <CAHk-=wjgg0bpD0qjYF=twJNXmRXYPjXqO1EFLL-mS8qUphe0AQ@mail.gmail.com>
- <20200602162931-mutt-send-email-mst@kernel.org>
- <950896ceff2d44e8aaf6f9f5fab210e4@AcuMS.aculab.com>
- <20200602215827.GP23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200602215827.GP23230@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 3 Jun 2020 04:08:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50612 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgFCII4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:08:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B5EDDACE6;
+        Wed,  3 Jun 2020 08:08:57 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 10:08:53 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     daniel.thompson@linaro.org, kgdb-bugreport@lists.sourceforge.net,
+        jason.wessel@windriver.com, dianders@chromium.org,
+        sergey.senozhatsky@gmail.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/4] kdb: Check status of console prior to invoking
+ handlers
+Message-ID: <20200603080853.GB14855@linux-b0ei>
+References: <1591168935-6382-1-git-send-email-sumit.garg@linaro.org>
+ <1591168935-6382-3-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591168935-6382-3-git-send-email-sumit.garg@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@ftp.linux.org.uk> On Behalf Of Al Viro
-> Sent: 02 June 2020 22:58
-> On Tue, Jun 02, 2020 at 08:41:38PM +0000, David Laight wrote:
+On Wed 2020-06-03 12:52:13, Sumit Garg wrote:
+> Check if a console is enabled prior to invoking corresponding write
+> handler.
 > 
-> > In which case you need a 'user_access_begin' that takes the mm
-> > as an additional parameter.
-> 
-> 	What does any of that have to do with mm?  Details, please.
+> Suggested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Actually probably nothing.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-I was sort of thinking that maybe the user process's memory
-map (mm?) would be temporarily 'attached' to the kernel thread
-so that it used the normal copy_to/from_user() fault
-handling to access the 'other' process.
-
-In which case you'd want to do the bound check against the
-limit of the user addresses in the mm rather than those of
-the current process.
-
-But later posts probably imply that it is all done differently.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Best Regards,
+Petr
