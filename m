@@ -2,109 +2,74 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9138220738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591197411;
-	bh=8vfgBSrae1Sl/Co8GuGiBgYLsvF7HA7YclCM8lPnj00=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lbhCDS+F3QydRaKE8BWPdh42s6ciTQjJKafrzN61nyzd2dIdakVOlTkxfQZJRKjEq
-	 D7CE3LbqEmG7w30QYxKB7LZ6y2EqDkOzO0iw4s/YqDqqMtDS43HbRfi9DPUDZBGKfp
-	 9G0VClA4+mUbMQ935jznenzMHYq6LMqI9qDm42qU=
+	by mail.kernel.org (Postfix) with ESMTP id CE70520738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgFCPQu (ORCPT
+        id S1726135AbgFCPTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 11:19:00 -0400
+Received: from 8bytes.org ([81.169.241.247]:45988 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgFCPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:16:50 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA17D206E6;
-        Wed,  3 Jun 2020 15:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591197409;
-        bh=8vfgBSrae1Sl/Co8GuGiBgYLsvF7HA7YclCM8lPnj00=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m3jJeo6lRuQ/vrRynASEprCi/bRIUGaRSPi5aAhrtSctPEaYpqEArdFme9bVSBOEJ
-         w4UTYgt9Ysw8WAI1PfQNDp5kCgvW93kVXGqin/tZ0rkMeOAeQJmH6wQ+A1RfXlL5nV
-         mmiINRD+WgMbVywc7EV4SJqSkJ6deRbaX1mIS4sI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jgV8K-00HUXD-7G; Wed, 03 Jun 2020 16:16:48 +0100
+        id S1725985AbgFCPS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:18:59 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 4B99F28B; Wed,  3 Jun 2020 17:18:58 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 17:18:57 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v3 35/75] x86/head/64: Build k/head64.c with
+ -fno-stack-protector
+Message-ID: <20200603151857.GC23071@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-36-joro@8bytes.org>
+ <CAMzpN2gfiBAeCV_1+9ogh42bMMuDW=qdwd7dYp49-=zY3kzBaA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 03 Jun 2020 16:16:48 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Saidi, Ali" <alisaidi@amazon.com>
-Cc:     "Herrenschmidt, Benjamin" <benh@amazon.com>, tglx@linutronix.de,
-        jason@lakedaemon.net, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-In-Reply-To: <AE04B507-C5E2-44D2-9190-41E9BE720F9D@amazon.com>
-References: <AE04B507-C5E2-44D2-9190-41E9BE720F9D@amazon.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <622fb6be108e894ee365d6b213535c8b@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alisaidi@amazon.com, benh@amazon.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dwmw@amazon.co.uk, zeev@amazon.com, zorik@amazon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMzpN2gfiBAeCV_1+9ogh42bMMuDW=qdwd7dYp49-=zY3kzBaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-02 19:47, Saidi, Ali wrote:
+On Tue, May 19, 2020 at 09:58:18AM -0400, Brian Gerst wrote:
+> On Tue, Apr 28, 2020 at 11:28 AM Joerg Roedel <joro@8bytes.org> wrote:
 
-[...]
+> The proper fix would be to initialize MSR_GS_BASE earlier.
 
-> Looks like the x86 apic set_affinity call explicitly checks for if
-> it’s activated in the managed case which makes sense given the code
-> Ben posted above:
->           /*
->            * Core code can call here for inactive interrupts. For 
-> inactive
->            * interrupts which use managed or reservation mode there is 
-> no
->            * point in going through the vector assignment right now as 
-> the
->            * activation will assign a vector which fits the destination
->            * cpumask. Let the core code store the destination mask and 
-> be
->            * done with it.
->            */
->           if (!irqd_is_activated(irqd) &&
->               (apicd->is_managed || apicd->can_reserve))
-> 
-> My original patch should certain check activated and not disabled.
-> With that do you still have reservations Marc?
+That'll mean to initialize it two times during boot, as the first C
+function with stack-protection is called before the kernel switches to
+its high addresses (early_idt_setup call-path). But okay, I can do that.
 
-I'd still prefer it if we could do something in core code, rather
-than spreading these checks in the individual drivers. If we can't,
-fair enough. But it feels like the core set_affinity function could
-just do the same thing in a single place (although the started vs
-activated is yet another piece of the puzzle I didn't consider,
-and the ITS doesn't need the "can_reserve" thing).
+On the other side, which value does the stack protector have in the early
+boot code?
 
-Thanks,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+	Joerg
