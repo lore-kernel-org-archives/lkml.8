@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D070DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84558C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B174C2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682042067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 19:21:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="m/Xcwdau"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WdU5OS8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgFCTVS (ORCPT
+        id S1726342AbgFCTV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:21:18 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:42980 "EHLO
+        Wed, 3 Jun 2020 15:21:27 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43002 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbgFCTVS (ORCPT
+        by vger.kernel.org with ESMTP id S1725922AbgFCTVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 15:21:18 -0400
+        Wed, 3 Jun 2020 15:21:25 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id ECA4F30DE4C;
-        Wed,  3 Jun 2020 12:21:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com ECA4F30DE4C
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 8465E30DEC3;
+        Wed,  3 Jun 2020 12:21:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 8465E30DEC3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1591212077;
-        bh=+RISK9H7pt+O7/u9I4TR8f6+UZgf0oc463SOKeQOuXo=;
+        s=dkimrelay; t=1591212083;
+        bh=aUi8AAMa+t96erb8wOXlvNHvozoS5xgqKvIjmp2MH08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/XcwdauavUFFzFKOMhN/tDmSzgXRBMzUG2uZvMbRwHRWR8Gw56VHl4JfyfehHpg3
-         Je42W2sRW2vdBOYGahiI8W7+FjgBCrsrOCpIeCgZVmEoGdvJjUZhSl4jQRxx+PD5bo
-         nYo/ci9/7rLY/JIzjXXCXarc/ru0f5C9O2hCbHTE=
+        b=WdU5OS8UoRjjEAIhrtjFt9pPSkm9Whb2J/730av8Y6ya92xLXNePdVFcdSW0udp0G
+         blB5Wbvi9vC60uyurB7E6tY9MslUgk010qK77U9vjdf8UtkroWMRKFsviOGjsNcFSB
+         GJlCiu0jy7I9QwnAc5fmANFztcvSEm3sRLW3iDmM=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 8B1D414008E;
-        Wed,  3 Jun 2020 12:21:15 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E2A6314008B;
+        Wed,  3 Jun 2020 12:21:21 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
@@ -45,10 +45,15 @@ Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 01/13] PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
-Date:   Wed,  3 Jun 2020 15:20:33 -0400
-Message-Id: <20200603192058.35296-2-james.quinlan@broadcom.com>
+Subject: [PATCH v3 05/13] PCI: brcmstb: Add suspend and resume pm_ops
+Date:   Wed,  3 Jun 2020 15:20:37 -0400
+Message-Id: <20200603192058.35296-6-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200603192058.35296-1-james.quinlan@broadcom.com>
 References: <20200603192058.35296-1-james.quinlan@broadcom.com>
@@ -59,32 +64,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jim Quinlan <jquinlan@broadcom.com>
 
-Have PCIE_BRCMSTB depend on ARCH_BRCMSTB.  Also set the default value to
-ARCH_BRCMSTB.
+Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+and resume.  Now the PCIe driver may do so as well.
 
 Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 49 +++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 91bfdb784829..c0f3d4d10047 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -244,9 +244,10 @@ config VMD
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 7c707e483181..f444751e247c 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -979,6 +979,49 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	brcm_pcie_bridge_sw_init_set(pcie, 1);
+ }
  
- config PCIE_BRCMSTB
- 	tristate "Broadcom Brcmstb PCIe host controller"
--	depends on ARCH_BCM2835 || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
-+	default ARCH_BRCMSTB
- 	help
- 	  Say Y here to enable PCIe host controller support for
- 	  Broadcom STB based SoCs, like the Raspberry Pi 4.
++static int brcm_pcie_suspend(struct device *dev)
++{
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++	int ret = 0;
++
++	brcm_pcie_turn_off(pcie);
++	clk_disable_unprepare(pcie->clk);
++
++	return ret;
++}
++
++static int brcm_pcie_resume(struct device *dev)
++{
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++	void __iomem *base;
++	u32 tmp;
++	int ret;
++
++	base = pcie->base;
++	clk_prepare_enable(pcie->clk);
++
++	/* Take bridge out of reset so we can access the SERDES reg */
++	brcm_pcie_bridge_sw_init_set(pcie, 0);
++
++	/* SERDES_IDDQ = 0 */
++	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++	u32p_replace_bits(&tmp, 0,
++			  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
++	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++
++	/* wait for serdes to be stable */
++	udelay(100);
++
++	ret = brcm_pcie_setup(pcie);
++	if (ret)
++		return ret;
++
++	if (pcie->msi)
++		brcm_msi_set_regs(pcie->msi);
++
++	return 0;
++}
++
+ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+ {
+ 	brcm_msi_remove(pcie);
+@@ -1095,12 +1138,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 
+ MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+ 
++static const struct dev_pm_ops brcm_pcie_pm_ops = {
++	.suspend_noirq = brcm_pcie_suspend,
++	.resume_noirq = brcm_pcie_resume,
++};
++
+ static struct platform_driver brcm_pcie_driver = {
+ 	.probe = brcm_pcie_probe,
+ 	.remove = brcm_pcie_remove,
+ 	.driver = {
+ 		.name = "brcm-pcie",
+ 		.of_match_table = brcm_pcie_match,
++		.pm = &brcm_pcie_pm_ops,
+ 	},
+ };
+ module_platform_driver(brcm_pcie_driver);
 -- 
 2.17.1
 
