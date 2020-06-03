@@ -2,148 +2,162 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90068C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF13BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 781C120659
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD2D207F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591200978;
+	bh=BoDLkq02THt+WbJVaiCCXtU5luclbfhVMmW4TS/e9Qg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=deQk7BOvIzS1ivlnF7KVY7U0CS7e0vTpA3nBBD9HbUlxWbc6An26uXATyY+FyZV7y
+	 uaVjiEOs0ohbl9Ad0APmhlfBGS7d/EmG+ifaWBRyVDToIFYhXSjsLCLzEBcIliLYjw
+	 NOXkMY18VP3O3jaFZ2xsOjcP61J2j4KlLd9i6L6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgFCQPf (ORCPT
+        id S1726103AbgFCQQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:15:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58271 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgFCQPe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:15:34 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jgW39-0007KL-Bj; Wed, 03 Jun 2020 16:15:31 +0000
-Subject: Re: [PATCH][next] ovl: fix null pointer dereference on null stack
- pointer on error return
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200603154559.140418-1-colin.king@canonical.com>
- <CAOQ4uxhLW=MSk=RhUi51EdOticfk1i_pku6qjCp2QpwnpyL5sw@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1edc291d-6e63-89d8-d48c-443908ddc0e8@canonical.com>
-Date:   Wed, 3 Jun 2020 17:15:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 3 Jun 2020 12:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbgFCQQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 12:16:17 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2CE0206E6;
+        Wed,  3 Jun 2020 16:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591200976;
+        bh=BoDLkq02THt+WbJVaiCCXtU5luclbfhVMmW4TS/e9Qg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0xIWs3b4/5BAZl5fKQdnqF63gWHhHFrLKLNd3bnlrXtYV3z5O3XIMZKKAeViSvDpj
+         7QtQQmZgy6EEP1w0l1pRehQWLxi2AUoS7PW4Tszk7IMBO1IehQCvOH9ILZ2VVEHWlA
+         elWvPMGVyHjgU46ArmjkTY1B+lAU3xRVTCndgAlI=
+Received: by mail-ot1-f46.google.com with SMTP id h7so2340121otr.3;
+        Wed, 03 Jun 2020 09:16:16 -0700 (PDT)
+X-Gm-Message-State: AOAM531YoKakT/77tl1BZqmjNOs0g9IUw9CHRbb2QjFiODuL7kShC3/2
+        /Mf4a3YtSAsj+NOlVEN1X5Ywuk7JgeGWqHalvA==
+X-Google-Smtp-Source: ABdhPJygRbGJCR00jC843Jp0prKdRc4VE8QO7dAZqmdODfIB/KZwGlghUEPf3SCOdRw3ZaN+HGgzsMSbMQOZ9qnxXPM=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr575554ots.192.1591200976092;
+ Wed, 03 Jun 2020 09:16:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxhLW=MSk=RhUi51EdOticfk1i_pku6qjCp2QpwnpyL5sw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1591184925-13055-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1591184925-13055-1-git-send-email-Anson.Huang@nxp.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 3 Jun 2020 10:15:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKGibK00edV5eG8HR1A0ks7ojY5uNssaqtYwiGJWt+GuA@mail.gmail.com>
+Message-ID: <CAL_JsqKGibK00edV5eG8HR1A0ks7ojY5uNssaqtYwiGJWt+GuA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: rtc: Convert imxdi rtc to json-schema
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Roland Stigge <stigge@antcom.de>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06/2020 17:11, Amir Goldstein wrote:
-> On Wed, Jun 3, 2020 at 6:46 PM Colin King <colin.king@canonical.com> wrote:
->>
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> There are two error return paths where the call to path_put is
->> dereferencing the null pointer 'stack'.  Fix this by avoiding the
->> error exit path via label 'out_err' that will lead to the path_put
->> calls and instead just return the error code directly.
->>
->> Addresses-Coverity: ("Dereference after null check)"
->> Fixes: 4155c10a0309 ("ovl: clean up getting lower layers")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> 
-> Which branch is that based on?
-> Doesn't seem to apply to master nor next
+On Wed, Jun 3, 2020 at 5:59 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> Convert the i.MXDI RTC binding to DT schema format using json-schema
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  .../devicetree/bindings/rtc/imxdi-rtc.txt          | 20 -----------
+>  .../devicetree/bindings/rtc/imxdi-rtc.yaml         | 42 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
+> deleted file mode 100644
+> index c797bc9..0000000
+> --- a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
+> +++ /dev/null
+> @@ -1,20 +0,0 @@
+> -* i.MX25 Real Time Clock controller
+> -
+> -Required properties:
+> -- compatible: should be: "fsl,imx25-rtc"
+> -- reg: physical base address of the controller and length of memory mapped
+> -  region.
+> -- clocks: should contain the phandle for the rtc clock
+> -- interrupts: rtc alarm interrupt
+> -
+> -Optional properties:
+> -- interrupts: dryice security violation interrupt (second entry)
+> -
+> -Example:
+> -
+> -rtc@53ffc000 {
+> -       compatible = "fsl,imx25-rtc";
+> -       reg = <0x53ffc000 0x4000>;
+> -       clocks = <&clks 81>;
+> -       interrupts = <25 56>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
+> new file mode 100644
+> index 0000000..6e43926
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/imxdi-rtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: i.MX25 Real Time Clock controller
+> +
+> +maintainers:
+> +  - Roland Stigge <stigge@antcom.de>
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx25-rtc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    items:
+> +      - description: rtc alarm interrupt
+> +      - description: dryice security violation interrupt
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
 
-It was based on today's linux-next
+Needs:
 
-> 
->> ---
->>  fs/overlayfs/super.c | 6 ++----
->>  1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
->> index 1094836f7e31..4be1b041b32c 100644
->> --- a/fs/overlayfs/super.c
->> +++ b/fs/overlayfs/super.c
->> @@ -1594,20 +1594,18 @@ static struct ovl_entry *ovl_get_lowerstack(struct super_block *sb,
->>         unsigned int i;
->>         struct ovl_entry *oe;
->>
->> -       err = -EINVAL;
->>         if (!ofs->config.upperdir && numlower == 1) {
->>                 pr_err("at least 2 lowerdir are needed while upperdir nonexistent\n");
->> -               goto out_err;
->> +               return ERR_PTR(-EINVAL);
->>         } else if (!ofs->config.upperdir && ofs->config.nfs_export &&
->>                    ofs->config.redirect_follow) {
->>                 pr_warn("NFS export requires \"redirect_dir=nofollow\" on non-upper mount, falling back to nfs_export=off.\n");
->>                 ofs->config.nfs_export = false;
->>         }
->>
->> -       err = -ENOMEM;
->>         stack = kcalloc(numlower, sizeof(struct path), GFP_KERNEL);
->>         if (!stack)
->> -               goto out_err;
->> +               return ERR_PTR(-ENOMEM);
->>
->>         err = -EINVAL;
->>         for (i = 0; i < numlower; i++) {
->> --
->> 2.25.1
->>
+additionalProperties: false
 
+(or if you have a top level $ref, 'unevaluatedProperties: false')
+
+I fixed these up in what I applied already, but please check all of
+yours pending and fix.
+
+Rob
