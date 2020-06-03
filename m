@@ -2,163 +2,298 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C654C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B475320663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D1C208A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:14:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="KcuhYU82"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Bh46lcPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgFCBN6 (ORCPT
+        id S1728490AbgFCBOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbgFCBNk (ORCPT
+        Tue, 2 Jun 2020 21:14:02 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39004 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbgFCBN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:13:40 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E9DC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jun 2020 18:13:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id v2so414883pfv.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jun 2020 18:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nhWgywlp7hGFzT3uDr0Y1hpZYhM+popoEVRUKB4VQWc=;
-        b=KcuhYU82+vDQQx/DeVCMpJeN14+0ym8WxhWxeXEkaQ+3yezTYF4Ee5fw/subrNMumN
-         KyeAfCGCmRn0kJMIhZMcogDXCSfT+sBBqmi7wdOtjgBK8yInPiCqMLFgrVCWXL2KYFXQ
-         wAigHdmOLJYq7IXym1xyUJRMKY8oH/Rez9kpo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nhWgywlp7hGFzT3uDr0Y1hpZYhM+popoEVRUKB4VQWc=;
-        b=GV0bzFYEQlZPDB1a/7ZjuBU0R/T78pqN2QHGCTvK3bEN8IMA/YhMmkeHQklnyBCWH8
-         5XkmVOpWCPghVzUuRFUEiHw4wfkG4TNtFMFZ26GHN5M0XEaGRBWK5HdlciHVZSadyb7q
-         /szdVm3mxZaQmw0P4K0BG0oWlY6V4ZusWxcBHytu/IW/MVxpoSZ2XuWlQysAorhPwQ6S
-         VrJnlGT0AeO0XTv1jbGtDZkBYouoDbG/uJ8Imw10EngNR7TBxql0xwi4PVmDo2QIrZld
-         cNPTrEY93NmFUqavOr8uPqRAvkGnboNlrEc+kOO4+ONr9TNt26VFQptUBQkrm+8lNo55
-         KXRQ==
-X-Gm-Message-State: AOAM531qk9I/KXTBfeNZZJB6SV0WmnkJ9wLwsFfWDk6jdK3ehQ74pQtK
-        +nX9WnillLot8BiKKfBI1qQXuA==
-X-Google-Smtp-Source: ABdhPJziu0Ir+oIrvYqeFGcbFb1EEVntTRUVR8VaEiMPDVEUmaVr/EmBGAHwManIvwfanKgve0+dwg==
-X-Received: by 2002:a17:90a:7bcb:: with SMTP id d11mr2287916pjl.209.1591146820050;
-        Tue, 02 Jun 2020 18:13:40 -0700 (PDT)
-Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id a12sm263222pjw.35.2020.06.02.18.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 18:13:39 -0700 (PDT)
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Sargun Dhillon <sargun@sargun.me>, Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        containers@lists.linux-foundation.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 2/4] pid: Use file_receive helper to copy FDs
-Date:   Tue,  2 Jun 2020 18:10:42 -0700
-Message-Id: <20200603011044.7972-3-sargun@sargun.me>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200603011044.7972-1-sargun@sargun.me>
-References: <20200603011044.7972-1-sargun@sargun.me>
+        Tue, 2 Jun 2020 21:13:58 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0CF7529B;
+        Wed,  3 Jun 2020 03:13:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591146834;
+        bh=jEFcv3/fEbD4RqcDaT0zdOELskl9FL4fg65FTzTDU4s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bh46lcPuOnAGHf+e9HSbh0ab17YVaCxHDyG0b82L0x3i0WbyVVnhVz1ivcviVdfIR
+         OGKcI1zP7xY2Psf8dSHrp+6tnPL2a8xtVDA4vyyeohQL9jCBA2iQx90Ua1SFg1VFP1
+         wgrmY/bFdnj64a/o/Mwxt+LYTw51XRoLGie88Kak=
+Date:   Wed, 3 Jun 2020 04:13:38 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vsagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ UHD-SDI Receiver Subsystem
+Message-ID: <20200603011338.GX6547@pendragon.ideasonboard.com>
+References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
+ <20200429141705.18755-2-vishal.sagar@xilinx.com>
+ <20200506130225.GD5946@pendragon.ideasonboard.com>
+ <DM6PR02MB6876116CECBA49741FF57E79A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <DM6PR02MB6876116CECBA49741FF57E79A78A0@DM6PR02MB6876.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code to copy file descriptors was duplicated in pidfd_getfd.
-Rather than continue to duplicate it, this hoists the code out of
-kernel/pid.c and uses the newly added file_receive helper.
+Hi Vishal,
 
-Earlier, when this was implemented there was some back-and-forth
-about how the semantics should work around copying around file
-descriptors [1], and it was decided that the default behaviour
-should be to not modify cgroup data. As a matter of least surprise,
-this approach follows the default semantics as presented by SCM_RIGHTS.
+On Mon, Jun 01, 2020 at 03:14:52PM +0000, Vishal Sagar wrote:
+> On Wednesday, May 6, 2020 6:32 PM, Laurent Pinchart wrote:
+> > On Wed, Apr 29, 2020 at 07:47:03PM +0530, Vishal Sagar wrote:
+> > > Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
+> > >
+> > > The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+> > > core, an SDI RX to Video Bridge IP core to convert SDI video to native
+> > > video and a Video In to AXI4-Stream IP core to convert native video to
+> > > AXI4-Stream.
+> > >
+> > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > > ---
+> > > v2
+> > > - Removed references to xlnx,video*
+> > > - Fixed as per Sakari Ailus and Rob Herring's comments
+> > > - Converted to yaml format
+> > >
+> > >  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
+> > >  1 file changed, 132 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> > >
+> > > diff --git
+> > a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> > b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> > > new file mode 100644
+> > > index 000000000000..9133ad19df55
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> > > @@ -0,0 +1,132 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +
+> > > +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
+> > > +
+> > > +maintainers:
+> > > +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> > > +
+> > > +description: |
+> > > +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
+> > > +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
+> > > +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
+> > > +  native SDI using Xilinx transceivers as the physical layer.
+> > > +
+> > > +  The subsystem consists of
+> > > +  1 - SMPTE UHD-SDI Rx
+> > > +  2 - SDI Rx to Native Video Bridge
+> > > +  3 - Video In to AXI4-Stream Bridge
+> > > +
+> > > +  The subsystem can capture SDI streams in upto 12G mode 8 data streams and output
+> > 
+> > s/upto/up to/
+> 
+> I will fix this in next version. 
+> 
+> > > +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    description: List of clock specifiers
+> > > +    items:
+> > > +      - description: AXI4-Lite clock
+> > > +      - description: SMPTE UHD-SDI Rx core clock
+> > > +      - description: Video clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: s_axi_aclk
+> > > +      - const: sdi_rx_clk
+> > > +      - const: video_out_clk
+> > > +
+> > > +  xlnx,bpp:
+> > > +    description: Bits per pixel supported. Can be 10 or 12 bits per pixel only.
+> > > +    allOf:
+> > > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> > > +      - enum: [10, 12]
+> > 
+> > I don't see this as a design parameter in the documentation (pg290,
+> > v2.0). What does it correspond to ? All the BPC mentions in the
+> > documentation always state that 10-bit is the only supported value.
+> 
+> The new version of IP being released will have 10 and 12 bit support. It is already in the Xilinx linux-xlnx repo.
+> I will rename this to "xlnx,bpc" instead of "xlnx,bpp" to refer to bits per component.
 
-In the future, a flag can be added to avoid manipulating the cgroup
-data on copy.
+Is the documentation for the new IP core version available ? Should this
+property only be allowed for the new version, given that in v2.0 the BPC
+is fixed to 10 ?
 
-[1]: https://lore.kernel.org/lkml/20200107175927.4558-1-sargun@sargun.me/
+> > > +
+> > > +  xlnx,line-rate:
+> > > +    description: |
+> > > +      The maximum mode supported by the design. Possible values are as below
+> > > +      12G_SDI_8DS - 12G mode with 8 data streams
+> > > +      6G_SDI      -  6G mode
+> > > +      3G_SDI      -  3G mode
+> > > +    enum:
+> > > +      - 12G_SDI_8DS
+> > > +      - 6G_SDI
+> > > +      - 3G_SDI
+> > 
+> > How about making this an integer property, with #define in
+> > include/dt-bindings/media/xilinx-sdi.h ? As far as I understand, the SDI
+> > TX subsystem has the same parameter, so the #define could be shared
+> > between the two.
+> 
+> Yes that is ok with me. I will add this in the next version.
+> 
+> > > +
+> > > +  xlnx,include-edh:
+> > > +    type: boolean
+> > > +    description: |
+> > > +      This is present when the Error Detection and Handling processor is
+> > > +      enabled in design.
+> > > +
+> > > +  ports:
+> > > +    type: object
+> > > +    description: |
+> > > +      Generally the SDI port is connected to a device like SDI Broadcast camera
+> > > +      which is independently controlled. Hence port@0 is a source port which can be
+> > > +      connected to downstream IP which can work with AXI4 Stream data.
+> > 
+> > We should still have an input port. It can be connected to a DT node for
+> > a physical SDI connector, or any other component in the platform (I
+> > expect the former to be the common case). There are DT bindings for
+> > connectors in Documentation/devicetree/bindings/display/connector/, we
+> > should add one for SDI.
+> 
+> Yes the input port is a physical SDI connector connected to an equipment like broadcast camera.
+> But the camera/equipment can't be controlled by the V4L2 pipeline and SDI protocol is unidirectional.
+> 
+> If we add another dt node, then I think another dummy v4l subdev driver will need to implemented and loaded
+> to complete the pipe as Xilinx Video driver will need it.
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-Suggested-by: Kees Cook <keescook@chromium.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Daniel Wagner <daniel.wagner@bmw-carit.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jann Horn <jannh@google.com>
-Cc: John Fastabend <john.r.fastabend@intel.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Tycho Andersen <tycho@tycho.ws>
-Cc: stable@vger.kernel.org
-Cc: cgroups@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- kernel/pid.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+We don't necessarily need a driver for the connector (although it may be
+a good idea to do so, but that's a separate question). The sdi-rx driver
+could handle the SDI connector DT node by parsing its properties
+manually (assuming it would contain properties that need to be parsed).
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index c835b844aca7..1642cf940aa1 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -606,7 +606,7 @@ static int pidfd_getfd(struct pid *pid, int fd)
- {
- 	struct task_struct *task;
- 	struct file *file;
--	int ret;
-+	int ret, err;
- 
- 	task = get_pid_task(pid, PIDTYPE_PID);
- 	if (!task)
-@@ -617,18 +617,16 @@ static int pidfd_getfd(struct pid *pid, int fd)
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
--	ret = security_file_receive(file);
--	if (ret) {
--		fput(file);
--		return ret;
--	}
--
- 	ret = get_unused_fd_flags(O_CLOEXEC);
--	if (ret < 0)
--		fput(file);
--	else
--		fd_install(ret, file);
-+	if (ret >= 0) {
-+		err = file_receive(ret, file);
-+		if (err) {
-+			put_unused_fd(ret);
-+			ret = err;
-+		}
-+	}
- 
-+	fput(file);
- 	return ret;
- }
- 
+> Could you please share the reason to have this input port in the SDI Rx driver?
+
+We try to make sure the whole pipeline is modelled in DT. This applies
+to both V4L2 and DRM/KMS. While the connector doesn't need to be
+controlled by software (it's just a connector), it may still have
+properties that matter from a software point of view. For instance the
+label property can be used to specify how the connector is labeled on
+the board or on the device's case, allowing applications to display the
+correct labels to the users. Another use case related to the 4-pin
+mini-DIN connectors typically used for S-Video. On some devices, they
+are also used for composite video, with multiple video sources connected
+to the same mini-DIN connector with a special cable. Kernel drivers need
+to know how signals are routed, and DT nodes help there.
+
+> > > +    properties:
+> > > +      port@0:
+> > > +        type: object
+> > > +        description: Source port
+> > > +        properties:
+> > > +          reg:
+> > > +            const: 0
+> > > +          endpoint:
+> > > +            type: object
+> > > +            properties:
+> > > +              remote-endpoint: true
+> > > +            required:
+> > > +              - remote-endpoint
+> > > +            additionalProperties: false
+> > > +        additionalProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - xlnx,line-rate
+> > > +  - xlnx,bpp
+> > > +  - ports
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
+
+I forgot to mention, you can drop the label as it's not used.
+
+> > > +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
+> > > +      interrupt-parent = <&gic>;
+> > > +      interrupts = <0 89 4>;
+> > > +      reg = <0x0 0x80000000 0x0 0x10000>;
+> > > +      xlnx,include-edh;
+> > > +      xlnx,line-rate = "12G_SDI_8DS";
+> > > +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
+> > > +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
+> > > +      xlnx,bpp = <10>;
+
+And I would group the xlnx,* properties after the standard properties.
+
+> > > +
+> > > +      ports {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +        port@0 {
+> > > +          reg = <0>;
+> > > +          sdirx_out: endpoint {
+> > > +            remote-endpoint = <&vcap_sdirx_in>;
+> > > +          };
+> > > +        };
+> > > +      };
+> > > +    };
+
 -- 
-2.25.1
+Regards,
 
+Laurent Pinchart
