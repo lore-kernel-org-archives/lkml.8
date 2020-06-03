@@ -2,85 +2,105 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53696C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D96620663
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 472D4207DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:46:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hVTDyEJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbgFCCop (ORCPT
+        id S1725888AbgFCCqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:44:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5777 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725836AbgFCCop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:44:45 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DC136CB971D0477D9F6E;
-        Wed,  3 Jun 2020 10:44:43 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.201.193) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 3 Jun 2020 10:44:34 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
-        <catalin.marinas@arm.com>
-CC:     <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <Jonathan.Cameron@huawei.com>, <john.garry@huawei.com>,
-        <prime.zeng@hisilicon.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 3/3] arm64: mm: reserve per-numa CMA after numa_init
-Date:   Wed, 3 Jun 2020 14:42:31 +1200
-Message-ID: <20200603024231.61748-4-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20200603024231.61748-1-song.bao.hua@hisilicon.com>
-References: <20200603024231.61748-1-song.bao.hua@hisilicon.com>
+        Tue, 2 Jun 2020 22:46:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:40251 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbgFCCqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:46:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cCwl20RQz9sSc;
+        Wed,  3 Jun 2020 12:46:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591152407;
+        bh=tm85i+M0UoXTbE+sU69kEPCnuNV5C/WVHJVbrmMhYy4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hVTDyEJmCM/JSpL3WddkJu9cy0ZFoG/WZnjUmhjioB4Y2T7F8DiXGqWvDz5qGS8Qr
+         6kig96nndy6asSDNX1bG6aIvztwGstU+9NxkmlqGKe8FxLm+z8zF6RpWyrfXa7XMpM
+         tFfZwaEq2QxtB62ULlCXDmBnTaamudY0JthHp/shB0/zMMP0dllsXRT44PZ42pv4DI
+         2AOTztrAuQ3w12QVX0FJ1FfN71kfV5/Hpu2prvCz3p3zPpyZhLZy3n1A2ZgCos3BnS
+         BNjeMRaQ3XKsl+n1r0BGLUfM1MT5qL+k0pYzAFL6k5/VFrjurX3EPnabk0+lFjj8lz
+         Nu9yA1QhpRyvQ==
+Date:   Wed, 3 Jun 2020 12:46:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the v4l-dvb-next tree
+Message-ID: <20200603124646.4ce0ca8b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.201.193]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/qPkXCkx5Qc722FVSGTz6W75";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, smmu is using dma_alloc_coherent() to get memory to save queues
-and tables. Typically, on ARM64 server, there is a default CMA located at
-node0, which could be far away from node2, node3 etc.
-with this patch, smmu will get memory from local numa node to save command
-queues and page tables. that means dma_unmap latency will be shrunk much.
-Meanwhile, when iommu.passthrough is on, device drivers which call dma_
-alloc_coherent() will also get local memory and avoid the travel between
-numa nodes.
+--Sig_/qPkXCkx5Qc722FVSGTz6W75
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- arch/arm64/mm/init.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi all,
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 8f0e70ebb49d..204a534982b2 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -474,6 +474,8 @@ void __init bootmem_init(void)
- 
- 	arm64_numa_init();
- 
-+	dma_pernuma_cma_reserve();
-+
- #ifdef CONFIG_ARM64_4K_PAGES
- 	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
- #endif
--- 
-2.23.0
+After merging the v4l-dvb-next tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
+drivers/staging/media/atomisp/pci/atomisp_compat_css20.c: In function 'atom=
+isp_css_isr_thread':
+drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:4196:9: error: 'at=
+omisp_hw_is_isp2401' undeclared (first use in this function)
+ 4196 |    if (!atomisp_hw_is_isp2401)
+      |         ^~~~~~~~~~~~~~~~~~~~~
+drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:4196:9: note: each=
+ undeclared identifier is reported only once for each function it appears in
 
+Caused by commit
+
+  be1fdab273a9 ("media: atomisp: change the detection of ISP2401 at runtime=
+")
+
+interacting with commit
+
+  7ef17aa55fc3 ("media: atomisp: atomisp_compat_css20.c: detect ISP at runt=
+ime")
+
+I have used the version of the v4l-dvb-next tree from next-20200602
+for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qPkXCkx5Qc722FVSGTz6W75
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7XDxYACgkQAVBC80lX
+0GyWFgf/YdkExVGSIJNHaFCJMCB52AmgZZMHw2DWH7pLPN0nDIof9SE9G1PUIp5O
+NKRwIYV27S36J+wO1ZYjJCFpHcnOmARMiSe0N15c/T1teo1ZNJM//l6RTxbXunS2
+KWs+OE28gQC+u/SmntCqc29hMLgePnFUSHBcAhtmpJFcH3UGOpANfI/4N55gQzbc
+hI6f4Ag6xHHP1rz/SRrVGjNQDYL2HnInjV9VHdhng+uq9SVHOD1EXUiZ7c4fsjBr
+vLD9aGQ7AmwVQmXGW9aG58BI/eNdH8KSVXva4wydpijhGn2qMjmLUz5FdWE5g+Em
+7otiQk6p20Hvjl+XoyzFaNZ+iVEu7A==
+=UTnA
+-----END PGP SIGNATURE-----
+
+--Sig_/qPkXCkx5Qc722FVSGTz6W75--
