@@ -2,97 +2,183 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2210C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC9DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8B5E206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB07206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 13:03:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Vm6d7M2i"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hyHgdnES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbgFCNBb (ORCPT
+        id S1725973AbgFCNDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:01:31 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:63051 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725833AbgFCNB3 (ORCPT
+        Wed, 3 Jun 2020 09:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCNDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 09:01:29 -0400
-X-UUID: a04f9c17f0f14a85b9f425e09bc82981-20200603
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4T4GZu2BhBmei0L8cxQIJh1W9EQOektqEZeHV+JC9ko=;
-        b=Vm6d7M2iXShnUXPqPG/6Uw7SJYLRssCcEXVgJODiqyHSSQG1tBCE9WULJBnW0tf4gClUKWe1Cpk7LccVeSXEIvJx4csFxIYToGazbUHfu0LrwU8wHoY86pAxbO3Ck7L1qpQj5caTQwhJHFt2dQOGvSd23bTl3kkLoMbWupal5HU=;
-X-UUID: a04f9c17f0f14a85b9f425e09bc82981-20200603
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1363244390; Wed, 03 Jun 2020 21:01:25 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 3 Jun 2020 21:01:20 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 3 Jun 2020 21:01:22 +0800
-Message-ID: <1591189283.23525.67.camel@mtkswgap22>
-Subject: Re: [PATCH] usb: host: xhci-mtk: avoid runtime suspend when
- removing hcd
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-CC:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
-Date:   Wed, 3 Jun 2020 21:01:23 +0800
-In-Reply-To: <ebd32a2b-c4ba-8891-b13e-f6c641a94276@linux.intel.com>
-References: <1590726569-28248-1-git-send-email-macpaul.lin@mediatek.com>
-         <ebd32a2b-c4ba-8891-b13e-f6c641a94276@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 3 Jun 2020 09:03:23 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D487C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 06:03:22 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id m29so1528563qkm.17
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 06:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=db/kQaLQg+0T8fOHQ2nb3EujmTQZxSTonth9y+N64Uw=;
+        b=hyHgdnESty+it4dM91ZX8qfTsvjopVZuLx7NZhlI7ymz/gMbMzfiSUOuSk3et7Fc3r
+         NYzkXQpApAIQ1KtveTHMUkeKsGl38ohGlyaccallRwA2bVzLUyG1D7jJKbXQRh6QhSPT
+         ZOZ7kWh0lu1nCNO95TPKVAst4EcTrn7qYt7HVUYmkDRel57RDygHEncjvFtJxpOpPumP
+         JxBaRZb/MyjsAYom7lKZeRdDenDUO7d3xtH5yJq5siM/Lv2HHCYXWJPohh49YGUoNWdr
+         imMezI6+UFIRUDX8opuJ/H3qsniO6imliwxPP1svQIExziR6B1TVg+alavwOiuic9UHW
+         8FUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=db/kQaLQg+0T8fOHQ2nb3EujmTQZxSTonth9y+N64Uw=;
+        b=Xmt4NS/dnLjeYF23FYCfgdPAuOUY5z8HrOi0MOQyxjsbrYTcr0ewSrH9zXa1pyYx+f
+         CqEwYzhjNDMIGEZde1amKlxvbKpnSNFIRf/1FEGWeOwsh+9xeYYmGeqUGvAtltPCqrYc
+         0qJ7hVWbWdjLp7tVpXuLH3m3e0g/G0ivzGeEs6s6Onl4EG2zLfROv1J85ueDPmm/bGxS
+         3/KYvdPUiTUkyHaK38HHlUc2tTexwdMbk+PW00kMtNet26mdQjk/DZZqOc/5u60xrMjs
+         R2TaO/asQzrZwBG60+FmtYXNL8mu3fZJOdorLxlKzyjMbV7HRJtdpAppgwliWSgw5Ttd
+         Q1Uw==
+X-Gm-Message-State: AOAM530jPelOpnkZXSlUItL9LfaV4DYfKDzLd7Ki5eBLzVevoWUs4DJy
+        z4/TUw9lSC82mwvZnuJlc8MWP7Mmv12g
+X-Google-Smtp-Source: ABdhPJzCA2PDywVGKDjNV3Cc55Uhss57Yqby9p8/gWrwS/ZB5sXzZjsmUyQMBnxfrIOcPgZGdZ10I20m2iTW
+X-Received: by 2002:ad4:4572:: with SMTP id o18mr30227802qvu.204.1591189400865;
+ Wed, 03 Jun 2020 06:03:20 -0700 (PDT)
+Date:   Wed,  3 Jun 2020 06:03:17 -0700
+Message-Id: <20200603130317.94672-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
+Subject: [PATCH v4] iommu/vt-d: Don't apply gfx quirks to untrusted devices
+From:   Rajat Jain <rajatja@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com,
+        pmalani@google.com, bleung@google.com, levinale@google.com,
+        zsm@google.com, mnissler@google.com, tbroch@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTAzIGF0IDE0OjQ3ICswMzAwLCBNYXRoaWFzIE55bWFuIHdyb3RlOg0K
-PiBPbiAyOS41LjIwMjAgNy4yOSwgTWFjcGF1bCBMaW4gd3JvdGU6DQo+ID4gV2hlbiBydW50aW1l
-IHN1c3BlbmQgd2FzIGVuYWJsZWQsIHJ1bnRpbWUgc3VzcGVuZCBtaWdodCBoYXBwZW5lZA0KPiA+
-IHdoZW4geGhjaSBpcyByZW1vdmluZyBoY2QuIFRoaXMgbWlnaHQgY2F1c2Uga2VybmVsIHBhbmlj
-IHdoZW4gaGNkDQo+ID4gaGFzIGJlZW4gZnJlZWQgYnV0IHJ1bnRpbWUgcG0gc3VzcGVuZCByZWxh
-dGVkIGhhbmRsZSBuZWVkIHRvDQo+ID4gcmVmZXJlbmNlIGl0Lg0KPiA+IA0KPiA+IENoYW5nZS1J
-ZDogSTcwYTVkYzgwMDYyMDdjYWVlY2JhYzY5NTVjZThlNTM0NWRjYzcwZTYNCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0K
-PiA+ICBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMgfCAgICA1ICsrKy0tDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tdGsuYyBiL2RyaXZlcnMvdXNiL2hvc3Qv
-eGhjaS1tdGsuYw0KPiA+IGluZGV4IGJmYmRiM2MuLjY0MWQyNGUgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay5jDQo+ID4gKysrIGIvZHJpdmVycy91c2IvaG9zdC94
-aGNpLW10ay5jDQo+ID4gQEAgLTU4Nyw2ICs1ODcsOSBAQCBzdGF0aWMgaW50IHhoY2lfbXRrX3Jl
-bW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpDQo+ID4gIAlzdHJ1Y3QgeGhjaV9oY2QJ
-KnhoY2kgPSBoY2RfdG9feGhjaShoY2QpOw0KPiA+ICAJc3RydWN0IHVzYl9oY2QgICpzaGFyZWRf
-aGNkID0geGhjaS0+c2hhcmVkX2hjZDsNCj4gPiAgDQo+ID4gKwlwbV9ydW50aW1lX3B1dF9zeW5j
-KCZkZXYtPmRldik7DQo+IA0KPiBNaWdodCBydW50aW1lIHN1c3BlbmQgaGVyZS4NCj4gSXQncyBh
-IGxvdCBiZXR0ZXIgdGhhbiBiZWZvcmUsIG5vIHBhbmljIGFzIGhjZCBpc24ndCByZWxlYXNlZCwg
-YnV0IGEgYml0IHVubmVjZXNzYXJ5Lg0KPiANCj4gaG93IGFib3V0IHRoaXMgc2VxdWVuY2UgaW5z
-dGVhZDoNCj4gcG1fcnVudGltZV9kaXNhYmxlKCkNCj4gcG1fcnVudGltZV9wdXRfbm9pZGxlKCkN
-Cj4gDQo+ID4gKwlwbV9ydW50aW1lX2Rpc2FibGUoJmRldi0+ZGV2KTsNCj4gPiArDQo+IA0KPiAt
-TWF0aGlhcw0KDQpUaGFua3MgZm9yIHlvdXIgc3VnZ2VzdGlvbiENCldpbGwgaXQgYmV0dGVyIHRv
-IHB1dCBubyBpZGxlIGJlZm9yZSBkaXNhYmxlPyANCnBtX3J1bnRpbWVfcHV0X25vaWRsZSgpDQpw
-bV9ydW50aW1lX2Rpc2FibGUoKQ0KDQpJJ3ZlIGZvdW5kIHBtX3J1bnRpbWVfcHV0X25vaWRsZSBp
-cyBjYWxsZWQgaW4gcG1fcnVudGltZV9kaXNhYmxlKCkgd2hlbg0KdGhlcmUgaXMgYSBwZW5kaW5n
-IHJlcXVlc3QuDQoNCkkgd2lsbCBzZW5kIHBhdGNoIHYzIGFzIG5vaWRsZSgpIGNhbGxlZCBlYXJs
-aWVyIHRoYW4gZGlzYWJsZSgpLiBQbGVhc2UNCmhlbHAgdG8gY29tbWVudCBpdCBpZiBkaXNhYmxl
-KCkgc2hvdWxkIGdvIGJlZm9yZS4NCg0KVGhhbmtzIQ0KTWFjcGF1bCBMaW4gDQo=
+Currently, an external malicious PCI device can masquerade the VID:PID
+of faulty gfx devices, and thus apply iommu quirks to effectively
+disable the IOMMU restrictions for itself.
+
+Thus we need to ensure that the device we are applying quirks to, is
+indeed an internal trusted device.
+
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+---
+v4: - Add Ashok Raj's "Reviewed-by"
+    - Use pci_info() and split debug print cleanly into 2 statements. 
+v3: - Separate out the warning mesage in a function to be called from
+      other places. Change the warning string as suggested.
+v2: - Change the warning print strings.
+    - Add Lu Baolu's acknowledgement.
+
+ drivers/iommu/intel-iommu.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index ef0a5246700e5..efd1e5de947b9 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -6185,6 +6185,23 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
+ 	return ret;
+ }
+ 
++/*
++ * Check that the device does not live on an external facing PCI port that is
++ * marked as untrusted. Such devices should not be able to apply quirks and
++ * thus not be able to bypass the IOMMU restrictions.
++ */
++static bool risky_device(struct pci_dev *pdev)
++{
++	if (pdev->untrusted) {
++		pci_info(pdev,
++			 "Skipping IOMMU quirk for dev [%04X:%04X] on untrusted PCI link\n",
++			 pdev->vendor, pdev->device);
++		pci_info(pdev, "Please check with your BIOS/Platform vendor about this\n");
++		return true;
++	}
++	return false;
++}
++
+ const struct iommu_ops intel_iommu_ops = {
+ 	.capable		= intel_iommu_capable,
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+@@ -6214,6 +6231,9 @@ const struct iommu_ops intel_iommu_ops = {
+ 
+ static void quirk_iommu_igfx(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
+ 	dmar_map_gfx = 0;
+ }
+@@ -6255,6 +6275,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+ 
+ static void quirk_iommu_rwbf(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	/*
+ 	 * Mobile 4 Series Chipset neglects to set RWBF capability,
+ 	 * but needs it. Same seems to hold for the desktop versions.
+@@ -6285,6 +6308,9 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
+ {
+ 	unsigned short ggc;
+ 
++	if (risky_device(dev))
++		return;
++
+ 	if (pci_read_config_word(dev, GGC, &ggc))
+ 		return;
+ 
+@@ -6318,6 +6344,12 @@ static void __init check_tylersburg_isoch(void)
+ 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
+ 	if (!pdev)
+ 		return;
++
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	pci_dev_put(pdev);
+ 
+ 	/* System Management Registers. Might be hidden, in which case
+@@ -6327,6 +6359,11 @@ static void __init check_tylersburg_isoch(void)
+ 	if (!pdev)
+ 		return;
+ 
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
+ 		pci_dev_put(pdev);
+ 		return;
+-- 
+2.27.0.rc2.251.g90737beb825-goog
 
