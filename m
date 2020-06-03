@@ -2,222 +2,172 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99450C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A912AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF4D20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870D520772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:49:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="m38bN+d8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFCOsY (ORCPT
+        id S1726186AbgFCOtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:48:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16500 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725834AbgFCOsW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:48:22 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 053EWOBx017053;
-        Wed, 3 Jun 2020 10:47:36 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ec64m5h5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 10:47:35 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 053EhHxG016719;
-        Wed, 3 Jun 2020 14:47:34 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 31bf47uc8x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 14:47:33 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 053ElVWG55968044
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Jun 2020 14:47:31 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 827CEA405C;
-        Wed,  3 Jun 2020 14:47:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D76CA4054;
-        Wed,  3 Jun 2020 14:47:28 +0000 (GMT)
-Received: from sathnaga86 (unknown [9.85.87.122])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  3 Jun 2020 14:47:27 +0000 (GMT)
-Date:   Wed, 3 Jun 2020 20:17:25 +0530
-From:   Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        sachinp <sachinp@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        manvanth <manvanth@linux.vnet.ibm.com>,
-        linux-next <linux-next@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "aneesh.kumar" <aneesh.kumar@linux.vnet.ibm.com>,
-        akpm@linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hch <hch@lst.de>
-Subject: Re: [mainline][Oops][bisected 2ba3e6 ] 5.7.0 boot fails with kernel
- panic on powerpc
-Message-ID: <20200603144725.GA221279@sathnaga86>
-Reply-To: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-References: <1591181457.9020.13.camel@abdul>
- <20200603133257.GL6857@suse.de>
+        Wed, 3 Jun 2020 10:49:51 -0400
+Received: from mail-mw2nam12on2074.outbound.protection.outlook.com ([40.107.244.74]:63529
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726123AbgFCOtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 10:49:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jV5MfEfz0vgQK8Bt7A3cs8LCglqsiTZJ/KYyEWQpY8ryGj1VryamrhRm2+Boo6NF+y8esY9RwKKk84Tj+D2/0hI9MIVvQ5AMdC+26tDtJmOSSCoXMeo7OEEY8foPfntGCLuKJRxS4zsM9EliOsv0JR0J9i4467Hm/+5wc34MkzTwaD0LfX1qReyacbw+S6xwXma+nSsPQrkuwwJq6nQW/QRjx9f0Hq1sbROwOawRAaT+/5Oyb8OJ4B3bgTKGGD4cKs7DKp6zIOgdvdqXxckv4ssL+Uoxhf8JxHixA7fqXXpeJ7ViY58Qk7vCg8eV/c3bHW0NCFHSshumDGVRPJu0Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bb+7R98fZ7vwAKf08Y2Xz/ClgfG8ljyHxv7HG5gskQU=;
+ b=il05p7Aomc8fm3kJOjQMedVz5IpeSkKvQ8oj7SfDlybaANVSp/umVKfbT3rWja3A2qQk0/Eywg8hHlypr52QonsryiShglsxvSvQ8iJOihZevDWXYSVX184XJCA99fkl0f/3eI4oXaTqJbwoSjM+fqXOc2Qoa0alnj7qvzcnJDocJR262ZkZcU6xcNS9oNpAixkepOSGuWL0/B9bmsomvru/YnKLSXIdUlQsHEuXQR1pITQhhiDFAWsttoL1RjVqiFlS5V0UmlGZgnGRKpbtiSK+Mstn4IojqkVVPrRFQ+jyZ0jrxTdnxBqaFuS6GQSWg+NNfynL0sgR47nQEeUl4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bb+7R98fZ7vwAKf08Y2Xz/ClgfG8ljyHxv7HG5gskQU=;
+ b=m38bN+d8QCaoa6yuitMqd4zmpvv8oUcRNkE2JREp7Xj3HbivmA1/Qs5+QxNjXMdtTTy9N7JV6cqvBTRaZ0ZW+98v5MEflradzv3qv6cgV/CH1W01yvFFEen0dQBR78dnGRYCkQ6TxdXSbCG/AeIETV//Sc3XvGLmy3QRoXJENCc=
+Received: from DM6PR08CA0032.namprd08.prod.outlook.com (2603:10b6:5:80::45) by
+ DM6PR02MB4012.namprd02.prod.outlook.com (2603:10b6:5:9d::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3066.18; Wed, 3 Jun 2020 14:49:48 +0000
+Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:80:cafe::4c) by DM6PR08CA0032.outlook.office365.com
+ (2603:10b6:5:80::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend
+ Transport; Wed, 3 Jun 2020 14:49:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
+ Server id 15.20.3045.17 via Frontend Transport; Wed, 3 Jun 2020 14:49:48
+ +0000
+Received: from [149.199.38.66] (port=60695 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1jgUhR-0007G7-Qw; Wed, 03 Jun 2020 07:49:01 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1jgUiB-000515-KL; Wed, 03 Jun 2020 07:49:47 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 053EnhQ0017032;
+        Wed, 3 Jun 2020 07:49:43 -0700
+Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1jgUi7-00050a-82; Wed, 03 Jun 2020 07:49:43 -0700
+From:   Ben Levinsky <ben.levinsky@xilinx.com>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org, michals@xilinx.com,
+        jollys@xilinx.com, rajanv@xilinx.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-remoteproc@vger.kernel.org,
+        linux-arm-kernell@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 1/5] firmware: xilinx: Add ZynqMP firmware ioctl enums for RPU configuration.
+Date:   Wed,  3 Jun 2020 07:49:39 -0700
+Message-Id: <1591195783-10290-2-git-send-email-ben.levinsky@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591195783-10290-1-git-send-email-ben.levinsky@xilinx.com>
+References: <1591195783-10290-1-git-send-email-ben.levinsky@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(396003)(136003)(39860400002)(346002)(376002)(46966005)(478600001)(336012)(70206006)(2906002)(83380400001)(26005)(4326008)(316002)(8676002)(36756003)(82740400003)(8936002)(47076004)(81166007)(9786002)(5660300002)(186003)(7696005)(356005)(426003)(2616005)(82310400002)(6666004)(44832011)(70586007);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603133257.GL6857@suse.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-03_12:2020-06-02,2020-06-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1011
- suspectscore=1 adultscore=0 malwarescore=0 cotscore=-2147483648
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030112
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 5cba284b-1a48-4e2b-3df7-08d807cd5cda
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4012:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB40123EB816DECE48F0E85CFAB5880@DM6PR02MB4012.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:565;
+X-Forefront-PRVS: 04238CD941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MOLC08M0v/nwMYqTnGCjQUSRoquQ0hH0ziJl8YOzVngrzedpISIu6PTC7b/EWY3p6jYAhEgr1e94g4uJZym2q5/KEHhc9bcyCECbI9cfpvbL7WzKbAT9B3UpnXam3B+Q2tlngX7mv3Pwk3DyA0BAMxKMW07/uhtJeq3MWPragqM8Lww/MzkbTwgEK43OqnoJGeebW5bN7gu9MnTf8NFyp+r7ytVVsp7xfagzXzcVQGBho0S747KnAOa1jo4mW72rdwkI8H3PlejIETU7Bx++c4YfD+oHbx0PswJkaQ4WqczRFUcC5k4ECVVY1rmLjeX/dYbDy7SnXOoZ4kS7Z1s1UwFK4lO1/0tryepNgO08tPi5AaSMv6wPo162sKCpp+4ql/c/gZQ6nlGoVXgKDdOfxg==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 14:49:48.0291
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cba284b-1a48-4e2b-3df7-08d807cd5cda
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:32:57PM +0200, Joerg Roedel wrote:
-> On Wed, Jun 03, 2020 at 04:20:57PM +0530, Abdul Haleem wrote:
-> > @Joerg, Could you please have a look?
-> 
-> Can you please try the attached patch?
+Add ZynqMP firmware ioctl enums for RPU configuration.
 
-Hi Joerg,
+Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+---
+v3:
+- add xilinx-related platform mgmt fn's instead of wrapping around
+  function pointer in xilinx eemi ops struct
+v4:
+- add default values for enums
+---
+ include/linux/firmware/xlnx-zynqmp.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-I did hit the similar boot failue on a Power9 baremetal box(mentioned in Note) and 
-your below patch helped solving that for my environment and 
-am able to boot the system fine.
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 5968df8..bb347df 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -104,6 +104,10 @@ enum pm_ret_status {
+ };
+ 
+ enum pm_ioctl_id {
++	IOCTL_GET_RPU_OPER_MODE = 0,
++	IOCTL_SET_RPU_OPER_MODE = 1,
++	IOCTL_RPU_BOOT_ADDR_CONFIG = 2,
++	IOCTL_TCM_COMB_CONFIG = 3,
+ 	IOCTL_SD_DLL_RESET = 6,
+ 	IOCTL_SET_SD_TAPDELAY,
+ 	IOCTL_SET_PLL_FRAC_MODE,
+@@ -129,6 +133,21 @@ enum pm_query_id {
+ 	PM_QID_CLOCK_GET_MAX_DIVISOR,
+ };
+ 
++enum rpu_oper_mode {
++	PM_RPU_MODE_LOCKSTEP = 0,
++	PM_RPU_MODE_SPLIT = 1,
++};
++
++enum rpu_boot_mem {
++	PM_RPU_BOOTMEM_LOVEC = 0,
++	PM_RPU_BOOTMEM_HIVEC = 1,
++};
++
++enum rpu_tcm_comb {
++	PM_RPU_TCM_SPLIT = 0,
++	PM_RPU_TCM_COMB = 1,
++};
++
+ enum zynqmp_pm_reset_action {
+ 	PM_RESET_ACTION_RELEASE,
+ 	PM_RESET_ACTION_ASSERT,
+-- 
+2.7.4
 
-...
-Fedora 31 (Thirty One)
-Kernel 5.7.0-gd6f9469a0-dirty on an ppc64le (hvc0)
-
- login:
-
-
-Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-
-Note: for the record, here is the boot failure call trace.
-
-[    0.023555] mempolicy: Enabling automatic NUMA balancing. Configure with numa_balancing= or the kernel.numa_balancing sysctl
-[    0.023582] pid_max: default: 163840 minimum: 1280
-[    0.035014] BUG: Unable to handle kernel data access on read at 0xc000006000000000
-[    0.035058] Faulting instruction address: 0xc000000000382304
-[    0.035074] Oops: Kernel access of bad area, sig: 11 [#1]
-[    0.035097] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA PowerNV
-[    0.035113] Modules linked in:
-[    0.035136] CPU: 24 PID: 0 Comm: swapper/24 Not tainted 5.7.0-gd6f9469a0 #1
-[    0.035161] NIP:  c000000000382304 LR: c00000000038407c CTR: 0000000000000000
-[    0.035197] REGS: c00000000167f930 TRAP: 0300   Not tainted  (5.7.0-gd6f9469a0)
-[    0.035241] MSR:  9000000002009033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 42022422  XER: 00000000
-[    0.035294] CFAR: c0000000003822fc DAR: c000006000000000 DSISR: 40000000 IRQMASK: 0 
-[    0.035294] GPR00: c00000000038407c c00000000167fbc0 c00000000168090[  150.252645597,5] OPAL: Reboot request...
-[  150.252928266,5] RESET: Initiating fast reboot 1...
-0 c008000000000000 
-[    0.035294] GPR04: ffffffffffffffff 00000000000001ff c0080000001fffff 0000000000000060 
-[    0.035294] GPR08: 0000000060000000 0000000000000005 c000006000000000 c008000000200000 
-[    0.035294] GPR12: 0000000022022422 c000000001870000 c000000000000000 c008000000000000 
-[    0.035294] GPR16: c008000007ffffff c008000000200000 0000000000000000 c000006000000000 
-[    0.035294] GPR20: c008000008000000 c008000008000000 c008000007ffffff c008000007ffffff 
-[    0.035294] GPR24: c00000000163f7c8 c00000000172d0c0 0000000000000001 0000000000000001 
-[    0.035294] GPR28: c000000001708000 c00000000172d0c8 0000000000000000 c008000008000000 
-[    0.035622] NIP [c000000000382304] map_kernel_range_noflush+0x274/0x510
-[    0.035657] LR [c00000000038407c] __vmalloc_node_range+0x2ec/0x3a0
-[    0.035690] Call Trace:
-[    0.035709] [c00000000167fbc0] [c00000000038d848] __alloc_pages_nodemask+0x158/0x3f0 (unreliable)
-[    0.035750] [c00000000167fc90] [c00000000038407c] __vmalloc_node_range+0x2ec/0x3a0
-[    0.035787] [c00000000167fd40] [c000000000384268] __vmalloc+0x58/0x70
-[    0.035823] [c00000000167fdb0] [c000000001056db8] alloc_large_system_hash+0x204/0x304
-[    0.035870] [c00000000167fe60] [c00000000105c1f0] vfs_caches_init+0xd8/0x138
-[    0.035916] [c00000000167fee0] [c0000000010242a0] start_kernel+0x644/0x6ec
-[    0.035960] [c00000000167ff90] [c00000000000ca9c] start_here_common+0x1c/0x400
-[    0.036004] Instruction dump:
-[    0.036016] 3af4ffff 60000000 60000000 38c90010 7f663036 7d667a14 7cc600d0 7d713038 
-[    0.036038] 38d1ffff 7c373040 41810008 7e91a378 <e8b30000> 2c250000 418201b4 7f464830 
-[    0.036083] ---[ end trace c7e72029dfacc217 ]---
-[    0.036114] 
-[    1.036223] Kernel panic - not syncing: Attempted to kill the idle task!
-[    1.036858] Rebooting in 10 seconds..
-
-
-Regards,
--Satheesh.
-
-> 
-> diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
-> index 58046ddc08d0..afbab31fbd7e 100644
-> --- a/include/asm-generic/5level-fixup.h
-> +++ b/include/asm-generic/5level-fixup.h
-> @@ -17,6 +17,11 @@
->  	((unlikely(pgd_none(*(p4d))) && __pud_alloc(mm, p4d, address)) ? \
->  		NULL : pud_offset(p4d, address))
-> 
-> +#define pud_alloc_track(mm, p4d, address, mask)					\
-> +	((unlikely(pgd_none(*(p4d))) &&						\
-> +	  (__pud_alloc(mm, p4d, address) || ({*(mask)|=PGTBL_P4D_MODIFIED;0;})))?	\
-> +	  NULL : pud_offset(p4d, address))
-> +
->  #define p4d_alloc(mm, pgd, address)		(pgd)
->  #define p4d_alloc_track(mm, pgd, address, mask)	(pgd)
->  #define p4d_offset(pgd, start)			(pgd)
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 7e07f4f490cb..d46bf03b804f 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2088,35 +2088,35 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
->  		NULL : pud_offset(p4d, address);
->  }
-> 
-> -static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-> +static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
->  				     unsigned long address,
->  				     pgtbl_mod_mask *mod_mask)
-> -
->  {
-> -	if (unlikely(pgd_none(*pgd))) {
-> -		if (__p4d_alloc(mm, pgd, address))
-> +	if (unlikely(p4d_none(*p4d))) {
-> +		if (__pud_alloc(mm, p4d, address))
->  			return NULL;
-> -		*mod_mask |= PGTBL_PGD_MODIFIED;
-> +		*mod_mask |= PGTBL_P4D_MODIFIED;
->  	}
-> 
-> -	return p4d_offset(pgd, address);
-> +	return pud_offset(p4d, address);
->  }
-> 
-> -#endif /* !__ARCH_HAS_5LEVEL_HACK */
-> -
-> -static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-> +static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
->  				     unsigned long address,
->  				     pgtbl_mod_mask *mod_mask)
-> +
->  {
-> -	if (unlikely(p4d_none(*p4d))) {
-> -		if (__pud_alloc(mm, p4d, address))
-> +	if (unlikely(pgd_none(*pgd))) {
-> +		if (__p4d_alloc(mm, pgd, address))
->  			return NULL;
-> -		*mod_mask |= PGTBL_P4D_MODIFIED;
-> +		*mod_mask |= PGTBL_PGD_MODIFIED;
->  	}
-> 
-> -	return pud_offset(p4d, address);
-> +	return p4d_offset(pgd, address);
->  }
-> 
-> +#endif /* !__ARCH_HAS_5LEVEL_HACK */
-> +
->  static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
->  {
->  	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
