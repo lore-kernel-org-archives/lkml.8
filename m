@@ -2,98 +2,211 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2867FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35855C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0614320679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E15207DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:08:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q6LEkZfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgFCOGo (ORCPT
+        id S1726108AbgFCOIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:06:44 -0400
-Received: from muru.com ([72.249.23.125]:56886 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCOGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:06:43 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id B20A1809C;
-        Wed,  3 Jun 2020 14:07:32 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 07:06:39 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
- platform data removal
-Message-ID: <20200603140639.GG37466@atomide.com>
-References: <20200531193941.13179-1-tony@atomide.com>
- <20200531193941.13179-2-tony@atomide.com>
- <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+        Wed, 3 Jun 2020 10:08:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgFCOIR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 10:08:17 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4609EC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 07:08:15 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id u17so1449687vsu.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=987vEKH7qwi1mDGdoRAEJ4OXmQS09iP3mdTNwmC8gNc=;
+        b=Q6LEkZfxtDhljoZLLSJB+xKbUuZ/9GorNwDH/PbasIqw8M/FfVqT+36ppVrQYUzf4R
+         ydEpAjtR/2V0a+vx4c5WvX3zvctPafn1B+BPL+HKrFbbLa42MQLwdzPIWtwUvl+UP1vk
+         SUV7FjYGUaLF3w3RPqMkAWg8XAm1AMO8E9egVn5vtXYoRRidPMx1HRT0SqGHvNYdtliB
+         q89+Y+5senbsBhg/sDB1Is+Midy9lfOHEqxIZebsxxqlfWneSVDSoNWXKM3RyV4FVpL0
+         dQySDcrtELfxaGaB1QEFmMNBohPj+lcfAxysuolQ4BaNHN1z4L5d1P5Y7PKjXO2Q9G+W
+         LChQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=987vEKH7qwi1mDGdoRAEJ4OXmQS09iP3mdTNwmC8gNc=;
+        b=pbtSv3GCn1eCrT6byVU59xJkV2njzDBwWh9f0a9kNkPyf5ugvlPLmmZliv/Utau5iz
+         drrPaBkYShQWnYM8z/08D7t9qlWQ3yJ7l5yUQi1l/21Ykd64sls/CjwMmlYmXfwK2LZ9
+         iBHYwmf/X8rkOquWFYQlNFN9cl4dBnr26LFv4Ujthaoo86gadpWLiXpuMTgtiT0MtPqe
+         6T+hm3n8ALR6CRObc/wYepyuWRANpC+Ez/NgTEiJRZDMaBsya6UyrESfKcPPWd6myWq1
+         DHHgww6Zk8ea9Lkb4eTKJfJXhF/RyZPKLcWwN3JBoraBe2mTjkYDXyjIAThweWA1fT2o
+         JeTg==
+X-Gm-Message-State: AOAM531Jpg/5Wmn9CCErgE3yLhNE7JIL1NVC8CtZTmVIQhNLb//YSmZd
+        Gg4y/GXrd/mPoSsOJQLztl4PA54G5uErJkeLhtap4g==
+X-Google-Smtp-Source: ABdhPJy0hpwTVN8ZLSoKHjsRwOYMVh8eTtLjYBhB7yeOnlKEff6FI7agH/g5zBKnYVkMBWnLIRuf7reWU8NEWJzrE+A=
+X-Received: by 2002:a67:edca:: with SMTP id e10mr21035480vsp.219.1591193294137;
+ Wed, 03 Jun 2020 07:08:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+ <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+ <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
+ <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
+ <CAL+tcoDn_=T--uB0CRymfTGvD022PPDk5Yw2yCxvqOOpZ4G_dQ@mail.gmail.com>
+ <CANn89i+dPu9=qJowhRVm9d3CesY4p+zzJ0HGiCMc_yJxux6pow@mail.gmail.com>
+ <CAL+tcoC2+vYoFbujkLCF7P3evfirNSBQtJ9bPFHiU2FGOnBo+A@mail.gmail.com>
+ <CANn89iJfLM2Hz69d9qOZoRKwzzCCpgVRZ1zbTTbg4vGvSAEZ-w@mail.gmail.com>
+ <CADVnQy=RJfmzHR15DyWdydFAqSqVmFhaW4_cgYYAgnixEa5DNQ@mail.gmail.com> <CANn89i+7-wE4xr5D9DpH+N-xkL1SB8oVghCKgz+CT5eG1ODQhA@mail.gmail.com>
+In-Reply-To: <CANn89i+7-wE4xr5D9DpH+N-xkL1SB8oVghCKgz+CT5eG1ODQhA@mail.gmail.com>
+From:   Neal Cardwell <ncardwell@google.com>
+Date:   Wed, 3 Jun 2020 10:07:55 -0400
+Message-ID: <CADVnQynXzE6_6h8w8TDyPjtQjy_uXr-+3weikTDtAbY-xPiDEw@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Jason Xing <kerneljasonxing@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [200603 12:34]:
-> Hi Tony,
-> 
-> On 31/05/2020 22:39, Tony Lindgren wrote:
-> > When booting without legacy platform data, we no longer have omap_device
-> > calling PM runtime suspend for us on suspend. This causes the driver
-> > context not be saved as we have no suspend and resume functions defined.
-> > 
-> > Let's fix the issue by switching over to use UNIVERSAL_DEV_PM_OPS as it
-> > will call the existing PM runtime suspend functions on suspend.
-> 
-> I don't think we can use UNIVERSAL_DEV_PM_OPS, as we can't disable DSS
-> modules in any order, but things have to be shut down in orderly manner.
+On Wed, Jun 3, 2020 at 9:55 AM Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Wed, Jun 3, 2020 at 5:02 AM Neal Cardwell <ncardwell@google.com> wrote:
+> >
+> > On Wed, Jun 3, 2020 at 1:44 AM Eric Dumazet <edumazet@google.com> wrote:
+> > >
+> > > On Tue, Jun 2, 2020 at 10:05 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
+> > > >
+> > > > Hi Eric,
+> > > >
+> > > > I'm still trying to understand what you're saying before. Would this
+> > > > be better as following:
+> > > > 1) discard the tcp_internal_pacing() function.
+> > > > 2) remove where the tcp_internal_pacing() is called in the
+> > > > __tcp_transmit_skb() function.
+> > > >
+> > > > If we do so, we could avoid 'too late to give up pacing'. Meanwhile,
+> > > > should we introduce the tcp_wstamp_ns socket field as commit
+> > > > (864e5c090749) does?
+> > > >
+> > >
+> > > Please do not top-post on netdev mailing list.
+> > >
+> > >
+> > > I basically suggested double-checking which point in TCP could end up
+> > > calling tcp_internal_pacing()
+> > > while the timer was already armed.
+> > >
+> > > I guess this is mtu probing.
+> >
+> > Perhaps this could also happen from some of the retransmission code
+> > paths that don't use tcp_xmit_retransmit_queue()? Perhaps
+> > tcp_retransmit_timer() (RTO) and  tcp_send_loss_probe() TLP? It seems
+> > they could indirectly cause a call to __tcp_transmit_skb() and thus
+> > tcp_internal_pacing() without first checking if the pacing timer was
+> > already armed?
+>
+> I feared this, (see recent commits about very low pacing rates) :/
+>
+> I am not sure we need to properly fix all these points for old
+> kernels, since EDT model got rid of these problems.
 
-OK. I presume you talk about the order of dss child devices here.
+Agreed.
 
-> omapdrm hasn't relied on omap_device calling runtime suspend for us (I
-> didn't know it does that). We have system suspend hooks in omap_drv.c:
+> Maybe we can try to extend the timer.
 
-We had omap_device sort of brute forcing things to idle on suspend
-which only really works for interconnect target modules with one
-device in them.
+Sounds good.
 
-> SIMPLE_DEV_PM_OPS(omapdrm_pm_ops, omap_drm_suspend, omap_drm_resume)
-> 
-> omap_drm_suspend() is supposed to turn off the displays, which then cause
-> dispc_runtime_put (and other runtime_puts) to be called, which result in
-> dispc_runtime_suspend (and other runtime PM suspends).
+> Something like :
+>
+>
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index cc4ba42052c21b206850594db6751810d8fc72b4..626b9f4f500f7e5270d8d59e6eb16dbfa3efbc7c
+> 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -966,6 +966,8 @@ enum hrtimer_restart tcp_pace_kick(struct hrtimer *timer)
+>
+>  static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
+>  {
+> +       struct tcp_sock *tp = tcp_sk(sk);
+> +       ktime_t expire, now;
+>         u64 len_ns;
+>         u32 rate;
+>
+> @@ -977,12 +979,29 @@ static void tcp_internal_pacing(struct sock *sk,
+> const struct sk_buff *skb)
+>
+>         len_ns = (u64)skb->len * NSEC_PER_SEC;
+>         do_div(len_ns, rate);
+> -       hrtimer_start(&tcp_sk(sk)->pacing_timer,
+> -                     ktime_add_ns(ktime_get(), len_ns),
+> +
+> +       now = ktime_get();
+> +       /* If hrtimer is already armed, then our caller has not
+> +        * used tcp_pacing_check().
+> +        */
+> +       if (unlikely(hrtimer_is_queued(&tp->pacing_timer))) {
+> +               expire = hrtimer_get_softexpires(&tp->pacing_timer);
+> +               if (ktime_after(expire, now))
+> +                       now = expire;
+> +               if (hrtimer_try_to_cancel(&tp->pacing_timer) == 1)
+> +                       __sock_put(sk);
+> +       }
+> +       hrtimer_start(&tp->pacing_timer, ktime_add_ns(now, len_ns),
+>                       HRTIMER_MODE_ABS_PINNED_SOFT);
+>         sock_hold(sk);
+>  }
+>
+> +static bool tcp_pacing_check(const struct sock *sk)
+> +{
+> +       return tcp_needs_internal_pacing(sk) &&
+> +              hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
+> +}
+> +
+>  static void tcp_update_skb_after_send(struct tcp_sock *tp, struct sk_buff *skb)
+>  {
+>         skb->skb_mstamp = tp->tcp_mstamp;
+> @@ -2117,6 +2136,9 @@ static int tcp_mtu_probe(struct sock *sk)
+>         if (!tcp_can_coalesce_send_queue_head(sk, probe_size))
+>                 return -1;
+>
+> +       if (tcp_pacing_check(sk))
+> +               return -1;
+> +
+>         /* We're allowed to probe.  Build it now. */
+>         nskb = sk_stream_alloc_skb(sk, probe_size, GFP_ATOMIC, false);
+>         if (!nskb)
+> @@ -2190,11 +2212,6 @@ static int tcp_mtu_probe(struct sock *sk)
+>         return -1;
+>  }
+>
+> -static bool tcp_pacing_check(const struct sock *sk)
+> -{
+> -       return tcp_needs_internal_pacing(sk) &&
+> -              hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
+> -}
+>
+>  /* TCP Small Queues :
+>   * Control number of packets in qdisc/devices to two packets / or ~1 ms.
 
-OK thanks for explaining, I missed that part.
+Thanks for your fix, Eric. This fix looks good to me! I agree that
+this fix is good enough for older kernels.
 
-> So... For some reason that's no longer happening? I need to try to find a
-> board with which suspend/resume works (without DSS)...
-
-Yes it seems something has changed. When diffing the dmesg debug output
-on suspend and resume, context save and restore functions are no longer
-called as the PM runtime suspend and resume functions are no longer
-called on suspend and resume.
-
-I'll drop this patch, and will be applying the rest of the series to
-fixes if no objections.
-
-Thanks,
-
-Tony
+thanks,
+neal
