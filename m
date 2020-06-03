@@ -2,118 +2,140 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B620C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D175C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49458206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222AD206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 00:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TEUfUx2Z";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TEUfUx2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgFCADX (ORCPT
+        id S1728372AbgFCAEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 20:03:23 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57926 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFCADX (ORCPT
+        Tue, 2 Jun 2020 20:04:47 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51486 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbgFCAEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 20:03:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0A4898030835;
-        Wed,  3 Jun 2020 00:03:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8X9nTlsCVJw4; Wed,  3 Jun 2020 03:03:20 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 03:03:18 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
-Message-ID: <20200603000318.2xgizrgwauw2ywwu@mobilestation>
-References: <20200602100921.1155-1-Sergey.Semin@baikalelectronics.ru>
- <20200602100921.1155-7-Sergey.Semin@baikalelectronics.ru>
- <61afd4bd10ac644fa623e218f947328e@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <61afd4bd10ac644fa623e218f947328e@kernel.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Tue, 2 Jun 2020 20:04:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id AA5FC8EE268;
+        Tue,  2 Jun 2020 17:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591142685;
+        bh=ZiKQ/cfbDn9jWGCX3Ai/Ywhy9oUSWUU+Sx8hFK1S17w=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=TEUfUx2ZCDy9g/gjgK89K6I67X3Z+lnqDLnB0x2CXvoavcMKSq4/mi9BZeDEz5wxb
+         NxZSPp30B+wjkKkl3OTVd3xR7HvenUjESNFOJwkp9+TFRGdxfLEbfp27EYQKh7iuNI
+         W0J7ZAtIcaTrZAMAWnQBK7a76cjBsHgac8VNiw38=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iHPO3SLpc0WE; Tue,  2 Jun 2020 17:04:45 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E35A58EE0F8;
+        Tue,  2 Jun 2020 17:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591142685;
+        bh=ZiKQ/cfbDn9jWGCX3Ai/Ywhy9oUSWUU+Sx8hFK1S17w=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=TEUfUx2ZCDy9g/gjgK89K6I67X3Z+lnqDLnB0x2CXvoavcMKSq4/mi9BZeDEz5wxb
+         NxZSPp30B+wjkKkl3OTVd3xR7HvenUjESNFOJwkp9+TFRGdxfLEbfp27EYQKh7iuNI
+         W0J7ZAtIcaTrZAMAWnQBK7a76cjBsHgac8VNiw38=
+Message-ID: <1591142683.16819.44.camel@HansenPartnership.com>
+Subject: Re: kobject_init_and_add is easy to misuse
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Wang Hai <wanghai38@huawei.com>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, khlebnikov@yandex-team.ru,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Tue, 02 Jun 2020 17:04:43 -0700
+In-Reply-To: <1591134670.16819.18.camel@HansenPartnership.com>
+References: <20200602115033.1054-1-wanghai38@huawei.com>
+         <20200602121035.GL19604@bombadil.infradead.org>
+         <1591111514.4253.32.camel@HansenPartnership.com>
+         <20200602173603.GB3579519@kroah.com>
+         <1591127656.16819.7.camel@HansenPartnership.com>
+         <20200602200756.GA3933938@kroah.com>
+         <1591134670.16819.18.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 11:12:31AM +0100, Marc Zyngier wrote:
-> On 2020-06-02 11:09, Serge Semin wrote:
-> > Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip,
-> > MIPS
-> > GIC timer and MIPS CPS CPUidle drivers.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > ---
-> > 
-> > Changelog v3:
-> > - Keep the files list alphabetically ordered.
-> > - Add Thomas as the co-maintainer of the designated drivers.
-> > ---
-> >  MAINTAINERS | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2926327e4976..20532e0287d7 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11278,6 +11278,17 @@
-> > F:	arch/mips/configs/generic/board-boston.config
-> >  F:	drivers/clk/imgtec/clk-boston.c
-> >  F:	include/dt-bindings/clock/boston-clock.h
-> > 
-> > +MIPS CORE DRIVERS
-> > +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > +M:	Serge Semin <fancer.lancer@gmail.com>
-> > +L:	linux-mips@vger.kernel.org
-> > +S:	Supported
-> > +F:	drivers/bus/mips_cdmm.c
-> > +F:	drivers/clocksource/mips-gic-timer.c
-> > +F:	drivers/cpuidle/cpuidle-cps.c
-> > +F:	drivers/irqchip/irq-mips-cpu.c
-> > +F:	drivers/irqchip/irq-mips-gic.c
-> > +
-> >  MIPS GENERIC PLATFORM
-> >  M:	Paul Burton <paulburton@kernel.org>
-> >  L:	linux-mips@vger.kernel.org
+On Tue, 2020-06-02 at 14:51 -0700, James Bottomley wrote:
+> On Tue, 2020-06-02 at 22:07 +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 02, 2020 at 12:54:16PM -0700, James Bottomley wrote:
 > 
-> Acked-by: Marc Zyngier <maz@kernel.org>
+> [...]
+> > > I think the only way we can make the failure semantics consistent
+> > > is to have the kobject_init() ones (so kfree on failure).  That
+> > > means for the add part, the function would have to unwind
+> > > everything it did from init on so kfree() is still an option.  If
+> > > people agree, then I can produce the patch ... it's just the
+> > > current drive to transform everyone who's doing kfree() into
+> > > kobject_put() would become wrong ...
+> > 
+> > Everyone should be putting their kfree into the kobject release
+> > anyway, right?
 > 
-> I assume this will go via the MIPS tree.
+> No, that's the problem ... for a static kobject you can't free it;
+> and the release path may make assumption which aren't valid depending
+> on the kobject state.
+> 
+> > Anyway, let's see your patch before I start to object further :)
+> 
+> My first thought was "what?  I got suckered into creating a patch",
+> thanks ;-)  But now I look, all the error paths do unwind back to the
+> initial state, so kfree() on error looks to be completely correct.
 
-Yes, I also think so. Though I suppose first we have to get acks from
-Rafael J. Wysocki (CPU IDLE) or Daniel Lezcano (CPU IDLE,
-CLOCKSOURCE/CLOCKEVENT) or Thomas Gleixner (CLOCKSOURCE, CLOCKEVENT)
-since we are going to maintain the drivers from the subsystems they
-support. Am I right?
+Actually, I spoke too soon.  I did another analysis of the syzkaller
+flow in b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") and it turns out there is a single piece
+of state that's not correctly unwound: the kobj->name which, thanks to
+additions after kobject_init_and_add() was created, is now allocated
+via kmalloc if it's not a rodata string and is always and freed in
+kobject_cleanup via kfree_const().  This problem can be fixed by
+unwinding the name allocation at the end of kobject_init_and_add() ...
+or it could be unwound in kobject_add_varg, which would also make
+kobject_add() unwind correctly.
 
--Sergey
+The unwind step is to kfree_const(kobj->name); kobj->name = NULL; so it
+won't interfere if the kobject_put() is called instead of a simple
+kfree.
 
-> 
-> Thanks,
-> 
->         M.
-> -- 
-> Jazz is not dead. It just smells funny...
+Would you prefer the unwind in kobject_init_and_add() like the patch
+below or in kobject_add_varg()?
+
+
+James
+
+---
+
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 65fa7bf70c57..9991baf43d27 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -472,6 +472,10 @@ int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,
+ 	va_start(args, fmt);
+ 	retval = kobject_add_varg(kobj, parent, fmt, args);
+ 	va_end(args);
++	if (retval && kobj->name) {
++		kfree_const(kobj->name);
++		kobj->name = NULL;
++	}
+ 
+ 	return retval;
+ }
