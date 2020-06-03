@@ -2,418 +2,207 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB17CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02E5206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95621206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbgFCPJA (ORCPT
+        id S1726138AbgFCPKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgFCPI7 (ORCPT
+        Wed, 3 Jun 2020 11:10:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55274 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgFCPKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:08:59 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB60C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 08:08:59 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jgV0i-0002R8-9M; Wed, 03 Jun 2020 17:08:56 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id B62E3FFC04;
-        Wed,  3 Jun 2020 17:08:55 +0200 (CEST)
-Date:   Wed, 03 Jun 2020 15:08:43 -0000
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/timers for v5.8
-Message-ID: <159119692334.13122.14553226198669248718.tglx@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Wed, 3 Jun 2020 11:10:47 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jgV2S-0002Mm-R3; Wed, 03 Jun 2020 15:10:44 +0000
+Subject: Re: [PATCH] input: ims-pcu: remove redundant assignment to variable
+ 'error'
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200603135102.130436-1-colin.king@canonical.com>
+ <20200603140953.GL30374@kadam>
+ <c4290ddf-8faa-bb09-bd96-4c01a3f1cc2b@canonical.com>
+ <20200603144507.GM30374@kadam>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ee8443d6-3ac1-83ba-a921-e9fdbc7a02c3@canonical.com>
+Date:   Wed, 3 Jun 2020 16:10:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <20200603144507.GM30374@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 03/06/2020 15:45, Dan Carpenter wrote:
+> On Wed, Jun 03, 2020 at 03:18:46PM +0100, Colin Ian King wrote:
+>> On 03/06/2020 15:09, Dan Carpenter wrote:
+>>> On Wed, Jun 03, 2020 at 02:51:02PM +0100, Colin King wrote:
+>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> The variable error is being initialized with a value that is
+>>>> never read and the -ENOMEM error return is being returned anyhow
+>>>> by the error exit path to label err_free_mem.  The assignment is
+>>>> redundant and can be removed.
+>>>>
+>>>> Addresses-Coverity: ("Unused value")
+>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>> ---
+>>>>  drivers/input/misc/ims-pcu.c | 1 -
+>>>>  1 file changed, 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/input/misc/ims-pcu.c b/drivers/input/misc/ims-pcu.c
+>>>> index d8dbfc030d0f..4ba68aa3d281 100644
+>>>> --- a/drivers/input/misc/ims-pcu.c
+>>>> +++ b/drivers/input/misc/ims-pcu.c
+>>>> @@ -292,7 +292,6 @@ static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
+>>>>  	if (!gamepad || !input) {
+>>>>  		dev_err(pcu->dev,
+>>>>  			"Not enough memory for gamepad device\n");
+>>>> -		error = -ENOMEM;
+>>>>  		goto err_free_mem;
+>>>
+>>> It would be better to change the return instead.
+>>>
+>>> regards,
+>>> dan carpenter
+>>>
+>>
+>> I'm not sure about that, the err_free_mem path is used by another error
+>> exit return path that also needs to free the device and gamepad and
+>> returns ENOMEM, so I think this is a good enough shared error exit strategy.
+> 
+> The code looks like this:
+> 
+> drivers/input/misc/ims-pcu.c
+>    284  static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
+>    285  {
+>    286          struct ims_pcu_gamepad *gamepad;
+>    287          struct input_dev *input;
+>    288          int error;
+>    289  
+>    290          gamepad = kzalloc(sizeof(struct ims_pcu_gamepad), GFP_KERNEL);
+>    291          input = input_allocate_device();
+>    292          if (!gamepad || !input) {
+>    293                  dev_err(pcu->dev,
+>    294                          "Not enough memory for gamepad device\n");
+>    295                  error = -ENOMEM;
+>    296                  goto err_free_mem;
+> 
+> The "error" is always set before all the gotos.
+> 
+>    297          }
+>    298  
+>    299          gamepad->input = input;
+>    300  
+>    301          snprintf(gamepad->name, sizeof(gamepad->name),
+>    302                   "IMS PCU#%d Gamepad Interface", pcu->device_no);
+>    303  
+>    304          usb_make_path(pcu->udev, gamepad->phys, sizeof(gamepad->phys));
+>    305          strlcat(gamepad->phys, "/input1", sizeof(gamepad->phys));
+>    306  
+>    307          input->name = gamepad->name;
+>    308          input->phys = gamepad->phys;
+>    309          usb_to_input_id(pcu->udev, &input->id);
+>    310          input->dev.parent = &pcu->ctrl_intf->dev;
+>    311  
+>    312          __set_bit(EV_KEY, input->evbit);
+>    313          __set_bit(BTN_A, input->keybit);
+>    314          __set_bit(BTN_B, input->keybit);
+>    315          __set_bit(BTN_X, input->keybit);
+>    316          __set_bit(BTN_Y, input->keybit);
+>    317          __set_bit(BTN_START, input->keybit);
+>    318          __set_bit(BTN_SELECT, input->keybit);
+>    319  
+>    320          __set_bit(EV_ABS, input->evbit);
+>    321          input_set_abs_params(input, ABS_X, -1, 1, 0, 0);
+>    322          input_set_abs_params(input, ABS_Y, -1, 1, 0, 0);
+>    323  
+>    324          error = input_register_device(input);
+>    325          if (error) {
+>    326                  dev_err(pcu->dev,
+>    327                          "Failed to register gamepad input device: %d\n",
+>    328                          error);
+>    329                  goto err_free_mem;
+> 
+> The input_register_device() can return a bunch of different error codes.
+> Better to preserve them.  "error" is set.
+> 
+>    330          }
+>    331  
+>    332          pcu->gamepad = gamepad;
+>    333          return 0;
+>    334  
+>    335  err_free_mem:
+>    336          input_free_device(input);
+>    337          kfree(gamepad);
+>    338          return -ENOMEM;
+> 
+> We just change this from "return -ENOMEM;" to "return error;"
+> 
+>    339  }
+> 
+> regards,
+> dan carpenter
+> 
+Elegantly explained, thanks Dan, I'll send a V2.
 
-please pull the latest x86/timers branch from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-timers-2020-06-03
-
-up to:  bd35c77e32e4: x86/tsc: Add tsc_early_khz command line parameter
-
-
-X86 timer specific updates:
-
- - Add TPAUSE based delay which allows the CPU to enter an optimized power
-   state while waiting for the delay to pass. The delay is based on TSC
-   cycles.
-   
- - Add tsc_early_khz command line parameter to workaround the problem that
-   overclocked CPUs can report the wrong frequency via CPUID.16h which
-   causes the refined calibration to fail because the delta to the initial
-   frequency value is too big. With the parameter users can provide an
-   halfways accurate initial value.
-
-Thanks,
-
-	tglx
-
------------------->
-Krzysztof Piecuch (1):
-      x86/tsc: Add tsc_early_khz command line parameter
-
-Kyung Min Park (2):
-      x86/delay: Refactor delay_mwaitx() for TPAUSE support
-      x86/delay: Introduce TPAUSE delay
-
-Thomas Gleixner (1):
-      x86/delay: Preparatory code cleanup
-
-
- Documentation/admin-guide/kernel-parameters.txt |   6 ++
- arch/x86/Kconfig.assembler                      |   4 +
- arch/x86/include/asm/delay.h                    |   4 +-
- arch/x86/include/asm/mwait.h                    |  24 ++++-
- arch/x86/kernel/time.c                          |   3 +
- arch/x86/kernel/tsc.c                           |  12 ++-
- arch/x86/lib/delay.c                            | 114 ++++++++++++++++--------
- 7 files changed, 128 insertions(+), 39 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdf..409ee4ae467c 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5067,6 +5067,12 @@
- 			interruptions from clocksource watchdog are not
- 			acceptable).
- 
-+	tsc_early_khz=  [X86] Skip early TSC calibration and use the given
-+			value instead. Useful when the early TSC frequency discovery
-+			procedure is not reliable, such as on overclocked systems
-+			with CPUID.16h support and partial CPUID.15h support.
-+			Format: <unsigned int>
-+
- 	tsx=		[X86] Control Transactional Synchronization
- 			Extensions (TSX) feature in Intel processors that
- 			support TSX control.
-diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
-index 13de0db38d4e..26b8c08e2fc4 100644
---- a/arch/x86/Kconfig.assembler
-+++ b/arch/x86/Kconfig.assembler
-@@ -15,3 +15,7 @@ config AS_SHA256_NI
- 	def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
- 	help
- 	  Supported by binutils >= 2.24 and LLVM integrated assembler
-+config AS_TPAUSE
-+	def_bool $(as-instr,tpause %ecx)
-+	help
-+	  Supported by binutils >= 2.31.1 and LLVM integrated assembler >= V7
-diff --git a/arch/x86/include/asm/delay.h b/arch/x86/include/asm/delay.h
-index de9e7841f953..630891d25819 100644
---- a/arch/x86/include/asm/delay.h
-+++ b/arch/x86/include/asm/delay.h
-@@ -3,8 +3,10 @@
- #define _ASM_X86_DELAY_H
- 
- #include <asm-generic/delay.h>
-+#include <linux/init.h>
- 
--void use_tsc_delay(void);
-+void __init use_tsc_delay(void);
-+void __init use_tpause_delay(void);
- void use_mwaitx_delay(void);
- 
- #endif /* _ASM_X86_DELAY_H */
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index b809f117f3f4..73d997aa2966 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -20,8 +20,10 @@
- 
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
--#define MWAITX_MAX_LOOPS		((u32)-1)
-+#define MWAITX_MAX_WAIT_CYCLES		UINT_MAX
- #define MWAITX_DISABLE_CSTATES		0xf0
-+#define TPAUSE_C01_STATE		1
-+#define TPAUSE_C02_STATE		0
- 
- u32 get_umwait_control_msr(void);
- 
-@@ -122,4 +124,24 @@ static inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
- 	current_clr_polling();
- }
- 
-+/*
-+ * Caller can specify whether to enter C0.1 (low latency, less
-+ * power saving) or C0.2 state (saves more power, but longer wakeup
-+ * latency). This may be overridden by the IA32_UMWAIT_CONTROL MSR
-+ * which can force requests for C0.2 to be downgraded to C0.1.
-+ */
-+static inline void __tpause(u32 ecx, u32 edx, u32 eax)
-+{
-+	/* "tpause %ecx, %edx, %eax;" */
-+	#ifdef CONFIG_AS_TPAUSE
-+	asm volatile("tpause %%ecx\n"
-+		     :
-+		     : "c"(ecx), "d"(edx), "a"(eax));
-+	#else
-+	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1\t\n"
-+		     :
-+		     : "c"(ecx), "d"(edx), "a"(eax));
-+	#endif
-+}
-+
- #endif /* _ASM_X86_MWAIT_H */
-diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
-index 106e7f87f534..371a6b348e44 100644
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -103,6 +103,9 @@ static __init void x86_late_time_init(void)
- 	 */
- 	x86_init.irqs.intr_mode_init();
- 	tsc_init();
-+
-+	if (static_cpu_has(X86_FEATURE_WAITPKG))
-+		use_tpause_delay();
- }
- 
- /*
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index fdd4c1078632..49d925043171 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -41,6 +41,7 @@ EXPORT_SYMBOL(tsc_khz);
-  * TSC can be unstable due to cpufreq or due to unsynced TSCs
-  */
- static int __read_mostly tsc_unstable;
-+static unsigned int __initdata tsc_early_khz;
- 
- static DEFINE_STATIC_KEY_FALSE(__use_tsc);
- 
-@@ -59,6 +60,12 @@ struct cyc2ns {
- 
- static DEFINE_PER_CPU_ALIGNED(struct cyc2ns, cyc2ns);
- 
-+static int __init tsc_early_khz_setup(char *buf)
-+{
-+	return kstrtouint(buf, 0, &tsc_early_khz);
-+}
-+early_param("tsc_early_khz", tsc_early_khz_setup);
-+
- __always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
- {
- 	int seq, idx;
-@@ -1412,7 +1419,10 @@ static bool __init determine_cpu_tsc_frequencies(bool early)
- 
- 	if (early) {
- 		cpu_khz = x86_platform.calibrate_cpu();
--		tsc_khz = x86_platform.calibrate_tsc();
-+		if (tsc_early_khz)
-+			tsc_khz = tsc_early_khz;
-+		else
-+			tsc_khz = x86_platform.calibrate_tsc();
- 	} else {
- 		/* We should not be here with non-native cpu calibration */
- 		WARN_ON(x86_platform.calibrate_cpu != native_calibrate_cpu);
-diff --git a/arch/x86/lib/delay.c b/arch/x86/lib/delay.c
-index c126571e5e2e..65d15df6212d 100644
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -27,9 +27,20 @@
- # include <asm/smp.h>
- #endif
- 
-+static void delay_loop(u64 __loops);
-+
-+/*
-+ * Calibration and selection of the delay mechanism happens only once
-+ * during boot.
-+ */
-+static void (*delay_fn)(u64) __ro_after_init = delay_loop;
-+static void (*delay_halt_fn)(u64 start, u64 cycles) __ro_after_init;
-+
- /* simple loop based delay: */
--static void delay_loop(unsigned long loops)
-+static void delay_loop(u64 __loops)
- {
-+	unsigned long loops = (unsigned long)__loops;
-+
- 	asm volatile(
- 		"	test %0,%0	\n"
- 		"	jz 3f		\n"
-@@ -49,9 +60,9 @@ static void delay_loop(unsigned long loops)
- }
- 
- /* TSC based delay: */
--static void delay_tsc(unsigned long __loops)
-+static void delay_tsc(u64 cycles)
- {
--	u64 bclock, now, loops = __loops;
-+	u64 bclock, now;
- 	int cpu;
- 
- 	preempt_disable();
-@@ -59,7 +70,7 @@ static void delay_tsc(unsigned long __loops)
- 	bclock = rdtsc_ordered();
- 	for (;;) {
- 		now = rdtsc_ordered();
--		if ((now - bclock) >= loops)
-+		if ((now - bclock) >= cycles)
- 			break;
- 
- 		/* Allow RT tasks to run */
-@@ -77,7 +88,7 @@ static void delay_tsc(unsigned long __loops)
- 		 * counter for this CPU.
- 		 */
- 		if (unlikely(cpu != smp_processor_id())) {
--			loops -= (now - bclock);
-+			cycles -= (now - bclock);
- 			cpu = smp_processor_id();
- 			bclock = rdtsc_ordered();
- 		}
-@@ -85,66 +96,97 @@ static void delay_tsc(unsigned long __loops)
- 	preempt_enable();
- }
- 
-+/*
-+ * On Intel the TPAUSE instruction waits until any of:
-+ * 1) the TSC counter exceeds the value provided in EDX:EAX
-+ * 2) global timeout in IA32_UMWAIT_CONTROL is exceeded
-+ * 3) an external interrupt occurs
-+ */
-+static void delay_halt_tpause(u64 start, u64 cycles)
-+{
-+	u64 until = start + cycles;
-+	u32 eax, edx;
-+
-+	eax = lower_32_bits(until);
-+	edx = upper_32_bits(until);
-+
-+	/*
-+	 * Hard code the deeper (C0.2) sleep state because exit latency is
-+	 * small compared to the "microseconds" that usleep() will delay.
-+	 */
-+	__tpause(TPAUSE_C02_STATE, edx, eax);
-+}
-+
- /*
-  * On some AMD platforms, MWAITX has a configurable 32-bit timer, that
-- * counts with TSC frequency. The input value is the loop of the
-- * counter, it will exit when the timer expires.
-+ * counts with TSC frequency. The input value is the number of TSC cycles
-+ * to wait. MWAITX will also exit when the timer expires.
-  */
--static void delay_mwaitx(unsigned long __loops)
-+static void delay_halt_mwaitx(u64 unused, u64 cycles)
- {
--	u64 start, end, delay, loops = __loops;
-+	u64 delay;
-+
-+	delay = min_t(u64, MWAITX_MAX_WAIT_CYCLES, cycles);
-+	/*
-+	 * Use cpu_tss_rw as a cacheline-aligned, seldomly accessed per-cpu
-+	 * variable as the monitor target.
-+	 */
-+	 __monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
-+
-+	/*
-+	 * AMD, like Intel, supports the EAX hint and EAX=0xf means, do not
-+	 * enter any deep C-state and we use it here in delay() to minimize
-+	 * wakeup latency.
-+	 */
-+	__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
-+}
-+
-+/*
-+ * Call a vendor specific function to delay for a given amount of time. Because
-+ * these functions may return earlier than requested, check for actual elapsed
-+ * time and call again until done.
-+ */
-+static void delay_halt(u64 __cycles)
-+{
-+	u64 start, end, cycles = __cycles;
- 
- 	/*
- 	 * Timer value of 0 causes MWAITX to wait indefinitely, unless there
- 	 * is a store on the memory monitored by MONITORX.
- 	 */
--	if (loops == 0)
-+	if (!cycles)
- 		return;
- 
- 	start = rdtsc_ordered();
- 
- 	for (;;) {
--		delay = min_t(u64, MWAITX_MAX_LOOPS, loops);
--
--		/*
--		 * Use cpu_tss_rw as a cacheline-aligned, seldomly
--		 * accessed per-cpu variable as the monitor target.
--		 */
--		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
--
--		/*
--		 * AMD, like Intel's MWAIT version, supports the EAX hint and
--		 * EAX=0xf0 means, do not enter any deep C-state and we use it
--		 * here in delay() to minimize wakeup latency.
--		 */
--		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
--
-+		delay_halt_fn(start, cycles);
- 		end = rdtsc_ordered();
- 
--		if (loops <= end - start)
-+		if (cycles <= end - start)
- 			break;
- 
--		loops -= end - start;
--
-+		cycles -= end - start;
- 		start = end;
- 	}
- }
- 
--/*
-- * Since we calibrate only once at boot, this
-- * function should be set once at boot and not changed
-- */
--static void (*delay_fn)(unsigned long) = delay_loop;
--
--void use_tsc_delay(void)
-+void __init use_tsc_delay(void)
- {
- 	if (delay_fn == delay_loop)
- 		delay_fn = delay_tsc;
- }
- 
-+void __init use_tpause_delay(void)
-+{
-+	delay_halt_fn = delay_halt_tpause;
-+	delay_fn = delay_halt;
-+}
-+
- void use_mwaitx_delay(void)
- {
--	delay_fn = delay_mwaitx;
-+	delay_halt_fn = delay_halt_mwaitx;
-+	delay_fn = delay_halt;
- }
- 
- int read_current_timer(unsigned long *timer_val)
-
+Colin
