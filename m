@@ -2,132 +2,78 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00024C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1A332065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HjN+k7NA"
+	by mail.kernel.org (Postfix) with ESMTP id 955F9206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 05:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbgFCFaB (ORCPT
+        id S1725955AbgFCFaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:30:01 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:34148 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725855AbgFCFaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:30:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591162199; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=zzTfxHouLE9jM7tdzGJeF4YIRqLBMDbYhT7bqTud5lA=;
- b=HjN+k7NAO6+naM1LLZP9DXtKT2uvWLnLxbbMExhc5GJo7OiXNIfnnDA1TvwPTmK+fTT0pkwz
- maFyoqPylMIRLfsBTLiVmoIf+VBYEcGGaT/jyK7sWRrQ7XgpUPh0TKT5fMh5f8FrI7bnccGQ
- GXpVZ7/UcXvggocVP7bcQOnyGts=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5ed7354746d39fc0a2950d7c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 03 Jun 2020 05:29:43
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EA77CC433CB; Wed,  3 Jun 2020 05:29:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5441DC433C6;
-        Wed,  3 Jun 2020 05:29:42 +0000 (UTC)
+        Wed, 3 Jun 2020 01:30:21 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4706 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbgFCFaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 01:30:20 -0400
+IronPort-SDR: zlIeaoElXAlV2yUpUWHRgJ4dTgkKLKdpyEG/juLXYmjf+sA3PRKgiHuGfit5nr+lsRcy1Ga4j+
+ zfrPUHtAoeyQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 22:30:13 -0700
+IronPort-SDR: 0cWYtPZtBHwgk1szY2u3scGNdBUAiggIUcHJKs3Tae7sEL3mHr97A1ldF8/iuLLoTu0Z8e7ecn
+ HOqM/ahP/yKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
+   d="scan'208";a="377986062"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 02 Jun 2020 22:30:08 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 03 Jun 2020 08:30:08 +0300
+Date:   Wed, 3 Jun 2020 08:30:08 +0300
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com, rajatxjain@gmail.com,
+        pmalani@google.com, bleung@google.com, levinale@google.com,
+        zsm@google.com, mnissler@google.com, tbroch@google.com
+Subject: Re: [PATCH v3] iommu/vt-d: Don't apply gfx quirks to untrusted
+ devices
+Message-ID: <20200603053008.GR247495@lahna.fi.intel.com>
+References: <20200602232602.156049-1-rajatja@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 10:59:42 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ohad Ben Cohen <ohad@wizery.com>, rohitkr@codeaurora.org,
-        stable@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 1/2] remoteproc: qcom: q6v5: Update running state before
- requesting stop
-In-Reply-To: <CAE=gft7sbh_S_GiRohtMmdMN9JzQhG0m3bUerwrmzhjmXucGKw@mail.gmail.com>
-References: <20200602163257.26978-1-sibis@codeaurora.org>
- <CAE=gft7sbh_S_GiRohtMmdMN9JzQhG0m3bUerwrmzhjmXucGKw@mail.gmail.com>
-Message-ID: <6392c800b0be1cbabb8a241cf518ab4b@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602232602.156049-1-rajatja@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Evan,
-Thanks for taking time to review
-the series.
+On Tue, Jun 02, 2020 at 04:26:02PM -0700, Rajat Jain wrote:
+> +static bool risky_device(struct pci_dev *pdev)
+> +{
+> +	if (pdev->untrusted) {
+> +		pci_warn(pdev,
+> +			 "Skipping IOMMU quirk for dev (%04X:%04X) on untrusted"
+> +			 " PCI link. Please check with your BIOS/Platform"
+> +			 " vendor about this\n", pdev->vendor, pdev->device);
 
-On 2020-06-02 23:14, Evan Green wrote:
-> On Tue, Jun 2, 2020 at 9:33 AM Sibi Sankar <sibis@codeaurora.org> 
-> wrote:
->> 
->> Sometimes the stop triggers a watchdog rather than a stop-ack. Update
->> the running state to false on requesting stop to skip the watchdog
->> instead.
->> 
->> Error Logs:
->> $ echo stop > /sys/class/remoteproc/remoteproc0/state
->> ipa 1e40000.ipa: received modem stopping event
->> remoteproc-modem: watchdog received: sys_m_smsm_mpss.c:291:APPS force 
->> stop
->> qcom-q6v5-mss 4080000.remoteproc-modem: port failed halt
->> ipa 1e40000.ipa: received modem offline event
->> remoteproc0: stopped remote processor 4080000.remoteproc-modem
->> 
->> Fixes: 3b415c8fb263 ("remoteproc: q6v5: Extract common resource 
->> handling")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
-> 
-> Are you sure you want to tolerate this behavior from MSS? This is a
-> graceful shutdown, modem shouldn't have a problem completing the
-> proper handshake. If they do, isn't that a bug on the modem side?
+You should not break user visible strings like this. It makes grepping
+for them harder (see also CodingStyle). You can write it like this instead:
 
-The graceful shutdown is achieved
-though sysmon (enabled using
-CONFIG_QCOM_SYSMON). When sysmon is
-enabled we get a shutdown-ack when we
-try to stop the modem, post which
-request stop is a basically a nop.
-Request stop is done to force stop
-the modem during failure cases (like
-rmtfs is not running and so on) and
-we do want to mask the wdog that we get
-during this scenario ( The locking
-already prevents the servicing of the
-wdog during shutdown, the check just
-prevents the scheduling of crash handler
-and err messages associated with it).
-Also this check was always present and
-was missed during common q6v5 resource
-helper migration, hence the unused
-running state in mss driver.
+	pci_info(pdev, "Skipping IOMMU quirk for dev (%04X:%04X) on untrusted PCI link\n",
+		 pdev->vendor, pdev->device);
+	pci_info(pdev, "Please check with your BIOS/Platform vendor about this\n");
 
-> 
-> I just worry this will mask real issues that happen during graceful 
-> shutdown.
-> -Evan
+Also I guess pci_info() might be better here after all. Your call :)
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Rest of the patch looks good to me.
