@@ -2,169 +2,142 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9827EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 746BB205CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:31:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fdFjp91y"
+	by mail.kernel.org (Postfix) with ESMTP id EED22205CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgFCPbL (ORCPT
+        id S1726239AbgFCPcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:31:11 -0400
-Received: from mout.web.de ([212.227.15.14]:37103 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgFCPbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:31:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591198217;
-        bh=Rn7fKHsFwwLiEDgA/knExuHS54ZAZVO02QRZ6k3ZyQw=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=fdFjp91yBSfmCCQuEF3025+1+9nOx16qTgwCi3Ifl7dPsxhZs1koYRPU1X9s+9nL3
-         bgu4zy6rJll3L8404giD2f8ybctXT5vpn6Q/4AamdnCun8KcT71St6E1/wEd5Sitz+
-         JwL0gJt9eoe5mGoxzFQmSxMJFn6/83DHGH6bAqCU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.82.231]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MlLA1-1jGqJA08VB-00lmFU; Wed, 03
- Jun 2020 17:30:17 +0200
-To:     Cheng Jian <cj.chengjian@huawei.com>,
-        kernel-janitors@vger.kernel.org
-Cc:     Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Chen Wandun <chenwandun@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] panic: Fix deadlock in panic()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <fabff510-bd19-1712-2aa2-b1d742349c39@web.de>
-Date:   Wed, 3 Jun 2020 17:30:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 3 Jun 2020 11:32:18 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:48582 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgFCPcP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:32:15 -0400
+Received: by mail-il1-f200.google.com with SMTP id o4so1759448ilc.15
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 08:32:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Gl8DCI8PdMFP57T9AipLOavLrIwW1cuatNeoRe4hWbg=;
+        b=J7jmZVnZsBt2WIgw9oywUGFpTvoN1SQ43fAq1eLV6oPRuvgeCFGZzBRRKmFzBIbnFy
+         SObGUMwylBJqVWwNhup96PdT++t5RbJzN90bsIMdo1DQz911+9MjiuhJAgy5gJqhzfuG
+         gf00eTWsywEOJb9pBjPXDPGi/S+5JvelH+HKejtWg4lxjYkLSEpKpUP9CFv9mMQa0IEi
+         kuMdyxa1dHIk8G/NuuIOHhpzO706JOJgV9cZxhALWfF3MOGJxOdQtfG/+ou3XDOjQ0qk
+         E3VKAUJup92eDe+zovhXoDE+h57kVkkgHc6LoEWVvqD0ZbIJ33r7NuGbQdzQW9SSqsrY
+         ddKA==
+X-Gm-Message-State: AOAM530GqheE7hN8l3M0PA/W/Y11pOXauLmkOTeiQT/cRUw8LYwlIwSD
+        8Aftcw6+bv93PPtUpXBD5gV87BTnTe0+uJQD3sCXl61MofhD
+X-Google-Smtp-Source: ABdhPJy5Ka0KHHhvWlr51OHU3WnJemWLkBsFR4ZWyPRPCO6VwyWIBTXiNMdirWDuNq1OUicZ8NEv0kerl7DZV6+xqhHPTg15ivM5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m+A5wHvMSSwj/4ZulG6se8q7GUNYt9SN+bV59H678/2LVxIt4GR
- Z9PVul/DlWe7u4Rl7ar5yIwP7IERy5eLj0hdBq2q5J2Su6QmkhEeQW3qlxdx1ST/gOmPXHD
- B14zHbvPHoR639eMkRy1xylG7W8T0uQCuymLLuV8EG7iy9PvbOZ/YRSz2SlbutEGTu+LFi0
- xamNM/eF0p47MPGoIstfA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ojT0uTotzlA=:eCQgDS8fiZu4U+MWxD/6fX
- Ye8uXMfpXsR2jh4HjmeCd9vBnRaTjaT2iH3gsjJhnUhbC+LSg5smfliCY18vN2ksA8Ag9lAQE
- v1xeKAutfZoRUgqfxdTbhZVvnx66nsBRqTZX2eLDxit5AqYP9x9plxcCkn42uHFJ6s3NEJWGw
- JNWDQtK7kl+cD83Gb2DTvtMMvCctfdW17Yc32o+8579BuMGo2QCkB9AagCzjjTF/3qDA1t9lq
- 1/5n9rwX/IvrtHDhsonQc/2KFoFbQTdGIZ5WGdIKa199zQioQcav6HyNSQI1RphSGeLmqVayk
- uaKyt594JuDT4kzMI19mmEyumsk5g6vmnStB577yjSBFyjDypbv+1xGFeGValHlFqWNyArt8k
- +hQ8tHTMC84MG8t/D2XRCtaF6wcFw1t48DGhtUyrDXGX7VWQcodM8dcQbVL+iOsIkCehJmibt
- W42IG2cVZ71l3nrMWK25iWYuGQDVKHgNWV/nuQnsZG4C9xprZeS4jHLSt/tCAtWnxUDh1ikb1
- f5cFS//Zo1HHhH8uRBoL+SaQBcIoo7QvtbMaXHbwmuDAtI/lA0f3Dpxvifq3lSXF+4trEt8sc
- oHExGVNvUBlCYz/wvxUrrkECbzmOg4+fn1WI2SShrjfo76irp4zQUoLUcZQX+XCdjD7VKJ3lj
- Ysz+IouPmGYECyg5blnSJZ2LiFZixNMqWjbNYcdI6F9t7RIkmVJAg+UweiXmqbF39aOswKq7C
- m68efz0hfz8WAwMGiYSOwx9W9NlKOo2NLmYnM0YzGgYESzDog2I/nnK7tkUu1/OrqyORpDJ3+
- 9ZpVnw+cbdfLaCFUaYo+u6379a7miKbHnyanPcN0FLpjEWcfBNF0cpUae27gzDKOaQWg65YnS
- A1EPX2kSJ2KsySyCcJKE7tEjU71Ryoaphu0JpdjBb5RiG2oJE3dILGCYwY0Qy3+Y4FEYVLcIC
- 9WgMLL+2znVvD/rYPih0/ni54vwhQDtD9tMwnZ9coPrnKGFjxDAK4kPolkJLdl2A5mZXbB6k3
- F+uvki+bJAN+lwGwk1AdJKC7IWeAXe9EtjIQ4I/fDfgJdUs1x8A9M3oTl05w2iNn8igxyJwyL
- O3KGOJHaekmJvVfe0ykVJc9W9HQuTmqLLW8Bjb8A9ey9SajpkvFxCvEdVTqDaa5uUW6DcKTxz
- NNDEpWxB4OHE4WciXOVaKS1zX4i2X1kNRsfhpHWIy5cr4zRO5mXOGvUyQB6syl9j4rJCYF+zu
- zu5oo78EpDGVYwfxX
+X-Received: by 2002:a92:9c52:: with SMTP id h79mr100851ili.252.1591198334773;
+ Wed, 03 Jun 2020 08:32:14 -0700 (PDT)
+Date:   Wed, 03 Jun 2020 08:32:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000082f13605a72fbbcb@google.com>
+Subject: KASAN: out-of-bounds Read in ath9k_hif_usb_rx_cb
+From:   syzbot <syzbot+d7289ef49bcdfd654265@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  A deadlock caused by logbuf_lock occurs when panic:
+Hello,
 
-I suggest a few wording adjustments for this change description.
+syzbot found the following crash on:
 
-Would you like to omit an extra space character at the beginning of this s=
-entence?
+HEAD commit:    2089c6ed usb: core: kcov: collect coverage from usb comple..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=17cf6bd6100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7479d3935864b1b
+dashboard link: https://syzkaller.appspot.com/bug?extid=d7289ef49bcdfd654265
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d7289ef49bcdfd654265@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:622 [inline]
+BUG: KASAN: out-of-bounds in ath9k_hif_usb_rx_cb+0xe64/0xf90 drivers/net/wireless/ath/ath9k/hif_usb.c:666
+Read of size 4 at addr ffff8881acb6c0d0 by task swapper/1/0
+
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x415 mm/kasan/report.c:382
+ __kasan_report.cold+0x37/0x7d mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:622 [inline]
+ ath9k_hif_usb_rx_cb+0xe64/0xf90 drivers/net/wireless/ath/ath9k/hif_usb.c:666
+ __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x700 kernel/time/timer.c:1405
+ expire_timers kernel/time/timer.c:1450 [inline]
+ __run_timers kernel/time/timer.c:1774 [inline]
+ __run_timers kernel/time/timer.c:1741 [inline]
+ run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1787
+ __do_softirq+0x21e/0x9aa kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x178/0x1a0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1140
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:default_idle+0x28/0x300 arch/x86/kernel/process.c:698
+Code: cc cc 41 56 41 55 65 44 8b 2d 94 3f 6b 7a 41 54 55 53 0f 1f 44 00 00 e8 16 28 af fb e9 07 00 00 00 0f 00 2d 7a e1 4b 00 fb f4 <65> 44 8b 2d 70 3f 6b 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
+RSP: 0018:ffff8881da227da8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: ffff8881da20b180 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8881da20b9fc
+RBP: ffffed103b441630 R08: ffff8881da20b180 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000001 R14: ffffffff87e88c40 R15: 0000000000000000
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x3e0/0x500 kernel/sched/idle.c:269
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:361
+ start_secondary+0x2ae/0x390 arch/x86/kernel/smpboot.c:268
+ secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:242
+
+The buggy address belongs to the page:
+page:ffffea0006b2db00 refcount:0 mapcount:0 mapping:0000000080660f93 index:0x0
+flags: 0x200000000000000()
+raw: 0200000000000000 0000000000000000 ffffea0006b2db08 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881acb6bf80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff8881acb6c000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff8881acb6c080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                                 ^
+ ffff8881acb6c100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff8881acb6c180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
 
 
-> we try to re-init =E2=80=A6
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-We =E2=80=A6
-
-
-> =E2=80=A6 deadlock, but it =E2=80=A6 here, because :
-
-=E2=80=A6 deadlock. But it =E2=80=A6 here because:
-
-
-> Firstly, =E2=80=A6
-
-1. =E2=80=A6
-
-
-> When the CPU bring down =E2=80=A6, =E2=80=A6 CPU willn't
-
-=E2=80=A6 CPU was brought down =E2=80=A6, =E2=80=A6 CPU will not
-
-
-> Secondly, =E2=80=A6
-
-2. =E2=80=A6
-
-
-> =E2=80=A6 callback, so if printk() =E2=80=A6
-
-=E2=80=A6 callback. If printk() =E2=80=A6
-
-
-> =E2=80=A6, deadlock will still occurs. Eg, =E2=80=A6
-
-=E2=80=A6, deadlock will still occur. E. g. =E2=80=A6
-
-
-Regards,
-Markus
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
