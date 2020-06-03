@@ -2,249 +2,146 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F141EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C66AE20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FF420738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:29:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591201792;
+	bh=V4v/+8+lWFZ7CMLSbJU7qQu/syYSwbhiswQCZEP0HRw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=SkeJZ8ocqhtStXvkSpypLpF7Vz3kk65pmbJVWl2oH7O+7DYbAa96VhDIeSu88L3t2
+	 3wOSaLubWUTdISVdVCILVAu2WYs4/h4ApKYSi98WMo+T31cNkM1GVQenMpZou0vmZR
+	 5qanb8XGuVlOBpBhnjD2o8L3rsOavttMjPhhmCVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgFCQ3V (ORCPT
+        id S1726191AbgFCQ3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:29:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgFCQ3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:29:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910E2C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 09:29:20 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jgWGJ-0006lc-9a; Wed, 03 Jun 2020 18:29:07 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jgWGI-0003qv-Km; Wed, 03 Jun 2020 18:29:06 +0200
-Date:   Wed, 3 Jun 2020 18:29:06 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     treding@nvidia.com, jonathanh@nvidia.com, bbasu@nvidia.com,
-        ldewangan@nvidia.com, kyarlagadda@nvidia.com,
-        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4] pwm: tegra: dynamic clk freq configuration by PWM
- driver
-Message-ID: <20200603162906.vyfynqtxa7mpjxxv@taurus.defre.kleine-koenig.org>
-References: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
+        Wed, 3 Jun 2020 12:29:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgFCQ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 12:29:50 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C70CF20659;
+        Wed,  3 Jun 2020 16:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591201789;
+        bh=V4v/+8+lWFZ7CMLSbJU7qQu/syYSwbhiswQCZEP0HRw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=TSOOj/h7G6v0j9acb9wGJ63VjpgRYjwsIJP6XEeL1QEAka5A0dvCOvM1ND0SHRe4A
+         irgsSygznKpoECopGUkXYJv3wcQERN2e1kVfNTX/PsO0uNeHrHt/B2gHKRiVYsDErj
+         JcUty3CcVHN7DXSxW83KIMaWgPyRRu0SrksS9qog=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AD32D35209C5; Wed,  3 Jun 2020 09:29:49 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 09:29:49 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rcu: Fixup noinstr warnings
+Message-ID: <20200603162949.GP29598@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200602184409.22142-1-elver@google.com>
+ <CAKwvOd=5_pgx2+yQt=V_6h7YKiCnVp_L4nsRhz=EzawU1Kf1zg@mail.gmail.com>
+ <20200602191936.GE2604@hirez.programming.kicks-ass.net>
+ <CANpmjNP3kAZt3kXuABVqJLAJAW0u9-=kzr-QKDLmO6V_S7qXvQ@mail.gmail.com>
+ <20200602193853.GF2604@hirez.programming.kicks-ass.net>
+ <20200603084818.GB2627@hirez.programming.kicks-ass.net>
+ <20200603095932.GM29598@paulmck-ThinkPad-P72>
+ <20200603105206.GG2604@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aolxn5mvfn62f3oc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590988836-11308-1-git-send-email-spatra@nvidia.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200603105206.GG2604@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 03, 2020 at 12:52:06PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 03, 2020 at 02:59:32AM -0700, Paul E. McKenney wrote:
+> > On Wed, Jun 03, 2020 at 10:48:18AM +0200, Peter Zijlstra wrote:
+> > > On Tue, Jun 02, 2020 at 09:38:53PM +0200, Peter Zijlstra wrote:
+> > > 
+> > > > That said; noinstr's __no_sanitize combined with atomic_t might be
+> > > > 'interesting', because the regular atomic things have explicit
+> > > > annotations in them. That should give validation warnings for the right
+> > > > .config, I'll have to go try -- so far I've made sure to never enable
+> > > > the *SAN stuff.
+> > > 
+> > > ---
+> > > Subject: rcu: Fixup noinstr warnings
+> > > 
+> > > A KCSAN build revealed we have explicit annoations through atomic_t
+> > > usage, switch to arch_atomic_*() for the respective functions.
+> > > 
+> > > vmlinux.o: warning: objtool: rcu_nmi_exit()+0x4d: call to __kcsan_check_access() leaves .noinstr.text section
+> > > vmlinux.o: warning: objtool: rcu_dynticks_eqs_enter()+0x25: call to __kcsan_check_access() leaves .noinstr.text section
+> > > vmlinux.o: warning: objtool: rcu_nmi_enter()+0x4f: call to __kcsan_check_access() leaves .noinstr.text section
+> > > vmlinux.o: warning: objtool: rcu_dynticks_eqs_exit()+0x2a: call to __kcsan_check_access() leaves .noinstr.text section
+> > > vmlinux.o: warning: objtool: __rcu_is_watching()+0x25: call to __kcsan_check_access() leaves .noinstr.text section
+> > > 
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > 
+> > This one does not apply cleanly onto the -rcu tree's "dev" branch, so
+> > I am guessing that it is intended to be carried in -tip with yours and
+> > Thomas's patch series.
+> 
+> Right, I've not played patch tetris yet so see how it should all fit
+> together. I also didn't know you feel about loosing the instrumentation
+> in these functions.
 
---aolxn5mvfn62f3oc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It would be very good for KCSAN to be able to detect misuse of ->dynticks!
 
-Hello,
+> One option would be do add explicit: instrument_atomic_write() calls
+> before instrument_end() / after instrument_begin() in
+> the respective callers that have that.
 
-On Mon, Jun 01, 2020 at 10:50:36AM +0530, Sandipan Patra wrote:
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> index d26ed8f..1daf591 100644
-> --- a/drivers/pwm/pwm-tegra.c
-> +++ b/drivers/pwm/pwm-tegra.c
-> @@ -4,8 +4,36 @@
->   *
->   * Tegra pulse-width-modulation controller driver
->   *
-> - * Copyright (c) 2010, NVIDIA Corporation.
-> + * Copyright (c) 2010-2020, NVIDIA Corporation.
->   * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix=
-=2Ede>
-> + *
-> + * Overview of Tegra Pulse Width Modulator Register:
-> + * 1. 13-bit: Frequency division (SCALE)
-> + * 2. 8-bit : Pulse division (DUTY)
-> + * 3. 1-bit : Enable bit
-> + *
-> + * The PWM clock frequency is divided by 256 before subdividing it based
-> + * on the programmable frequency division value to generate the required
-> + * frequency for PWM output. The maximum output frequency that can be
-> + * achieved is (max rate of source clock) / 256.
-> + * e.g. if source clock rate is 408 MHz, maximum output frequency can be:
-> + * 408 MHz/256 =3D 1.6 MHz.
-> + * This 1.6 MHz frequency can further be divided using SCALE value in PW=
-M.
-> + *
-> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
-> + * To achieve 100% duty cycle, program Bit [24] of this register to
-> + * 1=E2=80=99b1. In which case the other bits [23:16] are set to don't c=
-are.
-> + *
-> + * Limitations:
-> + * -	When PWM is disabled, the output is driven to inactive.
-> + * -	It does not allow the current PWM period to complete and
-> + *	stops abruptly.
-> + *
+One good thing: The atomic_andnot() goes away in -rcu patches slated
+for v5.9.  However, the others remain.
 
-I'd prefer to have no empty lines in the in Limitations paragraph to be
-able to get all infos using something like:
+So if today's -next is any guide, this instrument_atomic_write()
+would be added (for one example) in the functions that invoke
+rcu_dynticks_eqs_enter(), since it is noinstr.  Rather annoying, and
+will require careful commenting.  But there are only two such calls and
+they are both in the same file and it is very low-level code, so this
+should be doable.
 
-	sed -rn '/\* Limitations:/,/^ \*\/?$/p' drivers/pwm/pwm-tegra.c
+I should also add some commentary to the RCU requirements document
+say why all of this is happening.
 
-> + * -	If the register is reconfigured while PWM is running,
-> + *	it does not complete the currently running period.
-> + *
-> + * -	If the user input duty is beyond acceptible limits,
-> + *	-EINVAL is returned.
+> Anyway, I'll shortly be posting a pile of patches resulting from various
+> KCSAN and KASAN builds. The good news is that GCC-KASAN seems to behave
+> quite well with Marco's patches, the bad news is that GCC-KASAN is
+> retarded wrt inline and needs a bunch of kicks.
+> 
+> That is, it out-of-lines:
+> 
+> static inline bool foo(..)
+> {
+> 	return false;
+> }
+> 
+> just because..
 
-s/acceptible/acceptable/ (but in fact this isn't a limitation, so I'd
-drop this here, as pointed out in v2).
+Compilers!!!  :-/
 
-In v2 I mentioned a few things to add here.
-
->   */
-> =20
->  #include <linux/clk.h>
-> @@ -41,6 +69,7 @@ struct tegra_pwm_chip {
->  	struct reset_control*rst;
-> =20
->  	unsigned long clk_rate;
-> +	unsigned long min_period_ns;
-> =20
->  	void __iomem *regs;
-> =20
-> @@ -68,7 +97,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
->  {
->  	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
->  	unsigned long long c =3D duty_ns, hz;
-> -	unsigned long rate;
-> +	unsigned long rate, required_clk_rate;
-
-In v2 I requested to move this into the if block below. You replied to
-want to move it accordingly.
-
->  	u32 val =3D 0;
->  	int err;
-> =20
-> @@ -83,9 +112,47 @@ static int tegra_pwm_config(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->  	val =3D (u32)c << PWM_DUTY_SHIFT;
-> =20
->  	/*
-> +	 *  min period =3D max clock limit >> PWM_DUTY_WIDTH
-> +	 */
-> +	if (period_ns < pc->min_period_ns)
-> +		return -EINVAL;
-> +
-> +	/*
->  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
->  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
-> +	 *
-> +	 * num_channels: If single instance of PWM controller has multiple
-> +	 * channels (e.g. Tegra210 or older) then it is not possible to
-> +	 * configure separate clock rates to each of the channels, in such
-> +	 * case the value stored during probe will be referred.
-> +	 *
-> +	 * If every PWM controller instance has one channel respectively, i.e.
-> +	 * nums_channels =3D=3D 1 then only the clock rate can be modified
-> +	 * dynamically (e.g. Tegra186 or Tegra194).
->  	 */
-> +	if (pc->soc->num_channels =3D=3D 1) {
-> +		/*
-> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
-> +		 * with the maximum possible rate that the controller can
-> +		 * provide. Any further lower value can be derived by setting
-> +		 * PFM bits[0:12].
-
-It looks a bit strange that the algorithm to calculate the clock
-settings depends on the number of channels. Looks like a wrong
-abstraction.
-
-> +		 *
-> +		 * required_clk_rate is a reference rate for source clock and
-> +		 * it is derived based on user requested period. By setting the
-> +		 * source clock rate as required_clk_rate, PWM controller will
-> +		 * be able to configure the requested period.
-> +		 */
-> +		required_clk_rate =3D
-> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
-> +
-> +		err =3D clk_set_rate(pc->clk, required_clk_rate);
-> +		if (err < 0)
-> +			return -EINVAL;
-> +
-> +		/* Store the new rate for further references */
-> +		pc->clk_rate =3D clk_get_rate(pc->clk);
-> +	}
-> +
->  	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
-> =20
->  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
-> @@ -94,7 +161,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
-> =20
->  	/*
->  	 * Since the actual PWM divider is the register's frequency divider
-> -	 * field minus 1, we need to decrement to get the correct value to
-> +	 * field plus 1, we need to decrement to get the correct value to
-
-I would have put this in a separate change.
-
->  	 * write to the register.
->  	 */
->  	if (rate > 0)
-> @@ -205,6 +272,10 @@ static int tegra_pwm_probe(struct platform_device *p=
-dev)
->  	 */
->  	pwm->clk_rate =3D clk_get_rate(pwm->clk);
-> =20
-> +	/* Set minimum limit of PWM period for the IP */
-> +	pwm->min_period_ns =3D
-> +	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
-
-To ensure that required_clk_rate in tegra_pwm_config doesn't get bigger
-than pwm->soc->max_frequency this isn't the right formula I think. I'd
-use
-
-	pwm->min_period_ns =3D DIV_ROUNDUP(NSEC_PER_SEC, pwm->soc->max_frequency >=
-> PWM_DUTY_WIDTH);
-
-=2E Can you confirm?
-
-Best regards
-Uwe
-
---aolxn5mvfn62f3oc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7Xz88ACgkQwfwUeK3K
-7AlrAAf/aYBSEFxW/wXZ2OQi20KmCo1gebNdYjqppcGWBHFcslo+Zy//4zemJatL
-/zx40sFn60GynifMqDb3vGsgAtt3DCZsb9+MC3H8PQLXa70yaWeJ1n9oEapQ5UIk
-tD5GGH8Pa/dBdM7cH5bWjcziQ1elZZXDV8q7X5G/IJF79hHvoDYTnSJbeO1RVxG6
-XBopnHUquZladbAMRLK6mXUdiU1d0dRVcDCdMGqoypAkFbUNgVWXnVq6SpQqvice
-m+BUzT7ekqJ/0vE54NRJeudBnGkjmkuGMuX14+GJJqbO0NZVKPyi5XREm+eqlzvq
-1rD4TCb2n45vagAbws+IpFaRWueWkg==
-=t6tJ
------END PGP SIGNATURE-----
-
---aolxn5mvfn62f3oc--
+							Thanx, Paul
