@@ -2,245 +2,290 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C93C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0388EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B6E204EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="filiwAvw"
+	by mail.kernel.org (Postfix) with ESMTP id C7C8E206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591173410;
+	bh=9DA0NVKQ7T/t1r2nOn1sqBbAkR5debM1l0XRe6F7ASI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jVxROyzNWSByTKlQzpJuoAYP6Q6gs6K0CCRk7Mzsppym8d/LqXZJK2MDEBYZnCC5j
+	 aeb6JwsRHI8QMdNORx44ba7+ViVi5wP9WNucbhUa4DSi+wEFRu0xH1mJlKp47Ks3du
+	 HRdlVAxbzTNTAcKTjTmo7bx975bNTUSundSZt1zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgFCIbf (ORCPT
+        id S1726150AbgFCIgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:31:35 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:41893 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgFCIbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:31:35 -0400
-IronPort-SDR: z/jVJADfiYlbf7L1cZfhZDLJYTsZdqdrEhARY8Zwl9Zt8UABFKp0YBhYgOUaarv2jfPvXD0bwn
- VIjnvxsnifb0L0qTRgt+YK5Llm7Lx2qF+Nn/bf1xUNj42djbQgnapmHJY1FdRktvvZn+bEWRnq
- lhRfG+tjXWdjUfqCr/44w2rCH12iEfNzjQr0pHpslZ1hKrP+fc7nJSZKnIT1baqTK9GWTjt8F4
- 7N/gAKK5MqBoPckRcgDYE0/3gTFx3NdilWrvNNIG6XGNWSiSJB5W+CaQp2Q5WCBtpYdxF8UEdw
- 6g0=
-X-IronPort-AV: E=Sophos;i="5.73,467,1583190000"; 
-   d="scan'208";a="12527402"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 03 Jun 2020 10:31:28 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 03 Jun 2020 10:31:28 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 03 Jun 2020 10:31:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591173088; x=1622709088;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=12gaEvPgejwcTMiFel9idGDiiN7NGsxeA5qn0WYphWw=;
-  b=filiwAvws7LXaZiT4GBJMTkU/hytB/dJ4lR9GjrnkZEm+mmumWOAja1+
-   fMzAY4mHLN9OMJI2CUPgaTLI1T+6m+mWCVn3QRd55shqryA8mYfMkNnZb
-   Z11TsW+rD7NO/Doe4QUVFN3v4xUsrdfxjRDNVcmoSDGlIAz/1ml/ftJ0w
-   MBM3SWwQe2mjY/TsOuA475AykQcjVerjGZS0lLsIz6eK3LOqJ98RDFPkE
-   wG6NbipJCPbHxiEWPMvxnJQ9u+RJAPLGldX5CtUUEUaxPeAd8XinERFTI
-   bG9O/ZVqkx6Z3oPpYjci8F+3kSIcFWuZlx6NiAvgxI+EIbCw+XqV/LQqs
-   w==;
-IronPort-SDR: 7SR6DAMyb5S1Vz+MGSbLoaghwF70s+wW8DJfdKEqs6u6ZE0Bk2Lk79NG2budY+lJKGBcaIuWaW
- ad1xdJiPq55IemDxCIe4tE53xZwD8SrIwqPq9+12XNMmmH87RAdA/AukcBoV9zcLbv6LvOXl2F
- y5H5WZzk4HPS88vS1ACernz5ZxMYTBOzZCoG+n4Ju3Ns6tjafbLOTKpK7UFKPYG8KXeImJCCz2
- W/gzLW3YWC8uybCRxxOhOT2tRjQ0QEMkf+iUd40Hwa8G1aPqrVmqf/uUTpJblMvit+Yzqbs9h5
- RnA=
-X-IronPort-AV: E=Sophos;i="5.73,467,1583190000"; 
-   d="scan'208";a="12527401"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 03 Jun 2020 10:31:28 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id B9AA3280065;
-        Wed,  3 Jun 2020 10:31:28 +0200 (CEST)
-Message-ID: <5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com>
-Subject: Re: (EXT) [PATCH v8 00/13] add ecspi ERR009165 for i.mx6/7 soc
- family
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com,
-        Markus Niebel <Markus.Niebel@tq-group.com>
-Date:   Wed, 03 Jun 2020 10:31:25 +0200
-In-Reply-To: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
-References: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
+        Wed, 3 Jun 2020 04:36:50 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:48565 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgFCIgt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:36:49 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 0538aPiS020583;
+        Wed, 3 Jun 2020 17:36:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0538aPiS020583
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1591173386;
+        bh=NxqSJBg8D8C1YsmrHM+mF5MoQe65tmoe3D+vaOQDOKM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ktSp8YrhvT/Kpy42OkGt/Hv4iuob/8xHkzYKUE5yjsFOsWVRxn/oBW/RvP/1MvuXn
+         GSzweM/XjVJKkDhwpYsg+z10jhIM8FwTFmp4DcwNc0Qx57HlepiDlKP1u5NVwmbjfW
+         J1X7b1iQvGort1uQg0gxLHq1Waq9Avw3QeH8JW4vDVAAYESPZQSh9M8U654sosvXz/
+         xzxGj0Z4efH2MlIYUHNe1HcDEYD0Gg2bOG+VjtgSGkbO4Gi9ha6xeJm0YkcBimJ0RK
+         l9mkvuDec1C/H5EsbjdP+DpSxMfR1OCiQGwovF9woFBZFQhkxxytg5AAFUyp0zVwz5
+         KbqJ3+TgDZFNw==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id y123so909629vsb.6;
+        Wed, 03 Jun 2020 01:36:26 -0700 (PDT)
+X-Gm-Message-State: AOAM532mewYAqLRKi3pbvQW2pstiPgSABtPUTK3FMROv3s0n1DN227hk
+        EOBsYON6+4rbFHXas2xMbGVo8/66fAhwjAAb0Yo=
+X-Google-Smtp-Source: ABdhPJzYSBgSCJ6OroZkJeJc3OcbCz18pTAqEfCVovW3lv0ayn3q7oo63JILbdbwyAqTugDZXRL78X571Y8yZWYQKE4=
+X-Received: by 2002:a05:6102:1081:: with SMTP id s1mr20654080vsr.215.1591173384904;
+ Wed, 03 Jun 2020 01:36:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200603053313.3863761-1-masahiroy@kernel.org> <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com>
+In-Reply-To: <CAMj1kXGk-2pyTZ3yNW14Kk4fvtsNOb7maAHVM2C=vVAjaaFRug@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 3 Jun 2020 17:35:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
+Message-ID: <CAK7LNARg70FrTmnuoUiLM6KWxeJ+AeXqgB53GS6sY7z0J+qH6g@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: refactor Makefile to not use lib-y syntax
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-21 at 04:34 +0800, Robin Gong wrote:
-> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> transfer to be send twice in DMA mode. Please get more information
-> from:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is
-> adding
-> new sdma ram script which works in XCH  mode as PIO inside sdma
-> instead
-> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should
-> be
-> exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> NXP fix this design issue from i.mx6ul, so newer chips including
-> i.mx6ul/
-> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8
-> chips
-> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
-> errata
-> or not.
-> The first two reverted patches should be the same issue, though, it
-> seems 'fixed' by changing to other shp script. Hope Sean or Sascha
-> could
-> have the chance to test this patch set if could fix their issues.
-> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> on i.mx8mm because the event id is zero.
-> 
-> PS:
->    Please get sdma firmware from below linux-firmware and copy it to
-> your
-> local rootfs /lib/firmware/imx/sdma.
+On Wed, Jun 3, 2020 at 3:45 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Wed, 3 Jun 2020 at 07:34, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Documentation/kbuild/makefiles.rst says:
+> >
+> >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+> >
+> > I want to disallow lib-y outside of them.
+> >
+>
+> Why?
 
 
-Hello Robin,
+Because I plan to remove lib-y entirely at some point.
 
-we have tried out this series, and there seems to be an issue with the
-PIO fallback. We are testing on an i.MX6Q board, and our kernel is a
-mostly-unmodified 5.4, on which we backported all SDMA patches from
-next-20200602 (imx-sdma.c is identical to next-20200602 version), and 
-then applied this whole series.
+lib-y is not so useful to shrink the image size because:
 
-We build the SDMA driver as a kernel module, which is loaded by udev,
-so the root filesystem is ready and the SDMA firmware can be loaded.
-The behaviour we're seeing is the following:
+  - An object in lib.a can be omitted only when no symbol
+    in that object is referenced.  This rarely happens.
 
-1. As long as the SDMA driver is not loaded, initializing spi_imx will
-be deferred
-2. imx_sdma is loaded. The SDMA firmware is not yet loaded at this
-point
-3. spi_imx is initialized and an SPI-NOR flash is probed. To load the
-BFPT, the driver will attempt to use DMA; this will fail with EINVAL as
-long as the SDMA firmware is not ready, so the fallback to PIO happens
-(4. SDMA firmware is ready, subsequent SPI transfers use DMA)
+  -  lib-y objects are often exported by nature
+     because lib-y is a collection of utility functions.
+     Even if no in-tree user, we always need to keep them
+     because EXPORT_SYMBOL() is the interface to modules.
 
-The problem happens in step 3: Whenever the driver falls back to PIO,
-the received data is corrupt. The behaviour is specific to the
-fallback: When I disable DMA completely via spi_imx.use_dma, or when
-the timing is lucky and the SDMA firmware gets loaded before the flash
-is probed, no corruption can be observed.
 
-Kind regards,
-Matthias
+When I worked on commit 7273ad2b08f8ac9563579d16a3cf528857b26f49,
+I made some research.
+
+The benefit of lib-y is just 362 byte for x86_64_defconfig.
+( Before: 26578002, After: 26578364)
+
+My hope is lib-y will be replaced by dead-code elimination or
+ultimately by LTO.
+
+drivers/firmware/efi/libstub/Makefile
+is the only Makefile that breaks the rule:
+"Use of lib-y is normally restricted to `lib/` and `arch/*/lib`"
 
 
 
-> 
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
-> 
-> v2:
->   1.Add commit log for reverted patches.
->   2.Add comment for 'ecspi_fixed' in sdma driver.
->   3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
->     rather than remove.
-> v3:
->   1.Confirm with design team make sure ERR009165 fixed on
-> i.mx6ul/i.mx6ull
->     /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy
-> chips.
->     Correct dts related dts patch in v2.
->   2.Clean eratta information in binding doc and new 'tx_glitch_fixed'
-> flag
->     in spi-imx driver to state ERR009165 fixed or not.
->   3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in
-> the
->     errata workaroud, thus improve performance as possible.
-> v4:
->   1.Add Ack tag from Mark and Vinod
->   2.Remove checking 'event_id1' zero as 'event_id0'.
-> v5:
->   1.Add the last patch for compatible with the current uart driver
-> which
->     using rom script, so both uart ram script and rom script
-> supported
->     in latest firmware, by default uart rom script used. UART driver
->     will be broken without this patch.
-> v6:
->   1.Resend after rebase the latest next branch.
->   2.Remove below No.13~No.15 patches of v5 because they were
-> mergered.
->   	ARM: dts: imx6ul: add dma support on ecspi
->   	ARM: dts: imx6sll: correct sdma compatible
->   	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
->   3.Revert "dmaengine: imx-sdma: fix context cache" since
->     'context_loaded' removed.
-> v7:
->   1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix
-> context
->     cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma:
-> refine
->     to load context only once" so that no building waring during
-> comes out
->     during bisect.
->   2.Address Sascha's comments, including eliminating any i.mx6sx in
-> this
->     series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and
-> taking
->     care SMC bit for PIO.
->   3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
->    'spi: imx: add new i.mx6ul compatible name in binding doc'
-> v8:
->   1.remove 0003-Revert-dmaengine-imx-sdma-fix-context-cache.patch and
-> merge
->     it into 04/13 of v7
->   2.add 0005-spi-imx-fallback-to-PIO-if-dma-setup-failure.patch for
-> no any
->     ecspi function broken even if sdma firmware not updated.
->   3.merge 'tx.dst_maxburst' changes in the two continous patches into
-> one
->     patch to avoid confusion.
->   4.fix typo 'duplicated'.
-> 
-> Robin Gong (13):
->   Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
->   Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
->   Revert "dmaengine: imx-sdma: refine to load context only once"
->   dmaengine: imx-sdma: remove duplicated sdma_load_context
->   spi: imx: fallback to PIO if dma setup failure
->   dmaengine: imx-sdma: add mcu_2_ecspi script
->   spi: imx: fix ERR009165
->   spi: imx: remove ERR009165 workaround on i.mx6ul
->   spi: imx: add new i.mx6ul compatible name in binding doc
->   dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
->   dma: imx-sdma: add i.mx6ul compatible name
->   dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
->   dmaengine: imx-sdma: add uart rom script
-> 
->  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
->  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
->  arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
->  arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +-
->  drivers/dma/imx-sdma.c                             | 67 ++++++++++
-> ------
->  drivers/spi/spi-imx.c                              | 92
-> +++++++++++++++++++---
->  include/linux/platform_data/dma-imx-sdma.h         |  8 +-
->  7 files changed, 135 insertions(+), 44 deletions(-)
-> 
 
+>
+> > Add a custom rule to build lib.a, which is linked to the decompressor
+> > for ARCH=x86, ARCH=arm.
+> >
+> > For ARCH=arm64, use obj-y to link objects to vmlinux in the ordinary
+> > way.
+> >
+>
+> The code works perfectly fine as is, and I don't see what is
+> fundamentally wrong with using static libraries outside of lib/ and
+> arch/*/lib.
+
+The intended usage of lib-y is to hook lib.a
+to scripts/vmlinux.sh via KBUILD_VMLINUX_LIBS.
+
+This Makefile is just what you found to work.
+
+
+>
+> Also, I would like this code to still be incorporated as a static
+> library into arm64 as well, so that only pieces that are actually
+> needed are incorporated into the final image.
+
+No.
+It is not working like that because you set
+lib.a to core-y.
+
+All objects in core-y are always linked to vmlinux.
+
+
+
+
+Thanks.
+
+
+
+
+
+>
+>
+>
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  arch/arm64/Makefile                   |  1 -
+> >  drivers/firmware/efi/Makefile         |  2 +-
+> >  drivers/firmware/efi/libstub/Makefile | 51 +++++++++++++++------------
+> >  3 files changed, 30 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> > index 650e1185c190..ab79b20efc8d 100644
+> > --- a/arch/arm64/Makefile
+> > +++ b/arch/arm64/Makefile
+> > @@ -145,7 +145,6 @@ export      TEXT_OFFSET
+> >
+> >  core-y         += arch/arm64/
+> >  libs-y         := arch/arm64/lib/ $(libs-y)
+> > -core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> >
+> >  # Default target when executing plain make
+> >  boot           := arch/arm64/boot
+> > diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
+> > index 7a216984552b..317a05cd388b 100644
+> > --- a/drivers/firmware/efi/Makefile
+> > +++ b/drivers/firmware/efi/Makefile
+> > @@ -20,7 +20,7 @@ obj-$(CONFIG_EFI_VARS_PSTORE)         += efi-pstore.o
+> >  obj-$(CONFIG_UEFI_CPER)                        += cper.o
+> >  obj-$(CONFIG_EFI_RUNTIME_MAP)          += runtime-map.o
+> >  obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)     += runtime-wrappers.o
+> > -subdir-$(CONFIG_EFI_STUB)              += libstub
+> > +obj-$(CONFIG_EFI_STUB)                 += libstub/
+> >  obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_map.o
+> >  obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)   += efibc.o
+> >  obj-$(CONFIG_EFI_TEST)                 += test/
+> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> > index cce4a7436052..e4e9b17fa3b2 100644
+> > --- a/drivers/firmware/efi/libstub/Makefile
+> > +++ b/drivers/firmware/efi/libstub/Makefile
+> > @@ -44,7 +44,7 @@ OBJECT_FILES_NON_STANDARD     := y
+> >  # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
+> >  KCOV_INSTRUMENT                        := n
+> >
+> > -lib-y                          := efi-stub-helper.o gop.o secureboot.o tpm.o \
+> > +stub-obj-y                     := efi-stub-helper.o gop.o secureboot.o tpm.o \
+> >                                    file.o mem.o random.o randomalloc.o pci.o \
+> >                                    skip_spaces.o lib-cmdline.o lib-ctype.o \
+> >                                    alignedmem.o relocate.o vsprintf.o
+> > @@ -55,15 +55,19 @@ efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
+> >  $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
+> >         $(call if_changed_rule,cc_o_c)
+> >
+> > -lib-$(CONFIG_EFI_GENERIC_STUB) += efi-stub.o fdt.o string.o \
+> > +stub-obj-$(CONFIG_EFI_GENERIC_STUB)    += efi-stub.o fdt.o string.o \
+> >                                    $(patsubst %.c,lib-%.o,$(efi-deps-y))
+> >
+> > -lib-$(CONFIG_ARM)              += arm32-stub.o
+> > -lib-$(CONFIG_ARM64)            += arm64-stub.o
+> > -lib-$(CONFIG_X86)              += x86-stub.o
+> > +stub-obj-$(CONFIG_ARM)         += arm32-stub.o
+> > +stub-obj-$(CONFIG_ARM64)       += arm64-stub.o
+> > +stub-obj-$(CONFIG_X86)         += x86-stub.o
+> >  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> >
+> > +targets                                += $(stub-obj-y)
+> > +stub-obj-y                     := $(patsubst %.o,%.stub.o, $(stub-obj-y))
+> > +targets                                += $(stub-obj-y)
+> > +
+> >  #
+> >  # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
+> >  # .bss section, so the .bss section of the EFI stub needs to be included in the
+> > @@ -83,23 +87,6 @@ STUBCOPY_FLAGS-$(CONFIG_ARM) += --rename-section .data=.data.efistub \
+> >                                    --rename-section .bss=.bss.efistub,load,alloc
+> >  STUBCOPY_RELOC-$(CONFIG_ARM)   := R_ARM_ABS
+> >
+> > -#
+> > -# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
+> > -# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
+> > -# So let's apply the __init annotations at the section level, by prefixing
+> > -# the section names directly. This will ensure that even all the inline string
+> > -# literals are covered.
+> > -# The fact that the stub and the kernel proper are essentially the same binary
+> > -# also means that we need to be extra careful to make sure that the stub does
+> > -# not rely on any absolute symbol references, considering that the virtual
+> > -# kernel mapping that the linker uses is not active yet when the stub is
+> > -# executing. So build all C dependencies of the EFI stub into libstub, and do
+> > -# a verification pass to see if any absolute relocations exist in any of the
+> > -# object files.
+> > -#
+> > -extra-y                                := $(lib-y)
+> > -lib-y                          := $(patsubst %.o,%.stub.o,$(lib-y))
+> > -
+> >  STUBCOPY_FLAGS-$(CONFIG_ARM64) += --prefix-alloc-sections=.init \
+> >                                    --prefix-symbols=__efistub_
+> >  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
+> > @@ -121,3 +108,23 @@ quiet_cmd_stubcopy = STUBCPY $@
+> >                 /bin/false;                                             \
+> >         fi;                                                             \
+> >         $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
+> > +
+> > +# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
+> > +# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
+> > +# So let's apply the __init annotations at the section level, by prefixing
+> > +# the section names directly. This will ensure that even all the inline string
+> > +# literals are covered.
+> > +# The fact that the stub and the kernel proper are essentially the same binary
+> > +# also means that we need to be extra careful to make sure that the stub does
+> > +# not rely on any absolute symbol references, considering that the virtual
+> > +# kernel mapping that the linker uses is not active yet when the stub is
+> > +# executing. So build all C dependencies of the EFI stub into libstub, and do
+> > +# a verification pass to see if any absolute relocations exist in any of the
+> > +# object files.
+> > +#
+> > +obj-$(CONFIG_ARM64)            += $(stub-obj-y)
+> > +extra-$(CONFIG_ARM)            += lib.a
+> > +extra-$(CONFIG_X86)            += lib.a
+> > +
+> > +$(obj)/lib.a: $(addprefix $(obj)/, $(stub-obj-y)) FORCE
+> > +       $(call if_changed,ar)
+> > --
+> > 2.25.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
