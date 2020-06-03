@@ -2,105 +2,168 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43533C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95868206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:18:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwDhT0K2"
+	by mail.kernel.org (Postfix) with ESMTP id 267222077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbgFCHSm (ORCPT
+        id S1725993AbgFCHSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFCHSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:18:42 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5B7C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 00:18:41 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id n11so1175241qkn.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 00:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=upUYfRAA3OB+55Uid8yeg7Ykm1ooNkzjA3YEgCJr99I=;
-        b=IwDhT0K292/Bw6J/zj0jh9gBcuBIJl5QMCTXZQwICBLE9l8ck8ixucykHzavVL170l
-         GwGcTb8RqvvbWSXOotRntL7qZtuSKCnHcnb+XjMrfVo0ZmWQPH3G0o7IQjNuZIsCFgpT
-         KBsy+6Ha+U1JN5ac6VzHaGuSaXiEm/rX8praMgfXOlSkWVRMBTHLhTUv2WDgv1AyuQOg
-         M7x0krg0Ab0VmHJZPlaUbvwNxY1sMI43Sx4ovBjHRLtqp6ioG/I/Nos+mdKwzmmLrJp0
-         kAm6wrY8i+NcozOWXiE+PkLWhn1nGFisvrcLZgOLMCZsWDxz8Dl4tHopSzHo0XlfEIZz
-         8vJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=upUYfRAA3OB+55Uid8yeg7Ykm1ooNkzjA3YEgCJr99I=;
-        b=i3MBDsVHjSP2miBaGIOVdV3UXSQ7dnavmhQEwkpUZy4JxmUvebMAQQj2V0gJWmBJlL
-         jIXjvQAxoey0rmrOJpnTO6XT8ThxK7Tw1DXIU7xATKjTf6zzo1Ewyt3wxDhWIy7VPqPh
-         FF8z4Pcw487flhOEXbORLYhRx4uZqLmclALof85gjUR5CpA+0zXli+6tcNktiT6AWKuc
-         iBN6GdIFx1p8YZNgrvXhLLRII1o8Mcom8TMkkU+p2boaZFF8CYR3HND28ie5sO26HE6z
-         JpFqf/1AggxiKqJ9Pr+Jmu7suoT6SJmw4Vg9rUDVPJ5jTjqxDpKlICFp0woYCxNNH1cc
-         ewbA==
-X-Gm-Message-State: AOAM5304gjFeN/5XoTAa3QJeyknIxigxYKDX85PAoQz9+87wt7aIuHSS
-        W64fWJaQFvsbsg53YnjmC1vT4TWdD+7eSHirMUA=
-X-Google-Smtp-Source: ABdhPJw8caa0RkmT/kcE/lPlKwmQw7I0GVvEKAwuuSomY0LIBhKDbsb5isrygm8OpzPqI144baZWIiqEMdxh87QEAYo=
-X-Received: by 2002:a05:620a:15f4:: with SMTP id p20mr26731572qkm.283.1591168720536;
- Wed, 03 Jun 2020 00:18:40 -0700 (PDT)
+        Wed, 3 Jun 2020 03:18:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49404 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgFCHSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:18:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A7A0BAD66;
+        Wed,  3 Jun 2020 07:18:52 +0000 (UTC)
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jyri Sarha <jsarha@ti.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <CAHk-=wjvVjei5d45D=GQMsFMssD8knSFWqxMbd4bH8qSgXk-Lg@mail.gmail.com>
+ <CAHk-=wiug3vS=J7obQsyCLp+6qQvT5v6ctOddHRXbVgsLFTLwQ@mail.gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <e75218b1-985a-0ec8-483d-9780f668d8c3@suse.de>
+Date:   Wed, 3 Jun 2020 09:18:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200529033809.113516-1-lizhe67@huawei.com>
-In-Reply-To: <20200529033809.113516-1-lizhe67@huawei.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Wed, 3 Jun 2020 09:18:29 +0200
-Message-ID: <CAFLxGvzkMp3JJHiE3g3LrxVJUgh2Fj6tbGFPSdv-1W2PiYqGjQ@mail.gmail.com>
-Subject: Re: [PATCH] jffs2: fix nothing output for "ls" command
-To:     Zhe Li <lizhe67@huawei.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=wiug3vS=J7obQsyCLp+6qQvT5v6ctOddHRXbVgsLFTLwQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="RLSIgEdvUrhZl2rtSOw3WnVw6yWr4RKax"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 5:38 AM Zhe Li <lizhe67@huawei.com> wrote:
->
-> Recently I find a bug that I get nothing with shell
-> command "ls". The test steps are listed below.
-> 1. cd $JFFS2_MOUNT_DIR
-> 2. touch file
-> 3. ls
->
-> Finally I find that when command "ls" going into
-> function jffs2_readdir(), it get non-zero return
-> value from function dir_emit(). So I get nothing
-> from "ls", absolutely.
->
-> After checking my file system image, I find a raw
-> dirent node with nsize = 0. The full_scan mounting
-> process do not check nsize and the return value
-> of strnlen(rd->name, rd->nsize) carefully, which
-> causes function jffs2_readdir pass 0 to parameter
-> namelen of function dir_emit when we use command
-> "ls".
->
-> Of course it should never happened to find a raw
-> dirent with nsize = 0. In my opinion, this abnormal
-> phenomenon maybe cause by bad driver or bad medium.
-> But for rebustness reason, jffs2 should handle it.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--RLSIgEdvUrhZl2rtSOw3WnVw6yWr4RKax
+Content-Type: multipart/mixed; boundary="jEu9VtUzOhr79a3G2Suw4dWwZjIWlPvjq";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Airlie <airlied@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Jyri Sarha <jsarha@ti.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+ LKML <linux-kernel@vger.kernel.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>
+Message-ID: <e75218b1-985a-0ec8-483d-9780f668d8c3@suse.de>
+Subject: Re: [git pull] drm for 5.8-rc1
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <CAHk-=wjvVjei5d45D=GQMsFMssD8knSFWqxMbd4bH8qSgXk-Lg@mail.gmail.com>
+ <CAHk-=wiug3vS=J7obQsyCLp+6qQvT5v6ctOddHRXbVgsLFTLwQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiug3vS=J7obQsyCLp+6qQvT5v6ctOddHRXbVgsLFTLwQ@mail.gmail.com>
 
-Well, if driver or medium are bad, the filesystem will die and lose
-data. Instead of papering over the issue and delaying the inevitable
-loss of data, please address the root cause.
+--jEu9VtUzOhr79a3G2Suw4dWwZjIWlPvjq
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Thanks,
-//richard
+Hi
+
+Am 02.06.20 um 23:56 schrieb Linus Torvalds:
+> On Tue, Jun 2, 2020 at 2:21 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> I'm still working through the rest of the merge, so far that was the
+>> only one that made me go "Whaa?".
+>=20
+> Hmm. I'm also ending up effectively reverting the drm commit
+> b28ad7deb2f2 ("drm/tidss: Use simple encoder") because commit
+> 9da67433f64e ("drm/tidss: fix crash related to accessing freed
+> memory") made the premise of that simply encoder commit no longer be
+> true.
+
+That's OK. The simple encoder is just for consolidating these
+almost-empty encoders at a single place.
+
+> If there is a better way to sort that out (ie something like "use
+> simple encoder but make it free things at destroy time"), I don't know
+> of it.
+
+There's now drmm_kmalloc() to auto-free the memory when DRM releases a
+device.
+
+Best regards
+Thomas
+
+>=20
+> I'll let you guys fight it out (added people involved with those
+> commits to the participants,
+>=20
+>                     Linus
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--jEu9VtUzOhr79a3G2Suw4dWwZjIWlPvjq--
+
+--RLSIgEdvUrhZl2rtSOw3WnVw6yWr4RKax
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7XTtgACgkQaA3BHVML
+eiPI0AgAgnWMXL2blmz8VMgobGBBamCWk6Y894rrWLPzmXZpFIuVBgQ3EhYrpMBo
+b52G9ZFVCRZ2mlXTB9X/Zlh0oH8GR2sS8Mp4tnYEMhs/PNRlp1zAQfpGEBX292kS
+gb8/dWCi+tsVRcPxEZGHUcSnTAw2bn73ouqR7qpPL7ph5pEQxKjzcny6GNf4G0jm
+8+TFt9LoGj7lwSPjCVvLXf+UZi0WVGCLkcg99BiyF3jhXlKB+3hatSRV+0Q9eL81
+ABVXlhcOb8BptNwRCpUnvCXjaWjBw9Q6lbZLKDyKW46r14DPrry40UkbaTAjYV8h
+mzZr5P3xJ11oLq9nT7A4bXhaZOMDdQ==
+=W1gi
+-----END PGP SIGNATURE-----
+
+--RLSIgEdvUrhZl2rtSOw3WnVw6yWr4RKax--
