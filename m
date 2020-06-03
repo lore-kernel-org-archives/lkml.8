@@ -2,203 +2,120 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97D3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAE520679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591194189;
-	bh=H54s9yh9oa/pHnuA8XXKlONC1Ld4Ebm8z9nD3NA7S2g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dPJCVwRPyjk7wHrPg8tXb4ul/osYdEccY5GipTl17Dq3Ck0aCN/5I4X3Ecym2pHo0
-	 bACBvnmwCR+ZxZYqaLZmCB0bFyRbpmoGanv/0RUzYWqt68rgjPuECJxwxCJW114MOU
-	 2+u8C03Ye+iQpdlYdFVTm/GCHhcIhWjuEtM075kk=
+	by mail.kernel.org (Postfix) with ESMTP id 120E020679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725967AbgFCOXI (ORCPT
+        id S1726034AbgFCOXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:23:08 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33507 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgFCOXH (ORCPT
+        Wed, 3 Jun 2020 10:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgFCOX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:23:07 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i74so1970708oib.0;
-        Wed, 03 Jun 2020 07:23:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jgD8vssHycca9hhWw5GR8fg56A5aDizlCJPpWsS2JI8=;
-        b=M+xvzSpJPWowgOEAm8n6JaDc02zzVADf/NZmcZHdZzFDs272WZua9YLk33TtHtSRMk
-         8MxmKB7u6dApAkL0p/k7Wcx/oyJ5XmmvXVVUMNSDnbz3iIOuGEgIWOac/ckERMSFB4pT
-         VjwbcKk177pdX4ajFWvTl4w64vlhSOiWsXx5L+Hl4KcgDzlAOLypQwMv+TxwYc+K78Id
-         R0PZDuk6ZLRkvWjpNd7WeASDlJBa8TEwTkppGC1XIEjQKocWkVKOiB+sjQgV0y2uGO54
-         inu4h7Lag8Y41xSRx8gAayIyU0zZxn5JAyUkTGJ3yHQrbQffN6FfuKY76fGWjnQhks0N
-         Ql7w==
-X-Gm-Message-State: AOAM532Ov7akC4lZcVqd2xoZeA1NeY6vnquY5i7l+DtaXcF27Wzedg3W
-        eX/hE9Ma0D8lf6JDleP2FTb+Ctp0M2c0QjRm3X4=
-X-Google-Smtp-Source: ABdhPJzNTezlEavsAbvUt6SDIYhugO+ejOcohba7o+c1KWRIDeyqqhx/0LAPzxS/YsypnS3ROXg5zcM+CnvNeMpqqFg=
-X-Received: by 2002:aca:ad88:: with SMTP id w130mr6666418oie.103.1591194186785;
- Wed, 03 Jun 2020 07:23:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200531182453.15254-1-ggherdovich@suse.cz> <20200531182453.15254-2-ggherdovich@suse.cz>
-In-Reply-To: <20200531182453.15254-2-ggherdovich@suse.cz>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Jun 2020 16:22:52 +0200
-Message-ID: <CAJZ5v0iikLxwwwbe_PWysmG3mz8iO4KqEyXZtL2isvZm1v+J=A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] x86, sched: check for counters overflow in
- frequency invariant accounting
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 3 Jun 2020 10:23:29 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1A3C08C5C0;
+        Wed,  3 Jun 2020 07:23:29 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id B4EF728B; Wed,  3 Jun 2020 16:23:26 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 16:23:25 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 25/75] x86/sev-es: Add support for handling IOIO
+ exceptions
+Message-ID: <20200603142325.GB23071@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-26-joro@8bytes.org>
+ <20200520062055.GA17090@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520062055.GA17090@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 8:26 PM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
->
-> The product mcnt * arch_max_freq_ratio can overflows u64.
->
-> For context, a large value for arch_max_freq_ratio would be 5000,
-> corresponding to a turbo_freq/base_freq ratio of 5 (normally it's more like
-> 1500-2000). A large increment frequency for the MPERF counter would be 5GHz
-> (the base clock of all CPUs on the market today is less than that). With
-> these figures, a CPU would need to go without a scheduler tick for around 8
-> days for the u64 overflow to happen. It is unlikely, but the check is
-> warranted.
->
-> Under similar conditions, the difference acnt of two consecutive APERF
-> readings can overflow as well.
->
-> In these circumstances is appropriate to disable frequency invariant
-> accounting: the feature relies on measures of the clock frequency done at
-> every scheduler tick, which need to be "fresh" to be at all meaningful.
->
-> A note on i386: prior to version 5.1, the GCC compiler didn't have the
-> builtin function __builtin_mul_overflow. In these GCC versions the macro
-> check_mul_overflow needs __udivdi3() to do (u64)a/b, which the kernel
-> doesn't provide. For this reason this change fails to build on i386 if
-> GCC<5.1, and we protect the entire frequency invariant code behind
-> CONFIG_X86_64 (special thanks to "kbuild test robot" <lkp@intel.com>).
->
-> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Hi Jean,
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, May 19, 2020 at 11:20:55PM -0700, Sean Christopherson wrote:
+> On Tue, Apr 28, 2020 at 05:16:35PM +0200, Joerg Roedel wrote:
+> > +		/*
+> > +		 * For the string variants with rep prefix the amount of in/out
+> > +		 * operations per #VC exception is limited so that the kernel
+> > +		 * has a chance to take interrupts an re-schedule while the
+> > +		 * instruction is emulated.
+> 
+> Doesn't this also suppress single-step #DBs?
 
-> ---
->  arch/x86/include/asm/topology.h |  2 +-
->  arch/x86/kernel/smpboot.c       | 33 ++++++++++++++++++++++++++++-----
->  2 files changed, 29 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-> index 79d8d5496330..f4234575f3fd 100644
-> --- a/arch/x86/include/asm/topology.h
-> +++ b/arch/x86/include/asm/topology.h
-> @@ -193,7 +193,7 @@ static inline void sched_clear_itmt_support(void)
->  }
->  #endif /* CONFIG_SCHED_MC_PRIO */
->
-> -#ifdef CONFIG_SMP
-> +#if defined(CONFIG_SMP) && defined(CONFIG_X86_64)
->  #include <asm/cpufeature.h>
->
->  DECLARE_STATIC_KEY_FALSE(arch_scale_freq_key);
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 2f24c334a938..d660966d7de7 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -55,6 +55,7 @@
->  #include <linux/gfp.h>
->  #include <linux/cpuidle.h>
->  #include <linux/numa.h>
-> +#include <linux/overflow.h>
->
->  #include <asm/acpi.h>
->  #include <asm/desc.h>
-> @@ -1777,6 +1778,7 @@ void native_play_dead(void)
->
->  #endif
->
-> +#ifdef CONFIG_X86_64
->  /*
->   * APERF/MPERF frequency ratio computation.
->   *
-> @@ -2047,11 +2049,19 @@ static void init_freq_invariance(bool secondary)
->         }
->  }
->
-> +static void disable_freq_invariance_workfn(struct work_struct *work)
-> +{
-> +       static_branch_disable(&arch_scale_freq_key);
-> +}
-> +
-> +static DECLARE_WORK(disable_freq_invariance_work,
-> +                   disable_freq_invariance_workfn);
-> +
->  DEFINE_PER_CPU(unsigned long, arch_freq_scale) = SCHED_CAPACITY_SCALE;
->
->  void arch_scale_freq_tick(void)
->  {
-> -       u64 freq_scale;
-> +       u64 freq_scale = SCHED_CAPACITY_SCALE;
->         u64 aperf, mperf;
->         u64 acnt, mcnt;
->
-> @@ -2063,19 +2073,32 @@ void arch_scale_freq_tick(void)
->
->         acnt = aperf - this_cpu_read(arch_prev_aperf);
->         mcnt = mperf - this_cpu_read(arch_prev_mperf);
-> -       if (!mcnt)
-> -               return;
->
->         this_cpu_write(arch_prev_aperf, aperf);
->         this_cpu_write(arch_prev_mperf, mperf);
->
-> -       acnt <<= 2*SCHED_CAPACITY_SHIFT;
-> -       mcnt *= arch_max_freq_ratio;
-> +       if (check_shl_overflow(acnt, 2*SCHED_CAPACITY_SHIFT, &acnt))
-> +               goto error;
-> +
-> +       if (check_mul_overflow(mcnt, arch_max_freq_ratio, &mcnt) || !mcnt)
-> +               goto error;
->
->         freq_scale = div64_u64(acnt, mcnt);
-> +       if (!freq_scale)
-> +               goto error;
->
->         if (freq_scale > SCHED_CAPACITY_SCALE)
->                 freq_scale = SCHED_CAPACITY_SCALE;
->
->         this_cpu_write(arch_freq_scale, freq_scale);
-> +       return;
-> +
-> +error:
-> +       pr_warn("Scheduler frequency invariance went wobbly, disabling!\n");
-> +       schedule_work(&disable_freq_invariance_work);
-> +}
-> +#else
-> +static inline void init_freq_invariance(bool secondary)
-> +{
->  }
-> +#endif /* CONFIG_X86_64 */
-> --
-> 2.16.4
->
+Yes it does.
+
+> 
+> > +		 */
+> > +		io_bytes   = (exit_info_1 >> 4) & 0x7;
+> > +		ghcb_count = sizeof(ghcb->shared_buffer) / io_bytes;
+> > +
+> > +		op_count    = (exit_info_1 & IOIO_REP) ? regs->cx : 1;
+> > +		exit_info_2 = min(op_count, ghcb_count);
+> > +		exit_bytes  = exit_info_2 * io_bytes;
+> > +
+> > +		es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
+> > +
+> > +		if (!(exit_info_1 & IOIO_TYPE_IN)) {
+> > +			ret = vc_insn_string_read(ctxt,
+> > +					       (void *)(es_base + regs->si),
+> 
+> SEV(-ES) is 64-bit only, why bother with the es_base charade?
+
+User-space can also cause IOIO #VC exceptions, and user-space can be
+32-bit legacy code with segments, so es_base has to be taken into
+account.
+
+
+> 
+> > +					       ghcb->shared_buffer, io_bytes,
+> > +					       exit_info_2, df);
+> 
+> df handling is busted, it's aways non-zero.  Same goes for the SI/DI
+> adjustments below.
+
+Right, this is fixed now.
+
+> Batching the memory accesses and I/O accesses separately is technically
+> wrong, e.g. a #DB on a memory access will result in bogus data being shown
+> in the debugger.  In practice it seems unlikely to matter, but I'm curious
+> as to why string I/O is supported in the first place.  I didn't think there
+> was that much string I/O in the kernel?
+
+True, #DBs won't be correct anymore. Currently debugging is not
+supported in SEV-ES guests anyway, but if it is supported the #DB
+exception would happen in the #VC handler and not on the original
+instruction.
+
+
+Regards,
+
+	Joerg
