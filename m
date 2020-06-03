@@ -2,111 +2,77 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41414C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 123B72065C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D99C2065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgFCJly (ORCPT
+        id S1726718AbgFCJmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:41:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:59190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCJlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:41:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DFD431B;
-        Wed,  3 Jun 2020 02:41:52 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A3F93F305;
-        Wed,  3 Jun 2020 02:41:50 -0700 (PDT)
-References: <20200527151613.16083-1-benjamin.gaignard@st.com> <jhjpnahizkm.mognet@arm.com> <f95ce45f-7a1c-0feb-afa8-203ddb500f2f@st.com> <jhjo8q1io9o.mognet@arm.com> <1b0ace18-e7f8-0b75-f6fe-968a269626b0@st.com> <CAKfTPtCbM-w_0VrTB5tsSM5PKRtC44f3sSmAR=U=P3e3KQ+cMw@mail.gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab\@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32\@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-media\@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32\@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw\@rjwysocki.net" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
-In-reply-to: <CAKfTPtCbM-w_0VrTB5tsSM5PKRtC44f3sSmAR=U=P3e3KQ+cMw@mail.gmail.com>
-Date:   Wed, 03 Jun 2020 10:41:41 +0100
-Message-ID: <jhjmu5kiizu.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 3 Jun 2020 05:42:22 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:43412 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbgFCJmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:42:22 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL955cNdeqAQ9AA--.3197S2;
+        Wed, 03 Jun 2020 17:42:17 +0800 (CST)
+From:   Bibo Mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Do not flush tlb when setting pmd entry
+Date:   Wed,  3 Jun 2020 17:42:13 +0800
+Message-Id: <1591177333-17833-1-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: AQAAf9DxL955cNdeqAQ9AA--.3197S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKr17uryxCF15Zw1xuF47twb_yoWxtFc_J3
+        W2y398GryYqrsrt3yrWFZ5JFyDuayDuF18CrsFvryYy3s5Aa1kXayjqryjyr45XrWIvrWr
+        Gr98Zr909F17tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb7xYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY6wZUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Function set_pmd_at is to set pmd entry, if tlb entry need to
+be flushed, there exists pmdp_huge_clear_flush alike function
+before set_pmd_at is called. So it is not necessary to call
+flush_tlb_all in this function.
 
-On 03/06/20 08:50, Vincent Guittot wrote:
-> On Wed, 3 Jun 2020 at 09:34, Benjamin GAIGNARD <benjamin.gaignard@st.com> wrote:
->> On 6/2/20 3:35 PM, Valentin Schneider wrote:
->> > AFAIA streaming_start() is not necessarily executing on the same CPU as the
->> > one that will handle the interrupt. I was thinking you could use the IRQ's
->> > effective affinity as a hint of which CPU(s) to boost, i.e. something like:
->> >
->> > ---
->> >      struct cpumask_var_t visited;
->> >      struct irq_data *d = irq_get_irq_data(irq);
->> >
->> >      err = alloc_cpumask_var(visited, GFP_KERNEL);
->> >      /* ... */
->> >      for_each_cpu(cpu, irq_data_get_effective_affinity_mask(d)) {
->> >              /* check if not already spanned */
->> >              if (cpumask_test_cpu(cpu, visited))
->> >                      continue;
->> >
->> >              policy = cpufreq_cpu_get(cpu);
->> >              cpumask_or(visited, visited, policy->cpus);
->> >              /* do the boost for that policy here */
->> >              /* ... */
->> >              cpufreq_cpu_put(policy);
->> >      }
->> > ---
->> >
->> > That of course falls apart when hotplug gets involved, and the effective
->> > affinity changes... There's irq_set_affinity_notifier() out there, but it
->> > seems it's only about the affinity, not the effective_affinity, I'm not
->> > sure how valid it would be to query the effective_affinity in that
->> > notifier.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/mips/mm/pgtable-64.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->> If I wait to be in the irq it will be too late so I think I will do a
->> loop over all possible CPUs
->> before start the streaming to change the policies.
->
+diff --git a/arch/mips/mm/pgtable-64.c b/arch/mips/mm/pgtable-64.c
+index 6fd6e96..a236752 100644
+--- a/arch/mips/mm/pgtable-64.c
++++ b/arch/mips/mm/pgtable-64.c
+@@ -101,7 +101,6 @@ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+ 		pmd_t *pmdp, pmd_t pmd)
+ {
+ 	*pmdp = pmd;
+-	flush_tlb_all();
+ }
+ 
+ void __init pagetable_init(void)
+-- 
+1.8.3.1
 
-Yes, that's what I was thinking as well.
-
-> Can't you use irq_get_affinity_mask  and loop over it ?
->
-
-In the end that's the only usable option, I think.
-
-I was looking at alternatives because on arm64 (and AFAICT that applies
-to arm too; see irq-gic.c::gic_set_affinity()) the affinity mask spans
-all CPUs by default, while the effective affinity mask spans only the
-CPU that will actually handle the IRQ (+ where its thread should run).
-
-That said, using the effective mask that way does feel like an
-implementation leak. Sadly I couldn't find any better way to minimize
-the number of boosted frequency domains.
-
-> Also You should better use freq_qos_add/remove_request during probe
-> and remove of the driver and use freq_qos_update_request in
-> dcmi_start/stop_streaming to set/unset your constraint.
->
