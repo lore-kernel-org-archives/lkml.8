@@ -2,68 +2,112 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C814DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF31E2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2D1207DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:44:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bZwPXZPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgFCHoo (ORCPT
+        id S1726236AbgFCHo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:44:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47913 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgFCHon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:44:43 -0400
-IronPort-SDR: lCKqzKguZ8/amiF4ER3VJEvMlX6hTDURzB5O25ystJ93NlfmzX3KUfBfbyLmEvd/nJdatn6DI8
- CpPM6tk0I6Fw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 00:44:43 -0700
-IronPort-SDR: OaoTNCguD6VHZKwpsrKiPC2MBoAyk9VjE5N/uQievj7tI08znPL5Nu6zEZsZDcSuiOCk6XdfUV
- jFnvU27Mdcdg==
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="416470260"
-Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 00:44:40 -0700
-Subject: Re: [PATCH 4/6] KVM: X86: Split kvm_update_cpuid()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-References: <20200529085545.29242-1-xiaoyao.li@intel.com>
- <20200529085545.29242-5-xiaoyao.li@intel.com>
- <20200603011059.GB24169@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <5e5574d1-245d-ce57-d7aa-998eed2ca0b6@intel.com>
-Date:   Wed, 3 Jun 2020 15:44:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 3 Jun 2020 03:44:58 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17116 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgFCHo5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 03:44:57 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed754980003>; Wed, 03 Jun 2020 00:43:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 03 Jun 2020 00:44:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 03 Jun 2020 00:44:57 -0700
+Received: from [10.26.72.154] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jun
+ 2020 07:44:55 +0000
+Subject: Re: [PATCH 5.6 000/174] 5.6.16-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>
+References: <20200602101934.141130356@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4c120c44-1ddc-da80-0700-ed22ca165f62@nvidia.com>
+Date:   Wed, 3 Jun 2020 08:44:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200603011059.GB24169@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200602101934.141130356@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591170200; bh=Q/ovEomueayU2Nz4J2JbM8RtkKbGWe8+Hh2m9x/cpNY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bZwPXZPZWHauYmrBU0Db+vqyywS+aUovcMClunXypZHSh+xdq+i4MgPEQZth5SHrd
+         sYvOZfoZqq8OCd8/0u9obD5vDcwke1XC4lADtpZDqcW2sb9vHeSJJvpOlm2EIffIXG
+         HxVYNf4/urIX6BXxQWeP+qoGTbJo8kn5kADgjKbnQtG7LNLPOMP7gXFatqhSIi/zfH
+         AxMUg+dE2BbT1FuIu+j6JJ8k/58YfgDRS4Ui4jW23o0xG5h+hkOacZSdRJdqndJl5Z
+         /PYKGjpUtY2n+vCcBWr0v6G87p/IyzGe+NeUuaZZGR+79XiRI6qoYZWs+R33YY4nQT
+         NT5FBs9REEYCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/2020 9:10 AM, Sean Christopherson wrote:
-> On Fri, May 29, 2020 at 04:55:43PM +0800, Xiaoyao Li wrote:
->> Split the part of updating KVM states from kvm_update_cpuid(), and put
->> it into a new kvm_update_state_based_on_cpuid(). So it's clear that
->> kvm_update_cpuid() is to update guest CPUID settings, while
->> kvm_update_state_based_on_cpuid() is to update KVM states based on the
->> updated CPUID settings.
-> 
-> What about kvm_update_vcpu_model()?  "state" isn't necessarily correct
-> either.
-> 
 
-yeah, it's better.
+On 02/06/2020 11:24, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.16 release.
+> There are 174 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 04 Jun 2020 10:16:52 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.16-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+
+All tests are passing for Tegra ...
+
+Test results for stable-v5.6:
+    11 builds:	11 pass, 0 fail
+    26 boots:	26 pass, 0 fail
+    42 tests:	42 pass, 0 fail
+
+Linux version:	5.6.16-rc2-g7bff8a0b4fd4
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
+
+Sorry for the delay, I was having all changes of problems with our
+testers, email, yesterday!
+
+Cheers
+Jon
+-- 
+nvpublic
