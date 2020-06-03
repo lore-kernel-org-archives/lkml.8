@@ -2,131 +2,121 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1357BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC20C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1C22074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3E72067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:29:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rsiYpbdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgFCH1w (ORCPT
+        id S1726167AbgFCH3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:27:52 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:60873 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725275AbgFCH1v (ORCPT
+        Wed, 3 Jun 2020 03:29:08 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:6641 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725810AbgFCH3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:27:51 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jgNoP-003kyM-6A; Wed, 03 Jun 2020 09:27:45 +0200
-Received: from p57bd9b57.dip0.t-ipconnect.de ([87.189.155.87] helo=[192.168.178.139])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jgNoO-000jox-VT; Wed, 03 Jun 2020 09:27:45 +0200
-Subject: Re: [GIT PULL] sh: remove sh5 support
-To:     Rich Felker <dalias@libc.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
-        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200424221948.1120587-1-arnd@arndb.de>
- <20200507143552.GA28683@infradead.org> <20200528054600.GA29717@infradead.org>
- <20200528161416.GY1079@brightrain.aerifal.cx>
- <20200529143059.GA25475@infradead.org>
- <20200529175335.GK1079@brightrain.aerifal.cx>
- <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
- <20200601181259.GV1079@brightrain.aerifal.cx>
- <20200602013332.GY1079@brightrain.aerifal.cx>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <14cfb973-fe9b-d201-dc23-e8974c0bcb68@physik.fu-berlin.de>
-Date:   Wed, 3 Jun 2020 09:27:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 03:29:07 -0400
+X-UUID: 46bdbf9e4142415ea62346d624dd87a7-20200603
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uxJ/OyZIhvn8jO7euhdxxdoo6BqLiSJM0zglxbBqOos=;
+        b=rsiYpbdrvrTKk8pW+Ygso90z2A10JD7TpaJ9wdg6yWauTg7OT4Hw6IgcOEpu9vtFhCjL64pw7yMgy2sMrsE8tK5quGWduMsZI+iGlpkM0KyiC0grLkG+7Aq2sOQ2Dqodeo/S/GdP4dGfcFQZX2HhNDZkkobZQerRHTMBp+aW4Ik=;
+X-UUID: 46bdbf9e4142415ea62346d624dd87a7-20200603
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 526761993; Wed, 03 Jun 2020 15:29:03 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 3 Jun 2020 15:29:02 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 3 Jun 2020 15:29:01 +0800
+Message-ID: <1591169342.4878.9.camel@mtkswgap22>
+Subject: Re: Security Random Number Generator support
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Marc Zyngier <maz@misterjones.org>,
+        Julius Werner <jwerner@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>, "Rob Herring" <robh+dt@kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 3 Jun 2020 15:29:02 +0800
+In-Reply-To: <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+         <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+         <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200602013332.GY1079@brightrain.aerifal.cx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.155.87
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rich!
+T24gVHVlLCAyMDIwLTA2LTAyIGF0IDIxOjAyICswODAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+
+IE9uIDIwMjAtMDYtMDIgMTM6MTQsIEFyZCBCaWVzaGV1dmVsIHdyb3RlOg0KPiA+IE9uIFR1ZSwg
+MiBKdW4gMjAyMCBhdCAxMDoxNSwgTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4gd3Jv
+dGU6DQo+ID4+IA0KPiA+PiBUaGVzZSBwYXRjaCBzZXJpZXMgaW50cm9kdWNlIGEgc2VjdXJpdHkg
+cmFuZG9tIG51bWJlciBnZW5lcmF0b3INCj4gPj4gd2hpY2ggcHJvdmlkZXMgYSBnZW5lcmljIGlu
+dGVyZmFjZSB0byBnZXQgaGFyZHdhcmUgcm5kIGZyb20gU2VjdXJlDQo+ID4+IHN0YXRlLiBUaGUg
+U2VjdXJlIHN0YXRlIGNhbiBiZSBBcm0gVHJ1c3RlZCBGaXJtd2FyZShBVEYpLCBUcnVzdGVkDQo+
+ID4+IEV4ZWN1dGlvbiBFbnZpcm9ubWVudChURUUpLCBvciBldmVuIEVMMiBoeXBlcnZpc29yLg0K
+PiA+PiANCj4gPj4gUGF0Y2ggIzEuLjIgYWRkcyBzZWMtcm5nIGtlcm5lbCBkcml2ZXIgZm9yIFRy
+dXN0em9uZSBiYXNlZCBTb0NzLg0KPiA+PiBGb3Igc2VjdXJpdHkgYXdhcmVuZXNzIFNvQ3Mgb24g
+QVJNdjggd2l0aCBUcnVzdFpvbmUgZW5hYmxlZCwNCj4gPj4gcGVyaXBoZXJhbHMgbGlrZSBlbnRy
+b3B5IHNvdXJjZXMgaXMgbm90IGFjY2Vzc2libGUgZnJvbSBub3JtYWwgd29ybGQNCj4gPj4gKGxp
+bnV4KSBhbmQgcmF0aGVyIGFjY2Vzc2libGUgZnJvbSBzZWN1cmUgd29ybGQgKEhZUC9BVEYvVEVF
+KSBvbmx5Lg0KPiA+PiBUaGlzIGRyaXZlciBhaW1zIHRvIHByb3ZpZGUgYSBnZW5lcmljIGludGVy
+ZmFjZSB0byBBcm0gVHJ1c3RlZA0KPiA+PiBGaXJtd2FyZSBvciBIeXBlcnZpc29yIHJuZyBzZXJ2
+aWNlLg0KPiA+PiANCj4gPj4gDQo+ID4+IGNoYW5nZXMgc2luY2UgdjE6DQo+ID4+IC0gcmVuYW1l
+IG10Njd4eC1ybmcgdG8gbXRrLXNlYy1ybmcgc2luY2UgYWxsIE1lZGlhVGVrIEFSTXY4IFNvQ3Mg
+Y2FuIA0KPiA+PiByZXVzZQ0KPiA+PiAgIHRoaXMgZHJpdmVyLg0KPiA+PiAgIC0gcmVmaW5lIGNv
+ZGluZyBzdHlsZSBhbmQgdW5uZWNlc3NhcnkgY2hlY2suDQo+ID4+IA0KPiA+PiAgIGNoYW5nZXMg
+c2luY2UgdjI6DQo+ID4+ICAgLSByZW1vdmUgdW51c2VkIGNvbW1lbnRzLg0KPiA+PiAgIC0gcmVt
+b3ZlIHJlZHVuZGFudCB2YXJpYWJsZS4NCj4gPj4gDQo+ID4+ICAgY2hhbmdlcyBzaW5jZSB2MzoN
+Cj4gPj4gICAtIGFkZCBkdC1iaW5kaW5ncyBmb3IgTWVkaWFUZWsgcm5nIHdpdGggVHJ1c3Rab25l
+IGVuYWJsZWQuDQo+ID4+ICAgLSByZXZpc2UgSFdSTkcgU01DIGNhbGwgZmlkLg0KPiA+PiANCj4g
+Pj4gICBjaGFuZ2VzIHNpbmNlIHY0Og0KPiA+PiAgIC0gbW92ZSBiaW5kaW5ncyB0byB0aGUgYXJt
+L2Zpcm13YXJlIGRpcmVjdG9yeS4NCj4gPj4gICAtIHJldmlzZSBkcml2ZXIgaW5pdCBmbG93IHRv
+IGNoZWNrIG1vcmUgcHJvcGVydHkuDQo+ID4+IA0KPiA+PiAgIGNoYW5nZXMgc2luY2UgdjU6DQo+
+ID4+ICAgLSByZWZhY3RvciB0byBtb3JlIGdlbmVyaWMgc2VjdXJpdHkgcm5nIGRyaXZlciB3aGlj
+aA0KPiA+PiAgICAgaXMgbm90IHBsYXRmb3JtIHNwZWNpZmljLg0KPiA+PiANCj4gPj4gKioqIEJM
+VVJCIEhFUkUgKioqDQo+ID4+IA0KPiA+PiBOZWFsIExpdSAoMik6DQo+ID4+ICAgZHQtYmluZGlu
+Z3M6IHJuZzogYWRkIGJpbmRpbmdzIGZvciBzZWMtcm5nDQo+ID4+ICAgaHdybmc6IGFkZCBzZWMt
+cm5nIGRyaXZlcg0KPiA+PiANCj4gPiANCj4gPiBUaGVyZSBpcyBubyByZWFzb24gdG8gbW9kZWwg
+YSBTTUMgY2FsbCBhcyBhIGRyaXZlciwgYW5kIHJlcHJlc2VudCBpdA0KPiA+IHZpYSBhIERUIG5v
+ZGUgbGlrZSB0aGlzLg0KPiANCj4gKzEuDQo+IA0KPiA+IEl0IHdvdWxkIGJlIG11Y2ggYmV0dGVy
+IGlmIHRoaXMgU01DIGludGVyZmFjZSBpcyBtYWRlIHRydWx5IGdlbmVyaWMsDQo+ID4gYW5kIHdp
+cmVkIGludG8gdGhlIGFyY2hfZ2V0X3JhbmRvbSgpIGludGVyZmFjZSwgd2hpY2ggY2FuIGJlIHVz
+ZWQgbXVjaA0KPiA+IGVhcmxpZXIuDQo+IA0KPiBXYXNuJ3QgdGhlcmUgYSBwbGFuIHRvIHN0YW5k
+YXJkaXplIGEgU01DIGNhbGwgdG8gcnVsZSB0aGVtIGFsbD8NCj4gDQo+ICAgICAgICAgIE0uDQoN
+CkNvdWxkIHlvdSBnaXZlIHVzIGEgaGludCBob3cgdG8gbWFrZSB0aGlzIFNNQyBpbnRlcmZhY2Ug
+bW9yZSBnZW5lcmljIGluDQphZGRpdGlvbiB0byBteSBhcHByb2FjaD8NClRoZXJlIGlzIG5vIChl
+YXN5KSB3YXkgdG8gZ2V0IHBsYXRmb3JtLWluZGVwZW5kZW50IFNNQyBmdW5jdGlvbiBJRCwNCndo
+aWNoIGlzIHdoeSB3ZSBlbmNvZGUgaXQgaW50byBkZXZpY2UgdHJlZSwgYW5kIHByb3ZpZGUgYSBn
+ZW5lcmljDQpkcml2ZXIuIEluIHRoaXMgd2F5LCBkaWZmZXJlbnQgZGV2aWNlcyBjYW4gYmUgbWFw
+cGVkIGFuZCB0aGVuIGdldA0KZGlmZmVyZW50IGZ1bmN0aW9uIElEIGludGVybmFsbHkuDQoNCg0K
 
-On 6/2/20 3:33 AM, Rich Felker wrote:
-> Hmm, it looks like Andrew Morton just pulled most of these into -mm,
-> apparently independently of me getting them in my for-next a few hours
-> ago, since his versions lack my signed-off-by. That's ok though, as
-> long as they go up. Some details since further action is needed on a
-> few:
-
-I thought Andrew dropped them again since he saw you become active.
-
-I can't find them in his tree.
-
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
