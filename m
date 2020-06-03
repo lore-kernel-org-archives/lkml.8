@@ -2,123 +2,125 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434582067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F79C2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 21:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HpFtuwTR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T4ujYaIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgFCVoo (ORCPT
+        id S1726460AbgFCVqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 17:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgFCVoo (ORCPT
+        Wed, 3 Jun 2020 17:46:42 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25272 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725922AbgFCVql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 17:44:44 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0703EC08C5C0;
-        Wed,  3 Jun 2020 14:44:44 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id d128so3604690wmc.1;
-        Wed, 03 Jun 2020 14:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+yAvhub8sTxM3gTatxTKu08jxopfkyMEa6lUTC8uDRg=;
-        b=HpFtuwTRFecplFuSTnU3TaJmgj57jJMBpSaTHisrXQjT76WYx2y895URYnM1MhfyMh
-         NBynJYsGVpnlOW7ghI7K83YlVtm3EyCIZ6yuS26sNzh48AuMa6RwB9pgpbTfGzuM9dWZ
-         LlNdqAikRYswoS8b4Hvi3Q7nilPIemxfzsNn53ck32Lx2rqpBEUZL6Bypp1JY1NjT5Eg
-         Yi7nwPQO/3NzdYdfylanhXmyTKoJNAfOd1Zpf7Fm/uMWBoPyYgN64YrTRwf59XrLlEtb
-         at0nGgNY6bsKpBbAtGuX4uND4AM9h1qk/22zQlHHvzrSgrWhYLJSSDucsBK1kYnz7pFX
-         zdKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+yAvhub8sTxM3gTatxTKu08jxopfkyMEa6lUTC8uDRg=;
-        b=ht9X9+7/sv3+2gsTvRNrKfe6cQSSvivWsgPYJ7xD2TFyDeruEk7K290YMT93XZephE
-         4FMRuw2eAkQ80lhiEsGo+u0/qGWALuf+W5k7j4c/ycavsj+25joGpLr5tLYUu5LZI8OP
-         oxcewm7qAYvbbZHzSCvRETLpB17Nt4CiRN7hd3ZjVd+Sj0A6Ddsfrm/5tBkDXlD95azX
-         3DVvagc9iGH8l26pHTAzd7NkwNVTUGMlK9TNSVxMbagkMwVDhEYiaR5E5O0VGoNJ5vIf
-         F4hn8wXOwWh0XovmBF33ZR4x65nArordGPiESRvEJE8rJM0lsG1rHS0is0X75pxtxwmW
-         j9RA==
-X-Gm-Message-State: AOAM532ckh9Gcp3a8ZLGJCRraCFQiUFTzokP/7qsGh27m3ABctoMR4Zt
-        4ushqWBmJ6JYnR1M7Q4WzbVVJi90T5XfL6DbG2JPbg==
-X-Google-Smtp-Source: ABdhPJwIzGRzccpTjHF91zlEsgjGbu7/ZbtGVh3EDbM5YyW4WLWaV5c9/UNXqB5RKBfk4BvG+eSdGJjB1OE+BerkdVs=
-X-Received: by 2002:a7b:cd96:: with SMTP id y22mr1047727wmj.56.1591220682782;
- Wed, 03 Jun 2020 14:44:42 -0700 (PDT)
+        Wed, 3 Jun 2020 17:46:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591220800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=j8irI2YP3QxKXjo5qFTtbAZdDKv971AUeB+9+HvcfEc=;
+        b=T4ujYaIxCBrIxRdQ20oKPF7vLdf4QlN3wnULA8D5DrnTq+/HzRt0x3ef5w6J9/q43AEkJT
+        UlZCAlI/IRu8/u1paGHWDmqTohSEifkTKC17tZkNGWyd18KqRFcW6nFHj2u3+ZHy7z0WEl
+        61DO10pVTI0zddEyDMeKmeyINScvxfM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-QvVLwQMmN6OODyKajwOZpA-1; Wed, 03 Jun 2020 17:46:36 -0400
+X-MC-Unique: QvVLwQMmN6OODyKajwOZpA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A84A91B18BC3;
+        Wed,  3 Jun 2020 21:46:34 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-118-25.rdu2.redhat.com [10.10.118.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5327B60BE1;
+        Wed,  3 Jun 2020 21:46:34 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id D1478220C5A; Wed,  3 Jun 2020 17:46:33 -0400 (EDT)
+Date:   Wed, 3 Jun 2020 17:46:33 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     glider@google.com
+Cc:     miklos@szeredi.hu, linux-unionfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keescook@chromium.org,
+        royyang@google.com, stable@vger.kernel.org
+Subject: Re: [PATCH] ovl: explicitly initialize error in ovl_copy_xattr()
+Message-ID: <20200603214633.GF48122@redhat.com>
+References: <20200603174714.192027-1-glider@google.com>
 MIME-Version: 1.0
-References: <20200604073544.1ef1e38a@canb.auug.org.au>
-In-Reply-To: <20200604073544.1ef1e38a@canb.auug.org.au>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 3 Jun 2020 17:44:31 -0400
-Message-ID: <CADnq5_P0SCBUE=zmg0Bezp=6C7x32-T4DW0+iSsJmrYtaB=sJg@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commits in the amdgpu tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603174714.192027-1-glider@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 5:35 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commits
->
->   2967442ac479 ("drm/amd/display: Add DCN3 to Kconfig")
->   4e7406acd3e6 ("drm/amd/display: Add DCN3 blocks to Makefile")
->   b8163750954c ("drm/amd/display: fix and simplify pipe split logic for DCN3")
->   a6a7b1845598 ("drm/amdgpu: Enable DM block for DCN3")
->   5aa25fb310d5 ("drm/amd/display: Remove Unused Registers")
->   ea05812d2d55 ("drm/amd/display: Handle RGBE_ALPHA Pixel Format")
->   b663d733cbe1 ("drm/amd/display: Init function tables for DCN3")
->   19e1ceaeaadf ("drm/amd/display: Add DCN3 VPG")
->   889bc1fa55f5 ("drm/amd/display: Add DCN3 AFMT")
->   0e5cf8885f67 ("drm/amd/display: Add DCN3 Command Table Helpers")
->   3086e21408a6 ("drm/amd/display: Add DCN3 Resource")
->   3fbd2731be3e ("drm/amd/display: Add DCN3 Support in DM (v2)")
->   581b9589487e ("drm/amd/display: Add DCN3 HWSEQ")
->   ca2e97c317ad ("drm/amd/display: Add DCN3 DMUB")
->   c8728a921074 ("drm/amd/display: Add DCN3 GPIO")
->   e51d66e1d338 ("drm/amd/display: Add DCN3 IRQ")
->   3ab489724031 ("drm/amd/display: Add DCN3 DML")
->   202ad3f23604 ("drm/amd/display: Add DCN3 DWB")
->   8905a0576034 ("drm/amd/display: Add DCN3 MMHUBHUB")
->   481beb130dec ("drm/amd/display: Add DCN3 HUBP")
->   ee52a594ac12 ("drm/amd/display: Add DCN3 HUBHUB")
->   7dcc0bbf90d9 ("drm/amd/display: Add DCN3 DPP")
->   c37075e358b6 ("drm/amd/display: Add DCN3 MPC")
->   5629c57da234 ("drm/amd/display: Add DCN3 OPP header")
->   86f1f7c7bc4f ("drm/amd/display: Add DCN3 OPTC")
->   f0d3ced5769c ("drm/amd/display: Add DCN3 DCCG")
->   bce3430d79d4 ("drm/amd/display: Add DCN3 CLK_MGR")
->   ca1404079b72 ("drm/amd/display: Add DCN3 DIO")
->   639f7ee6f6d3 ("drm/amd/display: Add DCN3 chip ids")
->   5fa689e66bf4 ("drm/amdgpu/powerplay: add smu block for sienna_cichlid")
->
-> are missing a Signed-off-by from their committer.
+On Wed, Jun 03, 2020 at 07:47:14PM +0200, glider@google.com wrote:
+> Under certain circumstances (we found this out running Docker on a
+> Clang-built kernel with CONFIG_INIT_STACK_ALL) ovl_copy_xattr() may
+> return uninitialized value of |error| from ovl_copy_xattr().
 
-Fixed.
+If we are returning uninitialized value of error, doesn't that mean
+that somewhere in the function we are returning without setting error.
+And that probably means that's a bug and we should fix it?
 
->
-> Is all this new stuff really destined for v5.8?
+I am wondering if this is triggered by loop finishing because all
+the xattr on the file are ovl_is_private_xattr(). In that case, we
+will come out of the loop without setting error. This is in fact
+success and we should return 0 instead of some random error?
 
-No.  5.9.
+Thanks
+Vivek
 
-Alex
 
-> --
-> Cheers,
-> Stephen Rothwell
+> It is then returned by ovl_create() to lookup_open(), which casts it to
+> an invalid dentry pointer, that can be further read or written by the
+> lookup_open() callers.
+> 
+> Signed-off-by: Alexander Potapenko <glider@google.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Roy Yang <royyang@google.com>
+> Cc: <stable@vger.kernel.org> # 4.1
+> 
+> ---
+> 
+> It's unclear to me whether error should be initially 0 or some error
+> code (both seem to work), but I thought returning an error makes sense,
+> as the situation wasn't anticipated by the code authors.
+> 
+> The bug seem to date back to at least v4.1 where the annotation has been
+> introduced (i.e. the compilers started noticing error could be used
+> before being initialized). I hovever didn't try to prove that the
+> problem is actually reproducible on such ancient kernels. We've seen it
+> on a real machine running v4.4 as well.
+> ---
+>  fs/overlayfs/copy_up.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+> index 9709cf22cab3..428d43e2d016 100644
+> --- a/fs/overlayfs/copy_up.c
+> +++ b/fs/overlayfs/copy_up.c
+> @@ -47,7 +47,7 @@ int ovl_copy_xattr(struct dentry *old, struct dentry *new)
+>  {
+>  	ssize_t list_size, size, value_size = 0;
+>  	char *buf, *name, *value = NULL;
+> -	int uninitialized_var(error);
+> +	int error = -EINVAL;
+>  	size_t slen;
+>  
+>  	if (!(old->d_inode->i_opflags & IOP_XATTR) ||
+> -- 
+> 2.27.0.rc2.251.g90737beb825-goog
+> 
+
