@@ -2,146 +2,82 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311D92067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2007620810
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgFCKK0 (ORCPT
+        id S1726916AbgFCKKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:10:26 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34841 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFCKK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:10:26 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 82so956256lfh.2;
-        Wed, 03 Jun 2020 03:10:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VJQBChCpqVmScxIVsRE/tzoYaBw5y+ElxuBAFpFZSx4=;
-        b=gOeRpZGYaA4iy2YeApF4AKUMhmEYQCHIUdxJVaBNm4vI04v8b9l/r4wQOFJNRLI+eT
-         meEivp30PWxYMup3xoELC3FEZX2MLQu7htyNtQnLowM5Z05rz1Sso0YYXrU6Z2nDAq5i
-         PdtE/JljFojeMxX+G+JzHdsi2zH8HSciRE9vFwydVjEg3VRovPwLr6uarsMhAxSptFfB
-         vOIycKfYcwA9R1h/LHKnYp8IPsJ5qLA8kG7mqv2LqToiWIXknVac45JMXmci8hSdKNg/
-         K9v/sJ1ULASmJRuXqt6prqk60ZhcIGKDaLNnnpFFAk/NyyCLGTlOyT2OqXkblaaw0S23
-         LDxA==
-X-Gm-Message-State: AOAM530vPHsFiGnkz3CZrbmni8KQfOraN8DoY7s599bWgvPKcyKyDkyj
-        k8wXk7Z/wspq4inF9/6hzs8=
-X-Google-Smtp-Source: ABdhPJzbHpX6SdFHdCuPksS1gYu3+YX8RbNf4MpiT/293QxC9qClinHQc5NeGx+pAE+5VR6t9NaeGQ==
-X-Received: by 2002:ac2:5604:: with SMTP id v4mr2125245lfd.124.1591179022502;
-        Wed, 03 Jun 2020 03:10:22 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id c4sm346896lja.56.2020.06.03.03.10.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 03:10:21 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     pbonzini@redhat.com
-Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: Use vmemdup_user()
-Date:   Wed,  3 Jun 2020 13:11:31 +0300
-Message-Id: <20200603101131.2107303-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <0c00d96c46d34d69f5f459baebf3c89a507730fc.camel@perches.com>
-References: <0c00d96c46d34d69f5f459baebf3c89a507730fc.camel@perches.com>
+        Wed, 3 Jun 2020 06:10:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47920 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726744AbgFCKK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:10:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BBAB4ABCF;
+        Wed,  3 Jun 2020 10:10:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 077581E1281; Wed,  3 Jun 2020 12:10:24 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 12:10:24 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V11 11/11] fs/xfs: Update
+ xfs_ioctl_setattr_dax_invalidate()
+Message-ID: <20200603101024.GG19165@quack2.suse.cz>
+References: <20200428002142.404144-1-ira.weiny@intel.com>
+ <20200428002142.404144-12-ira.weiny@intel.com>
+ <20200428201138.GD6742@magnolia>
+ <20200602172353.GC8230@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602172353.GC8230@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace opencoded alloc and copy with vmemdup_user().
+On Tue 02-06-20 10:23:53, Darrick J. Wong wrote:
+> On Tue, Apr 28, 2020 at 01:11:38PM -0700, Darrick J. Wong wrote:
+> > > -out_unlock:
+> > > -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> > > -	return error;
+> > > +	if ((mp->m_flags & XFS_MOUNT_DAX_ALWAYS) ||
+> > > +	    (mp->m_flags & XFS_MOUNT_DAX_NEVER))
+> > > +		return;
+> > >  
+> > > +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
+> > > +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
+> > > +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
+> > > +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
+> > > +		d_mark_dontcache(inode);
+> 
+> Now that I think about this further, are we /really/ sure that we want
+> to let unprivileged userspace cause inode evictions?
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-Looks like these are the only places in KVM that are suitable for
-vmemdup_user().
+You have to have an equivalent of write access to the file to be able to
+trigger d_mark_dontcache(). So you can e.g. delete it.  Or you could
+fadvise / madvise regarding its page cache. I don't see the ability to push
+inode out of cache as stronger than the abilities you already have...
 
- arch/x86/kvm/cpuid.c | 17 +++++++----------
- virt/kvm/kvm_main.c  | 19 ++++++++-----------
- 2 files changed, 15 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 901cd1fdecd9..27438a2bdb62 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -182,17 +182,14 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
- 	r = -E2BIG;
- 	if (cpuid->nent > KVM_MAX_CPUID_ENTRIES)
- 		goto out;
--	r = -ENOMEM;
- 	if (cpuid->nent) {
--		cpuid_entries =
--			vmalloc(array_size(sizeof(struct kvm_cpuid_entry),
--					   cpuid->nent));
--		if (!cpuid_entries)
--			goto out;
--		r = -EFAULT;
--		if (copy_from_user(cpuid_entries, entries,
--				   cpuid->nent * sizeof(struct kvm_cpuid_entry)))
-+		cpuid_entries = vmemdup_user(entries,
-+					     array_size(sizeof(struct kvm_cpuid_entry),
-+							cpuid->nent));
-+		if (IS_ERR(cpuid_entries)) {
-+			r = PTR_ERR(cpuid_entries);
- 			goto out;
-+		}
- 	}
- 	for (i = 0; i < cpuid->nent; i++) {
- 		vcpu->arch.cpuid_entries[i].function = cpuid_entries[i].function;
-@@ -212,8 +209,8 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
- 	kvm_x86_ops.cpuid_update(vcpu);
- 	r = kvm_update_cpuid(vcpu);
- 
-+	kvfree(cpuid_entries);
- out:
--	vfree(cpuid_entries);
- 	return r;
- }
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 731c1e517716..46a3743e95ff 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3722,21 +3722,18 @@ static long kvm_vm_ioctl(struct file *filp,
- 		if (routing.flags)
- 			goto out;
- 		if (routing.nr) {
--			r = -ENOMEM;
--			entries = vmalloc(array_size(sizeof(*entries),
--						     routing.nr));
--			if (!entries)
--				goto out;
--			r = -EFAULT;
- 			urouting = argp;
--			if (copy_from_user(entries, urouting->entries,
--					   routing.nr * sizeof(*entries)))
--				goto out_free_irq_routing;
-+			entries = vmemdup_user(urouting->entries,
-+					       array_size(sizeof(*entries),
-+							  routing.nr));
-+			if (IS_ERR(entries)) {
-+				r = PTR_ERR(entries);
-+				goto out;
-+			}
- 		}
- 		r = kvm_set_irq_routing(kvm, entries, routing.nr,
- 					routing.flags);
--out_free_irq_routing:
--		vfree(entries);
-+		kvfree(entries);
- 		break;
- 	}
- #endif /* CONFIG_HAVE_KVM_IRQ_ROUTING */
+								Honza
 -- 
-2.26.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
