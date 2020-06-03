@@ -2,166 +2,211 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4804C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E38C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B313E205CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ACXS2IXL"
+	by mail.kernel.org (Postfix) with ESMTP id 344F02065C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFCJkI (ORCPT
+        id S1726649AbgFCJkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:40:08 -0400
-Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:46051
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgFCJkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:40:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aztJNJL/D2fgvn4taM6gQUOjKEFNU1ctl0ziAjJxc65Y7BH/Um3Q0YO5sqddLvvNA6R1dZ44+8Li05KJrGy744mdlFZGN7h3eHEpXbk29Z7651UVnzYk1/lml9v4YGfK0Ckld0em0avAkOLit01yRyC091KNIGEFIPw1ph8UhqC47LBrNY2736O1bbmeKP+4OSfUhgwMdajxJrPFlGZW/IsQhrRPu4g9AXMf7kjiQaI3IiDYgOA7fyHh8iUfX/xmkRXpCIhsUde6mdUcZs6o1uA4Gq4PYob0p99TqoFlQ1Th4G8JLg6c0iF03ANRN7Ta0LZmmxq0Modab30W4jGuUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMEY2ra3VmJNtDhGs/eKIOXbVsOomvkoqWKOLXOIapQ=;
- b=EjD1Wx7bU0RY0UAqHQbBEWCTm/zGBxJ/uQ29EYUZ/3DABSTSPVRhKOX5m6itD5B/p3lefEG+JvmTPlN5BsBeC5J+IEKViOFmkjgPJdKAZEC+JxT1En6deoGu6lsbiRMNjf9pNH57N+C2SaPfX1st14BpNn9A8YSWgsjJvZX49ciMyyGg4ge+yiAgPTqbsBHu8LYzEDqT79zJIwCVhKkC2TYYKuhFVO9zW2V1ezLfV+LK1ParXN5WbDxjjCt8Fu8V6w0P+hlgszUNoph49db+TPBEZNE9XUA3bx+4KTCnQtLKtzW+CNMOU1a+EQtJMuxyCq7KOUSe3tdFYM05RcW6qQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMEY2ra3VmJNtDhGs/eKIOXbVsOomvkoqWKOLXOIapQ=;
- b=ACXS2IXLrAqd3BYvstNzD54vVT0ICxUlWzP8ElP5WWU6TlZw75L/n01C2KCnK0b5QQ+IaXdYLynm2thfUY/hX+KOd/FwdnKtpz8b4gK8Xltg92Rx05V7hKsi3OfzPs1RJg6xgcUOPWKgY6f+7YJ0+EH8jfLMG8xXHkBfxXm3x7Q=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2856.eurprd04.prod.outlook.com (2603:10a6:4:9a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Wed, 3 Jun
- 2020 09:40:03 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
- 09:40:03 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, aisheng.dong@nxp.com
-Cc:     kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] soc: imx: scu: use devm_kasprintf
-Date:   Wed,  3 Jun 2020 17:29:32 +0800
-Message-Id: <1591176572-9693-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0070.apcprd02.prod.outlook.com
- (2603:1096:4:54::34) To DB6PR0402MB2760.eurprd04.prod.outlook.com
- (2603:10a6:4:a1::14)
+        Wed, 3 Jun 2020 05:40:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58822 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbgFCJkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:40:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id F1246ACC5;
+        Wed,  3 Jun 2020 09:40:43 +0000 (UTC)
+Date:   Wed, 3 Jun 2020 10:40:36 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200603094036.GF3070@suse.de>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200529100806.GA3070@suse.de>
+ <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR02CA0070.apcprd02.prod.outlook.com (2603:1096:4:54::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3045.25 via Frontend Transport; Wed, 3 Jun 2020 09:40:00 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 968e6474-ad19-4ef5-a439-08d807a21764
-X-MS-TrafficTypeDiagnostic: DB6PR0402MB2856:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB28560A4A78E4B58086F52AA488880@DB6PR0402MB2856.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:324;
-X-Forefront-PRVS: 04238CD941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 12XAsF9tEZf4nQsGfd+jV9EykKeYnJw/fNUDp0drfiO+fW6ezIKiZawKl/VwD0pk87levIH8YiSYBqQxBiN4Tmj/KrxE96YXj6ItokC/72FXeZrVjnN3jjQazznsH+ci4UCSoNfp1ScPDCrM3S76JA2xrQZaz3hoOSqYe/Hzm+37TGtVB4JvdNAJnXczLDM7HM5NgM2OWtiDOCMf9M32axiMO68gIx34IK/hkdP4zlsUN8iAqL4KQ8p4Inu8beht9BTHbefaWxd5IJmD6RkWAySC4IuoreQgxaApSYVk03y48kVfOihsc/nQ0ACf2+ZxP4keuUs0xOJpS3iDI18DUU1b8F5atx7r/B3CZMscqaijM+s3NepA/SI3zgPWUs/6
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(396003)(39860400002)(136003)(316002)(5660300002)(8936002)(69590400007)(86362001)(83380400001)(6506007)(36756003)(478600001)(52116002)(66556008)(66946007)(8676002)(4326008)(66476007)(6512007)(9686003)(2616005)(186003)(26005)(16526019)(2906002)(956004)(6486002)(6666004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: LCE4Jv334FGUoRWjfS4gtftsAfbXAfT4aDGgtmNEKOyyHIZzkryruNoMQoc5qB5bt/qF60v7fr2VYqVbI5uITKJFLrgGLx/m2Z7xY0CpMEUye8gfAXeC7TJp2IdtStAHoATq6CqXnDdTZamqyz65lJrwKwkKkPLyUQsOV0sdE3bQuW44KVH5xwTV9Yt6AZe4xuV3mNP6sKOJ2Y9KhiMHPTv6BF2rv6Fu47THrNYt1z5u6g8ITMftWmuR2g4jLhfOnOCQZ0nOkbRPUtBO5POQqrdizan0r4T928bkmxw3Ublj/FbyTHbKSEHb0yk+ekhJYOJ5HwgigKUcR/hkwU9q6ApaJE0V0DPjDI9ivduEt59AD7NYG36D281lI6vArnDUfHOutiuA9ocm0uJvTgVlDOhUqf1761XLs7KX8Ba7HpG3lgUn4fQZ00rW4MJqXrZOKmikMCCt/nMu78sRRm6nblD6YVsusEugVgT6ft2WGMv5LQoeb5c0QngpIKqJgtAO
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 968e6474-ad19-4ef5-a439-08d807a21764
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 09:40:03.4002
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ccq5Biz/yie/NneAkByHNAEBsvDwUTyx+XnNBD6zbkD4f6Z5BoA5snLGyXhCl2qTnU0EFJBAjTMgDAWZPnSwrw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2856
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Tue, Jun 02, 2020 at 06:46:00PM +0200, Dietmar Eggemann wrote:
+> On 29.05.20 12:08, Mel Gorman wrote:
+> > On Thu, May 28, 2020 at 06:11:12PM +0200, Peter Zijlstra wrote:
+> >>> FWIW, I think you're referring to Mel's notice in OSPM regarding the overhead.
+> >>> Trying to see what goes on in there.
+> >>
+> >> Indeed, that one. The fact that regular distros cannot enable this
+> >> feature due to performance overhead is unfortunate. It means there is a
+> >> lot less potential for this stuff.
+> > 
+> > During that talk, I was a vague about the cost, admitted I had not looked
+> > too closely at mainline performance and had since deleted the data given
+> > that the problem was first spotted in early April. If I heard someone
+> > else making statements like I did at the talk, I would consider it a bit
+> > vague, potentially FUD, possibly wrong and worth rechecking myself. In
+> > terms of distributions "cannot enable this", we could but I was unwilling
+> > to pay the cost for a feature no one has asked for yet. If they had, I
+> > would endevour to put it behind static branches and disable it by default
+> > (like what happened for PSI). I was contacted offlist about my comments
+> > at OSPM and gathered new data to respond properly. For the record, here
+> > is an editted version of my response;
+> 
+> [...]
+> 
+> I ran these tests on 'Ubuntu 18.04 Desktop' on Intel E5-2690 v2
+> (2 sockets * 10 cores * 2 threads) with powersave governor as:
+> 
+> $ numactl -N 0 ./run-mmtests.sh XXX
+> 
+> w/ config-network-netperf-unbound.
+> 
+> Running w/o 'numactl -N 0' gives slightly worse results.
+> 
+> without-clamp      : CONFIG_UCLAMP_TASK is not set
+> with-clamp         : CONFIG_UCLAMP_TASK=y,
+>                      CONFIG_UCLAMP_TASK_GROUP is not set
+> with-clamp-tskgrp  : CONFIG_UCLAMP_TASK=y,
+>                      CONFIG_UCLAMP_TASK_GROUP=y
+> 
+> 
+> netperf-udp
+>                                 ./5.7.0-rc7            ./5.7.0-rc7            ./5.7.0-rc7
+>                               without-clamp             with-clamp      with-clamp-tskgrp
+> 
+> Hmean     send-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
+> Hmean     send-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
+> Hmean     send-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
+> Hmean     send-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
+> Hmean     send-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.96 *   1.24%*
+> Hmean     send-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
+> Hmean     send-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
+> Hmean     send-8192     14961.77 (   0.00%)    14418.92 *  -3.63%*    14908.36 *  -0.36%*
+> Hmean     send-16384    25799.50 (   0.00%)    25025.64 *  -3.00%*    25831.20 *   0.12%*
+> Hmean     recv-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
+> Hmean     recv-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
+> Hmean     recv-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
+> Hmean     recv-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
+> Hmean     recv-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.95 *   1.24%*
+> Hmean     recv-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
+> Hmean     recv-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
+> Hmean     recv-8192     14961.61 (   0.00%)    14418.88 *  -3.63%*    14908.30 *  -0.36%*
+> Hmean     recv-16384    25799.39 (   0.00%)    25025.49 *  -3.00%*    25831.00 *   0.12%*
+> 
+> netperf-tcp
+>  
+> Hmean     64              818.65 (   0.00%)      812.98 *  -0.69%*      826.17 *   0.92%*
+> Hmean     128            1569.55 (   0.00%)     1555.79 *  -0.88%*     1586.94 *   1.11%*
+> Hmean     256            2952.86 (   0.00%)     2915.07 *  -1.28%*     2968.15 *   0.52%*
+> Hmean     1024          10425.91 (   0.00%)    10296.68 *  -1.24%*    10418.38 *  -0.07%*
+> Hmean     2048          17454.51 (   0.00%)    17369.57 *  -0.49%*    17419.24 *  -0.20%*
+> Hmean     3312          22509.95 (   0.00%)    22229.69 *  -1.25%*    22373.32 *  -0.61%*
+> Hmean     4096          25033.23 (   0.00%)    24859.59 *  -0.69%*    24912.50 *  -0.48%*
+> Hmean     8192          32080.51 (   0.00%)    31744.51 *  -1.05%*    31800.45 *  -0.87%*
+> Hmean     16384         36531.86 (   0.00%)    37064.68 *   1.46%*    37397.71 *   2.37%*
+> 
+> The diffs are smaller than on openSUSE Leap 15.1 and some of the
+> uclamp taskgroup results are better?
+> 
 
-Use devm_kasprintf to simplify code
+I don't see the stddev and coeff but these look close to borderline.
+Sure, they are marked with a * so it passed a significant test but it's
+still a very marginal difference for netperf. It's possible that the
+systemd configurations differ in some way that is significant for uclamp
+but I don't know what that is.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/soc/imx/soc-imx-scu.c | 37 +++++++++++--------------------------
- 1 file changed, 11 insertions(+), 26 deletions(-)
+> With this test setup we now can play with the uclamp code in
+> enqueue_task() and dequeue_task().
+> 
 
-diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
-index 20d37eaeb5f2..92448ca9a6f8 100644
---- a/drivers/soc/imx/soc-imx-scu.c
-+++ b/drivers/soc/imx/soc-imx-scu.c
-@@ -115,43 +115,28 @@ static int imx_scu_soc_probe(struct platform_device *pdev)
- 
- 	/* format soc_id value passed from SCU firmware */
- 	val = id & 0x1f;
--	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "0x%x", val);
-+	soc_dev_attr->soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "0x%x", val);
- 	if (!soc_dev_attr->soc_id)
- 		return -ENOMEM;
- 
- 	/* format revision value passed from SCU firmware */
- 	val = (id >> 5) & 0xf;
- 	val = (((val >> 2) + 1) << 4) | (val & 0x3);
--	soc_dev_attr->revision = kasprintf(GFP_KERNEL,
--					   "%d.%d",
--					   (val >> 4) & 0xf,
--					   val & 0xf);
--	if (!soc_dev_attr->revision) {
--		ret = -ENOMEM;
--		goto free_soc_id;
--	}
-+	soc_dev_attr->revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%d.%d",
-+						(val >> 4) & 0xf, val & 0xf);
-+	if (!soc_dev_attr->revision)
-+		return -ENOMEM;
- 
--	soc_dev_attr->serial_number = kasprintf(GFP_KERNEL, "%016llX", uid);
--	if (!soc_dev_attr->serial_number) {
--		ret = -ENOMEM;
--		goto free_revision;
--	}
-+	soc_dev_attr->serial_number = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-+						     "%016llX", uid);
-+	if (!soc_dev_attr->serial_number)
-+		return -ENOMEM;
- 
- 	soc_dev = soc_device_register(soc_dev_attr);
--	if (IS_ERR(soc_dev)) {
--		ret = PTR_ERR(soc_dev);
--		goto free_serial_number;
--	}
-+	if (IS_ERR(soc_dev))
-+		return PTR_ERR(soc_dev);
- 
- 	return 0;
--
--free_serial_number:
--	kfree(soc_dev_attr->serial_number);
--free_revision:
--	kfree(soc_dev_attr->revision);
--free_soc_id:
--	kfree(soc_dev_attr->soc_id);
--	return ret;
- }
- 
- static struct platform_driver imx_scu_soc_driver = {
+That is still true. An annotated perf profile should tell you if the
+uclamp code is being heavily used or if it's bailing early but it's also
+possible that uclamp overhead is not a big deal on your particular
+machine.
+
+The possibility that either the distribution, the machine or both are
+critical for detecting a problem with uclamp may explain why any overhead
+was missed. Even if it is marginal, it still makes sense to minimise the
+amount of uclamp code that is executed if no limit is specified for tasks.
+
+> ---
+> 
+> W/ config-network-netperf-unbound (only netperf-udp and buffer size 64):
+> 
+> $ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp/perf.data | grep activate_task
+> 
+> # Event 'cycles:ppp'
+> #
+> # Baseline  Delta Abs  Shared Object            Symbol
+> 
+>      0.02%     +0.54%  [kernel.vmlinux]         [k] activate_task
+>      0.02%     +0.38%  [kernel.vmlinux]         [k] deactivate_task
+> 
+> $ perf diff 5.7.0-rc7_without-clamp/perf.data 5.7.0-rc7_with-clamp-tskgrp/perf.data | grep activate_task
+> 
+>      0.02%     +0.35%  [kernel.vmlinux]         [k] activate_task
+>      0.02%     +0.34%  [kernel.vmlinux]         [k] deactivate_task
+> 
+> ---
+> 
+> I still see 20 out of 90 tests with the warning message that the
+> desired confidence was not achieved though.
+> 
+> "
+> !!! WARNING
+> !!! Desired confidence was not achieved within the specified iterations.
+> !!! This implies that there was variability in the test environment that
+> !!! must be investigated before going further.
+> !!! Confidence intervals: Throughput      : 6.727% <-- more than 5% !!!
+> !!!                       Local CPU util  : 0.000%
+> !!!                       Remote CPU util : 0.000%
+> "
+> 
+> mmtests seems to run netperf with the following '-I' and 'i' parameter
+> hardcoded: 'netperf -t UDP_STREAM -i 3,3 -I 95,5' 
+
+The reason is that netperf on localhost can be a bit unreliable. It also
+hits problems with shared locks and atomics that do not necessarily happen
+when running netperf between two physical machines. When running netperf
+with something like "-I 99,1" it can take a highly variable amount of
+time to run and you are left with no clue how variable it really is or
+whether it's anywhere close to the "true mean".  Hence, in mmtests I
+opted to run netperf multiple times with low confidence to get an idea
+of how variable the test is.
+
 -- 
-2.16.4
-
+Mel Gorman
+SUSE Labs
