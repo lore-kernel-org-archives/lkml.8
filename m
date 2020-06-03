@@ -2,196 +2,137 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3480C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5495F20674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB9320772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PDtwXBsk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MIkps4tW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgFCOpU (ORCPT
+        id S1726026AbgFCOsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:45:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60948 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgFCOpU (ORCPT
+        Wed, 3 Jun 2020 10:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgFCOsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:45:20 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053Eg7YM033013;
-        Wed, 3 Jun 2020 14:45:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=CD8BPhNFQrGZglesYkAqKUL+AjoZd9qnDdoPTaQkXGg=;
- b=PDtwXBsk3rWyVxk+WWxPZWGTx0B83SqsP4ONTTbyd1bRt6AllT/uzoi5renJrMdhy+Q1
- BDZf+itg1qBg84wtDy06UZSm0h7Q71z1pVyhdmes4ulfyD3PisfI18N212RQIhU39/qM
- /lpggRNqt92eOdI16/ggRThfuO6jEQHdlsxeSUZJqHGZVvR2oz5l2R7kUrHp4yZF6dO8
- byW/FhOMV3lSzemr4+qgk/X9D+8QYdk+2QXtvrGeeCcTXgPjpsPTCGG0iA0p4BYropCl
- UQm4GxakBo5qG1dWOendmAGJNIsYnCNPROTv97el/gx35N+3EhZPr87wYXtbRHW2l1qj OQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31dkrupre4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 14:45:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053Ei1Wi061055;
-        Wed, 3 Jun 2020 14:45:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 31c25saefa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 14:45:15 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053EjDPa003831;
-        Wed, 3 Jun 2020 14:45:13 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jun 2020 07:45:13 -0700
-Date:   Wed, 3 Jun 2020 17:45:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] input: ims-pcu: remove redundant assignment to variable
- 'error'
-Message-ID: <20200603144507.GM30374@kadam>
-References: <20200603135102.130436-1-colin.king@canonical.com>
- <20200603140953.GL30374@kadam>
- <c4290ddf-8faa-bb09-bd96-4c01a3f1cc2b@canonical.com>
+        Wed, 3 Jun 2020 10:48:07 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FBF4C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 07:48:07 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id o13so2073796otl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 07:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K4mWQ9BO+ADAedoRkxDsxNn5p6Rl0+bZnTb72ellqDY=;
+        b=MIkps4tW3dJjh2gI+MkcQDiSeHA+/2kyUTQs223quN2IFGpE5XwbsFdY0xuq1Pinx/
+         9Cur14MPWPsnKRuFW8iuEli5YlOWV4L03LVquMJk7w/RnWUT7vvxrEA0SgreCY9PlWQl
+         SMIwYh4Okf4LTQAFjd5y3kIId4UHXRGMRyCHfEplkPLMbCIsVd/gDdfRVJaU284qpJPN
+         pgdlDRfpzpnjzkb5jqg90mr2QxDPJfa4qpm8JhOka8ZbuQ4OydQUriTBWd4V7Zlm4vih
+         8lsA9I/2CyfiG+040dFG7EAbys/uwW8GgPkBBMyeQ0letlLHoWlPzOr3Y1V+NvTPLXnD
+         5xuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K4mWQ9BO+ADAedoRkxDsxNn5p6Rl0+bZnTb72ellqDY=;
+        b=Rg39aKp3L9EFZytRrwsvCyle9mBTXFSD17dVcOD4mSKu1u73CnGTrs1+lDHAuHWMy4
+         +ntZRHkiplsDHnY3h7SISGuq1XyASBx1+oiRUgT5OGbAGMdXMTemrN9PZTLeZcWoBrzt
+         ppN7AUp1cY7BXyaNjqVD5DarzfZ/Pw894Wqt+0AJ5h6egV0AB6hw0HekUkRYkgJpkmpv
+         8dyBx+w5Nj/IM4TuE2h/s4RVv6hCSwc44Lp8o/jXzWR8waN27rBKHtJ0FP+1NrZKokkX
+         UTSrd90EWuvedXV+TkPA7eUgkXabne7MJsLc/uHsmVSUfZg9ukhZtSV+M872jZQ/xnse
+         D4Fw==
+X-Gm-Message-State: AOAM530bbkM+Oku/eWsmksgCmNChxWkulihkwjzbyHVgBog56r73Vh+J
+        qOMrL/QKb8POG1duIhtKVMLRui3TDTBt4E3zERDX2A==
+X-Google-Smtp-Source: ABdhPJziZsRVXntK8sNdeCrfyAujrpVvkIXmhqO25+V3RupcnSBtEIl8SdahpAwthlHGQF8U/clIQ2OCahYRM6xd8CM=
+X-Received: by 2002:a9d:6958:: with SMTP id p24mr256297oto.17.1591195686488;
+ Wed, 03 Jun 2020 07:48:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4290ddf-8faa-bb09-bd96-4c01a3f1cc2b@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006030117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 suspectscore=2 malwarescore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 cotscore=-2147483648 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030117
+References: <20200603114014.152292216@infradead.org> <20200603120037.GA2570@hirez.programming.kicks-ass.net>
+ <20200603120818.GC2627@hirez.programming.kicks-ass.net> <CANpmjNOxLkqh=qpHQjUC_bZ0GCjkoJ4NxF3UuNGKhJSvcjavaA@mail.gmail.com>
+ <20200603121815.GC2570@hirez.programming.kicks-ass.net> <CANpmjNPxMo0sNmkbMHmVYn=WJJwtmYR03ZtFDyPhmiMuR1ug=w@mail.gmail.com>
+In-Reply-To: <CANpmjNPxMo0sNmkbMHmVYn=WJJwtmYR03ZtFDyPhmiMuR1ug=w@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 3 Jun 2020 16:47:54 +0200
+Message-ID: <CANpmjNPzmynV2X+e76roUmt_3oq8KDDKyLLsgn__qtAb8i0aXQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] x86/entry fixes
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:18:46PM +0100, Colin Ian King wrote:
-> On 03/06/2020 15:09, Dan Carpenter wrote:
-> > On Wed, Jun 03, 2020 at 02:51:02PM +0100, Colin King wrote:
-> >> From: Colin Ian King <colin.king@canonical.com>
-> >>
-> >> The variable error is being initialized with a value that is
-> >> never read and the -ENOMEM error return is being returned anyhow
-> >> by the error exit path to label err_free_mem.  The assignment is
-> >> redundant and can be removed.
-> >>
-> >> Addresses-Coverity: ("Unused value")
-> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >> ---
-> >>  drivers/input/misc/ims-pcu.c | 1 -
-> >>  1 file changed, 1 deletion(-)
-> >>
-> >> diff --git a/drivers/input/misc/ims-pcu.c b/drivers/input/misc/ims-pcu.c
-> >> index d8dbfc030d0f..4ba68aa3d281 100644
-> >> --- a/drivers/input/misc/ims-pcu.c
-> >> +++ b/drivers/input/misc/ims-pcu.c
-> >> @@ -292,7 +292,6 @@ static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
-> >>  	if (!gamepad || !input) {
-> >>  		dev_err(pcu->dev,
-> >>  			"Not enough memory for gamepad device\n");
-> >> -		error = -ENOMEM;
-> >>  		goto err_free_mem;
-> > 
-> > It would be better to change the return instead.
-> > 
-> > regards,
-> > dan carpenter
-> > 
-> 
-> I'm not sure about that, the err_free_mem path is used by another error
-> exit return path that also needs to free the device and gamepad and
-> returns ENOMEM, so I think this is a good enough shared error exit strategy.
+On Wed, 3 Jun 2020 at 15:32, Marco Elver <elver@google.com> wrote:
+>
+> On Wed, 3 Jun 2020 at 14:18, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Wed, Jun 03, 2020 at 02:08:57PM +0200, Marco Elver wrote:
+> >
+> > > What is the .config you used? I somehow can't reproduce. I've applied
+> > > the patches on top of -tip/master.
+> >
+> > So tip/master, my patches, your patches, this series.
+> >
+> > $ make CC=/opt/llvm/bin/clang O=defconfig-build/ -j80 -s bzImage
+> >
+> > is what I used, with the below config.
+> >
+>
+> Thanks, can reproduce now. So far I haven't found any indication that
+> there is a missing check in Clang's instrumentation passes somewhere.
+> I'm a bit suspicious because both Clang and GCC have this behaviour.
+> I'll continue looking.
 
-The code looks like this:
+This is fun: __always_inline functions inlined into
+__no_sanitize_undefined *do* get instrumented because apparently UBSan
+passes must run before the optimizer (before inlining), contrary to
+what [ATM]SAN instrumentation does. Both GCC and Clang do this.
 
-drivers/input/misc/ims-pcu.c
-   284  static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
-   285  {
-   286          struct ims_pcu_gamepad *gamepad;
-   287          struct input_dev *input;
-   288          int error;
-   289  
-   290          gamepad = kzalloc(sizeof(struct ims_pcu_gamepad), GFP_KERNEL);
-   291          input = input_allocate_device();
-   292          if (!gamepad || !input) {
-   293                  dev_err(pcu->dev,
-   294                          "Not enough memory for gamepad device\n");
-   295                  error = -ENOMEM;
-   296                  goto err_free_mem;
+Some options to fix:
 
-The "error" is always set before all the gotos.
+1. Add __no_sanitize_undefined to the problematic __always_inline
+functions. I don't know if a macro like '#define
+__always_inline_noinstr __always_inline __no_sanitize_undefined' is
+useful, but it's not an automatic fix either. This option isn't great,
+because it doesn't really scale.
 
-   297          }
-   298  
-   299          gamepad->input = input;
-   300  
-   301          snprintf(gamepad->name, sizeof(gamepad->name),
-   302                   "IMS PCU#%d Gamepad Interface", pcu->device_no);
-   303  
-   304          usb_make_path(pcu->udev, gamepad->phys, sizeof(gamepad->phys));
-   305          strlcat(gamepad->phys, "/input1", sizeof(gamepad->phys));
-   306  
-   307          input->name = gamepad->name;
-   308          input->phys = gamepad->phys;
-   309          usb_to_input_id(pcu->udev, &input->id);
-   310          input->dev.parent = &pcu->ctrl_intf->dev;
-   311  
-   312          __set_bit(EV_KEY, input->evbit);
-   313          __set_bit(BTN_A, input->keybit);
-   314          __set_bit(BTN_B, input->keybit);
-   315          __set_bit(BTN_X, input->keybit);
-   316          __set_bit(BTN_Y, input->keybit);
-   317          __set_bit(BTN_START, input->keybit);
-   318          __set_bit(BTN_SELECT, input->keybit);
-   319  
-   320          __set_bit(EV_ABS, input->evbit);
-   321          input_set_abs_params(input, ABS_X, -1, 1, 0, 0);
-   322          input_set_abs_params(input, ABS_Y, -1, 1, 0, 0);
-   323  
-   324          error = input_register_device(input);
-   325          if (error) {
-   326                  dev_err(pcu->dev,
-   327                          "Failed to register gamepad input device: %d\n",
-   328                          error);
-   329                  goto err_free_mem;
+2. If you look at the generated code for functions with
+__ubsan_handle_*, all the calls are actually guarded by a branch. So
+if we know that there is no UBSan violation in the function, AFAIK
+we're fine. What are the exact requirements for 'noinstr'? Is it only
+"do not call anything I didn't tell you to call?" If that's the case,
+and there is no bug in the function ;-), then for UBSan we're fine.
+With that in mind, you could whitelist "__ubsan_handle"-prefixed
+functions in objtool. Given the __always_inline+noinstr+__ubsan_handle
+case is quite rare, it might be reasonable.
 
-The input_register_device() can return a bunch of different error codes.
-Better to preserve them.  "error" is set.
+We could try to do better, and make __ubsan_handle_* 'noinstr' by
+checking if _RET_IP_ is in .noinstr.text and just return. Would that
+work? But that would only be useful if there is a UBSan bug. It might
+also slow-down regular UBSan, and if we assume that the
+__always_inline functions called from noinstr functions that end up
+with UBSan instrumentation don't have bugs (big assumption), then not
+much is gained either.
 
-   330          }
-   331  
-   332          pcu->gamepad = gamepad;
-   333          return 0;
-   334  
-   335  err_free_mem:
-   336          input_free_device(input);
-   337          kfree(gamepad);
-   338          return -ENOMEM;
+Thoughts?
 
-We just change this from "return -ENOMEM;" to "return error;"
-
-   339  }
-
-regards,
-dan carpenter
-
+Thanks,
+-- Marco
