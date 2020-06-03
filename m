@@ -2,102 +2,173 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C2DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D238C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7B920674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA5320674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 11:49:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="ZGL6/2Iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgFCLtO (ORCPT
+        id S1726261AbgFCLtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:49:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:60884 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCLtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:49:14 -0400
-IronPort-SDR: HekfZPGzVfN3Rz8tXdbg6osW7MqtPM45sCbbU6myPzFh+ifZZ6IXUlqfuyRZnburCgndiRm0+u
- gCvnaPhtsHEQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 04:49:13 -0700
-IronPort-SDR: H1mn7D3ibaebcB80vdUcFHwoNFnvDau4t3J8OyMuciLHY/Jr37C3l+UjPB97E1FmoH0aeFTeT+
- 2cqNvLgVz3sw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,467,1583222400"; 
-   d="scan'208";a="257987380"
-Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
-  by orsmga007.jf.intel.com with ESMTP; 03 Jun 2020 04:49:10 -0700
-From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
-        Michael K Johnson <johnsonm@danlj.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Allison Randal <allison@lohutok.net>,
+        Wed, 3 Jun 2020 07:49:33 -0400
+Received: from www.linux-watchdog.org ([185.87.125.42]:51132 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCLtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:49:32 -0400
+X-Greylist: delayed 498 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Jun 2020 07:49:32 EDT
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id 398F4409DB; Wed,  3 Jun 2020 12:45:21 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 398F4409DB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1591181121;
+        bh=GZUVWstdXkI+h/i93KPfb8kDZBh1tszMSwwt+h9Hi7U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZGL6/2IuOUBQx4dagp8i1lGa6/vSgFM9hcTjxRo58jzxlZ7mnlE0H7rVamp2qsRkY
+         Zijd4jKIDAkJc/KNvy9C0Nhp4jq+f37Ds0XYdxvh6hGIeUTp0e08nrl7PaRGrf18sE
+         ulMbgwWaT5sZ2JS04D7xkL037gpjAQAcDdriyu4c=
+Date:   Wed, 3 Jun 2020 12:45:21 +0200
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Arnd Bergmann <arnd@arndb.de>, Bumsik Kim <kbumsik@gmail.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Evan Benn <evanbenn@chromium.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Julius Werner <jwerner@chromium.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Shyam Saini <mayhs11saini@gmail.com>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Drake <drake@endlessm.com>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/15] mmc: sdhci: Use PCI_IRQ_MSI_TYPES where appropriate
-Date:   Wed,  3 Jun 2020 13:49:01 +0200
-Message-Id: <20200603114906.13625-1-piotr.stankiewicz@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
-References: <20200603114212.12525-1-piotr.stankiewicz@intel.com>
+        Wolfram Sang <wsa@kernel.org>
+Subject: [GIT PULL REQUEST] watchdog - v5.8 Merge window
+Message-ID: <20200603104521.GA14826@www.linux-watchdog.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing as there is shorthand available to use when asking for any type
-of interrupt, or any type of message signalled interrupt, leverage it.
+Hi Linus,
 
-Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Please pull the watchdog changes for the v5.8 release cycle.
+
+This series contains:
+* Add new arm_smc_wdt watchdog driver
+* da9062 and da9063 improvements
+* Clarify documentation about stop() that became optional
+* Document r8a7742 support
+* some overall fixes and improvements
+
+Please also note that Stephen Rothwell reported a conflict between the device tree and the watchdog tree on Tue, 26 May 2020 15:20:15 +1000.
+He fixed it with the following patch:
+diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
+index 27e8c4accd67..572f4c912fef 100644
+--- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
+@@ -24,6 +24,7 @@ properties:
+
+       - items:
+           - enum:
++              - renesas,r8a7742-wdt      # RZ/G1H
+               - renesas,r8a7743-wdt      # RZ/G1M
+               - renesas,r8a7744-wdt      # RZ/G1N
+               - renesas,r8a7745-wdt      # RZ/G1E
 ---
- drivers/mmc/host/sdhci-pci-gli.c     | 3 +--
- drivers/mmc/host/sdhci-pci-o2micro.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-index fd76aa672e02..d14997f9cbf9 100644
---- a/drivers/mmc/host/sdhci-pci-gli.c
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -271,8 +271,7 @@ static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
- {
- 	int ret;
- 
--	ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1,
--				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
-+	ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1, PCI_IRQ_MSI_TYPES);
- 	if (ret < 0) {
- 		pr_warn("%s: enable PCI MSI failed, error=%d\n",
- 		       mmc_hostname(slot->host->mmc), ret);
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-index fa8105087d68..498c51207bfb 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -470,8 +470,7 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_chip *chip,
- 		return;
- 	}
- 
--	ret = pci_alloc_irq_vectors(chip->pdev, 1, 1,
--				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
-+	ret = pci_alloc_irq_vectors(chip->pdev, 1, 1, PCI_IRQ_MSI_TYPES);
- 	if (ret < 0) {
- 		pr_err("%s: enable PCI MSI failed, err=%d\n",
- 		       mmc_hostname(host->mmc), ret);
--- 
-2.17.2
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
+
+  Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
+
+are available in the git repository at:
+
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.8-rc1
+
+for you to fetch changes up to 072cb8b628d312f5785ffdf324286a0519aed910:
+
+  watchdog: m54xx: Add missing include (2020-05-25 08:55:47 +0200)
+
+----------------------------------------------------------------
+linux-watchdog 5.8-rc1 tag
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      watchdog: iTCO: fix link error
+
+Bumsik Kim (1):
+      watchdog: clarify that stop() is optional
+
+Dinghao Liu (1):
+      watchdog: Fix runtime PM imbalance on error
+
+Evan Benn (1):
+      dt-bindings: watchdog: Add ARM smc wdt for mt8173 watchdog
+
+Fabio Estevam (1):
+      watchdog: imx_sc_wdt: Fix reboot on crash
+
+Jason Yan (1):
+      watchdog: riowd: remove unneeded semicolon
+
+Julius Werner (1):
+      watchdog: Add new arm_smc_wdt watchdog driver
+
+Lad Prabhakar (1):
+      dt-bindings: watchdog: renesas,wdt: Document r8a7742 support
+
+Shyam Saini (1):
+      watchdog: ts72xx_wdt: fix build error
+
+Stefan Riedmueller (3):
+      watchdog: da9062: Initialize timeout during probe
+      watchdog: da9063: Make use of pre-configured timeout during probe
+      watchdog: da9062: No need to ping manually before setting timeout
+
+Thomas Gleixner (1):
+      watchdog: m54xx: Add missing include
+
+Wolfram Sang (1):
+      watchdog: imx2_wdt: update contact email
+
+ .../devicetree/bindings/watchdog/arm-smc-wdt.yaml  |  37 ++++
+ .../devicetree/bindings/watchdog/renesas,wdt.txt   |   1 +
+ .../watchdog/convert_drivers_to_kernel_api.rst     |   2 +-
+ Documentation/watchdog/watchdog-kernel-api.rst     |   2 +-
+ MAINTAINERS                                        |   7 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/watchdog/Kconfig                           |  15 ++
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/arm_smc_wdt.c                     | 188 +++++++++++++++++++++
+ drivers/watchdog/da9062_wdt.c                      |  32 ++--
+ drivers/watchdog/da9063_wdt.c                      |  20 ++-
+ drivers/watchdog/imx2_wdt.c                        |   2 +-
+ drivers/watchdog/imx_sc_wdt.c                      |   5 +
+ drivers/watchdog/m54xx_wdt.c                       |   1 +
+ drivers/watchdog/omap_wdt.c                        |   1 +
+ drivers/watchdog/riowd.c                           |   2 +-
+ include/linux/watchdog.h                           |   4 +-
+ 17 files changed, 299 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+ create mode 100644 drivers/watchdog/arm_smc_wdt.c
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
 
