@@ -2,128 +2,151 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D41C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F104C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD1320679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:06:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxBiurAZ"
+	by mail.kernel.org (Postfix) with ESMTP id EF0A120679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 07:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgFCHGb (ORCPT
+        id S1725884AbgFCHLD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgFCHGb (ORCPT
+        Wed, 3 Jun 2020 03:11:03 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.4]:58490 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725840AbgFCHLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 03:06:31 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9510CC05BD43
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 00:06:29 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u16so621907lfl.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 00:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UFCTIuaj8xz+aKHpreeFlNyCdIKgQpq07UVVXvstL7I=;
-        b=UxBiurAZREXPM1HURsDXeYCy3qhAcKEZrySeaFpPyV87adNdAKo0BKKYlwWq2IHwfm
-         0yQSrZDcAsHv8HDwYjfllWB/TnnK1+gQYE9/JODt80oWHfaCr74epyYzWYK4UGPOLo6I
-         TfpZjUzYdLG8NiurklMPPvLtL5jUecgKiBdluuf9d7aCk5EGzoZqIf2PURl3j+vsdfci
-         idmGOrK1kTD/Qdia/QpWXC2sYkeUCZ+KMNfElBydHvXfi+HJyJA/xdNN7SD9CDeLWAPm
-         5MaaaYe/msa6giALcnqvYPEplF7GnA9QFk3USsXLxptgYah4UkV3zrwmF0LOvtpEm/5a
-         8sqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UFCTIuaj8xz+aKHpreeFlNyCdIKgQpq07UVVXvstL7I=;
-        b=Rua2bzyiu2H1Zp8amBghoAVPyVSohPBuIJk1aO1dsW7DgA8iPg1PpJ6smIjUCfqJaD
-         3EKnch9x5rCWS+JuFWgdTsgf0w58CVzVR6k3L55bE99JHcQA1CiqDEfR8OGPRHD+G2zR
-         A+La628twL3YM2C8yWgEikCSLaYUgPPhTOdMMMrWqVv6fY5J7wP9FFhN5fQEOACYVvNO
-         xiA/DG2uZdN0UiZiIIWz854gSR4GR0AfM9LRCampeDuYkobovHSXHcZpGqCu49LgZ8gP
-         fiWLr3JS7QyUt/rrnbj24Gww5xrPVutRZo/BnifX3BttT3iB0Q8LRWL60zNZ2GhJOKVT
-         YfnQ==
-X-Gm-Message-State: AOAM533k8paU1b0TjO+/wRGfflsYntyUyAYwNvQj5RUm5A45Ego2hdMc
-        gHBScWNt1SIyX6ni/QXT6qrzmyEA78CtIL9PdGo=
-X-Google-Smtp-Source: ABdhPJxAvNz3NC+UHfmFFv9r88vxizSW78ZxovGrxdKJJEDiA7ur1ngsxO6bJfwsgg9V7vZjf/WF1eyiGNzGnOsEkEs=
-X-Received: by 2002:a19:fc15:: with SMTP id a21mr1641142lfi.121.1591167987856;
- Wed, 03 Jun 2020 00:06:27 -0700 (PDT)
+        Wed, 3 Jun 2020 03:11:02 -0400
+Received: from [100.113.2.218] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.eu-central-1.aws.symcld.net id C2/3B-37389-30D47DE5; Wed, 03 Jun 2020 07:10:59 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRWlGSWpSXmKPExsUS8J9toi6T7/U
+  4g6erjS3+NP1ms2hevJ7N4uGXWywWl3fNYXNg8fjwMc5j06pONo/9c9ewe3zeJBfAEsWamZeU
+  X5HAmjH/znKWggsCFTdPPGdtYLzE18XIxSEk0MAosW39QbYuRk4OCQE/iX9nb7BDJFYzSuydd
+  JcZwtnHKPFzz3RWkCo2AV2J74s/g9kiAgoSV3/+ButmFkiX6Lm3HKibg0NYwFPi5hIhkDCLgI
+  rE5hlHWUHCvAL2Et+fpELskpf49fwzM4gtJKAhcbhzKztMfO3RLSwg5RICcRJf7piChHkFBCV
+  OznwCFbaWmLg5EaJaTWL+4i5GCJtT4v2HD0wgJcwCmhLrd+lDnKUtsWzha+YJjCKzkAyahVA1
+  C0nVAkbmVYyWSUWZ6RkluYmZObqGBga6hobGusa6RqaGeolVuol6qaW6yal5JUWJQFm9xPJiv
+  eLK3OScFL281JJNjMCISilk/r2D8fHrD3qHGCU5mJREeRPdr8cJ8SXlp1RmJBZnxBeV5qQWH2
+  KU4eBQkuAV9wHKCRalpqdWpGXmAKMbJi3BwaMkwlvjDZTmLS5IzC3OTIdInWJUlBLnXQaSEAB
+  JZJTmwbXBEsolRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSsK8c0Cm8GTmlcBNfwW0mAlosX3f
+  NZDFJYkIKakGJs4A1ZkmfbyvjqYdrphWfegm99cvFTtLzbfvXXZ0XtTpl8KlryRMU8/cCgk+4
+  /luth9/fO3J+s2lYT4F+lcfMmWszt9wNea9rfFfzfIc3jefZvNvWvD6U6mXmdqnyw93/by9a/
+  uadz0rHrO9m7pKycv9Xn+3aMWZUKm6sLce06+pn+PnZ9qxb0fT/eCTbNXRiVs+FuvfenKiUKp
+  /lrVEW/w84bm/qw5uVfym7BjYWf4i4vv6K0452Yd3n9G/EriwMXfTMcFddfUhszoKp3Ka5olm
+  e/09LGn+qPbkx2LdtgDG8mO1Yho/Le+fCN2Tfr7f0NBZK3a/yPFUzpUerM78TJ1lyncezsr2n
+  MPXZJj5QImlOCPRUIu5qDgRADVUtpyjAwAA
+X-Env-Sender: Andreas.Geissler@duagon.com
+X-Msg-Ref: server-10.tower-229.messagelabs.com!1591168258!1070118!1
+X-Originating-IP: [80.255.6.145]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 8765 invoked from network); 3 Jun 2020 07:10:58 -0000
+Received: from unknown (HELO keys.men.de) (80.255.6.145)
+  by server-10.tower-229.messagelabs.com with AES128-SHA encrypted SMTP; 3 Jun 2020 07:10:58 -0000
+Received: from MEN-EX01.intra.men.de ([192.168.1.1])
+  by keys.men.de (PGP Universal service);
+  Wed, 03 Jun 2020 09:10:58 +0200
+X-PGP-Universal: processed;
+        by keys.men.de on Wed, 03 Jun 2020 09:10:58 +0200
+Received: from MEN-EX01.intra.men.de (192.168.1.1) by MEN-EX01.intra.men.de
+ (192.168.1.1) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 3 Jun
+ 2020 09:10:57 +0200
+Received: from build1.dev.men.de (10.64.0.100) by MEN-EX01.intra.men.de
+ (192.168.1.1) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
+ Transport; Wed, 3 Jun 2020 09:10:57 +0200
+From:   AGeissler <Andreas.Geissler@duagon.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <jth@kernel.org>,
+        <crustyaw@gmx.de>, <Andreas.Geissler@duagon.com>
+Subject: [PATCH RESEND] MAINTAINERS: Update maintainer entries for MEN HW
+Date:   Wed, 3 Jun 2020 09:10:49 +0200
+Message-ID: <20200603071049.7309-1-Andreas.Geissler@duagon.com>
+X-Mailer: git-send-email 2.16.4
+X-Originating-IP: [10.64.0.100]
+X-ClientProxiedBy: MEN-EX01.intra.men.de (192.168.1.1) To
+ MEN-EX01.intra.men.de (192.168.1.1)
 MIME-Version: 1.0
-References: <20200601030347.112984-1-daeho43@gmail.com> <daed6176-fb7d-bd4d-9662-735cc3cda2e0@huawei.com>
-In-Reply-To: <daed6176-fb7d-bd4d-9662-735cc3cda2e0@huawei.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Wed, 3 Jun 2020 16:06:15 +0900
-Message-ID: <CACOAw_xgcevW9-xKHq-siDa-1i-Nap+rQQOpZ9LWyfbGkEmV=g@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: protect new segment allocation in expand_inode_data
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e4841e51-7998-49c0-ba41-8b8a0e2d8962
+X-EXCLAIMER-MD-BIFURCATION-INSTANCE: 0
+X-Loop: 2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oh, thanks for notification!
+﻿[resend; because of missing cc]
 
-2020=EB=85=84 6=EC=9B=94 3=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 3:59, Ch=
-ao Yu <yuchao0@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 2020/6/1 11:03, Daeho Jeong wrote:
-> > From: Daeho Jeong <daehojeong@google.com>
-> >
-> > Found a new segemnt allocation without f2fs_lock_op() in
-> > expand_inode_data(). So, when we do fallocate() for a pinned file
-> > and trigger checkpoint very frequently and simultaneously. F2FS gets
-> > stuck in the below code of do_checkpoint() forever.
-> >
-> >   f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
-> >   /* Wait for all dirty meta pages to be submitted for IO */
-> >                                                 <=3D if fallocate() her=
-e,
-> >   f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META); <=3D it'll wait forever=
-.
-> >
-> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> > Reviewed-by: Chao Yu <yuchao0@huawei.com>
->
-> Daeho,
->
-> I guess Jaegeuk could add the tag when merging this patch, we don't have
-> to resend the patch if there is no updates on code and message.
->
-> Thanks,
->
-> > ---
-> >  fs/f2fs/file.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> > index f7de2a1da528..14ace885baa9 100644
-> > --- a/fs/f2fs/file.c
-> > +++ b/fs/f2fs/file.c
-> > @@ -1660,7 +1660,11 @@ static int expand_inode_data(struct inode *inode=
-, loff_t offset,
-> >
-> >               down_write(&sbi->pin_sem);
-> >               map.m_seg_type =3D CURSEG_COLD_DATA_PINNED;
-> > +
-> > +             f2fs_lock_op(sbi);
-> >               f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
-> > +             f2fs_unlock_op(sbi);
-> > +
-> >               err =3D f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PR=
-E_DIO);
-> >               up_write(&sbi->pin_sem);
-> >
-> >
+Remove Andreas Werner as Maintainer of the F21 BMC driver, as he is no
+longer with the company and add Andreas Geissler as additional
+Maintainer for all MEN Hardware.
+
+Acked-by: Johannes Thumshirn <jth@kernel.org>
+Acked-by: Andreas Werner <crustyaw@gmx.de>
+Signed-off-by: AGeissler <Andreas.Geissler@duagon.com>
+---
+ MAINTAINERS | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68cd1b966b45..b3b45d2e9c8a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11044,19 +11044,21 @@ F:	include/uapi/mtd/
+ 
+ MEN A21 WATCHDOG DRIVER
+ M:	Johannes Thumshirn <morbidrsa@gmail.com>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ L:	linux-watchdog@vger.kernel.org
+ S:	Maintained
+ F:	drivers/watchdog/mena21_wdt.c
+ 
+ MEN CHAMELEON BUS (mcb)
+ M:	Johannes Thumshirn <morbidrsa@gmail.com>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ S:	Maintained
+ F:	Documentation/driver-api/men-chameleon-bus.rst
+ F:	drivers/mcb/
+ F:	include/linux/mcb.h
+ 
+ MEN F21BMC (Board Management Controller)
+-M:	Andreas Werner <andreas.werner@men.de>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ S:	Supported
+ F:	Documentation/hwmon/menf21bmc.rst
+ F:	drivers/hwmon/menf21bmc_hwmon.c
+@@ -11066,10 +11068,18 @@ F:	drivers/watchdog/menf21bmc_wdt.c
+ 
+ MEN Z069 WATCHDOG DRIVER
+ M:	Johannes Thumshirn <jth@kernel.org>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
+ L:	linux-watchdog@vger.kernel.org
+ S:	Maintained
+ F:	drivers/watchdog/menz69_wdt.c
+ 
++MEN Z135 UART DRIVER
++M:	Johannes Thumshirn <jth@kernel.org>
++M:	Andreas Geissler <andreas.geissler@duagon.com>
++L:	linux-serial@vger.kernel.org
++S:	Maintained
++F:	drivers/tty/serial/men_z135_uart.c
++
+ MESON AO CEC DRIVER FOR AMLOGIC SOCS
+ M:	Neil Armstrong <narmstrong@baylibre.com>
+ L:	linux-media@vger.kernel.org
+
+base-commit: d6f9469a03d832dcd17041ed67774ffb5f3e73b3
+-- 
+2.16.4
+
+
+MEN Mikro Elektronik GmbH
+Neuwieder Straße 1-7 90411 Nürnberg
+Geschäftsführer: Dr. Michael Goldbach - Matthias Kamolz - Yilmaz Kocak - Handelsregister AG Nürnberg HRB 5540
+
