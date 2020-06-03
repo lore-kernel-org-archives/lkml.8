@@ -2,85 +2,128 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134AC20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B305120678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:31:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cKDJ0CH/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WDEAYzj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgFCMbm (ORCPT
+        id S1726138AbgFCMbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38078 "EHLO
+        Wed, 3 Jun 2020 08:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgFCMbm (ORCPT
+        with ESMTP id S1725992AbgFCMby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:31:42 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 856F7C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 05:31:41 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id n23so2472281ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 05:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=P9MOihz2dNvs8KZnA010MIHpIN88q045MfnMNo8RW/o=;
-        b=cKDJ0CH/AF02dBkES1fgqvnlScibwydiQmc/O6sYnvqocnJJn8D7Dt7BUqJbsXHFOq
-         3Dh5EB5u05D+YUsYcdK2/dpz8P58l57wXAVWJcRb+qIKRfzhB1yUJK1hWXTcUY4lbCuG
-         USjD327wh1diUNLSkiylOunzvvYK+8hVXWtRTK1+Ul1Zfo3EtpeJBZTM8Z4Oqp98gjBd
-         DkWSSTa1qO5cNWMJDug4MRPvXkJ15iRqaEZ7DizskD2LQJKlcCVx4DV6nFhmgQDe10kX
-         Xpy2RgMSqATYotfaUQk02ZT1fs/CLkW4WoouCR9LTIlwVpbLTgEVYlT3tpDHo7uZkbM5
-         EI+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=P9MOihz2dNvs8KZnA010MIHpIN88q045MfnMNo8RW/o=;
-        b=hQJeRn8OPq5Y7AjBpCHhPS3BpfWcAr/C7AVOlQFuV9u/ugrwIuKDegLsdbqHlzzx7o
-         whJcKz7p6lgMspsmzO4fHfNlrZvRpb055MZiFpxaDqPr3ZuUMYDw2uOCmILVwhb90thG
-         mxugM9I8PLux1y5WuMjvt+Z6sMkggbOgyRLH6rYgTGawZ+h7UmMjesIUZ3imY1rTLtIo
-         uyuFDm7r+uYqJDYDq3eQ+N3ZUSa+9HaKxVvG0Q7OkGfTnpIWoikJk1ZM23cA2LB/Y0dZ
-         dCaFGDQWs2MqHZ7Jcihn4PEqwYeJl+WBqx8GVRMv3hiwSbQh2ZvgnHUpkAJRd9lPPyVU
-         ML/Q==
-X-Gm-Message-State: AOAM531bNzJpaJyAFRYJrw3Ic8QtFbDAAgFFSDM0Em68y1IfZfRInFSn
-        TloOac9h+B+JwUb5GyDv3MUKF3Qazt3A9+qc8qHx7Q==
-X-Google-Smtp-Source: ABdhPJw8SSAJIyE84pdf0Z6PzkVQ0XCT1269nX2POe1eYPap+iF6PA0W87bqQfgKU2PzWMulWs5QUCll7p5vTFgMEVE=
-X-Received: by 2002:a2e:911:: with SMTP id 17mr2041281ljj.411.1591187499787;
- Wed, 03 Jun 2020 05:31:39 -0700 (PDT)
+        Wed, 3 Jun 2020 08:31:54 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D164CC08C5C0;
+        Wed,  3 Jun 2020 05:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TOhmvnzlmGigE1Miw3N6/6ONIbwSf6YuZAt+1vAhyXM=; b=WDEAYzj5IU60fkR/zEsX7YNtO
+        YgVYYqu33onIdA26p4VUvN7E0Cg3z5u8zPdGgmbUEARPWtRBBi9g0ZAFdmahzE+F4GuKObKfyXYp8
+        7K+t50vIQ4W4/HewyO4Q2Ay55AVLF80mtaHCoVOdmi6dU9i/+3kAxACS7YC93lhs+YfE8ZaRaCkoB
+        KCi3ISwD0kFpDH6EadSuA/vnhN9nlfbIofGCvWtov1RK06E+NDhqu5cVuOGZrqi4OsWT8PBHd73hu
+        2vjvl2+gxuMKjRaGhXghQrq1Gskz0eMuJP+aNMcPi7CuGASM0tQpBRky786bQSmisdC33vMgSRIca
+        yZcrbr3vg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:48860)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jgSYY-0005QV-NX; Wed, 03 Jun 2020 13:31:42 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jgSYT-0005OK-CV; Wed, 03 Jun 2020 13:31:37 +0100
+Date:   Wed, 3 Jun 2020 13:31:37 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
+ 1000BaseX/2500BaseX ports
+Message-ID: <20200603123137.GZ1551@shell.armlinux.org.uk>
+References: <20200528135608.GU1551@shell.armlinux.org.uk>
+ <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
+ <20200528144805.GW1551@shell.armlinux.org.uk>
+ <20200528204312.df9089425162a22e89669cf1@suse.de>
+ <20200528220420.GY1551@shell.armlinux.org.uk>
+ <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
+ <20200529145928.GF869823@lunn.ch>
+ <20200529175225.a3be1b4faaa0408e165435ad@suse.de>
+ <20200529163340.GI869823@lunn.ch>
+ <20200602225016.GX1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 3 Jun 2020 18:01:28 +0530
-Message-ID: <CA+G9fYtCP3d805MpSMq0TGkz2uhHpFLaizP8uHxHzC5jnAc0hQ@mail.gmail.com>
-Subject: linux-next: arm64 build failed - aarch64-linux-gnu-ld: cannot find
- ./drivers/firmware/efi/libstub/lib.abuilt-in.a: No such file or directory
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-efi@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Cc:     ardb@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        nivedita@alum.mit.edu, jarkko.sakkinen@linux.intel.com,
-        xypron.glpk@gmx.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602225016.GX1551@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64 build failed on Linux-next 20200603.
+On Tue, Jun 02, 2020 at 11:50:16PM +0100, Russell King - ARM Linux admin wrote:
+> On Fri, May 29, 2020 at 06:33:40PM +0200, Andrew Lunn wrote:
+> > Given the current code, you cannot. Now we understand the
+> > requirements, we can come up with some ideas how to do this properly.
+> 
+> Okay, I've been a little quiet because of sorting out the ARM tree
+> for merging with Linus (now done) and I've been working on a solution
+> to this problem.
+> 
+> The good news is, I have an implementation in phylink to use the sync
+> status reported from a PCS, and to appropriately enable sync status
+> reporting.  I'm quite nervous about having that enabled as a matter of
+> routine as I've seen some Marvell hardware end up with interrupt storms
+> from it - presumably due to noise pickup on the serdes lines being
+> interpreted as an intermittently valid signal.
 
-make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm64
-CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
-aarch64-linux-gnu-gcc" O=build Image
- #
-aarch64-linux-gnu-ld: cannot find
-./drivers/firmware/efi/libstub/lib.abuilt-in.a: No such file or
-directory
- make[1]: *** [/linux/Makefile:1132: vmlinux] Error 1
+Yes, as expected - though not quite a storm - I'm seeing:
+
+[root@buildroot ~]# dmesg |grep 'eno2:' | wc -l
+1604
+[root@buildroot ~]# dmesg |grep 'eno2: mac link down' | wc -l
+1598
+[root@buildroot ~]# cat /proc/uptime
+68868.10 137231.62
+
+Similar happens with mvpp2 hardware - for Marvell's older mvpp2x driver,
+I had to disable the AN bypass bit:
+
+    net: marvell: mvpp2x: avoid link status flood
+
+    eth2 on the Macchiatobin board floods the system with link status
+    interrupts whilethe link is down.  This appears to be caused by the
+    AN bypass logic causing spurious link status change interrupts,
+    despite the port status register indicating that the link remains
+    down.
+
+    Avoid this by not setting the AN bypass bit for SGMII links.
+
+    Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+
+So, it looks like a different approach will be needed, since having a
+system flooded with unnecessary interrupts is obviously bad.  This
+isn't limited to just Marvell mvneta and mvpp2, I think Chris at ZII
+has reported a similar behaviour on his boards with noise inducing
+serdes sync/link events.
+
+Hmm.
 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
