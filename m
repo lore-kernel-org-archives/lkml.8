@@ -2,108 +2,115 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C18DD20734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493E620734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 20:28:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1LVFpMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgFCU0H (ORCPT
+        id S1726216AbgFCU2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:26:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:37624 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgFCU0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:26:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 303D155D;
-        Wed,  3 Jun 2020 13:26:06 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6ACA53F52E;
-        Wed,  3 Jun 2020 13:26:05 -0700 (PDT)
-References: <20200603173150.GB1551@shell.armlinux.org.uk> <jhjh7vshvwl.mognet@arm.com> <20200603184500.GC1551@shell.armlinux.org.uk> <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com> <20200603195853.GD1551@shell.armlinux.org.uk>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: v5.7: new core kernel option missing help text
-In-reply-to: <20200603195853.GD1551@shell.armlinux.org.uk>
-Date:   Wed, 03 Jun 2020 21:25:57 +0100
-Message-ID: <jhjftbbj3qi.mognet@arm.com>
+        Wed, 3 Jun 2020 16:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgFCU2K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:28:10 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D32C08C5C0;
+        Wed,  3 Jun 2020 13:28:09 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c3so3731904wru.12;
+        Wed, 03 Jun 2020 13:28:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QJoU0SL/WMOj7L3NadynkZeyU/j5E6/2RmbX2dsWEuI=;
+        b=O1LVFpMdx6MshAlnzmBj79PlQO5s8ec4kdWGh+y1Lp4Tk4bQ8uKEJuaeGQX+dKGEbJ
+         sLBjRjNR7OLo34SNlxhzLOc7vTz6E+Fg1Sz5LpB7kYH1LEG3Z/wasndPb262w/QmQWuA
+         s5rtW9C3xatcgDg6G3ErDST7EnfUp2zg7Hz8+CC8ui6tPSTg4HglImmkhr0O69jYImbS
+         ynLU+KdOwqP/9VsifF5GkohvIse8OP3jJqFLFp3+lSSXE+qFzax/ZMK4v7FpmMCMjJsU
+         vGMC2e9BEhVVsKlQHkHenxKCbb3QPsaBsytEcndI1/WwvvKWVJ+uGTi+SF+vHwHroERa
+         tqOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QJoU0SL/WMOj7L3NadynkZeyU/j5E6/2RmbX2dsWEuI=;
+        b=GokU4CNC9xUCOFWuUfCbkY242rmMICaehFoliQwWNR4m4dcazGk+zEU2MK3oA61EBr
+         V/va9XZSUe0EMra61XuQEf29DRWdCavZFd9XqsIKIeF9hFxqrpu0wn36dm0eYe3wE2rY
+         dDoVnPgfZ2y6xpq+jUH+DseqE1XOlYoSyRfNTh+TWrOK/ABCr1bpuozKuNFUH9b0beNK
+         cPwpglmn4f8ZupLa+yXeIQVsm1JgrcaHCkjMHJB3VxE7G3X+ZRHW4Ni5yWU2PzgT1C2z
+         oGVORNbEcOeHX6pPTUuMi7Kol5tvKJTpCHq04y+7MT4U1X6qRqJ2hfOVTOoHz0SH2Xjf
+         mGiA==
+X-Gm-Message-State: AOAM530Rr/4IvCSLhwvxolFFS60IJ3uoNZWHTXNN5sdWhxSBxL8/sqTz
+        A06O8EXeAk/m0h+4GFJHhwA01KGD
+X-Google-Smtp-Source: ABdhPJw1wLOdLyU2fIYxiFX1qFroH9/3SElpGfgD5z6nUeWbe6JPFezogiaAwdPas9bXLSZEBmUsbA==
+X-Received: by 2002:adf:c98a:: with SMTP id f10mr1043664wrh.329.1591216088120;
+        Wed, 03 Jun 2020 13:28:08 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id c5sm5237770wrb.72.2020.06.03.13.28.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 13:28:07 -0700 (PDT)
+Subject: Re: [PATCH v3 04/13] PCI: brcmstb: Add bcm7278 reigister info
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200603192058.35296-1-james.quinlan@broadcom.com>
+ <20200603192058.35296-5-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f93f96f8-7034-d8a4-7959-0da00e6ee0ce@gmail.com>
+Date:   Wed, 3 Jun 2020 13:28:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200603192058.35296-5-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 03/06/20 20:58, Russell King - ARM Linux admin wrote:
-> On Wed, Jun 03, 2020 at 09:24:56PM +0200, Vincent Guittot wrote:
->> On Wed, 3 Jun 2020 at 20:45, Russell King - ARM Linux admin
->> <linux@armlinux.org.uk> wrote:
->> > It's a start.  I'm still wondering whether I should answer yes or no
->> > for the platforms I'm building for.
->> >
->> > So far, all I've found is:
->> >
->> > arch/arm/include/asm/topology.h:#define arch_scale_thermal_pressure topology_get_thermal_pressure
->> >
->> > which really doesn't tell me anything about this.  So I'm still in
->> > the dark.
->> >
->> > I guess topology_get_thermal_pressure is provided by something in
->> > drivers/ which will be conditional on some driver or something.
->>
->> You need cpufreq_cooling device to make it useful and only for SMP
->> I don't think that this should not be user configurable because even
->> with the description above, it is not easy to choose.
->> This should be set by the driver that implement the feature which is
->> only cpufreq cooling device for now it
->
-> As I have CONFIG_CPU_FREQ_THERMAL=y in my config, I'm guessing (and it's
-> only a guess) that I should say y to SCHED_THERMAL_PRESSURE ?
->
 
-arm and arm64 implement arch_scale_thermal_pressure(); the actual
-implementation is in the arch_topology "driver" (GENERIC_ARCH_TOPOLOGY).
+On 6/3/2020 12:20 PM, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> Add in compatibility strings and code for three Broadcom STB chips.  Some
+> of the register locations, shifts, and masks are different for certain
+> chips, requiring the use of different constants based on of_id.
+> 
+> We would like to add the following at this time to the match list but we
+> need to wait until the end of this patchset so that everything works.
+> 
+>     { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
+>     { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
+>     { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
+>     { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
 
-Then, the caller of arch_set_thermal_pressure() is cpufreq_cooling (see
-below); that'll only get called if you have thermal zones using CPU
-cooling devices.
+If you need to resubmit, there is a typo in the subject: reigister vs.
+register. Other than that:
 
-AFAICT the current state of things imply we should have something like
-
-        depends on (ARM || ARM64) && GENERIC_ARCH_TOPOLOGY
-
-for that option.
-
->> > > +     help
->> > > +       This option allows the scheduler to be aware of CPU thermal throttling
->> > > +       (i.e. thermal pressure), providing arch_scale_thermal_pressure() is
->> > > +       implemented.
->
-> Is this feature documented in terms of what it does?  Do I assume that
-> as the thermal trip points start tripping, that has an influence on
-> the scheduler?  Or is it the case that the scheduler is wanting to
-> know when the cpu frequency changes?
->
-> Grepping for "thermal" in Documentation/scheduler brings up nothing.
-
-The former; changing a CPU cooling device's state (IOW changing its max
-allowed frequency for thermal reasons) leads to a call to
-arch_set_thermal_pressure() (see
-cpufreq_cooling.c::cpufreq_set_cur_state()).
-
-It's somewhat interesting to have, at least in theory. On plain SMP that
-would let the scheduler see if some CPUs are more throttled that others,
-which would be leveraged when doing load balancing. It's more
-interesting for big.LITTLE & co, where in the worst cases we can have
-things like capacity inversion, i.e. the bigs are so thermally throttled
-that they give less oomf than a LITTLE.
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
