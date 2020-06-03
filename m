@@ -6,92 +6,67 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C91C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E181BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856E82068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B012077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 06:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbgFCGyH (ORCPT
+        id S1726141AbgFCGyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 02:54:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48506 "EHLO huawei.com"
+        Wed, 3 Jun 2020 02:54:47 -0400
+Received: from winnie.ispras.ru ([83.149.199.91]:21904 "EHLO smtp.ispras.ru"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725883AbgFCGyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 02:54:07 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BA4BC407E5811365DDB7;
-        Wed,  3 Jun 2020 14:54:05 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.205) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 14:54:03 +0800
-Subject: Re: [PATCH] cxl: Fix kobject memory leak in cxl_sysfs_afu_new_cr()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Markus Elfring <Markus.Elfring@web.de>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Frederic Barrat" <fbarrat@linux.ibm.com>,
-        Ian Munsie <imunsie@au1.ibm.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-References: <b9791ff3-8397-f6e9-ca88-59c9bbe8c78f@web.de>
- <25ad528b-beaf-820f-9738-ea304dcbc0d7@huawei.com>
- <20200603061443.GB531505@kroah.com>
- <20ae5516-7e41-f706-46ba-955e1936f183@huawei.com>
- <20200603065024.GA587198@kroah.com>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-Message-ID: <0d51c5c2-80d7-610d-3866-6bc85eeaeadf@huawei.com>
-Date:   Wed, 3 Jun 2020 14:54:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726057AbgFCGyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 02:54:47 -0400
+Received: from monopod.intra.ispras.ru (monopod.intra.ispras.ru [10.10.3.121])
+        by smtp.ispras.ru (Postfix) with ESMTP id 2F94B203BF;
+        Wed,  3 Jun 2020 09:54:42 +0300 (MSK)
+Date:   Wed, 3 Jun 2020 09:54:42 +0300 (MSK)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+cc:     linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] iommu/amd: Fix event counter availability check
+In-Reply-To: <c0f9f676-eff8-572d-9174-4c22c6095a3d@linuxfoundation.org>
+Message-ID: <alpine.LNX.2.20.13.2006030935570.3181@monopod.intra.ispras.ru>
+References: <20200529200738.1923-1-amonakov@ispras.ru> <alpine.LNX.2.20.13.2005311014450.16067@monopod.intra.ispras.ru> <c0f9f676-eff8-572d-9174-4c22c6095a3d@linuxfoundation.org>
+User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
 MIME-Version: 1.0
-In-Reply-To: <20200603065024.GA587198@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.215.205]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2 Jun 2020, Shuah Khan wrote:
 
-在 2020/6/3 14:50, Greg Kroah-Hartman 写道:
-> On Wed, Jun 03, 2020 at 02:34:07PM +0800, wanghai (M) wrote:
->> 在 2020/6/3 14:14, Greg Kroah-Hartman 写道:
->>> On Wed, Jun 03, 2020 at 09:42:41AM +0800, wanghai (M) wrote:
->>>> 在 2020/6/3 1:20, Markus Elfring 写道:
->>>>>> Fix it by adding a call to kobject_put() in the error path of
->>>>>> kobject_init_and_add().
->>>>> Thanks for another completion of the exception handling.
->>>>>
->>>>> Would an other patch subject be a bit nicer?
->>>> Thanks for the guidance, I will perfect this description and send a v2
->>> Please note that you are responding to someone that a lot of kernel
->>> developers and maintainers have blacklisted as being very annoying and
->>> not helpful at all.
->>>
->>> Please do not feel that you need to respond to, or change any patch in
->>> response to their emails at all.
->>>
->>> I strongly recommend you just add them to your filters to not have to
->>> see their messages.  That's what I have done.
->>>
->>> thanks,
->>>
->>> greg k-h
->>>
->>> .
->> Okay, so I don’t have to send the v2 patch.
-> No, all should be fine, I'll review the patch when after 5.8-rc1 is out,
-> and if I find any problems with it, will let you know then.
+> I changed the logic to read config to get max banks and counters
+> before checking if counters are writable and tried writing to all.
+> The result is the same and all of them aren't writable. However,
+> when disable the writable check and assume they are, I can run
+[snip]
 
-Got it. Thanks.
+This is similar to what I did. I also noticed that counters can
+be successfully used with perf if the initial check is ignored.
+I was considering sending a patch to remove the check and adjust
+the event counting logic to use counters as read-only, but after
+a bit more investigation I've noticed how late pci_enable_device
+is done, and came up with this patch. It's a path of less resistance:
+I'd expect maintainers to be more averse to removing the check
+rather than fixing it so it works as intended (even though I think
+the check should not be there in the first place).
 
+However:
 
-thanks,
+The ability to modify the counters is needed only for sampling the
+events (getting an interrupt when a counter overflows). There's no
+code to do that for these AMD IOMMU counters. A solution I would
+prefer is to not write to those counters at all. It would simplify or
+even remove a bunch of code. I can submit a corresponding patch if
+there's general agreement this path is ok.
 
-Wang Hai
+What do you think?
 
-
-
+Alexander
