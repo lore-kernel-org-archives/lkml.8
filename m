@@ -2,124 +2,340 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECED3207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D8620829
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bn8KmNKp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hSUizZk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgFCXFC (ORCPT
+        id S1726837AbgFCXFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:05:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44130 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725876AbgFCXFB (ORCPT
+        Wed, 3 Jun 2020 19:05:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgFCXFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:05:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591225499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c2487rGs+TC6tntrEqOtDUOH3rYGvUESRfM9RkW9d4E=;
-        b=Bn8KmNKpIdye9HjL5OEYsjXsu6wN7WARwnKLgdVpBO47eOOirdyiPRBdb7vOzmnbzw+CPX
-        rvXrnUaHQn432zJMDrZFFuuFllD19pwvrO2FzbpDxiitxNNUXSfyLEIxIQ44S21a1+PDU4
-        TRjlxbfGHO3e0HGSHS6+I1Ce0ObVXR4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-GFLXoTvkOEe6eS8rzLIuTA-1; Wed, 03 Jun 2020 19:04:55 -0400
-X-MC-Unique: GFLXoTvkOEe6eS8rzLIuTA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34090800685;
-        Wed,  3 Jun 2020 23:04:54 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56C657B5E1;
-        Wed,  3 Jun 2020 23:04:53 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 17:04:52 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
- VFIO_IRQ_TYPE_REMAP_BAR_REGION
-Message-ID: <20200603170452.7f172baf@x1.home>
-In-Reply-To: <20200603014058.GA12300@joy-OptiPlex-7040>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
-        <20200518025245.14425-1-yan.y.zhao@intel.com>
-        <20200529154547.19a6685f@x1.home>
-        <20200601065726.GA5906@joy-OptiPlex-7040>
-        <20200601104307.259b0fe1@x1.home>
-        <20200602082858.GA8915@joy-OptiPlex-7040>
-        <20200602133435.1ab650c5@x1.home>
-        <20200603014058.GA12300@joy-OptiPlex-7040>
-Organization: Red Hat
+        Wed, 3 Jun 2020 19:05:47 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 100ECC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:05:46 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d7so2371480lfi.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QByVHWerg+6CCdPejtKU904pyLQMob3h8tAv1OiM+hg=;
+        b=hSUizZk7xrwWFBi8HYX3a8EJWePwzN7q8gehHqK0JH7vzZeqy4NsYf9qqViYLXdJGV
+         ulu01X0Lyo8yiUsL5pS1Yd6LtSICNQhFCi/MFdPpEhIr8LtICP/1tRJCDe9g6mBoPQs2
+         VTpyk7BqsC98500/Kqdz+QIyB5SojCOPfsMoU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QByVHWerg+6CCdPejtKU904pyLQMob3h8tAv1OiM+hg=;
+        b=r44abTtA7VAFoXEcwnrbYL0xsdo9HXivscUHOpJibSRjXqHJ2FEwpiBe6jLTAdFXsw
+         m6IM8ClJBMsJ2AAawzs+In1qLrPbg4plgxLCgeOaJXRzQ8+UZFsXOczOiWsVitlCPJUg
+         g+V684Lwi97G4Brm8+mGcouFdbCBbECa3d0p7ITdSxCf7DpKLutvBhlvGW7nMBRv7EtB
+         Mqb6BLfOR2G+uotyy5AjXp8M0m8MCyC9Z+llf2EBfiZ4u3JvlF6Vp1newCMOL/Z98voL
+         l9Dp2KVMzu5Gn4BkYBgAjw+Kr4kl05QaPwjV7XfS2LAlG8Cbk2FsQZdSU2q9nGXWSh7y
+         neAg==
+X-Gm-Message-State: AOAM533joumsTEH1Cq0A66bITkCk097bBd72Zij9qvR+EEe2gPdOY6QU
+        sku8l1d6up/zocui9+bbSudaaV5ERz/MMh9Uiqt4mg==
+X-Google-Smtp-Source: ABdhPJwAHV1wn9mbHgSH4BZU1nQEUqaGVnv54HRXlZit+Vppc64RYgiSSn/+nliheJKSTagD4wP1zZQmtlpixebT/iI=
+X-Received: by 2002:a19:5206:: with SMTP id m6mr887807lfb.144.1591225544351;
+ Wed, 03 Jun 2020 16:05:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200528165324.v1.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
+ <20200528165324.v1.2.I7f3372c74a6569cd3445b77a67a0b0fcfdd8a333@changeid> <1359027D-E531-4022-89DD-DB19B3C7F499@holtmann.org>
+In-Reply-To: <1359027D-E531-4022-89DD-DB19B3C7F499@holtmann.org>
+From:   Miao-chen Chou <mcchou@chromium.org>
+Date:   Wed, 3 Jun 2020 16:05:33 -0700
+Message-ID: <CABmPvSE0f766DjB1Npfa7ktn0XQuzdxV+yGpSax9WfF+4v8dYg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/7] Bluetooth: Add handler of MGMT_OP_READ_ADV_MONITOR_FEATURES
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Manish Mandlik <mmandlik@chromium.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Yoni Shavit <yshavit@chromium.org>,
+        Michael Sun <michaelfsun@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 21:40:58 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+Hi Marcel,
 
-> On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:
-> > I'm not at all happy with this.  Why do we need to hide the migration
-> > sparse mmap from the user until migration time?  What if instead we
-> > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
-> > where the existing capability is the normal runtime sparse setup and
-> > the user is required to use this new one prior to enabled device_state
-> > with _SAVING.  The vendor driver could then simply track mmap vmas to
-> > the region and refuse to change device_state if there are outstanding
-> > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
-> > required, no new irqfds, an incremental change to the protocol,
-> > backwards compatible to the extent that a vendor driver requiring this
-> > will automatically fail migration.
-> >   
-> right. looks we need to use this approach to solve the problem.
-> thanks for your guide.
-> so I'll abandon the current remap irq way for dirty tracking during live
-> migration.
-> but anyway, it demos how to customize irq_types in vendor drivers.
-> then, what do you think about patches 1-5?
+Thanks for your review. V2 was uploaded to address these 3 comments.
 
-In broad strokes, I don't think we've found the right solution yet.  I
-really question whether it's supportable to parcel out vfio-pci like
-this and I don't know how I'd support unraveling whether we have a bug
-in vfio-pci, the vendor driver, or how the vendor driver is making use
-of vfio-pci.
+Regards,
+Miao
 
-Let me also ask, why does any of this need to be in the kernel?  We
-spend 5 patches slicing up vfio-pci so that we can register a vendor
-driver and have that vendor driver call into vfio-pci as it sees fit.
-We have two patches creating device specific interrupts and a BAR
-remapping scheme that we've decided we don't need.  That brings us to
-the actual i40e vendor driver, where the first patch is simply making
-the vendor driver work like vfio-pci already does, the second patch is
-handling the migration region, and the third patch is implementing the
-BAR remapping IRQ that we decided we don't need.  It's difficult to
-actually find the small bit of code that's required to support
-migration outside of just dealing with the protocol we've defined to
-expose this from the kernel.  So why are we trying to do this in the
-kernel?  We have quirk support in QEMU, we can easily flip
-MemoryRegions on and off, etc.  What access to the device outside of
-what vfio-pci provides to the user, and therefore QEMU, is necessary to
-implement this migration support for i40e VFs?  Is this just an
-exercise in making use of the migration interface?  Thanks,
-
-Alex
-
+On Wed, Jun 3, 2020 at 10:59 AM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Miao-chen,
+>
+> > This adds the request handler of MGMT_OP_READ_ADV_MONITOR_FEATURES
+> > command. Since the controller-based monitoring is not yet in place, this
+> > report only the supported features but not the enabled features.
+> >
+> > The following test was performed.
+> > - Issuing btmgmt advmon-features.
+> >
+> > Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+> > ---
+> >
+> > include/net/bluetooth/hci_core.h | 24 +++++++++++++++++
+> > net/bluetooth/hci_core.c         | 10 ++++++-
+> > net/bluetooth/mgmt.c             | 46 ++++++++++++++++++++++++++++++++
+> > net/bluetooth/msft.c             |  7 +++++
+> > net/bluetooth/msft.h             |  9 +++++++
+> > 5 files changed, 95 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> > index cdd4f1db8670e..431fe0265dcfb 100644
+> > --- a/include/net/bluetooth/hci_core.h
+> > +++ b/include/net/bluetooth/hci_core.h
+> > @@ -25,6 +25,7 @@
+> > #ifndef __HCI_CORE_H
+> > #define __HCI_CORE_H
+> >
+> > +#include <linux/idr.h>
+> > #include <linux/leds.h>
+> > #include <linux/rculist.h>
+> >
+> > @@ -220,6 +221,24 @@ struct adv_info {
+> > #define HCI_MAX_ADV_INSTANCES         5
+> > #define HCI_DEFAULT_ADV_DURATION      2
+> >
+> > +struct adv_pattern {
+> > +     struct list_head list;
+> > +     __u8 ad_type;
+> > +     __u8 offset;
+> > +     __u8 length;
+> > +     __u8 value[HCI_MAX_AD_LENGTH];
+> > +};
+> > +
+> > +struct adv_monitor {
+> > +     struct list_head patterns;
+> > +     bool            active;
+> > +     __u16           handle;
+> > +};
+> > +
+> > +#define HCI_MIN_ADV_MONITOR_HANDLE           1
+> > +#define HCI_MAX_ADV_MONITOR_NUM_HANDLES      32
+> > +#define HCI_MAX_ADV_MONITOR_NUM_PATTERNS     16
+> > +
+> > #define HCI_MAX_SHORT_NAME_LENGTH     10
+> >
+> > /* Min encryption key size to match with SMP */
+> > @@ -477,6 +496,9 @@ struct hci_dev {
+> >       __u16                   adv_instance_timeout;
+> >       struct delayed_work     adv_instance_expire;
+> >
+> > +     struct idr              adv_monitors_idr;
+> > +     unsigned int            adv_monitors_cnt;
+> > +
+> >       __u8                    irk[16];
+> >       __u32                   rpa_timeout;
+> >       struct delayed_work     rpa_expired;
+> > @@ -1217,6 +1239,8 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
+> > int hci_remove_adv_instance(struct hci_dev *hdev, u8 instance);
+> > void hci_adv_instances_set_rpa_expired(struct hci_dev *hdev, bool rpa_expired);
+> >
+> > +void hci_adv_monitors_clear(struct hci_dev *hdev);
+> > +
+> > void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
+> >
+> > void hci_init_sysfs(struct hci_dev *hdev);
+> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > index dbe2d79f233fb..23bfe4f1d1e9d 100644
+> > --- a/net/bluetooth/hci_core.c
+> > +++ b/net/bluetooth/hci_core.c
+> > @@ -26,7 +26,6 @@
+> > /* Bluetooth HCI core. */
+> >
+> > #include <linux/export.h>
+> > -#include <linux/idr.h>
+> > #include <linux/rfkill.h>
+> > #include <linux/debugfs.h>
+> > #include <linux/crypto.h>
+> > @@ -2996,6 +2995,12 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
+> >       return 0;
+> > }
+> >
+> > +/* This function requires the caller holds hdev->lock */
+> > +void hci_adv_monitors_clear(struct hci_dev *hdev)
+> > +{
+> > +     idr_destroy(&hdev->adv_monitors_idr);
+> > +}
+> > +
+> > struct bdaddr_list *hci_bdaddr_list_lookup(struct list_head *bdaddr_list,
+> >                                        bdaddr_t *bdaddr, u8 type)
+> > {
+> > @@ -3574,6 +3579,8 @@ int hci_register_dev(struct hci_dev *hdev)
+> >
+> >       queue_work(hdev->req_workqueue, &hdev->power_on);
+> >
+> > +     idr_init(&hdev->adv_monitors_idr);
+> > +
+> >       return id;
+> >
+> > err_wqueue:
+> > @@ -3644,6 +3651,7 @@ void hci_unregister_dev(struct hci_dev *hdev)
+> >       hci_smp_irks_clear(hdev);
+> >       hci_remote_oob_data_clear(hdev);
+> >       hci_adv_instances_clear(hdev);
+> > +     hci_adv_monitors_clear(hdev);
+> >       hci_bdaddr_list_clear(&hdev->le_white_list);
+> >       hci_bdaddr_list_clear(&hdev->le_resolv_list);
+> >       hci_conn_params_clear_all(hdev);
+> > diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+> > index 9e8a3cccc6ca3..8d8275ee9718b 100644
+> > --- a/net/bluetooth/mgmt.c
+> > +++ b/net/bluetooth/mgmt.c
+> > @@ -36,6 +36,7 @@
+> > #include "hci_request.h"
+> > #include "smp.h"
+> > #include "mgmt_util.h"
+> > +#include "msft.h"
+> >
+> > #define MGMT_VERSION  1
+> > #define MGMT_REVISION 17
+> > @@ -111,6 +112,7 @@ static const u16 mgmt_commands[] = {
+> >       MGMT_OP_READ_SECURITY_INFO,
+> >       MGMT_OP_READ_EXP_FEATURES_INFO,
+> >       MGMT_OP_SET_EXP_FEATURE,
+> > +     MGMT_OP_READ_ADV_MONITOR_FEATURES,
+> > };
+> >
+> > static const u16 mgmt_events[] = {
+> > @@ -3849,6 +3851,49 @@ static int set_exp_feature(struct sock *sk, struct hci_dev *hdev,
+> >                              MGMT_STATUS_NOT_SUPPORTED);
+> > }
+> >
+> > +static int read_adv_monitor_features(struct sock *sk, struct hci_dev *hdev,
+> > +                                  void *data, u16 len)
+> > +{
+> > +     struct adv_monitor *monitor = NULL;
+> > +     struct mgmt_rp_read_adv_monitor_features *rp = NULL;
+> > +     int handle;
+> > +     size_t rp_size = 0;
+> > +     __u32 supported = 0;
+> > +     __u16 num_handles = 0;
+> > +     __u16 handles[HCI_MAX_ADV_MONITOR_NUM_HANDLES];
+> > +
+> > +     BT_DBG("request for %s", hdev->name);
+> > +
+> > +     hci_dev_lock(hdev);
+> > +
+> > +     if (msft_get_features(hdev) & MSFT_FEATURE_MASK_LE_ADV_MONITOR)
+> > +             supported |= MGMT_ADV_MONITOR_FEATURE_MASK_OR_PATTERNS;
+> > +
+> > +     idr_for_each_entry(&hdev->adv_monitors_idr, monitor, handle)
+> > +             handles[num_handles++] = monitor->handle;
+>
+> I would put { } here to make it readable.
+>
+> > +
+> > +     hci_dev_unlock(hdev);
+> > +
+> > +     rp_size = sizeof(*rp) + (num_handles * sizeof(u16));
+> > +     rp = kmalloc(rp_size, GFP_KERNEL);
+> > +     if (!rp)
+> > +             return -ENOMEM;
+> > +
+> > +     // Once controller-based monitoring is in place, the enabled_features
+> > +     // should reflect the use.
+>
+> Please use /* */ comment style here.
+>
+> > +     rp->supported_features = supported;
+> > +     rp->enabled_features = 0;
+> > +     rp->max_num_handles = HCI_MAX_ADV_MONITOR_NUM_HANDLES;
+> > +     rp->max_num_patterns = HCI_MAX_ADV_MONITOR_NUM_PATTERNS;
+>
+> These are little-endian.
+>
+> > +     rp->num_handles = num_handles;
+> > +     if (num_handles)
+> > +             memcpy(&rp->handles, &handles, (num_handles * sizeof(u16)));
+> > +
+> > +     return mgmt_cmd_complete(sk, hdev->id,
+> > +                              MGMT_OP_READ_ADV_MONITOR_FEATURES,
+> > +                              MGMT_STATUS_SUCCESS, rp, rp_size);
+> > +}
+> > +
+> > static void read_local_oob_data_complete(struct hci_dev *hdev, u8 status,
+> >                                        u16 opcode, struct sk_buff *skb)
+> > {
+> > @@ -7297,6 +7342,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
+> >       { set_exp_feature,         MGMT_SET_EXP_FEATURE_SIZE,
+> >                                               HCI_MGMT_VAR_LEN |
+> >                                               HCI_MGMT_HDEV_OPTIONAL },
+> > +     { read_adv_monitor_features, MGMT_READ_ADV_MONITOR_FEATURES_SIZE },
+> > };
+> >
+> > void mgmt_index_added(struct hci_dev *hdev)
+> > diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
+> > index d6c4e6b5ae777..8579bfeb28364 100644
+> > --- a/net/bluetooth/msft.c
+> > +++ b/net/bluetooth/msft.c
+> > @@ -139,3 +139,10 @@ void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb)
+> >
+> >       bt_dev_dbg(hdev, "MSFT vendor event %u", event);
+> > }
+> > +
+> > +__u64 msft_get_features(struct hci_dev *hdev)
+> > +{
+> > +     struct msft_data *msft = hdev->msft_data;
+> > +
+> > +     return  msft ? msft->features : 0;
+> > +}
+> > diff --git a/net/bluetooth/msft.h b/net/bluetooth/msft.h
+> > index 5aa9130e1f8ab..e9c478e890b8b 100644
+> > --- a/net/bluetooth/msft.h
+> > +++ b/net/bluetooth/msft.h
+> > @@ -3,16 +3,25 @@
+> >  * Copyright (C) 2020 Google Corporation
+> >  */
+> >
+> > +#define MSFT_FEATURE_MASK_BREDR_RSSI_MONITOR         BIT(0)
+> > +#define MSFT_FEATURE_MASK_LE_CONN_RSSI_MONITOR               BIT(1)
+> > +#define MSFT_FEATURE_MASK_LE_ADV_RSSI_MONITOR                BIT(2)
+> > +#define MSFT_FEATURE_MASK_LE_ADV_MONITOR             BIT(3)
+> > +#define MSFT_FEATURE_MASK_CURVE_VALIDITY             BIT(4)
+> > +#define MSFT_FEATURE_MASK_CONCURRENT_ADV_MONITOR     BIT(5)
+> > +
+> > #if IS_ENABLED(CONFIG_BT_MSFTEXT)
+> >
+> > void msft_do_open(struct hci_dev *hdev);
+> > void msft_do_close(struct hci_dev *hdev);
+> > void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb);
+> > +__u64 msft_get_features(struct hci_dev *hdev);
+> >
+> > #else
+> >
+> > static inline void msft_do_open(struct hci_dev *hdev) {}
+> > static inline void msft_do_close(struct hci_dev *hdev) {}
+> > static inline void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb) {}
+> > +static inline __u64 msft_get_features(struct hci_dev *hdev) { return 0; }
+>
+> Regards
+>
+> Marcel
+>
